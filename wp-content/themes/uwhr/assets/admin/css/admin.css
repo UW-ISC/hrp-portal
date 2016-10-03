@@ -1,0 +1,55 @@
+@import url( 'https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css' );
+
+@font-face {
+    font-family: 'Encode Sans Compressed';
+    src: url('../../../assets/fonts/encodesanscondensed-400-regular-webfont.eot');
+    src: url('../../../assets/fonts/encodesanscondensed-400-regular-webfont.eot?#iefix') format('embedded-opentype'), url('../../../assets/fonts/encodesanscondensed-400-regular-webfont.woff') format('woff'), url('assets/fonts/encodesanscondensed-400-regular-webfont.ttf') format('truetype'), url('../../../assets/fonts/encodesanscondensed-400-regular-webfont.svg#encodesanscondensed-400-regular-webfont') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Encode Sans Compressed';
+    src: url('../../../assets/fonts/encodesanscompressed-700-bold-webfont.eot');
+    src: url('../../../assets/fonts/encodesanscompressed-700-bold-webfont.eot?#iefix') format('embedded-opentype'), url('../../../assets/fonts/encodesanscompressed-700-bold-webfont.woff') format('woff'), url('../../../assets/fonts/encodesanscompressed-700-bold-webfont.ttf') format('truetype'), url('../../../assets/fonts/encodesanscompressed-700-bold-webfont.svg#encodesanscompressed-700-bold-webfont') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+h1, .h1,
+h2, .h2,
+h3, .h3,
+h4, .h4,
+h5, .h5,
+h6, .h6 {
+    font-family: "Encode Sans Compressed",sans-serif;
+    font-weight: 600;
+    color: rgb(89, 89, 89);
+}
+
+th,
+.wp-menu-name,
+.wp-submenu {
+    font-family: "Encode Sans Compressed",sans-serif;
+}
+
+#wpadminbar #wp-admin-bar-get_help .ab-item:before {
+    content: '\f473';
+    top: 3px;
+}
+
+a.link-file {
+    position: relative;
+    margin-left: 1.2rem;
+    display: inline-block;
+}
+
+a.link-file:before {
+    font-family: FontAwesome;
+    content: "\f016";
+    position: absolute;
+    left: -1.1rem;
+}
+
+a.link-file-pdf:before { content: "\f1c1"; }
+a.link-file-word:before { content: "\f1c2"; }
+a.link-file-excel:before { content: "\f1c3"; }

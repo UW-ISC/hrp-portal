@@ -1,0 +1,20 @@
+#tagsdiv-keyword .tagsdiv:after {
+    content: "Tag this page with a keyword to elevate it in search. Do not reuse keywords.";
+}
+
+#tagsdiv-keyword .tagchecklist {
+	margin-bottom: 8px;
+}
+
+#tagsdiv-keyword #link-keyword {
+	display: none;
+}
+
+#search_bucketdiv .categorydiv:after {
+    content: "Search Buckets tag this page for Search. If you do not want this content found by search, do not select a Search Bucket. ";
+}
+
+#poststuff #postimagediv {
+    display: block !important;
+}
+

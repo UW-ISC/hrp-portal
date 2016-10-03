@@ -1,0 +1,9 @@
+/* Import the main stylesheets */
+@import url( '../../main.css' );
+@import url( '../../main.min.css' );
+
+/* Add margin to main body */
+body { margin: 15px; }
+
+/* Show collapse divs */
+.collapse { display: block !important; }
