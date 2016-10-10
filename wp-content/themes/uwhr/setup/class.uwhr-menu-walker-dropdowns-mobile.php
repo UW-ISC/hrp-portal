@@ -89,7 +89,7 @@ class UWHR_Mobile_Dropdowns_Walker_Menu extends Walker_Nav_Menu {
         // print_r($args);
 
         // Check if page has children and output toggle collapse button, otherwise skip it
-        if ( $args["walker"]->has_children ) {
+        if ( $args->walker->has_children ) {
             $att = 'button';
             $li_css_class[] = 'has-children';
             $a_css_class[] = 'children-toggle';
