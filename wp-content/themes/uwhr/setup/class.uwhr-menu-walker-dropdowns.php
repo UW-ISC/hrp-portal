@@ -97,7 +97,7 @@ class UWHR_Dropdowns_Walker_Menu extends Walker_Nav_Menu {
         }
 
         // Check if page has children and at depth of at least one, otherwise skip it
-        if ($args["walker"]->has_children && $depth > 1 ) {
+        if ($depth>1 && $args->walker->has_children) {
             $li_css_class[] = 'has-children';
             $li_css_class[] = 'menu-group';
             $menu_group_label = true;
