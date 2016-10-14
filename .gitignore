@@ -1,4 +1,5 @@
 #Files to be ignored by git
 .htaccess
-wp-config
+.htpasswd
+wp-config.php
 hrp-isc/
