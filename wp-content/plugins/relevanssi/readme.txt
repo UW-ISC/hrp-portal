@@ -3,8 +3,8 @@ Contributors: msaari
 Donate link: http://www.relevanssi.com/buy-premium/
 Tags: search, relevance, better search
 Requires at least: 4.0
-Tested up to: 4.6
-Stable tag: 3.5.4
+Tested up to: 4.6.1
+Stable tag: 3.5.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -385,6 +385,23 @@ removing those words helps to make the index smaller and searching faster.
 * Mohib Ebrahim for relentless bug hunting.
 
 == Changelog ==
+
+= 3.5.6.1 =
+* Fix for a fatal bug in 3.5.6.
+
+= 3.5.6 =
+* Relevanssi admin page had a vulnerability that allowed SQL injection attacks. That is now fixed.
+* Relevanssi didn't like to highlight search terms that are followed by a ?, an ! or an apostrophe.
+* New filter: `relevanssi_ok_to_log` lets you control whether search queries are logged or not.
+
+= 3.5.5 =
+* 500 errors caused by arrays in custom fields should be gone now.
+* Improvements to the ACF "select" field support.
+* Relevanssi will not break when frontend plugins insert posts.
+* `relevanssi_match` filter has a new parameter, which contains the search term.
+* Polylang support has been improved.
+* WPML and Polylang filters work when "fields" is set to "ids".
+* New filter: `relevanssi_log_get_user` gets passed the user object before Relevanssi decides if the query should be logged or not.
 
 = 3.5.4 =
 * Relevanssi had a bug that lead to inflated relevancy scores for posts.
@@ -1117,6 +1134,15 @@ removing those words helps to make the index smaller and searching faster.
 * First published version.
 
 == Upgrade notice ==
+
+= 3.5.6.1 =
+* Fix for a fatal error.
+
+= 3.5.6 =
+* Fix for a SQL injection vulnerability.
+
+= 3.5.5 =
+* Bug fixes and small improvements.
 
 = 3.5.4 =
 * Fix for a small bug that leads to inflated relevancy scores.
