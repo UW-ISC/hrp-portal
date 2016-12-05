@@ -1,0 +1,25 @@
+/**
+ * Fix css error for Wordpress 3.8
+ *
+ * @package   PT_Content_Views_Admin
+ * @author    PT Guy <http://www.contentviewspro.com/>
+ * @license   GPL-2.0+
+ * @link      http://www.contentviewspro.com/
+ * @copyright 2014 PT Guy
+ */
+
+.pt-wrap input[type=radio], input[type=checkbox] {
+	margin-top: 2px !important;
+}
+
+/* Screen Resolutions */
+@media screen and (max-width: 782px) {
+	.pt-wrap label {
+		margin-left: 6px;
+	}
+
+	.pt-wrap label input[type=radio],
+	.pt-wrap label input[type=checkbox] {
+		margin-top: -2px !important;
+	}
+}

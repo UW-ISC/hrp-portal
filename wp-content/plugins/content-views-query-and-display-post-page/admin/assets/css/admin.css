@@ -1,0 +1,354 @@
+/**
+ * Common styles for WP admin
+ *
+ * @package   PT_Content_Views_Admin
+ * @author    PT Guy <http://www.contentviewspro.com/>
+ * @license   GPL-2.0+
+ * @link      http://www.contentviewspro.com/
+ * @copyright 2014 PT Guy
+ */
+
+/* Overwrite WP */
+.wrap .updated,
+.wrap .notice,
+.update-nag {
+	display: none;
+}
+.pt-wrap a:focus {
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+.pt-wrap input[type=number] {
+	height: 34px;
+}
+body {background-color: #fff}
+
+/* Fix Bootstrap box-sizing "border-box" problem */
+.pt-wrap *,
+.pt-wrap *:before,
+.pt-wrap *:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing:    border-box;
+	box-sizing:         border-box;
+}
+
+/* Fix small error when use Bootstrap */
+html {
+	background: none;
+}
+
+.pt-wrap select {
+	height: 34px !important;
+}
+
+.pt-wrap .text-muted {
+	clear:  both;
+	margin: 0px 0 2px;
+	float:  left;
+	font-style: italic;
+}
+
+/* Overwrite Bootstrap */
+.form-control:focus {
+	border-color:       #66afe9 !important;
+	outline:            0;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6) !important;
+	box-shadow:         inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6) !important;
+}
+
+.form-horizontal .control-label {
+	text-align: left !important;
+}
+
+.nav-tabs a {
+	font-weight: 600;
+	font-size:   1.3em;
+}
+
+/* Other settings */
+.pt-cv-caution {
+	background-color: #F44336;
+	color: #fff;
+	padding: 8px 10px;
+	margin-bottom: 1px;
+	text-align: center;
+	font-size: 1.2em;
+}
+.hide {
+	display: none;
+}
+.control-label {
+	padding-right: 0 !important;
+}
+
+/* Fix style bug */
+#pt-cv-form-view .nav {
+	position: relative !important;
+}
+#pt-cv-form-view .btn-cvp-action {
+	position: relative;
+	z-index: 10;
+}
+
+#pt-cv-form-view .tab-content {
+	display: block !important;
+}
+
+#pt-cv-form-view .nav .glyphicon {
+	margin-right: 6px;
+	color: rgba(255, 90, 95, 0.8);
+    font-size: 12px;
+}
+
+#pt-cv-form-view *, .preview-wrapper label {
+	font-size: 14px;
+}
+
+.preview-wrapper .text-muted {
+	margin-top: 8px;
+	font-size: 14px;
+}
+
+.pt-wrap h2 {
+	margin-bottom: 20px;
+}
+
+.pt-wrap .tab-content {
+	margin-top: 10px;
+}
+
+.pt-wrap .form-group.pt-form-group {
+	margin-bottom: 8px;
+}
+
+.pt-cv-color {
+	width: 100px !important;
+}
+
+.pt-cv-w50 select,
+.pt-cv-w50 radio {
+	width: 50%;
+	float: left;
+}
+
+.pt-cv-w200 select,
+.pt-cv-w200 input,
+.pt-cv-w200 radio {
+	width: 200px;
+	float: left;
+}
+
+.pt-wrap .updated {
+	display: none;
+}
+
+/* Group type */
+.panel-group .pt-cv-group {
+	margin-top: 10px;
+}
+
+.pt-cv-group .form-group {
+	margin-bottom: 6px;
+}
+
+.pt-cv-group .panel-body {
+	padding: 5px 15px;
+}
+
+.pt-cv-group .control-label, .pt-form-group .pt-form-group .control-label {
+	font-weight: 400;
+}
+
+.pt-cv-group .checkbox {
+	float: left;
+	background: none;
+}
+
+#pt-cv-group-advanced-params .checkbox,
+.pt-cv-taxonomies .checkbox
+{
+	width: 50%;
+}
+
+.pt-cv-taxonomies .text-muted {
+	margin-top: 5px;
+}
+
+.pt-cv-group .radio {
+	/*	width: 33%;
+		float: left;
+		margin-bottom: 10px !important;*/
+}
+
+.pt-cv-group .radio img {
+	height: 100px;
+}
+
+.pt-cv-no-panel {
+	margin-top: 0px;
+}
+
+.pt-cv-text {
+	margin-top: 7px;
+}
+
+.pt-wrap .input-group {
+	width: 200px;
+}
+
+/* Accordion */
+.pt-cv-group .pt-accordion .panel-heading {
+	cursor:       pointer;
+	padding-left: 30px;
+}
+
+.pt-cv-group .clickable {
+	cursor: pointer;
+}
+
+.pt-cv-group .panel-heading span {
+	margin-top: -15px;
+	font-size:  15px;
+}
+
+/* Activate group */
+#pt-cv-filter-settings .pt-cv-group-activate {
+	-webkit-box-shadow: inset 0 1px 1px rgba(255, 105, 105, 0.075), 0 0 8px rgba(0, 142, 255, 0.6) !important;
+	box-shadow:         inset 0 1px 1px rgba(255, 105, 105, 0.075), 0 0 8px rgba(0, 142, 255, 0.6) !important;
+}
+
+#pt-cv-filter-settings .pt-cv-group-activate .panel-body {
+	background: #FFCFCF;
+}
+
+/* Preview */
+#pt-cv-preview-box {
+	resize: vertical;
+	margin-bottom: 5px;
+	height:        300px;
+	padding:       20px;
+	position:      relative;
+	overflow-y:    scroll;
+	overflow-x:    hidden;
+}
+
+#pt-cv-preview-box + .text-muted {
+	margin-top: 8px;
+}
+
+#pt-cv-show-preview {
+	position: fixed;
+	right:    20px;
+	bottom:   120px;
+	z-index:  1001;
+}
+
+/* Sortable */
+.pt-wrap .ui-sortable {
+	background: #FFF9D7;
+}
+
+/* View shortcode text */
+.view-code {
+	display: inline-block;
+}
+.view-code input {
+	cursor:        pointer !important;
+	display:       inline !important;
+	border: none !important;
+	margin-bottom: 20px;
+	position:      relative;
+}
+
+/*** Fields settings ***/
+.pt-cv-field-setting {
+    margin-left: 0 !important;
+}
+
+.pt-cv-content-setting {
+    z-index: 1;
+}
+
+.pt-cv-excerpt-setting {
+    margin-top: -12px;
+    padding-top: 0;
+    z-index: 100;
+    position: relative;
+}
+
+.pt-cv-field-setting:not(.hidden) > .pt-params {
+	width: 100% !important;
+	border: 1px solid #ececec;
+	padding-top: 10px;
+}
+
+#pt-cv-group-field-settings > .form-group > .control-label {
+	font-weight: bold;
+	display: inline;
+    width: 100%;
+    padding-bottom: 7px;
+	color: #fff;
+    background-color: #428bca;
+}
+
+.pt-cv-content-setting > .pt-params,
+.pt-cv-metafield-setting > .pt-params {
+	padding-top: 0 !important;
+	padding-bottom: 10px;
+}
+
+/* Append group */
+.pt-cv-excerpt-setting > .pt-params {
+	border-top: none !important;
+    margin-top: -11px !important;
+}
+
+.pt-cv-excerpt-setting > .pt-params  > .pt-form-group {
+	background: #fff;
+}
+
+.pt-cv-excerpt-setting > label {
+	display: none !important;
+}
+/* End Append group */
+
+/* Others */
+.pt-cv-thumb-position {background-color:#fff; padding-bottom:10px}
+.pt-cv-group .panel .panel {border-color: #bce8f1}
+.pt-cv-group .panel .panel > .panel-heading {
+    color: #31708f;
+    background-color: #d9edf7;
+    border-color: #bce8f1
+}
+.pt-wrap .alert {text-align: center}
+
+@media (max-width: 991px) {
+    #pt-cv-form-view .nav .glyphicon {
+        display: none;
+    }
+    #pt-cv-form-view .nav-tabs>li>a {
+        font-size: 14px !important;
+        line-height: 1.8;
+    }
+    #pt-cv-form-view .control-label, .preview-wrapper .control-label {
+        font-size: 15px;
+        font-weight: 600;
+        margin: 6px 0;
+    }
+	#pt-cv-form-view .control-label:empty  {
+		display: none;
+	}
+	#pt-cv-form-view .tab-pane > .form-group > .control-label {
+		border-bottom: 2px solid #ff5a5f;
+		padding: 0;
+		margin-left: 15px;
+		font-size: 20px;
+	}
+	.pt-cv-field-setting {
+		min-height: 35px;
+	}
+	.pt-cv-field-setting > .pt-params {
+		margin-top: 10px;
+	}
+
+}
