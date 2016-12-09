@@ -115,7 +115,6 @@ class SearchWP_Live_Search_Form extends SearchWP_Live_Search {
 		// localize and enqueue the script with all of the variable goodness
 		wp_localize_script( 'swp-live-search-client', 'searchwp_live_search_params', $encoded_data );
 		wp_enqueue_script( 'swp-live-search-client' );
-		echo("OK!");
 	}
 
 	/**
