@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Define settings for options
  *
@@ -16,6 +15,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 	 * @todo Define settings for options
 	 */
 	class PT_CV_Settings {
+
 		/**
 		 * Get collection : Taxonomies => Terms
 		 *
@@ -97,7 +97,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					),
 				),
 				// Upgrade to Pro: More sort by options
-				!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'Sort by custom field, drag & drop, slug, random order, menu order', 'content-views-query-and-display-post-page' ) ) : '',
+				!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'Sort by drag & drop, custom field, slug, random order, menu order', 'content-views-query-and-display-post-page' ) ) : '',
 				// Order
 				apply_filters( PT_CV_PREFIX_ . 'orders', array(
 					'label'	 => array(
@@ -282,7 +282,7 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					),
 				),
 				// Upgrade to Pro: Drag & Drop
-				!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'Change display order (for example: show Title above Thumbnail)', 'content-views-query-and-display-post-page' ), 12, 'margin-top: -15px; margin-bottom: 5px; width: 100%;' ) : '',
+				!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'Show Custom Fields, show Title above Thumbnail...', 'content-views-query-and-display-post-page' ), 12, 'margin-top: -15px; margin-bottom: 5px; width: 100%;' ) : '',
 				// Title settings
 				apply_filters( PT_CV_PREFIX_ . 'settings_title_display', array(), $prefix, $prefix2 ),
 				// Thumbnail settings

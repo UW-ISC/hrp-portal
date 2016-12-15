@@ -40,7 +40,7 @@ if ( !function_exists( 'cv_field_content_excerpt_siteorigin' ) ) {
 add_filter( 'facetwp_is_main_query', 'cv_facetwp_is_main_query', 999, 2 );
 if ( !function_exists( 'cv_facetwp_is_main_query' ) ) {
 	function cv_facetwp_is_main_query( $is_main_query, $query ) {
-		if ( (!empty( $query->query_vars[ 'post_type' ] ) && $query->query_vars[ 'post_type' ] === 'pt_view') || !empty( $query->query_vars[ 'by_contentviews' ] ) ) {
+		if ( $query->get( 'cv_get_view' ) || $query->get( 'by_contentviews' ) ) {
 			$is_main_query = false;
 		}
 
@@ -49,4 +49,16 @@ if ( !function_exists( 'cv_facetwp_is_main_query' ) ) {
 
 }
 
+# "View maybe not exist" error, caused by custom filter hook (which modifies `post_type` in WordPress query) of another plugin
+add_action( 'pre_get_posts', 'cv_pre_get_posts_gv', 999 );
+if ( !function_exists( 'cv_pre_get_posts_gv' ) ) {
+	function cv_pre_get_posts_gv( $query ) {
+		if ( $query->get( 'cv_get_view' ) ) {
+			$query->set( 'post_type', PT_CV_POST_TYPE );
+		}
+
+		return $query;
+	}
+
+}
 

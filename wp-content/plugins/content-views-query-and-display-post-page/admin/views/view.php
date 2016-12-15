@@ -228,8 +228,7 @@ PT_CV_Functions::view_submit();
 											),
 										),
 									),
-									// Upgrade to Pro: Offset
-									apply_filters( PT_CV_PREFIX_ . 'after_limit_option', PT_CV_Settings::get_cvpro( __( 'Skip some posts', 'content-views-query-and-display-post-page' ), 12 ) ),
+									apply_filters( PT_CV_PREFIX_ . 'after_limit_option', '' ),
 								),
 							),
 						),
@@ -348,7 +347,7 @@ PT_CV_Functions::view_submit();
 												),
 											),
 										),
-										!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( sprintf( __( 'When you select any term above, it will not replace posts layout in term page (for example: %s) with layout of this View', 'content-views-query-and-display-post-page' ), '<code style="font-size: 11px;">http://yourdomain/category/selected_term/</code>' ), 12, null, true ) : '',
+										!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( sprintf( __( 'In this lite version, when you select any term above, it will not replace posts layout in term page (for example: %s) with layout of this View', 'content-views-query-and-display-post-page' ), '<code style="font-size: 11px;">http://yourdomain/category/selected_term/</code>' ), 12, null, true ) : '',
 										apply_filters( PT_CV_PREFIX_ . 'taxonomies_custom_settings', array() ),
 									), // End Taxonomies Settings
 									// Sort by Settings
@@ -501,6 +500,7 @@ PT_CV_Functions::view_submit();
 							),
 						),
 					),
+					!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'More amazing layouts (Pinterest, Timeline...)', 'content-views-query-and-display-post-page' ), 10, 'margin-bottom:10px' ) : '',
 					apply_filters( PT_CV_PREFIX_ . 'more_responsive_settings', array(
 						'label'		 => array(
 							'text' => __( 'Responsive settings', 'content-views-query-and-display-post-page' ),

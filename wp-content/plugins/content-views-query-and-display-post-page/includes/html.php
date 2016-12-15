@@ -411,7 +411,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 		static function _field_content( $post, $fargs ) {
 			setup_postdata( $post );
 
-			do_action( PT_CV_PREFIX_ . 'handle_teaser' );
+			do_action( PT_CV_PREFIX_ . 'before_content' );
 
 			$content_class	 = apply_filters( PT_CV_PREFIX_ . 'field_content_class', PT_CV_PREFIX . 'content' );
 			$tag			 = apply_filters( PT_CV_PREFIX_ . 'field_content_tag', 'div' );
@@ -436,7 +436,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 					if ( $length > 0 ) {
 						$GLOBALS[ 'cv_excerpt_type' ] = 'content';
 
-						$full_excerpt = apply_filters( PT_CV_PREFIX_ . 'field_content_excerpt', get_the_content(), $fargs, $post );
+						$full_excerpt = apply_filters( PT_CV_PREFIX_ . 'field_content_excerpt', get_the_content( '' ), $fargs, $post );
 
 						if ( apply_filters( PT_CV_PREFIX_ . 'trim_excerpt', $GLOBALS[ 'cv_excerpt_type' ] == 'content' ) ) {
 							$excerpt = PT_CV_Functions::cv_trim_words( $full_excerpt, $length );
@@ -457,6 +457,12 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 					ob_start();
 					the_content();
 					$content = ob_get_clean();
+
+					# Strip any raw shortcode if it is not executed
+					global $cv_sc_complete;
+					if ( !$cv_sc_complete ) {
+						$content = PT_CV_Functions::cv_strip_shortcodes( $content, false );
+					}
 
 					break;
 			}
@@ -574,7 +580,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 
 					case 'taxonomy':
 						$term_class	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_class', 'terms', 'terms' );
-						$prefix_text = apply_filters( PT_CV_PREFIX_ . 'field_meta_prefix_text', __( 'in', 'content-views-query-and-display-post-page' ), 'terms' );
+						$prefix_text = apply_filters( PT_CV_PREFIX_ . 'field_meta_prefix_text', '', 'terms' );
 
 						$terms = PT_CV_Functions::post_terms( $post );
 						if ( !empty( $terms ) ) {
@@ -598,7 +604,7 @@ if ( !class_exists( 'PT_CV_Html' ) ) {
 
 					case 'author':
 						$author_class	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_class', 'author', 'author' );
-						$prefix_text	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_prefix_text', __( 'by', 'content-views-query-and-display-post-page' ), 'author' );
+						$prefix_text	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_prefix_text', '', 'author' );
 
 						$author_html		 = sprintf( '<span class="%s">%s <a href="%s" rel="author">%s</a></span>', esc_attr( $author_class ), $prefix_text, esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ), get_the_author() );
 						$html[ 'author' ]	 = apply_filters( PT_CV_PREFIX_ . 'field_meta_author_html', $author_html, $post );

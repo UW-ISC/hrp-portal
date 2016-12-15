@@ -86,7 +86,7 @@
 
 			// Handle Pagination actions
 			$( 'body' ).bind( _prefix + 'admin-preview', function () {
-				new $.PT_CV_Public( { _prefix: _prefix } );
+				new $.PT_CV_Public();
 			} );
 		},
 		/**

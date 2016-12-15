@@ -3,8 +3,8 @@ Contributors: PT Guy
 Donate link: https://www.contentviewspro.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=donate
 Tags: post, posts, page, pages, grid, author, category, categories, tag, responsive, title, thumbnail, content
 Requires at least: 3.3
-Tested up to: 4.6.1
-Stable tag: 1.9.2.1
+Tested up to: 4.7
+Stable tag: 1.9.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -116,13 +116,17 @@ If you are using "Your latest posts" as home page, you should paste this code `<
 
 == Changelog ==
 
+= 1.9.3 - November 22 2016 =
+* Improvement: Remove prefix "by", "in" (before taxonomy, author) to save translation effort
+* Improvement: More accurate, time-saving mechanism to remove raw shortcodes text of other plugins in post content
+* Fix: "View maybe not exist" error, caused by custom filter hook (which modifies `post_type` in WordPress query) of another plugin
+
 = 1.9.2.1 - November 05 2016 =
 * Tweak: Update message when something went wrong, show exact error in Preview panel
 * Tweak: Update description for keyword setting
 * Tweak: Introduce filter "pt_cv_link_html" to modify HTML output of title, thumbnail, read-more button
 
 = 1.9.2 - October 24 2016 =
-* Fix: [Compatibility with FacetWP plugin] empty settings (View does not exist), missing posts in output when reload page after filtering by FacetWP search form
 * Revert force_balance_tags() for item HTML wrapper, to prevent broken output
 * Tweak: Remove unused functions
 * Tweak: Introduce filter "pt_cv_pagination_text" to customize pagination text

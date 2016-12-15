@@ -238,26 +238,22 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 		 * @after 1.8.3
 		 * @param string $text
 		 */
-		static function cv_strip_shortcodes( $text ) {
-			$trans_key		 = 'cv_tagregexp_187';
-			$stored_regex	 = get_transient( $trans_key );
-
-			global $shortcode_tags;
-			$tagnames	 = array_keys( $shortcode_tags );
-			$tagregexp	 = $live_regex	 = join( '|', array_map( 'preg_quote', $tagnames ) );
-
-			// Shortcodes of theme or another plugin were not loaded (in Preview/Pagination request)
-			if ( strlen( $live_regex ) <= strlen( $stored_regex ) ) {
-				$tagregexp = $stored_regex;
+		static function cv_strip_shortcodes( $text, $strip_all = true ) {
+			global $shortcode_tags, $cv_sc_tagnames, $cv_sc_complete;
+			if ( $cv_sc_complete ) {
+				$tagnames	 = array_keys( $shortcode_tags );
+				$tagregexp	 = join( '|', array_map( 'preg_quote', $tagnames ) );
 			} else {
-				set_transient( $trans_key, $tagregexp, 7 * DAY_IN_SECONDS );
+				$tagregexp = $cv_sc_tagnames;
 			}
 
-			// Strip some shortcodes
-			$temp_shortcode_tags = $shortcode_tags;
-			$shortcode_tags		 = apply_filters( PT_CV_PREFIX_ . 'shortcode_to_strip', array( 'caption' => '' ) );
-			$text				 = strip_shortcodes( $text );
-			$shortcode_tags		 = $temp_shortcode_tags;
+			if ( $strip_all ) {
+				// Strip some shortcodes
+				$temp_shortcode_tags = $shortcode_tags;
+				$shortcode_tags		 = apply_filters( PT_CV_PREFIX_ . 'shortcode_to_strip', array( 'caption' => '' ) );
+				$text				 = strip_shortcodes( $text );
+				$shortcode_tags		 = $temp_shortcode_tags;
+			}
 
 			// Keep other shortcodes' content
 			return preg_replace( '/'
@@ -338,6 +334,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 		/**
 		 * Handle slug of non-latin languages
+		 * used in CVP < 4.1
 		 *
 		 * @param string $slug
 		 * @param boolean $sanitize
@@ -452,12 +449,9 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 		static function post_terms( $post ) {
 			global $pt_cv_glb;
 
-			if ( !isset( $pt_cv_glb[ 'item_terms' ] ) ) {
-				$pt_cv_glb[ 'item_terms' ] = array();
-			}
-
 			$links				 = array();
 			$taxonomy_terms		 = array();
+			$post_terms			 = array();
 			$taxonomies			 = get_taxonomies( '', 'names' );
 			$taxonomies_to_show	 = apply_filters( PT_CV_PREFIX_ . 'taxonomies_to_show', $taxonomies );
 			$post_id			 = is_object( $post ) ? $post->ID : $post;
@@ -465,27 +459,33 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 			foreach ( $terms as $term ) {
 				$term_html		 = '';
+				$term_slug		 = $term->slug;
 				$include_this	 = apply_filters( PT_CV_PREFIX_ . 'terms_include_this', true, $term ) && in_array( $term->taxonomy, $taxonomies_to_show );
 				if ( $include_this ) {
 					$href		 = esc_url( get_term_link( $term, $term->taxonomy ) );
 					$text		 = __( 'View all posts in', 'content-views-query-and-display-post-page' );
 					$term_name	 = esc_attr( $term->name );
-					$class		 = esc_attr( PT_CV_PREFIX . 'tax-' . PT_CV_Functions::term_slug_sanitize( $term->slug ) );
+					$class		 = esc_attr( PT_CV_PREFIX . 'tax-' . $term_slug );
 					$term_html	 = apply_filters( PT_CV_PREFIX_ . 'post_term_html', "<a href='$href' title='$text $term_name' class='$class'>{$term->name}</a>", $term );
 					$links[]	 = $term_html;
 				}
 
-				// Add this term to terms list of an item
-				if ( !isset( $pt_cv_glb[ 'item_terms' ][ $post_id ] ) ) {
-					$pt_cv_glb[ 'item_terms' ][ $post_id ] = array();
-				}
-				$pt_cv_glb[ 'item_terms' ][ $post_id ][ PT_CV_Functions::term_slug_sanitize( $term->slug ) ] = $term->name;
+				$term_info							 = apply_filters( PT_CV_PREFIX_ . 'post_term', array( 'key' => $term_slug, 'value' => $term->name ), $term );
+				$post_terms[ $term_info[ 'key' ] ]	 = $term_info[ 'value' ];
 
 				// Add this term to terms list of an item
 				if ( !isset( $taxonomy_terms[ $term->taxonomy ] ) ) {
 					$taxonomy_terms[ $term->taxonomy ] = array();
 				}
 				$taxonomy_terms[ $term->taxonomy ][] = $term_html;
+			}
+
+			if ( $post_terms ) {
+				if ( !isset( $pt_cv_glb[ 'item_terms' ] ) ) {
+					$pt_cv_glb[ 'item_terms' ] = array();
+				}
+
+				$pt_cv_glb[ 'item_terms' ][ $post_id ] = $post_terms;
 			}
 
 			return apply_filters( PT_CV_PREFIX_ . 'post_terms_output', implode( ', ', $links ), $links, $taxonomy_terms );
@@ -535,8 +535,10 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 				'post_status'		 => 'publish',
 				'meta_key'			 => PT_CV_META_ID,
 				'meta_value'		 => esc_sql( $meta_id ),
+				'cv_get_view'		 => true,
 				)
 			);
+
 			if ( $pt_query->have_posts() ) :
 				while ( $pt_query->have_posts() ):
 					$pt_query->the_post();
@@ -633,6 +635,9 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			$pt_cv_glb[ $pt_cv_id ][ 'view_type' ]		 = $view_type;
 			$pt_cv_glb[ $pt_cv_id ][ 'current_page' ]	 = $current_page;
 
+			# Important: store current View ID, prevent it from being modified when process posts which contains View shortcode
+			$cv_live_id = $view_id;
+
 			if ( defined( 'PT_CV_DOING_PAGINATION' ) ) {
 				$sdata		 = CV_Session::get( $vdata_key, array( 'args' => '', 'dargs' => '' ) );
 				$args		 = $sdata[ 'args' ];
@@ -677,6 +682,8 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			} else {
 				$content_items = apply_filters( PT_CV_PREFIX_ . 'view_content', array() );
 			}
+
+			$pt_cv_id = $cv_live_id;
 
 			if ( apply_filters( PT_CV_PREFIX_ . 'hide_empty_result', false ) && $empty_result ) {
 				$html = '';

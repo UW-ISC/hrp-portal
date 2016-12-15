@@ -9,7 +9,7 @@ if ( !class_exists( 'CV_Session' ) ) {
 
 		static function start() {
 			if ( !headers_sent() && !session_id() && @is_writable( session_save_path() ) ) {
-				session_start();
+				@session_start();
 			}
 		}
 

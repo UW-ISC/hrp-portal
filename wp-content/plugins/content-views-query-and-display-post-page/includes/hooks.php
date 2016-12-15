@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Custom filters/actions
  *
@@ -15,6 +14,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 	 * @name PT_CV_Hooks
 	 */
 	class PT_CV_Hooks {
+
 		/**
 		 * Add custom filters/actions
 		 */
@@ -33,6 +33,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 			add_action( PT_CV_PREFIX_ . 'before_query', array( __CLASS__, 'action_before_query' ) );
 			add_action( PT_CV_PREFIX_ . 'before_process_item', array( __CLASS__, 'action_before_process_item' ) );
 			add_action( PT_CV_PREFIX_ . 'after_process_item', array( __CLASS__, 'action_after_process_item' ) );
+			add_action( PT_CV_PREFIX_ . 'before_content', array( __CLASS__, 'action_before_content' ) );
 
 			// For only Frontend
 			add_action( 'init', array( __CLASS__, 'action_init' ), 1 );
@@ -175,6 +176,37 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 		public static function action_after_process_item() {
 			// Enable View Shortcode again
 			PT_CV_Functions::disable_view_shortcode( 'recovery' );
+		}
+
+		public static function action_before_content() {
+			global $shortcode_tags, $cv_refresh_sct, $cv_get_sct, $cv_sc_tagnames, $cv_sc_complete;
+			$trans_key		 = 'cv_shortcode_tags_193';
+			# Make it theme independently
+			$cv_sc_complete	 = get_option( 'cv_save_sc_complete' );
+
+			if ( !defined( 'PT_CV_DOING_PAGINATION' ) && !defined( 'PT_CV_DOING_PREVIEW' ) ) {
+				if ( !$cv_refresh_sct ) {
+					if ( $cv_sc_complete ) {
+						set_transient( $trans_key, $shortcode_tags, HOUR_IN_SECONDS );
+					} else {
+						$tagnames		 = array_keys( $shortcode_tags );
+						$cv_sc_tagnames	 = join( '|', array_map( 'preg_quote', $tagnames ) );
+						set_transient( $trans_key, $cv_sc_tagnames, HOUR_IN_SECONDS );
+					}
+
+					$cv_refresh_sct = 1;
+				}
+			} else {
+				if ( !$cv_get_sct && $stored_sct = get_transient( $trans_key ) ) {
+					if ( $cv_sc_complete ) {
+						$shortcode_tags = $stored_sct;
+					} else {
+						$cv_sc_tagnames = $stored_sct;
+					}
+
+					$cv_get_sct = 1;
+				}
+			}
 		}
 
 		public static function action_init() {

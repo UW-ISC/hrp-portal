@@ -137,13 +137,13 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		 * @param string $terms_of_taxonomies Array of terms of taxonomies
 		 * @param array  $args                Array of query parameters
 		 */
-		static function term_of_taxonomy( $taxonomy, &$terms_of_taxonomies, $args = array() ) {
+		static function term_of_taxonomy( $taxonomy, &$terms_of_taxonomies, $args = array(), $data = 'name' ) {
 			$args	 = array_merge( array( 'hide_empty' => false ), $args );
 			$terms	 = get_terms( array( $taxonomy ), $args );
 
 			$term_slug_name = array();
 			foreach ( $terms as $term ) {
-				$term_slug_name[ PT_CV_Functions::term_slug_sanitize( $term->slug ) ] = $term->name;
+				$term_slug_name[ $term->slug ] = ($data === 'name') ? $term->name : $term;
 			}
 
 			// Sort values of param by saved order
