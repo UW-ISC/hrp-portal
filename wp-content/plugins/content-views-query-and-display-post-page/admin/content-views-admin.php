@@ -263,6 +263,7 @@ class PT_Content_Views_Admin {
 			wp_dequeue_style( 'unifStyleSheet' );
 			wp_dequeue_style( 'ssrc_grid_admin_styles' );
 			wp_dequeue_script( 'ssrc_grid_admin_scripts' );
+			wp_dequeue_script( 'chartjs' ); /* optimizePressExperiments/js/chart.min.js */
 			do_action( PT_CV_PREFIX_ . 'remove_unwanted_assets' );
 		}
 	}

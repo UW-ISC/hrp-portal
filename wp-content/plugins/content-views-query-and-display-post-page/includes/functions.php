@@ -788,9 +788,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 			);
 
 			// Ignore sticky posts
-			if ( in_array( $content_type, array( 'post', 'page' ) ) ) {
-				$args[ 'ignore_sticky_posts' ] = apply_filters( PT_CV_PREFIX_ . 'ignore_sticky_posts', 1 );
-			}
+			$args[ 'ignore_sticky_posts' ] = apply_filters( PT_CV_PREFIX_ . 'ignore_sticky_posts', 1 );
 
 			$post_in = PT_CV_Functions::setting_value( PT_CV_PREFIX . 'post__in', $view_settings );
 			$post_in = array_filter( PT_CV_Functions::string_to_array( $post_in ) );

@@ -872,8 +872,8 @@ if ( !class_exists( 'PT_CV_Settings' ) ) {
 					array(
 						'type'		 => 'html',
 						'content'	 => $notice ?
-							sprintf( '<div class="alert alert-warning"><strong>%s:</strong> %s</div>', __( 'Notice', 'content-views-query-and-display-post-page' ), $text . '.' ) :
-							sprintf( '<p class="text-muted" style="%s">&rarr; %s</p>', $style, $text . $url ),
+							sprintf( '<div class="alert alert-warning cvgopro"><strong>%s:</strong> %s</div>', __( 'Notice', 'content-views-query-and-display-post-page' ), $text . '.' ) :
+							sprintf( '<p class="text-muted cvgopro" style="%s">&rarr; %s</p>', $style, $text . $url ),
 					),
 				),
 			);

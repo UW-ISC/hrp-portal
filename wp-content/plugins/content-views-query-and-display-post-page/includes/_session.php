@@ -14,12 +14,23 @@ if ( !class_exists( 'CV_Session' ) ) {
 		}
 
 		static function get( $key, $default = false ) {
-			return isset( $_SESSION[ $key ] ) ? $_SESSION[ $key ] : $default;
+			if ( isset( $_SESSION[ $key ] ) ) {
+				$val = $_SESSION[ $key ];
+			} else {
+				$trans	 = get_transient( $key );
+				$val	 = $trans ? $trans : $default;
+			}
+
+			return $val;
 		}
 
 		static function set( $key, $val ) {
 			if ( self::is_valid() ) {
 				$_SESSION[ $key ] = $val;
+			}
+
+			if ( !isset( $_SESSION[ $key ] ) ) {
+				set_transient( $key, $val, HOUR_IN_SECONDS );
 			}
 		}
 
@@ -35,5 +46,3 @@ if ( !class_exists( 'CV_Session' ) ) {
 	}
 
 }
-
-
