@@ -916,21 +916,21 @@ class WPMDB extends WPMDB_Base {
 		// A little bit of house keeping.
 		WPMDB_Migration_State::cleanup();
 
-		if ( 'savefile' === $this->state_data['intent'] || 'find_replace' === $this->state_data['intent'] ) {
+		if ( in_array( $this->state_data['intent'], array( 'find_replace', 'savefile' ) ) ) {
 			$return = array(
 				'code'    => 200,
 				'message' => 'OK',
 				'body'    => json_encode( array( 'error' => 0 ) ),
 			);
 
-			if ( 'find_replace' !== $this->state_data['intent'] || 'backup' === $this->state_data['stage'] ) {
-				$return['dump_path']        = $this->get_sql_dump_info( 'migrate', 'path' );
+			if ( in_array( $this->state_data['stage'], array( 'backup', 'migrate' ) ) ) {
+				$return['dump_path']        = $this->get_sql_dump_info( $this->state_data['stage'], 'path' );
 				$return['dump_filename']    = basename( $return['dump_path'] );
-				$return['dump_url']         = $this->get_sql_dump_info( 'migrate', 'url' );
+				$return['dump_url']         = $this->get_sql_dump_info( $this->state_data['stage'], 'url' );
 				$dump_filename_no_extension = substr( $return['dump_filename'], 0, -4 );
 
-				$create_alter_table_query = $this->get_create_alter_table_query();
 				// sets up our table to store 'ALTER' queries
+				$create_alter_table_query = $this->get_create_alter_table_query();
 				$process_chunk_result = $this->process_chunk( $create_alter_table_query );
 
 				if ( true !== $process_chunk_result ) {
@@ -939,15 +939,19 @@ class WPMDB extends WPMDB_Base {
 					return $result;
 				}
 
-				if ( 'savefile' === $this->state_data['intent'] && $this->gzip() && isset( $this->form_data['gzip_file'] ) && $this->form_data['gzip_file'] ) {
-					$return['dump_path'] .= '.gz';
-					$return['dump_filename'] .= '.gz';
-					$return['dump_url'] .= '.gz';
-				}
+				if ( 'savefile' === $this->state_data['intent'] ) {
+					if ( $this->gzip() && isset( $this->form_data['gzip_file'] ) && $this->form_data['gzip_file'] ) {
+						$return['dump_path'] .= '.gz';
+						$return['dump_filename'] .= '.gz';
+						$return['dump_url'] .= '.gz';
+					}
 
-				$this->fp = $this->open( $this->get_upload_info( 'path' ) . DIRECTORY_SEPARATOR . $return['dump_filename'] );
-				$this->db_backup_header();
-				$this->close( $this->fp );
+					$upload_path = $this->get_upload_info( 'path' );
+
+					$this->fp = $this->open( $upload_path . DIRECTORY_SEPARATOR . $return['dump_filename'] );
+					$this->db_backup_header();
+					$this->close( $this->fp );
+				}
 
 				$return['dump_filename'] = $dump_filename_no_extension;
 			}

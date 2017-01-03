@@ -4,7 +4,7 @@ Donate link: https://www.contentviewspro.com/pricing/?utm_source=wporg&utm_mediu
 Tags: post, posts, page, pages, grid, author, category, categories, tag, responsive, title, thumbnail, content
 Requires at least: 3.3
 Tested up to: 4.7
-Stable tag: 1.9.3
+Stable tag: 1.9.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,10 @@ If you are using "Your latest posts" as home page, you should paste this code `<
 
 
 == Changelog ==
+
+= 1.9.3.1 - December 27 2016 =
+* Update: Save temporary View data to WordPress transient if SESSION is not available
+* Improvement: Show all content of Collapsible list when printing
 
 = 1.9.3 - November 22 2016 =
 * Improvement: Remove prefix "by", "in" (before taxonomy, author) to save translation effort

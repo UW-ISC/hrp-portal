@@ -171,7 +171,7 @@ if ( !class_exists( 'PT_Options_Framework' ) ) {
 			}
 
 			if ( $value === '' && (isset( $param[ 'std' ] ) && $param[ 'std' ] !== '') ) {
-				if ( in_array( $param[ 'type' ], array( 'number', 'text', 'color' ) ) ) {
+				if ( in_array( $param[ 'type' ], array( 'number', 'text' ) ) ) {
 					if ( $name !== PT_CV_PREFIX . 'limit' ) {
 						$value = $param[ 'std' ];
 					}
