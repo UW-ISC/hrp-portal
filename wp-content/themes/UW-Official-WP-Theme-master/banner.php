@@ -1,0 +1,2 @@
+<div class="title"><h2><?php bloginfo('name'); ?></h2></div>
+<a href="<?php bloginfo('url'); ?>"><img class="banner" src="<?php bloginfo('template_url'); ?>/images/banner.jpg" width="874" height="85" alt="Banner graphic" /></a>

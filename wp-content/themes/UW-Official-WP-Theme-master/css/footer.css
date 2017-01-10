@@ -1,0 +1,158 @@
+.footerLink ul {
+	margin: 0;
+}
+.footerLink  li{
+	list-style-type: none;
+	font-size: 11px;
+}
+.footerLink a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #383838;
+	text-decoration: none;
+}
+.footerLink a:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #4D4D4D;
+	text-decoration: underline;
+	font-weight: normal;
+}
+#footerBG {
+	background-repeat: repeat-x;
+	background-image: url(../images/footer_stripe.gif);
+	overflow: hidden;
+}
+#footerMargin {
+	width: 950px;
+	margin: 0 auto 30px;
+	overflow: hidden;
+	background-image: url(../images/footer_w.png);
+	background-repeat: no-repeat;
+	background-position: center top;
+}
+#footerSkyline {
+	height: 120px;
+	background-image: url(../images/footerSkyline.jpg);
+	background-repeat: no-repeat;
+	background-position: center bottom;
+	margin: 0 0 20px;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+	border-bottom-color: #ADADAD;
+}
+#footerSkyline h2 {
+	display: block;
+	float:left;
+	color: #39275B;
+	padding: 75px 0 0 5px;
+}
+#footerShare {
+	float:right;
+	padding: 90px 0 0 20px;
+}
+#footer li.footerTitle {
+	color: #39275B;
+	font-size: 11px;
+	font-weight: bold;
+}
+
+li.footerTitleTwo {
+	color: #39275B;
+	font-family:"Lucida Grande","Trebuchet MS", Arial, sans-serif;
+	font-size:15px; 
+	letter-spacing:-0.03em;
+	line-height:1.2em;
+	margin-bottom: .3em;
+}
+.footerLinks {
+	background-image: url(../images/footer_halo_dark.png);
+	background-repeat: no-repeat;
+	padding-top: 8px;
+	padding-right: 8px;
+	padding-left: 15px;
+	margin-bottom: 20px;
+}
+.footerLinks a {
+	background-image: url(../images/arrow_right_dark.gif);
+	background-repeat: no-repeat;
+	background-position: left top;
+	padding-left: 8px;
+	white-space: nowrap;
+	text-decoration:none;
+	color:#333;
+}
+.footerLinks a:hover {
+	background-position: left bottom;
+	color: #666;
+}
+.social li {
+	margin-top: 3px;	
+}
+a.facebook, a.youtube, a.itunes, a.rss, a.twitter, a.muw {
+	padding: 2px 0 4px 22px;
+}
+.footerLinks a.facebook {background: url(../images/icon_social.gif) no-repeat left top;}
+.footerLinks a.youtube {background: url(../images/icon_social.gif) no-repeat left -32px;}
+.footerLinks a.itunes {	background: url(../images/icon_social.gif) no-repeat left -64px;}
+.footerLinks a.rss {background: url(../images/icon_social.gif) no-repeat left -96px;}
+.footerLinks a.twitter {background: url(../images/icon_social.gif) no-repeat left -128px;}
+.footerLinks a.muw {background: url(../images/icon_social.gif) no-repeat left -160px;}
+
+
+
+/*--------------------- Thin Bar -----------------------*/
+
+
+#footerMain {
+	background-image: url(../images/img_footer/bg.gif);
+	background-repeat: repeat-x;
+	height: 25px;
+	overflow: hidden;
+}
+#footerMain ul {
+	margin: 0;
+	padding: 0;
+	display: block;
+}
+#footerMain li {
+	display: inline;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 9px;
+	font-weight: bold;
+	white-space: nowrap;
+}
+#footerMain li a {
+	text-decoration: none;
+	color: #FFF;
+	float: left;
+	padding: 7px 6px 7px 0;
+	text-transform:uppercase;
+}
+#footerMain li a:hover {
+	color: #CCC;
+	background-image: url(../images/img_footer/notch.gif);
+	background-position: center top;
+	background-repeat: no-repeat;
+}
+#footerMain li a:active {
+	color: #FFC;
+}
+#footerLeft {
+	float: left;
+	padding-left: 40px;
+}
+#footerRight {
+	float: right;
+	padding-right: 40px;	
+}
+#footerCenter {
+	width: 350px;
+	margin: 0 auto;
+}
+.footerLinkBorder {
+	float: left;
+	padding-left: 10px;
+	background-image: url(../images/img_footer/leftbar.png);
+	background-repeat: no-repeat;
+	background-position: 0 6px;
+}

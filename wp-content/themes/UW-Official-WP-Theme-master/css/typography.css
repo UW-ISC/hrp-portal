@@ -1,0 +1,182 @@
+/* -------------------------------------------------------------- 
+
+   typography.css
+   * Sets up some sensible default typography.
+   
+-------------------------------------------------------------- */
+
+/* Default font settings. 
+   The font-size percentage is of 16px. (0.75 * 16px = 12px) */
+html { font-size:100.01%; }
+body { 
+  font-size: 75%;
+  color: #222; 
+  background: #fff;
+  font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}
+
+
+/* Headings
+-------------------------------------------------------------- */
+
+h1,h2,h3,h4,h5,h6 { font-weight: normal; color: #39275B; font-family:"Lucida Grande","Lucida Sans Unicode",Arial,san-serif;}
+
+h1 {
+	font-size:230%;
+	font-style:normal;
+	font-weight:normal;
+	letter-spacing:-1px;
+	line-height:1.2em;
+	margin-bottom:0.5em;
+}
+	h1 i, h1 em {
+	font-family:georgia,times,serif;
+	text-transform:lowercase;
+	font-size:1435;
+	}
+	
+h2 { 
+	font-size:160%; 
+	letter-spacing:-0.03em;
+	line-height:1.2em;	
+	margin:15px 0 5px;
+}
+	h2 i, h2 em {
+	font-family:georgia,times,serif;
+	text-transform:lowercase;
+	}
+h2 a { 
+	color:#0F79A3;
+}
+	
+h3 {
+	display:block;
+	font-size:130%;
+	letter-spacing:-0.03em;
+	line-height:1.2em;
+	margin:0 0 5px;
+}
+	
+h4 {
+	font-weight:bold;
+	margin:0 0 1px 0;
+	padding:0;
+}
+h5 { font-size: 100%; font-weight: bold; margin-bottom: 1.5em; }
+h6 { font-size: 100%; font-weight: bold; }
+
+h1 img, h2 img, h3 img, 
+h4 img, h5 img, h6 img {
+  margin: 0;
+}
+
+
+/* Text elements
+-------------------------------------------------------------- */
+
+p           { margin: 0 0 1.5em; font-size:100%; line-height: 17px; color: #484848;}
+p img.left  { float: left; margin: 1.5em 1.5em 1.5em 0; padding: 0; }
+p img.right { float: right; margin: 1.5em 0 1.5em 1.5em; }
+
+a:focus, 
+a:hover     { color: #043f75; text-decoration: none; }
+a           { color: #0F79A3; text-decoration: none; }
+
+blockquote  { margin: 1.5em; color: #666; font-style: italic; }
+strong      { font-weight: bold; }
+em,dfn      { font-style: italic; }
+dfn         { font-weight: bold; }
+sup, sub    { line-height: 0; }
+
+abbr, 
+acronym     { border-bottom: 1px dotted #666; }
+address     { margin: 0 0 1.5em; font-style: italic; }
+del         { color:#666; }
+
+pre 				{ margin: 1.5em 0; white-space: pre; }
+pre,code,tt { font: 1em 'andale mono', 'lucida console', monospace; line-height: 1.5; }
+
+
+/* Lists
+-------------------------------------------------------------- */
+
+li ul, 
+li ol       { margin:0; }
+ul, ol      { margin: 0 1.5em 1.5em 1.5em; }
+
+ul          { list-style-type: none; }
+ol          { list-style-type: decimal; }
+
+dl          { margin: 0 0 1.5em 0; }
+dl dt       { font-weight: bold; }
+dd          { margin-left: 1.5em;}
+
+
+/* Tables
+-------------------------------------------------------------- */
+
+table       { margin-bottom: 1.4em; width:100%; }
+th          { font-weight: bold; }
+thead th 	{ background: #c3d9ff; }
+th,td,caption { padding: 4px 10px 4px 5px; }
+tr.even td  { background: #e5ecf9; }
+tfoot       { font-style: italic; }
+caption     { background: #eee; }
+
+
+/* Misc classes
+-------------------------------------------------------------- */
+
+.small      { font-size: .8em; margin-bottom: 1.875em; line-height: 1.875em; }
+.large      { font-size: 1.2em; line-height: 2.5em; margin-bottom: 1.25em; }
+.hide       { display: none; }
+
+.quiet      { color: #666; }
+.loud       { color: #000; }
+.highlight  { background:#ff0; }
+.added      { background:#060; color: #fff; }
+.removed    { background:#900; color: #fff; }
+
+.first      { margin-left:0; padding-left:0; }
+.last       { margin-right:0; padding-right:0; }
+.top        { margin-top:0; padding-top:0; }
+.bottom     { margin-bottom:0; padding-bottom:0; }
+
+.moreBlue, .moreGreen, .moreBlueDark {
+			background:url(../images/arrow_more.gif) left 0 no-repeat;
+			color:#777777 !important;
+			float:right;
+			font-family:Arial,Helvetica,sans-serif;
+			font-size:70% !important;
+			font-weight:bold;
+			line-height:14px;
+			margin:0 0 5px;
+			padding:2px 12px 1px 8px;
+			text-decoration:none;
+			text-transform:uppercase;
+			}
+			
+.moreBlue:hover {
+			background-position: right 0;}			
+.moreGreen  {
+			background-position: left -17px;}
+.moreGreen:hover {
+			background-position: right -17px;}	
+.moreBlueDark {
+			color: #666 !important;
+			background-position: right -17px;}
+span.chevron {
+			color:#d7a900;
+			font-family:arial;
+			font-size:120%;
+			font-weight:bold;
+}
+a.chevronLeft {
+			background:url(../images/arrow_bullet.gif) left 3px no-repeat;
+			padding-left: 8px;
+}
+a.chevronRight {
+			background:url(../images/arrow_bullet.gif) right 3px no-repeat;
+			padding-right: 8px;
+			display:inline-block;
+}
