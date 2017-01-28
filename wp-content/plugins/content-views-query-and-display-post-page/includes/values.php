@@ -337,8 +337,8 @@ if ( !class_exists( 'PT_CV_Values' ) ) {
 		static function layout_format() {
 
 			$result = array(
-				'1-col'	 => __( '1 column (show fields vertically)', 'content-views-query-and-display-post-page' ),
-				'2-col'	 => __( '2 columns (show thumbnail on the left/right side of other fields)', 'content-views-query-and-display-post-page' ),
+				'1-col'	 => __( 'Show thumbnail & text vertically', 'content-views-query-and-display-post-page' ),
+				'2-col'	 => __( 'Show thumbnail on the left/right of text', 'content-views-query-and-display-post-page' ),
 			);
 
 			$result = apply_filters( PT_CV_PREFIX_ . 'layout_format', $result );

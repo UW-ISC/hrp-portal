@@ -370,8 +370,8 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 						$value = self::wck_fep_get_edit_value( $post_id, $details );					
 					}
 					else
-						$value = apply_filters( 'wck_fep_default_value_'. $form_name . '_'. Wordpress_Creation_Kit::wck_generate_slug( $details['title'] ), '' );
-					
+						$value = apply_filters('wck_fep_default_value_' . $form_name . '_' . Wordpress_Creation_Kit::wck_generate_slug($details['title']), '');
+
 					$form .= parent::wck_output_form_field( $form_name, $details, $value, 'fep', $post_id );
 					
 				}
@@ -393,8 +393,12 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 												/* build edit values depending on the field */
 												$value = self::wck_fep_get_edit_value( $post_id, $details, $box_args['meta_name'] );					
 											}
-											else
-												$value = '';
+											else {
+												if( isset( $details['default'] ) )
+													$value = $details['default'];
+												else
+													$value = '';
+											}
 											$form .= '<div class="fep-single-element-wrap">';
 											$form .= parent::wck_output_form_field( $box_args['meta_name'], $details, $value, 'fep', $post_id );
 											$form .= '</div>';
@@ -490,7 +494,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		else{
 			$meta_values = get_post_meta( $post_id, $meta_name, true );
 			if( !empty( $meta_values ) )
-				$value = $meta_values[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'] )];
+				$value = $meta_values[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
 		}
 		
 		return $value;

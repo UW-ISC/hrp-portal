@@ -185,6 +185,9 @@ td.wck-number{
 	color:#21759B;
 }
 
+.upload-field-details + .wck_upload_button{
+	display:none;
+}
 
 /* Settings page. */
 .side .form-table th {

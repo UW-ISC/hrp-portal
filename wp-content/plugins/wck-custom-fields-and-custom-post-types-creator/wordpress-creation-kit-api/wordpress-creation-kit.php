@@ -268,6 +268,10 @@ class Wordpress_Creation_Kit{
 		else if( $context == 'fep' ){
 			/* id prefix for frontend posting */
 			$frontend_prefix = 'fep-';
+			/* we do this just for repeater fields, for single it should already be defined in fep */
+			if( !empty( $details['in_repeater'] ) && $details['in_repeater'] == true && isset( $details['default'] ) ){
+				$value = apply_filters( "wck_default_value_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug($details['title'], $details ), $details['default'] );
+			}
 		}
 		else{
 			if( isset( $details['default'] ) && !( $this->args['single'] == true && !is_null( $value ) ) ) {
@@ -385,6 +389,9 @@ class Wordpress_Creation_Kit{
                             else if( !empty( $results[0] ) && !empty( $results[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
                                 $value = $results[0][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
                         }
+						else{
+							$details['in_repeater'] = true;
+						}
 						
 						?>
 							<li class="row-<?php echo esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) ?>">
@@ -494,7 +501,7 @@ class Wordpress_Creation_Kit{
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( $meta );
-		
+
 		$list = '';	
 		$list .= '<table id="container_'.esc_attr($meta).'" class="mb-table-container widefat';
 		
@@ -538,12 +545,12 @@ class Wordpress_Creation_Kit{
 		if( !empty( $fields ) ){
 			foreach( $fields as $field ){
 				$details = $field;
-				
+
 				if( isset( $results[$element_id][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
 					$value = $results[$element_id][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
 				else
 					$value = '';
-					
+
 				/* filter display value */
 				/* keep this one for backwards compatibility */	
 				$value = apply_filters( "wck_displayed_value_{$meta}_element_{$j}", $value );
@@ -641,6 +648,8 @@ class Wordpress_Creation_Kit{
 				}
 			}
 		}
+
+		return $value;
 	}
 
 	/* function to generate output for upload field */
@@ -1613,6 +1622,8 @@ class Wordpress_Creation_Kit{
 	static function wck_generate_slug( $string, $details = array() ){
         if( !empty( $details['slug'] ) )
             $slug = $details['slug'];
+		elseif( !empty( $details['field-slug'] ) )
+			$slug = $details['field-slug'];
         else
 		    $slug = rawurldecode( sanitize_title_with_dashes( remove_accents( $string ) ) );
 

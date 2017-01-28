@@ -250,7 +250,7 @@ class PT_Content_Views {
 			'name'				 => _x( 'Views', 'post type general name', 'content-views-query-and-display-post-page' ),
 			'singular_name'		 => _x( 'View', 'post type singular name', 'content-views-query-and-display-post-page' ),
 			'menu_name'			 => _x( 'Views', 'admin menu', 'content-views-query-and-display-post-page' ),
-			'name_admin_bar'	 => _x( 'View', 'add new on admin bar', 'content-views-query-and-display-post-page' ),
+			'name_admin_bar'	 => _x( 'Content View', 'add new on admin bar', 'content-views-query-and-display-post-page' ),
 			'add_new'			 => _x( 'Add New', 'post' ),
 			'add_new_item'		 => __( 'Add New View', 'content-views-query-and-display-post-page' ),
 			'new_item'			 => __( 'New View', 'content-views-query-and-display-post-page' ),
@@ -269,6 +269,7 @@ class PT_Content_Views {
 			// Hide in menu, but can see All Views page
 			'show_ui'			 => true, // set "true" to fix "Invalid post type" error
 			'show_in_menu'		 => false,
+			'show_in_admin_bar'	 => true,
 			'query_var'			 => true,
 			'rewrite'			 => array( 'slug' => PT_CV_POST_TYPE ),
 			'capability_type'	 => 'post',

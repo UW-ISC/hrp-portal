@@ -455,6 +455,10 @@
     cursor: pointer;
 }
 
+.fep-container .upload-field-details + .wck_upload_button{
+    display:none;
+}
+
 .wck-edit, .wck-delete, .wck-number {
     text-align: center !important;
     width: 50px;	

@@ -154,7 +154,7 @@ PT_CV_Functions::view_submit();
 					// Common Filters
 					array(
 						'label'			 => array(
-							'text' => __( 'Common filters', 'content-views-query-and-display-post-page' ),
+							'text' => __( 'Common', 'content-views-query-and-display-post-page' ),
 						),
 						'extra_setting'	 => array(
 							'params' => array(
@@ -224,7 +224,7 @@ PT_CV_Functions::view_submit();
 												'name'	 => 'limit',
 												'std'	 => '10',
 												'min'	 => '1',
-												'desc'	 => __( 'The number of posts to show. Set empty to show all found posts', 'content-views-query-and-display-post-page' ),
+												'desc'	 => __( 'The number of posts to show. Leave empty to show all found posts', 'content-views-query-and-display-post-page' ),
 											),
 										),
 									),
@@ -236,7 +236,7 @@ PT_CV_Functions::view_submit();
 					// Advanced Filters
 					array(
 						'label'			 => array(
-							'text' => __( 'Advanced filters', 'content-views-query-and-display-post-page' ),
+							'text' => __( 'Advance', 'content-views-query-and-display-post-page' ),
 						),
 						'extra_setting'	 => array(
 							'params' => array(
@@ -473,7 +473,7 @@ PT_CV_Functions::view_submit();
 					// View Type
 					array(
 						'label'	 => array(
-							'text' => __( 'View type (Layout)', 'content-views-query-and-display-post-page' ),
+							'text' => __( 'Layout', 'content-views-query-and-display-post-page' ),
 						),
 						'params' => array(
 							apply_filters( PT_CV_PREFIX_ . 'viewtype_setting', array(
@@ -503,7 +503,7 @@ PT_CV_Functions::view_submit();
 					!get_option( 'pt_cv_version_pro' ) ? PT_CV_Settings::get_cvpro( __( 'More amazing layouts (Pinterest, Timeline...)', 'content-views-query-and-display-post-page' ), 10, 'margin-bottom:10px' ) : '',
 					apply_filters( PT_CV_PREFIX_ . 'more_responsive_settings', array(
 						'label'		 => array(
-							'text' => __( 'Responsive settings', 'content-views-query-and-display-post-page' ),
+							'text' => __( 'Responsive', 'content-views-query-and-display-post-page' ),
 						),
 						'params'	 => array(
 							array(
@@ -542,7 +542,7 @@ PT_CV_Functions::view_submit();
 					) ),
 					array(
 						'label'			 => array(
-							'text' => __( 'Layout format', 'content-views-query-and-display-post-page' ),
+							'text' => __( 'Format', 'content-views-query-and-display-post-page' ),
 						),
 						'extra_setting'	 => array(
 							'params' => array(

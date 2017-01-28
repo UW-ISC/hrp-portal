@@ -1217,8 +1217,13 @@ function wck_serialized_update_from_unserialized( $replace, $object_id, $meta_ke
 				if( !empty( $cfc_fields ) ){
 					foreach ( $cfc_fields as $cfc_field ){
 
+						if( !empty( $cfc_field['field-slug'] ) )
+							$slug = $cfc_field['field-slug'];
+						else
+							$slug = Wordpress_Creation_Kit::wck_generate_slug( $cfc_field['field-title'] );
+
 						/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
-						$unserialized_key = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $object_id, Wordpress_Creation_Kit::wck_generate_slug( $cfc_field['field-title'] ), $cfc_args[0]['meta-name'] );
+						$unserialized_key = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $object_id, $slug, $cfc_args[0]['meta-name'] );
 
 						/* I will limit this to maximum 100 repeater field entries */
 						for( $i=0; $i<1000;$i++ ){
@@ -1230,7 +1235,7 @@ function wck_serialized_update_from_unserialized( $replace, $object_id, $meta_ke
 
 							if ( isset($meta_cache[$unserialized_key.$suffix]) ) {
 								$unserialized_value = maybe_unserialize( $meta_cache[$unserialized_key.$suffix][0] );
-								$replace_with[$i][Wordpress_Creation_Kit::wck_generate_slug( $cfc_field['field-title'] )] = $unserialized_value;
+								$replace_with[$i][$slug] = $unserialized_value;
 							}
 						}
 					}
@@ -1239,8 +1244,9 @@ function wck_serialized_update_from_unserialized( $replace, $object_id, $meta_ke
 				if( !empty( $replace_with ) ){
 					$replace_with = array( array( $replace_with ) );
 
-					if ( $single )
+					if ( $single ) {
 						return $replace_with[0];
+					}
 					else
 						return $replace_with;
 				}

@@ -65,7 +65,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 
 			// View type
 			if ( empty( $dargs[ 'view-type' ] ) ) {
-				$errors[] = $messages[ 'field' ][ 'select' ] . $messages[ 'tab' ][ 'display' ] . ' > ' . __( 'View type (Layout)', 'content-views-query-and-display-post-page' );
+				$errors[] = $messages[ 'field' ][ 'select' ] . $messages[ 'tab' ][ 'display' ] . ' > ' . __( 'Layout', 'content-views-query-and-display-post-page' );
 			}
 
 			// Layout format
@@ -89,7 +89,7 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 				switch ( $dargs[ 'view-type' ] ) {
 					case 'grid':
 						if ( empty( $dargs[ 'number-columns' ] ) ) {
-							$errors[] = $messages[ 'field' ][ 'text' ] . $messages[ 'tab' ][ 'display' ] . ' > ' . __( 'View type (Layout)', 'content-views-query-and-display-post-page' ) . ' > ' . __( 'Items per row', 'content-views-query-and-display-post-page' );
+							$errors[] = $messages[ 'field' ][ 'text' ] . $messages[ 'tab' ][ 'display' ] . ' > ' . __( 'Layout', 'content-views-query-and-display-post-page' ) . ' > ' . __( 'Items per row', 'content-views-query-and-display-post-page' );
 						}
 						break;
 				}
@@ -129,16 +129,19 @@ if ( !class_exists( 'PT_CV_Hooks' ) ) {
 		 * @return array
 		 */
 		public static function filter_item_col_class( $args, $span_width ) {
-			// In CV: apply for Grid only
 			if ( PT_CV_Functions::get_global_variable( 'view_type' ) === 'grid' ) {
-				// If was not applied in CVPro
-				$key = PT_CV_PREFIX_ . 'item_col_class';
-				if ( array_key_exists( $key, $GLOBALS[ 'wp_filter' ] ) && count( $GLOBALS[ 'wp_filter' ][ $key ] ) == 1 ) {
-					$tablet_col	 = (int) PT_CV_Functions::setting_value( PT_CV_PREFIX . 'resp-tablet-number-columns' );
-					$mobile_col	 = (int) PT_CV_Functions::setting_value( PT_CV_PREFIX . 'resp-number-columns' );
+				$tablet_col	 = (int) PT_CV_Functions::setting_value( PT_CV_PREFIX . 'resp-tablet-number-columns' );
+				$mobile_col	 = (int) PT_CV_Functions::setting_value( PT_CV_PREFIX . 'resp-number-columns' );
 
-					$args[]	 = 'col-sm-' . (int) ( 12 / ($tablet_col ? $tablet_col : 2) );
-					$args[]	 = 'col-xs-' . (int) ( 12 / ($mobile_col ? $mobile_col : 1) );
+				$sm_class	 = 'col-sm-' . (int) ( 12 / ($tablet_col ? $tablet_col : 2) );
+				$xs_class	 = 'col-xs-' . (int) ( 12 / ($mobile_col ? $mobile_col : 1) );
+
+				if ( !in_array( $sm_class, $args ) ) {
+					$args[] = $sm_class;
+				}
+
+				if ( !in_array( $xs_class, $args ) ) {
+					$args[] = $xs_class;
 				}
 			}
 

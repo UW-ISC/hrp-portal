@@ -708,10 +708,7 @@ if ( !class_exists( 'PT_CV_Functions' ) ) {
 
 					// Output pagination
 					if ( (int) $max_num_pages > 0 ) {
-						$pagination_html = PT_CV_Html::pagination_output( $max_num_pages, $current_page, $pt_cv_id );
-						$before_view	 = apply_filters( PT_CV_PREFIX_ . 'pagination_before_view', false ) ? $pagination_html . "\n" : '';
-						$after_view		 = apply_filters( PT_CV_PREFIX_ . 'pagination_after_view', true ) ? "\n" . $pagination_html : '';
-						$html			 = $before_view . $html . $after_view;
+						$html .= "\n" . PT_CV_Html::pagination_output( $max_num_pages, $current_page, $pt_cv_id );
 					}
 				}
 			}

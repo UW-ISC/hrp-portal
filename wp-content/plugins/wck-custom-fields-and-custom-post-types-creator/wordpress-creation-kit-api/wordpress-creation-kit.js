@@ -393,12 +393,13 @@ function wckGoToByScroll(id){
 }
 
 /* Remove uploaded file */
-jQuery(function(){
+//this could be legacy code since before we added the upload.js so we might not need it
+/*jQuery(function(){
 	jQuery(document).on('click', '.wck-remove-upload', function(e){
 		jQuery(this).parent().parent().parent().children('.mb-field').val("");
 		jQuery(this).parent().parent('.upload-field-details').html('<p><span class="file-name"></span><span class="file-type"></span></p>');
-	});	
-});
+	});
+});*/
 
 /* Set width for listing "label" equal to the widest */
 jQuery( function(){

@@ -85,6 +85,7 @@ jQuery(document).ready(function(){
 					}
 					
 					uploadButton.before( result );
+					uploadButton.hide();
 					
 				}
 				/* turn into comma separated string */
@@ -123,9 +124,13 @@ jQuery(document).ready(function(){
 			}
 			newuploadAttachments = newuploadAttachments.join(',');
 			upload_input.val(newuploadAttachments);
-			
+
+			jQuery( '.wck_upload_button', jQuery(this).closest( '.mb-right-column' ) ).css( 'display', 'inline-block' );
+
 			/* remove the attachment details */
 			jQuery(this).parent().parent('.upload-field-details').remove();
+
+
 		});	
 	}
 });

@@ -3,8 +3,8 @@ Contributors: PT Guy
 Donate link: https://www.contentviewspro.com/pricing/?utm_source=wporg&utm_medium=link&utm_campaign=donate
 Tags: post, posts, page, pages, grid, author, category, categories, tag, responsive, title, thumbnail, content
 Requires at least: 3.3
-Tested up to: 4.7
-Stable tag: 1.9.3.1
+Tested up to: 4.7.1
+Stable tag: 1.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,17 @@ If you are using "Your latest posts" as home page, you should paste this code `<
 
 
 == Changelog ==
+
+= 1.9.4 - January 25 2016 =
+* New: Show link to add new View from Admin bar
+
+= 1.9.3.3 - January 21 2016 =
+* Fix: Correct output of Scrollable list in Tablet devices
+
+= 1.9.3.2 - January 11 2016 =
+* Update: simplify label of some settings in Add/Edit View page
+* Improvement: simplify code base and improve performance of Grid, Collapsible List
+* Improvement: some style adjustments for Scrollable List
 
 = 1.9.3.1 - December 27 2016 =
 * Update: Save temporary View data to WordPress transient if SESSION is not available
