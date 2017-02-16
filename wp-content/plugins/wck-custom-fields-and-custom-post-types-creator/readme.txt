@@ -5,8 +5,8 @@ Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 
 Requires at least: 3.1
-Tested up to: 4.7.1
-Stable tag: 2.0.6
+Tested up to: 4.7.2
+Stable tag: 2.0.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,9 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.4.0 =
+* Compatibility with php version 7.1
+
 = 2.0.6 =
 * Fixed an issue with fields that had their slug changed and didn't appear sometimes
 * Modifications to upload button so that it disappears when we already have something uploaded

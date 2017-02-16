@@ -900,6 +900,10 @@ class Wordpress_Creation_Kit{
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( $meta );
 
+		/* we need an array here */
+		if( empty( $results ) && !is_array( $results ) )
+			$results = array();
+
         /* for single metaboxes overwrite entries each time so we have a maximum of one */
         if( $this->args['single'] )
 		    $results = array( $values );
