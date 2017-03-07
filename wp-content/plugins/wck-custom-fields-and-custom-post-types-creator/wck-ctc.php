@@ -196,13 +196,19 @@ SQL;
 
 /* Taxonomy Name Verification */
 
-add_filter( 'wck_required_test_wck_ctc_taxonomy', 'wck_ctc_check_taxonomy', 10, 6 );
-function wck_ctc_check_taxonomy( $bool, $value, $post_id, $field, $meta, $fields ){
+add_filter( 'wck_required_test_wck_ctc_taxonomy', 'wck_ctc_check_taxonomy', 10, 8 );
+function wck_ctc_check_taxonomy( $bool, $value, $post_id, $field, $meta, $fields, $values, $elemet_id ){
     //Make sure it doesn't contain capital letters or spaces
     $no_spaces_value = str_replace(' ', '', $value);
     $lowercase_value = strtolower($value);
 
-    if ( ( $no_spaces_value == $value ) && ( $lowercase_value == $value ) )
+    /* make sure it's not reserved and avoid doing this on the update case for backwards compatibility */
+    $old_values = get_option( 'wck_ctc' );
+    $reserved_vars = array();
+    if( empty( $old_values[$elemet_id]['taxonomy'] ) || $value != $old_values[$elemet_id]['taxonomy']  )
+        $reserved_vars = wck_ctc_get_reserved_names();
+
+    if ( ( $no_spaces_value == $value ) && ( $lowercase_value == $value ) && !in_array( $value, $reserved_vars ) )
         $checked = false;
     else
         $checked = true;
@@ -216,6 +222,7 @@ function wck_ctc_change_taxonomy_message( $message, $value, $required_field ){
     // change error message
     $no_spaces_value = str_replace(' ', '', $value);
     $lowercase_value = strtolower($value);
+    $reserved_vars = wck_ctc_get_reserved_names();
 
     if( empty( $value ) )
         return $message;
@@ -223,8 +230,22 @@ function wck_ctc_change_taxonomy_message( $message, $value, $required_field ){
         return __("Taxonomy name must not contain any spaces\n", "wck" );
     else if ($lowercase_value != $value)
         return __( "Tanomony name must not contain any capital letters\n", "wck" );
+    else if( in_array( $value, $reserved_vars ) )
+        return __( "Please chose a different Tanomony name as this one is reserved\n", "wck" );
 }
 
+function wck_ctc_get_reserved_names(){
+    $reserved_vars = Wordpress_Creation_Kit::wck_get_reserved_variable_names();
+    /* add to reserved names existing taxonomy slugs created with wck */
+    $wck_post_types = get_option( 'wck_cptc' );
+    if( !empty( $wck_post_types ) ){
+        foreach ($wck_post_types as $wck_post_type) {
+            $reserved_vars[] = $wck_post_type['post-type'];
+        }
+    }
+
+    return $reserved_vars;
+}
 
 /* Flush rewrite rules */
 add_action('init', 'ctc_flush_rules', 20);

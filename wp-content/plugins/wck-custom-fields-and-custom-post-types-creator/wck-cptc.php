@@ -418,14 +418,20 @@ function wck_cptc_update_post_type( $meta, $id, $values, $element_id ){
 }
 
 /* Post Type Name Verification */
-add_filter( 'wck_required_test_wck_cptc_post-type', 'wck_cptc_check_post_type', 10, 6 );
-function wck_cptc_check_post_type( $bool, $value, $post_id, $field, $meta, $fields ){
+add_filter( 'wck_required_test_wck_cptc_post-type', 'wck_cptc_check_post_type', 10, 8 );
+function wck_cptc_check_post_type( $bool, $value, $post_id, $field, $meta, $fields, $values, $elemet_id ){
     //Make sure it doesn't contain capital letters or spaces
     $no_spaces_value = str_replace(' ', '', $value);
     $no_hyphens_value = str_replace('-', '', $value);
     $lowercase_value = strtolower($value);
 
-    if ( ( $no_spaces_value == $value ) && ( $lowercase_value == $value ) && ( $no_hyphens_value == $value ) )
+    /* make sure it's not reserved and avoid doing this on the update case for backwards compatibility */
+    $old_values = get_option( 'wck_cptc' );
+    $reserved_vars = array();
+    if( empty( $old_values[$elemet_id]['post-type'] ) || $value != $old_values[$elemet_id]['post-type'] )
+        $reserved_vars = wck_cpt_get_reserved_names();
+
+    if ( ( $no_spaces_value == $value ) && ( $lowercase_value == $value ) && ( $no_hyphens_value == $value ) && !in_array( $value, $reserved_vars ) )
         $checked = false;
     else
         $checked = true;
@@ -439,6 +445,7 @@ function wck_cptc_change_post_type_message( $message, $value, $required_field ){
     $no_spaces_value = str_replace(' ', '', $value);
     $no_hyphens_value = str_replace('-', '', $value);
     $lowercase_value = strtolower($value);
+    $reserved_vars = wck_cpt_get_reserved_names();
 
     if( empty( $value ) )
         return $message;
@@ -448,6 +455,21 @@ function wck_cptc_change_post_type_message( $message, $value, $required_field ){
         return __( "Post Type name must not contain any capital letters\n", "wck" );
     else if ($no_hyphens_value != $value)
         return __( "Post Type name must not contain any hyphens\n", "wck" );
+    else if( in_array( $value, $reserved_vars ) )
+        return __( "Please chose a different Post Type name as this one is reserved\n", "wck" );
+}
+
+function wck_cpt_get_reserved_names(){
+    $reserved_vars = Wordpress_Creation_Kit::wck_get_reserved_variable_names();
+    /* add to reserved names existing taxonomy slugs created with wck */
+    $wck_taxonomies = get_option( 'wck_ctc' );
+    if( !empty( $wck_taxonomies ) ){
+        foreach ($wck_taxonomies as $wck_taxonomy) {
+            $reserved_vars[] = $wck_taxonomy['taxonomy'];
+        }
+    }
+
+    return $reserved_vars;
 }
 
 ?>

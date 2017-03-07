@@ -6,7 +6,7 @@
  * @return string $element input element html string. */
 
 
-$element .= '<input type="text" name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" id="';
+$element .= '<input type="'. apply_filters( "wck_text_input_type_attribute_{$meta}_".Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), 'text' ) .'" name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" id="';
 if( !empty( $frontend_prefix ) )
 	$element .=	$frontend_prefix;
 $element .=	esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'"';
