@@ -191,12 +191,12 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		
 		
 		if( !empty( $_GET['action'] ) )
-			$action = $_GET['action'];
+			$action = sanitize_text_field( $_GET['action'] );
 		else
 			$action = '';
 			
 		if( !empty( $_GET['post_id'] ) )
-			$post_id = $_GET['post_id'];
+			$post_id = absint( $_GET['post_id'] );
 		else
 			$post_id = '';
 
@@ -237,11 +237,11 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		}
 		
 		if( !empty( $_POST['action_type'] ) )
-			$action = $_POST['action_type'];
+			$action = sanitize_text_field( $_POST['action_type'] );
 		else
 			$action = '';
 		if( !empty( $_POST['post_id'] ) )
-			$post_id = $_POST['post_id'];
+			$post_id = absint( $_POST['post_id'] );
 		else
 			$post_id = '';
 		
@@ -509,14 +509,14 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 	function wck_fep_add_post(){
 		check_ajax_referer( 'wck-fep-add-post' );
 		
-		$meta = $_POST['meta'];
-		$post_ID = $_POST['postid'];
+		$meta = sanitize_text_field( $_POST['meta'] );
+		$post_ID = absint( $_POST['postid'] );
 		if( !empty( $_POST['values'] ) )
 			$values = $_POST['values'];	
 		else
 			$values = array();
 		$single_cfcs = (!empty( $_POST['single_cfcs'] )) ? $_POST['single_cfcs'] : array() ;
-		$action_type = $_POST['action_type'];
+		$action_type = sanitize_text_field( $_POST['action_type'] );
 		
 		/* check required fields */	
 		$errors = array();
@@ -933,7 +933,7 @@ function wck_fep_output_lilo_form(){
 		if ( isset( $_GET['loginerror'] ) || isset( $_POST['loginerror'] ) ){
 			$loginerror = isset( $_GET['loginerror'] ) ? $_GET['loginerror'] : $_POST['loginerror'];
 			$lilo_form .= '<span class="wck-fep-error">';
-			$lilo_form .= urldecode( base64_decode( $loginerror ) );
+			$lilo_form .= wp_kses_post( urldecode( base64_decode( $loginerror ) ) );
 			$lilo_form .= '</span>';
 		}
 				
@@ -1031,15 +1031,15 @@ function wck_fep_handle_user_action(){
 	check_ajax_referer( 'wck-fep-user-action' );
 	
 	if( !empty( $_POST['action_type'] ) )
-		$action = $_POST['action_type'];
+		$action = sanitize_text_field( $_POST['action_type'] );
 	else
 		$action = '';
 	if( !empty( $_POST['username'] ) )
-		$username = $_POST['username'];
+		$username = sanitize_user( $_POST['username'] );
 	else 
 		$username = '';
 	if( !empty( $_POST['email'] ) )
-		$email = $_POST['email'];
+		$email = sanitize_email( $_POST['email'] );
 	else 
 		$email = '';
 	if( !empty( $_POST['password'] ) )
@@ -1051,7 +1051,7 @@ function wck_fep_handle_user_action(){
 	else 
 		$confirm_password = '';
 	if( !empty( $_POST['description'] ) )
-		$description = $_POST['description'];
+		$description = wp_kses_post( $_POST['description'] );
 	else 
 		$description = '';
 	
@@ -1191,7 +1191,7 @@ add_filter('wp_handle_upload_prefilter', 'wck_upload_file_type');
 function wck_upload_file_type($file) {	
     if (isset($_POST['allowed_type']) && !empty($_POST['allowed_type'])){
         //this allows you to set multiple types seperated by a pipe "|"
-        $allowed = explode("|", $_POST['allowed_type']);
+        $allowed = explode("|", sanitize_text_field( $_POST['allowed_type'] ) );
 
         $ext =  substr(strrchr($file['name'],'.'),1);
         //first check if the user uploaded the right type

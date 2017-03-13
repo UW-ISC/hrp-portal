@@ -6,9 +6,9 @@ add_action('admin_enqueue_scripts', 'wck_cfc_print_scripts' );
 function wck_cfc_print_scripts($hook){
 	if( isset( $_GET['post_type'] ) || isset( $_GET['post'] ) ){
 		if( isset( $_GET['post_type'] ) )
-			$post_type = $_GET['post_type'];
+			$post_type = sanitize_text_field( $_GET['post_type'] );
 		else if( isset( $_GET['post'] ) )
-			$post_type = get_post_type( $_GET['post'] );
+			$post_type = get_post_type( absint( $_GET['post'] ) );
 
 		if( 'wck-meta-box' == $post_type ){
 			wp_register_style('wck-cfc-css', plugins_url('/css/wck-cfc.css', __FILE__));
@@ -61,9 +61,9 @@ add_filter( 'admin_body_class', 'wck_cfc_admin_body_class' );
 function wck_cfc_admin_body_class( $classes ){
 	if( isset( $_GET['post_type'] ) || isset( $_GET['post'] ) ){
 		if( isset( $_GET['post_type'] ) )
-			$post_type = $_GET['post_type'];
+			$post_type = sanitize_text_field( $_GET['post_type'] );
 		else if( isset( $_GET['post'] ) )
-			$post_type = get_post_type( $_GET['post'] );
+			$post_type = get_post_type( absint( $_GET['post'] ) );
 
 		if( 'wck-meta-box' == $post_type ){
 			$classes .= ' wck_page_cfc-page ';
@@ -1039,10 +1039,7 @@ function wck_cfc_process_unserialized_batch() {
 	}
 
 	ignore_user_abort( true );
-
-	if (! ini_get( 'safe_mode' ) ) {
-		@set_time_limit( 0 );
-	}
+	@set_time_limit( 0 );	
 
 	/* set number of posts that are processed in a batch !IMPORTANT IT IS ALSO SET IN THE wck_unserialized_page_callback() FUNCTION */
 	$per_batch = 30;
