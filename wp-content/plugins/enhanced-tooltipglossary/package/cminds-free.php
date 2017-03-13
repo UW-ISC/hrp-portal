@@ -2401,7 +2401,6 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsFreePackage' ) ) {
 			Web Server Info:          <?php echo $_SERVER[ 'SERVER_SOFTWARE' ] . "\n"; ?>
 
 			WordPress Memory Limit:   <?php echo WP_MEMORY_LIMIT ?><?php echo "\n"; ?>
-			PHP Safe Mode:            <?php echo ini_get( 'safe_mode' ) ? "Yes" : "No\n"; ?>
 			PHP Memory Limit:         <?php echo ini_get( 'memory_limit' ) . "\n"; ?>
 			PHP Upload Max Size:      <?php echo ini_get( 'upload_max_filesize' ) . "\n"; ?>
 			PHP Post Max Size:        <?php echo ini_get( 'post_max_size' ) . "\n"; ?>

@@ -4,8 +4,8 @@ Contributors: CreativeMindsSolutions
 Donate link: http://tooltip.cminds.com/
 Tags: glossary,posts,definition,definitions,tooltip,automatic,hints,hint,tip,tool-tip,dictionary,Encyclopaedia,knowledge base,index,keywords,terms,knowledge base,knowledgebase,lexicon,synonyms,plural,singular,descriptions,description,explain,explanation,explanatory dictionary,Tooltips,vocabulary,words,word,expression,expressions,appendix,technical terms,content management,knowledge management,highlight,concordance,language,reference,terminology,jargon,palaver,style,talk,word,wording,thesaurus,word stock,wordbook,wordlist,archive,catalog,directory,index,listing,menu,source,archives,atlas,accent,expression,lingua,slang,bilingual,dialectic,expressed,lexical,literal,term,entry,verbal,verb,literature,book,literature,sourcebook,word list,translate,translation,google translate,merriam-webster,wikipedia,hint,youtube,vimeo,mp3,mp4,ecommerce,tags,amazon,products,productsrecommendations,recommendations,support,comments,images,page,pages,plugin,post,posts,seo,shortcode,sidebar,social,twitter,widget,widgets,wordpress,video,audio
 Requires at least: 3.9
-Tested up to: 4.7.2
-Stable tag: 3.5.0
+Tested up to: 4.7.3
+Stable tag: 3.5.2
 
 Easily create a glossary, encyclopedia or dictionary of your terms and show responsive tooltips when users hover over the terms.
 
@@ -18,7 +18,7 @@ The CM tooltip glossary plugin displays a tooltip containing the definition when
 The CM tooltip glossary plugin also creates a responsive glossary index with all tooltip glossary terms used.
 
 
-[vimeo https://vimeo.com/109103390]
+[youtube http://www.youtube.com/watch?v=WN3HLZ6ZuBM]
 
 This tooltip plugin allows users to add unlimited tooltips to a site or within a glossary of terms.
 
@@ -33,7 +33,7 @@ The CM tooltip glossary plugin integrates easily with external data from diction
 > * [Purchase Pro Plugin](https://www.cminds.com/wordpress-plugins-library/tooltipglossary/)
 > * [Pro Version Detailed Feature List](https://www.cminds.com/wordpress-plugins-library/tooltipglossary/#features)
 > * [User Guide](https://www.cminds.com/wordpress-plugins-knowledge-base-and-documentation/?hscat=6-cm-tooltip)
-> * [Video Tutorials](https://vimeo.com/channels/822493)
+> * [Video Tutorials](http://www.youtube.com/playlist?list=PLUgPw0Lem0AFU9lqQrY0kgc6NN0Qcjf2P)
 
 ---
 
@@ -45,8 +45,6 @@ The CM tooltip glossary plugin integrates easily with external data from diction
 > * [CM Tooltip Glossary Log & Statistics](https://www.cminds.com/wordpress-plugins-library/cm-tooltip-glossary-log-cm-plugins-store/)
 > * [CM Tooltip Glossary Skins](https://www.cminds.com/wordpress-plugins-library/cm-tooltip-glossary-skins-cm-plugins-store/)
 > * [CM Tooltip Glossary Widgets](https://www.cminds.com/wordpress-plugins-library/purchase-cm-tooltip-glossary-widgets-add-wordpress/)
-> * [CM Glossary Custom Taxonomies](https://www.cminds.com/wordpress-plugins-library/tooltip-glossary-custom-taxonomies-add-on-for-wordpress-by-creativeminds/#description)
-
 
 ---
 
@@ -69,6 +67,8 @@ The CM tooltip glossary plugin integrates easily with external data from diction
 > [Blog](http://plugin.cminds.com/blog/) | [Twitter](http://twitter.com/cmplugins)  | [Google+](https://plus.google.com/108513627228464018583/) | [LinkedIn](https://www.linkedin.com/company/creativeminds) | [YouTube](https://www.youtube.com/user/cmindschannel) | [Pinterest](http://www.pinterest.com/cmplugins/) | [FaceBook](https://www.facebook.com/cmplugins/)
 
 ---
+
+[youtube https://www.youtube.com/watch?v=drumP4tDL5Y]
 
 
 **Use-Cases**
