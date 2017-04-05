@@ -1,0 +1,2370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1487819834"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1487819834" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLA_WPML</h1>
+                    <p><em>Class MLA (Media Library Assistant) WPML provides admin mode support for the
+WPML Multilingual CMS family of plugins, including WPML Media</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_WPML.html#method_initialize" class="">initialize()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_admin_init" class="">admin_init()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_media_modal_begin_update_compat_fields" class="">mla_media_modal_begin_update_compat_fields()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_media_modal_update_compat_fields_terms" class="">mla_media_modal_update_compat_fields_terms()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_media_modal_end_update_compat_fields" class="">mla_media_modal_end_update_compat_fields()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_list_table_inline_action" class="">mla_list_table_inline_action()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_list_table_bulk_action_initial_request" class="">mla_list_table_bulk_action_initial_request()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_list_table_bulk_action_item_request" class="">mla_list_table_bulk_action_item_request()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_list_table_custom_admin_action" class="">mla_list_table_custom_admin_action()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_post_updated_messages" class="">post_updated_messages()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_pre_wpml_is_translated_post_type_filter" class="">pre_wpml_is_translated_post_type_filter()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_begin_mapping" class="">mla_begin_mapping()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_mapping_rule" class="">mla_mapping_rule()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_mapping_new_text" class="">mla_mapping_new_text()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_end_mapping" class="">mla_end_mapping()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_updated_single_item" class="">mla_updated_single_item()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_wpml_media_create_duplicate_attachment" class="">wpml_media_create_duplicate_attachment()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_attachment_fields_to_save" class="">attachment_fields_to_save()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_update_attachment_metadata_postfilter" class="">mla_update_attachment_metadata_postfilter()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_edit_attachment" class="">edit_attachment()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_upload_bulk_edit_form_values" class="">mla_upload_bulk_edit_form_values()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_get_options_tablist" class="">mla_get_options_tablist()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_localize_language_option_definitions" class="">mla_localize_language_option_definitions()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method_mla_render_language_tab" class="">mla_render_language_tab()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_WPML.html#property_mla_language_option_definitions" class="">$mla_language_option_definitions</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_WPML.html#method__add_relevant_term" class="">_add_relevant_term()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__get_relevant_term" class="">_get_relevant_term()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__build_existing_terms" class="">_build_existing_terms()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__update_existing_terms" class="">_update_existing_terms()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__build_tax_input" class="">_build_tax_input()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__apply_tax_input" class="">_apply_tax_input()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__apply_synch_input" class="">_apply_synch_input()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__apply_term_synchronization" class="">_apply_term_synchronization()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__save_language_settings" class="">_save_language_settings()</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#method__reset_language_settings" class="">_reset_language_settings()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_WPML.html#property_bulk_edit_map" class="">$bulk_edit_map</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_bulk_edit_request" class="">$bulk_edit_request</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_current_mapping_rule" class="">$current_mapping_rule</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_relevant_terms" class="">$relevant_terms</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_existing_terms" class="">$existing_terms</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_tax_input" class="">$tax_input</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_wpml_content_defaults" class="">$wpml_content_defaults</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_duplicate_attachments" class="">$duplicate_attachments</a><br />
+                                                                    <a href="../classes/MLA_WPML.html#property_updating_duplicates" class="">$updating_duplicates</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-wpml-support.html"><div class="path-wrapper">includes\class-mla-wpml-support.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLA_WPML</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_language_option_definitions" name="property_mla_language_option_definitions" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$mla_language_option_definitions</h3>
+                <pre class="signature">$mla_language_option_definitions : </pre>
+                <p><em>$mla_language_option_definitions defines the language-specific database options and
+admin page areas for setting/updating them</em></p>
+                <p>The array must be populated at runtime in MLA_WPML::mla_localize_language_option_definitions(),
+because localization calls cannot be placed in the &quot;public static&quot; array definition itself.</p>
+<p>Each option is defined by an array with the elements documented in class-mla-options.php</p>
+
+                                <h4>Type</h4>
+                
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_bulk_edit_map" name="property_bulk_edit_map" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$bulk_edit_map</h3>
+                <pre class="signature">$bulk_edit_map : array</pre>
+                <p><em>Custom Field Map during Bulk Edit, &quot;Upload New Media&quot;</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; [ id ] =&gt; field name                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_bulk_edit_request" name="property_bulk_edit_request" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$bulk_edit_request</h3>
+                <pre class="signature">$bulk_edit_request : array</pre>
+                <p><em>Bulk Edit parameters during &quot;Upload New Media&quot;</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; [ field ] =&gt; new value                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_current_mapping_rule" name="property_current_mapping_rule" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$current_mapping_rule</h3>
+                <pre class="signature">$current_mapping_rule : array</pre>
+                <p><em>Current mapping rule for term creation</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; mapping rule                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_relevant_terms" name="property_relevant_terms" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$relevant_terms</h3>
+                <pre class="signature">$relevant_terms : array</pre>
+                <p><em>Taxonomy terms and translations</em></p>
+                <p>NOTE: WPML uses term_taxonomy_id as the &quot;element_id&quot; in its translations;
+Polylang uses term_id as the &quot;element_id&quot;.</p>
+
+                                <h4>Type</h4>
+                array
+                &mdash; [ $term_taxonomy_id ] =&gt; array( $term, $details, $translations )                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_existing_terms" name="property_existing_terms" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$existing_terms</h3>
+                <pre class="signature">$existing_terms : array</pre>
+                <p><em>Taxonomy terms for the current item translation in the database</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; [&#039;element_id&#039;] =&gt; $post_id;
+				[ &#039;language_code&#039; ] =&gt; WPML item language or default language, e.g., &#039;en&#039;
+				[ &#039;slug&#039; ] =&gt; Polylang item language or default language, e.g., &#039;en&#039;
+				[ $language ][ translation_details ]
+				[ $language ][ $taxonomy ][ $term_taxonomy_id ] =&gt; $term                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_tax_input" name="property_tax_input" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$tax_input</h3>
+                <pre class="signature">$tax_input : array</pre>
+                <p><em>Replacement tax_input values in all languages</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; [&#039;tax_input_post_id&#039;] =&gt; $post_id;
+				[ $language ][ $taxonomy ] =&gt; array of integer term_ids (hierarchical)
+				[ $language ][ $taxonomy ] =&gt; comma-delimited string of term names (flat)                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_wpml_content_defaults" name="property_wpml_content_defaults" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$wpml_content_defaults</h3>
+                <pre class="signature">$wpml_content_defaults : array</pre>
+                <p><em>WPML Option settings to restore when always_translate_media is changed in
+Bulk Edit on Upload area</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; NULL or ( always_translate_media, duplicate_media, duplicate_featured )                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_duplicate_attachments" name="property_duplicate_attachments" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$duplicate_attachments</h3>
+                <pre class="signature">$duplicate_attachments : array</pre>
+                <p><em>Duplicates created during media upload</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; [ $post_id ] =&gt; $language;                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_updating_duplicates" name="property_updating_duplicates" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$updating_duplicates</h3>
+                <pre class="signature">$updating_duplicates : boolean</pre>
+                <p><em>True while fixing and mapping duplicates</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_initialize" name="method_initialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">initialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">initialize() : void</pre>
+                <p><em>Initialization function, similar to __construct()</em></p>
+                <p>This function contains add_action and add_filter calls.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_admin_init" name="method_admin_init" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">admin_init()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">admin_init() : void</pre>
+                <p><em>Add the plugin&#039;s admin-mode filter/action handlers</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_media_modal_begin_update_compat_fields" name="method_mla_media_modal_begin_update_compat_fields" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_media_modal_begin_update_compat_fields()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_media_modal_begin_update_compat_fields(  <span class="argument">$post</span>) </pre>
+                <p><em>Captures the existing term assignments before the
+Media Manager Modal Window ATTACHMENT DETAILS taxonomy meta boxes updates</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_media_modal_update_compat_fields_terms" name="method_mla_media_modal_update_compat_fields_terms" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_media_modal_update_compat_fields_terms()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_media_modal_update_compat_fields_terms(  <span class="argument">$terms</span>,   <span class="argument">$key</span>,   <span class="argument">$value</span>,   <span class="argument">$post_id</span>) </pre>
+                <p><em>Applies Term Assignment to the terms assigned to one
+Media Manager Modal Window ATTACHMENT DETAILS taxonomy</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$terms </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$value </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_media_modal_end_update_compat_fields" name="method_mla_media_modal_end_update_compat_fields" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_media_modal_end_update_compat_fields()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_media_modal_end_update_compat_fields(  <span class="argument">$results</span>,   <span class="argument">$taxonomies</span>,   <span class="argument">$post</span>) </pre>
+                <p><em>Applies Term Synchronization after the
+Media Manager Modal Window taxonomy updates</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$results </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$taxonomies </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_list_table_inline_action" name="method_mla_list_table_inline_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_list_table_inline_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_list_table_inline_action(array  <span class="argument">$item_content</span>, integer  <span class="argument">$post_id</span>) : object</pre>
+                <p><em>Captures the Quick Edit &quot;before update&quot; term assignments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$item_content </td>
+                                <td><p>NULL, to indicate no handler.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>the affected attachment.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>updated $item_content. NULL if no handler, otherwise
+( 'message' =&gt; error or status message(s), 'body' =&gt; '',
+'prevent_default' =&gt; true to bypass the MLA handler )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_list_table_bulk_action_initial_request" name="method_mla_list_table_bulk_action_initial_request" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_list_table_bulk_action_initial_request()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_list_table_bulk_action_initial_request(array  <span class="argument">$request</span>, string  <span class="argument">$bulk_action</span>, array  <span class="argument">$custom_field_map</span>) : array</pre>
+                <p><em>Captures the Bulk Edit, &quot;Upload New Media&quot; parameters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$request </td>
+                                <td><p>bulk action request parameters, including ['mla_bulk_action_do_cleanup'].</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$bulk_action </td>
+                                <td><p>the requested action.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$custom_field_map </td>
+                                <td><p>[ slug =&gt; field_name ]</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated bulk action request parameters</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_list_table_bulk_action_item_request" name="method_mla_list_table_bulk_action_item_request" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_list_table_bulk_action_item_request()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_list_table_bulk_action_item_request(array  <span class="argument">$request</span>, string  <span class="argument">$bulk_action</span>, integer  <span class="argument">$post_id</span>, array  <span class="argument">$custom_field_map</span>) : array</pre>
+                <p><em>Converts Bulk Edit taxonomy inputs to language-specific values</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$request </td>
+                                <td><p>bulk action request parameters, including ['mla_bulk_action_do_cleanup'].</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$bulk_action </td>
+                                <td><p>the requested action.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>the affected attachment.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$custom_field_map </td>
+                                <td><p>[ slug =&gt; field_name ]</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated bulk action request parameters</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_list_table_custom_admin_action" name="method_mla_list_table_custom_admin_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_list_table_custom_admin_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_list_table_custom_admin_action(string  <span class="argument">$mla_admin_action</span>, integer  <span class="argument">$mla_item_ID</span>) </pre>
+                <p><em>Add a duplicate translation for an item, then redirect to the Media/Edit Media screen</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$mla_admin_action </td>
+                                <td><p>the requested action.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$mla_item_ID </td>
+                                <td><p>zero (0), or the affected attachment.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_post_updated_messages" name="method_post_updated_messages" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">post_updated_messages()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">post_updated_messages(  <span class="argument">$messages</span>) : array</pre>
+                <p><em>Adds translation update message for display at the top of the Edit Media screen</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$messages </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated messages</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_pre_wpml_is_translated_post_type_filter" name="method_pre_wpml_is_translated_post_type_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">pre_wpml_is_translated_post_type_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">pre_wpml_is_translated_post_type_filter(  <span class="argument">$translated</span>,   <span class="argument">$type</span>) </pre>
+                <p><em>Force &quot;All languages&quot; mode for IPTC/EXIF mapping, which uses mla_get_shortcode_attachments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$translated </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_begin_mapping" name="method_mla_begin_mapping" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_begin_mapping()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_begin_mapping(  <span class="argument">$source</span>,   <span class="argument">$post_id = NULL</span>) </pre>
+                <p><em>Force &quot;All languages&quot; mode for IPTC/EXIF mapping, which uses mla_get_shortcode_attachments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_mapping_rule" name="method_mla_mapping_rule" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_mapping_rule()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_mapping_rule(  <span class="argument">$setting_value</span>,   <span class="argument">$post_id</span>,   <span class="argument">$category</span>,   <span class="argument">$attachment_metadata</span>) </pre>
+                <p><em>Saves the current mapping rule for term creation</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$setting_value </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$category </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$attachment_metadata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_mapping_new_text" name="method_mla_mapping_new_text" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_mapping_new_text()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_mapping_new_text(  <span class="argument">$new_text</span>,   <span class="argument">$setting_key</span>,   <span class="argument">$post_id</span>,   <span class="argument">$category</span>,   <span class="argument">$attachment_metadata</span>) : array</pre>
+                <p><em>Manages the creation of new taxonomy terms from metadata values</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$new_text </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$setting_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$category </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$attachment_metadata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated rule EXIF/Template value</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_end_mapping" name="method_mla_end_mapping" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_end_mapping()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_end_mapping() : void</pre>
+                <p><em>Remove &quot;All languages&quot; filter</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_updated_single_item" name="method_mla_updated_single_item" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_updated_single_item()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_updated_single_item(integer  <span class="argument">$post_id</span>, integer  <span class="argument">$result</span>) </pre>
+                <p><em>Applies Term Synchronization after item updates</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>ID of the item that was updated.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$result </td>
+                                <td><p>Zero if the update failed else ID of the item that was updated.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.15                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_wpml_media_create_duplicate_attachment" name="method_wpml_media_create_duplicate_attachment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">wpml_media_create_duplicate_attachment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">wpml_media_create_duplicate_attachment(  <span class="argument">$attachment_id</span>,   <span class="argument">$duplicated_attachment_id</span>) </pre>
+                <p><em>Copies taxonomy terms from the source item to the new translated item</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$attachment_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$duplicated_attachment_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_attachment_fields_to_save" name="method_attachment_fields_to_save" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">attachment_fields_to_save()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">attachment_fields_to_save(\WP_Post  <span class="argument">$post</span>, array  <span class="argument">$attachment</span>) </pre>
+                <p><em>Captures &quot;before update&quot; term assignments from the Media/Edit Media screen</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\WP_Post</td>
+                                <td>$post </td>
+                                <td><p>The WP_Post object.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$attachment </td>
+                                <td><p>An array of attachment metadata.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_attachment_metadata_postfilter" name="method_mla_update_attachment_metadata_postfilter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_attachment_metadata_postfilter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_attachment_metadata_postfilter(  <span class="argument">$data</span>,   <span class="argument">$post_id</span>,   <span class="argument">$options</span>) : array</pre>
+                <p><em>Copy attachment metadata to duplicated items</em></p>
+                <p>This filter is called AFTER MLA mapping rules are applied during
+wp_update_attachment_metadata() processing. The postfilter gives you
+an opportunity to record or update the metadata after the mapping.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$data </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$options </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated attachment metadata</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_edit_attachment" name="method_edit_attachment" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">edit_attachment()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">edit_attachment(  <span class="argument">$post_id</span>) </pre>
+                <p><em>Filters taxonomy updates by language for Bulk Edit during Add New Media
+and the Media/Edit Media screen</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_upload_bulk_edit_form_values" name="method_mla_upload_bulk_edit_form_values" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_upload_bulk_edit_form_values()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_upload_bulk_edit_form_values(array  <span class="argument">$page_values</span>) </pre>
+                <p><em>Modify and extend the substitution values used for the Bulk Edit on Upload form.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$page_values </td>
+                                <td><p>[ parameter_name =&gt; parameter_value ] pairs</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_options_tablist" name="method_mla_get_options_tablist" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_options_tablist()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_options_tablist(  <span class="argument">$results</span>,   <span class="argument">$mla_tablist</span>,   <span class="argument">$tab</span>) : array</pre>
+                <p><em>Adds the &quot;Language&quot; tab to the Settings/Media Library Assistant list</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$results </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$mla_tablist </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$tab </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated tablist or single tab element</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_localize_language_option_definitions" name="method_mla_localize_language_option_definitions" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_localize_language_option_definitions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_localize_language_option_definitions() : void</pre>
+                <p><em>Localize $mla_language_option_definitions array</em></p>
+                <p>Localization must be done at runtime, and these calls cannot be placed
+in the &quot;public static&quot; array definition itself.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_render_language_tab" name="method_mla_render_language_tab" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_render_language_tab()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_render_language_tab() : array</pre>
+                <p><em>Renders the Settings/Media Library Assistant &quot;Language&quot; tab</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( 'message' =&gt; '', 'body' =&gt; '' )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__add_relevant_term" name="method__add_relevant_term" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_add_relevant_term()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_add_relevant_term(  <span class="argument">$term</span>,   <span class="argument">$translations = NULL</span>,   <span class="argument">$skip_cache = false</span>) </pre>
+                <p><em>Adds a term and its translations to $relevant_terms</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$term </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$translations </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$skip_cache </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$relevant_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__get_relevant_term" name="method__get_relevant_term" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_get_relevant_term()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_get_relevant_term(string  <span class="argument">$field</span>, mixed  <span class="argument">$value</span>, string  <span class="argument">$taxonomy</span>, string  <span class="argument">$language = NULL</span>, boolean  <span class="argument">$test_only = false</span>,   <span class="argument">$skip_cache = false</span>) </pre>
+                <p><em>Finds a $relevant_term (if defined) given a key and (optional) a language</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$field </td>
+                                <td><p>to search in; 'id', 'name', or 'term_taxonomy_id'</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>mixed</td>
+                                <td>$value </td>
+                                <td><p>to search for; integer, string or integer</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$taxonomy </td>
+                                <td><p>to search in; slug</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$language </td>
+                                <td><p>code; string; optional</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$test_only </td>
+                                <td><p>false (default) to add missing term, true to leave term out</p></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$skip_cache </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$relevant_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__build_existing_terms" name="method__build_existing_terms" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_build_existing_terms()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_build_existing_terms(integer  <span class="argument">$post_id</span>) </pre>
+                <p><em>Build the $existing_terms array</em></p>
+                <p>Takes each translatable taxonomy and builds an array of
+language-specific term_id to term_id/term_name mappings
+for terms already assigned to the item translation.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>ID of the current post</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$existing_terms</dd>
+                                            <dd>MLA_WPML::$relevant_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__update_existing_terms" name="method__update_existing_terms" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_update_existing_terms()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_update_existing_terms(integer  <span class="argument">$post_id</span>) : array</pre>
+                <p><em>Update the $existing_terms array</em></p>
+                <p>Takes each translatable taxonomy and rebuilds the array of
+language-specific term_id to term_id/term_name mappings
+for the &quot;current translation&quot; represented by the $post_id.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>ID of the current post</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( taxonomy =&gt; term assignments ) before the update</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$existing_terms</dd>
+                                            <dd>MLA_WPML::$relevant_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__build_tax_input" name="method__build_tax_input" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_build_tax_input()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_build_tax_input(integer  <span class="argument">$post_id</span>, array  <span class="argument">$tax_inputs = NULL</span>, array  <span class="argument">$tax_actions = NULL</span>) </pre>
+                <p><em>Build the $tax_input array</em></p>
+                <p>Takes each term from the $tax_inputs parameter and builds an array of
+language-specific term_id to term_id/term_name mappings for all languages.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>ID of the current post</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$tax_inputs </td>
+                                <td><p>'tax_input' request parameter</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$tax_actions </td>
+                                <td><p>'tax_action' request parameter</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$tax_input</dd>
+                                            <dd>MLA_WPML::$existing_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__apply_tax_input" name="method__apply_tax_input" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_apply_tax_input()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_apply_tax_input(integer  <span class="argument">$post_id</span>, string  <span class="argument">$post_language = NULL</span>) : array</pre>
+                <p><em>Filter the $tax_input array to a specific language</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>ID of the post to be updated</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$post_language </td>
+                                <td><p>explicit language_code; optional</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>language-specific $tax_inputs</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$tax_input</dd>
+                                            <dd>MLA_WPML::$existing_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__apply_synch_input" name="method__apply_synch_input" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_apply_synch_input()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_apply_synch_input(string  <span class="argument">$language</span>) : array</pre>
+                <p><em>Compute Term Synchronization replacement $tax_inputs</em></p>
+                <p>Assumes the &quot;current post&quot; in $existing_terms is the source
+and $existing_terms contains the target translation</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$language </td>
+                                <td><p>the target translation code</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>$tax_inputs for Term Synchronization</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$existing_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__apply_term_synchronization" name="method__apply_term_synchronization" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_apply_term_synchronization()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_apply_term_synchronization(integer  <span class="argument">$post_id</span>) : array</pre>
+                <p><em>Apply Term Synchronization</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$post_id </td>
+                                <td><p>the item we're synchronizing to</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>$tax_inputs for Term Synchronization</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>MLA_WPML::$existing_terms</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.15                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__save_language_settings" name="method__save_language_settings" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_save_language_settings()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_save_language_settings() : array</pre>
+                <p><em>Save Language settings to the options table</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Message(s) reflecting the results of the operation</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>$_REQUEST</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__reset_language_settings" name="method__reset_language_settings" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_reset_language_settings()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_reset_language_settings() : array</pre>
+                <p><em>Delete saved settings, restoring default values</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Message(s) reflecting the results of the operation</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-wpml-support.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-wpml-support.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

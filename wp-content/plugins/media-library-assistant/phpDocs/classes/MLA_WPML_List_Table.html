@@ -1,0 +1,3096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1685518891"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1685518891" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLA_WPML_List_Table</h1>
+                    <p><em>Class MLA (Media Library Assistant) WPML List Table adds a reference to an MLA_WPML object</em></p>
+                    <p>Extends the MLA_List_Table class.</p>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_get_custom_field_filter_dropdown" class="">mla_get_custom_field_filter_dropdown()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_get_taxonomy_filter_dropdown" class="">mla_get_taxonomy_filter_dropdown()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_submenu_arguments" class="">mla_submenu_arguments()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_manage_hidden_columns_filter" class="">mla_manage_hidden_columns_filter()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_manage_columns_filter" class="">mla_manage_columns_filter()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_admin_init_action" class="">mla_admin_init_action()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method___construct" class="">__construct()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_ajax_user_can" class="">ajax_user_can()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_default" class="">column_default()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_cb" class="">column_cb()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_icon" class="">column_icon()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_ID_parent" class="">column_ID_parent()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_title_name" class="">column_title_name()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_post_title" class="">column_post_title()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_post_name" class="">column_post_name()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_parent" class="">column_parent()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_menu_order" class="">column_menu_order()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_featured" class="">column_featured()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_inserted" class="">column_inserted()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_galleries" class="">column_galleries()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_mla_galleries" class="">column_mla_galleries()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_alt_text" class="">column_alt_text()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_caption" class="">column_caption()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_description" class="">column_description()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_post_mime_type" class="">column_post_mime_type()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_file_url" class="">column_file_url()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_base_file" class="">column_base_file()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_date" class="">column_date()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_modified" class="">column_modified()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_author" class="">column_author()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_column_attached_to" class="">column_attached_to()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_pagination" class="">pagination()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_columns" class="">get_columns()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_hidden_columns" class="">get_hidden_columns()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_sortable_columns" class="">get_sortable_columns()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_print_column_headers" class="">print_column_headers()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_mla_get_view" class="">mla_get_view()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_views" class="">get_views()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_bulk_actions" class="">get_bulk_actions()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_display_tablenav" class="">display_tablenav()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_extra_tablenav" class="">extra_tablenav()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_prepare_items" class="">prepare_items()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_single_row" class="">single_row()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_List_Table.html#method__avail_mime_types" class="">_avail_mime_types()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method__format_post_status" class="">_format_post_status()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_get_default_primary_column_name" class="">get_default_primary_column_name()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method_handle_row_actions" class="">handle_row_actions()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method__build_rollover_actions" class="">_build_rollover_actions()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method__build_item_thumbnail" class="">_build_item_thumbnail()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method__build_inline_data" class="">_build_inline_data()</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#method__handle_primary_column" class="">_handle_primary_column()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_List_Table.html#property_rollover_id" class="">$rollover_id</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_currently_hidden" class="">$currently_hidden</a><br />
+                                                                    <a href="../classes/MLA_WPML_List_Table.html#property_mla_wpml_table" class="">$mla_wpml_table</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_default_columns" class="">$default_columns</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_default_hidden_columns" class="">$default_hidden_columns</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_default_sortable_columns" class="">$default_sortable_columns</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_List_Table.html#method__get_view" class="">_get_view()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_List_Table.html#property_detached" class="">$detached</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_attached" class="">$attached</a><br />
+                                                                    <a href="../classes/MLA_List_Table.html#property_is_trash" class="">$is_trash</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-wpml-support.html"><div class="path-wrapper">includes\class-mla-wpml-support.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                        <div class="namespace-wrapper">\WP_List_Table</div>
+                                                                    
+                                        <div class="namespace-wrapper"><a href="../classes/MLA_List_Table.html">\MLA_List_Table</a></div>
+                                                                                                    <div class="namespace-wrapper">\MLA_WPML_List_Table</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_rollover_id" name="property_rollover_id" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$rollover_id</h3>
+                <pre class="signature">$rollover_id : integer</pre>
+                <p><em>Records assignment of row-level actions to a table row</em></p>
+                <p>Set to the current Post-ID when row-level actions are output for the row.</p>
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_currently_hidden" name="property_currently_hidden" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$currently_hidden</h3>
+                <pre class="signature">$currently_hidden : array</pre>
+                <p><em>Currently hidden columns</em></p>
+                <p>Records hidden columns so row-level actions are not assigned to them.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_wpml_table" name="property_mla_wpml_table" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$mla_wpml_table</h3>
+                <pre class="signature">$mla_wpml_table : object</pre>
+                <p><em>The MLA_WPML_Table support object</em></p>
+                
+
+                                <h4>Type</h4>
+                object
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_columns" name="property_default_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$default_columns</h3>
+                <pre class="signature">$default_columns : array</pre>
+                <p><em>Table column definitions</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_hidden_columns" name="property_default_hidden_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$default_hidden_columns</h3>
+                <pre class="signature">$default_hidden_columns : array</pre>
+                <p><em>Default values for hidden columns</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_sortable_columns" name="property_default_sortable_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="protected ">$default_sortable_columns</h3>
+                <pre class="signature">$default_sortable_columns : array</pre>
+                <p><em>Sortable column definitions</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_detached" name="property_detached" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$detached</h3>
+                <pre class="signature">$detached : integer</pre>
+                <p><em>True if the current view is &quot;Unattached&quot;</em></p>
+                <p>Declaration added in MLA v2.11 for WP 4.2 compatibility.</p>
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_attached" name="property_attached" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$attached</h3>
+                <pre class="signature">$attached : integer</pre>
+                <p><em>True if the current view is &quot;Attached&quot;</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_is_trash" name="property_is_trash" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$is_trash</h3>
+                <pre class="signature">$is_trash : integer</pre>
+                <p><em>True if the current view is &quot;Trash&quot;</em></p>
+                <p>Declaration added in MLA v2.11 for WP 4.2 compatibility.</p>
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_custom_field_filter_dropdown" name="method_mla_get_custom_field_filter_dropdown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_custom_field_filter_dropdown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_custom_field_filter_dropdown(  <span class="argument">$selected = \MLACoreOptions::ALL_MLA_FILTER_METAKEY</span>,   <span class="argument">$dropdown_options = array()</span>) : string</pre>
+                <p><em>Get dropdown box of custom field values to filter by, if available</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$selected </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$dropdown_options </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup for dropdown box</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.32                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_taxonomy_filter_dropdown" name="method_mla_get_taxonomy_filter_dropdown" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_taxonomy_filter_dropdown()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_taxonomy_filter_dropdown(  <span class="argument">$selected</span>,   <span class="argument">$dropdown_options = array()</span>) : string</pre>
+                <p><em>Get dropdown box of terms to filter by, if available</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$selected </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$dropdown_options </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup for dropdown box</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_submenu_arguments" name="method_mla_submenu_arguments" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_submenu_arguments()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_submenu_arguments(  <span class="argument">$include_filters = true</span>) : array</pre>
+                <p><em>Process $_REQUEST, building $submenu_arguments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$include_filters </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>non-empty view, search, filter and sort arguments</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.42                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_manage_hidden_columns_filter" name="method_mla_manage_hidden_columns_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_manage_hidden_columns_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_manage_hidden_columns_filter(  <span class="argument">$result</span>,   <span class="argument">$option</span>,   <span class="argument">$user_data</span>) : array</pre>
+                <p><em>Handler for filter &#039;get_user_option_managemedia_page_mla-menucolumnshidden&#039;</em></p>
+                <p>Required because the screen.php get_hidden_columns function only uses
+the get_user_option result. Set when the file is loaded because the object
+is not created in time for the call from screen.php.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$result </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$user_data </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>updated list of hidden columns</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_manage_columns_filter" name="method_mla_manage_columns_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_manage_columns_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_manage_columns_filter() : array</pre>
+                <p><em>Handler for filter &#039;manage_media_page_mla-menu_columns&#039;</em></p>
+                <p>This required filter dictates the table's columns and titles. Set when the
+file is loaded because the list_table object isn't created in time
+to affect the &quot;screen options&quot; setup.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>list of table columns</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_admin_init_action" name="method_mla_admin_init_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_admin_init_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_admin_init_action() </pre>
+                <p><em>Adds support for taxonomy and custom field columns</em></p>
+                <p>Called in the admin_init action because the list_table object isn't
+created in time to affect the &quot;screen options&quot; setup.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method___construct" name="method___construct" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">__construct()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">__construct() </pre>
+                <p><em>Initializes some properties from $_REQUEST variables, then
+calls the parent constructor to set some default configs.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_ajax_user_can" name="method_ajax_user_can" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">ajax_user_can()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">ajax_user_can() : boolean</pre>
+                <p><em>Checks the current user&#039;s permissions</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_default" name="method_column_default" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_default()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_default(  <span class="argument">$item</span>,   <span class="argument">$column_name</span>) : string</pre>
+                <p><em>Supply a column value if no column-specific function has been defined</em></p>
+                <p>Called when the parent class can't find a method specifically built for a given column.
+The taxonomy and custom field columns are handled here. All other columns should have
+a specific method, so this function returns a troubleshooting message.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$column_name </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Text or HTML to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_cb" name="method_column_cb" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_cb()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_cb(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Displays checkboxes for using bulk actions. The &#039;cb&#039; column
+is given special treatment when columns are processed.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_icon" name="method_column_icon" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_icon()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_icon(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_ID_parent" name="method_column_ID_parent" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_ID_parent()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_ID_parent(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_title_name" name="method_column_title_name" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_title_name()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_title_name(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_post_title" name="method_column_post_title" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_post_title()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_post_title(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_post_name" name="method_column_post_name" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_post_name()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_post_name(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_parent" name="method_column_parent" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_parent()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_parent(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_menu_order" name="method_column_menu_order" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_menu_order()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_menu_order(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.60                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_featured" name="method_column_featured" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_featured()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_featured(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_inserted" name="method_column_inserted" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_inserted()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_inserted(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_galleries" name="method_column_galleries" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_galleries()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_galleries(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.70                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_mla_galleries" name="method_column_mla_galleries" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_mla_galleries()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_mla_galleries(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.70                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_alt_text" name="method_column_alt_text" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_alt_text()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_alt_text(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_caption" name="method_column_caption" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_caption()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_caption(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_description" name="method_column_description" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_description()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_description(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_post_mime_type" name="method_column_post_mime_type" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_post_mime_type()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_post_mime_type(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_file_url" name="method_column_file_url" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_file_url()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_file_url(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_base_file" name="method_column_base_file" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_base_file()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_base_file(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_date" name="method_column_date" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_date()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_date(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_modified" name="method_column_modified" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_modified()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_modified(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_author" name="method_column_author" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_author()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_author(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_column_attached_to" name="method_column_attached_to" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">column_attached_to()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">column_attached_to(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Supply the content for a custom column</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML markup to be placed inside the column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_pagination" name="method_pagination" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">pagination()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">pagination(  <span class="argument">$which</span>) </pre>
+                <p><em>Display the pagination, adding view, search and filter arguments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$which </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.42                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_columns" name="method_get_columns" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_columns()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_columns() : array</pre>
+                <p><em>This method dictates the table&#039;s columns and titles</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Column information: 'slugs'=&gt;'Visible Titles'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_hidden_columns" name="method_get_hidden_columns" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_hidden_columns()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_hidden_columns() : array</pre>
+                <p><em>Returns the list of currently hidden columns from a user option or
+from default values if the option is not set</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Column information,e.g., array(0 =&gt; 'ID_parent, 1 =&gt; 'title_name')</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_sortable_columns" name="method_get_sortable_columns" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_sortable_columns()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_sortable_columns() : array</pre>
+                <p><em>Returns an array where the  key is the column that needs to be sortable
+and the value is db column (or other criteria) to sort by.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Sortable column information,e.g.,
+'slug' =&gt; array('data_value', (boolean) initial_descending )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_print_column_headers" name="method_print_column_headers" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">print_column_headers()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">print_column_headers(boolean  <span class="argument">$with_id = true</span>) </pre>
+                <p><em>Print column headers, adding view, search and filter arguments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$with_id </td>
+                                <td><p>Whether to set the id attribute or not</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.42                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_view" name="method_mla_get_view" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_view()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_view(  <span class="argument">$view_slug</span>,   <span class="argument">$current_view</span>) : string</pre>
+                <p><em>Wrapper for _get_view; returns HTML markup for one view that can be used with this table</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$view_slug </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$current_view </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>| false HTML for link to display the view, false if count = zero</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_views" name="method_get_views" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_views()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_views() : array</pre>
+                <p><em>Returns an associative array listing all the views that can be used with this table.</em></p>
+                <p>These are listed across the top of the page and managed by WordPress.</p>
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>View information,e.g., array ( id =&gt; link )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_bulk_actions" name="method_get_bulk_actions" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">get_bulk_actions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_bulk_actions() : array</pre>
+                <p><em>Get an associative array ( option_name =&gt; option_title ) with the list
+of bulk actions available on this table.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Contains all the bulk actions: 'slugs'=&gt;'Visible Titles'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_display_tablenav" name="method_display_tablenav" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">display_tablenav()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">display_tablenav(  <span class="argument">$which</span>) </pre>
+                <p><em>Generate the table navigation above or below the table</em></p>
+                <p>Adds the list/grid switcher in WP 4.0+</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$which </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_extra_tablenav" name="method_extra_tablenav" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">extra_tablenav()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">extra_tablenav(  <span class="argument">$which</span>) : void</pre>
+                <p><em>Extra controls to be displayed between bulk actions and pagination</em></p>
+                <p>Modeled after class-wp-posts-list-table.php in wp-admin/includes.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$which </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_prepare_items" name="method_prepare_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">prepare_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">prepare_items() </pre>
+                <p><em>Prepares the list of items for displaying</em></p>
+                <p>This is where you prepare your data for display. This method will usually
+be used to query the database, sort and filter the data, and generally
+get it ready to be displayed. At a minimum, we should set $this-&gt;items and
+$this-&gt;set_pagination_args().</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_single_row" name="method_single_row" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">single_row()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">single_row(  <span class="argument">$item</span>) : void</pre>
+                <p><em>Generates (echoes) content for a single row of the table</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                                                            <p>.20</p>
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__avail_mime_types" name="method__avail_mime_types" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_avail_mime_types()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_avail_mime_types(  <span class="argument">$num_posts</span>) : array</pre>
+                <p><em>Get MIME types with one or more attachments for view preparation</em></p>
+                <p>Modeled after get_available_post_mime_types in wp-admin/includes/post.php,
+but uses the output of wp_count_attachments() as input.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$num_posts </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Mime type names</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__format_post_status" name="method__format_post_status" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_format_post_status()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_format_post_status(  <span class="argument">$post_status</span>) : string</pre>
+                <p><em>Translate post_status &#039;future&#039;, &#039;pending&#039;, &#039;draft&#039; and &#039;trash&#039; to label</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_status </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Status label or empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.01                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_get_default_primary_column_name" name="method_get_default_primary_column_name" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">get_default_primary_column_name()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">get_default_primary_column_name() : string</pre>
+                <p><em>Get the name of the default primary column.</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Name of the default primary column</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_handle_row_actions" name="method_handle_row_actions" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">handle_row_actions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">handle_row_actions(object  <span class="argument">$item</span>, string  <span class="argument">$column_name</span>, string  <span class="argument">$primary</span>) : string</pre>
+                <p><em>Generate and display row actions links.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>object</td>
+                                <td>$item </td>
+                                <td><p>Attachment being acted upon.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$column_name </td>
+                                <td><p>Current column name.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$primary </td>
+                                <td><p>Primary column name.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Row actions output for media attachments.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__build_rollover_actions" name="method__build_rollover_actions" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_build_rollover_actions()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_build_rollover_actions(  <span class="argument">$item</span>,   <span class="argument">$column</span>) : array</pre>
+                <p><em>Add rollover actions to the current primary column, one of:
+&#039;ID_parent&#039;, &#039;title_name&#039;, &#039;post_title&#039;, &#039;post_name&#039;</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$column </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Names and URLs of row-level actions</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__build_item_thumbnail" name="method__build_item_thumbnail" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_build_item_thumbnail()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_build_item_thumbnail(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Generate item thumbnail image tag</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML <img> for thumbnail</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.15                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__build_inline_data" name="method__build_inline_data" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_build_inline_data()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_build_inline_data(  <span class="argument">$item</span>) : string</pre>
+                <p><em>Add hidden fields with the data for use in the inline editor</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>HTML <div> with row data</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__handle_primary_column" name="method__handle_primary_column" class="anchor"></a>
+            <article class="method">
+                <h3 class="protected ">_handle_primary_column()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_handle_primary_column(  <span class="argument">$item</span>,   <span class="argument">$column_name</span>,   <span class="argument">$column_content</span>) : string</pre>
+                <p><em>Format primary column before/after Wordpress v4.3</em></p>
+                <p>For WordPress before 4.3, add rollover actions and inline_data to the
+first visible column. For 4.3 and later, merge the icon with the primary
+visible column and add div tags.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$item </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$column_name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$column_content </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Complete column content</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__get_view" name="method__get_view" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_get_view()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_get_view(  <span class="argument">$view_slug</span>,   <span class="argument">$current_view</span>) : string</pre>
+                <p><em>Returns HTML markup for one view that can be used with this table</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$view_slug </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$current_view </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>| false HTML for link to display the view, false if count = zero</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                    <dt>Inherited from</dt>
+                    <dd><a href="../classes/MLA_List_Table.html"><div class="path-wrapper">\MLA_List_Table</div></a></dd>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.40                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-wpml-support.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-wpml-support.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

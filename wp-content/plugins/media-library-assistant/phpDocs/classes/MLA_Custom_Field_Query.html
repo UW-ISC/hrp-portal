@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1747861855"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1747861855" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLA_Custom_Field_Query</h1>
+                    <p><em>Class MLA (Media Library Assistant) Custom Field Query implements the
+searchable database of custom field mapping rules.</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_put_custom_field_rules" class="">mla_put_custom_field_rules()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_count_custom_field_rules" class="">mla_count_custom_field_rules()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_query_custom_field_rules" class="">mla_query_custom_field_rules()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_find_custom_field_rule_ID" class="">mla_find_custom_field_rule_ID()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_custom_field_rule_names" class="">mla_custom_field_rule_names()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_find_custom_field_rule" class="">mla_find_custom_field_rule()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_convert_custom_field_rules" class="">mla_convert_custom_field_rules()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_update_custom_field_rule" class="">mla_update_custom_field_rule()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_replace_custom_field_rule" class="">mla_replace_custom_field_rule()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_add_custom_field_rule" class="">mla_add_custom_field_rule()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method_mla_tabulate_custom_field_items" class="">mla_tabulate_custom_field_items()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No public properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method__sort_uname_callback" class="">_sort_uname_callback()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method__get_custom_field_rules" class="">_get_custom_field_rules()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method__prepare_custom_field_rules_query" class="">_prepare_custom_field_rules_query()</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#method__execute_custom_field_rules_query" class="">_execute_custom_field_rules_query()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#property__custom_field_rules" class="">$_custom_field_rules</a><br />
+                                                                    <a href="../classes/MLA_Custom_Field_Query.html#property__custom_field_rule_highest_ID" class="">$_custom_field_rule_highest_ID</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-settings-custom-fields-tab.html"><div class="path-wrapper">includes\class-mla-settings-custom-fields-tab.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLA_Custom_Field_Query</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__custom_field_rules" name="property__custom_field_rules" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_custom_field_rules</h3>
+                <pre class="signature">$_custom_field_rules : array</pre>
+                <p><em>In-memory representation of the custom field mapping rules</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                &mdash; {
+        Items by ID. Key $$ID is an index number starting with 1.
+
+        @type array $$ID {
+            Rule elements.
+
+            @type integer $post_ID Rule ID; equal to $$ID.
+            @type string $rule_name Rule name, to accomodate an old bug.
+            @type string $name Custom field name the rule applies to.
+            @type string $data_source Data source name, &#039;none&#039;, &#039;meta&#039; or &#039;template&#039;.
+            @type string $meta_name if ( $data_source = &#039;meta&#039; ) attachment metadata element name,
+                                    if ( $data_source = &#039;template ) template value w/o &quot;template:&quot;
+            @type string $format Output format, &#039;native&#039;, &#039;commas&#039; or &#039;raw&#039;.
+            @type string $option Output option, &#039;text&#039;, &#039;single&#039;. &#039;array&#039; or &#039;multi&#039;.
+            @type boolean $keep_existing Retain existing value(s), do not replace them.
+            @type boolean $no_null Delete empty (NULL) values.
+            @type boolean $mla_column Display the field as a Media/Assistant submenu table column.
+            @type boolean $quick_edit Add the field to the Media/Assistant submenu table Quick Edit area.
+            @type boolean $bulk_edit Add the field to the Media/Assistant submenu table Bulk Edit area.
+            @type boolean $inline_edit OBSOLETE - no longer used.
+            @type boolean $active True if rule should be applied during mapping.
+            @type boolean $read_only True if rule_name !== name, to prevent editing of &quot;old bug&quot; rules.
+            @type boolean $changed True if the rule has changed since loading.
+            @type boolean $deleted True if the rule has been deleted since loading.
+        }                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property__custom_field_rule_highest_ID" name="property__custom_field_rule_highest_ID" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$_custom_field_rule_highest_ID</h3>
+                <pre class="signature">$_custom_field_rule_highest_ID : integer</pre>
+                <p><em>Highest existing custom field rule ID value</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_put_custom_field_rules" name="method_mla_put_custom_field_rules" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_put_custom_field_rules()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_put_custom_field_rules() </pre>
+                <p><em>Flush the in-memory representation of the custom field rules to the option value</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_count_custom_field_rules" name="method_mla_count_custom_field_rules" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_count_custom_field_rules()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_count_custom_field_rules(  <span class="argument">$request</span>) : integer</pre>
+                <p><em>Get the total number of MLA custom_field_rule objects</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>Number of MLA custom_field_rule objects</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_custom_field_rules" name="method_mla_query_custom_field_rules" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_custom_field_rules()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_custom_field_rules(  <span class="argument">$request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : array</pre>
+                <p><em>Retrieve MLA custom_field_rule objects for list table display</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>MLA custom_field_rule objects</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_find_custom_field_rule_ID" name="method_mla_find_custom_field_rule_ID" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_find_custom_field_rule_ID()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_find_custom_field_rule_ID(string  <span class="argument">$rule_name</span>) : integer</pre>
+                <p><em>Find a Custom Field Rule ID given its rule name</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$rule_name </td>
+                                <td><p>MLA Custom Field Rule name.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>Rule ID if the rule exists else zero (0).</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_custom_field_rule_names" name="method_mla_custom_field_rule_names" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_custom_field_rule_names()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_custom_field_rule_names() : array</pre>
+                <p><em>Return the custom field rule names</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>MLA custom_field_rule name =&gt; name</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_find_custom_field_rule" name="method_mla_find_custom_field_rule" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_find_custom_field_rule()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_find_custom_field_rule(integer  <span class="argument">$ID</span>) : array</pre>
+                <p><em>Find a Custom Field Rule given its ID</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$ID </td>
+                                <td><p>MLA Custom Field Rule ID</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>MLA custom_field_rule array</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_convert_custom_field_rules" name="method_mla_convert_custom_field_rules" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_convert_custom_field_rules()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_convert_custom_field_rules(  <span class="argument">$rule_ids</span>) : array</pre>
+                <p><em>Convert a Custom Field Rule to an old-style mapping rule, given its ID</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$rule_ids </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>MLA custom_field_mapping values (can be empty)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_custom_field_rule" name="method_mla_update_custom_field_rule" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_custom_field_rule()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_custom_field_rule(integer  <span class="argument">$ID</span>, string  <span class="argument">$key</span>, string  <span class="argument">$value</span>) : boolean</pre>
+                <p><em>Update a Custom Field Rule property given its ID and key.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$ID </td>
+                                <td><p>MLA Custom Field Rule ID.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$key </td>
+                                <td><p>MLA Custom Field Rule property.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$value </td>
+                                <td><p>MLA Custom Field Rule new value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if object exists else false.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_replace_custom_field_rule" name="method_mla_replace_custom_field_rule" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_replace_custom_field_rule()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_replace_custom_field_rule(array  <span class="argument">$value</span>) : boolean</pre>
+                <p><em>Replace a Custom Field Rule given its value array.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$value </td>
+                                <td><p>MLA Custom Field Rule new value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if object exists else false.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_add_custom_field_rule" name="method_mla_add_custom_field_rule" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_add_custom_field_rule()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_add_custom_field_rule(array  <span class="argument">$value</span>) : boolean</pre>
+                <p><em>Insert a Custom Field Rule given its value array.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$value </td>
+                                <td><p>MLA Custom Field Rule new value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if addition succeeds else false.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_tabulate_custom_field_items" name="method_mla_tabulate_custom_field_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_tabulate_custom_field_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_tabulate_custom_field_items(  <span class="argument">$s = &#039;&#039;</span>) : array</pre>
+                <p><em>Tabulate MLA custom_field_rule objects by view for list table display</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$s </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( 'singular' label, 'plural' label, 'count' of items )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__sort_uname_callback" name="method__sort_uname_callback" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_sort_uname_callback()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_sort_uname_callback(array  <span class="argument">$a</span>, array  <span class="argument">$b</span>) : integer</pre>
+                <p><em>Callback to sort array by a &#039;name&#039; key.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$a </td>
+                                <td><p>The first array.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$b </td>
+                                <td><p>The second array.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>The comparison result.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__get_custom_field_rules" name="method__get_custom_field_rules" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_get_custom_field_rules()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_get_custom_field_rules(boolean  <span class="argument">$force_refresh = false</span>) : boolean</pre>
+                <p><em>Assemble the in-memory representation of the custom field rules</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$force_refresh </td>
+                                <td><p>Optional. Force a reload of rules. Default false.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Success (true) or failure (false) of the operation</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__prepare_custom_field_rules_query" name="method__prepare_custom_field_rules_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_prepare_custom_field_rules_query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_prepare_custom_field_rules_query(  <span class="argument">$raw_request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : array</pre>
+                <p><em>Sanitize and expand query arguments from request variables</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$raw_request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>revised arguments suitable for query</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__execute_custom_field_rules_query" name="method__execute_custom_field_rules_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_execute_custom_field_rules_query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_execute_custom_field_rules_query(  <span class="argument">$request</span>) : array</pre>
+                <p><em>Query the plugin_examples items</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>query results; array of MLA post_mime_type objects</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-settings-custom-fields-tab.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-settings-custom-fields-tab.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

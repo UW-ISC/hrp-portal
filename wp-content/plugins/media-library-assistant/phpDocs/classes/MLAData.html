@@ -1,0 +1,2919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1262552368"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1262552368" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLAData</h1>
+                    <p><em>Class MLA (Media Library Assistant) Data provides database and template file access for MLA needs</em></p>
+                    <p>The _template functions are inspired by the book &quot;WordPress 3 Plugin Development Essentials.&quot;
+Templates separate HTML markup from PHP code for easier maintenance and localization.</p>
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAData.html#method_initialize" class="">initialize()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_parse_array_template" class="">mla_parse_array_template()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_parse_template" class="">mla_parse_template()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_apply_field_level_format" class="">mla_apply_field_level_format()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_expand_field_level_parameters" class="">mla_expand_field_level_parameters()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_get_template_placeholders" class="">mla_get_template_placeholders()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_count_list_table_items" class="">mla_count_list_table_items()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_query_list_table_items" class="">mla_query_list_table_items()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_get_attachment_by_id" class="">mla_get_attachment_by_id()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_find_array_element" class="">mla_find_array_element()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_save_post_action" class="">mla_save_post_action()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_parse_pdf_date" class="">mla_parse_pdf_date()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_parse_xmp_metadata" class="">mla_parse_xmp_metadata()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_iptc_metadata_value" class="">mla_iptc_metadata_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_exif_metadata_value" class="">mla_exif_metadata_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_xmp_metadata_value" class="">mla_xmp_metadata_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_id3_metadata_value" class="">mla_id3_metadata_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_pdf_metadata_value" class="">mla_pdf_metadata_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_IPTC_EXIF_error_handler" class="">mla_IPTC_EXIF_error_handler()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_fetch_attachment_id3_metadata" class="">mla_fetch_attachment_id3_metadata()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_fetch_attachment_image_metadata" class="">mla_fetch_attachment_image_metadata()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_update_wp_attachment_metadata" class="">mla_update_wp_attachment_metadata()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_update_item_postmeta" class="">mla_update_item_postmeta()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_update_single_item" class="">mla_update_single_item()</a><br />
+                                                                    <a href="../classes/MLAData.html#method_mla_hex_dump" class="">mla_hex_dump()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAData.html#property_query_parameters" class="">$query_parameters</a><br />
+                                                                    <a href="../classes/MLAData.html#property_search_parameters" class="">$search_parameters</a><br />
+                                                                    <a href="../classes/MLAData.html#property_utf8_chars" class="">$utf8_chars</a><br />
+                                                                    <a href="../classes/MLAData.html#property_mla_iptc_keys" class="">$mla_iptc_keys</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No constants found</em>
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAData.html#method__find_template_substring" class="">_find_template_substring()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__find_test_substring" class="">_find_test_substring()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__parse_field_level_template" class="">_parse_field_level_template()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__evaluate_template_array_node" class="">_evaluate_template_array_node()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__evaluate_template_node" class="">_evaluate_template_node()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__expand_field_level_template" class="">_expand_field_level_template()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__process_field_level_array" class="">_process_field_level_array()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__parse_arguments" class="">_parse_arguments()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__set_array_element" class="">_set_array_element()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__unset_array_element" class="">_unset_array_element()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__parse_iso8601_date" class="">_parse_iso8601_date()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__parse_xmp_array" class="">_parse_xmp_array()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__nonempty_value" class="">_nonempty_value()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__bin_to_utf8" class="">_bin_to_utf8()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__rational_to_decimal" class="">_rational_to_decimal()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__rational_to_string" class="">_rational_to_string()</a><br />
+                                                                    <a href="../classes/MLAData.html#method__remove_terms" class="">_remove_terms()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAData.html#property_mla_iptc_records" class="">$mla_iptc_records</a><br />
+                                                                    <a href="../classes/MLAData.html#property_mla_iptc_descriptions" class="">$mla_iptc_descriptions</a><br />
+                                                                    <a href="../classes/MLAData.html#property_mla_iptc_formats" class="">$mla_iptc_formats</a><br />
+                                                                    <a href="../classes/MLAData.html#property_mla_iptc_image_types" class="">$mla_iptc_image_types</a><br />
+                                                                    <a href="../classes/MLAData.html#property_mla_IPTC_EXIF_errors" class="">$mla_IPTC_EXIF_errors</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-data.html"><div class="path-wrapper">includes\class-mla-data.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLAData</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                        
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_query_parameters" name="property_query_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$query_parameters</h3>
+                <pre class="signature">$query_parameters : array</pre>
+                <p><em>WP_Query filter &quot;parameters&quot;</em></p>
+                <p>This array defines parameters for the query's join, where and orderby filters.
+The parameters are set up in the _prepare_list_table_query function, and
+any further logic required to translate those values is contained in the filters.</p>
+<p>Array index values are: use_alt_text_view, use_postmeta_view, use_orderby_view,
+alt_text_value, postmeta_key, postmeta_value, patterns, detached,
+orderby, order, mla-metavalue, debug (also in search_parameters)</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_search_parameters" name="property_search_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$search_parameters</h3>
+                <pre class="signature">$search_parameters : array</pre>
+                <p><em>WP_Query &#039;posts_search&#039; filter &quot;parameters&quot;</em></p>
+                <p>This array defines parameters for the query's posts_search filter, which uses
+'search_string' to add a clause to the query's WHERE clause. It is shared between
+the list_table-query functions here and the mla_get_shortcode_attachments function
+in class-mla-shortcodes.php. This array passes the relevant parameters to the filter.</p>
+<p>Array index values are:
+['mla_terms_search']['phrases']
+['mla_terms_search']['taxonomies']
+['mla_terms_search']['radio_phrases'] =&gt; AND/OR
+['mla_terms_search']['radio_terms'] =&gt; AND/OR
+['s'] =&gt; numeric for ID/parent search
+['mla_search_fields'] =&gt; 'title', 'name', 'alt-text', 'excerpt', 'content', 'file' ,'terms'
+Note: 'alt-text' and 'file' are not supported in [mla_gallery]
+['mla_search_connector'] =&gt; AND/OR
+['sentence'] =&gt; entire string must match as one &quot;keyword&quot;
+['exact'] =&gt; entire string must match entire field value
+['debug'] =&gt; internal element, console/log/shortcode/none
+['tax_terms_count'] =&gt; internal element, shared with JOIN and GROUP BY filters</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_utf8_chars" name="property_utf8_chars" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$utf8_chars</h3>
+                <pre class="signature">$utf8_chars : array</pre>
+                <p><em>UTF-8 replacements for invalid SQL characters</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_iptc_keys" name="property_mla_iptc_keys" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$mla_iptc_keys</h3>
+                <pre class="signature">$mla_iptc_keys : array</pre>
+                <p><em>IPTC Dataset friendly name/slug and identifiers</em></p>
+                <p>This array contains the sanitized names and identifiers of Datasets defined in
+the &quot;IPTC-NAA Information Interchange Model Version No. 4.1&quot;.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_iptc_records" name="property_mla_iptc_records" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_iptc_records</h3>
+                <pre class="signature">$mla_iptc_records : array</pre>
+                <p><em>IPTC Dataset identifiers and names</em></p>
+                <p>This array contains the identifiers and names of Datasets defined in
+the &quot;IPTC-NAA Information Interchange Model Version No. 4.1&quot;.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_iptc_descriptions" name="property_mla_iptc_descriptions" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_iptc_descriptions</h3>
+                <pre class="signature">$mla_iptc_descriptions : array</pre>
+                <p><em>IPTC Dataset descriptions</em></p>
+                <p>This array contains the descriptions of Datasets defined in
+the &quot;IPTC-NAA Information Interchange Model Version No. 4.1&quot;.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_iptc_formats" name="property_mla_iptc_formats" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_iptc_formats</h3>
+                <pre class="signature">$mla_iptc_formats : array</pre>
+                <p><em>IPTC file format identifiers and descriptions</em></p>
+                <p>This array contains the file format identifiers and descriptions defined in
+the &quot;IPTC-NAA Information Interchange Model Version No. 4.1&quot; for dataset 1#020.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_iptc_image_types" name="property_mla_iptc_image_types" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_iptc_image_types</h3>
+                <pre class="signature">$mla_iptc_image_types : array</pre>
+                <p><em>IPTC image type identifiers and descriptions</em></p>
+                <p>This array contains the image type identifiers and descriptions defined in
+the &quot;IPTC-NAA Information Interchange Model Version No. 4.1&quot; for dataset 2#130, octet 2.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_IPTC_EXIF_errors" name="property_mla_IPTC_EXIF_errors" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_IPTC_EXIF_errors</h3>
+                <pre class="signature">$mla_IPTC_EXIF_errors : array</pre>
+                <p><em>Passes IPTC/EXIF parse errors between mla_IPTC_EXIF_error_handler
+and mla_fetch_attachment_image_metadata</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_initialize" name="method_initialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">initialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">initialize() </pre>
+                <p><em>Initialization function, similar to __construct()</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_parse_array_template" name="method_mla_parse_array_template" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_parse_array_template()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_parse_array_template(  <span class="argument">$tpl</span>,   <span class="argument">$markup_values</span>) : mixed</pre>
+                <p><em>Expand a template, replacing placeholders with their values</em></p>
+                <p>Will return an array of values if one or more of the placeholders returns an array.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string or array, depending on placeholder values. Placeholders corresponding
+to the keys of the markup_values will be replaced with their values.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_parse_template" name="method_mla_parse_template" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_parse_template()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_parse_template(  <span class="argument">$tpl</span>,   <span class="argument">$markup_values</span>) : \strng</pre>
+                <p><em>Expand a template, replacing placeholders with their values</em></p>
+                <p>A simple parsing function for basic templating.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    \strng
+                                            &mdash; <p>Placeholders corresponding to the keys of the markup_values will be replaced with their values.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_apply_field_level_format" name="method_mla_apply_field_level_format" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_apply_field_level_format()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_apply_field_level_format(  <span class="argument">$value</span>,   <span class="argument">$args</span>) : string</pre>
+                <p><em>Apply field-level format options to field-level content</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$value </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$args </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>formatted field-level content</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_expand_field_level_parameters" name="method_mla_expand_field_level_parameters" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_expand_field_level_parameters()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_expand_field_level_parameters(  <span class="argument">$tpl</span>,   <span class="argument">$query = NULL</span>,   <span class="argument">$markup_values = array()</span>,   <span class="argument">$post_id</span>,   <span class="argument">$keep_existing = false</span>,   <span class="argument">$default_option = &#039;text&#039;</span>) : array</pre>
+                <p><em>Analyze a template, expanding Field-level Markup Substitution Parameters</em></p>
+                <p>Field-level parameters must have one of the following prefix values:
+template, request, query, custom, terms, meta, iptc, exif, xmp, pdf.
+All but request and query require an attachment ID.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$query </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$default_option </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( parameter =&gt; value ) for all field-level parameters and anything in $markup_values</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_template_placeholders" name="method_mla_get_template_placeholders" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_template_placeholders()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_template_placeholders(  <span class="argument">$tpl</span>,   <span class="argument">$default_option = &#039;text&#039;</span>) : array</pre>
+                <p><em>Analyze a template, returning an array of the placeholders it contains</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$default_option </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Placeholder information: each entry is an array with
+['prefix'] =&gt; string, ['value'] =&gt; string, ['option'] =&gt; string 'text'|single'|'export'|'array'|'multi'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.90                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_count_list_table_items" name="method_mla_count_list_table_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_count_list_table_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_count_list_table_items(  <span class="argument">$request</span>,   <span class="argument">$offset = NULL</span>,   <span class="argument">$count = NULL</span>) : integer</pre>
+                <p><em>Get the total number of attachment posts</em></p>
+                <p>Compatibility shim for MLAQuery::mla_count_list_table_items</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>Number of attachment posts</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_list_table_items" name="method_mla_query_list_table_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_list_table_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_list_table_items(  <span class="argument">$request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : array</pre>
+                <p><em>Retrieve attachment objects for list table display</em></p>
+                <p>Compatibility shim for MLAQuery::mla_query_list_table_items</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>attachment objects (posts) including parent data, meta data and references</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_attachment_by_id" name="method_mla_get_attachment_by_id" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_attachment_by_id()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_attachment_by_id(  <span class="argument">$post_id</span>,   <span class="argument">$add_references = true</span>) : NULL|array</pre>
+                <p><em>Retrieve an Attachment array given a $post_id</em></p>
+                <p>The (associative) array will contain every field that can be found in
+the posts and postmeta tables, and all references to the attachment.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$add_references </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    NULL|array
+                                            &mdash; <p>NULL on failure else associative array</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                                                            <dt>Uses</dt>
+                                                                <dd>$post</dd>
+                                                </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_find_array_element" name="method_mla_find_array_element" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_find_array_element()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_find_array_element(  <span class="argument">$needle</span>,   <span class="argument">$haystack</span>,   <span class="argument">$option</span>,   <span class="argument">$keep_existing = false</span>,   <span class="argument">$glue = &#039;, &#039;</span>) : mixed</pre>
+                <p><em>Finds the value of a key in a possibly nested array structure</em></p>
+                <p>Used primarily to extract fields from the _wp_attachment_metadata custom field.
+Also used with the audio/video ID3 metadata exposed in WordPress 3.6 and later.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$needle </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$haystack </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$glue </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string or array value matching key(.key ...) or ''</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_save_post_action" name="method_mla_save_post_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_save_post_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_save_post_action(  <span class="argument">$post_id</span>) : void</pre>
+                <p><em>Invalidates $mla_galleries and $galleries arrays and cached values after post, page or attachment updates</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.00                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_parse_pdf_date" name="method_mla_parse_pdf_date" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_parse_pdf_date()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_parse_pdf_date(  <span class="argument">$source_string</span>) : string</pre>
+                <p><em>Parse a PDF date string</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source_string </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>formatted date string YYYY-MM-DD HH:mm:SS</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_parse_xmp_metadata" name="method_mla_parse_xmp_metadata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_parse_xmp_metadata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_parse_xmp_metadata(  <span class="argument">$file_name</span>,   <span class="argument">$file_offset</span>) : mixed</pre>
+                <p><em>Extract XMP meta data from a file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$file_name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$file_offset </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>array of metadata values or NULL on failure</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_iptc_metadata_value" name="method_mla_iptc_metadata_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_iptc_metadata_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_iptc_metadata_value(  <span class="argument">$iptc_key</span>,   <span class="argument">$item_metadata</span>,   <span class="argument">$option = &#039;text&#039;</span>,   <span class="argument">$keep_existing = false</span>) : mixed</pre>
+                <p><em>Parse one IPTC metadata field</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$iptc_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$item_metadata </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string/array representation of metadata value or an empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.41                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_exif_metadata_value" name="method_mla_exif_metadata_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_exif_metadata_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_exif_metadata_value(  <span class="argument">$exif_key</span>,   <span class="argument">$item_metadata</span>,   <span class="argument">$option = &#039;text&#039;</span>,   <span class="argument">$keep_existing = false</span>) : mixed</pre>
+                <p><em>Parse one EXIF metadata field</em></p>
+                <p>Also handles the special pseudo-values 'ALL_EXIF' and 'ALL_IPTC'.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$exif_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$item_metadata </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string/array representation of metadata value or an empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_xmp_metadata_value" name="method_mla_xmp_metadata_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_xmp_metadata_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_xmp_metadata_value(  <span class="argument">$xmp_key</span>,   <span class="argument">$xmp_metadata</span>,   <span class="argument">$option = &#039;text&#039;</span>,   <span class="argument">$keep_existing = false</span>) : mixed</pre>
+                <p><em>Parse one XMP metadata field</em></p>
+                <p>Also handles the special pseudo-value 'ALL_XMP'.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$xmp_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$xmp_metadata </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string/array representation of metadata value or an empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_id3_metadata_value" name="method_mla_id3_metadata_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_id3_metadata_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_id3_metadata_value(  <span class="argument">$id3_key</span>,   <span class="argument">$id3_metadata</span>,   <span class="argument">$option</span>,   <span class="argument">$keep_existing</span>) : mixed</pre>
+                <p><em>Parse one ID3 (audio/visual) metadata field</em></p>
+                <p>Also handles the special pseudo-value 'ALL_ID3'.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$id3_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$id3_metadata </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string/array representation of metadata value or an empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_pdf_metadata_value" name="method_mla_pdf_metadata_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_pdf_metadata_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_pdf_metadata_value(  <span class="argument">$pdf_key</span>,   <span class="argument">$item_metadata</span>) : mixed</pre>
+                <p><em>Parse one PDF metadata field</em></p>
+                <p>Also handles the special pseudo-value 'ALL_PDF'.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$pdf_key </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$item_metadata </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string/array representation of metadata value or an empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_IPTC_EXIF_error_handler" name="method_mla_IPTC_EXIF_error_handler" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_IPTC_EXIF_error_handler()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_IPTC_EXIF_error_handler(  <span class="argument">$type</span>,   <span class="argument">$string</span>,   <span class="argument">$file</span>,   <span class="argument">$line</span>) : boolean</pre>
+                <p><em>Intercept IPTC and EXIF parse errors</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$type </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$string </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$file </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$line </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true, to bypass PHP error handler</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.81                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_fetch_attachment_id3_metadata" name="method_mla_fetch_attachment_id3_metadata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_fetch_attachment_id3_metadata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_fetch_attachment_id3_metadata(  <span class="argument">$post_id</span>,   <span class="argument">$path = &#039;&#039;</span>) : array</pre>
+                <p><em>Fetch and filter ID3 metadata for an audio or video attachment</em></p>
+                <p>Adapted from /wp-admin/includes/media.php functions wp_add_id3_tag_data,
+wp_read_video_metadata and wp_read_audio_metadata</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$path </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Meta data variables, including 'audio' and 'video'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_fetch_attachment_image_metadata" name="method_mla_fetch_attachment_image_metadata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_fetch_attachment_image_metadata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_fetch_attachment_image_metadata(  <span class="argument">$post_id</span>,   <span class="argument">$path = &#039;&#039;</span>) : array</pre>
+                <p><em>Fetch and filter IPTC and EXIF, XMP or PDF metadata for an image attachment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$path </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Meta data variables, IPTC and EXIF or PDF</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.90                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_wp_attachment_metadata" name="method_mla_update_wp_attachment_metadata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_wp_attachment_metadata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_wp_attachment_metadata(  <span class="argument">$current_values</span>,   <span class="argument">$new_meta</span>) : string</pre>
+                <p><em>Update &quot;meta:&quot; data for a single attachment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$current_values </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$new_meta </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>success/failure message(s); empty string if no changes.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.51                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_item_postmeta" name="method_mla_update_item_postmeta" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_item_postmeta()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_item_postmeta(  <span class="argument">$post_id</span>,   <span class="argument">$new_meta</span>) : string</pre>
+                <p><em>Update custom field and &quot;meta:&quot; data for a single attachment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$new_meta </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>success/failure message(s)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.40                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_single_item" name="method_mla_update_single_item" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_single_item()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_single_item(  <span class="argument">$post_id</span>,   <span class="argument">$new_data</span>,   <span class="argument">$tax_input = NULL</span>,   <span class="argument">$tax_actions = NULL</span>) : array</pre>
+                <p><em>Update a single item; change the &quot;post&quot; data, taxonomy terms
+and meta data for a single attachment</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$new_data </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$tax_input </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$tax_actions </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>success/failure message and NULL content</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_hex_dump" name="method_mla_hex_dump" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_hex_dump()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_hex_dump(  <span class="argument">$data</span>,   <span class="argument">$limit</span>,   <span class="argument">$bytes_per_row = 16</span>,   <span class="argument">$offset = -1</span>) : string</pre>
+                <p><em>Format printable version of binary data</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$data </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$limit </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$bytes_per_row </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>Printable representation of $data</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.90                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__find_template_substring" name="method__find_template_substring" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_find_template_substring()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_find_template_substring(  <span class="argument">$tpl</span>) : string</pre>
+                <p><em>Find a complete template, balancing opening and closing delimiters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>'' or template string starting with '[+template:' and ending with the matching '+]'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__find_test_substring" name="method__find_test_substring" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_find_test_substring()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_find_test_substring(  <span class="argument">$tpl</span>) : string</pre>
+                <p><em>Find a complete (test) element, balancing opening and closing delimiters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>'' or template string starting with '(' and ending with the matching ')'</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__parse_field_level_template" name="method__parse_field_level_template" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_parse_field_level_template()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_parse_field_level_template(  <span class="argument">$tpl</span>) : array</pre>
+                <p><em>Convert field-level &quot;template:&quot; string into its component parts</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( node =&gt; array( type =&gt; &quot;string | test | choice | template&quot;, length =&gt; bytes, value =&gt; string | node(s) ) )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__evaluate_template_array_node" name="method__evaluate_template_array_node" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_evaluate_template_array_node()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_evaluate_template_array_node(  <span class="argument">$node</span>,   <span class="argument">$markup_values = array()</span>) : mixed</pre>
+                <p><em>Analyze a field-level &quot;template:&quot; element, expanding Field-level Markup Substitution Parameters</em></p>
+                <p>Will return an array of values if one or more of the placeholders returns an array.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$node </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>string or array, depending on placeholder values. Placeholders corresponding to the keys of the markup_values will be replaced with their values.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__evaluate_template_node" name="method__evaluate_template_node" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_evaluate_template_node()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_evaluate_template_node(  <span class="argument">$node</span>,   <span class="argument">$markup_values = array()</span>) : string</pre>
+                <p><em>Analyze a field-level &quot;template:&quot; element, expanding Field-level Markup Substitution Parameters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$node </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>String with expanded values, if any</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__expand_field_level_template" name="method__expand_field_level_template" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_expand_field_level_template()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_expand_field_level_template(  <span class="argument">$tpl</span>,   <span class="argument">$markup_values = array()</span>,   <span class="argument">$return_arrays = false</span>) : mixed</pre>
+                <p><em>Analyze a field-level &quot;template:&quot; element, expanding Field-level Markup Substitution Parameters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tpl </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$markup_values </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$return_arrays </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>Element with expanded string/array values, if any</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__process_field_level_array" name="method__process_field_level_array" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_process_field_level_array()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_process_field_level_array(  <span class="argument">$record</span>,   <span class="argument">$option = &#039;text&#039;</span>,   <span class="argument">$keep_existing = false</span>) : array</pre>
+                <p><em>Process an markup field array value according to the supplied data-format option</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$record </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$keep_existing </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( parameter =&gt; value ) for all field-level parameters and anything in $markup_values</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__parse_arguments" name="method__parse_arguments" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_parse_arguments()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_parse_arguments(  <span class="argument">$argument_string</span>) : array</pre>
+                <p><em>Process an argument list within a field-level parameter format specification</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$argument_string </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>individual arguments, e.g. array( 0 =&gt; 'd/m/Y H:i:s', 1 =&gt; 'arg, &quot; two' )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.02                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__set_array_element" name="method__set_array_element" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_set_array_element()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_set_array_element(  <span class="argument">$needle</span>,   <span class="argument">$value</span>,   <span class="argument">$haystack</span>) : boolean</pre>
+                <p><em>Adds or replaces the value of a key in a possibly nested array structure</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$needle </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$value </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$haystack </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if $needle element set, false if not</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.51                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__unset_array_element" name="method__unset_array_element" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_unset_array_element()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_unset_array_element(  <span class="argument">$needle</span>,   <span class="argument">$haystack</span>) : boolean</pre>
+                <p><em>Deletes the value of a key in a possibly nested array structure</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$needle </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$haystack </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if $needle element found, false if not</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.51                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__parse_iso8601_date" name="method__parse_iso8601_date" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_parse_iso8601_date()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_parse_iso8601_date(  <span class="argument">$source_string</span>) : string</pre>
+                <p><em>Parse a ISO 8601 Timestamp</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source_string </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>formatted date string YYYY-MM-DD HH:mm:SS</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__parse_xmp_array" name="method__parse_xmp_array" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_parse_xmp_array()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_parse_xmp_array(  <span class="argument">$values</span>) : mixed</pre>
+                <p><em>Parse an XMP array value, stripping namespace prefixes and Seq/Alt/Bag arrays</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$values </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>Simplified array or string value</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__nonempty_value" name="method__nonempty_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_nonempty_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_nonempty_value(  <span class="argument">$namespace_array</span>,   <span class="argument">$namespace</span>,   <span class="argument">$key</span>) : string</pre>
+                <p><em>Search the namespace array for a non-empty value</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$namespace_array </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$namespace </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$key </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>trimmed value of the key within the namespace</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__bin_to_utf8" name="method__bin_to_utf8" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_bin_to_utf8()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_bin_to_utf8(  <span class="argument">$string</span>) : string</pre>
+                <p><em>Replace SQL incorrect characters (0x80 - 0xFF) with their UTF-8 equivalents</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$string </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>UTF-8 encoded string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.41                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__rational_to_decimal" name="method__rational_to_decimal" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_rational_to_decimal()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_rational_to_decimal(  <span class="argument">$rational</span>) : float</pre>
+                <p><em>Convert an EXIF GPS rational value to a PHP float value</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$rational </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    float
+                                            &mdash; <p>numerator/denominator</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__rational_to_string" name="method__rational_to_string" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_rational_to_string()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_rational_to_string(  <span class="argument">$rational</span>,   <span class="argument">$integer_format</span>,   <span class="argument">$fraction_format</span>,   <span class="argument">$mixed_format</span>) : mixed</pre>
+                <p><em>Convert an EXIF rational value to a formatted string</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$rational </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$integer_format </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$fraction_format </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$mixed_format </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>formatted value or boolean false if no value available</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.02                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__remove_terms" name="method__remove_terms" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_remove_terms()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_remove_terms(  <span class="argument">$post_id</span>,   <span class="argument">$terms</span>,   <span class="argument">$taxonomy_obj</span>) : array</pre>
+                <p><em>Remove terms from an attachment&#039;s assignments</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$terms </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$taxonomy_obj </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Term ids/names of the surviving terms</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.40                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-data.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-data.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

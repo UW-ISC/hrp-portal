@@ -1,0 +1,2853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-76166652"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-76166652" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLACore</h1>
+                    <p><em>Class MLA (Media Library Assistant) Core is the minimum support required for all other MLA features</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLACore.html#method_initialize" class="">initialize()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_media_view_settings_filter" class="">mla_media_view_settings_filter()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_wp_enqueue_media_action" class="">mla_wp_enqueue_media_action()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_plugins_loaded_action_wpml" class="">mla_plugins_loaded_action_wpml()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_wpml_unset_lang_admin_bar" class="">wpml_unset_lang_admin_bar()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_plugins_loaded_action" class="">mla_plugins_loaded_action()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_wp_redirect_filter" class="">mla_wp_redirect_filter()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_initialize_tax_checked_on_top" class="">mla_initialize_tax_checked_on_top()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_get_option" class="">mla_get_option()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_update_option" class="">mla_update_option()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_delete_option" class="">mla_delete_option()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_load_template" class="">mla_load_template()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_taxonomy_support" class="">mla_taxonomy_support()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_supported_taxonomies" class="">mla_supported_taxonomies()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_custom_field_support" class="">mla_custom_field_support()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_prepare_view_query" class="">mla_prepare_view_query()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_parse_view_specification" class="">mla_parse_view_specification()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_checklist_meta_box" class="">mla_checklist_meta_box()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_debug_mode" class="">mla_debug_mode()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_debug_file" class="">mla_debug_file()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_debug_content" class="">mla_debug_content()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_debug_flush" class="">mla_debug_flush()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_mla_debug_add" class="">mla_debug_add()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_admin_columns_support_deprecated" class="">admin_columns_support_deprecated()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_remove_column_types_deprecated" class="">remove_column_types_deprecated()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_add_editing_strategy" class="">add_editing_strategy()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_register_list_screen" class="">register_list_screen()</a><br />
+                                                                    <a href="../classes/MLACore.html#method_remove_column_types" class="">remove_column_types()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLACore.html#property_original_php_log" class="">$original_php_log</a><br />
+                                                                    <a href="../classes/MLACore.html#property_original_php_reporting" class="">$original_php_reporting</a><br />
+                                                                    <a href="../classes/MLACore.html#property_process_featured_in" class="">$process_featured_in</a><br />
+                                                                    <a href="../classes/MLACore.html#property_process_inserted_in" class="">$process_inserted_in</a><br />
+                                                                    <a href="../classes/MLACore.html#property_process_gallery_in" class="">$process_gallery_in</a><br />
+                                                                    <a href="../classes/MLACore.html#property_process_mla_gallery_in" class="">$process_mla_gallery_in</a><br />
+                                                                    <a href="../classes/MLACore.html#property_mla_debug_level" class="">$mla_debug_level</a><br />
+                                                                    <a href="../classes/MLACore.html#property_admin_columns_storage_model" class="">$admin_columns_storage_model</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLACore.html#constant_CURRENT_MLA_VERSION" class="">CURRENT_MLA_VERSION</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_STYLESHEET_SLUG" class="">STYLESHEET_SLUG</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_DEBUG_CATEGORY_ANY" class="">MLA_DEBUG_CATEGORY_ANY</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_DEBUG_CATEGORY_AJAX" class="">MLA_DEBUG_CATEGORY_AJAX</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_DEBUG_CATEGORY_LANGUAGE" class="">MLA_DEBUG_CATEGORY_LANGUAGE</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_DEBUG_CATEGORY_THUMBNAIL" class="">MLA_DEBUG_CATEGORY_THUMBNAIL</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_DEBUG_CATEGORY_METADATA" class="">MLA_DEBUG_CATEGORY_METADATA</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_ADMIN_PAGE_SLUG" class="">ADMIN_PAGE_SLUG</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_EDIT_DISPLAY" class="">MLA_ADMIN_SINGLE_EDIT_DISPLAY</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_EDIT_INSTALL" class="">MLA_ADMIN_SINGLE_EDIT_INSTALL</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_EDIT_UPDATE" class="">MLA_ADMIN_SINGLE_EDIT_UPDATE</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP" class="">MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE" class="">MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_MAP" class="">MLA_ADMIN_SINGLE_MAP</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SET_PARENT" class="">MLA_ADMIN_SET_PARENT</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_TERMS_SEARCH" class="">MLA_ADMIN_TERMS_SEARCH</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_DELETE" class="">MLA_ADMIN_SINGLE_DELETE</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_TRASH" class="">MLA_ADMIN_SINGLE_TRASH</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_RESTORE" class="">MLA_ADMIN_SINGLE_RESTORE</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_COPY" class="">MLA_ADMIN_SINGLE_COPY</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_SINGLE_ADD" class="">MLA_ADMIN_SINGLE_ADD</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_NONCE_ACTION" class="">MLA_ADMIN_NONCE_ACTION</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_MLA_ADMIN_NONCE_NAME" class="">MLA_ADMIN_NONCE_NAME</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_JAVASCRIPT_INLINE_EDIT_SLUG" class="">JAVASCRIPT_INLINE_EDIT_SLUG</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_JAVASCRIPT_QUERY_ATTACHMENTS_ACTION" class="">JAVASCRIPT_QUERY_ATTACHMENTS_ACTION</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_JAVASCRIPT_FILL_COMPAT_ACTION" class="">JAVASCRIPT_FILL_COMPAT_ACTION</a><br />
+                                                                    <a href="../classes/MLACore.html#constant_JAVASCRIPT_UPDATE_COMPAT_ACTION" class="">JAVASCRIPT_UPDATE_COMPAT_ACTION</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLACore.html#method__debug_log" class="">_debug_log()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLACore.html#property_mla_debug_messages" class="">$mla_debug_messages</a><br />
+                                                                    <a href="../classes/MLACore.html#property_mla_debug_mode" class="">$mla_debug_mode</a><br />
+                                                                    <a href="../classes/MLACore.html#property_mla_debug_file" class="">$mla_debug_file</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-core.html"><div class="path-wrapper">includes\class-mla-core.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLACore</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_CURRENT_MLA_VERSION" name="constant_CURRENT_MLA_VERSION" class="anchor"></a>
+            <article id="constant_CURRENT_MLA_VERSION" class="constant">
+                <h3 class="">CURRENT_MLA_VERSION</h3>
+                <pre class="signature">CURRENT_MLA_VERSION</pre>
+                <p><em>Current version number (moved from class-mla-main.php)</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_STYLESHEET_SLUG" name="constant_STYLESHEET_SLUG" class="anchor"></a>
+            <article id="constant_STYLESHEET_SLUG" class="constant">
+                <h3 class="">STYLESHEET_SLUG</h3>
+                <pre class="signature">STYLESHEET_SLUG</pre>
+                <p><em>Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_DEBUG_CATEGORY_ANY" name="constant_MLA_DEBUG_CATEGORY_ANY" class="anchor"></a>
+            <article id="constant_MLA_DEBUG_CATEGORY_ANY" class="constant">
+                <h3 class="">MLA_DEBUG_CATEGORY_ANY</h3>
+                <pre class="signature">MLA_DEBUG_CATEGORY_ANY</pre>
+                <p><em>Constant to log &quot;any&quot; debug activity</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_DEBUG_CATEGORY_AJAX" name="constant_MLA_DEBUG_CATEGORY_AJAX" class="anchor"></a>
+            <article id="constant_MLA_DEBUG_CATEGORY_AJAX" class="constant">
+                <h3 class="">MLA_DEBUG_CATEGORY_AJAX</h3>
+                <pre class="signature">MLA_DEBUG_CATEGORY_AJAX</pre>
+                <p><em>Constant to log Ajax debug activity</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_DEBUG_CATEGORY_LANGUAGE" name="constant_MLA_DEBUG_CATEGORY_LANGUAGE" class="anchor"></a>
+            <article id="constant_MLA_DEBUG_CATEGORY_LANGUAGE" class="constant">
+                <h3 class="">MLA_DEBUG_CATEGORY_LANGUAGE</h3>
+                <pre class="signature">MLA_DEBUG_CATEGORY_LANGUAGE</pre>
+                <p><em>Constant to log WPML/Polylang action/filter activity</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_DEBUG_CATEGORY_THUMBNAIL" name="constant_MLA_DEBUG_CATEGORY_THUMBNAIL" class="anchor"></a>
+            <article id="constant_MLA_DEBUG_CATEGORY_THUMBNAIL" class="constant">
+                <h3 class="">MLA_DEBUG_CATEGORY_THUMBNAIL</h3>
+                <pre class="signature">MLA_DEBUG_CATEGORY_THUMBNAIL</pre>
+                <p><em>Constant to log Ghostscript/Imagick activity</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_DEBUG_CATEGORY_METADATA" name="constant_MLA_DEBUG_CATEGORY_METADATA" class="anchor"></a>
+            <article id="constant_MLA_DEBUG_CATEGORY_METADATA" class="constant">
+                <h3 class="">MLA_DEBUG_CATEGORY_METADATA</h3>
+                <pre class="signature">MLA_DEBUG_CATEGORY_METADATA</pre>
+                <p><em>Constant to log IPTC/EXIF/XMP/PDF metadata activity</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_ADMIN_PAGE_SLUG" name="constant_ADMIN_PAGE_SLUG" class="anchor"></a>
+            <article id="constant_ADMIN_PAGE_SLUG" class="constant">
+                <h3 class="">ADMIN_PAGE_SLUG</h3>
+                <pre class="signature">ADMIN_PAGE_SLUG</pre>
+                <p><em>Slug for adding plugin submenu</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_EDIT_DISPLAY" name="constant_MLA_ADMIN_SINGLE_EDIT_DISPLAY" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_EDIT_DISPLAY" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_EDIT_DISPLAY</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_EDIT_DISPLAY</pre>
+                <p><em>mla_admin_action value to display a single item for editing/viewing</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_EDIT_INSTALL" name="constant_MLA_ADMIN_SINGLE_EDIT_INSTALL" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_EDIT_INSTALL" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_EDIT_INSTALL</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_EDIT_INSTALL</pre>
+                <p><em>mla_admin_action value to install an example plugin</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_EDIT_UPDATE" name="constant_MLA_ADMIN_SINGLE_EDIT_UPDATE" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_EDIT_UPDATE" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_EDIT_UPDATE</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_EDIT_UPDATE</pre>
+                <p><em>mla_admin_action value for updating a single item</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP" name="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP</pre>
+                <p><em>mla_admin_action value for mapping Custom Field metadata</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE" name="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE</pre>
+                <p><em>mla_admin_action value for purging Custom Field values</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_MAP" name="constant_MLA_ADMIN_SINGLE_MAP" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_MAP" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_MAP</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_MAP</pre>
+                <p><em>mla_admin_action value for mapping IPTC/EXIF metadata</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SET_PARENT" name="constant_MLA_ADMIN_SET_PARENT" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SET_PARENT" class="constant">
+                <h3 class="">MLA_ADMIN_SET_PARENT</h3>
+                <pre class="signature">MLA_ADMIN_SET_PARENT</pre>
+                <p><em>mla_admin_action value for setting an item&#039;s parent object</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_TERMS_SEARCH" name="constant_MLA_ADMIN_TERMS_SEARCH" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_TERMS_SEARCH" class="constant">
+                <h3 class="">MLA_ADMIN_TERMS_SEARCH</h3>
+                <pre class="signature">MLA_ADMIN_TERMS_SEARCH</pre>
+                <p><em>mla_admin_action value for searching taxonomy terms</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_DELETE" name="constant_MLA_ADMIN_SINGLE_DELETE" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_DELETE" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_DELETE</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_DELETE</pre>
+                <p><em>mla_admin_action value for permanently deleting a single item</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_TRASH" name="constant_MLA_ADMIN_SINGLE_TRASH" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_TRASH" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_TRASH</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_TRASH</pre>
+                <p><em>mla_admin_action value for moving a single item to the trash</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_RESTORE" name="constant_MLA_ADMIN_SINGLE_RESTORE" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_RESTORE" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_RESTORE</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_RESTORE</pre>
+                <p><em>mla_admin_action value for restoring a single item from the trash</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_COPY" name="constant_MLA_ADMIN_SINGLE_COPY" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_COPY" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_COPY</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_COPY</pre>
+                <p><em>mla_admin_action value for copying a single item</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_SINGLE_ADD" name="constant_MLA_ADMIN_SINGLE_ADD" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_SINGLE_ADD" class="constant">
+                <h3 class="">MLA_ADMIN_SINGLE_ADD</h3>
+                <pre class="signature">MLA_ADMIN_SINGLE_ADD</pre>
+                <p><em>mla_admin_action value for copying a single item</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_NONCE_ACTION" name="constant_MLA_ADMIN_NONCE_ACTION" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_NONCE_ACTION" class="constant">
+                <h3 class="">MLA_ADMIN_NONCE_ACTION</h3>
+                <pre class="signature">MLA_ADMIN_NONCE_ACTION</pre>
+                <p><em>Action name; gives a context for the nonce</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ADMIN_NONCE_NAME" name="constant_MLA_ADMIN_NONCE_NAME" class="anchor"></a>
+            <article id="constant_MLA_ADMIN_NONCE_NAME" class="constant">
+                <h3 class="">MLA_ADMIN_NONCE_NAME</h3>
+                <pre class="signature">MLA_ADMIN_NONCE_NAME</pre>
+                <p><em>Nonce name; uniquely identifies the nonce</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_JAVASCRIPT_INLINE_EDIT_SLUG" name="constant_JAVASCRIPT_INLINE_EDIT_SLUG" class="anchor"></a>
+            <article id="constant_JAVASCRIPT_INLINE_EDIT_SLUG" class="constant">
+                <h3 class="">JAVASCRIPT_INLINE_EDIT_SLUG</h3>
+                <pre class="signature">JAVASCRIPT_INLINE_EDIT_SLUG</pre>
+                <p><em>Slug for localizing and enqueueing JavaScript - MLA List Table</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_JAVASCRIPT_QUERY_ATTACHMENTS_ACTION" name="constant_JAVASCRIPT_QUERY_ATTACHMENTS_ACTION" class="anchor"></a>
+            <article id="constant_JAVASCRIPT_QUERY_ATTACHMENTS_ACTION" class="constant">
+                <h3 class="">JAVASCRIPT_QUERY_ATTACHMENTS_ACTION</h3>
+                <pre class="signature">JAVASCRIPT_QUERY_ATTACHMENTS_ACTION</pre>
+                <p><em>Slug for the &quot;query attachments&quot; action - Add Media and related dialogs</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_JAVASCRIPT_FILL_COMPAT_ACTION" name="constant_JAVASCRIPT_FILL_COMPAT_ACTION" class="anchor"></a>
+            <article id="constant_JAVASCRIPT_FILL_COMPAT_ACTION" class="constant">
+                <h3 class="">JAVASCRIPT_FILL_COMPAT_ACTION</h3>
+                <pre class="signature">JAVASCRIPT_FILL_COMPAT_ACTION</pre>
+                <p><em>Slug for the &quot;fill compat-attachment-fields&quot; action - Add Media and related dialogs</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_JAVASCRIPT_UPDATE_COMPAT_ACTION" name="constant_JAVASCRIPT_UPDATE_COMPAT_ACTION" class="anchor"></a>
+            <article id="constant_JAVASCRIPT_UPDATE_COMPAT_ACTION" class="constant">
+                <h3 class="">JAVASCRIPT_UPDATE_COMPAT_ACTION</h3>
+                <pre class="signature">JAVASCRIPT_UPDATE_COMPAT_ACTION</pre>
+                <p><em>Slug for the &quot;update compat-attachment-fields&quot; action - Add Media and related dialogs</em></p>
+                
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_original_php_log" name="property_original_php_log" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$original_php_log</h3>
+                <pre class="signature">$original_php_log : string</pre>
+                <p><em>Original PHP error_log path and file</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_original_php_reporting" name="property_original_php_reporting" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$original_php_reporting</h3>
+                <pre class="signature">$original_php_reporting : string</pre>
+                <p><em>Original PHP error_reporting value</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_process_featured_in" name="property_process_featured_in" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$process_featured_in</h3>
+                <pre class="signature">$process_featured_in : boolean</pre>
+                <p><em>Option setting for &quot;Featured in&quot; reporting</em></p>
+                <p>This setting is false if the &quot;Featured in&quot; database access setting is &quot;disabled&quot;, else true.</p>
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_process_inserted_in" name="property_process_inserted_in" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$process_inserted_in</h3>
+                <pre class="signature">$process_inserted_in : boolean</pre>
+                <p><em>Option setting for &quot;Inserted in&quot; reporting</em></p>
+                <p>This setting is false if the &quot;Inserted in&quot; database access setting is &quot;disabled&quot;, else true.</p>
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_process_gallery_in" name="property_process_gallery_in" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$process_gallery_in</h3>
+                <pre class="signature">$process_gallery_in : boolean</pre>
+                <p><em>Option setting for &quot;Gallery in&quot; reporting</em></p>
+                <p>This setting is false if the &quot;Gallery in&quot; database access setting is &quot;disabled&quot;, else true.</p>
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_process_mla_gallery_in" name="property_process_mla_gallery_in" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$process_mla_gallery_in</h3>
+                <pre class="signature">$process_mla_gallery_in : boolean</pre>
+                <p><em>Option setting for &quot;MLA Gallery in&quot; reporting</em></p>
+                <p>This setting is false if the &quot;MLA Gallery in&quot; database access setting is &quot;disabled&quot;, else true.</p>
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_debug_level" name="property_mla_debug_level" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$mla_debug_level</h3>
+                <pre class="signature">$mla_debug_level : integer</pre>
+                <p><em>Effective MLA Debug Level, from MLA_DEBUG_LEVEL or override option</em></p>
+                
+
+                                <h4>Type</h4>
+                integer
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_admin_columns_storage_model" name="property_admin_columns_storage_model" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$admin_columns_storage_model</h3>
+                <pre class="signature">$admin_columns_storage_model : object</pre>
+                <p><em>Admin Columns support storage model object for the Media/Assistant submenu</em></p>
+                
+
+                                <h4>Type</h4>
+                object
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_debug_messages" name="property_mla_debug_messages" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_debug_messages</h3>
+                <pre class="signature">$mla_debug_messages : string</pre>
+                <p><em>Accumulates debug messages</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_debug_mode" name="property_mla_debug_mode" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_debug_mode</h3>
+                <pre class="signature">$mla_debug_mode : string</pre>
+                <p><em>Debug information collection mode</em></p>
+                <p>Collection mode: 'buffer', 'console', 'log' or 'none' (default).</p>
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_debug_file" name="property_mla_debug_file" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_debug_file</h3>
+                <pre class="signature">$mla_debug_file : string</pre>
+                <p><em>Debug information output file for mode = &#039;log&#039;</em></p>
+                
+
+                                <h4>Type</h4>
+                string
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_initialize" name="method_initialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">initialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">initialize() : void</pre>
+                <p><em>Initialization function, similar to __construct()</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.00                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_media_view_settings_filter" name="method_mla_media_view_settings_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_media_view_settings_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_media_view_settings_filter(  <span class="argument">$settings</span>,   <span class="argument">$post</span>) </pre>
+                <p><em>Ensures that MLA media manager enhancements are present when required.</em></p>
+                <p>Declared public because it is a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$settings </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$post </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_wp_enqueue_media_action" name="method_mla_wp_enqueue_media_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_wp_enqueue_media_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_wp_enqueue_media_action() </pre>
+                <p><em>Registers and enqueues the mla-beaver-builder-style.css file, when needed.</em></p>
+                <p>Declared public because it is an action.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_plugins_loaded_action_wpml" name="method_mla_plugins_loaded_action_wpml" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_plugins_loaded_action_wpml()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_plugins_loaded_action_wpml() : void</pre>
+                <p><em>Add the WPML suppress All languages filter</em></p>
+                <p>The &quot;add_action&quot; for this function is in mla-plugin-loader.php, because the &quot;initialize&quot;
+function above doesn't run in time.
+Defined as public because it's an action.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.32                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_wpml_unset_lang_admin_bar" name="method_wpml_unset_lang_admin_bar" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">wpml_unset_lang_admin_bar()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">wpml_unset_lang_admin_bar(  <span class="argument">$suppress_all_languages</span>) </pre>
+                <p><em>Restores All languages view to Media/Assistant submenu screen</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$suppress_all_languages </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.32                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_plugins_loaded_action" name="method_mla_plugins_loaded_action" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_plugins_loaded_action()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_plugins_loaded_action() : void</pre>
+                <p><em>Load a plugin text domain and alternate debug file</em></p>
+                <p>The &quot;add_action&quot; for this function is in mla-plugin-loader.php, because the &quot;initialize&quot;
+function above doesn't run in time.
+Defined as public because it's an action.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.60                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_wp_redirect_filter" name="method_mla_wp_redirect_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_wp_redirect_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_wp_redirect_filter(string  <span class="argument">$location</span>, integer  <span class="argument">$status</span>) </pre>
+                <p><em>Filter the redirect location.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$location </td>
+                                <td><p>The path to redirect to.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$status </td>
+                                <td><p>Status code to use.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_initialize_tax_checked_on_top" name="method_mla_initialize_tax_checked_on_top" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_initialize_tax_checked_on_top()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_initialize_tax_checked_on_top() : void</pre>
+                <p><em>Initialize &quot;tax_checked_on_top&quot; =&gt; &quot;checked&quot; default for all supported taxonomies</em></p>
+                <p>Called after all taxonomies are registered, e.g., in MLAObjects::_build_taxonomies.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.02                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_option" name="method_mla_get_option" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_option()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_option(  <span class="argument">$option</span>,   <span class="argument">$get_default = false</span>,   <span class="argument">$get_stored = false</span>,   <span class="argument">$option_table = NULL</span>) : mixed</pre>
+                <p><em>Return the stored value or default value of a defined MLA option</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$get_default </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$get_stored </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option_table </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    mixed
+                                            &mdash; <p>Value(s) for the option or false if the option is not a defined MLA option</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_update_option" name="method_mla_update_option" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_update_option()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_update_option(  <span class="argument">$option</span>,   <span class="argument">$newvalue</span>,   <span class="argument">$option_table = NULL</span>) : boolean</pre>
+                <p><em>Add or update the stored value of a defined MLA option</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$newvalue </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option_table </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if the value was changed or false if the update failed</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_delete_option" name="method_mla_delete_option" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_delete_option()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_delete_option(  <span class="argument">$option</span>,   <span class="argument">$option_table = NULL</span>) : boolean</pre>
+                <p><em>Delete the stored value of a defined MLA option</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$option </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$option_table </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>True if the option was deleted, otherwise false</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_load_template" name="method_mla_load_template" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_load_template()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_load_template(  <span class="argument">$source</span>,   <span class="argument">$type = &#039;file&#039;</span>) : string|array|false|NULL</pre>
+                <p><em>Load an HTML template from a file</em></p>
+                <p>Loads a template to a string or a multi-part template to an array.
+Multi-part templates are divided by comments of the form <!-- template="key" -->,
+where &quot;key&quot; becomes the key part of the array.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$source </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string|array|false|NULL
+                                            &mdash; <p>string for files that do not contain template divider comments,
+array for files containing template divider comments,
+false if file or option does not exist,
+NULL if file could not be loaded.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_taxonomy_support" name="method_mla_taxonomy_support" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_taxonomy_support()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_taxonomy_support(  <span class="argument">$tax_name</span>,   <span class="argument">$support_type = &#039;support&#039;</span>) : boolean|string</pre>
+                <p><em>Determine MLA support for a taxonomy, handling the special case where the
+settings are being updated or reset.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$tax_name </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$support_type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean|string
+                                            &mdash; <p>true if the taxonomy is supported in this way else false.
+string if $tax_name is '' and $support_type is 'filter', returns the taxonomy to filter by.
+string if $support_type is 'metakey', returns the custom field to filter by.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_supported_taxonomies" name="method_mla_supported_taxonomies" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_supported_taxonomies()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_supported_taxonomies(  <span class="argument">$support_type = &#039;support&#039;</span>) : array|string</pre>
+                <p><em>Returns an array of taxonomy names assigned to $support_type</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$support_type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array|string
+                                            &mdash; <p>array   taxonomies assigned to $support_type; can be empty.
+string if $support_type is 'metakey', returns the custom field to filter by.</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_custom_field_support" name="method_mla_custom_field_support" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_custom_field_support()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_custom_field_support(  <span class="argument">$support_type = &#039;default_columns&#039;</span>) : array</pre>
+                <p><em>Evaluate support information for custom field mapping</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$support_type </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>default, hidden, sortable quick_edit or bulk_edit colums in appropriate format</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_prepare_view_query" name="method_mla_prepare_view_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_prepare_view_query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_prepare_view_query(  <span class="argument">$slug</span>,   <span class="argument">$specification</span>) : array</pre>
+                <p><em>Convert a Library View/Post MIME Type specification to WP_Query parameters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$slug </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$specification </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>post_mime_type specification or custom field query</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.40                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_parse_view_specification" name="method_mla_parse_view_specification" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_parse_view_specification()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_parse_view_specification(  <span class="argument">$specification</span>) : array</pre>
+                <p><em>Analyze a Library View/Post MIME Type specification, returning an array of the placeholders it contains</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$specification </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>( ['prefix'] =&gt; string, ['name'] =&gt; string, ['value'] =&gt; string, ['option'] =&gt; string, optional ['error'] =&gt; string )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.40                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_checklist_meta_box" name="method_mla_checklist_meta_box" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_checklist_meta_box()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_checklist_meta_box(  <span class="argument">$target_post</span>,   <span class="argument">$box</span>) : void</pre>
+                <p><em>Display taxonomy &quot;checklist&quot; form fields</em></p>
+                <p>Adapted from /wp-admin/includes/ajax-actions.php function _wp_ajax_add_hierarchical_term().
+Includes the &quot;? Search&quot; area to filter the term checklist by entering part
+or all of a word/phrase in the term label.
+Output to the Media/Edit Media screen and to the Media Manager Modal Window.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$target_post </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$box </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.71                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_debug_mode" name="method_mla_debug_mode" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_debug_mode()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_debug_mode(string  <span class="argument">$mode = false</span>) : string</pre>
+                <p><em>Get/Set debug information collection mode</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$mode </td>
+                                <td><p>Optional. New collection mode: 'none' (default), 'buffer', 'console' or 'log'</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The previous mode value, i.e., before the update</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_debug_file" name="method_mla_debug_file" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_debug_file()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_debug_file(string  <span class="argument">$file = NULL</span>) : string</pre>
+                <p><em>Get/Set debug information collection output file for mode = &#039;log&#039;</em></p>
+                <p>Note that WP_CONTENT_DIR will be pre-pended to the value, and a slash
+will be added to the front of the value if necessary.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$file </td>
+                                <td><p>Optional. The (optional path and) file name, relative to WP_CONTENT_DIR,
+or false/empty string to clear the value.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>The previous file value, i.e., before the update, relative to WP_CONTENT_DIR</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.14                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_debug_content" name="method_mla_debug_content" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_debug_content()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_debug_content(string  <span class="argument">$format = &#039;string&#039;</span>, string  <span class="argument">$glue = &#039;&lt;p&gt;&#039;</span>) : boolean</pre>
+                <p><em>Get debug information without clearing the buffer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$format </td>
+                                <td><p>Return data type: 'string' (default) or 'array'</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>string</td>
+                                <td>$glue </td>
+                                <td><p>Join array elements with '\n' or '<p>' (default)</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if success else false</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_debug_flush" name="method_mla_debug_flush" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_debug_flush()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_debug_flush(string  <span class="argument">$destination = &#039;buffer&#039;</span>, boolean  <span class="argument">$stop_collecting = true</span>) : string</pre>
+                <p><em>Flush debug information and clear buffer</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$destination </td>
+                                <td><p>Destination: 'buffer' (default), 'console', 'log' or 'none'</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>boolean</td>
+                                <td>$stop_collecting </td>
+                                <td><p>true (default) to stop, false to continue collection</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>debug content if $destination == 'buffer' else empty string</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_debug_add" name="method_mla_debug_add" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_debug_add()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_debug_add(string  <span class="argument">$message</span>, integer  <span class="argument">$debug_level = NULL</span>) </pre>
+                <p><em>Add a debug message to the collection</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$message </td>
+                                <td><p>Message text</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>integer</td>
+                                <td>$debug_level </td>
+                                <td><p>Optional. Debug category.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.12                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_admin_columns_support_deprecated" name="method_admin_columns_support_deprecated" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">admin_columns_support_deprecated()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">admin_columns_support_deprecated(array  <span class="argument">$storage_models</span>, object  <span class="argument">$cpac</span>) </pre>
+                <p><em>Define the Media/Assistant submenu screen to the (old) Admin Columns plugin</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$storage_models </td>
+                                <td><p>List of storage model class instances ( [key] =&gt; [CPAC_Storage_Model object] )</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>object</td>
+                                <td>$cpac </td>
+                                <td><p>CPAC, the root CodePress Admin Columns object</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.22                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_column_types_deprecated" name="method_remove_column_types_deprecated" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_column_types_deprecated()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_column_types_deprecated(array&lt;mixed,\CPAC_Column&gt;  <span class="argument">$columns</span>,   <span class="argument">$storage_model</span>) </pre>
+                <p><em>Remove duplicate columns from the Admin Columns &quot;Custom&quot; section</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array&lt;mixed,\CPAC_Column&gt;</td>
+                                <td>$columns </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$storage_model </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_add_editing_strategy" name="method_add_editing_strategy" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">add_editing_strategy()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">add_editing_strategy(\ACP_Editing_Model  <span class="argument">$model</span>) </pre>
+                <p><em>Set MLA-specific inline editing strategy</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\ACP_Editing_Model</td>
+                                <td>$model </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_register_list_screen" name="method_register_list_screen" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">register_list_screen()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">register_list_screen() </pre>
+                <p><em>Create and register MLA-specific list screen handler for Admin Columns</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_remove_column_types" name="method_remove_column_types" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">remove_column_types()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">remove_column_types(\AC_ListScreen  <span class="argument">$listscreen</span>) </pre>
+                <p><em>Remove duplicate columns from the Admin Columns &quot;Custom&quot; section</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>\AC_ListScreen</td>
+                                <td>$listscreen </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.50                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__debug_log" name="method__debug_log" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_debug_log()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_debug_log(string  <span class="argument">$message</span>) </pre>
+                <p><em>Write a debug message to the appropriate log file</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>string</td>
+                                <td>$message </td>
+                                <td><p>Message text</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.14                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-core.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-core.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>

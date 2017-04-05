@@ -1,0 +1,2103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>Media Library Assistant</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    <script type="text/javascript">
+    function loadExternalCodeSnippets() {
+        Array.prototype.slice.call(document.querySelectorAll('pre[data-src]')).forEach(function (pre) {
+            var src = pre.getAttribute('data-src');
+            var extension = (src.match(/\.(\w+)$/) || [, ''])[1];
+            var language = 'php';
+
+            var code = document.createElement('code');
+            code.className = 'language-' + language;
+
+            pre.textContent = '';
+
+            code.textContent = 'Loading…';
+
+            pre.appendChild(code);
+
+            var xhr = new XMLHttpRequest();
+
+            xhr.open('GET', src, true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState == 4) {
+
+                    if (xhr.status < 400 && xhr.responseText) {
+                        code.textContent = xhr.responseText;
+
+                        Prism.highlightElement(code);
+                    }
+                    else if (xhr.status >= 400) {
+                        code.textContent = '✖ Error ' + xhr.status + ' while fetching file: ' + xhr.statusText;
+                    }
+                    else {
+                        code.textContent = '✖ Error: File does not exist or is empty';
+                    }
+                }
+            };
+
+            xhr.send(null);
+        });
+    }
+
+    $(document).ready(function(){
+        loadExternalCodeSnippets();
+    });
+    $('#source-view').on('shown', function () {
+        loadExternalCodeSnippets();
+    })
+</script>
+
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Media Library Assistant</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">5</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+                                <div class="accordion" style="margin-bottom: 0">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1989614373"></a>
+                                <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
+            </div>
+            <div id="namespace-1989614373" class="accordion-body collapse in">
+                <div class="accordion-inner">
+
+                    
+                    <ul>
+                                                                                                    <li class="class"><a href="../classes/AC_Addon_MLA_Editing_Strategy.html">AC_Addon_MLA_Editing_Strategy</a></li>
+                                                    <li class="class"><a href="../classes/AC_Addon_MLA_ListScreen.html">AC_Addon_MLA_ListScreen</a></li>
+                                                    <li class="class"><a href="../classes/CPAC_Deprecated_Storage_Model_MLA.html">CPAC_Deprecated_Storage_Model_MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA.html">MLA</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Ajax.html">MLA_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Checklist_Walker.html">MLA_Checklist_Walker</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Field_Query.html">MLA_Custom_Field_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Custom_Fields_List_Table.html">MLA_Custom_Fields_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Example_List_Table.html">MLA_Example_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_List_Table.html">MLA_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang.html">MLA_Polylang</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Polylang_Shortcodes.html">MLA_Polylang_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_List_Table.html">MLA_Template_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Template_Query.html">MLA_Template_Query</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Thumbnail.html">MLA_Thumbnail</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upgrader_Skin.html">MLA_Upgrader_Skin</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_List_Table.html">MLA_Upload_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_Upload_Optional_List_Table.html">MLA_Upload_Optional_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_View_List_Table.html">MLA_View_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML.html">MLA_WPML</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_List_Table.html">MLA_WPML_List_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Shortcodes.html">MLA_WPML_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLA_WPML_Table.html">MLA_WPML_Table</a></li>
+                                                    <li class="class"><a href="../classes/MLACore.html">MLACore</a></li>
+                                                    <li class="class"><a href="../classes/MLACoreOptions.html">MLACoreOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAData.html">MLAData</a></li>
+                                                    <li class="class"><a href="../classes/MLAData_Source.html">MLAData_Source</a></li>
+                                                    <li class="class"><a href="../classes/MLAEdit.html">MLAEdit</a></li>
+                                                    <li class="class"><a href="../classes/MLAFileDownloader.html">MLAFileDownloader</a></li>
+                                                    <li class="class"><a href="../classes/MLAImageProcessor.html">MLAImageProcessor</a></li>
+                                                    <li class="class"><a href="../classes/MLAMime.html">MLAMime</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal.html">MLAModal</a></li>
+                                                    <li class="class"><a href="../classes/MLAModal_Ajax.html">MLAModal_Ajax</a></li>
+                                                    <li class="class"><a href="../classes/MLAMutex.html">MLAMutex</a></li>
+                                                    <li class="class"><a href="../classes/MLAObjects.html">MLAObjects</a></li>
+                                                    <li class="class"><a href="../classes/MLAOptions.html">MLAOptions</a></li>
+                                                    <li class="class"><a href="../classes/MLAPDF.html">MLAPDF</a></li>
+                                                    <li class="class"><a href="../classes/MLAQuery.html">MLAQuery</a></li>
+                                                    <li class="class"><a href="../classes/MLAReferences.html">MLAReferences</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings.html">MLASettings</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_CustomFields.html">MLASettings_CustomFields</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Documentation.html">MLASettings_Documentation</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_IPTCEXIF.html">MLASettings_IPTCEXIF</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Shortcodes.html">MLASettings_Shortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_Upload.html">MLASettings_Upload</a></li>
+                                                    <li class="class"><a href="../classes/MLASettings_View.html">MLASettings_View</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcode_Support.html">MLAShortcode_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLAShortcodes.html">MLAShortcodes</a></li>
+                                                    <li class="class"><a href="../classes/MLATemplate_Support.html">MLATemplate_Support</a></li>
+                                                    <li class="class"><a href="../classes/MLATest.html">MLATest</a></li>
+                                                    <li class="class"><a href="../classes/MLATextWidget.html">MLATextWidget</a></li>
+                                                    <li class="class"><a href="../classes/MLAUninstall.html">MLAUninstall</a></li>
+                                            </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        </div>
+    </section>
+    <section class="row-fluid">
+        <div class="span10 offset2">
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <nav>
+                                                <a href="../namespaces/default.html">\</a> <i class="icon-level-up"></i>
+                                            </nav>
+                    <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal"><i class="icon-code"></i></a>
+
+                    <h1><small>\</small>MLAQuery</h1>
+                    <p><em>Class MLA (Media Library Assistant) Query provides database query support
+for MLA Ajax, Shortcode and Admin needs</em></p>
+                    
+                    
+                                        
+                    <section id="summary">
+                        <h2>Summary</h2>
+                        <section class="row-fluid heading">
+                            <section class="span4">
+                                <a href="#methods">Methods</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#properties">Properties</a>
+                            </section>
+                            <section class="span4">
+                                <a href="#constants">Constants</a>
+                            </section>
+                        </section>
+                        <section class="row-fluid public">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAQuery.html#method_initialize" class="">initialize()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_fetch_attachment_references" class="">mla_fetch_attachment_references()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_attachment_array_fetch_references" class="">mla_attachment_array_fetch_references()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_flush_mla_galleries" class="">mla_flush_mla_galleries()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_get_sortable_columns" class="">mla_get_sortable_columns()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_count_list_table_items" class="">mla_count_list_table_items()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_list_table_items" class="">mla_query_list_table_items()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_media_modal_items" class="">mla_query_media_modal_items()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_fetch_attachment_parent_data" class="">mla_fetch_attachment_parent_data()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_fetch_attachment_metadata" class="">mla_fetch_attachment_metadata()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_custom_field_option_value" class="">mla_custom_field_option_value()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_search_terms_tidy" class="">mla_search_terms_tidy()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_search_filter" class="">mla_query_posts_search_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_where_filter" class="">mla_query_posts_where_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_join_filter" class="">mla_query_posts_join_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_groupby_filter" class="">mla_query_posts_groupby_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_orderby_filter" class="">mla_query_posts_orderby_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_relevanssi_admin_search_ok_filter" class="">mla_query_relevanssi_admin_search_ok_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_relevanssi_prevent_default_request_filter" class="">mla_query_relevanssi_prevent_default_request_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_terms_clauses_filter" class="">mla_query_terms_clauses_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_clauses_filter" class="">mla_query_posts_clauses_filter()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method_mla_query_posts_clauses_request_filter" class="">mla_query_posts_clauses_request_filter()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAQuery.html#property_wp_4dot0_plus" class="">$wp_4dot0_plus</a><br />
+                                                                    <a href="../classes/MLAQuery.html#property_default_columns" class="">$default_columns</a><br />
+                                                                    <a href="../classes/MLAQuery.html#property_default_hidden_columns" class="">$default_hidden_columns</a><br />
+                                                                    <a href="../classes/MLAQuery.html#property_default_sortable_columns" class="">$default_sortable_columns</a><br />
+                                                                    <a href="../classes/MLAQuery.html#property_query_parameters" class="">$query_parameters</a><br />
+                                                                    <a href="../classes/MLAQuery.html#property_search_parameters" class="">$search_parameters</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAQuery.html#constant_MLA_ALT_TEXT_SUBQUERY" class="">MLA_ALT_TEXT_SUBQUERY</a><br />
+                                                                    <a href="../classes/MLAQuery.html#constant_MLA_FILE_SUBQUERY" class="">MLA_FILE_SUBQUERY</a><br />
+                                                                    <a href="../classes/MLAQuery.html#constant_MLA_ORDERBY_SUBQUERY" class="">MLA_ORDERBY_SUBQUERY</a><br />
+                                                                    <a href="../classes/MLAQuery.html#constant_MLA_TABLE_VIEW_SUBQUERY" class="">MLA_TABLE_VIEW_SUBQUERY</a><br />
+                                                            </section>
+                        </section>
+                        <section class="row-fluid protected">
+                            <section class="span4">
+                                                                    <em>No protected methods found</em>
+                                                            </section>
+                            <section class="span4">
+                                                                    <em>No protected properties found</em>
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                        <section class="row-fluid private">
+                            <section class="span4">
+                                                                    <a href="../classes/MLAQuery.html#method__localize_default_columns_array" class="">_localize_default_columns_array()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method__prepare_list_table_query" class="">_prepare_list_table_query()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method__execute_list_table_query" class="">_execute_list_table_query()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method__wildcard_search_string" class="">_wildcard_search_string()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method__match_quoted_phrase" class="">_match_quoted_phrase()</a><br />
+                                                                    <a href="../classes/MLAQuery.html#method__parse_terms_search" class="">_parse_terms_search()</a><br />
+                                                            </section>
+                            <section class="span4">
+                                                                    <a href="../classes/MLAQuery.html#property_mla_list_table_items" class="">$mla_list_table_items</a><br />
+                                                            </section>
+                            <section class="span4">
+                                <em>N/A</em>
+                            </section>
+                        </section>
+                    </section>
+                </div>
+                <aside class="span4 detailsbar">
+                                        
+                    
+                    <dl>
+                        <dt>File</dt>
+                            <dd><a href="../files/includes.class-mla-data-query.html"><div class="path-wrapper">includes\class-mla-data-query.php</div></a></dd>
+                                                <dt>Package</dt>
+                            <dd><div class="namespace-wrapper">Media Library Assistant</div></dd>
+                                                <dt>Class hierarchy</dt>
+                            <dd class="hierarchy">
+                                                                                                                                                                    <div class="namespace-wrapper">\MLAQuery</div>
+                            </dd>
+
+                        
+                        
+                        
+                        
+                                                                        </dl>
+                    <h2>Tags</h2>
+                    <table class="table table-condensed">
+                                            <tr>
+                            <th>
+                                since
+                            </th>
+                            <td>
+                                                                    
+                                                            </td>
+                        </tr>
+                                        </table>
+                </aside>
+            </div>
+
+                                    <a id="constants" name="constants"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Constants</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ALT_TEXT_SUBQUERY" name="constant_MLA_ALT_TEXT_SUBQUERY" class="anchor"></a>
+            <article id="constant_MLA_ALT_TEXT_SUBQUERY" class="constant">
+                <h3 class="">MLA_ALT_TEXT_SUBQUERY</h3>
+                <pre class="signature">MLA_ALT_TEXT_SUBQUERY</pre>
+                <p><em>Provides a unique value for the ALT Text &quot;Search Media&quot; subquery</em></p>
+                <p>The subquery is used to filter the Media/Assistant submenu table by
+ALT Text with the Search Media text box.</p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_FILE_SUBQUERY" name="constant_MLA_FILE_SUBQUERY" class="anchor"></a>
+            <article id="constant_MLA_FILE_SUBQUERY" class="constant">
+                <h3 class="">MLA_FILE_SUBQUERY</h3>
+                <pre class="signature">MLA_FILE_SUBQUERY</pre>
+                <p><em>Provides a unique value for the File Name &quot;Search Media&quot; subquery</em></p>
+                <p>The subquery is used to filter the Media/Assistant submenu table by
+File Name with the Search Media text box.</p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_ORDERBY_SUBQUERY" name="constant_MLA_ORDERBY_SUBQUERY" class="anchor"></a>
+            <article id="constant_MLA_ORDERBY_SUBQUERY" class="constant">
+                <h3 class="">MLA_ORDERBY_SUBQUERY</h3>
+                <pre class="signature">MLA_ORDERBY_SUBQUERY</pre>
+                <p><em>Provides a unique suffix for the custom field &quot;orderby&quot; subquery</em></p>
+                <p>The subquery is used to sort the Media/Assistant submenu table on
+ALT Text and custom field columns.</p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="constant_MLA_TABLE_VIEW_SUBQUERY" name="constant_MLA_TABLE_VIEW_SUBQUERY" class="anchor"></a>
+            <article id="constant_MLA_TABLE_VIEW_SUBQUERY" class="constant">
+                <h3 class="">MLA_TABLE_VIEW_SUBQUERY</h3>
+                <pre class="signature">MLA_TABLE_VIEW_SUBQUERY</pre>
+                <p><em>Provides a unique suffix for the &quot;Table View custom:&quot; SQL View</em></p>
+                <p>The SQL View is used to filter the Media/Assistant submenu table on
+custom field Table Views.</p>
+            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="properties" name="properties"></a>
+            <div class="row-fluid">
+                <div class="span8 content class">
+                    <h2>Properties</h2>
+                </div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_wp_4dot0_plus" name="property_wp_4dot0_plus" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$wp_4dot0_plus</h3>
+                <pre class="signature">$wp_4dot0_plus : boolean</pre>
+                <p><em>WordPress version test for $wpdb-&gt;esc_like() Vs esc_sql()</em></p>
+                
+
+                                <h4>Type</h4>
+                boolean
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_columns" name="property_default_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$default_columns</h3>
+                <pre class="signature">$default_columns : array</pre>
+                <p><em>Table column definitions</em></p>
+                <p>This array defines table columns and titles where the key is the column slug (and class)
+and the value is the column's title text. If you need a checkbox for bulk actions,
+use the special slug &quot;cb&quot;.</p>
+<p>The 'cb' column is treated differently than the rest. If including a checkbox
+column in your table you must create a column_cb() method. If you don't need
+bulk actions or checkboxes, simply leave the 'cb' entry out of your array.</p>
+<p>All of the columns are added to this array by MLA_List_Table::mla_admin_init_action.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_hidden_columns" name="property_default_hidden_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$default_hidden_columns</h3>
+                <pre class="signature">$default_hidden_columns : array</pre>
+                <p><em>Default values for hidden columns</em></p>
+                <p>This array is used when the user-level option is not set, i.e.,
+the user has not altered the selection of hidden columns.</p>
+<p>The value on the right-hand side must match the column slug, e.g.,
+array(0 =&gt; 'ID_parent, 1 =&gt; 'title_name').</p>
+<p>Taxonomy and custom field columns are added to this array by
+MLA_List_Table::mla_admin_init_action.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_default_sortable_columns" name="property_default_sortable_columns" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$default_sortable_columns</h3>
+                <pre class="signature">$default_sortable_columns : array</pre>
+                <p><em>Sortable column definitions</em></p>
+                <p>This array defines the table columns that can be sorted. The array key
+is the column slug that needs to be sortable, and the value is database column
+to sort by. Often, the key and value will be the same, but this is not always
+the case (as the value is a column name from the database, not the list table).</p>
+<p>The array value also contains a boolean which is 'true' if the initial sort order
+for the column is DESC/Descending.</p>
+<p>Taxonomy and custom field columns are added to this array by
+MLA_List_Table::mla_admin_init_action.</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_query_parameters" name="property_query_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$query_parameters</h3>
+                <pre class="signature">$query_parameters : array</pre>
+                <p><em>WP_Query filter &quot;parameters&quot;</em></p>
+                <p>This array defines parameters for the query's join, where and orderby filters.
+The parameters are set up in the _prepare_list_table_query function, and
+any further logic required to translate those values is contained in the filters.</p>
+<p>Array index values are: use_alt_text_view, use_postmeta_view, use_orderby_view,
+alt_text_value, postmeta_key, postmeta_value, patterns, detached,
+orderby, order, mla-metavalue, debug (also in search_parameters)</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_search_parameters" name="property_search_parameters" class="anchor"></a>
+            <article class="property">
+                <h3 class="public ">$search_parameters</h3>
+                <pre class="signature">$search_parameters : array</pre>
+                <p><em>WP_Query &#039;posts_search&#039; filter &quot;parameters&quot;</em></p>
+                <p>This array defines parameters for the query's posts_search filter, which uses
+'search_string' to add a clause to the query's WHERE clause. It is shared between
+the list_table-query functions here and the mla_get_shortcode_attachments function
+in class-mla-shortcodes.php. This array passes the relevant parameters to the filter.</p>
+<p>Array index values are:
+['mla_terms_search']['phrases']
+['mla_terms_search']['taxonomies']
+['mla_terms_search']['radio_phrases'] =&gt; AND/OR
+['mla_terms_search']['radio_terms'] =&gt; AND/OR
+['s'] =&gt; numeric for ID/parent search
+['mla_search_fields'] =&gt; 'title', 'name', 'alt-text', 'excerpt', 'content', 'file' ,'terms'
+Note: 'alt-text' and 'file' are not supported in [mla_gallery]
+['mla_search_connector'] =&gt; AND/OR
+['sentence'] =&gt; entire string must match as one &quot;keyword&quot;
+['exact'] =&gt; entire string must match entire field value
+['debug'] =&gt; internal element, console/log/shortcode/none
+['tax_terms_count'] =&gt; internal element, shared with JOIN and GROUP BY filters</p>
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="property_mla_list_table_items" name="property_mla_list_table_items" class="anchor"></a>
+            <article class="property">
+                <h3 class="private ">$mla_list_table_items</h3>
+                <pre class="signature">$mla_list_table_items : array</pre>
+                <p><em>Cache the results of mla_count_list_table_items for reuse in mla_query_list_table_items</em></p>
+                
+
+                                <h4>Type</h4>
+                array
+                                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                        <dl>
+                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                            
+                                    <a id="methods" name="methods"></a>
+            <div class="row-fluid">
+                <div class="span8 content class"><h2>Methods</h2></div>
+                <aside class="span4 detailsbar"></aside>
+            </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_initialize" name="method_initialize" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">initialize()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">initialize() </pre>
+                <p><em>Initialization function, similar to __construct()</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_fetch_attachment_references" name="method_mla_fetch_attachment_references" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_fetch_attachment_references()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_fetch_attachment_references(  <span class="argument">$ID</span>,   <span class="argument">$parent</span>,   <span class="argument">$add_references = true</span>) : array</pre>
+                <p><em>Find Featured Image and inserted image/link references to an attachment</em></p>
+                <p>Searches all post and page content to see if the attachment is used
+as a Featured Image or inserted in the post as an image or link.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$ID </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$parent </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$add_references </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Reference information; see $references array comments</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_attachment_array_fetch_references" name="method_mla_attachment_array_fetch_references" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_attachment_array_fetch_references()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_attachment_array_fetch_references(  <span class="argument">$attachments</span>) : void</pre>
+                <p><em>Add Featured Image and inserted image/link references to an array of attachments</em></p>
+                <p>Searches all post and page content to see if the attachmenta are used
+as a Featured Image or inserted in the post as an image or link.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$attachments </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.94                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_flush_mla_galleries" name="method_mla_flush_mla_galleries" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_flush_mla_galleries()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_flush_mla_galleries(  <span class="argument">$option_name</span>) : void</pre>
+                <p><em>Invalidates the $mla_galleries or $galleries array and cached values</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$option_name </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.00                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_get_sortable_columns" name="method_mla_get_sortable_columns" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_get_sortable_columns()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_get_sortable_columns() : array</pre>
+                <p><em>Return the names and display values of the sortable columns</em></p>
+                
+
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>name =&gt; array( orderby value, heading ) for sortable columns</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_count_list_table_items" name="method_mla_count_list_table_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_count_list_table_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_count_list_table_items(  <span class="argument">$request</span>,   <span class="argument">$offset = NULL</span>,   <span class="argument">$count = NULL</span>) : integer</pre>
+                <p><em>Get the total number of attachment posts</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    integer
+                                            &mdash; <p>Number of attachment posts</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_list_table_items" name="method_mla_query_list_table_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_list_table_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_list_table_items(  <span class="argument">$request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : array</pre>
+                <p><em>Retrieve attachment objects for list table display</em></p>
+                <p>Supports prepare_items in class-mla-list-table.php.
+Modeled after wp_edit_attachments_query in wp-admin/post.php</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>attachment objects (posts) including parent data, meta data and references</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_media_modal_items" name="method_mla_query_media_modal_items" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_media_modal_items()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_media_modal_items(  <span class="argument">$request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : object</pre>
+                <p><em>Retrieve attachment objects for the WordPress Media Manager</em></p>
+                <p>Supports month-year and taxonomy-term filters as well as the enhanced search box</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>WP_Query object with query results</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.20                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_fetch_attachment_parent_data" name="method_mla_fetch_attachment_parent_data" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_fetch_attachment_parent_data()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_fetch_attachment_parent_data(  <span class="argument">$parent_id</span>) : array</pre>
+                <p><em>Returns information about an attachment&#039;s parent, if found</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$parent_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Parent information; post_date, post_title and post_type</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_fetch_attachment_metadata" name="method_mla_fetch_attachment_metadata" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_fetch_attachment_metadata()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_fetch_attachment_metadata(  <span class="argument">$post_id</span>) : array</pre>
+                <p><em>Fetch and filter meta data for an attachment</em></p>
+                <p>Returns a filtered array of a post's meta data. Internal values beginning with '<em>'
+are stripped out or converted to an 'mla</em>' equivalent.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$post_id </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>Meta data variables</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_custom_field_option_value" name="method_mla_custom_field_option_value" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_custom_field_option_value()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_custom_field_option_value(  <span class="argument">$slug</span>) : array</pre>
+                <p><em>Fetch custom field option value given a slug</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$slug </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>option value, e.g., array( 'name' =&gt; 'File Size', ... )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.10                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_search_terms_tidy" name="method_mla_search_terms_tidy" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_search_terms_tidy()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_search_terms_tidy(  <span class="argument">$term</span>) : string</pre>
+                <p><em>Replaces a WordPress function deprecated in v3.7</em></p>
+                <p>Defined as public because it's a callback from array_map().</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$term </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>cleaned up search term</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.51                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_search_filter" name="method_mla_query_posts_search_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_search_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_search_filter(  <span class="argument">$search_string</span>,   <span class="argument">$query_object</span>) : string</pre>
+                <p><em>Adds a keyword search to the WHERE clause, if required</em></p>
+                <p>Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$search_string </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$query_object </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after keyword search addition</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.60                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_where_filter" name="method_mla_query_posts_where_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_where_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_where_filter(  <span class="argument">$where_clause</span>) : string</pre>
+                <p><em>Adds/modifies the WHERE clause for meta values, LIKE patterns and detached items</em></p>
+                <p>Modeled after _edit_attachments_query_helper in wp-admin/post.php.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$where_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after modification</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_join_filter" name="method_mla_query_posts_join_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_join_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_join_filter(  <span class="argument">$join_clause</span>) : string</pre>
+                <p><em>Adds a JOIN clause, if required, to handle sorting/searching on custom fields or ALT Text</em></p>
+                <p>Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$join_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>query clause after &quot;LEFT JOIN view ON post_id&quot; item modification</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_groupby_filter" name="method_mla_query_posts_groupby_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_groupby_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_groupby_filter(  <span class="argument">$groupby_clause</span>) : string</pre>
+                <p><em>Adds a GROUPBY clause, if required</em></p>
+                <p>Taxonomy text queries and postmeta queries can return multiple results for the same ID.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$groupby_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>updated query clause</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.90                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_orderby_filter" name="method_mla_query_posts_orderby_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_orderby_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_orderby_filter(  <span class="argument">$orderby_clause</span>) : string</pre>
+                <p><em>Adds a ORDERBY clause, if required</em></p>
+                <p>Expands the range of sort options because the logic in WP_Query is limited.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$orderby_clause </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    string
+                                            &mdash; <p>updated query clause</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_relevanssi_admin_search_ok_filter" name="method_mla_query_relevanssi_admin_search_ok_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_relevanssi_admin_search_ok_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_relevanssi_admin_search_ok_filter(  <span class="argument">$admin_search_ok</span>) : boolean</pre>
+                <p><em>Disable Relevanssi - A Better Search, v3.2 by Mikko Saari
+Defined as public because it&#039;s a filter.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$admin_search_ok </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Updated setting</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.80                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_relevanssi_prevent_default_request_filter" name="method_mla_query_relevanssi_prevent_default_request_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_relevanssi_prevent_default_request_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_relevanssi_prevent_default_request_filter(  <span class="argument">$prevent</span>) : boolean</pre>
+                <p><em>Disable Relevanssi - A Better Search, v3.2 by Mikko Saari
+Defined as public because it&#039;s a filter.</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$prevent </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>Updated setting</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.25                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_terms_clauses_filter" name="method_mla_query_terms_clauses_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_terms_clauses_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_terms_clauses_filter(array  <span class="argument">$pieces</span>, array  <span class="argument">$taxonomies</span>, array  <span class="argument">$args</span>) </pre>
+                <p><em>Filters all clauses for get_terms queries</em></p>
+                <p>Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td>array</td>
+                                <td>$pieces </td>
+                                <td><p>Terms query SQL clauses.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$taxonomies </td>
+                                <td><p>An array of taxonomies.</p></td>
+                            </tr>
+                                                    <tr>
+                                <td>array</td>
+                                <td>$args </td>
+                                <td><p>An array of terms query arguments.</p></td>
+                            </tr>
+                                            </table>
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_clauses_filter" name="method_mla_query_posts_clauses_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_clauses_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_clauses_filter(  <span class="argument">$pieces</span>) : array</pre>
+                <p><em>Filters all clauses for shortcode queries, pre caching plugins</em></p>
+                <p>This is for debug purposes only.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$pieces </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>query clauses after modification (none)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.80                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_mla_query_posts_clauses_request_filter" name="method_mla_query_posts_clauses_request_filter" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">mla_query_posts_clauses_request_filter()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">mla_query_posts_clauses_request_filter(  <span class="argument">$pieces</span>) : array</pre>
+                <p><em>Filters all clauses for shortcode queries, post caching plugins</em></p>
+                <p>This is for debug purposes only.
+Defined as public because it's a filter.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$pieces </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>query clauses after modification (none)</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.80                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__localize_default_columns_array" name="method__localize_default_columns_array" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_localize_default_columns_array()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_localize_default_columns_array() </pre>
+                <p><em>Builds the $default_columns array with translated source texts.</em></p>
+                <p>Called from MLATest::initialize because the $default_columns information
+might be accessed from &quot;front end&quot; posts/pages.</p>
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            1.71                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__prepare_list_table_query" name="method__prepare_list_table_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_prepare_list_table_query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_prepare_list_table_query(  <span class="argument">$raw_request</span>,   <span class="argument">$offset</span>,   <span class="argument">$count</span>) : array</pre>
+                <p><em>Sanitize and expand query arguments from request variables</em></p>
+                <p>Prepare the arguments for WP_Query.
+Modeled after wp_edit_attachments_query in wp-admin/post.php</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$raw_request </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$offset </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$count </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>revised arguments suitable for WP_Query</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.1                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__execute_list_table_query" name="method__execute_list_table_query" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_execute_list_table_query()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_execute_list_table_query(  <span class="argument">$request</span>) : object</pre>
+                <p><em>Add filters, run query, remove filters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$request </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    object
+                                            &mdash; <p>WP_Query object with query results</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            0.30                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__wildcard_search_string" name="method__wildcard_search_string" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_wildcard_search_string()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_wildcard_search_string(  <span class="argument">$search_string</span>) : boolean</pre>
+                <p><em>Detects wildcard searches, i.e., containing an asterisk outside quotes</em></p>
+                <p>Defined as public because it's a callback from array_map().</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$search_string </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>true if wildcard</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.13                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__match_quoted_phrase" name="method__match_quoted_phrase" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_match_quoted_phrase()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_match_quoted_phrase(  <span class="argument">$needle</span>,   <span class="argument">$haystack</span>) : boolean</pre>
+                <p><em>Isolates keyword match results to word boundaries</em></p>
+                <p>Eliminates matches such as &quot;man&quot; in &quot;woman&quot;.</p>
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$needle </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$haystack </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    boolean
+                                            &mdash; <p>$needle is a word match within $haystack</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.11                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method__parse_terms_search" name="method__parse_terms_search" class="anchor"></a>
+            <article class="method">
+                <h3 class="private ">_parse_terms_search()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">_parse_terms_search(  <span class="argument">$whole_string</span>,   <span class="argument">$delimiter = &#039;,&#039;</span>,   <span class="argument">$full_parse = false</span>) : array</pre>
+                <p><em>Process a terms search term or phrase list with quoted phrases and variable delimiters</em></p>
+                
+
+                                    <h4>Parameters</h4>
+                    <table class="table table-condensed table-hover">
+                                                    <tr>
+                                <td></td>
+                                <td>$whole_string </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$delimiter </td>
+                                <td></td>
+                            </tr>
+                                                    <tr>
+                                <td></td>
+                                <td>$full_parse </td>
+                                <td></td>
+                            </tr>
+                                            </table>
+                
+                
+                                    <h4>Returns</h4>
+                    array
+                                            &mdash; <p>individual arguments, e.g. array( 0 =&gt; '&quot;a phrase&quot;', 1 =&gt; 'separate', 2 =&gt; 'phrase' )</p>
+                                    				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                            <span class="label label-info">static</span>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr>
+                        <th>
+                            since
+                        </th>
+                        <td>
+                                                            2.31                                
+                                                    </td>
+                    </tr>
+                            </table>
+        </aside>
+    </div>
+
+                                    </div>
+    </section>
+
+    <div id="source-view" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="source-view-label" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="source-view-label">class-mla-data-query.php</h3>
+        </div>
+        <div class="modal-body">
+            <pre data-src="../files/includes\class-mla-data-query.php.txt" class="language-php line-numbers"></pre>
+        </div>
+    </div>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 18th, 2017 at 19:35.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
