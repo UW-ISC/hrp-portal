@@ -25,6 +25,10 @@
 	min-width:100px;
 }
 
+#container_post_detail strong{
+	min-width:70px;
+}
+
 .field-label.error{
 	color:#ff0000;
 }
