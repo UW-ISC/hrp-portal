@@ -287,7 +287,12 @@ class Wordpress_Creation_Kit{
             $single_prefix = '';
 
 		if( $details['type'] !== 'heading' && $details['type'] !== 'html' ) {
-			$element .= '<label for="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="field-label">'. apply_filters( "wck_label_{$meta}_". Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details  ), ucfirst($details['title']) ) .':';
+			$details['title'] = apply_filters( "wck_label_{$meta}_". Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details  ), $details['title'] );
+			if (function_exists('icl_register_string') && function_exists('icl_translate') ) {
+				icl_register_string( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $details['title'] );
+				$details['title'] = icl_translate( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $details['title'] );
+			}
+			$element .= '<label for="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="field-label">'.  ucfirst( $details['title'] ) .':';
 			if( !empty( $details['required'] ) && $details['required'] )
 				$element .= '<span class="required">*</span>';
 			$element .= '</label>';
@@ -1592,7 +1597,7 @@ class Wordpress_Creation_Kit{
 	}
 	
 	
-	function wck_get_meta_boxes( $screen = null ){
+	static function wck_get_meta_boxes( $screen = null ){
 		global $wp_meta_boxes, $wck_objects;	
 			
 		if ( empty( $screen ) )

@@ -6,7 +6,7 @@ Tags: custom fields, custom field, wordpress custom fields, custom post type, cu
 
 Requires at least: 3.1
 Tested up to: 4.7.3
-Stable tag: 2.0.9
+Stable tag: 2.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,11 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.1.0 =
+* All WCK meta keys are now protected so they do not appear in WordPress Custom Fields box which fixes some issues
+* We now can translate WCK labels with string translation in WPML (this includes Front end Posting labels)
+* Fixed a small css bug
+
 = 2.0.9 =
 * Security improvements
 * Small css change for labels in metaboxes

@@ -433,7 +433,12 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 			$submit_text = apply_filters( 'wck_fep_form_button_update', __( 'Update Post', 'wck' ), $form_name );
 		else 
 			$submit_text = apply_filters( 'wck_fep_form_button_add', __( 'Add Post', 'wck' ), $form_name );
-		
+
+		if (function_exists('icl_register_string') && function_exists('icl_translate') ) {
+			icl_register_string( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $submit_text ), $submit_text );
+			$submit_text = icl_translate( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $submit_text ), $submit_text );
+		}
+
 		$form .= '<input type="submit" id="submit_'.$form_name.'" value="'. $submit_text .'" onclick="wckFepAddPost(\''. $form_name .'\', '. $post_id .', \''. $action .'\', \''. $nonce .'\');return false;"/>';
 		
 		$form .= '</form>';		
@@ -552,6 +557,14 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		if( !empty( $single_cfcs ) ){
 			foreach( $single_cfcs as $meta_name => $single_values ){
 				update_post_meta( $post_ID, $meta_name, array( $single_values ) );
+
+				if (!empty($single_values)) {
+					foreach ($single_values as $name => $value) {
+						/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
+						$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_ID, $name, $meta_name );
+						update_post_meta($post_ID, $name, $value);
+					}
+				}
 				
 				/* if unserialize_fields is true add for each entry separate post meta for every element of the form  */				
 				if( $this->single_cfcs[$meta_name.'_unserialize_fields'] ){					
@@ -695,9 +708,16 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 			do_action( 'wck_fep_update_post', $wck_fep_new_post, get_current_user_id() );
 		
 		if( $action_type == '' )		
-			echo apply_filters( 'wck_fep_post_added_message', __( 'Post Added', 'wck' ), $meta );
+			$message = apply_filters( 'wck_fep_post_added_message', __( 'Post Added', 'wck' ), $meta );
 		else if( $action_type == 'edit' )
-			echo apply_filters( 'wck_fep_post_updated_message', __( 'Post Updated', 'wck' ), $meta );			
+			$message = apply_filters( 'wck_fep_post_updated_message', __( 'Post Updated', 'wck' ), $meta );
+
+		if (function_exists('icl_register_string') && function_exists('icl_translate') ) {
+			icl_register_string( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $message ), $message );
+			$message = icl_translate( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $message ), $message );
+		}
+
+		echo $message;
 		
 		die();
 	}	
