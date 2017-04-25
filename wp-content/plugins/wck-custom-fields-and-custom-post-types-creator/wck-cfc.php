@@ -134,6 +134,9 @@ function wck_cfc_create_box(){
 	if( !empty( $templates ) )
 		$cfc_box_args_fields[] = array( 'type' => 'select', 'title' => __( 'Page Template', 'wck' ), 'slug' => 'page-template', 'options' => $templates, 'default-option' => true, 'description' => __( 'If post type is "page" you can further select a page templete. The meta box will only appear  on the page that has that selected page template.', 'wck' ) );
 
+	/* added box style in version 2.4.4 */
+	$cfc_box_args_fields[] = array( 'type' => 'select', 'title' => __( 'Box Style', 'wck' ), 'slug' => 'box-style', 'options' => array( '%Default (WP meta-box)%default', '%Seamless (no meta-box)%seamless' ), 'default' => 'default', 'description' => __( 'If the fields should be in a meta-box or not', 'wck' ) );
+
 	/* set up the box arguments */
 	$args = array(
 		'metabox_id' => 'wck-cfc-args',
@@ -367,6 +370,9 @@ function wck_cfc_create_boxes_args(){
 
 					if( !empty( $wck_cfc_arg['page-template'] ) )
 						$box_args['page_template'] = $wck_cfc_arg['page-template'];
+
+					if( !empty( $wck_cfc_arg['box-style'] ) )
+						$box_args['box_style'] = $wck_cfc_arg['box-style'];
 
 					$box_args['unserialize_fields'] = apply_filters( 'wck_cfc_unserialize_fields_'.$wck_cfc_arg['meta-name'], false );
 

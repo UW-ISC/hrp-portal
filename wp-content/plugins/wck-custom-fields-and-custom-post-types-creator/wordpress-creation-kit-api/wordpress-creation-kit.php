@@ -67,7 +67,8 @@ class Wordpress_Creation_Kit{
 							'unserialize_fields' => false,
 							'unserialize' => true,
 							'sortable' => true,
-							'context' => 'post_meta'
+							'context' => 'post_meta',
+							'box_style' => 'default'
 						);
 	private $args;	
 	
@@ -228,6 +229,10 @@ class Wordpress_Creation_Kit{
 	/* Function used to add classes to the wck meta boxes */
 	function wck_add_metabox_classes( $classes ){
 		array_push($classes,'wck-post-box');
+		
+		if( $this->args['box_style'] == 'seamless' )
+			array_push($classes,'wck-no-box');
+		
 		return $classes;
 	}
 

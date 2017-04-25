@@ -476,8 +476,8 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 					/* take care of taxonomies */
 					if( !empty( $this->args['taxonomies'] ) ){
 						foreach( $this->args['taxonomies'] as $taxonomy ){
-							
-							if( $details['title'] == $taxonomy->label ){
+
+							if( $details['title'] == $taxonomy->label || $details['slug'] == $taxonomy->name ){
 								$object_terms = wp_get_object_terms( $post->ID, $taxonomy->name );
 								
 								if(!empty($object_terms)){
@@ -659,7 +659,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		if( !empty( $this->args['taxonomies'] ) ){
 			foreach( $this->args['taxonomies'] as $taxonomy ){
 				
-				$tax_names = $values[ Wordpress_Creation_Kit::wck_generate_slug( $taxonomy->label ) ];
+				$tax_names = $values[ Wordpress_Creation_Kit::wck_generate_slug( $taxonomy->label, array( 'slug' => $taxonomy->name ) ) ];
 				
 				if( !empty( $tax_names ) ){ 
 					$tax_names = explode( ',', $tax_names );			
