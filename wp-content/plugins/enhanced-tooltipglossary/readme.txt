@@ -4,8 +4,8 @@ Contributors: CreativeMindsSolutions
 Donate link: http://tooltip.cminds.com/
 Tags: glossary,tooltip,lexicon, dictionary, knowledgebase, posts,definition,definitions,tooltip,automatic,hints,hint,tip,tool-tip,dictionary,Encyclopaedia,knowledge base,index,keywords,terms,knowledge base,knowledgebase,lexicon,synonyms,plural,singular,descriptions,description,explain,explanation,explanatory dictionary,Tooltips,vocabulary,words,word,expression,expressions,appendix,technical terms,content management,knowledge management,highlight,concordance,language,reference,terminology,jargon,palaver,style,talk,word,wording,thesaurus,word stock,wordbook,wordlist,archive,catalog,directory,index,listing,menu,source,archives,atlas,accent,expression,lingua,slang,bilingual,dialectic,expressed,lexical,literal,term,entry,verbal,verb,literature,book,literature,sourcebook,word list,translate,translation,google translate,merriam-webster,wikipedia,hint,youtube,vimeo,mp3,mp4,ecommerce,tags,amazon,products,productsrecommendations,recommendations,support,comments,images,page,pages,plugin,post,posts,seo,shortcode,sidebar,social,twitter,widget,widgets,wordpress,video,audio
 Requires at least: 3.9
-Tested up to: 4.7.3
-Stable tag: 3.5.4
+Tested up to: 4.7.4
+Stable tag: 3.5.5
 
 Easily create a glossary, encyclopedia or dictionary of your terms and show responsive tooltips when users hover over the terms.
 
