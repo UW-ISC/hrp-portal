@@ -1,0 +1,5 @@
+# Copy this file to .htaccess and edit
+
+AuthType UWNetID
+PubCookieAppID "isc"
+Require group <GROUPNAME>

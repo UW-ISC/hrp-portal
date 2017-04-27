@@ -1,0 +1,52 @@
+# Copy this file to /data/conf/apache-global and edit.
+
+# UW NetID restrict, but don't break styles, images
+#<Location "/">
+#  AuthType UWNetID
+#  require group <GROUPNAME>
+#  PubcookieAppID cac
+#</Location>
+
+<Location "/wp-content/themes/">
+  Satisfy any
+</Location>
+
+<Location "/wp-content/plugins/">
+  Satisfy any
+</Location>
+
+<Location "/wp-content/uploads/">
+  Satisfy any
+</Location>
+
+<Location "/wp-admin/css/">
+  Satisfy any
+</Location>
+
+<Location "/wp-admin/images/">
+  Satisfy any
+</Location>
+
+<Location "/wp-includes/css/">
+  Satisfy any
+</Location>
+
+<Location "/wp-includes/js/">
+  Satisfy any
+</Location>
+
+<Location "/wp-includes/images/">
+  Satisfy any
+</Location>
+# End UW NetID restrict
+
+<Location "/user-guides/">
+  AuthType uwnetid
+  require valid-user
+  PubcookieAppID isc
+</Location>
+
+
+# Add mimetypes
+AddType text/javascript .js
+# End mimetypes

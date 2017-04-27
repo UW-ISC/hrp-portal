@@ -1,0 +1,17 @@
+# Copy this file to .htaccess and edit
+
+<Files "wp-login.php">
+  AuthType UWNetID
+  PubCookieAppID "isc"
+  Require group <GROUPNAME>
+</Files>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.php$ - [L]
+  RewriteCond %{REQUEST_URI} !/PubCookie.reply
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.php [L]
+</IfModule>
