@@ -6,6 +6,11 @@
   Require group <GROUPNAME>
 </Files>
 
+<Files wp-config.php>
+  Order allow,deny
+  Deny from all
+</Files>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
