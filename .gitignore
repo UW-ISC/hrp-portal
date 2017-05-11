@@ -2,6 +2,10 @@
 .htaccess
 .htpasswd
 hrp-isc/
+robots.txt
 wp-config.php
+wp-content/advanced-cache.php
+wp-content/cache/
 wp-content/themes/isc-uw-child/
 wp-content/uploads/
+wp-content/wp-cache-config.php
