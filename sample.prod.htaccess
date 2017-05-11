@@ -11,6 +11,11 @@
   Deny from all
 </Files>
 
+<Files sample.*>
+  Order allow,deny
+  Deny from all
+</Files>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /

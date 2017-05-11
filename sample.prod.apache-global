@@ -40,11 +40,19 @@
 </Location>
 # End UW NetID restrict
 
-<Location "/user-guides/">
+# Locations to UW NetID restrict
+<Location "/user-guides">
   AuthType uwnetid
   require valid-user
   PubcookieAppID isc
 </Location>
+
+<Location "/admin-corner/video-library">
+  AuthType uwnetid
+  require valid-user
+  PubcookieAppID isc
+</Location>
+# End UW NetID restrict
 
 
 # Add mimetypes
