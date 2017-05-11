@@ -69,8 +69,9 @@ function wckGetTargetedValues( target ){
 				else
 					values[key.toString()] += ', ' + jQuery(this).val().toString();
 			}			
+		}else if( jQuery(this).hasClass('mb-select-multiple') ){
+			values[key.toString()] = jQuery(this).val().toString().replace(',', ', ');
 		}
-		
 		else		
 			values[key.toString()] = jQuery(this).val().toString();			
 		

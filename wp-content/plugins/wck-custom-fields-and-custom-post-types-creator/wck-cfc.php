@@ -153,7 +153,7 @@ function wck_cfc_create_box(){
 
 	/* set up field types */
 
-	$field_types = array( 'heading', 'text', 'number', 'textarea', 'select', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
+	$field_types = array( 'heading', 'text', 'number', 'textarea', 'select', 'select multiple', 'checkbox', 'radio', 'phone', 'upload', 'wysiwyg editor', 'datepicker', 'timepicker', 'colorpicker', 'country select', 'user select', 'cpt select', 'currency select', 'html', 'map' );
 
 	$field_types = apply_filters( 'wck_field_types', $field_types );
 
@@ -827,7 +827,7 @@ add_filter( 'wck_field_types', 'wck_cfc_filter_field_types' );
 function wck_cfc_filter_field_types( $field_types ){
 	$wck_premium_update = WCK_PLUGIN_DIR.'/update/';
 	if ( !file_exists ($wck_premium_update . 'update-checker.php'))
-		$field_types = array( 'text', 'textarea', 'select', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'heading', 'colorpicker', 'currency select', 'phone', 'timepicker', 'html', 'number' );
+		$field_types = array( 'text', 'textarea', 'select', 'select multiple', 'checkbox', 'radio', 'upload', 'wysiwyg editor', 'heading', 'colorpicker', 'currency select', 'phone', 'timepicker', 'html', 'number' );
 
 	return $field_types;
 }
@@ -836,7 +836,7 @@ function wck_cfc_filter_field_types( $field_types ){
 add_filter( 'wck_before_test_required', 'wck_cfc_make_options_required', 10, 4 );
 function wck_cfc_make_options_required( $meta_array, $meta, $values, $id ) {
 	if( $meta == 'wck_cfc_fields' ) {
-		if( $values['field-type'] == 'select' || $values['field-type'] == 'radio' || $values['field-type'] == 'checkbox' ) {
+		if( $values['field-type'] == 'select' || $values['field-type'] == 'select multiple' || $values['field-type'] == 'radio' || $values['field-type'] == 'checkbox' ) {
 			foreach( $meta_array as $key => $field ) {
 				if( $field['slug'] == 'options' ) {
 					$meta_array[$key]['required'] = true;

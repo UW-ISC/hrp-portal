@@ -32,7 +32,7 @@ function addMeta(value, id, nonce){
 	var values = {};
 	
 	jQuery('#'+value+' .mb-field').each(function(){
-	
+
 		var key = jQuery(this).attr('name');
 
 		if(jQuery(this).attr('type') == 'checkbox' || jQuery(this).attr('type') == 'radio' ) {
@@ -57,8 +57,13 @@ function addMeta(value, id, nonce){
             else
                 values[key.toString()].push( '' );
 
-        } else {
-
+        }else if( jQuery(this).hasClass('mb-select-multiple') ) {
+			if( jQuery(this).val() != null )
+				values[key.toString()] = jQuery(this).val().toString().replace(',', ', ');
+			else
+				values[key.toString()] = '';
+		}
+		else {
             if( jQuery(this).val() != null )
                 values[key.toString()] = jQuery(this).val().toString();
             else
@@ -320,6 +325,12 @@ function updateMeta(value, id, element_id, nonce){
             else
                 values[key.toString()].push( '' );
         }
+		else if( jQuery(this).hasClass('mb-select-multiple') ) {
+			if( jQuery(this).val() != null )
+				values[key.toString()] = jQuery(this).val().toString().replace(',', ', ');
+			else
+				values[key.toString()] = '';
+		}
 		else {
             if( jQuery(this).val() != null )
                 values[key.toString()] = jQuery(this).val().toString();

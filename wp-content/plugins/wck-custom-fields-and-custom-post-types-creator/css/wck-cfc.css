@@ -59,6 +59,8 @@
 #container_wck_cfc_fields .element_type_checkbox .row-labels,
 #container_wck_cfc_fields .element_type_select .row-options,
 #container_wck_cfc_fields .element_type_select .row-labels,
+#container_wck_cfc_fields .element_type_select-multiple .row-options,
+#container_wck_cfc_fields .element_type_select-multiple .row-labels,
 #container_wck_cfc_fields .element_type_radio .row-options,
 #container_wck_cfc_fields .element_type_radio .row-labels,
 #container_wck_cfc_fields .element_type_upload .row-attach-upload-to-post,
