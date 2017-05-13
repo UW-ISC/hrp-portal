@@ -16,6 +16,11 @@
   Deny from all
 </Files>
 
+<Files wp-cron.php>
+  Order deny,allow
+  Allow from all
+</Files>
+
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
