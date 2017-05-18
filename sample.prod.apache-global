@@ -4,7 +4,7 @@
 #<Location "/">
 #  AuthType UWNetID
 #  require group <GROUPNAME>
-#  PubcookieAppID cac
+#  PubcookieAppID isc
 #</Location>
 
 <Location "/wp-content/themes/">
@@ -41,19 +41,24 @@
 # End UW NetID restrict
 
 # Locations to UW NetID restrict
+<Location "/admin-corner/video-library-2">
+  AuthType uwnetid
+  require valid-user
+  PubcookieAppID isc
+</Location>
+
 <Location "/user-guides">
   AuthType uwnetid
   require valid-user
   PubcookieAppID isc
 </Location>
 
-<Location "/admin-corner/video-library">
+<Location "/video-library">
   AuthType uwnetid
   require valid-user
   PubcookieAppID isc
 </Location>
 # End UW NetID restrict
-
 
 # Add mimetypes
 AddType text/javascript .js
