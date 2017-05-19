@@ -1,25 +1,31 @@
 # Copy this file to .htaccess and edit
 
+# UW NetID protect logins
 <Files "wp-login.php">
   AuthType UWNetID
   PubCookieAppID "isc"
   Require group <GROUPNAME>
+</Files>
+# End UW NetID protect logins
+
+# Protect viewing config files
+<Files sample.*>
+  Order allow,deny
+  Deny from all
 </Files>
 
 <Files wp-config.php>
   Order allow,deny
   Deny from all
 </Files>
+# End Protect viewing config files
 
-<Files sample.*>
-  Order allow,deny
-  Deny from all
-</Files>
-
+# Allow wp-cron to be hit, even w/ top level restriction
 <Files wp-cron.php>
   Order deny,allow
   Allow from all
 </Files>
+# End Allow wp-cron to be hit, even w/ top level restriction
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -29,4 +35,6 @@
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.php [L]
+  RewriteCond %{QUERY_STRING} action=logout
+  RewriteRule ^wp-login.php$ http://weblogin.washington.edu/index.cgi?logout_action=1 [R,L]
 </IfModule>
