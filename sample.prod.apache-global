@@ -60,6 +60,14 @@
 </Location>
 # End UW NetID restrict
 
+# Logout location
+<Location "/user_logout">
+    AuthType uwnetid
+    require valid-user
+    PubcookieEndSession clearLogin
+</Location>
+# End Logout location
+
 # Add mimetypes
 AddType text/javascript .js
 # End mimetypes

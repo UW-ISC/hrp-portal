@@ -30,11 +30,11 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+  RewriteCond %{QUERY_STRING} action=logout
+  RewriteRule ^wp-login.php$ /user_logout [R,L]
   RewriteRule ^index\.php$ - [L]
   RewriteCond %{REQUEST_URI} !/PubCookie.reply
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.php [L]
-  RewriteCond %{QUERY_STRING} action=logout
-  RewriteRule ^wp-login.php$ http://weblogin.washington.edu/index.cgi?logout_action=1 [R,L]
 </IfModule>
