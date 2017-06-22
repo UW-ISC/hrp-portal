@@ -71,3 +71,7 @@
 # Add mimetypes
 AddType text/javascript .js
 # End mimetypes
+
+# PHP values
+php_value upload_max_filesize 5M
+# End PHP values
