@@ -62,15 +62,56 @@
 
 # Logout location
 <Location "/user_logout">
-    AuthType uwnetid
-    require valid-user
-    PubcookieEndSession clearLogin
+  AuthType uwnetid
+  require valid-user
+  PubcookieEndSession clearLogin
 </Location>
 # End Logout location
 
 # Add mimetypes
 AddType text/javascript .js
 # End mimetypes
+
+# Speed Improvements
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml application/xml application/xhtml+xml text/css text/javascript application/javascript application/x-javascript
+</IfModule>
+
+# BEGIN Expire headers
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 5 seconds"
+  ExpiresByType image/x-icon "access plus 2500000 seconds"
+  ExpiresByType image/jpeg "access plus 2500000 seconds"
+  ExpiresByType image/png "access plus 2500000 seconds"
+  ExpiresByType image/gif "access plus 2500000 seconds"
+  ExpiresByType application/x-shockwave-flash "access plus 2500000 seconds"
+  ExpiresByType text/css "access plus 600000 seconds"
+  ExpiresByType text/javascript "access plus 200000 seconds"
+  ExpiresByType application/javascript "access plus 200000 seconds"
+  ExpiresByType application/x-javascript "access plus 200000 seconds"
+  ExpiresByType text/html "access plus 600 seconds"
+  ExpiresByType application/xhtml+xml "access plus 600 seconds"
+  </IfModule>
+# END Expire headers
+
+# BEGIN Cache-Control Headers
+<IfModule mod_headers.c>
+<filesMatch "\.(ico|jpe?g|png|gif|swf)$">
+  Header set Cache-Control "public"
+</filesMatch>
+<filesMatch "\.(css)$">
+  Header set Cache-Control "public"
+</filesMatch>
+<filesMatch "\.(js)$">
+  Header set Cache-Control "private"
+</filesMatch>
+<filesMatch "\.(x?html?|php)$">
+  Header set Cache-Control "private, must-revalidate"
+</filesMatch>
+</IfModule>
+# END Cache-Control Headers
+# End Speed Improvements
 
 # PHP values
 php_value upload_max_filesize 5M
