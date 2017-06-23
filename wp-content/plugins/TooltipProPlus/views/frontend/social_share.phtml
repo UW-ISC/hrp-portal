@@ -1,0 +1,22 @@
+<?php
+$shareBoxLabel = get_option( 'cmtt_glossaryShowShareBoxLabel', 'Share This' );
+?>
+<div class="cmtt-social-box">
+    <div class="sharetitle"><?php _e( $shareBoxLabel, 'cm-tooltip-glossary' ); ?></div>
+    <table>
+        <tr>
+            <td class="sharetwitter">
+                <a href="http://twitter.com/share" class="twitter-share-button" data-url="<?php the_permalink() ?>" data-counturl="<?php the_permalink() ?>" data-text="<?php the_title(); ?>" data-via="username" data-related="username">Tweet</a>
+            </td>
+            <td class="sharefb" id="fb-root">
+                <iframe src="//www.facebook.com/plugins/like.php?href=<?php echo urlencode( the_permalink() ) ?>&amp;width=120&amp;layout=button_count&amp;action=like&amp;show_faces=false&amp;share=false&amp;height=21" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:120px; height:21px;" allowTransparency="true"></iframe>
+            </td>
+            <td class="sharegplus">
+                <div class="g-plus" data-action="share" data-annotation="bubble"></div>
+            </td>
+            <td class="sharelinkedin">
+                <script type="in/share" data-counter="right"></script>
+            </td>
+        </tr>
+    </table>
+</div>
