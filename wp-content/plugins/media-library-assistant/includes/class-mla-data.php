@@ -2875,7 +2875,7 @@ class MLAData {
 
 		$path_info = pathinfo( $file );
 		$file_name = $path_info['basename'];
-		MLAData::$mla_IPTC_EXIF_errors[] = "{$level} ({$type}) - {$string} [{$file_name} : {$line}]";
+		MLAData::$mla_IPTC_EXIF_errors[] = "{$level} ({$type}) {$string}";
 
 		/* Don't execute PHP internal error handler */
 		return true;
@@ -3018,15 +3018,30 @@ class MLAData {
 
 			if ( is_callable( 'iptcparse' ) ) {
 				if ( ! empty( $info['APP13'] ) ) {
-					//set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
-					$iptc_values = @iptcparse( $info['APP13'] );
-					MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata iptc_values = ' . var_export( $iptc_values, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
-					//restore_error_handler();
+					set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
+					try {
+						$exception = NULL;
+						$iptc_values = iptcparse( $info['APP13'] );
+					} catch ( Throwable $e ) { // PHP 7
+						$exception = $e;
+						$iptc_values = NULL;
+					} catch ( Exception $e ) { // PHP 5
+						$exception = $e;
+						$iptc_values = NULL;
+					}
+					restore_error_handler();
 
+					MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata iptc_values = ' . var_export( $iptc_values, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
+					if ( ! empty( $exception ) ) {
+						MLAData::$mla_IPTC_EXIF_errors[] = sprintf( '(%1$s) %2$s', $exception->getCode(), $exception->getMessage() );
+					}
+
+					// Combine exceptions with PHP notice/warning/error messages
 					if ( ! empty( MLAData::$mla_IPTC_EXIF_errors ) ) {
 						$results['mla_iptc_errors'] = MLAData::$mla_IPTC_EXIF_errors;
+						MLACore::mla_debug_add( __LINE__ . ' ' . __( 'ERROR', 'media-library-assistant' ) . ': ' . '$results[mla_iptc_errors] = ' . var_export( $results['mla_iptc_errors'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 						MLAData::$mla_IPTC_EXIF_errors = array();
-						MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . '$results[mla_iptc_errors] = ' . var_export( $results['mla_exif_errors'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 					}
 
 					if ( ! is_array( $iptc_values ) ) {
@@ -3047,19 +3062,32 @@ class MLAData {
 			} // iptcparse
 
 			if ( is_callable( 'exif_read_data' ) && in_array( $size[2], array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) ) ) {
-				// When reading EXIF information from the 'WINXP' group, you may need to change used encoding from the default "ISO-8859-15" to "UTF-8". This can be done in php.ini or in your code.
-				//ini_set( 'exif.encode_unicode', 'UTF-8' );
-				//set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
-				$exif_data = @exif_read_data( $path, NULL, true );
-				//ini_restore( 'exif.encode_unicode' );
-				//MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata exif_data = ' . var_export( $exif_data, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
-				//restore_error_handler();
-				if ( ! empty( MLAData::$mla_IPTC_EXIF_errors ) ) {
-					$results['mla_exif_errors'] = MLAData::$mla_IPTC_EXIF_errors;
-					MLAData::$mla_IPTC_EXIF_errors = array();
-					MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . '$results[mla_exif_errors] = ' . var_export( $results['mla_exif_errors'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
+				try {
+					$exception = NULL;
+					$exif_data = exif_read_data( $path, NULL, true );
+				} catch ( Throwable $e ) { // PHP 7
+					$exception = $e;
+					$exif_data = NULL;
+				} catch ( Exception $e ) { // PHP 5
+					$exception = $e;
+					$exif_data = NULL;
+				}
+				restore_error_handler();
+
+				MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata exif_data = ' . var_export( $exif_data, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
+				if ( ! empty( $exception ) ) {
+					MLAData::$mla_IPTC_EXIF_errors[] = sprintf( '(%1$s) %2$s', $exception->getCode(), $exception->getMessage() );
 				}
 				
+				// Combine exceptions with PHP notice/warning/error messages
+				if ( ! empty( MLAData::$mla_IPTC_EXIF_errors ) ) {
+					$results['mla_exif_errors'] = MLAData::$mla_IPTC_EXIF_errors;
+					MLACore::mla_debug_add( __LINE__ . ' ' . __( 'ERROR', 'media-library-assistant' ) . ': ' . '$results[mla_exif_errors] = ' . var_export( $results['mla_exif_errors'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+					MLAData::$mla_IPTC_EXIF_errors = array();
+				}
+
 				if ( ! is_array( $exif_data ) ) {
 					$exif_data = array();
 				}
@@ -3743,6 +3771,7 @@ class MLAData {
 				 * should not get a value, e.g., text or PDF documents
 				 */
 				case 'bulk_image_alt':
+					// wp_attachment_is_image( $post_id );
 					if ( 'image/' !== substr( $post_data[ 'post_mime_type' ], 0, 6 ) ) {
 						break;
 					}

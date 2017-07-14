@@ -529,7 +529,7 @@ class MLASettings_CustomFields {
 	}
 
 	/**
-	 * Purge one or more custom field vaues for Bulk action
+	 * Purge one or more custom field values for Bulk action
 	 *
 	 * @since 2.50
 	 *
@@ -561,7 +561,7 @@ class MLASettings_CustomFields {
 		$page_template_array = MLACore::mla_load_template( 'admin-display-settings-custom-fields-tab.tpl' );
 		if ( ! is_array( $page_template_array ) ) {
 			/* translators: 1: ERROR tag 2: function name 3: non-array value */
-			$page_content['message'] = sprintf( _x( '%1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLASettings_CustomFields::mla_compose_shortcodes_tab', var_export( $page_template_array, true ) );
+			$page_content['message'] = sprintf( _x( '%1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLASettings_CustomFields::mla_compose_custom_field_tab', var_export( $page_template_array, true ) );
 			return $page_content;
 		}
 
@@ -2362,7 +2362,7 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 	 *
 	 * @since 2.50
  	 *
-	 * @param integer|array $ID | array( $IDs )  MLA Custom Field Rule ID(s)
+	 * @param integer|array $rule_ids | array( $IDs )  MLA Custom Field Rule ID(s)
  	 *
 	 * @return array MLA custom_field_mapping values (can be empty)
 	 * @return boolean false; MLA custom_field_rules do not exist

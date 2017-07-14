@@ -207,7 +207,7 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsFreePackage' ) ) {
                 $message    = '<p>The ' . $fields[ 'product_name' ] . ' has been deactivated on ' . $fields[ 'remote_url' ] . ' by ' . $fields[ 'email' ] . $registered . '.</p> <p>The reason was:</p> <p><strong>' . $filteredReason . '</strong></p>';
                 $message .= '<br/><hr/>';
 
-                $mail = 'marketing@cminds.com';
+                $mail = 'support@cminds.com';
 
                 if ( $fields[ 'want_contact' ] ) {
                     $message .= '<p>This user is interested in contact from our side.</p>';
@@ -392,8 +392,14 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsFreePackage' ) ) {
             $content          = '';
             $upgradeToProHtml = $this->getOption( 'plugin-compare-table' );
             $pluginUrl        = $this->getOption( 'plugin-store-url' );
+            wp_enqueue_script( 'jquery-ui-tooltip' );
             ob_start();
             ?>
+            <script>
+                jQuery( document ).ready( function () {
+                    jQuery( ".cminds-package-show-tooltip" ).tooltip();
+                } );
+            </script>
             <style type="text/css">
                 .pricing-table ul{
                     border-width: 1px;
@@ -623,7 +629,7 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsFreePackage' ) ) {
         public function updateMenu() {
             add_submenu_page( $this->getOption( 'plugin-menu-item' ), __( 'User Guide', 'cminds-package' ), __( 'User Guide', 'cminds-package' ), 'manage_options', $this->getPageSlug(), array( $this, 'displayPage' ) );
             if ( !$this->getOption( 'plugin-free-only' ) ) {
-                add_submenu_page( $this->getOption( 'plugin-menu-item' ), __( 'Upgrade To Pro', 'cminds-package' ), __( 'Upgrade To Pro', 'cminds-package' ), 'manage_options', $this->getProSlug(), array( $this, 'displayPage' ) );
+                add_submenu_page( $this->getOption( 'plugin-menu-item' ), __( 'Upgrade&nbsp;➤', 'cminds-package' ), __( 'Upgrade&nbsp;➤', 'cminds-package' ), 'manage_options', $this->getProSlug(), array( $this, 'displayPage' ) );
             }
 
             $tag       = 'cminds-' . $this->getOption( 'plugin-short-slug' ) . '-license-page';
@@ -2382,7 +2388,7 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsFreePackage' ) ) {
                         <?php submit_button( 'Download system information file', 'primary', 'cminds-download-sysinfo', false ); ?>
                     </p>
                     <textarea class="cminds_system_info_area" readonly="readonly" onclick="this.focus();
-                            this.select()" id="system-info-textarea" name="cminds-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
+                                        this.select()" id="system-info-textarea" name="cminds-sysinfo" title="<?php _e( 'To copy the system info, click below then press Ctrl + C (PC) or Cmd + C (Mac).', 'edd' ); ?>">
                         <?php $this->cminds_system_info_content(); ?>
                     </textarea>
                 </form>

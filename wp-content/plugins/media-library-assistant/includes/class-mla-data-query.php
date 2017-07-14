@@ -73,7 +73,7 @@ class MLAQuery {
 
 		self::_localize_default_columns_array();
 
-		/// Set up the Media/Assistant submenu table column definitions
+		// Set up the Media/Assistant submenu table column definitions
 		$taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'names' );
 
 		foreach ( $taxonomies as $tax_name ) {
@@ -246,7 +246,7 @@ class MLAQuery {
 	 * for the column is DESC/Descending.
 	 *
 	 * Taxonomy and custom field columns are added to this array by
-	 * MLA_List_Table::mla_admin_init_action.
+	 * MLAQuery::initialize.
 	 *
 	 * @since 0.1
 	 *
@@ -273,15 +273,12 @@ class MLAQuery {
 		'modified' => array('post_modified',true),
 		'author' => array('post_author',false),
 		'attached_to' => array('post_parent',false),
-		// sortable taxonomy columns, if any, added by mla_admin_init_action
-		// sortable custom field columns, if any, added by mla_admin_init_action
+		// sortable taxonomy columns, if any, added by MLAQuery::initialize
+		// sortable custom field columns, if any, added by MLAQuery::initialize
         );
 
 	/**
 	 * Builds the $default_columns array with translated source texts.
-	 *
-	 * Called from MLATest::initialize because the $default_columns information
-	 * might be accessed from "front end" posts/pages.
 	 *
 	 * @since 1.71
 	 */
@@ -311,7 +308,8 @@ class MLAQuery {
 				'modified' => esc_html( _x( 'Last Modified', 'list_table_column', 'media-library-assistant' ) ),
 				'author' => esc_html( _x( 'Author', 'list_table_column', 'media-library-assistant' ) ),
 				'attached_to' => esc_html( _x( 'Attached to', 'list_table_column', 'media-library-assistant' ) ),
-				// taxonomy and custom field columns added below
+				// taxonomy columns, if any, added by MLAQuery::initialize
+				// custom field columns, if any, added by MLAQuery::initialize
 			);
 		}
 	}
@@ -526,6 +524,7 @@ class MLAQuery {
 		$attached_file = NULL;
 		$results = array();
 		$post_meta = get_metadata( 'post', $post_id );
+
 		if ( is_array( $post_meta ) ) {
 			foreach ( $post_meta as $post_meta_key => $post_meta_value ) {
 				if ( empty( $post_meta_key ) ) {
@@ -1099,7 +1098,7 @@ class MLAQuery {
 		global $wpdb;
 		static $wpmf_pre_get_posts_priority = false, $wpmf_pre_get_posts1_priority = false;
 
-		add_filter( 'posts_search', 'MLAQuery::mla_query_posts_search_filter', 10, 2 ); // $search, &$this
+		add_filter( 'posts_search', 'MLAQuery::mla_query_posts_search_filter' );
 		add_filter( 'posts_where', 'MLAQuery::mla_query_posts_where_filter' );
 		add_filter( 'posts_join', 'MLAQuery::mla_query_posts_join_filter' );
 		add_filter( 'posts_groupby', 'MLAQuery::mla_query_posts_groupby_filter' );
@@ -1337,11 +1336,10 @@ class MLAQuery {
 	 * @since 0.60
 	 *
 	 * @param	string	query clause before modification
-	 * @param	object	WP_Query object
 	 *
 	 * @return	string	query clause after keyword search addition
 	 */
-	public static function mla_query_posts_search_filter( $search_string, &$query_object ) {
+	public static function mla_query_posts_search_filter( $search_string ) {
 		global $wpdb;
 
 		$numeric_clause = '';

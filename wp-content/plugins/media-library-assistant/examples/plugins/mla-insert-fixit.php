@@ -1,39 +1,8 @@
 <?php
 /**
- * Synchronizes Media Library values to and from post/page inserted images
+ * Synchronizes Media Library values to and from post/page inserted and attached images
  *
  * Adds a Tools/Insert Fixit submenu with buttons to perform the operations.
- *
- * @package Insert Fixit
- * @version 1.04
- */
-
-/*
-Plugin Name: MLA Insert Fixit
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
-Description: Synchronizes Media Library values to and from post/page inserted images
-Author: David Lingren
-Version: 1.04
-Author URI: http://fairtradejudaica.org/our-story/staff/
-
-Copyright 2015-2016  David Lingren
-
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
-
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
-
-	You can get a copy of the GNU General Public License by writing to the
-	Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
-*/
-
-/**
- * Class Insert Fixit implements a Tools submenu page with several image-fixing tools.
  *
  * Created for support topic "Changed ALT text doesn't not reflect in published posts"
  * opened on 6/6/2015 by "pikaren":
@@ -55,6 +24,41 @@ Copyright 2015-2016  David Lingren
  * opened on 8/16/2016 by "sebastianvondreyse"
  * https://wordpress.org/support/topic/map-image-att-tags-to-attached-post-tags
  *
+ * Enhanced for support topic "Can you bulk update titles AND add an incrementing number?"
+ * opened on 5/18/2017 by "optic"
+ * https://wordpress.org/support/topic/can-you-bulk-update-titles-and-add-an-incrementing-number
+ *
+ * @package Insert Fixit
+ * @version 1.05
+ */
+
+/*
+Plugin Name: MLA Insert Fixit
+Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Description: Synchronizes Media Library values to and from post/page inserted images
+Author: David Lingren
+Version: 1.05
+Author URI: http://fairtradejudaica.org/our-story/staff/
+
+Copyright 2015-2017  David Lingren
+
+	This program is free software; you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation; either version 2 of the License, or
+	(at your option) any later version.
+
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+
+	You can get a copy of the GNU General Public License by writing to the
+	Free Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110, USA
+*/
+
+/**
+ * Class Insert Fixit implements a Tools submenu page with several image-fixing tools.
+ *
  * @package Insert Fixit
  * @since 1.00
  */
@@ -66,7 +70,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.04';
+	const CURRENT_VERSION = '1.05';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -162,9 +166,9 @@ class Insert_Fixit {
 		$old_attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] : '';
 		$attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] : 'data-pin-description';
 
-		$page_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] : '([+page_terms:category,single+]: )([+page_title+] )[+sequence+]';
+		$page_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] : '([+page_terms:category,single+]: )([+page_title+] )[+index+]';
 
-		$parent_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] : '([+parent_terms:category,single+]: )([+parent_title+] )[+sequence+]';
+		$parent_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] : '([+parent_terms:category,single+]: )([+parent_title+] )[+index+]';
 
 		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] : 'attachment_tag';
 		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] : 'post_tag';
@@ -208,30 +212,25 @@ class Insert_Fixit {
 				'comment' => 'Attach items to the first Post/Page for which they are the Featured Image' ),
 			'c07' => array( 'handler' => '', 'comment' => '<hr>' ),
 			'c08' => array( 'handler' => '', 'comment' => '<h3>Copy Post/Page values to inserted Media Library items</h3>' ),
-			'c09' => array( 'handler' => '', 'comment' => 'This tool finds items inserted in the body of a Post or Page and composes a new Title for the items based on values in the Post/Page, adding a sequence number to make the Title unique.<br>&nbsp;<br><strong>NOTE:</strong> The Post to Library tool uses the Template value below.' ),
+			'c09' => array( 'handler' => '', 'comment' => 'This tool finds items inserted in the body of a Post or Page and composes a new Title for the items based on values in the Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of inserted items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Post to Item Title tool uses the Template value below.' ),
 			't0201' => array( 'open' => '<table><tr>' ),
 			't0202' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Template</td>' ),
 			't0203' => array( 'continue' => '  <td style="text-align: left">' ),
 			't0205' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'page_library_template" type="text" size="60" value="' . $page_library_template . '">' ),
 			't0206' => array( 'continue' => '  </td>' ),
 			't0207' => array( 'close' => '</tr></table>' ),
-			'Post to Item Title' => array( 'handler' => '_copy_post_title_to_media_library',
+			'Post to Item Title' => array( 'handler' => '_copy_post_values_to_items',
 				'comment' => 'Copy "Template" value from Post/Page inserts to Media Library item' ),
-			'c10' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c11' => array( 'handler' => '', 'comment' => '<h3>Refresh Caches</h3>' ),
-			'c12' => array( 'handler' => '', 'comment' => 'If you have a large number of posts/pages and/or Media Library items you can use the cache refresh operation to break up processing into smaller steps. Try clicking the "Refresh Caches" button to build these intermediate data structures and save them in the WordPress cache for fifteen minutes. That will make the "Copy", "Modification" and "Attach" operations above go quicker.<br>&nbsp;' ),
-			'Refresh Caches' => array( 'handler' => '_refresh_caches',
-				'comment' => 'rebuild arrays and save in cache for fifteen minutes' ),
 			'c13' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c14' => array( 'handler' => '', 'comment' => '<h3>Copy values between Parent Post/Page and Media Library (attached) items</h3>' ),
-			'c15' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The Parent to Item Title tool uses the Template value below.' ),
+			'c14' => array( 'handler' => '', 'comment' => '<h3>Copy Parent values to attached Media Library items</h3>' ),
+			'c15' => array( 'handler' => '', 'comment' => 'This tool finds items attached to a Post or Page and composes a new Title for the items based on values in the parent Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of attached items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Parent to Item Title tool uses the Template value below.' ),
 			't0301' => array( 'open' => '<table><tr>' ),
 			't0302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Template</td>' ),
 			't0303' => array( 'continue' => '  <td style="text-align: left">' ),
 			't0305' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'parent_library_template" type="text" size="60" value="' . $parent_library_template . '">' ),
 			't0306' => array( 'continue' => '  </td>' ),
 			't0307' => array( 'close' => '</tr></table>' ),
-			'Parent to Item Title' => array( 'handler' => '_copy_parent_template_to_library',
+			'Parent to Item Title' => array( 'handler' => '_copy_parent_values_to_items',
 				'comment' => 'Copy "Template" value from parent Post/Page to (attached) Media Library items' ),
 			'c16' => array( 'handler' => '', 'comment' => '<br><strong>NOTE:</strong> The Item Terms to Parent tool uses the Taxonomy name/slug values below.' ),
 			't0401' => array( 'open' => '<table><tr>' ),
@@ -252,6 +251,11 @@ class Insert_Fixit {
             't0418' => array( 'close' => '</tr></table>' ),
 			'Item Terms to Parent' => array( 'handler' => '_copy_item_terms_to_parent',
 				'comment' => 'Copy assigned terms from attached items to the parent Post/Page' ),
+			'c10' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c11' => array( 'handler' => '', 'comment' => '<h3>Refresh Caches</h3>' ),
+			'c12' => array( 'handler' => '', 'comment' => 'If you have a large number of posts/pages and/or Media Library items you can use the cache refresh operation to break up processing into smaller steps. Try clicking the "Refresh Caches" button to build these intermediate data structures and save them in the WordPress cache for fifteen minutes. That will make the "Copy", "Modification" and "Attach" operations above go quicker.<br>&nbsp;' ),
+			'Refresh Caches' => array( 'handler' => '_refresh_caches',
+				'comment' => 'rebuild arrays and save in cache for fifteen minutes' ),
  		);
 
 		echo '<div class="wrap">' . "\n";
@@ -1186,20 +1190,16 @@ class Insert_Fixit {
 	 *
 	 * @return	string	HTML markup for results/messages
 	 */
-	private static function _copy_post_title_to_media_library() {
+	private static function _copy_post_values_to_items() {
 		global $post;
 
-		/*
-		 * Load the image_inserts array
-		 */
+		// Load the image_inserts array
 		self::_build_image_inserts_cache( true );
 
-		/*
-		 * Load the image_objects array
-		 */
+		// Load the image_objects array
 		self::_build_image_objects_cache( true );
 
-		$template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] : '([+page_terms:category,single+]: )([+page_title+] )[+sequence+]';
+		$template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] : '([+page_terms:category,single+]: )([+page_title+] )[+index+]';
 
 		$image_inserts = count( self::$image_inserts );
 		$image_objects = count( self::$image_objects );
@@ -1213,14 +1213,16 @@ class Insert_Fixit {
 				$post_inserts[ $post_id ][] = $attachment_id;
 			} // each reference
 		} // each attachment
-//error_log( __LINE__ . " Insert_Fixit::_copy_post_title_to_media_library file test post_inserts = " . var_export( $post_inserts, true ), 0 );
+//error_log( __LINE__ . " Insert_Fixit::_copy_post_values_to_items file test post_inserts = " . var_export( $post_inserts, true ), 0 );
 
 		foreach ( $post_inserts as $post_id => $references ) {
 			// Set the global $post object so page_terms: will work; get the post/page values
 			$post = get_post( $post_id );
+			self::$custom_data_sources['page_ID'] = (string) $post_id;
+			self::$custom_data_sources['found_rows'] = (string) count( $references );
 
 			foreach ( $references as $sequence => $attachment_id ) {
-				self::$custom_data_sources['sequence'] = (string) 1 + $sequence;
+				self::$custom_data_sources['index'] = (string) 1 + $sequence;
 
 				// Find the data source
 				$data_source = array(
@@ -1230,11 +1232,11 @@ class Insert_Fixit {
 					'format' => 'raw',
 				);
 				$data_value = MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $data_source, NULL );
-//error_log( __LINE__ . " Insert_Fixit::_copy_post_title_to_media_library( {$attachment_id} ) data_value = " . var_export( $data_value, true ), 0 );
+//error_log( __LINE__ . " Insert_Fixit::_copy_post_values_to_items( {$attachment_id} ) data_value = " . var_export( $data_value, true ), 0 );
 
 				$new_content = array( 'ID' => $attachment_id, 'post_title' => $data_value );
 				$result = wp_update_post( $new_content, true );
-//error_log( __LINE__ . " Insert_Fixit::_copy_post_title_to_media_library( {$attachment_id} ) update result =  " . var_export( $result, true ), 0 );
+//error_log( __LINE__ . " Insert_Fixit::_copy_post_values_to_items( {$attachment_id} ) update result =  " . var_export( $result, true ), 0 );
 
 				if ( $result ) {
 					$updated_attachments++;
@@ -1252,31 +1254,21 @@ class Insert_Fixit {
 		}
 
 		return "<br>Post to Item Title matched {$image_inserts} posts/pages to {$image_objects} attachments and updated {$updated_attachments} Media Library items. There were {$errors} error(s).\n";
-	} // _copy_post_title_to_media_library
+	} // _copy_post_values_to_items
 
 	/**
-	 * Rebuild the Image Inserts and Image Objects arrays and cache them
+	 * Copy Parent values to attached Media Library items
  	 *
 	 * @since 1.04
 	 *
 	 * @return	string	HTML markup for results/messages
 	 */
-	private static function _refresh_caches() {
-		$results  = '<br>' . self::_build_image_inserts_cache();
-		return $results . '<br>' . self::_build_image_objects_cache() . "\n";
-	} // _refresh_caches
+	private static function _copy_parent_values_to_items() {
+		global $post;
 
-	/**
-	 * Copy parent values template to attached items
- 	 *
-	 * @since 1.04
-	 *
-	 * @return	string	HTML markup for results/messages
-	 */
-	private static function _copy_parent_template_to_library() {
 		self::_build_attached_items_cache();
 
-		$template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] : '([+parent_terms:category,single+]: )([+parent_title+] )[+sequence+]';
+		$template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] : '([+parent_terms:category,single+]: )([+parent_title+] )[+index+]';
 
 		$attached_parents = count( self::$attached_items );
 		$attached_items = 0;
@@ -1284,9 +1276,14 @@ class Insert_Fixit {
 		$errors = 0;
 
 		foreach ( self::$attached_items as $post_id => $attachments ) {
+			// Set the global $post object so page_terms: will work; get the post/page values
+			$post = get_post( $post_id );
+			self::$custom_data_sources['page_ID'] = (string) $post_id;
+			self::$custom_data_sources['found_rows'] = (string) count( $attachments );
+
 			foreach ( $attachments as $sequence => $attachment_id ) {
 				$attached_items++;
-				self::$custom_data_sources['sequence'] = (string) 1 + $sequence;
+				self::$custom_data_sources['index'] = (string) 1 + $sequence;
 
 				// Find the data source
 				$data_source = array(
@@ -1296,11 +1293,11 @@ class Insert_Fixit {
 					'format' => 'raw',
 				);
 				$data_value = MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $data_source, NULL );
-//error_log( __LINE__ . " Insert_Fixit::_copy_post_title_to_media_library( {$attachment_id} ) data_value = " . var_export( $data_value, true ), 0 );
+//error_log( __LINE__ . " Insert_Fixit::_copy_post_values_to_items( {$attachment_id} ) data_value = " . var_export( $data_value, true ), 0 );
 
 				$new_content = array( 'ID' => $attachment_id, 'post_title' => $data_value );
 				$result = wp_update_post( $new_content, true );
-//error_log( __LINE__ . " Insert_Fixit::_copy_post_title_to_media_library( {$attachment_id} ) update result =  " . var_export( $result, true ), 0 );
+//error_log( __LINE__ . " Insert_Fixit::_copy_post_values_to_items( {$attachment_id} ) update result =  " . var_export( $result, true ), 0 );
 
 				if ( $result ) {
 					$updated_attachments++;
@@ -1311,7 +1308,7 @@ class Insert_Fixit {
 		} // foreach attachment
 
 		return "<br>Parent to Item Title matched {$attached_parents} posts/pages to {$attached_items} attachments and updated {$updated_attachments} Media Library items. There were {$errors} error(s).\n";
-	} // _copy_parent_template_to_library
+	} // _copy_parent_values_to_items
 
 	/**
 	 * Copy assigned terms from attached items to the parent post/page
@@ -1392,6 +1389,18 @@ class Insert_Fixit {
 
 		return "<br>Item Terms to Parent matched {$attached_parents} posts/pages to {$attached_items} attachments and updated {$updated_parents} parent posts/pages. There were {$skipped} skipped parents and {$errors} error(s).\n";
 	} // _copy_item_terms_to_parent
+
+	/**
+	 * Rebuild the Image Inserts and Image Objects arrays and cache them
+ 	 *
+	 * @since 1.04
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _refresh_caches() {
+		$results  = '<br>' . self::_build_image_inserts_cache();
+		return $results . '<br>' . self::_build_image_objects_cache() . "\n";
+	} // _refresh_caches
 } //Insert_Fixit
 
 /*

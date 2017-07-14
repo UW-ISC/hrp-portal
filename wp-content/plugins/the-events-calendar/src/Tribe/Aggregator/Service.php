@@ -160,7 +160,10 @@ class Tribe__Events__Aggregator__Service {
 		 */
 		$timeout_in_seconds = (int) apply_filters( 'tribe_aggregator_connection_timeout', 60 );
 
-		$response = $this->requests->get( esc_url_raw( $url ), array( 'timeout' => $timeout_in_seconds ) );
+		$response = $http_response = $this->requests->get(
+			esc_url_raw( $url ),
+			array( 'timeout' => $timeout_in_seconds )
+		);
 
 		if ( is_wp_error( $response ) ) {
 			if ( isset( $response->errors['http_request_failed'] ) ) {
@@ -176,6 +179,15 @@ class Tribe__Events__Aggregator__Service {
 		// if the response is not an image, let's json decode the body
 		if ( ! preg_match( '/image/', $response['headers']['content-type'] ) ) {
 			$response = json_decode( wp_remote_retrieve_body( $response ) );
+		}
+
+		// It's possible that the json_decode() operation will have failed
+		if ( null === $response ) {
+			return new WP_Error(
+				'core:aggregator:bad-json-response',
+				esc_html__( 'The response from the Event Aggregator server was badly formed and could not be understood. Please try again.', 'the-events-calendar' ),
+				$http_response
+			);
 		}
 
 		return $response;
@@ -496,6 +508,7 @@ class Tribe__Events__Aggregator__Service {
 			'error:create-import-failed' => __( 'Sorry, but something went wrong. Please try again.', 'the-events-calendar' ),
 			'error:create-import-invalid-params' => __( 'Events could not be imported. The import parameters were invalid.', 'the-events-calendar' ),
 			'error:fb-permissions' => __( 'Events cannot be imported because Facebook has returned an error. This could mean that the event ID does not exist, the event or source is marked as Private, or the event or source has been otherwise restricted by Facebook. You can <a href="https://theeventscalendar.com/knowledgebase/import-errors/" target="_blank">read more about Facebook restrictions in our knowledgebase</a>.', 'the-events-calendar' ),
+			'error:fb-no-results' => __( 'No upcoming Facebook events found.', 'the-events-calendar' ),
 			'error:fetch-404' => __( 'The URL provided could not be reached.', 'the-events-calendar' ),
 			'error:fetch-failed' => __( 'The URL provided failed to load.', 'the-events-calendar' ),
 			'error:get-image' => __( 'The image associated with your event could not be imported.', 'the-events-calendar' ),

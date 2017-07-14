@@ -129,7 +129,6 @@ class MLASettings_Shortcodes {
 				$sections[ $key ] = $text;
 			}
 		}
-//error_log( __LINE__ . " mla_add_template sections = " . var_export( $sections, true ), 0 );
 
 		  if ( strlen( $message_list ) ) {
 			  $message_list .= '<br>';
@@ -158,7 +157,6 @@ class MLASettings_Shortcodes {
 	 */
 	public static function mla_copy_template( $ID ) {
 		$value = MLA_Template_Query::mla_find_shortcode_template( $ID );
-//error_log( __LINE__ . " mla_copy_template( {$ID} ) value = " . var_export( $value, true ), 0 );
 		$old_name = $value['name'];
 		$new_name = $old_name . '-copy';
 
@@ -190,9 +188,7 @@ class MLASettings_Shortcodes {
 	public static function mla_update_template( $value ) {
 		$ID = $value['post_ID'];
 		$value = stripslashes_deep( $value );
-//error_log( __LINE__ . " mla_update_template( {$ID} ) value = " . var_export( $value, true ), 0 );
 		$old_value = MLA_Template_Query::mla_find_shortcode_template( $ID );
-//error_log( __LINE__ . " mla_update_template( {$ID} ) old_value = " . var_export( $old_value, true ), 0 );
 		$template_changed = false;
 		$message_list = '';
 		$error_list = '';
@@ -261,7 +257,6 @@ class MLASettings_Shortcodes {
 	 */
 	public static function mla_delete_template( $ID ) {
 		$value = MLA_Template_Query::mla_find_shortcode_template( $ID );
-//error_log( __LINE__ . " mla_update_template( {$ID} ) value = " . var_export( $value, true ), 0 );
 		$value['deleted'] = true;
 		MLA_Template_Query::mla_replace_shortcode_template( $value );
 		/* translators: 1: field type */
@@ -372,12 +367,11 @@ class MLASettings_Shortcodes {
 					$definition['type'] = $type;
 					$definition['shortcode'] = $shortcode;
 					$definition['slug'] = $section_name;
-					$sections[ $type . $shortcode . $definition['order'] ] = $definition;
+					$sections[ $type . $shortcode . sprintf("%'.02d", $definition['order'] ) ] = $definition;
 				}
 			}
 		}
 		ksort( $sections, SORT_REGULAR );
-//error_log( __LINE__ . " _compose_add_template_tab sections = " . var_export( $sections, true ), 0 );
 
 		$section_list = '';
 		foreach ( $sections as $section ) {
@@ -411,6 +405,9 @@ class MLASettings_Shortcodes {
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
 			'submit' =>'mla-add-template-submit',
 			'Update' => __( 'Add Template', 'media-library-assistant' ),
+			'copy_style' => 'style="display: none"',
+			'copy_href' => '#',
+			'Copy' => __( 'Copy', 'media-library-assistant' ),
 		);
 
 		return array(
@@ -430,8 +427,6 @@ class MLASettings_Shortcodes {
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
 	private static function _compose_edit_template_tab( $item, &$template ) {
-//error_log( __LINE__ . " _compose_edit_template_tab item = " . var_export( $item, true ), 0 );
-//error_log( __LINE__ . " _compose_edit_template_tab template = " . var_export( $template, true ), 0 );
 		$sections = array();
 		foreach( MLATemplate_Support::$mla_template_definitions[ $item['type'] ][ $item['shortcode'] ]['sections'] as $section_name => $definition ) {
 			$definition['slug'] = $section_name;
@@ -620,7 +615,6 @@ class MLASettings_Shortcodes {
 			'mla-edit-template-submit',
 			'mla-shortcodes-options-save',
 		), $_SERVER['REQUEST_URI'] );
-//error_log( __LINE__ . ' mla_compose_shortcodes_tab REQUEST_URI = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
 
 		// Create an instance of our package class
 		$MLATemplateListTable = new MLA_Template_List_Table();
@@ -700,7 +694,6 @@ class MLASettings_Shortcodes {
 				$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s" value="%2$s" />', $key, esc_attr( $value ) ) . "\n";
 			}
 		}
-//error_log( __LINE__ . " view arguments( {$view_args} ) = " . var_export( $view_arguments, true ), 0 );
 
 		$page_values = array(
 			'MLA Shortcode Options' => __( 'MLA Shortcode Options', 'media-library-assistant' ),
@@ -909,7 +902,6 @@ class MLA_Template_List_Table extends WP_List_Table {
 		if ( isset( $_REQUEST['orderby'] ) ) {
 			$submenu_arguments['orderby'] = $_REQUEST['orderby'];
 		}
-//error_log( __LINE__ . ' mla_submenu_arguments request = ' . var_export( $submenu_arguments, true ), 0 );
 
 		return $submenu_arguments;
 	}
@@ -1569,7 +1561,6 @@ class MLA_Template_Query {
 			self::$_shortcode_template_items[ $ID ] = $value;
 		}
 
-//error_log( __LINE__ . ' MLA_Template_List_Table::_get_shortcode_template_items _shortcode_template_items = ' . var_export( self::$_shortcode_template_items, true ), 0 );
 		return true;
 	}
 
@@ -1589,7 +1580,6 @@ class MLA_Template_Query {
 		}
 
 		foreach( self::$_shortcode_template_items as $ID => $value ) {
-//error_log( __LINE__ . " MLA_Template_Query::mla_put_shortcode_template_items( {$ID} ) value = " . var_export( $value, true ), 0 );
 			if ( $value['default'] ) {
 				continue;
 			}
@@ -1626,12 +1616,10 @@ class MLA_Template_Query {
 
 		if ( $style_changed ) {
 			$results = MLATemplate_Support::mla_put_style_templates( $style_templates );
-//error_log( __LINE__ . ' MLA_Template_Query::mla_put_shortcode_template_items style_templates = ' . var_export( $style_templates, true ), 0 );
 		}
 
 		if ( $markup_changed ) {
 			$results = MLATemplate_Support::mla_put_markup_templates( $markup_templates );
-//error_log( __LINE__ . ' MLA_Template_Query::mla_put_shortcode_template_items markup_templates = ' . var_export( $markup_templates, true ), 0 );
 		}
 
 		if ( $style_changed || $markup_changed ) {
@@ -1717,7 +1705,6 @@ class MLA_Template_Query {
 			$clean_request['posts_per_page'] = $count;
 		}
 
-//error_log( __LINE__ . " MLA_Template_List_Table::_prepare_template_items_query( {$offset}, {$count} ) clean_request = " . var_export( $clean_request, true ), 0 );
 		return $clean_request;
 	}
 
@@ -1820,7 +1807,6 @@ class MLA_Template_Query {
 			} //orderby
 		}
 		ksort( $sorted_items );
-//error_log( __LINE__ . " MLA_Template_List_Table::_execute_template_items_query sorted_items = " . var_export( $sorted_items, true ), 0 );
 
 		if ( 'DESC' == $request['order'] ) {
 			$sorted_items = array_reverse( $sorted_items, true );
@@ -1841,7 +1827,6 @@ class MLA_Template_Query {
 				break;
 			}
 		}
-//error_log( __LINE__ . " MLA_Template_List_Table::_execute_template_items_query results = " . var_export( $results, true ), 0 );
 
 		return $results;
 	}
@@ -1874,7 +1859,6 @@ class MLA_Template_Query {
 	 */
 	public static function mla_query_template_items( $request, $offset, $count ) {
 		$request = self::_prepare_template_items_query( $request, $offset, $count );
-//error_log( __LINE__ . ' _query_template_items request = ' . var_export( $request, true ), 0 );
 		$results = self::_execute_template_items_query( $request );
 		return $results;
 	}
@@ -1962,7 +1946,6 @@ class MLA_Template_Query {
 
 		if ( isset( self::$_shortcode_template_items[ $value['post_ID'] ] ) ) {
 			self::$_shortcode_template_items[ $value['post_ID'] ] = $value;
-//error_log( __LINE__ . " mla_replace_shortcode_template value = " . var_export( $value, true ), 0 );
 			return true;
 		}
 
@@ -1987,7 +1970,6 @@ class MLA_Template_Query {
 		$value['deleted'] = false;
 
 		self::$_shortcode_template_items[ $value['post_ID'] ] = $value;
-//error_log( __LINE__ . " mla_add_shortcode_template value = " . var_export( $value, true ), 0 );
 	}
 
 	/**
