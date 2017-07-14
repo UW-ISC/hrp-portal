@@ -150,6 +150,30 @@ class MLAShortcode_Support {
 	}
 
 	/**
+	 * Filters the image src result, returning an icon to represent an attachment.
+	 *
+	 * @since 2.52
+	 *
+	 * @param array|false  $image         Either array with src, width & height, icon src, or false.
+	 * @param int          $attachment_id Image attachment ID.
+	 */
+	public static function _get_attachment_icon_src( $image, $attachment_id ) {
+		if ( $src = wp_mime_type_icon( $attachment_id ) ) {
+			/** This filter is documented in wp-includes/post.php */
+			$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/media' );
+
+			$src_file = $icon_dir . '/' . wp_basename( $src );
+			@list( $width, $height ) = getimagesize( $src_file );
+		}
+
+		if ( $src && $width && $height ) {
+			$image = array( $src, $width, $height );
+		}
+
+		return $image;
+	}
+	
+	/**
 	 * Make sure $attr is an array, repair line-break damage, merge with $content
 	 *
 	 * @since 2.20
@@ -220,7 +244,9 @@ class MLAShortcode_Support {
 		if ( ! ( empty( $content ) || isset( $attr['mla_alt_shortcode'] ) ) ) {
 			$content = str_replace( array( '&#8216;', '&#8217;', '&#8221;', '&#8243;', '<br />', '<p>', '</p>', "\r", "\n" ), array( '\'', '\'', '"', '"', ' ', ' ', ' ', ' ', ' ' ), $content );
 			$new_attr = shortcode_parse_atts( $content );
-			$attr = array_merge( $attr, $new_attr );
+			if ( is_array( $new_attr ) ) {
+				$attr = array_merge( $attr, $new_attr );
+			}
 		}
 
 		return $attr;
@@ -660,7 +686,14 @@ class MLAShortcode_Support {
 			} // is_null( $mla_alt_ids_value )
 		} // mla_alt_shortcode
 
-		$size = $size_class = $arguments['size'];
+		$size_class = $arguments['size'];
+		$size = strtolower( $size_class );
+
+		$icon_only = 'icon_only' === $size;
+		if ( $icon_only ) {
+			$size = $size_class = 'icon';
+		}
+		
 		if ( 'icon' == strtolower( $size) ) {
 			if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
 				$size = array( 64, 64 );
@@ -686,13 +719,25 @@ class MLAShortcode_Support {
 		/*
 		 * Check for Imagick thumbnail generation arguments
 		 */
+		$mla_viewer_required = false;
 		if ( 'checked' == MLACore::mla_get_option( 'enable_mla_viewer' ) ) {
-			if ( ! empty( $arguments['mla_viewer'] ) && ( 'single' == strtolower( $arguments['mla_viewer'] ) ) ) {
-				$arguments['mla_single_thread'] = true;	
-				$arguments['mla_viewer'] = 'true';
-			}
+			if ( ! empty( $arguments['mla_viewer'] ) ) {
+				// Split out the required suffix
+				$mla_viewer_args = explode( ',', strtolower( $arguments['mla_viewer'] ) ) ;
+				$mla_viewer_required = ( 1 < count( $mla_viewer_args ) && 'required' == $mla_viewer_args[1] );
 
-			$arguments['mla_viewer'] = !empty( $arguments['mla_viewer'] ) && ( 'true' == strtolower( $arguments['mla_viewer'] ) );
+				if ( 'single' == $mla_viewer_args[0] ) {
+					$arguments['mla_single_thread'] = true;	
+					$arguments['mla_viewer'] = true;
+				} elseif ( 'true' == $mla_viewer_args[0] ) {
+					$arguments['mla_viewer'] = true;
+				} elseif ( 'required' == $mla_viewer_args[0] ) {
+					$mla_viewer_required = true;
+					$arguments['mla_viewer'] = true;
+				} else {
+					$arguments['mla_viewer'] = false;
+				}
+			}
 		} else {
 			$arguments['mla_viewer'] = false;
 		}
@@ -994,7 +1039,7 @@ class MLAShortcode_Support {
 			$item_values['parent_date'] = '';
 			$item_values['parent_permalink'] = '';
 			$item_values['title'] = wptexturize( $attachment->post_title );
-			$item_values['slug'] = $attachment->post_name; //wptexturize( $attachment->post_name );
+			$item_values['slug'] = $attachment->post_name;
 			$item_values['width'] = '';
 			$item_values['height'] = '';
 			$item_values['orientation'] = '';
@@ -1004,7 +1049,7 @@ class MLAShortcode_Support {
 			$item_values['path'] = '';
 			$item_values['file'] = '';
 			$item_values['description'] = wptexturize( $attachment->post_content );
-			$item_values['file_url'] = $attachment->guid; //wptexturize( $attachment->guid );
+			$item_values['file_url'] = $attachment->guid;
 			$item_values['author_id'] = $attachment->post_author;
 			$item_values['author'] = '';
 			$item_values['caption'] = '';
@@ -1040,7 +1085,6 @@ class MLAShortcode_Support {
 			}
 
 			if ( !empty( $post_meta['mla_wp_attachment_metadata']['image_meta'] ) ) {
-				// $item_values['image_meta'] = wptexturize( var_export( $post_meta['mla_wp_attachment_metadata']['image_meta'], true ) );
 				$item_values['image_meta'] = var_export( $post_meta['mla_wp_attachment_metadata']['image_meta'], true );
 			}
 
@@ -1056,13 +1100,13 @@ class MLAShortcode_Support {
 				$last_slash = strrpos( $base_file, '/' );
 				if ( false === $last_slash ) {
 					$file_name = $base_file;
-					$item_values['base_file'] = $base_file; //wptexturize( $base_file );
-					$item_values['file'] = $base_file; //wptexturize( $base_file );
+					$item_values['base_file'] = $base_file;
+					$item_values['file'] = $base_file;
 				} else {
 					$file_name = substr( $base_file, $last_slash + 1 );
-					$item_values['base_file'] = $base_file; //wptexturize( $base_file );
-					$item_values['path'] = substr( $base_file, 0, $last_slash + 1 ); //wptexturize( substr( $base_file, 0, $last_slash + 1 ) );
-					$item_values['file'] = $file_name; //wptexturize( $file_name );
+					$item_values['base_file'] = $base_file;;
+					$item_values['path'] = substr( $base_file, 0, $last_slash + 1 );
+					$item_values['file'] = $file_name;
 				}
 			} else {
 				$file_name = '';
@@ -1127,8 +1171,22 @@ class MLAShortcode_Support {
 			 * "$selector-#id". See below for the MLA equivalent processing.
 			 */
 			if ( 'attachment' == $attachment->post_type ) {
-				$item_values['pagelink'] = wp_get_attachment_link($attachment->ID, $size, true, $show_icon, $link_text);
-				$item_values['filelink'] = wp_get_attachment_link($attachment->ID, $size, false, $show_icon, $link_text);
+				// Avoid native PDF thumbnails, if specified
+				if ( $mla_viewer_required && in_array( $attachment->post_mime_type, array( 'application/pdf' ) ) ) {
+					$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $attachment->post_title );
+					$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $attachment->post_title );
+				} else {
+					if ( $icon_only ) {
+						add_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_icon_src', 10, 2 );
+					}
+					
+					$item_values['pagelink'] = wp_get_attachment_link($attachment->ID, $size, true, $show_icon, $link_text);
+					$item_values['filelink'] = wp_get_attachment_link($attachment->ID, $size, false, $show_icon, $link_text);
+
+					if ( $icon_only ) {
+						remove_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_icon_src' );
+					}
+				}
 			} else {
 				$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $attachment->post_title );
 				$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $attachment->post_title );
@@ -1537,9 +1595,9 @@ class MLAShortcode_Support {
 						}
 						if ( ! empty( $link_href ) ) {
 							$item_values['link'] = sprintf( '<a %1$shref="%2$s" title="%3$s">%4$s</a>', $link_attributes, $link_href, $rollover_text, $item_values['thumbnail_content'] );
-						} elseif ( 'permalink' == $arguments['link'] ) {
+						} elseif ( 'permalink' == $arguments['link'] || 'post' == $arguments['link'] ) {
 							$item_values['link'] = $item_values['pagelink'];
-						} elseif ( 'file' == $arguments['link'] ) {
+						} elseif ( 'file' == $arguments['link'] || 'full' == $arguments['link'] ) {
 							$item_values['link'] = $item_values['filelink'];
 						} elseif ( 'download' == $arguments['link'] ) {
 							$item_values['link'] = $item_values['downloadlink'];
@@ -3095,9 +3153,9 @@ class MLAShortcode_Support {
 			'mla_target' => '',
 			'hide_if_empty' => false,
 			'option_all_text' => '',
-			'option_all_value' => '0',
+			'option_all_value' => NULL,
 			'option_none_text' => '',
-			'option_none_value' => '-1',
+			'option_none_value' => NULL,
 
 			'depth' => 0,
 			'child_of' => 0,
@@ -3291,9 +3349,11 @@ class MLAShortcode_Support {
 		if ( !in_array( $output_parameters[0], array( 'flat', 'list', 'ulist', 'olist', 'dlist', 'dropdown', 'checklist', 'array' ) ) ) {
 			$output_parameters[0] = 'ulist';
 		}
+
+		$default_style = 'term-list';
+		$default_markup = 'term-list-ul';
 		
 		if ( $is_list = in_array( $output_parameters[0], array( 'list', 'ulist', 'olist', 'dlist' ) ) ) {
-			$default_style = 'term-list';
 
 			if ( 'list' == $output_parameters[0] && 'dd' == $arguments['captiontag'] ) {
 				$default_markup = 'term-list-dl';
@@ -3321,43 +3381,25 @@ class MLAShortcode_Support {
 						$arguments['itemtag'] = 'ul';
 				}
 			}
-
-			if ( NULL == $arguments['mla_style'] ) {
-				$arguments['mla_style'] = $default_style;
-			}
-
-			if ( NULL == $arguments['mla_markup'] ) {
-				$arguments['mla_markup'] = $default_markup;
-			}
 		}
 
 		if ( $is_dropdown = 'dropdown' == $output_parameters[0] ) {
-			$default_style = 'term-list';
 			$default_markup = 'term-list-dropdown';
 			$arguments['itemtag'] = empty( $attr['itemtag'] ) ? 'select' : $attr['itemtag'];
 			$arguments['termtag'] = 'option';
-
-			if ( NULL == $arguments['mla_style'] ) {
-				$arguments['mla_style'] = $default_style;
-			}
-
-			if ( NULL == $arguments['mla_markup'] ) {
-				$arguments['mla_markup'] = $default_markup;
-			}
 		}
 
 		if ( $is_checklist = 'checklist' == $output_parameters[0] ) {
-			$default_style = 'term-list';
 			$default_markup = 'term-list-checklist';
 			$arguments['termtag'] = 'li';
+		}
 
-			if ( NULL == $arguments['mla_style'] ) {
-				$arguments['mla_style'] = $default_style;
-			}
+		if ( NULL == $arguments['mla_style'] ) {
+			$arguments['mla_style'] = $default_style;
+		}
 
-			if ( NULL == $arguments['mla_markup'] ) {
-				$arguments['mla_markup'] = $default_markup;
-			}
+		if ( NULL == $arguments['mla_markup'] ) {
+			$arguments['mla_markup'] = $default_markup;
 		}
 
 		$mla_multi_select = !empty( $arguments['mla_multi_select'] ) && ( 'true' == strtolower( $arguments['mla_multi_select'] ) );
@@ -3450,15 +3492,20 @@ class MLAShortcode_Support {
 					$arguments['option_none_text'] = __( 'no-terms', 'media-library-assistant' );
 				}
 
-				// Using the slug is a common practice and affects option_all_value
-				if ( in_array( $arguments['mla_option_value'], array( '{+slug+}', '[+slug+]' ) ) ) {
-					$option_none_id = -1;
-					$option_none_slug = sanitize_title( $arguments['option_none_value'] );
+				if ( !empty( $arguments['option_none_value'] ) ) {
+					$option_none_value = self::_process_shortcode_parameter( $arguments['option_none_value'], $page_values );
+					if ( is_numeric( $option_none_value ) ) {
+						$option_none_id = intval( $option_none_value );
+						$option_none_slug = sanitize_title( $arguments['option_none_text'] );
+					} else {
+						$option_none_id = -1;
+						$option_none_slug = sanitize_title( $option_none_value );
+					}
 				} else {
-					$option_none_id = intval( $arguments['option_none_value'] );
+					$option_none_id = -1;
 					$option_none_slug = sanitize_title( $arguments['option_none_text'] );
 				}
-
+				
 				$tags[0] = ( object ) array(
 					'term_id' => $option_none_id,
 					'name' => $arguments['option_none_text'],
@@ -3499,11 +3546,17 @@ class MLAShortcode_Support {
 
 		// Using the slug is a common practice and affects option_all_value
 		if ( $add_all_option ) {
-			if ( in_array( $arguments['mla_option_value'], array( '{+slug+}', '[+slug+]' ) ) ) {
-				$option_all_id = 0;
-				$option_all_slug = sanitize_title( $arguments['option_all_value'] );
+			if ( !empty( $arguments['option_all_value'] ) ) {
+				$option_all_value = self::_process_shortcode_parameter( $arguments['option_all_value'], $page_values );
+				if ( is_numeric( $option_all_value ) ) {
+					$option_all_id = intval( $option_all_value );
+					$option_all_slug = sanitize_title( $arguments['option_all_text'] );
+				} else {
+					$option_all_id = 0;
+					$option_all_slug = sanitize_title( $option_all_value );
+				}
 			} else {
-				$option_all_id = intval( $arguments['option_all_value'] );
+				$option_all_id = 0;
 				$option_all_slug = sanitize_title( $arguments['option_all_text'] );
 			}
 		} else {
@@ -3742,20 +3795,16 @@ class MLAShortcode_Support {
 		 */
 		$attr['echo'] = false;
 
-		if ( empty( $attr['mla_output'] ) ) {
-			return 'mla_output is empty';
-		}
-
-		switch ( $attr['mla_output'] ) {
-			case 'wp_list_categories':
-				return wp_list_categories( $attr );
-			case 'wp_dropdown_categories':
-				return wp_dropdown_categories( $attr );
-			case 'wp_terms_checklist':
-				require_once( ABSPATH . 'wp-admin/includes/template.php' );
-				return wp_terms_checklist( 0, $attr );
-			default:
-				//return 'mla_output not recognized';
+		if ( !empty( $attr['mla_output'] ) ) {
+			switch ( $attr['mla_output'] ) {
+				case 'wp_list_categories':
+					return wp_list_categories( $attr );
+				case 'wp_dropdown_categories':
+					return wp_dropdown_categories( $attr );
+				case 'wp_terms_checklist':
+					require_once( ABSPATH . 'wp-admin/includes/template.php' );
+					return wp_terms_checklist( 0, $attr );
+			}
 		}
 
 		return self::mla_term_list( $attr );
@@ -4536,19 +4585,26 @@ class MLAShortcode_Support {
 						$query_arguments[ $key ] = $value;
 						self::$mla_get_shortcode_dynamic_attachments_parameters[ $key ] = $value;
 					} else {
-						$tax_query = NULL;
 						$value = self::_sanitize_query_specification( $value );
 
-						/*
-						 * Replace invalid queries from "where-used" callers with a harmless equivalent
-						 */
+						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( false !== strpos( $value, '{+' ) ) ) {
 							$value = "array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) )";
 						}
 
-						$function = @create_function('', 'return ' . $value . ';' );
+						try {
+							$function = @create_function('', 'return ' . $value . ';' );
+						} catch ( Throwable $e ) { // PHP 7
+							$function = NULL;
+						} catch ( Exception $e ) { // PHP 5
+							$function = NULL;
+						}
+						
 						if ( is_callable( $function ) ) {
 							$tax_query = $function();
+						} else {
+							$tax_query = NULL;
+
 						}
 
 						if ( is_array( $tax_query ) ) {
@@ -4917,19 +4973,25 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$date_query = NULL;
 						$value = self::_sanitize_query_specification( $value );
 
-						/*
-						 * Replace invalid queries from "where-used" callers with a harmless equivalent
-						 */
+						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( false !== strpos( $value, '{+' ) ) ) {
 							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
 						}
 
-						$function = @create_function('', 'return ' . $value . ';' );
+						try {
+							$function = @create_function('', 'return ' . $value . ';' );
+						} catch ( Throwable $e ) { // PHP 7
+							$function = NULL;
+						} catch ( Exception $e ) { // PHP 5
+							$function = NULL;
+						}
+						
 						if ( is_callable( $function ) ) {
 							$date_query = $function();
+						} else {
+							$date_query = NULL;
 						}
 
 						if ( is_array( $date_query ) ) {
@@ -4948,19 +5010,25 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$meta_query = NULL;
 						$value = self::_sanitize_query_specification( $value );
 
-						/*
-						 * Replace invalid queries from "where-used" callers with a harmless equivalent
-						 */
+						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( false !== strpos( $value, '{+' ) ) ) {
 							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
 						}
 
-						$function = @create_function('', 'return ' . $value . ';' );
+						try {
+							$function = @create_function('', 'return ' . $value . ';' );
+						} catch ( Throwable $e ) { // PHP 7
+							$function = NULL;
+						} catch ( Exception $e ) { // PHP 5
+							$function = NULL;
+						}
+						
 						if ( is_callable( $function ) ) {
 							$meta_query = $function();
+						} else {
+							$meta_query = NULL;
 						}
 
 						if ( is_array( $meta_query ) ) {

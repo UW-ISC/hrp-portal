@@ -823,8 +823,10 @@ class MLA_WPML {
 
 		/*
 		 * Find all assigned terms and build term_master array
-		 */		
+		 */
+		$current_language = $sitepress->get_current_language();
 		foreach ( $translations as $language_code => $translation ) {
+			$sitepress->switch_lang( $language_code, true );
 			foreach ( $taxonomies as $taxonomy_name ) {
 				if ( $terms = get_the_terms( $translation['element_id'], $taxonomy_name ) ) {
 					foreach ( $terms as $term ) {
@@ -846,10 +848,12 @@ class MLA_WPML {
 					continue;
 				}
 
+				$sitepress->switch_lang( $translation->language_code, true );
 				$term_object = get_term_by( 'term_taxonomy_id', $translation->element_id, $term['term']->taxonomy );
 				self::_add_relevant_term( $term_object, $term['translations'] );
 			} // translation
 		} // term
+		$sitepress->switch_lang( $current_language, true );
 
 		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_build_existing_terms( {$post_id} ) self::\$existing_terms = " . var_export( self::$existing_terms, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_build_existing_terms( {$post_id} ) self::\$relevant_terms = " . var_export( self::$relevant_terms, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
@@ -1234,6 +1238,8 @@ class MLA_WPML {
 	 * @return	array	$tax_inputs for Term Synchronization
 	 */
 	private static function _apply_term_synchronization( $post_id ) {
+		global $sitepress;
+
 		if ( 'checked' == MLACore::mla_get_option( 'term_synchronization', false, false, MLA_WPML::$mla_language_option_definitions ) ) {
 
 			/*
@@ -1242,6 +1248,7 @@ class MLA_WPML {
 			$terms_before = self::_update_existing_terms( $post_id );
 
 			// $tax_input is a convenient source of language codes; ignore $tax_inputs
+			$current_language = $sitepress->get_current_language();
 			foreach( self::$tax_input as $language => $tax_inputs ) {
 				/*
 				 * Skip the language we've already updated
@@ -1250,12 +1257,14 @@ class MLA_WPML {
 					continue;
 				}
 
+				$sitepress->switch_lang( $language, true );
 				$tax_inputs = self::_apply_synch_input( $language );
 				if ( ! empty( $tax_inputs ) ) {
 					$translation = self::$existing_terms[ $language ]['element_id'];
 					MLAData::mla_update_single_item( $translation, array(), $tax_inputs );
 				}
 			} // translation
+			$sitepress->switch_lang( $current_language, true );
 		} // do synchronization
 	}
 
@@ -2217,7 +2226,7 @@ class MLA_WPML_Table {
 					$link = add_query_arg( $args, wp_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) );
 				}
 
-				$link = apply_filters( 'wpml_link_to_translation', $link, false, $language['code'] );
+				$link = apply_filters( 'wpml_link_to_translation', $link, false, $language['code'], $trid );
 				$content .= '<a href="' . $link . '" title="' . $alt . '">';
 				$content .= '<img style="padding:1px;margin:2px;" border="0" src="' . ICL_PLUGIN_URL . '/res/img/' . $img . '" alt="' . $alt . '" width="16" height="16" />';
 				$content .= '</a>';

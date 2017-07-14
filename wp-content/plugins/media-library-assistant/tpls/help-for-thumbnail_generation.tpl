@@ -33,11 +33,15 @@
 </tr>
 <tr>
 <td class="mla-doc-table-label">Type</td>
-<td>the MIME type, "JPG" (image/jpeg, default) or "PNG" (image/png), of the final thumbnail. You can, for example, set this to "PNG" to retain a transparent background instead of the white jpeg background.</td>
+<td>the MIME type, "JPG" (image/jpeg, default) or "PNG" (image/png), of the final thumbnail. You can, for example, set this to "PNG" to retain a transparent background instead of the white jpeg background.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+You can select "WP" to generate WordPress-style thumbnails (for PDF documents) like those for new uploads as of WP 4.7. These are part of the PDF item itself, not a separate item.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">Existing Items</td>
 <td>the action to take if an item already has a thumbnail. Select "<strong>Keep</strong>" to retain the thumbnail and not generate anything. Select "<strong>Ignore</strong>" to generate and assign a new thumbnail, leaving the old item unchanged. Select "<strong>Trash</strong>" to generate and assign a new thumbnail, moving the old item to the Media Trash (if defined) or deleting it. Select "<strong>Delete</strong>" to generate and assign a new thumbnail, permanently deleting the old item.
+<div style="font-size:8px; line-height:8px">&nbsp;</div>
+You can select "Delete" to replace WordPress-style thumbnails (Type "WP") like those for new uploads as of WP 4.7. The existing thumbnails will be deleted and new thumbnails generated.
 </td>
 </tr>
 <tr>

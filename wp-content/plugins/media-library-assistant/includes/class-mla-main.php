@@ -1036,6 +1036,15 @@ class MLA {
 	}
 
 	/**
+	 * Holds [+index+] and [+found_rows+] values for MLAData_Source::_evaluate_data_source
+	 *
+	 * @since 2.52
+	 *
+	 * @var	array
+	 */
+	public static $bulk_edit_data_source = array();
+
+	/**
 	 * Process bulk action for one or more attachments
 	 *
 	 * @since 2.00
@@ -1064,6 +1073,16 @@ class MLA {
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_process_bulk_action request = " . var_export( $request, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 
 		if ( isset( $request['cb_attachment'] ) ) {
+			if ( !empty( $request['cb_offset'] ) ) {
+				self::$bulk_edit_data_source['cb_offset'] = absint( $request['cb_offset'] );
+				self::$bulk_edit_data_source['cb_count'] = absint( $request['cb_count'] );
+				self::$bulk_edit_data_source['cb_index'] = self::$bulk_edit_data_source['cb_offset'];
+			} else {
+				self::$bulk_edit_data_source['cb_offset'] = 0;
+				self::$bulk_edit_data_source['cb_count'] = count( $request['cb_attachment'] );
+				self::$bulk_edit_data_source['cb_index'] = 0;
+			}
+
 			$item_content = apply_filters( 'mla_list_table_begin_bulk_action', NULL, $bulk_action );
 			if ( is_null( $item_content ) ) {
 				$prevent_default = false;
@@ -1090,6 +1109,8 @@ class MLA {
 			}
 
 			foreach ( $request['cb_attachment'] as $index => $post_id ) {
+				self::$bulk_edit_data_source['cb_index']++;
+				
 				if ( ! current_user_can( 'edit_post', $post_id ) ) {
 					$page_content['message'] .= __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'You are not allowed to edit Attachment: ', 'media-library-assistant' ) . $post_id . '<br>';
 					continue;

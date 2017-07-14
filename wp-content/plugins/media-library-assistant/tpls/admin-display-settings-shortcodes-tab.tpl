@@ -62,10 +62,10 @@
 				[+view_args+]
 				[+_wpnonce+]
 				<span style="margin-top: 1em">
-					<input name="mla-add-new-template-submit" class="button-primary alignleft" type="submit" value="[+Add New Template+]" />
 					<label class="screen-reader-text" for="mla-search-templates-input">[+Search Templates+]:</label>
 					<input name="mla-search-templates-submit" class="button alignright" id="mla-search-templates-submit" type="submit" value="[+Search Templates+]" />
 					<input name="s" class="alignright" id="mla-search-templates-input" type="search" value="[+s+]" />
+					<input name="mla-add-new-template-submit" class="button-primary alignleft" type="submit" value="[+Add New Template+]" />
 					[+results+]
 				</span>
 <!-- template="after-table" -->

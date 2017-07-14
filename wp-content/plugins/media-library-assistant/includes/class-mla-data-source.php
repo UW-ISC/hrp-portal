@@ -787,6 +787,16 @@ class MLAData_Source {
 					$result = '';
 				}
 				break;
+			case 'index':
+				if ( class_exists( 'MLA' ) && !empty( MLA::$bulk_edit_data_source['cb_index'] ) ) {
+					$result = MLA::$bulk_edit_data_source['cb_index'];
+				}
+				break;
+			case 'found_rows':
+				if ( class_exists( 'MLA' ) && !empty( MLA::$bulk_edit_data_source['cb_count'] ) ) {
+					$result = MLA::$bulk_edit_data_source['cb_count'];
+				}
+				break;
  			default:
 				$custom_value = apply_filters( 'mla_evaluate_custom_data_source', NULL, $post_id, $category, $data_value, $attachment_metadata );
 				if ( !is_null( $custom_value ) ) {

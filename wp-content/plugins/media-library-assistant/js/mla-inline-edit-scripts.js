@@ -260,7 +260,6 @@ var jQuery,
 
 			// Find the items to process
 			chunk = mla.bulkEdit.ids.slice( mla.bulkEdit.offset, mla.bulkEdit.offset + mla.bulkEdit.chunkSize );
-			mla.bulkEdit.offset += mla.bulkEdit.chunkSize;
 
 			// Move them from waiting to running
 			for ( cIndex = 0; cIndex < chunk.length; cIndex++ ) {
@@ -275,8 +274,12 @@ var jQuery,
 				action: mla.settings.ajax_action,
 				mla_admin_nonce: mla.settings.ajax_nonce,
 				bulk_action: mla.bulkEdit.targetName,
+				cb_offset: mla.bulkEdit.offset,
+				cb_count: mla.bulkEdit.idsCount,
 				cb_attachment: chunk
 			};
+
+			mla.bulkEdit.offset += mla.bulkEdit.chunkSize;
 
 			params = $.param( params ) + '&' + mla.bulkEdit.fields;
 			//console.log( params );
