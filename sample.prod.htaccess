@@ -8,6 +8,13 @@
 </Files>
 # End UW NetID protect logins
 
+# Block xml-rpc brute force attempts
+<Files xmlrpc.php>
+  order allow,deny
+  deny from all
+</Files>
+# End block xml-rpc
+
 # Protect viewing config files
 <Files sample.*>
   Order allow,deny
