@@ -1,0 +1,65 @@
+<p><strong><?php echo __( "Notice: shortcodes are case-sensitive." ); ?></strong></p>
+
+<article class="cm-shortcode-desc">
+    <header>
+        <h4>[cmbd_single_business]</h4>
+        <span>Single business shortcode</span>
+    </header>
+    <div class="cm-shortcode-desc-inner">
+        <h5>Parameters:</h5>
+        <ul>
+            <li><strong>slug</strong> - The slug of the business</li>
+        </ul>
+        <h5>Example</h5>
+        <p><kbd>[cmbd_single_business slug="business-slug"]</kbd></p>
+        <p>The shortcode shows the single business based on the slug passed as a parameter.</p>
+    </div>
+</article>
+
+<article class="cm-shortcode-desc">
+    <header>
+        <h4>[cmbd_business]</h4>
+        <span>Business Directory Shortcode</span>
+    </header>
+    <div class="cm-shortcode-desc-inner">
+        <h5>Parameters:</h5>
+        <ul>
+            <li><strong>view</strong> - the id of the view from the following: <code>tiles, list, directory</code>(defaults to: <code>tiles</code>)</li>
+            <li><strong>hidesearch</strong> - whether to show the search field. Value should be 1 or 0</li>
+            <li><strong>hidecategories</strong> - whether to show the categories filter. Value should be 1 or 0.</li>
+            <li><strong>hidecustomtaxonomies</strong> - whether to show the Custom Taxonomy filter. Value should be 1 or 0.</li>
+            <li><strong>hidetags</strong> - whether to show the tags filter. Value should be 1 or 0.</li>
+            <li><strong>hidesearchby</strong> - whether to show the Search by City/ZIP/State field. Value should be 1 or 0.</li>
+            <li><strong>row_business</strong> - number of the business in the row (<code>tiles</code> view only).</li>
+            <li><strong>page_business</strong> - number of the business on one page.</li>
+            <li><strong>cats</strong> - the slug of the catagory from which the business should be displayed.</li>
+            <li><strong>customtax</strong> - the slug of the Custom Taxonomy from which the business should be displayed.</li>
+            <li><strong>tags</strong> -the name of the tag the business displayed should have.
+            <li><strong>only_relevant</strong> - use 1 if you like only to display the categories associated with businesses in the directory. Value should be 1 or 0.</li>
+            <li><strong>business_ids</strong> - the IDs of the business you only want to show in directory. Value should be an ID, or comma separated IDs.</li>
+            <li><strong>exclude_ids</strong> - the IDs of the business you want to exclude from displaying in directory. Value should be an ID, or comma separated IDs.</li>
+        </ul>
+        <h5>Example</h5>
+        <p><kbd>[cmbd_business showfilter="1" row_business="3" cats="1" only_relevant="0" tags="tagname" business_ids="1,3,5" exclude_ids="2,4" ]</kbd></p>
+        <p>Shows the Business Directory index. Used without parameters it will display the main index without filtering based on the Settings. Passing arguments allow to deeply customise
+        what is displayed</p>
+    </div>
+</article>
+
+<article class="cm-shortcode-desc">
+    <header>
+        <span>Business Page shortcodes</span>
+    </header>
+    <div class="cm-shortcode-desc-inner">
+        <h5>Shortcodes:</h5>
+        <ul>
+            <li><strong>[cmbd_categories]</strong> - displays the categories and tags box.</li>
+            <li><strong>[cmbd_post_title]</strong> - displays post title</li>
+            <li><strong>[cmbd_post_content]</strong> - displays post content.</li>
+            <li><strong>[cmbd_featured_image]</strong> - display featured image.</li>
+            <li><strong>[cmbd_back_to_index_link]</strong> - displays back link.</li>
+        </ul>
+        <h5>Usage:</h5>
+        <p>These shortcodes can only be used on the Business Page theme.</p>
+    </div>
+</article>
