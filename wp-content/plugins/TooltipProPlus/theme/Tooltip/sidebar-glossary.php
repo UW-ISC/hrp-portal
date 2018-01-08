@@ -1,0 +1,1 @@
+<?phpglobal $cmtt_post_thumbnail;?><aside id="secondary" class="widget-area" role="complementary">    <div class="cmtt_sidebar_thumb">        <?php echo $cmtt_post_thumbnail; ?>    </div>    <?php    dynamic_sidebar( 'CM Tooltip Glossary Sidebar' );    ?></aside><!-- #secondary -->
