@@ -437,8 +437,11 @@ The "mla_target" parameter accepts any value and adds an HTML "target" attribute
 </p>
 <h4>Thumbnail Substitution Support, mla_viewer</h4>
 <p>
-<strong>NOTE: Google has discontinued the File Viewer support for thumbnail images.</strong>
+<strong>NOTE: Google discontinued their File Viewer support for thumbnail images some time ago.</strong>
 This solution supports dynamic thumbnail image generation for PDF and Postscript documents on your site's server. You can also assign a "Featured Image" to any Media Library item. For non-image items such as Microsoft Office documents the featured image will replace the MIME-type icon or document title in an <code>[mla_gallery]</code> display. Simply go to the Media/Edit Media screen, scroll down to the "Featured Image" meta box and select an image as you would for a post or page.
+</p>
+<p>
+WordPress 4.7 added thumbnail generation for PDF documents, and these "native thumbnail images" will automatically be used when available. You can also use MLA's thumbnail generation support (in the Media/Assistant Bulk Actions) to create native thumbnails for older documents.
 </p>
 <p>
 The dynamic thumbnail image generation for PDF and Postscript documents uses the PHP <code>Imagick</code> class, which <strong>requires ImageMagick and Ghostscript</strong> to be installed on your server.  If you need help installing them, look at this <a href="https://wordpress.org/support/topic/nothing-but-error-messages" title="Help with installation" target="_blank">PDF Thumbnails support topic</a>. If you don't have them on your server you can still use the Featured Image support to supply thumbnails for  your non-image items.
@@ -449,7 +452,7 @@ Ten <code>[mla_gallery]</code> parameters provide an easy way to simulate thumbn
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_viewer</td>
-<td>must be "true" or "single" to enable thumbnail substitution. Use "true" unless you experience generation failures due to memory limitations on your server. Use "single" to generate one thumbnail at a time, which may be slower but requires less memory.</td>
+<td>must be "true" or "single" to enable thumbnail substitution. Use "true" unless you experience generation failures due to memory limitations on your server. Use "single" to generate one thumbnail at a time, which may be slower but requires less memory. You can add ",required" to bypass the WordPress-generated native PDF thumbnails; MLA's Featured Image or a dynamically-generated thumbnail will always be used when ",required" is present.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_viewer_extensions</td>
@@ -587,10 +590,32 @@ The order parameter (default ASC) can give an ASC/DESC default for any value tha
 </p>
 <h4>Size</h4>
 <p>
-The Size parameter specifies the image size to use for the thumbnail display. Valid values include "thumbnail", "medium", "large", "full" and any additional image size that was registered with add_image_size(). The default value is "thumbnail". You can use "none" or "" to suppress thumbnail display and substitute the item title string for the image/icon.
+The Size parameter specifies the image size to use for the thumbnail display; "thumbnail" is the default value. You can also substitute an appropriate icon for some or all items or replace the thumbnail image with the item title.
 </p>
+<table>
+<tr>
+<td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large,&nbsp;full</td>
+<td valign="top">For image types, the size of the image you want to display. For non-image types the title of the item will be displayed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
+<td>For image types, any additional image size that was registered with add_image_size(). If the specified size is not available or if the attachment is not an image the title of the item will be displayed.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_only</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for <strong>ALL</strong> items, image and non-image.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">none</td>
+<td>Suppress thumbnail display and substitute the title of the item.</td>
+</tr>
+</table>
 <p>
-The <code>[mla_gallery]</code> shortcode supports an additional Size value, "icon", which shows a 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files.
+&nbsp;
 <a name="link"></a>
 </p>
 <h4>Link</h4>
@@ -2408,7 +2433,7 @@ Dropdown and Checklist formats do not generate hyperlinks; they generate HTML in
 </tr>
 <tr>
 <td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for 'all terms' option</td>
+<td>Control value for 'all terms' option. <strong>Default zero</strong>. Numeric values are used for the term_id; text values for the slug.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">option_none_text</td>
@@ -2416,7 +2441,7 @@ Dropdown and Checklist formats do not generate hyperlinks; they generate HTML in
 </tr>
 <tr>
 <td class="mla-doc-table-label">option_none_value</td>
-<td>Control value for 'no terms' option</td>
+<td>Control value for 'no terms' option. <strong>Default -1</strong>. Numeric values are used for the term_id; text values for the slug.</td>
 </tr>
 </table>
 <p>
@@ -3054,7 +3079,7 @@ The category_name example does not follow the general rule of "taxonomy-slug = t
 </p>
 <h4>A Paginated Gallery</h4>
 <p>
-If your gallery display includes a large number of items it may be useful to divide the display into "pages" with a fixed upper limit of items per page. The <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section explains several ways to do that; here is one example:
+If your gallery display includes a large number of items it may be useful to divide the display into "pages" with a fixed upper limit of items per page. The <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section explains several ways to do that; here is one example. Put <strong>both of these shortcodes</strong> on a post or page to display a paginated gallery:
 <blockquote>
 <code>[mla_gallery attachment_category=big-dog posts_per_page=12]</code><br />
 &nbsp;<br />
@@ -3062,7 +3087,7 @@ If your gallery display includes a large number of items it may be useful to div
 </blockquote>
 </p>
 <p>
-Put both of these shortcodes on a post or page to display a paginated gallery. The first <code>[mla_gallery]</code> displays the images assigned to <code>attachment_category=big-dog</code> and displays a maximum of 12 images at once. The second <code>[mla_gallery]</code> has <strong>exactly the same</strong> data selection parameter and posts per page parameter; that's essential to match up with the first shortcode. It adds one more parameter, <code>mla_output</code>. This parameter changes the display from a set of images to a set of pagination controls.
+Note that <strong>two shortcodes are required</strong>; one for the gallery display and a second one for the pagination controls. The first <code>[mla_gallery]</code> displays the images assigned to <code>attachment_category=big-dog</code> and displays a maximum of 12 images at once. The second <code>[mla_gallery]</code> has <strong>exactly the same</strong> data selection parameter and posts per page parameter; that's essential to match up with the first shortcode. It adds one more parameter, <code>mla_output</code>. This parameter changes the display from a set of images to a set of pagination controls.
 </p>
 <p>
 MLA will add and manage a "current page" parameter of its own so the two shortcodes stay in synch as you navigate from page to page. That's all there is to it.
@@ -3139,6 +3164,9 @@ The <code>posts_per_page=12</code> parameter has been added to the gallery displ
 <p>
 The <code>[mla_gallery]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a gallery or among gallery "pages". For example, if you have many items with a specific Att. Category or Att. Tag value you can build a single-image page with links to the previous/next item having that value. You can also build a page that shows a large gallery in groups, or "gallery pages", of ten items with links to the previous/next ten items or links to all of the gallery pages of items having that value. Finally, you can get a set of links to all pages in the gallery or links around the current page ( e.g.: &laquo; Previous 1 ... 3 4 5 6 7 ... 9 Next &raquo; ).
 </p>
+<p>
+<strong>IMPORTANT:</strong> Pagination controls are an alternative output, not an additional output. One shortcode can generate either a gallery display or pagination controls. <strong>You will need two or more shortcodes to get both the gallery and the controls</strong>.
+</p>
 <h4>The <code>mla_output</code> parameter</h4>
 <p>
 The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. Explanation and examples of each output type are given later in this section. You can choose from seven values:
@@ -3192,7 +3220,7 @@ Here is a more complete example of two standard WordPress pages, "Sample Gallery
 [mla_gallery attachment_tag="sample" mla_caption="{+title+}" mla_link_href="/single-sample/?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]
 </code>
 <p>
-In this example <code>/single-sample/</code>, the URL portion of the link, is the "Permalink" WordPress generates from the page title. If your Permalink structure is different you will have to adjust this element. Note the use of <code>attachment_tag={+query:attachment_tag+}</code> in the href to pass the tag value from the gallery page to the Single Sample page. The Single Sample page has three <code>[mla_gallery]</code> shortcodes; one to display the image and two for the "Previous Sample" and "Next Sample" links:
+In this example <code>/single-sample/</code>, the URL portion of the link, is the "Permalink" WordPress generates from the page title. If your Permalink structure is different you will have to adjust this element. Note the use of <code>attachment_tag={+query:attachment_tag+}</code> in the href to pass the tag value from the gallery page to the Single Sample page. <strong>The Single Sample page has three <code>[mla_gallery]</code> shortcodes; one to display the image and two for the "Previous Sample" and "Next Sample" links</strong>:
 </p>
 <code>
 [mla_gallery columns=1 ids="{+request:current_id+}" size=medium]
@@ -3377,7 +3405,7 @@ The next or previous link returned can use the following Gallery Display Content
 </table>
 <h4>An example of the <code>next_page</code> and <code>previous_page</code> output types</h4>
 <p>
-Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are the previous/next page links:
+Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are <strong>two additional shortcodes</strong> for the previous/next page links:
 </p>
 <code>
 [mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
@@ -3426,7 +3454,7 @@ The <strong>Page Selection Parameters</strong>, <strong>Gallery Display Content 
 </p>
 <h4>An example of the <code>paginate_links</code> output type</h4>
 <p>
-Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode is the list of page links:
+Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode is <strong>the second shortcode for the list of page links</strong>:
 </p>
 <code>
 [mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]

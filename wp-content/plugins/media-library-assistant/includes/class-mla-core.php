@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.51';
+	const CURRENT_MLA_VERSION = '2.54';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -1613,54 +1613,6 @@ class MLACore {
 	}
 	
 	/**
-	 * Remove duplicate columns from the Admin Columns "Custom" section
-	 *
-	 * @since 2.50
-	 *
-	 * @param CPAC_Column[] $columns
-	 * @param $storage_model
-	 */
-	public static function remove_column_types_deprecated( $columns, $storage_model ) {
-		if ( $storage_model instanceof CPAC_Deprecated_Storage_Model_MLA ) {
-
-			$exclude = array(
-				'comments',
-				'title',
-				'column-actions',
-				'column-alternate_text',
-				'column-attached_to',
-				'column-author_name',
-				'column-caption',
-				'column-description',
-				'column-file_name',
-				'column-full_path',
-				'column-mediaid',
-				'column-mime_type',
-				'column-taxonomy',
-				/*
-				'column-meta',
-				'column-available_sizes',
-				'column-dimensions',
-				'column-exif_data',
-				'column-file_size',
-				'column-height',
-				'column-image',
-				'column-used_by_menu',
-				'column-width',
-				 */
-			);
-
-			foreach ( $exclude as $column_type ) {
-				if ( array_key_exists( $column_type, $columns ) ) {
-//error_log( __LINE__ . " MLACore::remove_column_types_deprecated remove = " . var_export( $column_type, true ), 0 );
-				}
-				
-				//$listscreen->deregister_column_type( $column_type );
-			}
-		}
-	}
-	
-	/**
 	 * Set MLA-specific inline editing strategy
 	 *
 	 * @since 2.50
@@ -1668,9 +1620,10 @@ class MLACore {
 	 * @param ACP_Editing_Model $model
 	 */
 	public static function add_editing_strategy( $model ) {
+//error_log( __LINE__ . " MLACore::add_editing_strategy key = " . var_export( $model->get_column()->get_list_screen()->get_key(), true ), 0 );
 		if ( 'mla-media-assistant' === $model->get_column()->get_list_screen()->get_key() ) {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support.php' );
-			$model->set_strategy( new AC_Addon_MLA_Editing_Strategy( $model ) );
+			$model->set_strategy( new ACP_Addon_MLA_Editing_Strategy( $model ) );
 		}
 
 		return $model;
@@ -1682,54 +1635,9 @@ class MLACore {
 	 * @since 2.50
 	 */
 	public static function register_list_screen() {
+//error_log( __LINE__ . " MLACore::register_list_screen", 0 );
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support.php' );
 		AC()->register_list_screen( new AC_Addon_MLA_ListScreen );
-	}
-
-	/**
-	 * Remove duplicate columns from the Admin Columns "Custom" section
-	 *
-	 * @since 2.50
-	 *
-	 * @param AC_ListScreen $listscreen
-	 */
-	public static function remove_column_types( $listscreen ) {
-//error_log( __LINE__ . " MLACore::remove_column_types key = " . var_export( $listscreen->get_key(), true ), 0 );
-		if ( $listscreen instanceof AC_Addon_MLA_ListScreen ) {
-//error_log( __LINE__ . " MLACore::remove_column_types column_types = " . var_export( array_keys( $listscreen->get_column_types() ), true ), 0 );
-
-			$exclude = array(
-				'comments',
-				'title',
-				'column-actions',
-				'column-alternate_text',
-				'column-attached_to',
-				'column-author_name',
-				'column-caption',
-				'column-description',
-				'column-file_name',
-				'column-full_path',
-				'column-mediaid',
-				'column-mime_type',
-				'column-taxonomy',
-
-				/*
-				'column-meta',
-				'column-available_sizes',
-				'column-dimensions',
-				'column-exif_data',
-				'column-file_size',
-				'column-height',
-				'column-image',
-				'column-used_by_menu',
-				'column-width',
-				 */
-			);
-
-			foreach ( $exclude as $column_type ) {
-				$listscreen->deregister_column_type( $column_type );
-			}
-		}
 	}
 } // Class MLACore
 
@@ -1816,10 +1724,7 @@ add_action( 'init', 'MLAMime::initialize', 0x7FFFFFFF );
  * Admin Columns plugin support
  */
 add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );
-//add_action( 'cac/column_types', 'MLACore::remove_column_types_deprecated', 10, 2 );
 
 add_filter( 'acp/editing/model', 'MLACore::add_editing_strategy', 10, 1 );
 add_action( 'ac/list_screens', 'MLACore::register_list_screen', 10, 0 );
-add_action( 'acp/column_types', 'MLACore::remove_column_types', 10, 1 );
-add_action( 'ac/column_types', 'MLACore::remove_column_types', 10, 1 );
 ?>

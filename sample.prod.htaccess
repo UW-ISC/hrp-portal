@@ -15,6 +15,20 @@
 </Files>
 # End block xml-rpc
 
+# Block the include-only files.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^wp-admin/includes/ - [F,L]
+  RewriteRule !^wp-includes/ - [S=3]
+  # The following rule could be incompatible with multi-site, you may
+  # need to comment it out.
+  RewriteRule ^wp-includes/[^/]+\.php$ - [F,L]
+  RewriteRule ^wp-includes/js/tinymce/langs/.+\.php - [F,L]
+  RewriteRule ^wp-includes/theme-compat/ - [F,L]
+</IfModule>
+# End block include only
+
 # Protect viewing config files
 <Files sample.*>
   Order allow,deny
