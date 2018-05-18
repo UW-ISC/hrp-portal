@@ -112,54 +112,45 @@ class MLASettings_CustomFields {
 	 * Save custom field settings to the options table
  	 *
 	 * @since 1.10
-	 * @uses $_REQUEST if passed a NULL parameter
-	 *
-	 * @param array | NULL	specific custom_field_mapping values 
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
-	private static function _save_custom_field_settings( $new_values = NULL ) {
+	private static function _save_custom_field_settings() {
 		$message_list = '';
 		$option_messages = '';
+		$changed = false;
 
-		// Tab-level Save Changes
-		if ( NULL == $new_values ) {
-			/*
-			 * Start with any page-level options
-			 */
-			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-				if ( 'custom_field' == $value['tab'] ) {
-					$option_messages .= MLASettings::mla_update_option_row( $key, $value );
-				}
+		// See if the entire tab is disabled
+		if ( ! isset( $_REQUEST[ MLA_OPTION_PREFIX . MLACoreOptions::MLA_ALLOW_CUSTOM_FIELD_MAPPING ] ) ) {
+			unset( $_REQUEST[ MLA_OPTION_PREFIX . 'enable_custom_field_mapping' ] );
+			unset( $_REQUEST[ MLA_OPTION_PREFIX . 'enable_custom_field_update' ] );
+		}
+
+		// Process any page-level options
+		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
+			if ( 'custom_field' == $value['tab'] ) {
+				$old_value = MLACore::mla_get_option( $key );
+				$option_messages .= MLASettings::mla_update_option_row( $key, $value );
+				$changed |= $old_value !== MLACore::mla_get_option( $key );
 			}
+		}
 
-			/*
-			 * Uncomment this for debugging.
-			 */
-			// $message_list = $option_messages . '<br>';
+		// Uncomment this for debugging.
+		//$message_list = $option_messages . '<br>';
+			
+		if ( $changed ) {
+			$message_list .= __( 'Custom field mapping settings updated.', 'media-library-assistant' ) . "\r\n";
+		} else {
+			$message_list .= __( 'Custom field no mapping changes detected.', 'media-library-assistant' ) . "\r\n";
+		}
 
-			return array(
-				'message' => $message_list . __( 'Custom field mapping settings saved.', 'media-library-assistant' ) . "\r\n",
-				'body' => '' 
-			);
-		} // NULL
-
-		/*
-		 * Uncomment this for debugging.
-		 */
-		// $message_list = $option_messages . '<br>';
-
-		return array(
-			'message' => $message_list . MLAOptions::mla_custom_field_option_handler( 'update', 'custom_field_mapping', MLACoreOptions::$mla_option_definitions['custom_field_mapping'], $new_values ),
-			'body' => '' 
-		);
+		return array( 'message' => $message_list, 'body' => '' );
 	} // _save_custom_field_settings
 
 	/**
-	 * Process custom field settings against all image attachments
+	 * Process custom field rules against all image attachments
  	 *
 	 * @since 2.50
-	 * @uses $_REQUEST if passed a NULL parameter
 	 *
 	 * @param array | NULL	specific custom_field_mapping values 
 	 * @param integer			offset for chunk mapping 
@@ -169,6 +160,7 @@ class MLASettings_CustomFields {
 	 */
 	private static function _process_custom_field_mapping( $settings = NULL, $offset = 0, $length = 0 ) {
 		global $wpdb;
+
 		if ( NULL == $settings ) {
 			$source = 'custom_fields';
 			$settings = MLACore::mla_get_option( 'custom_field_mapping' );
@@ -235,7 +227,7 @@ class MLASettings_CustomFields {
 	 * @return string Message(s) reflecting the results of the operation
 	 */
 	private static function _add_custom_field_rule() {
-		$mla_custom_field = isset( $_REQUEST['mla_custom_field'] ) ? $_REQUEST['mla_custom_field'] : array();
+		$mla_custom_field = isset( $_REQUEST['mla_custom_field'] ) ? stripslashes_deep( $_REQUEST['mla_custom_field'] ) : array();
 
 		// Validate new rule name
 		if ( !empty( $mla_custom_field['new_field'] ) ) {
@@ -296,7 +288,7 @@ class MLASettings_CustomFields {
 	 */
 	private static function _update_custom_field_rule( $post_id, &$template ) {
 		$error_message = '';
-		$mla_custom_field = isset( $_REQUEST['mla_custom_field'] ) ? $_REQUEST['mla_custom_field'] : array();
+		$mla_custom_field = isset( $_REQUEST['mla_custom_field'] ) ? stripslashes_deep( $_REQUEST['mla_custom_field'] ) : array();
 
 		// Validate rule name change
 		if ( !empty( $mla_custom_field['new_field'] ) ) {
@@ -446,9 +438,6 @@ class MLASettings_CustomFields {
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
 	private static function _compose_edit_custom_field_rule_tab( $item, &$template ) {
-//error_log( __LINE__ . " _compose_edit_custom_field_rule_tab item = " . var_export( $item, true ), 0 );
-//error_log( __LINE__ . " _compose_edit_custom_field_rule_tab template = " . var_export( $template, true ), 0 );
-
 		// An old bug left multiple rules for the same custom field; only one can be active
 		if ( $item['name'] === $item['rule_name'] ) {
 			$display_name = $item['name'];
@@ -556,7 +545,6 @@ class MLASettings_CustomFields {
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
 	public static function mla_compose_custom_field_tab( ) {
-//error_log( __LINE__ . ' mla_compose_custom_field_tab REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		$page_content = array( 'message' => '', 'body' => '' );
 		$page_template_array = MLACore::mla_load_template( 'admin-display-settings-custom-fields-tab.tpl' );
 		if ( ! is_array( $page_template_array ) ) {
@@ -624,9 +612,7 @@ class MLASettings_CustomFields {
 			}
 		} // $bulk_action
 
-		/*
-		 * Process row-level actions that affect a single item
-		 */
+		// Process row-level actions that affect a single item
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
@@ -654,9 +640,29 @@ class MLASettings_CustomFields {
 			return $page_content;
 		}
 
-		/*
-		 * Display the Custom Fields tab and the custom fields rule table
-		 */
+		// Check for disabled status
+		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_CUSTOM_FIELD_MAPPING ) ) {
+			// Fill in the page-level option
+			$options_list = '';
+			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
+				if ( MLACoreOptions::MLA_ALLOW_CUSTOM_FIELD_MAPPING == $key ) {
+					$options_list .= MLASettings::mla_compose_option_row( $key, $value );
+				}
+			}
+
+			$page_values = array(
+				'Support is disabled' => __( 'Custom Field Mapping Support is disabled', 'media-library-assistant' ),
+				'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-custom_field&mla_tab=custom_field',
+				'options_list' => $options_list,
+				'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
+				'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
+			);
+
+			$page_content['body'] .= MLAData::mla_parse_template( $page_template_array['custom-field-disabled'], $page_values );
+			return $page_content;
+		}
+
+		// Display the Custom Fields tab and the custom fields rule table
 		$_SERVER['REQUEST_URI'] = remove_query_arg( array(
 			'mla_admin_action',
 			'mla_custom_field_item',
@@ -706,6 +712,13 @@ class MLASettings_CustomFields {
 			}
 		}
 
+		$progress_template_array = MLACore::mla_load_template( 'admin-display-settings-progress-div.tpl' );
+		if ( ! is_array( $progress_template_array ) ) {
+			/* translators: 1: ERROR tag 2: function name 3: non-array value */
+			$page_content['message'] = sprintf( _x( '%1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLASettings_CustomFields::mla_compose_custom_field_tab', var_export( $progress_template_array, true ) );
+			return $page_content;
+		}
+
 		$page_values = array(
 			'Mapping Progress' => __( 'Custom Field Mapping Progress', 'media-library-assistant' ),
 			'DO NOT' => __( 'DO NOT DO THE FOLLOWING (they will cause mapping to fail)', 'media-library-assistant' ),
@@ -721,7 +734,7 @@ class MLASettings_CustomFields {
 			'refresh_href' => '?page=mla-settings-menu-custom_field&mla_tab=custom_field',
 		);
 
-		$progress_div = MLAData::mla_parse_template( $page_template_array['mla-progress-div'], $page_values );
+		$progress_div = MLAData::mla_parse_template( $progress_template_array['mla-progress-div'], $page_values );
 
 		$page_values = array(
 			'mla-progress-div' => $progress_div,
@@ -742,7 +755,7 @@ class MLASettings_CustomFields {
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
 			'Map All' => __( 'Execute All Rules', 'media-library-assistant' ),
-			'Add New Rule' => __( 'Add New Rule', 'media-library-assistant' ),
+			'Add New Rule' => __( 'Add New Custom Field Rule', 'media-library-assistant' ),
 			'Name' => __( 'Name', 'media-library-assistant' ),
 			'new_names' => MLAOptions::mla_compose_custom_field_option_list( 'none', MLA_Custom_Field_Query::mla_custom_field_rule_names() ),
 			'Enter new field' => __( 'Enter new field', 'media-library-assistant' ),
@@ -842,7 +855,7 @@ class MLASettings_CustomFields {
 		if ( ! empty( $_REQUEST['bulk_action'] ) && ( 'custom-field-options-map' == $_REQUEST['bulk_action'] ) ) {
 			$page_content = self::_process_custom_field_mapping( NULL, $offset, $length );
 		}
-		elseif ( ! empty( $_REQUEST['bulk_action'] ) && ( 'custom-field-options-bulk-execute' == $_REQUEST['bulk_action'] ) ) {
+		elseif ( ! empty( $_REQUEST['bulk_action'] ) && ( 'mapping-options-bulk-execute' == $_REQUEST['bulk_action'] ) ) {
 			$source_rules = MLA_Custom_Field_Query::mla_convert_custom_field_rules( $_REQUEST['ids'] );
 			
 			$rules = array();
@@ -907,9 +920,7 @@ class MLASettings_CustomFields {
 	 * @return	void	echo HTML <tr> markup for updated row or error message, then die()
 	 */
 	public static function mla_inline_edit_custom_action() {
-//error_log( __LINE__ . ' MLASettings_CustomFields::mla_inline_edit_custom_action $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		set_current_screen( $_REQUEST['screen'] );
-
 		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		$error_message = '';
@@ -939,6 +950,7 @@ class MLASettings_CustomFields {
 		$rule['active'] = '1' === $_REQUEST['status'];
 		$rule['changed'] = true;
 		$rule['deleted'] = false;
+		$rule = stripslashes_deep( $rule );
 
 		if ( false === MLA_Custom_Field_Query::mla_replace_custom_field_rule( $rule ) ) {
 			echo __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' );
@@ -951,7 +963,7 @@ class MLASettings_CustomFields {
 		$MLAListCustomTable = new MLA_Custom_Fields_List_Table();
 		$MLAListCustomTable->single_row( (object) $rule );
 		die(); // this is required to return a proper result
-	} // mla_inline_edit_upload_action
+	} // mla_inline_edit_custom_action
 } // class MLASettings_CustomFields
 
 /* 
@@ -1081,35 +1093,14 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Return the names and display values of the sortable columns
+	 * Return the names and orderby values of the sortable columns
 	 *
 	 * @since 2.50
 	 *
-	 * @return	array	name => array( orderby value, heading ) for sortable columns
+	 * @return	array	column_slug => array( orderby value, initial_descending_sort ) for sortable columns
 	 */
 	public static function mla_get_sortable_columns( ) {
-		self::_localize_default_columns_array();
-		$columns = self::$default_sortable_columns;
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$needle = array( $_REQUEST['orderby'], false );
-			$key = array_search( $needle, $columns );
-			if ( $key ) {
-				$columns[ $key ][ 1 ] = true;
-			}
-		} else {
-			$columns['name'][ 1 ] = true;
-		}
-
-		return $columns;
-		$results = array() ;
-
-		foreach ( self::$default_sortable_columns as $key => $value ) {
-			$value[1] = self::$default_columns[ $key ];
-			$results[ $key ] = $value;
-		}
-
-		return $results;
+		return self::$default_sortable_columns;
 	}
 
 	/**
@@ -1350,7 +1341,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 			$view_args['orderby'] = $_REQUEST['orderby'];
 		}
 
-			$actions['edit'] = '<a href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
+			$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
 
 		if ( !$item->read_only ) {
 			$actions['inline hide-if-no-js'] = '<a class="editinline" href="#" title="' . __( 'Edit this item inline', 'media-library-assistant' ) . '">' . __( 'Quick Edit', 'media-library-assistant' ) . '</a>';
@@ -1358,10 +1349,10 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 			$actions['execute hide-if-no-js'] = '<a class="execute" id="' . 
 		MLACore::MLA_ADMIN_SINGLE_CUSTOM_FIELD_MAP . '[' . $item->post_ID . ']" href="#" title="' . __( 'Map All Attachments', 'media-library-assistant' ) . '">' . __( 'Execute', 'media-library-assistant' ) . '</a>';
 
-			$actions['purge'] = '<a class="purge"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Purge custom field values', 'media-library-assistant' ) . '">' . __( 'Purge Values', 'media-library-assistant' ) . '</a>';
+			$actions['purge'] = '<a class="purge"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Purge custom field values', 'media-library-assistant' ) . '">' . __( 'Purge Values', 'media-library-assistant' ) . '</a>';
 		}
 
-		$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
+		$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
 
 		return $actions;
 	}
@@ -1595,29 +1586,16 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	}
 
 	/**
-	 * Returns an array where the  key is the column that needs to be sortable
-	 * and the value is db column to sort by. Also notes the current sort column,
-	 * if set.
+	 * Returns an array where the key is the column that needs to be sortable
+	 * and the value is db column to sort by.
 	 *
 	 * @since 2.50
 	 * 
 	 * @return	array	Sortable column information,e.g.,
-	 * 					'slugs'=>array('data_values',boolean)
+	 * 					'slugs'=>array('data_values', boolean initial_descending_sort)
 	 */
 	function get_sortable_columns( ) {
-		$columns = self::$default_sortable_columns;
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$needle = array( $_REQUEST['orderby'], false );
-			$key = array_search( $needle, $columns );
-			if ( $key ) {
-				$columns[ $key ][ 1 ] = true;
-			}
-		} else {
-			$columns['menu_order'][ 1 ] = true;
-		}
-
-		return $columns;
+		return self::$default_sortable_columns;
 	}
 
 	/**
@@ -1985,7 +1963,6 @@ class MLA_Custom_Field_Query {
 			} // foreach rule
 		} // foreach name
 
-//error_log( __LINE__ . ' MLA_Custom_Field_Query::_get_custom_field_rules _custom_field_rules = ' . var_export( self::$_custom_field_rules, true ), 0 );
 		return true;
 	}
 
@@ -2003,7 +1980,6 @@ class MLA_Custom_Field_Query {
 		$rules_changed = false;
 
 		foreach( self::$_custom_field_rules as $ID => $current_value ) {
-//error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$ID} ) current_value = " . var_export( $current_value, true ), 0 );
 			if ( $current_value['deleted'] ) {
 				$rules_changed = true;
 				continue;
@@ -2028,7 +2004,6 @@ class MLA_Custom_Field_Query {
 
 		if ( $rules_changed ) {
 			$settings_changed = MLACore::mla_update_option( 'custom_field_mapping', $custom_field_rules );
-error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$settings_changed} ) custom_field_rules = " . var_export( $custom_field_rules, true ), 0 );
 			self::_get_custom_field_rules( true );
 		}
 	}
@@ -2045,7 +2020,6 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 	 * @return	array	revised arguments suitable for query
 	 */
 	private static function _prepare_custom_field_rules_query( $raw_request, $offset = 0, $count = 0 ) {
-//error_log( __LINE__ . " MLA_Custom_Field_Query::_prepare_custom_field_rules_query( {$offset}, {$count} ) raw_request = " . var_export( $raw_request, true ), 0 );
 		/*
 		 * Go through the $raw_request, take only the arguments that are used in the query and
 		 * sanitize or validate them.
@@ -2074,13 +2048,9 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 					if ( 'none' == $value ) {
 						$clean_request[ $key ] = $value;
 					} else {
-						$sortable_columns = MLA_Custom_Fields_List_Table::mla_get_sortable_columns();
-						foreach ($sortable_columns as $sort_key => $sort_value ) {
-							if ( $value == $sort_value[0] ) {
-								$clean_request[ $key ] = $value;
-								break;
-							}
-						} // foreach
+						if ( array_key_exists( $value, MLA_Custom_Fields_List_Table::mla_get_sortable_columns() ) ) {
+							$clean_request[ $key ] = $value;
+						}
 					}
 					break;
 				case 'order':
@@ -2112,7 +2082,6 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 			$clean_request['posts_per_page'] = $count;
 		}
 
-//error_log( __LINE__ . " MLA_Custom_Field_Query::_prepare_custom_field_rules_query( {$offset}, {$count} ) clean_request = " . var_export( $clean_request, true ), 0 );
 		return $clean_request;
 	}
 
@@ -2226,14 +2195,9 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 		$sorted_items = array();
 		$sorted_keys = array_keys( $sortable_items );
 		natcasesort( $sorted_keys );
-//error_log( __LINE__ . " MLA_Custom_Field_Query::_execute_custom_field_rules_query sorted_keys = " . var_export( $sorted_keys, true ), 0 );
 		foreach ( $sorted_keys as $key ) {
 			$sorted_items[] = $sortable_items[ $key ];
 		}
-
-		//ksort( $sorted_items );
-//error_log( __LINE__ . " MLA_Custom_Field_Query::_execute_custom_field_rules_query sorted_items = " . var_export( $sorted_items, true ), 0 );
-//error_log( __LINE__ . " MLA_Custom_Field_Query::_execute_custom_field_rules_query sorted_item keys = " . var_export( array_keys( $sorted_items ), true ), 0 );
 
 		if ( 'DESC' == $request['order'] ) {
 			$sorted_items = array_reverse( $sorted_items, true );
@@ -2254,7 +2218,6 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 				break;
 			}
 		}
-//if ( isset( $request['posts_per_page'] ) ) {error_log( __LINE__ . " MLA_Custom_Field_Query::_execute_custom_field_rules_query results = " . var_export( $results, true ), 0 );}
 
 		return $results;
 	}
@@ -2287,7 +2250,6 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 	 */
 	public static function mla_query_custom_field_rules( $request, $offset, $count ) {
 		$request = self::_prepare_custom_field_rules_query( $request, $offset, $count );
-//error_log( __LINE__ . ' mla_query_custom_field_rules request = ' . var_export( $request, true ), 0 );
 		$results = self::_execute_custom_field_rules_query( $request );
 		return $results;
 	}
@@ -2420,7 +2382,6 @@ error_log( __LINE__ . " MLA_Custom_Field_Query::mla_put_custom_field_rules( {$se
 
 		if ( isset( self::$_custom_field_rules[ $ID ] ) ) {
 			self::$_custom_field_rules[ $ID ][ $key ] = $value;
-error_log( __LINE__ . " mla_update_custom_field_rule( {$ID}, {$key} ) value = " . var_export( $value, true ), 0 );
 			return true;
 		}
 
@@ -2442,7 +2403,6 @@ error_log( __LINE__ . " mla_update_custom_field_rule( {$ID}, {$key} ) value = " 
 
 		if ( isset( self::$_custom_field_rules[ $value['post_ID'] ] ) ) {
 			self::$_custom_field_rules[ $value['post_ID'] ] = $value;
-error_log( __LINE__ . " mla_replace_custom_field_rule value = " . var_export( $value, true ), 0 );
 			return true;
 		}
 
@@ -2468,7 +2428,6 @@ error_log( __LINE__ . " mla_replace_custom_field_rule value = " . var_export( $v
 		$value['deleted'] = false;
 
 		self::$_custom_field_rules[ $value['post_ID'] ] = $value;
-error_log( __LINE__ . " mla_add_custom_field_rule value = " . var_export( $value, true ), 0 );
 		return true;
 	}
 

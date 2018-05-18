@@ -174,10 +174,6 @@
 	margin-right: 18px;
 }
 
-#mla-add-new-bulk-edit-div span.catshow {
-	display: none;
-}
-
 #mla-add-new-bulk-edit-div fieldset ul.cat-checklist li,
 #mla-add-new-bulk-edit-div fieldset ul.cat-checklist input {
 	margin: 0;

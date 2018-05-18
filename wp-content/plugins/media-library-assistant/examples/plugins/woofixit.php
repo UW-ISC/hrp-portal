@@ -72,7 +72,7 @@
  * https://wordpress.org/support/topic/regenerate-bulk-alt-text-with-product-name-product-category-keyword/
  *
  * @package WooCommerce Fixit
- * @version 2.01
+ * @version 2.02
  */
 
 /*
@@ -80,7 +80,7 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.01
+Version: 2.02
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
 Copyright 2014-2017 David Lingren
@@ -113,7 +113,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.01';
+	const CURRENT_VERSION = '2.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -1979,7 +1979,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 
 		if ( 'clear' != $action ) {
 			// Get the array of the Product Category term objects for comparison
-			$product_categories = get_terms( 'product_cat', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
+			$product_categories = MLAQuery::mla_wp_get_terms( 'product_cat', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 		} else {
 			$product_categories = array();
 		}
@@ -2139,7 +2139,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		global $wpdb;
 		
 		// Get the array of the Att. Category term objects for comparison
-		$attachment_categories = get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
+		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
 		$update_count = 0;
 		$terms_added = 0;
@@ -2191,7 +2191,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		global $wpdb;
 		
 		// Get the array of the Att. Category term objects for comparison
-		$attachment_categories = get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
+		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
 		$update_count = 0;
 		$terms_added = 0;
@@ -2245,7 +2245,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		global $wpdb;
 		
 		// Get the array of the Att. Category term objects for comparison
-		$attachment_categories = get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
+		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
 		$update_count = 0;
 		$delete_count = 0;

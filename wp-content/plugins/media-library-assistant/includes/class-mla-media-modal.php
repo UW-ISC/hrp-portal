@@ -76,9 +76,41 @@ class MLAModal {
 			add_filter( 'media_view_settings', 'MLAModal::mla_media_view_settings_filter', 10, 2 );
 			add_filter( 'media_view_strings', 'MLAModal::mla_media_view_strings_filter', 10, 2 );
 			add_action( 'wp_enqueue_media', 'MLAModal::mla_wp_enqueue_media_action', 10, 0 );
+			add_filter( 'media_library_months_with_files', 'MLAModal::mla_media_library_months_with_files_filter', 10, 1 );
 			add_action( 'print_media_templates', 'MLAModal::mla_print_media_templates_action', 10, 0 );
 			add_action( 'admin_init', 'MLAModal::mla_admin_init_action' );
 		} // Media Modal support enabled
+	}
+
+	/**
+	 * Allows overriding the list of months displayed in the media library.
+	 *
+	 * Called from /wp-includes/media.php function wp_enqueue_media()
+	 *
+	 * @since 2.66
+	 *
+	 * @param array|null An array of objects with `month` and `year`
+	 *                   properties, or `null` (or any other non-array value)
+	 *                   for default behavior.
+	 *
+	 * @return	array	objects with `month` and `year` properties.
+	 */
+	public static function mla_media_library_months_with_files_filter( $months = NULL ) {
+		global $wpdb;
+		static $library_months_with_files = NULL;
+
+		if ( is_array( $library_months_with_files ) ) {
+			return $library_months_with_files;
+		}
+		
+		$library_months_with_files = $wpdb->get_results( $wpdb->prepare( "
+			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
+			FROM $wpdb->posts
+			WHERE post_type = %s
+			ORDER BY post_date DESC
+		", 'attachment' ) );
+
+		return $library_months_with_files;
 	}
 
 	/**
@@ -88,19 +120,12 @@ class MLAModal {
 	 *
 	 * @since 1.20
 	 *
-	 * @param	string	post_type, e.g., 'attachment'
-	 *
 	 * @return	array	( value => label ) pairs
 	 */
-	private static function _months_dropdown( $post_type ) {
-		global $wpdb, $wp_locale;
+	private static function _months_dropdown() {
+		global $wp_locale;
 
-		$months = $wpdb->get_results( $wpdb->prepare( "
-			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
-			FROM $wpdb->posts
-			WHERE post_type = %s
-			ORDER BY post_date DESC
-		", $post_type ) );
+		$months = self::mla_media_library_months_with_files_filter();
 
 		$month_count = count( $months );
 		$month_array = array( '0' => __( 'Show all dates', 'media-library-assistant' ) );
@@ -121,7 +146,7 @@ class MLAModal {
 				sprintf( __( '%1$s %2$d', 'media-library-assistant' ), $wp_locale->get_month( $month ), $year );
 		}
 
-		return apply_filters( 'mla_media_modal_months_dropdown', $month_array, $post_type );
+		return apply_filters( 'mla_media_modal_months_dropdown', $month_array, 'attachment' );
 	}
 
 	/**
@@ -134,12 +159,10 @@ class MLAModal {
 	 * @return	array	( 'class' => $class_array, 'value' => $value_array, 'text' => $text_array )
 	 */
 	public static function mla_terms_options( $markup ) {
-//error_log( __LINE__ . ' mla_terms_options markup = ' . var_export( $markup, true ), 0 );
 		$match_count = preg_match_all( "#\<option(( class=\"([^\"]+)\" )|( ))value=((\'([^\']+)\')|(\"([^\"]+)\"))([^\>]*)\>([^\<]*)\<.*#", $markup, $matches );
 		if ( ( $match_count == false ) || ( $match_count == 0 ) ) {
 			return array( 'class' => array( '' ), 'value' => array( '0' ), 'text' => array( 'Show all terms' ) );
 		}
-//error_log( __LINE__ . ' mla_terms_options matches = ' . var_export( $matches, true ), 0 );
 
 		$class_array = array();
 		$value_array = array();
@@ -427,12 +450,14 @@ class MLAModal {
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 
-			if ( 'upload' == $screen->base ) {
-				if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
+			if ( is_object( $screen ) ) {
+				if ( 'upload' == $screen->base ) {
+					if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) {
+						return;
+					}
+				} elseif ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
 					return;
 				}
-			} elseif ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
-				return;
 			}
 		} else {
 			$screen = NULL;

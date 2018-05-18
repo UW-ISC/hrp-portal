@@ -89,9 +89,7 @@ class MLAReferences {
 			return $references;
 		}
 
-		/*
-		 * Fill in Parent data
-		 */
+		// Fill in Parent data
 		$parent_data = MLAQuery::mla_fetch_attachment_parent_data( $parent );
 		if ( isset( $parent_data['parent_type'] ) ) {
 			$references['parent_type'] = $parent_data['parent_type'];
@@ -135,23 +133,17 @@ class MLAReferences {
 
 		$references['files'][ $references['base_file'] ] = $base_reference;
 
-		/*
-		 * Process the where-used settings option
-		 */
+		// Process the where-used settings option
 		if ('checked' == MLACore::mla_get_option( MLACoreOptions::MLA_EXCLUDE_REVISIONS ) ) {
 			$exclude_revisions = "(post_type <> 'revision') AND ";
 		} else {
 			$exclude_revisions = '';
 		}
 
-		/*
-		 * Accumulate reference test types, e.g., 0 = no tests, 4 = all tests
-		 */
+		// Accumulate reference test types, e.g., 0 = no tests, 4 = all tests
 		$reference_tests = 0;
 
-		/*
-		 * Look for the "Featured Image(s)", if enabled
-		 */
+		// Look for the "Featured Image(s)", if enabled
 		if ( MLACore::$process_featured_in ) {
 			$reference_tests++;
 			$features = $wpdb->get_results( 
@@ -184,9 +176,7 @@ class MLAReferences {
 			}
 		} // $process_featured_in
 
-		/*
-		 * Look for item(s) inserted in post_content
-		 */
+		// Look for item(s) inserted in post_content
 		$references['inserted_option'] = $inserted_in_option;
 		if ( MLACore::$process_inserted_in ) {
 			$reference_tests++;
@@ -220,6 +210,9 @@ class MLAReferences {
 				$query[] = ')';
 				$query = join(' ', $query);
 
+				MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$parent}, {$add_references} ) inserts base query = " . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
+				MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$parent}, {$add_references} ) inserts base parms = " . var_export( $query_parameters, true ), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
+
 				$inserts = $wpdb->get_results(
 					$wpdb->prepare( $query, $query_parameters )
 				);
@@ -247,6 +240,8 @@ class MLAReferences {
 						$like = like_escape( $file );
 					}
 
+					MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$file}, {$like} ) inserts enabled", MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
+					
 					$inserts = $wpdb->get_results(
 						$wpdb->prepare(
 							"SELECT ID, post_type, post_status, post_title FROM {$wpdb->posts}
@@ -268,9 +263,7 @@ class MLAReferences {
 			} // process intermediate sizes
 		} // $process_inserted_in
 
-		/*
-		 * Look for [mla_gallery] references
-		 */
+		// Look for [mla_gallery] references
 		if ( MLACore::$process_mla_gallery_in ) {
 			$reference_tests++;
 			if ( self::_build_mla_galleries( MLACoreOptions::MLA_MLA_GALLERY_IN_TUNING, self::$mla_galleries, '[mla_gallery', $exclude_revisions ) ) {
@@ -290,9 +283,7 @@ class MLAReferences {
 			}
 		} // $process_mla_gallery_in
 
-		/*
-		 * Look for [gallery] references
-		 */
+		// Look for [gallery] references
 		if ( MLACore::$process_gallery_in ) {
 			$reference_tests++;
 			if ( self::_build_mla_galleries( MLACoreOptions::MLA_GALLERY_IN_TUNING, self::$galleries, '[gallery', $exclude_revisions ) ) {
@@ -312,9 +303,7 @@ class MLAReferences {
 			}
 		} // $process_gallery_in
 
-		/*
-		 * Evaluate and summarize reference tests
-		 */
+		// Evaluate and summarize reference tests
 		$errors = '';
 		if ( 0 == $reference_tests ) {
 			$references['tested_reference'] = false;
@@ -342,6 +331,9 @@ class MLAReferences {
 
 		$save_id = $ID;
 		$references = apply_filters( 'mla_fetch_attachment_references', $references, $ID, $parent );
+
+		MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$parent}, {$add_references} ) references = " . var_export( $references, true ), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
+
 		return $references;
 	}
 

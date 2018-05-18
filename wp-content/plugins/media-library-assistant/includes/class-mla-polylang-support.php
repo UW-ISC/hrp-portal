@@ -110,7 +110,11 @@ class MLA_Polylang {
 		add_action( 'mla_end_mapping', 'MLA_Polylang::mla_end_mapping', 10, 0 );
 
 		// Defined in /polylang/admin/admin-filters-media.php
-		add_action( 'pll_translate_media', 'MLA_Polylang::pll_translate_media', 10, 3 );
+		if ( self::$polylang_1dot8_plus ) {
+			add_action( 'pll_translate_media', 'MLA_Polylang::pll_translate_media', 10, 3 );
+		} else {
+			add_action( 'pll_translate_media', 'MLA_Polylang::pll_translate_media_old', 10, 3 );
+		}
 	}
 
 	/**
@@ -385,17 +389,63 @@ class MLA_Polylang {
 	/**
 	 * Copies taxonomy terms from the source item to the new translated item
 	 *
+	 * For Polylang versions 1.8 and later, which changed the parameters
+	 *
+	 * @since 2.63
+	 *
+	 * @param integer $source_attachment_id post id of the source media
+	 * @param integer $target_attachment_id post id of the new media translation
+	 * @param string $language_code language code of the new translation
+	 */
+	public static function pll_translate_media( $source_attachment_id, $target_attachment_id, $language_code ) {
+		global $polylang;
+		static $already_adding = 0;
+
+		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::pll_translate_media( {$source_attachment_id}, {$target_attachment_id}, {$language_code} )", MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
+
+		if ( $already_adding == $target_attachment_id ) {
+			return;
+		} else {
+			$already_adding = $target_attachment_id;
+		}
+
+		self::$duplicate_attachments [ $target_attachment_id ] = $language_code;
+
+		if ( isset( $_REQUEST['action'] ) && 'translate_media' ==  $_REQUEST['action'] ) {
+			if ( 'checked' == MLACore::mla_get_option( 'term_synchronization', false, false, MLA_Polylang::$mla_language_option_definitions ) ) {
+				// Clone the existing common terms to the new translation
+				self::_build_existing_terms( $source_attachment_id );
+				self::_build_tax_input( $source_attachment_id );
+				$tax_inputs = self::_apply_tax_input( 0, $language_code );
+			} else {
+				$tax_inputs = NULL;
+			}
+
+			if ( !empty( $tax_inputs ) ) {
+				MLAData::mla_update_single_item( $target_attachment_id, array(), $tax_inputs );
+			}
+
+			self::$existing_terms = array( 'element_id' => 0 );
+			self::$relevant_terms = array();
+		} // translate_media
+	} // pll_translate_media
+
+	/**
+	 * Copies taxonomy terms from the source item to the new translated item
+	 *
+	 * For Polylang versions before 1.8, which changed the parameters.
+	 *
 	 * @since 2.11
 	 *
 	 * @param	integer	ID of the new item
 	 * @param	object	post object of the new item
 	 * @param	array	 an associative array of translations with language code as key and translation id as value
 	 */
-	public static function pll_translate_media( $duplicated_attachment_id, $duplicated_attachment_object, $translations ) {
+	public static function pll_translate_media_old( $duplicated_attachment_id, $duplicated_attachment_object, $translations ) {
 		global $polylang;
 		static $already_adding = 0;
 
-		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::pll_translate_media( {$duplicated_attachment_id} ) translations = " . var_export( $translations, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::pll_translate_media_old( {$duplicated_attachment_id} ) translations = " . var_export( $translations, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
 		if ( $already_adding == $duplicated_attachment_id ) {
 			return;
@@ -552,7 +602,10 @@ class MLA_Polylang {
 
 				if ( $relevant_term ) {
 					if ( isset( $relevant_term['translations'][ $item_language ] ) ) {
-						$new_terms[] = absint( $relevant_term['translations'][ $item_language ]->element_id );
+//						$new_terms[] = absint( $relevant_term['translations'][ $item_language ]->element_id );
+						$new_term_id = absint( $relevant_term['translations'][ $item_language ]->element_id );
+						$new_term = self::_get_relevant_term( 'id', $new_term_id, $setting_key );
+						$new_terms[] = $new_term['term']->name;
 					}
 				} else {
 					/*
@@ -566,7 +619,11 @@ class MLA_Polylang {
 					
 					$res = wp_insert_term( $new_name, $setting_key, array( 'parent' => $parent ) );
 					if ( ( ! is_wp_error( $res ) ) && isset( $res['term_id'] ) ) {
-						$polylang->model->set_term_language( $res['term_id'], $current_language );
+						if ( self::$polylang_1dot8_plus ) {
+							PLL()->model->term->set_language( $res['term_id'], $current_language );
+						} else {
+							$polylang->model->set_term_language( $res['term_id'], $current_language );
+						}
 					}
 					 
 					/*
@@ -588,7 +645,12 @@ class MLA_Polylang {
 							$_POST['action'] = 'mla';
 							$res = wp_insert_term( $new_name, $setting_key, array( 'parent' => $parent ) );
 							if ( ( ! is_wp_error( $res ) ) && isset( $res['term_id'] ) ) {
-								$polylang->model->set_term_language( $res['term_id'], $language );
+								if ( self::$polylang_1dot8_plus ) {
+									PLL()->model->term->set_language( $res['term_id'], $language );
+								} else {
+									$polylang->model->set_term_language( $res['term_id'], $language );
+								}
+
 								$translations[ $language ] = $res['term_id'];
 							}
 						}
@@ -610,7 +672,10 @@ class MLA_Polylang {
 					 */
 					$relevant_term = self::_get_relevant_term( 'name', $new_name, $setting_key );
 					if ( isset( $relevant_term['translations'][ $item_language ] ) ) {
-						$new_terms[] = absint( $relevant_term['translations'][ $item_language ]->element_id );
+//						$new_terms[] = absint( $relevant_term['translations'][ $item_language ]->element_id );
+						$new_term_id = absint( $relevant_term['translations'][ $item_language ]->element_id );
+						$new_term = self::_get_relevant_term( 'id', $new_term_id, $setting_key );
+						$new_terms[] = $new_term['term']->name;
 					}
 				} // new term
 			} // foreach new_name
@@ -656,13 +721,13 @@ class MLA_Polylang {
 	 */
 	private static function _create_relevant_term( $name, $taxonomy, $language ) {
 		global $polylang;
-//error_log( __LINE__ . " _create_relevant_term( {$name}, {$taxonomy}, {$language} )", 0 );
+
 		// save_language() does a check_admin_referer() security test
 		$_REQUEST['_pll_nonce'] = wp_create_nonce( 'pll_language' );
 		$_POST['term_lang_choice'] = $language;
 		$_POST['action'] = 'mla';
 		$res = wp_insert_term( $name, $taxonomy, array( 'parent' => 0 ) );
-//error_log( __LINE__ . " _create_relevant_term( {$name}, {$taxonomy}, {$language} ) res = " . var_export( $res, true ), 0 );
+
 		if ( ( ! is_wp_error( $res ) ) && isset( $res['term_id'] ) ) {
 			if ( self::$polylang_1dot8_plus ) {
 				PLL()->model->term->set_language( $res['term_id'], $language );
@@ -670,6 +735,7 @@ class MLA_Polylang {
 				$polylang->model->set_term_language( $res['term_id'], $language );
 			}
 		}
+
 		unset( $_POST['term_lang_choice'] );
 		unset( $_POST['action'] );
 
@@ -691,41 +757,39 @@ class MLA_Polylang {
 		$source_term = $relevant_term['term']->term_id;
 		$name = $relevant_term['term']->name;
 		$taxonomy = $relevant_term['term']->taxonomy;
-//error_log( __LINE__ . " _create_relevant_translation( {$name}, {$taxonomy}, {$language} )", 0 );
 
 		// save_language() does a check_admin_referer() security test
 		$_REQUEST['_pll_nonce'] = wp_create_nonce( 'pll_language' );
 		$_POST['term_lang_choice'] = $language;
 		$_POST['action'] = 'mla';
 		$res = wp_insert_term( $name, $taxonomy, array( 'parent' => 0 ) );
-//error_log( __LINE__ . " _create_relevant_translation( {$name}, {$taxonomy}, {$language} ) res = " . var_export( $res, true ), 0 );
+
 		if ( ( ! is_wp_error( $res ) ) && isset( $res['term_id'] ) ) {
 			if ( self::$polylang_1dot8_plus ) {
 				PLL()->model->term->set_language( $res['term_id'], $language );
 			} else {
 				$polylang->model->set_term_language( $res['term_id'], $language );
 			}
+
+			$translations = array( $language => $res['term_id'] );
+			if (isset( $relevant_term['translations'] ) ) {
+				foreach( $relevant_term['translations'] as $slug => $translation ) {
+					$translations[ $slug ] = $translation->element_id;
+				}
+			}
+			
+			if ( self::$polylang_1dot8_plus ) {
+				PLL()->model->term->save_translations( $source_term, $translations );
+			} else {
+				$polylang->model->save_translations( 'term', $source_term, $translations );
+			}
 		}
+
 		unset( $_POST['term_lang_choice'] );
 		unset( $_POST['action'] );
 
-		$translations = array( $language => $res['term_id'] );
-		if (isset( $relevant_term['translations'] ) ) {
-			foreach( $relevant_term['translations'] as $slug => $translation ) {
-				$translations[ $slug ] = $translation->element_id;
-			}
-		}
-		
-		if ( self::$polylang_1dot8_plus ) {
-			PLL()->model->term->save_translations( $source_term, $translations );
-		} else {
-			$polylang->model->save_translations( 'term', $source_term, $translations );
-		}
-
 		// Reload the term with its new translation
-		$term = self::_get_relevant_term( 'id', $res['term_id'], $taxonomy );
-//error_log( __LINE__ . " _create_relevant_translation( {$name}, {$taxonomy}, {$language} ) term = " . var_export( $term, true ), 0 );
-		return $term;
+		return self::_get_relevant_term( 'id', $res['term_id'], $taxonomy );
 	} // _create_relevant_translation
 
 	/**
@@ -739,7 +803,8 @@ class MLA_Polylang {
 	 */
 	private static function _add_relevant_term( $term, $translations = NULL ) {
 		global $polylang;
-
+		static $languages = NULL;
+		
 		if ( ! is_object( $term ) ) {
 			return false;
 		}
@@ -758,8 +823,19 @@ class MLA_Polylang {
 				}
 
 				if ( empty( $translations ) ) {
-					$language_code = pll_default_language();
-					$translations[ $language_code ] = (object) array( 'element_id' => $term->term_id );
+					if ( $polylang->model->is_translated_taxonomy( $term->taxonomy ) ) {
+						$language_code = pll_default_language();
+						$translations[ $language_code ] = (object) array( 'element_id' => $term->term_id );
+					} else {
+						// Handle untranslated taxonomies
+						if ( empty( $languages ) ) {
+							$languages = $polylang->model->get_languages_list( array( 'fields' => 'slug' ) );
+						}
+						
+						foreach( $languages as $language_code ) {
+							$translations[ $language_code ] = (object) array( 'element_id' => $term->term_id );
+						}
+					}
 				}
 			}
 
@@ -786,9 +862,8 @@ class MLA_Polylang {
 	 * @param	boolean	$test_only false (default) to add missing term, true to leave term out
 	 */
 	private static function _get_relevant_term( $field, $value, $taxonomy, $language = NULL, $test_only = false ) {
-		/*
-		 * WordPress encodes special characters, e.g., "&" as HTML entities in term names
-		 */
+
+		// WordPress encodes special characters, e.g., "&" as HTML entities in term names
 		if ( 'name' == $field ) {
 			$value = _wp_specialchars( $value );
 		}
@@ -825,26 +900,18 @@ class MLA_Polylang {
  		if ( ( false === $relevant_term ) && $test_only ) {
 			return false;
 		}
-//error_log( __LINE__ . " _get_relevant_term( {$field}, {$taxonomy}, {$value} ) relevant_term = " . var_export( $relevant_term, true ), 0 );
 
-		/*
-		 * If no match, try to add it and its translations
-		 */
+		// If no match, try to add it and its translations
  		if ( ( false === $relevant_term ) && $candidate = get_term_by( $field, $value, $taxonomy ) ) {
-//error_log( __LINE__ . " _get_relevant_term( {$field}, {$taxonomy}, {$value} ) candidate = " . var_export( $candidate, true ), 0 );
 			$relevant_term =  self::_add_relevant_term( $candidate );
-//error_log( __LINE__ . " _get_relevant_term( {$field}, {$taxonomy}, {$value} ) relevant_term = " . var_export( $relevant_term, true ), 0 );
 
 			foreach ( $relevant_term['translations'] as $translation ) {
 				$term_object = get_term_by( 'id', $translation->element_id, $taxonomy );
 				self::_add_relevant_term( $term_object, $relevant_term['translations'] );
 			} // translation
 		} // new term
-//error_log( __LINE__ . " _get_relevant_term( {$field}, {$taxonomy}, {$value} ) candidate = " . var_export( $candidate, true ), 0 );
 
-		/*
-		 * Find the language-specific value, if requested
-		 */
+		// Find the language-specific value, if requested
 		if ( $relevant_term && ! empty( $language ) ) {
 			if ( $relevant_term && array_key_exists( $language, $relevant_term['translations'] ) ) {
 				$relevant_term = self::$relevant_terms[ $relevant_term['translations'][ $language ]->element_id ];
@@ -1128,9 +1195,6 @@ class MLA_Polylang {
 								$relevant_term = self::_create_relevant_term( $term_name, $taxonomy, self::$existing_terms['slug'] );
 								$new_names[ $term_name ][ self::$existing_terms['slug'] ] = $relevant_term['term']->term_id;
 							} else {
-								$language = self::$existing_terms['slug'];
-//error_log( __LINE__ . " _build_tax_input( {$post_id}, {$term_name}, {$language} ) relevant_term = " . var_export( $relevant_term, true ), 0 );
-//error_log( __LINE__ . " _build_tax_input( {$post_id}, {$term_name}, {$language} ) new_names = " . var_export( $new_names, true ), 0 );
 								if ( !array_key_exists( self::$existing_terms['slug'], $relevant_term['translations'] ) && isset( $new_names[ $term_name ] ) ) {
 									$relevant_term = self::_create_relevant_translation( $relevant_term, self::$existing_terms['slug'] );
 									$new_names[ $term_name ][ self::$existing_terms['slug'] ] = $relevant_term['term']->term_id;
@@ -1150,10 +1214,8 @@ class MLA_Polylang {
 			} // flat taxonomy
 
 			foreach( $active_languages as $language => $language_details ) {
+				// Apply the tax_action to the terms_before to find the terms_after
 				$language = $language_details->slug;
-				/*
-				 * Apply the tax_action to the terms_before to find the terms_after
-				 */
 				$term_changes = isset( $input_terms[ $language ] ) ? $input_terms[ $language ] : array();
 				if ( 'replace' == $tax_action ) {
 					$terms_after = $term_changes;
@@ -1169,9 +1231,7 @@ class MLA_Polylang {
 					} // input_term
 				}
 
-				/*
-				 * Convert terms_after to tax_input format
-				 */
+				// Convert terms_after to tax_input format
 				$term_changes = array();
 				foreach( $terms_after as $input_term ) {
 					$term_changes[] = $input_term->term_id;
@@ -1179,7 +1239,6 @@ class MLA_Polylang {
 
 				self::$tax_input[ $language ][ $taxonomy ] = $term_changes;
 			} // language
-
 		} // foreach taxonomy
 
 		MLACore::mla_debug_add( __LINE__ . " MLA_Polylang::_build_tax_input( {$post_id} ) self::\$tax_input = " . var_export( self::$tax_input, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
@@ -1570,7 +1629,6 @@ class MLA_Polylang {
 			} else {
 				$tax_inputs = array( $key => implode( ',', $terms ) );
 			}
-//error_log( __LINE__ . " MLA_Polylang::mla_media_modal_update_compat_fields_terms = " . var_export( $tax_inputs, true ), 0 );
 
 			self::_build_tax_input( $post_id, $tax_inputs, NULL, true );
 			$tax_inputs = self::_apply_tax_input( $post_id );
@@ -2580,7 +2638,7 @@ class MLA_Polylang {
 		foreach ( MLA_Polylang::$mla_language_option_definitions as $key => $value ) {
 			if ( 'language' == $value['tab'] ) {
 				if ( 'custom' == $value['type'] && isset( $value['reset'] ) ) {
-					$message = MLA_Polylang::$value['reset']( 'reset', $key, $value, $_REQUEST );
+					$message = call_user_func( array( 'MLA_Polylang', $value['reset'] ), 'reset', $key, $value, $_REQUEST );
 				} elseif ( ('header' == $value['type']) || ('hidden' == $value['type']) ) {
 					$message = '';
 				} else {

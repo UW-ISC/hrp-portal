@@ -4,7 +4,7 @@
 <div class="wrap">
 <div id="icon-options-general" class="icon32"><br/></div>
 <div id="donate-button-div" class="alignright clear">
-	<a title="[+Support Our Work+]" class="button button-large button-primary" href="http://fairtradejudaica.org/make-a-difference/donate/">[+Donate+]</a>
+	<a title="[+Support Our Work+]" class="button button-large button-primary" href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" target="_blank">[+Donate+]</a>
 </div>
 <h1>[+Media Library Assistant+] [+version+][+development+] [+Settings+]</h1>
 [+messages+]
@@ -24,11 +24,11 @@
             <a href="#backtotop">[+Go to Top+]</a> | <a href="#gotobottom">[+Go to Bottom+]</a>
         </td></tr>
         <tr><td colspan="2">
-            <h2 id="[+key+]">[+value+]</h2>
+            <h3 id="[+key+]">[+value+]</h3>
         </td></tr>
 <!-- template="subheader" -->
         <tr><td colspan="2">
-            <h3 id="[+key+]">[+value+]</h3>
+            <h4 id="[+key+]">[+value+]</h4>
         </td></tr>
 <!-- template="radio" -->
         <tr valign="top"><th scope="row" class="textright">
@@ -122,7 +122,7 @@
 <table width="700" border="0" cellpadding="10">
 	<tr>
 		<td>
-			<a title="[+Donate to FTJ+]" class="button button-large button-primary" href="http://fairtradejudaica.org/make-a-difference/donate/">[+Donate+]</a>
+			<a title="[+Donate to FTJ+]" class="button button-large button-primary" href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" target="_blank">[+Donate+]</a>
 		</td>
 		<td>[+This plugin was+]</td>
 	</tr>
@@ -135,6 +135,11 @@
     <table class="optiontable">
 [+options_list+]
 	</table>
+<p>[+You can find+]</p>
+<p class="submit mla-settings-submit">
+	<input name="mla-debug-options-save" class="button-primary" id="mla-debug-options-save" type="submit" value="[+Save Changes+]" />
+</p>
+<div class="mla-settings-help">[+Click Save Changes+]</div>
 <h3>[+Debug Settings+]</h3>
     <table class="optiontable">
 [+settings_list+]
@@ -153,10 +158,6 @@
             </td>
         </tr>
 	</table>
-    <p class="submit mla-settings-submit">
-        <input name="mla-debug-options-save" class="button-primary" id="mla-debug-options-save" type="submit" value="[+Save Changes+]" />
-    </p>
-	<div class="mla-settings-help">[+Click Save Changes+]</div>
 [+_wpnonce+]
 [+_wp_http_referer+]
 </form>

@@ -374,9 +374,7 @@ class MLAData_Source {
 
 		$data_source = $data_value['data_source'];
 
-		/*
-		 * Do this once per page load; cache attachment metadata if mapping all attachments
-		 */
+		// Do this once per page load; cache attachment metadata if mapping all attachments
 		if ( NULL == $intermediate_sizes ) {
 			$upload_dir = wp_upload_dir();
 			$upload_dir = $upload_dir['basedir'] . '/';
@@ -393,14 +391,13 @@ class MLAData_Source {
 			} // custom_field_mapping, i.e., mapping all attachments
 		} // first call after page load
 
-		/*
-		 * Do this once per post. Simulate SQL results for $wp_attached_files and $wp_attachment_metadata.
-		 */
+		// Do this once per post. Simulate SQL results for $wp_attached_files and $wp_attachment_metadata.
 		if ( $current_id != $post_id ) {
 			$current_id = $post_id;
 			$parent_info = NULL;
 			$references = NULL;
 			$alt_text = NULL;
+			MLAData::mla_reset_regex_matches();
 
 			if ( 'single_attachment_mapping' == $category ) {
 				$metadata = get_metadata( 'post', $post_id, '_wp_attached_file' );
@@ -450,10 +447,7 @@ class MLAData_Source {
 					$default_option = 'text';
 				}
 
-				/*
-				 * Go through the template and expand the non-prefixed elements
-				 * as Data Sources
-				 */
+				// Go through the template and expand the non-prefixed elements as Data Sources
 				$item_values = array();
 				$placeholders = MLAData::mla_get_template_placeholders( $data_value['meta_name'], $default_option );
 				foreach ( $placeholders as $key => $placeholder ) {
@@ -473,11 +467,9 @@ class MLAData_Source {
 					} // Data Source
 				} // foreach placeholder
 
-				/*
-				 * Now expand the template using the above Data Source values
-				 */
+				// Now expand the template using the above Data Source values
 				$template = '[+template:' . $data_value['meta_name'] . '+]';
-				$item_values = MLAData::mla_expand_field_level_parameters( $template, NULL, $item_values, $post_id, $data_value['keep_existing'], $default_option );
+				$item_values = MLAData::mla_expand_field_level_parameters( $template, NULL, $item_values, $post_id, $data_value['keep_existing'], $default_option, $attachment_metadata );
 
 				if ( 'array' ==  $default_option ) {
 					$result = MLAData::mla_parse_array_template( $template, $item_values );
@@ -682,9 +674,7 @@ class MLAData_Source {
 
 				if ( !empty( $references['parent_errors'] ) ) {
 					$result = $references['parent_errors'];
-					/*
-					 * Remove (ORPHAN...
-					 */
+					// Remove (ORPHAN...
 					$orphan_certain =  '(' . __( 'ORPHAN', 'media-library-assistant' ) . ')';
 					$orphan_possible = '(' . __( 'ORPHAN', 'media-library-assistant' ) . '?)';
 
@@ -790,6 +780,9 @@ class MLAData_Source {
 			case 'index':
 				if ( class_exists( 'MLA' ) && !empty( MLA::$bulk_edit_data_source['cb_index'] ) ) {
 					$result = MLA::$bulk_edit_data_source['cb_index'];
+					if ( !empty( $data_value['format'] ) ) {
+						$result += absint( $data_value['format'] );
+					}
 				}
 				break;
 			case 'found_rows':
@@ -816,9 +809,7 @@ class MLAData_Source {
 				break;
 			case 'native':
 			default:
-				/*
-				 * Make some numeric values sortable as strings, make all value non-empty
-				 */
+				// Make some numeric values sortable as strings, make all value non-empty
 				if ( in_array( $data_source, array( 'file_size', 'pixels', 'width', 'height' ) ) ) {
 					$result = str_pad( $result, 15, ' ', STR_PAD_LEFT );
 				} elseif ( empty( $result ) ) {

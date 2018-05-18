@@ -1,11 +1,11 @@
 ﻿<!-- template="documentation-tab" -->
-<div class="mla-display-settings-page" id="mla-display-settings-documentation-tab" style="width:700px">
-<h3>Plugin and Shortcode Documentation. In this tab, jump to:</h3>
+<h2>Plugin and Shortcode Documentation. In this tab, jump to:</h2>
+<div class="mla-display-settings-page" id="mla-display-settings-documentation-tab" style="width:710px">
 <p class="submit mla-settings-submit">
 Browse and install: 
-<a href="[+example_url+]" class="button button-primary">Example Plugins</a><br>
+<a href="[+example_url+]" class="button button-primary">Example Plugins</a><br />
 &nbsp;<br />
-For more information about the example plugins, jump to <a href="#mla_example_plugins">The Example Plugins</a><br>
+For more information about the example plugins, jump to <a href="#mla_example_plugins">The Example Plugins</a><br />
 &nbsp;
 </p>
 <div id="mla-doc-gallery-shortcode"><a href="#mla_gallery"><strong>MLA Gallery Shortcode</strong></a>
@@ -19,12 +19,13 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#order_orderby">Order, Orderby</a></li>
 <li><a href="#size">Size</a></li>
 <li><a href="#link">Link</a></li>
+<li><a href="#named_transfer">Transfer by Item Name</a></li>
 <li><a href="#include_exclude">Include, Exclude</a></li>
 <li><a href="#post_id_ids_post_parent">Post ID, "ids", Post Parent</a></li>
 <li><a href="#author_author_name">Author, Author Name</a></li>
 <li><a href="#category_parameters">Category Parameters</a></li>
 <li><a href="#tag_parameters">Tag Parameters</a></li>
-<li><a href="#taxonomy_parameters_tax_operator">Simple Taxonomy Parameters</a></li>
+<li><a href="#simple_taxonomy_parameters">Simple Taxonomy Parameters</a></li>
 <li><a href="#taxonomy_parameters_tax_input">Compound Taxonomy Parameters, "tax_input"</a></li>
 <li><a href="#taxonomy_queries">Taxonomy Queries, the "tax_query"</a></li>
 <li><a href="#taxonomy_keyword_search">Taxonomy term keyword(s) search</a></li>
@@ -76,12 +77,12 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li>
 <a href="#gallery_examples"><strong>MLA Gallery Examples</strong></a>
 </li>
-<ul class="mla-doc-toc-list">
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#simple_examples">Simple Examples</a></li>
 <li><a href="#paginated_gallery">A Paginated Gallery</a></li>
 <li><a href="#cloud_and_gallery">Tag Cloud and Gallery</a></li>
 <li><a href="#search_form_and_gallery">Search Form and Gallery</a></li>
-</ul>
+</ul></li>
 <li>
 <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a>
 </li>
@@ -94,31 +95,43 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li>
 <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>
 </li>
-<ul class="mla-doc-toc-list">
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#argument_parameters">Argument substitution parameters</a></li>
 <li><a href="#gallery_specific">Gallery-specific substitution parameters</a></li>
 <li><a href="#mla_style_parameters">Substitution parameters for style templates</a></li>
 <li><a href="#mla_markup_parameters">Substitution parameters for markup templates</a></li>
 <li><a href="#mla_attachment_parameters">Attachment-specific substitution parameters for the markup template Item part</a></li>
-</ul>
+</ul></li>
 <li>
 <a href="#mla_table_example"><strong>A table-based Style and Markup template example</strong></a>
 </li>
 <li>
 <a href="#mla_variable_parameters"><strong>Field-level substitution parameters</strong></a>
 </li>
-<ul class="mla-doc-toc-list">
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#field_level_prefixes">Field-level prefix values</a></li>
 <li><a href="#field_level_formats">Field-level option/format values</a></li>
 <li><a href="#field_level_data_sources">Field-level data sources</a></li>
-<li><a href="#mla_iptc_identifiers">Field-level IPTC identifiers and friendly names</a>
+<li><a href="#mla_iptc_identifiers">Field-level IPTC identifiers and friendly names</a></li>
 <li><a href="#mla_camera_values">Field-level Enhanced EXIF CAMERA values</a></li>
 <li><a href="#mla_gps_values">Field-level Enhanced EXIF GPS values</a></li>
 <li><a href="#pdf_metadata">Field-level metadata in PDF documents</a></li>
 <li><a href="#substitution_parameter_filters">Field-level substitution parameter filters (Hooks)</a></li>
-</ul>
+</ul></li>
 <li>
 <a href="#mla_template_parameters"><strong>Content Templates</strong></a>
+</li>
+<li>
+<a href="#mla_regular_expressions"><strong>Regular Expression Features</strong></a>
+</li>
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
+<li><a href="#mla_regular_expressions_patterns">Patterns and Subpatterns</a></li>
+<li><a href="#mla_regular_expressions_match">The <code>,match(p)</code> option/format value</a></li>
+<li><a href="#mla_regular_expressions_extract">The <code>,extract(p,v)</code> option/format value</a></li>
+<li><a href="#mla_regular_expressions_replace">The <code>,replace(p,r,v)</code> option/format value</a></li>
+<li><a href="#mla_regular_expressions_matches">The <code>matches:</code> field-level prefix</a></li>
+<li><a href="#mla_regular_expressions_examples">Application Examples</a></li>
+</ul></li>
 <li>
 <a href="#mla_text_widget"><strong>The MLA Text Widget</strong></a>
 </li>
@@ -130,6 +143,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 </li>
 <li>
 <a href="#admin_columns"><strong>Support for the &#8220;Admin Columns&#8221; Plugin</strong></a>
+</li>
+<li>
+<a href="#mla_taxonomy_hooks"><strong>Custom Taxonomy Actions and Filters (Hooks)</strong></a>
 </li>
 <li>
 <a href="#mla_list_table_hooks"><strong>Media/Assistant Submenu Actions and Filters (Hooks)</strong></a>
@@ -152,26 +168,23 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li>
 <a href="#mla_custom_field_mapping"><strong>Custom Field and Attachment Metadata Processing Options</strong></a>
 </li>
-<ul class="mla-doc-toc-list">
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#custom_field_mapping_example">Custom field mapping example</a></li>
 <li><a href="#custom_field_rule_elements">The custom field rule elements</a></li>
 <li><a href="#attachment_metadata_mapping">Adding or Changing Attachment Metadata</a></li>
 <li><a href="#custom_field_mapping_with_templates">Custom field mapping with Content Templates</a></li>
-<li><a href="#other_custom_field_mapping">Other mapping techniques</a></li>
-</ul>
+</ul></li>
 <li>
 <a href="#mla_iptc_exif_mapping"><strong>IPTC &amp; EXIF Processing Options</strong></a>
 </li>
-<ul class="mla-doc-toc-list">
+<li style="list-style-type:none"><ul class="mla-doc-toc-list">
 <li><a href="#iptc_exif_mapping_example">IPTC/EXIF mapping example</a></li>
-<li><a href="#iptc_exif_mapping_tables">IPTC/EXIF mapping tables</a></li>
-<li><a href="#iptc_exif_mapping_buttons">IPTC/EXIF mapping command buttons</a></li>
+<li><a href="#iptc_exif_mapping_tables">The IPTC/EXIF rule elements</a></li>
 <li><a href="#iptc_exif_mapping_with_templates">EXIF/Template mapping with Content Templates</a></li>
+<li><a href="#date_iptc_exif_mapping">IPTC/EXIF Mapping and Bulk Editing for the "Uploaded on" Standard Field</a></li>
 <li><a href="#pdf_iptc_exif_mapping">IPTC/EXIF Mapping for PDF Documents</a></li>
-<li><a href="#other_iptc_exif_mapping">Other mapping techniques</a></li>
 <li><a href="#wordpress_default_mapping">WordPress default title, slug and description mapping</a></li>
-</li>
-</ul>
+</ul></li>
 <li><a href="#mla_mapping_hooks"><strong>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</strong></a></li>
 <li><a href="#mla_debug_tab"><strong>MLA Debug Tab</strong></a></li>
 <li><a href="#mla_language_tab"><strong>WPML &amp; Polylang Multilingual Support; the MLA Language Tab</strong></a></li>
@@ -186,9 +199,8 @@ have a look at the <a title="MLA Internationalization Guide.pdf" href="[+transla
 <p>
 If you are a developer interested in how this plugin is put together, you should
 have a look at the <a title="Consult the phpDocs documentation" href="[+phpDocs_url+]" target="_blank" class="mla-doc-bold-link">phpDocs documentation</a>.
-</p>
 <a name="mla_gallery"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -220,6 +232,7 @@ All of the options/parameters documented for the <code>[gallery]</code> shortcod
 <h4>Substitution Parameters</h4>
 <p>
 Substitution parameters are a powerful way to add general and attachment-specific values to the gallery display. For example, if you code "<code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. There are dozens of parameter names like `date` and `description` divided in several categories:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label"><a href="#gallery_specific">Gallery-specific</a></td>
@@ -246,7 +259,7 @@ Substitution parameters are a powerful way to add general and attachment-specifi
 <td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
 </tr>
 </table>
-&nbsp;<br />
+<p>
 Click on any of the category names in the above table to go to the Documentation section describing the names available in that category and how to use them.
 </p>
 <p>
@@ -426,7 +439,7 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 All but the "mla_target" parameter support the <a href="#mla_markup_parameters">Markup</a>, <a href="#mla_attachment_parameters">Attachment-specific</a>, <a href="#mla_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
 <p>
-The "mla_link_href" parameter is a great way to change the destination your gallery item links to or add arguments to the link for later processing. For example, to make a gallery item link back to the page/post it is attached to, you can code: <code>mla_link_href='{+site_url+}/?page_id={+parent+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+link_url+}?myarg1=myvalue1&amp;amp;myarg2=myvalue2'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&", "<" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameter modified by this parameter is "link". Other markup parameters such as "pagelink", "filelink" and "link_url" are not modified.
+The "mla_link_href" parameter is a great way to change the destination your gallery item links to or add arguments to the link for later processing. For example, to make a gallery item link back to the page/post it is attached to, you can code: <code>mla_link_href='{+site_url+}/?page_id={+parent+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+link_url+}?myarg1=myvalue1&amp;amp;myarg2=myvalue2'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameter modified by this parameter is "link". Other markup parameters such as "pagelink", "filelink" and "link_url" are not modified.
 </p>
 <p>
 The "mla_link_attributes" and "mla_image_attributes" parameters accept any value and adds it to the "&lt;a&gt;" or "&lt;img&gt;" tags for the gallery item. For example, you can create a Shadowbox JS (plugin) album by adding <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code> to your shortcode query (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets (as this example does). In this case, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
@@ -496,6 +509,7 @@ When this feature is active, gallery items for which WordPress can generate a th
 </p>
 <p>
 Five options in the Settings/Media Library Assistant MLA Gallery tab allow control over mla_viewer operation:
+</p>
 <ul class="mla_settings">
 <li><strong>Enable thumbnail substitution</strong><br />
 Check this option to allow the "mla_viewer" to generate thumbnail images for PDF documents. Thumbnails are generated dynamically, each time the item appears in an <code>[mla_gallery]</code> display.<br />
@@ -510,8 +524,7 @@ Check this option to enable the explicit check for Ghostscript support required 
 <li><strong>Ghostscript path</strong><br />
 If your Ghostscript software is in a non-standard location, enter the full path and name of the executable here. The value you enter will be used as-is and the search for Ghostscript in the usual locations will be bypassed.</li>
 </ul>
-<a name="order_orderby"></a>
-</p>
+<a name="order_orderby"></a>&nbsp;
 <h4>Order, Orderby</h4>
 <p>
 The Orderby parameter specifies which database field(s) are used to sort the gallery. You can sort the gallery by one or more of these values (there is additional information on some of these values in the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>):
@@ -629,11 +642,11 @@ The Link parameter specifies the target and type of link from the gallery item t
 </tr>
 <tr>
 <td class="mla-doc-table-label">file, full</td>
-<td>Link directly to the attachment file.</td>
+<td>Link directly to the attachment file. See also the "Transfer by Item Name" section just below.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">download</td>
-<td>Link to the MLA file downloader for this attachment. Forces a file download instead of opening the file in the browser.</td>
+<td>Link to the MLA file downloader for this attachment. Forces a file download instead of opening the file in the browser.  See also the "Transfer by Item Name" section just below.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large</td>
@@ -653,7 +666,40 @@ The Link parameter specifies the target and type of link from the gallery item t
 </tr>
 </table>
 <p>
-&nbsp;
+Note that the handling of `link=file` and `link=download` values can be altered by specifying <code>mla_named_transfer=true</code> as described in the next section.
+<a name="named_transfer"></a>
+</p>
+<h4>Transfer by Item Name</h4>
+<p>
+The "mla_named_transfer" parameter activates a different approach to handling the <code>link=file</code> and <code>link=download</code> values. If you code <code>mla_named_transfer=true</code> each item will be identified by its <code>post_name</code> value instead of its directory and file name. When the gallery item link is clicked the post_name will be used to locate the file and send it to the browser. When used with <code>link=download</code> a file download is performed, otherwise the file will be opened in the browser.
+</p>
+<p>
+The links generated for mla_named_transfer items are of the form:<br />
+&nbsp;<br /> 
+<code>http://mysite.com/wp-admin/admin-ajax.php?action=mla_named_transfer&amp;mla_item=item-name&amp;mla_disposition=inline</code><br />
+&nbsp;<br />
+Where the query arguments are:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">action</td>
+<td>must be "mla_named_transfer".</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_item</td>
+<td>is the post_name/slug value for the item. This is the last, editable part of the item&rsquo;s permalink.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_disposition</td>
+<td>selects a "forced download" ( use "download" or "attachment" ) or "open in the bowser" ( use "file", "view" or "inline" ).</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_debug</td>
+<td>add <code>mla_debug=log</code> to send diagnostic information to the error log. If you add <code>mla_debug=log</code> as a shortcode parameter it will be added to these links as well.</td>
+</tr>
+</table>
+<p>
+This alternate approach provides a small measure of security by obscuring the directory structure used to locate the file. It also makes it possible to generate SEO-friendly "pretty links" and use the <a href="https://codex.wordpress.org/Rewrite_API" title="Codex article: Rewrite API" target="_blank">WordPress Rewrite API</a> to translate the pretty links to the Transfer by Item Name syntax. The <a title="Find the Pretty Links Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Item+Transfer+Pretty+Links%22" class="mla-doc-bold-link">MLA Item Transfer Pretty Links</a> example plugin shows how this can be done.
 <a name="include_exclude"></a>
 </p>
 <h4>Include, Exclude</h4>
@@ -676,7 +722,7 @@ You can add <code>post_parent=all</code> to include or exclude attachments regar
 The "id" parameter lets you specify a post ID for your query. The gallery will display images which are attached to that post. If the "id" parameter is not specified, the <code>[mla_gallery]</code> behavior differs from the <code>[gallery]</code> behavior. If your query uses taxonomy or custom field parameters, "author", "author_name" or "s" (search term), then the query will NOT be restricted to items attached to the current post. This lets you build a gallery with any combination of Media Library items that match the parameters.
 </p>
 <p>
-The "ids" parameter lets you specify a list of Post IDs. The attachment(s) matching the "ids" values will be displayed in the order specified by the list.
+The "ids" parameter lets you specify a list of item/attachment IDs. The attachment(s) matching the "ids" values will be displayed in the order specified by the list.
 </p>
 <p>
 You can use the "post_parent" to override the default behavior. If you set "post_parent" to a specific post ID, only the items attached to that post are displayed. You can also specify multiple values separated by commas, e.g., <code>post_parent=1,2,3</code>. There are four additional values available:
@@ -751,7 +797,7 @@ The Tag parameters search in the WordPress core &quot;Tags&quot; taxonomy. Remem
 <p>
 More information and examples can be found on the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Tag_Parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
 Note that the "tag_id" parameter requires exactly one tag ID; multiple IDs are not allowed. You can use the "tag__in" parameter to query for multiple values.
-<a name="taxonomy_parameters_tax_operator"></a>
+<a name="simple_taxonomy_parameters"></a>
 </p>
 <h4>Simple Taxonomy Parameters</h4>
 <p>
@@ -767,20 +813,26 @@ For simple queries, enter the custom taxonomy name and the term(s) that must be 
 Note that you should use the name/slug strings for taxonomy and terms, not the "title" strings. You can often use the "title" strings if they can be "sanitized" to the slug, but this is not always reliable. If you are using the "Att. Tag" taxonomy built in to MLA then your shortcode should be something like:
 </p>
 <ul class="mla_settings">
-<li><code>[mla_gallery attachment_tag=artisan post_parent=all]</code></li>
+<li><code>[mla_gallery attachment_tag=artisan]</code></li>
 </ul>
 <p>
 In this example, "attachment_tag" is the WordPress taxonomy name/slug for the taxonomy. If you're using "Att. Category", the slug would be "attachment_category".
 </p>
 <p>
-The default behavior of the simple taxonomy query will match any of the terms in the list. If you have two or more simple taxonomy queries, they will be joined by "AND". MLA enhances the simple taxonomy query form by providing three additional parameters:
+The default behavior of the simple taxonomy query will match any of the terms in the list. A special value lets you find items that have no assigned terms in the taxonomy. For example, to find items that have no Att. Tags you can code:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery attachment_tag=no.assigned.terms]</code></li>
+</ul>
+<p>
+If you have two or more simple taxonomy queries, they will be joined by "AND". MLA enhances the simple taxonomy query form by providing three additional parameters:
 </p>
 <table>
-<tr>
 <tr>
 <td class="mla-doc-table-label">tax_relation</td>
 <td>SQL operator to join multiple taxonomy queries; can be "AND" (the default) or "OR".</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">tax_operator</td>
 <td>SQL operator to join the terms within each taxonomy; can be "IN" (the default), "NOT IN" or "AND".</td>
 </tr>
@@ -829,15 +881,49 @@ In the example, <code>animal.invalid-slug</code> is a taxonomy.term combination 
 <p>
 More complex queries can be specified by using <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters" title="WordPress Codex Documentation for tax_query" target="_blank">WP_Query's "tax_query"</a>, e.g.:
 </p>
-<ul class="mla_settings">
-<li><code>[mla_gallery tax_query="array(array('taxonomy' => 'attachment_tag','field' => 'slug','terms' => 'artisan'))"]</code></li>
-<li><code>[mla_gallery tax_query="array(array('taxonomy' => 'attachment_category','field' => 'id','terms' => array(11, 12)))" post_parent=current post_mime_type='']</code></li>
-</ul>
+<p><code>[mla_gallery]<br />
+tax_query="array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taxonomy' =&gt; 'attachment_tag',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field' =&gt; 'slug',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'terms' =&gt; 'artisan'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;)<br />
+)"<br />
+[/mla_gallery]
+</code></p>
+<p><code>[mla_gallery]<br />
+tax_query="array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taxonomy' =&gt; 'attachment_category',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field' =&gt; 'id',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'terms' =&gt; array(11, 12)<br />
+&nbsp;&nbsp;&nbsp;&nbsp;)<br />
+)"<br />
+post_parent=current<br />
+post_mime_type=all<br />
+[/mla_gallery]
+</code></p>
 <p>
-The first example is equivalent to the simple query <code>attachment_tag=artisan</code>. The second example matches items of all MIME types, attached to the current post, having an attachment_category ID of 11 or 12.
+The first example is equivalent to the simple query <code>attachment_tag=artisan</code>. The second example matches items of all MIME types, attached to the current post, having an attachment_category ID of 11 or 12. Both examples use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
 </p>
 <p>
 When embedding the shortcode in the body of a post, be very careful when coding the tax_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+</p>
+<p>
+A special "terms" value, "no.terms.assigned" lets you find items that have no assigned terms in the taxonomy. For example, to find items that have no Att. Tags you can code:</p>
+<p><code>[mla_gallery]<br />
+tax_query="array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;array(<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taxonomy' =&gt; 'attachment_tag',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field' =&gt; 'id',<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'terms' =&gt; 'no.terms.assigned'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'operator' =&gt; 'NOT IN'<br />
+&nbsp;&nbsp;&nbsp;&nbsp;)<br />
+)"<br />
+[/mla_gallery]
+</code></p>
+<p>
+In addition to <code>'terms' =&gt; 'no.terms.assigned'</code> you must code <code>'field' =&gt; 'id'</code> and <code>'operator' =&gt; 'NOT IN'</code> to get the proper results. The example uses use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
@@ -865,10 +951,10 @@ Searching for keywords within the names of taxonomy terms is a completely differ
 <td>If you enter multiple phrases (separated by the <code>mla_phrase_delimiter</code>) in the <code>mla_terms_phrases</code> parameter, this parameter controls how they are connected. Choose from OR to require that any one of the phrases must match for the search to succeed, or <strong>AND (the default)</strong> to require that all of the phrases must match.</td>
 </tr>
 <tr>
-<tr>
 <td class="mla-doc-table-label">mla_term_delimiter</td>
 <td>A single character that separates the terms in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a comma (',') since term names can contain spaces.</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">mla_term_connector</td>
 <td>If you enter multiple terms (separated by the <code>mla_term_delimiter</code>) in the <code>mla_terms_phrases</code> parameter, this parameter controls how they are connected. Choose from <strong>OR (the default)</strong> to require that any one of the terms must match for the search to succeed, or AND to require that all of the terms must match.</td>
 </tr>
@@ -883,13 +969,15 @@ For compatibility with the WordPress <code>[gallery]</code> shortcode, this para
 </p>
 <h4>Post Type, Post Status</h4>
 <p>
-For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display items in the trash (<code>post_status=trash</code>).
+For compatibility with the WordPress <code>[gallery]</code> shortcode, these parameters default to <code>post_type=attachment</code>, <code>post_status=inherit</code>. You can override the defaults to, for example, display items in the trash (<code>post_status=trash</code>). You can specify more than one value in a comma-separated list, e.g., <code>post_type="post,page"</code>.
 </p>
 <p>
 You can change the <code>post_type</code> parameter to compose a "gallery" of WordPress objects such as posts, pages and custom post types. For example, to display a gallery of the published posts in a particular category you can code something like:
+</p>
 <p>
 <code>[mla_gallery category=some-term post_type=post post_status=publish post_mime_type=all post_parent=all]</code>
 </p>
+<p>
 Note that you must also change the <code>post_status</code> <code>post_mime_type</code> and <code>post_parent</code> because the default values for those parameters are set for Media Library image items.
 </p>
 <p>
@@ -997,11 +1085,13 @@ The <code>[mla_gallery]</code> shortcode supports the simple custom field parame
 <td class="mla-doc-table-label">meta_value&nbsp;(string)</td>
 <td>Custom field value; string-based comparison.</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">meta_value_num&nbsp;(number)</td>
 <td>Custom field value; numeric comparison.</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">meta_compare&nbsp;(string)</td>
-<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '<', '<=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
+<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
 </tr>
 </table>
 <p>
@@ -1042,7 +1132,7 @@ You can use the <code>mla_search_connector</code> and <code>mla_search_fields</c
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_search_fields</td>
-<td>The fields in which to search. Choose from title, content, excerpt, name, terms. Searching on alt-text is not supported.</td>
+<td>The fields in which to search. Choose from title, name, excerpt, content, file, terms. Searching on alt-text is not supported.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_terms_taxonomies</td>
@@ -1097,7 +1187,8 @@ If you code <code>mla_debug=log</code> all of the information will be written to
 </p>
 <h4>MLA Gallery Filters and Actions (Hooks)</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link">MLA Gallery Hooks Example</a>. To run the example:
+The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link">MLA Gallery Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Gallery Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -1106,7 +1197,6 @@ The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters
 <li>Create a new <code>[mla_gallery]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="all custom"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a list of each item's custom fields appended to the gallery captions.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter/action function that intercepts each hook. Generally, each part of the gallery supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that gallery part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a gallery part. The current hooks are:
 </p>
@@ -1168,6 +1258,10 @@ The example code documents each hook with comments in the filter/action function
 <td class="mla-doc-hook-definition">for manipulating the Style template.</td>
 </tr>
 <tr>
+<td class="mla-doc-hook-label">mla_gallery_pagination_values</td>
+<td class="mla-doc-hook-definition">for manipulating the markup values used in pagination controls.</td>
+</tr>
+<tr>
 <td class="mla-doc-hook-label">mla_gallery_open_values,<br />mla_gallery_open_template,<br />mla_gallery_open_parse</td>
 <td class="mla-doc-hook-definition">for manipulating the "Open" part of the Markup template.</td>
 </tr>
@@ -1176,7 +1270,7 @@ The example code documents each hook with comments in the filter/action function
 <td class="mla-doc-hook-definition">for manipulating the "Row Open" part of the Markup template.</td>
 </tr>
 <tr>
-<td class="mla-doc-hook-label">mla_gallery_item_values,<br />mla_gallery_item_template,<br />mla_gallery_item_parse</td>
+<td class="mla-doc-hook-label">mla_gallery_initial_item_values,<br />mla_gallery_item_values,<br />mla_gallery_item_template,<br />mla_gallery_item_parse</td>
 <td class="mla-doc-hook-definition">for manipulating the "Item" part of the Markup template.</td>
 </tr>
 <tr>
@@ -1398,7 +1492,6 @@ Nine parameters provide an easy way to control the contents of tag cloud items w
 </p>
 <table>
 <tr>
-<tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
 <td>adds one or more HTML attributes to the hyperlink for each item; see below</td>
 </tr>
@@ -1439,7 +1532,7 @@ Nine parameters provide an easy way to control the contents of tag cloud items w
 All but the "mla_target" parameter support the <a href="#tag_cloud_markup_parameters">Markup</a>, <a href="#tag_cloud_item_parameters">Item-specific</a>, <a href="#tag_cloud_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
 <p>
-The "mla_link_href" parameter is a great way to change the destination your cloud item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&", "<" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
+The "mla_link_href" parameter is a great way to change the destination your cloud item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "viewlink" and "editlink" are not modified.
 </p>
 <p>
 The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
@@ -1502,7 +1595,7 @@ You can code "true" to omit the attachment-counting process. If you do that, the
 </tr>
 <tr>
 <td class="mla-doc-table-label">orderby</td>
-<td>The sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug".</td>
+<td>The final sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular terms for the cloud).</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">order</td>
@@ -1510,7 +1603,7 @@ You can code "true" to omit the attachment-counting process. If you do that, the
 </tr>
 <tr>
 <td class="mla-doc-table-label">no_orderby</td>
-<td>The default, "false", applies the orderby and order parameters to the final term list. If you have a large number of terms and/or attachments, this can take a long time. You can code "true" to omit the final sorting process. If you do that, the cloud will be sorted by "count" in descending order.</td>
+<td>The default, "false", applies the orderby and order parameters to the final term list. If you have a large number of terms and/or attachments, this can take a long time. You can code "true" to omit both the initial sort (most popular terms) and the final sorting process. If you do that, the sort order of the cloud will be indeterminite.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">preserve_case</td>
@@ -1550,6 +1643,7 @@ If you code <code>mla_debug=log</code> all of the information will be written to
 <h4>Tag Cloud Substitution Parameters</h4>
 <p>
 Substitution parameters are a powerful way to add general and attachment-specific values to the gallery display. For example, if you code "<code>mla_link_href="{+page_url+}?current_id={+term_id+}&amp;mla_cloud_current={+request:mla_cloud_current+}"</code>, the hyperlinks behind each cloud term will contain the page URL and the taxonomy term ID. There are many parameter names like `page_url` and `term_id` divided in several categories:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">Cloud-specific</td>
@@ -1564,7 +1658,7 @@ Substitution parameters are a powerful way to add general and attachment-specifi
 <td>values that are known at the beginning of cloud output processing and remain the same for the entire cloud</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">Item-specific</a></td>
+<td class="mla-doc-table-label"><a href="#tag_cloud_item_parameters">Item-specific</a></td>
 <td  style="vertical-align: top">values that change for each term/item in the cloud, such as Name and Description</td>
 </tr>
 <tr>
@@ -1576,7 +1670,7 @@ Substitution parameters are a powerful way to add general and attachment-specifi
 <td>lets you compose a value from multiple substitution parameters and test for empty values, choose among two or more alternatives or suppress output entirely</td>
 </tr>
 </table>
-&nbsp;<br />
+<p>
 The following paragraphs go into more detail about each category and the parameter names within them.
 </p>
 <p>
@@ -1584,6 +1678,7 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 </p>
 <p>
 <strong>Cloud-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the cloud based on information about the post/page on which the cloud appears. The cloud-specific substitution parameters are:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">site_url</td>
@@ -1609,7 +1704,6 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 <td class="mla-doc-table-label">page_ID,<br />id</td>
 <td style="vertical-align: top">the <code>ID</code> value of the post/page in which the cloud appears</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label">page_author</td>
 <td>the <code>post_author</code> value of the post/page in which the cloud appears</td>
@@ -1675,6 +1769,7 @@ The following <strong>field-level substitution parameters</strong> are available
 <tr>
 <td class="mla-doc-table-label">query</td>
 <td>The parameters defined in the <code>[mla_tag_cloud]</code> shortcode. For example, if your shortcode is <code>[mla_tag_cloud taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+</tr>
 <tr>
 <td class="mla-doc-table-label">template</td>
 <td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
@@ -1896,6 +1991,7 @@ Tag cloud <strong>item-specific substitution parameters</strong> for the Markup 
 <td class="mla-doc-table-label">rollover_text</td>
 <td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">link_style</td>
 <td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
 </tr>
@@ -1927,6 +2023,7 @@ Tag cloud <strong>item-specific substitution parameters</strong> for the Markup 
 <h4>Tag Cloud Pagination Parameters</h4>
 <p>
 If you have a large number of terms in your cloud taxonomy you may want to paginate the cloud display, i.e., divide the cloud into two or more pages of a reasonable size. Pagination support for <code>[mla_tag_cloud]</code> is modeled on similar functions for<code>[mla_gallery]</code>, and you can find more explanation of the ideas behind pagination in the <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section. Five parameters are supplied for this purpose:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">limit</td>
@@ -1951,6 +2048,7 @@ If you have a large number of terms in your cloud taxonomy you may want to pagin
 </table>
 <p>
 The <code>[mla_tag_cloud]</code> shortcode can be used to provide "Previous" and "Next" links that support moving among the individual items in a cloud or among cloud "pages". For example, if you have many terms in your Att. Category or Att. Tag taxonomies you can build a term-specific <code>[mla_gallery]</code> page with links to the previous/next term in the taxonomy (a complete pagination example is included below). You can also build a page that shows a large taxonomy in groups, or "cloud pages", of ten terms with links to the previous/next ten terms or links to all of the cloud pages of terms in the taxonomy.
+</p>
 <p>
 The <strong>"mla_output"</strong> parameter determines the type of output the shortcode will return. For pagination output, you can choose from six values: 
 </p>
@@ -1959,6 +2057,7 @@ The <strong>"mla_output"</strong> parameter determines the type of output the sh
 <td class="mla-doc-table-label">next_link</td>
 <td>returns a link to the next cloud item, based on the "term_id" parameter value. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the cloud. If you omit the qualifier, an empty string is returned for the "next_link" from the last item. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first item.</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">current_link</td>
 <td>returns a link to the current cloud item, based on the "term_id" parameter value. This gives you an easy way to provide a visual indication of where you are within the taxonomy. The "span" and  "none" link formats are often used with this mla_output type.</td>
 </tr>
@@ -2050,7 +2149,8 @@ The "smallest=12" and "largest=12" parameters make "font-size" the same for all 
 </p>
 <h4>MLA Tag Cloud Filters (Hooks)</h4>
 <p>
-The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Tag+Cloud+Hooks+Example%22" class="mla-doc-bold-link">MLA Tag Cloud Hooks Example</a>. To run the example:
+The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filters that give you complete control over cloud composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Tag+Cloud+Hooks+Example%22" class="mla-doc-bold-link">MLA Tag Cloud Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Tag Cloud Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -2058,7 +2158,6 @@ The <code>[mla_tag_cloud]</code> shortcode supports a comprehensive set of filte
 <li>Create a new <code>[mla_tag_cloud]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color cloud"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a tag cloud with a range of colors applied to the terms.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the cloud supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that cloud part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a cloud part. The current hooks are:
 </p>
@@ -2224,6 +2323,10 @@ Each item in the list comprises a term name, a hyperlink surrounding the term na
 <td>The name of the parameter containing the current item value; <strong>default "current_item"</strong>. You can change the name if you need multiple lists on one post/page.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">active_item_class</td>
+<td>The class attribute for the "active" item(s) in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_active_item"</strong>. An item is "active" if it or any of its child items are the current item.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">current_item_class</td>
 <td>The class attribute for the current item in the list as determined by the "current_item" parameter (if specified); <strong>default "mla_current_item"</strong>.</td>
 </tr>
@@ -2356,7 +2459,6 @@ Eight parameters provide an easy way to control the contents of list items witho
 </p>
 <table>
 <tr>
-<tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
 <td>adds one or more HTML attributes to the hyperlink for each item; see below</td>
 </tr>
@@ -2393,7 +2495,7 @@ Eight parameters provide an easy way to control the contents of list items witho
 All but the "mla_target" parameter support the <a href="#term_list_markup_parameters">Markup</a>, <a href="#term_list_item_parameters">Item-specific</a>, <a href="#term_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
 <p>
-The "mla_link_href" parameter is a great way to change the destination your list item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&", "<" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink", "viewlink" and "editlink" are not modified.
+The "mla_link_href" parameter is a great way to change the destination your list item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>mla_link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink", "viewlink" and "editlink" are not modified.
 </p>
 <p>
 The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add a unique identifier to each item by adding <code>mla_link_attributes='id="{+selector}-{+index+}"'</code> to your shortcode (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
@@ -2417,11 +2519,11 @@ Dropdown and Checklist formats do not generate hyperlinks; they generate HTML in
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_option_value</td>
-<td>replaces the <strong>term_id (default)</strong> value returned for each option. For <strong>dropdown</strong> controls containing terms from multiple taxonomies, the default is <strong><code>[+taxonomy+].[+term_id+]</code>.</td>
+<td>replaces the <strong>term_id (default)</strong> value returned for each option. For <strong>dropdown</strong> controls containing terms from multiple taxonomies, the default is <strong><code>[+taxonomy+].[+term_id+]</code></strong>.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">hide_if_empty</td>
-<td>If <strong>false (default)</strong>, display a control with "option_none" text & value. If true, display mla_nolink_text or nothing.</td>
+<td>If <strong>false (default)</strong>, display a control with "option_none" text &amp; value. If true, display mla_nolink_text or nothing.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_nolink_text</td>
@@ -2479,7 +2581,6 @@ You could use the <code>mla_control_name</code> shortcode parameter to move the 
 </p>
 <h4>Term List Other Parameters</h4>
 <table>
-<tr>
 <tr>
 <td class="mla-doc-table-label">mla_debug</td>
 <td>controls debug log output; <strong>default false</strong>. See below for details.</td>
@@ -2619,7 +2720,7 @@ Substitution parameters are a powerful way to add general and attachment-specifi
 <td>values that are known at the beginning of list output processing and remain the same for the entire list</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">Item-specific</a></td>
+<td class="mla-doc-table-label"><a href="#term_list_item_parameters">Item-specific</a></td>
 <td  style="vertical-align: top">values that change for each term/item in the list, such as Name and Description</td>
 </tr>
 <tr>
@@ -2639,6 +2740,7 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 </p>
 <p>
 <strong>list-specific substitution parameters</strong> are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the list based on information about the post/page on which the list appears. The list-specific substitution parameters are:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">site_url</td>
@@ -2664,7 +2766,6 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 <td class="mla-doc-table-label">page_ID,<br />id</td>
 <td style="vertical-align: top">the <code>ID</code> value of the post/page in which the list appears</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label">page_author</td>
 <td>the <code>post_author</code> value of the post/page in which the list appears</td>
@@ -2733,6 +2834,7 @@ The following <strong>field-level substitution parameters</strong> are available
 <tr>
 <td class="mla-doc-table-label">query</td>
 <td>The parameters defined in the <code>[mla_term_list]</code> shortcode. For example, if your shortcode is <code>[mla_term_list taxonomy=attachment_tag div-class=some_class]</code> you can access the parameters as <code>[+query:taxonomy+]</code> and <code>[+query:div-class+]</code> respectively. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
+</tr>
 <tr>
 <td class="mla-doc-table-label">template</td>
 <td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for content templates.</td>
@@ -2912,13 +3014,18 @@ Term list <strong>item-specific substitution parameters</strong> for the Markup 
 <td>link attributes, if any, drawn from the mla_target, mla_link_attributes and mla_link_class parameters</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">active_item_class</td>
+<td>set to the value of the <code>active_item_class</code> parameter (default "mla_active_item") for the active item(s) in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list. An item is "active" if it or any of its child items are the current item.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">current_item_class</td>
-<td>set to "mla_current_item" for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
+<td>set to the value of the <code>current_item_class</code> parameter (default "mla_current_item") for the current item in the list as determined by the "current_item" parameter, and to an empty string for all other items in the list.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">rollover_text</td>
 <td>the "title" attribute value, drawn from single_text/multiple_text or the mla_rollover_text parameters</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">link_style</td>
 <td>the CSS "style" attribute, drawn from the font_size and unit parameters</td>
 </tr>
@@ -2964,7 +3071,7 @@ Here is a simple example of a dropdown control for the Att. Categories taxonomy:
 [mla_gallery]<br />
 attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}"<br />
 posts_per_page=3 mla_output="paginate_links,prev_next"<br />
-mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&tax_input[attachment_category]="{+query:attachment_category,text+}"'<br />
+mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&amp;tax_input[attachment_category]="{+query:attachment_category,text+}"'<br />
 [/mla_gallery]<br />
 &nbsp;<br />
 [mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}" posts_per_page=3 mla_caption="{+title+} : {+description+}" mla_nolink_text="&lt;br&gt;Select a term to display the gallery.&lt;br&gt;"]
@@ -2983,7 +3090,8 @@ You will also see that the term you select doesn&rsquo;t &ldquo;stick&rdquo; in 
 </p>
 <h4>MLA Term List Filters (Hooks)</h4>
 <p>
-The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Term List Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Term+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Term List Hooks Example</a>. To run the example:
+The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filters that give you complete control over list composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Term List Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Term+List+Hooks+Example%22" class="mla-doc-bold-link">MLA Term List Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Term List Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -2991,7 +3099,6 @@ The <code>[mla_term_list]</code> shortcode supports a comprehensive set of filte
 <li>Create a new <code>[mla_term_list]</code> shortcode or modify an existing shortcode, adding the <code>my_filter="color list"</code> parameter to activate the example output.</li>
 <li>View the post or page on which the modified shortcode appears to see a term list with a range of colors applied to the terms.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter/action function that intercepts the hook. Generally, each part of the list supports three hooks: 1) a "<strong>values</strong>" hook, which lets you record or update the substitution values for that list part, 2) a "<strong>template</strong>" hook, which lets you record/update the template used to generate the HTML markup, and 3) a "<strong>parse</strong>" hook which lets you modify or replace the markup generated for a list part. The current hooks are:
 </p>
@@ -3048,7 +3155,6 @@ As you can tell from the number of parameters available, the <code>[mla_gallery]
 <a name="simple_examples"></a>
 </p>
 <h4>Simple Examples</h4>
-<p>
 <ul class="mla_settings">
 <li><code>[mla_gallery]</code> - will display all the images "attached" to the current post/page.</li>
 <li><code>[mla_gallery ids="1,3,2,4"]</code> - will display specific images on any post/page. The numbers are the ID values of the images. You can use the "Add Media..." popup window and "Create Gallery" to get the list, then change the shortcode name to "mla_gallery" if you want to add other <code>[mla_gallery]</code> specific parameters.</li>
@@ -3057,7 +3163,6 @@ As you can tell from the number of parameters available, the <code>[mla_gallery]
 <li><code>[mla_gallery post_parent=all post_mime_type="audio,video"]</code> - will display all the audio and video documents in your Media Library.</li>
 <li><code>[mla_gallery post_parent=all post_mime_type=application/pdf size=icon link=file]</code> - will display all the PDF documents in your Media Library. The "PDF icon" will display in place of the thumbnail. When the icon is clicked, the document itself will be displayed in the browser.</li>
 </ul>
-</p>
 <p>
 Perhaps the most popular Media Library Assistant feature is the ability to assign category and tag values to Media Library Items and use the values to filter a gallery display. "Categories" and "Tags" are built-in WordPress "taxonomies" and have been used for a long time to organize posts and pages. WordPress does not have built-in support for using them with attachments and that was one of the original motivations for MLA.
 </p>
@@ -3080,12 +3185,12 @@ The category_name example does not follow the general rule of "taxonomy-slug = t
 <h4>A Paginated Gallery</h4>
 <p>
 If your gallery display includes a large number of items it may be useful to divide the display into "pages" with a fixed upper limit of items per page. The <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a> section explains several ways to do that; here is one example. Put <strong>both of these shortcodes</strong> on a post or page to display a paginated gallery:
+</p>
 <blockquote>
 <code>[mla_gallery attachment_category=big-dog posts_per_page=12]</code><br />
 &nbsp;<br />
 <code>[mla_gallery attachment_category=big-dog posts_per_page=12 mla_output="paginate_links,prev_next"]</code>
 </blockquote>
-</p>
 <p>
 Note that <strong>two shortcodes are required</strong>; one for the gallery display and a second one for the pagination controls. The first <code>[mla_gallery]</code> displays the images assigned to <code>attachment_category=big-dog</code> and displays a maximum of 12 images at once. The second <code>[mla_gallery]</code> has <strong>exactly the same</strong> data selection parameter and posts per page parameter; that's essential to match up with the first shortcode. It adds one more parameter, <code>mla_output</code>. This parameter changes the display from a set of images to a set of pagination controls.
 </p>
@@ -3096,12 +3201,12 @@ MLA will add and manage a "current page" parameter of its own so the two shortco
 <h4>Tag Cloud and Gallery</h4>
 <p>
 Adding the "taxonomy=term" parameter to your shortcode is all well and good, but letting the viewer choose a term when they view the post/page is often better. One easy way to do this is to add the <code>[mla_tag_cloud]</code> shortcode. Here is a simple combination of a cloud and a gallery display:
+</p>
 <blockquote>
 <code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
 &nbsp;<br />
 <code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" mla_nolink_text="Click a term to display the gallery."]</code>
 </blockquote>
-</p>
 <p>
 The <code>[mla_tag_cloud]</code> displays Att. Categories terms in the familiar cloud format. The <code>number=0</code> parameter ensures that all of the terms are displayed. The <code>mla_link_href</code> parameter links each term back to the current page (<code>{+page_url}</code>) and passes a variable back with the term selection (<code>?term_slug={+slug+}</code>). If you put the <code>[mla_tag_cloud]</code> shortcode on another page or in a widget you will have to hard-code the URL portion of the link.
 </p>
@@ -3117,6 +3222,7 @@ The <code>[mla_gallery]</code> displays the images assigned to the selected atta
 </ul>
 <p>
 You can read more about templates in the <a href="#mla_template_parameters">Content Templates</a> section. You can paginate your gallery by adding a third shortcode to the post/page. Put the new shortcode between the cloud and gallery so the pagination controls will appear above the gallery display:
+</p>
 <blockquote>
 <code>[mla_tag_cloud taxonomy=attachment_category number=0 mla_link_href="{+page_url+}?term_slug={+slug+}"]</code><br />
 &nbsp;<br />
@@ -3124,7 +3230,6 @@ You can read more about templates in the <a href="#mla_template_parameters">Cont
 &nbsp;<br />
 <code>[mla_gallery attachment_category="{+template:({+request:term_slug+}|a-bad-term)+}" posts_per_page=12 mla_nolink_text="Click a term to display the gallery."]</code>
 </blockquote>
-</p>
 <p>
 The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?term_slug={+request:term_slug+}"</code> parameter is added so the pagination controls pass the <code>term_slug</code> from page to page.
 <a name="search_form_and_gallery"></a>
@@ -3132,6 +3237,7 @@ The <code>posts_per_page=12</code> parameter has been added to the gallery displ
 <h4>Search Form and Gallery</h4>
 <p>
 A common alternative to the taxonomy filtering in the previous examples is a keyword-based search. This example shows a simple HTML form with a text box and a button to run the search. The user can enter one or more words to search for in the Title or Description of Media Library items, then click "Search" to display a gallery of matching images:
+</p>
 <blockquote>
 <code>&lt;form id="mla-search-form" action="." method="post"><br />
 &lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
@@ -3139,11 +3245,12 @@ A common alternative to the taxonomy filtering in the previous examples is a key
 &nbsp;<br />
 <code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery."]</code>
 </blockquote>
-</p>
 <p>
 In this example the <code>name="search-string"</code> parameter is passed from the form to the <code>s="{+request:search-string+}</code>... parameter in the shortcode. As in the Cloud and Gallery example a Content Template is used to supply <code>a-bad-term</code> before the form is completed, which displays an empty gallery because it doesn't match anything. You can find more information on the <code>s=</code> parameter and other search parameters in the <a href="#search_keywords">Keyword(s) Search</a> section.
+</p>
 <p>
 As in the Cloud and Gallery example, paginating your gallery display requires a slight modification of the <code>[mla_gallery]</code> shortcode (at the bottom of the next example) and adding a second <code>[mla_gallery]</code> shortcode (in the middle of the next example) to display the pagination controls:
+</p>
 <blockquote>
 <code>&lt;form id="mla-search-form" action="." method="post"><br />
 &lt;input id="mla-search-box" name="search-string" type="text" value="" />&amp;nbsp;&lt;input id="submit" name="submit" type="submit" value="Search" /><br />
@@ -3153,10 +3260,10 @@ As in the Cloud and Gallery example, paginating your gallery display requires a 
 &nbsp;<br />
 <code>[mla_gallery s="{+template:({+request:search-string+}|a-bad-term)+}" mla_nolink_text="Enter a search value above to display gallery." posts_per_page=12]</code>
 </blockquote>
-</p>
 <p>
 The <code>posts_per_page=12</code> parameter has been added to the gallery display shortcode (the third shortcode). A new <code>[mla_gallery]</code> is added to display the pagination controls. The data selection parameter (<code>s="{+request:search-string+}</code>...) and <code>posts_per_page=12</code> parameter match the gallery display shortcode below it. The <code>mla_output</code> parameter displays the pagination controls. Finally, the <code>mla_link_href="{+page_url+}?search-string={+request:search-string+}"</code> parameter is added so the pagination controls pass the <code>search-string</code> from page to page.
 <a name="mla_output_parameter"></a>
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -3180,6 +3287,7 @@ The <strong>"mla_output"</strong> parameter determines the type of output the sh
 <td class="mla-doc-table-label">next_link</td>
 <td>returns a link to the next gallery item. The optional "<strong>,wrap</strong>" qualifier determines what happens at the end of the gallery. If you omit the qualifier, an empty string is returned for the "next_link" from the last item in the gallery. If you code the ",wrap" qualifier, the "next_link" from the last item will be to the first gallery item.</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">current_link</td>
 <td>returns a link to the current gallery item. This gives you an easy way to provide a visual indication of where you are within the overall gallery. The "span" and  "none" link formats are often used with this mla_output type.</td>
 </tr>
@@ -3224,12 +3332,12 @@ In this example <code>/single-sample/</code>, the URL portion of the link, is th
 </p>
 <code>
 [mla_gallery columns=1 ids="{+request:current_id+}" size=medium]
-<br />&nbsp;<br>
+<br />&nbsp;<br />
 &lt;div style="clear: both; float: left"&gt;<br />
-[mla_gallery mla_output="previous_link,wrap" mla_link_text='&amp;larr; Previous Sample' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br>
-&lt;/div&gt;<br>
-&lt;div style="float: right"&gt;<br>
-[mla_gallery mla_output="next_link,wrap" mla_link_text='Next Sample &amp;rarr;' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br>
+[mla_gallery mla_output="previous_link,wrap" mla_link_text='&amp;larr; Previous Sample' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
+&lt;/div&gt;<br />
+&lt;div style="float: right"&gt;<br />
+[mla_gallery mla_output="next_link,wrap" mla_link_text='Next Sample &amp;rarr;' attachment_tag="{+request:attachment_tag+}" id="{+request:current_id+}" mla_rollover_text="{+title+}" mla_link_href="{+page_url+}?current_id={+attachment_ID+}&amp;attachment_tag={+query:attachment_tag+}"]<br />
 &lt;/div&gt;
 </code>
 <p>
@@ -3409,12 +3517,12 @@ Expanding the "attachment tag gallery" example, you can select images using the 
 </p>
 <code>
 [mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
-<br>&nbsp;<br>
+<br />&nbsp;<br />
 &lt;div style="clear: both; float: left"&gt;<br />
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br>
-&lt;/div&gt;<br>
-&lt;div style="float: right"&gt;<br>
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br>
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br />
+&lt;/div&gt;<br />
+&lt;div style="float: right"&gt;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br />
 &lt;/div&gt;
 </code>
 <p>
@@ -3458,14 +3566,13 @@ Expanding the "attachment tag gallery" example, you can select images using the 
 </p>
 <code>
 [mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
-<br>&nbsp;<br>
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="paginate_links,prev_next" mla_nolink_text='No Gallery Pages']<br>
+<br />&nbsp;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="paginate_links,prev_next" mla_nolink_text='No Gallery Pages']<br />
 </code>
 <p>
 This example is even simpler that the two earlier examples because there's just one additional <code>[mla_gallery]</code> shortcode for pagination links.
-</p>
 <a name="alt_shortcode"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -3533,10 +3640,8 @@ You can also use the "enclosing shortcode" form if the alternate shortcode, such
 </p>
 <p>
 <strong>NOTE:</strong> When you use "mla_alt_shortcode" to pass format/display responsibility off to another shortcode you will lose the <code>[mla_gallery]</code> Gallery Display Style (e.g. "mla_float") and Gallery Display Content (e.g. "mla_caption") parameters. There is no reliable way for <code>[mla_gallery]</code> to pass this information on to the other shortcode you've specified.
-</p>
-<p>
 <a name="photonic_gallery"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -3592,6 +3697,7 @@ In the arguments section you can separate the parameters with one or more spaces
 <h4>Gallery-specific Substitution Parameters</h4>
 <p>
 Gallery-specific substitution parameters are known at the beginning of shortcode processing and they do not change during processing. They can be used, for example, in any of the data selection parameters to change the items selected for the gallery based on information about the post/page on which the gallery appears. The gallery-specific substitution parameters are:
+</p>
 <table>
 <tr>
 <td class="mla-doc-table-label">site_url</td>
@@ -3617,7 +3723,6 @@ Gallery-specific substitution parameters are known at the beginning of shortcode
 <td class="mla-doc-table-label">page_ID,<br />id</td>
 <td style="vertical-align: top">the <code>ID</code> value of the post/page in which the gallery appears</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label">page_author</td>
 <td>the <code>post_author</code> value of the post/page in which the gallery appears</td>
@@ -3671,8 +3776,7 @@ Gallery-specific substitution parameters are known at the beginning of shortcode
 <td>absolute URL to the page or post on which the gallery appears, if any, with trailing slash</td>
 </tr>
 </table>
-<a name="mla_style_parameters"></a>
-&nbsp;
+<a name="mla_style_parameters"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -3772,6 +3876,7 @@ The item-level substitution parameter names are:
 <td class="mla-doc-table-label">captiontag_content</td>
 <td>if both captiontag and caption are not empty, contains the complete HTML markup for the caption. This can be used to omit empty tags (as it is in the default template).</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">excerpt</td>
 <td>always contains post_excerpt</td>
 </tr>
@@ -3815,6 +3920,7 @@ The item-level substitution parameter names are:
 <td class="mla-doc-table-label">parent_date</td>
 <td>upload date of the parent</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">parent_permalink</td>
 <td>permalink to the parent</td>
 </tr>
@@ -3891,6 +3997,10 @@ The item-level substitution parameter names are:
 <td>always contains a hyperlink to the MLA file downloader for this attachment</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">transferlink</td>
+<td>always contains a hyperlink to the <a href="#named_transfer">Transfer by Item Name</a> handler for this attachment</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">link_url</td>
 <td>the URL portion of <em>link</em></td>
 </tr>
@@ -3907,6 +4017,10 @@ The item-level substitution parameter names are:
 <td>the URL portion of <em>downloadlink</em></td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">transferlink_url</td>
+<td>the URL portion of <em>transferlink</em></td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">thumbnail_content</td>
 <td>complete content of the gallery item link. This will either be an "&lt;img ... &gt;" tag<br />or a text string for non-image items</td>
 </tr>
@@ -3914,7 +4028,6 @@ The item-level substitution parameter names are:
 <td class="mla-doc-table-label">thumbnail_width</td>
 <td>for image/icon items, width of the gallery image/icon</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label">thumbnail_height</td>
 <td>for image/icon items, height of the gallery image/icon</td>
@@ -4061,7 +4174,7 @@ The next sections define each of the prefix and option/format values.
 </p>
 <h4>Prefix values</h4>
 <p>
-There are eleven prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
+There are fourteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
 </p>
 <table>
 	<tr>
@@ -4181,6 +4294,10 @@ MLA adds three fields of its own to the XMP metadata information:
 		<td class="mla-doc-table-label">template</td>
 		<td>A Content Template, which lets you compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing output entirely. See the <a href="#mla_template_parameters">Content Templates</a> section for details. Note that the formatting option is not supported for templates.</td>
 	</tr>
+	<tr>
+		<td class="mla-doc-table-label">matches</td>
+		<td>The matches prefix is part of MLA&rsquo;s <a href="#mla_regular_expressions">Regular Expression Features</a>. It allows you to access data sources created by applying the <code>,match(p)</code> and <code>,extract(p)</code> format/option values.</td>
+	</tr>
 </table>
 <a name="field_level_formats"></a>
 &nbsp;<br />
@@ -4222,7 +4339,7 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 </tr>
 <tr>
 <td class="mla-doc-table-label">,attr</td>
-<td>If you use a substitution parameter in an HTML attribute such as the <code>title</code> attribute of a hyperlink (<code>a</code>) or <code>img</code> tag you can add the ",attr" option to encode the <, >, &, " and ' (less than, greater than, ampersand, double quote and single quote) characters.</td>
+<td>If you use a substitution parameter in an HTML attribute such as the <code>title</code> attribute of a hyperlink (<code>a</code>) or <code>img</code> tag you can add the ",attr" option to encode the &lt;, >, &amp;, " and ' (less than, greater than, ampersand, double quote and single quote) characters.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">,url</td>
@@ -4231,6 +4348,10 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,substr(s,l)</td>
 <td>If you need to limit the length of a value or extract a portion of it the ",substr" option will return part of the value. This option accepts one or two parameters, "start" (s) and "length" (l). The first character in the value is at position zero (0) so, for example, ",substr(2,3)" would return "cde" from a value of "abcdef". You can find complete information on "start" and "length", including the effect of negative values, at: <a href="http://php.net/manual/en/function.substr.php" title="PHP substr parameters" target="_blank">http://php.net/manual/en/function.substr.php</a>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label" style="white-space:nowrap">,str_replace(s,r)</td>
+<td>Replace all occurrences of the "search" string (s) with the "replacement" string (r). If search and replacement are arrays, then str_replace() takes a value from each array and uses them to search and replace on subject. If replace has fewer values than search, then an empty string is used for the rest of replacement values. If search is an array and replace is a string, then this replacement string is used for every value of search. You can find complete information on "search" and "replacement", including examples, at: <a href="http://php.net/manual/en/function.str-replace.php" title="PHP str_replace parameters" target="_blank">http://php.net/manual/en/function.str-replace.php</a>.<br />&nbsp;<br />To specify an array argument enclose the argument in braces ( "{" and "}" ) and separate elements with <strong>spaces</strong>. For example, <code>,str_replace( {',' '-'}, {' ' '_'} )</code> will change commas to spaces and dashes to underscores, while <code>,str_replace( {',' '-'}, ' ' )</code> will change both commas <strong>and</strong> dashes to spaces.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,kbmb(t,k,m,p)</td>
@@ -4250,6 +4371,25 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 </tr>
 </table>
 <p>
+Three values let you use powerful regular expressions to apply patterns to any data source, extracting or replacing pieces of it. These three values are explained in detail, with examples, in the <a href="#mla_regular_expressions">Regular Expression Features</a> section below. They are:
+</p>
+<table>
+	<tr>
+		<td class="mla-doc-table-label" style="white-space:nowrap"><a href="#mla_regular_expressions_match">,match(p)</a></td>
+		<td>This format/option value looks for a match of its pattern (and optional subpatterns) in the data source. If a match is found, that portion of the data source is returned. If the pattern is not matched an empty value is returned. Any pattern or subpattern matches found are stored for later access using the "matches:" prefix.
+		</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label" style="white-space:nowrap"><a href="#mla_regular_expressions_extract">,extract(p,v)</a></td>
+		<td>This format/option value looks for a match of its pattern (and optional subpatterns) (the p paremeter) in the data source. Any pattern or subpattern matches found are stored for later access using the "matches:" prefix. An empty value is returned by default but this can be changed with the optional second (v) parameter.
+		</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label" style="white-space:nowrap"><a href="#mla_regular_expressions_replace">,replace(p,r,v)</a></td>
+		<td>This format/option value looks for a match of its pattern (p) (and optional subpatterns) in the data source. By default, if a match is found, the replacement (r) pattern is used to return a modified version of the data source. If the pattern is not matched the original data source value is returned. The default can be changed with the optional third (v) parameter.
+		</td>
+	</tr>
+</table>
 <a name="field_level_data_sources"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -4417,6 +4557,7 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td class="mla-doc-table-label">size_dimensions</td>
 <td>image dimensions for thumbnail versions of the image, e.g., "150x150, 300x225, 600x288"</td>
 </tr>
+<tr>
 <td class="mla-doc-table-label">size_name[size]</td>
 <td>image file name for a specific thumbnail version, e.g., size_name[medium] = "image-300x225.jpg"; set to empty string if the specified size does not exist. There will be a [size] choice for every thumbnail version registered with WordPress for the site.</td>
 </tr>
@@ -4428,7 +4569,6 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td class="mla-doc-table-label">size_pixels[size]</td>
 <td>image size in pixels for a specific thumbnail version, e.g., size_pixels[medium] = "67500"</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label" style="width: 12em">size_dimensions[size]</td>
 <td style="padding-bottom: 2em;">image dimensions for a specific thumbnail version, e.g., size_dimensions[medium] = "300x225"; set to empty string if the specified size does not exist. There will be a [size] choice for every thumbnail version registered with WordPress for the site.</td>
@@ -4442,11 +4582,9 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td>for "attached" (post_parent not zero) objects, post type of the parent object</td>
 </tr>
 <tr>
-<tr>
 <td class="mla-doc-table-label">parent_title</td>
 <td>for "attached" (post_parent not zero) objects, post title of the parent object</td>
 </tr>
-<tr>
 <tr>
 <td class="mla-doc-table-label">parent_issues</td>
 <td>summary of parent status (only) "issues", e.g., bad parent, invalid parent, unattached</td>
@@ -4929,8 +5067,7 @@ The native format of this data is somewhat complicated, so MLA converts the most
 <td class="mla-doc-table-sublabel">The geodetic survey data used by the GPS receiver</td>
 </tr>
 </table>
-<a name="pdf_metadata"></a>
-&nbsp;
+<a name="pdf_metadata"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -4978,6 +5115,7 @@ Metadata in PDF documents comes from two sources. Early versions of the PDF spec
 </table>
 <p>
 More recent versions of the specification add a second source of metadata, Metadata Streams, holding data defined by the <a href="https://www.adobe.com/products/xmp/" title="Adobe XMP site" target="_blank">Extensible Metadata Platform (XMP)</a> framework. XMP metadata varies from document to document but is often extensive. MLA provides access to this data in four ways:
+</p>
 <ol>
 <li>
 If a D.I.D. field is not stored in the document, MLA will copy appropriate values from the XMP data into the empty field to populate it as often as possible. For example, the "creator" value(s) in the "dc" namespace ("dc.creator") might be copied to an empty "Author" field, or the "dc.subject" value(s) might be copied to an empty Keywords field.
@@ -4992,7 +5130,6 @@ Other namespaces in the document are copied to arrays at the root level. For exa
 For consistency with other file types, all XMP data found in a PDF document is also available with the "xmp:" prefix.
 </li>
 </ol>
-</p>
 <p>
 MLA adds five fields of its own to the metadata information:
 </p>
@@ -5018,14 +5155,14 @@ MLA adds five fields of its own to the metadata information:
 		<td>a special "pseudo value" that returns a string representation of all the metadata. You can use this pseudo-value to examine the metadata in a document, find field names and see what values are present.</td>
 	</tr>
 </table>
-<a name="substitution_parameter_filters"></a>
-&nbsp;
+<a name="substitution_parameter_filters"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h4>Field-level substitution parameter filters (Hooks)</h4>
 <p>
-Field-level substitution parameters can be extended to include any data values your application requires. They are supported by a set of filters that enables PHP code in your theme or in another plugin to create data values and make them available to MLA. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Substitution Parameter Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Substitution+Parameter+Hooks+Example%22" class="mla-doc-bold-link">MLA Substitution Parameter Hooks Example</a>. To run the example:
+Field-level substitution parameters can be extended to include any data values your application requires. They are supported by a set of filters that enables PHP code in your theme or in another plugin to create data values and make them available to MLA. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Substitution Parameter Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Substitution+Parameter+Hooks+Example%22" class="mla-doc-bold-link">MLA Substitution Parameter Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Substitution Parameter Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -5093,7 +5230,9 @@ The conditional and choice elements are the key to templates' power, particularl
 </p>
 <p>
 Conditional, choice and template elements can be nested as needed. For example, a conditional element can have a choice element within it or a choice alternative could include a conditional. Here's an example:
-<p><code>[+template: Terms: (([+terms:category+], [+terms:post_tag+])|[+ terms: category +]|[+terms:post_tag +]|none)+]</code>
+</p>
+<p>
+<code>[+template: Terms: (([+terms:category+], [+terms:post_tag+])|[+ terms: category +]|[+terms:post_tag +]|none)+]</code>
 </p>
 <p>
 This template has a String, "Terms: " and a Conditional, "(([+terms: ... none)". This Conditional separates the "Terms: " literal from the first alternative in the Choice. Within the Conditional is a Choice having four alternatives. The first alternative is a Conditional, which will be empty unless both categories and tags are present.  The second and third alternatives handle the cases where one of the two taxonomies has terms, and the final alternative is used when neither categories nor tags are present.
@@ -5103,25 +5242,131 @@ In the Media/Assistant submenu table  Bulk Edit area and the IPTC/EXIF Standard 
 </p>
 <h4>Special characters inside templates</h4>
 <p>
-The conditional and choice elements require delimiters, "(", ")" and "|". If you want to put any of these three characters in your template, preface them with two backslash characters, e.g., "\\(". If you need a backslash in your template, code it as four backslash characters, i.e., "\\\\". The doubling of backslash characters is required because of the way WordPress processes shortcode parameters.
+The conditional and choice elements require delimiters, "(", ")" and "|". If you want to put any of these three characters in your template, preface them with a backslash character, e.g., "\(". If you need a backslash in your template, code it as two backslash characters, i.e., "\\".
 </p>
+<p>
+<strong>In a shortcode parameter:</strong> If your template is coded in a shortcode parameter, preface the template delimiters with two backslash characters, e.g., "\\(". If you need a backslash in your template, code it as four backslash characters, i.e., "\\\\". The doubling of backslash characters is required because of the way WordPress processes shortcode parameters.
+<a name="mla_regular_expressions"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Regular Expression Features</h3>
+<p>
+Regular Expressions is a formal name for a powerful pattern-matching tool you can use to extract parts of, for example, a file name and use the parts to compose or update a caption, title or other item element. Although they can get complicated pretty quickly regular expressions are well defined and even simple examples can be quite powerful. They are definitely a power tool! You can find a wealth of information on the web, such as these resources:
+</p>
+<ul class="mla_settings">
+<li><a href="https://en.wikipedia.org/wiki/Regular_expression" title="Wikipedia Article" target="_blank">Regular expression - Wikipedia</a></li>
+<li><a href="http://www.regular-expressions.info/" title="The Premier website about Regular Expressions" target="_blank">Regular-Expressions.info</a></li>
+<li><a href="http://php.net/manual/en/book.pcre.php" title="Official PHP Documentation for regular expressions" target="_blank">Regular Expressions (Perl-Compatible) in PHP</a></li>
+</ul>
+<p>
+The MLA regular expression features are simply a way to access a few of PHP's PCRE functions, so the last link above is particularly useful. The <a href="http://php.net/manual/en/pcre.examples.php" title="PCRE Examples" target="_blank">Examples</a> and <a href="http://php.net/manual/en/reference.pcre.pattern.syntax.php" title="Pattern Syntax" target="_blank">PCRE regex syntax</a> sections give you the details you need to build your expressions. The rest of this section describes how the PCRE functions are made available within MLA shortcodes, custom markup templates, mapping rules and the Bulk Edit area. Of course, they can be used within Content Templates in any of these areas as well.
+<a name="mla_regular_expressions_patterns"></a>
+</p>
+<h4>Patterns and subpatterns</h4>
+<p>
+Each regular expression defines a "pattern" that is applied to the subject, or data source. If the pattern is matched, that part of the data source is returned from the option/format value. Subpatterns allow you to take a portion of the overall pattern and return it separately. For example, you might construct a pattern that matches a date and include within the pattern subpatterns that return the year, month and day portions of the date. The pattern and subpattern matches are stored by MLA and become data sources you can access with the <code>matches:</code> field-level prefix. By default, the pattern match and any subpattern match(es) are assigned index numbers. The pattern is number zero and the subpatterns are numbered from one to the total number of subpatterns.
+</p>
+<p>
+For example, consider the <code>post_date</code> data source, the "Uploaded on" date and time for a Media Library item. This date is stored as a string with a specific format: "YYYY-MM-DD HH:MM:SS", e.g., "2013-10-03 02:47:13". You can match this value in many ways:
+</p>
+<ul class="mla_settings">
+<li><strong>/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/</strong> - matches the entire date and time, e.g., "2013-10-03 02:47:13"</li>
+<li><strong>/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}:\d{2})/</strong> - matches the entire date and time (index 0) and matches two subpatterns, for the date portion (index 1) and the time portion (index 2)</li>
+<li><strong>/\d{4}-\d{2}-\d{2}/</strong> - matches the date portion, e.g., "2013-10-03"</li>
+<li><strong>/\d{2}:\d{2}:\d{2}/</strong> - matches the time portion, e.g., "02:47:13"</li>
+<li><strong>/(\d{4})-(\d{2})-(\d{2})/</strong> - matches the date portion (index 0) and matches three subpatterns for the year (index 1), month (index 2) and day (index 3) portions.</li>
+<li><strong>/(?&lt;year&gt;\d{4})-(?&lt;month&gt;\d{2})-(?&lt;day&gt;\d{2})/</strong> - matches the date portion (index 0) and matches three subpatterns for the year (index 1, name "year"), month (index 2, name "month") and day (index 3, name "day") portions.</li>
+</ul>
+<p>
+The last example is particularly useful, because named subpatterns let you give unique names to each piece of your data for later use with the <code>matches:</code> prefix. With only one pattern the index values are fine, but if you have more than one pattern the index numbers are reused so later patterns overwrite matches from earlier patterns.
+</p>
+<p>
+The patterns above contain backslash ('\') characters. When entering backslashes in an argument of the three option/format values below <strong>you must code two backslashes</strong> because the backslash is used in function arguments to escape special characters such as quotes (" ' "). The examples below show how this is done.
+<a name="mla_regular_expressions_match"></a>
+</p>
+<h4>The <code>,match(p)</code> option/format value</h4>
+<p>
+The <code>,match(p)</code> option/format value can be applied to any data source, including those specified by any of the field-level prefix values. The "p" argument is a regular expression pattern that is applied to the data source. If a match is found the portion of the data source that matches the pattern is returned. If no match is found and empty value is returned. Any pattern and subpattern matches are stored and made available as data sources accessed with the <code>matches:</code> field-level prefix.
+<a name="mla_regular_expressions_extract"></a>
+</p>
+<h4>The <code>,extract(p,v)</code> option/format value</h4>
+<p>
+The <code>,extract(p)</code> option/format value can be applied to any data source, including those specified by any of the field-level prefix values. The "p" argument is a regular expression pattern that is applied to the data source. By default, the <code>,extract(p)</code> option/format value <strong>returns an empty value</strong>; it's purpose is to collect pattern/subpattern matches for later use as data sources accessed with the <code>matches:</code> field-level prefix. You can change the returned value by adding the optional second "v" argument to specify any of the matched pattern or subpattern keys. For example, add zero ("0") to return the entire pattern, the index number of a subpattern or the name of a named subpattern.
+<a name="mla_regular_expressions_replace"></a>
+</p>
+<h4>The <code>,replace(p,r,v)</code> option/format value</h4>
+<p>
+The <code>,replace(p,r)</code> option/format value matches a pattern (like <code>,match(p)</code>) but returns a modified version of the original data source value. The "p" argument is a regular expression pattern that is applied to the data source. The "r" argument is a replacement pattern. If a match is found the data source modified by the replacement pattern is returned. If the match is not found, the original data source value is returned unaltered. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3' )+]</code> would return "year: 2013, month: 10, day: 03 02:47:13". Note the double backslashes in the pattern argument!
+Fund a SEP. Business owners and the self-employed can stash pretax money in a Simplified Employee Pension Plan. “Typically, you can contribute up to 20 percent of your net employment income,’’ says New Jersey-based Certified Public Accountant Barry Kleiman. While you have until April 17 to fund an IRA or Roth IRA, you can fund a SEP until Oct. 15 with a filing extension.To specify an array argument enclose the argument in braces ( "{" and "}" ) and separate elements with <strong>spaces</strong>. For a simple example, <code>,replace( {'/,/' '/-/'}, {' ' '_'} )</code> will change commas to spaces and dashes to underscores, while <code>,replace( {'/,/' '/-/'}, ' ' )</code> will change both commas <strong>and</strong> dashes to spaces.
+</p>
+You can alter the value returned by adding the optional third "v" parameter set to "true". If you add this parameter the returned value will be just the matched portion of the original with the replacement modifications applied. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3', true )+]</code> would return "year: 2013, month: 10, day: 03". Note the double backslashes in the pattern argument!
+<p>
+</p>
+<p>
+Note that, unlike match and extract, the replace format/option value does not store its pattern or subpattern(s) for later use with the matches: prefix.
+<a name="mla_regular_expressions_matches"></a>
+</p>
+<h4>The <code>matches:</code> field-level prefix</h4>
+<p>
+The <code>matches:</code> field-level prefix lets you access the patterns and subpatterns matched by all of the match and extract format/option values that precede it in a shortcode, template or rule. For example, if you code <code>[+post_date,extract( '/(?&lt;year&gt;\\d{4})-(?&lt;month&gt;\\d{2})-(?&lt;day&gt;\\d{2})/' )+]</code> you can then code <code>[+matches:year+]</code> or <code>[+matches:1+]</code> (index 1) to access the year subpattern from the extract format/option.
+<a name="mla_regular_expressions_examples"></a>
+</p>
+<h4>Application Examples</h4>
+<p>
+Imagine that you have a photo archive where all the files are named with the date on which the image was taken, for example "2010.06.14 Death Valley Landscape.jpg". You would like to extract the date from the file name and use it to update the post_date (Uploaded on) date in the database. You'd also like to preserve the time portion of the current post_date so the items will sort in the order they were uploaded. You can define an IPTC/EXIF mapping rule to do this or use the Media/Assistant Bulk Edit area. In either place you can compose a Content Template to do the job:
+</p>
+<p>
+<code>template:[+name_only,extract( '/(?&lt;year&gt;\\d{4}).(?&lt;month&gt;\\d{2}).(?&lt;day&gt;\\d{2})/' )+]([+matches:year+]-[+matches:month+]-[+matches:day+] [+post_date,date( 'H:i:s' )+])</code>
+</p>
+<p>
+That looks complicated, so let&rsquo;s consider each part. The first part, <code>[+name_only,extract( ...</code>, extracts the three subparts of the date from the file name and stores them for later use. This part of the template returns an empty value, so it does not contribute to the new post_date value. The second part uses three <code>[+matches: ...</code> data sources to build a valid date separated by dashes. The third part returns just the time portion of the original post_date. The second and third part are surrounded by parentheses, so an empty value is returned when the date values are not found in the file name. That will leave the original post_date value intact for any items whose file names lack a date portion.
+</p>
+<p>
+Here is a somewhat shorter alternative:
+</p>
+<p>
+<code>template:[+name_only,extract( '/(?&lt;filedate&gt;\\d{4}.\\d{2}.\\d{2})/' )+]([+matches:filedate,str_replace( '.', '-' )+] [+post_date,date( 'H:i:s' )+])</code>
+</p>
+<p>
+In this alternative the first part extracts the complete date with its period separators. The second part reformats the date, replacing the periods with dashes. The third part is the same as in the first alternative.
+</p>
+<p>
+One subtle point. The period characters (".") separating the year, month and day portions of the pattern are actually one of the regular expression metacharacters; they will match any character in the subject. For example, they will match "2010/06/14" or "2010X06X14". Either of those values will cause the <code>str_replace()</code> function to fail. If you want to explicitly match a period, preface it with a backslash, e.g.:
+</p>
+<p>
+<code>template:[+name_only,extract( '/(?&lt;filedate&gt;\\d{4}\.\\d{2}\.\\d{2})/' )+]([+matches:filedate,str_replace( '.', '-' )+] [+post_date,date( 'H:i:s' )+])</code>
+</p>
+<p>
+Finally, here&rsquo;s a version that uses the <code>replace</code> value in a different way:
+</p>
+<p>
+<code>template:([+name_only,replace( '/(\\d{4})\.(\\d{2})\.(\\d{2})/','$1-$2-$3',true)+] [+post_date,date( 'H:i:s' )+])</code>
+</p>
+<p>
+In this version the first part matches the date at the beginning of the file name and replaces its period separators with dashes. It uses the thrid `true` argument to return just the matches/modified portion of the file name. The second part is the same as in the first alternative.
+</p>
+<p>
+As you can see, regular expressions require close attention to detail and they reward careful study of the documentation and examples in the PHP documentation and elsewhere. They are a power tool with sharp edges.
 <a name="mla_text_widget"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>The MLA Text Widget</h3>
 <p>
 The MLA Text Widget lets you add content such as <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> displays to your site's sidebars. It is an easy way to add slide shows and navigation features to all your pages. The MLA Text Widget is based on the WordPress Text widget, but adds the ability to include <strong>any</strong> shortcode to widget content. To use the MLA Text Widget:
+</p>
 <ol>
 <li>Go to the Appearance/Widgets Administration screen</li>
 <li>Open the sidebar, footer, or Theme section to which you wish to add the Text Widget</li>
 <li>Find the Text Widget in the list of Widgets</li>
 <li>Click and drag the Widget to the spot you wish it to appear</li>
 </ol>
-</p>
 <p>
 To open and edit the MLA Text Widget: 
+</p>
 <ol>
 <li>Click the down arrow to the right of the MLA Text Widget title</li>
 <li>Set the MLA Text Widget Title (optional)</li>
@@ -5131,7 +5376,6 @@ To open and edit the MLA Text Widget:
 <li>Click Close to close the Widget</li>
 <li>Switch tabs in your browser and review the results; make changes if necessary</li>
 </ol>
-</p>
 <p>
 To add an <code>[mla_gallery]</code> or <code>[mla_tag_cloud]</code> shortcode to your widget, simply enter the shortcode name and parameters just as you would in the body of a post or page. Aside from the usually more limited area devoted to displaying the widget content, there are no differences in the way shortcodes are processed in the MLA Widget. Also, there is nothing special about the two MLA shortcodes; <strong>any</strong> shortcode can be added to the MLA Widget.
 <a name="terms_search"></a>
@@ -5161,11 +5405,12 @@ The first example would match each word separately. The second would match "man"
 </p>
 <p>
 Quote marks have another effect on the search; they restrict the match to a word boundary. For example, if you enter 'man' without enclosing quotes it will match "man" or "woman", because "<strong>man</strong>" appears as a part of "wo<strong>man</strong>". If you add quotes, i.e., ' "man" ', it will match "man" or "big man" but it will not match the "man" portion of "woman".
+</p>
 <p>
 In the unlikely event you need to match single or double quotes inside a phrase you can enter them as an escape sequence. Use <code>\47</code> for a single quote<code>\42</code> for a double quote. 
 </p>
-</p>
 <h4>Connecting multiple phrases</h4>
+<p>
 The search is further defined by the connector used between multiple phrases:
 </p>
 <ul class="mla_settings">
@@ -5257,11 +5502,12 @@ If you change your mind you can close the window without making a change by clic
 The <a href="https://wordpress.org/plugins/codepress-admin-columns/" title="Admin Columns plugin directory page" target="_blank">Admin Columns</a> plugin allows you to customize columns on several admin-mode screens, including the MLA Media/Assistant submenu screen. All you have to do is install the plugin; MLA will detect its presence and automatically register the Media/Assistant submenu screen for support. With Admin Columns, you can:
 </p>
 <ul class="mla_settings">
-<li>Reorder columns with a simple drag & drop interface.</li>
+<li>Reorder columns with a simple drag &amp; drop interface.</li>
 <li>Re-size columns to give more or less space to a column.</li>
 <li>Remove (not just hide) columns from the submenu table.</li>
 <li>Add new columns for custom fields and additional information.</li>
-<li>The Admin Columns "Pro" version adds support for ACF fields and other capabilities.</li>
+<li>The Admin Columns "Pro" version adds support for inline editing, ACF fields and other capabilities.</li>
+<li>The Admin Columns "Pro" version adds support for exporting Media/Assistant table values to CSV-format files.</li>
 </ul>
 <p>
 When Admin Columns is present you will see a new "Edit Columns" button just above the Media/Assistant submenu table. Click the button to go to the Settings/Admin Columns configuration screen. There you will see "Media Library Assistant" added to the "Others:" list. Click on it to see the configuration of the Media/Assistant submenu screen.
@@ -5271,14 +5517,53 @@ You can find detailed configuration instructions at the <a href="http://admincol
 </p>
 <p>
 When you have completed your configuration changes, click "Update Media Library Assistant" in the Store Settings metabox at the top-right of the screen. You can also click "Restore Media Library Assistant columns" to remove your changes and go back to the MLA default settings. Click the "View" button at the right of the Media Library Assistant heading to return to the Media/Assistant submenu screen and see your changes.
-<a name="mla_list_table_hooks"></a>
+<a name="mla_taxonomy_hooks"></a>
 </p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Custom Taxonomy Actions and Filters (Hooks)</h3>
+<p>
+The Custom Taxonomy filters and actions give you control over the registration of the Att. Categories and Att. Tags taxonomies from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Taxonomy Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Taxonomy+Hooks+Example%22" class="mla-doc-bold-link">MLA Taxonomy Hooks Example</a>. To run the example:
+</p>
+<ol>
+<li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
+<li>Hover over "MLA Taxonomy Hooks Example" in the Name column, then click the "Install" rollover action.</li>
+<li>Go to the Plugins/Installed Plugins screen and activate the "MLA Taxonomy Hooks Example" plugin.</li>
+<li>Go to, for example, the Media/Assistant submenu to exercise the filters and write filter/action information to the site's Error Log.</li>
+<li>Examine the Error Log to see the filter/action information.</li>
+</ol>
+<p>
+You can find more information about the types, labels and arguments in the <a href="https://codex.wordpress.org/Function_Reference/register_taxonomy" title="register_taxonomy() Documentation" target="_blank">Function Reference/register taxonomy</a> repository page. 
+</p>
+<p>
+The example code documents each hook with comments in the filter/action function that intercepts each hook.
+</p>
+<p>
+The following hooks are defined in <code>/wp-admin/includes/class-mla-objects.php</code>:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_attachment_category_types,<br />mla_attachment_tag_types</td>
+<td class="mla-doc-hook-definition">Modify the array of post types for which the taxonomy is registered. The default is "attachment".</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_attachment_category_labels,<br />mla_attachment_tag_labels</td>
+<td class="mla-doc-hook-definition">Modify the array of labels used in the User Interface for submenu and metabox names, etc.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_attachment_category_arguments,<br />mla_attachment_tag_arguments</td>
+<td class="mla-doc-hook-definition">Modify the array of arguments with which the taxonomy is registered. For example, you can change the URL rewrite slug from the default <code>attachment_category/attachment_tag</code> values for SEO purposes. <strong>Note</strong>: You may need to flush the rewrite rules after changing the slug. You can do it manually by going to the Permalink Settings page and re-saving the rules -- you don't need to change them.</td>
+</tr>
+</table>
+<a name="mla_list_table_hooks"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>Media/Assistant Submenu Actions and Filters (Hooks)</h3>
 <p>
-The Media/Assistant submenu supports a comprehensive set of filters and actions that give you control over table columns, inline actions and bulk actions from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the List Table Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+List+Table+Hooks+Example%22" class="mla-doc-bold-link">MLA List Table Hooks Example</a>. To run the example:
+The Media/Assistant submenu supports a comprehensive set of filters and actions that give you control over table columns, inline actions and bulk actions from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the List Table Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+List+Table+Hooks+Example%22" class="mla-doc-bold-link">MLA List Table Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA List Table Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -5286,7 +5571,6 @@ The Media/Assistant submenu supports a comprehensive set of filters and actions 
 <li>Go to the Media/Assistant submenu to exercise the filters and write filter/action information to the site's Error Log.</li>
 <li>Examine the Error Log to see the filter/action information.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter/action function that intercepts each hook. There are hooks that let you add, modify or delete table columns. 
 </p>
@@ -5328,7 +5612,11 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_taxonomy_column</td>
-<td class="mla-doc-hook-definition">Gives you an opportunity to change column content in the Edit Taxonomy submenu table(s).</td>
+<td class="mla-doc-hook-definition">Gives you an opportunity to replace column content in the Edit Taxonomy submenu table(s) before MLA computes the count.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_taxonomy_column_final</td>
+<td class="mla-doc-hook-definition">Gives you an opportunity to replace column content in the Edit Taxonomy submenu table(s) after MLA computes the count.</td>
 </tr>
 </table>
 <p>
@@ -5459,7 +5747,7 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_extranav_actions</td>
-<td class="mla-doc-hook-definition">Gives you an opportunity to add, remove and/or re-order the controls added to the top & bottom table navigation areas.</td>
+<td class="mla-doc-hook-definition">Gives you an opportunity to add, remove and/or re-order the controls added to the top &amp; bottom table navigation areas.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_extranav_custom_action</td>
@@ -5519,16 +5807,14 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 <td class="mla-doc-hook-definition">Gives you a final chance to modify and extend the HTML markup used for the Bulk Edit on Upload form.</td>
 </tr>
 </table>
-<p>
-&nbsp;
-<a name="mla_media_modal_filters"></a>
-</p>
+<a name="mla_media_modal_filters"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>Media Manager Enhancement filters (Hooks)</h3>
 <p>
-Media Library Assistant adds several controls to the toolbar in the Media Manager Modal Window; more MIME type filters, year/month filter, taxonomy term filter and an enhanced Search media box. These features are supported by a comprehensive set of filters and actions that give you control over MMMW content from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Media Modal Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Media+Modal+Hooks+Example%22" class="mla-doc-bold-link">MLA Media Modal Hooks Example</a>. To run the example:
+Media Library Assistant adds several controls to the toolbar in the Media Manager Modal Window; more MIME type filters, year/month filter, taxonomy term filter and an enhanced Search media box. These features are supported by a comprehensive set of filters and actions that give you control over MMMW content from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Media Modal Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Media+Modal+Hooks+Example%22" class="mla-doc-bold-link">MLA Media Modal Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Media Modal Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -5546,7 +5832,7 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-media-moda
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_months_dropdown</td>
-<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Month & Year Dropdown control</td>
+<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Month &amp; Year Dropdown control</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_terms_options</td>
@@ -5610,10 +5896,7 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-data-query
 <td class="mla-doc-hook-definition">Substitute the results of the Media Manager Modal Window "Query Attachments" query with alternative results of your own</td>
 </tr>
 </table>
-<p>
-<a name="mla_edit_meta_boxes"></a>
-&nbsp;
-</p>
+<a name="mla_edit_meta_boxes"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -5622,7 +5905,8 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-data-query
 Media Library Assistant adds support for the "Custom Fields" meta box to the Media/Edit Media screen. MLA also adds several meta boxes to this screen with more information about the item and where it is  used on your site. You can enable/disable the additional meta boxes with an option on the Settings/Media Library Assistant General tab.
 </p>
 <p>
-You can also make individual changes in which meta boxes are displayed and in their content by using one or more of the filters MLA provides. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Meta Box Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Meta+Box+Hooks+Example%22" class="mla-doc-bold-link">MLA Meta Box Hooks Example</a>. To run the example:
+You can also make individual changes in which meta boxes are displayed and in their content by using one or more of the filters MLA provides. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Meta Box Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Meta+Box+Hooks+Example%22" class="mla-doc-bold-link">MLA Meta Box Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Meta Box Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -5630,7 +5914,6 @@ You can also make individual changes in which meta boxes are displayed and in th
 <li>Make any changes or additions you want to in the example plugin source code. For example, you can modify the <code>mla_inserted_in_metabox</code> example to display a simplified version of the "Inserted in" information.</li>
 <li>View the Media/Edit Media screen for an item to see the effect of your changes.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter function that intercepts the hook. Generally, each meta box filter lets you change the size of the text box (if appropriate) and the content that appears in the box. There is also a second filter for each meta box that lets you replace <strong>all</strong> of the HTML content for most boxes; use these with caution. The current hooks are:
 </p>
@@ -5672,10 +5955,7 @@ The example code documents each hook with comments in the filter function that i
 <td class="mla-doc-hook-definition">modify the rows, columns and content of the "MLA Gallery in" meta box.</td>
 </tr>
 </table>
-<p>
-<a name="mla_views"></a>
-&nbsp;
-</p>
+<a name="mla_views"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -5713,9 +5993,8 @@ The Table View list also supports custom field queries. You can choose from thre
 </ul>
 <p>
 If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media Manager/Add Media "media items" drop down list.
-</p>
 <a name="mla_uploads"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -5729,6 +6008,7 @@ The first time it is invoked, MLA will retrieve the current list of extensions a
 <h4>Extension and MIME Type</h4>
 <p>
 The Extension is the file extension for this type, and unique key for the item. It must be all lowercase and contain only letters, numbers and hyphens (-). The MIME Type value must be all lowercase and contain only letters, numbers, periods (.), slashes (/) and hyphens (-). The MIME type specification must be a single, valid MIME specification, e.g., "image" or "image/jpeg". These two values are used to compose the list of valid extension/type associations for use within WordPress.
+</p>
 <p>
 When a file is uploaded to your Media Library the MIME type associated with that file extension is saved in the WordPress database record for the item. Later, you can use the <code>post_mime_type</code> to, for example, include or exclude the item from an <code>[mla_gallery]</code> display. You can think of the MIME Type as another way to categorize items in the Media Library. Once assigned, the MIME Type is not changed if you later alter the association between file extension and MIME Type. Think twice, therefore, when adding a new association to the list or changing the MIME type associated with an existing extension on the list.
 </p>
@@ -5740,6 +6020,7 @@ When a file is uploaded to your Media Library the MIME type associated with that
 <h4>Source and Status</h4>
 <p>
 The "Source" of an Upload MIME Type reveals where the extension/MIME Type association comes from:
+</p>
 <ul class="mla_settings">
 <li><strong>core</strong>: WordPress defines a core set of extensions and associated MIME types, and this list changes with new WordPress releases. These are the "official" items. You can't delete them, but you can inactivate them so they are not used to validate file uploads.</li>
 <li><strong>mla</strong>: Media Library Assistant adds several more extension/type items, drawing from the most popular items found in other plugins and web sites. They are initialized as "inactive" items, so you must explicitly decide to activate them for use in file upload validation.</li>
@@ -5779,9 +6060,8 @@ The Icon Type information is used primarily in a function that matches a file ex
 </ul>
 <p>
 The icon images can be returned in a <code>[gallery]</code> or an <code>[mla_gallery]</code> shortcode when <code>size=icon</code> is specified. The icons also appear on the Media/Library and Media/Assistant submenu tables.
-</p>
 <a name="mla_optional_uploads"></a>
-&nbsp;
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -5797,6 +6077,7 @@ The <em><strong>Known File Extension/MIME Type Associations</strong></em> list w
 </p>
 <p>
 For your own research, I suggest starting with these resources:
+</p>
 <ul class="mla_settings">
 <li><a href="http://www.iana.org/assignments/media-types" target="_blank">Internet Assigned Number Authority MIME Media Types</a></li>
 <li><a href="http://en.wikipedia.org/wiki/Internet_media_type" target="_blank">Wikipedia: Internet Media Type</a></li>
@@ -5812,13 +6093,28 @@ Put on your boots and have a paddle handy - it's a swamp! Good luck.
 </p>
 <h3>Custom Field and Attachment Metadata Processing Options</h3>
 <p>
-In the Custom Fields tab of the Settings screen you can define the rules for mapping several types of file and image metadata to WordPress custom fields. Custom field mapping can be applied automatically when an attachment is added to the Media Library. You can refresh the mapping for <strong><em>ALL</em></strong> attachments using the command buttons on the screen. You can selectively apply the mapping in the bulk edit area of the Media/Assistant submenu table and/or on the Edit Media screen for a single attachment.
+In the Custom Fields tab of the Settings screen you can define the rules for mapping several types of file and image metadata to WordPress custom fields. You can also use this screen to define rules for adding or updating elements within the WordPress-supplied "Attachment Metadata", stored in the "_wp_attachment_metadata" custom field. See the <a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a> section below for details.
 </p>
 <p>
-You can also use this screen to define rules for adding or updating elements within the WordPress-supplied "Attachment Metadata", stored in the "_wp_attachment_metadata" custom field. See the <a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a> section below for details.
+In this tab there are three ways to execute one or more custom field mapping rules for <strong>ALL</strong> of your Media Library items:
+</p>
+<ul class="mla_settings">
+<li><strong>Execute All Rules button</strong> - just below the "Enable" checkbox controls in the upper-left portion of the tab. Click this button to immediately run <strong>ALL</strong> of the active rules. Rules marked as inactive will not be executed.</li>
+<li><strong>Bulk Actions "Execute"</strong> - Runs the rules you select by checking the box to the left of one or more rule names. Pull down the "Bulk Actions" control and select "Execute", then click the "Apply" button. <strong>Inactive rules will be executed</strong>; do not select them unless you want to execute them!</li>
+<li><strong>"Execute" rollover action</strong> - Runs the single rule you select by clicking the rule's "Execute" rollover action. <strong>Inactive rules will be executed</strong>.</li>
+</ul>
+<p>
+These commands process your items in "chunks" to prevent timeout errors. You can pause/resume or cancel the operation between chunks. Note that rules with a Data Source of "none" are ignored because they can't change the custom field value.
 </p>
 <p>
-This is a powerful tool, but it comes at the price of additional database storage space and processing time to maintain and retrieve the data. <strong><em>Think carefully about your needs before you use this tool.</em></strong> You can disable or delete any rules you create, so you might want to set up some rules for a special project or analysis of your library and then discard them when you're done. That said, the advantages of mapping metadata to custom fields are:
+There are two other ways you can perform custom field mapping for one or more existing attachments:
+</p>
+<ul class="mla_settings">
+<li><strong>Edit Media screen</strong> - You can click the "Map Custom Field metadata" link in the "Image Metadata" postbox to apply the existing mapping rules to a single attachment.</li>
+<li><strong>Bulk Action edit area</strong> - To perform mapping for a group of attachments you can use the Bulk Action facility on the Media/Assistant screen. Check the attachments you want to map, select "Edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map Custom Field metadata" button in the lower left corner of the area to apply the existing mapping rules to the attachments in the list.</li>
+</ul>
+<p>
+Custom field mapping is a powerful tool, but it comes at the price of additional database storage space and processing time to maintain and retrieve the data. <strong><em>Think carefully about your needs before you use this tool.</em></strong> You can disable or delete any rules you create, so you might want to set up some rules for a special project or analysis of your library and then discard them when you're done. That said, the advantages of mapping metadata to custom fields are:
 </p>
 <ul class="mla_settings">
 <li>You can add the data to an <code>[mla_gallery]</code> with a field-level markup substitution parameter. For example, add the image dimensions or a list of all the intermediate sizes available for the image.</li>
@@ -5828,7 +6124,22 @@ This is a powerful tool, but it comes at the price of additional database storag
 If you just want to add a custom field to the Media/Assistant submenu, the quick edit area and/or the bulk edit area you can bypass the mapping logic by leaving the Data Source value as "-- None (select a value) --".
 </p>
 <p>
-Two options control the custom field mapping when new items are added to the Media Library ("Enable custom field mapping when adding new media") or when attachment metadata is updated ("Enable custom field mapping when updating media metadata"). Check one or both options to enable these features. Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "AJAX" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
+Three checkbox options control the custom field mapping when new items are added to the Media Library:
+</p>
+<ul class="mla_settings">
+<li><strong>Enable custom field mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
+<li><strong>Enable custom field mapping when adding new media</strong> - Check this option to enable mapping when uploading new items (attachments) to the Media Library.</li>
+<li><strong>Enable custom field mapping when updating media metadata</strong> - Check this option to enable mapping when item (attachment) metadata is regenerated,
+ e.g., when the Media/Edit Media "Edit Image" functions are used.</li>
+</ul>
+<p>
+The "when adding" and "when updating" options do <strong>NOT</strong> affect the operation of the "Map" buttons on the bulk edit or single edit screens, nor do they affect any of the "Execute" mapping functions On this Settings screen.
+</p>
+<p>
+Check one or more options to enable these features, then click the "Save Changes" button to record your new setting(s).
+</p>
+<p>
+Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "AJAX" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
 </p>
 <ul class="mla_settings">
 <li><code>define( 'MLA_AJAX_EXCEPTIONS', 'wfu_ajax_action,upload_ugc' );</code></li>
@@ -5846,6 +6157,7 @@ If you cannot identify the proper "action" value or if your uploader uses anothe
 <h4>Custom field mapping example</h4>
 <p>
 Here is a simple example of mapping the items' file size to a custom field, so you can display it in the Media/Assistant submenu table and use it in and <code>[mla_gallery]</code> shortcode. You can go to the Settings/Media Library Assistant Custom Fields tab and define a rule that maps file size to a WordPress custom field. The steps required are:
+</p>
 <ol>
 <li>Navigate to the Settings/Media Library Assistant "Custom Fields" tab.</li>
 <li>Make sure the "Enable custom field mapping when adding new media" box is checked. If not, check the box, scroll down and click "Save Changes".</li>
@@ -5869,7 +6181,7 @@ Here is a simple example of mapping the items' file size to a custom field, so y
 &nbsp;<br />
 The three parameters in the above example will select all of the images in your media library and sort your gallery so the largest files appear first. You can replace <code>post_parent=all</code> with any other data selection parameters to get the items you want. For example, you can use a "meta_query" to select only those items (of any MIME Type) whose File Size is less than 82,168 bytes (and display the size in the gallery item caption):<br />
 &nbsp;<br />
-<code>[mla_gallery post_mime_type=all meta_query="array( array( 'key' => 'File Size', 'value' => array( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;82,168' ), 'compare' => 'BETWEEN' ) )" meta_key="File Size" orderby="meta_value" order="DESC" mla_caption="{+caption+}<br>{+custom:File Size+}"]</code>
+<code>[mla_gallery post_mime_type=all meta_query="array( array( 'key' => 'File Size', 'value' => array( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;82,168' ), 'compare' => 'BETWEEN' ) )" meta_key="File Size" orderby="meta_value" order="DESC" mla_caption="{+caption+}<br />{+custom:File Size+}"]</code>
 </p>
 <p>
 Note the format of the <code>value</code> and <code>compare</code> parameters within the <code>meta_query</code>. Because the File Size custom field uses the "Commas" format, the values are stored as 15-character strings with leading spaces; this makes the values display and sort sensibly. You must use <code>'compare' => 'BETWEEN'</code> and give the lowest and highest values as an array in the <code>'value' => array( '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;', '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;82,168' )</code> parameter, padding each value out to exactly 15 characters wide.
@@ -5894,7 +6206,7 @@ Contains a list of data elements you can map to the custom field. You can also s
 </tr>
 <tr>
 <td class="mla-doc-table-label">--&nbsp;Metadata&nbsp;(see&nbsp;below)&nbsp;--</td>
-<td>WordPress attachment metadata, from the <em>_wp_attachment_metadata</em> array. Enter the field you want in the text box below the dropdown list. More coding guidelines are given in the "<a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a>" section above.</td>
+<td>WordPress attachment metadata, from the <em>_wp_attachment_metadata</em> array. Enter the field you want in the text box below the dropdown list. More coding guidelines are given in the "<a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a>" section below.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">--&nbsp;Template&nbsp;(see&nbsp;below)&nbsp;--</td>
@@ -6034,8 +6346,10 @@ WordPress stores an array of information for image, audio and video items in the
 </p>
 <p>
 As explained elsewhere, you can access all of this data with the "meta:" <a href="#mla_variable_parameters">Field-level markup substitution parameter</a>. By coding the "meta:" prefix in the Field Title column of a field mapping rule you can add to or update this data as well, from any of the data sources listed below. You can use a <a href="#mla_template_parameters">Content Template</a> to compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing the mapping altogether for a given item.
+</p>
 <p>
 Let's say, for example, that you want to add GPS coordinates to the "image_meta" element of the Attachment Metadata.
+</p>
 <ol>
 <li>
 Open the Settings/Media Library Assistant submenu and select the Custom Fields tab. Scroll down to the "Add a new Field and Mapping Rule" section.
@@ -6050,9 +6364,9 @@ In the Data Source dropdown, select "-- Template (see below) --". In the text bo
 Set the other parts of the rule as needed. You can select "Keep" if some of your items already have this information or "Replace" to update all items. "Native" and "Text" are appropriate for this example. You can check "Delete NULL values" to remove any existing, empty values for this element. The "MLA Column", "Quick Edit" and "Bulk Edit" checkboxes have no meaning for Attachment Metadata elements and can be left blank; they will be ignored if checked.
 </li>
 </ol>
-</p>
 <p>
 If you are creating an IPTC/EXIF mapping rule the details are a bit different.
+</p>
 <ol>
 <li>
 Open the Settings/Media Library Assistant submenu and select the IPTC/EXIF tab. Scroll down to the "Add a new Field and Mapping Rule" section.
@@ -6067,9 +6381,7 @@ In the "EXIF/Template" text box, enter "template:([+exif:GPS.LatitudeSDD+])". Th
 Set the other parts of the rule as needed. You can select "EXIF" unless you also select an IPTC value and want it to have priority. You can select "Keep" if some of your items already have this information or "Replace" to update all items.
 </li>
 </ol>
-</p>
-<a name="custom_field_mapping_with_templates"></a>
-&nbsp;
+<a name="custom_field_mapping_with_templates"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6082,53 +6394,67 @@ Within a template, all of the data sources listed above are available. For examp
 </p>
 <p>
 You can use a template to compose a custom field from multiple data sources, e.g., "<code>Taken with [+meta:camera+] at [+dimensions+] using ISO [+exif:ISOSpeedRatings,single+] and [+exif:ExposureTime+] exposure time</code>".
-<p>
 </p>
+<p>
 You can use a template to compose a custom field from alternative data sources, depending on which fields are populated for a given attachment. For example, "<code>[+pdf:Keywords+]|[+iptc:2#025+]|none</code>" will use the PDF Keywords field, if populated, then the IPTC keywords field, if populated, or the literal "none" if neither field contains a value. With this template you can get keywords from both PDF documents and images in a single field.
+</p>
 <p>
 Using a template with the Option Dropdown "Text" or "Single" values will yield a text result. For example, multiple IPTC keywords would be converted into a comma-delimited list as a string. If you combine a template with the "Export", "Array" or "Multi" values the template will deliver an array result if the fields inside the template have multiple values. For example, with "Multi" you can code "<code>([+iptc:2#020<strong>,array</strong>+])([+iptc:2#025<strong>,array</strong>+])</code>" to store each of the IPTC supplemental-category <em><strong>and</strong></em> keywords values (there is no "|" in the template) in a separate custom field value. Note the use of the <strong>,array</strong> formatting option in each field; this is required to get an array result for the field. Also, note that each of the fields is enclosed in parentheses, so the field is suppressed if it contains no values.
 </p>
 <p>
 <strong>CAUTION:</strong> If you use the <code>[+custom:ALL_CUSTOM+]</code> pseudo value in a mapping rule, and you apply the rule more than once, you will see copies of the field you are mapping to in the result. To "clear out" a field you are mapping ALL_CUSTOM into, clear out the text box containing the template, select "Replace" and check the "Delete NULL values" box. Then, click "Map All Attachments"; that will delete the old values and give you a clean start. You'll also see that the template you deleted will be restored after the mapping is complete.
+<a name="mla_iptc_exif_mapping"></a>
 </p>
-<a name="other_custom_field_mapping"></a>&nbsp;
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h4>Other mapping techniques</h4>
-<p>
-There are two other ways you can perform custom field mapping for one or more existing attachments:
-<dl>
-<dt>Edit Media screen</dt>
-<dd>You can click the "Map Custom Field metadata" link in the "Image Metadata" postbox to apply the existing mapping rules to a single attachment.
-</dd>
-<dt>Bulk Action edit area</dt>
-<dd>To perform mapping for a group of attachments you can use the Bulk Action facility on the main Assistant screen. Check the attachments you want to map, select "edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map Custom Field metadata" button in the lower left corner of the area to apply the existing mapping rules to the attachments in the list.
-</dd>
-</dl>
-<a name="mla_iptc_exif_mapping"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>IPTC &amp; EXIF Processing Options</h3>
 <p>
-Some image file formats such as JPEG DCT or TIFF Rev 6.0 support the addition of data about the image, or <em>metadata</em>, in the image file. Many popular image processing programs such as Adobe PhotoShop allow you to populate metadata fields with information such as a copyright notice, caption, the image author and keywords that categorize the image in a larger collection. WordPress uses some of this information to populate the Title, Slug and Description fields when you add an image to the Media Library.
+Some image file formats such as JPEG DCT or TIFF Rev 6.0 support the addition of data about the image, or <em>metadata</em>, in the image file. In addition, many JPEG, TIFF and PDF files use the <a href="https://www.adobe.com/products/xmp/" title="Adobe XMP site" target="_blank">Extensible Metadata Platform (XMP)</a> framework. XMP metadata varies from file to file but is often extensive. Many popular image processing programs such as Adobe PhotoShop allow you to populate metadata fields with information such as a copyright notice, caption, the image author and keywords that categorize the image in a larger collection. WordPress uses some of this information to populate the Title, Slug and Description fields when you add an image to the Media Library.
 </p>
 <p>
-The Media Library Assistant has powerful tools for copying image metadata to:
+The Media Library Assistant has powerful tools for copying metadata to:
+</p>
 <ul class="mla_settings">
 <li>the WordPress standard fields, e.g., the Caption</li>
-<li>taxonomy terms, e.g., in categories, tags or custom taxonomies</li>
+<li>taxonomy terms, e.g., in categories, tags or custom taxonomies like Att. Categories and Att. Tags</li>
 <li>WordPress Custom Fields</li>
 </ul>
-You can define the rules for mapping metadata on the "IPTC/EXIF" tab of the Settings page. You can choose to automatically apply the rules when new media are added to the Library (or not). You can click the "Map IPTC/EXIF metadata" button on the Edit Media/Edit Single Item screen or in the bulk edit area to selectively apply the rules to one or more images. You can click the "Map All Attachments Now" to apply the rules to <strong><em>ALL of the images in your library</em></strong> at one time.
+<p>
+You can define the rules for mapping metadata on the "IPTC/EXIF" tab of the Settings page. You can choose to automatically apply the rules when new media are added to the Library (or not). You can click the "Map IPTC/EXIF metadata" button on the Edit Media/Edit Single Item screen or in the bulk edit area to selectively apply the rules to one or more items. You can use the "Execute" functions in the tab to apply the rules to one, some or <strong><em>ALL</em></strong> of the items in your library at one time.
 </p>
-<p>If you click any of the three "Map All Attachments, ... Now" buttons, the rules currently displayed in that category will be immediately applied to <strong>all</strong> of the attachments in your site. Rule changes are <strong>not</strong> saved when you click any of these buttons. THERE<strong> IS NO UNDO FOR THESE ACTIONS!</strong></p>
+<p>If you use any of the "Execute" functions, the selected rule(s) will be immediately applied to <strong>all</strong> of the attachments in your Media Library. THERE<strong> IS NO UNDO FOR THESE ACTIONS!</strong></p>
 <p>
 If you just want to add a custom field to the Media/Assistant submenu, the quick edit area and/or the bulk edit area go to the "Custom Fields" tab and follow the instructions there.
 </p>
+<p>In this tab there are three ways to execute one or more IPTC/EXIF mapping rules for <strong>ALL</strong> of your Media Library items:
+</p>
+<ul class="mla_settings">
+<li><strong>Execute All Rules button</strong> - just below the "Enable" checkbox controls in the upper-left portion of the tab. Click this button to immediately run <strong>ALL</strong> of the active rules. Rules marked as inactive will not be executed.</li>
+<li><strong>Bulk Actions "Execute"</strong> - Runs the rules you select by checking the box to the left of one or more rule names. Pull down the "Bulk Actions" control and select "Execute", then click the "Apply" button. <strong>Inactive rules will be executed</strong>; do not select them unless you want to execute them!</li>
+<li><strong>"Execute" rollover action</strong> - Runs the single rule you select by clicking the rule's "Execute" rollover action. <strong>Inactive rules will be executed</strong>.</li>
+</ul>
 <p>
-Two options control the metadata mapping when new items are added to the Media Library ("Enable IPTC/EXIF Mapping when adding new media") or when attachment metadata is updated ("Enable IPTC/EXIF Mapping when updating media metadata"). Check one or both options to enable these features. Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "AJAX" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
+These commands process your items in "chunks" to prevent timeout errors. You can pause/resume or cancel the operation between chunks.</p>
+<p>There are two other ways you can perform IPTC/EXIF mapping for one or more existing attachments: 
+</p>
+<ul class="mla_settings">
+<li><strong>Edit Media screen</strong> - You can click the "Map IPTC/EXIF metadata" link in the "Image Metadata" postbox to apply the existing mapping rules to a single attachment.</li>
+<li><strong>Bulk Action edit area</strong> - To perform mapping for a group of attachments you can use the Bulk Action facility on the Media/Assistant screen. Check the attachments you want to map, select "Edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map IPTC/EXIF metadata" button in the lower left corner of the area to apply the standing mapping rules to the attachments in the list.</li>
+</ul>
+<p>Three checkbox options control the IPTC/EXIF mapping when new items are added to the Media Library:
+</p>
+<ul class="mla_settings">
+<li><strong>Enable IPTC/EXIF Mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
+<li><strong>Enable IPTC/EXIF Mapping when adding new media</strong> - Check this option to enable mapping when uploading new items (attachments) to the Media Library.</li>
+<li><strong>Enable IPTC/EXIF Mapping when updating media metadata</strong> - Check this option to enable mapping when item (attachment) metadata is regenerated,
+ e.g., when the Media/Edit Media "Edit Image" functions are used.</li>
+</ul>
+<p>
+The "when adding" and "when updating" options do <strong>NOT</strong> affect the operation of the "Map" buttons on the bulk edit or single edit screens, nor do they affect any of the "Execute" mapping functions On this Settings screen.</p>
+<p>Check one or more options to enable these features, then click the "Save Changes" button to record your new setting(s).</p>
+<p>
+Some plugins support file uploads from the WordPress "front end", usually by using the WordPress "AJAX" support. To enable mapping when these plugins are used you must add an entry to your <code>wp-config.php</code> file so MLA will load the mapping code:
 </p>
 <ul class="mla_settings">
 <li><code>define( 'MLA_AJAX_EXCEPTIONS', 'wfu_ajax_action,upload_ugc' );</code></li>
@@ -6138,7 +6464,7 @@ The above example adds the "action" values for two popular file upload plugins, 
 </p>
 <p>
 If you cannot identify the proper "action" value or if your uploader uses another method to do its work you can try adding <code>define( 'MLA_AJAX_EXCEPTIONS', 'always' );</code> to your <code>wp-config.php</code> file. This value will unconditionally load full MLA support for AJAX operations and may give you better results. You can also use the <a href="#mla_debug_tab">Debug tab</a> and <code>define( 'MLA_DEBUG_LEVEL', 3 );</code> to log more information about file upload requests; that may help identify the appropriate "action" value. 
-<a name="iptc_exif_mapping_example"></a>&nbsp;
+<a name="iptc_exif_mapping_example"></a>
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -6154,19 +6480,23 @@ DateTime 2012:12:01 17:37:05<br />
 </blockquote>
 <p>
 You can go to the Settings/Media Library Assistant IPTC/EXIF tab and define a rule that maps any of these fields to a WordPress custom field. The steps required are:
+</p>
 <ol>
-<li>Go to the Settings/Media Library Assistant IPTC/EXIF tab.</li>
-<li>Make sure the "Enable IPTC/EXIF Mapping when adding new media" box is checked.</li>
-<li>Scroll down to the "Custom field mapping" section.</li>
-<li>If you have already defined "Date Time Created" as a custom field, use the "Add a new Mapping Rule" section and select the field name in the first dropdown. If the field does not yet exist, use the "Add a new Field and Mapping Rule" section and enter, for example, "Date Time Created" in the first text box.</li>
+<li>Navigate to the Settings/Media Library Assistant IPTC/EXIF tab.</li>
+<li>Make sure the "Enable IPTC/EXIF Mapping when adding new media" box is checked.  If not, check the box, scroll down and click "Save Changes".</li>
+<li>Scroll down to the "Add New Custom Field Rule" section.</li>
+<li>If you have already defined "Date Time Created" as a custom field, select the field name in the first dropdown. If the field does not yet exist, click the "Enter new field" link to change the drop down list of existing fields to a text box and enter, for example, "Date Time Created" in the text box.</li>
 <li>Leave the "IPTC Value" dropdown list set to the default "None (select a value)" setting.</li>
 <li>Enter "DateTimeOriginal" in the EXIF/Template Value field.</li>
 <li>Set the Priority dropdown to "EXIF".</li>
 <li>Set the Existing Text dropdown to "Keep", unless you want to wipe out any values you've assigned earlier.</li>
-<li>Click "Add Rule/Add Field" to save your rule.</li>
+<li>In the "Format" dropdown list, select "Native".</li>
+<li>In the "Option:" dropdown list, select "Text".</li>
+<li>Click the "Delete NULL Values" checkbox. This prevents storing an empty value in the database for items that do not have a "DateTimeOriginal" value.</li>
+<li>Click "Add Rule" to save your rule.</li>
 </ol>
 <p>
-If you are feeling confident you can click the "Add Rule/Field and Map All Attachments" button to save your rule and map all of the attachments in your Media Library in one step. If you want to test your work first, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has keywords. Click the "Map IPTC/EXIF Metadata" link in the upper right "Save" area of the screen, then look down at the Caption meta box and see if your value is correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Map All Attachments" button below your rule to process all of your images.
+If you want to test your work, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has keywords. Click the "Map IPTC/EXIF Metadata" link in the upper right "Save" area of the screen, then look down at the Custom Fields meta box and see if your "Date Time Created" value is present and correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Execute" rollover action for your rule to process all of your images.
 </p>
 <p>
 You can use the meta_key, orderby and order parameters to sort an <code>[mla_gallery]</code> by your custom field. For example:<br />
@@ -6175,20 +6505,21 @@ You can use the meta_key, orderby and order parameters to sort an <code>[mla_gal
 &nbsp;<br />
 The three parameters in the above example will select all of the images in your media library and sort your gallery so the newest/most recent images appear first. You can replace <code>post_parent=all</code> with any other data selection parameters to get the images you want. For example, you can use a "meta_query" to select only those images created after 2012-01-01 (and display the date in the gallery item caption):<br />
 &nbsp;<br />
-<code>[mla_gallery meta_query="array( array( 'key' => 'Date Time Created', 'value' => '2012-01-01', 'compare' => '<' ) )" meta_key="Date Time Created" orderby="meta_value DESC" mla_caption="{+custom:Date Time Created+}" ]</code>
+<code>[mla_gallery meta_query="array( array( 'key' => 'Date Time Created', 'value' => '2012-01-01', 'compare' => '&lt;' ) )" meta_key="Date Time Created" orderby="meta_value DESC" mla_caption="{+custom:Date Time Created+}" ]</code>
+<a name="iptc_exif_mapping_tables"></a>
 </p>
-<a name="iptc_exif_mapping_tables"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h4>IPTC/EXIF mapping tables</h4>
+<h4>The IPTC/EXIF rule elements</h4>
 <p>
-The three mapping tables on the IPTC/EXIF tab have the following columns:
+All types of IPTC/EXIF mapping rules have the following common elements:
+</p>
 <dl>
 <dt>Field Title</dt>
-<dd>The standard field title, taxonomy name or Custom Field name. In the Custom Field table you can define a new field by entering its name in the blank box at the bottom of the list; the value will be saved when you click "Save Changes" at the bottom of the screen.
+<dd>The standard field title, taxonomy name or Custom Field name. In the Add New Custom Field Rule area you can define a new field by clicking the "Enter new field" link and entering its name in the text box; the value will be saved when you click "Add Rule" at the bottom of the area.
 <br />&nbsp;<br />
-You can also use the Custom field mapping section of this screen to define rules for adding or updating elements within the WordPress-supplied "Attachment Metadata", stored in the "_wp_attachment_metadata" custom field. Code the "meta:" prefix in the Field Title textbox to make the destination of the rule an element of the Attachment Metadata; see the <a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a> section for more details.
+You can also use the Add New Custom Field Rule area to define rules for adding or updating elements within the WordPress-supplied "Attachment Metadata", stored in the "_wp_attachment_metadata" custom field. Code the "meta:" prefix in the Field Title textbox to make the destination of the rule an element of the Attachment Metadata; see the <a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a> section for more details.
 </dd>
 <dt>IPTC Value</dt>
 <dd>The IPTC (International Press Telecommunications Council) metadata, if any, embedded in the image file. For this category, you can select any of the IPTC DataSet tag and field identifiers, e.g., "2#025" for the Keywords field. The dropdown list has the identifier and the "friendly name" MLA defines for most of the IPTC fields; see the table of identifiers and friendly names in the table below. You can find more information in the <a href="http://www.iptc.org/std/IIM/4.1/specification/IIMV4.1.pdf" title="IPTC-NAA Information Interchange Model Version No. 4.1 specification" target="_blank">IPTC-NAA Information Interchange Model Version No. 4.1 specification</a>.
@@ -6201,9 +6532,9 @@ MLA uses a standard PHP function, <a href="http://php.net/manual/en/function.exi
 <br />&nbsp;<br />
 MLA provides enhanced access to GPS values within the EXIF metadata; more details are given in the <a href="#mla_gps_values">Enhanced GPS values</a> section below.
 <br />&nbsp;<br />
-Two special exif "pseudo-values" are available; <strong>ALL_IPTC</strong> and <strong>ALL_EXIF</strong>. These return a string representation (in &quot;export&quot; format) of all IPTC or EXIF data respectively. You can use these pseudo-values to examine the metadata in an image, find field names and see what values are embedded in the image.
+You can also enter a <strong>Content Template</strong> here by coding the "template:" prefix at the beginning of the value. Do <strong>not</strong> add the "[+" and "+]" delimiters; the prefix is all you need. You can use a Content Template to access XMP metadata as an alternative to EXIF metadata. More information about using templates here is given below.
 <br />&nbsp;<br />
-You can also enter a Content Template here by coding the "template:" prefix at the beginning of the value. Do <strong>not</strong> add the "[+" and "+]" delimiters; the prefix is all you need. More information about using templates here is given below.
+Two special exif "pseudo-values" are available; <strong>ALL_IPTC</strong> and <strong>ALL_EXIF</strong>. These return a string representation (in &quot;export&quot; format) of all IPTC or EXIF data respectively. You can use these pseudo-values to examine the metadata in an image, find field names and see what values are embedded in the image.
 </dd>
 <dt>Priority</dt>
 <dd>If both the IPTC Value and the EXIF Value are non-blank for a particular image, you can select which of the values will be used for the mapping.
@@ -6211,9 +6542,12 @@ You can also enter a Content Template here by coding the "template:" prefix at t
 <dt>Existing Text</dt>
 <dd>Images already in the Media Library will have non-blank values in many fields and may have existing terms in a taxonomy. You can select "Keep" to retain these values or "Replace" to always map a metadata value into the field. For a taxonomy, "Keep" will retain any terms already assigned to the item and "Replace" will delete any existing terms before assigning metadata values as terms.
 </dd>
+<dt>Status</dt>
+<dd>The "Status" dropdown lets you turn rules on or off for most mapping purposes. If you select "Active" the rule will always be applied during a mapping operation. If you select "Inactive" the rule will NOT be applied except when explicitly included in a Bulk Action "Execute" or "Execute" rollover action. 
+</dd>
 </dl>
 <p>
-The Taxonomy term mapping table has two additional columns:
+The Taxonomy mapping rules have two additional elements:
 </p>
 <dl>
 <dt>Delimiter(s)</dt>
@@ -6224,84 +6558,21 @@ In some cases multiple terms will be contained in a single IPTC or EXIF value. F
 <dd>For hierarchical taxonomies such as Categories you can select one of the existing terms in the taxonomy as the parent term for any terms you are mapping from metadata values. For example, you could define "IPTC Keywords" as a parent and then assign all of the 2#025 values under that parent term.
 </dd>
 </dl>
-<a name="iptc_exif_mapping_buttons"></a>&nbsp;
 <p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h4>IPTC/EXIF mapping command buttons</h4>
-<p>
-To the right of each table heading is a "Map All Attachments, ... Now" button. When you click one of these buttons, the mapping rules in that table are applied to <strong><em>ALL of the images in the Media Library</em></strong>. This is a great way to bring your media items up to date, but it is <strong><em>NOT REVERSIBLE</em></strong>, so think carefully before you click! Each button applies the rules in just one category, so (for example) you can update taxonomy terms without disturbing standard or custom field values.
-</p>
-<p>
-These immediate mapping buttons <strong><em>DO NOT</em></strong> save any rules changes you've made, so you can make a temporary rule change and process your attachments without disturbing the standing rules.
+The Custom Field mapping rules have three additional elements (see <a href="#custom_field_rule_elements">The custom field rule elements</a> for more information on these elements):
 </p>
 <dl>
-<dt>Map All Attachments, Standard Fields Now</dt>
+<dt>Format</dt>
 <dd>
-Click this button to map the Title, Name/Slug, ALT Text, Caption and Description rules for all attachments.
+The Format element has a "commas" value that can improve the results of sorting on numeric values and a "raw" value that changes the handling of "empty" values such as zero.
 </dd>
-<dt>Map All Attachments, Taxonomy Terms Now</dt>
-<dd>
-Click this button to map IPTC/EXIF values such as keywords to taxonomy terms.
+<dt>Option</dt>
+<dd>Some metadata fields can contain more than one value. For example, the "Keywords" field can contain a list of terms that describe the item. The format option dropdown can further refine your specification where multiple values exist.
 </dd>
-<dt>Map All Attachments, Custom Fields Now</dt>
-<dd>
-Click this button to map all attachments using all of the IPTC/EXIF to custom field rules.
+<dt>Delete NULL Values</dt>
+<dd>The "Delete NULL values" checkbox lets you control what happens if the data source you've selected does not have a value for every attachment.
 </dd>
 </dl>
-<p>
-For each of the IPTC/EXIF to custom field existing rules the command buttons are:
-</p>
-<dl>
-<dt>Delete Rule</dt>
-<dd>
-Click this button to delete the mapping rule but leave the custom field values assigned to attachments intact.
-</dd>
-<dt>Delete Rule AND Field</dt>
-<dd>
-Click this button to delete the mapping rule AND delete the custom field values assigned to attachments as well.
-</dd>
-<dt>Update Rule</dt>
-<dd>
-Click this button to save any changes to the rule parameters, but do not perform any mapping.
-</dd>
-<dt>Map All Attachments</dt>
-<dd>
-Click this button to map all attachments using this one rule with its current parameters.  Rule changes are <strong><em>NOT</em></strong> saved when you click this button, and <strong><em>THERE IS NO UNDO FOR THE MAPPING ACTIONS!</em></strong>
-</dd>
-</dl>
-<p>
-Below the existing custom field rules there are command buttons for adding a new IPTC/EXIF to custom field rule, adding a new field and mapping attachment data using all of the existing rules:
-</p>
-<dl>
-<dt>Add Rule</dt>
-<dd>
-To define a new rule for an existing custom field, select the field name from the dropdown list, enter the rule parameters and click this button.
-</dd>
-<dt>Add Rule and Map All Attachments</dt>
-<dd>
-Click this button to define a new rule and map all attachments using all the rule&rsquo;s parameters.
-</dd>
-<dt>Add Field</dt>
-<dd>
-To define a new rule and a new custom field, enter the field name in the text box, enter the rule parameters and click this button.
-</dd>
-<dt>Add Field and Map All Attachments</dt>
-<dd>
-Click this button to define a new rule, define a new custom field and map all attachments using all the rule&rsquo;s parameters.
-</dd>
-</dl>
-<p>
-At the bottom of the screen is a command button for saving <strong><em>all</em></strong> of the rule updates at one time:
-</p>
-<dl>
-<dt>Save Changes</dt>
-<dd>
-Click this button to update all of the existing rules at one time. This is handy of you change several rules at once.
-</dd>
-</dl>
-<p>
-"Save Changes" is the <strong><em>only</em></strong> command button that saves changes made in the Standard Field Mapping and Taxonomy Term Mapping sections. </p>
 <a name="iptc_exif_mapping_with_templates"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -6311,12 +6582,20 @@ Click this button to update all of the existing rules at one time. This is handy
 If you code the "template:" prefix at the beginning of the EXIF/Template value you have all the power of Content Templates at your disposal. Do <strong>not</strong> add the "[+" and "+]" delimiters; the prefix is all you need.
 </p>
 <p>
+A template can be used to access any XMP metadata your items contain. For example:<br />
+&nbsp;<br />
+<code>template:([+xmp:Title+])</code><br />
+<code>template:([+xmp:Regions.RegionList.*.*.Name,array+])</code><br />
+&nbsp;<br />
+Note the use of parentheses around the XMP parameters, which replace missing values with an empty value to enable proper rule processing.
+</p>
+<p>
 Within a template, all of the <a href="#field_level_data_sources">Data sources for custom field mapping</a> are available. For example, you can code <code>[+pixels+]</code> or <code>[+size_keys,single+]</code>.
 </p>
 <p>
 You can use a template to compose a value from multiple data sources, e.g., "<code>Taken with [+meta:camera+] at [+dimensions+] using ISO [+exif:ISOSpeedRatings,single+] and [+exif:ExposureTime+] exposure time</code>".
-<p>
 </p>
+<p>
 You can use a template to compose a value from alternative data sources, depending on which fields are populated for a given attachment. For example, "<code>[+iptc:2#020+]|[+iptc:2#025+]|none</code>" will use the IPTC supplemental-category field, if populated, then the IPTC keywords field, if populated, or the literal "none" if neither IPTC field contains a value.
 </p>
 <p>
@@ -6327,8 +6606,32 @@ In the "Standard field mapping" table a special <code>template:[+empty+]</code> 
 </p>
 <p>
 Note that the <strong>,array</strong> formatting option is <strong>not</strong> required to get an array result for the field in a Taxonomy term mapping template; it is assumed. If you want a <strong>text</strong>, <strong>single</strong> or <strong>export</strong> result you can add one of those formatting options to your field specification.
+<a name="date_iptc_exif_mapping"></a>
 </p>
-<a name="pdf_iptc_exif_mapping"></a>&nbsp;
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h4>IPTC/EXIF Mapping and Bulk Editing for the "Uploaded on" Standard Field</h4>
+<p>
+The "Uploaded on" Standard Field is set by WordPress to the date and time the item is uploaded to the Media Library. You can use a mapping rule to replace this with a different value, such as the date and time the item was created. Many EXIF date and time values such as DateTimeOriginal and DateTimeDigitized are stored as strings with a format of "YYYY:MM:DD HH:MM:SS". You can parse this format and just about any English textual datetime description into a Unix timestamp, then convert the result to the appropriate format ('Y-m-d H:i:s', e.g., "2014-12-31 23:59:00", or just before midnight on new year's eve). The mapping rule first uses the PHP strtotime() function, then the date() function, to compose a valid date and time. The "Supported Date and Time Formats" that can be passed in to the rule are described at: <a href="http://php.net/manual/en/datetime.formats.php" title="PHP Supported Date and Time Formats" target="_blank">http://php.net/manual/en/datetime.formats.php</a>.<br />&nbsp;<br />You can use a Content Template to compose the starting value in many ways. For example:
+</p>
+<p><code>
+template:([+exif:DateTimeOriginal+]|[+meta:image_meta.created_timestamp,timestamp('Y-m-d H:i:s')+])
+</code></p>
+<p>
+This example first uses the EXIF <code>DateTimeOriginal</code> value, if present. If that value is missing the alternative is the <code>created_timestamp</code> that WordPress calculates and adds to the <code>image_meta</code> array in the attachment metadata. Since the <code>created_timestamp</code> is a Unix timestamp it is first converted to a text format that can be processed by strtotime(). If neither value is available the original WordPress-supplied default will be retained.
+</p>
+<p>
+You can also replace the Uploaded on values for one or more items in the <strong>Bulk Edit Area</strong> of the Media/Assistant submenu table. Again, the Content Template feature adds power to this feature. For example, you can replace the date portion of the value while retaining the time portion to preserve the sort order of your items:
+</p>
+<p><code>
+template: 20180102 [+post_date,date( 'H:i:s' )+]<br />
+template: today [+post_date,date( 'H:i:s' )+]
+</code></p>
+<p>
+The first example above sets the date to a fixed value. The second example uses "today", one of the <a href="http://php.net/manual/en/datetime.formats.relative.php" title="PHP Supported Relative Date/Time Formats" target="_blank">Relative Formats</a> PHP supports to replace the date portion with the current date. Both examples access the original <code>post_date</code> data value and then use the "date" format/option function to extract just the time portion.
+<a name="pdf_iptc_exif_mapping"></a>
+</p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6368,6 +6671,7 @@ You can use Content Templates in the EXIF/Template Value text box to extract met
 </table>
 <p>
 The three rules have a similar structure:
+</p>
 <ul class="mla_settings">
 <li>"template:" (goes in the text box below "EXIF/Template Value") is used to access the pdf: values instead of the EXIF values.</li>
 <li>The values are surrounded by parentheses "(" and ")" so they will return an empty string for documents without meta data in the field and for other items such as images.
@@ -6375,6 +6679,7 @@ The three rules have a similar structure:
 <li>I have selected "Replace" to overwrite the existing text, because a default Title was assigned to the items when they were uploaded. You can change this to "Keep" if you already have values in one or more of the fields that you want to retain.
 </li>
 </ul>
+<p>
 The taxonomy rule also has the ",array" option to return multiple keywords as individual array elements that can be converted to taxonomy terms. For this rule, the "Delimiter(s)" text box contains a comma and a semicolon, which should cover most of the documents you will encounter.
 </p>
 <p>
@@ -6412,30 +6717,16 @@ If your Media Library contains a mix of images and PDF documents you will want a
 </table>
 <p>
 The three rules have similar changes:
+</p>
 <ul class="mla_settings">
 <li>A vertical bar ("|") separates the two data source specifications. This is the Content Template "Choice" operator, which takes the first non-blank alternative from among the choices.</li>
 <li>A second data source for images. The PDF documents will not have "exif:"/"iptc:" data sources, and images will not have "pdf:" data sources, so only one (at most) of the two alternatives will be non-blank.
 </li>
 </ul>
+<p>
 In fact, WordPress contains its own rules for composing a Title from IPTC/Exif metadata (see <a href="#wordpress_default_mapping">WordPress default title, slug and description mapping</a>), so you may not need or want to extend the Title rule. WordPress also fills the Description field, but does not fill the Caption. You may want to copy the Description into the Caption; if you do, replace <code>[+exif:ImageDescription+]</code> with <code>[+post_content+]</code> in the Caption rule.
+<a name="wordpress_default_mapping"></a>
 </p>
-<a name="other_iptc_exif_mapping"></a>&nbsp;
-<p>
-<a href="#backtotop">Go to Top</a>
-</p>
-<h4>Other mapping techniques</h4>
-<p>
-There are two other ways you can perform metadata mapping to one or more existing Media Library images:
-<dl>
-<dt>Edit Media screen</dt>
-<dd>You can click the "Map IPTC/EXIF metadata" link in the "Image Metadata" postbox to apply the standing mapping rules to a single attachment.
-</dd>
-<dt>Bulk Action edit area</dt>
-<dd>To perform mapping for a group of attachments you can use the Bulk Action facility on the main Assistant screen. Check the attachments you want to map, select "edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map IPTC/EXIF metadata" button in the lower left corner of the area to apply the standing mapping rules to the attachments in the list.
-</dd>
-</dl>
-</p>
-<a name="wordpress_default_mapping"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
@@ -6445,6 +6736,7 @@ When WordPress uploads a new image file that contains IPTC and EXIF metadata it 
 </p>
 <p>
 The WordPress rules are somewhat complex; consult the source code if you need exact details. Roughly speaking, the priority order for mapping the post_title and post_name values from non-blank IPTC/EXIF metadata is:
+</p>
 <ol>
 <li>EXIF "Title"</li>
 <li>EXIF "ImageDescription" (if less than 80 characters)</li>
@@ -6457,14 +6749,14 @@ The priority order for mapping the post_content value from non-blank IPTC/EXIF m
 <li>EXIF "ImageDescription" (if different from post_title)</li>
 <li>IPTC 2#120 "caption-or-abstract" (if different from post_title)</li>
 </ol>
-</p>
 <a name="mla_mapping_hooks"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</h3>
 <p>
-The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Mapping Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Mapping Hooks Example</a>. To run the example:
+The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Mapping Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Mapping Hooks Example</a>. To run the example:
+</p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
 <li>Hover over "MLA Mapping Hooks Example" in the Name column, then click the "Install" rollover action.</li>
@@ -6472,7 +6764,6 @@ The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filt
 <li>Upload a new attachment and/or run the mapping rules to exercise the filters and write mapping information to the site's Error Log.</li>
 <li>Examine the Error Log to see the mapping information.</li>
 </ol>
-</p>
 <p>
 The example code documents each hook with comments in the filter/action function that intercepts each hook. There are hooks that run at the beginning and end of the overall mapping operation as well as hooks for each mapping rule. 
 </p>
@@ -6521,7 +6812,7 @@ The current mapping hooks are:
 </tr>
 </table>
 <p>
-A second example plugin, <a title="Find the Metadata Mapping Hooks Example" href="[+example_url+]&mla-example-search=Search+Plugins&s=%22MLA+Metadata+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Metadata Mapping Hooks Example</a>, illustrates the metadata hooks. The current insert attachment/update attachment metadata hooks are:
+A second example plugin, <a title="Find the Metadata Mapping Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Metadata+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Metadata Mapping Hooks Example</a>, illustrates the metadata hooks. The current insert attachment/update attachment metadata hooks are:
 </p>
 <table>
 <tr>
@@ -6607,13 +6898,13 @@ When WP_DEBUG_DISPLAY is true, WordPress will force errors to be displayed. WP_D
 The full path and file name of the error log is displayed just above the text area that contains the log content. If the content doesn't display and/or you can't download the log file, you can try finding the log file at the location shown. If you can't access the PHP error log for any reason, you can write the MLA-specific messages to a separate file in your <code>/wp-content/</code> directory using the "Debug File" option explained below.
 </p>
 <p>
-To add the Debug tab to your Settings/Media Library Assistant submenu you must add an entry to your <code>wp-config.php</code> file:
+The MLA Debug Tab appears at the right of the tab list in the Settings/Media Library Assistant submenu. If you want to restrict access to the logging options and error log file you can suppress the tab by adding an entry to your <code>wp-config.php</code> file:
 </p>
 <ul class="mla_settings">
-<li><code>define( 'MLA_DEBUG_LEVEL', 1 );</code></li>
+<li><code>define( 'MLA_DEBUG_LEVEL', 0 );</code></li>
 </ul>
 <p>
-Once that line is added to the <code>wp-config.php</code> file the "Debug" tab will appear at the right of the tab list in the Settings/Media Library Assistant submenu. The MLA_DEBUG_LEVEL is also used to turn categories of debug messages on and off. Each bit of the value has a separate meaning; the current definitions are:
+The MLA_DEBUG_LEVEL is also used to turn categories of debug messages on and off. Each bit of the value has a separate meaning; the current definitions are:
 </p>
 <table>
 <tr>
@@ -6635,6 +6926,18 @@ Once that line is added to the <code>wp-config.php</code> file the "Debug" tab w
 <tr>
 <td class="mla-doc-table-label">16, or 0x0010</td>
 <td>writes MLA-specific messages to the log for IPTC, EXIF, XMP and PDF metadata generation.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">32, or 0x0020</td>
+<td>writes MLA-specific messages to the log for WP REST API calls identified by <code>/wp-json/</code> in the SERVER_URI.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">64, or 0x0040</td>
+<td>writes MLA-specific messages to the log for "where-used" reference collection.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">128, or 0x0080</td>
+<td>writes MLA-specific messages to the log for MIME Type processing.</td>
 </tr>
 </table>
 <p>
@@ -6681,7 +6984,7 @@ Below the Debug Settings section is a text area with the current content of the 
 </ul>
 <p>
 If you are having an MLA problem that includes error messages in the log, copying the messages and adding them to your Support Forum topic can be most helpful; thanks!
-<a name="mla_language_tab"></a>&nbsp;
+<a name="mla_language_tab"></a>
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -6761,16 +7064,21 @@ When new terms are added during IPTC/EXIF taxonomy term mapping a third task is 
 <p>
 When a specific language is selected only the item translations for that language are shown, and only the terms for that language are displayed (except for a Polylang bug that shows all languages in the "auto-complete" list for flat taxonomies). When "All Languages"/"Show all languages" is selected the terms for all languages are displayed even if they cannot be assigned to an item. For example, a Spanish term may appear in the list be cannot be assigned to an English item translations.
 </p>
+<p>
 For individual edit and quick edit updates the rule is simple:
+</p>
 <ol>
 <li>For all terms selected/entered, find the equivalent term in the language of the item translation. Assign the equivalent (language-specific) term if one exists. If no equivalent term exists, ignore the selected/entered term. Assign all equivalent terms to the item translation, replacing any previous terms.</li>
 </ol>
+<p>
 For bulk edit updates the rule depends on which action (add, remove, replace) has been selected. Each of the item translations in the bulk edit list is updated by these rules:
+</p>
 <ol>
 <li><strong>Add</strong>: For all terms selected/entered, find the equivalent term in the language of the item translation. Assign the equivalent (language-specific) term if one exists. If the equivalent term exists, add it to the item translation.</li>
 <li><strong>Remove</strong>: For all terms selected/entered, find the equivalent term in the language of the item translation. Assign the equivalent (language-specific) term if one exists. If the equivalent term exists, remove it from the item translation.</li>
 <li><strong>Replace</strong>: This is the tricky case. What should happen to terms already assigned to an item translation that have not been selected/entered for the update? In particular, what about terms that do not have translations to all languages? Should a "French-only" term be preserved?</li>
 </ol>
+<p>
 The "<strong>Replace</strong>" answer is the same as the individual/quick edit answer. If the term is not selected/entered for the update it is discarded along with the other old assignments. After all, in "All Languages"/"Show all languages" mode the "French-only" term would have been in the list and could be selected if desired.
 </p>
 <strong>Term Synchronization</strong>
@@ -6833,7 +7141,7 @@ When rules are defined in the IPTC/EXIF "Taxonomy term mapping section" they ext
 </ul>
 <p>
 If you use Replication to automatically create terms in non-current languages they will be created with the same text value as the source term in the current language. You can always go to the taxonomy edit page and change the source text to an appropriate value for the other language(s). If you do not use Replication you can always go to the taxonomy edit page and add translations with an appropriate value for the other language(s).
-<a name="mla_example_plugins"></a>&nbsp;
+<a name="mla_example_plugins"></a>
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -6844,6 +7152,7 @@ The MLA example plugins have been developed to illustrate practical applications
 <p>The Documentation/Example Plugins submenu lets you browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. <strong>To activate, deactivate or delete</strong> the plugins you must go to the Plugins/Installed Plugins admin submenu.</p>
 <p>
 The Example plugins submenu lists all of the MLA example plugins and identifies those already in the Installed Plugins area. In the submenu:
+</p>
 <ul class="mla_settings">
 <li>the "Screen Options" dropdown area lets you choose which columns to display and how many items appear on each page</li>
 <li>the "Help" dropdown area gives you a brief explanation of the submenu content and functions</li>
@@ -6851,7 +7160,6 @@ The Example plugins submenu lists all of the MLA example plugins and identifies 
 <li>bulk and rollover actions are provided to install or update example plugins</li>
 <li>the table can be sorted by any of the displayed columns</li>
 </ul>
-</p>
 <p>
 Once you have installed an example plugin you can use the WordPress Plugins/Editor submenu to view the source code and (with extreme caution) make small changes to the code. <strong>Be very careful if you choose to modify the code!</strong> Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated. It is much safer to download the file(s) or use FTP access to your site to modify the code offline in a more robust HTML/PHP editor.
 </p>

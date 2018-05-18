@@ -89,6 +89,7 @@ var jQuery,
 					return mla.inlineEditAttachment.revert();
 				}
 			});
+
 			// Clicking "Refresh" submits the form, refreshing the page
 			$('#bulk_refresh', progressRow).click(function(){
 				$( '#bulk-progress a' ).prop( 'disabled', true );
@@ -99,15 +100,6 @@ var jQuery,
 			$( '#the-list' ).on( 'click', 'a.editinline', function(){
 				mla.inlineEditAttachment.quickEdit(this);
 				return false;
-			});
-
-			// hiearchical taxonomies expandable?
-			$('span.catshow').click(function(){
-				$(this).hide().next().show().parent().next().addClass("cat-hover");
-			});
-
-			$('span.cathide').click(function(){
-				$(this).hide().prev().show().parent().next().removeClass("cat-hover");
 			});
 
 			$('select[name="_status"] option[value="future"]', bulkRow).remove();
@@ -175,6 +167,16 @@ var jQuery,
 			});
 
 			$('html, body').animate( { scrollTop: 0 }, 'fast' );
+
+			if ( ( typeof quicktags !== 'undefined' ) && ( typeof  mla.settings.quickTagsInit !== 'undefined' ) ) {
+				for ( id in mla.settings.quickTagsInit ) {
+					quicktags( mla.settings.quickTagsInit[id] );
+
+					if ( mla.settings.quickTagsInit[id]['active'] ) {
+						window.wpActiveEditor = id;
+					}
+				}
+			}
 		},
 
 		bulkSave : function(e) {
@@ -384,7 +386,7 @@ var jQuery,
 		},
 
 		quickEdit : function(id) {
-			var t = this, fields, editRow, rowData, icon, fIndex;
+			var t = this, fields, editRow, rowData, checkedOnTop = [], icon, fIndex;
 			t.revert();
 
 			if ( typeof(id) == 'object' )
@@ -434,13 +436,24 @@ var jQuery,
 				$('label.inline-edit-image-alt', editRow).hide();
 			}
 
+			// checklist taxonomies having "checked terms on top"
+			$('.checked_on_top', rowData).each(function(){
+				checkedOnTop[checkedOnTop.length] = $(this).attr('id').replace('_'+id, '');
+			});
+
 			// hierarchical taxonomies
 			$('.mla_category', rowData).each(function(){
-				var term_ids = $(this).text(), taxname;
+				var term_ids = $(this).text(), taxname, checkedLabels, checkedTerms;
 
 				if ( term_ids ) {
 					taxname = $(this).attr('id').replace('_'+id, '');
 					$('ul.'+taxname+'-checklist :checkbox', editRow).val(term_ids.split(','));
+					
+					if ( -1 !== checkedOnTop.indexOf( taxname ) ) {
+						checkedLabels = $('ul.'+taxname+'-checklist li :checked', editRow ).parents( 'label' ).remove().toArray().reverse();
+						checkedTerms = $( '<li></li>' ).html( checkedLabels );
+						$('ul.'+taxname+'-checklist', editRow ).prepend( checkedTerms );
+					}
 				}
 			});
 
@@ -672,6 +685,16 @@ var jQuery,
 					$('.inline-edit-categories', bulkRow ).html( blankCategories ),
 					$('.inline-edit-tags', bulkRow ).html( blankTags ),
 					$('.inline-edit-fields', bulkRow ).html( blankFields );
+
+					if ( ( typeof quicktags !== 'undefined' ) && ( typeof  mla.settings.quickTagsInit !== 'undefined' ) ) {
+						for ( id in mla.settings.quickTagsInit ) {
+							quicktags( mla.settings.quickTagsInit[id] );
+		
+							if ( mla.settings.quickTagsInit[id]['active'] ) {
+								window.wpActiveEditor = id;
+							}
+						}
+					}
 
 					$('#bulk-edit-set-parent', bulkRow).on( 'click', function(){
 						return mla.inlineEditAttachment.bulkParentOpen();
