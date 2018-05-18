@@ -170,7 +170,7 @@ class MLACustomFieldSearchExample {
 		if ( isset( self::$custom_field_parameters['debug'] ) ) {
 			MLAData::$query_parameters['debug'] = self::$custom_field_parameters['debug'];
 			MLAData::$search_parameters['debug'] = self::$custom_field_parameters['debug'];
-			MLA::mla_debug_mode( self::$custom_field_parameters['debug'] );
+			MLACore::mla_debug_mode( self::$custom_field_parameters['debug'] );
 		}
 
 		// Apply default field name?

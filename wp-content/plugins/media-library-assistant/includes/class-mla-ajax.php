@@ -32,7 +32,15 @@ class MLA_Ajax {
 	 * @return	void
 	 */
 	public static function initialize() {
+		$ajax_only = var_export( self::$ajax_only, true );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		add_action( 'admin_init', 'MLA_Ajax::mla_admin_init_action' );
+
+		// Defined here because the "admin_init" action is not called for item transfers
+		if ( ( defined('DOING_AJAX') && DOING_AJAX ) && ( 'mla_named_transfer' ==  $_REQUEST['action'] ) ) {
+			add_action( 'wp_ajax_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
+			add_action( 'wp_ajax_nopriv_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
+		}
 	}
 
 	/**
@@ -44,15 +52,15 @@ class MLA_Ajax {
 	public static function mla_admin_init_action( ) {
 		$ajax_only = var_export( self::$ajax_only, true );
 		
-		//error_log( __LINE__ . " DEBUG: MLA_Ajax::mla_admin_init_action( {$ajax_only} ) $_REQUEST = " . var_export( $_REQUEST, true ), 0 );
+		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
+		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_POST = " . var_export( $_POST, true ), 0 );
+		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_GET = " . var_export( $_GET, true ), 0 );
 		if ( $_REQUEST['action'] !== 'heartbeat' ) {
-			//error_log( __LINE__ . " DEBUG: MLA_Ajax::mla_admin_init_action( {$ajax_only} ) $_REQUEST = " . var_export( $_REQUEST, true ), 0 );
+			//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
 			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		}
 
-		/*
-		 * If there's no action variable, we have nothing more to do
-		 */
+		// If there's no action variable, we have nothing more to do
 		if ( ! isset( $_POST['action'] ) ) {
 			return;
 		}
@@ -131,6 +139,58 @@ class MLA_Ajax {
 		$x = new WP_Ajax_Response( $add );
 		$x->send();
 	} // _mla_ajax_add_flat_term
+
+	/**
+	 * Ajax handler to stream/view or download a Media Library item
+	 *
+	 * @since 2.63
+	 *
+	 * @return	void	echo HTML for file streaming or download, then exit()
+	 */
+	public static function mla_named_transfer_ajax_action() {
+		if ( !class_exists( 'MLAFileDownloader' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-file-downloader.php' );
+		}
+
+		$download_args = array();
+			
+		if ( empty( $_REQUEST['mla_item'] ) ) {
+			$download_args['error'] = 'ERROR: mla_item argument not set.';
+		} else {
+			$item_name = $_REQUEST['mla_item'];
+			$args = array(
+				'name'           => $item_name,
+				'post_type'      => 'attachment',
+				'post_status'    => 'inherit',
+				'posts_per_page' => 1
+			);
+
+			$items = get_posts( $args );
+
+			if( $items ) {
+				$file = get_attached_file( $items[0]->ID );
+				if ( !empty( $file ) ) {
+					$download_args['mla_download_file'] = $file;
+					$download_args['mla_download_type'] = $items[0]->post_mime_type;
+					
+					if ( !empty( $_REQUEST['mla_disposition'] ) ) {
+						$download_args['mla_disposition'] = $_REQUEST['mla_disposition'];
+					}
+				} else {
+					$download_args['error'] = 'ERROR: mla_item no attached file.';
+				}
+			} else {
+				$download_args['error'] = 'ERROR: mla_item not found.';
+			}
+		}
+		
+		MLAFileDownloader::$mla_debug = isset( $_REQUEST['mla_debug'] ) && 'log' == $_REQUEST['mla_debug'];
+		MLAFileDownloader::mla_process_download_file( $download_args );
+
+		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_named_transfer_ajax_action failed. \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		echo "MLA_Ajax::mla_named_transfer_ajax_action failed.";
+		die();
+	} // mla_named_transfer_ajax_action
 
 	/**
 	 * Ajax handler to fetch candidates for the "Set Parent" popup window
@@ -260,6 +320,19 @@ class MLA_Ajax {
 		if ( ! class_exists( 'MLA_List_Table' ) ) {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-list-table.php' );
 			MLA_List_Table::mla_admin_init_action();
+
+			// Check for multi-language table column support
+			global $sitepress, $polylang;
+			
+			if ( is_object( $sitepress ) ) {
+				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-wpml-support.php' );
+				MLA_WPML::initialize();
+				MLA_WPML::admin_init(); // This action has already passed.
+			} elseif ( is_object( $polylang ) ) {
+				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-polylang-support.php' );
+				MLA_Polylang::initialize();
+				MLA_Polylang::admin_init();
+			}
 		}
 
 		//	Create an instance of our package class and echo the new HTML

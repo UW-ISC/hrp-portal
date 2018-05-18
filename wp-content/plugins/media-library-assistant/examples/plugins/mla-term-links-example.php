@@ -3,7 +3,10 @@
  * Provides custom prefixes that return links to Tag or Category archive pages from terms assigned to an item
  *
  * In this example:
- *     - a "term_links:" prefix converts assigned terms to hyperlinks of the form:
+ *     - a "term_links:" prefix with a "cloud" option/format suffix converts assigned terms to hyperlinks of the form:
+ *       <a href="[+page_url+]?current_id=[+term_id+]"> where both parameters are expanded
+ *
+ *     - a "term_links:" prefix without a "cloud" option/format suffix converts assigned terms to hyperlinks of the form:
  *       <a href="http://cousin-collector.com/blog/?tag=dahlstrom-surname" rel="tag"> for taxonomy=post_tag
  *       <a title="Photos" class="photos" href="http://cousin-collector.com/blog/?cat=232"> for taxonomy=category
  *
@@ -11,16 +14,20 @@
  * opened on 4/8/2017 by "ellsinore":
  * https://wordpress.org/support/topic/show-post-kicker-in-media-library/
  *
+ * Enhanced for support topic "Tag cloud – clickable tags in mla_caption area?"
+ * opened on 6/24/2017 by "antonstepichev":
+ * https://wordpress.org/support/topic/tag-cloud-clickable-tags-in-mla_caption-area/
+ *
  * @package MLA Term Links Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Term Links Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
-Description: Adds "tag_links:" and "category_links:" Field-level Substitution Parameters
+Description: Adds "term_links:" Field-level Substitution Parameter prefix
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
 Copyright 2017 David Lingren
@@ -74,14 +81,21 @@ class MLATermLinksExample {
 	 *
 	 * @param	mixed	String or array - initial value
 	 * @param	integer	The Post ID of the new/updated attachment
-	 * @param	string	Taxonomy slug
-	 * @param	string	Format/option; text,single,export,unpack,array
+	 * @param	array	data-source components; prefix, value, option, format and args (if present)
+	 * @param	array	Item markup template values
 	 *
 	 * @return	mixed	String or array 
 	 */
-	private static function _evaluate_terms( $custom_value, $post_id, $taxonomy, $option ) {
-		// Only two taxonomies are supported
-		if ( ! in_array( $taxonomy, array( 'post_tag', 'category' ) ) ) {
+	private static function _evaluate_terms( $custom_value, $post_id, $value, $markup_values ) {
+		$taxonomy = $value['value'];
+		if ( 'cloud' === $value['format'] ) {
+			$option = 'cloud';
+		} else {
+			$option = $value['option'];
+		}
+			
+		// Only two taxonomies are supported unless $option is "cloud"
+		if ( ! ( $option === 'cloud' || in_array( $taxonomy, array( 'post_tag', 'category' ) ) ) ) {
 			return $custom_value;
 		}
 	
@@ -100,7 +114,15 @@ class MLATermLinksExample {
 		if ( is_wp_error( $terms ) ) {
 			$custom_value = implode( ',', $terms->get_error_messages() );
 		} elseif ( ! empty( $terms ) ) {
-			if ( 'single' == $option || 1 == count( $terms ) ) {
+			if ( 'cloud' == $option ) {
+				$links = array();
+				foreach ( $terms as $term ) {
+					$term_name = sanitize_term_field( 'name', $term->name, $term->term_id, $taxonomy, 'display' );
+					$links[] = sprintf( '<a href="%1$s?current_id=%2$d">%3$s</a>', $markup_values['page_url'], $term->term_id, $term_name );
+				}
+				
+				$custom_value = implode( ', ', $links );
+			} elseif ( 'single' == $option || 1 == count( $terms ) ) {
 				reset( $terms );
 				$term = current( $terms );
 				$term_name = sanitize_term_field( 'name', $term->name, $term->term_id, $taxonomy, 'display' );
@@ -142,7 +164,7 @@ class MLATermLinksExample {
 	 *
 	 * @param	string	NULL, indicating that by default, no custom value is available
 	 * @param	string	the data-source name 
-	 * @param	array	data-source components; prefix (empty), value, option, format and args (if present)
+	 * @param	array	data-source components; prefix, value, option, format and args (if present)
 	 * @param	array	values from the query, if any, e.g. shortcode parameters
 	 * @param	array	item-level markup template values, if any
 	 * @param	integer	attachment ID for attachment-specific values
@@ -160,7 +182,7 @@ class MLATermLinksExample {
 		}
 
 		if ( 'term_links' == $value['prefix'] ) {
-			$custom_value = self::_evaluate_terms( $custom_value, $post_id, $value['value'], $value['option'] );
+			$custom_value = self::_evaluate_terms( $custom_value, $post_id, $value, $markup_values );
 		}
 
 		return $custom_value;

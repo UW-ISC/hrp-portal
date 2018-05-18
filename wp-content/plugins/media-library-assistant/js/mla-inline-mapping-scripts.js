@@ -105,7 +105,7 @@ var jQuery,
 //console.log( JSON.stringify( mla.bulkMap ) );
 
 				e.preventDefault();
-				return mla.inlineMapAttachment.bulkMap( 'custom-field-options-bulk-execute', 0 );
+				return mla.inlineMapAttachment.bulkMap( 'mapping-options-bulk-execute', 0 );
 			});
 
 			// add event handler to the Bulk Actions Apply (bottom)
@@ -125,7 +125,7 @@ var jQuery,
 				});
 
 				e.preventDefault();
-				return mla.inlineMapAttachment.bulkMap( 'custom-field-options-bulk-execute', 0 );
+				return mla.inlineMapAttachment.bulkMap( 'mapping-options-bulk-execute', 0 );
 			});
 
 			// add event handler to the Execute rollover links

@@ -74,7 +74,7 @@ function custom_taxonomy_dropdown( $taxonomy, $orderby = 'date', $order = 'DESC'
 		'order' => $order,
 		'exclude' => '120'
 	);
-	$terms = get_terms( $taxonomy, $args );
+	$terms = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 	$name = ( $name ) ? $name : $taxonomy;
 	$y=0;
 	if ( $terms ) {
@@ -96,7 +96,7 @@ function custom_taxonomy_dropdown( $taxonomy, $orderby = 'date', $order = 'DESC'
 custom_taxonomy_dropdown( 'attachment_category', 'date', 'ASC', '5', 'attachment_category', 'Select All');
 ?>
 		<?php 
-$terms = get_terms("attachment_category", "exclude=120");
+$terms = MLAQuery::mla_wp_get_terms("attachment_category", "exclude=120");
 
 if ( !empty( $terms ) && !is_wp_error( $terms ) ){
 	$xyz=0;

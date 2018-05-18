@@ -205,7 +205,7 @@ class MLA_Thumbnail {
 	} // mla_list_table_begin_bulk_action
 
 	/**
-	 * Add a subdirectory to the wp_upload_dir results
+	 * Adjust wp_upload_dir results to match the original PDF location
 	 *
 	 * @since 2.54
 	 *
@@ -214,10 +214,17 @@ class MLA_Thumbnail {
 	 */
 	public static function upload_dir( $uploads ) {
 		$subdir = self::$bulk_action_options['item_subdir'];
-		if ( !empty( $subdir ) ) {
+		if ( $subdir !== $uploads['subdir'] ) {
+			// Remove the old subdir, if present
+			if ( !empty( $uploads['subdir'] ) ) {
+				$uploads['path'] = substr( $uploads['path'], 0, strpos( $uploads['path'], $uploads['subdir'] ) );
+				$uploads['url'] = substr( $uploads['url'], 0, strpos( $uploads['url'], $uploads['subdir'] ) );
+			}
+			
+			// Add the new subdir
 			$uploads['path'] .= $subdir;
 			$uploads['url'] .= $subdir;
-			$uploads['subdir'] .= $subdir;
+			$uploads['subdir'] = $subdir;
 		}
 		
 		return $uploads;
@@ -236,6 +243,7 @@ class MLA_Thumbnail {
 	 * @return	boolean	true, to bypass PHP error handler
 	 */
 	public static function unlink_error_handler( $type, $string, $file, $line ) {
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::unlink_error_handler( $type, $string, $file, $line )", MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		// Don't execute PHP internal error handler
 		return true;
 	}
@@ -324,12 +332,15 @@ class MLA_Thumbnail {
 		add_filter( 'upload_dir', 'MLA_Thumbnail::upload_dir', 10, 1 );
 		$results = wp_handle_sideload( $args, $overrides );
 		remove_filter( 'upload_dir', 'MLA_Thumbnail::upload_dir', 10 );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail( $post_id, $file ) sideload results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		if ( ! empty( $results['error'] ) ) {
 			return $results['error'];
 		}
 
-		$editor = wp_get_image_editor( $results['file'] );
+		$editor_args = isset( $results['type'] ) ? array( 'mime_type' => $results['type'] ) : array();
+		$editor = wp_get_image_editor( $results['file'], $editor_args );
 		if ( is_wp_error( $editor ) ) {
+			MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail editor = " . var_export( $editor, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			return implode( ',', $editor->get_error_messages() );
 		}
 
@@ -343,6 +354,7 @@ class MLA_Thumbnail {
 
 		// Update the metadata for the original (PDF) attachment.
 		$item_data['sizes'] = $results;
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		wp_update_attachment_metadata( $post_id, $item_data );
 
 		return true;
@@ -566,7 +578,10 @@ class MLA_Thumbnail {
 	 * @return	array	updated array of actions.
 	 */
 	public static function mla_list_table_get_bulk_actions( $actions ) {
-		$actions[self::MLA_GFI_ACTION] = __( 'Thumbnail', 'media-library-assistant' );
+		if ( !( isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash' ) ) {
+			$actions[self::MLA_GFI_ACTION] = __( 'Thumbnail', 'media-library-assistant' );
+		}
+		
 		return $actions;
 	} // mla_list_table_get_bulk_actions
 

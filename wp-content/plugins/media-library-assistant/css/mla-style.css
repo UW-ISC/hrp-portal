@@ -95,15 +95,14 @@ div.mla_errors {
 	line-height: 1.2
 }
 
-.quick-edit-row-attachment fieldset.inline-edit-col-center span.catshow,
-.bulk-edit-row-attachment fieldset.inline-edit-col-center span.catshow {
-	display: none
-}
-
 .quick-edit-row-attachment fieldset.inline-edit-col-left label span.input-text-wrap,
 .quick-edit-row-attachment fieldset.inline-edit-col-right label span.input-text-wrap,
 .bulk-edit-row-attachment fieldset.inline-edit-col-right label span.input-text-wrap {
 	margin-left: 6em
+}
+
+.bulk-edit-row-attachment fieldset.inline-edit-col-right label.inline-edit-post-content textarea.wp-editor-area {
+	height: auto
 }
 
 .quick-edit-row-attachment fieldset.inline-edit-col-left label.inline-edit-post-parent span.input-text-wrap,
@@ -415,15 +414,18 @@ ul.mla_settings li {
 	margin-left: 2em;
 }
 
+#mla-add-iptc-exif-table,
 #mla-add-custom-field-table {
 	margin-bottom: 15px;
 }
 
+#mla-add-iptc-exif-table th,
 #mla-add-custom-field-table th {
 	padding: 5px 5px 5px 0px;
 	width: 10px;
 }
 
+#mla-add-iptc-exif-table td,
 #mla-add-custom-field-table td {
 	padding: 5px 0px 5px 0px;
 }
@@ -432,7 +434,9 @@ ul.mla_settings li {
 	text-decoration:none;
 }
 
-#mla-new-custom-field-table input[type="text"],
+#mla-add-iptc-exif-table input[type="text"],
+#mla-add-iptc-exif-table select,
+#mla-add-custom-field-table input[type="text"],
 #mla-add-custom-field-table select {
 	width: 100%;
 }

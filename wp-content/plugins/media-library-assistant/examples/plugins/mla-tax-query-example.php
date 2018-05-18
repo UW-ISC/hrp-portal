@@ -1,6 +1,28 @@
 <?php
 /**
- * Provides a custom example of hooking the filters provided by the [mla_gallery] shortcode:
+ * This plugin provides much faster taxonomy queries when the taxonomy and term(s) given as input
+ * are ONLY used for Media Library image items, so we can omit the term_relationships/posts 
+ * JOIN clause for tests on assigned term values.
+ *
+ * A custom shortcode parameter, "my_custom_sql", activates the logic in this plugin.
+ *
+ * The "my_custom_sql" parameter accepts these query arguments:
+ *  - ONE taxonomy=(/)slug(,(/)slug)... argument, to INCLUDE or /EXCLUDE terms
+ *    i.e. put a slash in front of a term to EXCLUDE items assigned to it
+ *  - include_children=true
+ *  - author=ID(,ID...)
+ *  - order and/or orderby
+ *
+ * The shortcode can also contain the post_mime_type and/or keyword search parameters
+ * (outside "my_custom_sql") to further filter the results. The double_query() function is
+ * called when the request contains post_mime_type, keyword search or orderby/order parameters.
+ *
+ * NOTE: If you use this logic for queries that only EXCLUDE terms, e.g., "taxonomy=/slug", note that it
+ * will fail to include items that have no term assignments at all, because this logic only looks in the
+ * wp_term_relationships table to find attachment IDs. If this affects your application, consider assigning
+ * a term such as "Uncategorized" to items without terms or use the standard "tax_query" parameter instead.
+ *
+ * This plugin provides a custom example of hooking the filters provided by the [mla_gallery] shortcode:
  *    
  *  - In the "mla_gallery_arguments" filter is an example of detecting MLA pagination, e.g.,
  *    mla_output="paginate_links,prev_next and supplying the count required to accomodate it.
@@ -11,23 +33,28 @@
  *  - The "single_query()" and "double_query()" functions provide simplified, higher-performance
  *    alternatives to the standard WordPress tax_query.
  *
- * A custom shortcode parameter, "my_custom_sql", activates the logic in this plugin. See the
- * "mla_gallery_query_arguments" function for documentation on the parameter.
- *
  * Created for support topic "Slow queries"
  * opened on 7/4/2014 by "aptharsia".
- * https://wordpress.org/support/topic/slow-queries-1
+ * https://wordpress.org/support/topic/slow-queries-1/
  *
  * Enhanced for support topic "REALLY Slow Queries........  Help! :)"
  * opened on 8/16/2014 by "alexapaige".
- * https://wordpress.org/support/topic/really-slow-queries-help
+ * https://wordpress.org/support/topic/really-slow-queries-help/
  *
  * Enhanced for support topic "MLATaxQuery with keyword search and pagination"
  * opened on 10/15/2015 by "CabinetWorks".
- * https://wordpress.org/support/topic/mlataxquery-with-keyword-search-and-pagination
+ * https://wordpress.org/support/topic/mlataxquery-with-keyword-search-and-pagination/
+ *
+ * Enhanced for support topic "Gallery page with many images takes too long to load"
+ * opened on 6/27/2017 by "davidjhk".
+ * https://wordpress.org/support/topic/gallery-page-with-many-images-takes-too-long-to-load/
+ *
+ * Enhanced for support topic "504 Time-Out issue"
+ * opened on 10/19/2017 by "ratterizzo".
+ * https://wordpress.org/support/topic/504-time-out-issue/
  *
  * @package MLA tax query Example
- * @version 1.04
+ * @version 1.08
  */
 
 /*
@@ -35,10 +62,10 @@ Plugin Name: MLA tax query Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Replaces the WP_Query tax_query with a more efficient, direct SQL query
 Author: David Lingren
-Version: 1.04
+Version: 1.08
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
-Copyright 2013 - 2016 David Lingren
+Copyright 2013 - 2017 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -72,19 +99,10 @@ class MLATaxQueryExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful for front-end posts/pages; exit if in the admin section
-		 */
+		// The filters are only useful for front-end posts/pages; exit if in the admin section
 		if ( is_admin() )
 			return;
 
-		/*
-		 * add_filter parameters:
-		 * $tag - name of the hook you're filtering; defined by [mla_gallery]
-		 * $function_to_add - function to be called when [mla_gallery] applies the filter
-		 * $priority - default 10; lower runs earlier, higher runs later
-		 * $accepted_args - number of arguments your function accepts
-		 */
 		add_filter( 'mla_gallery_attributes', 'MLATaxQueryExample::mla_gallery_attributes', 10, 1 );
 		add_filter( 'mla_gallery_arguments', 'MLATaxQueryExample::mla_gallery_arguments', 10, 1 );
 		add_filter( 'mla_gallery_query_arguments', 'MLATaxQueryExample::mla_gallery_query_arguments', 10, 1 );
@@ -124,14 +142,10 @@ class MLATaxQueryExample {
 	 * @return	array	updated shortcode attributes
 	 */
 	public static function mla_gallery_attributes( $shortcode_attributes ) {
-		/*
-		 * Save the attributes for use in the later filters
-		 */
+		// Save the attributes for use in the later filters
 		self::$shortcode_attributes = $shortcode_attributes;
 
-		/*
-		 * See if we are involved in processing this shortcode
-		 */
+		// See if we are involved in processing this shortcode
 		if ( isset( self::$shortcode_attributes['my_custom_sql'] ) ) {
 			unset( $shortcode_attributes['my_custom_sql'] );
 
@@ -206,10 +220,16 @@ class MLATaxQueryExample {
 					$my_query_vars = shortcode_parse_atts( $my_query_vars );
 				}
 
-				if ( isset( $my_query_vars['order'] ) || isset( $my_query_vars['orderby'] ) ) {
+				if ( isset( $my_query_vars['order'] ) || isset( $my_query_vars['orderby'] ) || isset( $my_query_vars['author'] ) ) {
 					self::$shortcode_attributes['is_double'] = true;
 				} else {
-					self::$shortcode_attributes['is_double'] = false;
+					// Test for exclude-only queries
+					self::_find_ttids( $my_query_vars, $ttids, $exclude_ttids );
+					if ( empty( $ttids ) && ! empty( $exclude_ttids ) ) {
+						self::$shortcode_attributes['is_double'] = true;
+					} else {
+						self::$shortcode_attributes['is_double'] = false;
+					}
 				}
 			}
 		} // my_custom_sql
@@ -282,15 +302,6 @@ class MLATaxQueryExample {
 		 * parameter is not present, we have nothing to do. If the parameter IS present,
 		 * single_query() or double_query() extracts  taxonomy values, then builds a custom
 		 * query that does a simple, high-performance search.
-		 *
-		 * The "my_custom_sql" parameter accepts these query arguments:
-		 * - one or more taxonomy=slug(,slug)... arguments, which will be joined by OR
-		 * - include_children=true
-		 * - order and/or orderby
-		 *
-		 * The shortcode can also contain the post_mime_type and/or keyword search parameters
-		 * to further filter the results. The double_query() function is called when the request
-		 * contains post_mime_type, keyword search or orderby/order parameters.
 		 */		
 		if ( isset( self::$shortcode_attributes['my_custom_sql'] ) ) {
 			if ( self::$shortcode_attributes['is_double'] ) {
@@ -302,6 +313,74 @@ class MLATaxQueryExample {
 
 		return $all_query_parameters;
 	} // mla_gallery_query_arguments
+
+	/**
+	 * Extract include and exclude term_taxonomy_id values for the query
+	 *
+	 * @since 1.07
+	 *
+	 * @param	array	$my_query_vars parsed content of the 'my_custom_sql' parameter
+	 * @param	array	$include_ttids filled with include terms on output, passed by reference
+	 * @param	array	$exclude_ttids filled with exclude terms on output, passed by reference
+	 */
+	private static function _find_ttids( $my_query_vars, &$include_ttids, &$exclude_ttids ) {
+		// Start with empty parameter values
+		$include_ttids = array();
+		$exclude_ttids = array();
+
+		// Find taxonomy argument, if present, and collect terms
+		$taxonomies = get_object_taxonomies( 'attachment', 'names' );
+		foreach( $taxonomies as $taxonomy ) {
+			if ( empty( $my_query_vars[ $taxonomy ] ) ) {
+				continue;
+			}
+
+			// Found the taxonomy; collect the terms
+			$include_children =  isset( $my_query_vars['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) );
+
+			// Allow for multiple term slug values, separate includes from excludes
+			$terms = array();
+			$excludes = array();
+			$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
+			foreach ( $slugs as $slug ) {
+				if ( 0 === strpos( $slug, '/' ) ) {
+					$args = array( 'slug' => substr( $slug, 1 ), 'hide_empty' => false );
+					$excludes = array_merge( $excludes, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
+				} else {
+					$args = array( 'slug' => $slug, 'hide_empty' => false );
+					$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
+				}
+			}
+
+			foreach( $terms as $term ) {
+				// Index by ttid to remove duplicates
+				$include_ttids[ $term->term_taxonomy_id ] = $term->term_taxonomy_id;
+
+				if ( $include_children ) {
+					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
+					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
+					foreach( $children as $child ) {
+						$include_ttids[] = $child->term_taxonomy_id;
+					}
+				} // include_children
+			} // $term
+
+			foreach( $excludes as $exclude ) {
+				// Index by ttid to remove duplicates
+				$exclude_ttids[ $exclude->term_taxonomy_id ] = $exclude->term_taxonomy_id;
+
+				if ( $include_children ) {
+					$args = array( 'child_of' => $exclude->term_id, 'hide_empty' => false );
+					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
+					foreach( $children as $child ) {
+						$exclude_ttids[] = $child->term_taxonomy_id;
+					}
+				} // include_children
+			} // $exclude
+
+			break;
+		} // foreach $taxonomy
+	} // _find_ttids
 
 	/**
 	 * Custom query support function, taxonomy terms only
@@ -343,42 +422,7 @@ class MLATaxQueryExample {
 			$my_query_vars = shortcode_parse_atts( $my_query_vars );
 		}
 
-		// Start with empty parameter values
-		$ttids = array();
-
-		// Find taxonomy argument, if present, and collect terms
-		$taxonomies = get_object_taxonomies( 'attachment', 'names' );
-		foreach( $taxonomies as $taxonomy ) {
-			if ( empty( $my_query_vars[ $taxonomy ] ) ) {
-				continue;
-			}
-
-			// Found the taxonomy; collect the terms
-			$include_children =  isset( $my_query_vars['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) );
-
-			// Allow for multiple term slug values
-			$terms = array();
-			$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
-			foreach ( $slugs as $slug ) {
-				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
-			}
-
-			foreach( $terms as $term ) {
-				// Index by ttid to remove duplicates
-				$ttids[ $term->term_taxonomy_id ] = $term->term_taxonomy_id;
-
-				if ( $include_children ) {
-					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = get_terms( 'attachment_category', $args );
-					foreach( $children as $child ) {
-						$ttids[] = $child->term_taxonomy_id;
-					}
-				} // include_children
-			} // $term
-
-			break;
-		}
+		self::_find_ttids( $my_query_vars, $ttids, $exclude_ttids );
 
 		// Build an array of SQL clauses
 		$query = array();
@@ -397,14 +441,35 @@ class MLATaxQueryExample {
 				$query_parameters[] = $ttid;
 			}
 		} else {
+			// Both includes and excludes are empty; return nothing
+			if ( empty( $exclude_ttids ) ) {
 				$placeholders[] = '%s';
 				$query_parameters[] = '0';
+			}
 		}
 
-		$query[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ') )';
+		if ( empty( $placeholders ) ) {
+			// No includes, only excludes
+			$query[] = 'WHERE ( 1=1';
+		} else {
+			$query[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+		}
 
-		// ORDER BY clause would go here, if needed
+		if ( !empty( $exclude_ttids ) ) {
+			$placeholders = array();
+			foreach ( $exclude_ttids as $ttid ) {
+				$placeholders[] = '%s';
+				$query_parameters[] = $ttid;
+			}
 
+			// Build the excludes as a sub query			
+			$query[] = 'AND tr.object_id NOT IN (';
+			$query[] = "SELECT DISTINCT object_id FROM {$wpdb->term_relationships}";
+			$query[] = 'WHERE ( term_taxonomy_id IN (' . join( ',', $placeholders ) . ') ) )';
+		}
+
+		$query[] = ')';
+		
 		if ( ! $is_pagination ) {
 			/*
 			 * Add pagination to our query, then remove it from the query
@@ -465,12 +530,15 @@ class MLATaxQueryExample {
 		} // ! is_pagination
 
 		$query =  join(' ', $query);
+		if ( 0 < count( $query_parameters ) ) {
+			$query = $wpdb->prepare( $query, $query_parameters );
+		}
+		
 		if ( $is_pagination ) {
-			$count = $wpdb->get_var( $wpdb->prepare( $query, $query_parameters ) );
-			return $count;
+			return $wpdb->get_var( $query );
 		}
 
-		$ids = $wpdb->get_results( $wpdb->prepare( $query, $query_parameters ) );
+		$ids = $wpdb->get_results( $query );
 		if ( is_array( $ids ) ) {
 			$includes = array();
 			foreach ( $ids as $id ) {
@@ -485,6 +553,129 @@ class MLATaxQueryExample {
 	} // single_query
 
 	/**
+	 * Translates query parameters to a valid SQL order by clause.
+	 *
+	 * Accepts one or more valid columns, with or without ASC/DESC. Adapted from
+	 * /media-library-assistant/includes/class-mla-shortcode-support.php function _validate_sql_orderby().
+	 *
+	 * @since 1.07
+	 *
+	 * @param array Validated query parameters; 'order', 'orderby', 'meta_key', 'post__in'.
+	 * @param string Optional. Database table prefix; can be empty. Default taken from $wpdb->posts.
+	 * @param array Optional. Field names (keys) and database column equivalents (values). Defaults from [mla_gallery].
+	 * @param array Optional. Field names (values) that require a BINARY prefix to preserve case order. Default array()
+	 * @return string|bool Returns the orderby clause if present, false otherwise.
+	 */
+	private static function _validate_sql_orderby( $query_parameters, $table_prefix = NULL, $allowed_keys = NULL, $binary_keys = array() ){
+		global $wpdb;
+
+		$results = array ();
+		$order = isset( $query_parameters['order'] ) ? ' ' . trim( strtoupper( $query_parameters['order'] ) ) : '';
+		$orderby = isset( $query_parameters['orderby'] ) ? $query_parameters['orderby'] : 'none';
+		$meta_key = isset( $query_parameters['meta_key'] ) ? $query_parameters['meta_key'] : '';
+
+		if ( is_null( $table_prefix ) ) {
+			$table_prefix = $wpdb->posts . '.';
+		}
+
+		if ( is_null( $allowed_keys ) ) {
+			$allowed_keys = array(
+				'empty_orderby_default' => 'post_date',
+				'explicit_orderby_field' => 'post__in',
+				'explicit_orderby_column' => 'ID',
+				'id' => 'ID',
+				'author' => 'post_author',
+				'date' => 'post_date',
+				'description' => 'post_content',
+				'content' => 'post_content',
+				'title' => 'post_title',
+				'caption' => 'post_excerpt',
+				'excerpt' => 'post_excerpt',
+				'slug' => 'post_name',
+				'name' => 'post_name',
+				'modified' => 'post_modified',
+				'parent' => 'post_parent',
+				'menu_order' => 'menu_order',
+				'mime_type' => 'post_mime_type',
+				'comment_count' => 'post_content',
+				'rand' => 'RAND()',
+			);
+		}
+
+		if ( empty( $orderby ) ) {
+			if ( ! empty( $allowed_keys['empty_orderby_default'] ) ) {
+				return 'ORDER BY ' . $table_prefix . $allowed_keys['empty_orderby_default'] . " {$order}";
+			} else {
+				return 'ORDER BY ' . "{$table_prefix}post_date {$order}";
+			}
+		} elseif ( 'none' == $orderby ) {
+			return '';
+		} elseif ( ! empty( $allowed_keys['explicit_orderby_field'] ) ) {
+			$explicit_field = $allowed_keys['explicit_orderby_field'];
+			if ( $orderby == $explicit_field ) {
+				if ( ! empty( $query_parameters[ $explicit_field ] ) ) {
+					$explicit_order = implode(',', array_map( 'absint', $query_parameters[ $explicit_field ] ) );
+
+					if ( ! empty( $explicit_order ) ) {
+						$explicit_column = $allowed_keys['explicit_orderby_column'];
+						return 'ORDER BY ' . "FIELD( {$table_prefix}{$explicit_column}, {$explicit_order} )";
+					} else {
+						return '';
+					}
+				}
+			}
+		}
+
+		if ( ! empty( $meta_key ) ) {
+			$allowed_keys[ $meta_key ] = "$wpdb->postmeta.meta_value";
+			$allowed_keys['meta_value'] = "$wpdb->postmeta.meta_value";
+			$allowed_keys['meta_value_num'] = "$wpdb->postmeta.meta_value+0";
+		}
+
+		$obmatches = preg_split('/\s*,\s*/', trim($query_parameters['orderby']));
+		foreach ( $obmatches as $index => $value ) {
+			$count = preg_match('/([a-z0-9_]+)(\s+(ASC|DESC))?/i', $value, $matches);
+			if ( $count && ( $value == $matches[0] ) ) {
+				$matches[1] = strtolower( $matches[1] );
+				if ( isset( $matches[2] ) ) {
+					$matches[2] = strtoupper( $matches[2] );
+				}
+
+				if ( array_key_exists( $matches[1], $allowed_keys ) ) {
+					if ( ( 'rand' == $matches[1] ) || ( 'random' == $matches[1] ) ){
+							$results[] = 'RAND()';
+					} else {
+						switch ( $matches[1] ) {
+							case $meta_key:
+							case 'meta_value':
+								$matches[1] = "$wpdb->postmeta.meta_value";
+								break;
+							case 'meta_value_num':
+								$matches[1] = "$wpdb->postmeta.meta_value+0";
+								break;
+							default:
+								if ( in_array( $matches[1], $binary_keys ) ) {
+									$matches[1] = 'BINARY ' . $table_prefix . $allowed_keys[ $matches[1] ];
+								} else {
+									$matches[1] = $table_prefix . $allowed_keys[ $matches[1] ];
+								}
+						} // switch $matches[1]
+
+						$results[] = isset( $matches[2] ) ? $matches[1] . $matches[2] : $matches[1] . $order;
+					} // not 'rand'
+				} // allowed key
+			} // valid column specification
+		} // foreach $obmatches
+
+		$orderby = implode( ', ', $results );
+		if ( empty( $orderby ) ) {
+			return false;
+		}
+
+		return 'ORDER BY ' . $orderby;
+	}
+
+	/**
 	 * Custom query support function, taxonomy terms plus post_mime_type and orderby/order fields
 	 *
 	 * For pagination controls, the number of terms satisfying the query parameters is returned.
@@ -495,6 +686,7 @@ class MLATaxQueryExample {
 	 *
 	 * - one or more taxonomy term lists, with include_children
 	 * - one or more post_mime_types
+	 * - one or more author IDs
 	 * - ORDER BY post table fields
 	 *
 	 * @since 1.01
@@ -513,6 +705,7 @@ class MLATaxQueryExample {
 		 *
 		 * The subquery is on taxonomy and term(s) only, yielding a list of object_id
 		 * (post ID) values.
+		 *
 		 * The main query filters the list by post_mime_type and/or keyword search, orders
 		 * it and paginates it.
 		 */		
@@ -525,42 +718,7 @@ class MLATaxQueryExample {
 			$my_query_vars = shortcode_parse_atts( $my_query_vars );
 		}
 
-		// Start with empty parameter values
-		$ttids = array();
-
-		// Find taxonomy argument, if present, and collect terms
-		$taxonomies = get_object_taxonomies( 'attachment', 'names' );
-		foreach( $taxonomies as $taxonomy ) {
-			if ( empty( $my_query_vars[ $taxonomy ] ) ) {
-				continue;
-			}
-
-			// Found the taxonomy; collect the terms
-			$include_children =  isset( $my_query_vars['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) );
-
-			// Allow for multiple term slug values
-			$terms = array();
-			$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
-			foreach ( $slugs as $slug ) {
-				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
-			}
-
-			foreach( $terms as $term ) {
-				// Index by ttid to remove duplicates
-				$ttids[ $term->term_taxonomy_id ] = $term->term_taxonomy_id;
-
-				if ( $include_children ) {
-					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = get_terms( 'attachment_category', $args );
-					foreach( $children as $child ) {
-						$ttids[] = $child->term_taxonomy_id;
-					}
-				} // include_children
-			} // $term
-
-			break;
-		}
+		self::_find_ttids( $my_query_vars, $ttids, $exclude_ttids );
 
 		// Build an array of SQL clauses for the term_relationships query
 		$subquery = array();
@@ -575,11 +733,35 @@ class MLATaxQueryExample {
 				$subquery_parameters[] = $ttid;
 			}
 		} else {
+			// Both includes and excludes are empty; return nothing
+			if ( empty( $exclude_ttids ) ) {
 				$placeholders[] = '%s';
 				$subquery_parameters[] = '0';
+			}
 		}
 
-		$subquery[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ') )';
+		if ( empty( $placeholders ) ) {
+			// No includes, only excludes
+			$subquery[] = 'WHERE ( 1=1';
+		} else {
+			$subquery[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+		}
+
+		if ( !empty( $exclude_ttids ) ) {
+			$placeholders = array();
+			foreach ( $exclude_ttids as $ttid ) {
+				$placeholders[] = '%s';
+				$subquery_parameters[] = $ttid;
+			}
+
+			// Build the excludes as a sub query			
+			$subquery[] = 'AND tr.object_id NOT IN (';
+			$subquery[] = "SELECT DISTINCT object_id FROM {$wpdb->term_relationships}";
+			$subquery[] = 'WHERE ( term_taxonomy_id IN (' . join( ',', $placeholders ) . ') ) )';
+		}
+
+		$subquery[] = ')';
+		
 		$subquery =  join(' ', $subquery);
 
 		// Build an array of SQL clauses for the posts query
@@ -602,6 +784,10 @@ class MLATaxQueryExample {
 			$query[] = "AND (p.post_mime_type LIKE 'image/%%')";
 		}
 
+		if ( ! empty( $my_query_vars['author'] ) ) {
+			$query[] = "AND (p.post_author IN (" . $my_query_vars['author'] . ") )";
+		}
+
 		if ( isset( self::$search_attributes['s'] ) ) {
 			global $wpdb;
 			$prefix = $wpdb->posts . '.';
@@ -619,74 +805,15 @@ class MLATaxQueryExample {
 		// Close the WHERE clause
 		$query[] = ')';
 
-		/*
-		 * ORDER BY clause
-		 */
-		if ( ! empty( $my_query_vars['orderby'] ) ) {
-			$orderby = strtolower( $my_query_vars['orderby'] );
-		} else {
-			$orderby = 'none';
+		// ORDER BY clause
+		$orderby = self::_validate_sql_orderby( $my_query_vars, 'p.' );
+		if ( ! empty( $orderby ) ) {
+			$query[] = $orderby;
 		}
+		
+		// Tell the final query to respect our orderby
 		$all_query_parameters['orderby'] = 'post__in';
-
-		if ( ! empty( $my_query_vars['order'] ) ) {
-			$order = strtoupper( $my_query_vars['order'] );
-			if ( 'DESC' != $order ) {
-				$order = 'ASC';
-			}
-		} else {
-			$order = 'ASC';
-		}
 		$all_query_parameters['order'] = 'ASC';
-
-		switch ( $orderby ) {
-			case 'id':
-				$query[] = 'ORDER BY p.ID ' . $order;
-				break;
-			case 'author':
-				$query[] = 'ORDER BY p.post_author ' . $order;
-				break;
-			case 'date':
-				$query[] = 'ORDER BY p.post_date ' . $order;
-				break;
-			case 'description':
-			case 'content':
-				$query[] = 'ORDER BY p.post_content ' . $order;
-				break;
-			case 'title':
-				$query[] = 'ORDER BY p.post_title ' . $order;
-				break;
-			case 'caption':
-			case 'excerpt':
-				$query[] = 'ORDER BY p.post_excerpt ' . $order;
-				break;
-			case 'slug':
-			case 'name':
-				$query[] = 'ORDER BY p.post_name ' . $order;
-				break;
-			case 'modified':
-				$query[] = 'ORDER BY p.post_modified ' . $order;
-				break;
-			case 'parent':
-				$query[] = 'ORDER BY p.post_parent ' . $order;
-				break;
-			case 'menu_order':
-				$query[] = 'ORDER BY p.menu_order ' . $order;
-				break;
-			case 'post_mime_type':
-				$query[] = 'ORDER BY p.post_mime_type ' . $order;
-				break;
-			case 'comment_count':
-				$query[] = 'ORDER BY p.comment_count ' . $order;
-				break;
-			case 'rand':
-			case 'random':
-				$query[] = 'ORDER BY RAND() ' . $order;
-				break;
-			case 'none':
-			default:
-				break;
-		}
 
 		if ( ! $is_pagination ) {
 			/*
@@ -748,11 +875,15 @@ class MLATaxQueryExample {
 		} // ! is_pagination
 
 		$query = join(' ', $query);
+		if ( 0 < count( $query_parameters ) ) {
+			$query = $wpdb->prepare( $query, $query_parameters );
+		}
+		
 		if ( $is_pagination ) {
-			return $wpdb->get_var( $wpdb->prepare( $query, $query_parameters ) );
+			return $wpdb->get_var( $query );
 		}
 
-		$ids = $wpdb->get_results( $wpdb->prepare( $query, $query_parameters ) );
+		$ids = $wpdb->get_results( $query );
 		if ( is_array( $ids ) ) {
 			$includes = array();
 			foreach ( $ids as $id ) {
@@ -767,8 +898,6 @@ class MLATaxQueryExample {
 	} // double_query
 } // Class MLATaxQueryExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLATaxQueryExample::initialize');
 ?>

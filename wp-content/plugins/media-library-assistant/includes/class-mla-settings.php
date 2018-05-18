@@ -50,6 +50,15 @@ class MLASettings {
 	const JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG = 'mla-inline-mapping-custom-scripts';
 
 	/**
+	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF List Table
+	 *
+	 * @since 2.60
+	 *
+	 * @var	string
+	 */
+	const JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG = 'mla-inline-edit-iptc-exif-scripts';
+
+	/**
 	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF tab
 	 *
 	 * @since 2.00
@@ -107,6 +116,7 @@ class MLASettings {
 				case self::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG:
 					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-custom-fields-tab.php' );
 					break;
+				case self::JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG:
 				case self::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG:
 					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings-iptc-exif-tab.php' );
 					break;
@@ -259,17 +269,20 @@ class MLASettings {
 			 * Add format, option and no_null to IPTC/EXIF custom mapping rules
 			 */
 			$option_value = MLACore::mla_get_option( 'iptc_exif_mapping' );
-			$new_values = array();
-
-			foreach ( $option_value['custom'] as $key => $value ) {
-				$value['format'] = isset( $value['format'] ) ? $value['format'] : 'native';
-				$value['option'] = isset( $value['option'] ) ? $value['option'] : 'text';
-				$value['no_null'] = isset( $value['no_null'] ) ? $value['no_null'] : false;
-				$new_values[ $key ] = $value;
+			
+			if ( !empty( $option_value['custom'] ) ) {
+				$new_values = array();
+	
+				foreach ( $option_value['custom'] as $key => $value ) {
+					$value['format'] = isset( $value['format'] ) ? $value['format'] : 'native';
+					$value['option'] = isset( $value['option'] ) ? $value['option'] : 'text';
+					$value['no_null'] = isset( $value['no_null'] ) ? $value['no_null'] : false;
+					$new_values[ $key ] = $value;
+				}
+	
+				$option_value['custom'] = $new_values;
+				MLACore::mla_update_option( 'iptc_exif_mapping', $option_value );
 			}
-
-			$option_value['custom'] = $new_values;
-			MLACore::mla_update_option( 'iptc_exif_mapping', $option_value );
 		} // version is less than 2.13
 
 		MLACore::mla_update_option( MLACoreOptions::MLA_VERSION_OPTION, MLACore::CURRENT_MLA_VERSION );
@@ -359,6 +372,7 @@ class MLASettings {
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG, 'MLASettings_Upload::mla_inline_edit_upload_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG, 'MLASettings_CustomFields::mla_inline_edit_custom_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG, 'MLASettings_CustomFields::mla_inline_mapping_custom_action' );
+		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG, 'MLASettings_IPTCEXIF::mla_inline_edit_iptc_exif_action' );
 		add_action( 'wp_ajax_' . self::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG, 'MLASettings_IPTCEXIF::mla_inline_mapping_iptc_exif_action' );
 	}
 
@@ -481,7 +495,18 @@ class MLASettings {
 				);
 
 				add_screen_option( $option, $args );
-			} // upload
+			} // custom_field
+			elseif ( 'iptc_exif' == $_REQUEST['mla_tab'] ) {
+				$option = 'per_page';
+
+				$args = array(
+					 'label' => __( 'Rules per page', 'media-library-assistant' ),
+					'default' => 10,
+					'option' => 'mla_iptc_exif_rules_per_page' 
+				);
+
+				add_screen_option( $option, $args );
+			} // iptc_exif
 			elseif ( 'documentation' == $_REQUEST['mla_tab'] ) {
 				if ( isset( $_REQUEST['mla-example-display'] ) || isset( $_REQUEST['mla-example-search'] ) ) {
 					$option = 'per_page';
@@ -510,7 +535,7 @@ class MLASettings {
 
 		// Do we have options/help information for this tab?
 		$screen_suffix = substr( $screen->id, strlen( 'settings_page_' . MLACoreOptions::MLA_SETTINGS_SLUG ) ) ;
-		if ( ! in_array( $screen_suffix, array( '-view', '-upload', '-shortcodes', '-custom_field', '-documentation' ) ) ) {
+		if ( ! in_array( $screen_suffix, array( '-view', '-upload', '-shortcodes', '-custom_field', '-iptc_exif', '-documentation' ) ) ) {
 			return;
 		}
 
@@ -603,7 +628,7 @@ class MLASettings {
 	 * @return	mixed	New value if this is our option, otherwise original status
 	 */
 	public static function mla_set_screen_option_filter( $status, $option, $value ) {
-		if ( in_array( $option, array ( 'mla_views_per_page', 'mla_uploads_per_page', 'mla_types_per_page', 'mla_shortcode_templates_per_page', 'mla_custom_field_rules_per_page', 'mla_example_plugins_per_page' ) ) ) {
+		if ( in_array( $option, array ( 'mla_views_per_page', 'mla_uploads_per_page', 'mla_types_per_page', 'mla_shortcode_templates_per_page', 'mla_custom_field_rules_per_page', 'mla_iptc_exif_rules_per_page', 'mla_example_plugins_per_page' ) ) ) {
 			return $value;
 		}
 
@@ -625,6 +650,8 @@ class MLASettings {
 	 */
 	public static function mla_add_plugin_settings_link_filter( $links, $file ) {
 		if ( $file == 'media-library-assistant/index.php' && current_user_can( 'manage_options' ) ) {
+			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation&mla_tab=documentation' ), __( 'Guide', 'media-library-assistant' ) );
+			array_unshift( $links, $settings_link );
 			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-general' ), __( 'Settings', 'media-library-assistant' ) );
 			array_unshift( $links, $settings_link );
 		}
@@ -1044,7 +1071,7 @@ class MLASettings {
 			'Donate to FTJ' => __( 'Donate to FTJ', 'media-library-assistant' ),
 			'Donate' => __( 'Donate', 'media-library-assistant' ),
 			/* translators: 1: donation hyperlink */
-			'This plugin was' => sprintf( __( 'This plugin was inspired by my work on the WordPress web site for our nonprofit, Fair Trade Judaica. If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our work. Thank you!', 'media-library-assistant' ), '<a href="http://fairtradejudaica.org/make-a-difference/donate/" title="' . __( 'Donate to FTJ', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
+			'This plugin was' => sprintf( __( 'This plugin was inspired by my work on the WordPress web site for our nonprofit, Fair Trade Judaica. If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our work. Thank you!', 'media-library-assistant' ), '<a href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" title="' . __( 'Donate to FTJ', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
 			'shortcode_list' => '',
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-general&mla_tab=general',
 			'options_list' => '',
@@ -1360,10 +1387,9 @@ class MLASettings {
 			if ( $error_log_exists ) {
 				$args = array(
 					'page' => MLACore::ADMIN_PAGE_SLUG,
-					'mla_download_file' => urlencode( $error_log_name ),
-					'mla_download_type' => 'text/plain'
+					'mla_download_error_log' => 'true',
 				);
-				$download_link = '<a class="button-secondary" href="' . add_query_arg( $args, wp_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
+				$download_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
 			} else {
 				$download_link = '';
 			}
@@ -1373,7 +1399,7 @@ class MLASettings {
 				'mla_tab' => 'debug',
 				'mla_reset_log' => 'true'
 			);
-			$reset_link = '<a class="button-secondary" href="' . add_query_arg( $args, wp_nonce_url( 'options-general.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Reset', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Reset', 'media-library-assistant' ) . '</a>';
+			$reset_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'options-general.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Reset', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Reset', 'media-library-assistant' ) . '</a>';
 		}
 
 		$settings_list  = self::_compose_settings_row( 'Display Limit', $display_limit );
@@ -1400,6 +1426,9 @@ class MLASettings {
 			'Debug Settings' => __( 'Debug Settings', 'media-library-assistant' ),
 			'settings_list' => $settings_list,
 			'Error Log' => __( 'Error Log', 'media-library-assistant' ),
+			/* translators: 1: Documentation hyperlink */
+			'You can find' => sprintf( __( 'You can find more information about the MLA Reporting/MLA_DEBUG_LEVEL values in the %1$s section of the Documentation tab.', 'media-library-assistant' ), '<a href="[+settingsURL+]?page=mla-settings-menu-documentation&amp;mla_tab=documentation#mla_debug_tab" title="' . __( 'MLA Debug Tab documentation', 'media-library-assistant' ) . '" target="_blank">' . __( 'MLA Debug Tab', 'media-library-assistant' ) . '</a>' ),
+			'settingsURL' => admin_url('options-general.php'),
 			'Error Log Name' => $error_log_name,
 			'Error Log Size' => number_format( (float) $error_log_size ),
 			'error_log_text' => $error_log_contents,

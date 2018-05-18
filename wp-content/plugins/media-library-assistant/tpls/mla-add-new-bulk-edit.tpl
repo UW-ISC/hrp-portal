@@ -3,10 +3,7 @@
 [+category_blocks+]
   </div></fieldset>
 <!-- template="category_block" -->
-    <span class="title inline-edit-categories-label">[+tax_html+]
-      <span class="catshow">[[+more+]]</span>
-      <span class="cathide" style="display:none;">[[+less+]]</span>
-    </span>
+    <span class="title inline-edit-categories-label">[+tax_html+]</span>
     <input type="hidden" name="tax_input[[+tax_attr+]][]" value="0" />
     <ul class="cat-checklist [+tax_attr+]-checklist">
 [+tax_checklist+]
@@ -47,6 +44,9 @@
         </span></label>
       <label class="inline-edit-image-alt"><span class="title">[+ALT Text+]</span><span class="input-text-wrap">
         <input type="text" name="image_alt" value="" />
+        </span></label>
+      <label class="inline-edit-post-date"><span class="title">[+Uploaded on+]</span><span class="input-text-wrap">
+        <input type="text" name="post_date" value="" />
         </span></label>
       <div class="inline-edit-group">
         <label class="inline-edit-post-parent alignleft"><span class="title">[+Parent ID+]</span><span class="input-text-wrap">
@@ -94,6 +94,9 @@
         </span></label>
       <label class="inline-edit-image-alt"><span class="title">[+ALT Text+]</span><span class="input-text-wrap">
         <input type="text" name="image_alt" value="" />
+        </span></label>
+      <label class="inline-edit-post-date"><span class="title">[+Uploaded on+]</span><span class="input-text-wrap">
+        <input type="text" name="post_date" value="" />
         </span></label>
       <div class="inline-edit-group">
         <label class="inline-edit-post-parent alignleft"><span class="title">[+Parent ID+]</span><span class="input-text-wrap">

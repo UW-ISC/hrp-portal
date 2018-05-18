@@ -14,6 +14,79 @@
 }
 
 /*
+ * Submit meta box
+ */
+.curtime span#timestamp {
+	display: none !important;
+}
+
+#uploadtimestampdiv select,
+#modifytimestampdiv select {
+	height: 21px;
+	line-height: 14px;
+	padding: 0;
+	vertical-align: top;
+	font-size: 12px;
+}
+
+#aa, #jj, #hh, #mn {
+	padding: 1px;
+	font-size: 12px;
+}
+
+#jj, #hh, #mn {
+	width: 2em;
+}
+
+#aa {
+	width: 3.4em;
+}
+
+.uploadtime #upload-timestamp,
+.modifytime #modify-timestamp {
+	padding: 2px 0 1px 0;
+	display: inline !important;
+	height: auto !important;
+}
+
+.uploadtime #upload-timestamp:before,
+.modifytime #modify-timestamp:before {
+	color: #82878c;
+	font: normal 20px/1 dashicons;
+	speak: none;
+	display: inline-block;
+	margin-left: -1px;
+	padding-right: 3px;
+	vertical-align: top;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.uploadtime #upload-timestamp:before,
+.modifytime #modify-timestamp:before {
+	content: "\f145";
+	position: relative;
+	top: -1px;
+}
+ 
+#uploadtimestampdiv,
+#modifytimestampdiv {
+	padding-top: 5px;
+	line-height: 23px;
+}
+
+#uploadtimestampdiv p,
+#modifytimestampdiv p {
+	margin: 8px 0 6px;
+}
+
+#uploadtimestampdiv input,
+#modifytimestampdiv input {
+	border-width: 1px;
+	border-style: solid;
+}
+
+/*
  * Parent Info meta box
  */
  

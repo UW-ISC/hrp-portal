@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2017-05-25 22:30-0700\n"
+"POT-Creation-Date: 2018-03-25 15:56-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@fairtradejudaica.org>\n"
@@ -19,6 +19,41 @@ msgstr ""
 "X-Poedit-SearchPath-0: includes\n"
 "X-Poedit-SearchPath-1: tests\n"
 "X-Poedit-SearchPath-2: index.php\n"
+
+msgid "Draft"
+msgstr ""
+
+msgid "Scheduled"
+msgstr ""
+
+msgctxt "post state"
+msgid "Pending"
+msgstr ""
+
+msgid "Trash"
+msgstr ""
+
+msgid "NO REFERENCE TESTS"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "PARENT"
+msgstr ""
+
+msgid "None"
+msgstr ""
+
+msgid "(Private post)"
+msgstr ""
+
+msgid "Y/m/d"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Unattached"
+msgstr ""
 
 msgid "Media Library Assistant"
 msgstr ""
@@ -44,16 +79,7 @@ msgstr ""
 msgid "Published"
 msgstr ""
 
-msgid "Scheduled"
-msgstr ""
-
 msgid "Pending Review"
-msgstr ""
-
-msgid "Draft"
-msgstr ""
-
-msgid "Y/m/d"
 msgstr ""
 
 msgid "ERROR"
@@ -93,9 +119,6 @@ msgid "Featured in"
 msgstr ""
 
 msgid "Enabled"
-msgstr ""
-
-msgid "Disabled"
 msgstr ""
 
 msgid "Search database posts and pages for Featured Image attachments."
@@ -256,9 +279,6 @@ msgstr ""
 msgid "Order By"
 msgstr ""
 
-msgid "None"
-msgstr ""
-
 msgid "ID/Parent"
 msgstr ""
 
@@ -277,6 +297,12 @@ msgstr ""
 msgid "Choose the sort order."
 msgstr ""
 
+msgid "Entries per page"
+msgstr ""
+
+msgid "Enter the number of Media/Assistant submenu table items per page."
+msgstr ""
+
 msgid "Views Width"
 msgstr ""
 
@@ -287,6 +313,21 @@ msgid "Icon Size"
 msgstr ""
 
 msgid "Enter the size of the thumbnail/icon images, in pixels"
+msgstr ""
+
+msgid "Show Primary Column File Name"
+msgstr ""
+
+msgid ""
+"Check/uncheck this option to show/omit the file name from the primary column."
+msgstr ""
+
+msgid "QuickTags editor for bulk description"
+msgstr ""
+
+msgid ""
+"Check this option to use the QuickTags editor for the Description field in "
+"the Bulk Edit area."
 msgstr ""
 
 msgid "Bulk Chunk Size"
@@ -655,10 +696,13 @@ msgid ""
 "override the search for Ghostscript in other places."
 msgstr ""
 
-msgid "Enable custom field mapping when adding new media"
+msgid "Enable custom field mapping"
 msgstr ""
 
 msgid "See Help menu."
+msgstr ""
+
+msgid "Enable custom field mapping when adding new media"
 msgstr ""
 
 msgid "Enable custom field mapping when updating media metadata"
@@ -669,6 +713,9 @@ msgid ""
 "make the updates permanent.<br>You can also make temporary updates and click "
 "a Map All Attachments button to apply the rule(s) to all attachments without "
 "saving any rule changes."
+msgstr ""
+
+msgid "Enable IPTC/EXIF Mapping"
 msgstr ""
 
 msgid "Enable IPTC/EXIF Mapping when adding new media"
@@ -725,6 +772,9 @@ msgid "Caption"
 msgstr ""
 
 msgid "Description"
+msgstr ""
+
+msgid "Uploaded on"
 msgstr ""
 
 msgid "Enable View and Post MIME Type Support"
@@ -810,10 +860,6 @@ msgctxt "post_mime_types_description"
 msgid "All application subtypes"
 msgstr ""
 
-msgctxt "table_view_singular"
-msgid "Unattached"
-msgstr ""
-
 msgctxt "table_view_plural"
 msgid "Unattached"
 msgstr ""
@@ -866,7 +912,9 @@ msgstr ""
 
 msgid ""
 "Enter the name of an alternate, MLA-specific debug log file; leave blank to "
-"use the PHP error_log."
+"use the PHP error_log.<br>&nbsp;&nbsp;The WP_CONTENT_DIR value (below) will "
+"be prepended to the value here, e.g., enter something like \"/uploads/mla.log"
+"\"."
 msgstr ""
 
 msgid "Replace PHP error_log file"
@@ -1083,9 +1131,6 @@ msgctxt "error_log"
 msgid "%1$s: mla_query_posts_clauses_request_filter = \"%2$s\"."
 msgstr ""
 
-msgid "NO REFERENCE TESTS"
-msgstr ""
-
 msgid "ORPHAN"
 msgstr ""
 
@@ -1121,7 +1166,7 @@ msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: _find_test_substring no end delimiter, tail = \"%2$s\"."
+msgid "%1$s: _find_delimited_substring no end delimiter, tail = \"%2$s\"."
 msgstr ""
 
 msgid "Test; no closing parenthesis "
@@ -1293,6 +1338,13 @@ msgstr ""
 msgid "An ajax.done error has occurred. Please reload the page and try again."
 msgstr ""
 
+#, php-format
+msgid "Uploaded on: %s"
+msgstr ""
+
+msgid "Last modified"
+msgstr ""
+
 msgid "more"
 msgstr ""
 
@@ -1337,10 +1389,51 @@ msgstr ""
 msgid "IPTC/EXIF mapping updated."
 msgstr ""
 
-msgid "M j, Y @ G:i"
+msgid "Custom field mapping is disabled."
 msgstr ""
 
-msgid "Last modified"
+msgid "IPTC/EXIF mapping is disabled."
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+#, php-format
+msgid "%1$s-%2$s"
+msgstr ""
+
+msgid "Day"
+msgstr ""
+
+msgid "Year"
+msgstr ""
+
+msgid "Hour"
+msgstr ""
+
+msgid "Minute"
+msgstr ""
+
+#, php-format
+msgid "%1$s %2$s, %3$s @ %4$s:%5$s"
+msgstr ""
+
+msgid "OK"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "M j, Y @ H:i"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "Edit upload date and time"
+msgstr ""
+
+msgid "Upload Date and time"
 msgstr ""
 
 msgid "Map Custom Field metadata for this item"
@@ -1366,17 +1459,10 @@ msgctxt "error_log"
 msgid "%1$s: %2$s discarding \"%3$s\"; no title/order"
 msgstr ""
 
-msgctxt "post state"
-msgid "Pending"
-msgstr ""
-
 msgid "Post Parent"
 msgstr ""
 
 msgid "Select Parent"
-msgstr ""
-
-msgid "PARENT"
 msgstr ""
 
 msgid "All"
@@ -1397,12 +1483,6 @@ msgstr ""
 
 #, php-format
 msgid "column_default: %1$s, %2$s"
-msgstr ""
-
-msgid "Edit"
-msgstr ""
-
-msgid "Trash"
 msgstr ""
 
 msgid "Restore this item from the Trash"
@@ -1438,6 +1518,9 @@ msgstr ""
 msgid "View"
 msgstr ""
 
+msgid "File name"
+msgstr ""
+
 msgid "(no title: bad ID)"
 msgstr ""
 
@@ -1456,9 +1539,6 @@ msgstr ""
 
 #, php-format
 msgid "%1$s ago"
-msgstr ""
-
-msgid "(Private post)"
 msgstr ""
 
 msgid "Set Parent"
@@ -1519,7 +1599,13 @@ msgstr[1] ""
 msgid "Item %1$d moved to Trash."
 msgstr ""
 
-msgid "Entries per page"
+msgid "download path out of bounds."
+msgstr ""
+
+msgid "download path invalid."
+msgstr ""
+
+msgid "download argument(s) not set."
 msgstr ""
 
 msgid "You are not allowed to edit Attachment: "
@@ -1575,9 +1661,6 @@ msgid "For"
 msgstr ""
 
 msgid "Unattached"
-msgstr ""
-
-msgid "Cancel"
 msgstr ""
 
 msgid "Bulk Edit"
@@ -1945,6 +2028,9 @@ msgstr ""
 msgid "Automatically add paragraphs"
 msgstr ""
 
+msgid "Add .textwidget div tags"
+msgstr ""
+
 msgid "error loading tpls/mla-option-templates.tpl"
 msgstr ""
 
@@ -2088,86 +2174,11 @@ msgstr ""
 msgid "Delete NULL values"
 msgstr ""
 
-msgid "No Custom Field Mapping Rules Defined"
-msgstr ""
-
-msgid "Keep"
-msgstr ""
-
-msgid "Native"
-msgstr ""
-
-msgid "Commas"
-msgstr ""
-
-msgid "Raw"
-msgstr ""
-
-msgid "Text"
-msgstr ""
-
-msgid "Single"
-msgstr ""
-
-msgid "Export"
-msgstr ""
-
-msgid "Array"
-msgstr ""
-
-msgid "Multi"
-msgstr ""
-
-msgid "Delete Rule"
-msgstr ""
-
-msgid "Delete Rule AND Field"
-msgstr ""
-
-msgid "Update Rule"
-msgstr ""
-
-msgid "Map All Attachments"
-msgstr ""
-
-msgid "Add a new Mapping Rule"
-msgstr ""
-
-msgid "Add Rule"
-msgstr ""
-
-msgid "Add Rule and Map All Attachments"
-msgstr ""
-
-msgid "Add a new Field and Mapping Rule"
-msgstr ""
-
-msgid "Add Field"
-msgstr ""
-
-msgid "Add Field and Map All Attachments"
+#, php-format
+msgid "%1$s: No old values for %2$s."
 msgstr ""
 
 msgid "Field Title"
-msgstr ""
-
-msgid "Custom field mapping rules updated."
-msgstr ""
-
-msgid "Custom field mapping rules update failed."
-msgstr ""
-
-msgid "Custom field no mapping rule changes detected."
-msgstr ""
-
-msgid "Custom field mapping settings saved."
-msgstr ""
-
-msgid "Custom field mapping settings reset failed."
-msgstr ""
-
-#, php-format
-msgid "%1$s: No old values for %2$s."
 msgstr ""
 
 msgid "IPTC Value"
@@ -2186,53 +2197,6 @@ msgid "Priority"
 msgstr ""
 
 msgid "Delimiter(s)"
-msgstr ""
-
-msgid "IPTC"
-msgstr ""
-
-msgid "EXIF"
-msgstr ""
-
-msgid "EXIF/Template Value"
-msgstr ""
-
-#, php-format
-msgid "%1$s: Render unknown custom %2$s."
-msgstr ""
-
-#, php-format
-msgid "%1$s: Update/delete unknown custom %2$s."
-msgstr ""
-
-msgid "IPTC/EXIF mapping settings updated."
-msgstr ""
-
-msgid "IPTC/EXIF settings update failed."
-msgstr ""
-
-msgid "IPTC/EXIF no mapping changes detected."
-msgstr ""
-
-#, php-format
-msgid "%1$s settings saved."
-msgstr ""
-
-msgid "Standard field"
-msgstr ""
-
-#, php-format
-msgid "%1$s: IPTC/EXIF %2$s settings update failed."
-msgstr ""
-
-msgid "Taxonomy term"
-msgstr ""
-
-msgid "Custom field"
-msgstr ""
-
-#, php-format
-msgid "%1$s: Reset unknown custom %2$s"
 msgstr ""
 
 msgid "ERROR: No post ID found"
@@ -2395,11 +2359,20 @@ msgstr ""
 msgid "PAUSED"
 msgstr ""
 
+msgid "Custom field mapping settings updated."
+msgstr ""
+
+msgid "Custom field no mapping changes detected."
+msgstr ""
+
 msgid "No custom field mapping rules to process."
 msgstr ""
 
 #, php-format
 msgid "%1$s mapping completed; %2$d attachment(s) examined, %3$d updated."
+msgstr ""
+
+msgid "Custom field"
 msgstr ""
 
 #, php-format
@@ -2467,6 +2440,33 @@ msgstr ""
 msgid "Add to Media/Assistant Bulk Edit area"
 msgstr ""
 
+msgid "Keep"
+msgstr ""
+
+msgid "Native"
+msgstr ""
+
+msgid "Commas"
+msgstr ""
+
+msgid "Raw"
+msgstr ""
+
+msgid "Text"
+msgstr ""
+
+msgid "Single"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Array"
+msgstr ""
+
+msgid "Multi"
+msgstr ""
+
 msgid "Delete NULL Values"
 msgstr ""
 
@@ -2488,6 +2488,9 @@ msgstr ""
 
 #, php-format
 msgid "Unknown bulk action %1$s"
+msgstr ""
+
+msgid "Custom Field Mapping Support is disabled"
 msgstr ""
 
 msgid "Custom Field Mapping Progress"
@@ -2546,7 +2549,10 @@ msgstr ""
 msgid "Execute All Rules"
 msgstr ""
 
-msgid "Add New Rule"
+msgid "Add New Custom Field Rule"
+msgstr ""
+
+msgid "Add Rule"
 msgstr ""
 
 msgid "Nothing to execute"
@@ -2584,6 +2590,9 @@ msgstr ""
 
 msgctxt "list_table_column"
 msgid "Option"
+msgstr ""
+
+msgid "Map All Attachments"
 msgstr ""
 
 msgid "Execute"
@@ -2771,11 +2780,46 @@ msgctxt "table_view_plural"
 msgid "Uninstalled"
 msgstr ""
 
-#, php-format
-msgid "%1$s: No %2$s settings to process."
+msgid "IPTC/EXIF mapping settings updated."
+msgstr ""
+
+msgid "IPTC/EXIF no mapping changes detected."
 msgstr ""
 
 msgid "updated."
+msgstr ""
+
+msgid "EXIF/Template Value"
+msgstr ""
+
+msgid "EXIF element name or Content Template"
+msgstr ""
+
+msgid " (starting with \"template:\")"
+msgstr ""
+
+msgid "IPTC"
+msgstr ""
+
+msgid "EXIF"
+msgstr ""
+
+msgid "Delimiters"
+msgstr ""
+
+msgid "Standard field mapping"
+msgstr ""
+
+msgid "Taxonomy term mapping"
+msgstr ""
+
+msgid "Custom field mapping"
+msgstr ""
+
+msgid "Edit IPTC EXIF Rule cancelled."
+msgstr ""
+
+msgid "IPTC/EXIF Mapping Support is disabled"
 msgstr ""
 
 msgid "IPTC &amp; EXIF Mapping Progress"
@@ -2787,52 +2831,46 @@ msgstr ""
 msgid ""
 "In this tab you can define the rules for mapping IPTC (International Press "
 "Telecommunications Council) and EXIF (EXchangeable Image File) metadata to "
-"WordPress standard attachment fields, taxonomy terms and custom fields. "
-"<strong>NOTE:</strong> settings changes will not be made permanent until you "
-"click \"Save Changes\" at the bottom of this page."
+"WordPress standard attachment fields, taxonomy terms and custom fields."
 msgstr ""
 
-#, php-format
-msgid ""
-"You can find more information about using the controls in this tab to define "
-"mapping rules and apply them in the %1$s section of the Documentation."
+msgctxt "list_table_column"
+msgid "IPTC Value"
 msgstr ""
 
-msgid "IPTC/EXIF Options documentation"
+msgctxt "list_table_column"
+msgid "EXIF/Template Value"
 msgstr ""
 
-msgid "Standard field mapping"
+msgctxt "list_table_column"
+msgid "Priority "
 msgstr ""
 
-msgid "Map All Attachments, Standard Fields Now"
+msgctxt "list_table_column"
+msgid "Delimiter(s)"
 msgstr ""
 
-msgid "Taxonomy term mapping"
-msgstr ""
-
-msgid "Map All Attachments, Taxonomy Terms Now"
-msgstr ""
-
-msgid "Custom field mapping"
-msgstr ""
-
-msgid "Map All Attachments, Custom Fields Now"
-msgstr ""
-
-#, php-format
-msgid ""
-"Click %1$s to update the \"Enable IPTC/EXIF mapping...\" checkbox and/or all "
-"rule changes and additions at once. <strong>No rule mapping will be "
-"performed.</strong>"
-msgstr ""
-
-msgid "Edit IPTC EXIF Rule cancelled."
-msgstr ""
-
-msgid "IPTC EXIF and Attachment Metadata Processing Options"
+msgctxt "list_table_column"
+msgid "Parent"
 msgstr ""
 
 msgid "Purge IPTC EXIF values"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Standard"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Standard"
+msgstr ""
+
+msgctxt "table_view_singular"
+msgid "Taxonomy"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Taxonomy"
 msgstr ""
 
 #, php-format
@@ -2904,6 +2942,10 @@ msgstr ""
 msgid "%1$s \"%2$s\" deleted."
 msgstr ""
 
+#, php-format
+msgid "%1$s settings saved."
+msgstr ""
+
 msgid "Shortcodes"
 msgstr ""
 
@@ -2929,13 +2971,13 @@ msgid ""
 "hyphens (-)."
 msgstr ""
 
+msgid "Copy"
+msgstr ""
+
 msgid "View Template"
 msgstr ""
 
 msgid "Edit Template"
-msgstr ""
-
-msgid "Copy"
 msgstr ""
 
 msgid "Add Template cancelled."
@@ -3284,6 +3326,9 @@ msgstr ""
 msgid "Plugins per page"
 msgstr ""
 
+msgid "Guide"
+msgstr ""
+
 #, php-format
 msgctxt "error_log"
 msgid "%1$s: %2$s unknown type = \"%3$s\""
@@ -3385,6 +3430,18 @@ msgid "Debug Options"
 msgstr ""
 
 msgid "Debug Settings"
+msgstr ""
+
+#, php-format
+msgid ""
+"You can find more information about the MLA Reporting/MLA_DEBUG_LEVEL values "
+"in the %1$s section of the Documentation tab."
+msgstr ""
+
+msgid "MLA Debug Tab documentation"
+msgstr ""
+
+msgid "MLA Debug Tab"
 msgstr ""
 
 #, php-format

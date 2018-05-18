@@ -96,7 +96,7 @@ mlaInlineEditSettings = {
 	},
 
 	edit : function(id) {
-		var t = this, fields, checkboxes, editRow, rowData, fIndex;
+		var t = this, fields, checkboxes, editRow, rowData, fIndex, fText;
 		t.revert();
 
 		if ( typeof(id) == 'object' )
@@ -118,10 +118,35 @@ mlaInlineEditSettings = {
 		rowData = $('#inline_'+id);
 
 		for ( fIndex = 0; fIndex < fields.length; fIndex++ ) {
-			$(':input[name="' + fields[fIndex] + '"]', editRow).val( $('.'+fields[fIndex], rowData).text() );
+			fText =  $( '.' + fields[fIndex], rowData ).text();
+
+			switch ( fields[fIndex] ) {
+				case 'type':
+					// IPTC/EXIF rules differ by type
+					if ( 'taxonomy' == fText ) {
+						$('.inline-taxonomy-group', editRow).show();
+					} else {
+						$('.inline-taxonomy-group', editRow).hide();
+					}
+					
+					if ( 'custom' == fText ) {
+						$('.inline-custom-group', editRow).show();
+					} else {
+						$('.inline-custom-group', editRow).hide();
+					}
+	
+					break;
+				case 'parent_options':
+					fText =  $( '.' + fields[fIndex], rowData ).html();
+					$(':input[name="parent"]', editRow).html( fText );
+					break;
+				default:
+					$(':input[name="' + fields[fIndex] + '"]', editRow).val( fText );
+					break;
+			} // switch fields[fIndex]
 		}
 
-		for ( fIndex = 0; fIndex < fields.length; fIndex++ ) {
+		for ( fIndex = 0; fIndex < checkboxes.length; fIndex++ ) {
 			if ( '1' == $('.'+checkboxes[fIndex], rowData).text() )
 				$(':input[name="' + checkboxes[fIndex] + '"]', editRow).attr( 'checked', 'checked' );
 			else
