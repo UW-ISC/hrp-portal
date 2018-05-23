@@ -19,7 +19,7 @@
  * alternatives to the standard WordPress tax_query.
  *
  * @package Alexa Paige Plugin for BuddyPress & rtMedia
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -27,7 +27,7 @@ Plugin Name: Alexa Paige Plugin for BuddyPress & rtMedia
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Supports BuddyPress URLs and multi-taxonomy and term checkbox queries
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
 Copyright 2014 David Lingren
@@ -177,7 +177,7 @@ class AlexaPaigePlugin {
 		$terms = array();
 		$args = array( 'hide_empty' => false, 'exclude' => $exclude, 'include' => $include, );
 		foreach( $taxonomies as $key => $taxonomy ) {
-			$term_objects = get_terms( $taxonomy, $args );
+			$term_objects = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 			//error_log( "AlexaPaigePlugin::axp_checkbox_form term_objects [ {$taxonomy} ] = " . var_export( $term_objects, true ), 0 );
 			if ( is_array( $term_objects ) ) {
 				// Get the name for display purposes
@@ -790,7 +790,7 @@ class AlexaPaigePlugin {
 			$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
 			foreach ( $slugs as $slug ) {
 				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
+				$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 			}
 
 			foreach( $terms as $term ) {
@@ -799,7 +799,7 @@ class AlexaPaigePlugin {
 
 				if ( $include_children ) {
 					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = get_terms( 'attachment_category', $args );
+					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
 					foreach( $children as $child ) {
 						$ttids[] = $child->term_taxonomy_id;
 					}
@@ -978,7 +978,7 @@ class AlexaPaigePlugin {
 			$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
 			foreach ( $slugs as $slug ) {
 				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
+				$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 			}
 //error_log( "AlexaPaigePlugin::double_query {$taxonomy} \$terms = " . var_export( $terms, true ), 0 );
 
@@ -988,7 +988,7 @@ class AlexaPaigePlugin {
 
 				if ( $include_children ) {
 					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = get_terms( 'attachment_category', $args );
+					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
 					foreach( $children as $child ) {
 						$ttids[] = $child->term_taxonomy_id;
 					}

@@ -3,7 +3,7 @@
  * Provides an example of hooking the filters provided by the MLA_List_Table class
  *
  * @package MLA List Table Hooks Example
- * @version 1.08
+ * @version 1.09
  */
 
 /*
@@ -11,10 +11,10 @@ Plugin Name: MLA List Table Hooks Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Provides an example of hooking the filters provided by the MLA_List_Table class
 Author: David Lingren
-Version: 1.08
+Version: 1.09
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
-Copyright 2014 - 2015 David Lingren
+Copyright 2014 - 2017 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -76,6 +76,7 @@ class MLAListTableHooksExample {
 		  */
 		add_filter( 'mla_taxonomy_get_columns', 'MLAListTableHooksExample::mla_taxonomy_get_columns', 10, 3 );
 		add_filter( 'mla_taxonomy_column', 'MLAListTableHooksExample::mla_taxonomy_column', 10, 5 );
+		add_filter( 'mla_taxonomy_column_final', 'MLAListTableHooksExample::mla_taxonomy_column_final', 10, 5 );
 
 		 /*
 		  * Defined in /media-library-assistant/includes/class-mla-data.php
@@ -307,7 +308,7 @@ class MLAListTableHooksExample {
 	 * Pre-process Edit Taxonomy submenu table column content
 	 *
 	 * This filter gives you an opportunity to change column content in
-	 * for the Edit Taxonomy submenu table(s).
+	 * for the Edit Taxonomy submenu table(s) before MLA computes the count.
 	 *
 	 * @since 1.06
 	 *
@@ -324,6 +325,28 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column $taxonomy = ' . var_export( $taxonomy, true ), 0 );
 		return $filter_content;
 	} // mla_taxonomy_column
+
+	/**
+	 * Post-process Edit Taxonomy submenu table column content
+	 *
+	 * This filter gives you an opportunity to change column content in
+	 * for the Edit Taxonomy submenu table(s) after MLA computes the count.
+	 *
+	 * @since 1.09
+	 *
+	 * @param	NULL	$filter_content NULL, indicating no changes to the current content.
+	 * @param	object	$tax_object Defines the current taxonomy.
+	 * @param	object	$term Defines the current term.
+	 * @param	string	$column_text MLA-computed count or "click to search".
+	 * @param	boolean	$count_terms True to compute counts.
+	 */
+	public static function mla_taxonomy_column_final( $filter_content, $tax_object, $term, $column_text, $count_terms ) {
+		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column_final $tax_object = ' . var_export( $tax_object, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column_final $term = ' . var_export( $term, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column_final $column_text = ' . var_export( $column_text, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column_final $count_terms = ' . var_export( $count_terms, true ), 0 );
+		return $filter_content;
+	} // mla_taxonomy_column_final
 
 	/**
 	 * Process the "where-used" reference reporting results 

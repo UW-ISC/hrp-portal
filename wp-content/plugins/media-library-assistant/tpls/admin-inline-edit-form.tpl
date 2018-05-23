@@ -2,10 +2,7 @@
           <fieldset class="inline-edit-col-center inline-edit-categories"><div class="inline-edit-col">
 [+category_blocks+]          </div></fieldset>
 <!-- template="category_block" -->
-            <span class="title inline-edit-categories-label">[+tax_html+]
-              <span class="catshow">[[+more+]]</span>
-              <span class="cathide" style="display:none;">[[+less+]]</span>
-            </span>
+            <span class="title inline-edit-categories-label">[+tax_html+]</span>
             <input type="hidden" name="tax_input[[+tax_attr+]][]" value="0" />
             <ul class="cat-checklist [+tax_attr+]-checklist">
 [+tax_checklist+]
@@ -56,6 +53,9 @@
                 <input type="text" name="image_alt" value="" />
                 </span> </label>
               <div class="inline-edit-group">
+[+Uploaded on+]
+              </div>
+              <div class="inline-edit-group">
                 <label class="inline-edit-post-parent alignleft"> <span class="title">[+Parent ID+]</span> <span class="input-text-wrap">
                   <input type="text" name="post_parent" value="" />
                   </span> </label>
@@ -102,12 +102,15 @@
               <label> <span class="title">[+Caption+]</span> <span class="input-text-wrap">
                 <input type="text" name="post_excerpt" value="" />
                 </span> </label>
-              <label> <span class="title">[+Description+]</span> <span class="input-text-wrap">
-                <textarea class="widefat" name="post_content"></textarea>
+              <label class="inline-edit-post-content"> <span class="title">[+Description+]</span> <span class="input-text-wrap">
+                [+description_field+]
                 </span> </label>
               <label class="inline-edit-image-alt"> <span class="title">[+ALT Text+]</span> <span class="input-text-wrap">
                 <input type="text" name="image_alt" value="" />
                 </span> </label>
+              <label class="inline-edit-post-date"><span class="title">[+Bulk Uploaded on+]</span><span class="input-text-wrap">
+                <input type="text" name="post_date" value="" />
+                </span></label>
               <div class="inline-edit-group">
                 <label class="inline-edit-post-parent alignleft"> <span class="title">[+Parent ID+]</span> <span class="input-text-wrap">
                   <input type="text" name="post_parent" value="" />
@@ -158,12 +161,15 @@
               <label> <span class="title">[+Caption+]</span> <span class="input-text-wrap">
                 <input type="text" name="post_excerpt" value="" />
                 </span> </label>
-              <label> <span class="title">[+Description+]</span> <span class="input-text-wrap">
-                <textarea class="widefat" name="post_content"></textarea>
+              <label class="inline-edit-post-content"> <span class="title">[+Description+]</span> <span class="input-text-wrap">
+                [+description_field+]
                 </span> </label>
               <label class="inline-edit-image-alt"> <span class="title">[+ALT Text+]</span> <span class="input-text-wrap">
                 <input type="text" name="image_alt" value="" />
                 </span> </label>
+              <label class="inline-edit-post-date"><span class="title">[+Bulk Uploaded on+]</span><span class="input-text-wrap">
+                <input type="text" name="post_date" value="" />
+                </span></label>
               <div class="inline-edit-group">
                 <label class="inline-edit-post-parent alignleft"> <span class="title">[+Parent ID+]</span> <span class="input-text-wrap">
                   <input type="text" name="post_parent" value="" />
@@ -193,8 +199,8 @@
           <p class="submit inline-edit-save">
 		  	<a accesskey="c" href="#inline-edit" title="[+Cancel+]" class="button-secondary cancel alignleft">[+Cancel+]</a>
             <input accesskey="s" type="submit" name="bulk_edit" id="bulk_edit" class="button-primary alignright" value="[+Update+]"  />
-            <input accesskey="i" type="submit" name="bulk_map" id="bulk_map" class="button-secondary alignright" value="[+Map IPTC/EXIF metadata+]" />
-            <input accesskey="m" type="submit" name="bulk_custom_field_map" id="bulk_custom_field_map" class="button-secondary alignright" value="[+Map Custom Field metadata+]" />
+            <input style="[+bulk_map_style+]" accesskey="i" type="submit" name="bulk_map" id="bulk_map" class="button-secondary alignright" value="[+Map IPTC/EXIF metadata+]" />
+            <input style="[+bulk_custom_field_map_style+]" accesskey="m" type="submit" name="bulk_custom_field_map" id="bulk_custom_field_map" class="button-secondary alignright" value="[+Map Custom Field metadata+]" />
             <input type="hidden" name="page" value="mla-menu" />
             <input type="hidden" name="screen" value="media_page_mla-menu" />
             <span class="error" style="display:none"></span> <br class="clear" />

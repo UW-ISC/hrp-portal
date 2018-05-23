@@ -16,7 +16,7 @@
  * https://wordpress.org/support/topic/automatic-hierarchical-display-for-hierarchical-taxonomies
  *
  * @package MLA Child Term Hooks Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -24,7 +24,7 @@ Plugin Name: MLA Child Term Hooks Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Creates a term-specific gallery of images assigned to child terms.
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
 Copyright 2014 David Lingren
@@ -178,7 +178,7 @@ class MLAChildTermHooksExample {
 				$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
 				foreach ( $slugs as $slug ) {
 					$args = array( 'slug' => $slug, 'hide_empty' => false );
-					$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
+					$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 				}
 
 				foreach( $terms as $term ) {
@@ -189,7 +189,7 @@ class MLAChildTermHooksExample {
 						$args = array( 'parent' => absint( $term->term_id ), 'hide_empty' => false );
 					}
 
-					$children = get_terms( 'attachment_category', $args );
+					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
 					foreach( $children as $child ) {
 						// Index by ttid to remove duplicates
 						$ttids[ $child->term_taxonomy_id ] = $child->term_taxonomy_id;

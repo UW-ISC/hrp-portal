@@ -22,6 +22,11 @@ var jQuery,
 
 	// The mlaEditAttachment functions are adapted from wp-admin/js/post.js
 	mla.mlaEditAttachment = {
+		$uploaddiv : null,
+		uploadtimestamp : '',
+		$modifydiv : null,
+		modifytimestamp : '',
+				
 		init : function(){
 			$( '#mla_set_parent' ).on( 'click', function(){
 				return mla.mlaEditAttachment.setParentOpen();
@@ -110,6 +115,62 @@ var jQuery,
 					return false;
 				});
 			}); // .categorydiv.each, 
+
+			/*
+			 * Save Post box (#submitdiv), for Uploaded on and Last modified dates
+			 */
+			if ( $('#submitdiv').length ) {
+				mla.mlaEditAttachment.uploadtimestamp = $('#upload-timestamp').html();
+				mla.mlaEditAttachment.$uploaddiv = $('#timestampdiv');
+				//mla.mlaEditAttachment.modifytimestamp = $('#modify-timestamp').html();
+				//mla.mlaEditAttachment.$modifydiv = $('#modifytimestampdiv');
+
+				// Edit Uploaded on click.
+				mla.mlaEditAttachment.$uploaddiv.siblings('a.edit-timestamp').click( function( event ) {
+					if ( mla.mlaEditAttachment.$uploaddiv.is( ':hidden' ) ) {
+						mla.mlaEditAttachment.$uploaddiv.slideDown( 'fast', function() {
+							$( 'input, select', mla.mlaEditAttachment.$uploaddiv.find( '.timestamp-wrap' ) ).first().focus();
+						} );
+						$(this).hide();
+					}
+					event.preventDefault();
+				});
+		
+				// Cancel editing the Uploaded on time and hide the settings.
+				mla.mlaEditAttachment.$uploaddiv.find('.cancel-timestamp').click( function( event ) {
+					mla.mlaEditAttachment.$uploaddiv.slideUp('fast').siblings('a.edit-timestamp').show().focus();
+					$( '#mm', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_mm', mla.mlaEditAttachment.$uploaddiv ).val());
+					$( '#jj', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_jj', mla.mlaEditAttachment.$uploaddiv ).val());
+					$( '#aa', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_aa', mla.mlaEditAttachment.$uploaddiv ).val());
+					$( '#hh', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_hh', mla.mlaEditAttachment.$uploaddiv ).val());
+					$( '#mn', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_mn', mla.mlaEditAttachment.$uploaddiv ).val());
+					mla.mlaEditAttachment.updateText( mla.mlaEditAttachment.$uploaddiv, mla.mlaEditAttachment.uploadtimestamp, '#upload-timestamp' );
+					event.preventDefault();
+				});
+		
+				// Save the changed Uploaded on timestamp.
+				mla.mlaEditAttachment.$uploaddiv.find('.save-timestamp').click( function( event ) { // crazyhorse - multiple ok cancels
+					if ( mla.mlaEditAttachment.updateText( mla.mlaEditAttachment.$uploaddiv, mla.mlaEditAttachment.uploadtimestamp, '#upload-timestamp' ) ) {
+						mla.mlaEditAttachment.$uploaddiv.slideUp('fast');
+						mla.mlaEditAttachment.$uploaddiv.siblings('a.edit-timestamp').show().focus();
+					}
+					event.preventDefault();
+				});
+		
+				// Cancel submit when an invalid Uploaded on timestamp has been selected.
+				$('#post').on( 'submit', function( event ) {
+					if ( ! mla.mlaEditAttachment.updateText( mla.mlaEditAttachment.$uploaddiv, mla.mlaEditAttachment.uploadtimestamp, '#upload-timestamp' ) ) {
+						event.preventDefault();
+						mla.mlaEditAttachment.$uploaddiv.show();
+		
+						if ( wp.autosave ) {
+							wp.autosave.enableButtons();
+						}
+		
+						$( '#publishing-action .spinner' ).removeClass( 'is-active' );
+					}
+				});
+			} // $('#submitdiv').length
 		}, // function init
 
 		setParentOpen : function() {
@@ -144,6 +205,53 @@ var jQuery,
 			}
 
 			$( '#mla-set-parent-submit' ).off( 'click' );
+		},
+
+		/**
+		 * Make sure all Uploaded on or Last Modified labels represent the current settings.
+		 *
+		 * @returns {boolean} False when an invalid timestamp has been selected, otherwise True.
+		 */
+		updateText : function( $div, stamp, stampdiv ) {
+
+			if ( ! $div.length )
+				return true;
+
+			var attemptedDate, originalDate, currentDate,
+			    aa = $( '#aa', $div ).val(), mm = $( '#mm', $div ).val(), jj = $( '#jj', $div ).val(),
+			    hh = $( '#hh', $div ).val(), mn = $( '#mn', $div ).val();
+
+			attemptedDate = new Date( aa, mm - 1, jj, hh, mn );
+			originalDate = new Date( $( '#hidden_aa', $div ).val(), $( '#hidden_mm', $div ).val() -1, $( '#hidden_jj', $div ).val(), $( '#hidden_hh', $div ).val(), $( '#hidden_mn', $div ).val() );
+			currentDate = new Date( $( '#cur_aa', $div ).val(), $( '#cur_mm', $div ).val() -1, $( '#cur_jj', $div ).val(), $( '#cur_hh', $div ).val(), $( '#cur_mn', $div ).val() );
+
+			// Catch unexpected date problems.
+			if ( attemptedDate.getFullYear() != aa || (1 + attemptedDate.getMonth()) != mm || attemptedDate.getDate() != jj || attemptedDate.getMinutes() != mn ) {
+				$div.find('.timestamp-wrap').addClass('form-invalid');
+				return false;
+			} else {
+				$div.find('.timestamp-wrap').removeClass('form-invalid');
+			}
+
+			// If the date is the same, set it to trigger update events.
+			if ( originalDate.toUTCString() == attemptedDate.toUTCString() ) {
+				// Re-set to the current value.
+				$( stampdiv ).html( stamp );
+			} else {
+				label = '#upload-timestamp' == stampdiv ? mla.settings.uploadLabel : mla.settings.modifyLabel;
+				$( stampdiv ).html(
+					label + '<b>' +
+					postL10n.dateFormat
+						.replace( '%1$s', $( 'option[value="' + mm + '"]', '#mm' ).attr( 'data-text' ) )
+						.replace( '%2$s', parseInt( jj, 10 ) )
+						.replace( '%3$s', aa )
+						.replace( '%4$s', ( '00' + hh ).slice( -2 ) )
+						.replace( '%5$s', ( '00' + mn ).slice( -2 ) ) +
+						'</b> '
+				);
+			}
+
+			return true;
 		}
 	}; // mla.mlaEditAttachment
 

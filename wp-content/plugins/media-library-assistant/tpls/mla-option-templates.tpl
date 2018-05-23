@@ -1,3 +1,10 @@
+<!-- template="text" -->
+        <tr valign="top"><th scope="row" class="textright">
+            [+value+]
+        </th><td class="textleft">
+            <input name="[+key+]" id="[+key+]" type="text" size="[+size+]" value="[+text+]" />
+            <div class="mla-settings-help">&nbsp;&nbsp;[+help+]</div>
+        </td></tr>
 <!-- template="taxonomy-table" -->
         <tr valign="top">
 		<td colspan="2" class="textleft">

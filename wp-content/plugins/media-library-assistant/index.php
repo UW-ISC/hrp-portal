@@ -6,7 +6,7 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 2.54
+ * @version 2.73
  */
 
 /*
@@ -16,10 +16,10 @@ Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] 
 Author: David Lingren, Fair Trade Judaica
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.54
+Version: 2.73
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
-Copyright 2011-2017 David Lingren
+Copyright 2011-2018 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -103,17 +103,23 @@ if ( ! defined( 'MLA_BACKUP_DIR' ) ) {
  */
 $mla_name_conflict_candidates =
 	array (
+		'CPAC_Deprecated_Storage_Model_MLA' => 'class',
+		'ACP_Addon_MLA_Editing_Strategy' => 'class',
+		'AC_Addon_MLA_ListScreen' => 'class',
+		'ACP_Addon_MLA_Editing_Model_Media_Title' => 'class',
+		'ACP_Addon_MLA_Column_Parent' => 'class',
+		'ACP_Addon_MLA_Column_Date' => 'class',
 		'MLA_Ajax' => 'class',
 		'MLACore' => 'class',
+		'MLACoreOptions' => 'class',
 		'MLA_Checklist_Walker' => 'class',
-		'CPAC_Storage_Model_MLA' => 'class',
 		'MLAPDF' => 'class',
 		'MLAQuery' => 'class',
 		'MLAReferences' => 'class',
 		'MLAData_Source' => 'class',
 		'MLAData' => 'class',
 		'MLAEdit' => 'class',
-		'MLA_Example_List_Table' => 'class',
+		'MLAFileDownloader' => 'class',
 		'MLAImageProcessor' => 'class',
 		'MLAMutex' => 'class',
 		'MLA_List_Table' => 'class',
@@ -124,15 +130,30 @@ $mla_name_conflict_candidates =
 		'MLAObjects' => 'class',
 		'MLATextWidget' => 'class',
 		'MLAOptions' => 'class',
+		'MLA_Polylang_Shortcodes' => 'class',
 		'MLA_Polylang' => 'class',
+		'MLASettings_CustomFields' => 'class',
+		'MLA_Custom_Fields_List_Table' => 'class',
+		'MLA_Custom_Field_Query' => 'class',
+		'MLASettings_Documentation' => 'class',
+		'MLA_Example_List_Table' => 'class',
+		'MLA_Upgrader_Skin' => 'class',
+		'MLASettings_IPTCEXIF' => 'class',
+		'MLA_IPTC_EXIF_List_Table' => 'class',
+		'MLA_IPTC_EXIF_Query' => 'class',
+		'MLASettings_Shortcodes' => 'class',
+		'MLA_Template_List_Table' => 'class',
+		'MLA_Template_Query' => 'class',
+		'MLASettings_Upload' => 'class',
+		'MLA_Upload_List_Table' => 'class',
+		'MLA_Upload_Optional_List_Table' => 'class',
+		'MLASettings_View' => 'class',
+		'MLA_View_List_Table' => 'class',
 		'MLASettings' => 'class',
 		'MLAShortcode_Support' => 'class',
 		'MLAShortcodes' => 'class',
+		'MLATemplate_Support' => 'class',
 		'MLA_Thumbnail' => 'class',
-		'MLA_Upgrader_Skin' => 'class',
-		'MLA_Upload_List_Table' => 'class',
-		'MLA_Upload_Optional_List_Table' => 'class',
-		'MLA_View_List_Table' => 'class',
 		'MLA_WPML' => 'class',
 		'MLA_WPML_List_Table' => 'class',
 		'MLA_WPML_Table' => 'class',

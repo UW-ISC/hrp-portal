@@ -129,6 +129,16 @@ class MLACoreOptions {
 	const MLA_TABLE_ICON_SIZE = 'table_icon_size';
 
 	/**
+	 * Provides a unique name for the Media/Assistant submenu table file name in the primary column
+	 */
+	const MLA_SHOW_FILE_NAME = 'show_file_name';
+
+	/**
+	 * Provides a unique name for the Media/Assistant submenu table bulk description wp_editor
+	 */
+	const MLA_BULK_EDITOR = 'bulk_wp_editor';
+
+	/**
 	 * Provides a unique name for the Bulk Update and Map All chunk size option
 	 */
 	const MLA_BULK_CHUNK_SIZE = 'bulk_chunk_size';
@@ -301,6 +311,16 @@ class MLACoreOptions {
 	 * Provides a unique name for the Enable MLA Icons option
 	 */
 	const MLA_ENABLE_MLA_ICONS = 'enable_mla_icons';
+
+	/**
+	 * Provides a unique name for the Enable Custom Field Mapping option
+	 */
+	const MLA_ALLOW_CUSTOM_FIELD_MAPPING = 'allow_custom_field_mapping';
+
+	/**
+	 * Provides a unique name for the Enable IPTC/EXIF Mapping option
+	 */
+	const MLA_ALLOW_IPTC_EXIF_MAPPING = 'allow_iptc_exif_mapping';
 
 	/**
 	 * Provides a unique name for the Debug display limit option
@@ -593,6 +613,19 @@ class MLACoreOptions {
 					'texts' => array( __( 'Ascending', 'media-library-assistant' ), __( 'Descending', 'media-library-assistant' ) ),
 					'help' => __( 'Choose the sort order.', 'media-library-assistant' )),
 
+			'entries_per_page' =>
+				array('tab' => 'general',
+					'name' => __( 'Entries per page', 'media-library-assistant' ),
+					'autoload' => true,
+					'std' => '10',
+					'size' => 2,
+					'help' => __( 'Enter the number of Media/Assistant submenu table items per page.', 'media-library-assistant' ),
+					'type' => 'custom',
+					'render' => 'mla_entries_per_page_handler',
+					'update' => 'mla_entries_per_page_handler',
+					'delete' => 'mla_entries_per_page_handler',
+					'reset' => 'mla_entries_per_page_handler'),
+
 			self::MLA_TABLE_VIEWS_WIDTH =>
 				array('tab' => 'general',
 					'name' => __( 'Views Width', 'media-library-assistant' ),
@@ -610,6 +643,22 @@ class MLACoreOptions {
 					'std' => '',
 					'size' => 5,
 					'help' => __( 'Enter the size of the thumbnail/icon images, in pixels', 'media-library-assistant' )),
+
+			self::MLA_SHOW_FILE_NAME =>
+				array('tab' => 'general',
+					'name' => __( 'Show Primary Column File Name', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'autoload' => true,
+					'std' => '',
+					'help' => __( 'Check/uncheck this option to show/omit the file name from the primary column.', 'media-library-assistant' )),
+
+			self::MLA_BULK_EDITOR =>
+				array('tab' => 'general',
+					'name' => __( 'QuickTags editor for bulk description', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'autoload' => true,
+					'std' => '',
+					'help' => __( 'Check this option to use the QuickTags editor for the Description field in the Bulk Edit area.', 'media-library-assistant' )),
 
 			self::MLA_BULK_CHUNK_SIZE =>
 				array('tab' => 'general',
@@ -874,10 +923,10 @@ class MLACoreOptions {
 					'delete' => 'mla_attachment_display_settings_option_handler',
 					'reset' => 'mla_attachment_display_settings_option_handler'),
 
-			'uninstall_plugin_subheader' =>
+			'uninstall_plugin_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Uninstall (Delete) Plugin Settings', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'header'),
 
 			self::MLA_DELETE_OPTION_SETTINGS =>
 				array('tab' => 'general',
@@ -1043,6 +1092,13 @@ class MLACoreOptions {
 					'type' => 'hidden',
 					'std' => array()),
 
+			self::MLA_ALLOW_CUSTOM_FIELD_MAPPING =>
+				array('tab' => 'custom_field',
+					'name' => __( 'Enable custom field mapping', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => 'checked',
+					'help' => __( 'See Help menu.', 'media-library-assistant' )),
+
 			'enable_custom_field_mapping' =>
 				array('tab' => 'custom_field',
 					'name' => __( 'Enable custom field mapping when adding new media', 'media-library-assistant' ),
@@ -1066,6 +1122,13 @@ class MLACoreOptions {
 					'update' => 'mla_custom_field_option_handler',
 					'delete' => 'mla_custom_field_option_handler',
 					'reset' => 'mla_custom_field_option_handler'),
+
+			self::MLA_ALLOW_IPTC_EXIF_MAPPING =>
+				array('tab' => 'iptc_exif',
+					'name' => __( 'Enable IPTC/EXIF Mapping', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => 'checked',
+					'help' => __( 'See Help menu.', 'media-library-assistant' )),
 
 			'enable_iptc_exif_mapping' =>
 				array('tab' => 'iptc_exif',
@@ -1150,6 +1213,13 @@ class MLACoreOptions {
 								'exif_value' => '',
 								'iptc_first' => true,
 								'keep_existing' => true
+							),
+							'post_date' => array (
+								'name' => __( 'Uploaded on', 'media-library-assistant' ),
+								'iptc_value' => 'none',
+								'exif_value' => '',
+								'iptc_first' => true,
+								'keep_existing' => false
 							),
 						),
 						'taxonomy' => array (
@@ -1300,7 +1370,7 @@ class MLACoreOptions {
 					'type' => 'text',
 					'std' => '',
 					'size' => 60,
-					'help' => __( 'Enter the name of an alternate, MLA-specific debug log file; leave blank to use the PHP error_log.', 'media-library-assistant' )),
+					'help' => __( 'Enter the name of an alternate, MLA-specific debug log file; leave blank to use the PHP error_log.<br>&nbsp;&nbsp;The WP_CONTENT_DIR value (below) will be prepended to the value here, e.g., enter something like "/uploads/mla.log".', 'media-library-assistant' )),
 
 			self::MLA_DEBUG_REPLACE_PHP_LOG =>
 				array('tab' => 'debug',

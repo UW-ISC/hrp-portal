@@ -16,7 +16,7 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.12
+ * @version 1.14
  */
 
 /*
@@ -24,10 +24,10 @@ Plugin Name: MLA Gallery Hooks Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.12
+Version: 1.14
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
-Copyright 2013 - 2016 David Lingren
+Copyright 2013 - 2017 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -96,6 +96,7 @@ class MLAGalleryHooksExample {
 		add_filter( 'mla_gallery_style_template', 'MLAGalleryHooksExample::mla_gallery_style_template', 10, 1 );
 		add_filter( 'mla_gallery_style_parse', 'MLAGalleryHooksExample::mla_gallery_style_parse', 10, 3 );
 
+		add_filter( 'mla_gallery_pagination_values', 'MLAGalleryHooksExample::mla_gallery_pagination_values', 10, 1 );
 		add_filter( 'mla_gallery_open_values', 'MLAGalleryHooksExample::mla_gallery_open_values', 10, 1 );
 		add_filter( 'mla_gallery_open_template', 'MLAGalleryHooksExample::mla_gallery_open_template', 10, 1 );
 		add_filter( 'mla_gallery_open_parse', 'MLAGalleryHooksExample::mla_gallery_open_parse', 10, 3 );
@@ -106,6 +107,7 @@ class MLAGalleryHooksExample {
 		add_filter( 'mla_gallery_row_open_template', 'MLAGalleryHooksExample::mla_gallery_row_open_template', 10, 1 );
 		add_filter( 'mla_gallery_row_open_parse', 'MLAGalleryHooksExample::mla_gallery_row_open_parse', 10, 3 );
 
+		add_filter( 'mla_gallery_item_initial_values', 'MLAGalleryHooksExample::mla_gallery_item_initial_values', 10, 2 );
 		add_filter( 'mla_gallery_item_values', 'MLAGalleryHooksExample::mla_gallery_item_values', 10, 1 );
 		add_filter( 'mla_gallery_item_template', 'MLAGalleryHooksExample::mla_gallery_item_template', 10, 1 );
 		add_filter( 'mla_gallery_item_parse', 'MLAGalleryHooksExample::mla_gallery_item_parse', 10, 3 );
@@ -490,7 +492,7 @@ class MLAGalleryHooksExample {
 				$slugs = explode( ',', $my_query_vars[ $taxonomy ] );
 				foreach ( $slugs as $slug ) {
 					$args = array( 'slug' => $slug, 'hide_empty' => false );
-					$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
+					$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 				}
 
 				$ttids = array();
@@ -500,7 +502,7 @@ class MLAGalleryHooksExample {
 
 					if ( $tax_include_children ) {
 						$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-						$children = get_terms( $taxonomy, $args );
+						$children = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 						foreach( $children as $child ) {
 							$ttids[ $child->term_taxonomy_id ] = $child->term_taxonomy_id;
 						}
@@ -838,7 +840,7 @@ class MLAGalleryHooksExample {
 	 * @return string Complete 'ids_name="value,value"' parameter or an empty string to omit parameter
 	 */
 	public static function mla_gallery_alt_shortcode_ids( $ids, $ids_name, $attachments ) {
-		//error_log( 'MLAGalleryHooksExample::mla_gallery_alt_shortcode_ids( $ids_name ) attachments = " . var_export( $attachments, true ), 0 );
+		//error_log( "MLAGalleryHooksExample::mla_gallery_alt_shortcode_ids( $ids_name ) attachments = " . var_export( $attachments, true ), 0 );
 		
 		return $ids;
 	} // mla_gallery_alt_shortcode_ids
@@ -975,6 +977,21 @@ class MLAGalleryHooksExample {
 
 		return $html_markup;
 	} // mla_gallery_style_parse
+
+	/**
+	 * MLA Gallery Pagination Values
+	 *
+	 * This filter gives you an opportunity to customize the markup values used in pagination controls.
+	 *
+	 * @since 1.13
+	 *
+	 * @param array	$markup_values gallery-level parameter_name => parameter_value pairs
+	 */
+	public static function mla_gallery_pagination_values( $markup_values ) {
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_pagination_values $markup_values = ' . var_export( $markup_values, true ), 0 );
+
+		return $markup_values;
+	} // mla_gallery_pagination_values
 
 	/**
 	 * MLA Gallery Open Values
@@ -1136,6 +1153,24 @@ class MLAGalleryHooksExample {
 
 		return $item_values;
 	} // _update_caption
+
+	/**
+	 * MLA Gallery Item Initial Values
+	 *
+	 * This filter gives you an opportunity to add custom elements to each item
+	 * returned by the query item-level processing occurs.
+	 *
+	 * @since 1.13
+	 *
+	 * @param array	$markup_values gallery-level parameter_name => parameter_value pairs
+	 * @param array $attachment WP_Post object of the current item
+	 */
+	public static function mla_gallery_item_initial_values( $markup_values, $attachment ) {
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_initial_values $markup_values = ' . var_export( $markup_values, true ), 0 );
+		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_initial_values $attachment = ' . var_export( $attachment, true ), 0 );
+
+		return $markup_values;
+	} // mla_gallery_item_initial_values
 
 	/**
 	 * MLA Gallery Item Values

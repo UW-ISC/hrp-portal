@@ -61,10 +61,6 @@
 			  </tr></table>
 			  <p>&nbsp;&nbsp;[+WP Help+]</p>
             </div> <!-- inline-edit-group -->
-<!--		<label class="alignleft clear">
-			<span class="title" style="display: inline-block">[+Options+]</span>
-            <input name="mla_thumbnail_options[clear_filters]" id="mla-thumbnail-options-clear-filters" type="checkbox" value="checked" checked="checked" />[+Clear Filter-by+]
-			</label> -->
             </div> <!-- inline-edit-col -->
           </fieldset>
           <p class="submit inline-edit-save"> <a accesskey="c" href="#mla-generate-thumbnail" title="[+Cancel+]" class="button-secondary cancel alignleft">[+Cancel+]</a>

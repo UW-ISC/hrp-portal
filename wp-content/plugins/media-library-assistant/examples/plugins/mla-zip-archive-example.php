@@ -1,22 +1,24 @@
 <?php
 /**
- * Provides an example of hooking the filters provided by the MLA_List_Table class
+ * Creates a "Download" Bulk Action that downloads one or more Media Library files as a ZIP archive.
  *
- * In this example, a Bulk Action is created that downloads one or more files as a ZIP archive.
+ * Created for support topic "Att Categories menu returns 404 error"
+ * opened on 11/17/2014 by "activecontent".
+ * https://wordpress.org/support/topic/att-categories-menu-returns-404-error
  *
  * @package MLA Download ZIP Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Download ZIP Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
-Description: Provides an example of hooking the filters provided by the MLA_List_Table class
+Description: Creates a "Download" Bulk Action that downloads one or more Media Library files as a ZIP archive
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
-Copyright 2014 David Lingren
+Copyright 2014, 2018 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -154,9 +156,9 @@ class MLADownloadZIPExample {
 			return;
 		}
 
-		$download_args = array( 'page' => MLA::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $archive_name ), 'mla_download_type' => 'application/zip', 'mla_download_disposition' => 'delete' );
+		$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $archive_name ), 'mla_download_type' => 'application/zip', 'mla_download_disposition' => 'delete' );
 
-		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLA::MLA_ADMIN_NONCE ) ), 302 );
+		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
 		exit;
 	} // admin_init_action
 

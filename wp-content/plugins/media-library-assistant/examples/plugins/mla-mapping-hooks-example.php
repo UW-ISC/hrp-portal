@@ -525,17 +525,16 @@ class MLAMappingHooksExample {
 	 * @since 1.02
 	 *
 	 * @param	mixed 	string or array value returned by the rule
-	 * @param	array 	custom_field_mapping rule
+	 * @param	string 	rule key - standard field slug, taxonomy slug or custom field name
 	 * @param	integer post ID to be evaluated
 	 * @param	string 	category/scope to evaluate against: iptc_exif_standard_mapping, iptc_exif_taxonomy_mapping or iptc_exif_custom_mapping
 	 * @param	array 	attachment_metadata, default NULL
 	 *
 	 * @return	array	updated rule EXIF/Template value
 	 */
-	public static function mla_mapping_new_text( $new_text, $setting_value, $post_id, $category, $attachment_metadata ) {
-		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_new_text_filter( {$post_id}, {$category} ) new_text = " . var_export( $new_text, true ), 0 );
-		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_new_text_filter( {$post_id}, {$category} ) setting_value = " . var_export( $setting_value, true ), 0 );
-		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_new_text_filter( {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
+	public static function mla_mapping_new_text( $new_text, $setting_key, $post_id, $category, $attachment_metadata ) {
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) new_text = " . var_export( $new_text, true ), 0 );
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
 
 		return  $new_text;
 	} // mla_mapping_new_text_filter

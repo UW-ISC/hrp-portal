@@ -279,7 +279,7 @@ function mla_taxonomy_terms_list( $attr = NULL ) {
 		'taxonomy' => 'attachment_tag',
 	), $attr ) );
 
-	$terms = get_terms( $taxonomy );
+	$terms = MLAQuery::mla_wp_get_terms( $taxonomy );
 	if ( empty( $terms ) ) {
 		return __( 'There are no non-empty taxonomy values', 'mla-child-theme' );
 	}

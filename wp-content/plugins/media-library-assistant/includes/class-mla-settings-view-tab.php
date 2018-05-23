@@ -308,7 +308,7 @@ class MLASettings_View {
 			 */
 			$options_list = '';
 			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-				if ( 'view' == $value['tab'] ) {
+				if ( MLACoreOptions::MLA_ENABLE_POST_MIME_TYPES == $key ) {
 					$options_list .= MLASettings::mla_compose_option_row( $key, $value );
 				}
 			}
@@ -717,15 +717,15 @@ class MLA_View_List_Table extends WP_List_Table {
 			$custom_types = array ();
 		}
 
-		$actions['edit'] = '<a href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
+		$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
 
 		$actions['inline hide-if-no-js'] = '<a class="editinline" href="#" title="' . __( 'Edit this item inline', 'media-library-assistant' ) . '">' . __( 'Quick Edit', 'media-library-assistant' ) . '</a>';
 
 			if ( isset( $custom_types[ $item->slug ] ) ) {
 				if ( isset( $mla_types[ $item->slug ] ) ) {
-					$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Revert to standard item', 'media-library-assistant' ) . '">' . __( 'Revert to Standard', 'media-library-assistant' ) . '</a>';
+					$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Revert to standard item', 'media-library-assistant' ) . '">' . __( 'Revert to Standard', 'media-library-assistant' ) . '</a>';
 				} else {
-					$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
+					$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
 				}
 			} // custom type
 
@@ -897,8 +897,7 @@ class MLA_View_List_Table extends WP_List_Table {
 
 	/**
 	 * Returns an array where the  key is the column that needs to be sortable
-	 * and the value is db column to sort by. Also notes the current sort column,
-	 * if set.
+	 * and the value is db column to sort by.
 	 *
 	 * @since 1.40
 	 * 
@@ -906,19 +905,7 @@ class MLA_View_List_Table extends WP_List_Table {
 	 * 					'slugs'=>array('data_values',boolean)
 	 */
 	function get_sortable_columns( ) {
-		$columns = MLAMime::$default_sortable_view_columns;
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$needle = array( $_REQUEST['orderby'], false );
-			$key = array_search( $needle, $columns );
-			if ( $key ) {
-				$columns[ $key ][ 1 ] = true;
-			}
-		} else {
-			$columns['menu_order'][ 1 ] = true;
-		}
-
-		return $columns;
+		return MLAMime::$default_sortable_view_columns;
 	}
 
 	/**

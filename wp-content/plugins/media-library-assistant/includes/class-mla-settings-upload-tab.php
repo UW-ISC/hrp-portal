@@ -467,7 +467,7 @@ class MLASettings_Upload {
 			 */
 			$options_list = '';
 			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-				if ( 'upload' == $value['tab'] ) {
+				if ( MLACoreOptions::MLA_ENABLE_UPLOAD_MIMES == $key ) {
 					$options_list .= MLASettings::mla_compose_option_row( $key, $value );
 				}
 			}
@@ -542,7 +542,7 @@ class MLASettings_Upload {
 			'Description' => __( 'Description', 'media-library-assistant' ),
 			'The description can' => __( 'The description can contain any documentation or notes you need to understand or use the item.', 'media-library-assistant' ),
 			'Add Upload MIME' => __( 'Add Upload MIME Type', 'media-library-assistant' ),
-			'search_url' => wp_nonce_url( '?page=mla-settings-menu-upload&mla_tab=upload&mla-optional-uploads-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'search_url' => MLACore::mla_nonce_url( '?page=mla-settings-menu-upload&mla_tab=upload&mla-optional-uploads-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
 			'Search Known Types' => __( 'Search Known Types', 'media-library-assistant' ),
 			'colspan' => $MLAListUploadTable->get_column_count(),
 			'Quick Edit' => __( '<strong>Quick Edit</strong>', 'media-library-assistant' ),
@@ -920,15 +920,15 @@ class MLA_Upload_List_Table extends WP_List_Table {
 			$view_args['orderby'] = $_REQUEST['orderby'];
 		}
 
-		$actions['edit'] = '<a href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
+		$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';
 
 		$actions['inline hide-if-no-js'] = '<a class="editinline" href="#" title="' . __( 'Edit this item inline', 'media-library-assistant' ) . '">' . __( 'Quick Edit', 'media-library-assistant' ) . '</a>';
 
 		if ( 'custom' == $item->source ) {
 			if ( empty( $item->standard_source ) ) {
-				$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
+				$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Delete this item Permanently', 'media-library-assistant' ) . '">' . __( 'Delete Permanently', 'media-library-assistant' ) . '</a>';
 			} else {
-				$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Revert to standard item', 'media-library-assistant' ) . '">' . __( 'Revert to Standard', 'media-library-assistant' ) . '</a>';
+				$actions['delete'] = '<a class="delete-tag"' . ' href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_DELETE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Revert to standard item', 'media-library-assistant' ) . '">' . __( 'Revert to Standard', 'media-library-assistant' ) . '</a>';
 			}
 		}
 
@@ -1128,8 +1128,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 
 	/**
 	 * Returns an array where the  key is the column that needs to be sortable
-	 * and the value is db column to sort by. Also notes the current sort column,
-	 * if set.
+	 * and the value is db column to sort by.
 	 *
 	 * @since 1.40
 	 * 
@@ -1137,19 +1136,7 @@ class MLA_Upload_List_Table extends WP_List_Table {
 	 * 					'slugs'=>array('data_values',boolean)
 	 */
 	function get_sortable_columns( ) {
-		$columns = MLAMime::$default_sortable_upload_columns;
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$needle = array( $_REQUEST['orderby'], false );
-			$key = array_search( $needle, $columns );
-			if ( $key ) {
-				$columns[ $key ][ 1 ] = true;
-			}
-		} else {
-			$columns['name'][ 1 ] = true;
-		}
-
-		return $columns;
+		return MLAMime::$default_sortable_upload_columns;
 	}
 
 	/**
@@ -1479,7 +1466,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 			$view_args['orderby'] = $_REQUEST['orderby'];
 		}
 
-		$actions['select'] = '<a href="' . add_query_arg( $view_args, wp_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_UPDATE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Select this entry', 'media-library-assistant' ) . '">' . __( 'Select', 'media-library-assistant' ) . '</a>';
+		$actions['select'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_UPDATE, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Select this entry', 'media-library-assistant' ) . '">' . __( 'Select', 'media-library-assistant' ) . '</a>';
 
 		return $actions;
 	}
@@ -1577,8 +1564,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 
 	/**
 	 * Returns an array where the  key is the column that needs to be sortable
-	 * and the value is db column to sort by. Also notes the current sort column,
-	 * if set.
+	 * and the value is db column to sort by.
 	 *
 	 * @since 1.40
 	 * 
@@ -1586,19 +1572,7 @@ class MLA_Upload_Optional_List_Table extends WP_List_Table {
 	 * 					'slugs'=>array('data_values',boolean)
 	 */
 	function get_sortable_columns( ) {
-		$columns = MLAMime::$default_upload_optional_sortable_columns;
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			$needle = array( $_REQUEST['orderby'], false );
-			$key = array_search( $needle, $columns );
-			if ( $key ) {
-				$columns[ $key ][ 1 ] = true;
-			}
-		} else {
-			$columns['name'][ 1 ] = true;
-		}
-
-		return $columns;
+		return MLAMime::$default_upload_optional_sortable_columns;
 	}
 
 	/**

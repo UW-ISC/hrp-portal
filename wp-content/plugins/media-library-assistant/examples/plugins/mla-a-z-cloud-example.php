@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/alphabetical-pagination-2
  *
  * @package MLA Child Term Hooks Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA A-Z Cloud and Collapse-o-Matic Example
 Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
 Description: Provides an "A-Z cloud/pagination" and expandable gallery example
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://fairtradejudaica.org/our-story/staff/
 
 Copyright 2015 David Lingren
@@ -419,7 +419,7 @@ class MLAAtoZCloudExample {
 			$slugs = explode( ',', $attr[ $taxonomy ] );
 			foreach ( $slugs as $slug ) {
 				$args = array( 'slug' => $slug, 'hide_empty' => false );
-				$terms = array_merge( $terms, get_terms( $taxonomy, $args ) );
+				$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 			}
 
 			foreach( $terms as $term ) {
@@ -428,7 +428,7 @@ class MLAAtoZCloudExample {
 
 				if ( $include_children ) {
 					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = get_terms( $taxonomy, $args );
+					$children = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 					foreach( $children as $child ) {
 						$ttids[] = $child->term_taxonomy_id;
 					}
