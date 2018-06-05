@@ -11,15 +11,16 @@ abstract class Red_Module {
 	}
 
 	static function get( $id ) {
-		$id = intval( $id );
+		$id = intval( $id, 10 );
 		$options = red_get_options();
 
-		if ( $id === Apache_Module::MODULE_ID )
+		if ( $id === Apache_Module::MODULE_ID ) {
 			return new Apache_Module( isset( $options['modules'][ Apache_Module::MODULE_ID ] ) ? $options['modules'][ Apache_Module::MODULE_ID ] : array() );
-		else if ( $id === WordPress_Module::MODULE_ID )
+		} else if ( $id === WordPress_Module::MODULE_ID ) {
 			return new WordPress_Module( isset( $options['modules'][ WordPress_Module::MODULE_ID ] ) ? $options['modules'][ WordPress_Module::MODULE_ID ] : array() );
-		else if ( $id === Nginx_Module::MODULE_ID )
+		} else if ( $id === Nginx_Module::MODULE_ID ) {
 			return new Nginx_Module( isset( $options['modules'][ Nginx_Module::MODULE_ID ] ) ? $options['modules'][ Nginx_Module::MODULE_ID ] : array() );
+		}
 
 		return false;
 	}
@@ -46,22 +47,38 @@ abstract class Red_Module {
 		);
 	}
 
+	static function get_id_for_name( $name ) {
+		$names = array(
+			'wordpress' => WordPress_Module::MODULE_ID,
+			'apache'    => Apache_Module::MODULE_ID,
+			'nginx'     => Nginx_Module::MODULE_ID,
+		);
+
+		if ( isset( $names[ $name ] ) ) {
+			return $names[ $name ];
+		}
+
+		return false;
+	}
+
 	static function flush( $group_id ) {
 		$group = Red_Group::get( $group_id );
 
 		if ( $group ) {
 			$module = Red_Module::get( $group->get_module_id() );
 
-			if ( $module )
+			if ( $module ) {
 				$module->flush_module();
+			}
 		}
 	}
 
 	static function flush_by_module( $module_id ) {
 		$module = Red_Module::get( $module_id );
 
-		if ( $module )
+		if ( $module ) {
 			$module->flush_module();
+		}
 	}
 
 	abstract public function get_id();
