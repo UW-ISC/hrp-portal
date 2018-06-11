@@ -561,6 +561,14 @@ select.tribe-events-dropdown {
 	left: auto;
 	right: 30px;
 }
+/** For when a tooltip is near top edge of viewport, so displays below event title instead of above it. */
+.tribe-events-tooltip.tribe-events-tooltip-flipdown {
+	.tribe-events-arrow {
+		top: -11px;
+		transform: rotate(180deg);
+	}
+}
+
 
 /* Recurring info tooltip */
 .recurringinfo {
@@ -586,15 +594,18 @@ select.tribe-events-dropdown {
 	padding: 6px 8px;
 	border-bottom: 1px solid #e7e7e7;
 }
+
 .events-archive.events-gridview #tribe-events-content table .tribe-events-last {
 	border-bottom: 0;
 }
+
 .tribe-events-viewmore {
 	margin: 0 5%;
 	padding: 6px 8px;
 	font-weight: bold;
 	line-height: 1;
 }
+
 .tribe-events-calendar th {
 	width: 250px;
 	height: 10px;
@@ -603,6 +614,7 @@ select.tribe-events-dropdown {
 	text-transform: uppercase;
 	letter-spacing: 1px;
 }
+
 .tribe-events-calendar td div[id*='tribe-events-daynum-'] {
 	padding: 6px 9px;
 	line-height: 1.2;

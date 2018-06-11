@@ -122,10 +122,15 @@ $field->help        = __( 'Enter the url for a Facebook group or page. You can a
 			class="tribe-ea-field tribe-ea-size-xlarge"
 			placeholder="<?php echo esc_attr( $field->placeholder ); ?>"
 			value="<?php echo esc_attr( empty( $record->meta['source'] ) ? '' : $record->meta['source'] ); ?>"
+			data-validation-match-regexp="<?php echo esc_attr( Tribe__Events__Aggregator__Record__Facebook::get_source_regexp() ); ?>"
+			data-validation-error="<?php esc_attr_e( 'Invalid Facebook URL', 'the-events-calendar' ); ?>"
 		>
 		<span class="tribe-bumpdown-trigger tribe-bumpdown-permanent tribe-bumpdown-nohover tribe-ea-help dashicons dashicons-editor-help" data-bumpdown="<?php echo esc_attr( $field->help ); ?>" data-width-rule="all-triggers"></span>
 	</td>
 </tr>
+
+<?php include dirname( __FILE__ ) . '/refine.php'; ?>
+
 <tr class="tribe-dependent" data-depends="#tribe-ea-field-facebook_import_type" data-condition-not-empty>
 	<td colspan="2" class="tribe-button-row">
 		<button type="submit" class="button button-primary tribe-preview">

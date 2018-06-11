@@ -443,7 +443,9 @@ if ( ! class_exists( 'Tribe__PUE__Checker' ) ) {
 			$domain = self::$domain;
 
 			if ( empty( $domain ) ) {
-				$domain = $_SERVER['SERVER_NAME'];
+				if ( isset( $_SERVER['SERVER_NAME'] ) ) {
+				    $domain = $_SERVER['SERVER_NAME'];
+				}
 
 				if ( is_multisite() ) {
 					// For multisite, return the network-level siteurl
@@ -620,9 +622,9 @@ if ( ! class_exists( 'Tribe__PUE__Checker' ) ) {
 							$validity_msg.html(data.message);
 
 							switch ( data.status ) {
-								case 1: $validity_msg.addClass( 'valid-key' ); break;
+								case 1: $validity_msg.addClass( 'valid-key' ).removeClass( 'invalid-key' ); break;
 								case 2: $validity_msg.addClass( 'valid-key service-msg' ); break;
-								default: $validity_msg.addClass( 'invalid-key' ); break;
+								default: $validity_msg.addClass( 'invalid-key' ).removeClass( 'valid-key' ); break;
 							}
 						});
 					}
@@ -680,9 +682,9 @@ if ( ! class_exists( 'Tribe__PUE__Checker' ) ) {
 						AND `deleted` = '0'
 				";
 
-				$stats['multisite']         = 1;
-				$stats['network_activated'] = (int) $this->is_plugin_active_for_network();
-				$stats['active_sites']      = (int) $wpdb->get_var( $sql_count );
+				$stats['network']['multisite']         = 1;
+				$stats['network']['network_activated'] = (int) $this->is_plugin_active_for_network();
+				$stats['network']['active_sites']      = (int) $wpdb->get_var( $sql_count );
 			}
 
 			self::$stats = $stats;
@@ -913,7 +915,7 @@ if ( ! class_exists( 'Tribe__PUE__Checker' ) ) {
 				$response['message'] = $this->get_api_message( $plugin_info );
 				$response['api_invalid'] = true;
 			} else {
-				$key_type = 'site';
+				$key_type = 'local';
 
 				if ( $network ) {
 					$key_type = 'network';
@@ -1460,7 +1462,7 @@ if ( ! class_exists( 'Tribe__PUE__Checker' ) ) {
 				$network_option = (boolean) $validated_field->field['network_option'];
 			}
 
-			$key_type = 'site';
+			$key_type = 'local';
 
 			if ( $network_option ) {
 				$key_type = 'network';

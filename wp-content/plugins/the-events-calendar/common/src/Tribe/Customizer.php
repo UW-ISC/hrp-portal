@@ -281,8 +281,8 @@ final class Tribe__Customizer {
 			 *
 			 * @param array $defaults
 			 */
-			$defaults[ $section->ID ] = apply_filters( "tribe_customizer_section_{$section->ID}_defaults", array() );
 			$settings = isset( $sections[ $section->ID ] ) ? $sections[ $section->ID ] : array();
+			$defaults[ $section->ID ] = apply_filters( "tribe_customizer_section_{$section->ID}_defaults", $settings );
 			$sections[ $section->ID ] = wp_parse_args( $settings, $defaults[ $section->ID ] );
 		}
 
@@ -421,12 +421,16 @@ final class Tribe__Customizer {
 	 * @return string           A Valid css after replacing the variables
 	 */
 	private function parse_css_template( $template ) {
-		$css = $template;
+		$css      = $template;
 		$sections = $this->get_option();
 
-		$search = array();
+		$search  = array();
 		$replace = array();
+
 		foreach ( $sections as $section => $settings ) {
+			if ( ! is_array( $settings ) ) {
+				continue;
+			}
 			foreach ( $settings as $setting => $value ) {
 				$index = array( $section, $setting );
 

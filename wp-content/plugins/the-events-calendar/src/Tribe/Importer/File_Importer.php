@@ -7,18 +7,18 @@ abstract class Tribe__Events__Importer__File_Importer {
 	protected $required_fields = array();
 
 	/** @var Tribe__Events__Importer__File_Reader */
-	private $reader = null;
-	private $map = array();
-	private $type = '';
-	private $limit = 100;
-	private $offset = 0;
-	private $errors = array();
-	private $updated = 0;
-	private $created = 0;
+	private $reader   = null;
+	private $map      = array();
+	private $type     = '';
+	private $limit    = 100;
+	private $offset   = 0;
+	private $errors   = array();
+	private $updated  = 0;
+	private $created  = 0;
 	private $encoding = array();
-	private $log = array();
+	protected $log    = array();
 
-	protected $skipped = array();
+	protected $skipped      = array();
 	protected $inverted_map = array();
 
 	public $is_aggregator = false;
@@ -70,9 +70,9 @@ abstract class Tribe__Events__Importer__File_Importer {
 	 * @param Tribe__Events__Importer__File_Reader $file_reader
 	 */
 	public function __construct( Tribe__Events__Importer__File_Reader $file_reader, Tribe__Events__Importer__Featured_Image_Uploader $featured_image_uploader = null ) {
-		$this->reader = $file_reader;
+		$this->reader                  = $file_reader;
 		$this->featured_image_uploader = $featured_image_uploader;
-		$this->limit = apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size );
+		$this->limit                   = apply_filters( 'tribe_aggregator_batch_size', Tribe__Events__Aggregator__Record__Queue_Processor::$batch_size );
 	}
 
 	public function set_map( array $map_array ) {
@@ -95,7 +95,7 @@ abstract class Tribe__Events__Importer__File_Importer {
 	public function do_import() {
 		$this->reader->set_row( $this->offset );
 		for ( $i = 0; $i < $this->limit && ! $this->import_complete(); $i ++ ) {
-			set_time_limit( 30 );
+			tribe_set_time_limit( 30 );
 			$this->import_next_row();
 		}
 	}
@@ -105,7 +105,7 @@ abstract class Tribe__Events__Importer__File_Importer {
 
 		$this->reader->set_row( $this->offset );
 		for ( $i = 0; $i < $this->limit && ! $this->import_complete(); $i ++ ) {
-			set_time_limit( 30 );
+			tribe_set_time_limit( 30 );
 			$rows[] = $this->import_next_row( false, true );
 		}
 
@@ -166,7 +166,17 @@ abstract class Tribe__Events__Importer__File_Importer {
 		$row    = $this->reader->get_last_line_number_read() + 1;
 
 		//Check if option to encode is active
-		$encoding_option = Tribe__Events__Importer__Options::getOption( 'imported_encoding_status', array( 'csv' => 'encode' ) );
+		$encoding_option = Tribe__Settings_Manager::get_option( 'imported_encoding_status', array( 'csv' => 'encode' ) );
+		/**
+		 *  Filter Encoding Status Option for CSV Imports
+		 *
+		 * @since 4.6.18
+		 *
+		 * @param  $encoding_status array an array to encode
+		 * @param [ 'csv' => 'encode' ] array the default value to enable encoding to UTF8
+		 */
+		$encoding_option = apply_filters( 'tribe_import_setting_imported_encoding_status', $encoding_option, array( 'csv' => 'encode' ) );
+
 		if ( isset( $encoding_option['csv'] ) && 'encode' == $encoding_option['csv'] ) {
 			$encoded       = ForceUTF8__Encoding::toUTF8( $record );
 			$encoding_diff = array_diff( $encoded, $record );
@@ -213,6 +223,15 @@ abstract class Tribe__Events__Importer__File_Importer {
 			$this->log[ $this->reader->get_last_line_number_read() + 1 ] = sprintf( esc_html__( '%s (post ID %d) created.', 'the-events-calendar' ), get_the_title( $id ), $id );
 		}
 
+		$featured_image = $this->get_value_by_key( $record, 'featured_image' );
+
+		if ( ! empty( $featured_image ) ) {
+			$post_thumbnail_process = new Tribe__Process__Post_Thumbnail_Setter();
+			$post_thumbnail_process->set_post_id( $id );
+			$post_thumbnail_process->set_post_thumbnail( $featured_image );
+			$post_thumbnail_process->dispatch();
+		}
+
 		return $id;
 	}
 
@@ -251,7 +270,7 @@ abstract class Tribe__Events__Importer__File_Importer {
 		return $record[ $this->inverted_map[ $key ] ];
 	}
 
-	protected function find_matching_post_id( $name, $post_type ) {
+	protected function find_matching_post_id( $name, $post_type, $post_status = 'publish' ) {
 		if ( empty( $name ) ) {
 			return 0;
 		}
@@ -265,7 +284,7 @@ abstract class Tribe__Events__Importer__File_Importer {
 
 		$query_args = array(
 			'post_type'        => $post_type,
-			'post_status'      => 'publish',
+			'post_status'      => $post_status,
 			'post_title'       => $name,
 			'fields'           => 'ids',
 			'suppress_filters' => false,
@@ -346,14 +365,14 @@ abstract class Tribe__Events__Importer__File_Importer {
 		if ( ! empty( $event_id ) ) {
 			$featured_image = get_post_meta( $event_id, '_wp_attached_file', true );
 			if ( empty( $featured_image ) ) {
-				$featured_image = $this->featured_image_uploader( $featured_image_content )->upload_and_get_attachment();
+				$featured_image = $this->featured_image_uploader( $featured_image_content )->upload_and_get_attachment_id();
 
 				return $featured_image;
 			}
 
 			return $featured_image;
 		} else {
-			$featured_image = $this->featured_image_uploader( $featured_image_content )->upload_and_get_attachment();
+			$featured_image = $this->featured_image_uploader( $featured_image_content )->upload_and_get_attachment_id();
 
 			return $featured_image;
 
