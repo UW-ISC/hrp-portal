@@ -4,7 +4,6 @@ class Nginx_Module extends Red_Module {
 	const MODULE_ID = 3;
 
 	private $location  = '';
-	private $canonical = '';
 
 	public function get_id() {
 		return self::MODULE_ID;
@@ -14,12 +13,8 @@ class Nginx_Module extends Red_Module {
 		return 'Nginx';
 	}
 
-	public function can_edit_config() {
-		return false;
-	}
-
 	protected function load( $data ) {
-		$mine = array( 'location', 'canonical' );
+		$mine = array( 'location' );
 
 		foreach ( $mine as $key ) {
 			if ( isset( $data[ $key ] ) )
@@ -32,12 +27,5 @@ class Nginx_Module extends Red_Module {
 
 	public function update( array $data ) {
 		return false;
-	}
-
-	public function render_config() {
-	}
-
-	public function get_config() {
-		return array();
 	}
 }
