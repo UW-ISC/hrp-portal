@@ -37,6 +37,12 @@ class Tribe__Events__Aggregator__API__Origins extends Tribe__Events__Aggregator_
 				'disabled' => true,
 				'upsell' => true,
 			),
+			'eventbrite' => (object) array(
+				'id' => 'eventbrite',
+				'name' => __( 'Eventbrite', 'the-events-calendar' ),
+				'disabled' => true,
+				'upsell' => true,
+			),
 			'gcal' => (object) array(
 				'id' => 'gcal',
 				'name' => __( 'Google Calendar', 'the-events-calendar' ),
@@ -124,7 +130,15 @@ class Tribe__Events__Aggregator__API__Origins extends Tribe__Events__Aggregator_
 			}
 		}
 
-		set_transient( "{$this->cache_group}_origins", $this->origins, 6 * HOUR_IN_SECONDS );
+		// use the specified expiration if available
+		if ( isset( $this->origins->expiration ) ) {
+			$expiration = $this->origins->expiration;
+			unset( $this->origins->expiration );
+		} else {
+			$expiration = 6 * HOUR_IN_SECONDS;
+		}
+
+		set_transient( "{$this->cache_group}_origins", $this->origins, $expiration );
 
 		return $this->origins;
 	}
@@ -134,24 +148,37 @@ class Tribe__Events__Aggregator__API__Origins extends Tribe__Events__Aggregator_
 	 */
 	private function fetch_origin_data() {
 		$cached = tribe_get_var( 'events-aggregator.origins-data' );
+		if ( empty( $cached ) ) {
+			// try to see if we have a lock in place
+			$cached = get_transient( "{$this->cache_group}_fetch_lock" );
+		}
 
 		if ( ! empty( $cached ) ) {
 			return $cached;
 		}
 
-		$origin_data = (object) $this->service->get_origins();
+		list( $origin_data, $error ) = $this->service->get_origins( true );
+		$origin_data = (object) $origin_data;
 
-		if ( ! get_transient( "{$this->cache_group}_origin_oauth" ) && ! empty( $origin_data->oauth ) ) {
-			set_transient( "{$this->cache_group}_origin_oauth", $origin_data->oauth, 6 * HOUR_IN_SECONDS );
-		}
+		if ( empty( $error ) ) {
+			if ( ! get_transient( "{$this->cache_group}_origin_oauth" ) && ! empty( $origin_data->oauth ) ) {
+				set_transient( "{$this->cache_group}_origin_oauth", $origin_data->oauth, 6 * HOUR_IN_SECONDS );
+			}
 
-		if ( ! get_transient( "{$this->cache_group}_origin_limit" ) && ! empty( $origin_data->limit ) ) {
-			set_transient( "{$this->cache_group}_origin_limit", $origin_data->limit, 6 * HOUR_IN_SECONDS );
+			if ( ! get_transient( "{$this->cache_group}_origin_limit" ) && ! empty( $origin_data->limit ) ) {
+				set_transient( "{$this->cache_group}_origin_limit", $origin_data->limit, 6 * HOUR_IN_SECONDS );
+			}
+		} elseif ( 403 == wp_remote_retrieve_response_code( $error ) ) {
+			// store the origins data for 5' only
+			$origin_data->expiration = 300;
+			// and avoid bugging the service for 5'
+			set_transient( "{$this->cache_group}_fetch_lock", $origin_data, 300 );
 		}
 
 		tribe_set_var( 'events-aggregator.origins-data', $origin_data );
 
 		return $origin_data;
+
 	}
 
 	/**
@@ -162,8 +189,13 @@ class Tribe__Events__Aggregator__API__Origins extends Tribe__Events__Aggregator_
 	 * @return boolean
 	 */
 	public function is_oauth_enabled( $origin ) {
-		if ( ! tribe( 'events-aggregator.main' )->is_service_active() ) {
+
+		if (  'eventbrite' !== $origin && ! tribe( 'events-aggregator.main' )->is_service_active() ) {
 			return false;
+		}
+
+		if (  'eventbrite' === $origin && class_exists( 'Tribe__Events__Tickets__Eventbrite__Main' ) ) {
+			return true;
 		}
 
 		$cached_oauth_settings = get_transient( "{$this->cache_group}_origin_oauth" );

@@ -3,6 +3,15 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 	public static $scheduled_key = 'tribe_aggregator_process_insert_records';
 
 	/**
+	 * Which Action will be triggered as a single Cron event
+	 *
+	 * @since  4.5.9
+	 *
+	 * @var    string
+	 */
+	public static $scheduled_single_key = 'tribe_aggregator_single_process_insert_records';
+
+	/**
 	 *Number of items to be processed in a single batch.
 	 *
 	 * @var int
@@ -29,7 +38,7 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 	protected $current_record_id = 0;
 
 	/**
-	 * @var Tribe__Events__Aggregator__Record__Queue
+	 * @var Tribe__Events__Aggregator__Record__Queue_Interface
 	 */
 	public $current_queue;
 
@@ -47,7 +56,10 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 	 */
 	public function manage_scheduled_task() {
 		add_action( 'tribe_events_blog_deactivate', array( $this, 'clear_scheduled_task' ) );
+
 		add_action( self::$scheduled_key, array( $this, 'process_queue' ), 20, 0 );
+		add_action( self::$scheduled_single_key, array( $this, 'process_queue' ), 20, 0 );
+
 		$this->register_scheduled_task();
 	}
 
@@ -130,9 +142,19 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 				break;
 			}
 		}
+
+		$queue_items = get_post_meta( $this->current_record_id, Tribe__Events__Aggregator__Records::instance()->prefix_meta( Tribe__Events__Aggregator__Record__Queue::$queue_key ), true );
+
+		// We only get here if we done processing this batch
+		// Now we will check for more events on the queue
+		if ( ! empty( $queue_items ) ) {
+			// Schedule a Cron Event to happen ASAP, and flag it for searching and we need to make it unique
+			// By default WordPress won't allow more than one Action to happen twice in 10 minutes
+			wp_schedule_single_event( time(), self::$scheduled_single_key );
+		}
 	}
 
-	public function set_current_queue( Tribe__Events__Aggregator__Record__Queue $queue ) {
+	public function set_current_queue( Tribe__Events__Aggregator__Record__Queue_Interface $queue ) {
 		$this->current_queue = $queue;
 	}
 
@@ -158,6 +180,7 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 				),
 			),
 		);
+
 
 		if ( $interactive_only ) {
 			$args['meta_query'][] = array(
@@ -191,7 +214,7 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 		$this->current_queue->set_in_progress_flag();
 		$processed = $this->current_queue->process( self::$batch_size );
 		// in the 'fetch' phase this will not be a Queue object
-		if ( $processed instanceof Tribe__Events__Aggregator__Record__Queue ) {
+		if ( $processed instanceof Tribe__Events__Aggregator__Record__Queue_Interface ) {
 			$this->processed += $processed->activity->count( $this->current_queue->get_queue_type() );
 		}
 		$this->current_queue->clear_in_progress_flag();
@@ -206,7 +229,7 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 	 */
 	protected function get_current_queue() {
 		try {
-			$this->current_queue = new Tribe__Events__Aggregator__Record__Queue( $this->current_record_id );
+			$this->current_queue = self::build_queue( $this->current_record_id );
 		} catch ( InvalidArgumentException $e ) {
 			do_action( 'log', sprintf( __( 'Could not process queue for Import Record %1$d: %2$s', 'the-events-calendar' ), $this->current_record_id, $e->getMessage() ) );
 			return false;
@@ -226,5 +249,54 @@ class Tribe__Events__Aggregator__Record__Queue_Processor {
 	 */
 	protected function batch_complete() {
 		return ( $this->processed >= self::$batch_size );
+	}
+
+	/**
+	 * Builds the correct class of queue.
+	 *
+	 * @since 4.6.16
+	 *
+	 * @param int|Tribe__Events__Aggregator__Record__Abstract $record A record object or ID
+	 * @param array|string $items
+	 * @param bool $use_legacy                                        Whether to use the legacy queue processor or not.
+	 *
+	 * @return Tribe__Events__Aggregator__Record__Queue_Interface
+	 */
+	public static function build_queue( $record, $items = null, $use_legacy = false ) {
+		if (
+			( defined( 'TRIBE_EA_QUEUE_USE_LEGACY' ) && TRIBE_EA_QUEUE_USE_LEGACY )
+			|| (bool) getenv( 'TRIBE_EA_QUEUE_USE_LEGACY' )
+			|| false !== (bool) tribe_get_request_var( 'tribe_ea_queue_use_legacy', false )
+		) {
+			$use_legacy = true;
+		}
+
+		if ( is_numeric( $record ) ) {
+			$record = tribe( 'events-aggregator.records' )->get_by_post_id( $record );
+		}
+
+		$class = 'Tribe__Events__Aggregator__Record__Async_Queue';
+
+		// Force the use of the Legacy Queue for CSV Imports
+		if ( $record instanceof Tribe__Events__Aggregator__Record__CSV || $use_legacy ) {
+			$class = 'Tribe__Events__Aggregator__Record__Queue';
+		}
+
+		/**
+		 * Filters the class of the queue that should be used.
+		 *
+		 * This filter can also return a fully built queue object.
+		 *
+		 * @since 4.6.16
+		 *
+		 * @param string $class
+		 * @param Tribe__Events__Aggregator__Record__Abstract $record
+		 * @param array|string $items
+		 */
+		$class = apply_filters( 'tribe_aggregator_queue_class', $class, $record, $items );
+
+		return $class instanceof Tribe__Events__Aggregator__Record__Queue_Interface
+			? $class
+			: new $class( $record, $items );
 	}
 }

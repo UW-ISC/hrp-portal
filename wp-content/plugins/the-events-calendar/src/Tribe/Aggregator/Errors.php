@@ -63,6 +63,7 @@ class Tribe__Events__Aggregator__Errors {
 		tribe_register_error( 'core:aggregator:invalid-record-post_type', __( 'Unable to get a post of the correct type.', 'the-events-calendar' ) );
 		tribe_register_error( 'core:aggregator:invalid-service-key', __( 'You must enter an Event Aggregator license key in Events > Settings > Licenses before using this service.', 'the-events-calendar' ) );
 		tribe_register_error( 'core:aggregator:invalid-service-response', __( 'There may be an issue with the Event Aggregator server. Please try your import again later.', 'the-events-calendar' ) );
+		tribe_register_error( 'core:aggregator:invalid-json-response', __( 'There is an JSON error with the Event Aggregator server. Please try your import again later.', 'the-events-calendar' ) );
 
 		tribe_register_error( 'core:aggregator:missing-csv-column-map', __( 'You must map columns from the CSV file to specific fields in order to perform a CSV import.', 'the-events-calendar' ) );
 		tribe_register_error( 'core:aggregator:missing-csv-file', __( 'The CSV file cannot be found. You may need to re-upload the file.', 'the-events-calendar' ) );
@@ -87,6 +88,11 @@ class Tribe__Events__Aggregator__Errors {
 
 		// Only Apply on 4.1 and above
 		if ( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
+			return;
+		}
+
+		// Prevent this happening if we don't have EA active
+		if ( ! tribe( 'events-aggregator.main' )->is_active( true ) ) {
 			return;
 		}
 
@@ -131,6 +137,11 @@ class Tribe__Events__Aggregator__Errors {
 	public function hide_error_comments_pre_41( $clauses, $wp_comment_query ) {
 		global $wpdb, $wp_version;
 
+		// Prevent this happening if we don't have EA active
+		if ( ! tribe( 'events-aggregator.main' )->is_active( true ) ) {
+			return $clauses;
+		}
+
 		if( version_compare( floatval( $wp_version ), '4.1', '<' ) ) {
 			$clauses['where'] .= $wpdb->prepare( ' AND comment_type != %s', self::$comment_type );
 		}
@@ -150,6 +161,11 @@ class Tribe__Events__Aggregator__Errors {
 	public function hide_error_comments_from_feeds( $where, $wp_comment_query ) {
 	    global $wpdb;
 
+		// Prevent this happening if we don't have EA active
+		if ( ! tribe( 'events-aggregator.main' )->is_active( true ) ) {
+			return $where;
+		}
+
 		$where .= $wpdb->prepare( ' AND comment_type != %s', self::$comment_type );
 		return $where;
 	}
@@ -168,6 +184,11 @@ class Tribe__Events__Aggregator__Errors {
 		global $wpdb, $pagenow;
 
 		if ( ! in_array( $pagenow, array( 'index.php', 'edit-comments.php' ) ) ) {
+			return $stats;
+		}
+
+		// Prevent this happening if we don't have EA active
+		if ( ! tribe( 'events-aggregator.main' )->is_active( true ) ) {
 			return $stats;
 		}
 

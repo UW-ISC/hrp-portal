@@ -91,10 +91,6 @@ h2.tribe-events-page-title,
 }
 
 /* General Template Header/Footer Nav */
-#tribe-events-header .tribe-events-sub-nav li,
-#tribe-events-header .tribe-events-sub-nav .tribe-events-nav-next a {
-	display: none;
-}
 #tribe-events-header .tribe-events-sub-nav .tribe-events-nav-next {
 	display: block;
 }
@@ -341,14 +337,20 @@ h2.tribe-events-page-title,
 
 .tribe-events-calendar td.tribe-events-past div[id*='tribe-events-daynum-'],
 .tribe-events-calendar td.tribe-events-past div[id*='tribe-events-daynum-'] > a {
-	background-color: #e0e0e0;
-	color: #fff;
+	background-color: #f7f7f7;
+	color: #707070;
 }
 
 .tribe-events-calendar td.tribe-events-past .tribe-events-month-event-title a,
 .tribe-events-calendar td.tribe-events-past .tribe-events-viewmore a {
 	opacity: .5;
 	filter: Alpha(opacity=50);
+}
+
+.tribe-events-calendar td.tribe-events-othermonth.tribe-events-future div[id*='tribe-events-daynum-'],
+.tribe-events-calendar td.tribe-events-othermonth.tribe-events-future div[id*='tribe-events-daynum-'] > a {
+	background-color: #b2b2b2;
+	color: #454545;
 }
 
 /* Global Tooltips */
@@ -377,9 +379,11 @@ h2.tribe-events-page-title,
 .events-archive.events-gridview #tribe-events-content table .type-tribe_events {
 	border-bottom: 1px solid #e0e0e0;
 }
+
 .events-archive.events-gridview #tribe-events-content table .tribe-events-last {
 	border-bottom: 0;
 }
+
 .tribe-events-calendar thead th {
 	background-color: #666;
 	color: #fff;
@@ -389,6 +393,7 @@ h2.tribe-events-page-title,
 	border-left: 1px solid #666;
 	border-right: 1px solid #666;
 }
+
 .tribe-events-calendar td div[id*='tribe-events-daynum-'] {
 	padding: 4px 9px 6px;
 }
@@ -427,6 +432,13 @@ h2.tribe-events-page-title,
 
 .tribe-events-map.tribe-bar-is-disabled #tribe-events-content-wrapper {
 	max-width: none;
+}
+
+.tribe-events-tooltip.tribe-events-tooltip-flipdown {
+	&::before {
+		border-bottom-color: #fff;
+		top: -20px; /* Normally it's -21px, but -20px works better in Tribe Events theme because of tooltip box-shadow. */
+	}
 }
 
 /**

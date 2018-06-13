@@ -18,17 +18,17 @@
 
 	$( document ).ready( function() {
 
-		var $body = $( 'body' ),
-			$nav_link = $( '[class^="tribe-events-nav-"] a' ),
-			initial_date = tf.get_url_param( 'tribe-bar-date' ),
-			$wrapper = $( '#tribe-events' ),
-			$tribedate = $( '#tribe-bar-date' ),
-			date_mod = false;
+		var $body        = $( 'body' );
+		var $nav_link    = $( '[class^="tribe-events-nav-"] a' );
+		var initial_date = tf.get_url_param( 'tribe-bar-date' );
+		var $wrapper     = $( document.getElementById( 'tribe-events' ) );
+		var $tribedate   = $( document.getElementById( 'tribe-bar-date' ) );
+		var date_mod     = false;
 
 		var base_url = '/';
 
 		if ( 'undefined' !== typeof config.events_base ) {
-			base_url =  $( '#tribe-events-header' ).data( 'baseurl' );
+			base_url =  $( document.getElementById( 'tribe-events-header' ) ).data( 'baseurl' );
 		} else if ( $nav_link.length ) {
 			base_url = $nav_link.first().attr( 'href' ).slice( 0, -8 );
 		}
@@ -37,9 +37,9 @@
 			base_url = base_url.split("?")[0];
 		}
 
-		if ( $( '.tribe-events-calendar' ).length && $( '#tribe-events-bar' ).length ) {
+		if ( $( '.tribe-events-calendar' ).length && $( document.getElementById( 'tribe-events-bar' ) ).length ) {
 			if ( initial_date && initial_date.length > 7 ) {
-				$( '#tribe-bar-date-day' ).val( initial_date.slice( -3 ) );
+				$( document.getElementById( 'tribe-bar-date-day' ) ).val( initial_date.slice( -3 ) );
 				$tribedate.val( initial_date.substring( 0, 7 ) );
 			}
 		}
@@ -52,8 +52,8 @@
 
 			// we are not using the default query date format, lets grab it from the data array
 
-			var arr_key = parseInt( ts.datepicker_format ),
-				mask_key = 'm' + ts.datepicker_format.toString();
+			var arr_key  = parseInt( ts.datepicker_format );
+			var mask_key = 'm' + ts.datepicker_format.toString();
 
 			date_format = td.datepicker_formats.month[arr_key];
 
@@ -67,14 +67,12 @@
 
 				$tribedate.val( tribeDateFormat( initial_date, mask_key ) );
 			}
-
-
 		}
 
 		td.datepicker_opts = {
-			format     : date_format,
-			minViewMode: 'months',
-			autoclose  : true
+			format      : date_format,
+			minViewMode : 'months',
+			autoclose   : true
 		};
 
 		$tribedate
@@ -83,19 +81,18 @@
 
 				ts.mdate = e.date;
 
-				var year = e.date.getFullYear(),
-					month = ('0' + (e.date.getMonth() + 1)).slice( -2 );
+				var year  = e.date.getFullYear();
+				var month = ( '0' + ( e.date.getMonth() + 1 ) ).slice( -2 );
 
 				date_mod = true;
-
-				ts.date = year + '-' + month;
+				ts.date  = year + '-' + month;
 
 				if ( tt.no_bar() || tt.live_ajax() && tt.pushstate ) {
 					if ( ts.ajax_running || ts.updating_picker ) {
 						return;
 					}
 					if ( ts.filter_cats ) {
-						td.cur_url = $( '#tribe-events-header' ).data( 'baseurl' ) + ts.date + '/';
+						td.cur_url = $( document.getElementById( 'tribe-events-header' ) ).data( 'baseurl' ) + ts.date + '/';
 					}
 					else {
 						if ( td.default_permalinks ) {
@@ -104,7 +101,9 @@
 							td.cur_url = base_url + ts.date + '/';
 						}
 					}
+
 					ts.popping = false;
+
 					tf.pre_ajax( function() {
 						tribe_events_calendar_ajax_post();
 					} );
@@ -113,10 +112,10 @@
 			} );
 
 		function tribe_mobile_load_events( date ) {
-			var $target = $( '.tribe-mobile-day[data-day="' + date + '"]' ),
-				$cell = $( '.tribe-events-calendar td[data-day="' + date + '"]' ),
-				$more = $cell.find( '.tribe-events-viewmore' ),
-				$events = $cell.find( '.type-tribe_events' );
+			var $target = $( '.tribe-mobile-day[data-day="' + date + '"]' );
+			var $cell   = $( '.tribe-events-calendar td[data-day="' + date + '"]' );
+			var $more   = $cell.find( '.tribe-events-viewmore' );
+			var $events = $cell.find( '.type-tribe_events' );
 
 			if ( $events.length ) {
 				$events
@@ -127,8 +126,17 @@
 						if ( $this.tribe_has_attr( 'data-tribejson' ) ) {
 
 							var data = $this.data( 'tribejson' );
+							if ( 'string' === typeof data ) {
+								try {
+									data = JSON.parse( data );
+								} catch ( e ) {
+									data = {};
+								}
+							}
 
-							$target.append( tribe_tmpl( 'tribe_tmpl_month_mobile', data ) );
+							if ( data && 'eventId' in data ) {
+								$target.append( tribe_tmpl( 'tribe_tmpl_month_mobile', data ) )
+							}
 						}
 
 					} );
@@ -142,15 +150,16 @@
 		}
 
 		function tribe_mobile_setup_day( $date ) {
-			var data = $date.data( 'tribejson' );
+
+			var data  = $date.data( 'tribejson' );
 			data.date = $date.attr( 'data-day' );
 
-			var $calendar = $date.parents( '.tribe-events-calendar' ),
-				$container = $calendar.next( '#tribe-mobile-container' ),
-				$days = $container.find( '.tribe-mobile-day' ),
-				$triggers = $calendar.find( '.mobile-trigger' ),
-				_active = '[data-day="' + data.date + '"]',
-				$day = $days.filter( _active );
+			var $calendar  = $date.parents( '.tribe-events-calendar' );
+			var $container = $calendar.next( document.getElementById( 'tribe-mobile-container' ) );
+			var $days      = $container.find( '.tribe-mobile-day' );
+			var $triggers  = $calendar.find( '.mobile-trigger' );
+			var _active    = '[data-day="' + data.date + '"]';
+			var $day       = $days.filter( _active );
 
 			data.has_events = $date.hasClass( 'tribe-events-has-events' );
 
@@ -171,11 +180,11 @@
 
 		function tribe_mobile_month_setup() {
 
-			var $today = $wrapper.find( '.tribe-events-present' ),
-				$mobile_trigger = $wrapper.find( '.mobile-trigger' ),
-				$tribe_grid = $wrapper.find( document.getElementById( 'tribe-events-content' ) ).find( '.tribe-events-calendar'  );
+			var $today          = $wrapper.find( '.tribe-events-present' );
+			var $mobile_trigger = $wrapper.find( '.mobile-trigger' );
+			var $tribe_grid     = $wrapper.find( document.getElementById( 'tribe-events-content' ) ).find( '.tribe-events-calendar'  );
 
-			if ( !$( '#tribe-mobile-container' ).length ) {
+			if ( ! $( document.getElementById( 'tribe-mobile-container' ) ).length ) {
 				$( '<div id="tribe-mobile-container" />' ).insertAfter( $tribe_grid );
 			}
 
@@ -183,7 +192,7 @@
 				tribe_mobile_setup_day( $today );
 			}
 			else {
-				var $first_current_day = $mobile_trigger.filter( ".tribe-events-thismonth" ).first();
+				var $first_current_day = $mobile_trigger.filter( '.tribe-events-thismonth' ).first();
 				tribe_mobile_setup_day( $first_current_day );
 			}
 
@@ -192,9 +201,9 @@
 		function tribe_mobile_day_abbr() {
 
 			$wrapper.find( '.tribe-events-calendar th' ).each( function() {
-				var $this = $( this ),
-					day_abbr = $this.attr( 'data-day-abbr' ),
-					day_full = $this.attr( 'title' );
+				var $this    = $( this );
+				var day_abbr = $this.attr( 'data-day-abbr' );
+				var day_full = $this.attr( 'title' );
 
 				if ( $body.is( '.tribe-mobile' ) ) {
 					$this.text( day_abbr );
@@ -262,7 +271,7 @@
 			} );
 		}
 
-		$( '#tribe-events' )
+		$( document.getElementById( 'tribe-events' ) )
 			.on( 'click', '.tribe-events-nav-previous, .tribe-events-nav-next', function( e ) {
 				e.preventDefault();
 				if ( ts.ajax_running ) {
@@ -290,6 +299,15 @@
 				// If we don't have Permalink
 				if ( td.default_permalinks ) {
 					url = td.cur_url.split("?")[0];
+				}
+
+				// if using the shortcode
+				if ( $wrapper.is( '.tribe-events-shortcode' ) ) {
+					// and plain permalinks
+					if ( td.default_permalinks ) {
+						// we get the base URL
+						url = tf.get_base_url();
+					}
 				}
 
 				// Update the baseurl
@@ -405,7 +423,7 @@
 			ts.pushcount = 0;
 			ts.ajax_running = true;
 
-			if ( !ts.popping ) {
+			if ( ! ts.popping ) {
 
 				ts.params = {
 					action   : 'tribe_calendar',
@@ -420,12 +438,16 @@
 					ts.url_params.tribe_events_cat = ts.category;
 				}
 
+				// when having plain permalinks
 				if ( td.default_permalinks ) {
-					if( !ts.url_params.hasOwnProperty( 'post_type' ) ){
-						ts.url_params['post_type'] = config.events_post_type;
-					}
-					if( !ts.url_params.hasOwnProperty( 'eventDisplay' ) ){
-						ts.url_params['eventDisplay'] = ts.view;
+					// when not using the shorcode
+					if ( ! $wrapper.is( '.tribe-events-shortcode' ) ) {
+						if ( ! ts.url_params.hasOwnProperty( 'post_type' ) ) {
+							ts.url_params['post_type'] = config.events_post_type;
+						}
+						if ( ! ts.url_params.hasOwnProperty( 'eventDisplay' ) ) {
+							ts.url_params['eventDisplay'] = ts.view;
+						}
 					}
 				}
 
@@ -507,11 +529,14 @@
 								$( '#tribe-events.tribe-events-shortcode' ).length
 								|| ts.do_string
 						) {
-							if ( -1 !== td.cur_url.indexOf( '?' ) ) {
-								td.cur_url = td.cur_url.split( '?' )[0];
+							if ( td.default_permalinks ) {
+								td.cur_url = td.cur_url + '&' + ts.url_params;
+							} else {
+								if ( -1 !== td.cur_url.indexOf( '?' ) ) {
+									td.cur_url = td.cur_url.split( '?' )[0];
+								}
+								td.cur_url = td.cur_url + '?' + ts.url_params;
 							}
-
-							td.cur_url = td.cur_url + '?' + ts.url_params;
 						}
 
 						if ( ts.do_string ) {

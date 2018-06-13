@@ -45,10 +45,14 @@ $display_tab_fields = Tribe__Main::array_insert_before_key(
 		),
 		'info-box-description'               => array(
 			'type' => 'html',
-			'html' => '<p>' . sprintf(
-				__( 'The settings below control the display of your calendar. If things don\'t look right, try switching between the three style sheet options or pick a page template from your theme.</p><p>There are going to be situations where no out-of-the-box template is 100&#37; perfect. Check out our <a href="%s">our themer\'s guide</a> for instructions on custom modifications.', 'the-events-calendar' ),
-				Tribe__Main::$tec_url . 'knowledgebase/themers-guide/?utm_medium=plugin-tec&utm_source=generaltab&utm_campaign=in-app'
-			) . '</p>',
+			'html' => '<p>'
+				. __( 'The settings below control the display of your calendar. If things don\'t look right, try switching between the three style sheet options or pick a page template from your theme.', 'the-events-calendar' )
+				. '</p> <p>'
+				. sprintf(
+					__( 'There are going to be situations where no out-of-the-box template is 100&#37; perfect. Check out our <a href="%s">our themer\'s guide</a> for instructions on custom modifications.', 'the-events-calendar' ),
+					Tribe__Main::$tec_url . 'knowledgebase/themers-guide/?utm_medium=plugin-tec&utm_source=generaltab&utm_campaign=in-app'
+				)
+				. '</p>',
 		),
 		'info-end'                           => array(
 			'type' => 'html',
@@ -68,7 +72,7 @@ $display_tab_fields = Tribe__Main::array_insert_before_key(
 			'tooltip'         => esc_html__( 'Enter the format to use for displaying dates with the year. Used when displaying a date in a future year.', 'the-events-calendar' ),
 			'default'         => get_option( 'date_format' ),
 			'size'            => 'medium',
-			'validation_type' => 'html',
+			'validation_type' => 'not_empty',
 		),
 		'dateTimeSeparator'                  => array(
 			'type'            => 'text',
@@ -91,7 +95,7 @@ $display_tab_fields = Tribe__Main::array_insert_after_key(
 			'tooltip'         => esc_html__( 'Enter the format to use for displaying dates without a year. Used when showing an event from the current year.', 'the-events-calendar' ),
 			'default'         => 'F j',
 			'size'            => 'medium',
-			'validation_type' => 'html',
+			'validation_type' => 'not_empty',
 		),
 		'monthAndYearFormat'                 => array(
 			'type'            => 'text',
@@ -99,7 +103,7 @@ $display_tab_fields = Tribe__Main::array_insert_after_key(
 			'tooltip'         => esc_html__( 'Enter the format to use for dates that show a month and year only. Used on month view.', 'the-events-calendar' ),
 			'default'         => 'F Y',
 			'size'            => 'medium',
-			'validation_type' => 'html',
+			'validation_type' => 'not_empty',
 		),
 	)
 );

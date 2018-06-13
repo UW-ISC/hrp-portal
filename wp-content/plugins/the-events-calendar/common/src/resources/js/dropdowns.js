@@ -1,10 +1,11 @@
 var tribe_dropdowns = tribe_dropdowns || {};
 
-( function( $, obj ) {
+( function( $, obj, _ ) {
 	'use strict';
 
 	obj.selector = {
-		dropdown: '.tribe-dropdown'
+		dropdown: '.tribe-dropdown',
+		created: '.tribe-dropdown-created',
 	};
 
 	// Setup a Dependent
@@ -70,13 +71,13 @@ var tribe_dropdowns = tribe_dropdowns || {};
 	obj.matcher = function ( term, text ) {
 		var $select = this.element,
 			args = $select.data( 'dropdown' ),
-			result = text.toUpperCase().indexOf( term.toUpperCase() ) == 0;
+			result = text.toUpperCase().indexOf( term.toUpperCase() ) !== -1;
 
 		if ( ! result && 'undefined' !== typeof args.tags ){
 			var possible = _.where( args.tags, { text: text } );
 			if ( args.tags.length > 0  && _.isObject( possible ) ){
 				var test_value = obj.search_id( possible[0] );
-				result = test_value.toUpperCase().indexOf( term.toUpperCase() ) == 0;
+				result = test_value.toUpperCase().indexOf( term.toUpperCase() ) !== -1;
 			}
 		}
 
@@ -91,15 +92,15 @@ var tribe_dropdowns = tribe_dropdowns || {};
 	 * @param {function} make_selection
 	 */
 	obj.init_selection = function( $select, make_selection ) {
-		var is_multiple    = $select.is( '[multiple]' ),
-		    options        = $select.data( 'dropdown' ),
-		    current_values = $select.val().split( options.regexSplit ),
-		    selected_items = [];
+		var is_multiple    = $select.is( '[multiple]' );
+		var options        = $select.data( 'dropdown' );
+		var current_values = $select.val().split( options.regexSplit );
+		var selected_items = [];
 
-		$( current_values ).each( function() {
-			var search_for   = { id: this, text: this },
-				data = options.ajax ? $select.data( 'options' ) : options.data,
-				located_item = find_item( search_for, data );
+		$( current_values ).each( function( index, value ) {
+			var search_for   = { id: this, text: this };
+			var data = options.ajax ? $select.data( 'options' ) : options.data;
+			var located_item = find_item( search_for, data );
 
 			if ( located_item ) {
 				selected_items.push( located_item );
@@ -154,26 +155,29 @@ var tribe_dropdowns = tribe_dropdowns || {};
 		return false;
 	}
 
-	obj.element = function ( event ) {
-		var $select = $( this ),
-			args = {},
-			carryOverData = [
-				'depends',
-				'condition',
-				'conditionNot',
-				'condition-not',
-				'conditionNotEmpty',
-				'condition-not-empty',
-				'conditionEmpty',
-				'condition-empty',
-				'conditionIsNumeric',
-				'condition-is-numeric',
-				'conditionIsNotNumeric',
-				'condition-is-not-numeric',
-				'conditionChecked',
-				'condition-is-checked'
-			],
-			$container;
+	obj.element = function ( field, args ) {
+		var $select = $( field );
+		var args = $.extend( {}, args );
+		var carryOverData = [
+			'depends',
+			'condition',
+			'conditionNot',
+			'condition-not',
+			'conditionNotEmpty',
+			'condition-not-empty',
+			'conditionEmpty',
+			'condition-empty',
+			'conditionIsNumeric',
+			'condition-is-numeric',
+			'conditionIsNotNumeric',
+			'condition-is-not-numeric',
+			'conditionChecked',
+			'condition-is-checked'
+		];
+		var $container;
+
+		// Add a class for dropdown created
+		$select.addClass( obj.selector.created.className() );
 
 		// For Reference we save the jQuery element as an Arg
 		args.$select = $select;
@@ -216,6 +220,11 @@ var tribe_dropdowns = tribe_dropdowns || {};
 			args.allowClear = false;
 		}
 
+		// Pass the "Searching..." placeholder if specified
+		if ( $select.is( '[data-searching-placeholder]' ) ) {
+			args.formatSearching = $select.data( 'searching-placeholder' );
+		}
+
 		// If we are dealing with a Input Hidden we need to set the Data for it to work
 		if ( $select.is( '[data-options]' ) ) {
 			args.data = $select.data( 'options' );
@@ -240,14 +249,13 @@ var tribe_dropdowns = tribe_dropdowns || {};
 			args.createSearchChoice = obj.freefrom_create_search_choice;
 		}
 
-		if ( 'tribe-ea-field-origin' === $select.attr( 'id' ) ) {
-			args.formatResult = args.upsellFormatter;
-			args.formatSelection = args.upsellFormatter;
-			args.escapeMarkup = obj.allow_html_markup;
-		}
-
 		if ( $select.is( '[multiple]' ) ) {
 			args.multiple = true;
+
+			// Set the max select items, if defined
+			if ( $select.is( '[data-maximum-selection-size]' ) ) {
+				args.maximumSelectionSize = $select.data( 'maximum-selection-size' );
+			}
 
 			// If you don't have separator, add one (comma)
 			if ( ! $select.is( 'data-separator' ) ) {
@@ -497,13 +505,26 @@ var tribe_dropdowns = tribe_dropdowns || {};
 	 * Configure the Drop Down Fields
 	 *
 	 * @param  {jQuery} $fields All the fields from the page
+	 * @param  {array}  args    Allow extending the arguments
 	 *
 	 * @return {jQuery}         Affected fields
 	 */
-	obj.dropdown = function( $fields ) {
-		var $elements = $fields.not( '.select2-offscreen, .select2-container' );
+	obj.dropdown = function( $fields, args ) {
+		var $elements = $fields.not( '.select2-offscreen, .select2-container, ' + obj.selector.created.className() );
 
-		$elements.each( obj.element )
+		if ( 0 === $elements.length ) {
+			return $elements;
+		}
+
+		// Default args to avoid Undefined
+		if ( ! args ) {
+			args = {};
+		}
+
+		$elements.each( function( index, element ) {
+			// Apply element to all given items and pass args
+			obj.element( element, args );
+		} )
 		.on( 'select2-open', obj.action_select2_open )
 		.on( 'select2-close', obj.action_select2_close )
 		.on( 'select2-removed', obj.action_select2_removed )
@@ -517,4 +538,10 @@ var tribe_dropdowns = tribe_dropdowns || {};
 	$( function() {
 		$( obj.selector.dropdown ).tribe_dropdowns();
 	} );
-} )( jQuery, tribe_dropdowns );
+
+	// Addresses some problems with Select2 inputs not being initialized when using a browser's "Back" button.
+	$( window ).on( 'unload', function() {
+		$( obj.selector.dropdown ).tribe_dropdowns();
+	});
+
+} )( jQuery, tribe_dropdowns, window.underscore || window._ );

@@ -147,7 +147,9 @@
 }
 
 .eventForm .tribe-datetime-block .tribe-field-timezone {
-	width: 100px;
+	width: 100%;
+	max-width: 199px;
+	min-width: 100px;
 	margin-top: -2px;
 	display: none;
 }
@@ -255,7 +257,6 @@
 	.linked-post-wrapper tbody + tfoot tr td {
 	margin-top: 1em;
 	padding-top: 1em;
-	border-top: 1px solid #e5e5e5;
 }
 
 .linked-post-wrapper .linked-post td:first-child {
@@ -419,7 +420,8 @@ table.eventForm {
 	font-weight: bold;
 }
 
-.tribe-ea-facebook-disconnect {
+.tribe-ea-facebook-disconnect,
+.tribe-ea-eventbrite-disconnect {
 	color: #a00;
 	display: inline-block;
 	margin-left: 16px;
@@ -427,12 +429,14 @@ table.eventForm {
 }
 
 .tribe-ea-facebook-disconnect:active,
-	.tribe-ea-facebook-disconnect:hover {
+	.tribe-ea-facebook-disconnect:hover,
+	.tribe-ea-eventbrite-disconnect:active,
+	.tribe-ea-eventbrite-disconnect:hover {
 	color: #f00;
 }
 
-.tribe-ea-facebook-button {
-	background: #3d599b;
+.tribe-ea-facebook-button,
+.tribe-ea-eventbrite-button {
 	border-radius: 3px;
 	color: #fff;
 	display: inline-block;
@@ -444,10 +448,31 @@ table.eventForm {
 }
 
 .tribe-ea-facebook-button:active,
-	.tribe-ea-facebook-button:hover {
-	background: #32497e;
+	.tribe-ea-facebook-button:hover,
+	.tribe-ea-eventbrite-button:active,
+	.tribe-ea-eventbrite-button:hover {
 	color: #fff;
 	cursor: pointer;
+}
+
+.tribe-ea-facebook-button {
+	background: #3d599b;
+}
+
+.tribe-ea-facebook-button:active,
+	.tribe-ea-facebook-button:hover,
+	.tribe-ea-facebook-button:focus {
+	background: #32497e;
+}
+
+.tribe-ea-eventbrite-button {
+	background: #f6682f;
+}
+
+.tribe-ea-eventbrite-button:active,
+	.tribe-ea-eventbrite-button:hover,
+	.tribe-ea-eventbrite-button:focus {
+	background: #c85b2f;
 }
 
 /* = Event Aggregator Status
@@ -533,5 +558,12 @@ table.eventForm {
 		display: block;
 		text-align: center;
 		padding: 5px 0;
+	}
+}
+
+@media( min-width: 1193px ) {
+
+	.eventForm .tribe-datetime-block .tribe-field-timezone {
+		width: calc(100% - 400px);
 	}
 }

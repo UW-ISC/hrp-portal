@@ -8,10 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-$events_label_singular = tribe_get_event_label_singular();
-$events_label_plural = tribe_get_event_label_plural();
+$events_label_singular           = tribe_get_event_label_singular();
+$events_label_plural             = tribe_get_event_label_plural();
 $events_label_singular_lowercase = tribe_get_event_label_singular_lowercase();
-$events_label_plural_lowercase = tribe_get_event_label_plural_lowercase();
+$events_label_plural_lowercase   = tribe_get_event_label_plural_lowercase();
 ?>
 <div id="eventIntro">
 	<div id="tribe-events-post-error" class="tribe-events-error error"></div>
@@ -89,7 +89,7 @@ $events_label_plural_lowercase = tribe_get_event_label_plural_lowercase();
 								class="tribe-timepicker tribe-field-start_time"
 								name="EventStartTime"
 								id="EventStartTime"
-								<?php echo Tribe__View_Helpers::is_24hr_format() ? 'data-format="H:i"' : '' ?>"
+								<?php echo Tribe__View_Helpers::is_24hr_format() ? 'data-format="H:i"' : '' ?>
 								data-step="<?php echo esc_attr( $start_timepicker_step ); ?>"
 								data-round="<?php echo esc_attr( $timepicker_round ); ?>"
 								value="<?php echo esc_attr( $metabox->is_auto_draft() ? $start_timepicker_default : $EventStartTime ) ?>"
@@ -104,7 +104,7 @@ $events_label_plural_lowercase = tribe_get_event_label_plural_lowercase();
 								class="tribe-timepicker tribe-field-end_time"
 								name="EventEndTime"
 								id="EventEndTime"
-								<?php echo Tribe__View_Helpers::is_24hr_format() ? 'data-format="H:i"' : '' ?>"
+								<?php echo Tribe__View_Helpers::is_24hr_format() ? 'data-format="H:i"' : '' ?>
 								data-step="<?php echo esc_attr( $end_timepicker_step ); ?>"
 								data-round="<?php echo esc_attr( $timepicker_round ); ?>"
 								value="<?php echo esc_attr( $metabox->is_auto_draft() ? $end_timepicker_default : $EventEndTime ); ?>"
@@ -126,10 +126,10 @@ $events_label_plural_lowercase = tribe_get_event_label_plural_lowercase();
 								name="EventTimezone"
 								id="event-timezone"
 								class="tribe-field-timezone tribe-dropdown hide-if-js"
-								data-timezone-label="<?php esc_attr_e( 'Timezone:', 'the-events-calendar' ) ?>"
+								data-timezone-label="<?php esc_attr_e( 'Time Zone:', 'the-events-calendar' ) ?>"
 								data-timezone-value="<?php echo esc_attr( Tribe__Events__Timezones::get_event_timezone_string() ) ?>"
 							>
-								<?php echo wp_timezone_choice( Tribe__Events__Timezones::get_event_timezone_string() ); ?>
+								<?php echo tribe_events_timezone_choice( Tribe__Events__Timezones::get_event_timezone_string() ); ?>
 							</select>
 
 							<p class="tribe-allday">

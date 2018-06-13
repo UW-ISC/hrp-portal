@@ -158,6 +158,31 @@ if ( ! function_exists( 'tribe_get_request_var' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tribe_get_global_query_object' ) ) {
+	/**
+	 * Grabs the $wp_query global in a safe way with some fallbacks that help prevent fatal errors
+	 * on sites where themes or other plugins directly manipulate the $wp_query global.
+	 *
+	 * @since 4.7.8
+	 *
+	 * @return object The $wp_query, the $wp_the_query if $wp_query empty, null otherwise.
+	 */
+	function tribe_get_global_query_object() {
+		global $wp_query;
+		global $wp_the_query;
+
+		if ( ! empty( $wp_query ) ) {
+			return $wp_query;
+		}
+
+		if ( ! empty( $wp_the_query ) ) {
+			return $wp_the_query;
+		}
+
+		return null;
+	}
+}
+
 if ( ! function_exists( 'tribe_is_truthy' ) ) {
 	/**
 	 * Determines if the provided value should be regarded as 'true'.
@@ -244,6 +269,21 @@ if ( ! function_exists( 'tribe_normalize_terms_list' ) ) {
 
 		return $normalized;
 	}
+
+	if ( ! function_exists( 'tribe_upload_image' ) ) {
+		/** * @param string|int $image The path to an image file, an image URL or an attachment post ID.
+		 *
+		 * @return int|bool The attachment post ID if the uploading and attachment is successful or the ID refers to an attachment;
+		 *                  `false` otherwise.
+		 *
+		 * @see Tribe__Image__Uploader::upload_and_get_attachment_id()
+		 */
+		function tribe_upload_image( $image ) {
+			$uploader = new Tribe__Image__Uploader( $image );
+
+			return $uploader->upload_and_get_attachment_id();
+		}
+	}
 }
 
 if ( ! function_exists( 'tribe_is_error' ) ) {
@@ -309,5 +349,114 @@ if ( ! function_exists( 'tribe_retrieve_object_by_hook' ) ) {
 		}
 
 		return false;
+	}
+}
+
+if ( ! function_exists( 'tribe_is_wpml_active' ) ) {
+	/**
+	 * A unified way of checking if WPML is activated.
+	 *
+	 * @since 4.6.2
+	 *
+	 * @return boolean
+	 */
+	function tribe_is_wpml_active() {
+		return ( class_exists( 'SitePress' ) && defined( 'ICL_PLUGIN_PATH' ) );
+	}
+}
+
+if ( ! function_exists( 'tribe_post_exists' ) ) {
+	/**
+	 * Checks if a post, optionally of a specific type, exists in the database.
+	 *
+	 * This is a low-level database check that will ignore caches and will
+	 * check if there is an entry, in the posts table, for the post.
+	 *
+	 * @since 4.7.7
+	 *
+	 * @param string|int $post_id_or_name Either a post ID or a post name.
+	 * @param null       $post_type       An optional post type, or a list of post types, the
+	 *                                    post should have; a logic OR will be used.
+	 *
+	 * @return bool|int The matching post ID if found, `false` otherwise
+	 */
+	function tribe_post_exists( $post_id_or_name, $post_type = null ) {
+		if ( $post_id_or_name instanceof WP_Post ) {
+			$post_id_or_name = $post_id_or_name->ID;
+		}
+
+		global $wpdb;
+
+		$query_template = "SELECT ID FROM {$wpdb->posts} WHERE %s";
+		$query_vars     = array();
+		$where          = '';
+
+		if ( is_numeric( $post_id_or_name ) ) {
+			$where        = 'ID = %d';
+			$query_vars[] = $post_id_or_name;
+		} elseif ( is_string( $post_id_or_name ) ) {
+			$where        = 'post_name = %s';
+			$query_vars[] = $post_id_or_name;
+		}
+
+		if (
+			is_string( $post_type )
+			|| (
+				is_array( $post_type )
+				&& count( $post_type ) === count( array_filter( $post_type, 'is_string' ) )
+			)
+		) {
+			$post_types_where_template = ' AND post_type IN (%s)';
+			$post_types                = (array) $post_type;
+
+			$post_types_interval = $wpdb->prepare(
+				implode(
+					',',
+					array_fill( 0, count( $post_types ), '%s' )
+				),
+				$post_types
+			);
+
+			$where .= sprintf( $post_types_where_template, $post_types_interval );
+		}
+
+		$prepared = $wpdb->prepare( sprintf( $query_template, $where ), $query_vars );
+		$found    = $wpdb->get_var( $prepared );
+
+		return ! empty( $found ) ? (int) $found : false;
+	}
+}
+
+if ( ! function_exists( 'tribe_post_excerpt' ) ) {
+	/**
+	 * Wrapper function for `tribe_events_get_the_excerpt` to prevent access the function when is not present on the
+	 * current site installation.
+	 *
+	 * @param $post
+	 *
+	 * @return null|string
+	 */
+	function tribe_post_excerpt( $post ) {
+		if ( function_exists( 'tribe_events_get_the_excerpt' ) ) {
+			return tribe_events_get_the_excerpt( $post );
+		}
+
+		if ( ! is_numeric( $post ) && ! $post instanceof WP_Post ) {
+			$post = get_the_ID();
+		}
+
+		if ( is_numeric( $post ) ) {
+			$post = WP_Post::get_instance( $post );
+		}
+
+		if ( ! $post instanceof WP_Post ) {
+			return null;
+		}
+
+		$excerpt = has_excerpt( $post->ID )
+			? $post->post_excerpt
+			: wp_trim_words( $post->post_content );
+
+		return wpautop( $excerpt );
 	}
 }

@@ -4,6 +4,14 @@ defined( 'WPINC' ) or die;
 
 class Tribe__Events__Aggregator {
 	/**
+	 * Cache key used to storage the services list returned by the call to:
+	 * - Tribe__Events__Aggregator__Service::instance()->get_origins();
+	 *
+	 * @since 4.6.12
+	 */
+	public $KEY_CACHE_SERVICES = 'tribe_aggregator_services_list';
+
+	/**
 	 * @var Tribe__Events__Aggregator__Meta_Box Event Aggregator Meta Box object
 	 */
 	public $meta_box;
@@ -100,7 +108,7 @@ class Tribe__Events__Aggregator {
 	 * Set up any necessary notices
 	 */
 	public function setup_notices() {
-		if ( ! is_admin() || Tribe__Main::instance()->doing_ajax() ) {
+		if ( ! is_admin() || tribe( 'context' )->doing_ajax() ) {
 			return;
 		}
 
@@ -404,7 +412,7 @@ class Tribe__Events__Aggregator {
 		<p>
 			<?php
 			if ( $passed > 0 ) {
-				echo sprintf( __( 'Your Event Aggregator Facebook token has expired %s.', 'the-events-calendar' ), $time );
+				echo sprintf( __( 'Your Event Aggregator Facebook token expired %s.', 'the-events-calendar' ), $time );
 			} else {
 				echo sprintf( __( 'Your Event Aggregator Facebook token will expire %s.', 'the-events-calendar' ), $time );
 			}
@@ -516,6 +524,22 @@ class Tribe__Events__Aggregator {
 	}
 
 	/**
+	 * Adds the Items for Aggregator on the Admin bar
+	 *
+	 * @since   4.5.12
+	 *
+	 * @return  void
+	 */
+	public function add_admin_bar_items() {
+		$admin_bar = Tribe__Events__Aggregator__Admin_Bar::instance();
+		if ( ! $admin_bar->is_enabled() ) {
+			return;
+		}
+		global $wp_admin_bar;
+		$admin_bar->init( $wp_admin_bar );
+	}
+
+	/**
 	 * Hooks all the filters and actions needed for Events Aggregator to work.
      *
      * No action or filter will be loaded if Events Aggregator has not loaded first.
@@ -548,6 +572,12 @@ class Tribe__Events__Aggregator {
 		// Notify users about expiring Facebook Token if oauth is enabled
 		add_action( 'plugins_loaded', array( $this, 'setup_notices' ), 11 );
 
+		// Add admin bar items for Aggregator
+		add_action( 'wp_before_admin_bar_render', array( $this, 'add_admin_bar_items' ), 10 );
+
+		// Remove caches associated with the list of services
+		add_action( 'tribe_settings_after_save', array( $this, 'clear_services_list_cache' ) );
+
 		// Let's prevent events-importer-ical from DESTROYING its saved recurring imports when it gets deactivated
 		if ( class_exists( 'Tribe__Events__Ical_Importer__Main' ) ) {
 			remove_action(
@@ -562,5 +592,16 @@ class Tribe__Events__Aggregator {
 		add_filter( 'wp_check_filetype_and_ext', array( $this, 'add_csv_mimes' ), 10, 4 );
 
 		return true;
+	}
+
+	/**
+	 * Function used to remove cache stored in transients.
+	 *
+	 * @since 4.6.12
+	 *
+	 * @return boolean
+	 */
+	public function clear_services_list_cache() {
+		return delete_transient( $this->KEY_CACHE_SERVICES );
 	}
 }

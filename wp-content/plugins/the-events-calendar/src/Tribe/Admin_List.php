@@ -20,7 +20,7 @@ if ( ! class_exists( 'Tribe__Events__Admin_List' ) ) {
 		 */
 		public static function init() {
 			if ( is_admin() ) {
-				if ( ! Tribe__Main::instance()->doing_ajax() ) {
+				if ( ! tribe( 'context' )->doing_ajax() ) {
 					// Logic for sorting events by event category or tags
 					add_filter( 'posts_clauses', array( __CLASS__, 'sort_by_tax' ), 10, 2 );
 
@@ -109,7 +109,7 @@ if ( ! class_exists( 'Tribe__Events__Admin_List' ) ) {
 				$clauses['join'] .= " LEFT JOIN {$wpdb->postmeta} AS tribe_event_end_date ON {$wpdb->posts}.ID = tribe_event_end_date.post_id AND tribe_event_end_date.meta_key = '_EventEndDate' ";
 			}
 
-			$append_orderby = false;
+			$append_orderby   = false;
 			$original_orderby = null;
 
 			if ( ! empty( $clauses['orderby'] ) ) {
@@ -122,7 +122,7 @@ if ( ! class_exists( 'Tribe__Events__Admin_List' ) ) {
 			}
 
 			$start_orderby = "tribe_event_start_date.meta_value {$sort_direction}";
-			$end_orderby = "tribe_event_end_date.meta_value {$sort_direction}";
+			$end_orderby   = "tribe_event_end_date.meta_value {$sort_direction}";
 
 			$date_orderby = "{$start_orderby}, {$end_orderby}";
 
@@ -295,8 +295,14 @@ if ( ! class_exists( 'Tribe__Events__Admin_List' ) ) {
 		public static function custom_columns( $column_id, $post_id ) {
 			switch ( $column_id ) {
 				case 'events-cats':
-					$event_cats = get_the_term_list( $post_id, Tribe__Events__Main::TAXONOMY, '', ', ', '' );
-					echo ( $event_cats ) ? strip_tags( $event_cats ) : '—';
+					$event_cats = wp_get_post_terms( $post_id, Tribe__Events__Main::TAXONOMY, array(
+						'fields' => 'names',
+					) );
+					$categories_list = '-';
+					if ( is_array( $event_cats ) ) {
+						$categories_list = implode( ', ', $event_cats );
+					}
+					echo esc_html( $categories_list );
 				break;
 
 				case 'start-date':
@@ -368,7 +374,6 @@ if ( ! class_exists( 'Tribe__Events__Admin_List' ) ) {
 			$cache_key = $type;
 
 			$query = "SELECT post_status, COUNT( * ) AS num_posts FROM {$wpdb->posts}";
-			$query .= " LEFT JOIN {$wpdb->postmeta} as eventStart ON( {$wpdb->posts}.ID = eventStart.post_id AND eventStart.meta_key = '_EventStartDate') ";
 			$query .= ' WHERE post_type = %s';
 			if ( 'readable' == $perm && is_user_logged_in() ) {
 				$post_type_object = get_post_type_object( $type );
