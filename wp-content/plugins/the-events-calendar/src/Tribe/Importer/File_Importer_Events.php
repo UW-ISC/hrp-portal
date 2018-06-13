@@ -58,7 +58,16 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 		$query_args['tribe_remove_date_filters'] = true;
 
 		add_filter( 'posts_search', array( $this, 'filter_query_for_title_search' ), 10, 2 );
-		$matches = get_posts( $query_args );
+
+		/**
+		 * Add an option to change the $matches that are duplicates.
+		 *
+		 * @since 4.6.15
+		 *
+		 * @param array $matches Array with the duplicate matches
+		 * @param array $query_args Array with the arguments used to get the posts.
+		 */
+		$matches = (array) apply_filters( 'tribe_events_import_event_duplicate_matches', get_posts( $query_args ), $query_args );
 		remove_filter( 'posts_search', array( $this, 'filter_query_for_title_search' ), 10 );
 
 		if ( empty( $matches ) ) {
@@ -85,10 +94,11 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 
 		if ( 'preserve_changes' === $update_authority_setting ) {
 			$event['ID'] = $post_id;
-			$event = Tribe__Events__Aggregator__Event::preserve_changed_fields( $event );
+			$event       = Tribe__Events__Aggregator__Event::preserve_changed_fields( $event );
 		}
 
 		add_filter( 'tribe_tracker_enabled', '__return_false' );
+
 		Tribe__Events__API::updateEvent( $post_id, $event );
 
 		if ( $this->is_aggregator && ! empty( $this->aggregator_record ) ) {
@@ -149,15 +159,13 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 		$start_date = strtotime( $this->get_event_start_date( $record ) );
 		$end_date   = strtotime( $this->get_event_end_date( $record ) );
 
-		if ( empty( $this->is_aggregator ) ) {
-			$post_status_setting = Tribe__Events__Importer__Options::get_default_post_status( 'csv' );
-		} elseif ( $this->default_post_status ) {
+		if ( $this->default_post_status ) {
 			$post_status_setting = $this->default_post_status;
 		} else {
 			$post_status_setting = tribe( 'events-aggregator.settings' )->default_post_status( 'csv' );
 		}
 
-		$event                  = array(
+		$event = array(
 			'post_type'             => Tribe__Events__Main::POSTTYPE,
 			'post_title'            => $this->get_value_by_key( $record, 'event_name' ),
 			'post_status'           => $post_status_setting,
@@ -182,7 +190,6 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 			'EventURL'              => $this->get_value_by_key( $record, 'event_website' ),
 			'EventCurrencySymbol'   => $this->get_value_by_key( $record, 'event_currency_symbol' ),
 			'EventCurrencyPosition' => $this->get_currency_position( $record ),
-			'FeaturedImage'         => $this->get_featured_image( $event_id, $record ),
 			'EventTimezone'         => $this->get_timezone( $this->get_value_by_key( $record, 'event_timezone' ) ),
 		);
 
@@ -195,29 +202,16 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 		}
 
 		$cats = $this->get_value_by_key( $record, 'event_category' );
+
 		if ( $this->is_aggregator && ! empty( $this->default_category ) ) {
 			$cats = $cats ? $cats . ',' . $this->default_category : $this->default_category;
 		} elseif ( $category_setting = tribe( 'events-aggregator.settings' )->default_category( 'csv' ) ) {
 			$cats = $cats ? $cats . ',' . $category_setting : $category_setting;
 		}
 
-		if ( $this->is_aggregator ) {
-			if ( $show_map_setting = tribe( 'events-aggregator.settings' )->default_map( 'csv' ) ) {
-				$event['EventShowMap']     = $show_map_setting;
-				$event['EventShowMapLink'] = $show_map_setting;
-			} else {
-				if ( isset( $event['EventShowMap'] ) ) {
-					unset( $event['EventShowMap'] );
-				}
-
-				if ( ! isset( $this->inverted_map['event_show_map_link'] ) ) {
-					$event['EventShowMapLink'] = $show_map_setting;
-				}
-			}
-		}
-
 		if ( $cats ) {
-			$event['tax_input'][ Tribe__Events__Main::TAXONOMY ] = $this->translate_terms_to_ids( explode( ',', $cats ) );
+			$events_cat = Tribe__Events__Main::TAXONOMY;
+			$event['tax_input'][ $events_cat ] = Tribe__Terms::translate_terms_to_ids( explode( ',', $cats ), $events_cat );
 		}
 
 		if ( $tags = $this->get_value_by_key( $record, 'event_tags' ) ) {
@@ -234,6 +228,7 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 		}
 
 		$additional_fields = apply_filters( 'tribe_events_csv_import_event_additional_fields', array() );
+
 		if ( ! empty ( $additional_fields ) ) {
 			foreach ( $additional_fields as $key => $csv_column ) {
 				$event[ $key ] = $this->get_value_by_key( $record, $key );
@@ -251,7 +246,7 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 			$split = preg_split( '/[\\s,]+/', $name );
 			$match = array();
 			foreach ( $split as $possible_id_match ) {
-				$match[] = $this->find_matching_post_id( $possible_id_match, Tribe__Events__Organizer::POSTTYPE );
+				$match[] = $this->find_matching_post_id( $possible_id_match, Tribe__Events__Organizer::POSTTYPE, 'any' );
 			}
 
 			$match = array_unique( $match );
@@ -270,7 +265,7 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 			}
 		}
 
-		$matching_post_ids = $this->find_matching_post_id( $name, Tribe__Events__Organizer::POSTTYPE );
+		$matching_post_ids = $this->find_matching_post_id( $name, Tribe__Events__Organizer::POSTTYPE, 'any' );
 
 		if ( ! is_array( $matching_post_ids ) ) {
 			$matching_post_ids = array( $matching_post_ids );
@@ -282,52 +277,7 @@ class Tribe__Events__Importer__File_Importer_Events extends Tribe__Events__Impor
 	private function find_matching_venue_id( $record ) {
 		$name = $this->get_value_by_key( $record, 'event_venue_name' );
 
-		return $this->find_matching_post_id( $name, Tribe__Events__Venue::POSTTYPE );
-	}
-
-	/**
-	 * When passing terms to wp_insert_post(), we're required to have IDs
-	 * for hierarchical taxonomies, not strings
-	 *
-	 * @param array $terms
-	 *
-	 * @return int[]
-	 */
-	private function translate_terms_to_ids( array $terms ) {
-		$term_ids = array();
-		// duplicating some code from wp_set_object_terms()
-		foreach ( $terms as $term ) {
-			if ( ! strlen( trim( $term ) ) ) {
-				continue;
-			}
-
-			if ( is_numeric( $term ) ) {
-				$term = absint( $term );
-				$term_info = get_term( $term, Tribe__Events__Main::TAXONOMY, ARRAY_A );
-			} else {
-				$term_info = term_exists( $term, Tribe__Events__Main::TAXONOMY );
-			}
-
-			if ( ! $term_info ) {
-				// Skip if a non-existent term ID is passed.
-				if ( is_numeric( $term ) ) {
-					continue;
-				}
-				$term_info = wp_insert_term( $term, Tribe__Events__Main::TAXONOMY );
-			}
-
-			if ( is_wp_error( $term_info ) ) {
-				continue;
-			}
-
-			if ( $this->is_aggregator && ! empty( $this->aggregator_record ) ) {
-				$this->aggregator_record->meta['activity']->add( 'category', 'created', $term_info['term_id'] );
-			}
-
-			$term_ids[] = $term_info['term_id'];
-		}
-
-		return $term_ids;
+		return $this->find_matching_post_id( $name, Tribe__Events__Venue::POSTTYPE, 'any' );
 	}
 
 	/**

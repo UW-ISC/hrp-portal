@@ -51,7 +51,8 @@ final class Tribe__Events__Customizer__Month_Week_View extends Tribe__Customizer
 					border-color: <%= month_week_view.border_dark_color %>;
 				}
 
-				.events-archive.events-gridview #tribe-events-content table .type-tribe_events {
+				.events-archive.events-gridview #tribe-events-content table .type-tribe_events,
+				.tribe-events-shortcode .tribe-events-month table .type-tribe_events {
 					border-color: <%= month_week_view.border_light_color %>;
 				}
 
@@ -172,7 +173,7 @@ final class Tribe__Events__Customizer__Month_Week_View extends Tribe__Customizer
 				$manager,
 				$customizer->get_setting_name( 'table_bg_color', $section ),
 				array(
-					'label'   => __( 'Calendar Table Color' ),
+					'label'   => __( 'Calendar Table Color', 'the-events-calendar' ),
 					'section' => $section->id,
 				)
 			)
@@ -194,7 +195,7 @@ final class Tribe__Events__Customizer__Month_Week_View extends Tribe__Customizer
 				$manager,
 				$customizer->get_setting_name( 'highlight_color', $section ),
 				array(
-					'label'   => __( 'Calendar Highlight Color' ),
+					'label'   => __( 'Calendar Highlight Color', 'the-events-calendar' ),
 					'section' => $section->id,
 				)
 			)

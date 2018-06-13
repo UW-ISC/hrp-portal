@@ -60,7 +60,7 @@ class Tribe__Log__File_Logger implements Tribe__Log__Logger {
 	protected function obtain_handle() {
 		$this->close_handle();
 
-		if ( ! file_exists( $this->log_file ) ) {
+		if ( ! file_exists( $this->log_file ) && $this->is_available() ) {
 			touch( $this->log_file );
 		}
 
@@ -207,34 +207,60 @@ class Tribe__Log__File_Logger implements Tribe__Log__Logger {
 	 *       '2016-12-30',
 	 *       '2016-12-30', ... ]
 	 *
+	 * @since 4.6.2 added extra safety checks before attempting to access log directory
+	 *
 	 * @return array
 	 */
 	public function list_available_logs() {
 		$logs = array();
-		$basename = $this->get_log_file_basename();
 
-		// Look through the log storage directory
-		foreach ( new DirectoryIterator( $this->log_dir ) as $node ) {
-			$name = $node->getFilename();
-
-			// DirectoryIterator::getExtension() is only available on 5.3.6
-			if ( version_compare( phpversion(), '5.3.6', '>=' ) ) {
-				$ext = $node->getExtension();
-			} else {
-				$ext = pathinfo( $name, PATHINFO_EXTENSION );
-			}
-
-			// Skip unless it is a .log file with the expected prefix
-			if ( 'log' !== $ext || 0 !== strpos( $name, $basename ) ) {
-				continue;
-			}
-
-			if ( preg_match( '/([0-9]{4}\-[0-9]{2}\-[0-9]{2})/', $name, $matches ) ) {
-				$logs[] = $matches[1];
-			}
+		// This could be called when the log dir is not accessible.
+		if ( ! $this->is_available() ) {
+			return $logs;
 		}
 
-		rsort( $logs );
+		$basename = $this->get_log_file_basename();
+
+		/**
+		 * Though the is_available() method tests to see if the log directory is
+		 * readable and writeable there are situations where that isn't a
+		 * sufficient check by itself, hence the try/catch block.
+		 *
+		 * @see https://central.tri.be/issues/90436
+		 */
+		try {
+			$log_files_dir = new DirectoryIterator( $this->log_dir );
+
+			// Look through the log storage directory
+			foreach ( $log_files_dir as $node ) {
+				if ( ! $node->isReadable() ) {
+					continue;
+				}
+
+				$name = $node->getFilename();
+
+				// DirectoryIterator::getExtension() is only available on 5.3.6
+				if ( version_compare( phpversion(), '5.3.6', '>=' ) ) {
+					$ext = $node->getExtension();
+				} else {
+					$ext = pathinfo( $name, PATHINFO_EXTENSION );
+				}
+
+				// Skip unless it is a .log file with the expected prefix
+				if ( 'log' !== $ext || 0 !== strpos( $name, $basename ) ) {
+					continue;
+				}
+
+				if ( preg_match( '/([0-9]{4}\-[0-9]{2}\-[0-9]{2})/', $name, $matches ) ) {
+					$logs[] = $matches[1];
+				}
+			}
+
+			rsort( $logs );
+		} catch ( Exception $e ) {
+			return $logs;
+		}
+
 		return $logs;
 	}
 

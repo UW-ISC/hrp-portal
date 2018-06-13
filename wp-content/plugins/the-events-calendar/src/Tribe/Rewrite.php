@@ -6,7 +6,7 @@ defined( 'WPINC' ) or die;
  * Rewrite Configuration Class
  * Permalinks magic Happens over here!
  */
-class Tribe__Events__Rewrite extends  Tribe__Rewrite {
+class Tribe__Events__Rewrite extends Tribe__Rewrite {
 	/**
 	 * Static singleton variable
 	 * @var self
@@ -42,7 +42,7 @@ class Tribe__Events__Rewrite extends  Tribe__Rewrite {
 	 *
 	 * @param WP_Rewrite|null $wp_rewrite
 	 */
-	public function __construct(WP_Rewrite $wp_rewrite = null) {
+	public function __construct( WP_Rewrite $wp_rewrite = null ) {
 		$this->rewrite = $wp_rewrite;
 	}
 
@@ -85,8 +85,9 @@ class Tribe__Events__Rewrite extends  Tribe__Rewrite {
 		 *
 		 * @param array $events_rewrite_rules
 		 * @param Tribe__Events__Rewrite $tribe_rewrite
+		 * @param WP_Rewrite $wp_rewrite WordPress Rewrite that will be modified.
 		 */
-		$this->rules = apply_filters( 'tribe_events_rewrite_rules_custom', $this->rules, $this );
+		$this->rules = apply_filters( 'tribe_events_rewrite_rules_custom', $this->rules, $this, $wp_rewrite );
 
 		$wp_rewrite->rules = $this->rules + $wp_rewrite->rules;
 	}
@@ -244,20 +245,28 @@ class Tribe__Events__Rewrite extends  Tribe__Rewrite {
 		 * way if the forms are altered (whether through i18n or other custom mods) *after* links
 		 * have already been promulgated, there will be less chance of visitors hitting 404s.
 		 *
+		 * The term "original" here for:
+		 * - events
+		 * - event
+		 *
+		 * Means that is a value that can be overwritten and relies on the user value entered on the
+		 * options page.
+		 *
 		 * @var array $bases
 		 */
 		$bases = apply_filters( 'tribe_events_rewrite_base_slugs', array(
-			'month' => array( 'month', $tec->monthSlug ),
-			'list' => array( 'list', $tec->listSlug ),
-			'today' => array( 'today', $tec->todaySlug ),
-			'day' => array( 'day', $tec->daySlug ),
-			'tag' => array( 'tag', $tec->tag_slug ),
-			'tax' => array( 'category', $tec->category_slug ),
-			'page' => (array) 'page',
-			'single' => (array) Tribe__Settings_Manager::get_option( 'singleEventSlug', 'event' ),
-			'archive' => (array) Tribe__Settings_Manager::get_option( 'eventsSlug', 'events' ),
+			'month'    => array( 'month', $tec->monthSlug ),
+			'list'     => array( 'list', $tec->listSlug ),
+			'today'    => array( 'today', $tec->todaySlug ),
+			'day'      => array( 'day', $tec->daySlug ),
+			'tag'      => array( 'tag', $tec->tag_slug ),
+			'tax'      => array( 'category', $tec->category_slug ),
+			'page'     => array( 'page', esc_html_x( 'page', 'The "/page/" URL string component.', 'the-events-calendar' ) ),
+			'single'   => array( Tribe__Settings_Manager::get_option( 'singleEventSlug', 'event' ), $tec->rewriteSlugSingular ),
+			'archive'  => array( Tribe__Settings_Manager::get_option( 'eventsSlug', 'events' ), $tec->rewriteSlug ),
 			'featured' => array( 'featured', $tec->featured_slug ),
 		) );
+
 
 		// Remove duplicates (no need to have 'month' twice if no translations are in effect, etc)
 		$bases = array_map( 'array_unique', $bases );
@@ -267,7 +276,7 @@ class Tribe__Events__Rewrite extends  Tribe__Rewrite {
 
 		// By default we load the Default and our plugin domains
 		$domains = apply_filters( 'tribe_events_rewrite_i18n_domains', array(
-			'default' => true, // Default doesn't need file path
+			'default'             => true, // Default doesn't need file path
 			'the-events-calendar' => $tec->plugin_dir . 'lang/',
 		) );
 
@@ -387,5 +396,47 @@ class Tribe__Events__Rewrite extends  Tribe__Rewrite {
 		parent::add_hooks();
 		add_action( 'tribe_events_pre_rewrite', array( $this, 'generate_core_rules' ) );
 		add_filter( 'post_type_link', array( $this, 'filter_post_type_link' ), 15, 2 );
+		add_filter( 'url_to_postid', array( $this, 'filter_url_to_postid' ) );
+	}
+
+	/**
+	 * Prevent url_to_postid to run if on the main events page to avoid
+	 * query conflicts.
+	 *
+	 * @since 4.6.15
+	 *
+	 * @param string $url The URL from `url_to_postid()`
+	 * @see [94328]
+	 *
+	 * @return int|string $url
+	 */
+	public function filter_url_to_postid( $url ) {
+
+		$events_url = Tribe__Events__Main::instance()->getLink();
+
+		// check if the site is using pretty permalinks
+		if ( '' !== get_option( 'permalink_structure' ) ) {
+			$url_query = @parse_url( $url, PHP_URL_QUERY );
+
+			// Remove the "args" in case we receive any
+			if ( ! empty( $url_query ) ) {
+				$url = str_replace( '?' . $url_query, '', $url );
+			} else {
+				// Check if they're viewing the events page with pretty params
+				if ( 0 === stripos( $url, $events_url ) ) {
+					$url = $events_url;
+				}
+			}
+		}
+
+		if (
+			$url === $events_url
+			|| $url === Tribe__Events__Main::instance()->getLink( 'month' )
+		) {
+			return 0;
+		}
+
+		return $url;
+
 	}
 }

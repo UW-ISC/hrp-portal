@@ -8,10 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	die( '-1' );
 }
 
-
 class Tribe__Events__Cost_Utils extends Tribe__Cost_Utils {
-	const UNCOSTED_EVENTS_TRANSIENT = 'tribe_events_have_uncosted_events';
 
+	const UNCOSTED_EVENTS_TRANSIENT = 'tribe_events_have_uncosted_events';
 
 	/**
 	 * Static Singleton Factory Method
@@ -101,7 +100,15 @@ class Tribe__Events__Cost_Utils extends Tribe__Cost_Utils {
 			$cost = $this->maybe_replace_cost_with_free( $cost );
 
 			if ( $with_currency_symbol ) {
-				$cost = $this->maybe_format_with_currency( $cost );
+				$event_id          = Tribe__Main::post_id_helper( $event );
+				$currency_symbol   = get_post_meta( $event_id, '_EventCurrencySymbol', true );
+				$currency_position = get_post_meta( $event_id, '_EventCurrencyPosition', true );
+
+				if ( empty( $currency_position ) ) {
+					$currency_position = tribe_get_option( 'reverseCurrencyPosition', false );
+				}
+
+				$cost = $this->maybe_format_with_currency( $cost, $event, $currency_symbol, $currency_position );
 			}
 
 			$cost = esc_html( $cost );
@@ -110,7 +117,7 @@ class Tribe__Events__Cost_Utils extends Tribe__Cost_Utils {
 		if ( $relevant_costs['min'] == $relevant_costs['max'] ) {
 			$formatted = $relevant_costs['min'];
 		} else {
-			$formatted = $relevant_costs['min'] . _x( ' - ',
+			$formatted = $relevant_costs['min'] . _x( ' – ',
 					'Cost range separator',
 					'the-events-calendar' ) . $relevant_costs['max'];
 		}
@@ -141,13 +148,13 @@ class Tribe__Events__Cost_Utils extends Tribe__Cost_Utils {
 			LEFT JOIN {$wpdb->postmeta}
 			          ON ( post_id = ID AND meta_key = '_EventCost' )
 
-			WHERE post_type = %s 
-			      AND ( 
+			WHERE post_type = %s
+			      AND (
 			          LENGTH( meta_value ) = 0
 			          OR meta_value IS NULL
 			      )
 			      AND post_status NOT IN ( 'auto-draft', 'revision' )
-			      
+
 			LIMIT 1
 		", Tribe__Events__Main::POSTTYPE ) );
 

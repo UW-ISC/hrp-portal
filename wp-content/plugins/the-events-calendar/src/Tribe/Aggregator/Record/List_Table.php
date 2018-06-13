@@ -292,7 +292,7 @@ class Tribe__Events__Aggregator__Record__List_Table extends WP_List_Table {
 					'The aggregator origin "%s" contains records, but is not supported and was skipped in the counts.',
 					$origin
 				);
-				Tribe__Main::instance()->log()->log_debug( $debug_message, 'aggregator' );
+				tribe( 'logger' )->log_debug( $debug_message, 'aggregator' );
 
 				continue;
 			}
@@ -462,7 +462,10 @@ class Tribe__Events__Aggregator__Record__List_Table extends WP_List_Table {
 		}
 
 		$source_info = $record->get_source_info();
-		$source_info['title'] = $source_info['title'];
+
+		if ( is_array( $source_info['title'] ) ) {
+			$source_info['title'] = implode( ', ', $source_info['title'] );
+		}
 
 		if ( $record->is_schedule && tribe( 'events-aggregator.main' )->is_service_active() ) {
 			$html[] = '<p><b><a href="' . get_edit_post_link( $post->ID ) . '">' . esc_html( $source_info['title'] ) . '</a></b></p>';
@@ -538,6 +541,12 @@ class Tribe__Events__Aggregator__Record__List_Table extends WP_List_Table {
 		$time = strtotime( $original );
 		$now = current_time( 'timestamp', true );
 
+		$retry_time = false;
+
+		if ( ! empty( $last_import_error ) ) {
+			$retry_time = $record->get_retry_time();
+		}
+
 		$html[] = '<span title="' . esc_attr( $original ) . '">';
 		if ( ( $now - $time ) <= DAY_IN_SECONDS ) {
 			$diff = human_time_diff( $time, $now );
@@ -549,8 +558,22 @@ class Tribe__Events__Aggregator__Record__List_Table extends WP_List_Table {
 		} else {
 			$html[] = date( tribe_get_date_format( true ), $time ) . '<br>' . date( Tribe__Date_Utils::TIMEFORMAT, $time );
 		}
-
 		$html[] = '</span>';
+
+		if ( $retry_time ) {
+			$html[] = '<div title="' . esc_attr( $original ) . '-retry">';
+			if ( ( $retry_time - $now ) <= DAY_IN_SECONDS ) {
+				$diff   = human_time_diff( $retry_time, $now );
+				$html[] = sprintf( esc_html_x( 'retrying in about %s', 'in human readable time', 'the-events-calendar' ), $diff );
+			} else {
+				$html[] = sprintf(
+					esc_html_x( 'retrying at %s', 'when the retry will happen, a date', 'the-events-calendar' ),
+					date( tribe_get_date_format( true ), $retry_time )
+				);
+			}
+			$html[] = '</div>';
+		}
+
 		return $this->render( $html );
 	}
 

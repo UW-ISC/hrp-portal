@@ -151,7 +151,8 @@ table.plugins .tribe-plugin-update-message a {
 }
 .tribe-settings-form .tribe-settings-form-wrap .tribe-sysinfo-optin-msg,
 .tribe-settings-form .tribe-settings-form-wrap .system-info,
-.tribe-settings-form .tribe-settings-form-wrap h3 + p {
+.tribe-settings-form .tribe-settings-form-wrap h3 + p,
+.tribe-settings-form .tribe-settings-form-wrap .contained {
 	margin: 0 0 10px;
 	padding-left: 12px;
 }
@@ -231,14 +232,17 @@ table.plugins .tribe-plugin-update-message a {
 	width: 450px;
 }
 .tribe-field-text.tribe-size-small input,
+.tribe-field-email.tribe-size-small input,
 .tribe-field-license_key.tribe-size-small input {
 	width: 50px;
 }
 .tribe-field-text.tribe-size-medium input,
+.tribe-field-email.tribe-size-medium input,
 .tribe-field-license_key.tribe-size-medium input {
 	width: 225px;
 }
 .tribe-field-text.tribe-size-large input,
+.tribe-field-email.tribe-size-large input,
 .tribe-field-license_key.tribe-size-large input {
 	width: 450px;
 }
@@ -251,6 +255,12 @@ table.plugins .tribe-plugin-update-message a {
 .tribe-field-dropdown.tribe-size-large select {
 	width: 450px;
 }
+.tribe-field-wrapped_html.tribe-size-large .tribe-field-wrap {
+	max-width: 600px;
+}
+.tribe-field-wrapped_html.tribe-size-large .tribe-field-wrap .description{
+	max-width: 100%;
+}
 .tribe-field-dropdown_chosen.tribe-size-small select {
 	width: 100px;
 }
@@ -259,6 +269,28 @@ table.plugins .tribe-plugin-update-message a {
 }
 .tribe-field-dropdown_chosen.tribe-size-large select {
 	width: 300px;
+}
+.tribe-field-wrap .tooltip:first-child {
+	font-style: normal;
+}
+.tribe-field.indent {
+	margin-left: 252px;
+	width: 75%;
+}
+.tribe-field.indent legend {
+	font-weight: normal;
+	width: auto;
+}
+.tribe-field.indent .tribe-field-wrap {
+	padding-right: 12px;
+}
+.tribe-field.indent.tribe-field-radio .tribe-field-wrap {
+	clear: left;
+	margin-top: 12px;
+}
+.tribe-field.light-bordered {
+	background-color: white;
+	border: solid lightgrey 1px;
 }
 /* license keys */
 .ajax-loading-license,
@@ -433,12 +465,10 @@ table.plugins .tribe-plugin-update-message a {
 }
 #tribe-log-controls .working {
 	opacity: 1;
-	-webkit-transition: opacity 0.2s;
 	transition: opacity 0.2s;
 }
 #tribe-log-controls .working.hidden {
 	opacity: 0;
-	-webkit-transition: opacity 0.2s;
 	transition: opacity 0.2s;
 }
 #tribe-system-info dl.support-stats,
@@ -697,7 +727,6 @@ table.plugins .tribe-plugin-update-message a {
 	left: 0;
 	position: absolute;
 	top: 0;
-	-webkit-transition: all 1s linear;
 	transition: all 1s linear;
 	webkit-transition: all 1s linear;
 	width: 100%;
@@ -862,7 +891,6 @@ a.tribe-rating-link {
 #tribe-dialog-wrapper .select-single-container label {
 	opacity: 1;
 	padding: 3px 5px;
-	-webkit-transition: opacity 0.2s;
 	transition: opacity 0.2s;
 }
 #tribe-dialog-wrapper .select-single-container label:nth-child(odd) {
@@ -878,7 +906,6 @@ a.tribe-rating-link {
 }
 #tribe-dialog-wrapper .select-single-container.updating label {
 	opacity: 0.35;
-	-webkit-transition: opacity 0.2s;
 	transition: opacity 0.2s;
 }
 /* Useful to ensure modals rise above the grey 'miasma' */
@@ -1008,7 +1035,6 @@ a.tribe-rating-link {
 .tribe-ea-dropdown.select2-container-multi .select2-choices .select2-search-choice-close, .tribe-dropdown.select2-container-multi .select2-choices .select2-search-choice-close {
 	top: 3px;
 	left: 4px;
-	-webkit-transition-property: border,color;
 	transition-property: border,color;
 }
 .select2-results .select2-selected {
@@ -1104,6 +1130,41 @@ Credit to https://github.com/jensjns/wp-admin-red-button
 }
 .clear:after {
 	clear: both;
+}
+/* from https://codepen.io/lajlev/pen/diKbz */
+.checkmark:after {/*Add another block-level blank space*/
+	content: '';
+	display: block;/*Make it a small rectangle so the border will create an L-shape*/
+	width: 8px;
+	height: 15px;/*Add a white border on the bottom and left, creating that 'L' */
+	border: solid #0AB152;
+	border-width: 0 3px 3px 0;/*Rotate the L 45 degrees to turn it into a checkmark*/
+	transform: rotate(45deg);
+}
+.checkmark.checkmark-right:after {
+	float: right;
+	margin-right: 2em;
+}
+.checkmark.checkmark-left:after {
+	float: left;
+	margin-left: 2em;
+}
+.checkmark.no-checkmark:after {
+	display: none;
+}
+.complete, .ok, .yes, .on,
+[data-status="complete"],
+[data-status="ok"],
+[data-status="yes"],
+[data-status="on"] {
+	color: #0AB152;
+}
+.incomplete, .ko, .no, .off,
+[data-status="incomplete"],
+[data-status="ko"],
+[data-status="no"],
+[data-status="off"] {
+	color: #FF2500;
 }
 /*
  * Plugin install CSS

@@ -323,6 +323,10 @@ class Tribe__Meta__Chunker {
 	 * @return bool
 	 */
 	protected function is_chunker_logic_meta_key( $meta_key ) {
+		if ( ! is_string( $meta_key ) ) {
+			return false;
+		}
+
 		return 0 === strpos( $meta_key, $this->meta_key_prefix );
 	}
 
@@ -435,10 +439,8 @@ class Tribe__Meta__Chunker {
 		if ( ! empty( $this->max_chunk_size ) ) {
 			return $this->max_chunk_size;
 		}
-		/** @var wpdb $wpdb */
-		global $wpdb;
-		$max_size = $wpdb->get_results( "SHOW VARIABLES LIKE 'max_allowed_packet';", ARRAY_A );
-		$max_size = ! empty( $max_size[0]['Value'] ) ? $max_size[0]['Value'] : 1048576;
+
+		$max_size = tribe( 'db' )->get_max_allowed_packet_size();
 
 		/**
 		 * Filters the max size of the of the chunks in bytes.
