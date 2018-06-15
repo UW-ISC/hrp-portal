@@ -32,7 +32,6 @@ class Tribe__Events__Amalgamator {
 		$this->merge_identical_venues();
 
 		$events = Tribe__Events__Main::instance();
-		$events->setOption( 'organizer_venue_amalgamation', 1 );
 		wp_cache_flush();
 	}
 
@@ -102,7 +101,7 @@ class Tribe__Events__Amalgamator {
 					$buckets[ $hash ] = array();
 				}
 				// prioritize venues with an eventbrite id
-				$eventbrite = get_post_meta( $id, '_VenueEventBriteId', true );
+				$eventbrite = get_post_meta( $id, '_VenueEventBriteID', true );
 				if ( empty( $eventbrite ) ) {
 					array_push( $buckets[ $hash ], $id );
 				} else {

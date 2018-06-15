@@ -186,7 +186,13 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			// Cache the result of month/content.php
 			if ( $this->use_cache ) {
 				$this->cache_expiration = apply_filters( 'tribe_events_month_view_transient_expiration', HOUR_IN_SECONDS );
-				$this->html_cache = new Tribe__Template_Part_Cache( 'month/content.php', serialize( $this->args ), $this->cache_expiration, 'save_post' );
+
+				$cache_id = serialize( $this->args );
+				if ( isset( $_REQUEST ) && is_array( $_REQUEST ) ) {
+					$cache_id .= serialize( $_REQUEST );
+				}
+				$cache_id = md5( $cache_id );
+				$this->html_cache = new Tribe__Template_Part_Cache( 'month/content.php', $cache_id, $this->cache_expiration, 'save_post' );
 			}
 
 			$this->events_per_day  = apply_filters( 'tribe_events_month_day_limit', tribe_get_option( 'monthEventAmount', '3' ) );
@@ -284,13 +290,18 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 		 * @return void
 		 */
 		public function json_ld_markup() {
+
 			if ( ! $this->use_cache ) {
 				$this->produce_json_ld_markup( true );
 				return;
 			}
 
 			$cache     = new Tribe__Cache();
-			$cache_key = $this->get_month_view_cache_key( 'events_month_jsonld' );
+			$prefix = 'events_month_jsonld';
+			if ( tribe_is_event_category() ) {
+				$prefix = sprintf( 'events_cat_%d_month_jsonld', get_queried_object_id() );
+			}
+			$cache_key = $this->get_month_view_cache_key( $prefix );
 			$json_ld   = $cache->get_transient( $cache_key, 'save_post' );
 
 			if ( ! $json_ld ) {
@@ -314,11 +325,42 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			}
 
 			$events = wp_list_pluck( $this->events_in_month, 'ID' );
+			if ( tribe_is_event_category() ) {
+				$events = $this->filter_by_current_term( $events );
+			}
+
 			Tribe__Events__JSON_LD__Event::instance()->markup( $events );
 
 			if ( ! $echo ) {
 				return ob_get_clean();
 			}
+		}
+
+		/**
+		 * Remove any event that is not the same as the current term of the array of events, it return a modified events
+		 * array with the events that only has the current term or original events if the term is not valid.
+		 *
+		 * @since 4.6.9
+		 *
+ 		 * @param array
+		 *
+		 * @return array
+		 */
+		private function filter_by_current_term( $events ) {
+			$taxonomy = get_query_var( 'taxonomy' );
+			$current_term = get_term_by( 'id', get_queried_object_id(), $taxonomy );
+
+			// get_term_by returns false if term does not exists or on failure.
+			if ( false === $current_term ) {
+				return $events;
+			}
+
+			foreach ( (array) $events as $key => $event_id ) {
+				if ( ! has_term( $current_term->term_id, $taxonomy, $event_id ) ) {
+					unset( $events[ $key ] );
+				}
+			}
+			return $events;
 		}
 
 		/**
@@ -363,7 +405,10 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 
 			if ( empty( $args ) ) {
 				// if no args were passed to the constructor, get them from $wp_query
-				global $wp_query;
+				if ( ! $wp_query = tribe_get_global_query_object() ) {
+					return;
+				}
+
 				$args = $wp_query->query;
 
 				if ( ! empty( $wp_query->query_vars['meta_query'] ) ) {
@@ -372,7 +417,6 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			}
 
 			$this->args = $args;
-
 		}
 
 		/**
@@ -534,26 +578,53 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 			$post_stati = implode( "','", $post_stati );
 			$ignore_hidden_events_AND = $this->hidden_events_fragment();
 
-			$events_request = $wpdb->prepare(
-				"SELECT tribe_event_start.post_id as ID,
-						tribe_event_start.meta_value as EventStartDate,
-						tribe_event_end_date.meta_value as EventEndDate
-				FROM $wpdb->postmeta AS tribe_event_start
-				LEFT JOIN $wpdb->posts ON tribe_event_start.post_id = $wpdb->posts.ID
-				LEFT JOIN $wpdb->postmeta as tribe_event_end_date ON ( tribe_event_start.post_id = tribe_event_end_date.post_id AND tribe_event_end_date.meta_key = '_EventEndDate' )
-				WHERE $ignore_hidden_events_AND tribe_event_start.meta_key = '_EventStartDate'
-				AND ( (tribe_event_start.meta_value >= '%1\$s' AND  tribe_event_start.meta_value <= '%2\$s')
-					OR (tribe_event_start.meta_value <= '%1\$s' AND tribe_event_end_date.meta_value >= '%1\$s')
-					OR ( tribe_event_start.meta_value >= '%1\$s' AND  tribe_event_start.meta_value <= '%2\$s')
-				)
-				AND $wpdb->posts.post_status IN('$post_stati')
-				ORDER BY $wpdb->posts.menu_order ASC, DATE(tribe_event_start.meta_value) ASC, TIME(tribe_event_start.meta_value) ASC;
-				",
-				tribe_beginning_of_day( $this->first_grid_date ),
-				tribe_end_of_day( $this->final_grid_date )
-			);
+			$start_date = tribe_beginning_of_day( $this->first_grid_date );
+			$end_date   = tribe_end_of_day( $this->final_grid_date );
 
-			$this->events_in_month = $wpdb->get_results( $events_request );
+			/**
+			 * Allow bypassing the events in month SQL query to return events an alternative way.
+			 *
+			 * @param null|array $events_in_month An array of events in month (default null, run the SQL query like normal)
+			 * @param string     $start_date      The start date to filter the queried events by
+			 * @param string     $end_date        The end date to filter the queried events by
+			 *
+			 * @since 4.5.9
+			 */
+			$events_in_month = apply_filters( 'tribe_events_month_get_events_in_month', null, $start_date, $end_date );
+
+			if ( null === $events_in_month ) {
+				$start_date_sql = esc_sql( $start_date );
+				$end_date_sql = esc_sql( $end_date );
+
+				$events_request = "SELECT tribe_event_start.post_id as ID,
+							tribe_event_start.meta_value as EventStartDate,
+							tribe_event_end_date.meta_value as EventEndDate
+					FROM $wpdb->postmeta AS tribe_event_start
+					LEFT JOIN $wpdb->posts ON tribe_event_start.post_id = $wpdb->posts.ID
+					LEFT JOIN $wpdb->postmeta as tribe_event_end_date ON ( tribe_event_start.post_id = tribe_event_end_date.post_id AND tribe_event_end_date.meta_key = '_EventEndDate' )
+					WHERE $ignore_hidden_events_AND tribe_event_start.meta_key = '_EventStartDate'
+					AND (
+						(
+							tribe_event_start.meta_value >= '{$start_date_sql}'
+							AND tribe_event_start.meta_value <= '{$end_date_sql}'
+						)
+						OR (
+							tribe_event_end_date.meta_value >= '{$start_date_sql}'
+							AND tribe_event_end_date.meta_value <= '{$end_date_sql}'
+						)
+						OR (
+							tribe_event_start.meta_value < '{$start_date_sql}'
+							AND tribe_event_end_date.meta_value > '{$end_date_sql}'
+						)
+					)
+					AND $wpdb->posts.post_status IN('$post_stati')
+					ORDER BY $wpdb->posts.menu_order ASC, DATE(tribe_event_start.meta_value) ASC, TIME(tribe_event_start.meta_value) ASC;
+					";
+
+				$events_in_month = $wpdb->get_results( $events_request );
+			}
+
+			$this->events_in_month = $events_in_month;
 
 			// cache the postmeta and terms for all these posts in one go
 			$event_ids_in_month = wp_list_pluck( $this->events_in_month, 'ID' );
@@ -1136,7 +1207,9 @@ if ( ! class_exists( 'Tribe__Events__Template__Month' ) ) {
 
 				Tribe__Events__Main::instance()->displaying = 'month';
 
-				global $wp_query;
+				if ( ! $wp_query = tribe_get_global_query_object() ) {
+					return;
+				}
 
 				$wp_query = tribe_get_events( $this->args, true );
 
