@@ -1,5 +1,6 @@
 # Copy this file to .htaccess and edit
 
-AuthType UWNetID
-PubCookieAppID "isc"
+AuthType shibboleth
+ShibRequestSetting requireSession true
+ShibRequestSetting redirectToSSL 443
 Require group <GROUPNAME>
