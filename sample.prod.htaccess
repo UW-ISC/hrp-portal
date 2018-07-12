@@ -2,8 +2,9 @@
 
 # UW NetID protect logins
 <Files "wp-login.php">
-  AuthType UWNetID
-  PubCookieAppID "isc"
+  AuthType shibboleth
+  ShibRequestSetting requireSession true
+  ShibRequestSetting redirectToSSL 443
   Require group <GROUPNAME>
 </Files>
 # End UW NetID protect logins
@@ -52,9 +53,9 @@
   RewriteEngine On
   RewriteBase /
   RewriteCond %{QUERY_STRING} action=logout
-  RewriteRule ^wp-login.php$ /user_logout [R,L]
+  RewriteRule ^wp-login.php$ /Shibboleth.sso/Logout [R,L]
   RewriteRule ^index\.php$ - [L]
-  RewriteCond %{REQUEST_URI} !/PubCookie.reply
+  RewriteCond %{REQUEST_URI} !/Shibboleth.sso
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.php [L]
