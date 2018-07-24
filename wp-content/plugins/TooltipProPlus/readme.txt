@@ -4,8 +4,8 @@ Contributors: CreativeMindsSolutions
 Donate link: https://www.cminds.com/
 Tags: glossary, pages, posts, definitions, tooltip, automatic, hints, hint, tip, tool-tip
 Requires at least: 3.3
-Tested up to: 4.8.1
-Stable tag: 3.6.1
+Tested up to: 4.9.6
+Stable tag: 3.8.0
 
 PRO+ Version! Parses posts for defined glossary terms and adds links to the static glossary page containing the definition and a tooltip with the definition.
 
@@ -76,6 +76,74 @@ You can use glossaryLink. You can also define glossaryLinkMain if you wish to ha
 5. Glossary setting page in Admin
 
 == Changelog ==
+
+= 3.8.1 =
+* Bug: Fixed the bug in Enfold compatibility
+* Feature: Added the new Word of Day Widget
+
+= 3.8.0 =
+* Feature: Added an option for tooltip display animation and tooltip hide animation along with animation time in seconds for Glossary Tooltip
+* Bug: Fixed the additional linebreaks being added on export
+* Update: Updated the Enfold compatibility (requires Enfold 4.4.1+)
+
+= 3.7.10 =
+* GDPR: Improved the description of the Tooltip font feature
+* Feature: Added new options to set the paddings for the tooltip!
+
+= 3.7.9 =
+* Bug: Fixed the bug which caused the tooltips to be stuck open
+
+= 3.7.8 =
+* Bug: Fixed the bug which caused the plugin to stop parsing the terms
+
+= 3.7.7 =
+* Feature: Added the option to allow sorting of Glossary Index terms by the title
+* Feature: Added the minification for the scripts and styles (disabled for Administrators)
+* Feature: Added the support for the wpDatatables plugin
+* Feature: Added the option to exclude parsing in the HTML elements with given class
+
+= 3.7.6 =
+* Bug: Fixed the bug with the missing function
+* Feature: Added the option to add custom code before and after the Glossary Term Page content
+* Feature: Added the option to add custom code before and after the Glossary Tooltip content
+
+= 3.7.5 =
+* Option: Added the option to disable the links in description of the Glossary Index Page
+* Option: Added the option to link the Glossary Index Page thumbnails to the original sized images
+* Option: Added the option to disable closing the tooltips on mouse moveout
+* Bug: Fixed the typo
+
+= 3.7.4 =
+* Bug/Feature: Added the missing $additionalClass to links if tooltips are disabled
+* Change: Added the support for the Luxembourgish language
+
+= 3.7.3 =
+* Feature: Added the option to close the tooltip on touch enabled devices by touching outside of the tooltip
+* Bug/Change: Disabled the option "Move tooltip contents to footer?" by default - to stop the rare problems with the tooltips displaying random strings
+* Bug: Fixed the bug with the Merriam-Webster duplicate contents in the tooltip
+
+= 3.7.2 =
+* Bug: Fixed the small compatibility issue with PHP >7.2
+* Bug: Fixed the small compatibility with servers with "set_time_limit" disabled
+
+= 3.7.1 =
+* Feature: Added the new param "length=X" to the embed url allowing to limit the length of the description
+* Feature: Removed the underline of the dashicons in the [glossary_tooltip] shortcode unless it's forced with the new underline="1" parameter
+* Bug: Fixed the small compatibility issue with PHP <5.5
+* Bug: Changed the default setting to move to scripts to footer to fix the problems with the tooltips displaying random strings
+
+= 3.7.0 =
+* Added the option to disable the comments per glossary page
+* Added the option to add multiple terms with the same title (Alternative Meanings)
+* Added the option to set the dashicon for each term
+* Added the option to embed the tooltips (add in an iframe)
+* Added the option to move the tooltip content to the footer (improved the compatibility with the builders)
+* Added the option to close the tooltips on mobile only on the close icon click.
+* Added the option to close with "ESC" button
+* Improved the accessibility of the tooltips (displaying the tooltips on focus)
+* Updated the licensing package
+* Fixed the bug with the padding of tooltip not being recognized
+* Fixed the bug with selecting the tooltip font
 
 = 3.6.1 =
 * Added the support for "author_id" attribute for the [glossary] shortcode allowing to display terms from single author

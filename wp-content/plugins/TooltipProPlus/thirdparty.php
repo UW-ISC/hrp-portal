@@ -173,6 +173,11 @@ class CMTT_Google_API {
 			'language'	 => 'lt',
 			'name'		 => 'Lithuanian',
 		),
+        'lb' =>
+        array(
+            'language' => 'lb',
+            'name'     => 'Luxembourgish',
+        ),
 		33	 =>
 		array(
 			'language'	 => 'mk',

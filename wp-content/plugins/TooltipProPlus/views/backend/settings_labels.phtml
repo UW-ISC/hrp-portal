@@ -1,177 +1,185 @@
 <div class="block">
-	<h3>Labels</h3>
-	<table class="floated-form-table form-table">
-		<tr valign="top">
-			<th scope="row">Glossary Item singular label</th>
-			<td><input type="text" name="cmtt_glossaryItemSingularName" value="<?php echo get_option( 'cmtt_glossaryItemSingularName', 'Glossary Item' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">
-				The label describing the CM Tooltip Glossary Custom Post Types, often used to generate the breadcrumbs in themes. Default: "Glossary Item"
-				<br/><i>This label is a part of the Permalink Structure. It's best to refresh the permalink structure database. (Go to Settings -> Permalinks -> "Save Changes")</i>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Title attribute prefix</th>
-			<td><input type="text" name="cmtt_titleAttributeLabelPrefix" value="<?php echo get_option( 'cmtt_titleAttributeLabelPrefix', 'Glossary:' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">
-				The text which appears in the title attribute if the option: "Show HTML "title" attribute for glossary links" is enabled.
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Sharing box label</th>
-			<td><input type="text" name="cmtt_glossaryShowShareBoxLabel" value="<?php echo get_option( 'cmtt_glossaryShowShareBoxLabel', 'Share This' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">
-				What should be the label of the sharing box on the Glossary Index Page. Leave blank to disable. Default: "Share This"
-				<br/><i>Works only if "Show Glossary Index page with definition" is enabled</i>
-			</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of the search input on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_SearchLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchLabel' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the label for the search input appearing on the Glossary Index page.
-				<br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Placeholder of the search input on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_SearchPlaceholder" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchPlaceholder' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the placeholder for the search input appearing on the Glossary Index page.
-				<br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of the search button on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_SearchButtonLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchButtonLabel' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the label for the search button appearing on the Glossary Index page.
-				<br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Text for "Search Hint" on the Glossary Index page</th>
-			<td><textarea name="cmtt_glossarySearchHelp"><?php echo esc_attr( get_option( 'cmtt_glossarySearchHelp' ) ); ?></textarea></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the text for the help on the Glossary Index page.
-				<br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Text for "no results" on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_NoResultsLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_NoResultsLabel' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the text which appears if the filters return no results on the Glossary Index page.
-				<br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Text for "All Categories" option on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_AllCategoriesLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_AllCategoriesLabel' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">The label for "All Categories" selection on the Glossary Index page.</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of Category selection</th>
-			<td><input type="text" name="cmtt_glossaryCategoriesLabel" value="<?php echo get_option( 'cmtt_glossaryCategoriesLabel' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Select the label for the categories on the Glossary Index Page</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of tags</th>
-			<td><input type="text" name="cmtt_glossaryTagsLabel" value="<?php echo get_option( 'cmtt_glossaryTagsLabel' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Select the label for the tags (both on the Glossary Index and in the term page)</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of the clear link on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossary_ClearLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_ClearLabel' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the label for the clear link appearing on the Glossary Index page.
-				<br/><i>Works only if the "Show the search button on the Glossary Index page" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of the elipsis on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossaryIndexTruncateLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossaryIndexTruncateLabel', __('(...)') ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the label which appears after the truncated definition on the Glossary Index page.
-				<br/><i>Works only if the "Limit the definition length" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label of the Read More link on the Glossary Index page</th>
-			<td><input type="text" name="cmtt_glossaryIndexDescReadMoreLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossaryIndexDescReadMoreLabel', __('Read More') ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">This is the label for the read more link appearing after the truncated definition on the Glossary Index page.
-				<br/><i>Works only if the "Limit the definition length" is enabled.</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label for [ALL] in alphabetic index</th>
-			<td>
-				<input type="text" name="cmtt_index_allLabel" value="<?php echo get_option( 'cmtt_index_allLabel', 'ALL' ); ?>" />
-			</td>
-			<td colspan="2" class="cmtt_field_help_container">Label for the option displaying all terms in the alphabetic index. Displays [ALL] by default.</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Prefix of the title:</th>
-			<td><input  type="text" name="cmtt_glossaryBeforeTitle" value="<?php echo get_option( 'cmtt_glossaryBeforeTitle' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">What text should appear before the term title on the Glossary Term page
-				(e.g. if prefix is "Term:" the glossary term title would appear as "Term: Something")</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Back link text (top)</th>
-			<td><input type="text" name="cmtt_glossary_backLinkText" value="<?php echo esc_attr( get_option( 'cmtt_glossary_backLinkText' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">Text to display as backlink</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Back link text (bottom)</th>
-			<td><input type="text" name="cmtt_glossary_backLinkBottomText" value="<?php echo esc_attr( get_option( 'cmtt_glossary_backLinkBottomText' ) ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">Text to display as backlink</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Title of related articles:</th>
-			<td><input  type="text" name="cmtt_glossary_showRelatedArticlesTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesTitle' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">What should be the title of related articles widget?</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Number of related glossary terms:</th>
-			<td><input type="number" name="cmtt_glossary_showRelatedArticlesGlossaryCount" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesGlossaryCount' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">How many related glossary terms should be shown? Works only if "Show related articles and glossary terms together" is enabled</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Title of related glossary terms list:</th>
-			<td><input  type="text" name="cmtt_glossary_showRelatedArticlesGlossaryTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesGlossaryTitle' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">What should be the title of related glossary terms widget? Works only if "Show related articles and glossary terms together" is enabled</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Prefix for related articles that are glossary terms:</th>
-			<td><input type="text" name="cmtt_glossary_relatedArticlesPrefix" value="<?php echo esc_attr( get_option( 'cmtt_glossary_relatedArticlesPrefix' ) ); ?>"/>
-			</td>
-			<td colspan="2" class="cmtt_field_help_container">Prefix for related articles that are glossary terms (leave empty to disable). Works only if "Show related articles and glossary terms together" is enabled</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Title of linked glossary terms list:</th>
-			<td><input  type="text" name="cmtt_glossary_showRelatedTermsTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedTermsTitle' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">What should be the title of linked glossary items widget?</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Prefix for linked glossary terms:</th>
-			<td><input type="text" name="cmtt_glossary_relatedTermsPrefix" value="<?php echo esc_attr( get_option( 'cmtt_glossary_relatedTermsPrefix' ) ); ?>"/>
-			</td>
-			<td colspan="2" class="cmtt_field_help_container">Prefix for linked glossary items (leave empty to disable).</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Title of synonyms list:</th>
-			<td><input  type="text" name="cmtt_glossary_addSynonymsTitle" value="<?php echo get_option( 'cmtt_glossary_addSynonymsTitle' ); ?>" /></td>
-			<td colspan="2" class="cmtt_field_help_container">What should be the title of synonyms widget?</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Term details link label</th>
-			<td><input type="text" name="cmtt_glossaryTermDetailsLink" value="<?php echo get_option( 'cmtt_glossaryTermDetailsLink' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Select the label for the link to the term details which shows in the tooltip if the length is limited.<br/>
-				<i>Works only if "Show Glossary Index page with definition" is enabled</i></td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label for the link when mobile suppport is on:</th>
-			<td><input type="text" name="cmtt_glossaryMobileSupportLabel" value="<?php echo get_option( 'cmtt_glossaryMobileSupportLabel' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Label for the link to Glossary Term page which appears in the tooltip when the mobile device is detected.</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label for Categories on single Glossary Page:</th>
-			<td><input type="text" name="cmtt_term_taxonomy_label_glossary-categories" value="<?php echo get_option( 'cmtt_term_taxonomy_label_glossary-categories', 'Categories:' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Label for list of the Categories on the single Glossary Page.</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row">Label for Tags on single Glossary Page:</th>
-			<td><input type="text" name="cmtt_term_taxonomy_label_glossary-tags" value="<?php echo get_option( 'cmtt_term_taxonomy_label_glossary-tags', 'Tags:' ); ?>"  /></td>
-			<td colspan="2" class="cmtt_field_help_container">Label for list of the Tags on the single Glossary Page.</td>
-		</tr>
+    <h3>Labels</h3>
+    <table class="floated-form-table form-table">
+        <tr valign="top">
+            <th scope="row">Glossary Item singular label</th>
+            <td><input type="text" name="cmtt_glossaryItemSingularName" value="<?php echo get_option( 'cmtt_glossaryItemSingularName', 'Glossary Item' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">
+                The label describing the CM Tooltip Glossary Custom Post Types, often used to generate the breadcrumbs in themes. Default: "Glossary Item"
+                <br/><i>This label is a part of the Permalink Structure. It's best to refresh the permalink structure database. (Go to Settings -> Permalinks -> "Save Changes")</i>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Title attribute prefix</th>
+            <td><input type="text" name="cmtt_titleAttributeLabelPrefix" value="<?php echo get_option( 'cmtt_titleAttributeLabelPrefix', 'Glossary:' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">
+                The text which appears in the title attribute if the option: "Show HTML "title" attribute for glossary links" is enabled.
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Sharing box label</th>
+            <td><input type="text" name="cmtt_glossaryShowShareBoxLabel" value="<?php echo get_option( 'cmtt_glossaryShowShareBoxLabel', 'Share This' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">
+                What should be the label of the sharing box on the Glossary Index Page. Leave blank to disable. Default: "Share This"
+                <br/><i>Works only if "Show Glossary Index page with definition" is enabled</i>
+            </td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of the search input on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_SearchLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchLabel' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label for the search input appearing on the Glossary Index page.
+                <br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Placeholder of the search input on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_SearchPlaceholder" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchPlaceholder' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the placeholder for the search input appearing on the Glossary Index page.
+                <br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of the search button on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_SearchButtonLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_SearchButtonLabel' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label for the search button appearing on the Glossary Index page.
+                <br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Text for "Search Hint" on the Glossary Index page</th>
+            <td><textarea name="cmtt_glossarySearchHelp"><?php echo esc_attr( get_option( 'cmtt_glossarySearchHelp' ) ); ?></textarea></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the text for the help on the Glossary Index page.
+                <br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Text for "no results" on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_NoResultsLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_NoResultsLabel' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the text which appears if the filters return no results on the Glossary Index page.
+                <br/><i>Works only if the "Show the search on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Text for "All Categories" option on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_AllCategoriesLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_AllCategoriesLabel' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">The label for "All Categories" selection on the Glossary Index page.</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of Category selection</th>
+            <td><input type="text" name="cmtt_glossaryCategoriesLabel" value="<?php echo get_option( 'cmtt_glossaryCategoriesLabel' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Select the label for the categories on the Glossary Index Page</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of tags</th>
+            <td><input type="text" name="cmtt_glossaryTagsLabel" value="<?php echo get_option( 'cmtt_glossaryTagsLabel' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Select the label for the tags (both on the Glossary Index and in the term page)</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of the clear link on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossary_ClearLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_ClearLabel' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label for the clear link appearing on the Glossary Index page.
+                <br/><i>Works only if the "Show the search button on the Glossary Index page" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of the elipsis on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossaryIndexTruncateLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossaryIndexTruncateLabel', __( '(...)' ) ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label which appears after the truncated definition on the Glossary Index page.
+                <br/><i>Works only if the "Limit the definition length" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label of the Read More link on the Glossary Index page</th>
+            <td><input type="text" name="cmtt_glossaryIndexDescReadMoreLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossaryIndexDescReadMoreLabel', __( 'Read More' ) ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label for the read more link appearing after the truncated definition on the Glossary Index page.
+                <br/><i>Works only if the "Limit the definition length" is enabled.</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label for [ALL] in alphabetic index</th>
+            <td>
+                <input type="text" name="cmtt_index_allLabel" value="<?php echo get_option( 'cmtt_index_allLabel', 'ALL' ); ?>" />
+            </td>
+            <td colspan="2" class="cmtt_field_help_container">Label for the option displaying all terms in the alphabetic index. Displays [ALL] by default.</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Prefix of the title:</th>
+            <td><input  type="text" name="cmtt_glossaryBeforeTitle" value="<?php echo get_option( 'cmtt_glossaryBeforeTitle' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">What text should appear before the term title on the Glossary Term page
+                (e.g. if prefix is "Term:" the glossary term title would appear as "Term: Something")</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Back link text (top)</th>
+            <td><input type="text" name="cmtt_glossary_backLinkText" value="<?php echo esc_attr( get_option( 'cmtt_glossary_backLinkText' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">Text to display as backlink</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Back link text (bottom)</th>
+            <td><input type="text" name="cmtt_glossary_backLinkBottomText" value="<?php echo esc_attr( get_option( 'cmtt_glossary_backLinkBottomText' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">Text to display as backlink</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Title of related articles:</th>
+            <td><input  type="text" name="cmtt_glossary_showRelatedArticlesTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesTitle' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">What should be the title of related articles widget?</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Number of related glossary terms:</th>
+            <td><input type="number" name="cmtt_glossary_showRelatedArticlesGlossaryCount" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesGlossaryCount' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">How many related glossary terms should be shown? Works only if "Show related articles and glossary terms together" is enabled</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Title of related glossary terms list:</th>
+            <td><input  type="text" name="cmtt_glossary_showRelatedArticlesGlossaryTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedArticlesGlossaryTitle' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">What should be the title of related glossary terms widget? Works only if "Show related articles and glossary terms together" is enabled</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Prefix for related articles that are glossary terms:</th>
+            <td><input type="text" name="cmtt_glossary_relatedArticlesPrefix" value="<?php echo esc_attr( get_option( 'cmtt_glossary_relatedArticlesPrefix' ) ); ?>"/>
+            </td>
+            <td colspan="2" class="cmtt_field_help_container">Prefix for related articles that are glossary terms (leave empty to disable). Works only if "Show related articles and glossary terms together" is enabled</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Title of linked glossary terms list:</th>
+            <td><input  type="text" name="cmtt_glossary_showRelatedTermsTitle" value="<?php echo get_option( 'cmtt_glossary_showRelatedTermsTitle' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">What should be the title of linked glossary items widget?</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Prefix for linked glossary terms:</th>
+            <td><input type="text" name="cmtt_glossary_relatedTermsPrefix" value="<?php echo esc_attr( get_option( 'cmtt_glossary_relatedTermsPrefix' ) ); ?>"/>
+            </td>
+            <td colspan="2" class="cmtt_field_help_container">Prefix for linked glossary items (leave empty to disable).</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Title of synonyms list:</th>
+            <td><input  type="text" name="cmtt_glossary_addSynonymsTitle" value="<?php echo get_option( 'cmtt_glossary_addSynonymsTitle' ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">What should be the title of synonyms widget?</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Term details link label</th>
+            <td><input type="text" name="cmtt_glossaryTermDetailsLink" value="<?php echo get_option( 'cmtt_glossaryTermDetailsLink' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Select the label for the link to the term details which shows in the tooltip if the length is limited.<br/>
+                <i>Works only if "Show Glossary Index page with definition" is enabled</i></td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label for the link when mobile suppport is on:</th>
+            <td><input type="text" name="cmtt_glossaryMobileSupportLabel" value="<?php echo get_option( 'cmtt_glossaryMobileSupportLabel' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Label for the link to Glossary Term page which appears in the tooltip when the mobile device is detected.</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label for Categories on single Glossary Page:</th>
+            <td><input type="text" name="cmtt_term_taxonomy_label_glossary-categories" value="<?php echo get_option( 'cmtt_term_taxonomy_label_glossary-categories', 'Categories:' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Label for list of the Categories on the single Glossary Page.</td>
+        </tr>
+        <tr valign="top">
+            <th scope="row">Label for Tags on single Glossary Page:</th>
+            <td><input type="text" name="cmtt_term_taxonomy_label_glossary-tags" value="<?php echo get_option( 'cmtt_term_taxonomy_label_glossary-tags', 'Tags:' ); ?>"  /></td>
+            <td colspan="2" class="cmtt_field_help_container">Label for list of the Tags on the single Glossary Page.</td>
+        </tr>
         <tr valign="top">
             <th scope="row">Label for "Back to Top" on Glossary Index Page</th>
             <td><input type="text" name="cmtt_tooltipExpandBackToTopLabel" value="<?php echo get_option( 'cmtt_tooltipExpandBackToTopLabel', 'Back to Top' ); ?>"  /></td>
             <td colspan="2" class="cmtt_field_help_container">Label for text appearing in "Expand + Description" Index Page type</td>
         </tr>
-	</table>
+        <tr valign="top">
+            <th scope="row">Label for alternative meanings section on Glossary Term Page</th>
+            <td><input type="text" name="cmtt_glossary_AlternativeMeaningLabel" value="<?php echo esc_attr( get_option( 'cmtt_glossary_AlternativeMeaningLabel', 'Alternative Meanings:' ) ); ?>" /></td>
+            <td colspan="2" class="cmtt_field_help_container">This is the label indicating the start of the alternative meaning of the term (if term has multiple different meanings).
+                <br/><i>Works only if the "Show the alternative menaings" is enabled.</i>
+                <br/><i>%d - will be replaced with the number representing n-th alternative meaning (can be omitted)</i>
+            </td>
+        </tr>
+    </table>
 </div>

@@ -56,6 +56,10 @@ class CMTT_Pro {
         add_action( 'admin_notices', array( self::$calledClassName, 'cmtt_glossary_admin_notice_client_pagination' ) );
         add_action( 'admin_print_footer_scripts', array( self::$calledClassName, 'cmtt_quicktags' ) );
         add_action( 'add_meta_boxes', array( self::$calledClassName, 'cmtt_RegisterBoxes' ) );
+
+        add_filter( 'manage_edit-glossary_columns', array( self::$calledClassName, 'cmtt_customColumns' ) );
+        add_filter( 'manage_glossary_posts_custom_column', array( self::$calledClassName, 'cmtt_customColumnsContent' ), 10, 2 );
+        add_action( 'quick_edit_custom_box', array( self::$calledClassName, 'cmtt_quickEdit' ), 10, 2 );
         add_action( 'save_post', array( self::$calledClassName, 'cmtt_save_postdata' ) );
         add_action( 'update_post', array( self::$calledClassName, 'cmtt_save_postdata' ) );
         /*
@@ -108,7 +112,8 @@ class CMTT_Pro {
             add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'addTitleToTooltip' ), 10, 2 );
             add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'addEditlinkToTooltip' ), 10, 2 );
             add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'addTermPageLinkToTooltip' ), 100, 2 );
-            add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'fixQuotes' ), PHP_INT_MAX, 2 );
+            add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'fixQuotes' ), PHP_INT_MAX - 100, 2 );
+            add_filter( 'cmtt_tooltip_content_add', array( self::$calledClassName, 'maybeHashContent' ), PHP_INT_MAX - 90, 2 );
 
             /*
              * Filter for the BuddyPress record
@@ -128,6 +133,7 @@ class CMTT_Pro {
              * "Normal" Tooltip Content
              */
             add_filter( 'cmtt_term_tooltip_content', array( self::$calledClassName, 'getTheTooltipContentBase' ), 10, 2 );
+            add_filter( 'cmtt_term_tooltip_content', array( self::$calledClassName, 'addCodeBeforeAfter' ), 15, 2 );
             add_filter( 'cmtt_term_tooltip_content', array( self::$calledClassName, 'cmtt_glossary_parse_strip_shortcodes' ), 20, 2 );
             add_filter( 'cmtt_term_tooltip_content', array( self::$calledClassName, 'cmtt_glossary_filterTooltipContent' ), 30, 2 );
 
@@ -156,6 +162,12 @@ class CMTT_Pro {
              * Tooltips in Goodlayers Page Builder
              */
             add_filter( 'gdlr_core_the_content', array( self::$calledClassName, 'cmtt_glossary_parse' ), 20000 );
+
+            /*
+             * Tooltips in wpDatatables
+             */
+//            add_filter( 'wpdatatables_filter_rendered_table', array( self::$calledClassName, 'cmtt_glossary_parse' ), 20000 );
+//            add_filter( 'wpdatatables_filter_cell_output', array( self::$calledClassName, 'parseWPDatatablesFields' ), 20000 );
 
             add_filter( 'comments_open', array( self::$calledClassName, 'cmtt_comments_open' ), 10, 2 );
             add_filter( 'get_comments_number', array( self::$calledClassName, 'cmtt_comments_number' ), 10, 2 );
@@ -190,11 +202,47 @@ class CMTT_Pro {
 
             add_filter( 'the_content', array( __CLASS__, 'themifyFix' ), 21000 );
 
+            add_filter( 'cmtt_tooltip_script_data', array( __CLASS__, 'addTooltipDefinitions' ) );
+
+            add_filter('cmtt_glossary_content_before', array( __CLASS__, 'formatAdditionalContent'), 1000);
+            add_filter('cmtt_glossary_content_after', array( __CLASS__, 'formatAdditionalContent'), 1000);
+
             /*
              * Init the Glossary Index (adds hooks)
              */
             CMTT_Glossary_Index::init();
         }
+    }
+
+    public static function maybeHashContent( $glossaryItemContent, $glossary_item ) {
+        $hashTooltipContent = get_option( 'cmtt_glossaryTooltipHashContent', '0' );
+        if ( $hashTooltipContent ) {
+            /*
+             * Store the TooltipContent in the JS, after decoding the entities, and return the hash
+             */
+            $glossaryItemContent = self::addTooltipDefinition( html_entity_decode( $glossaryItemContent ) );
+        }
+        return $glossaryItemContent;
+    }
+
+    public static function addTooltipDefinition( $tooltipData = null, $returnAll = false ) {
+        static $tooltipDefinitons = array();
+        if ( !empty( $tooltipData ) ) {
+            $tooltipDataHash                       = md5( $tooltipData );
+            $tooltipDefinitons[ $tooltipDataHash ] = $tooltipData;
+            return $tooltipDataHash;
+        } else {
+            if ( $returnAll ) {
+        return $tooltipDefinitons;
+            } else {
+                return '';
+    }
+        }
+    }
+
+    public static function addTooltipDefinitions( $tooltipData ) {
+        $tooltipData[ 'cmtooltip_definitions' ] = self::addTooltipDefinition(false, true);
+        return $tooltipData;
     }
 
     public static function themifyFix( $content ) {
@@ -226,7 +274,24 @@ class CMTT_Pro {
         if ( class_exists( 'AviaHelper' ) && 'active' == AviaHelper::builder_status( $post->ID ) ) {
             remove_filter( 'the_content', array( 'CMTT_Pro', 'cmtt_glossary_parse' ), 20000 );
             add_filter( 'av_complete_content', array( 'CMTT_Pro', 'cmtt_glossary_parse' ), 20000 );
+            add_action( 'ava_before_content_templatebuilder_page', array( 'CMTT_Pro', 'enfold441fix_start' ) );
+            add_action( 'ava_after_content_templatebuilder_page', array( 'CMTT_Pro', 'enfold441fix_end' ) );
         }
+    }
+
+    public static function enfold441fix_start() {
+        /*
+         * Start the output buffering
+         */
+        ob_start();
+    }
+
+    public static function enfold441fix_end() {
+        /*
+         * End the output buffering and pass through our filter
+         */
+        $content = ob_get_clean();
+        echo self::cmtt_glossary_parse( $content, true );
     }
 
     /**
@@ -239,12 +304,12 @@ class CMTT_Pro {
         $mobileTermLink                   = get_option( 'cmtt_glossaryMobileSupportLabel', 'Term link: ' );
         $fontName                         = get_option( 'cmtt_tooltipFontStyle', 'default' );
         $fontSize                         = get_option( 'cmtt_tooltipFontSize', null );
-        $fontFamily                       = ($fontName !== 'default') ? 'font-family: "' . $fontName . '", sans - serif;
-		' : '';
+        $fontFamily                       = ($fontName !== 'default') ? 'font-family: "' . $fontName . '", sans-serif;' : '';
         $glossaryTermTitleColorText       = str_replace( '#', '', get_option( 'cmtt_tooltipTitleColor_text' ) );
         /* ML */
         $glossaryTermTitleColorBackground = str_replace( '#', '', get_option( 'cmtt_tooltipTitleColor_background' ) );
-        $paddingCont                      = get_option( 'cmtt_tooltipPadding', '2%' );
+        $paddingContent                      = get_option( 'cmtt_tooltipPaddingContent', '0' );
+        $paddingTitle                      = get_option( 'cmtt_tooltipPaddingTitle', '0' );
         $stemColor                        = get_option( 'cmtt_tooltipStemColor', '#ffffff' );
         $showStem                         = get_option( 'cmtt_tooltipShowStem', '0' );
 
@@ -259,12 +324,9 @@ class CMTT_Pro {
         <?php endif; ?>
 
         <?php if ( !empty( $glossaryTermTitleColorBackground ) ) : ?>
-            #tt #ttcont {
-            padding: 0px !important;
-            }
             #tt #ttcont div.glossaryItemTitle {
             background-color: #<?php echo $glossaryTermTitleColorBackground; ?> !important;
-            padding: <?php echo $paddingCont; ?> !important;
+            padding: <?php echo $paddingTitle; ?> !important;
             margin: 0px !important;
             border-top: 10px solid transparent;
             border-bottom: 10px solid transparent;
@@ -272,7 +334,7 @@ class CMTT_Pro {
         <?php endif; ?>
 
         #tt #ttcont div.glossaryItemBody {
-        padding: <?php echo $paddingCont; ?> !important;
+        padding: <?php echo $paddingContent; ?> !important;
         <?php if ( !empty( $fontSize ) ) : ?>
             font-size: <?php echo $fontSize; ?>px !important;
         <?php endif; ?>
@@ -303,7 +365,7 @@ class CMTT_Pro {
      * @param type $post
      * @return bool
      */
-    public static function isHightlightOnlyOnceEnabled( $post = null ) {
+    public static function isHighlightOnlyOnceEnabled( $post = null ) {
         if ( empty( $post ) ) {
             global $post;
         }
@@ -337,10 +399,12 @@ class CMTT_Pro {
      * Function removing the comments functionality from the Term Page pt2.
      */
     public static function cmtt_comments_open( $open, $post_id ) {
-        $removeComments = get_option( 'cmtt_glossaryRemoveCommentsTermPage', 0 );
-        $_post          = get_post( $post_id );
-        if ( 'glossary' === $_post->post_type ) {
-            $open = !$removeComments;
+        if ( $open ) {
+            $removeComments = get_option( 'cmtt_glossaryRemoveCommentsTermPage', 0 );
+            $_post          = get_post( $post_id );
+            if ( 'glossary' === $_post->post_type ) {
+                $open = !$removeComments;
+            }
         }
         return $open;
     }
@@ -438,6 +502,42 @@ class CMTT_Pro {
      * @param type $field
      * @return type
      */
+    public static function parseWPDatatablesFields( $value ) {
+        if ( defined( 'DOING_AJAX' ) && doing_action( 'wp_ajax_nopriv_get_wdtable' ) ) {
+            add_filter( 'cmtt_glossary_parse_post', array( __CLASS__, 'parseWPDatatablesFieldsPostOverwrite' ), 10, 3 );
+            $cmWrapItUp = true;
+            $result     = apply_filters( 'cm_tooltip_parse', $value, true );
+            $cmWrapItUp = false;
+            remove_filter( 'cmtt_glossary_parse_post', array( __CLASS__, 'parseWPDatatablesFieldsPostOverwrite' ), 10, 3 );
+        } else {
+            $result = $value;
+        }
+        return $result;
+    }
+
+    public static function parseWPDatatablesFieldsPostOverwrite( $post, $content, $force ) {
+        global $post;
+
+        if ( empty( $post ) ) {
+            $args  = array(
+                'post_type'      => 'page',
+                'posts_per_page' => 1,
+                'orderby'        => 'rand',
+            );
+            $rand  = new WP_Query( $args );
+            $posts = $rand->get_posts();
+            $post  = is_array( $posts ) ? reset( $posts ) : null;
+        }
+        return $post;
+    }
+
+    /**
+     * Function adds the term highlighting to bbPress fields
+     * @param type $value
+     * @param type $post_id
+     * @param type $field
+     * @return type
+     */
     public static function parseBBPressFields( $value ) {
         if ( !is_string( $value ) ) {
             return $value;
@@ -496,7 +596,7 @@ class CMTT_Pro {
         add_option( 'cmtt_glossaryFirstOnly', 0 ); //Search for all occurances in a post or only one?
         add_option( 'cmtt_removeGlossaryCreateListFilter', 0 ); //Remove the Glossary Index List after first run
         add_option( 'cmtt_glossaryOnlySpaceSeparated', 1 ); //Search only for words separated by spaces
-        add_option( 'cmtt_script_in_footer', 0 ); //Place the scripts in the footer not the header
+        add_option( 'cmtt_script_in_footer', 1 ); //Place the scripts in the footer not the header
         add_option( 'cmtt_glossaryOnPosttypes', array( 'post', 'page', 'glossary' ) ); //Default post types where the terms are highlighted
 
         add_option( 'cmtt_glossary_backup_pinprotect', '' ); //PIN Protect the backup
@@ -812,8 +912,8 @@ class CMTT_Pro {
      * @return type
      */
     public static function cmtt_glossary_admin_settings_scripts() {
-        global $parent_file;
-        if ( CMTT_MENU_OPTION !== $parent_file ) {
+        global $parent_file, $pagenow;
+        if ( (CMTT_MENU_OPTION !== $parent_file && 'edit.php?post_type=glossary' !== $parent_file) || $pagenow === 'edit-tags.php' ) {
             return;
         }
 
@@ -821,7 +921,7 @@ class CMTT_Pro {
         wp_enqueue_style( 'cmtooltip', self::$cssPath . 'tooltip.css' );
         wp_enqueue_style( 'wp-color-picker' );
 
-        wp_enqueue_script( 'tooltip-admin-js', self::$jsPath . 'cm-tooltip.js', array( 'jquery', 'wp-color-picker', 'jquery-ui-core', 'jquery-ui-tooltip' ) );
+        wp_enqueue_script( 'tooltip-admin-js', self::$jsPath . 'cm-tooltip.js', array( 'jquery', 'wp-color-picker', 'jquery-ui-core', 'jquery-ui-tooltip', 'inline-edit-post' ) );
 
         wp_enqueue_script( 'jquery-ui-core' );
         wp_enqueue_script( 'jquery-ui-tooltip' );
@@ -1054,8 +1154,7 @@ class CMTT_Pro {
         /*
          * 10.06.2015 added check for (get_option('cmtt_createGlossaryTermPages', TRUE)
          */
-        if ( (get_option( 'cmtt_createGlossaryTermPages', TRUE ) && get_option( 'cmtt_glossaryLimitTooltip' ) > 30) && (strlen( $glossaryItemContent ) > get_option( 'cmtt_glossaryLimitTooltip' )) ) {
-
+        if ( (get_option( 'cmtt_createGlossaryTermPages', TRUE ) && get_option( 'cmtt_glossaryLimitTooltip' ) >= 30) && (strlen( $glossaryItemContent ) > get_option( 'cmtt_glossaryLimitTooltip' )) ) {
             $glossaryItemContent = cminds_truncate( html_entity_decode( $glossaryItemContent ), get_option( 'cmtt_glossaryLimitTooltip' ), get_option( 'cmtt_glossaryLimitTooltipSymbol', '(...)' ) );
         }
 
@@ -1314,7 +1413,7 @@ class CMTT_Pro {
         /*
          * If there's more than one query and the "Only higlight once"
          */
-        if ( (get_option( 'cmtt_glossaryOnMainQuery' ) != 1 ) && self::isHightlightOnlyOnceEnabled( $post ) ) {
+        if ( (get_option( 'cmtt_glossaryOnMainQuery' ) != 1 ) && self::isHighlightOnlyOnceEnabled( $post ) ) {
             $initializeReplacedTerms = true;
         }
 
@@ -1578,16 +1677,19 @@ class CMTT_Pro {
          */
         $linksDisabled = CMTT_Pro::_get_meta( '_glossary_disable_links_for_page', $post->ID ) == 1;
 
+        $mainPageId     = CMTT_Glossary_Index::getGlossaryIndexPageId();
+        $onGlossaryIndex = !empty($post) && $post->ID == $mainPageId;
+        $removeLinksToTermsOnIndex = $onGlossaryIndex && get_option( 'cmtt_glossaryOnlyTitleLinksToTerm', 0) ;
 
         /*
          * If TRUE then the links to glossary pages are exchanged with spans
          */
-        $removeLinksToTerms = (get_option( 'cmtt_glossaryTermLink' ) == 1 || $linksDisabled || !get_option( 'cmtt_createGlossaryTermPages' ) );
+        $removeLinksToTerms = (get_option( 'cmtt_glossaryTermLink' ) == 1 || $linksDisabled || !get_option( 'cmtt_createGlossaryTermPages' ) || $removeLinksToTermsOnIndex );
 
         /*
          * If "Highlight first occurance only" option is set
          */
-        $highlightFirstOccuranceOnly = self::isHightlightOnlyOnceEnabled( $post );
+        $highlightFirstOccuranceOnly = self::isHighlightOnlyOnceEnabled( $post );
 
         /*
          * If it's case insensitive, then the term keys are stored as lowercased
@@ -1716,15 +1818,15 @@ class CMTT_Pro {
             $tooltipContent = apply_filters( 'cmtt_tooltip_content_add', $tooltipContent, $glossary_item );
 
             if ( $removeLinksToTerms ) {
-                $link_replace = '<span class="glossaryLink ' . $additionalClass . '" ' . $titleAttr . ' data-cmtooltip="' . $tooltipContent . '">' . $titlePlaceholder . '</span>';
+                $link_replace = '<span aria-describedby="tt" class="glossaryLink ' . $additionalClass . '" ' . $titleAttr . ' data-cmtooltip="' . $tooltipContent . '">' . $titlePlaceholder . '</span>';
             } else {
-                $link_replace = '<a href="' . $permalink . '"' . $titleAttr . ' class="glossaryLink ' . $additionalClass . '" data-cmtooltip="' . $tooltipContent . '" ' . $windowTarget . '>' . $titlePlaceholder . '</a>';
+                $link_replace = '<a aria-describedby="tt" href="' . $permalink . '"' . $titleAttr . ' class="glossaryLink ' . $additionalClass . '" data-cmtooltip="' . $tooltipContent . '" ' . $windowTarget . '>' . $titlePlaceholder . '</a>';
             }
         } else {
             if ( $removeLinksToTerms ) {
-                $link_replace = '<span  ' . $titleAttr . ' class="glossaryLink">' . $titlePlaceholder . '</span>';
+                $link_replace = '<span  ' . $titleAttr . ' class="glossaryLink ' . $additionalClass . '">' . $titlePlaceholder . '</span>';
             } else {
-                $link_replace = '<a href="' . $permalink . '"' . $titleAttr . ' class="glossaryLink"' . $windowTarget . '>' . $titlePlaceholder . '</a>';
+                $link_replace = '<a href="' . $permalink . '"' . $titleAttr . ' class="glossaryLink ' . $additionalClass . '"' . $windowTarget . '>' . $titlePlaceholder . '</a>';
             }
         }
 
@@ -1748,6 +1850,19 @@ class CMTT_Pro {
      */
     public static function getTheTooltipContentBase( $content, $glossary_item ) {
         $content = (get_option( 'cmtt_glossaryExcerptHover' ) && $glossary_item->post_excerpt) ? $glossary_item->post_excerpt : $glossary_item->post_content;
+        return $content;
+    }
+
+    /**
+     * Get the base of the Tooltip Content on Glossary Index Page
+     * @param type $content
+     * @param type $glossary_item
+     * @return type
+     */
+    public static function addCodeBeforeAfter( $content, $glossary_item ) {
+        $before  = apply_filters( 'cmtt_glossary_content_before', get_option( 'cmtt_glossaryTooltipContentBefore', '' ) );
+        $after   = apply_filters( 'cmtt_glossary_content_after', get_option( 'cmtt_glossaryTooltipContentAfter', '' ) );
+        $content = $before . $content . $after;
         return $content;
     }
 
@@ -2004,8 +2119,13 @@ class CMTT_Pro {
             $exportDataRow           = array(
                 $term->ID,
                 $term->post_title,
-                str_replace( array( "\r\n", "\n", "\r" ), array( "", "", "" ), nl2br( $term->post_excerpt ) ),
-                str_replace( array( "\r\n", "\n", "\r" ), array( "", "", "" ), nl2br( $term->post_content ) ),
+                /*
+                 * Change related to ticket #53075
+                 */
+//                str_replace( array( "\r\n", "\n", "\r" ), array( "", "", "" ), nl2br( $term->post_excerpt ) ),
+//                str_replace( array( "\r\n", "\n", "\r" ), array( "", "", "" ), nl2br( $term->post_content ) ),
+                $term->post_excerpt,
+                $term->post_content,
                 CMTT_Synonyms::getSynonyms( $term->ID, true ),
                 CMTT_Synonyms::getSynonyms( $term->ID, false ),
             );
@@ -2376,6 +2496,11 @@ class CMTT_Pro {
         return $title;
     }
 
+    public static function formatAdditionalContent( $content ) {
+        $contentFormatted = do_shortcode( html_entity_decode( $content ) );
+        return $contentFormatted;
+    }
+
     /**
      * Add the backlink on the Glossary Term page
      * @global type $wp_query
@@ -2392,10 +2517,10 @@ class CMTT_Pro {
         $id   = $post->ID;
 
         $disableSynonymsForThisTerm = (bool) get_post_meta( $id, '_cmtt_disable_synonyms_for_term', true );
+        $onMainQueryOnly            = (get_option( 'cmtt_glossaryOnMainQuery' ) == 1 ) ? is_main_query() : TRUE;
+        $addBacklink                = apply_filters( 'cmtt_add_backlink', is_single() && get_query_var( 'post_type' ) == 'glossary' && $onMainQueryOnly && 'glossary' == get_post_type() );
 
-        $onMainQueryOnly = (get_option( 'cmtt_glossaryOnMainQuery' ) == 1 ) ? is_main_query() : TRUE;
-
-        if ( is_single() && get_query_var( 'post_type' ) == 'glossary' && $onMainQueryOnly && 'glossary' == get_post_type() ) {
+        if ( $addBacklink ) {
             $mainPageId     = CMTT_Glossary_Index::getGlossaryIndexPageId();
             $backlinkHref   = apply_filters( 'cmtt_glossary_backlink_href', get_permalink( $mainPageId ), $post );
             $backlink       = (get_option( 'cmtt_glossary_addBackLink' ) == 1 && $mainPageId > 0) ? '<a href="' . $backlinkHref . '" class="cmtt-backlink cmtt-backlink-top">' . __( get_option( 'cmtt_glossary_backLinkText' ), 'cm-tooltip-glossary' ) . '</a>' : '';
@@ -2406,7 +2531,9 @@ class CMTT_Pro {
 
             $referralSnippet = (get_option( 'cmtt_glossaryReferral' ) == 1 && get_option( 'cmtt_glossaryAffiliateCode' )) ? self::cmtt_getReferralSnippet() : '';
 
-            $contentWithoutBacklink = $content . $synonymSnippet . $relatedSnippet;
+            $contentBefore          = apply_filters( 'cmtt_glossary_content_before', get_option( 'cmtt_glossaryContentBefore', '' ) );
+            $contentAfter           = apply_filters( 'cmtt_glossary_content_after', get_option( 'cmtt_glossaryContentAfter', '' ) );
+            $contentWithoutBacklink = $contentBefore . $content . $contentAfter . $synonymSnippet . $relatedSnippet;
 
             $filteredContent = apply_filters( 'cmtt_add_backlink_content', $contentWithoutBacklink, $post );
 
@@ -2422,7 +2549,7 @@ class CMTT_Pro {
              */
             $contentWithBacklink = $backlink . $filteredContent . $referralSnippet;
 
-            $contentWithBacklink = apply_filters( 'cmtt_glossary_term_after_content', $contentWithBacklink );
+            $contentWithBacklink = apply_filters( 'cmtt_glossary_term_after_content', $contentWithBacklink, $post );
 
             return $contentWithBacklink;
         }
@@ -2552,7 +2679,7 @@ class CMTT_Pro {
         echo '<div class="cmtt_disable_for_page_field">';
         echo '<label for="cmtt_highlightFirstOnly" class="blocklabel">';
         echo '<input type="checkbox" name="cmtt_highlightFirstOnly" id="cmtt_highlightFirstOnly" value="1" ' . checked( 1, $highlightFirstForPage, false ) . '>';
-        echo '&nbsp;&nbsp;&nbsp;Overwrite the "Hightlight Only First Occurence" setting on this page.</label>';
+        echo '&nbsp;&nbsp;&nbsp;Overwrite the "Highlight Only First Occurence" setting on this page.</label>';
         echo '</div>';
 
         echo '<div class="cmtt_disable_for_page_field">';
@@ -2578,7 +2705,7 @@ class CMTT_Pro {
 
             if ( is_string( $value ) ) {
                 $optionContent .= '<input type="checkbox" name="' . $key . '" id="' . $key . '" value="1" ' . ((bool) $fieldValue ? ' checked ' : '') . '>';
-                $optionContent .= '&nbsp;&nbsp;&nbsp;' . $value . '</label></div>';
+                $optionContent .= '&nbsp;&nbsp;&nbsp;' . $value;
             } elseif ( is_array( $value ) ) {
                 $label = isset( $value[ 'label' ] ) ? $value[ 'label' ] : __( 'No label', 'cm-tooltip-glossary' );
                 if ( isset( $value[ 'options' ] ) ) {
@@ -2593,15 +2720,53 @@ class CMTT_Pro {
                     $fieldValue  = !empty( $fieldValue ) ? $fieldValue : $placeholder;
                     $optionContent .= '<input type="text" name="' . $key . '" id="' . $key . '" value=" ' . $fieldValue . '" placeholder="' . $placeholder . '">';
                 }
-                $optionContent .= '&nbsp;&nbsp;&nbsp;' . $label . '</label></div>';
+                $optionContent .= '&nbsp;&nbsp;&nbsp;' . $label;
             }
-
+            $optionContent .= '</label></div>';
             $result[] = $optionContent;
         }
 
-        $result = apply_filters( 'cmtt_edit_properties_metabox_array', $result );
+        $result = apply_filters( 'cmtt_edit_properties_metabox_array', $result, $post );
 
         echo implode( '', $result );
+    }
+
+    public static function cmtt_customColumns( $columns ) {
+        $new_columns                = array();
+        $new_columns[ 'cmtt_meta' ] = 'Meta values';
+        return array_merge( $columns, $new_columns );
+    }
+
+    public static function cmtt_customColumnsContent( $column_name, $post_id ) {
+        $html = '';
+        //output post featured checkbox
+        if ( 'cmtt_meta' === $column_name ) {
+            ob_start();
+            do_action( 'cmtt_meta_column_content', $post_id );
+            $html = ob_get_clean();
+        }
+        echo $html;
+    }
+
+    public static function cmtt_quickEdit( $column_name, $post_type ) {
+        $html = '';
+
+        //output post featured checkbox
+        if ( 'cmtt_meta' === $column_name ) {
+            wp_nonce_field( 'post_metadata', 'post_metadata_field' );
+
+            ob_start();
+            ?>
+            <fieldset class="inline-edit-col-left clear">
+                <div class="inline-edit-group wp-clearfix">
+                    <?php do_action( 'cmtt_quick_edit_content' ); ?>
+                </div>
+            </fieldset>
+            <?php
+            $html = ob_get_clean();
+        }
+
+        echo $html;
     }
 
     public static function cmtt_unset_transients( $post_id ) {
@@ -2815,6 +2980,17 @@ class CMTT_Pro {
              */
             $query .= '[not(ancestor::*[contains(concat(\' \', @class, \' \'), \' ls-wp-container \')])]';
 
+            /*
+             * Parsing of the custom classes
+             */
+            $parsingExcludedClassArr = explode( ',', get_option( 'cmtt_glossaryParseExcludedClasses', '' ) );
+            $parsingExcludedClassArr = array_filter( $parsingExcludedClassArr );
+            if ( !empty( $parsingExcludedClassArr ) ) {
+                foreach ( $parsingExcludedClassArr as $class ) {
+                    $query .= '[not(ancestor::*[contains(concat(\' \', @class, \' \'), \' ' . trim( $class ) . ' \')])]';
+                }
+            }
+
             foreach ( $xpath->query( apply_filters( 'cmtt_glossary_xpath_query', $query ) ) as $node ) {
                 /* @var $node DOMText */
                 $replaced = preg_replace_callback( $glossarySearchString, array( self::$calledClassName, 'cmtt_replace_matches' ), htmlspecialchars( $node->wholeText, ENT_COMPAT ) );
@@ -2900,9 +3076,10 @@ class CMTT_Pro {
      * [glossary_tooltip content="text" dashicon="dashicons-editor-help" color="#c0c0c0" size="16px"]term[/glossary_tooltip]
      */
     public static function cmtt_custom_tooltip_shortcode( $atts, $text = '' ) {
-        $content  = __( 'Use the &quot;content&quot; attribute on the shortcode to change this text', 'cm-tooltip-glossary' );
-        $dashicon = '';
-        extract( shortcode_atts( array( 'content' => $content, 'dashicon' => '', 'size' => '', 'color' => '' ), $atts ) );
+        $content         = __( 'Use the &quot;content&quot; attribute on the shortcode to change this text', 'cm-tooltip-glossary' );
+        $dashicon        = '';
+        $additionalClass = '';
+        extract( shortcode_atts( array( 'content' => $content, 'dashicon' => '', 'size' => '', 'color' => '', 'underline' => '' ), $atts ) );
 
         if ( !empty( $atts[ 'dashicon' ] ) ) {
             $style = '';
@@ -2913,11 +3090,18 @@ class CMTT_Pro {
                 $style .= 'color:' . esc_attr( $atts[ 'color' ] ) . ';';
             }
             $dashicon = '<span class="dashicons ' . $atts[ 'dashicon' ] . '" style="' . $style . 'display:inline;"></span>';
+
+            /*
+             * Don't underline unless underline="1"
+             */
+            if ( empty( $atts[ 'underline' ] ) ) {
+                $additionalClass = 'hasDashicon';
+            }
         }
 
         $wrappedContent = '<div class=glossaryItemBody>' . $content . '</div>';
 
-        $tooltip                                 = '<span data-cmtooltip="' . $wrappedContent . '" class="glossaryLink">' . $dashicon . $text . '</span>';
+        $tooltip                                 = '<span data-cmtooltip="' . $wrappedContent . '" class="glossaryLink ' . $additionalClass . '">' . $dashicon . $text . '</span>';
         CMTT_Glossary_Index::$shortcodeDisplayed = 1;
         return $tooltip;
     }
@@ -3303,7 +3487,7 @@ class CMTT_Pro {
             if ( $networkwide ) {
                 $old_blog = $wpdb->blogid;
                 // Get all blog ids
-                $blogids  = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM {$wpdb->blogs}" ) );
+                $blogids  = $wpdb->get_col( $wpdb->prepare( "SELECT blog_id FROM {$wpdb->blogs}", array() ) );
                 foreach ( $blogids as $blog_id ) {
                     switch_to_blog( $blog_id );
                     self::_activate();
