@@ -274,7 +274,7 @@ if ( !function_exists( 'cminds_cmtt_settings_tooltip_tab_content_after' ) ) {
                     <td>
                         <?php
                         $fontsArray = array(
-                            'default',
+                            'default (disables Google Fonts)',
                             'Droid Sans',
                             'Roboto',
                             'Lekton',
@@ -296,7 +296,7 @@ if ( !function_exists( 'cminds_cmtt_settings_tooltip_tab_content_after' ) ) {
                             <?php endforeach; ?>
                         </select>
                     </td>
-                    <td colspan="2" class="cmtt_field_help_container">Set the font of the tooltip</td>
+                    <td colspan="2" class="cmtt_field_help_container">Set the font of the tooltip. You can disable Google Fonts by selecting "default" - this can be relevant for GDPR compliance. <a href="https://creativeminds.helpscoutdocs.com/article/2185-cm-tooltip-cmtg-user-data-privacy-and-gdpr-compliance">Learn more</a></td>
                 </tr>
                 <tr valign="top">
                     <th scope="row">Is clickable?</th>
@@ -448,8 +448,22 @@ if ( !function_exists( 'cminds_cmtt_settings_tooltip_tab_content_after' ) ) {
                     <td colspan="2" class="cmtt_field_help_container">Set size of font inside tooltip</td>
                 </tr>
                 <tr valign="top">
-                    <th scope="row">Tooltip padding</th>
+                    <th scope="row">Tooltip box padding</th>
                     <td><input type="text" name="cmtt_tooltipPadding" value="<?php echo get_option( 'cmtt_tooltipPadding' ); ?>"/>
+                    </td>
+
+                    <td colspan="2" class="cmtt_field_help_container">Set internal padding: top, right, bottom, left</td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Tooltip title padding</th>
+                    <td><input type="text" name="cmtt_tooltipPaddingTitle" value="<?php echo get_option( 'cmtt_tooltipPaddingTitle' ); ?>"/>
+                    </td>
+
+                    <td colspan="2" class="cmtt_field_help_container">Set internal padding: top, right, bottom, left</td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row">Tooltip content padding</th>
+                    <td><input type="text" name="cmtt_tooltipPaddingContent" value="<?php echo get_option( 'cmtt_tooltipPaddingContent' ); ?>"/>
                     </td>
 
                     <td colspan="2" class="cmtt_field_help_container">Set internal padding: top, right, bottom, left</td>

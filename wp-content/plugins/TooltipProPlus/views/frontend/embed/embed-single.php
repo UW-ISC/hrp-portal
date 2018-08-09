@@ -1,0 +1,1 @@
+<div class="cmtt-embedded"><?php echo $content; ?></div>

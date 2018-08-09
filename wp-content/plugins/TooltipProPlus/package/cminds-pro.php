@@ -1,9 +1,9 @@
 <?php
 
-namespace com\cminds\package\pro\v1_8_0;
+namespace com\cminds\package\pro\v1_8_3;
 
 if ( !defined( __NAMESPACE__ . '\PLATFORM_VERSION' ) ) {
-    define( __NAMESPACE__ . '\PLATFORM_VERSION', '1_8_0' );
+    define( __NAMESPACE__ . '\PLATFORM_VERSION', '1_8_3' );
 }
 if ( !class_exists( __NAMESPACE__ . '\CmindsProPackage' ) ) {
 
@@ -77,10 +77,10 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsProPackage' ) ) {
             global $cmindsPluginPackage;
 
             if ( $this->getOption( 'plugin-is-addon' ) ) {
-                $parentPluginAbbrev = $this->getOption( 'plugin-parent-abbrev' );
-                $parentPluginPackage = $cmindsPluginPackage[ $parentPluginAbbrev ];
-                if(!empty($parentPluginPackage)){
-                    return $parentPluginPackage->isLicenseOk();
+                $parentPluginAbbrev  = $this->getOption( 'plugin-parent-abbrev' );
+                $parentPluginPackage = isset( $cmindsPluginPackage[ $parentPluginAbbrev ] ) ? $cmindsPluginPackage[ $parentPluginAbbrev ] : null;
+                if ( !empty( $parentPluginPackage ) ) {
+                    return $parentPluginPackage->licensingApi->isLicenseOk();
                 }
             }
             return null;

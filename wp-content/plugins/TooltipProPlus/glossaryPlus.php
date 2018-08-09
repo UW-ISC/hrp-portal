@@ -45,10 +45,17 @@ class CMTT_Glossary_Plus {
          * FILTERS
          */
         add_filter( 'the_content', array( __CLASS__, 'addRelatedTerms' ), 21500 );
-        add_filter( 'the_title', array( __CLASS__, 'addAbbreviation' ), 22000, 2 );
+        if ( !is_admin() ) {
+            add_filter( 'the_title', array( __CLASS__, 'addAbbreviation' ), 22000, 2 );
+            add_filter( 'the_title', array( __CLASS__, 'addDashicon' ), 23000, 2 );
+        }
+        add_action( 'cmtt_quick_edit_content', array( __CLASS__, 'addQuickEdit' ) );
+        add_action( 'cmtt_meta_column_content', array( __CLASS__, 'addMetaColumn' ) );
+        add_filter( 'cmtt_glossaryItemTitle', array( __CLASS__, 'addDashicon' ), 23000, 2 );
 
         add_filter( 'cmtt_post_type_args', array( __CLASS__, 'addPostTypeSupport' ) );
-        add_filter( 'cmtt_edit_properties_metabox_array', array( __CLASS__, 'renderFlushButton' ) );
+        add_filter( 'cmtt_edit_properties_metabox_array', array( __CLASS__, 'renderIconSelectButton' ), 10, 2 );
+        add_filter( 'cmtt_edit_properties_metabox_array', array( __CLASS__, 'renderFlushButton' ), 10, 2 );
 
         if ( get_option( 'cmtt_glossaryTermsInComments', false ) ) {
             add_filter( 'comment_text', array( 'CMTT_Pro', 'cmtt_glossary_parse' ), 20000 );
@@ -84,8 +91,6 @@ class CMTT_Glossary_Plus {
 
         add_filter( 'cmtt_glossary_index_tooltip_content', array( __CLASS__, 'outputGlossaryIndexGoogleTermOnly' ), 5, 2 );
         add_filter( 'cmtt_glossary_index_tooltip_content', array( __CLASS__, 'outputGlossaryIndexGoogleTranslation' ), 25, 2 );
-        add_filter( 'cmtt_glossary_index_tooltip_content', array( __CLASS__, 'addGlossaryIndexMerriamWebsterDictionary' ), 50, 2 );
-        add_filter( 'cmtt_glossary_index_tooltip_content', array( __CLASS__, 'addGlossaryIndexMerriamWebsterThesaurus' ), 60, 2 );
 
         add_filter( 'cmtt_glossary_index_content_arr', array( __CLASS__, 'addAbbreviationsToGlossaryIndex' ), 10, 5 );
         add_filter( 'cmtt_glossary_index_content_arr', array( __CLASS__, 'addSynonymsToGlossaryIndex' ), 10, 5 );
@@ -244,10 +249,10 @@ class CMTT_Glossary_Plus {
         }
         /* ML - get the  width of the image from settings
          */
-        $width_size = get_option( 'cmtt_glossary_tooltip_imageWidth', '100%' );
+        $widthOption = get_option( 'cmtt_glossary_tooltip_imageWidth', '100px' );
         $widthMeta  = trim( get_post_meta( $post->ID, '_cmtt_featured_image_size', true ) );
 
-        $imageWidth = !empty( $widthMeta ) ? $widthMeta : $width_size;
+        $imageWidth = !empty( $widthMeta ) ? $widthMeta : $widthOption;
 
         $additionalStyle = '';
         switch ( $featuredImageLocation ) {
@@ -435,8 +440,8 @@ class CMTT_Glossary_Plus {
 
         $addListnav = get_option( 'cmtt_glossaryTermShowListnav' );
         if ( $addListnav ) {
-            $atts = array('glossary-container-additional-class' => 'glossary-term-listnav');
-            $listnav = self::glossaryListnavShortcode($atts);
+            $atts    = array( 'glossary-container-additional-class' => 'glossary-term-listnav' );
+            $listnav = self::glossaryListnavShortcode( $atts );
             $content = $listnav . $content;
         }
         return $content;
@@ -560,7 +565,7 @@ class CMTT_Glossary_Plus {
         $allLabel         = get_option( 'cmtt_index_allLabel', 'ALL' );
         $letterSize       = get_option( 'cmtt_indexLettersSize' );
         $glossaryPageLink = get_permalink( CMTT_Glossary_Index::getGlossaryIndexPageId() );
-        $additionalClass  = !empty($atts[ 'glossary-container-additional-class' ]) ? $atts[ 'glossary-container-additional-class' ] : '';
+        $additionalClass  = !empty( $atts[ 'glossary-container-additional-class' ] ) ? $atts[ 'glossary-container-additional-class' ] : '';
 
         $listNavInsideContent = '';
         $listNavInsideContent .= '<div class="glossary-container ' . $letterSize . ' ' . $additionalClass . '"><div class="ln-letters">';
@@ -688,6 +693,8 @@ class CMTT_Glossary_Plus {
         include_once CMTT_PLUGIN_DIR . "abbreviations.php";
         include_once CMTT_PLUGIN_DIR . "thirdparty.php";
         include_once CMTT_PLUGIN_DIR . "glosbe.php";
+        include_once CMTT_PLUGIN_DIR . "postDuplicates.php";
+        include_once CMTT_PLUGIN_DIR . "postEmbed.php";
     }
 
     /**
@@ -701,6 +708,8 @@ class CMTT_Glossary_Plus {
         CMTT_RelatedArticles_Widget::init();
         CMTT_Categories_Widget::init();
         CMTT_Abbreviations::init();
+        CMTT_Post_Duplicates::init();
+        CMTT_Post_Embed::init();
         CMTT_Mw_API::addShortcodes();
         CMTT_Google_API::addShortcodes();
         CMTT_Glosbe_API::addShortcodes();
@@ -1215,7 +1224,7 @@ class CMTT_Glossary_Plus {
         ?>
         <p style="clear: left;">
             <span class="howto">
-                <?php _e( 'Insert the custom URL of the Glossary Term. This URL will be used on Glossary Index and whenever the term is highlighed instead of the link to Glossary Term Page.', 'cm-tooltip-glossary' ); ?><br/>
+                <?php _e( 'Insert the custom URL of the Glossary Term. This URL will replace the link to the Glossary Term Page on the Glossary Index and whenever the term is highlighted.', 'cm-tooltip-glossary' ); ?><br/>
                 <strong><?php _e( 'Once you finish, "Publish" or "Update" to store changes', 'cm-tooltip-glossary' ); ?></strong>
             </span>
         </p>
@@ -1380,6 +1389,7 @@ class CMTT_Glossary_Plus {
      * @return type
      */
     public static function addMetaboxFields( $metaboxFields ) {
+        $imageWidthOption = get_option( 'cmtt_glossary_tooltip_imageWidth', '100px' );
         $newMetaboxFields = array_merge( $metaboxFields, array(
             'cmtt_exclude_parsing'                   => __( 'Don\'t parse this term', 'cm-tooltip-glossary' ),
             'cmtt_exclude_tooltip'                   => __( 'Hide tooltip for this term', 'cm-tooltip-glossary' ),
@@ -1401,9 +1411,10 @@ class CMTT_Glossary_Plus {
                 ),
             ),
             'cmtt_featured_image_size'               => array(
-                'label'       => __( 'Featured Image size', 'cm-tooltip-glossary' ),
-                'placeholder' => get_option( 'cmtt_glossary_tooltip_imageWidth', '200px' ),
+                'label'       => __( 'Featured Image width', 'cm-tooltip-glossary' ),
+                'placeholder' => !empty($imageWidthOption) ? $imageWidthOption : '100px',
             ),
+            'cmtt_term_icon'                         => true, //only for save
         ) );
 
         return $newMetaboxFields;
@@ -1981,42 +1992,6 @@ class CMTT_Glossary_Plus {
             remove_filter( 'cmtt_glossary_index_tooltip_content', array( 'CMTT_Pro', 'cmtt_glossary_parse_strip_shortcodes' ), 20, 2 );
             remove_filter( 'cmtt_glossary_index_tooltip_content', array( 'CMTT_Pro', 'cmtt_glossary_filterTooltipContent' ), 30, 2 );
         }
-        return $glossaryItemContent;
-    }
-
-    /**
-     * Allows to add Merriam-Webster Dictionary to Glossary Index term
-     * @param type $glossaryItemContent
-     * @param type $glossaryItem
-     * @return type
-     */
-    public static function addGlossaryIndexMerriamWebsterDictionary( $glossaryItemContent, $glossaryItem ) {
-        $excludeMerriamDictionaryApi = get_post_meta( $glossaryItem->ID, '_cmtt_exclude_merriam_api', true );
-        if ( CMTT_Mw_API::dictionary_enabled() && CMTT_Mw_API::dictionary_show_in_tooltip() && !$excludeMerriamDictionaryApi ) {
-            $onlyOnEmpty = CMTT_Mw_API::dictionary_only_on_empty_content();
-            if ( ($onlyOnEmpty && empty( $glossaryItem->post_content )) || !$onlyOnEmpty ) {
-                $glossaryItemContent .= CMTT_Mw_API::get_dictionary( $glossaryItem->post_title, true );
-            }
-        }
-
-        return $glossaryItemContent;
-    }
-
-    /**
-     * Allows to add Merriam-Webster Thesaurus to Glossary Index term
-     * @param type $glossaryItemContent
-     * @param type $glossaryItem
-     * @return type
-     */
-    public static function addGlossaryIndexMerriamWebsterThesaurus( $glossaryItemContent, $glossaryItem ) {
-        $excludeMerriamThesaurusApi = get_post_meta( $glossaryItem->ID, '_cmtt_exclude_merriam_thesaurus_api', true );
-        if ( CMTT_Mw_API::thesaurus_enabled() && CMTT_Mw_API::thesaurus_show_in_tooltip() && !$excludeMerriamThesaurusApi ) {
-            $onlyOnEmpty = CMTT_Mw_API::thesaurus_only_on_empty_content();
-            if ( ($onlyOnEmpty && empty( $glossaryItem->post_content )) || !$onlyOnEmpty ) {
-                $glossaryItemContent .= CMTT_Mw_API::get_thesaurus( $glossaryItem->post_title );
-            }
-        }
-
         return $glossaryItemContent;
     }
 
@@ -2787,6 +2762,76 @@ class CMTT_Glossary_Plus {
         return $title;
     }
 
+    public static function getDashicon( $id = null ) {
+        $dashicon = '';
+        if ( empty( $id ) ) {
+            return $dashicon;
+        }
+        $glossaryItem = get_post( $id );
+        if ( $glossaryItem && 'glossary' == $glossaryItem->post_type ) {
+            $icon = get_post_meta( $glossaryItem->ID, '_cmtt_term_icon', true );
+            if ( $icon ) {
+                $style    = '';
+                $dashicon = '<span class="dashicons ' . esc_attr( $icon ) . '" data-icon="' . esc_attr( $icon ) . '" style="' . $style . 'display:inline;"></span>';
+            }
+        }
+        return $dashicon;
+    }
+
+    /**
+     * Add the abbreviation in the square brackets to the post's title
+     * @param string $title
+     * @param int $id
+     * @return string
+     */
+    public static function addQuickEdit() {
+        ob_start();
+        ?>
+        <div class="inline-edit-col">
+            <label class="alignleft">
+                <span class="title">Term Icon</span>
+                <span class="input-text-wrap"><input type="text" id="cmtt_term_icon" name="cmtt_term_icon" class="inline-edit-cmtt_term_icon" value=""></span>
+            </label>
+        </div>
+        <?php
+        $content = ob_get_clean();
+        echo $content;
+    }
+
+    /**
+     * Add the abbreviation in the square brackets to the post's title
+     * @param string $title
+     * @param int $id
+     * @return string
+     */
+    public static function addMetaColumn( $id ) {
+        $icon = self::getDashicon( $id );
+        ob_start();
+        if ( !empty( $icon ) ):
+            ?>
+            <div id="cmtt_meta_icon_<?php echo esc_attr( $id ); ?>">
+                Custom Icon: <?php echo $icon; ?>
+            </div>
+            <?php
+        endif;
+        $content = ob_get_clean();
+        echo $content;
+    }
+
+    /**
+     * Add the abbreviation in the square brackets to the post's title
+     * @param string $title
+     * @param int $id
+     * @return string
+     */
+    public static function addDashicon( $title = '', $id = null ) {
+        if ( $id ) {
+            $dashicon = self::getDashicon( $id );
+            $title    = $dashicon . $title;
+        }
+        return $title;
+    }
+
     /**
      * Disable the parsing
      */
@@ -2828,6 +2873,22 @@ class CMTT_Glossary_Plus {
             $relatedSnippet = CMTT_Related::renderRelatedTerms( $replacedTerms );
             $content .= $relatedSnippet;
         }
+        return $content;
+    }
+
+    /**
+     * Adds the "Flush API Cache" button
+     * @param array $content
+     * @return string
+     */
+    public static function renderIconSelectButton( $content, $post ) {
+        $selectedIcon      = get_post_meta( $post->ID, '_cmtt_term_icon', true );
+        $additionalContent = '';
+        $additionalContent = '<div><label for="cmtt_term_icon"><input id="cmtt_term_icon" type="text" name="cmtt_term_icon" value="' . esc_attr( $selectedIcon ) . '" />
+<input class="button dashicons-picker" type="button" value="Choose Icon" data-target="#cmtt_term_icon" data-preview="#cmtt_term_icon_preview" />
+<span style="font-size: 15px;padding: 4px;display: inline-block;">
+' . __( 'Preview:', 'cm-tooltip-glossary' ) . ' <span id="cmtt_term_icon_preview" class="dashicons ' . esc_attr( $selectedIcon ) . '"></span></span></label></div><br>';
+        $content[]         = $additionalContent;
         return $content;
     }
 

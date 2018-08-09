@@ -3,22 +3,28 @@
   Plugin Name: CM Tooltip Glossary Pro+
   Plugin URI: https://www.cminds.com/
   Description: PRO+ Version! Parses posts for defined glossary terms and adds links to the static glossary page containing the definition and a tooltip with the definition.
-  Version: 3.6.1
+  Version: 3.8.1
   Text Domain: cm-tooltip-glossary
   Author: CreativeMindsSolutions
   Author URI: https://www.cminds.com/
  */
 
-if ( !ini_get( 'max_execution_time' ) || ini_get( 'max_execution_time' ) < 300 ) {
-	/*
-	 * Setup the high max_execution_time to avoid timeouts during lenghty operations like importing big glossaries,
-	 * or rebuilding related articles index
-	 */
-	ini_set( 'max_execution_time', 300 );
-	$disabled = explode( ',', ini_get( 'disable_functions' ) );
-	if ( !in_array( 'set_time_limit', $disabled ) ) {
-		set_time_limit( 300 );
-	}
+try {
+    if ( !ini_get( 'safe_mode' ) && !ini_get( 'max_execution_time' ) || ini_get( 'max_execution_time' ) < 300 ) {
+        /*
+         * Setup the high max_execution_time to avoid timeouts during lenghty operations like importing big glossaries,
+         * or rebuilding related articles index
+         */
+        $disabled = explode( ',', ini_get( 'disable_functions' ) );
+        if ( !in_array( 'set_time_limit', $disabled ) ) {
+            @set_time_limit( 300 );
+        }
+        if ( !in_array( 'ini_set', $disabled ) ) {
+            @ini_set( 'max_execution_time', 300 );
+        }
+    }
+} catch ( Exception $exc ) {
+    //silent all possible warnings
 }
 
 /**
@@ -27,7 +33,7 @@ if ( !ini_get( 'max_execution_time' ) || ini_get( 'max_execution_time' ) < 300 )
  * @since 1.0
  */
 if ( !defined( 'CMTT_VERSION' ) ) {
-	define( 'CMTT_VERSION', '3.6.1' );
+	define( 'CMTT_VERSION', '3.8.1' );
 }
 
 /**
