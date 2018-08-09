@@ -36,6 +36,7 @@ class CMTT_Glossary_Index {
 
         add_filter( 'cmtt_glossary_index_remove_links_to_terms', array( __CLASS__, 'removeLinksToTerms' ), 10, 2 );
         add_filter( 'cmtt_glossary_index_disable_tooltips', array( __CLASS__, 'disableTooltips' ), 10, 2 );
+        add_filter( 'cmtt_glossary_index_disable_tooltips', array( __CLASS__, 'disableTooltipsOnIndex' ), 100 );
 
         add_filter( 'cmtt_glossary_index_pagination', array( __CLASS__, 'outputPagination' ), 10, 3 );
 
@@ -82,11 +83,12 @@ class CMTT_Glossary_Index {
     }
 
     /**
-     * Returns true if the server-side pagination is enabled
+     * Returns true if the server-side pagination is enabled (and perPage is enabled)
      * @return type
      */
     public static function isServerSide() {
-        return (bool) apply_filters( 'cmtt_is_serverside_pagination', get_option( 'cmtt_glossaryServerSidePagination' ) == 1 );
+        $default = get_option( 'cmtt_perPage' ) >= 0 && get_option( 'cmtt_glossaryServerSidePagination' ) == 1;
+        return (bool) apply_filters( 'cmtt_is_serverside_pagination', $default );
     }
 
     /**
@@ -309,6 +311,20 @@ class CMTT_Glossary_Index {
     }
 
     /**
+     * Check whether to disable the tooltips on Glossary Index page
+     * @param type $disable
+     * @param type $post
+     * @return type
+     */
+    public static function disableTooltipsOnIndex( $disable ) {
+        /*
+         * When this option is enabled we don't want titles to display tooltips
+         */
+        $disableNewValue = (bool) get_option( 'cmtt_glossaryOnlyTitleLinksToTerm', 0 );
+        return $disableNewValue;
+    }
+
+    /**
      * Wrap Glossary Index in styling container
      * @param type $content
      * @param type $glossaryIndexStyle
@@ -461,7 +477,7 @@ class CMTT_Glossary_Index {
         /*
          * Pass the shortcodeAtts to the subsequent queries (search click, letter click, category click etc.)
          */
-        $attributesArr = array('glossary_index_style','related','author_id');
+        $attributesArr = array( 'glossary_index_style', 'related', 'author_id' );
         foreach ( $attributesArr as $value ) {
             if ( isset( $shortcodeAtts[ $value ] ) ) {
                 $content .= '<input type="hidden" class="cmtt-attribute-field" name="' . esc_attr( $value ) . '" value="' . esc_attr( $shortcodeAtts[ $value ] ) . '">';
@@ -629,11 +645,18 @@ class CMTT_Glossary_Index {
                 $liAdditionalClass = '';
                 $thumbnail         = '';
 
-
                 if ( get_option( 'cmtt_showFeaturedImageThumbnail', FALSE ) && in_array( $glossaryIndexStyle, array( 'classic-excerpt', 'classic-definition' ) ) ) {
-                    $thumbnail = get_the_post_thumbnail( $glossaryItem->ID, array( 50, 50 ), array( 'style' => 'margin:1px 5px' ) );
+                    $linkToOriginal = get_option( 'cmtt_linkThumbnailToOriginal', FALSE );
+                    $size           = apply_filters( 'cmtt_thumbnail_size', array( 50, 50 ) );
+                    $attr           = apply_filters( 'cmtt_thumbnail_attr', array( 'style' => 'margin:1px 5px', 'rel' => 'lightbox' ) );
+                    $thumbnail      = get_the_post_thumbnail( $glossaryItem->ID, $size, $attr );
                     if ( !empty( $thumbnail ) ) {
                         $liAdditionalClass = 'cmtt-has-thumbnail cmtt-classic';
+                        if ( !empty( $linkToOriginal ) ) {
+                            $imageUrl           = get_the_post_thumbnail_url( $glossaryItem->ID, 'original' );
+                            $thumbnailLinkClass = apply_filters( 'cmtt_thumbnail_link_class', 'cmtt-thumbnail-link', $glossaryItem );
+                            $thumbnail          = sprintf( '<a href="%s" rel="lightbox" class="%s">%s</a>', $imageUrl, $thumbnailLinkClass, $thumbnail );
+                        }
                     }
                 }
 
@@ -647,8 +670,10 @@ class CMTT_Glossary_Index {
                 }
                 // End image tiles thumbnail PLUS
 
+                $liAdditionalClass   = apply_filters( 'cmtt_liAdditionalClass', $liAdditionalClass );
                 $preItemTitleContent .= '<li class="' . $liAdditionalClass . '">';
                 $preItemTitleContent .= $thumbnail;
+                $preItemTitleContent = apply_filters( 'cmtt_preItemTitleContent', $preItemTitleContent );
 
                 /*
                  * Start the internal tag: span or a
@@ -664,7 +689,7 @@ class CMTT_Glossary_Index {
                     $tooltipContent = apply_filters( 'cmtt_glossary_index_tooltip_content', '', $glossaryItem );
                     $tooltipContent = apply_filters( 'cmtt_3rdparty_tooltip_content', $tooltipContent, $glossaryItem, true );
                     $tooltipContent = apply_filters( 'cmtt_tooltip_content_add', $tooltipContent, $glossaryItem );
-                    $preItemTitleContent .= 'data-cmtooltip="' . $tooltipContent . '"';
+                    $preItemTitleContent .= ' aria-describedby="tt" data-cmtooltip="' . $tooltipContent . '"';
                 }
                 $preItemTitleContent .= '>';
 
@@ -681,10 +706,22 @@ class CMTT_Glossary_Index {
                  * Add description if needed
                  */
                 $postItemTitleContent .= $glossaryItemDesc;
+                $postItemTitleContent = apply_filters( 'cmtt_postItemTitleContent', $postItemTitleContent );
                 $postItemTitleContent .= '</li>';
 
                 if ( !$hideTerms ) {
-                    $glossaryIndexContentArr[ mb_strtolower( $glossaryItem->post_title ) ] = $letterSeparatorContent . $preItemTitleContent . $glossaryItem->post_title . $postItemTitleContent;
+
+                    $sortByTitle = get_option( 'cmtt_index_sortby_title', 0 );
+
+                    if ( $sortByTitle ) {
+                    /*
+                     * This verion doesn't support the two items with different meanings
+                     */
+                        $key = mb_strtolower( $glossaryItem->post_title );
+                    } else {
+                        $key = $glossaryItem->post_name;
+                }
+                    $glossaryIndexContentArr[ $key ] = $letterSeparatorContent . $preItemTitleContent . apply_filters( 'cmtt_glossaryItemTitle', $glossaryItem->post_title, $glossaryItem ) . $postItemTitleContent;
                 }
 
                 $glossaryIndexContentArr = apply_filters( 'cmtt_glossary_index_content_arr', $glossaryIndexContentArr, $glossaryItem, $preItemTitleContent, $postItemTitleContent, $shortcodeAtts );
@@ -697,7 +734,7 @@ class CMTT_Glossary_Index {
              */
             $glossary_index = NULL;
 
-            $content .= '<ul class="glossaryList" role="tabpanel" id="' . $glossary_list_id . '">';
+            $content .= '<ul class="glossaryList" role="tablist" id="' . $glossary_list_id . '">';
 
             if ( extension_loaded( 'intl' ) === true ) {
                 $customLocale = get_option( 'cmtt_index_locale', '' );
@@ -947,16 +984,38 @@ class CMTT_Glossary_Index {
      * Adds the scripts which has to be included on the main glossary index page only
      */
     public static function addScripts() {
-        $embeddedMode = get_option( 'cmtt_enableEmbeddedMode', false );
-        $inFooter     = get_option( 'cmtt_script_in_footer', false );
+        $embeddedMode       = get_option( 'cmtt_enableEmbeddedMode', false );
+        $inFooter           = get_option( 'cmtt_script_in_footer', true );
+        /*
+         * If hashing is enabled scripts have to be loaded in the footer
+         */
+        $hashTooltipContent = get_option( 'cmtt_glossaryTooltipHashContent', '0' );
         /*
          * If the embeddedMode is enabled we ignore the inFooter setting
          */
-        if ( $inFooter && !$embeddedMode ) {
+        if ( $hashTooltipContent || ($inFooter && !$embeddedMode ) ) {
             add_action( 'wp_footer', array( __CLASS__, 'outputScripts' ), 9 );
         } else {
             self::outputScripts();
         }
+        add_action( 'wp_footer', array( __CLASS__, 'outputTooltipWrapper' ), PHP_INT_MAX );
+    }
+
+    public static function outputTooltipWrapper() {
+        $addflipclass = '';
+        if ( get_option( 'cmtt_tooltipDisplayanimation' ) == 'center_flip' && get_option( 'cmtt_tooltipHideanimation' ) != 'center_flip' ) {
+            $addflipclass .= ' has-in no-out';
+    }
+        if ( get_option( 'cmtt_tooltipHideanimation' ) == 'center_flip' && get_option( 'cmtt_tooltipDisplayanimation' ) != 'center_flip' ) {
+            $addflipclass.= ' no-in';
+        }
+        if ( get_option( 'cmtt_tooltipDisplayanimation' ) == 'center_flip' && get_option( 'cmtt_tooltipHideanimation' ) == 'center_flip' ) {
+            $addflipclass.= ' has-in';
+        }
+        if ( get_option( 'cmtt_tooltipDisplayanimation' ) == 'horizontal_flip' || get_option( 'cmtt_tooltiphideanimation' ) == 'horizontal_flip' || get_option( 'cmtt_tooltipDisplayanimation' ) == 'grow' || get_option( 'cmtt_tooltipHideanimation' ) == 'shrink' || get_option( 'cmtt_tooltipDisplayanimation' ) == 'fade_in' || get_option( 'cmtt_tooltipHideanimation' ) == 'fade_out' ) {
+            $addflipclass.= ' animated';
+        }
+        echo '<div id="tt" role="tooltip" class="' . $addflipclass . '"></div>';
     }
 
     public static function outputScripts() {
@@ -969,42 +1028,50 @@ class CMTT_Glossary_Index {
         global $post, $replacedTerms;
         $postId = empty( $post->ID ) ? '' : $post->ID;
 
-        $embeddedMode   = get_option( 'cmtt_enableEmbeddedMode', false );
-        $inFooter       = get_option( 'cmtt_script_in_footer', false );
-        $isGlossaryTerm = (!empty( $post->post_type ) && in_array( $post->post_type, array( 'glossary' ) )); //TRUE if is glossary term page, FALSE otherwise
+        $embeddedMode    = get_option( 'cmtt_enableEmbeddedMode', false );
+        $inFooter        = get_option( 'cmtt_script_in_footer', true );
+        $isGlossaryTerm  = $post && (!empty( $post->post_type ) && in_array( $post->post_type, array( 'glossary' ) )); //TRUE if is glossary term page, FALSE otherwise
+        $isGlossaryIndex = $post && has_shortcode( $post->post_content, 'glossary' );
+        $isIframe        = $post && strpos( $post->post_content, 'cm-embedded-content' ) !== FALSE;
+        $miniSuffix      = current_user_can( 'manage_options' ) ? '' : '.min';
 
         /*
          * If the scripts are loaded in footer and there's no tooltips found, and we're not on Glossary Term Page, we can ignore loading scripts
          */
-        if ( ($inFooter && !$embeddedMode) && (empty( $replacedTerms ) && !self::$shortcodeDisplayed) && !$isGlossaryTerm ) {
+        if ( ($inFooter && !$embeddedMode) && (empty( $replacedTerms ) && !self::$shortcodeDisplayed) && !$isGlossaryTerm && !$isGlossaryIndex && !$isIframe ) {
             return;
         }
 
         $tooltipData = array();
 
         $tooltipArgs                              = array(
-            'placement'    => get_option( 'cmtt_tooltipPlacement', 'horizontal' ),
-            'clickable'    => (bool) apply_filters( 'cmtt_is_tooltip_clickable', FALSE ),
-            'delay'        => (int) get_option( 'cmtt_tooltipDisplayDelay', 0 ),
-            'timer'        => (int) get_option( 'cmtt_tooltipHideDelay', 0 ),
-            'minw'         => (int) get_option( 'cmtt_tooltipWidthMin', 200 ),
-            'maxw'         => (int) get_option( 'cmtt_tooltipWidthMax', 400 ),
-            'top'          => (int) get_option( 'cmtt_tooltipPositionTop' ),
-            'left'         => (int) get_option( 'cmtt_tooltipPositionLeft' ),
-            'endalpha'     => (int) get_option( 'cmtt_tooltipOpacity' ),
-            'borderStyle'  => get_option( 'cmtt_tooltipBorderStyle' ),
-            'borderWidth'  => get_option( 'cmtt_tooltipBorderWidth' ) . 'px',
-            'borderColor'  => get_option( 'cmtt_tooltipBorderColor' ),
-            'background'   => get_option( 'cmtt_tooltipBackground' ),
-            'foreground'   => get_option( 'cmtt_tooltipForeground' ),
-            'fontSize'     => get_option( 'cmtt_tooltipFontSize' ) . 'px',
-            'padding'      => get_option( 'cmtt_tooltipPadding' ),
-            'borderRadius' => get_option( 'cmtt_tooltipBorderRadius' ) . 'px'
+            'placement'        => get_option( 'cmtt_tooltipPlacement', 'horizontal' ),
+            'clickable'        => (bool) apply_filters( 'cmtt_is_tooltip_clickable', FALSE ),
+            'close_on_moveout' => (bool) get_option( 'cmtt_glossaryCloseOnMoveout', 1 ),
+            'only_on_button'   => (bool) get_option( 'cmtt_glossaryCloseOnlyOnButton', FALSE ),
+            'touch_anywhere'   => (bool) get_option( 'cmtt_glossaryCloseOnTouchAnywhere', FALSE ),
+            'delay'            => (int) get_option( 'cmtt_tooltipDisplayDelay', 0 ),
+            'timer'            => (int) get_option( 'cmtt_tooltipHideDelay', 0 ),
+            'minw'             => (int) get_option( 'cmtt_tooltipWidthMin', 200 ),
+            'maxw'             => (int) get_option( 'cmtt_tooltipWidthMax', 400 ),
+            'top'              => (int) get_option( 'cmtt_tooltipPositionTop' ),
+            'left'             => (int) get_option( 'cmtt_tooltipPositionLeft' ),
+            'endalpha'         => (int) get_option( 'cmtt_tooltipOpacity' ),
+            'borderStyle'      => get_option( 'cmtt_tooltipBorderStyle' ),
+            'borderWidth'      => get_option( 'cmtt_tooltipBorderWidth' ) . 'px',
+            'borderColor'      => get_option( 'cmtt_tooltipBorderColor' ),
+            'background'       => get_option( 'cmtt_tooltipBackground' ),
+            'foreground'       => get_option( 'cmtt_tooltipForeground' ),
+            'fontSize'         => get_option( 'cmtt_tooltipFontSize' ) . 'px',
+            'padding'          => get_option( 'cmtt_tooltipPadding' ),
+            'borderRadius'            => get_option( 'cmtt_tooltipBorderRadius' ) . 'px',
+            'tooltipDisplayanimation' => get_option( 'cmtt_tooltipDisplayanimation' ),
+            'tooltipHideanimation'    => get_option( 'cmtt_tooltipHideanimation' )
         );
         $tooltipData[ 'cmtooltip' ]               = apply_filters( 'cmtt_tooltip_script_args', $tooltipArgs );
         $tooltipData[ 'ajaxurl' ]                 = admin_url( 'admin-ajax.php' );
         $tooltipData[ 'post_id' ]                 = $postId;
-        $tooltipData[ 'mobile_disable_tooltips' ] = get_option( 'cmtt_glossaryMobileDisableTooltips' );
+        $tooltipData[ 'mobile_disable_tooltips' ] = get_option( 'cmtt_glossaryMobileDisableTooltips', '0' );
         $tooltipData[ 'tooltip_on_click' ]        = get_option( 'cmtt_glossaryShowTooltipOnClick', '0' );
 
         $scriptsConfig = array(
@@ -1013,8 +1080,16 @@ class CMTT_Glossary_Index {
                     'path'      => self::$jsPath . 'modernizr.min.js',
                     'in_footer' => $inFooter
                 ),
+                'jqueryui-js'         => array(
+                    'path'      => self::$jsPath . 'jquery-ui.min.js',
+                    'in_footer' => $inFooter
+                ),
+                'jquery-flipjs'       => array(
+                    'path'      => self::$jsPath . 'jquery.flip.min.js',
+                    'in_footer' => $inFooter
+                ),
                 'tooltip-frontend-js' => array(
-                    'path'      => self::$jsPath . 'tooltip.js',
+                    'path'      => self::$jsPath . 'tooltip'.$miniSuffix.'.js',
                     'deps'      => array( 'jquery', 'cm-modernizr-js', 'mediaelement' ),
                     'in_footer' => $inFooter,
                     'localize'  => array(
@@ -1025,7 +1100,19 @@ class CMTT_Glossary_Index {
             ),
             'styles'  => array(
                 'cmtooltip' => array(
-                    'path'   => self::$cssPath . 'tooltip.css',
+                    'path'   => self::$cssPath . 'tooltip'.$miniSuffix.'.css',
+                    'inline' => array(
+                        'data' => self::getDynamicCSS()
+                    )
+                ),
+                'jqueryui-css' => array(
+                    'path'   => self::$cssPath . 'jquery-ui.min.css',
+                    'inline' => array(
+                        'data' => self::getDynamicCSS()
+                    )
+                ),
+                'animate-css'  => array(
+                    'path'   => self::$cssPath . 'animate.css',
                     'inline' => array(
                         'data' => self::getDynamicCSS()
                     )
@@ -1038,7 +1125,8 @@ class CMTT_Glossary_Index {
 
         $fontName = get_option( 'cmtt_tooltipFontStyle', 'default' );
         if ( is_string( $fontName ) && $fontName !== 'default' ) {
-            $scriptsConfig[ 'styles' ][ 'tooltip-google-font' ] = array( 'path' => '//fonts.googleapis.com/css?family=' . $fontName );
+            $fontNameFixed                                      = strpos( $fontName, 'Condensed' ) !== FALSE ? $fontName . ':300' : $fontName; //fix for the Open Sans Condensed
+            $scriptsConfig[ 'styles' ][ 'tooltip-google-font' ] = array( 'path' => '//fonts.googleapis.com/css?family=' . $fontNameFixed );
         }
 
         self::_scriptStyleLoader( $scriptsConfig, $embeddedMode );
@@ -1053,7 +1141,8 @@ class CMTT_Glossary_Index {
         }
 
         $embeddedMode = get_option( 'cmtt_enableEmbeddedMode', false );
-        $inFooter     = get_option( 'cmtt_script_in_footer', false );
+        $inFooter     = get_option( 'cmtt_script_in_footer', true );
+        $miniSuffix      = current_user_can( 'manage_options' ) ? '' : '.min';
 
         if ( !self::isServerSide() ) {
             $listnavArgs                  = array(
@@ -1091,7 +1180,7 @@ class CMTT_Glossary_Index {
                     'in_footer' => $inFooter
                 ),
                 'tooltip-listnav-js'   => array(
-                    'path'      => self::$jsPath . 'cm-glossary-listnav.js',
+                    'path'      => self::$jsPath . 'cm-glossary-listnav'.$miniSuffix.'.js',
                     'deps'      => array( 'jquery', 'cm-fastlivefilter-js' ),
                     'in_footer' => $inFooter,
                     'localize'  => array(
@@ -1193,7 +1282,14 @@ class CMTT_Glossary_Index {
             }
             <?php
         endif;
-
+        ?>
+        .fadeIn,.zoomIn,.flipInY,.in{
+        animation-duration:<?php echo get_option( 'cmtt_tooltipDisplayDelay', '0.5' ); ?>s !important;
+        }
+        .fadeOut,.zoomOut,.flipOutY,.out{
+        animation-duration:<?php echo get_option( 'cmtt_tooltipHideDelay', '0.5' ); ?>s !important;
+        }
+        <?php
         echo apply_filters( 'cmtt_dynamic_css_after', '' );
         $content = ob_get_clean();
 

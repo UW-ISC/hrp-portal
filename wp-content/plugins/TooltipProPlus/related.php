@@ -410,7 +410,7 @@ class CMTT_Related {
                 $target = ($article->post_type == 'custom_related_article') ? (get_option( 'cmtt_glossary_customRelatedArticlesNewTab', '1' ) ? 'target="_blank"' : '') : (get_option( 'cmtt_glossary_relatedArticlesNewTab', '1' ) ? 'target="_blank"' : '');
                 $html.= '<li class="cmtt_related_item">';
                 $html.= '<a href="' . $article->url . '"' . $target . '>' . $title . '</a>';
-                if ( get_option( 'cmtt_glossary_relatedShowExcerpt' ) ) {
+                if ( get_option( 'cmtt_glossary_relatedShowExcerpt' ) && !empty($article->post_excerpt) ) {
                     $html.= '<div>' . strip_shortcodes( $article->post_excerpt ) . '</div>';
                 }
                 $html.= '</li>';
@@ -427,7 +427,7 @@ class CMTT_Related {
                 $title = $article->post_title;
                 $html.= '<li class="cmtt_related_item">';
                 $html.= '<a href="' . $article->url . '">' . $title . '</a>';
-                if ( get_option( 'cmtt_glossary_relatedShowExcerpt' ) ) {
+                if ( get_option( 'cmtt_glossary_relatedShowExcerpt' ) && !empty($article->post_excerpt) ) {
                     $html.= '<div>' . strip_shortcodes( $article->post_excerpt ) . '</div>';
                 }
                 $html.= '</li>';
