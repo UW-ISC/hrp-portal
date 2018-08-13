@@ -1,6 +1,6 @@
 <?php
 
-namespace com\cminds\package\pro\v1_8_0;
+namespace com\cminds\package\pro\v1_8_3;
 
 if ( !class_exists( __NAMESPACE__ . '\CmindsLicensingAPI' ) ) {
 
@@ -117,7 +117,6 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsLicensingAPI' ) ) {
                     add_action( 'add_option_' . $this->optionLicenseKey, array( $this, 'activate_license' ) );
 
                     add_action( 'admin_init', array( $this, 'deactivate_license' ) );
-                    return;
 //					add_action( 'admin_init', array( $this, 'check_license' ) );
                 }
                 add_action( 'admin_notices', array( $this, 'setupMessage' ) );
@@ -208,7 +207,7 @@ if ( !class_exists( __NAMESPACE__ . '\CmindsLicensingAPI' ) ) {
             $currentVersion = isset( $pluginInfo[ 'Version' ] ) ? $pluginInfo[ 'Version' ] : $this->version;
             $this->version  = $currentVersion;
             if ( empty( $_transient_data->response ) || empty( $_transient_data->response[ $this->name ] ) ) {
-                $version_info = $this->api_call( self::GET_VERSION_ACTION, 60 * 60 * 24 );
+                $version_info = $this->api_call( self::GET_VERSION_ACTION, 7 * 60 * 60 * 24 );
                 if ( false !== $version_info && is_object( $version_info ) && isset( $version_info->new_version ) ) {
                     $version_info->plugin = $this->plugin;
                     $this->did_check      = true;

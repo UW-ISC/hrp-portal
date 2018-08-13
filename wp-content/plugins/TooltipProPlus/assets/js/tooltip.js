@@ -12,9 +12,10 @@ var CM_Tooltip = { };
  */
 CM_Tooltip.gtooltip = function ( opts ) {
     "use strict";
-    var tooltipWrapper, tooltipTop, tooltipContainer, tooltipBottom, tooltipButtonClose, h, w, id, alpha, ie, tooltipApi, closeButtonClicked;
+    var tooltipWrapper, tooltipWrapperInit, tooltipTop, tooltipContainer, tooltipBottom, tooltipButtonClose, h, w, id, alpha, ie, tooltipApi, closeButtonClicked, tooltipWrapperClicked;
 
     tooltipWrapper = null;
+    tooltipWrapperInit = null;
     id = 'tt';
     alpha = 0;
     ie = document.all ? true : false;
@@ -22,9 +23,17 @@ CM_Tooltip.gtooltip = function ( opts ) {
     tooltipApi = {
         create: function ( switchElement ) {
             closeButtonClicked = false;
-            if ( tooltipWrapper === null ) {
-                tooltipWrapper = document.createElement( 'div' );
+            tooltipWrapperClicked = false;
+            if ( tooltipWrapperInit === null ) {
+                tooltipWrapper = document.getElementById( 'tt' );
+                if ( tooltipWrapper === null ) {
+                    tooltipWrapper = document.createElement( 'div' );
+                }
+                jQuery( tooltipWrapper ).html( '' ); //reset the content if it's there
+
                 tooltipWrapper.setAttribute( 'id', id );
+                tooltipWrapper.setAttribute( 'role', 'tooltip' );
+                tooltipWrapper.setAttribute( 'aria-hidden', true );
 
                 tooltipTop = document.createElement( 'div' );
                 tooltipTop.setAttribute( 'id', id + 'top' );
@@ -46,7 +55,8 @@ CM_Tooltip.gtooltip = function ( opts ) {
                 if ( opts.close_button !== false ) {
                     tooltipButtonClose = document.createElement( 'span' );
                     tooltipButtonClose.setAttribute( 'id', id + '-btn-close' );
-                    tooltipButtonClose.setAttribute( 'class', 'dashicons '+opts.close_symbol );
+                    tooltipButtonClose.setAttribute( 'class', 'dashicons ' + opts.close_symbol );
+                    tooltipButtonClose.setAttribute( 'aria-label', 'Close the tooltip' );
                     tooltipTop.appendChild( tooltipButtonClose );
                 }
                 tooltipWrapper.appendChild( tooltipTop );
@@ -69,12 +79,29 @@ CM_Tooltip.gtooltip = function ( opts ) {
                             tooltipWrapper.style.display = 'none';
                         }
                         if ( jQuery( this ).is( ':animated' ) && !closeButtonClicked ) {
-                            jQuery( this ).stop().fadeTo( tooltipWrapper.timer, ( opts.endalpha / 100 ) ).show();
+                            //animation effects
+                            jQuery( tooltipWrapper ).removeClass( 'force-hide' );
+                            jQuery( tooltipWrapper ).removeClass( 'flipOutY' );
+                            jQuery( tooltipWrapper ).removeClass( 'zoomOut' );
+                            jQuery( tooltipWrapper ).removeClass( 'fadeOut' );
+                            tooltipWrapper.style.opacity = opts.endalpha / 100;
+                            if ( opts.tooltipDisplayanimation == 'no_animation' ) {
+                                tooltipWrapper.style.display = 'block';
+                            } else if ( opts.tooltipDisplayanimation == 'fade_in' ) {
+                                jQuery( tooltipWrapper ).addClass( 'fadeIn' );
+                            } else if ( opts.tooltipDisplayanimation == 'grow' ) {
+                                jQuery( tooltipWrapper ).addClass( 'zoomIn' );
+                            } else if ( opts.tooltipDisplayanimation == 'horizontal_flip' ) {
+                                jQuery( tooltipWrapper ).addClass( 'flipInY' );
+                            } else if ( opts.tooltipDisplayanimation == 'center_flip' ) {
+                            } else {
+                                jQuery( this ).stop().fadeTo( tooltipWrapper.timer, ( opts.endalpha / 100 ) ).show();
+                            }
                         }
                     } );
                 }
 
-                if ( opts.clickable !== false ) {
+                if ( opts.clickable !== false && opts.close_on_moveout ) {
                     jQuery( tooltipWrapper ).on( 'mouseleave', function () {
                         clearTimeout( CM_Tooltip.delayId );
                         if ( !jQuery( this ).is( ':animated' ) ) {
@@ -87,11 +114,17 @@ CM_Tooltip.gtooltip = function ( opts ) {
                     if ( jQuery( e.target ).parents( '.cmtt-audio-player' ).length < 1 )
                     {
                         closeButtonClicked = jQuery( e.target ).attr( 'id' ) === 'tt-btn-close';
-                        opts.only_on_button = opts.mobile;
 
-                        if ( !opts.only_on_button || opts.only_on_button && closeButtonClicked ) {
+                        if ( !opts.only_on_button && !opts.touch_anywhere || opts.only_on_button && closeButtonClicked ) {
                             tooltipApi.hide();
                         }
+                    }
+                } );
+
+                jQuery( 'body' ).on( 'touchstart', function ( e ) {
+                    tooltipWrapperClicked = jQuery( e.target ).parents( '#tt' ).length;
+                    if ( opts.touch_anywhere && !tooltipWrapperClicked ) {
+                        tooltipApi.hide();
                     }
                 } );
 
@@ -102,6 +135,7 @@ CM_Tooltip.gtooltip = function ( opts ) {
                         }
                     } );
                 }
+                tooltipWrapperInit = 1;
             }
         },
         show: function ( content, switchElement ) {
@@ -130,6 +164,7 @@ CM_Tooltip.gtooltip = function ( opts ) {
                 tooltipWrapper.style.display = 'block';
                 tooltipWrapper.style.width = 'auto';
                 tooltipWrapper.style.maxWidth = opts.maxw + 'px';
+                tooltipWrapper.setAttribute( 'aria-hidden', false );
 
                 if ( !switchElement && ie ) {
                     tooltipTop.style.display = 'block';
@@ -137,8 +172,33 @@ CM_Tooltip.gtooltip = function ( opts ) {
                 }
 
                 h = parseInt( tooltipWrapper.offsetHeight, 10 ) + opts.top;
-
+                //center flip issue
+                if ( opts.tooltipDisplayanimation == 'center_flip' || opts.tooltipHideanimation == 'center_flip' ) {
+                    if ( jQuery( '#tt' ).hasClass( 'no-in' ) ) {
+                        jQuery( '#tt' ).css( { 'display': 'block' } );
+                        jQuery( '#tt' ).removeClass( 'out' );
+                    } else {
+                        jQuery( '#tt' ).addClass( 'in' );
+                        jQuery( '#tt' ).removeClass( 'out' );
+                    }
+                }
+                jQuery( tooltipWrapper ).removeClass( 'force-hide' );
+                jQuery( tooltipWrapper ).removeClass( 'flipOutY' );
+                jQuery( tooltipWrapper ).removeClass( 'zoomOut' );
+                jQuery( tooltipWrapper ).removeClass( 'fadeOut' );
+                tooltipWrapper.style.opacity = opts.endalpha / 100;
+                if ( opts.tooltipDisplayanimation == 'no_animation' ) {
+                    tooltipWrapper.style.display = 'block';
+                } else if ( opts.tooltipDisplayanimation == 'fade_in' ) {
+                    jQuery( tooltipWrapper ).addClass( 'fadeIn' );
+                } else if ( opts.tooltipDisplayanimation == 'grow' ) {
+                    jQuery( tooltipWrapper ).addClass( 'zoomIn' );
+                } else if ( opts.tooltipDisplayanimation == 'horizontal_flip' ) {
+                    jQuery( tooltipWrapper ).addClass( 'flipInY' );
+                } else if ( opts.tooltipDisplayanimation == 'center_flip' ) {
+                } else {
                 jQuery( tooltipWrapper ).stop().fadeTo( tooltipWrapper.timer, ( opts.endalpha / 100 ) );
+                }
             }, opts.delay );
         },
         pos: function ( e ) {
@@ -152,6 +212,10 @@ CM_Tooltip.gtooltip = function ( opts ) {
             if ( typeof e.pageX === 'undefined' && e.type === 'touchstart' ) {
                 u = e.originalEvent.touches[0].pageY;
                 l = e.originalEvent.touches[0].pageX;
+            } else if ( e.type === 'focusin' ) {
+                var offset = jQuery( e.currentTarget ).offset();
+                u = offset.top + opts.top;
+                l = offset.left;
             } else
             {
                 u = ie ? event.clientY + document.documentElement.scrollTop : e.pageY;
@@ -231,73 +295,73 @@ CM_Tooltip.gtooltip = function ( opts ) {
                     tooltipWrapper.style.right = null;
                 }
             } else {
-            topShift = ( u - h ) > 28 ? ( u - h / 2 ) : 28;
+                topShift = ( u - h ) > 28 ? ( u - h / 2 ) : 28;
                 leftShift = ( l + opts.left - 5 );
 
-            screenWidth = jQuery( window ).width();
+                screenWidth = jQuery( window ).width();
 
-            tooltipWrapper.style.right = 'none';
-            tooltipWrapper.style.left = 'none';
+                tooltipWrapper.style.right = 'none';
+                tooltipWrapper.style.left = 'none';
 
-            /*
-             * Check the vertical offscreen
-             */
-
-            horizontalOffscreen = ( screenWidth - leftShift ) < opts.minw;
-
-            if ( horizontalOffscreen )
-            {
-                tooltipWrapper.style.width = 'auto';
-                tooltipWrapper.style.left = null;
-                tooltipWrapper.style.right = 0 + 'px';
                 /*
-                 * Recalculate the height
+                 * Check the vertical offscreen
                  */
-                h = parseInt( tooltipWrapper.offsetHeight, 10 ) + opts.top;
-                fullWidth = true;
-                topShift -= h / 2 + 10;
-            } else
-            {
-                tooltipWrapper.style.width = 'auto';
-                tooltipWrapper.style.left = leftShift + 'px';
-                tooltipWrapper.style.right = null;
-            }
 
-            /*
-             * Check the vertical offscreen
-             */
-            screenHeight = jQuery( window ).height();
+                horizontalOffscreen = ( screenWidth - leftShift ) < opts.minw;
 
-            var docViewTop = jQuery( window ).scrollTop();
-            var docViewBottom = docViewTop + screenHeight;
-
-            var elemTop = topShift;
-            var elemBottom = elemTop + h;
-
-            if ( jQuery( '#wpadminbar' ).length )
-            {
-                docViewTop += jQuery( '#wpadminbar' ).height();
-            }
-
-            verticalOffscreenBot = elemBottom > docViewBottom;
-            verticalOffscreenTop = elemTop < docViewTop;
-
-            if ( verticalOffscreenBot )
-            {
-                topShift -= ( ( elemBottom - docViewBottom ) + 1 );
-            }
-            if ( verticalOffscreenTop )
-            {
-                if ( fullWidth )
+                if ( horizontalOffscreen )
                 {
-                    topShift += h + 20;
+                    tooltipWrapper.style.width = 'auto';
+                    tooltipWrapper.style.left = null;
+                    tooltipWrapper.style.right = 0 + 'px';
+                    /*
+                     * Recalculate the height
+                     */
+                    h = parseInt( tooltipWrapper.offsetHeight, 10 ) + opts.top;
+                    fullWidth = true;
+                    topShift -= h / 2 + 10;
                 } else
                 {
-                    topShift += ( ( docViewTop - elemTop ) + 1 );
+                    tooltipWrapper.style.width = 'auto';
+                    tooltipWrapper.style.left = leftShift + 'px';
+                    tooltipWrapper.style.right = null;
                 }
-            }
 
-            tooltipWrapper.style.top = topShift + 'px';
+                /*
+                 * Check the vertical offscreen
+                 */
+                screenHeight = jQuery( window ).height();
+
+                var docViewTop = jQuery( window ).scrollTop();
+                var docViewBottom = docViewTop + screenHeight;
+
+                var elemTop = topShift;
+                var elemBottom = elemTop + h;
+
+                if ( jQuery( '#wpadminbar' ).length )
+                {
+                    docViewTop += jQuery( '#wpadminbar' ).height();
+                }
+
+                verticalOffscreenBot = elemBottom > docViewBottom;
+                verticalOffscreenTop = elemTop < docViewTop;
+
+                if ( verticalOffscreenBot )
+                {
+                    topShift -= ( ( elemBottom - docViewBottom ) + 1 );
+                }
+                if ( verticalOffscreenTop )
+                {
+                    if ( fullWidth )
+                    {
+                        topShift += h + 20;
+                    } else
+                    {
+                        topShift += ( ( docViewTop - elemTop ) + 1 );
+                    }
+                }
+
+                tooltipWrapper.style.top = topShift + 'px';
             }
 
             /*
@@ -316,6 +380,7 @@ CM_Tooltip.gtooltip = function ( opts ) {
         },
         fade: function ( d ) {
             var i, a = alpha;
+            tooltipWrapper.setAttribute( 'aria-hidden', true );
             if ( ( a !== opts.endalpha && d === 1 ) || ( a !== 0 && d === -1 ) ) {
                 i = opts.speed;
                 if ( opts.endalpha - a < opts.speed && d === 1 ) {
@@ -334,7 +399,36 @@ CM_Tooltip.gtooltip = function ( opts ) {
             }
         },
         hide: function () {
-            jQuery( tooltipWrapper ).stop().fadeOut( tooltipWrapper.timer ).fadeTo( 0, 0 );
+            tooltipWrapper.setAttribute( 'aria-hidden', true );
+            //animation effects
+            if ( opts.tooltipDisplayanimation == 'center_flip' || opts.tooltipHideanimation == 'center_flip' ) {
+                if ( jQuery( '#tt' ).hasClass( 'no-out' ) ) {
+                    jQuery( '#tt' ).addClass( 'temp' );
+                    jQuery( '#tt' ).removeClass( 'in' );
+                } else {
+                    jQuery( '#tt' ).addClass( 'out' );
+                    jQuery( '#tt' ).removeClass( 'in' );
+                }
+            }
+            jQuery( tooltipWrapper ).removeClass( 'flipInY' );
+            jQuery( tooltipWrapper ).removeClass( 'zoomIn' );
+            jQuery( tooltipWrapper ).removeClass( 'fadeIn' );
+            jQuery( tooltipWrapper ).removeClass( 'tooltip-bloated-content' );
+            if ( opts.tooltipHideanimation == 'no_animation' ) {
+                if ( opts.tooltipHideanimation == 'no_animation' ) {
+                    jQuery( tooltipWrapper ).addClass( 'force-hide' );
+                }
+                tooltipWrapper.style.display = 'none !important';
+            } else if ( opts.tooltipHideanimation == 'fade_out' ) {
+                jQuery( tooltipWrapper ).addClass( 'fadeOut' );
+            } else if ( opts.tooltipHideanimation == 'shrink' ) {
+                jQuery( tooltipWrapper ).addClass( 'zoomOut' );
+            } else if ( opts.tooltipHideanimation == 'horizontal_flip' ) {
+                jQuery( tooltipWrapper ).addClass( 'flipOutY' );
+            } else if ( opts.tooltipHideanimation == 'center_flip' ) {
+            } else {
+                jQuery( tooltipWrapper ).stop().fadeOut( tooltipWrapper.timer ).fadeTo( 0, 0 );
+            }
         }
     };
     return tooltipApi;
@@ -364,7 +458,9 @@ CM_Tooltip.glossaryTip = null;
             padding: '2px 12px 3px 7px',
             clickable: true,
             close_button: false,
-            only_on_button: true,
+            only_on_button: false,
+            close_on_moveout: true,
+            touch_anywhere: false,
             placement: 'horizontal'
         };
         opts = $.extend( { }, opts, options );
@@ -382,9 +478,14 @@ CM_Tooltip.glossaryTip = null;
             opts.mobile = 0;
 
             return this.each( function () {
-                var tooltipContent, $inputCopy;
+                var tooltipContent, tooltipContentMaybeHash, $inputCopy;
 
-                tooltipContent = $( this ).data( 'cmtooltip' );
+                tooltipContentMaybeHash = $( this ).data( 'cmtooltip' );
+                if ( typeof window.cmtt_data.cmtooltip_definitions !== 'undefined' && typeof window.cmtt_data.cmtooltip_definitions[tooltipContentMaybeHash] !== 'undefined' ) {
+                    tooltipContent = jQuery( '<div>' + window.cmtt_data.cmtooltip_definitions[tooltipContentMaybeHash] + '</div>' ).html();
+                } else {
+                    tooltipContent = tooltipContentMaybeHash;
+                }
 
                 if ( this.tagName === 'A' && CM_Tools.Modernizr.touch )
                 {
@@ -448,15 +549,17 @@ CM_Tooltip.glossaryTip = null;
                         /*
                          * Display tooltips on hover
                          */
-                        $( this ).mouseenter( function ( e ) {
+                        $( this ).on( 'mouseenter focusin', function ( e ) {
                             clearTimeout( CM_Tooltip.timeoutId );
                             CM_Tooltip.glossaryTip.show( tooltipContent, this );
                             CM_Tooltip.glossaryTip.pos( e );
-                        } ).mouseleave( function () {
-                            clearTimeout( CM_Tooltip.delayId );
-                            CM_Tooltip.timeoutId = setTimeout( function () {
-                                CM_Tooltip.glossaryTip.hide();
-                            }, opts.timer );
+                        } ).on( 'mouseleave focusout', function () {
+                            if ( opts.close_on_moveout ) {
+                                clearTimeout( CM_Tooltip.delayId );
+                                CM_Tooltip.timeoutId = setTimeout( function () {
+                                    CM_Tooltip.glossaryTip.hide();
+                                }, opts.timer );
+                            }
                         } );
                     }
                 }
@@ -632,8 +735,7 @@ CM_Tooltip.glossaryTip = null;
             {
                 if ( typeof $.fn.mediaelementplayer === 'undefined' )
                 {
-                    console.log( 'The jQuery doesn\'t have the function required for displaying the AudioPlayer. \n\
-This is probably because the jQuery has been reinitialized after the "mediaplayerelement" has already been added.' );
+                    console.log( 'The jQuery doesn\'t have the function required for displaying the AudioPlayer. \n\ This is probably because the jQuery has been reinitialized after the "mediaplayerelement" has already been added.' );
                 } else
                 {
                     $( '.cmtt-audio-shortcode' ).mediaelementplayer( settings );
@@ -705,5 +807,231 @@ This is probably because the jQuery has been reinitialized after the "mediaplaye
         };
         CM_Tooltip.shareBox();
 
+        $( '.cmtt-embed-btn' ).click( function ( ev ) {
+            ev.preventDefault();
+            var overlay = CM_Tooltip.Utils.overlay( $( document ).find( '.cmtt-embed-modal' ) );
+            overlay.find( '.cmtt-embed-modal' ).show();
+            overlay.find( '.cmtt-embed-modal textarea' ).click( function () {
+                this.select();
+            } );
+            $( ".cmtt-embed-copy-btn", overlay ).click( function ( e ) {
+                e.preventDefault();
+                var wrapper = $( this ).parents( '.cmtt-embed-modal' );
+                wrapper.find( "textarea" ).select();
+                document.execCommand( 'copy' );
+            } );
+        } );
     } );
+
+    window.CM_Tooltip.Utils = {
+        addSingleHandler: function ( handlerName, selector, action, func ) {
+            var obj;
+            if ( typeof selector == 'string' )
+                obj = $( selector );
+            else
+                obj = selector;
+            obj.each( function () {
+                var obj = $( this );
+                if ( obj.data( handlerName ) != '1' ) {
+                    obj.data( handlerName, '1' );
+                    obj.on( action, func );
+                }
+            } );
+        },
+        leftClick: function ( func ) {
+            return function ( e ) {
+                // Allow to use middle-button to open thread in a new tab:
+                if ( e.which > 1 || e.shiftKey || e.altKey || e.metaKey || e.ctrlKey )
+                    return;
+                func.apply( this, [ e ] );
+                return false;
+            }
+        },
+        toast: function ( msg, className, duration ) {
+            if ( typeof className != 'string' )
+                className = 'info';
+            if ( typeof duration == 'undefined' )
+                duration = 5;
+            var toast = $( '<div/>', { "class": "cmtt-toast " + className, "style": "display:none" } );
+            toast.text( msg );
+            $( 'body' ).append( toast );
+            toast.fadeIn( 500, function () {
+                setTimeout( function () {
+                    toast.fadeOut( 500 );
+                }, duration * 1000 );
+            } );
+        },
+        overlay: function ( content ) {
+            var overlay = $( '<div>', { "class": 'cmtt-overlay' } );
+            var contentOuter = $( '<div>', { "class": 'cmtt-overlay-content-outer' } );
+            var contentWrapper = $( '<div>', { "class": 'cmtt-overlay-content' } );
+            var closeButton = $( '<span>', { "class": 'cmtt-overlay-close' } )
+            closeButton.html( '&times;' );
+            $( 'body' ).append( overlay );
+            overlay.append( contentOuter );
+            contentOuter.append( contentWrapper );
+            if ( typeof content == 'string' )
+                contentWrapper.html( content );
+            else
+                contentWrapper.append( content.clone() );
+            contentWrapper.append( closeButton );
+            overlay.fadeIn( 'fast' );
+            var close = function () {
+                overlay.fadeOut( 'fast', function () {
+                    overlay.remove();
+                } );
+            };
+            overlay.click( function ( ev ) {
+                var target = $( ev.target );
+                if ( target.hasClass( 'cmtt-overlay' ) ) {
+                    close();
+                }
+            } );
+            closeButton.click( close );
+            $( window ).keydown( function ( ev ) {
+                if ( ev.keyCode == 27 ) {
+                    close();
+                }
+            } );
+            return overlay;
+        }
+
+    };
+
 }( jQuery ) );
+
+/**
+ * WordPress inline HTML embed
+ *
+ * @since 4.4.0
+ *
+ * This file cannot have ampersands in it. This is to ensure
+ * it can be embedded in older versions of WordPress.
+ * See https://core.trac.wordpress.org/changeset/35708.
+ */
+( function ( window, document ) {
+    'use strict';
+
+    var supportedBrowser = false,
+        loaded = false;
+
+    if ( document.querySelector ) {
+        if ( window.addEventListener ) {
+            supportedBrowser = true;
+        }
+    }
+
+    /** @namespace wp */
+    window.wp = window.wp || { };
+
+    window.wp.receiveEmbedMessage = null;
+
+    if ( !!window.wp.receiveEmbedMessage ) {
+        return;
+    }
+
+    window.wp.receiveEmbedMessage = function ( e ) {
+        var data = e.data;
+        if ( !( data.secret || data.message || data.value ) ) {
+            return;
+        }
+
+        if ( typeof data.secret === 'undefined' ) {
+            return;
+        }
+
+        if ( /[^a-zA-Z0-9]/.test( data.cmsecret ) ) {
+            return;
+        }
+        if ( /[^a-zA-Z0-9]/.test( data.secret ) ) {
+            return;
+        }
+
+        var cmsecret = data.secret.replace( "__cm__", "" );
+        var iframes = document.querySelectorAll( 'iframe[data-cmsecret="' + cmsecret + '"]' ),
+            blockquotes = document.querySelectorAll( 'blockquote[data-cmsecret="' + cmsecret + '"]' ),
+            i, source, height, sourceURL, targetURL;
+
+        for ( i = 0; i < blockquotes.length; i++ ) {
+            blockquotes[ i ].style.display = 'none';
+        }
+
+        for ( i = 0; i < iframes.length; i++ ) {
+            source = iframes[ i ];
+
+            if ( e.source !== source.contentWindow ) {
+                continue;
+            }
+
+//			source.removeAttribute( 'style' );
+
+            /* Resize the iframe on request. */
+            if ( 'height' === data.message ) {
+                height = parseInt( data.value, 10 );
+                if ( height > 1000 ) {
+                    height = 1000;
+                } else if ( ~~height < 200 ) {
+                    height = 200;
+                }
+
+                source.height = height;
+            }
+
+            /* Link to a specific URL on request. */
+            if ( 'link' === data.message ) {
+                sourceURL = document.createElement( 'a' );
+                targetURL = document.createElement( 'a' );
+
+                sourceURL.href = source.getAttribute( 'src' );
+                targetURL.href = data.value;
+
+                /* Only continue if link hostname matches iframe's hostname. */
+                if ( targetURL.host === sourceURL.host ) {
+                    if ( document.activeElement === source ) {
+                        var win = window.open( data.value, '_blank' );
+                        win.focus();
+//                        window.top.location.href = data.value;
+                    }
+                }
+            }
+        }
+    };
+
+    function onLoad() {
+        if ( loaded ) {
+            return;
+        }
+
+        loaded = true;
+
+        var isIE10 = -1 !== navigator.appVersion.indexOf( 'MSIE 10' ),
+            isIE11 = !!navigator.userAgent.match( /Trident.*rv:11\./ ),
+            iframes = document.querySelectorAll( 'iframe.cm-embedded-content' ),
+            iframeClone, i, source, secret;
+
+        for ( i = 0; i < iframes.length; i++ ) {
+            source = iframes[ i ];
+
+            if ( !source.getAttribute( 'data-cmsecret' ) ) {
+                /* Add secret to iframe */
+                secret = Math.random().toString( 36 ).substr( 2, 10 );
+                source.src += '#?cmsecret=' + secret;
+                source.setAttribute( 'data-secret', '__cm__' + secret );
+                source.setAttribute( 'data-cmsecret', secret );
+            }
+
+            /* Remove security attribute from iframes in IE10 and IE11. */
+            if ( ( isIE10 || isIE11 ) ) {
+                iframeClone = source.cloneNode( true );
+                iframeClone.removeAttribute( 'security' );
+                source.parentNode.replaceChild( iframeClone, source );
+            }
+        }
+    }
+
+    if ( supportedBrowser ) {
+        window.addEventListener( 'message', window.wp.receiveEmbedMessage, false );
+        document.addEventListener( 'DOMContentLoaded', onLoad, false );
+        window.addEventListener( 'load', onLoad, false );
+    }
+} )( window, document );

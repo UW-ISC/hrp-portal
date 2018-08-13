@@ -1,5 +1,5 @@
 #tt {position:absolute; display:block;z-index:1500;}
-
+#tt iframe{max-width: 99%}
 /*
 Top stem
 */
@@ -55,6 +55,7 @@ Bottom stem
 #ttcont {display:block; padding:20px; margin-left:5px; background: #333; color:white; overflow: auto}
 #ttbot {display:block; margin-left:5px;}
 
+#ttcont iframe{max-width: 99%}
 #ttcont ol,
 #ttcont ul {
     list-style-position: inside;
@@ -129,11 +130,14 @@ Bottom stem
     color: #F00;
 }
 
-ul#glossaryList{padding: 0; margin: 0; list-style-type: none;}
+ul#glossaryList{padding: 0; margin: 0; list-style-type: none !important;}
 div.glossary-container > ul.pageNumbers {padding-top: 20px;}
+div.glossary-container > p br {display: none;}
 
 span.glossaryLink, a.glossaryLink {text-decoration:none !important; border-bottom: dotted 1px;}
+span.glossaryLink.hasDashicon, a.glossaryLink.hasDashicon {border-bottom: none !important;}
 a.glossaryLink:hover {text-decoration:none !important;}
+span.glossaryLink.hasDashicon:hover, a.glossaryLink.hasDashicon:hover {border-bottom: none !important; text-decoration:none !important;}
 #glossary-categories {float: right; margin: 0}
 .mobile-link{margin: 10px; font-size: 14pt}
 .mobile-link:before{content: "Term link: "}
@@ -142,6 +146,7 @@ h4.cmtt_related_title {margin-bottom:0px; margin-top: 20px;}
 div.cmtt_related_title {margin-bottom:0px; margin-top: 20px; font-weight: bold;}
 .glossary_itemdesc .cmtt_related_title { margin-top: 5px}
 ul.cmtt_related {margin-top:0;clear:none;}
+li.cmtt_related_item{margin-bottom: 10px;}
 
 div.cmtt_synonyms {margin-bottom: 1em; font-style: italic}
 div.cmtt_synonyms_title {margin-bottom: 0px;margin-top: 20px;font-weight: bold;}
@@ -210,6 +215,7 @@ div.glossaryItemTitle {margin: 10px 0;}
 
 #glossary-exclude-box label.blocklabel,
 #glossary-disable-box label.blocklabel{display: block}
+div#glossary-exclude-box div div {margin: 5px 0px;}
 
 .floated-form-table{
     clear: none;
@@ -271,6 +277,7 @@ div.cmtt_help:hover{
 
 div.mw-dictionary-container{margin-top: 1em}
 div.mw-thesaurus-container{margin-top: 2em;}
+.mw-wikipedia-container table.infobox {float: right;font-size: 8pt;margin-left: 5px;}
 div.glossary_mw_dictionary,
 div.glossary_mw_wikipedia {font-size: 14pt; margin: 0.5em 0 0.5em 0;}
 div.mw-group{margin: 0.5em 0 0.5em 0}
@@ -435,6 +442,19 @@ li.cmtt-has-thumbnail .cmtt-thumbnail {
     position: relative;
 }
 
+li.cmtt-has-thumbnail .cmtt-thumbnail-link {
+    position: relative;
+    display: inline-block;
+    border: 0 !important;
+    outline: none;
+    text-decoration: none!important;
+    -webkit-box-shadow: none!important;
+    box-shadow: none!important;
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+
 /* Media Uploader */
 .cmtt_Media_Image.cmtt_hasThumb {
     width: 70px;
@@ -487,3 +507,80 @@ li.cmtt-has-thumbnail .cmtt-thumbnail {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
+
+/*Dashicons picker*/
+
+.dashicon-picker-container {
+    position: absolute;
+    width: 220px;
+    height: 252px;
+    font-size: 14px;
+    background-color: #fff;
+    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    padding: 5px;
+    box-sizing: border-box;
+}
+.dashicon-picker-container ul {
+    margin: 0;
+    padding: 0;
+    margin-bottom: 10px;
+}
+.dashicon-picker-container ul .dashicons {
+    width: 20px;
+    height: 20px;
+    font-size: 20px;
+}
+.dashicon-picker-container ul li {
+    display: inline-block;
+    margin: 5px;
+    float: left;
+}
+.dashicon-picker-container ul li a {
+    display: block;
+    text-decoration: none;
+    color: #373737;
+    padding: 5px 5px;
+    border: 1px solid #dfdfdf;
+}
+.dashicon-picker-container ul li a:hover {
+    border-color: #999;
+    background: #efefef;
+}
+
+.dashicon-picker-control {
+    height: 32px;
+}
+.dashicon-picker-control a {
+    padding: 5px;
+    text-decoration: none;
+    line-height: 32px;
+    width: 25px;
+}
+.dashicon-picker-control a span {
+    display: inline;
+    vertical-align: middle;
+}
+.dashicon-picker-control input {
+    font-size: 12px;
+    width: 140px;
+}
+
+.cmtt_meaning_label{
+    margin: 10px 0;
+}
+
+/*Embed/iframe CSS*/
+
+body.cmtt-embed {margin: 0 !important; padding: 0 !important; overflow: hidden; background: #fff;}
+body.cmtt-embed .cmtt-embedded{margin: 25px 5px}
+.cmtt-embed-btn {margin: 5px 0;}
+.cmtt-embed-modal {display: none; background: white; padding: 2em; width: 600px;}
+.cmtt-embed-modal textarea {width: 100%; height: 7em; margin-top: 1em;}
+body.cmtt-embed .zopim {display: none !important; visibility: hidden !important;}
+
+.cmtt-overlay {position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(50,50,50,0.9); z-index: 9999998;}
+.cmtt-overlay-content-outer {position: fixed; top: 10%; left: 50%; width: auto; z-index: 9999999;}
+.cmtt-overlay-content {background: white; margin-left: -50%; width: 100%; position: relative;}
+.cmtt-overlay-close {font: normal 24px Arial; color: #666; position: absolute; top: 0; right: 3px; cursor: pointer;}

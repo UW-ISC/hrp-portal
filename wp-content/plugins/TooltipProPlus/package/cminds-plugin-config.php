@@ -1,20 +1,21 @@
 <?php
 
 $cminds_plugin_config = array(
-	'plugin-is-pro'				 => TRUE,
-	'plugin-has-addons'			 => TRUE,
-	'plugin-addons'				 => array(
-		array( 'title' => 'Tooltip Glossary Search Widget', 'description' => 'Make your glossary more accessible by adding a search widget on the bottom of your website.', 'link' => 'https://www.cminds.com/store/tooltip-glossary-search-console-widget-add-on-for-wordpress-by-creativeminds/#', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=105680&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Custom Taxonomies', 'description' => 'Add support for multiple taxonomies and filtering for the Glossary terms.', 'link' => 'https://www.cminds.com/store/tooltip-glossary-custom-taxonomies-add-on-for-wordpress-by-creativeminds/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=113609&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Skins', 'description' => 'Lets you change the tooltip shape, color, opacity and much more. It offers various improved shapes and themes for the tooltip and improves the overall user experience. It is mobile responsive.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-skins-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=9644&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Log & Statistics', 'description' => 'Tracks and reports tooltip usage statistics such as number of tooltip hovers, term link clicks, inside tooltip clicks, term overall impressions, and server loads. Apply this data to your site to improve your glossary performance.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-log-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=10130&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Community Terms', 'description' => 'Let users suggest new terms for your Glossary. Works for both anonymous and registered users and allows you to control which users can add new terms directly and which needs moderation', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-community-terms-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=11837&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Remote Import', 'description' => 'Provides an easy way to import, replicate and create an up-to-date copy of your CM Glossary across several WordPress sites or domains.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-remote-import-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=12111&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'Tooltip Glossary Widgets', 'description' => 'Lets you add six new widgets to your glossary, which enhance the user experience and glossary engagement by exposing its content to users and visitors. Create visually appealing widgets to improve glossary content and user interaction.', 'link' => 'https://www.cminds.com/store/purchase-cm-tooltip-glossary-widgets-add-wordpress/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=30457&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-		array( 'title' => 'All Glossary AddOns Bundle', 'description' => 'Includes All CM Tooltip Glossary 5 AddOns.', 'link' => '', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=107574&wp_referrer=https://www.cminds.com/checkout/&edd_options[price_id]=1' ),
-	),
-	'plugin-show-shortcodes'	 => TRUE,
-	'plugin-shortcodes'			 => '<article class="cm-shortcode-desc">
+    'plugin-is-pro'             => TRUE,
+    'plugin-has-addons'         => TRUE,
+    'plugin-addons'             => array(
+        array( 'title' => 'Tooltip Glossary Search Widget', 'description' => 'Make your glossary more accessible by adding a search widget on the bottom of your website.', 'link' => 'https://www.cminds.com/store/tooltip-glossary-search-console-widget-add-on-for-wordpress-by-creativeminds/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=105680&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Custom Taxonomies', 'description' => 'Add support for multiple taxonomies and filtering for the Glossary terms.', 'link' => 'https://www.cminds.com/store/tooltip-glossary-custom-taxonomies-add-on-for-wordpress-by-creativeminds/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=113609&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Skins', 'description' => 'Lets you change the tooltip shape, color, opacity and much more. It offers various improved shapes and themes for the tooltip and improves the overall user experience. It is mobile responsive.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-skins-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=9644&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Log & Statistics', 'description' => 'Tracks and reports tooltip usage statistics such as number of tooltip hovers, term link clicks, inside tooltip clicks, term overall impressions, and server loads. Apply this data to your site to improve your glossary performance.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-log-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=10130&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Community Terms', 'description' => 'Let users suggest new terms for your Glossary. Works for both anonymous and registered users and allows you to control which users can add new terms directly and which needs moderation', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-community-terms-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=11837&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Remote Import', 'description' => 'Provides an easy way to import, replicate and create an up-to-date copy of your CM Glossary across several WordPress sites or domains.', 'link' => 'https://www.cminds.com/store/cm-tooltip-glossary-remote-import-cm-plugins-store/', 'link' => 'https://www.cminds.com/wordpress-plugins-library/cm-tooltip-glossary-remote-import-cm-plugins-store/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=12111&edd_options[price_id]=1' ),
+        array( 'title' => 'Tooltip Glossary Widgets', 'description' => 'Lets you add six new widgets to your glossary, which enhance the user experience and glossary engagement by exposing its content to users and visitors. Create visually appealing widgets to improve glossary content and user interaction.', 'link' => 'https://www.cminds.com/store/purchase-cm-tooltip-glossary-widgets-add-wordpress/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=30457&edd_options[price_id]=1' ),
+        array( 'title' => 'Glossary PeepSo Integration', 'description' => 'Integrate glossary tooltip with PeepSo. Parse PeepSo content to show tooltip for glossary terms and let members suggest terms.', 'link' => 'https://www.cminds.com/wordpress-plugins-library/glossary-peepso-integration-add-wordpress-creativeminds/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=196020&edd_options[price_id]=1' ),
+        array( 'title' => 'Glossary Editor Tooltip', 'description' => 'Display tooltip on the wordpress post content, title and excerpt in both visual and text mode.', 'link' => 'https://www.cminds.com/wordpress-plugins-library/tooltip-glossary-editor-tooltip-addon-wordpress-creativeminds/', 'link_buy' => 'https://www.cminds.com/checkout/?edd_action=add_to_cart&download_id=230827&edd_options[price_id]=1' ),
+    ),
+    'plugin-show-shortcodes'    => TRUE,
+    'plugin-shortcodes'         => '<article class="cm-shortcode-desc">
     <header>
         <h4>[glossary]</h4>
         <span>Show Glossary Index</span>
@@ -54,11 +55,12 @@ $cminds_plugin_config = array(
             <li><strong>dashicon</strong> - Dashicon to show the tooltip instead of the term/phrase.<a href="https://developer.wordpress.org/resource/dashicons/#chart-bar">List of dashicons</a></li>
             <li><strong>color</strong> - The color of the dashicon.</li>
             <li><strong>size</strong> - The size of the dashicon.</li>
+            <li><strong>underline</strong> - The dashicon tooltips will not be underlined by default. If you want to force underline you need to set this parameter to 1.</li>
         </ul>
         <h5>Shortcode content:</h5>
         <p>The term/phrase which should display the custom tooltip.</p>
         <h5>Example</h5>
-        <p><kbd>[glossary_tooltip content="text" dashicon="dashicon="dashicons-editor-help" color="#c0c0c0" size="16px"] term [/glossary_tooltip]</kbd></p>
+        <p><kbd>[glossary_tooltip content="text" dashicon="dashicon="dashicons-editor-help" color="#c0c0c0" size="16px" underline="0"] term [/glossary_tooltip]</kbd></p>
         <p>The shows a custom glossary tooltip.</p>
     </div>
 </article>
@@ -231,33 +233,33 @@ $cminds_plugin_config = array(
         </p>
     </div>
 </article>',
-	'plugin-shortcodes-action'	 => 'cmtt_glossary_supported_shortcodes',
-	'plugin-version'			 => '3.6.1',
-	'plugin-abbrev'				 => 'cmtt',
-	'plugin-short-slug'			 => 'cmtooltip',
-	'plugin-parent-short-slug'	 => '',
-	'plugin-settings-url'		 => admin_url( 'admin.php?page=cmtt_settings' ),
-	'plugin-show-guide'			 => FALSE,
-	'plugin-guide-text'			 => '<p>
+    'plugin-shortcodes-action'  => 'cmtt_glossary_supported_shortcodes',
+    'plugin-version'            => '3.8.1',
+    'plugin-abbrev'             => 'cmtt',
+    'plugin-short-slug'         => 'cmtooltip',
+    'plugin-parent-short-slug'  => '',
+    'plugin-settings-url'       => admin_url( 'admin.php?page=cmtt_settings' ),
+    'plugin-show-guide'         => FALSE,
+    'plugin-guide-text'         => '<p>
 										The description of the plugin goes here
 									</p>',
-	'plugin-guide-video-height'	 => 180,
-	'plugin-guide-videos'		 => array(
-		array( 'title' => 'Free Version Installation Tutorial', 'video_id' => '157868636' ),
-	),
-	'plugin-file'				 => CMTT_PLUGIN_FILE,
-	'plugin-dir-path'			 => plugin_dir_path( CMTT_PLUGIN_FILE ),
-	'plugin-dir-url'			 => plugin_dir_url( CMTT_PLUGIN_FILE ),
-	'plugin-basename'			 => plugin_basename( CMTT_PLUGIN_FILE ),
-	'plugin-icon'				 => '',
-	'plugin-name'				 => CMTT_NAME,
-	'plugin-license-name'		 => CMTT_CANONICAL_NAME,
-	'plugin-slug'				 => '',
-	'plugin-menu-item'			 => CMTT_MENU_OPTION,
-	'plugin-textdomain'			 => CMTT_SLUG_NAME,
-	'plugin-userguide-key'		 => '6-cm-tooltip',
-	'plugin-store-url'			 => 'https://www.cminds.com/store/tooltipglossary/',
-	'plugin-review-url'			 => 'https://wordpress.org/support/view/plugin-reviews/enhanced-tooltipglossary',
-	'plugin-changelog-url'		 => CMTT_RELEASE_NOTES,
-	'plugin-licensing-aliases'	 => array( CMTT_LICENSE_NAME ),
+    'plugin-guide-video-height' => 180,
+    'plugin-guide-videos'       => array(
+        array( 'title' => 'Free Version Installation Tutorial', 'video_id' => '157868636' ),
+    ),
+    'plugin-file'               => CMTT_PLUGIN_FILE,
+    'plugin-dir-path'           => plugin_dir_path( CMTT_PLUGIN_FILE ),
+    'plugin-dir-url'            => plugin_dir_url( CMTT_PLUGIN_FILE ),
+    'plugin-basename'           => plugin_basename( CMTT_PLUGIN_FILE ),
+    'plugin-icon'               => '',
+    'plugin-name'               => CMTT_NAME,
+    'plugin-license-name'       => CMTT_CANONICAL_NAME,
+    'plugin-slug'               => '',
+    'plugin-menu-item'          => CMTT_MENU_OPTION,
+    'plugin-textdomain'         => CMTT_SLUG_NAME,
+    'plugin-userguide-key'      => '6-cm-tooltip',
+    'plugin-store-url'          => 'https://www.cminds.com/store/tooltipglossary/',
+    'plugin-review-url'         => 'https://wordpress.org/support/view/plugin-reviews/enhanced-tooltipglossary',
+    'plugin-changelog-url'      => CMTT_RELEASE_NOTES,
+    'plugin-licensing-aliases'  => array( CMTT_LICENSE_NAME ),
 );

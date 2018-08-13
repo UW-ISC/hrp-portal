@@ -3,7 +3,11 @@
 class CMTT_RandomTerms_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**
@@ -138,7 +142,11 @@ class CMTT_RandomTerms_Widget extends WP_Widget {
 class CMTT_Search_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**
@@ -246,7 +254,11 @@ class CMTT_Search_Widget extends WP_Widget {
 class CMTT_LatestTerms_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**
@@ -381,7 +393,11 @@ class CMTT_LatestTerms_Widget extends WP_Widget {
 class CMTT_Categories_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**
@@ -545,7 +561,11 @@ class CMTT_Categories_Widget extends WP_Widget {
 class CMTT_RelatedTerms_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**
@@ -627,7 +647,11 @@ class CMTT_RelatedTerms_Widget extends WP_Widget {
 class CMTT_RelatedArticles_Widget extends WP_Widget {
 
     public static function init() {
-        add_action( 'widgets_init', create_function( '', 'return register_widget("' . get_class() . '");' ) );
+        add_action( 'widgets_init', array(__CLASS__, 'register_widget') );
+    }
+
+    public static function register_widget(){
+        return register_widget(get_class());
     }
 
     /**

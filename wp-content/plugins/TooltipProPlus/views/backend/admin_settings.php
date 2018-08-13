@@ -14,7 +14,7 @@
         global $cmindsPluginPackage;
         $shortcodesPage = $cmindsPluginPackage[ 'cmtt' ]->licensingApi->getPageSlug( 'shortcodes' );
         ?>
-        <strong>Supported Shortcodes:</strong> <a href="<?php echo get_admin_url( '', 'admin.php?page=' . esc_attr( $shortcodesPage ) ); ?>">See list</a>
+        <strong>Supported Shortcodes:</strong> <a href="<?php echo get_admin_url( '', 'admin.php?page=' . esc_attr( $shortcodesPage ) ); ?>">See the list</a>
     </p>
 
     <p>
@@ -168,6 +168,36 @@
                 <div class="clear"></div>
             </div>
             <div class="block">
+                <h3>Alternative Meanings Settings</h3>
+                <table class="floated-form-table form-table">
+                    <tr valign="top">
+                        <th scope="row">Allow for Alternative Meanings</th>
+                        <td>
+                            <input type="hidden" name="cmtt_alternativeMeaningsAllow" value="0" />
+                            <input type="checkbox" name="cmtt_alternativeMeaningsAllow" <?php checked( true, get_option( 'cmtt_alternativeMeaningsAllow', '1' ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is unchecked it will be impossible to add more than one Glossary Term with the same title.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Display Alternative Meanings in Tooltips</th>
+                        <td>
+                            <input type="hidden" name="cmtt_alternativeMeaningsInTooltips" value="0" />
+                            <input type="checkbox" name="cmtt_alternativeMeaningsInTooltips" <?php checked( true, get_option( 'cmtt_alternativeMeaningsInTooltips', '1' ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is enabled then the Alternative Meaning descriptions will be displayed in the tooltips.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Display Alternative Meanings on Glossary Term Page</th>
+                        <td>
+                            <input type="hidden" name="cmtt_alternativeMeaningsInGlossaryTermPage" value="0" />
+                            <input type="checkbox" name="cmtt_alternativeMeaningsInGlossaryTermPage" <?php checked( true, get_option( 'cmtt_alternativeMeaningsInGlossaryTermPage', '1' ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is enabled the Alternative Meanings will be displaed on the bottom of the Glossary Term page.</td>
+                    </tr>
+                </table>
+                <div class="clear"></div>
+            </div>
+            <div class="block">
                 <h3>Advanced Custom Fields Settings</h3>
                 <table class="floated-form-table form-table">
                     <tr valign="top">
@@ -285,6 +315,13 @@
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">Select this option if you want to highlight the glossary terms in the Text Widget built in WordPress.</td>
                     </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php _e( 'Excluded HTML Classes', 'cm-tooltip-glossary' ); ?>:</th>
+                        <td>
+                            <input type="text" name="cmtt_glossaryParseExcludedClasses" value="<?php echo get_option( 'cmtt_glossaryParseExcludedClasses' ); ?>" placeholder="<?php _e( 'class_1,class_2', 'cm-tooltip-glossary' ); ?>"/>
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">You can put here the comma separated list of IDs of the HTML classes you would like to exclude from being parsed.</td>
+                    </tr>
                 </table>
                 <div class="clear"></div>
             </div>
@@ -305,7 +342,7 @@
                         <th scope="row">Load the scripts in footer?</th>
                         <td>
                             <input type="hidden" name="cmtt_script_in_footer" value="0" />
-                            <input type="checkbox" name="cmtt_script_in_footer" <?php checked( true, get_option( 'cmtt_script_in_footer' ) ); ?> value="1" />
+                            <input type="checkbox" name="cmtt_script_in_footer" <?php checked( true, get_option( 'cmtt_script_in_footer', true ) ); ?> value="1" />
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">
                             <strong>Warning: Don't change this setting unless you know what you're doing</strong><br/>
@@ -369,6 +406,15 @@
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">
                             Uncheck this option if you'd like to parse the excerpts in search for the glossary terms.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Move tooltip contents to footer?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_glossaryTooltipHashContent" value="0" />
+                            <input type="checkbox" name="cmtt_glossaryTooltipHashContent" <?php checked( true, get_option( 'cmtt_glossaryTooltipHashContent', 0 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">
+                            If this option is enabled, the tooltip content will not be passed directly to JS with the HTML attribute.</td>
                     </tr>
                 </table>
                 <div class="clear"></div>
@@ -503,6 +549,17 @@
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">
                             Select this option if you want to display the thumbnails of the featured image on the Glossary Index (when available).
+                            <br/><i>Works only on "Classic + definition", "Classic + excerpt"</i>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Link the thumbnail to the original image?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_linkThumbnailToOriginal" value="0" />
+                            <input type="checkbox" name="cmtt_linkThumbnailToOriginal" <?php checked( true, get_option( 'cmtt_linkThumbnailToOriginal' ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">
+                            Select this option if you want to link the thumbnails of the featured image displayed on the Glossary Index (when available) to the original images.
                             <br/><i>Works only on "Classic + definition", "Classic + excerpt"</i>
                         </td>
                     </tr>
@@ -651,6 +708,14 @@
                             <input type="checkbox" name="cmtt_glossaryDiffLinkClass" <?php checked( true, get_option( 'cmtt_glossaryDiffLinkClass' ) ); ?> value="1" />
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">Select this option if you wish for the links in the Glossary Index page to be styled differently than the regular way glossary terms links are styled.  By selecting this option you will be able to use the class 'glossaryLinkMain' to style only the links on the Glossary Index page otherwise they will retain the class 'glossaryLink' and will be identical to the linked terms on all other pages.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Only title links to Glossary Term pages?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_glossaryOnlyTitleLinksToTerm" value="0" />
+                            <input type="checkbox" name="cmtt_glossaryOnlyTitleLinksToTerm" <?php checked( true, get_option( 'cmtt_glossaryOnlyTitleLinksToTerm', 0 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">Select this option if you wish  By selecting this option you wish that only the term title links to the Glossary Term pages, while the terms in definitions only display the tooltips.</td>
                     </tr>
                 </table>
             </div>
@@ -850,6 +915,14 @@
                         <td colspan="2" class="cmtt_field_help_container">With this setting you can control how the non-latin letters used in many national character sets should be displayed on the Glossary Index alphabetical list. When this setting is unchecked the terms starting with: "A" and "Á" will be displayed for "A".</td>
                     </tr>
                     <tr valign="top">
+                        <th scope="row">Use titles for sorting insead of permalinks?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_index_sortby_title" value="0" />
+                            <input type="checkbox" name="cmtt_index_sortby_title" <?php checked( true, get_option( 'cmtt_index_sortby_title', '0' ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">By default the terms in the Glossary Index are sorted by their slug(permalink part), which allows to differentiate terms with the same title (multiple meanings). You can switch to sorting by title if that better suits your needs.<td>
+                    </tr>
+                    <tr valign="top">
                         <th scope="row">What locale should be used for sorting?</th>
                         <td><input type="text" size="4" name="cmtt_index_locale" value="<?php echo get_option( 'cmtt_index_locale', get_locale() ) ?>" /></td>
                         <td colspan="2" class="cmtt_field_help_container"> You can specify the locale which should be used for sorting the items on Glossary Index eg. 'de_DE', 'it_IT'. If left empty the locale of the Wordpress installation will be used.
@@ -930,6 +1003,28 @@
                             <input type="checkbox" name="cmtt_glossaryTermShowListnav" <?php checked( true, get_option( 'cmtt_glossaryTermShowListnav' ) ); ?> value="1" />
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">Select this option if you want to display the alphabetical list on top of Glossary Term Page.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Display embed button on top of the Term Page?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_embed_enabled" value="0" />
+                            <input type="checkbox" name="cmtt_embed_enabled" <?php checked( true, get_option( 'cmtt_embed_enabled', 0 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">Select this option if you want to display the button allowing to embed the term on top of Glossary Term Page.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Content to be displayed before the Glossary Term description</th>
+                        <td>
+                            <textarea cols="30" rows="4" style="resize: both" placeholder="You can put anything here, including HTML and shortcodes" name="cmtt_glossaryContentBefore" /><?php echo get_option( 'cmtt_glossaryContentBefore', '' ) ?></textarea>
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">You can put anything here, including HTML, shortcodes. It will be displayed right before the description.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Content to be displayed after the Glossary Term description</th>
+                        <td>
+                            <textarea cols="30" rows="4" style="resize: both" placeholder="You can put anything here, including HTML and shortcodes" name="cmtt_glossaryContentAfter" /><?php echo get_option( 'cmtt_glossaryContentAfter', '' ) ?></textarea>
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">You can put anything here, including HTML, shortcodes. It will be displayed right after the description.</td>
                     </tr>
                 </table>
             </div>
@@ -1353,6 +1448,20 @@
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">Select this option if you want glossary terms to be case-sensitive.</td>
                     </tr>
+                    <tr valign="top">
+                        <th scope="row">Content to be displayed before the Tooltip content</th>
+                        <td>
+                            <textarea cols="30" rows="4" style="resize: both" placeholder="You can put anything here, including HTML and shortcodes" name="cmtt_glossaryTooltipContentBefore" /><?php echo get_option( 'cmtt_glossaryTooltipContentBefore', '' ) ?></textarea>
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">You can put anything here, including HTML, shortcodes. It will be displayed right before the description.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Content to be displayed after the Tooltip content</th>
+                        <td>
+                            <textarea cols="30" rows="4" style="resize: both" placeholder="You can put anything here, including HTML and shortcodes" name="cmtt_glossaryTooltipContentAfter" /><?php echo get_option( 'cmtt_glossaryTooltipContentAfter', '' ) ?></textarea>
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">You can put anything here, including HTML, shortcodes. It will be displayed right after the description.</td>
+                    </tr>
                 </table>
             </div>
             <div class="block">
@@ -1365,6 +1474,36 @@
                             <input type="checkbox" name="cmtt_glossaryMobileSupport" <?php checked( true, get_option( 'cmtt_glossaryMobileSupport' ) ); ?> value="1" />
                         </td>
                         <td colspan="2" class="cmtt_field_help_container">If this option is enabled then on the mobile devices a link to the term page will appear on the bottom of the tooltip.</td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Close tooltips only on button click?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_glossaryCloseOnlyOnButton" value="0" />
+                            <input type="checkbox" name="cmtt_glossaryCloseOnlyOnButton" <?php checked( true, get_option( 'cmtt_glossaryCloseOnlyOnButton', 0 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is enabled then the only way to close the tooltip on mobile devices will be by clicking the "Close icon".
+                            <br/><strong>Make sure that the "Show close icon" option is enabled, otherwise it won't be possible to close the tooltips!</strong>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Close tooltips on mouse moveout?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_glossaryCloseOnMoveout" value="0" />
+                            <input type="checkbox" name="cmtt_glossaryCloseOnMoveout" <?php checked( true, get_option( 'cmtt_glossaryCloseOnMoveout', 1 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is enabled then the tooltips will close when moving the cursor out of their bounds.
+                            <br/><strong>Make sure that the "Show close icon" option is enabled, otherwise it won't be possible to close the tooltips!</strong>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row">Close tooltips on touch outside?</th>
+                        <td>
+                            <input type="hidden" name="cmtt_glossaryCloseOnTouchAnywhere" value="0" />
+                            <input type="checkbox" name="cmtt_glossaryCloseOnTouchAnywhere" <?php checked( true, get_option( 'cmtt_glossaryCloseOnTouchAnywhere', 0 ) ); ?> value="1" />
+                        </td>
+                        <td colspan="2" class="cmtt_field_help_container">If this option is enabled then it would be possible to close the tooltip on mobile devices will be by touching anywhere outside the tooltip.
+                            <br/><strong>You will be able to touch inside the tooltip to scroll the long tooltips!</strong>
+                        </td>
                     </tr>
                     <tr valign="top">
                         <th scope="row">Disable tooltips on mobile devices?</th>
@@ -1403,7 +1542,7 @@
                     </tr>
                     <tr valign="top">
                         <th scope="row">Image width:</th>
-                        <td><input type="text" name="cmtt_glossary_tooltip_imageWidth" value="<?php echo get_option( 'cmtt_glossary_tooltip_imageWidth' ); ?>" /></td>
+                        <td><input type="text" name="cmtt_glossary_tooltip_imageWidth" value="<?php echo get_option( 'cmtt_glossary_tooltip_imageWidth', '100px' ); ?>" /></td>
                         <td colspan="2" class="cmtt_field_help_container">The image's width in the tooltip</td>
                     </tr>
                 </table>
