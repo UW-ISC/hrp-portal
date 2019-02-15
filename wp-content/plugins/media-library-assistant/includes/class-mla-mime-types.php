@@ -116,9 +116,7 @@ class MLAMime {
 	 */
 	public static function mla_sanitize_mime_type_filter( $sanitized_mime_type, $raw_mime_type ) {
 		if ( self::$mla_debug_active ) {
-			global $wp_filter;
-
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_sanitize_mime_type_filter( $sanitized_mime_type, $raw_mime_type ) wp_filter = " . var_export( $wp_filter['sanitize_mime_type'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_sanitize_mime_type_filter( $sanitized_mime_type, $raw_mime_type ) wp_filter = " . MLACore::mla_decode_wp_filter('sanitize_mime_type'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		return $sanitized_mime_type;
@@ -156,10 +154,8 @@ class MLAMime {
 	 */
 	public static function mla_ext2type_filter( $standard_types ) {
 		if ( self::$mla_debug_active ) {
-			global $wp_filter;
-
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter standard_types = " . var_export( $standard_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter wp_filter = " . var_export( $wp_filter['ext2type'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter wp_filter = " . MLACore::mla_decode_wp_filter('ext2type'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		if ( self::$disable_mla_filtering ) {
@@ -228,10 +224,9 @@ class MLAMime {
 	 */
 	public static function mla_wp_check_filetype_and_ext_filter( $validate, $file, $filename, $mimes ) {
 		if ( self::$mla_debug_active ) {
-			global $wp_filter;
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_wp_check_filetype_and_ext_filter( $file, $filename ) validate = " . var_export( $validate, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_wp_check_filetype_and_ext_filter mimes = " . var_export( $mimes, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_wp_check_filetype_and_ext_filter wp_filter = " . var_export( $wp_filter['wp_check_filetype_and_ext'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_wp_check_filetype_and_ext_filter wp_filter = " . MLACore::mla_decode_wp_filter('wp_check_filetype_and_ext'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		return $validate;
@@ -257,9 +252,8 @@ class MLAMime {
 		static $first_call = true;
 		
 		if ( self::$mla_debug_active && $first_call ) {
-			global $wp_filter;
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_mime_types_filter mime_types = " . var_export( $mime_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_mime_types_filter wp_filter = " . var_export( $wp_filter['mime_types'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_mime_types_filter wp_filter = " . MLACore::mla_decode_wp_filter('mime_types'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		if ( self::$disable_mla_filtering || ! self::_get_upload_mime_templates() ) {
@@ -340,9 +334,8 @@ class MLAMime {
 		static $first_call = true;
 		
 		if ( self::$mla_debug_active && $first_call ) {
-			global $wp_filter;
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_upload_mimes_filter mime_types = " . var_export( $mime_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_upload_mimes_filter wp_filter = " . var_export( $wp_filter['upload_mimes'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_upload_mimes_filter wp_filter = " . MLACore::mla_decode_wp_filter('upload_mimes'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		if ( self::$disable_mla_filtering || ! self::_get_upload_mime_templates() ) {
@@ -422,9 +415,8 @@ class MLAMime {
 		static $first_call = true;
 		
 		if ( self::$mla_debug_active && $first_call ) {
-			global $wp_filter;
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_post_mime_types_filter post_mime_types = " . var_export( $post_mime_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_post_mime_types_filter wp_filter = " . var_export( $wp_filter['upload_mimes'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_post_mime_types_filter wp_filter = " . MLACore::mla_decode_wp_filter('post_mime_types'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
 		if ( self::$disable_mla_filtering || ! self::_get_post_mime_templates() ) {
@@ -2227,8 +2219,10 @@ class MLAMime {
 			}
 
 			$description = trim( $value['description'] );
-			if ( ! empty( $description ) && ( $description != self::$mla_upload_mime_descriptions[ $key ] ) ) {
-				$mla_upload_mimes['description'][ $key ] =  $description;
+			if ( ! empty( $description ) ) {
+				if ( empty( self::$mla_upload_mime_descriptions[ $key ] ) || ( $description != self::$mla_upload_mime_descriptions[ $key ] ) ) {
+					$mla_upload_mimes['description'][ $key ] =  $description;
+				}
 			}
 
 			if ( $value['icon_type'] != $value['core_icon_type'] ) {

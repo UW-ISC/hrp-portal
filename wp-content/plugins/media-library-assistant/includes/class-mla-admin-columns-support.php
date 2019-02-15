@@ -7,13 +7,28 @@
  */
 defined( 'ABSPATH' ) or die();
 
+// Accomodate class namespace introduction in Admin Columns 3.2.x
+if ( class_exists( 'AC\ListScreen\Media' ) ) {
+	/**
+	 * Class Admin Columns List Screen Stub for Admin Columns 3.2.x+
+	 */
+	class AC_Addon_MLA_ListScreen_Stub extends AC\ListScreen\Media {
+	}
+} else {
+	/**
+	 * Class Admin Columns List Screen Stub for Admin Columns 3.1.x-
+	 */
+	class AC_Addon_MLA_ListScreen_Stub extends AC_ListScreen_Media {
+	}
+}
+
 /**
  * Class Admin Columns Addon MLA (Media Library Assistant) List Screen supports the Admin Columns plugin
  *
  * @package Media Library Assistant
  * @since 2.50
  */
-class AC_Addon_MLA_ListScreen extends AC_ListScreen_Media {
+class AC_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen_Stub {
 
 	/**
 	 * Initializes some properties, installs filters and then

@@ -450,7 +450,6 @@ The "mla_target" parameter accepts any value and adds an HTML "target" attribute
 </p>
 <h4>Thumbnail Substitution Support, mla_viewer</h4>
 <p>
-<strong>NOTE: Google discontinued their File Viewer support for thumbnail images some time ago.</strong>
 This solution supports dynamic thumbnail image generation for PDF and Postscript documents on your site's server. You can also assign a "Featured Image" to any Media Library item. For non-image items such as Microsoft Office documents the featured image will replace the MIME-type icon or document title in an <code>[mla_gallery]</code> display. Simply go to the Media/Edit Media screen, scroll down to the "Featured Image" meta box and select an image as you would for a post or page.
 </p>
 <p>
@@ -481,11 +480,15 @@ Ten <code>[mla_gallery]</code> parameters provide an easy way to simulate thumbn
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_viewer_height</td>
-<td>the maximum width in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.</td>
+<td>the maximum height in pixels (default "0") of the thumbnail image. The width (unless also specified) will be adjusted to maintain the page proportions.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_viewer_best_fit</td>
 <td>retain page proportions (default "false") when both height and width are explicitly stated. If "false", the image will be stretched as required to exactly fit the height and width. If "true", the image will be reduced in size to fit within the bounds, but proportions will be preserved. For example, a typical page is 612 pixels wide and 792 pixels tall. If you set width and height to 300 and set best_fit to true, the thumbnail will be reduced to 231 pixels wide by 300 pixels tall.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">size</td>
+<td>You can use <code>size</code> as an alternative to <code>mla_viewer_width</code> and/or <code>mla_viewer_height</code> to set the image dimensions from one of the intermediate sizes your site supports, e.g., "medium" or "large" (but not "full"). If <code>size</code> is present and <code>mla_viewer_best_fit</code> is not, <code>mla_viewer_best_fit</code> will be set to "true".</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_viewer_page</td>
@@ -620,7 +623,7 @@ The Size parameter specifies the image size to use for the thumbnail display; "t
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon_only</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for <strong>ALL</strong> items, image and non-image.</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">none</td>
@@ -822,7 +825,7 @@ In this example, "attachment_tag" is the WordPress taxonomy name/slug for the ta
 The default behavior of the simple taxonomy query will match any of the terms in the list. A special value lets you find items that have no assigned terms in the taxonomy. For example, to find items that have no Att. Tags you can code:
 </p>
 <ul class="mla_settings">
-<li><code>[mla_gallery attachment_tag=no.assigned.terms]</code></li>
+<li><code>[mla_gallery attachment_tag=no.terms.assigned]</code></li>
 </ul>
 <p>
 If you have two or more simple taxonomy queries, they will be joined by "AND". MLA enhances the simple taxonomy query form by providing three additional parameters:
@@ -1132,7 +1135,7 @@ You can use the <code>mla_search_connector</code> and <code>mla_search_fields</c
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_search_fields</td>
-<td>The fields in which to search. Choose from title, name, excerpt, content, file, terms. Searching on alt-text is not supported.</td>
+<td>The fields in which to search. Choose from title, name, excerpt, content, alt-text, file, terms.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_terms_taxonomies</td>
@@ -4201,9 +4204,9 @@ There are fourteen prefix values for field-level parameters. Prefix values must 
 		<br />&nbsp;<br />
 		You can change the term field by adding the field name in parentheses after the taxonomy name. For example, <code>[+terms:attachment_category(slug)+]</code> or <code>[+terms:attachment_category(term_id)+]</code>.
 		<br />&nbsp;<br />
-		You can access fields from a specific term, independent of terms assigned to an item, with a compound name. Append the term slug to the taxonomy slug separated by a period ("."), e.g. <code>[+terms:attachment_category.my-term(slug)+]</code>. You can also pass a term slug to the parameter from the <code>request:</code> or <code>query:</code> arguments. For example, if your shortcode is something like <code>[mla_gallery attachment_category=my-term]</code> you can access the query value as <code>[+terms:attachment_category.[\+query:attachment_category+\](name)+}(slug)+]</code> in a custom markup template. The backslash ("\") characters are required to prevent parsing confusion when a substitution parameter is embedded in another substitution parameter.
+		You can access fields from a specific term, independent of terms assigned to an item, with a compound name. Append the term slug to the taxonomy slug separated by a period ("."), e.g. <code>[+terms:attachment_category.my-term(term_id)+]</code>. <span style="display:none">You can also pass a term slug to the parameter from the <code>request:</code> or <code>query:</code> arguments. For example, if your shortcode is something like <code>[mla_gallery attachment_category=my-term]</code> you can access the query value as <code>[+terms:attachment_category.[\+query:attachment_category+\](name)+}(slug)+]</code> in a custom markup template. The backslash ("\") characters are required to prevent parsing confusion when a substitution parameter is embedded in another substitution parameter.
 		<br />&nbsp;<br />
-		You can use this form in a shortcode parameter such as <code>mla_caption</code> by coding <code>[mla_gallery attachment_category=my-term mla_caption="{+terms:attachment_category.{\\+query:attachment_category+\\}(name)+}(slug)+}" ]</code>. The extra backslash characters are required to pass the parameter through the WordPress shortcode parameter parsing process.
+		You can use this form in a shortcode parameter such as <code>mla_caption</code> by coding <code>[mla_gallery attachment_category=my-term mla_caption="{+terms:attachment_category.{\\+query:attachment_category+\\}(name)+}(slug)+}" ]</code>. The extra backslash characters are required to pass the parameter through the WordPress shortcode parameter parsing process.</span>
 		</td>
 	</tr>
 	<tr>
@@ -5441,6 +5444,13 @@ If you choose the 'or'/'Any phrase' connector and enter 'man "bites dog"' in the
 <p>
 The Search Terms popup window has an additional capability, "Exact match" and a checkbox to activate it. When you check the "Exact" box, each phrase must match the entire text of a term name. For example, if you check "Exact", the phrase "man" will match a term of the same name but not a term named "big man". If you check "Exact" and enter "big man" you will match terms named "big" or "man" <strong>but not</strong> "big man". If you want an exact match on a multi-word term such as "big man", put quotes around the name, i.e., ' "big man" '.
 </p>
+<h4>Excluding phrases</h4>
+<p>
+If you want to exclude items that match a phrase, enclose the phrase in slash ("/") delimiters. For example, enter "/dog/" to exclude terms containing the word dog. To exclude a multi word phrase, enter something like "/bites dog/" to exclude both words or ' /"bites dog"/ ' to exclude the exact phrase. You can combine include and exclude phrases, e.g., something like "man /that/ dog" to select terms containing "man" and "dog" but not containing "that".
+</p>
+<p>
+When you add exclude phrases to your search, the phrases you enter are divided into two sub-values, "positive" and "negative", with everything enclosed by the exclude delmiters going to the negative sub-value and everything else to the positive. Two queries are performed. First, the negative sub-value is used and a list of the item IDs that pass the query is compiled. Second, the positive sub-value is used and items with the "negative" IDs are excluded.
+</p>
 <h4>Entering multiple terms</h4>
 <p>
 The Search Terms popup window has an additional capability and another control to refine it. The additional capability lets you search for multiple terms and the control sets the connector between terms. For example, consider two taxonomies, each with several terms:
@@ -6496,7 +6506,7 @@ You can go to the Settings/Media Library Assistant IPTC/EXIF tab and define a ru
 <li>Click "Add Rule" to save your rule.</li>
 </ol>
 <p>
-If you want to test your work, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has keywords. Click the "Map IPTC/EXIF Metadata" link in the upper right "Save" area of the screen, then look down at the Custom Fields meta box and see if your "Date Time Created" value is present and correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Execute" rollover action for your rule to process all of your images.
+If you want to test your work, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has a "DateTimeOriginal" value. Click the "Map IPTC/EXIF Metadata" link in the upper right "Save" area of the screen, then look down at the Custom Fields meta box and see if your "Date Time Created" value is present and correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Execute" rollover action for your rule to process all of your images.
 </p>
 <p>
 You can use the meta_key, orderby and order parameters to sort an <code>[mla_gallery]</code> by your custom field. For example:<br />

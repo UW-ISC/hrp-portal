@@ -243,6 +243,7 @@ class MLAOptions {
 				$tax_term_search = isset( $current_values['tax_term_search'] ) ? $current_values['tax_term_search'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'];
 				$tax_flat_checklist = isset( $current_values['tax_flat_checklist'] ) ? $current_values['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'];
 				$tax_checked_on_top = isset( $current_values['tax_checked_on_top'] ) ? $current_values['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
+				$tax_checklist_add_term = isset( $current_values['tax_checklist_add_term'] ) ? $current_values['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'];
 				$tax_filter = isset( $current_values['tax_filter'] ) ? $current_values['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 				$tax_metakey_sort = isset( $current_values['tax_metakey_sort'] ) ? $current_values['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 				$tax_metakey = isset( $current_values['tax_metakey'] ) ? $current_values['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
@@ -296,6 +297,7 @@ class MLAOptions {
 						'flat_checklist_disabled' => '',
 						'flat_checklist_value' => 'checked',
 						'checked_on_top_checked' => array_key_exists( $tax_name, $tax_checked_on_top ) ? 'checked=checked' : '',
+						'checklist_add_term_checked' => array_key_exists( $tax_name, $tax_checklist_add_term ) ? 'checked=checked' : '',
 						'filter_checked' => ( $tax_name == $tax_filter ) ? 'checked=checked' : ''
 					);
 
@@ -308,9 +310,7 @@ class MLAOptions {
 					$row .= MLAData::mla_parse_template( $taxonomy_row, $option_values );
 				}
 
-				/*
-				 * Add the "filter on custom field" row
-				 */
+				// Add the "filter on custom field" row
 				$selected = empty( $tax_metakey ) ? 'none' : $tax_metakey;
 				$tax_metakey_options = MLAOptions::mla_compose_custom_field_option_list( $selected, array() );
 
@@ -333,6 +333,7 @@ class MLAOptions {
 					'Term Search' => __( 'Term Search', 'media-library-assistant' ),
 					'Checklist' => __( 'Checklist', 'media-library-assistant' ),
 					'Checked On Top' => __( 'Checked On Top', 'media-library-assistant' ),
+					'Inline Add Term' => __( 'Inline Add Term', 'media-library-assistant' ),
 					'List Filter' => __( 'List Filter', 'media-library-assistant' ),
 					'Taxonomy' => __( 'Taxonomy', 'media-library-assistant' ),
 					'taxonomy_rows' => $row,
@@ -347,6 +348,7 @@ class MLAOptions {
 				$tax_term_search = isset( $args['tax_term_search'] ) ? $args['tax_term_search'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'];
 				$tax_flat_checklist = isset( $args['tax_flat_checklist'] ) ? $args['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'];
 				$tax_checked_on_top = isset( $args['tax_checked_on_top'] ) ? $args['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
+				$tax_checklist_add_term = isset( $args['tax_checklist_add_term'] ) ? $args['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'];
 				$tax_filter = isset( $args['tax_filter'] ) ? $args['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 				$tax_metakey_sort = isset( $args['tax_metakey_sort'] ) ? $args['tax_metakey_sort'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 				$tax_metakey = isset( $args['tax_metakey'] ) ? stripslashes( $args['tax_metakey'] ) : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
@@ -393,12 +395,22 @@ class MLAOptions {
 					}
 				}
 
+
+				foreach ( $tax_checklist_add_term as $tax_name => $tax_value ) {
+					if ( !array_key_exists( $tax_name, $tax_support ) ) {
+						/* translators: 1: taxonomy name */
+						$msg .= '<br>' . sprintf( __( 'Inline Add Term ignored; %1$s not supported.', 'media-library-assistant' ), $tax_name ) . "\r\n";
+						unset( $tax_checklist_add_term[ $tax_name ] );
+					}
+				}
+				
 				$value = array (
 					'tax_support' => $tax_support,
 					'tax_quick_edit' => $tax_quick_edit,
 					'tax_term_search' => $tax_term_search,
 					'tax_flat_checklist' => $tax_flat_checklist,
 					'tax_checked_on_top' => $tax_checked_on_top,
+					'tax_checklist_add_term' => $tax_checklist_add_term,
 					'tax_filter' => $tax_filter,
 					'tax_metakey_sort' => $tax_metakey_sort,
 					'tax_metakey' => $tax_metakey,
@@ -524,7 +536,7 @@ class MLAOptions {
 			case 'render':
 				$current_value = get_user_option( $key );
 
-				if ( false === $current_value ) {
+				if ( empty( $current_value ) ) {
 					$current_value = get_option( 'posts_per_page', $value['std'] );
 				}
 				
@@ -1465,9 +1477,12 @@ return "MLAOptions::mla_custom_field_option_handler( $action, $key ) deprecated.
 				if ( !empty( $new_text ) ) {
 					switch ( $setting_key ) {
 						case 'post_title':
-							if ( ( empty( $post->post_title ) || !$keep_existing ) &&
-							( trim( $new_text ) && ! is_numeric( sanitize_title( $new_text ) ) ) )
+							// wpadmin/includes/media.php function media_handle_upload() eliminates numeric values
+//							if ( ( empty( $post->post_title ) || !$keep_existing ) &&
+//							( trim( $new_text ) && ! is_numeric( sanitize_title( $new_text ) ) ) )
+							if ( empty( $post->post_title ) || !$keep_existing ) {
 								$updates[ $setting_key ] = $new_text;
+							}
 							break;
 						case 'post_name':
 							$updates[ $setting_key ] = wp_unique_post_slug( sanitize_title( $new_text ), $post->ID, $post->post_status, $post->post_type, $post->post_parent);
@@ -1475,7 +1490,8 @@ return "MLAOptions::mla_custom_field_option_handler( $action, $key ) deprecated.
 						case 'image_alt':
 							$old_text = get_metadata( 'post', $post->ID, '_wp_attachment_image_alt', true );
 							if ( empty( $old_text ) || !$keep_existing ) {
-								$updates[ $setting_key ] = $new_text;							}
+								$updates[ $setting_key ] = $new_text;
+							}
 							break;
 						case 'post_excerpt':
 							if ( empty( $post->post_excerpt ) || !$keep_existing ) {

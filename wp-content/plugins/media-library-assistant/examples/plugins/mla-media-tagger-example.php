@@ -13,16 +13,16 @@
  * that are required for the current task have been retained in this plugin.
  *
  * @package MLA Media Tagger Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Media Tagger Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Shows how to use a Custom Field mapping filter to accomplish item-specific database updates.
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2014 David Lingren
 

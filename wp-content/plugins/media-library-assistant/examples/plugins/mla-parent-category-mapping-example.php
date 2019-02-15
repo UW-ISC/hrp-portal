@@ -7,16 +7,16 @@
  * https://wordpress.org/support/topic/all-category-links-working-but-one/
  *
  * @package MLA Parent Category Mapping Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Parent Category Mapping Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Assigns parent term when child term(s) are assigned
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 

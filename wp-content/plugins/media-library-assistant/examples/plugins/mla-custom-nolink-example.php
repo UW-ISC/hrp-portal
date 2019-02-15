@@ -3,16 +3,16 @@
  * Replaces gallery item hyperlinks with simple <img> tags when nolink=true
  *
  * @package MLA Custom Nolink Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Custom Nolink Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Replaces gallery item hyperlinks with simple <img> tags when nolink=true
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

@@ -98,9 +98,6 @@ class Wordpress_Creation_Kit{
 		add_action("wp_ajax_wck_add_meta".$this->args['meta_name'], array( &$this, 'wck_add_meta') );
 		add_action("wp_ajax_wck_update_meta".$this->args['meta_name'], array( &$this, 'wck_update_meta') );
 		add_action("wp_ajax_wck_show_update".$this->args['meta_name'], array( &$this, 'wck_show_update_form') );
-		add_action("wp_ajax_wck_refresh_list".$this->args['meta_name'], array( &$this, 'wck_refresh_list') );
-		add_action("wp_ajax_wck_refresh_entry".$this->args['meta_name'], array( &$this, 'wck_refresh_entry') );
-		add_action("wp_ajax_wck_add_form".$this->args['meta_name'], array( &$this, 'wck_add_form') );
 		add_action("wp_ajax_wck_remove_meta".$this->args['meta_name'], array( &$this, 'wck_remove_meta') );
 		add_action("wp_ajax_wck_reorder_meta".$this->args['meta_name'], array( &$this, 'wck_reorder_meta') );
 
@@ -109,9 +106,6 @@ class Wordpress_Creation_Kit{
 			add_action("wp_ajax_nopriv_wck_add_meta".$this->args['meta_name'], array( &$this, 'wck_add_meta') );
             add_action("wp_ajax_nopriv_wck_update_meta".$this->args['meta_name'], array( &$this, 'wck_update_meta') );
             add_action("wp_ajax_nopriv_wck_show_update".$this->args['meta_name'], array( &$this, 'wck_show_update_form') );
-            add_action("wp_ajax_nopriv_wck_refresh_list".$this->args['meta_name'], array( &$this, 'wck_refresh_list') );
-            add_action("wp_ajax_nopriv_wck_refresh_entry".$this->args['meta_name'], array( &$this, 'wck_refresh_entry') );
-            add_action("wp_ajax_nopriv_wck_add_form".$this->args['meta_name'], array( &$this, 'wck_add_form') );
             add_action("wp_ajax_nopriv_wck_remove_meta".$this->args['meta_name'], array( &$this, 'wck_remove_meta') );
             add_action("wp_ajax_nopriv_wck_reorder_meta".$this->args['meta_name'], array( &$this, 'wck_reorder_meta') );
         }
@@ -170,7 +164,14 @@ class Wordpress_Creation_Kit{
 			}
 			
 			if( $this->args['post_id'] == '' && $this->args['page_template'] == '' ){
-				add_meta_box($this->args['metabox_id'], $this->args['metabox_title'], array( &$this, 'wck_content' ), $this->args['post_type'], $metabox_context, $metabox_priority,  array( 'meta_name' => $this->args['meta_name'], 'meta_array' => $this->args['meta_array']) );
+				$screens = $this->args['post_type'];
+				/* turn this into an array for wp 4.4.0 */
+				global $wp_version;
+				if( version_compare( $wp_version, '4.4.0', '>=' ) && !is_array( $screens ) ) {
+					$screens = array( $screens );
+				}
+				$screens = apply_filters( 'wck_filter_add_meta_box_screens', $screens );
+				add_meta_box($this->args['metabox_id'], $this->args['metabox_title'], array( &$this, 'wck_content' ), $screens, $metabox_context, $metabox_priority,  array( 'meta_name' => $this->args['meta_name'], 'meta_array' => $this->args['meta_array']) );
 				/* add class to meta box */
 				add_filter( "postbox_classes_".$this->args['post_type']."_".$this->args['metabox_id'], array( &$this, 'wck_add_metabox_classes' ) );
 			}
@@ -392,7 +393,7 @@ class Wordpress_Creation_Kit{
                             $value = null;
                             /* see if we have any posted values */
                             if( !empty( $_GET['postedvalues'] ) ){
-                                $posted_values = unserialize( urldecode( base64_decode( $_GET['postedvalues'] ) ) );
+                                $posted_values = json_decode( urldecode( base64_decode( $_GET['postedvalues'] ) ) , true);
 								if( !empty( $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
                                 	$value = $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
                             }
@@ -752,8 +753,8 @@ class Wordpress_Creation_Kit{
         wp_enqueue_script( 'jquery-ui-dialog' );
         wp_enqueue_style( 'wp-jquery-ui-dialog' );
 
-		wp_enqueue_script('wordpress-creation-kit', plugins_url('/wordpress-creation-kit.js', __FILE__), array('jquery', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable' ) );
-		wp_register_style('wordpress-creation-kit-css', plugins_url('/wordpress-creation-kit.css', __FILE__));
+		wp_enqueue_script('wordpress-creation-kit', plugins_url('/wordpress-creation-kit.js', __FILE__), array('jquery', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable' ), WCK_PLUGIN_VERSION );
+		wp_register_style('wordpress-creation-kit-css', plugins_url('/wordpress-creation-kit.css', __FILE__), array(), WCK_PLUGIN_VERSION );
 		wp_enqueue_style('wordpress-creation-kit-css');
 		
 		// wysiwyg				
@@ -919,8 +920,13 @@ class Wordpress_Creation_Kit{
 		    $results = array( $values );
         else
             $results[] = $values;
-		
-		do_action( 'wck_before_add_meta', $meta, $id, $values );
+
+		/* make sure this does not output anything so it won't break the json response below
+		will keep it do_action for compatibility reasons
+		 */
+		ob_start();
+			do_action( 'wck_before_add_meta', $meta, $id, $values );
+		$wck_before_add_meta = ob_get_clean(); //don't output it
 		
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -955,8 +961,12 @@ class Wordpress_Creation_Kit{
 				}
 			}
 		}
-		
-		exit;
+
+		$entry_list = $this->wck_refresh_list( $meta, $id );
+		$add_form = $this->wck_add_form( $meta, $id );
+
+		header( 'Content-type: application/json' );
+		die( json_encode( array( 'entry_list' => $entry_list, 'add_form' => $add_form ) ) );
 	}
 
 	/* ajax update a reccord in the meta */
@@ -1000,8 +1010,13 @@ class Wordpress_Creation_Kit{
 			$results = get_option( $meta );
 		
 		$results[$element_id] = $values;
-
-		do_action( 'wck_before_update_meta', $meta, $id, $values, $element_id );
+		
+		/* make sure this does not output anything so it won't break the json response below
+		will keep it do_action for compatibility reasons
+		 */
+		ob_start();
+			do_action( 'wck_before_update_meta', $meta, $id, $values, $element_id );
+		$wck_before_update_meta = ob_get_clean(); //don't output it
 		
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -1036,69 +1051,48 @@ class Wordpress_Creation_Kit{
 				}
 			}
 		}
-		
-		exit;
+
+		$entry_content = $this->wck_refresh_entry( $meta, $id, $element_id );
+
+		header( 'Content-type: application/json' );
+		die( json_encode( array( 'entry_content' => $entry_content ) ) );
 	}
 
-	/* ajax to refresh the meta content */
-	function wck_refresh_list(){
-		if( isset( $_POST['meta'] ) )
-			$meta = sanitize_text_field( $_POST['meta'] );
-		else 
-			$meta = '';
-		if( isset( $_POST['id'] ) )
-			$id = absint($_POST['id']);
-		else 
-			$id = '';
-		echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']);
-		
-		do_action( "wck_refresh_list_{$meta}", $id );
-		
-		exit;
+	/* function to output the the meta content list */
+	function wck_refresh_list( $meta = '', $id = '' ){
+		ob_start();		
+			echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']);
+			do_action( "wck_refresh_list_{$meta}", $id );
+		$entry_list = ob_get_clean();
+
+		return $entry_list;
 	}
 	
-	/* ajax to refresh an entry content */
-	function wck_refresh_entry(){
-		if( isset( $_POST['meta'] ) )
-			$meta = sanitize_text_field( $_POST['meta'] );
-		else 
-			$meta = '';
-		if( isset( $_POST['id'] ) )
-			$id = absint( $_POST['id'] );
-		else
-			$id = '';
-		if( isset( $_POST['element_id'] ) )
-			$element_id = absint( $_POST['element_id'] );
-		else
-			$element_id = '';
-		
+	/* function to return an entry content */
+	function wck_refresh_entry( $meta = '', $id = '', $element_id = '' ){
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
 		else if ( $this->args['context'] == 'option' )
 			$results = get_option( $meta );
-		
-		echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id );
-		
-		do_action( "wck_refresh_entry_{$meta}", $id );
-		
-		exit;
+
+		ob_start();
+			echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id );
+			do_action( "wck_refresh_entry_{$meta}", $id );
+		$entry_content = ob_get_clean();
+
+		return $entry_content;
 	}
 	
-	/* ajax to add the form for single */
-	function wck_add_form(){
-		if( !empty( $_POST['meta'] ) )
-			$meta = sanitize_text_field( $_POST['meta'] );
-		else
-			$meta = '';
-		if( !empty( $_POST['id'] ) )
-			$id = absint( $_POST['id'] );
-		else
-			$id = '';
+	/* function that returns the form for single */
+	function wck_add_form( $meta = '', $id = '' ){
 		$post = get_post($id);
-		self::create_add_form($this->args['meta_array'], $meta, $post );
-		do_action( "wck_ajax_add_form_{$meta}", $id );
+
+		ob_start();
+			self::create_add_form($this->args['meta_array'], $meta, $post );
+			do_action( "wck_ajax_add_form_{$meta}", $id );
+		$add_form = ob_get_clean();
 		
-		exit;
+		return $add_form;		
 	}
 	
 
@@ -1150,8 +1144,13 @@ class Wordpress_Creation_Kit{
 		unset($results[$element_id]);
 		/* reset the keys for the array */
 		$results = array_values($results);
-		
-		do_action( 'wck_before_remove_meta', $meta, $id, $element_id );
+
+		/* make sure this does not output anything so it won't break the json response below
+		will keep it do_action for compatibility reasons
+		 */
+		ob_start();
+			do_action( 'wck_before_remove_meta', $meta, $id, $element_id );
+		$wck_before_remove_meta = ob_get_clean(); //don't output it
 		
 		if( $this->args['context'] == 'post_meta' )
 			update_post_meta($id, $meta, $results);
@@ -1222,8 +1221,12 @@ class Wordpress_Creation_Kit{
 			}
 
 		}
-		
-		exit;
+
+		$entry_list = $this->wck_refresh_list( $meta, $id );
+		$add_form = $this->wck_add_form( $meta, $id );
+
+		header( 'Content-type: application/json' );
+		die( json_encode( array( 'entry_list' => $entry_list, 'add_form' => $add_form ) ) );
 	}
 
 
@@ -1248,7 +1251,12 @@ class Wordpress_Creation_Kit{
 			die( json_encode( $error ) );
 		}
 		
-		do_action( 'wck_before_reorder_meta', $meta, $id, $elements_id );
+		/* make sure this does not output anything so it won't break the json response below
+		will keep it do_action for compatibility reasons
+		 */
+		ob_start();
+			do_action( 'wck_before_reorder_meta', $meta, $id, $elements_id );
+		$wck_before_reorder_meta = ob_get_clean(); //don't output it
 		
 		if( $this->args['context'] == 'post_meta' )
 			$results = get_post_meta($id, $meta, true);
@@ -1303,9 +1311,11 @@ class Wordpress_Creation_Kit{
 				}
 			}
 			
-		}		
-		
-		exit;
+		}
+
+		$entry_list = $this->wck_refresh_list( $meta, $id );
+		header( 'Content-type: application/json' );
+		die( json_encode( array( 'entry_list' => $entry_list ) ) );
 	}
 
     /**
@@ -1424,7 +1434,7 @@ class Wordpress_Creation_Kit{
                 $error_messages .= $wck_single_forms_error['error'];
                 $error_fields .= implode( ',', $wck_single_forms_error['errorfields'] ).',';
             }
-            wp_safe_redirect( add_query_arg( array( 'wckerrormessages' => base64_encode( urlencode( $error_messages ) ), 'wckerrorfields' => base64_encode( urlencode( $error_fields ) ), 'postedvalues' => base64_encode( urlencode( serialize( $wck_single_forms_posted_values ) ) ) ), $_SERVER["HTTP_REFERER"] ) );
+            wp_safe_redirect( add_query_arg( array( 'wckerrormessages' => base64_encode( urlencode( $error_messages ) ), 'wckerrorfields' => base64_encode( urlencode( $error_fields ) ), 'postedvalues' => base64_encode( urlencode( json_encode( $wck_single_forms_posted_values ) ) ) ), $_SERVER["HTTP_REFERER"] ) );
             exit;
         }
     }

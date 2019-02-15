@@ -26,7 +26,8 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen {
 
 		add_action( 'acp/column_types', 'ACP_Addon_MLA_ListScreen::inline_column_types', 10, 1 );
 		add_action( 'ac/column_types', 'ACP_Addon_MLA_ListScreen::inline_column_types', 10, 1 );
-		add_filter( 'acp/editing/model', 'ACP_Addon_MLA_ListScreen::add_editing_strategy', 10, 2 );
+//		add_filter( 'acp/editing/model', 'ACP_Addon_MLA_ListScreen::add_editing_strategy', 10, 2 );
+		add_filter( 'acp/editing/model', 'ACP_Addon_MLA_ListScreen::add_editing_strategy', 10, 1 );
 	}
 
 	/**
@@ -54,9 +55,9 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen {
 	 * @since 2.50
 	 *
 	 * @param ACP_Editing_Model $model
-	 * @param AC_Column $column
 	 */
-	public static function add_editing_strategy( $model, $column ) {
+	public static function add_editing_strategy( $model /*, $column */ ) {
+	// @ param AC_Column $column added after 4.0.3 and before 4.0.14 - not used by MLA
 		$model->set_strategy( new ACP_Addon_MLA_Editing_Strategy( $model ) );
 		return $model;
 	}

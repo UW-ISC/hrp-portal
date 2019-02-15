@@ -23,13 +23,27 @@ class Redirection_Api_Redirect extends Redirection_Api_Filter_Route {
 	}
 
 	public function route_create( WP_REST_Request $request ) {
-		$redirect = Red_Item::create( $request->get_params() );
+		$params = $request->get_params();
+		$urls = array();
 
-		if ( is_wp_error( $redirect ) ) {
-			return $this->add_error_details( $redirect, __LINE__ );
+		if ( isset( $params['url'] ) ) {
+			$urls = array( $params['url'] );
+
+			if ( is_array( $params['url'] ) ) {
+				$urls = $params['url'];
+			}
+
+			foreach ( $urls as $url ) {
+				$params['url'] = $url;
+				$redirect = Red_Item::create( $params );
+
+				if ( is_wp_error( $redirect ) ) {
+					return $this->add_error_details( $redirect, __LINE__ );
+				}
+			}
 		}
 
-		return $this->route_list( $request );;
+		return $this->route_list( $request );
 	}
 
 	public function route_update( WP_REST_Request $request ) {
@@ -60,11 +74,11 @@ class Redirection_Api_Redirect extends Redirection_Api_Filter_Route {
 				if ( $redirect ) {
 					if ( $action === 'delete' ) {
 						$redirect->delete();
-					} else if ( $action === 'disable' ) {
+					} elseif ( $action === 'disable' ) {
 						$redirect->disable();
-					} else if ( $action === 'enable' ) {
+					} elseif ( $action === 'enable' ) {
 						$redirect->enable();
-					} else if ( $action === 'reset' ) {
+					} elseif ( $action === 'reset' ) {
 						$redirect->reset();
 					}
 				}

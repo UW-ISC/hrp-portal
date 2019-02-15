@@ -33,16 +33,16 @@
  * https://wordpress.org/support/topic/mla-shortcode-to-show-images-of-all-posts-of-a-wp-category
  *
  * @package Insert Fixit
- * @version 1.09
+ * @version 1.10
  */
 
 /*
 Plugin Name: MLA Insert Fixit
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.09
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.10
+Author URI: http://davidlingren.com/
 
 Copyright 2015-2018 David Lingren
 

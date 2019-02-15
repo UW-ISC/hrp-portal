@@ -18,7 +18,6 @@ class URE_Base_Lib {
     protected $options = array(); // plugin options data
     protected $multisite = false;
     protected $active_for_network = false;
-    protected $blog_ids = null;
     protected $main_blog_id = 0;
 
     
@@ -40,8 +39,7 @@ class URE_Base_Lib {
 
         $this->multisite = function_exists('is_multisite') && is_multisite();
         if ($this->multisite) {
-            $this->blog_ids = $this->get_blog_ids();
-            // get Id of 1st (main) blog
+            // get Id of the 1st (main) blog
             $this->main_blog_id = $this->get_main_site();
         }
 
@@ -87,7 +85,7 @@ class URE_Base_Lib {
      * @global wpdb $wpdb
      * @return array
      */
-    protected function get_blog_ids() {
+    public function get_blog_ids() {
         global $wpdb;
 
         $network = get_current_site();        
@@ -121,7 +119,7 @@ class URE_Base_Lib {
 
         if ($message) {
             if ($error_style) {
-                echo '<div id="message" class="error" >';
+                echo '<div id="message" class="error">';
             } else {
                 echo '<div id="message" class="updated fade">';
             }
@@ -183,6 +181,7 @@ class URE_Base_Lib {
     }
     // end of get_request_var()
 
+    
     /**
      * returns option value for option with name in $option_name
      */
@@ -276,8 +275,12 @@ class URE_Base_Lib {
      */
     public function get_short_list_str($full_list, $items_count=3) {
      
+        if (empty($full_list) || !is_array($full_list)) {
+            return '...';
+        }
+        
         $short_list = array(); $i = 0;
-        foreach($full_list as $key=>$item) {            
+        foreach($full_list as $item) {            
             if ($i>=$items_count) {
                 break;
             }
@@ -287,7 +290,7 @@ class URE_Base_Lib {
         
         $str = implode(', ', $short_list);
         if ($items_count<count($full_list)) {
-            $str .= '...';
+            $str .= ', ...';
         }
         
         return $str;
@@ -348,4 +351,4 @@ class URE_Base_Lib {
     // end of __wakeup()
 
 }
-// end of Garvs_WP_Lib class
+// end of URE_Base_Lib class

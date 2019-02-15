@@ -15,16 +15,16 @@
  * https://wordpress.org/support/topic/exiftemplate-value-editing
  *
  * @package MLA jhdean Mapping Hooks Example
- * @version 1.04
+ * @version 1.05
  */
 
 /*
 Plugin Name: MLA jhdean Mapping Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Add or remove Title hyperlink, replace JIG Link; for Jeff Dean.
 Author: David Lingren
-Version: 1.04
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.05
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2017 David Lingren
 

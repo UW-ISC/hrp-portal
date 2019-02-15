@@ -14,16 +14,16 @@
  * https://wordpress.org/support/topic/how-to-add-a-regenerate-thumbnails-plugin-action-to-mla-interface
  *
  * @package MLA Regenerate Thumbnails Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Regenerate Thumbnails Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds "Regenerate Thumbnails" actions to rollover actions and Bulk Edit dropdown
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

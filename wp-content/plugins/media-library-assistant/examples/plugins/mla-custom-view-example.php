@@ -10,16 +10,16 @@
  * https://wordpress.org/support/topic/filter-by-post-status/
  *
  * @package MLA Custom View Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name:MLA Custom View Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds a Media/Assistant submenu table view for items attached to non-published parent posts/pages.
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

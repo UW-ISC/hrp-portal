@@ -3,16 +3,16 @@
  * Supports WordPress SEO by Yoast Page Analysis and XMP Sitemap generation
  *
  * @package MLA Yoast SEO Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
 Plugin Name: MLA Yoast SEO Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Supports WordPress SEO by Yoast Page Analysis and XMP Sitemap generation
 Author: David Lingren
-Version: 1.10
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.11
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

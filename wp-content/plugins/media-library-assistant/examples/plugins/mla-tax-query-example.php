@@ -54,16 +54,16 @@
  * https://wordpress.org/support/topic/504-time-out-issue/
  *
  * @package MLA tax query Example
- * @version 1.08
+ * @version 1.09
  */
 
 /*
 Plugin Name: MLA tax query Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Replaces the WP_Query tax_query with a more efficient, direct SQL query
 Author: David Lingren
-Version: 1.08
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.09
+Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2017 David Lingren
 

@@ -672,6 +672,128 @@ class MLAQuery {
 	} // mla_custom_field_option_value
 
 	/**
+	 * Separate negative ("NOT IN") search string phrases from positive phrases
+	 *
+	 * @since 2.78
+	 *
+	 * @uses	array	self::$search_parameters
+	 *
+	 * @param	string	phrases, e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 *
+	 * @return	array	( 'original' => all phrases, 'positive' => positive phrases, 'negative' => negative phrases )
+	 */
+	private static function _divide_search_string( $whole_string ) {
+		$separator = ','; // TODO default value
+		$negative_delimiter = '/'; // TODO default value
+		$phrases = array( 'original' => $whole_string, 'positive' => '', 'negative' => '' );
+		
+		$separator_list = " \n\t\r\0\x0B";
+		if ( false === strpos( $separator_list, $separator ) ) {
+			$separator_list .= $separator;
+		} else {
+			$separator_list .= ',';
+		}
+
+		$in_negative = false;
+		$current_quote = '';
+		$in_trim = false;
+		$current_separator = ' ';
+		$argument = '';
+		$index = 0;
+		
+		while ( $index < strlen( $whole_string ) ) {
+			$byte = $whole_string[ $index++ ];
+//error_log( __LINE__ . " MLAQuery::_divide_search_string byte |{$byte}| in_trim |{$in_trim}| in_negative |{$in_negative}| current_quote |{$current_quote}| current_separator |{$current_separator}| argument |{$argument}| phrases = " . var_export( $phrases, true ), 0 );
+
+			// Are we between arguments?
+			if ( ( false !== strpos( $separator_list, $byte ) ) && !( $in_negative || $current_quote ) ) {
+				$in_trim = true;
+
+				if ( $separator === $byte ) {
+					$current_separator = $separator;
+				}
+				
+				continue;
+			} elseif ( $in_trim ) {
+				// Have we seen a positive argument?
+				if ( strlen( $argument ) ) {
+					$phrases['positive'] .= $argument;
+					$argument = '';
+				}
+
+				if ( strlen( $phrases['positive'] ) ) {
+					$phrases['positive'] .= $current_separator;
+				}
+
+				if ( strlen( $phrases['negative'] ) ) {
+					$phrases['negative'] .= $current_separator;
+				}
+
+				$current_separator = ' ';
+				$in_trim = false;
+			}
+
+			// Are we finishing a negative phrase?
+			if ( $in_negative && ( $negative_delimiter == $byte ) ) {
+				if ( strlen( $argument ) ) {
+					$phrases['negative'] .= $argument;
+					$argument = '';
+				}
+
+				$in_negative = false;
+				continue;
+			}
+
+			// Are we finishing a quoted phrase?
+			if ( $current_quote == $byte ) {
+				if ( strlen( $argument ) ) {
+					if ( $in_negative ) {
+						$phrases['negative'] .= $current_quote . $argument . $current_quote;
+					} else {
+						$phrases['positive'] .= $current_quote . $argument . $current_quote;
+					}
+
+					$argument = '';
+				}
+
+				$current_quote = '';
+				continue;
+			}
+
+			// Are we starting a negative phrase?
+			if ( ( $negative_delimiter == $byte ) && !$current_quote ) {
+				if ( strlen( $argument ) ) {
+					$phrases['positive'] .= $argument;
+					$argument = '';
+				}
+
+				$in_negative = true;
+				continue;
+			}
+			
+			// Are we starting a quoted phrase?
+			if ( !$current_quote && ( '\'' == $byte || '"' == $byte ) ) {
+				$current_quote = $byte;
+				continue;
+			}
+			
+			// Accumulate a phrase
+			$argument .= $byte;
+		} // index < strlen
+
+		// Close out the final argument
+		if ( strlen( $argument ) ) {
+			// Restore quotes for word-boundary check
+			$phrases['positive'] .= $argument;
+		}
+		
+//error_log( __LINE__ . ' MLAQuery::_divide_search_string phrases = ' . var_export( $phrases, true ), 0 );
+
+		return $phrases;
+		return array( 'original' => 'america /statue/', 'positive' => 'america', 'negative' => 'statue' );
+	} // _divide_search_string
+
+	/**
 	 * Sanitize and expand query arguments from request variables
 	 *
 	 * Prepare the arguments for WP_Query.
@@ -696,9 +818,7 @@ class MLAQuery {
 			return NULL;
 		}
 
-		/*
-		 * Make sure the current orderby choice still exists or revert to default.
-		 */
+		// Make sure the current orderby choice still exists or revert to default.
 		$default_orderby = array_merge( array( 'none' => array('none',false) ), self::mla_get_sortable_columns( ) );
 		$current_orderby = MLACore::mla_get_option( MLACoreOptions::MLA_DEFAULT_ORDERBY );
 		$found_current = false;
@@ -881,7 +1001,7 @@ class MLAQuery {
 					break;
 				case 'mla-metakey':
 				case 'mla-metavalue':
-					$clean_request[ $key ] = stripslashes( $value );
+					$clean_request[ $key ] = stripslashes( html_entity_decode( $value ) );
 					break;
 				case 'meta_query':
 					if ( ! empty( $value ) ) {
@@ -934,22 +1054,16 @@ class MLAQuery {
 			unset( $clean_request['debug'] );
 		}
 
-		/*
-		 * We must patch the WHERE clause if there are leading spaces in the meta_value
-		 */
+		// We must patch the WHERE clause if there are leading spaces in the meta_value
 		if ( isset( $clean_request['mla-metavalue'] ) && ( 0 < strlen( $clean_request['mla-metavalue'] ) ) && ( ' ' == $clean_request['mla-metavalue'][0] ) ) {
 			self::$query_parameters['mla-metavalue'] = $clean_request['mla-metavalue'];
 		}
 
-		/*
-		 * We will handle "Terms Search" in the mla_query_posts_search_filter.
-		 */
+		// We will handle "Terms Search" in the mla_query_posts_search_filter.
 		if ( isset( $clean_request['mla_terms_search'] ) ) {
 			self::$search_parameters['mla_terms_search'] = $clean_request['mla_terms_search'];
 
-			/*
-			 * The Terms Search overrides any terms-based keyword search for now; too complicated.
-			 */
+			// The Terms Search overrides any terms-based keyword search for now; too complicated.
 			if ( isset( $clean_request['mla_search_fields'] ) ) {
 				foreach ( $clean_request['mla_search_fields'] as $index => $field ) {
 					if ( 'terms' == $field ) {
@@ -959,9 +1073,7 @@ class MLAQuery {
 			}
 		}
 
-		/*
-		 * We will handle keyword search in the mla_query_posts_search_filter.
-		 */
+		// We will handle keyword search in the mla_query_posts_search_filter.
 		if ( isset( $clean_request['s'] ) ) {
 			self::$search_parameters['s'] = $clean_request['s'];
 			self::$search_parameters['mla_search_fields'] = apply_filters( 'mla_list_table_search_filter_fields', $clean_request['mla_search_fields'], array( 'title', 'name', 'alt-text', 'excerpt', 'content', 'file' ,'terms' ) );
@@ -1033,9 +1145,7 @@ class MLAQuery {
 			} // switch $orderby
 		}
 
-		/*
-		 * Ignore incoming paged value; use offset and count instead
-		 */
+		// Ignore incoming paged value; use offset and count instead
 		if ( ( (int) $count ) > 0 ) {
 			$clean_request['offset'] = $offset;
 			$clean_request['posts_per_page'] = $count;
@@ -1103,7 +1213,43 @@ class MLAQuery {
 			unset( $clean_request['mla-metakey'] );
 			unset( $clean_request['mla-metavalue'] );
 		} // isset mla_tax
+		
+		if ( !empty( self::$search_parameters['s'] ) ) {
+			$search_phrases = self::_divide_search_string( self::$search_parameters['s'] );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_phrases = " . var_export( $search_phrases, true ), 0 );
+		
+			if ( !empty( $search_phrases['negative'] ) ) {
+				self::$search_parameters['s'] = $search_phrases['negative'];
+				$clean_request['fields'] = 'ids';
+				$excluded_items = self::_execute_list_table_query( $clean_request );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query posts = " . var_export( $excluded_items->posts, true ), 0 );
+				unset( $clean_request['fields'] );
+				self::$search_parameters['s'] = $search_phrases['positive'];
+				self::$search_parameters['exclude'] = implode( ',', $excluded_items->posts);
+			}
+		}
+		
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query clean_request = " . var_export( $clean_request, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_parameters = " . var_export( self::$search_parameters, true ), 0 );
 
+		if ( !empty( self::$search_parameters['mla_terms_search'] ) ) {
+			$search_phrases = self::_divide_search_string( self::$search_parameters['mla_terms_search']['phrases'] );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query mla_terms_search search_phrases = " . var_export( $search_phrases, true ), 0 );
+		
+			if ( !empty( $search_phrases['negative'] ) ) {
+				self::$search_parameters['mla_terms_search']['phrases'] = $search_phrases['negative'];
+				$clean_request['fields'] = 'ids';
+				$excluded_items = self::_execute_list_table_query( $clean_request );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query mla_terms_search posts = " . var_export( $excluded_items->posts, true ), 0 );
+				unset( $clean_request['fields'] );
+				unset( self::$search_parameters['tax_terms_count'] );
+				self::$search_parameters['mla_terms_search']['phrases'] = $search_phrases['positive'];
+				self::$search_parameters['mla_terms_search']['exclude'] = implode( ',', $excluded_items->posts );
+			}
+		}
+		
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query clean_request = " . var_export( $clean_request, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_parameters = " . var_export( self::$search_parameters, true ), 0 );
 		return $clean_request;
 	}
 
@@ -1135,9 +1281,7 @@ class MLAQuery {
 			add_filter( 'relevanssi_admin_search_ok', 'MLAQuery::mla_query_relevanssi_admin_search_ok_filter' );
 		}
 
-		/*
-		 * Remove WP Media Folders actions from MLA queries for the Media/Assistant submenu table
-		 */
+		// Remove WP Media Folders actions from MLA queries for the Media/Assistant submenu table
 		if ( isset( $GLOBALS['wp_media_folder'] ) && isset( $_REQUEST['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_REQUEST['page'] ) ) {
 			$wpmf_pre_get_posts_priority = has_filter( 'pre_get_posts', array( $GLOBALS['wp_media_folder'], 'wpmf_pre_get_posts' ) );
 			$wpmf_pre_get_posts1_priority = has_filter( 'pre_get_posts', array( $GLOBALS['wp_media_folder'], 'wpmf_pre_get_posts1' ) );
@@ -1152,8 +1296,7 @@ class MLAQuery {
 		}
 
 		if ( isset( self::$query_parameters['debug'] ) ) {
-			global $wp_filter;
-			$debug_array = array( 'posts_search' => $wp_filter['posts_search'], 'posts_join' => $wp_filter['posts_join'], 'posts_where' => $wp_filter['posts_where'], 'posts_orderby' => $wp_filter['posts_orderby'] );
+			$debug_array = array( 'posts_search' => MLACore::mla_decode_wp_filter('posts_search'), 'posts_join' => MLACore::mla_decode_wp_filter('posts_join'), 'posts_where' => MLACore::mla_decode_wp_filter('posts_where'), 'posts_orderby' => MLACore::mla_decode_wp_filter('posts_orderby') );
 
 			/* translators: 1: DEBUG tag 2: query filter details */
 			MLACore::mla_debug_add( sprintf( _x( '%1$s: _execute_list_table_query $wp_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
@@ -1285,7 +1428,7 @@ class MLAQuery {
 	 * @return	array	individual arguments, e.g. array( 0 => '"a phrase"', 1 => 'separate', 2 => 'phrase' )
 	 */
 	private static function _parse_terms_search( $whole_string, $delimiter = ',', $full_parse = false ) {
-		$trim_list = " \n\t\r\0\x0B,";
+		$trim_list = " \n\t\r\0\x0B,"; // space,line feed,tab,carriage return, null,vertical tab,comma
 		if ( false === strpos( $trim_list, $delimiter ) ) {
 			$trim_list .= $delimiter;
 		}
@@ -1293,6 +1436,7 @@ class MLAQuery {
 		$whole_string = trim( $whole_string, $trim_list );
 		$phrases = array();
 
+//error_log( __LINE__ . " MLAQuery::_parse_terms_search( {$full_parse} ) whole_string = " . var_export( $whole_string, true ), 0 );
 		while ( strlen( $whole_string ) ) {
 			$argument = '';
 			$index = 0;
@@ -1344,7 +1488,10 @@ class MLAQuery {
 				$phrases[] = $current_delimiter . $argument . $current_delimiter;
 			}
 
+//error_log( __LINE__ . " MLAQuery::_parse_terms_search( {$index} ) whole_string = " . var_export( $whole_string, true ), 0 );
 			$whole_string = trim( substr( $whole_string, $index ), $trim_list );
+//error_log( __LINE__ . ' MLAQuery::_parse_terms_search whole_string = ' . var_export( $whole_string, true ), 0 );
+//error_log( __LINE__ . ' MLAQuery::_parse_terms_search phrases = ' . var_export( $phrases, true ), 0 );
 		} // strlen( $whole_string )
 
 		return $phrases;
@@ -1363,12 +1510,14 @@ class MLAQuery {
 	 * @return	integer	Taxonomy JOIN clauses required. Updates $tax_clause as well
 	 */
 	private static function _generate_tax_clause( $terms_search_parameters, &$tax_clause ) {
+//error_log( __LINE__ . ' MLAQuery::_generate_tax_clause terms_search_parameters = ' . var_export( $terms_search_parameters, true ), 0 );
 		$term_delimiter = isset( $terms_search_parameters['term_delimiter'] ) ? $terms_search_parameters['term_delimiter'] : ',';
 		$phrase_delimiter = isset( $terms_search_parameters['phrase_delimiter'] ) ? $terms_search_parameters['phrase_delimiter'] : ' ';
 		$tax_clause = '';
 		$tax_index = 0;
 
 		$terms = self::_parse_terms_search( $terms_search_parameters['phrases'], $term_delimiter );
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters terms = " . var_export( $terms, true ), 0 );
 		if ( 1 < count( $terms ) ) {
 			$terms_connector = '(';			
 		} else {
@@ -1380,14 +1529,17 @@ class MLAQuery {
 
 			// Find the quoted phrases for a word-boundary check
 			$phrases = self::_parse_terms_search( $term, $phrase_delimiter, false );
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters( {$term} ) phrases = " . var_export( $phrases, true ), 0 );
 			$quoted = array();
 			foreach ( $phrases as $index => $phrase ) {
 				$delimiter = substr( $phrase, 0, 1 );
 				$quoted[ $index ] = ( '"' == $delimiter ) || ( "'" == $delimiter );
 			}
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters( {$term} ) quoted = " . var_export( $quoted, true ), 0 );
 
 			// Strip delimiters and escape backslashes
 			$phrases = self::_parse_terms_search( $term, $phrase_delimiter, true );
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters( {$term} ) phrases = " . var_export( $phrases, true ), 0 );
 
 			$tax_terms = array();
 			$tax_counts = array();
@@ -1429,6 +1581,7 @@ class MLAQuery {
 					} // quoted phrase
 				} // not exact
 
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause terms_search_parameters( {$index}, {$phrase} ) the_terms = " . var_export( $the_terms, true ), 0 );
 				foreach( $the_terms as $the_term ) {
 					$tax_terms[ $the_term->taxonomy ][ $the_term->term_id ] = (integer) $the_term->term_taxonomy_id;
 
@@ -1440,9 +1593,8 @@ class MLAQuery {
 				}
 			} // foreach phrase
 
-			/*
-			 * For the AND connector, a taxonomy term must have all of the search terms within it
-			 */
+//error_log( __LINE__ . ' MLAQuery::_generate_tax_clause tax_counts = ' . var_export( $tax_counts, true ), 0 );
+			// For the AND connector, a taxonomy term must have all of the search terms within it
 			if ( 'AND' == $terms_search_parameters['radio_phrases'] ) {
 				$search_term_count = count( $phrases );
 				foreach ($tax_terms as $taxonomy => $term_ids ) {
@@ -1460,6 +1612,7 @@ class MLAQuery {
 				} // foreach taxonomy
 			} // AND (i.e., All phrases)
 
+//error_log( __LINE__ . ' MLAQuery::_generate_tax_clause tax_terms = ' . var_export( $tax_terms, true ), 0 );
 			if ( empty( $tax_terms ) ) {
 				if ( 'AND' == $terms_search_parameters['radio_terms'] ) {
 					$tax_clause = '';
@@ -1494,6 +1647,7 @@ class MLAQuery {
 			$tax_index = 0;
 		};
 
+//error_log( __LINE__ . " MLAQuery::_generate_tax_clause( {$tax_index} ) tax_clause = " . var_export( $tax_clause, true ), 0 );
 		return $tax_index;
 	}
 
@@ -1517,14 +1671,19 @@ class MLAQuery {
 		$tax_connector = 'AND';
 		$tax_index = 0;
 
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter search_string = " . var_export( $search_string, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter search_parameters = " . var_export( self::$search_parameters, true ), 0 );
 		// Process the Terms Search arguments, if present.
 		if ( isset( self::$search_parameters['mla_terms_search']['phrases'] ) ) {
 			self::$search_parameters['tax_terms_count'] = self::_generate_tax_clause( self::$search_parameters['mla_terms_search'], $tax_clause );
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter tax_clause = " . var_export( $tax_clause, true ), 0 );
+			
+			if ( '1=0' === $tax_clause && !empty( self::$search_parameters['mla_terms_search']['exclude'] ) ) {
+				$tax_clause = '';
+			}
 		}
 
-		/*
-		 * Process the keyword search argument, if present.
-		 */
+		// Process the keyword search argument, if present.
 		if ( ! empty( self::$search_parameters['s'] ) ) {
 			// WordPress v3.7 says: there are no line breaks in <input /> fields
 			$keyword_string = stripslashes( str_replace( array( "\r", "\n" ), '', self::$search_parameters['s'] ) );
@@ -1537,6 +1696,7 @@ class MLAQuery {
 				preg_match_all('/".*?("|$)|((?<=[\t ",+])|^)[^\t ",+]+/', $keyword_string, $matches);
 				$keyword_array = array_map( 'MLAQuery::mla_search_terms_tidy', $matches[0]);
 				$numeric_array = array_filter( $keyword_array, 'is_numeric' );
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter keyword_array = " . var_export( $keyword_array, true ), 0 );
 
 				/*
 				 * If all the "keywords" are numeric, interpret it/them as the ID(s) of a specific attachment
@@ -1622,6 +1782,7 @@ class MLAQuery {
 
 				if ( $allow_terms_search ) {
 					self::$search_parameters['tax_terms_count'] = self::_generate_tax_clause( array( 'phrases' => $keyword_string, 'radio_phrases' => self::$search_parameters['mla_search_connector'], 'radio_terms' => self::$search_parameters['mla_search_connector'], 'taxonomies' => self::$search_parameters['mla_search_taxonomies'] ), $tax_clause );
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter tax_clause = " . var_export( $tax_clause, true ), 0 );
 
 					if ( '1=0' === $tax_clause ) {
 						// If "Terms" is the only field and no terms are present, the search must fail.
@@ -1660,6 +1821,21 @@ class MLAQuery {
 			}
 		} // debug
 
+		// Remove posts containing "negative" search phrases
+		$excludes = array();
+		if ( !empty( self::$search_parameters['exclude'] ) ) {
+			$excludes[] = self::$search_parameters['exclude'];
+		}
+		
+		if ( !empty( self::$search_parameters['mla_terms_search']['exclude'] ) ) {
+			$excludes[] = self::$search_parameters['mla_terms_search']['exclude'];
+		}
+		
+		if ( count( $excludes ) ) {
+			$search_clause .= " AND ( {$wpdb->posts}.ID NOT IN ( " . implode( ',', $excludes ) . " ) )";
+		}
+		
+//error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter search_clause = " . var_export( $search_clause, true ), 0 );
 		return $search_clause;
 	}
 
@@ -1682,9 +1858,7 @@ class MLAQuery {
 			$debug_array = array( 'where_string' => $where_clause );
 		}
 
-		/*
-		 * WordPress filters meta_value thru trim() - which we must reverse
-		 */
+		// WordPress filters meta_value thru trim() - which we must reverse
 		if ( isset( self::$query_parameters['mla-metavalue'] ) ) {
 			if ( is_array( self::$query_parameters['mla-metavalue'] ) ) {
 				foreach ( self::$query_parameters['mla-metavalue'] as $pattern => $replacement ) {
@@ -1695,16 +1869,12 @@ class MLAQuery {
 			}
 		}
 
-		/*
-		 * Matching a NULL meta value 
-		 */
+		// Matching a NULL meta value 
 		if ( array_key_exists( 'postmeta_value', self::$query_parameters ) && NULL == self::$query_parameters['postmeta_value'] ) {
 			$where_clause .= ' AND ' . self::MLA_TABLE_VIEW_SUBQUERY . '.meta_value IS NULL';
 		}
 
-		/*
-		 * WordPress modifies the LIKE clause - which we must reverse
-		 */
+		// WordPress modifies the LIKE clause - which we must reverse
 		if ( isset( self::$query_parameters['patterns'] ) ) {
 			foreach ( self::$query_parameters['patterns'] as $pattern ) {
 				$pattern = str_replace( '_', '\\\\_', $pattern );
@@ -1713,9 +1883,7 @@ class MLAQuery {
 			}
 		}
 
-		/*
-		 * Unattached items require some help
-		 */
+		// Unattached items require some help
 		if ( isset( self::$query_parameters['detached'] ) ) {
 			if ( '1' == self::$query_parameters['detached'] ) {
 				$where_clause .= sprintf( ' AND %1$s.post_parent < 1', $wpdb->posts );

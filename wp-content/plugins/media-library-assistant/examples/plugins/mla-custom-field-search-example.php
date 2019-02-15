@@ -24,16 +24,16 @@
  * https://wordpress.org/support/topic/searching-on-custom-fields/
  *
  * @package MLA Custom Field Search Example
- * @version 1.04
+ * @version 1.05
  */
 
 /*
 Plugin Name: MLA Custom Field Search Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Extends the Media/Assistant "Search Media" box to custom field values
 Author: David Lingren
-Version: 1.04
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.05
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

@@ -19,17 +19,17 @@
  * three boxes for MLA Column, Quick Edit and Bulk Edit support.
  * 
  *
- * @package MLA ACF Checkbox Example
- * @version 1.02
+ * @package MLA Advanced Custom Fields Example
+ * @version 1.03
  */
 
 /*
 Plugin Name: MLA Advanced Custom Fields Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Supports an ACF checkbox and "where-used" in an ACF repeater
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 
@@ -53,7 +53,7 @@ Copyright 2014 - 2015 David Lingren
  * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
  * else inside a class means this is the only name you have to worry about.
  *
- * @package MLA ACF Checkbox Example
+ * @package MLA Advanced Custom Fields Example
  * @since 1.00
  */
 class MLAACFExample {

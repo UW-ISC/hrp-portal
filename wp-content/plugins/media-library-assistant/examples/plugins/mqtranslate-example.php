@@ -6,16 +6,16 @@
  * added to the site_url value.
  *
  * @package MLA mqTranslate Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA mqTranslate Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_tag_cloud] shortcode
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014 David Lingren
 

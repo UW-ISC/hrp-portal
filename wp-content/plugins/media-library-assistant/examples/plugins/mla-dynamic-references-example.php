@@ -3,16 +3,16 @@
  * Updates custom field(s) "where-used" inserted-in and featured-image when an item is edited
  *
  * @package MLA Dynamic References Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
 Plugin Name: MLA Dynamic References Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Updates custom field(s) "where-used" inserted-in and featured-image when an item is edited
 Author: David Lingren
-Version: 1.03
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.04
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

@@ -3,16 +3,16 @@
  * Replaces the Title by a cleaned up version of the file name.
  *
  * @package MLA File Name Mapping Hooks Example
- * @version 1.00
+ * @version 1.03
  */
 
 /*
 Plugin Name: MLA File Name Mapping Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Replace Title, Caption and ALT Text with re-formatted file name
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2016 David Lingren
 

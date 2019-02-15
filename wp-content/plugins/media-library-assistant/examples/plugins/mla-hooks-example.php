@@ -16,16 +16,16 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.14
+ * @version 1.15
  */
 
 /*
 Plugin Name: MLA Gallery Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.14
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.15
+Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2017 David Lingren
 

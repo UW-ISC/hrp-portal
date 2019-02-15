@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MLA Current User Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Uses the current logged in user to supply an "Author" parameter for the query
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

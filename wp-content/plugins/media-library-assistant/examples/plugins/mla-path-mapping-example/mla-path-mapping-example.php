@@ -14,16 +14,16 @@
  * https://wordpress.org/support/topic/help-with-custom-taxonomy/
  *
  * @package MLA Path Mapping Example
- * @version 1.00
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Path Mapping Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2018 David Lingren
 
@@ -58,7 +58,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.00';
+	const CURRENT_VERSION = '1.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -593,7 +593,7 @@ class MLAPathMappingExample {
 
 			// Is this a simple, unqualified term already in the cache?
 			if ( isset( $unqualified_cache[ $setting_key ][ $term_name ] ) ) {
-error_log( __LINE__ . " mla_mapping_new_text found $term_name in unqualified_cache", 0 );
+//error_log( __LINE__ . " mla_mapping_new_text found $term_name in unqualified_cache", 0 );
 				MLAOptions::$mla_term_cache[ $setting_key ][ $term_parent ][ $term_name ] = $unqualified_cache[ $setting_key ][ $term_name ]['term_id'];
 				continue;
 			}
@@ -612,7 +612,7 @@ error_log( __LINE__ . " mla_mapping_new_text found $term_name in unqualified_cac
 			} else {
 				$current_parent = $term_parent;
 			}
-error_log( __LINE__ . " mla_mapping_new_text parent = " . var_export( $current_parent, true ) . ", path = " . var_export( $path, true ), 0 );
+//error_log( __LINE__ . " mla_mapping_new_text parent = " . var_export( $current_parent, true ) . ", path = " . var_export( $path, true ), 0 );
 
 			// Holder for the $assign_parents entries
 			$assign_parents_entry = 0;
@@ -630,13 +630,13 @@ error_log( __LINE__ . " mla_mapping_new_text parent = " . var_export( $current_p
 				
 				// Ignore initial or duplicate delimiters
 				if ( empty( $path_name ) ) {
-error_log( __LINE__ . " mla_mapping_new_text ignoring empty path_name", 0 );
+//error_log( __LINE__ . " mla_mapping_new_text ignoring empty path_name", 0 );
 					continue;
 				}
 				
 				// Is this component in the cache?
 				if ( isset( $term_cache[ $setting_key ][ $current_parent ][ $path_name ] ) ) {
-error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in cache", 0 );
+//error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in cache", 0 );
 					$current_parent = $term_cache[ $setting_key ][ $current_parent ][ $path_name ]['term_id'];
 					
 					if ( $assign_parents ) {
@@ -650,13 +650,13 @@ error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_par
 				if ( $unqualified_name ) {
 					// Is this component in the cache?
 					if ( isset( $unqualified_cache[ $setting_key ][ $path_name ] ) ) {
-error_log( __LINE__ . " mla_mapping_new_text found $path_name in unqualified cache", 0 );
+//error_log( __LINE__ . " mla_mapping_new_text found $path_name in unqualified cache", 0 );
 						$path_term = $unqualified_cache[ $setting_key ][ $path_name ];
 					} else {
 						$path_term = term_exists( $path_name, $setting_key );
 
 						if ( $path_term !== 0 && $path_term !== NULL ) {
-error_log( __LINE__ . " mla_mapping_new_text adding $path_name to unqualified cache", 0 );
+//error_log( __LINE__ . " mla_mapping_new_text adding $path_name to unqualified cache", 0 );
 							$unqualified_cache[ $setting_key ][ $path_name ] = $path_term;
 						}
 					}
@@ -667,8 +667,8 @@ error_log( __LINE__ . " mla_mapping_new_text adding $path_name to unqualified ca
 				}
 				
 				if ( $path_term !== 0 && $path_term !== NULL ) {
-error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in database = " . var_export( $path_term, true ), 0 );
-					$term_cache[ $setting_key ][ $path_term['parent'] ][ $path_name ] = $path_term;
+//error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in database = " . var_export( $path_term, true ), 0 );
+					$term_cache[ $setting_key ][ $current_parent ][ $path_name ] = $path_term;
 					$current_parent = absint( $path_term['term_id'] );
 					
 					if ( $assign_parents ) {
@@ -681,7 +681,7 @@ error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_par
 				// Create the term 
 				$path_term = wp_insert_term( $path_name, $setting_key, array( 'parent' => $current_parent ) );
 				if ( ( ! is_wp_error( $path_term ) ) && isset( $path_term['term_id'] ) ) {
-error_log( __LINE__ . " mla_mapping_new_text created $path_name under $current_parent = " . var_export( $path_term, true ), 0 );
+//error_log( __LINE__ . " mla_mapping_new_text created $path_name under $current_parent = " . var_export( $path_term, true ), 0 );
 					$term_cache[ $setting_key ][ $current_parent ][ $path_name ] = $path_term;
 					$current_parent = absint( $path_term['term_id'] );
 					
@@ -701,7 +701,7 @@ error_log( __LINE__ . " mla_mapping_new_text created $path_name under $current_p
 			$new_text[] = 'rule_parent-term';			
 		}
 
-error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) mla term cache = " . var_export( MLAOptions::$mla_term_cache, true ), 0 );
+//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) mla term cache = " . var_export( MLAOptions::$mla_term_cache, true ), 0 );
 		return  $new_text;
 	} // mla_mapping_new_text_filter
 
@@ -723,8 +723,8 @@ error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$se
 	 * @return	array	updated attachment's updates
 	 */
 	public static function mla_mapping_updates( $updates, $post_id, $category, $settings, $attachment_metadata ) {
-		error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_updates_filter( {$post_id}, {$category} ) updates = " . var_export( $updates, true ), 0 );
-		error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_updates_filter( {$post_id}, {$category} ) settings = " . var_export( $settings, true ), 0 );
+		//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_updates_filter( {$post_id}, {$category} ) updates = " . var_export( $updates, true ), 0 );
+		//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_updates_filter( {$post_id}, {$category} ) settings = " . var_export( $settings, true ), 0 );
 		//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_updates_filter( {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
 
 		// To stop this rule's updates, return an empty array, i.e., return array();

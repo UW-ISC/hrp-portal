@@ -9,10 +9,8 @@ class Red_Csv_File extends Red_FileIO {
 	public function force_download() {
 		parent::force_download();
 
-		$filename = 'redirection-'.date_i18n( get_option( 'date_format' ) ).'.csv';
-
 		header( 'Content-Type: text/csv' );
-		header( 'Content-Disposition: attachment; filename="'.$filename.'"' );
+		header( 'Content-Disposition: attachment; filename="' . $this->export_filename( 'csv' ) . '"' );
 	}
 
 	public function get_data( array $items, array $groups ) {
@@ -22,7 +20,7 @@ class Red_Csv_File extends Red_FileIO {
 			$lines[] = $this->item_as_csv( $line );
 		}
 
-		return implode( PHP_EOL, $lines ).PHP_EOL;
+		return implode( PHP_EOL, $lines ) . PHP_EOL;
 	}
 
 	public function item_as_csv( $item ) {
@@ -45,7 +43,7 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function escape_csv( $item ) {
-		return '"'.str_replace( '"', '""', $item ).'"';
+		return '"' . str_replace( '"', '""', $item ) . '"';
 	}
 
 	public function load( $group, $filename, $data ) {
@@ -89,10 +87,10 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function csv_as_item( $csv, $group ) {
-		if ( $csv[ self::CSV_SOURCE ] !== 'source' && $csv[ self::CSV_TARGET ] !== 'target' && count( $csv ) > 1 ) {
+		if ( count( $csv ) > 1 && $csv[ self::CSV_SOURCE ] !== 'source' && $csv[ self::CSV_TARGET ] !== 'target' ) {
 			return array(
-				'url'         => trim( $csv[ self ::CSV_SOURCE ] ),
-				'action_data' => array( 'url' => trim( $csv[ self ::CSV_TARGET ] ) ),
+				'url'         => trim( $csv[ self::CSV_SOURCE ] ),
+				'action_data' => array( 'url' => trim( $csv[ self::CSV_TARGET ] ) ),
 				'regex'       => isset( $csv[ self::CSV_REGEX ] ) ? $this->parse_regex( $csv[ self::CSV_REGEX ] ) : $this->is_regex( $csv[ self::CSV_SOURCE ] ),
 				'group_id'    => $group,
 				'match_type'  => 'url',

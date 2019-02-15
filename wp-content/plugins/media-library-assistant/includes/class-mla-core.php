@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.73';
+	const CURRENT_MLA_VERSION = '2.78';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -596,7 +596,7 @@ class MLACore {
 
 				if ( $mla_reporting )  {
 					MLACore::$mla_debug_level = $mla_reporting | 1;
-					if ( class_exists( 'MLA' ) ) {
+					if ( class_exists( 'MLA' ) && ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
 						MLACore::mla_debug_add( __LINE__ . sprintf( ' MLACore::mla_plugins_loaded_action() MLA %s (%s) mla_debug_level 0x%X', MLACore::CURRENT_MLA_VERSION, MLA::MLA_DEVELOPMENT_VERSION, MLACore::$mla_debug_level, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 					}
 				} else {
@@ -985,6 +985,15 @@ class MLACore {
 
 				$tax_checked_on_top = isset( $tax_options['tax_checked_on_top'] ) ? $tax_options['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'];
 				return array_key_exists( $tax_name, $tax_checked_on_top );
+			case 'checklist-add-term':
+				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+					return isset( $_REQUEST['tax_checklist_add_term'][ $tax_name ] );
+				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
+				}
+
+				$tax_checklist_add_term = isset( $tax_options['tax_checklist_add_term'] ) ? $tax_options['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'];
+				return array_key_exists( $tax_name, $tax_checklist_add_term );
 			case 'filter':
 				$tax_filter = isset( $tax_options['tax_filter'] ) ? $tax_options['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 				if ( '' == $tax_name ) {
@@ -1074,6 +1083,14 @@ class MLACore {
 				}
 
 				return array_keys( isset( $tax_options['tax_checked_on_top'] ) ? $tax_options['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
+			case 'checklist-add-term':
+				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
+					return isset( $_REQUEST['tax_checklist_add_term'] ) ? array_keys( $_REQUEST['tax_checklist_add_term'] ) : array();
+				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
+					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
+				}
+
+				return array_keys( isset( $tax_options['tax_checklist_add_term'] ) ? $tax_options['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 			case 'filter':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
 					return isset( $_REQUEST['tax_filter'] ) ? (array) $_REQUEST['tax_filter'] : array();
@@ -1448,6 +1465,50 @@ class MLACore {
 	} // mla_checklist_meta_box
 
 	/**
+	 * Decode the list of functions hooking an action/filter
+	 * 
+	 * @since 2.74
+	 * 
+	 * @param	string	$filter The name of the action/filter to be decoded
+	 *
+	 * @return	string	List of functions hooking the action/filter
+	 */
+	public static function mla_decode_wp_filter( $filter ) {
+		global $wp_filter;
+//error_log( __LINE__ . " mla_decode_wp_filter( $filter ) wp_filter = " . var_export( $wp_filter[ $filter ], true ), 0 );
+
+		$hook_list = '';
+		if ( isset( $wp_filter[ $filter ] ) ) {
+			// WordPress 4.7+ uses WP_Hook, earlier versions use an array
+			if ( is_object( $wp_filter[ $filter ] ) ) {
+				$callback_array = $wp_filter[ $filter ]->callbacks;
+			} else {
+				$callback_array = $wp_filter[ $filter ];
+			}
+			
+			foreach ( $callback_array as $priority => $callbacks ) {
+				$hook_list .= "Priority: {$priority}\n";
+				foreach ( $callbacks as $tag => $reference ) {
+					$hook_list .= "{$tag} => ";
+					if ( is_string( $reference['function'] ) ) {
+						$hook_list .= $reference['function'] . "()\n";
+					} else {
+						if ( is_object( $reference['function'][0] ) ) {
+							$hook_list .= get_class( $reference['function'][0] ) . '->';
+						} else {
+							$hook_list .= $reference['function'][0] . '::';
+						}
+						
+						$hook_list .= $reference['function'][1] . "()\n";
+					}
+				} // foreach tag
+			} // foreach proprity
+		} // filters exist
+		
+		return $hook_list;
+	}
+
+	/**
 	 * Effective MLA Debug Level, from MLA_DEBUG_LEVEL or override option
 	 *
 	 * @since 2.15
@@ -1715,9 +1776,15 @@ class MLACore {
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support.php' );
 
 		if ( function_exists( 'ACP' ) ) {
-			if ( version_compare( ACP()->get_version(), '4.2.3', '>=' ) ) {
-				// Load the latest version, with export support
+			if ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) {
+				// Load the latest version, with namespace support
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support.php' );
+			} elseif ( version_compare( ACP()->get_version(), '4.3', '>=' ) ) {
+				// Load the interim version, without bulk edit support
+				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-44.php' );
+			} elseif ( version_compare( ACP()->get_version(), '4.2.3', '>=' ) ) {
+				// Load the interim version, with export support
+				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-423.php' );
 			} elseif ( version_compare( ACP()->get_version(), '4.2.0', '>=' ) ) {
 				// Load the interim version, with inline editing support
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-42.php' );
