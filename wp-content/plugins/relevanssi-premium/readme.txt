@@ -3,8 +3,8 @@ Contributors: msaari
 Donate link: http://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.6
-Tested up to: 4.9.6
-Stable tag: 2.1.6
+Tested up to: 5.0.3
+Stable tag: 2.2.4.2
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -262,86 +262,118 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.2.4.2 =
+* Fixes couple of JS issues with the metabox scripts.
+* Improves meta key sorting.
+* New actions: `pre_relevanssi_related` is triggered before related posts searches and `post_relevanssi_related` after the searches.
 
-= 2.1.6.1 =
-* The privacy features caused an error notice with certain Relevanssi configurations, and the plugin required WP 4.9.6.
+= 2.2.4.1 =
+* It's now possible to disable thumbnails and titles for related posts.
+* The related posts custom template is looked for in the right place.
+* Metabox buttons work without Gutenberg.
+* Drafts shouldn't appear in the related posts anymore.
+* Choosing the default thumbnail for related posts is more pleasant now.
+* You can now disable auto-appended related posts for a post.
+* You can disable a post so that it won't appear as a related post.
 
-= 2.1.6 =
-* Privacy: If you log search queries, Relevanssi will suggest some additional content to your privacy policy page.
-* Privacy: Relevanssi now supports the new Privacy Policy and Personal Data tools in WordPress 4.9.6.
-* Improved Polylang support. Now taxonomy terms can be language filtered as well.
-* Saving synonyms with quotes worked, but the synonyms showed up wrong.
-* Taxonomy term indexing had a bug where the `type` column for taxonomy terms would be set to 0.
-* The `relevanssi_user_index_ok` filter is now applied when users are updated.
-* Relevanssi could in some situations override navigation menu links with links to the user profiles or taxonomy terms found in the search. This update fixes that behaviour.
-* Random order works again; using orderby `rand` didn't work properly. The `rand(seed)` format is also supported now.
-* Fixed quotes and apostrophes in Did you mean suggestions.
+= 2.2.4 =
+* New Related posts feature can be used to display related posts for your content.
+* Relevanssi metabox on post edit pages is now in the sidebar by default. It doesn't move automatically on older installations, but you can drag it there. It's recommended, as from now on the look will be designed for sidebar use.
+* Search performance has been improved.
+* Redirects have been improved a bit.
+* Multisite searching was broken when sorting posts.
+* Using period as a thousands separator could cause weird results.
+* Members plugin compatibility has been improved: it's only used if the 'content permissions' feature has been enabled.
+* New JetPack taxonomies and post types have been added to the block list so they won't appear in Relevanssi settings.
+* Attachment indexing will bypass zip files.
+* New filter: `relevanssi_accept_mime_type` lets you filter attachment reading by MIME type.
+* New filter: `relevanssi_do_not_read` lets you filter attachment reading by post ID.
+* API key field was not shown if Relevanssi was installed on a single site in a multisite network. Now it's shown correctly.
+* New filter: `relevanssi_search_form` works exactly like `get_search_form`, but only applies to the Relevanssi shortcode search forms.
+* Relevanssi settings page won't let you exclude categories you have restricted the search to.
 
-= 2.1.5 =
-* New feature: WooCommerce product visibility can now be considered better in the indexing. See the filter hook 'relevanssi_woocommerce_indexing' for more details.
-* Phrases were not highlighted correctly on documents. This is now fixed.
-* Shortcode fix: 'wp_show_posts' shouldn't cause problems anymore.
-* Fix for post tag indexing issues.
-* MemberPress post controls were loose and showed drafts to searchers. That is now fixed.
-* Highlighting was too loose, even if matching was set to whole words.
-* Highlighting now works better in cases where there's a hyphen or an apostrophe inside a word.
+= 2.2.3.1 =
+* The new Redirects feature caused unforeseen consequences. This version should fix them.
 
-= 2.1.4 =
-* Fixed cases where Relevanssi added an ellipsis even if the excerpt was from the start of the post.
-* Highlighting now works with numeric search strings.
-* Improved highlighting for accented words. Thanks to Paul Ryan.
-* A surplus comma at the end of post exclusion setting won't break the search anymore.
-* Fixed instructions for adjusting the throttle limit.
-* New "Pin this post for all keywords" feature.
+= 2.2.3 =
+* New Redirects feature lets you redirect keywords directly to specific result pages.
+* Choosing "CSS Style" for highlighting was not possible. That is now fixed.
+* Gutenberg reusable block indexing was fatally broken with the latest Gutenberg version. That has been updated.
+* Relevanssi now by default respects the WooCommerce "exclude from search" setting.
+* `post__not_in` still didn't work properly, it does now.
+* New filter: `relevanssi_comparison_order` can be used to define the sorting order when sorting the results by post type.
+* English stemmer has been improved a bit.
+* "Did you mean" process included a very slow query. It is now cached, leading in some cases to massive performance improvements (we're talking about several seconds here).
+* Highlights inside `code` and similar blocks are handled better now.
 
-= 2.1.3 =
-* Recent post bonus is now applied to searches.
-* Exact term setting can now be disabled.
-* Users of Members plugin would have drafts appear in search results. This is now fixed.
-* Pinned keywords would appear in the list of exlusion keywords, and you couldn't set exclusion keywords. That is now corrected.
-* "Index unindexed posts" works better.
-* Removing quotes and apostrophes in indexing didn't work properly.
-* Attachment indexing progress meter fixed.
-* The "Highlight from external searches" option was removed. It's not supported by Google or Bing anymore, so there's little point in keeping it.
+= 2.2.2.1 =
+* Fixed broken "User searches" page.
+* "How Relevanssi sees this post" is hidden by default.
 
-= 2.1.2 =
-* MemberPress post control was backwards.
-* Fusion Builder shortcodes are automatically removed from excerpts.
-* Indexing failed, when a same word appeared in two different taxonomies.
-* Internal link management had a bit of a bug in the indexing.
-* User searches page reset buttons fixed.
+= 2.2.2 =
+* Relevanssi can now index Gutenberg reusable blocks. (This functionality broke once already before release, so that can happen, since Gutenberg is still in very active development.)
+* The `post__in` and `post__not_in` parameters didn't work, and are now fixed. `post_parent__in` and `post_parent__not_in` are also improved.
+* You can use named meta queries for sorting posts. Meta query sorting is improved in other ways as well.
+* Log export didn't work properly.
+* The `relevanssi_premium_get_post()` now has a default value (-1) for the blog ID.
+* Adding stopwords from the common word list has been fixed.
+* The `relevanssi_get_words_having` filter hook is now also applied to the free version Did you mean queries.
+* New filters: `relevanssi_1day` and `relevanssi_7days` can be used to adjust the number of days for log displays, so instead of 1, 7 and 30 days you can have anything you want.
 
-= 2.1.1.1 =
-* Fixes an issue where you can't save taxonomy indexing settings.
+= 2.2.1 =
+* The admin search has been moved to a separate page and made visible to editors, authors and contributors.
+* New filter: `relevanssi_admin_search_capability` can be used to adjust who sees the admin search page.
+* "How Relevanssi sees the post" feature on post edit screens actually works now.
+* Numeric meta values (`meta_value_num`) are now sorted as numbers and not strings.
 
-= 2.1.1 =
-* Automated testing can't catch everything... There was some overzealous security in place, breaking Network options. That is now fixed.
-* Attachment file name is not prepended to the excerpts automatically.
+= 2.2.0.1 =
+* 2.2 claimed to be version 2.1.7.
 
-= 2.1 =
-* Relevanssi code has been reviewed and modified to follow WordPress coding standards. As a result, there have been minor improvements all around the code to make things more robust and secure.
-* Attachment indexing has been extended to many more document types: now it should be able to handle most document types, including Office and OpenDocument formats. It's also slightly faster.
-* There's now an option to do attachment reading in an EU-based server.
-* Custom field detail is no longer serialized. It's now JSON. If you use custom field detail, rebuild the index and change your code to use json_decode() instead of unserialize().
-* `relevanssi_the_tags()` and `relevanssi_get_the_tags()` now have different set of parameters, more in line with `the_tags()` and `get_the_tags()`.
-* Taxonomy indexing settings were emptied out if you saved another options tab. That is now fixed.
-* Improvements to WPML support; WPML is now less likely to be confused in multisite searches.
-* Updated filter: `relevanssi_search_ok` now gets the WP_Query object as a parameter, which is helpful if you're not using the global $wp_query.
-* ACF Flexible Content field indexing didn't work properly, possibly due to a change in ACF. That should now work better.
+= 2.2 =
+* New feature: Search tab on Relevanssi settings page allows you to perform searches in WP admin using Relevanssi.
+* New feature: Post type archives can now be indexed. This will index the label and the description of the post type.
+* New feature: Relevanssi now has a privacy mode that blocks outside connections: at the moment that means update checks and indexing attachments with Relevanssi indexing services. This helps keep your site private and can in some configurations speed up plugin page loads a lot.
+* New feature: On post edit screens, you can now see how Relevanssi sees the post. This should help debugging indexing issues.
+* New feature: You can now export the search log as a CSV file.
+* New filter: `relevanssi_entities_inside_pre` and `relevanssi_entities_inside_code` adjust how HTML entities are handled inside `pre` and `code` tags.
+* New filter: `relevanssi_attachment_server_url` allows the use of custom attachment reading server.
+* User meta fields are indexed as custom fields, not as post content, and the `customfield_detail` column is also filled.
+* Pinned posts have `$post->relevanssi_pinned` set to 1 for debugging purposes, but you can also use this for styling the posts in the search results templates.
+* Multisite searching updates: exact match bonus and the recency bonus did not work in multisite searches. Now they work.
+* Multisite search also had quite a few bugs squashed.
+* The basic Did you mean feature has been toned down a bit, to make the suggestions slightly less weird in some cases.
+* Post parent parameters now accept 0 as a value, making it easier to search for children of any post or posts without a parent.
+* Pinning caused an error message when `fields` was set to `ids`. Now the behaviour is correct, and the pinning code also won't run, unless something is pinned.
+* Taxonomy terms and users are handled better in multi-word AND searches.
 
 == Upgrade notice ==
 
-= 2.1.6.1 =
-* Privacy feature correction.
+= 2.2.4.2 =
+* Improvements for Related posts and meta value sorting.
 
-= 2.1.6 =
-* Privacy features and bug fixes.
+= 2.2.4.1 =
+* Improvements for Related posts.
 
-= 2.1.5 =
-* Taxonomy indexing fixes, better WooCommerce product visibility filtering.
+= 2.2.4 =
+* New Related posts feature.
 
-= 2.1.4 =
-* Minor bugfixes.
+= 2.2.3.1 =
+* Fix for Redirect issues.
 
-= 2.1.3 =
-* Several bug fixes.
+= 2.2.3 =
+* New Redirects feature and bug fixes.
+
+= 2.2.2.1 =
+* Fixes broken User searches page.
+
+= 2.2.2 =
+* Minor improvements here and there, particularly in custom field sorting.
+
+= 2.2.1 =
+* Admin search moved, working "How Relevanssi sees this".
+
+= 2.2.0.1 =
+* Simple version number fix.
+
+= 2.2 =
+* Several new features, lots of bug fixes.

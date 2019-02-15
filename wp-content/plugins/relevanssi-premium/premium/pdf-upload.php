@@ -33,9 +33,9 @@ function relevanssi_read_attachment( $post_id ) {
 		return;
 	}
 
-	$mime_type  = get_post_mime_type( $post_id );
-	$mime_parts = explode( '/', $mime_type );
-	if ( ! in_array( $mime_parts[0], array( 'image', 'video' ), true ) ) {
+	$mime_type = get_post_mime_type( $post_id );
+	$read_this = relevanssi_mime_type_ok( $mime_type );
+	if ( $read_this ) {
 		$result = relevanssi_index_pdf( $post_id );
 		if ( is_array( $result ) && isset( $result['success'] ) && true === $result['success'] ) {
 			// Remove the usual relevanssi_publish action because
@@ -43,6 +43,36 @@ function relevanssi_read_attachment( $post_id ) {
 			remove_action( 'add_attachment', 'relevanssi_publish', 12 );
 		}
 	}
+}
+
+/**
+ * Checks the MIME type of the attachment to determine if it's allowed or not.
+ *
+ * By default this function blocks all images, all video, and zip files.
+ *
+ * @param string $mime_type The attachment MIME type.
+ *
+ * @return boolean True, if ok to read the attachment, false if not.
+ */
+function relevanssi_mime_type_ok( $mime_type ) {
+	$read_this  = true;
+	$mime_parts = explode( '/', $mime_type );
+	if ( in_array( $mime_parts[0], array( 'image', 'video' ), true ) ) {
+		$read_this = false;
+	}
+	if ( in_array( $mime_parts[1], array( 'zip', 'octet-stream', 'x-zip-compressed', 'x-zip' ), true ) ) {
+		$read_this = false;
+	}
+	/**
+	 * Allows the filtering of attachment reading based on MIME type.
+	 *
+	 * @param boolean $read_this True, if ok to read the attachment, false if not.
+	 * @param string  $mime_type The attachment MIME type.
+	 *
+	 * @return boolean True, if ok to read the attachment, false if not.
+	 */
+	$read_this = apply_filters( 'relevanssi_accept_mime_type', $read_this, $mime_type );
+	return $read_this;
 }
 
 /**
@@ -175,8 +205,29 @@ function relevanssi_attachment_metabox() {
  */
 function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 	$hide_post = get_post_meta( $post_id, '_relevanssi_hide_post', true );
+	/**
+	 * Filters whether the attachment should be read or not.
+	 *
+	 * @param boolean $hide_post True if ok, false if not ok to read.
+	 * @param int     $post_id   The attachment post ID.
+	 */
+	$hide_post = apply_filters( 'relevanssi_do_not_read', $hide_post, $post_id );
 	if ( $hide_post ) {
-		$error = 'Post excluded from the index by the user.';
+		$error = 'R_ERR01: ' . __( 'Post excluded from the index by the user.', 'relevanssi' );
+		delete_post_meta( $post_id, '_relevanssi_pdf_content' );
+		update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
+
+		$result = array(
+			'success' => false,
+			'error'   => $error,
+		);
+
+		return $result;
+	}
+
+	$mime_type = get_post_mime_type( $post_id );
+	if ( ! relevanssi_mime_type_ok( $mime_type ) ) {
+		$error = 'R_ERR03: ' . __( 'Attachment MIME type blocked.', 'relevanssi' );
 		delete_post_meta( $post_id, '_relevanssi_pdf_content' );
 		update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
 
@@ -199,6 +250,20 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 	$api_key    = get_site_option( 'relevanssi_api_key' );
 	$server_url = relevanssi_get_server_url();
 
+	if ( 'on' === get_option( 'relevanssi_do_not_call_home' ) ) {
+		if ( in_array( $server_url, array( RELEVANSSI_EU_SERVICES_URL, RELEVANSSI_US_SERVICES_URL ), true ) ) {
+			$error = 'R_ERR02: ' . __( 'Relevanssi is in privacy mode and not allowed to contact Relevanssiservices.com.', 'relevanssi' );
+			delete_post_meta( $post_id, '_relevanssi_pdf_content' );
+			update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
+
+			$result = array(
+				'success' => false,
+				'error'   => $error,
+			);
+
+			return $result;
+		}
+	}
 	if ( 'on' === $send_file ) {
 		$file_name = get_attached_file( $post_id );
 
@@ -255,6 +320,11 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 		echo wp_json_encode( $result );
 		wp_die();
 	}
+
+	// The PDF count is cached because the query is slow; delete the cache now, as
+	// the value just changed.
+	wp_cache_delete( 'relevanssi_pdf_count' );
+	wp_cache_delete( 'relevanssi_pdf_error_count' );
 
 	return $result;
 }
@@ -313,7 +383,8 @@ function relevanssi_process_server_response( $response, $post_id ) {
  * Gets the posts with attachments.
  *
  * Finds the posts with non-image attachments that don't have read content or errors,
- * including those with timeout or connection errors.
+ * including those with timeout or connection errors and those that haven't been read
+ * for privacy mode issues.
  *
  * @since 2.0.0
  *
@@ -335,6 +406,11 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 			array(
 				'key'     => '_relevanssi_pdf_error',
 				'compare' => 'NOT EXISTS',
+			),
+			array(
+				'key'     => '_relevanssi_pdf_error',
+				'compare' => 'LIKE',
+				'value'   => 'R_ERR02:',
 			),
 			array(
 				'key'     => '_relevanssi_pdf_error',

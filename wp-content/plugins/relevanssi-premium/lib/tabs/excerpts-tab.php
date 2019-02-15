@@ -58,7 +58,7 @@ function relevanssi_excerpts_tab() {
 	$highlight_strong      = relevanssi_select( $highlight, 'strong' );
 	$highlight_col         = relevanssi_select( $highlight, 'col' );
 	$highlight_bgcol       = relevanssi_select( $highlight, 'bgcol' );
-	$highlight_style       = relevanssi_select( $highlight, 'style' );
+	$highlight_style       = relevanssi_select( $highlight, 'css' );
 	$highlight_class       = relevanssi_select( $highlight, 'class' );
 
 	$txt_col_display = 'screen-reader-text';
@@ -72,7 +72,7 @@ function relevanssi_excerpts_tab() {
 	if ( 'bgcol' === $highlight ) {
 		$bg_col_display = '';
 	}
-	if ( 'style' === $highlight ) {
+	if ( 'css' === $highlight ) {
 		$css_display = '';
 	}
 	if ( 'class' === $highlight ) {
@@ -97,6 +97,14 @@ function relevanssi_excerpts_tab() {
 			</label>
 		</fieldset>
 		<p class="description"><?php esc_html_e( 'Only enable this if you actually use the custom excerpts.', 'relevanssi' ); ?></p>
+		<?php
+		$theme    = wp_get_theme();
+		$template = $theme->get( 'Template' );
+		if ( 'divi' === strtolower( $template ) ) :
+		?>
+			<?php // Translators: %1$s opens the link, %2$s closes it. ?>
+			<p class="important"><?php printf( esc_html__( 'Looks like you are using Divi. In order to use custom excerpts with Divi, you need to make some changes to your templates. %1$sSee instructions here%2$s.', 'relevanssi' ), '<a href="https://www.relevanssi.com/knowledge-base/divi-page-builder-and-cleaner-excerpts/">', '</a>' ); ?></p>
+		<?php endif; ?>
 		</td>
 	</tr>
 	<tr id="tr_excerpt_length"
@@ -235,7 +243,7 @@ function relevanssi_excerpts_tab() {
 			<p class="description"><?php esc_html_e( 'Requires custom snippets to work.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-	<tr id="relevanssi_txt_col" class='<?php echo esc_attr( $txt_col_display ); ?>'>
+	<tr id="tr_relevanssi_txt_col" class='<?php echo esc_attr( $txt_col_display ); ?>'>
 		<th scope="row">
 			<label for="relevanssi_txt_col"><?php esc_html_e( 'Text color', 'relevanssi' ); ?></label>
 		</th>
@@ -249,7 +257,7 @@ function relevanssi_excerpts_tab() {
 			/>
 		</td>
 	</tr>
-	<tr id="relevanssi_bg_col" class=' <?php echo esc_attr( $bg_col_display ); ?>'>
+	<tr id="tr_relevanssi_bg_col" class=' <?php echo esc_attr( $bg_col_display ); ?>'>
 		<th scope="row">
 			<label for="relevanssi_bg_col"><?php esc_html_e( 'Background color', 'relevanssi' ); ?></label>
 		</th>
@@ -263,7 +271,7 @@ function relevanssi_excerpts_tab() {
 			/>
 		</td>
 	</tr>
-	<tr id="relevanssi_css" class=' <?php echo esc_attr( $css_display ); ?>'>
+	<tr id="tr_relevanssi_css" class=' <?php echo esc_attr( $css_display ); ?>'>
 		<th scope="row">
 			<label for='relevanssi_css'><?php esc_html_e( 'CSS style for highlights', 'relevanssi' ); ?></label>
 		</th>
@@ -279,7 +287,7 @@ function relevanssi_excerpts_tab() {
 			<p class="description"><?php printf( esc_html__( 'The highlights will be wrapped in a %s with this CSS in the style parameter.', 'relevanssi' ), '&lt;span&gt;' ); ?></p>
 		</td>
 	</tr>
-	<tr id="relevanssi_class" class=' <?php echo esc_attr( $class_display ); ?>'>
+	<tr id="tr_relevanssi_class" class=' <?php echo esc_attr( $class_display ); ?>'>
 		<th scope="row">
 			<label for='relevanssi_class'><?php esc_html_e( 'CSS class for highlights', 'relevanssi' ); ?></label>
 		</th>

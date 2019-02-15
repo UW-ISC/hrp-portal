@@ -26,6 +26,7 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	 * respectively.
 	 * ---
 	 * options:
+	 *   - post_types
 	 *   - taxonomies
 	 *   - users
 	 * ---
@@ -102,6 +103,9 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 			WP_CLI::success( 'Done!' );
 		} elseif ( 'users' === $target ) {
 			relevanssi_index_users();
+			WP_CLI::success( 'Done!' );
+		} elseif ( 'post_types' === $target ) {
+			relevanssi_index_post_type_archives();
 			WP_CLI::success( 'Done!' );
 		} else {
 			if ( isset( $post_id ) ) {
@@ -293,6 +297,58 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 		}
 	}
 
+	/**
+	 * Regenerates the related posts for all posts.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *      wp relevanssi regenerate_related
+	 *
+	 * @param array $args       Command arguments (not used).
+	 * @param array $assoc_args Command arguments as associative array.
+	 */
+	public function regenerate_related( $args, $assoc_args ) {
+		relevanssi_flush_related_cache();
+
+		$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
+
+		if ( isset( $settings['enabled'] ) && 'off' === $settings['enabled'] ) {
+			WP_CLI::error( 'Related posts feature is disabled.' );
+		}
+
+		$post_types = array();
+		if ( isset( $settings['append'] ) ) {
+			// Related posts are automatically appended to certain post types, so
+			// regenerate the related posts for those post types.
+			$post_types = explode( ',', $settings['append'] );
+		} else {
+			// Nothing set, so regenerate for all public post types.
+			$args       = array(
+				'public' => true,
+			);
+			$post_types = get_post_types( $args, 'names' );
+		}
+
+		$args  = array(
+			'post_type'      => $post_types,
+			'fields'         => 'ids',
+			'posts_per_page' => -1,
+		);
+		$posts = get_posts( $args ); // Get all posts for the wanted post types.
+		$count = count( $posts );
+
+		WP_CLI::log( 'Regenerating related posts for post types ' . implode( ', ', $post_types ) . ", total $count posts." );
+
+		$progress = relevanssi_generate_progress_bar( 'Regenerating', $count );
+
+		foreach ( $posts as $post_id ) {
+			relevanssi_related_posts( $post_id );
+			$progress->tick();
+		}
+
+		$progress->finish();
+		WP_CLI::success( 'Done!' );
+	}
 }
 
 WP_CLI::add_command( 'relevanssi', 'Relevanssi_WP_Cli_Command' );

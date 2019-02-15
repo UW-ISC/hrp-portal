@@ -30,6 +30,13 @@ add_filter( 'relevanssi_hits_filter', 'relevanssi_pinning' );
 function relevanssi_pinning( $hits ) {
 	global $wpdb, $wp_filter;
 
+	// Is pinning used?
+	$results = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE ( meta_key LIKE '_relevanssi_pin%' OR meta_key LIKE '_relevanssi_unpin%' ) AND meta_value != '' LIMIT 1" );
+	if ( empty( $results ) ) {
+		// No, nothing is pinned.
+		return $hits;
+	}
+
 	// Disable all filter functions on 'relevanssi_stemmer'.
 	if ( isset( $wp_filter['relevanssi_stemmer'] ) ) {
 		$callbacks                                  = $wp_filter['relevanssi_stemmer']->callbacks;
@@ -73,6 +80,12 @@ function relevanssi_pinning( $hits ) {
 		$pinned_posts = array();
 		$other_posts  = array();
 		foreach ( $hits[0] as $hit ) {
+			$return_id = false;
+			if ( is_int( $hit ) ) {
+				// Search is using fields=>ids.
+				$hit       = relevanssi_get_post( $hit );
+				$return_id = true;
+			}
 			$blog_id = 0;
 			if ( isset( $hit->blog_id ) ) {
 				// Multisite, so switch_to_blog() to correct blog and process
@@ -93,17 +106,35 @@ function relevanssi_pinning( $hits ) {
 					$pins_fetched    = true;
 				}
 			}
-			if ( is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit->ID, $positive_ids[ $blog_id ], true ) ) {
-				$pinned_posts[] = $hit;
+			$hit_id = strval( $hit->ID ); // The IDs from the database are strings, the one from the post is an integer in some contexts.
+			if ( is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit_id, $positive_ids[ $blog_id ], true ) ) {
+				if ( $return_id ) {
+					$pinned_posts[] = $hit->ID;
+				} else {
+					$pinned_posts[] = $hit;
+				}
 			} else {
 				if ( 'on' === get_post_meta( $hit->ID, '_relevanssi_pin_for_all', true ) ) {
-					$pinned_posts[] = $hit;
+					$hit->relevanssi_pinned = 1;
+					if ( $return_id ) {
+						$pinned_posts[] = $hit->ID;
+					} else {
+						$pinned_posts[] = $hit;
+					}
 				} elseif ( is_array( $negative_ids[ $blog_id ] ) && count( $negative_ids[ $blog_id ] ) > 0 ) {
 					if ( ! in_array( $hit->ID, $negative_ids[ $blog_id ], true ) ) {
-						$other_posts[] = $hit;
+						if ( $return_id ) {
+							$other_posts[] = $hit->ID;
+						} else {
+							$other_posts[] = $hit;
+						}
 					}
 				} else {
-					$other_posts[] = $hit;
+					if ( $return_id ) {
+						$other_posts[] = $hit->ID;
+					} else {
+						$other_posts[] = $hit;
+					}
 				}
 			}
 		}
