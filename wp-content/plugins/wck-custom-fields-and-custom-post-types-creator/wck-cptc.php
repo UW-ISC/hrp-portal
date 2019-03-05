@@ -27,7 +27,7 @@ function wck_cptc_print_scripts($hook){
 /* create the meta box only for admins ( 'capability' => 'edit_theme_options' ) */
 add_action( 'init', 'wck_cptc_create_box', 11 );
 function wck_cptc_create_box(){
-	global $wp_version;
+    global $wp_version;
     if( is_admin() && current_user_can( 'edit_theme_options' ) ){
         /* get registered taxonomies */
         $args = array(
@@ -66,53 +66,54 @@ function wck_cptc_create_box(){
             array( 'type' => 'text', 'title' => __( 'Not Found In Trash', 'wck' ), 'slug' => 'not-found-in-trash', 'description' => __( 'ex. No Books found in Trash', 'wck' ) ),
             array( 'type' => 'text', 'title' => __( 'Parent Item Colon', 'wck' ), 'slug' => 'parent-item-colon', 'description' => __( 'the parent text. This string isn\'t used on non-hierarchical types. In hierarchical ones the default is Parent Page ', 'wck' ) ),
             array( 'type' => 'text', 'title' => __( 'Menu Name', 'wck' ), 'slug' => 'menu-name' ),
-		);
+        );
 
-		if( version_compare( $wp_version, '4.3', '>=' ) ) {
-			$labels_v43 = array(
-				array( 'type' => 'text', 'title' => __( 'Featured Image', 'wck' ), 'slug' => 'featured_image', 'description' => __( 'ex. Featured Image', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Set Featured Image', 'wck' ), 'slug' => 'set_featured_image', 'description' => __( 'ex. Set Featured Image', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Remove Featured Image', 'wck' ), 'slug' => 'remove_featured_image', 'description' => __( 'ex. Remove Featured Image', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Use Featured Image', 'wck' ), 'slug' => 'use_featured_image', 'description' => __( 'ex. Use Featured Image', 'wck' ) )
-			);
+        if( version_compare( $wp_version, '4.3', '>=' ) ) {
+            $labels_v43 = array(
+                array( 'type' => 'text', 'title' => __( 'Featured Image', 'wck' ), 'slug' => 'featured_image', 'description' => __( 'ex. Featured Image', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Set Featured Image', 'wck' ), 'slug' => 'set_featured_image', 'description' => __( 'ex. Set Featured Image', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Remove Featured Image', 'wck' ), 'slug' => 'remove_featured_image', 'description' => __( 'ex. Remove Featured Image', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Use Featured Image', 'wck' ), 'slug' => 'use_featured_image', 'description' => __( 'ex. Use Featured Image', 'wck' ) )
+            );
 
-			foreach( $labels_v43 as $label_v43 ) {
-				array_push( $cpt_creation_fields, $label_v43 );
-			}
-		}
+            foreach( $labels_v43 as $label_v43 ) {
+                array_push( $cpt_creation_fields, $label_v43 );
+            }
+        }
 
-		if( version_compare( $wp_version, '4.4', '>=' ) ) {
-			$labels_v44 = array(
-				array( 'type' => 'text', 'title' => __( 'Archives', 'wck' ), 'slug' => 'archives', 'description' => __( 'ex. Archives', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Inser Into Item', 'wck' ), 'slug' => 'insert_into_item', 'description' => __( 'ex. Inser Into Item', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Uploaded to this Item', 'wck' ), 'slug' => 'uploaded_to_this_item', 'description' => __( 'ex. Uploaded to this Item', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Filter Items List', 'wck' ), 'slug' => 'filter_items_list', 'description' => __( 'ex. Filter Items List', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Items List Navigation', 'wck' ), 'slug' => 'items_list_navigation', 'description' => __( 'ex. Items List Navigation', 'wck' ) ),
-				array( 'type' => 'text', 'title' => __( 'Items List', 'wck' ), 'slug' => 'items_list', 'description' => __( 'ex. Items List', 'wck' ) ),
-			);
+        if( version_compare( $wp_version, '4.4', '>=' ) ) {
+            $labels_v44 = array(
+                array( 'type' => 'text', 'title' => __( 'Archives', 'wck' ), 'slug' => 'archives', 'description' => __( 'ex. Archives', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Inser Into Item', 'wck' ), 'slug' => 'insert_into_item', 'description' => __( 'ex. Inser Into Item', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Uploaded to this Item', 'wck' ), 'slug' => 'uploaded_to_this_item', 'description' => __( 'ex. Uploaded to this Item', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Filter Items List', 'wck' ), 'slug' => 'filter_items_list', 'description' => __( 'ex. Filter Items List', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Items List Navigation', 'wck' ), 'slug' => 'items_list_navigation', 'description' => __( 'ex. Items List Navigation', 'wck' ) ),
+                array( 'type' => 'text', 'title' => __( 'Items List', 'wck' ), 'slug' => 'items_list', 'description' => __( 'ex. Items List', 'wck' ) ),
+            );
 
-			foreach( $labels_v44 as $label_v44 ) {
-				array_push( $cpt_creation_fields, $label_v44 );
-			}
-		}
+            foreach( $labels_v44 as $label_v44 ) {
+                array_push( $cpt_creation_fields, $label_v44 );
+            }
+        }
 
-		$cpt_creation_fields2 = array(
-			array( 'type' => 'select', 'title' => __( 'Public', 'wck' ), 'slug' => 'public', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Meta argument used to define default values for publicly_queriable, show_ui, show_in_nav_menus and exclude_from_search', 'wck' ) ),
-			array( 'type' => 'select', 'title' => __( 'Show UI', 'wck' ), 'slug' => 'show-ui', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Whether to generate a default UI for managing this post type.', 'wck' ) ),
-			array( 'type' => 'select', 'title' => __( 'Show In Nav Menus', 'wck' ), 'slug' => 'show-in-nav-menus', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Whether post_type is available for selection in navigation menus.', 'wck' ) ),
-			array( 'type' => 'text', 'title' => __( 'Show In Menu', 'wck' ), 'slug' => 'show-in-menu', 'default' => 'true', 'description' => __( 'Whether to show the post type in the admin menu. show_ui must be true. "false" - do not display in the admin menu, "true" - display as a top level menu, "some string" - If an existing top level page such as "tools.php" or "edit.php?post_type=page", the post type will be placed as a sub menu of that.', 'wck' ) ),
-			array( 'type' => 'text', 'title' => __( 'Menu Position', 'wck' ), 'slug' => 'menu-position', 'description' => __( 'The position in the menu order the post type should appear.', 'wck' ) ),
-			array( 'type' => 'text', 'title' => __( 'Menu Icon', 'wck' ), 'slug' => 'menu-icon', 'description' => __( 'The url to the icon to be used for this menu.', 'wck' ) ),
-			array( 'type' => 'text', 'title' => __( 'Capability Type', 'wck' ), 'slug' => 'capability-type', 'description' => __( 'The string to use to build the read, edit, and delete capabilities.', 'wck' ), 'default' => 'post' ),
-			array( 'type' => 'checkbox', 'title' => __( 'Taxonomies', 'wck' ), 'slug' => 'taxonomies', 'options' => $taxonomie_names ),
-			array( 'type' => 'select', 'title' => __( 'Rewrite', 'wck' ), 'slug' => 'rewrite', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Rewrite permalinks.', 'wck' ) ),
-			array( 'type' => 'text', 'title' => __( 'Rewrite Slug', 'wck' ), 'slug' => 'rewrite-slug', 'description' => __( 'Defaults to post type name.', 'wck' ) ),
-			array( 'type' => 'select', 'title' => __( 'Show in REST API', 'wck'), 'slug' => 'show-in-rest', 'options' => array( 'false', 'true'), 'default' => 'false', 'description' => __('Make this post type available via WP REST API ', 'wck' ) )
-		);
+        $cpt_creation_fields2 = array(
+            array( 'type' => 'select', 'title' => __( 'Public', 'wck' ), 'slug' => 'public', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Meta argument used to define default values for publicly_queriable, show_ui, show_in_nav_menus and exclude_from_search', 'wck' ) ),
+            array( 'type' => 'select', 'title' => __( 'Show UI', 'wck' ), 'slug' => 'show-ui', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Whether to generate a default UI for managing this post type.', 'wck' ) ),
+            array( 'type' => 'select', 'title' => __( 'Show In Nav Menus', 'wck' ), 'slug' => 'show-in-nav-menus', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Whether post_type is available for selection in navigation menus.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Show In Menu', 'wck' ), 'slug' => 'show-in-menu', 'default' => 'true', 'description' => __( 'Whether to show the post type in the admin menu. show_ui must be true. "false" - do not display in the admin menu, "true" - display as a top level menu, "some string" - If an existing top level page such as "tools.php" or "edit.php?post_type=page", the post type will be placed as a sub menu of that.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Menu Position', 'wck' ), 'slug' => 'menu-position', 'description' => __( 'The position in the menu order the post type should appear.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Menu Icon', 'wck' ), 'slug' => 'menu-icon', 'description' => __( 'The url to the icon to be used for this menu.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Capability Type', 'wck' ), 'slug' => 'capability-type', 'description' => __( 'The string to use to build the read, edit, and delete capabilities.', 'wck' ), 'default' => 'post' ),
+            array( 'type' => 'checkbox', 'title' => __( 'Taxonomies', 'wck' ), 'slug' => 'taxonomies', 'options' => $taxonomie_names ),
+            array( 'type' => 'select', 'title' => __( 'Rewrite', 'wck' ), 'slug' => 'rewrite', 'options' => array( 'false', 'true' ), 'default' => 'true', 'description' => __( 'Rewrite permalinks.', 'wck' ) ),
+            array( 'type' => 'select', 'title' => __( 'With Front', 'wck' ), 'slug' => 'with_front', 'options' => array( 'true', 'false' ), 'default' => 'true', 'description' => __( 'Use the defined base for permalinks.', 'wck' ) ),
+            array( 'type' => 'text', 'title' => __( 'Rewrite Slug', 'wck' ), 'slug' => 'rewrite-slug', 'description' => __( 'Defaults to post type name.', 'wck' ) ),
+            array( 'type' => 'select', 'title' => __( 'Show in REST API', 'wck'), 'slug' => 'show-in-rest', 'options' => array( 'false', 'true'), 'default' => 'false', 'description' => __('Make this post type available via WP REST API ', 'wck' ) )
+        );
 
-		foreach( $cpt_creation_fields2 as $cpt_creation_field ) {
-			array_push( $cpt_creation_fields, $cpt_creation_field );
-		}
+        foreach( $cpt_creation_fields2 as $cpt_creation_field ) {
+            array_push( $cpt_creation_fields, $cpt_creation_field );
+        }
 
         /* set up the box arguments */
         $args = array(
@@ -134,7 +135,7 @@ function wck_cptc_create_box(){
 add_action( 'init', 'wck_cptc_create_cpts', 8 );
 
 function wck_cptc_create_cpts(){
-	global $wp_version;
+    global $wp_version;
 
     $cpts = get_option('wck_cptc');
 
@@ -157,33 +158,33 @@ function wck_cptc_create_cpts(){
                 'menu_name' => $cpt['menu-name'] ? $cpt['menu-name'] : $cpt['plural-label']
             );
 
-			if( version_compare( $wp_version, '4.3', '>=' ) ) {
-				$labels_v43 = array(
-					'featured_image' => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image" ),
-					'set_featured_image' => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image" ),
-					'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image" ),
-					'use_featured_image' => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image" )
-				);
+            if( version_compare( $wp_version, '4.3', '>=' ) ) {
+                $labels_v43 = array(
+                    'featured_image' => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image" ),
+                    'set_featured_image' => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image" ),
+                    'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image" ),
+                    'use_featured_image' => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image" )
+                );
 
-				foreach( $labels_v43 as $label_v43 ) {
-					array_push( $labels, $label_v43 );
-				}
-			}
+                foreach( $labels_v43 as $label_v43 ) {
+                    array_push( $labels, $label_v43 );
+                }
+            }
 
-			if( version_compare( $wp_version, '4.4', '>=' ) ) {
-				$labels_v44 = array(
-					'archives' => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives" ),
-					'insert_into_item' => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'] ),
-					'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'] ),
-					'filter_items_list' => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List" ),
-					'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation" ),
-					'items_list' => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List" )
-				);
+            if( version_compare( $wp_version, '4.4', '>=' ) ) {
+                $labels_v44 = array(
+                    'archives' => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives" ),
+                    'insert_into_item' => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'] ),
+                    'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'] ),
+                    'filter_items_list' => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List" ),
+                    'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation" ),
+                    'items_list' => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List" )
+                );
 
-				foreach( $labels_v44 as $label_v44 ) {
-					array_push( $labels, $label_v44 );
-				}
-			}
+                foreach( $labels_v44 as $label_v44 ) {
+                    array_push( $labels, $label_v44 );
+                }
+            }
 
             $args = array(
                 'labels' => $labels,
@@ -218,8 +219,17 @@ function wck_cptc_create_cpts(){
             if( $cpt['rewrite'] == 'false' )
                 $args['rewrite'] = $cpt['rewrite'] == 'false' ? false : true;
             else{
+                $rewrite_array = array();
+
                 if( !empty( $cpt['rewrite-slug'] ) )
-                    $args['rewrite'] = array('slug' => $cpt['rewrite-slug']);
+                    $rewrite_array['slug'] = $cpt['rewrite-slug'];
+
+                if( !empty( $cpt['with_front'] ) && $cpt['with_front'] == 'false' )
+                    $rewrite_array['with_front'] = false;
+
+                if ( count( $rewrite_array ) > 0 ) {
+                    $args['rewrite'] = $rewrite_array;
+                }
             }
 
             register_post_type( $cpt['post-type'], apply_filters( 'wck_cptc_register_post_type_args', $args, $cpt['post-type'] ) );
@@ -334,10 +344,29 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
-                alt="WCK-PRO"/></a>
-    <?php
+                    src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
+                    alt="WCK-PRO"/></a>
+        <?php
     }
+}
+
+/* add TranslatePress crosspromotion */
+add_action('add_meta_boxes', 'wck_cptc_add_trp_side_box');
+function wck_cptc_add_trp_side_box()
+{
+    add_meta_box('wck-cptc-side-trp', __('TranslatePress', 'wck'), 'wck_cptc_side_box_trp', 'wck_page_cptc-page', 'side', 'low');
+}
+
+function wck_cptc_side_box_trp()
+{
+    ?>
+    <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img
+                src="<?php echo plugins_url('/images/banner_trp.png', __FILE__) ?>?v=1" width="254"
+                alt="TranslatePress"/></a>
+    <h4>Easily translate your entire WordPress website</h4>
+    <p><a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank">Translate</a> your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.<br/><br/>
+        It offers a simpler way to translate WordPress sites, with full support for WooCommerce and site builders.</p>
+    <?php
 }
 
 /* Contextual Help */

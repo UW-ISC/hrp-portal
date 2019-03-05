@@ -148,6 +148,16 @@ class MLAData_Source {
 	 * @return	string|array	data source value
 	 */
 	public static function mla_get_data_source( $post_id, $category, $data_value, $attachment_metadata = NULL ) {
+		if ( !class_exists( 'MLAQuery' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
+			MLAQuery::initialize();
+		}
+
+		if ( !class_exists( 'MLAData' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
+			MLAData::initialize();
+		}
+
 		$default_arguments = array(
 			'data_source' => 'none',
 			'keep_existing' => true,

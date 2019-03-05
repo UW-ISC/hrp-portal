@@ -3,9 +3,6 @@
 &nbsp;
 <div class="wrap">
 <div id="icon-options-general" class="icon32"><br/></div>
-<div id="donate-button-div" class="alignright clear">
-	<a title="[+Support Our Work+]" class="button button-large button-primary" href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" target="_blank">[+Donate+]</a>
-</div>
 <h1>[+Media Library Assistant+] [+version+][+development+] [+Settings+]</h1>
 [+messages+]
 [+tablist+]
@@ -118,15 +115,6 @@
 <p>
 <a href="#backtotop">[+Go to Top+]</a>
 </p>
-<h2>[+Support Our Work+]</h2>
-<table width="700" border="0" cellpadding="10">
-	<tr>
-		<td>
-			<a title="[+Donate to FTJ+]" class="button button-large button-primary" href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" target="_blank">[+Donate+]</a>
-		</td>
-		<td>[+This plugin was+]</td>
-	</tr>
-</table>
 
 <!-- template="debug-tab" -->
 <h2>[+Debug Options+]</h2>

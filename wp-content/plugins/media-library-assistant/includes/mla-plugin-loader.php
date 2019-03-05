@@ -95,6 +95,10 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 
 	if( defined('DOING_AJAX') && DOING_AJAX ) {
 		//error_log( __LINE__ . " mla-plugin-loader.php DOING_AJAX \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
+		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_peak_usage( true ) ' . number_format( memory_get_peak_usage( true ) ), 0);
+		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_peak_usage( false ) ' . number_format( memory_get_peak_usage( false ) ), 0);
+		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_usage( true ) ' . number_format( memory_get_usage( true ) ), 0);
+		//error_log( __LINE__ . ' MEMORY mla-plugin-loader.php memory_get_usage( false ) ' . number_format( memory_get_usage( false ) ), 0);
 
 		// Ajax handlers
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-ajax.php' );
@@ -141,9 +145,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 			add_action( 'init', 'MLAQuery::initialize', 0x7FFFFFFF );
 
-			/*
-			 * Other plugins such as "No Cache AJAX Widgets" might need shortcodes
-			 */
+			// Other plugins such as "No Cache AJAX Widgets" might need shortcodes
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
 			add_action( 'init', 'MLAShortcodes::initialize', 0x7FFFFFFF );
 
@@ -151,50 +153,36 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		}
 	}
 
-	/*
-	 * Template file and database access functions.
-	 */
+	// Template file and database access functions.
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 	add_action( 'init', 'MLAQuery::initialize', 0x7FFFFFFF );
 
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
 	add_action( 'init', 'MLAData::initialize', 0x7FFFFFFF );
 
-	/*
-	 * Shortcode shim functions
-	 */
+	// Shortcode shim functions
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
 	add_action( 'init', 'MLAShortcodes::initialize', 0x7FFFFFFF );
 
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
 
-	/*
-	 * Plugin settings management
-	 */
+	// Plugin settings management
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
 	add_action( 'init', 'MLAOptions::initialize', 0x7FFFFFFF );
 	 
-	/*
-	 * Plugin settings management page
-	 */
+	// Plugin settings management page
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings.php' );
 	add_action( 'init', 'MLASettings::initialize', 0x7FFFFFFF );
 
-	/*
-	 * Main program
-	 */
+	// Main program
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-main.php' );
 	add_action( 'init', 'MLA::initialize', 0x7FFFFFFF );
 
-	/*
-	 * Edit Media screen additions, e.g., meta boxes
-	 */
+	// Edit Media screen additions, e.g., meta boxes
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-edit-media.php' );
 	add_action( 'init', 'MLAEdit::initialize', 0x7FFFFFFF );
 
-	/*
-	 * Media Manager (Modal window) additions
-	 */
+	// Media Manager (Modal window) additions
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-media-modal.php' );
 	add_action( 'init', 'MLAModal::initialize', 0x7FFFFFFF );
 

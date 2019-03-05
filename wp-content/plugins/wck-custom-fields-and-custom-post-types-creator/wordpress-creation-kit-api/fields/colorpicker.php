@@ -5,10 +5,12 @@
  * @param string $context Context where the function is used. Depending on it some actions are preformed.;
  * @return string $element input element html string. */
 
+$extra_attr = apply_filters( 'wck_extra_field_attributes', '', $details, $meta );
+
 $element .= '<input type="text" name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" id="';
 if( !empty( $frontend_prefix ) )
 	$element .=	$frontend_prefix;
-$element .= esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" value="'. ( ! empty( $value ) ? esc_attr( $value ) : esc_attr( $details['default'] ) ) .'" data-default-color="'. ( ! empty( $details['default'] ) ? esc_attr( $details['default'] ) : '' ) .'" class="mb-colorpicker mb-field"/>';
+$element .= esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" value="'. esc_attr( $value ) .'" data-default-color="'. ( ! empty( $details['default'] ) ? esc_attr( $details['default'] ) : '' ) .'" class="mb-colorpicker mb-field" '.$extra_attr.'/>';
 $element .= '<script type="text/javascript">
 	jQuery( document ).ready( function( $ ) {
 		$( ".mb-colorpicker" ).iris( {} );

@@ -21,6 +21,91 @@ var jQuery,
 				var id = jQuery( o ).closest( 'tr' ).attr( 'id' ),
 					parts = id.split( '-' );
 				return parts[ parts.length - 1 ];
+			},
+
+			attachSearch : function( rowId ) {
+				jQuery( rowId + ' .categorydiv' ).each( function(){
+					var this_id = jQuery(this).attr('id'), taxonomyParts, taxonomy;
+	
+					taxonomyParts = this_id.split('-');
+					taxonomyParts.shift(); // taxonomy-
+					taxonomy = taxonomyParts.join('-');
+	
+					jQuery.extend( jQuery.expr[":"], {
+						"matchTerms": function( elem, i, match, array ) {
+							return ( elem.textContent || elem.innerText || "" ).toLowerCase().indexOf( ( match[3] || "" ).toLowerCase() ) >= 0;
+						}
+					});
+	
+					jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
+					jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+
+					jQuery( rowId + ' #search-' + taxonomy ).off();
+
+					jQuery( rowId + ' #search-' + taxonomy ).keydown( function( event ){
+	
+						if( 13 === event.keyCode ) {
+							event.preventDefault();
+							jQuery( rowId + ' #search-'  + taxonomy ).val( '' );
+							jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
+	
+							jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+							return false;
+						}
+	
+					} );
+	
+					jQuery( rowId + ' #search-' + taxonomy ).keypress( function( event ){
+	
+						if( 13 === event.keyCode ) {
+							event.preventDefault();
+							jQuery( rowId + ' #search-'  + taxonomy ).val( '' );
+							jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
+	
+							jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+							return;
+						}
+	
+					} );
+	
+					jQuery( rowId + ' #search-' + taxonomy ).keyup( function( event ){
+						var searchValue, termList, matchingTerms;
+	
+						if( 13 === event.keyCode ) {
+							event.preventDefault();
+							jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).focus();
+							return;
+						}
+	
+						searchValue = jQuery( rowId + ' #search-' + taxonomy ).val();
+						termList = jQuery( rowId + ' #' + taxonomy + 'checklist li' );
+	
+						if ( 0 < searchValue.length ) {
+							termList.hide();
+						} else {
+							termList.show();
+						}
+	
+						matchingTerms = jQuery( rowId + ' #' + taxonomy + "checklist label:matchTerms('" + searchValue + "')");
+						matchingTerms.closest( 'li' ).find( 'li' ).andSelf().show();
+						matchingTerms.parents( rowId + ' #' + taxonomy + 'checklist li' ).show();
+					} );
+	
+					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).off();
+
+					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).click( function() {
+						jQuery( rowId + ' #' + taxonomy + '-adder ').addClass( 'wp-hidden-children' );
+						jQuery( rowId + ' #' + taxonomy + '-searcher' ).toggleClass( 'wp-hidden-children' );
+						jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+	
+						if ( false === jQuery( rowId + ' #' + taxonomy + '-searcher' ).hasClass( 'wp-hidden-children' ) ) {
+							jQuery( rowId + ' #search-'  + taxonomy ).val( '' ).removeClass( 'form-input-tip' );
+							jQuery( rowId + ' #search-' + taxonomy ).focus();
+						}
+	
+						return false;
+					});
+				}); // .categorydiv.each, 
 			}
 		},
 
@@ -30,9 +115,7 @@ var jQuery,
 	};
 
 ( function( $ ) {
-	/**
-	 * Localized settings and strings
-	 */
+	// Localized settings and strings
 	mla.settings = typeof mla_add_new_bulk_edit_vars === 'undefined' ? {} : mla_add_new_bulk_edit_vars;
 	mla_add_new_bulk_edit_vars = void 0; // delete won't work on Globals
 
@@ -46,13 +129,18 @@ var jQuery,
 				bypass = $( '.upload-flash-bypass' ), title = $( '#wpbody .wrap' ).children ( 'h1, h2' ),
 				uploadContent, uploadDiv = $( '#mla-add-new-bulk-edit-div' ).hide(); // Start with area closed up
 
+			if ( typeof mla.addTerm !== 'undefined' ) {
+				mla.addTerm.init( '#mla-add-new-bulk-edit-div' );
+			}
+			mla.utility.attachSearch( '#mla-add-new-bulk-edit-div' );
+				
 			$( '#bulk-edit-set-parent', uploadDiv ).on( 'click', function(){
 				return mla.addNewBulkEdit.parentOpen();
 			});
 
 			// Move the blank content out of the form so it won't pollute the serialize() results
 			blankContent = $('#mla-blank-add-new-bulk-edit-div').detach();
-			$( '#file-form' ).before( blankContent );
+			$( '#file-form' ).after( blankContent );
 
 			// Move the Open/Close Bulk Edit area toggleButton to save space on the page
 			toggleButton = $( '#bulk-edit-toggle', uploadDiv ).detach();
@@ -113,6 +201,11 @@ var jQuery,
 			$('.inline-edit-tags', bulkDiv ).html( blankTags ),
 			$('.inline-edit-fields', bulkDiv ).html( blankFields );
 
+			if ( typeof mla.addTerm !== 'undefined' ) {
+				mla.addTerm.init( '#mla-add-new-bulk-edit-div' );
+			}
+			mla.utility.attachSearch( '#mla-add-new-bulk-edit-div' );
+				
 			$('#bulk-edit-set-parent', bulkDiv).on( 'click', function(){
 				return mla.addNewBulkEdit.parentOpen();
 			});

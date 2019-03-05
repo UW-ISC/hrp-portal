@@ -130,7 +130,7 @@ class MLAObjects {
 	 */
 	public static function mla_taxonomy_get_columns_filter( $columns ) {
 		// Adding or inline-editing a tag is done with AJAX, and there's no current screen object
-		if ( isset( $_POST['action'] ) && in_array( $_POST['action'], array( 'add-tag', 'inline-save-tax' ) ) ) {
+		if ( isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'add-tag', 'inline-save-tax' ) ) ) {
 			$post_type = !empty($_POST['post_type']) ? $_POST['post_type'] : 'post';
 			$taxonomy = !empty($_POST['taxonomy']) ? $_POST['taxonomy'] : 'post_tag';
 		} else {

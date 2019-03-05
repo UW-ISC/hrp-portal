@@ -18,16 +18,16 @@
  * https://wordpress.org/support/topic/create-a-feed-out-of-the-media-library/
  *
  * @package MLA Custom Feed Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
 Plugin Name: MLA Custom Feed Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Configures and processes custom RSS2 feeds for Media Library items
 Author: David Lingren
-Version: 1.10
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.11
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 
@@ -60,7 +60,7 @@ class MLACustomFeedExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.10';
+	const CURRENT_VERSION = '1.11';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings

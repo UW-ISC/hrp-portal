@@ -6,20 +6,20 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 2.73
+ * @version 2.78
  */
 
 /*
 Plugin Name: Media Library Assistant
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/#two
 Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
-Author: David Lingren, Fair Trade Judaica
+Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.73
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 2.78
+Author URI: http://davidlingren.com/
 
-Copyright 2011-2018 David Lingren
+Copyright 2011-2019 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

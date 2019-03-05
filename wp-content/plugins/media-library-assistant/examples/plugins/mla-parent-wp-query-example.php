@@ -20,16 +20,16 @@
  * https://wordpress.org/support/topic/create-gallery-of-all-images-attached-to-a-list-of-posts/
  *
  * @package MLA Parent WP_Query Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Parent WP_Query Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Selects items attached to parents assigned to a taxonomy term
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

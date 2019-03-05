@@ -1,4 +1,4 @@
-<?php 
+<?php
 /* Copyright 2013 cozmoslabs.com (email : hello@cozmoslabs.com)
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
  * We're converting new lines to <br /> tags
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $field The processed field
  */
@@ -33,7 +33,7 @@ function wck_preprocess_field_textarea( $field ){
  * We're returnig an array with the selected checkboxes
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $checkbox The processed field
  */
@@ -51,12 +51,12 @@ function wck_preprocess_field_checkbox( $field ){
  * We're returnig a coma separated list with the selected values - not labels
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $checkbox The processed field
  */
  add_filter( 'wck_output_the_field_checkbox', 'wck_preprocess_the_field_checkbox', 10 );
-function wck_preprocess_the_field_checkbox( $field ){	
+function wck_preprocess_the_field_checkbox( $field ){
 	if( !empty( $field ) ){
 		$checkbox_list = implode( ', ', $field );
 		return $checkbox_list;
@@ -69,7 +69,7 @@ function wck_preprocess_the_field_checkbox( $field ){
  * We're returning an array for images and an object for normal files
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $upload The processed field
  */
@@ -82,52 +82,43 @@ function wck_preprocess_field_upload( $field ){
 	if ( is_null( get_post( $field ) ) )
 		return false;
 
-	if ( wp_attachment_is_image( $field ) ) {
-		
-		$attachment = get_post( $field );
+	$attachment = get_post( $field );
 
-		// create array to hold value data
+	// create array to hold value data
+	$value = array(
+		'id'          => $attachment->ID,
+		'alt'         => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
+		'title'       => $attachment->post_title,
+		'caption'     => $attachment->post_excerpt,
+		'description' => $attachment->post_content
+	);
+
+	if ( wp_attachment_is_image( $field ) ) {
+
 		$src = wp_get_attachment_image_src( $attachment->ID, 'full' );
-		
-		$value = array(
-			'id' => $attachment->ID,
-			'alt' => get_post_meta($attachment->ID, '_wp_attachment_image_alt', true),
-			'title' => $attachment->post_title,
-			'caption' => $attachment->post_excerpt,
-			'description' => $attachment->post_content,
-			'url' => $src[0],
-			'width' => $src[1],
-			'height' => $src[2],
-			'sizes' => array(),
-		);
-		
+
+		$value['url'] = $src[0];
+		$value['width'] = $src[1];
+		$value['height'] = $src[2];
+
 		// find all image sizes
 		$image_sizes = get_intermediate_image_sizes();
-			
-		if( $image_sizes )
-		{
-			foreach( $image_sizes as $image_size )
-			{
+
+		if( $image_sizes ) {
+			foreach( $image_sizes as $image_size ) {
 				// find src
 				$src = wp_get_attachment_image_src( $attachment->ID, $image_size );
-				
+
 				// add src
 				$value[ 'sizes' ][ $image_size ] = $src[0];
 				$value[ 'sizes' ][ $image_size . '-width' ] = $src[1];
 				$value[ 'sizes' ][ $image_size . '-height' ] = $src[2];
 			}
-		}		
-		
-		return $value;
-	
-	} else {
-	
-		$attachement = get_post( $field );
-	
-		return $attachement;
-	
-	}
-	
+		}
+	} else
+		$value['url'] = wp_get_attachment_url( $attachment->ID );
+
+	return $value;
 }
 
 /**
@@ -135,7 +126,7 @@ function wck_preprocess_field_upload( $field ){
  * We're returnig an url.
  *
  * @since 1.1.5
- *	 
+ *
  */
 add_filter( 'wck_output_the_field_upload', 'wck_preprocess_the_field_upload', 10 );
 function wck_preprocess_the_field_upload( $field ){
@@ -143,15 +134,15 @@ function wck_preprocess_the_field_upload( $field ){
 	if( $field === false ){
 		return;
 	}
-	
+
 	if ( is_object( $field ) ){
 		return $field->guid;
 	}
-	
+
 	if ( is_array( $field ) ){
 		return $field['url'];
 	}
-	
+
 }
 
 
@@ -160,14 +151,14 @@ function wck_preprocess_the_field_upload( $field ){
  * We're returnig an array with user related information
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $user The processed field
  */
 add_filter( 'wck_output_get_field_user-select', 'wck_preprocess_field_user_select', 10 );
 function wck_preprocess_field_user_select( $uid ){
 	$user_data = get_userdata( $uid );
-	
+
 	if ( $user_data ){
 		$user_array = array();
 		$user_array['ID'] = $uid;
@@ -181,13 +172,13 @@ function wck_preprocess_field_user_select( $uid ){
 		$user_array['user_registered'] = $user_data->user_registered;
 		$user_array['user_description'] = $user_data->user_description;
 		$user_array['user_avatar'] = get_avatar( $uid );
-		
+
 		return $user_array;
-		
+
 	} else {
-	
+
 		return false;
-	
+
 	}
 }
 
@@ -196,7 +187,7 @@ function wck_preprocess_field_user_select( $uid ){
  * We're returnig the Display Name
  *
  * @since 1.1.5
- *	 
+ *
  */
 add_filter( 'wck_output_the_field_user-select', 'wck_preprocess_the_field_user_select', 10 );
 function wck_preprocess_the_field_user_select( $user ){
@@ -204,7 +195,7 @@ function wck_preprocess_the_field_user_select( $user ){
 	if( $user === false ){
 		return;
 	}
-	
+
 	if( is_array( $user ) ){
 		return $user['display_name'];
 	}
@@ -216,20 +207,20 @@ function wck_preprocess_the_field_user_select( $user ){
  * We're returnig a post object
  *
  * @since 1.1.5
- *	 
+ *
  * @param string $field The actual field content
  * @return string $user The processed field
  */
 add_filter( 'wck_output_get_field_cpt-select', 'wck_preprocess_field_cpt_select', 10 );
 function wck_preprocess_field_cpt_select( $id ){
-	
+
 	if ( $id == '' || !is_numeric( $id ) )
 		return false;
-	
+
 	$post = get_post( $id );
 	if( is_null( $post ) )
 		return false;
-		
+
 	return $post;
 }
 
@@ -238,15 +229,15 @@ function wck_preprocess_field_cpt_select( $id ){
  * We're returnig the post title.
  *
  * @since 1.1.5
- *	 
+ *
  */
 add_filter( 'wck_output_the_field_cpt-select', 'wck_preprocess_the_field_cpt_select', 10 );
 function wck_preprocess_the_field_cpt_select( $post ){
-	
+
 	if( $post == false ){
 		return;
 	}
-	
+
 	if( is_object( $post ) ){
 		return $post->post_title;
 	}

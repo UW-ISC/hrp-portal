@@ -30,6 +30,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_disable_or_fallback' );
 	delete_option( 'relevanssi_disable_shortcodes' );
 	delete_option( 'relevanssi_doc_count' );
+	delete_option( 'relevanssi_do_not_call_home' );
 	delete_option( 'relevanssi_exact_match_bonus' );
 	delete_option( 'relevanssi_excat' );
 	delete_option( 'relevanssi_extag' );
@@ -57,6 +58,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_index_limit' );
 	delete_option( 'relevanssi_index_pdf_parent' );
 	delete_option( 'relevanssi_index_post_types' );
+	delete_option( 'relevanssi_index_post_type_archives' );
 	delete_option( 'relevanssi_index_subscribers' );
 	delete_option( 'relevanssi_index_synonyms' );
 	delete_option( 'relevanssi_index_taxonomies' );
@@ -74,12 +76,16 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_mysql_columns' );
 	delete_option( 'relevanssi_omit_from_logs' );
 	delete_option( 'relevanssi_polylang_all_languages' );
+	delete_option( 'relevanssi_post_type_ids' );
 	delete_option( 'relevanssi_post_type_weights' );
 	delete_option( 'relevanssi_punctuation' );
 	delete_option( 'relevanssi_read_new_files' );
 	delete_option( 'relevanssi_recency_bonus' );
+	delete_option( 'relevanssi_redirects' );
 	delete_option( 'relevanssi_respect_exclude' );
 	delete_option( 'relevanssi_send_pdf_files' );
+	delete_option( 'relevanssi_searchblogs' );
+	delete_option( 'relevanssi_searchblogs_all' );
 	delete_option( 'relevanssi_server_location' );
 	delete_option( 'relevanssi_show_matches_text' );
 	delete_option( 'relevanssi_show_matches' );
@@ -100,6 +106,12 @@ function relevanssi_uninstall() {
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_unpin'" );
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pdf_content'" );
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pdf_error'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_keywords'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_posts'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_include_ids'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_exclude_ids'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_no_append'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_not_related'" );
 
 	// Unused options, removed in case they are still left.
 	delete_option( 'relevanssi_custom_types' );

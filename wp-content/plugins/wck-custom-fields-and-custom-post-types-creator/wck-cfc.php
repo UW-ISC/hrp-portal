@@ -231,14 +231,19 @@ function wck_cfc_after_refresh_list(){
 add_action( 'admin_init', 'wck_cfc_create_boxes' );
 
 function wck_cfc_create_boxes_args(){
+    $all_box_args = wp_cache_get( 'wck_all_box_args', 'wck' );
+
+    if ( $all_box_args !== false )
+        return $all_box_args;
+
+    $all_box_args = array();
+
 	$args = array(
 		'post_type' => 'wck-meta-box',
 		'numberposts' => -1
 	);
 
 	$all_meta_boxes = get_posts( $args );
-
-	$all_box_args = array();
 
 	if( !empty( $all_meta_boxes ) ){
 		foreach( $all_meta_boxes as $meta_box ){
@@ -385,6 +390,7 @@ function wck_cfc_create_boxes_args(){
 			}
 		}
 	}
+    wp_cache_set( 'wck_all_box_args', $all_box_args, 'wck');
 	return $all_box_args;
 }
 
@@ -754,6 +760,25 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     }
 }
 
+/* add TranslatePress crosspromotion */
+add_action('add_meta_boxes', 'wck_cfc_add_trp_side_box');
+function wck_cfc_add_trp_side_box()
+{
+    add_meta_box('wck-cfc-side-trp', __('TranslatePress', 'wck'), 'wck_cfc_side_box_trp', 'wck-meta-box', 'side', 'low');
+}
+
+function wck_cfc_side_box_trp()
+{
+    ?>
+    <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img
+                src="<?php echo plugins_url('/images/banner_trp.png', __FILE__) ?>?v=1" width="254"
+                alt="TranslatePress"/></a>
+	<h4>Easily translate your entire WordPress website</h4>
+	<p><a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank">Translate</a> your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.<br/><br/>
+	It offers a simpler way to translate WordPress sites, with full support for WooCommerce and site builders.</p>
+    <?php
+}
+
 
 /* Contextual Help */
 add_action('current_screen', 'wck_cfc_help');
@@ -846,13 +871,13 @@ function wck_cfc_make_options_required( $meta_array, $meta, $values, $id ) {
 	}
 
 	foreach( $meta_array as $key => $field ) {
-		if( $field['type'] == 'phone' ) {
+		if( isset( $field['type'] ) && $field['type'] == 'phone' ) {
 			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
 			$meta_array[$key]['required'] = true;
 			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_phone_field_error', 10, 6 );
 		}
 
-		if( $field['type'] == 'number' ) {
+		if( isset( $field['type'] ) && $field['type'] == 'number' ) {
 			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
 			$meta_array[$key]['required'] = true;
 			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_number_field_error', 10, 6 );
@@ -947,22 +972,59 @@ function wck_number_field_error( $bool, $value, $id, $field, $meta, $fields ) {
 		$field_slug = Wordpress_Creation_Kit::wck_generate_slug( $field_array['title'], $field_array );
 		if( $field_slug == $field ) {
 			if( ! empty( $value ) && ! is_numeric( $value ) ) {
-				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$message = apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" ); return $message;' ), 10, 3 );
+
+				if ( version_compare( phpversion(), '5.4.0', '<' ) )
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$message = apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" ); return $message;' ), 10, 3 );
+				else {
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) {
+						return apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" );
+					}, 10, 3 );
+				}
+
 				return true;
 			}
 
 			if( ! empty( $field_array['number-step-value'] ) && ! empty( $value ) && ( sprintf( round( $value / $field_array['number-step-value'] ) ) != sprintf( $value / $field_array['number-step-value'] ) ) ) {
-				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_step = '. $field_array['number-step-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" ); return $message;' ), 10, 3 );
+
+				if ( version_compare( phpversion(), '5.4.0', '<' ) )
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_step = '. $field_array['number-step-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" ); return $message;' ), 10, 3 );
+				else {
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+						$number_step = $field_array['number-step-value'];
+
+						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" );
+					}, 10, 3 );
+				}
+
 				return true;
 			}
 
-			if( ( ! empty( $field_array['min-number-value'] ) || $field_array['min-number-value'] == '0' ) && ( ! empty( $value ) || $value == '0' ) && $value < $field_array['min-number-value'] ) {
-				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_min = '. $field_array['min-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" ); return $message;' ), 10, 3 );
+			if( ( ! empty( $field_array['min-number-value'] ) || (isset($field_array['min-number-value']) && $field_array['min-number-value'] == '0' )) && ( ! empty( $value ) || $value == '0' ) && $value < $field_array['min-number-value'] ) {
+
+				if ( version_compare( phpversion(), '5.4.0', '<' ) )
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_min = '. $field_array['min-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" ); return $message;' ), 10, 3 );
+				else {
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+						$number_min = $field_array['min-number-value'];
+
+						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" );
+					}, 10, 3 );
+				}
+
 				return true;
 			}
 
-			if( ( ! empty( $field_array['max-number-value'] ) || $field_array['max-number-value'] == '0' ) && ( ! empty( $value ) || $value == '0' ) && $value > $field_array['max-number-value'] ) {
-				add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_max = '. $field_array['max-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" ); return $message;' ), 10, 3 );
+			if( ( ! empty( $field_array['max-number-value'] ) || (isset($field_array['max-number-value']) && $field_array['max-number-value'] == '0' )) && ( ! empty( $value ) || $value == '0' ) && $value > $field_array['max-number-value'] ) {
+				if ( version_compare( phpversion(), '5.4.0', '<' ) )
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_max = '. $field_array['max-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" ); return $message;' ), 10, 3 );
+				else {
+					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+						$number_max = $field_array['max-number-value'];
+
+						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" );
+					}, 10, 3 );
+				}
+
 				return true;
 			}
 
@@ -1264,6 +1326,12 @@ function wck_serialized_update_from_unserialized( $replace, $object_id, $meta_ke
 add_filter( 'is_protected_meta', 'wck_cfc_protect_meta_keys', 10, 3 );
 function wck_cfc_protect_meta_keys( $protected, $meta_key, $meta_type ){
 	global $wck_objects, $post;
+
+	//they should be available on frontend and customizer
+	if( is_customize_preview() || !is_admin() ){
+		return $protected;
+	}
+
 	if( !empty( $wck_objects ) ){
 		foreach( $wck_objects as $wck_object ){
 			if( !empty( $wck_object['meta_array'] ) ){

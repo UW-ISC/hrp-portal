@@ -7,16 +7,16 @@
  * https://wordpress.org/support/topic/attachment_category-rewrite/
  *
  * @package MLA Taxonomy Hooks Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Taxonomy Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Documents the hooks provided for registering the Att. Categories and Att. Tags taxonomies
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 

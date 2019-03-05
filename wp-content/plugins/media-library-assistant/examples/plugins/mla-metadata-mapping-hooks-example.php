@@ -8,16 +8,16 @@
  * file do the actual work.
  *
  * @package MLA Metadata Mapping Hooks Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
 Plugin Name: MLA Metadata Mapping Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an advanced example of the filters provided by the IPTC/EXIF and Custom Field mapping features
 Author: David Lingren
-Version: 1.03
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.04
+Author URI: http://davidlingren.com/
 
 Copyright 2014-2016 David Lingren
 

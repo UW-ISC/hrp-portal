@@ -6,16 +6,16 @@
  * shortcode parameter is present. The example documents ALL the filters available in the shortcode.
  *
  * @package MLA Term List Hooks Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Term List Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_term_list] shortcode
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2013-2016 David Lingren
 

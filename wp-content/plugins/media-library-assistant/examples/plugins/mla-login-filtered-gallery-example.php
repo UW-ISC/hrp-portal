@@ -19,16 +19,16 @@
  * https://wordpress.org/support/topic/multiple-calls-to-a-smaller-amount
  *
  * @package MLA Login-filtered Gallery Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Login-filtered Gallery Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Restricts items to logged-in users based on an Att. Categories term
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 

@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MLA Fixed Values Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2014, 2015 David Lingren
 

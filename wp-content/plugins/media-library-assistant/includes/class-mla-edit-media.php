@@ -86,9 +86,7 @@ class MLAEdit {
 
 		add_post_type_support( 'attachment', apply_filters( 'mla_edit_media_support', $edit_media_support ) );
 
-		/*
-		 * Check for Media/Add New bulk edit area updates
-		 */
+		// Check for Media/Add New bulk edit area updates
 		if ( ! empty( $_REQUEST['mlaAddNewBulkEditFormString'] ) && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT ) ) ) {
 			/*
 			 * If any of the mapping rule options is enabled, use the MLA filter so this
@@ -106,10 +104,8 @@ class MLAEdit {
 			}
 		}
 
-		/*
-		 * If there's no action variable, we have nothing more to do
-		 */
-		if ( ! isset( $_POST['action'] ) ) {
+		// If there's no action variable, we have nothing more to do
+		if ( ! isset( $_REQUEST['action'] ) ) {
 			return;
 		}
 
@@ -117,7 +113,7 @@ class MLAEdit {
 		 * For flat taxonomies that use the checklist meta box, convert the term array
 		 * back into a string of slug values.
 		 */
-		if ( 'editpost' == $_POST['action']  ) {
+		if ( 'editpost' == $_REQUEST['action']  ) {
 			if ( isset( $_POST['tax_input'] ) && is_array( $_POST['tax_input'] ) ) {
 				foreach( $_POST['tax_input'] as $key => $value ) {
 					if ( is_array( $value ) ) {
@@ -153,9 +149,7 @@ class MLAEdit {
 
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
-		/*
-		 * Add New Bulk Edit Area
-		 */
+		// Add New Bulk Edit Area
 		if ( 'media-new.php' == $page_hook && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT ) ) ) {
 			if ( $wp_locale->is_rtl() ) {
 				wp_register_style( 'mla-add-new-bulk-edit', MLA_PLUGIN_URL . 'css/mla-add-new-bulk-edit-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
@@ -172,6 +166,11 @@ class MLAEdit {
 			wp_enqueue_script( 'mla-add-new-bulk-edit-scripts', MLA_PLUGIN_URL . "js/mla-add-new-bulk-edit-scripts{$suffix}.js", 
 				array( 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
 
+			if ( MLACore::mla_supported_taxonomies( 'checklist-add-term' ) ) {
+				wp_enqueue_script( 'mla-add-new-bulk-edit-scripts' . '-add-term', MLA_PLUGIN_URL . "js/mla-add-term-scripts{$suffix}.js", 
+					array( 'wp-ajax-response', 'jquery', 'mla-add-new-bulk-edit-scripts' ), MLACore::CURRENT_MLA_VERSION, false );
+			}
+		
 			wp_enqueue_script( 'mla-add-new-bulk-edit-scripts' . '-set-parent', MLA_PLUGIN_URL . "js/mla-set-parent-scripts{$suffix}.js", 
 				array( 'mla-add-new-bulk-edit-scripts', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
 
@@ -334,13 +333,34 @@ class MLAEdit {
 					$tax_checklist = ob_get_contents();
 					ob_end_clean();
 					
+					if ( MLACore::mla_taxonomy_support( $tax_name, 'checklist-add-term' ) ) {
+						$page_values = array(
+							'tax_attr' => esc_attr( $tax_name ),
+							'Add New Term' => __( '+&nbsp;Add&nbsp;New&nbsp;Term', 'media-library-assistant' ),
+							'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
+							'tax_parents' => wp_dropdown_categories( array( 'taxonomy' => $tax_name, 'hide_empty' => 0, 'name' => "new{$tax_name}_parent", 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax_object->labels->parent_item . ' &mdash;', 'echo' => 0 ) ),
+							'Add Button' => esc_html( $tax_object->labels->add_new_item ),
+							'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+						);
+					
+						$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
+						$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+					} else {
+						$category_add_link = '';
+						$category_adder = '';
+					}
+					
 					$page_values = array(
-					  'tax_html' => esc_html( $tax_object->labels->name ),
-					  'tax_attr' => esc_attr( $tax_name ),
-					  'tax_checklist' => $tax_checklist,
-					  'Add' => __( 'Add', 'media-library-assistant' ),
-					  'Remove' => __( 'Remove', 'media-library-assistant' ),
-					  'Replace' => __( 'Replace', 'media-library-assistant' ),
+						'tax_html' => esc_html( $tax_object->labels->name ),
+						'tax_attr' => esc_attr( $tax_name ),
+						'tax_checklist' => $tax_checklist,
+						'category_add_link' => $category_add_link,
+						'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
+						'category_adder' => $category_adder,
+						'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
+						'Add' => __( 'Add', 'media-library-assistant' ),
+						'Remove' => __( 'Remove', 'media-library-assistant' ),
+						'Replace' => __( 'Replace', 'media-library-assistant' ),
 					);
 					$category_block = MLAData::mla_parse_template( $page_template_array['category_block'], $page_values );
 					$taxonomy_options = MLAData::mla_parse_template( $page_template_array['taxonomy_options'], $page_values );
@@ -369,10 +389,31 @@ class MLAEdit {
 						$tax_checklist = ob_get_contents();
 						ob_end_clean();
 						
+						if ( MLACore::mla_taxonomy_support( $tax_name, 'checklist-add-term' ) ) {
+							$page_values = array(
+								'tax_attr' => esc_attr( $tax_name ),
+								'Add New Term' => __( '+&nbsp;Add&nbsp;New&nbsp;Term', 'media-library-assistant' ),
+								'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
+								'tax_parents' => "<input type='hidden' name='new{$tax_name}_parent' id='new{$tax_name}_parent' value='-1' />",
+								'Add Button' => esc_html( $tax_object->labels->add_new_item ),
+								'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+							);
+						
+							$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
+							$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+						} else {
+							$category_add_link = '';
+							$category_adder = '';
+						}
+					
 						$page_values = array(
 							'tax_html' => esc_html( $tax_object->labels->name ),
 							'tax_attr' => esc_attr( $tax_name ),
 							'tax_checklist' => $tax_checklist,
+							'category_add_link' => $category_add_link,
+							'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
+							'category_adder' => $category_adder,
+							'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
 							'Add' => __( 'Add', 'media-library-assistant' ),
 							'Remove' => __( 'Remove', 'media-library-assistant' ),
 							'Replace' => __( 'Replace', 'media-library-assistant' ),

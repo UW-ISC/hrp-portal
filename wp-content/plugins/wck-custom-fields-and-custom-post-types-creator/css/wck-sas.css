@@ -47,3 +47,13 @@
 	background:#eeffe0;
 	border-color:#4dcc00;
 }
+
+.wck_page_sas-page #poststuff .changelog h2{
+	font-size:1.4em;
+	padding-left:0;
+}
+
+.wck_page_sas-page .about-wrap .feature-section p{
+	margin-right: 0;
+	margin-left: 0;
+}

@@ -11,29 +11,44 @@ class Red_Htaccess {
 		$url = ltrim( $url, '/' );
 
 		// Exactly match the URL
-		return '^'.$url.'$';
+		return '^' . $url . '$';
 	}
 
+	// URL encode some things, but other things can be passed through
 	private function encode2nd( $url ) {
+		$allowed = [
+			'%2F' => '/',
+			'%3F' => '?',
+			'%3A' => ':',
+			'%3D' => '=',
+			'%26' => '&',
+			'%25' => '%',
+			'+' => '%20',
+			'%24' => '$',
+			'%23' => '#',
+		];
+
 		$url = urlencode( $url );
-		$url = str_replace( '%2F', '/', $url );
-		$url = str_replace( '%3F', '?', $url );
-		$url = str_replace( '%3A', ':', $url );
-		$url = str_replace( '%3D', '=', $url );
-		$url = str_replace( '%26', '&', $url );
-		$url = str_replace( '%25', '%', $url );
-		$url = str_replace( '+', '%20', $url );
-		$url = str_replace( '%24', '$', $url );
-		return $url;
+		return $this->replace_encoding( $url, $allowed );
+	}
+
+	private function replace_encoding( $str, $allowed ) {
+		foreach ( $allowed as $before => $after ) {
+			$str = str_replace( $before, $after, $str );
+		}
+
+		return $str;
 	}
 
 	private function encode( $url ) {
-		$url = urlencode( $url );
-		$url = str_replace( '%2F', '/', $url );
-		$url = str_replace( '%3F', '?', $url );
-		$url = str_replace( '+', '%20', $url );
-		$url = str_replace( '.', '\\.', $url );
-		return $url;
+		$allowed = [
+			'%2F' => '/',
+			'%3F' => '?',
+			'+' => '%20',
+			'.' => '\\.',
+		];
+
+		return $this->replace_encoding( urlencode( $url ), $allowed );
 	}
 
 	private function encode_regex( $url ) {
@@ -79,13 +94,14 @@ class Red_Htaccess {
 
 	private function add_agent( $item, $match ) {
 		$from = $this->encode( ltrim( $item->get_url(), '/' ) );
-		if ( $item->is_regex() )
+		if ( $item->is_regex() ) {
 			$from = $this->encode_regex( ltrim( $item->get_url(), '/' ) );
+		}
 
 		if ( ( $match->url_from || $match->url_notfrom ) && $match->user_agent ) {
 			$this->items[] = sprintf( 'RewriteCond %%{HTTP_USER_AGENT} %s [NC]', ( $match->regex ? $this->encode_regex( $match->user_agent ) : $this->encode2nd( $match->user_agent ) ) );
 
-			if ( $match->url_from )	{
+			if ( $match->url_from ) {
 				$to = $this->target( $item->get_action_type(), $match->url_from, $item->get_action_code(), $item->is_regex() );
 				$this->items[] = sprintf( 'RewriteRule %s %s', $from, $to );
 			}
@@ -97,13 +113,20 @@ class Red_Htaccess {
 		}
 	}
 
+	private function add_server( $item, $match ) {
+		$match->url = $match->url_from;
+		$this->items[] = sprintf( 'RewriteCond %%{HTTP_HOST} ^%s$ [NC]', preg_quote( $match->server ) );
+		$this->add_url( $item, $match );
+	}
+
 	private function add_url( $item, $match ) {
 		$url = $item->get_url();
 
 		if ( $item->is_regex() === false && strpos( $url, '?' ) !== false || strpos( $url, '&' ) !== false ) {
-			$url_parts = parse_url( $url );
+			$url_parts = wp_parse_url( $url );
 			$url = $url_parts['path'];
-			$this->items[] = sprintf( 'RewriteCond %%{QUERY_STRING} ^%s$', $url_parts['query'] );
+			$query = isset( $url_parts['query'] ) ? $url_parts['query'] : '';
+			$this->items[] = sprintf( 'RewriteCond %%{QUERY_STRING} ^%s$', $query );
 		}
 
 		$to = $this->target( $item->get_action_type(), $match->url, $item->get_action_code(), $item->is_regex() );
@@ -123,7 +146,7 @@ class Red_Htaccess {
 		global $wpdb;
 
 		$post = $wpdb->get_var( "SELECT ID FROM {$wpdb->posts} ORDER BY RAND() LIMIT 0,1" );
-		$url  = parse_url( get_permalink( $post ) );
+		$url  = wp_parse_url( get_permalink( $post ) );
 
 		return sprintf( '%s [R=%d,L]', $this->encode( $url['path'] ), $code );
 	}
@@ -150,7 +173,7 @@ class Red_Htaccess {
 	}
 
 	private function target( $action, $data, $code, $regex ) {
-		$target = 'action_'.$action;
+		$target = 'action_' . $action;
 
 		if ( method_exists( $this, $target ) ) {
 			return $this->$target( $data, $code, $regex );
@@ -159,22 +182,29 @@ class Red_Htaccess {
 	}
 
 	private function generate() {
-		$version = get_plugin_data( dirname( dirname( __FILE__ ) ).'/redirection.php' );
+		$version = red_get_plugin_data( dirname( dirname( __FILE__ ) ) . '/redirection.php' );
 
 		if ( count( $this->items ) === 0 ) {
 			return '';
 		}
 
 		$text[] = '# Created by Redirection';
-		$text[] = '# '.date( 'r' );
-		$text[] = '# Redirection '.trim( $version['Version'] ).' - https://redirection.me';
+		$text[] = '# ' . date( 'r' );
+		$text[] = '# Redirection ' . trim( $version['Version'] ) . ' - https://redirection.me';
 		$text[] = '';
 
 		// mod_rewrite section
 		$text[] = '<IfModule mod_rewrite.c>';
 
+		// Add http => https option
+		$options = red_get_options();
+		if ( $options['https'] ) {
+			$text[] = 'RewriteCond %{HTTPS} off';
+			$text[] = 'RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI}';
+		}
+
 		// Add redirects
-		$text = array_merge( $text, $this->items );
+		$text = array_merge( $text, array_filter( array_map( [ $this, 'sanitize_redirect' ], $this->items ) ) );
 
 		// End of mod_rewrite
 		$text[] = '</IfModule>';
@@ -183,15 +213,16 @@ class Red_Htaccess {
 		// End of redirection section
 		$text[] = '# End of Redirection';
 
-		$text = implode( "\r\n", $text );
-		return "\n".$text."\n";
+		$text = implode( "\n", $text );
+		return "\n" . $text . "\n";
 	}
 
 	public function add( $item ) {
-		$target = 'add_'.$item->get_match_type();
+		$target = 'add_' . $item->get_match_type();
 
-		if ( method_exists( $this, $target ) )
+		if ( method_exists( $this, $target ) && $item->is_enabled() ) {
 			$this->$target( $item, $item->match );
+		}
 	}
 
 	public function get( $existing = false ) {
@@ -201,15 +232,24 @@ class Red_Htaccess {
 			if ( preg_match( self::INSERT_REGEX, $existing ) > 0 ) {
 				$text = preg_replace( self::INSERT_REGEX, str_replace( '$', '\\$', $text ), $existing );
 			} else {
-				$text = trim( $existing )."\n".$text;
+				$text = $text . "\n" . trim( $existing );
 			}
 		}
 
 		return trim( $text );
 	}
 
+	public function sanitize_redirect( $text ) {
+		return str_replace( [ '<?', '>' ], '', $text );
+	}
+
+	public function sanitize_filename( $filename ) {
+		return str_replace( '.php', '', $filename );
+	}
+
 	public function save( $filename, $content_to_save = false ) {
 		$existing = false;
+		$filename = $this->sanitize_filename( $filename );
 
 		if ( file_exists( $filename ) ) {
 			$existing = file_get_contents( $filename );

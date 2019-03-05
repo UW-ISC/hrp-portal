@@ -9,6 +9,8 @@
  *     - an "author:" prefix accesses all of the WP_User properties for an item's author
  *     - an "conditional:" prefix returns a value when a condition is true, e.g., during the upload process
  *     - a "wp_query_vars:" prefix accesses all of the "global $wp_query->query_vars" properties
+ *     - a "current_term:" prefix accesses the term named in a $_REQUEST variable
+ *         e.g. {+current_term:taxonomy.default_value(term_field)+}
  *
  * Created for support topic "Parent category tag"
  * opened on 5/20/2016 by "Levy":
@@ -38,19 +40,23 @@
  * opened on 3/1/2017 by "mbruxelle":
  * https://wordpress.org/support/topic/wp_query-query_vars-in-query/
  *
+ * Enhanced for support topic "Sorting items in Tag cloud by parent/child?"
+ * opened on 5/9/2018 by "antonstepichev":
+ * https://wordpress.org/support/topic/sorting-items-in-tag-cloud-by-parent-child/
+ *
  * @package MLA Substitution Parameter Hooks Example
- * @version 1.08
+ * @version 1.12
  */
 
 /*
 Plugin Name: MLA Substitution Parameter Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
-Description: Adds "parent_terms:", "page_terms:", "parent:", "author:" and "conditional:" Field-level Substitution Parameters
+Plugin URI: http://davidlingren.com/
+Description: Adds "parent_terms:", "page_terms:", "parent:", "author:", "conditional:", "wp_query_vars" and "current_term" Field-level Substitution Parameters
 Author: David Lingren
-Version: 1.08
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.12
+Author URI: http://davidlingren.com/
 
-Copyright 2016-2017 David Lingren
+Copyright 2016-2018 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -88,18 +94,14 @@ class MLASubstitutionParameterExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * Defined in /media-library-assistant/includes/class-mla-data.php
-		 */
+		// Defined in /media-library-assistant/includes/class-mla-data.php
 		//add_filter( 'mla_expand_custom_data_source', 'MLASubstitutionParameterExample::mla_expand_custom_data_source', 10, 9 );
 		add_filter( 'mla_expand_custom_prefix', 'MLASubstitutionParameterExample::mla_expand_custom_prefix', 10, 8 );
 		//add_filter( 'mla_apply_custom_format', 'MLASubstitutionParameterExample::mla_apply_custom_format', 10, 2 );
 
-		/*
-		 * Defined in /media-library-assistant/includes/class-mla-data-source.php
-		 */
+		// Defined in /media-library-assistant/includes/class-mla-data-source.php
 		//add_filter( 'mla_evaluate_custom_data_source', 'MLASubstitutionParameterExample::mla_evaluate_custom_data_source', 10, 5 );
-		
+
 		/*
 		 * Additional hooks defined in "MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)".
 		 * These are only required for the "conditional:is_upload" prefix processing.
@@ -148,7 +150,7 @@ class MLASubstitutionParameterExample {
 	 */
 	public static function mla_update_attachment_metadata_postfilter( $data, $post_id, $options ) {
 		self::$is_upload = false;
-		
+
 		return $data;
 	} // mla_update_attachment_metadata_postfilter
 
@@ -170,9 +172,7 @@ class MLASubstitutionParameterExample {
 	 * @param	string	default option value
 	 */
 	public static function mla_expand_custom_data_source( $custom_value, $key, $candidate, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
-		/*
-		 * Uncomment the error_log statements in any of the filters to see what's passed in
-		 */
+		// Uncomment the error_log statements in any of the filters to see what's passed in
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$key}, {$candidate}, {$post_id}, {$keep_existing}, {$default_option} ) value = " . var_export( $value, true ), 0 );
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$candidate}, {$post_id} ) query = " . var_export( $query, true ), 0 );
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$candidate}, {$post_id} ) markup_values = " . var_export( $markup_values, true ), 0 );
@@ -239,7 +239,7 @@ class MLASubstitutionParameterExample {
 				}
 			}
 		}
-		
+
 		return $custom_value;
 	} // _evaluate_terms
 
@@ -261,7 +261,7 @@ class MLASubstitutionParameterExample {
 	 */
 	public static function mla_expand_custom_prefix( $custom_value, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
 		static $parent_cache = array(), $author_cache = array();
-		
+
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$keep_existing}, {$default_option} ) value = " . var_export( $value, true ), 0 );
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) query = " . var_export( $query, true ), 0 );
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) markup_values = " . var_export( $markup_values, true ), 0 );
@@ -276,6 +276,16 @@ class MLASubstitutionParameterExample {
 			$qualifier = '';
 		}
 
+		// Set debug mode
+		$debug_active = isset( $query['mla_debug'] ) && ( 'false' !== trim( strtolower( $query['mla_debug'] ) ) );
+		if ( $debug_active ) {
+			$old_mode = MLACore::mla_debug_mode( 'log' );
+			MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$keep_existing}, {$default_option} ) \$_REQUEST = " . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$field}, {$qualifier} ) \$value = " . var_export( $value, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix() \$query = " . var_export( $query, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix() \$markup_values = " . var_export( $markup_values, true ) );
+		}
+
 		if ( 'page_terms' == $value['prefix'] ) {
 			if ( isset( $markup_values['page_ID'] ) ) {
 				$post_id = absint( $markup_values['page_ID'] );
@@ -288,7 +298,7 @@ class MLASubstitutionParameterExample {
 					$post_id = 0;
 				}
 			}
-			
+
 			$custom_value = self::_evaluate_terms( $custom_value, $post_id, $field, $qualifier, $value['option'] );
 		} elseif ( 'page' == $value['prefix'] ) {
 			if ( 'featured' == $value['value'] ) {
@@ -297,6 +307,64 @@ class MLASubstitutionParameterExample {
 					$custom_value = (string) $featured;
 				}
 			}
+		} elseif ( 'current_term' == $value['prefix'] ) {
+			// Look for compound names, e.g., taxonomy.default_value
+			$key_array = explode( '.', $field );
+			if ( 1 < count( $key_array ) ) {
+				$field = $key_array[0];
+				$custom_value = $key_array[1];
+			} else {
+				$custom_value = '';
+			}
+
+			// Look in $_REQUEST for simple taxonomy query, then tax_input query
+			if ( isset( $_REQUEST[ $field ] ) ) {
+				$current_terms = explode( ',', trim( $_REQUEST[ $field ] ) );
+			} elseif ( isset( $_REQUEST['tax_input'] ) && isset( $_REQUEST['tax_input'][ $field ] )) {
+				$current_terms = $_REQUEST['tax_input'][ $field ];
+			} else {
+				return $custom_value;
+			}
+
+			if ( empty( $qualifier ) ) {
+				$qualifier = 'name';
+			}
+
+			if ( $debug_active ) {
+				MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$field}, {$qualifier} ) \$current_terms = " . var_export( $current_terms, true ) );
+			}
+			
+			$results = '';
+			foreach( $current_terms as $current_term ) {
+				// Find the current term
+				if ( ctype_digit( $current_term ) ) {
+					$current_term = get_term_by( 'id', absint( $current_term ), $field, 'ARRAY_A' );
+				} else {
+					$current_term = get_term_by( 'slug', sanitize_title_for_query( $current_term ), $field, 'ARRAY_A' );
+				}
+
+				// If the terms does not exist, skip it			
+				if ( false === $current_term ) {
+					continue;
+				}
+
+				// Extract the desired term field
+				$new_value = isset( $current_term[ $qualifier ] ) ? $current_term[ $qualifier ] : $current_term['name'];
+				$new_value =  sanitize_term_field( $qualifier, $new_value, absint( $current_term['term_id'] ), $field, 'display' );
+				$results .= strlen( $results ) ? ',' . $new_value : $new_value;
+			} // foreach term
+
+			if ( $debug_active ) {
+				MLACore::mla_debug_add( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$field}, {$qualifier} ) \$results = " . var_export( $results, true ) );
+			}
+			
+			if ( strlen( $results ) ) {
+				$custom_value =  $results;
+			}
+		}
+
+		if ( $debug_active ) {
+			MLACore::mla_debug_mode( $old_mode );
 		}
 		
 		if ( 0 == absint( $post_id ) ) {
@@ -310,7 +378,7 @@ class MLASubstitutionParameterExample {
 				$item = get_post( $post_id );
 				$post_parent = absint( $item->post_parent );
 			}
-			
+
 			$custom_value = self::_evaluate_terms( $custom_value, $post_parent, $field, $qualifier, $value['option'] );
 		} elseif ( 'parent' == $value['prefix'] ) {
 			if ( isset( $markup_values['parent'] ) ) {
@@ -319,7 +387,7 @@ class MLASubstitutionParameterExample {
 				$item = get_post( $post_id );
 				$parent_id = absint( $item->post_parent );
 			}
-			
+
 			if ( 0 == $parent_id ) {
 				return $custom_value;
 			}
@@ -335,7 +403,7 @@ class MLASubstitutionParameterExample {
 					return $custom_value;
 				}
 			}
-			
+
 			if ( property_exists( $parent, $value['value'] ) ) {
 				$custom_value = $parent->{$value['value']};
 			} elseif ( 'permalink' == $value['value'] ) {
@@ -348,7 +416,7 @@ class MLASubstitutionParameterExample {
 					$custom_value = $meta_value;
 				}
 			}
-			
+
 //error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$parent_id} ) custom_value = " . var_export( $custom_value, true ), 0 );
 
 			if ( is_array( $custom_value ) ) {
@@ -365,14 +433,14 @@ class MLASubstitutionParameterExample {
 
 					foreach ( $custom_value as $element ) {
 						$field_value = sanitize_text_field( $element );
-	
+
 						if ( 'array' == $value['option'] ) {
 							$new_value[] = $field_value;
 						} else {
 							$new_value .= strlen( $custom_value ) ? ', ' . $field_value : $field_value;
 						}
 					}
-					
+
 					$custom_value = $new_value;
 				}
 			}
@@ -383,7 +451,7 @@ class MLASubstitutionParameterExample {
 				$item = get_post( $post_id );
 				$item_author = absint( $item->post_author );
 			}
-			
+
 			if ( isset( $author_cache[ $item_author ] ) ) {
 				$author = $author_cache[ $item_author ];
 			} else {
@@ -395,13 +463,13 @@ class MLASubstitutionParameterExample {
 					return $custom_value;
 				}
 			}
-			
+
 			if ( property_exists( $author, $value['value'] ) ) {
 				$custom_value = $author->{$value['value']};
 			} else {
 				$custom_value = $author->get( $value['value'] );
 			}
-			
+
 //error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) custom_value = " . var_export( $custom_value, true ), 0 );
 
 			if ( is_array( $custom_value ) ) {
@@ -418,14 +486,14 @@ class MLASubstitutionParameterExample {
 
 					foreach ( $custom_value as $element ) {
 						$field_value = sanitize_text_field( $element );
-	
+
 						if ( 'array' == $value['option'] ) {
 							$new_value[] = $field_value;
 						} else {
 							$new_value .= strlen( $custom_value ) ? ', ' . $field_value : $field_value;
 						}
 					}
-					
+
 					$custom_value = $new_value;
 				}
 			}
@@ -433,11 +501,11 @@ class MLASubstitutionParameterExample {
 			if ( empty( $value['args'] ) ) {
 				return $custom_value;
 			}
-			
+
 			$true_value = ( isset( $value['args'][0] ) && !empty( $value['args'][0] ) ) ? $value['args'][0] : '';
 			$false_value = ( isset( $value['args'][1] ) && !empty( $value['args'][1] ) ) ? $value['args'][1] : '';
 			$qualifier = ( isset( $value['args'][2] ) && !empty( $value['args'][2] ) ) ? $value['args'][2] : '';
-			
+
 			switch ( $value['value'] ) {
 				case 'is_upload':
 					if ( self::$is_upload ) {
@@ -459,7 +527,7 @@ class MLASubstitutionParameterExample {
 								break;
 							}
 						}
-						
+
 						$custom_value = $true_value;
 					} else {
 						$custom_value = $false_value;

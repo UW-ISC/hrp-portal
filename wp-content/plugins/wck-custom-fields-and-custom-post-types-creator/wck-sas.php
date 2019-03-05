@@ -144,7 +144,25 @@ add_action( 'wck_after_meta_boxes', 'wck_sas_quickintro', 12);
 function wck_sas_quickintro($hook){
 	if('wck_page_sas-page' == $hook ){
 ?>
-		<div class="wrap about-wrap" style="clear:both;">
+
+
+
+        <div class="wrap about-wrap" style="clear:both;">
+
+            <div>
+                <div style="float:right">
+                    <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img src="<?php echo plugins_url( './images/pb-trp-cross-promotion.png', __FILE__ ); ?>" alt="TranslatePress Logo"/></a>
+                </div>
+                <div>
+                    <h3>Easily translate your entire WordPress website</h3>
+                    <p>Translate your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.</p>
+                    <p>It offers a simpler way to translate WordPress sites, with full support for WooCommerce and site builders.</p>
+                    <p><a href="https://wordpress.org/plugins/translatepress-multilingual/" class="button" target="_blank">Find out how</a></p>
+
+                </div>
+            </div>
+
+
 			<div class="changelog">
 				<h2><?php _e( 'Quick Start-Up Guide', 'wck' ); ?></h2>
 

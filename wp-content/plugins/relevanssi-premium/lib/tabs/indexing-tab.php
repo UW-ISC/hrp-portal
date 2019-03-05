@@ -143,7 +143,11 @@ function relevanssi_indexing_tab() {
 
 	<?php
 	if ( count( $index_post_types ) < 2 ) {
-		printf( '<p><strong>%s</strong></p>', esc_html__( "WARNING: You've chosen no post types to index. Nothing will be indexed. Choose some post types to index.", 'relevanssi' ) );
+		$index_users      = get_option( 'relevanssi_index_users', 'off' );
+		$index_taxonomies = get_option( 'relevanssi_index_taxonomies', 'off' );
+		if ( 'off' === $index_users && 'off' === $index_taxonomies ) {
+			printf( '<p><strong>%s</strong></p>', esc_html__( "WARNING: You've chosen no post types to index. Nothing will be indexed. Choose some post types to index.", 'relevanssi' ) );
+		}
 	}
 	?>
 
@@ -170,7 +174,7 @@ function relevanssi_indexing_tab() {
 	$public_types = array_merge( $pt_1, $pt_2 );
 	$post_types   = get_post_types();
 	foreach ( $post_types as $type ) {
-		if ( in_array( $type, array( 'nav_menu_item', 'revision', 'acf-field', 'acf-field-group', 'oembed_cache', 'customize_changeset', 'custom_css' ), true ) ) {
+		if ( in_array( $type, relevanssi_get_forbidden_post_types(), true ) ) {
 			continue;
 		}
 		$checked = '';
@@ -222,7 +226,7 @@ function relevanssi_indexing_tab() {
 	<?php
 	$taxos = get_taxonomies( '', 'objects' );
 	foreach ( $taxos as $taxonomy ) {
-		if ( in_array( $taxonomy->name, array( 'nav_menu', 'link_category' ), true ) ) {
+		if ( in_array( $taxonomy->name, relevanssi_get_forbidden_taxonomies(), true ) ) {
 			continue;
 		}
 		$checked = '';
@@ -280,6 +284,13 @@ function relevanssi_indexing_tab() {
 			esc_html_e( "'Some' lets you choose individual custom fields to index.", 'relevanssi' );
 			?>
 			</p>
+			<?php
+			if ( class_exists( 'acf' ) && $fields_select_all ) {
+				echo "<p class='description important'>";
+				esc_html_e( 'Advanced Custom Fields has lots of invisible custom fields with meta data. Selecting "all" will include lots of garbage in the index and excerpts. "Visible" is usually a better option with ACF.' );
+				echo '</p>';
+			}
+			?>
 			<div id="index_field_input"
 			<?php
 			if ( empty( $fields_select_some ) ) {
@@ -375,6 +386,9 @@ function relevanssi_indexing_tab() {
 	}
 	if ( function_exists( 'relevanssi_form_index_taxonomies' ) ) {
 		relevanssi_form_index_taxonomies();
+	}
+	if ( function_exists( 'relevanssi_form_index_post_type_archives' ) ) {
+		relevanssi_form_index_post_type_archives();
 	}
 	if ( function_exists( 'relevanssi_form_index_pdf_parent' ) ) {
 		relevanssi_form_index_pdf_parent();

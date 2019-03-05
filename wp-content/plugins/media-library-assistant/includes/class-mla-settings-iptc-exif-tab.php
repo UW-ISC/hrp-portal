@@ -1197,9 +1197,11 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 		$submenu_arguments = array();
 		$has_filters = $include_filters;
 
-		// View arguments
+		// View arguments - see also mla_tabulate_iptc_exif_items
 		if ( isset( $_REQUEST['mla_iptc_exif_view'] ) ) {
-			$submenu_arguments['mla_iptc_exif_view'] = $_REQUEST['mla_iptc_exif_view'];
+			if ( in_array( $_REQUEST['mla_iptc_exif_view'], array( 'all', 'standard', 'taxonomy', 'custom', 'read_only' ) ) ) {
+				$submenu_arguments['mla_iptc_exif_view'] = $_REQUEST['mla_iptc_exif_view'];
+			}
 		}
 
 		// Search box arguments
@@ -1209,16 +1211,20 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 
 		// Filter arguments (from table header)
 		if ( isset( $_REQUEST['mla_iptc_exif_status'] ) && ( 'any' != $_REQUEST['mla_iptc_exif_status'] ) ) {
-			$submenu_arguments['mla_iptc_exif_status'] = $_REQUEST['mla_iptc_exif_status'];
+			if ( in_array( $_REQUEST['mla_iptc_exif_status'], array( 'active', 'inactive' ) ) ) {
+				$submenu_arguments['mla_iptc_exif_status'] = $_REQUEST['mla_iptc_exif_status'];
+			}
 		}
 
 		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$submenu_arguments['order'] = $_REQUEST['order'];
+			$submenu_arguments['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			$submenu_arguments['orderby'] = $_REQUEST['orderby'];
+			if ( array_key_exists( $_REQUEST['orderby'], self::$default_sortable_columns ) ) {
+				$submenu_arguments['orderby'] = $_REQUEST['orderby'];
+			}
 		}
 
 		return $submenu_arguments;
@@ -1397,10 +1403,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 	private function _build_rollover_actions( $item, $column ) {
 		$actions = array();
 
-		/*
-		 * Compose view arguments
-		 */
-
+		// Compose view arguments
 		$view_args = array_merge( array(
 			'page' => MLACoreOptions::MLA_SETTINGS_SLUG . '-iptc_exif',
 			'mla_tab' => 'iptc_exif',
@@ -1408,15 +1411,17 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 		), MLA_IPTC_EXIF_List_Table::mla_submenu_arguments() );
 
 		if ( isset( $_REQUEST['paged'] ) ) {
-			$view_args['paged'] = $_REQUEST['paged'];
+			$view_args['paged'] = absint( $_REQUEST['paged'] );
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) {
-			$view_args['order'] = $_REQUEST['order'];
+			$view_args['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			$view_args['orderby'] = $_REQUEST['orderby'];
+			if ( array_key_exists( $_REQUEST['orderby'], self::$default_sortable_columns ) ) {
+				$view_args['orderby'] = $_REQUEST['orderby'];
+			}
 		}
 
 			$actions['edit'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Edit this item', 'media-library-assistant' ) . '">' . __( 'Edit', 'media-library-assistant' ) . '</a>';

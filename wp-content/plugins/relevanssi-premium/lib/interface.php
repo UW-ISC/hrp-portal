@@ -229,8 +229,20 @@ function update_relevanssi_options() {
 	$index_taxonomies_list = array();
 	$index_terms_list      = array();
 	foreach ( $_REQUEST as $key => $value ) {
+		if ( empty( $value ) ) {
+			$value = 0;
+		}
+
 		if ( 'relevanssi_weight_' === substr( $key, 0, strlen( 'relevanssi_weight_' ) ) ) {
 			$type                       = substr( $key, strlen( 'relevanssi_weight_' ) );
+			$post_type_weights[ $type ] = $value;
+		}
+		if ( 'relevanssi_taxonomy_weight_' === substr( $key, 0, strlen( 'relevanssi_taxonomy_weight_' ) ) ) {
+			$type                       = 'post_tagged_with_' . substr( $key, strlen( 'relevanssi_taxonomy_weight_' ) );
+			$post_type_weights[ $type ] = $value;
+		}
+		if ( 'relevanssi_term_weight_' === substr( $key, 0, strlen( 'relevanssi_term_weight_' ) ) ) {
+			$type                       = 'taxonomy_term_' . substr( $key, strlen( 'relevanssi_term_weight_' ) );
 			$post_type_weights[ $type ] = $value;
 		}
 		if ( 'relevanssi_index_type_' === substr( $key, 0, strlen( 'relevanssi_index_type_' ) ) ) {
@@ -305,8 +317,22 @@ function update_relevanssi_options() {
 
 	if ( isset( $_REQUEST['relevanssi_excat'] ) ) {
 		if ( is_array( $_REQUEST['relevanssi_excat'] ) ) {
-			$csv_cats = implode( ',', $_REQUEST['relevanssi_excat'] );
-			update_option( 'relevanssi_excat', $csv_cats );
+			$array_excats = $_REQUEST['relevanssi_excat'];
+			$cat          = get_option( 'relevanssi_cat' );
+			if ( $cat ) {
+				$array_cats   = explode( ',', $cat );
+				$valid_excats = array();
+				foreach ( $array_excats as $excat ) {
+					if ( ! in_array( $excat, $array_cats, true ) ) {
+						$valid_excats[] = $excat;
+					}
+				}
+			} else {
+				// No category restrictions, so everything's good.
+				$valid_excats = $array_excats;
+			}
+			$csv_excats = implode( ',', $valid_excats );
+			update_option( 'relevanssi_excat', $csv_excats );
 		}
 	} else {
 		if ( isset( $_REQUEST['relevanssi_excat_active'] ) ) {
@@ -454,6 +480,27 @@ function relevanssi_search_stats() {
 }
 
 /**
+ * Prints out the 'Admin search' page.
+ */
+function relevanssi_admin_search_page() {
+	global $relevanssi_variables;
+
+	$relevanssi_hide_branding = get_option( 'relevanssi_hide_branding' );
+
+	$options_txt = __( 'Admin Search', 'relevanssi' );
+
+	wp_enqueue_style( 'dashboard' );
+	wp_print_styles( 'dashboard' );
+	wp_enqueue_script( 'dashboard' );
+	wp_print_scripts( 'dashboard' );
+
+	printf( "<div class='wrap'><h2>%s</h2>", esc_html( $options_txt ) );
+
+	require_once dirname( $relevanssi_variables['file'] ) . '/lib/tabs/search-page.php';
+	relevanssi_search_tab();
+}
+
+/**
  * Truncates the Relevanssi logs.
  *
  * @global object $wpdb                 The WP database interface.
@@ -488,6 +535,20 @@ function relevanssi_query_log() {
 	/**
 	 * Adjusts the number of days to show the logs in User searches page.
 	 *
+	 * @param int Number of days, default 1.
+	 */
+	$days1 = apply_filters( 'relevanssi_1day', 1 );
+
+	/**
+	 * Adjusts the number of days to show the logs in User searches page.
+	 *
+	 * @param int Number of days, default 7.
+	 */
+	$days7 = apply_filters( 'relevanssi_7days', 7 );
+
+	/**
+	 * Adjusts the number of days to show the logs in User searches page.
+	 *
 	 * @param int Number of days, default 30.
 	 */
 	$days30 = apply_filters( 'relevanssi_30days', 30 );
@@ -511,11 +572,17 @@ function relevanssi_query_log() {
 	printf( '<p>%s</p>', esc_html( sprintf( __( 'Here you can see the %d most common user search queries, how many times those queries were made and how many results were found for those queries.', 'relevanssi' ), $limit ) ) );
 
 	echo "<div style='width: 30%; float: left; margin-right: 2%; overflow: auto'>";
-	relevanssi_date_queries( 1, __( 'Today and yesterday', 'relevanssi' ) );
+	if ( 1 === $days1 ) {
+		relevanssi_date_queries( $days1, __( 'Today and yesterday', 'relevanssi' ) );
+	} else {
+		// Translators: number of days to show.
+		relevanssi_date_queries( $days1, sprintf( __( 'Last %d days', 'relevanssi' ), $days1 ) );
+	}
 	echo '</div>';
 
 	echo "<div style='width: 30%; float: left; margin-right: 2%; overflow: auto'>";
-	relevanssi_date_queries( 7, __( 'Last 7 days', 'relevanssi' ) );
+	// Translators: number of days to show.
+	relevanssi_date_queries( $days7, sprintf( __( 'Last %d days', 'relevanssi' ), $days7 ) );
 	echo '</div>';
 
 	echo "<div style='width: 30%; float: left; margin-right: 2%; overflow: auto'>";
@@ -726,7 +793,9 @@ function relevanssi_options_form() {
 	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=excerpts" class="nav-tab <?php echo 'excerpts' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Excerpts and highlights', 'relevanssi' ); ?></a>
 	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=synonyms" class="nav-tab <?php echo 'synonyms' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Synonyms', 'relevanssi' ); ?></a>
 	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=stopwords" class="nav-tab <?php echo 'stopwords' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Stopwords', 'relevanssi' ); ?></a>
-	<?php if ( function_exists( 'relevanssi_form_importexport' ) ) : ?>
+	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=redirects" class="nav-tab <?php echo 'redirects' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Redirects', 'relevanssi' ); ?></a>
+	<?php if ( RELEVANSSI_PREMIUM ) : ?>
+	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=related" class="nav-tab <?php echo 'related' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Related', 'relevanssi' ); ?></a>
 	<a href="<?php echo esc_attr( $this_page ); ?>&amp;tab=importexport" class="nav-tab <?php echo 'importexport' === $active_tab ? 'nav-tab-active' : ''; ?>"><?php esc_html_e( 'Import / Export options', 'relevanssi' ); ?></a>
 	<?php endif; ?>
 </h2>
@@ -779,6 +848,22 @@ function relevanssi_options_form() {
 			relevanssi_import_export_tab();
 		}
 	}
+	if ( 'related' === $active_tab ) {
+		if ( RELEVANSSI_PREMIUM ) {
+			require_once dirname( $relevanssi_variables['file'] ) . '/premium/tabs/related-tab.php';
+			relevanssi_related_tab();
+		}
+	}
+	if ( 'redirects' === $active_tab ) {
+		if ( ! RELEVANSSI_PREMIUM ) {
+			$display_save_button = false;
+			require_once 'tabs/redirects-tab.php';
+			relevanssi_redirects_tab();
+		} else {
+			require_once dirname( $relevanssi_variables['file'] ) . '/premium/tabs/redirects-tab.php';
+			relevanssi_redirects_tab();
+		}
+	}
 
 	if ( $display_save_button ) :
 	?>
@@ -813,6 +898,7 @@ function relevanssi_add_admin_scripts( $hook ) {
 		'settings_page_relevanssi-premium/relevanssi',
 		'toplevel_page_relevanssi/relevanssi',
 		'settings_page_relevanssi/relevanssi',
+		'dashboard_page_relevanssi_admin_search',
 	);
 	if ( ! in_array( $hook, $acceptable_hooks, true ) ) {
 		return;
@@ -866,11 +952,13 @@ function relevanssi_add_admin_scripts( $hook ) {
 	wp_localize_script( 'relevanssi_admin_js', 'relevanssi', $localizations );
 
 	$nonce = array(
-		'indexing_nonce' => wp_create_nonce( 'relevanssi_indexing_nonce' ),
+		'indexing_nonce'  => wp_create_nonce( 'relevanssi_indexing_nonce' ),
+		'searching_nonce' => wp_create_nonce( 'relevanssi_admin_search_nonce' ),
 	);
 
-	wp_localize_script( 'relevanssi_admin_js', 'nonce', $nonce );
-
+	if ( ! RELEVANSSI_PREMIUM ) {
+		wp_localize_script( 'relevanssi_admin_js', 'nonce', $nonce );
+	}
 }
 
 /**

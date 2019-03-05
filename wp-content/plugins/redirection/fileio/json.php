@@ -4,14 +4,12 @@ class Red_Json_File extends Red_FileIO {
 	public function force_download() {
 		parent::force_download();
 
-		$filename = 'redirection-'.date_i18n( get_option( 'date_format' ) ).'.json';
-
 		header( 'Content-Type: application/json' );
-		header( 'Content-Disposition: attachment; filename="'.$filename.'"' );
+		header( 'Content-Disposition: attachment; filename="' . $this->export_filename( 'json' ) . '"' );
 	}
 
 	public function get_data( array $items, array $groups ) {
-		$version = get_plugin_data( dirname( dirname( __FILE__ ) ).'/redirection.php' );
+		$version = red_get_plugin_data( dirname( dirname( __FILE__ ) ) . '/redirection.php' );
 
 		$items = array(
 			'plugin' => array(
@@ -24,7 +22,7 @@ class Red_Json_File extends Red_FileIO {
 			}, $items ),
 		);
 
-		return json_encode( $items, JSON_PRETTY_PRINT ).PHP_EOL;
+		return wp_json_encode( $items, JSON_PRETTY_PRINT ) . PHP_EOL;
 	}
 
 	public function load( $group, $filename, $data ) {
@@ -60,7 +58,8 @@ class Red_Json_File extends Red_FileIO {
 				unset( $redirect['id'] );
 
 				if ( ! isset( $group_map[ $redirect['group_id'] ] ) ) {
-					$group_map[ $redirect['group_id'] ] = Red_Group::create( 'Group', 1 );
+					$new_group = Red_Group::create( 'Group', 1 );
+					$group_map[ $redirect['group_id'] ] = $new_group->get_id();
 				}
 
 				if ( $redirect['match_type'] === 'url' && isset( $redirect['action_data'] ) && ! is_array( $redirect['action_data'] ) ) {
@@ -72,7 +71,7 @@ class Red_Json_File extends Red_FileIO {
 				$count++;
 
 				// Helps reduce memory usage
-				unset( $json['redirects'][$pos] );
+				unset( $json['redirects'][ $pos ] );
 				$wpdb->queries = array();
 				$wpdb->num_queries = 0;
 			}

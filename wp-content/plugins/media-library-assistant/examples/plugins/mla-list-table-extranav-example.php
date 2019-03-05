@@ -3,16 +3,16 @@
  * Adds an "author" dropdown control to the "extra tablenav" area of the Media/Assistant submenu
  *
  * @package MLA Extra Nav Hooks Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Extra Nav Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds an "author" dropdown control to the "extra tablenav" area of the Media/Assistant submenu
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

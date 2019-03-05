@@ -19,16 +19,16 @@
  * https://wordpress.org/support/topic/multiple-calls-to-a-smaller-amount
  *
  * @package MLA Random Galleries Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Random Galleries Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: High performance queries for random items from a list of Att. Categories
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

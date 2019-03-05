@@ -308,7 +308,7 @@ class SMC_Settings_Support {
 	 * @return	void	echoes HTML markup for the section description
 	 */
 	public static function render_automatic_options_section() {
-		echo '<p>' . __( "You can find some User Interface notes and more information about the rules in this PDF document: ", 'smart-media-categories' ) . "<a href=\"http://fairtradejudaica.org/wp-content/uploads/Smart-Media-Categories-v07.pdf\" target=\"_blank\">Smart-Media-Categories-v07.pdf</a></p>\n";
+		echo '<p>' . __( "You can find some User Interface notes and more information about the rules in this PDF document: ", 'smart-media-categories' ) . "<a href=\"http://davidlingren.com/assets/Smart-Media-Categories-v07.pdf\" target=\"_blank\">Smart-Media-Categories-v07.pdf</a></p>\n";
 		echo '<p>' . __( "Check the box of each automatic rule you want to apply.", 'smart-media-categories' ) . "</p>\n";
 	}
 	

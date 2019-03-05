@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MLA Custom Taxonomy Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Defines custom taxonomies for support topic opened on 4/15/2016 by "direys"
 Author: David Lingren
-Version: 1.03
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.04
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

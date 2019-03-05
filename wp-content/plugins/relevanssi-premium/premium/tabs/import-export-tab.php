@@ -72,6 +72,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_default_orderby']        = get_option( 'relevanssi_default_orderby' );
 	$serialize_options['relevanssi_disable_or_fallback']    = get_option( 'relevanssi_disable_or_fallback' );
 	$serialize_options['relevanssi_disable_shortcodes']     = get_option( 'relevanssi_disable_shortcodes' );
+	$serialize_options['relevanssi_do_not_call_home']       = get_option( 'relevanssi_do_not_call_home' );
 	$serialize_options['relevanssi_exact_match_bonus']      = get_option( 'relevanssi_exact_match_bonus' );
 	$serialize_options['relevanssi_excat']                  = get_option( 'relevanssi_excat' );
 	$serialize_options['relevanssi_excerpt_allowable_tags'] = get_option( 'relevanssi_excerpt_allowable_tags' );
@@ -116,6 +117,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_punctuation']            = get_option( 'relevanssi_punctuation' );
 	$serialize_options['relevanssi_read_new_files']         = get_option( 'relevanssi_read_new_files' );
 	$serialize_options['relevanssi_recency_bonus']          = get_option( 'relevanssi_recency_bonus' );
+	$serialize_options['relevanssi_redirects']              = get_option( 'relevanssi_redirects' );
 	$serialize_options['relevanssi_respect_exclude']        = get_option( 'relevanssi_respect_exclude' );
 	$serialize_options['relevanssi_searchblogs_all']        = get_option( 'relevanssi_searchblogs_all' );
 	$serialize_options['relevanssi_searchblogs']            = get_option( 'relevanssi_searchblogs' );

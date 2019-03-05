@@ -30,6 +30,11 @@ function relevanssi_premium_plugin_page_actions( $plugin_page ) {
  */
 function relevanssi_form_api_key() {
 	$api_key = get_option( 'relevanssi_api_key' );
+	if ( empty( $api_key ) ) {
+		// In multisite environments, the API key may be empty because it's stored in
+		// the network options. Let's look there!
+		$api_key = get_site_option( 'relevanssi_api_key' );
+	}
 
 	if ( ! empty( $api_key ) ) :
 ?>
@@ -58,6 +63,34 @@ function relevanssi_form_api_key() {
 	</tr>
 <?php
 	endif;
+}
+
+/**
+ * Prints out the form fields for blocking update requests.
+ *
+ * @since 2.1.8
+ */
+function relevanssi_form_do_not_call_home() {
+	$option          = get_option( 'relevanssi_do_not_call_home' );
+	$can_i_call_home = relevanssi_check( $option );
+?>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Disable outside connections', 'relevanssi' ); ?>
+		</th>
+		<td>
+		<fieldset>
+			<legend class="screen-reader-text"><?php esc_html_e( 'Disable update version checking and attachment indexing', 'relevanssi' ); ?></legend>
+			<label for='relevanssi_do_not_call_home'>
+				<input type='checkbox' name='relevanssi_do_not_call_home' id='relevanssi_do_not_call_home' <?php echo esc_attr( $can_i_call_home ); ?> />
+				<?php esc_html_e( 'Disable update version checking and attachment indexing', 'relevanssi' ); ?>
+			</label>
+		</fieldset>
+		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will stop all outside connections. This means the plugin won't check for updates from Relevanssi.com and won't read attachment contents using Relevanssiservices.com attachment reader (using custom attachment reader is still allowed). Do not check this box unless you know what you're doing, because this will disable Relevanssi updates.", 'relevanssi' ); ?></p>
+		</td>
+		</td>
+	</tr>
+<?php
 }
 
 /**
@@ -170,10 +203,7 @@ function relevanssi_form_post_type_weights() {
 
 	$post_types = get_post_types();
 	foreach ( $post_types as $type ) {
-		if ( 'nav_menu_item' === $type ) {
-			continue;
-		}
-		if ( 'revision' === $type ) {
+		if ( in_array( $type, array( 'nav_menu_item', 'revision', 'acf-field', 'acf-field-group', 'oembed_cache', 'customize_changeset', 'custom_css' ), true ) ) {
 			continue;
 		}
 		if ( isset( $post_type_weights[ $type ] ) ) {
@@ -200,24 +230,27 @@ function relevanssi_form_post_type_weights() {
 /**
  * Prints out the form fields for taxonomy weights.
  *
- * Prints out the form fields for adjusting the taxonomy weights. Automatically skips 'nav_menu', 'post_format' and 'link_category' taxonomies.
+ * Prints out the form fields for adjusting the taxonomy weights. Automatically skips forbidden taxonomies.
  */
 function relevanssi_form_taxonomy_weights() {
 	$taxonomy_weights = get_option( 'relevanssi_post_type_weights' );
 
 	$taxonomies = get_taxonomies( '', 'names' );
 	foreach ( $taxonomies as $type ) {
-		if ( in_array( $type, array( 'nav_menu', 'post_format', 'link_category' ), true ) ) {
+		if ( in_array( $type, relevanssi_get_forbidden_taxonomies(), true ) ) {
 			continue;
 		}
-		if ( isset( $taxonomy_weights[ $type ] ) ) {
+		if ( isset( $taxonomy_weights[ 'post_tagged_with_' . $type ] ) ) {
+			$value = $taxonomy_weights[ 'post_tagged_with_' . $type ];
+		} elseif ( isset( $taxonomy_weights[ $type ] ) ) {
+			// Legacy code, this changed in 2.1.8. Remove eventually.
 			$value = $taxonomy_weights[ $type ];
 		} else {
 			$value = 1;
 		}
 
 		/* translators: name of the taxonomy */
-		$label = sprintf( __( "Taxonomy '%s':", 'relevanssi' ), $type );
+		$label = sprintf( __( "Posts tagged with taxonomy '%s':", 'relevanssi' ), $type );
 
 ?>
 	<tr>
@@ -225,10 +258,40 @@ function relevanssi_form_taxonomy_weights() {
 		<?php echo esc_html( $label ); ?>
 	</td>
 	<td class="col-2">
-		<input type='text' id='relevanssi_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
+		<input type='text' id='relevanssi_taxonomy_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_taxonomy_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
 	</td>
 </tr>
 <?php
+	}
+
+	$index_taxonomies = get_option( 'relevanssi_index_taxonomies' );
+	if ( 'on' === $index_taxonomies ) {
+		foreach ( $taxonomies as $type ) {
+			if ( in_array( $type, relevanssi_get_forbidden_taxonomies(), true ) ) {
+				continue;
+			}
+			if ( isset( $taxonomy_weights[ 'taxonomy_term_' . $type ] ) ) {
+				$value = $taxonomy_weights[ 'taxonomy_term_' . $type ];
+			} elseif ( isset( $taxonomy_weights[ $type ] ) ) {
+				// Legacy code, this changed in 2.1.8. Remove eventually.
+				$value = $taxonomy_weights[ $type ];
+			} else {
+				$value = 1;
+			}
+
+			/* translators: name of the taxonomy */
+			$label = sprintf( __( "Terms in the taxonomy '%s':", 'relevanssi' ), $type );
+?>
+	<tr>
+	<td>
+		<?php echo esc_html( $label ); ?>
+	</td>
+	<td class="col-2">
+		<input type='text' id='relevanssi_term_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_term_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
+	</td>
+</tr>
+<?php
+		}
 	}
 }
 
@@ -463,7 +526,7 @@ function relevanssi_form_index_users() {
 		</fieldset>
 		</td>
 	</tr>
-	<tr id="index_subscribers" <?php echo esc_attr( $fields_display ); ?>>
+	<tr id="index_subscribers" <?php echo $fields_display; // WPCS: XSS ok. ?>>
 		<th scope="row">
 			<label for='relevanssi_index_subscribers'><?php esc_html_e( 'Index subscribers', 'relevanssi' ); ?></label>
 		</th>
@@ -479,7 +542,7 @@ function relevanssi_form_index_users() {
 		</td>
 	</tr>
 
-	<tr id="user_extra_fields" <?php echo esc_attr( $fields_display ); ?>>
+	<tr id="user_extra_fields" <?php echo $fields_display; // WPCS: XSS ok. ?>>
 		<th scope="row">
 			<label for='relevanssi_index_user_fields'><?php esc_html_e( 'Extra fields', 'relevanssi' ); ?></label>
 		</th>
@@ -515,7 +578,7 @@ function relevanssi_form_index_synonyms() {
 				<?php esc_html_e( 'Index synonyms for AND searches.', 'relevanssi' ); ?>
 			</label>
 		</fieldset>
-		<p class="description"><?php esc_html_e( 'If checked, Relevanssi will use the synonyms in indexing. If you add <code>dog = hound</code> to the synonym list and enable this feature, every time the indexer sees <code>hound</code> in post content or post title, it will index it as <code>hound dog</code>. Thus, the post will be found when searching with either word. This makes it possible to use synonyms with AND searches, but will slow down indexing, especially with large databases and large lists of synonyms. This only works for post titles and post content. You can use multi-word keys and values, but phrases do not work.', 'relevanssi' ); ?></p>
+		<p class="description"><?php _e( 'If checked, Relevanssi will use the synonyms in indexing. If you add <code>dog = hound</code> to the synonym list and enable this feature, every time the indexer sees <code>hound</code> in post content or post title, it will index it as <code>hound dog</code>. Thus, the post will be found when searching with either word. This makes it possible to use synonyms with AND searches, but will slow down indexing, especially with large databases and large lists of synonyms. This only works for post titles and post content. You can use multi-word keys and values, but phrases do not work.', 'relevanssi' ); // WPCS: XSS ok. ?></p>
 		</td>
 	</tr>
 	</table>
@@ -531,6 +594,7 @@ function relevanssi_form_index_synonyms() {
  */
 function relevanssi_form_index_pdf_parent() {
 	$index_pdf_parent = get_option( 'relevanssi_index_pdf_parent' );
+	$index_pdf_parent = relevanssi_check( $index_pdf_parent );
 	$index_post_types = get_option( 'relevanssi_index_post_types' );
 ?>
 	<h2><?php esc_html_e( 'Indexing PDF content', 'relevanssi' ); ?></h2>
@@ -598,7 +662,7 @@ function relevanssi_form_index_taxonomies() {
 		</fieldset>
 		</td>
 	</tr>
-	<tr id="taxonomies" <?php echo esc_attr( $fields_display ); ?>>
+	<tr id="taxonomies" <?php echo $fields_display; // WPCS: XSS ok. ?>>
 		<th scope="row">
 			<?php esc_html_e( 'Taxonomies', 'relevanssi' ); ?>
 		</th>
@@ -614,7 +678,7 @@ function relevanssi_form_index_taxonomies() {
 	<?php
 	$taxos = get_taxonomies( '', 'objects' );
 	foreach ( $taxos as $taxonomy ) {
-		if ( in_array( $taxonomy->name, array( 'nav_menu', 'link_category' ), true ) ) {
+		if ( in_array( $taxonomy->name, relevanssi_get_forbidden_taxonomies(), true ) ) {
 			continue;
 		}
 		if ( in_array( $taxonomy->name, $index_these_taxonomies, true ) ) {
@@ -655,6 +719,57 @@ function relevanssi_form_index_taxonomies() {
 }
 
 /**
+ * Prints out the form fields for indexing post type archives.
+ *
+ * Prints out the form fields for choosing which post types are indexed.
+ */
+function relevanssi_form_index_post_type_archives() {
+	$index_post_type_archives = get_option( 'relevanssi_index_post_type_archives' );
+	$index_post_type_archives = relevanssi_check( $index_post_type_archives );
+
+	$fields_display = 'class="screen-reader-text"';
+	if ( ! empty( $index_post_type_archives ) ) {
+		$fields_display = '';
+	}
+
+?>
+	<h2><?php esc_html_e( 'Indexing post type archives', 'relevanssi' ); ?></h2>
+
+	<table class="form-table">
+	<tr>
+		<th scope="row">
+			<label for='relevanssi_index_post_type_archives'><?php esc_html_e( 'Index post type archives', 'relevanssi' ); ?></label>
+		</th>
+		<td>
+		<fieldset>
+			<legend class="screen-reader-text"><?php esc_html_e( 'Index post type archives.', 'relevanssi' ); ?></legend>
+			<label for='relevanssi_index_post_type_archives'>
+				<input type='checkbox' name='relevanssi_index_post_type_archives' id='relevanssi_index_post_type_archives' <?php echo esc_attr( $index_post_type_archives ); ?> />
+				<?php esc_html_e( 'Index post type archives.', 'relevanssi' ); ?>
+			</label>
+			<?php // Translators: %s is the name of filter hook. ?>
+			<p class="description"><?php printf( esc_html__( 'Relevanssi will index post type archive pages. By default Relevanssi indexes the post type label and the description set when the post type is registered. If you want to index some other content, you can use the %s filter hook to adjust the content.', 'relevanssi' ), '<code>relevanssi_post_type_additional_content</code>' ); ?></p>
+		</fieldset>
+		</td>
+	</tr>
+	<tr id="posttypearchives" <?php echo $fields_display; // WPCS: XSS ok. ?>>
+		<th scope="row">
+			<?php esc_html_e( 'Post types indexed', 'relevanssi' ); ?>
+		</th>
+		<td>
+			<?php
+			$post_types = relevanssi_get_indexed_post_type_archives();
+			echo '<p>' . esc_html( implode( ', ', $post_types ) ) . '</p>';
+			?>
+			<?php // Translators: %1$s is 'has_archive', %2$s is 'relevanssi_indexed_post_type_archives' . ?>
+			<p class="description"><?php printf( esc_html__( 'This list includes all post types that are not built in and have %1$s set to true. If you want to adjust the list, you can use the %2$s filter hook.', 'relevanssi' ), '<code>has_archive</code>', '<code>relevanssi_indexed_post_type_archives</code>' ); ?></p>
+		</td>
+	</tr>
+	</table>
+<?php
+}
+
+/**
  * Adds admin PDF scripts for Relevanssi Premium.
  *
  * Adds the admin-side Javascript for Relevanssi Premium PDF controls and includes some script localizations.
@@ -682,12 +797,22 @@ function relevanssi_premium_add_admin_scripts( $hook ) {
 				)
 			);
 		}
+		wp_enqueue_script( 'relevanssi_metabox_js', $plugin_dir_url . 'premium/admin_metabox_scripts.js', array( 'jquery' ) );
+		wp_localize_script( 'relevanssi_metabox_js', 'relevanssi_metabox_data',
+			array(
+				'metabox_nonce' => wp_create_nonce( 'relevanssi_metabox_nonce' ),
+			)
+		);
+		wp_enqueue_style( 'relevanssi_metabox_css', $plugin_dir_url . 'premium/metabox_styles.css' );
+
 	}
 
 	$nonce = array(
-		'taxonomy_indexing_nonce' => wp_create_nonce( 'relevanssi_taxonomy_indexing_nonce' ),
-		'user_indexing_nonce'     => wp_create_nonce( 'relevanssi_user_indexing_nonce' ),
-		'indexing_nonce'          => wp_create_nonce( 'relevanssi_indexing_nonce' ),
+		'taxonomy_indexing_nonce'          => wp_create_nonce( 'relevanssi_taxonomy_indexing_nonce' ),
+		'user_indexing_nonce'              => wp_create_nonce( 'relevanssi_user_indexing_nonce' ),
+		'indexing_nonce'                   => wp_create_nonce( 'relevanssi_indexing_nonce' ),
+		'post_type_archive_indexing_nonce' => wp_create_nonce( 'relevanssi_post_type_archive_indexing_nonce' ),
+		'searching_nonce'                  => wp_create_nonce( 'relevanssi_admin_search_nonce' ),
 	);
 
 	wp_localize_script( 'relevanssi_admin_js_premium', 'nonce', $nonce );
@@ -703,7 +828,7 @@ function relevanssi_premium_add_admin_scripts( $hook ) {
 function relevanssi_import_options( $options ) {
 	$unserialized = json_decode( stripslashes( $options ) );
 	foreach ( $unserialized as $key => $value ) {
-		if ( in_array( $key, array( 'relevanssi_post_type_weights', 'relevanssi_recency_bonus', 'relevanssi_punctuation' ), true ) ) {
+		if ( in_array( $key, array( 'relevanssi_post_type_weights', 'relevanssi_recency_bonus', 'relevanssi_punctuation', 'relevanssi_related_style' ), true ) ) {
 			// The options are associative arrays that are translated to objects in JSON and need to be changed back to arrays.
 			$value = (array) $value;
 		}
@@ -745,6 +870,9 @@ function relevanssi_update_premium_options() {
 		if ( ! isset( $request['relevanssi_show_post_controls'] ) ) {
 			$request['relevanssi_show_post_controls'] = 'off';
 		}
+		if ( ! isset( $request['relevanssi_do_not_call_home'] ) ) {
+			$request['relevanssi_do_not_call_home'] = 'off';
+		}
 	}
 
 	if ( 'indexing' === $request['tab'] ) {
@@ -762,6 +890,10 @@ function relevanssi_update_premium_options() {
 
 		if ( ! isset( $request['relevanssi_index_subscribers'] ) ) {
 			$request['relevanssi_index_subscribers'] = 'off';
+		}
+
+		if ( ! isset( $request['relevanssi_index_post_type_archives'] ) ) {
+			$request['relevanssi_index_post_type_archives'] = 'off';
 		}
 
 		if ( ! isset( $request['relevanssi_index_pdf_parent'] ) ) {
@@ -802,6 +934,80 @@ function relevanssi_update_premium_options() {
 		}
 	}
 
+	if ( 'related' === $request['tab'] ) {
+		$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
+
+		$settings['enabled'] = 'off';
+		if ( isset( $request['relevanssi_related_enabled'] ) && 'off' !== $request['relevanssi_related_enabled'] ) {
+			$settings['enabled'] = 'on';
+		}
+		if ( isset( $request['relevanssi_related_number'] ) ) {
+			$settings['number'] = intval( $request['relevanssi_related_number'] );
+		}
+		if ( isset( $request['relevanssi_related_nothing'] ) ) {
+			$settings['nothing'] = 'nothing';
+			if ( 'random' === $request['relevanssi_related_nothing'] ) {
+				$settings['nothing'] = 'random';
+			}
+		}
+		if ( isset( $request['relevanssi_related_notenough'] ) ) {
+			$settings['notenough'] = 'nothing';
+			if ( 'random' === $request['relevanssi_related_notenough'] ) {
+				$settings['notenough'] = 'random';
+			}
+		}
+		$settings['append'] = '';
+		if ( isset( $request['relevanssi_related_append'] ) && is_array( $request['relevanssi_related_append'] ) ) {
+			$settings['append'] = implode( ',', $request['relevanssi_related_append'] );
+		}
+		$settings['post_types'] = '';
+		if ( isset( $request['relevanssi_related_post_types'] ) && is_array( $request['relevanssi_related_post_types'] ) ) {
+			$settings['post_types'] = implode( ',', $request['relevanssi_related_post_types'] );
+			if ( false !== stripos( $settings['post_types'], 'matching_post_type' ) ) {
+				$settings['post_types'] = 'matching_post_type';
+			}
+		}
+		$settings['keyword'] = '';
+		if ( isset( $request['relevanssi_related_keyword'] ) && is_array( $request['relevanssi_related_keyword'] ) ) {
+			$settings['keyword'] = implode( ',', $request['relevanssi_related_keyword'] );
+		}
+		$settings['cache_for_admins'] = 'off';
+		if ( isset( $request['relevanssi_related_cache_for_admins'] ) && 'off' !== $request['relevanssi_related_cache_for_admins'] ) {
+			$settings['cache_for_admins'] = 'on';
+		}
+
+		update_option( 'relevanssi_related_settings', $settings );
+
+		if ( isset( $request['relevanssi_flush_related_cache'] ) && 'off' !== $request['relevanssi_flush_related_cache'] ) {
+			relevanssi_flush_related_cache();
+		}
+
+		$style = get_option( 'relevanssi_related_style', relevanssi_related_default_styles() );
+
+		if ( isset( $request['relevanssi_related_width'] ) ) {
+			$style['width'] = intval( $request['relevanssi_related_width'] );
+		}
+		$style['excerpts'] = 'off';
+		if ( isset( $request['relevanssi_related_excerpts'] ) && 'off' !== $request['relevanssi_related_excerpts'] ) {
+			$style['excerpts'] = 'on';
+		}
+		$style['titles'] = 'off';
+		if ( isset( $request['relevanssi_related_titles'] ) && 'off' !== $request['relevanssi_related_titles'] ) {
+			$style['titles'] = 'on';
+		}
+		$style['thumbnails'] = 'off';
+		if ( isset( $request['relevanssi_related_thumbnails'] ) && 'off' !== $request['relevanssi_related_thumbnails'] ) {
+			$style['thumbnails'] = 'on';
+		}
+		if ( isset( $request['relevanssi_default_thumbnail'] ) ) {
+			$style['default_thumbnail'] = intval( $request['relevanssi_default_thumbnail'] );
+		}
+		if ( isset( $request['relevanssi_remove_default_thumbnail'] ) && 'off' !== $request['relevanssi_remove_default_thumbnail'] ) {
+			$style['default_thumbnail'] = 0;
+		}
+		update_option( 'relevanssi_related_style', $style );
+	}
+
 	if ( isset( $request['relevanssi_remove_api_key'] ) ) {
 		update_option( 'relevanssi_api_key', '' );
 	}
@@ -815,6 +1021,13 @@ function relevanssi_update_premium_options() {
 			$value = 'on';
 		}
 		update_option( 'relevanssi_index_synonyms', $value );
+	}
+	if ( isset( $request['relevanssi_index_post_type_archives'] ) ) {
+		$value = 'off';
+		if ( 'off' !== $request['relevanssi_index_post_type_archives'] ) {
+			$value = 'on';
+		}
+		update_option( 'relevanssi_index_post_type_archives', $value );
 	}
 	if ( isset( $request['relevanssi_index_users'] ) ) {
 		$value = 'off';
@@ -858,6 +1071,13 @@ function relevanssi_update_premium_options() {
 			$value = 'on';
 		}
 		update_option( 'relevanssi_show_post_controls', $value );
+	}
+	if ( isset( $request['relevanssi_do_not_call_home'] ) ) {
+		$value = 'off';
+		if ( 'off' !== $request['relevanssi_do_not_call_home'] ) {
+			$value = 'on';
+		}
+		update_option( 'relevanssi_do_not_call_home', $value );
 	}
 	if ( isset( $request['relevanssi_index_taxonomies'] ) ) {
 		$value = 'off';
@@ -923,5 +1143,10 @@ function relevanssi_update_premium_options() {
 			$value = 'eu';
 		}
 		update_option( 'relevanssi_server_location', $value );
+	}
+
+	if ( 'redirects' === $request['tab'] ) {
+		$value = relevanssi_process_redirects( $request );
+		update_option( 'relevanssi_redirects', $value );
 	}
 }

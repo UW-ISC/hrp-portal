@@ -5,16 +5,16 @@
  * Provides an example of the filters provided by the IPTC/EXIF and Custom Field mapping features
  *
  * @package MLA Mapping Parent Data Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Mapping Parent Data Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Copies a custom field value from the parent post/page to all attached Media Library items.
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
 

@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MLA Viewer Replacement Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides selective mla_caption replacement for PDF documents, etc.
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2014, 2015 David Lingren
 
