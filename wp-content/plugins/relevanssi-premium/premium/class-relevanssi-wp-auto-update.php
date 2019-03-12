@@ -57,11 +57,13 @@ class Relevanssi_WP_Auto_Update {
 		list ($t1, $t2)        = explode( '/', $plugin_slug );
 		$this->slug            = str_replace( '.php', '', $t2 );
 
-		// define the alternative API for updating checking.
-		add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'check_update' ) );
+		if ( 'on' !== get_option( 'relevanssi_do_not_call_home' ) ) {
+			// define the alternative API for updating checking.
+			add_filter( 'pre_set_site_transient_update_plugins', array( &$this, 'check_update' ) );
 
-		// Define the alternative response for information checking.
-		add_filter( 'plugins_api', array( &$this, 'check_info' ), 10, 3 );
+			// Define the alternative response for information checking.
+			add_filter( 'plugins_api', array( &$this, 'check_info' ), 10, 3 );
+		}
 	}
 
 	/**
@@ -69,7 +71,7 @@ class Relevanssi_WP_Auto_Update {
 	 *
 	 * @param object $transient The filtered transient.
 	 *
-	 * @return object $ transient
+	 * @return object $transient
 	 */
 	public function check_update( $transient ) {
 		// Get the remote version.

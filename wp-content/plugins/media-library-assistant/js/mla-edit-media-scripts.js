@@ -2,6 +2,8 @@ var jQuery,
 	mla_edit_media_vars,
 	mla = {
 		// Properties
+		// mla.settings.uploadLabel
+		// mla.settings.modifyLabel
 		settings: {},
 
 		// Utility functions
@@ -14,9 +16,7 @@ var jQuery,
 	};
 
 ( function( $ ) {
-	/**
-	 * Localized settings and strings
-	 */
+	// Localized settings and strings
 	mla.settings = typeof mla_edit_media_vars === 'undefined' ? {} : mla_edit_media_vars;
 	mla_edit_media_vars = void 0; // delete won't work on Globals
 
@@ -33,14 +33,11 @@ var jQuery,
 			});
 
 			$('.categorydiv').each( function(){
-				var this_id = $(this).attr('id'), taxonomyParts, taxonomy, settingName;
+				var this_id = $(this).attr('id'), taxonomyParts, taxonomy;
 
 				taxonomyParts = this_id.split('-');
 				taxonomyParts.shift(); // taxonomy-
 				taxonomy = taxonomyParts.join('-');
-				settingName = taxonomy + '_tab';
-				if ( taxonomy == 'category' )
-					settingName = 'cats';
 
 				$.extend( $.expr[":"], {
 					"matchTerms": function( elem, i, match, array ) {
@@ -107,18 +104,14 @@ var jQuery,
 					return false;
 				});
 
-				/*
-				 * Supplement the click logic in wp-admin/js/post.js
-				 */
+				// Supplement the click logic in wp-admin/js/post.js
 				$( '#' + taxonomy + '-add-toggle' ).click( function() {
 					$( '#' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
 					return false;
 				});
 			}); // .categorydiv.each, 
 
-			/*
-			 * Save Post box (#submitdiv), for Uploaded on and Last modified dates
-			 */
+			// Save Post box (#submitdiv), for Uploaded on and Last modified dates
 			if ( $('#submitdiv').length ) {
 				mla.mlaEditAttachment.uploadtimestamp = $('#upload-timestamp').html();
 				mla.mlaEditAttachment.$uploaddiv = $('#timestampdiv');
@@ -180,9 +173,8 @@ var jQuery,
 			postId = $( '#post_ID' ).val() || '';
 			postTitle = $( '#title' ).val() || '';
 			mla.setParent.open( parentId, postId, postTitle );
-			/*
-			 * Grab the "Update" button
-			 */
+
+			// Grab the "Update" button
 			$( '#mla-set-parent-submit' ).on( 'click', function( event ){
 				event.preventDefault();
 				mla.mlaEditAttachment.setParentSave();
@@ -207,7 +199,7 @@ var jQuery,
 			$( '#mla-set-parent-submit' ).off( 'click' );
 		},
 
-		/**
+		/*
 		 * Make sure all Uploaded on or Last Modified labels represent the current settings.
 		 *
 		 * @returns {boolean} False when an invalid timestamp has been selected, otherwise True.

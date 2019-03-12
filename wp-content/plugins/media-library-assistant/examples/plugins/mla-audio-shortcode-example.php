@@ -6,16 +6,16 @@
  * by the WordPress [audio] shortcode.
  *
  * @package MLA Audio Shortcode Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Audio Shortcode Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2013, 2014 David Lingren
 

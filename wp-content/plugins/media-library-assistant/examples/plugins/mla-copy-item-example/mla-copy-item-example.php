@@ -13,16 +13,16 @@
  * https://wordpress.org/support/topic/option-to-copy-an-image/
  *
  * @package MLA Copy Item Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Copy Item Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds "Copy" action to Media/Assistant submenu Bulk Actions dropdown
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

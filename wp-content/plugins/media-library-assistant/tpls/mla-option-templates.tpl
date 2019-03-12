@@ -27,6 +27,9 @@
 			[+Checked On Top+]
 			</th>
 		    <th scope="col" class="mla-settings-taxonomy-th">
+			[+Inline Add Term+]
+			</th>
+		    <th scope="col" class="mla-settings-taxonomy-th">
 			[+List Filter+]
 			</th>
 		    <th scope="col" class="textleft" style="padding: 0px 5px 0px 5px;">
@@ -57,6 +60,9 @@
         </td>
 		<td style="text-align:center;">
             <input type="checkbox" name="tax_checked_on_top[[+key+]]" id="tax_checked_on_top_[+key+]" [+checked_on_top_checked+] value="checked" />
+        </td>
+		<td style="text-align:center;">
+            <input type="checkbox" name="tax_checklist_add_term[[+key+]]" id="tax_checklist_add_term_[+key+]" [+checklist_add_term_checked+] value="checked" />
         </td>
 		<td style="text-align:center;">
             <input type="radio" name="tax_filter" id="tax_filter_[+key+]" [+filter_checked+] value="[+key+]" />

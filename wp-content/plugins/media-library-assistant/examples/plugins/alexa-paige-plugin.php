@@ -18,17 +18,21 @@
  * - The "single_query()" and "double_query()" functions provide simplified, higher-performance
  * alternatives to the standard WordPress tax_query.
  *
+ * Created for support topic "REALLY Slow Queries........  Help! :)"
+ * opened on 8/16/2014 by "alexapaige".
+ * https://wordpress.org/support/topic/really-slow-queries-help/
+ *
  * @package Alexa Paige Plugin for BuddyPress & rtMedia
- * @version 1.03
+ * @version 1.04
  */
 
 /*
 Plugin Name: Alexa Paige Plugin for BuddyPress & rtMedia
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Supports BuddyPress URLs and multi-taxonomy and term checkbox queries
 Author: David Lingren
-Version: 1.03
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.04
+Author URI: http://davidlingren.com/
 
 Copyright 2014 David Lingren
 

@@ -22,16 +22,16 @@
  * https://wordpress.org/support/topic/replacing-sort-order-attribute
  *
  * @package MLA Simple Mapping Hooks Example
- * @version 1.02
+ * @version 1.03
  */
 
 /*
 Plugin Name: MLA Simple Mapping Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Populates custom fields based on a regular expression; updates menu_order; cleans up Title and ALT Text
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2016 David Lingren
 

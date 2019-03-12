@@ -19,16 +19,16 @@
  * https://wordpress.org/support/topic/tag-cloud-clickable-tags-in-mla_caption-area/
  *
  * @package MLA Term Links Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Term Links Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds "term_links:" Field-level Substitution Parameter prefix
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 

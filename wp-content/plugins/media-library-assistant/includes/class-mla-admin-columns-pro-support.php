@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) or die();
  * @since 2.71
  */
 class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
-	implements ACP_Editing_ListScreen, ACP_Export_ListScreen {
+	implements ACP\Editing\ListScreen, ACP\Export\ListScreen {
 
 	/**
 	 * Initializes some properties, installs filters and then
@@ -33,10 +33,10 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 	 *
 	 * @since 2.71
 	 *
-	 * @param ACP_Editing_Model $model
+	 * @param ACP\Editing\Model $model
 	 */
-	public function editing( $model ) {
-		return new ACP_Addon_MLA_Editing_Strategy( $model );
+	public function editing( /* $model */ ) {
+		return new ACP_Addon_MLA_Editing_Strategy( 'attachment' /* $model */ );
 	}
 
 	/**
@@ -88,12 +88,9 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 	public function register_column_types() {
 		parent::register_column_types();
 
-		// $this->register_column_type( new ACP_Column_CustomField ); Tobias 3/1/18 message
-		// $this->register_column_type( new ACP_Colmn_Menu ); Tobias 3/1/18 message
-
 		// Autoload the CustomField class if necessary
-		if ( class_exists( 'ACP_Column_CustomField' ) ) {
-            $this->register_column_type( new ACP_Column_CustomField );
+		if ( class_exists( 'ACP\Column\CustomField' ) ) {
+            $this->register_column_type( new ACP\Column\CustomField );
 		}
 
 		$this->register_column_type( new ACP_Addon_MLA_Column_ID_Parent );
@@ -159,7 +156,7 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 			}
 		}
 
-		return AC_Addon_MLA_ListScreen::get_object( $id );
+		return get_post( $id );
 	}
 
 	/**
@@ -200,7 +197,7 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
  *
  * @since 2.71
  */
-class ACP_Addon_MLA_Export_Strategy extends ACP_Export_Strategy {
+class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 
 	/**
 	 * Call parent constructor
@@ -214,7 +211,7 @@ class ACP_Addon_MLA_Export_Strategy extends ACP_Export_Strategy {
 	/**
 	 * Retrieve the headers for the columns
 	 *
-	 * @param AC_Column[] $columns
+	 * @param AC\Column[] $columns
 	 *
 	 * @since 1.0
 	 * @return string[] Associative array of header labels for the columns.
@@ -284,7 +281,7 @@ class ACP_Addon_MLA_Export_Strategy extends ACP_Export_Strategy {
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Editing_Strategy extends ACP_Editing_Strategy_Post {
+class ACP_Addon_MLA_Editing_Strategy extends ACP\Editing\Strategy\Post {
 
 	/**
 	 * Get the available items on the current page for passing them to JS
@@ -309,7 +306,7 @@ class ACP_Addon_MLA_Editing_Strategy extends ACP_Editing_Strategy_Post {
  * @package Media Library Assistant
  * @since 2.52
  */
-class ACP_Addon_MLA_Editing_Model_Media_Title extends ACP_Editing_Model_Media_Title {
+class ACP_Addon_MLA_Editing_Model_Media_Title extends ACP\Editing\Model\Media\Title {
 
 	/**
 	 * Remove JavaScript selector settings
@@ -328,8 +325,8 @@ class ACP_Addon_MLA_Editing_Model_Media_Title extends ACP_Editing_Model_Media_Ti
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_ID_Parent extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_ID_Parent extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -346,7 +343,7 @@ class ACP_Addon_MLA_Column_ID_Parent extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -366,8 +363,8 @@ class ACP_Addon_MLA_Column_ID_Parent extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Title_Name extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Title_Name extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -381,7 +378,7 @@ class ACP_Addon_MLA_Column_Title_Name extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -407,8 +404,8 @@ class ACP_Addon_MLA_Column_Title_Name extends AC_Column
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Title extends AC_Column_Media_Title
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_Title extends AC\Column\Media\Title
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -421,7 +418,7 @@ class ACP_Addon_MLA_Column_Title extends AC_Column_Media_Title
 	/**
 	 * Add inline editing support
 	 *
-	 * @return ACP_Editing_Model_Media_Title
+	 * @return ACP\Editing\Model\Media\Title
 	 */
 	public function editing() {
 		return new ACP_Addon_MLA_Editing_Model_Media_Title( $this );
@@ -431,7 +428,7 @@ class ACP_Addon_MLA_Column_Title extends AC_Column_Media_Title
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -451,8 +448,8 @@ class ACP_Addon_MLA_Column_Title extends AC_Column_Media_Title
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Name extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Name extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -466,7 +463,7 @@ class ACP_Addon_MLA_Column_Name extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -487,8 +484,8 @@ class ACP_Addon_MLA_Column_Name extends AC_Column
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Parent extends AC_Column_Media_Parent
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Parent extends AC\Column\Media\MediaParent
+	implements ACP\Export\Exportable {
 	/**
 	 * Remove default column width
 	 */
@@ -499,7 +496,7 @@ class ACP_Addon_MLA_Column_Parent extends AC_Column_Media_Parent
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -520,8 +517,8 @@ class ACP_Addon_MLA_Column_Parent extends AC_Column_Media_Parent
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_MenuOrder extends AC_Column
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_MenuOrder extends AC\Column
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -534,17 +531,17 @@ class ACP_Addon_MLA_Column_MenuOrder extends AC_Column
 	/**
 	 * Add inline editing support
 	 *
-	 * @return ACP_Editing_Model_Post_Order
+	 * @return ACP\Editing\Model\Post\Order
 	 */
 	public function editing() {
-		return new ACP_Editing_Model_Post_Order( $this );
+		return new ACP\Editing\Model\Post\Order( $this );
 	}
 
 	/**
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 	
 	/**
@@ -564,8 +561,8 @@ class ACP_Addon_MLA_Column_MenuOrder extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Features extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Features extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -579,7 +576,7 @@ class ACP_Addon_MLA_Column_Features extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -626,8 +623,8 @@ class ACP_Addon_MLA_Column_Features extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Inserts extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Inserts extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -641,7 +638,7 @@ class ACP_Addon_MLA_Column_Inserts extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -693,8 +690,8 @@ class ACP_Addon_MLA_Column_Inserts extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Galleries extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Galleries extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -708,7 +705,7 @@ class ACP_Addon_MLA_Column_Galleries extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -755,8 +752,8 @@ class ACP_Addon_MLA_Column_Galleries extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_MLA_Galleries extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_MLA_Galleries extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -770,7 +767,7 @@ class ACP_Addon_MLA_Column_MLA_Galleries extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -818,8 +815,8 @@ class ACP_Addon_MLA_Column_MLA_Galleries extends AC_Column
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_AltText extends ACP_Column_Media_AlternateText
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_AltText extends ACP\Column\Media\AlternateText
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -832,17 +829,17 @@ class ACP_Addon_MLA_Column_AltText extends ACP_Column_Media_AlternateText
 	/**
 	 * Add inline editing support
 	 *
-	 * @return ACP_Editing_Model_Media_AlternateText
+	 * @return ACP\Editing\Model\Media\AlternateText
 	 */
 	public function editing() {
-		return new ACP_Editing_Model_Media_AlternateText( $this );
+		return new ACP\Editing\Model\Media\AlternateText( $this );
 	}
 
 	/**
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -874,8 +871,8 @@ class ACP_Addon_MLA_Column_AltText extends ACP_Column_Media_AlternateText
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Caption extends ACP_Column_Media_Caption
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_Caption extends ACP\Column\Media\Caption
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -889,7 +886,7 @@ class ACP_Addon_MLA_Column_Caption extends ACP_Column_Media_Caption
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -910,8 +907,8 @@ class ACP_Addon_MLA_Column_Caption extends ACP_Column_Media_Caption
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Description extends AC_Column_Media_Description
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_Description extends AC\Column\Media\Description
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -924,17 +921,17 @@ class ACP_Addon_MLA_Column_Description extends AC_Column_Media_Description
 	/**
 	 * Add inline editing and provides export for Description
 	 *
-	 * @return ACP_Editing_Model_Post_Content
+	 * @return ACP\Editing\Model\Post\Content
 	 */
 	public function editing() {
-		return new ACP_Editing_Model_Post_Content( $this );
+		return new ACP\Editing\Model\Post\Content( $this );
 	}
 
 	/**
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 	
 	/**
@@ -955,8 +952,8 @@ class ACP_Addon_MLA_Column_Description extends AC_Column_Media_Description
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_MimeType extends AC_Column_Media_MimeType
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_MimeType extends AC\Column\Media\MimeType
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -969,17 +966,17 @@ class ACP_Addon_MLA_Column_MimeType extends AC_Column_Media_MimeType
 	/**
 	 * Add inline editing support
 	 *
-	 * @return ACP_Editing_Model_Media_MimeType
+	 * @return ACP\Editing\Model\Media\MimeType
 	 */
 	public function editing() {
-		return new ACP_Editing_Model_Media_MimeType( $this );
+		return new ACP\Editing\Model\Media\MimeType( $this );
 	}
 
 	/**
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 	
 	/**
@@ -999,8 +996,8 @@ class ACP_Addon_MLA_Column_MimeType extends AC_Column_Media_MimeType
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_FileURL extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_FileURL extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1014,7 +1011,7 @@ class ACP_Addon_MLA_Column_FileURL extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1034,8 +1031,8 @@ class ACP_Addon_MLA_Column_FileURL extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Base_File extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Base_File extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1049,7 +1046,7 @@ class ACP_Addon_MLA_Column_Base_File extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1073,8 +1070,8 @@ class ACP_Addon_MLA_Column_Base_File extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Attached extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Attached extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1088,7 +1085,7 @@ class ACP_Addon_MLA_Column_Attached extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1145,8 +1142,8 @@ class ACP_Addon_MLA_Column_Attached extends AC_Column
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Date extends ACP_Column_Media_Date
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Date extends ACP\Column\Media\Date
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Remove default column width
@@ -1158,7 +1155,7 @@ class ACP_Addon_MLA_Column_Date extends ACP_Column_Media_Date
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1178,8 +1175,8 @@ class ACP_Addon_MLA_Column_Date extends ACP_Column_Media_Date
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Modified extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Modified extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1193,7 +1190,7 @@ class ACP_Addon_MLA_Column_Modified extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1214,8 +1211,8 @@ class ACP_Addon_MLA_Column_Modified extends AC_Column
  * @since 2.52
  * @since 2.71 Added export
  */
-class ACP_Addon_MLA_Column_Author extends AC_Column_Media_Author
-	implements ACP_Column_EditingInterface, ACP_Export_Column {
+class ACP_Addon_MLA_Column_Author extends AC\Column\Media\Author
+	implements ACP\Editing\Editable, ACP\Export\Exportable {
 
 	/**
 	 * Remove default column width
@@ -1226,17 +1223,17 @@ class ACP_Addon_MLA_Column_Author extends AC_Column_Media_Author
 	/**
 	 * Add inline editing support
 	 *
-	 * @return ACP_Editing_Model_Post_Author
+	 * @return ACP\Editing\Model\Post\Author
 	 */
 	public function editing() {
-		return new ACP_Editing_Model_Post_Author( $this );
+		return new ACP\Editing\Model\Post\Author( $this );
 	}
 
 	/**
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1262,8 +1259,8 @@ class ACP_Addon_MLA_Column_Author extends AC_Column_Media_Author
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_Taxonomy extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_Taxonomy extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1296,7 +1293,7 @@ class ACP_Addon_MLA_Column_Taxonomy extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**
@@ -1321,8 +1318,8 @@ class ACP_Addon_MLA_Column_Taxonomy extends AC_Column
  * @package Media Library Assistant
  * @since 2.71
  */
-class ACP_Addon_MLA_Column_CustomField extends AC_Column
-	implements ACP_Export_Column {
+class ACP_Addon_MLA_Column_CustomField extends AC\Column
+	implements ACP\Export\Exportable {
 
 	/**
 	 * Define column properties
@@ -1346,7 +1343,7 @@ class ACP_Addon_MLA_Column_CustomField extends AC_Column
 	 * Support export
 	 */
 	public function export() {
-		return new ACP_Export_Model_StrippedValue( $this );
+		return new ACP\Export\Model\StrippedValue( $this );
 	}
 
 	/**

@@ -16,9 +16,13 @@ add_action( 'wp_ajax_relevanssi_send_url', 'relevanssi_send_url' );
 add_action( 'wp_ajax_relevanssi_get_pdf_errors', 'relevanssi_get_pdf_errors_action' );
 add_action( 'wp_ajax_relevanssi_index_taxonomies', 'relevanssi_index_taxonomies_ajax_wrapper' );
 add_action( 'wp_ajax_relevanssi_count_taxonomies', 'relevanssi_count_taxonomies_ajax_wrapper' );
+add_action( 'wp_ajax_relevanssi_index_post_type_archives', 'relevanssi_index_post_type_archives_ajax_wrapper' );
 add_action( 'wp_ajax_relevanssi_index_users', 'relevanssi_index_users_ajax_wrapper' );
 add_action( 'wp_ajax_relevanssi_count_users', 'relevanssi_count_users_ajax_wrapper' );
 add_action( 'wp_ajax_relevanssi_list_taxonomies', 'relevanssi_list_taxonomies_wrapper' );
+add_action( 'wp_ajax_relevanssi_related_posts', 'relevanssi_get_related_posts' );
+add_action( 'wp_ajax_relevanssi_related_remove', 'relevanssi_add_to_exclude_list' );
+add_action( 'wp_ajax_relevanssi_related_return', 'relevanssi_remove_from_exclude_list' );
 
 /**
  * Performs the "list PDF files" AJAX action.
@@ -269,6 +273,36 @@ function relevanssi_index_taxonomies_ajax_wrapper() {
 }
 
 /**
+ * Indexes post type archives for AJAX indexing.
+ *
+ * Indexes post type archives and reports the results. The post type archives are
+ * always indexed all at one go; I don't think there's often a case where there are
+ * too many.
+ *
+ * @since 2.2.0
+ */
+function relevanssi_index_post_type_archives_ajax_wrapper() {
+	check_ajax_referer( 'relevanssi_post_type_archive_indexing_nonce', 'security' );
+
+	$response = array();
+
+	if ( 'on' !== get_option( 'relevanssi_index_post_type_archives' ) ) {
+		$response['feedback'] = __( 'disabled.', 'relevanssi' ) . "\n";
+	} else {
+		$indexing_response = relevanssi_index_post_type_archives_ajax();
+
+		$response['completed']   = 'done';
+		$response['total_posts'] = $indexing_response['indexed'];
+		$response['percentage']  = 100;
+		// translators: number of terms indexed on this go, total indexed terms, total number of terms.
+		$response['feedback'] = sprintf( _n( '%1$d post type archive indexed.', '%1$d post type archives indexed.', $indexing_response['indexed'], 'relevanssi' ), $indexing_response['indexed'] ) . "\n";
+	}
+
+	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
  * Indexes users for AJAX indexing.
  *
  * Reads in the parameters, indexes users and reports the results.
@@ -354,4 +388,163 @@ function relevanssi_count_taxonomies_ajax_wrapper() {
 	}
 	echo wp_json_encode( $count );
 	wp_die();
+}
+
+/**
+ * Creates a list of related posts.
+ *
+ * @since 2.2.4
+ */
+function relevanssi_get_related_posts() {
+	check_ajax_referer( 'relevanssi_metabox_nonce', 'security' );
+
+	$post_id = (int) $_POST['post_id']; // WPCS: input var ok.
+
+	if ( 0 === $post_id ) {
+		wp_die();
+	}
+
+	$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
+
+	if ( isset( $_POST['keywords'] ) ) {
+		$keywords = sanitize_text_field( $_POST['keywords'] ); // WPCS: input var ok.
+
+		delete_post_meta( $post_id, '_relevanssi_related_keywords' );
+		add_post_meta( $post_id, '_relevanssi_related_keywords', $keywords );
+
+		// Keywords have changed, flush the cache.
+		$related_posts = null;
+		delete_post_meta( $post_id, '_relevanssi_related_posts' );
+	}
+
+	if ( isset( $_POST['ids'] ) ) {
+		$include_ids_array = explode( ',', $_POST['ids'] );
+		$valid_ids         = array();
+		foreach ( $include_ids_array as $id ) {
+			if ( get_post( $id ) ) {
+				$valid_ids[] = $id;
+			}
+		}
+		if ( ! empty( $valid_ids ) ) {
+			$id_string = implode( ',', $valid_ids );
+			delete_post_meta( $post_id, '_relevanssi_related_include_ids' );
+			add_post_meta( $post_id, '_relevanssi_related_include_ids', $id_string );
+		} else {
+			delete_post_meta( $post_id, '_relevanssi_related_include_ids' );
+		}
+
+		// Included IDs have changed, flush the cache.
+		delete_post_meta( $post_id, '_relevanssi_related_posts' );
+	}
+
+	$list = relevanssi_generate_related_list( $post_id );
+
+	$response = array(
+		'list' => $list,
+	);
+
+	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
+ * Adds a post ID to the excluded ID list.
+ *
+ * @since 2.2.4
+ */
+function relevanssi_add_to_exclude_list() {
+	check_ajax_referer( 'relevanssi_metabox_nonce', 'security' );
+
+	$post_id = (int) $_POST['post_id']; // WPCS: input var ok.
+
+	if ( 0 === $post_id ) {
+		wp_die();
+	}
+
+	if ( isset( $_POST['remove_id'] ) ) {
+		relevanssi_exclude_a_related_post( $post_id, $_POST['remove_id'] );
+	}
+
+	$related  = relevanssi_generate_related_list( $post_id );
+	$excluded = relevanssi_generate_excluded_list( $post_id );
+
+	$response = array(
+		'related'  => $related,
+		'excluded' => $excluded,
+	);
+
+	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
+ * Adds a post ID to the list of excluded post IDs of a post.
+ *
+ * @param int $post_id       Add to this post IDs exclude list.
+ * @param int $excluded_post Add this post ID to the exclude list.
+ */
+function relevanssi_exclude_a_related_post( $post_id, $excluded_post ) {
+	$remove_id    = (int) $excluded_post;
+	$excluded_ids = trim( get_post_meta( $post_id, '_relevanssi_related_exclude_ids', true ) );
+	if ( $excluded_ids ) {
+		$excluded_ids = explode( ',', $excluded_ids );
+	} else {
+		$excluded_ids = array();
+	}
+	$excluded_ids[] = $remove_id;
+	$excluded_ids   = array_keys( array_flip( $excluded_ids ) );
+	$excluded_ids   = implode( ',', $excluded_ids );
+	update_post_meta( $post_id, '_relevanssi_related_exclude_ids', $excluded_ids );
+
+	// Excluded IDs have changed, flush the cache.
+	delete_post_meta( $post_id, '_relevanssi_related_posts' );
+}
+
+/**
+ * Removes a post ID from the excluded ID list and regenerates the lists.
+ *
+ * @since 2.2.4
+ */
+function relevanssi_remove_from_exclude_list() {
+	check_ajax_referer( 'relevanssi_metabox_nonce', 'security' );
+
+	$post_id = (int) $_POST['post_id']; // WPCS: input var ok.
+
+	if ( 0 === $post_id ) {
+		wp_die();
+	}
+
+	if ( isset( $_POST['return_id'] ) ) {
+		relevanssi_unexclude_a_related_post( $post_id, $_POST['return_id'] );
+	}
+
+	$related  = relevanssi_generate_related_list( $post_id );
+	$excluded = relevanssi_generate_excluded_list( $post_id );
+
+	$response = array(
+		'related'  => $related,
+		'excluded' => $excluded,
+	);
+
+	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
+ * Removes a post ID from the related posts exclude list.
+ *
+ * @param int $post_id         The post ID that owns the related posts exclude list.
+ * @param int $unexcluded_post The post ID which is removed from the exclude list.
+ */
+function relevanssi_unexclude_a_related_post( $post_id, $unexcluded_post ) {
+	$return_id    = (int) $unexcluded_post;
+	$excluded_ids = trim( get_post_meta( $post_id, '_relevanssi_related_exclude_ids', true ) );
+	$excluded_ids = array_flip( explode( ',', $excluded_ids ) );
+	unset( $excluded_ids[ $return_id ] );
+	$excluded_ids = array_keys( $excluded_ids );
+	$excluded_ids = implode( ',', $excluded_ids );
+	update_post_meta( $post_id, '_relevanssi_related_exclude_ids', $excluded_ids );
+
+	// Excluded IDs have changed, flush the cache.
+	delete_post_meta( $post_id, '_relevanssi_related_posts' );
 }

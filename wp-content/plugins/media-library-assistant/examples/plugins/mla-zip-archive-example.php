@@ -7,16 +7,16 @@
  * https://wordpress.org/support/topic/att-categories-menu-returns-404-error
  *
  * @package MLA Download ZIP Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Download ZIP Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Creates a "Download" Bulk Action that downloads one or more Media Library files as a ZIP archive
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014, 2018 David Lingren
 

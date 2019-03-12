@@ -18,16 +18,16 @@
  * https://wordpress.org/support/topic/lazy-load-and-masonry-layout/
  *
  * @package Get Post Galleries Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: Get Post Galleries Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Hooks a WordPress filter to supply a list of the items returned from [mla_gallery] shortcodes
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

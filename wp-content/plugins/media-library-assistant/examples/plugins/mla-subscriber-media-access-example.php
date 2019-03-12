@@ -7,16 +7,16 @@
  * https://wordpress.org/support/topic/limiting-users-to-their-own-uploaded-media/
  *
  * @package MLA Subscriber Media Access Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Subscriber Media Access Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Allows "owner only" access to the Media Library for the Subscriber role
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2017 David Lingren
 

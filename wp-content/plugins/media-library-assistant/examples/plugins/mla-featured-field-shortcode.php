@@ -10,16 +10,16 @@
  * Code [mla_featured_field field_name="Archive Date"] to return, for example, the "Archive Date" custom field.
  *
  * @package MLA Featured Field Shortcode
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Featured Field Shortcode Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Inserts custom field content from a post/page Featured Image
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
 

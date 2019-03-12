@@ -11,16 +11,16 @@
  * https://wordpress.org/support/topic/counter-in-title-for-multiple-upload-images/
  *
  * @package MLA Upload Bulk Edit Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Upload Bulk Edit Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Updates the Title/post_title value entered in the bulk edit area
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2015 David Lingren
 

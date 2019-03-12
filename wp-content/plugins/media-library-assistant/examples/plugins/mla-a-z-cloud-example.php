@@ -20,17 +20,17 @@
  * opened on 5/16/2015 by "kevincowart111".
  * https://wordpress.org/support/topic/alphabetical-pagination-2
  *
- * @package MLA Child Term Hooks Example
- * @version 1.02
+ * @package MLA A-Z Cloud and Collapse-o-Matic Example
+ * @version 1.03
  */
 
 /*
 Plugin Name: MLA A-Z Cloud and Collapse-o-Matic Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an "A-Z cloud/pagination" and expandable gallery example
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
 

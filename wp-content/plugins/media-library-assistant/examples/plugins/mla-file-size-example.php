@@ -1,11 +1,11 @@
 <?php
 /*
 Plugin Name: MLA File Size Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds File Size in KB/MB to the caption
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
 

@@ -65,18 +65,18 @@
  * https://wordpress.org/support/topic/shortcode-456/
  *
  * @package MLA UI Elements Example
- * @version 1.08
+ * @version 1.10
  */
 
 /*
 Plugin Name: MLA UI Elements Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes
 Author: David Lingren
-Version: 1.08
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.10
+Author URI: http://davidlingren.com/
 
-Copyright 2016-2017 David Lingren
+Copyright 2016-2018 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -455,7 +455,7 @@ class MLAUIElementsExample {
 
 				if ( !empty( $terms ) ) {
 					// Numeric values could still be a slug
-					$field = self::$mla_option_values[ $taxonomy ];
+					$field = ( !empty( self::$mla_option_values[ $taxonomy ] ) ) ? self::$mla_option_values[ $taxonomy ] : 'term_id';
 					foreach ( $terms as $term ) {
 						if ( ! ctype_digit( $term ) ) {
 							$field = 'slug';

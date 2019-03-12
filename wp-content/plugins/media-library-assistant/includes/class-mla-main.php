@@ -6,9 +6,7 @@
  * @since 0.1
  */
 
-/* 
- * The Meta Boxes functions are't automatically available to plugins.
- */
+// The Meta Boxes functions are't automatically available to plugins.
 if ( !function_exists( 'post_categories_meta_box' ) ) {
 	require_once( ABSPATH . 'wp-admin/includes/meta-boxes.php' );
 }
@@ -144,7 +142,6 @@ class MLA {
 	public static function mla_admin_init_action() {
 		//static $count = 0;
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $count = ' . var_export( $count++, true ), 0 );
-
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action referer = ' . var_export( wp_get_referer(), true ), 0 );
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		//error_log( __LINE__ . ' MLA::mla_admin_init_action $_POST = ' . var_export( $_POST, true ), 0 );
@@ -154,6 +151,19 @@ class MLA {
 		if ( isset( $_REQUEST['mla_download_file'] ) && isset( $_REQUEST['mla_download_type'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			self::_process_mla_download_file( $_REQUEST, true );
+			exit();
+		}
+
+		// Process example plugin download requests from the Documentation tab
+		if ( isset( $_REQUEST['mla_download_example_plugin'] ) ) {
+			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+
+			$request = array (
+				'mla_download_file' => str_replace( '\\', '/', MLA_PLUGIN_PATH . 'examples/plugins/' . stripslashes( $_REQUEST['mla_download_example_plugin'] ) ),
+				'mla_download_type' => 'text/plain',
+			);
+
+			self::_process_mla_download_file( $request, false );
 			exit();
 		}
 
@@ -178,7 +188,7 @@ class MLA {
 				$request = array (
 					'mla_download_file' => addslashes( $error_log_name ),
 					'mla_download_type' => 'text/plain',
-					);
+				);
 
 				self::_process_mla_download_file( $request, false );
 			}
@@ -407,6 +417,11 @@ class MLA {
 		wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, MLA_PLUGIN_URL . "js/mla-inline-edit-scripts{$suffix}.js", 
 			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
 
+		if ( MLACore::mla_supported_taxonomies( 'checklist-add-term' ) ) {
+			wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-add-term', MLA_PLUGIN_URL . "js/mla-add-term-scripts{$suffix}.js", 
+				array( 'wp-ajax-response', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::CURRENT_MLA_VERSION, false );
+		}
+		
 		wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-set-parent', MLA_PLUGIN_URL . "js/mla-set-parent-scripts{$suffix}.js", 
 			array( 'wp-lists', 'suggest', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::CURRENT_MLA_VERSION, false );
 
@@ -693,18 +708,9 @@ class MLA {
 	 * @return	mixed	New value if this is our option, otherwise original status
 	 */
 	public static function mla_set_screen_option_filter( $status, $option, $value ) {
-		global $wp_filter;
-
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) status = " . var_export( $status, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-
-		foreach( $wp_filter['set-screen-option'] as $priority => $filters ) {
-			$debug_message = __LINE__ . ' MLA::mla_set_screen_option_filter $wp_filter[set-screen-option] priority = ' . var_export( $priority, true ) . '<br />';
-			foreach ( $filters as $name => $descriptor ) {
-				$debug_message .= 'filter name = ' . var_export( $name, true ) . '<br />';
-			}
-			MLACore::mla_debug_add( $debug_message, MLACore::MLA_DEBUG_CATEGORY_ANY );
-		}
+		MLACore::mla_debug_add( __LINE__ . " MLA::mla_set_screen_option_filter( {$option} ) wp_filter = " . MLACore::mla_decode_wp_filter('set-screen-option'), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		if ( ( MLA_OPTION_PREFIX . 'entries_per_page' ) == $option ) {
 			return $value;
@@ -1571,7 +1577,7 @@ class MLA {
 			if ( !empty( $_REQUEST['heading_suffix'] ) ) {
 				echo ' - ' . esc_html( $_REQUEST['heading_suffix'] ) . $heading_tail;
 			} elseif ( !empty( $_REQUEST['mla_terms_search'] ) ) {
-					echo ' - ' . __( 'term search results for', 'media-library-assistant' ) . ' "' . esc_html( stripslashes( trim( $_REQUEST['mla_terms_search']['phrases'] ) ) ) . $heading_tail;
+					echo ' - ' . __( 'term search results for', 'media-library-assistant' ) . ' "' . esc_html( stripslashes( trim( $_REQUEST['mla_terms_search']['phrases'] ) ) ) . "\"" . $heading_tail;
 			} elseif ( !empty( $_REQUEST['s'] ) ) {
 				if ( empty( $_REQUEST['mla_search_fields'] ) ) {
 					echo ' - ' . __( 'post/parent results for', 'media-library-assistant' ) . ' "' . esc_html( stripslashes( trim( $_REQUEST['s'] ) ) ) . "\"" . $heading_tail;
@@ -2049,24 +2055,45 @@ class MLA {
 
 			foreach ( $hierarchical_taxonomies as $tax_name => $tax_object ) {
 				if ( current_user_can( $tax_object->cap->assign_terms ) ) {
-				  ob_start();
-				  wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
-				  $tax_checklist = ob_get_contents();
-				  ob_end_clean();
-  
-				  $page_values = array(
-					  'tax_html' => esc_html( $tax_object->labels->name ),
-					  'tax_attr' => esc_attr( $tax_name ),
-					  'tax_checklist' => $tax_checklist,
-					  'Add' => __( 'Add', 'media-library-assistant' ),
-					  'Remove' => __( 'Remove', 'media-library-assistant' ),
-					  'Replace' => __( 'Replace', 'media-library-assistant' ),
-				  );
-				  $category_block = MLAData::mla_parse_template( $page_template_array['category_block'], $page_values );
-				  $taxonomy_options = MLAData::mla_parse_template( $page_template_array['taxonomy_options'], $page_values );
-  
-				  $quick_category_blocks .= $category_block;
-				  $bulk_category_blocks .= $category_block . $taxonomy_options;
+					ob_start();
+					wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
+					$tax_checklist = ob_get_contents();
+					ob_end_clean();
+					
+					if ( MLACore::mla_taxonomy_support( $tax_name, 'checklist-add-term' ) ) {
+						$page_values = array(
+							'tax_attr' => esc_attr( $tax_name ),
+							'Add New Term' => __( '+&nbsp;Add&nbsp;New&nbsp;Term', 'media-library-assistant' ),
+							'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
+							'tax_parents' => wp_dropdown_categories( array( 'taxonomy' => $tax_name, 'hide_empty' => 0, 'name' => "new{$tax_name}_parent", 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax_object->labels->parent_item . ' &mdash;', 'echo' => 0 ) ),
+							'Add Button' => esc_html( $tax_object->labels->add_new_item ),
+							'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+						);
+					
+						$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
+						$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+					} else {
+						$category_add_link = '';
+						$category_adder = '';
+					}
+					
+					$page_values = array(
+						'tax_html' => esc_html( $tax_object->labels->name ),
+						'tax_attr' => esc_attr( $tax_name ),
+						'tax_checklist' => $tax_checklist,
+						'category_add_link' => $category_add_link,
+						'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
+						'category_adder' => $category_adder,
+						'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
+						'Add' => __( 'Add', 'media-library-assistant' ),
+						'Remove' => __( 'Remove', 'media-library-assistant' ),
+						'Replace' => __( 'Replace', 'media-library-assistant' ),
+					);
+					$category_block = MLAData::mla_parse_template( $page_template_array['category_block'], $page_values );
+					$taxonomy_options = MLAData::mla_parse_template( $page_template_array['taxonomy_options'], $page_values );
+					
+					$quick_category_blocks .= $category_block;
+					$bulk_category_blocks .= $category_block . $taxonomy_options;
 				} // current_user_can
 			} // foreach $hierarchical_taxonomies
 
@@ -2097,10 +2124,31 @@ class MLA {
 						$tax_checklist = ob_get_contents();
 						ob_end_clean();
 						
+						if ( MLACore::mla_taxonomy_support( $tax_name, 'checklist-add-term' ) ) {
+							$page_values = array(
+								'tax_attr' => esc_attr( $tax_name ),
+								'Add New Term' => __( '+&nbsp;Add&nbsp;New&nbsp;Term', 'media-library-assistant' ),
+								'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
+								'tax_parents' => "<input type='hidden' name='new{$tax_name}_parent' id='new{$tax_name}_parent' value='-1' />",
+								'Add Button' => esc_html( $tax_object->labels->add_new_item ),
+								'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+							);
+						
+							$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
+							$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+						} else {
+							$category_add_link = '';
+							$category_adder = '';
+						}
+					
 						$page_values = array(
 							'tax_html' => esc_html( $tax_object->labels->name ),
 							'tax_attr' => esc_attr( $tax_name ),
 							'tax_checklist' => $tax_checklist,
+							'category_add_link' => $category_add_link,
+							'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
+							'category_adder' => $category_adder,
+							'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
 							'Add' => __( 'Add', 'media-library-assistant' ),
 							'Remove' => __( 'Remove', 'media-library-assistant' ),
 							'Replace' => __( 'Replace', 'media-library-assistant' ),

@@ -39,16 +39,16 @@
  * https://wordpress.org/support/topic/display-rtmedia-gallery-with-a-query-on-the-title-or-media_id-2/
  *
  * @package MLA BuddyPress & rtMedia Example
- * @version 1.08
+ * @version 1.09
  */
 
 /*
 Plugin Name: MLA BuddyPress & rtMedia Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides [mla_gallery] parameters to filter items, generate rtMedia URLs and substitute cover art
 Author: David Lingren
-Version: 1.08
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.09
+Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2017 David Lingren
 

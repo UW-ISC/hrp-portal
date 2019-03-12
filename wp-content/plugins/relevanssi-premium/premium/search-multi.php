@@ -65,6 +65,10 @@ function relevanssi_search_multi( $multi_args ) {
 	if ( isset( $filtered_values['order'] ) ) {
 		$order = $filtered_values['order'];
 	}
+	$include_attachments = '';
+	if ( isset( $filtered_values['include_attachments'] ) ) {
+		$include_attachments = $filtered_values['include_attachments'];
+	}
 
 	$hits = array();
 
@@ -122,6 +126,8 @@ function relevanssi_search_multi( $multi_args ) {
 
 	$post_type_weights = get_option( 'relevanssi_post_type_weights' );
 
+	$scores = array();
+
 	$original_blog = $wpdb->blogid;
 	foreach ( $search_blogs as $blogid ) {
 		// Only search blogs that are publicly available (unless filter says otherwise).
@@ -169,7 +175,7 @@ function relevanssi_search_multi( $multi_args ) {
 		// If $post_type is not set, see if there are post types to exclude from the search.
 		// If $post_type is set, there's no need to exclude, as we only include.
 		if ( ! $post_type ) {
-			$negative_post_type = relevanssi_get_negative_post_type();
+			$negative_post_type = relevanssi_get_negative_post_type( $include_attachments );
 		} else {
 			$negative_post_type = null;
 		}
@@ -275,8 +281,7 @@ function relevanssi_search_multi( $multi_args ) {
 		// Go get the count from the options, but run the full query if it's not available.
 		$doc_count = get_option( 'relevanssi_doc_count' );
 		if ( ! $doc_count || $doc_count < 1 ) {
-			$doc_count = $wpdb->get_var( "SELECT COUNT(DISTINCT(relevanssi.doc)) FROM $relevanssi_table AS relevanssi" ); // WPCS: unprepared SQL ok, Relevanssi table name.
-			update_option( 'relevanssi_doc_count', $doc_count );
+			$doc_count = relevanssi_update_doc_count();
 		}
 
 		$no_matches = true;
@@ -288,11 +293,34 @@ function relevanssi_search_multi( $multi_args ) {
 
 		$min_length   = get_option( 'relevanssi_min_word_length' );
 		$search_again = false;
+		$fuzzy        = get_option( 'relevanssi_fuzzy' );
 
 		$content_boost = floatval( get_option( 'relevanssi_content_boost', 1 ) );
 		$title_boost   = floatval( get_option( 'relevanssi_title_boost' ) );
 		$link_boost    = floatval( get_option( 'relevanssi_link_boost' ) );
 		$comment_boost = floatval( get_option( 'relevanssi_comment_boost' ) );
+
+		$recency_bonus       = false;
+		$recency_cutoff_date = false;
+		if ( function_exists( 'relevanssi_get_recency_bonus' ) ) {
+			list( $recency_bonus, $recency_cutoff_date ) = relevanssi_get_recency_bonus();
+		}
+
+		$exact_match_bonus = false;
+		$exact_match_boost = 0;
+		if ( 'on' === get_option( 'relevanssi_exact_match_bonus' ) ) {
+			$exact_match_bonus = true;
+			/**
+			 * Filters the exact match bonus.
+			 *
+			 * @param array The title bonus under 'title' (default 5) and the content
+			 * bonus under 'content' (default 2).
+			 */
+			$exact_match_boost = apply_filters( 'relevanssi_exact_match_bonus', array(
+				'title'   => 5,
+				'content' => 2,
+			));
+		}
 
 		$tag = $relevanssi_variables['post_type_weight_defaults']['post_tag'];
 		$cat = $relevanssi_variables['post_type_weight_defaults']['category'];
@@ -302,6 +330,9 @@ function relevanssi_search_multi( $multi_args ) {
 		if ( ! empty( $post_type_weights['category'] ) ) {
 			$cat = $post_type_weights['category'];
 		}
+
+		$doc_weight = array();
+		$term_hits  = array();
 
 		do {
 			foreach ( $terms as $term ) {
@@ -370,20 +401,18 @@ function relevanssi_search_multi( $multi_args ) {
 
 				$total_hits += count( $matches );
 
-				if ( isset( $post_type_weights['post_tag'] ) ) {
+				if ( isset( $post_type_weights['post_tag'] ) && is_numeric( $post_type_weights['post_tag'] ) ) {
 					$tag_boost = $post_type_weights['post_tag'];
 				} else {
 					$tag_boost = 1;
 				}
 
-				$doc_weight = array();
-				$scores     = array();
-				$term_hits  = array();
-
 				$idf = log( $doc_count / ( 1 + $df ) );
 				foreach ( $matches as $match ) {
 					if ( 'user' === $match->type ) {
 						$match->doc = 'u_' . $match->item;
+					} elseif ( 'post_type' === $match->type ) {
+						$match->doc = 'p_' . $match->item;
 					} elseif ( ! in_array( $match->type, array( 'post', 'attachment' ), true ) ) {
 						$match->doc = '**' . $match->type . '**' . $match->item;
 					}
@@ -422,6 +451,24 @@ function relevanssi_search_multi( $multi_args ) {
 						$match->weight = $match->weight * $post_type_weights[ $type ];
 					}
 
+					if ( $recency_bonus ) {
+						$post = relevanssi_get_post( $match->doc );
+						if ( strtotime( $post->post_date ) > $recency_cutoff_date ) {
+							$match->weight = $match->weight * $recency_bonus;
+						}
+					}
+
+					if ( $exact_match_bonus ) {
+						$post    = relevanssi_get_post( $match->doc );
+						$clean_q = str_replace( '"', '', $q );
+						if ( stristr( $post->post_title, $clean_q ) !== false ) {
+							$match->weight *= $exact_match_boost['title'];
+						}
+						if ( stristr( $post->post_content, $clean_q ) !== false ) {
+							$match->weight *= $exact_match_boost['content'];
+						}
+					}
+
 					/**
 					 * Filters the Relevanssi post matches.
 					 *
@@ -448,23 +495,25 @@ function relevanssi_search_multi( $multi_args ) {
 						continue; // The filters killed the match.
 					}
 
+					$doc_id = $blogid . '|' . $match->doc;
+
 					$doc_terms[ $match->doc ][ $term ] = true; // Count how many terms are matched to a doc.
-					if ( isset( $doc_weight[ $match->doc ] ) ) {
+					if ( isset( $doc_weight[ $doc_id ] ) ) {
 						$doc_weight[ $match->doc ] += $match->weight;
 					} else {
 						$doc_weight[ $match->doc ] = $match->weight;
 					}
-					if ( isset( $scores[ $match->doc ] ) ) {
-						$scores[ $match->doc ] += $match->weight;
+					if ( isset( $scores[ $doc_id ] ) ) {
+						$scores[ $doc_id ] += $match->weight;
 					} else {
-						$scores[ $match->doc ] = $match->weight;
+						$scores[ $doc_id ] = $match->weight;
 					}
 
-					$body_matches[ $match->doc ]    = $match->content;
-					$title_matches[ $match->doc ]   = $match->title;
-					$link_matches[ $match->doc ]    = $match->link;
-					$tag_matches[ $match->doc ]     = $match->tag;
-					$comment_matches[ $match->doc ] = $match->comment;
+					$body_matches[ $doc_id ]    = $match->content;
+					$title_matches[ $doc_id ]   = $match->title;
+					$link_matches[ $doc_id ]    = $match->link;
+					$tag_matches[ $doc_id ]     = $match->tag;
+					$comment_matches[ $doc_id ] = $match->comment;
 				}
 			}
 
@@ -562,7 +611,7 @@ function relevanssi_search_multi( $multi_args ) {
 		 * and array format
 		 */
 		$orderby = apply_filters( 'relevanssi_orderby', $orderby );
-		relevanssi_object_sort( $hits, $orderby );
+		relevanssi_object_sort( $hits, $orderby, $meta_query );
 	} else {
 		if ( empty( $order ) ) {
 			$order = 'desc';
@@ -589,7 +638,7 @@ function relevanssi_search_multi( $multi_args ) {
 		if ( 'relevance' !== $orderby ) {
 			// Results are by default sorted by relevance, so no need to sort for that.
 			$orderby_array = array( $orderby => $order );
-			relevanssi_object_sort( $hits, $orderby_array );
+			relevanssi_object_sort( $hits, $orderby_array, $meta_query );
 		}
 	}
 

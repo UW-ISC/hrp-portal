@@ -14,7 +14,7 @@ class Header_Match extends Red_Match {
 	public function save( array $details, $no_target_url = false ) {
 		$data = array(
 			'regex' => isset( $details['regex'] ) && $details['regex'] ? true : false,
-			'name'  => isset( $details['name'] ) ? $this->sanitize_name( $details['name'] ): '',
+			'name'  => isset( $details['name'] ) ? $this->sanitize_name( $details['name'] ) : '',
 			'value' => isset( $details['value'] ) ? $this->sanitize_value( $details['value'] ) : '',
 		);
 
@@ -43,7 +43,7 @@ class Header_Match extends Red_Match {
 		$matched = Redirection_Request::get_header( $this->name ) === $this->value;
 
 		if ( $this->regex ) {
-			$matched = preg_match( '@'.str_replace( '@', '\\@', $this->value ).'@', Redirection_Request::get_header( $this->name ), $matches ) > 0;
+			$matched = preg_match( '@' . str_replace( '@', '\\@', $this->value ) . '@', Redirection_Request::get_header( $this->name ), $matches ) > 0;
 		}
 
 		// Check if referrer matches

@@ -37,7 +37,7 @@ function relevanssi_related( $query, $pre = '<ul><li>', $sep = '</li><li>', $pos
 	}
 
 	$query_slug = sanitize_title( $query );
-	$related    = wp_cache_get( 'related-' . $query_slug );
+	$related    = get_transient( 'related-' . $query_slug );
 	if ( ! $related ) {
 		/**
 		 * Loop over each token in the query and return logged queries which:
@@ -69,7 +69,7 @@ function relevanssi_related( $query, $pre = '<ul><li>', $sep = '</li><li>', $pos
 		if ( empty( $related ) ) {
 			return;
 		} else {
-			wp_cache_set( 'related-' . $query_slug, $related );
+			set_transient( 'related-' . $query_slug, $related, 60 * 60 * 24 * 7 );
 		}
 	}
 
@@ -90,18 +90,22 @@ function relevanssi_related( $query, $pre = '<ul><li>', $sep = '</li><li>', $pos
 /**
  * Replaces get_posts() in a way that handles users and taxonomy terms.
  *
- * Custom-made get_posts() replacement that creates post objects for users and taxonomy terms. For regular posts, the function uses get_posts() and a caching mechanism.
+ * Custom-made get_posts() replacement that creates post objects for users and
+ * taxonomy terms. For regular posts, the function uses get_posts() and a caching
+ * mechanism.
  *
- * @global array $relevanssi_post_array The global Relevanssi post array used as a cache.
+ * @global array $relevanssi_post_array The global Relevanssi post array used as a
+ *                                      cache.
  *
- * @param int $id      The post ID to fetch. If the ID begins with 'u_', it's considered a user ID and if it begins with '**', it's considered a taxonomy term.
- * @param int $blog_id The blog ID, used to make caching work in multisite environment.
+ * @param int $id      The post ID to fetch. If the ID begins with 'u_', it's
+ * considered a user ID and if it begins with '**', it's considered a taxonomy term.
+ * @param int $blog_id The blog ID, used to make caching work in multisite
+ * environment. Defaults to -1, which means the blog id is not used.
  *
  * @return $post The post object for the post ID.
  */
-function relevanssi_premium_get_post( $id, $blog_id ) {
+function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 	global $relevanssi_post_array;
-
 	$type = substr( $id, 0, 2 );
 	switch ( $type ) {
 		case 'u_':
@@ -126,11 +130,42 @@ function relevanssi_premium_get_post( $id, $blog_id ) {
 			/**
 			 * Filters the user profile post object.
 			 *
-			 * After a post object is created from the user profile, it is passed through this filter so it can be modified.
+			 * After a post object is created from the user profile, it is passed
+			 * through this filter so it can be modified.
 			 *
 			 * @param Object $post The post object.
 			 */
 			$post = apply_filters( 'relevanssi_user_profile_to_post', $post );
+			break;
+		case 'p_':
+			list( $throwaway, $id ) = explode( '_', $id );
+
+			$post_type_name        = relevanssi_get_post_type_by_id( $id );
+			$post_type             = get_post_type_object( $post_type_name );
+			$post                  = new stdClass();
+			$post->post_title      = $post_type->label;
+			$post->post_content    = $post_type->description;
+			$post->post_type       = 'post_type';
+			$post->ID              = $id;
+			$post->relevanssi_link = get_post_type_archive_link( $post_type_name );
+			$post->post_status     = 'publish';
+			$post->post_date       = date( 'Y-m-d H:i:s' );
+			$post->post_author     = 0;
+			$post->post_name       = '';
+			$post->post_excerpt    = '';
+			$post->comment_status  = '';
+			$post->ping_status     = '';
+			$post->post_type_id    = $post_type_name;
+
+			/**
+			 * Filters the post type post object.
+			 *
+			 * After a post object is created from a post type, it is passed through
+			 * this filter so it can be modified.
+			 *
+			 * @param Object $post The post object.
+			 */
+			$post = apply_filters( 'relevanssi_post_type_to_post', $post );
 			break;
 		case '**':
 			list( $throwaway, $taxonomy, $id ) = explode( '**', $id );
@@ -155,7 +190,8 @@ function relevanssi_premium_get_post( $id, $blog_id ) {
 			/**
 			 * Filters the taxonomy term post object.
 			 *
-			 * After a post object is created from the taxonomy term, it is passed through this filter so it can be modified.
+			 * After a post object is created from the taxonomy term, it is passed
+			 * through this filter so it can be modified.
 			 *
 			 * @param Object $post The post object.
 			 */
@@ -172,8 +208,8 @@ function relevanssi_premium_get_post( $id, $blog_id ) {
 			} else {
 				$post = get_post( $id );
 			}
-			if ( 'on' === get_option( 'relevanssi_link_pdf_files' ) && 'application/pdf' === $post->post_mime_type ) {
-				$post->relevanssi_link = $post->guid;
+			if ( 'on' === get_option( 'relevanssi_link_pdf_files' ) && ! empty( $post->post_mime_type ) ) {
+				$post->relevanssi_link = wp_get_attachment_url( $post->ID );
 			}
 	}
 	return $post;
@@ -314,6 +350,8 @@ function relevanssi_premium_generate_suggestion( $query ) {
 			return '';
 		}
 		if ( count( $correct ) > 0 ) {
+			// Strip quotes, because they are likely incorrect.
+			$query           = str_replace( '"', '', $query );
 			$corrected_query = $query;
 		}
 	}
@@ -375,6 +413,9 @@ function relevanssi_premium_init() {
 			remove_action( 'save_post', 'relevanssi_save_postdata' );
 		}
 	);
+
+	// Add the related posts filters if necessary.
+	relevanssi_related_init();
 }
 
 /**
@@ -409,27 +450,33 @@ function relevanssi_post_link_replace( $permalink, $post_id ) {
 function relevanssi_get_words() {
 	global $wpdb, $relevanssi_variables;
 
-	/**
-	 * The minimum limit of occurrances to include a word.
-	 *
-	 * To save resources, only words with more than this many occurrances are fed for
-	 * the spelling corrector. If there are problems with the spelling corrector,
-	 * increasing this value may fix those problems.
-	 *
-	 * @param int $number The number of occurrances must be more than this value,
-	 * default 2.
-	 */
-	$count = apply_filters( 'relevanssi_get_words_having', 2 );
-	if ( ! is_numeric( $count ) ) {
-		$count = 2;
-	}
-	$q = 'SELECT term, SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield) as c FROM ' . $relevanssi_variables['relevanssi_table'] . " GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
+	$words = get_transient( 'relevanssi_words' );
 
-	$results = $wpdb->get_results( $q ); // WPCS: Unprepared SQL ok. Only variables are a Relevanssi DB table name and a filtered value, which is sanitized and numeric.
+	if ( ! $words ) {
+		/**
+		 * The minimum limit of occurrances to include a word.
+		 *
+		 * To save resources, only words with more than this many occurrances are fed for
+		 * the spelling corrector. If there are problems with the spelling corrector,
+		 * increasing this value may fix those problems.
+		 *
+		 * @param int $number The number of occurrances must be more than this value,
+		 * default 2.
+		 */
+		$count = apply_filters( 'relevanssi_get_words_having', 2 );
+		if ( ! is_numeric( $count ) ) {
+			$count = 2;
+		}
+		$q = 'SELECT term, SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield) as c FROM ' . $relevanssi_variables['relevanssi_table'] . " GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
 
-	$words = array();
-	foreach ( $results as $result ) {
-		$words[ $result->term ] = $result->c;
+		$results = $wpdb->get_results( $q ); // WPCS: Unprepared SQL ok. Only variables are a Relevanssi DB table name and a filtered value, which is sanitized and numeric.
+
+		$words = array();
+		foreach ( $results as $result ) {
+			$words[ $result->term ] = $result->c;
+		}
+
+		set_transient( 'relevanssi_words', $words, 60 * 60 * 24 * 7 );
 	}
 
 	return $words;
@@ -448,6 +495,7 @@ function relevanssi_premium_install() {
 	add_option( 'relevanssi_index_users', 'off' );
 	add_option( 'relevanssi_index_subscribers', 'off' );
 	add_option( 'relevanssi_index_taxonomies', 'off' );
+	add_option( 'relevanssi_index_post_type_archives', 'off' );
 	add_option( 'relevanssi_internal_links', 'noindex' );
 	add_option( 'relevanssi_thousand_separator', '' );
 	add_option( 'relevanssi_disable_shortcodes', '' );
@@ -466,6 +514,10 @@ function relevanssi_premium_install() {
 	add_option( 'relevanssi_send_pdf_files', 'off' );
 	add_option( 'relevanssi_link_pdf_files', 'off' );
 	add_option( 'relevanssi_server_location', 'us' );
+	add_option( 'relevanssi_do_not_call_home', 'off' );
+	add_option( 'relevanssi_redirects', array() );
+	add_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
+	add_option( 'relevanssi_related_style', relevanssi_related_default_styles() );
 }
 
 /**
@@ -481,5 +533,10 @@ function relevanssi_get_server_url() {
 	if ( 'eu' === get_option( 'relevanssi_server_location' ) ) {
 		$server = RELEVANSSI_EU_SERVICES_URL;
 	}
-	return $server;
+	/**
+	 * Allows changing the attachment reading server URL.
+	 *
+	 * @param string The server URL.
+	 */
+	return apply_filters( 'relevanssi_attachment_server_url', $server );
 }

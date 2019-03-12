@@ -16,16 +16,16 @@
  * https://wordpress.org/support/topic/automatic-hierarchical-display-for-hierarchical-taxonomies
  *
  * @package MLA Child Term Hooks Example
- * @version 1.02
+ * @version 1.03
  */
 
 /*
 Plugin Name: MLA Child Term Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Creates a term-specific gallery of images assigned to child terms.
 Author: David Lingren
-Version: 1.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.03
+Author URI: http://davidlingren.com/
 
 Copyright 2014 David Lingren
 

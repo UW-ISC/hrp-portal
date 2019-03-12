@@ -1067,11 +1067,6 @@ class MLASettings {
 			'_wp_http_referer' => wp_referer_field( false ),
 			'Go to Top' => __( 'Go to Top', 'media-library-assistant' ),
 			'Go to Bottom' => __( 'Go to Bottom', 'media-library-assistant' ),
-			'Support Our Work' => __( 'Support Our Work', 'media-library-assistant' ),
-			'Donate to FTJ' => __( 'Donate to FTJ', 'media-library-assistant' ),
-			'Donate' => __( 'Donate', 'media-library-assistant' ),
-			/* translators: 1: donation hyperlink */
-			'This plugin was' => sprintf( __( 'This plugin was inspired by my work on the WordPress web site for our nonprofit, Fair Trade Judaica. If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our work. Thank you!', 'media-library-assistant' ), '<a href="http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/" title="' . __( 'Donate to FTJ', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
 			'shortcode_list' => '',
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-general&mla_tab=general',
 			'options_list' => '',
@@ -1458,17 +1453,13 @@ class MLASettings {
 			wp_die( __( 'You do not have permission to manage plugin settings.', 'media-library-assistant' ) );
 		}
 
-		/*
-		 * Load template array and initialize page-level values.
-		 */
+		// Load template array and initialize page-level values.
 		$development_version =  MLA::MLA_DEVELOPMENT_VERSION;
 		$development_version =  ( ! empty( $development_version ) ) ? ' (' . $development_version . ')' : '';
 		self::$page_template_array = MLACore::mla_load_template( 'admin-display-settings-page.tpl' );
 		$current_tab_slug = isset( $_REQUEST['mla_tab'] ) ? $_REQUEST['mla_tab']: 'general';
 		$current_tab = self::_get_options_tablist( $current_tab_slug );
 		$page_values = array(
-			'Support Our Work' => __( 'Support Our Work', 'media-library-assistant' ),
-			'Donate' => __( 'Donate', 'media-library-assistant' ),
 			'version' => 'v' . MLACore::CURRENT_MLA_VERSION,
 			'development' => $development_version,
 			'messages' => '',
@@ -1479,9 +1470,7 @@ class MLASettings {
 		);
 //error_log( __LINE__ . " mla_render_settings_page( {$current_tab_slug} ) REQUEST = " . var_export( $_REQUEST, true ), 0 );
 
-		/*
-		 * Compose tab content
-		 */
+		// Compose tab content
 		if ( $current_tab ) {
 			if ( isset( $current_tab['render'] ) ) {
 				$handler = $current_tab['render'];

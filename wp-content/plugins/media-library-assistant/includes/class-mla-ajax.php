@@ -32,14 +32,22 @@ class MLA_Ajax {
 	 * @return	void
 	 */
 	public static function initialize() {
-		$ajax_only = var_export( self::$ajax_only, true );
-		MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
-		add_action( 'admin_init', 'MLA_Ajax::mla_admin_init_action' );
+		if ( ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
+			$ajax_only = var_export( self::$ajax_only, true );
+			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		}
+		
+		// If there's no action variable, we have nothing more to do
+		if ( ! isset( $_REQUEST['action'] ) ) {
+			return;
+		}
 
 		// Defined here because the "admin_init" action is not called for item transfers
-		if ( ( defined('DOING_AJAX') && DOING_AJAX ) && ( 'mla_named_transfer' ==  $_REQUEST['action'] ) ) {
+		if ( 'mla_named_transfer' ==  $_REQUEST['action'] ) {
 			add_action( 'wp_ajax_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
 			add_action( 'wp_ajax_nopriv_' . 'mla_named_transfer', 'MLA_Ajax::mla_named_transfer_ajax_action' );
+		} else {
+			add_action( 'admin_init', 'MLA_Ajax::mla_admin_init_action' );
 		}
 	}
 
@@ -50,27 +58,12 @@ class MLA_Ajax {
 	 * @since 2.20
 	 */
 	public static function mla_admin_init_action( ) {
-		$ajax_only = var_export( self::$ajax_only, true );
-		
-		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
-		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_POST = " . var_export( $_POST, true ), 0 );
-		//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_GET = " . var_export( $_GET, true ), 0 );
-		if ( $_REQUEST['action'] !== 'heartbeat' ) {
-			//error_log( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), 0 );
-			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::mla_admin_init_action( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
-		}
-
-		// If there's no action variable, we have nothing more to do
-		if ( ! isset( $_POST['action'] ) ) {
-			return;
-		}
-
 		/*
 		 * For flat taxonomies that use the checklist meta box, substitute our own handler
 		 * for /wp-admin/includes/ajax-actions.php function _wp_ajax_add_hierarchical_term().
 		 */
-		if ( ( defined('DOING_AJAX') && DOING_AJAX ) && ( 'add-' == substr( $_POST['action'], 0, 4 ) ) ) {
-			$key = substr( $_POST['action'], 4 );
+		if ( ( defined('DOING_AJAX') && DOING_AJAX ) && ( 'add-' == substr( $_REQUEST['action'], 0, 4 ) ) ) {
+			$key = substr( $_REQUEST['action'], 4 );
 			if ( MLACore::mla_taxonomy_support( $key, 'flat-checklist' ) ) {
 				self::_mla_ajax_add_flat_term( $key );
 				/* note: this function sends an Ajax response and then dies; no return */
@@ -88,13 +81,13 @@ class MLA_Ajax {
 	 *
 	 * @since 2.20
 	 *
-	 * @param string The taxonomy name, from $_POST['action']
+	 * @param string The taxonomy name, from $_REQUEST['action']
 	 *
 	 * @return void Sends JSON response with updated HTML for the checklist
 	 */
 	private static function _mla_ajax_add_flat_term( $key ) {
 		$taxonomy = get_taxonomy( $key );
-		check_ajax_referer( $_POST['action'], '_ajax_nonce-add-' . $key, true );
+		check_ajax_referer( $_REQUEST['action'], '_ajax_nonce-add-' . $key, true );
 
 		if ( !current_user_can( $taxonomy->cap->edit_terms ) ) {
 			wp_die( -1 );

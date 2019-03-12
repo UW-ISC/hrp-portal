@@ -176,10 +176,12 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 		}
 		$custom_column_list = implode( ', ', $custom_column_list_array );
 
-		$custom_column_data = $wpdb->get_row( "SELECT $custom_column_list FROM $wpdb->posts WHERE ID=$post_id", ARRAY_A ); // WPCS: unprepared SQL ok. No user-generated input, column list can only contain valid column names.
+		$custom_column_data  = $wpdb->get_row( "SELECT $custom_column_list FROM $wpdb->posts WHERE ID=$post_id", ARRAY_A ); // WPCS: unprepared SQL ok. No user-generated input, column list can only contain valid column names.
+		$remove_stopwords    = true;
+		$minimum_word_length = get_option( 'relevanssi_min_word_length', 3 );
 		if ( is_array( $custom_column_data ) ) {
 			foreach ( $custom_column_data as $data ) {
-				$data = relevanssi_tokenize( $data );
+				$data = relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length );
 				if ( count( $data ) > 0 ) {
 					foreach ( $data as $term => $count ) {
 						if ( isset( $insert_data[ $term ]['mysqlcolumn'] ) ) {
@@ -309,7 +311,7 @@ function relevanssi_strip_internal_links( $text ) {
 function relevanssi_apply_thousands_separator( $string ) {
 	$thousands_separator = get_option( 'relevanssi_thousand_separator', '' );
 	if ( ! empty( $thousands_separator ) ) {
-		$pattern = '/(\d+)' . $thousands_separator . '(\d+)/u';
+		$pattern = '/(\d+)' . preg_quote( $thousands_separator ) . '(\d+)/u';
 		$string  = preg_replace( $pattern, '$1$2', $string );
 	}
 	return $string;
@@ -351,6 +353,7 @@ function relevanssi_simple_english_stemmer( $term ) {
 	$end1 = substr( $term, -1, 1 );
 	if ( 's' === $end1 && $len > 3 ) {
 		$term = substr( $term, 0, -1 );
+		$len--;
 	}
 	$end = substr( $term, -3, 3 );
 
@@ -708,11 +711,12 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 			foreach ( $values as $value ) {
 				$tokens = relevanssi_tokenize( $value, $remove_stopwords, $min_length );
 				foreach ( $tokens as $term => $tf ) {
-					if ( isset( $insert_data[ $term ]['content'] ) ) {
-						$insert_data[ $term ]['content'] += $tf;
+					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
+						$insert_data[ $term ]['customfield'] += $tf;
 					} else {
-						$insert_data[ $term ]['content'] = $tf;
+						$insert_data[ $term ]['customfield'] = $tf;
 					}
+					$insert_data = relevanssi_customfield_detail( $insert_data, $term, $tf, $key );
 				}
 			}
 		}
@@ -737,11 +741,12 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 				}
 				$tokens = relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length );
 				foreach ( $tokens as $term => $tf ) {
-					if ( isset( $insert_data[ $term ]['content'] ) ) {
-						$insert_data[ $term ]['content'] += $tf;
+					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
+						$insert_data[ $term ]['customfield'] += $tf;
 					} else {
-						$insert_data[ $term ]['content'] = $tf;
+						$insert_data[ $term ]['customfield'] = $tf;
 					}
+					$insert_data = relevanssi_customfield_detail( $insert_data, $term, $tf, $field );
 				}
 			}
 		}
@@ -802,7 +807,7 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	$insert_data = apply_filters( 'relevanssi_user_data_to_index', $insert_data, $user );
 
 	foreach ( $insert_data as $term => $data ) {
-		$fields = array( 'content', 'title', 'comment', 'tag', 'link', 'author', 'category', 'excerpt', 'taxonomy', 'customfield' );
+		$fields = array( 'content', 'title', 'comment', 'tag', 'link', 'author', 'category', 'excerpt', 'taxonomy', 'customfield', 'customfield_detail' );
 		foreach ( $fields as $field ) {
 			if ( ! isset( $data[ $field ] ) ) {
 				$data[ $field ] = 0;
@@ -819,12 +824,13 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 		$excerpt     = $data['excerpt'];
 		$taxonomy    = $data['taxonomy'];
 		$customfield = $data['customfield'];
+		$cf_detail   = $data['customfield_detail'];
 
 		$wpdb->query(
 			$wpdb->prepare('INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] .
 				' (item, doc, term, term_reverse, content, title, comment, tag, link, author, category, excerpt, taxonomy, customfield, type, customfield_detail, taxonomy_detail, mysqlcolumn_detail)
 			VALUES (%d, %d, %s, REVERSE(%s), %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s)',
-			$user->ID, -1, $term, $term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, $taxonomy, $customfield, 'user', '', '', '' )
+			$user->ID, -1, $term, $term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, $taxonomy, $customfield, 'user', $cf_detail, '', '' )
 		); // WPCS: unprepared SQL ok, database table name.
 	}
 }
@@ -1264,4 +1270,324 @@ function relevanssi_hide_post( $post_id ) {
 		$hidden = true;
 	}
 	return $hidden;
+}
+
+/**
+ * Indexes post type archive pages.
+ *
+ * Goes through all the post type archive pages and indexes them using
+ * relevanssi_index_post_type_archive().
+ *
+ * @see relevanssi_index_post_type_archive()
+ * @since 2.2
+ *
+ * @global object $wpdb The WordPress database object.
+ */
+function relevanssi_index_post_type_archives() {
+	if ( 'on' === get_option( 'relevanssi_index_post_type_archives' ) ) {
+		global $wpdb;
+
+		// Delete all post types from the Relevanssi index first.
+		$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'post_type'" ); // WPCS: unprepared SQL ok. Just table names.
+
+		$post_types = relevanssi_get_indexed_post_type_archives();
+		if ( ! empty( $post_types ) ) {
+			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+				$progress = WP_CLI\Utils\make_progress_bar( 'Indexing post type archives', count( $post_types ) );
+			}
+			foreach ( $post_types as $post_type ) {
+				relevanssi_index_post_type_archive( $post_type );
+				if ( defined( 'WP_CLI' ) && WP_CLI ) {
+					$progress->tick();
+				}
+			}
+			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+				$progress->finish();
+			}
+		} else {
+			if ( defined( 'WP_CLI' ) && WP_CLI ) {
+				WP_CLI::error( 'No post types available.' );
+			}
+		}
+	} else {
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			WP_CLI::error( 'Post type archive indexing disabled.' );
+		}
+	}
+}
+
+/**
+ * Indexes post type archive pages in AJAX context.
+ *
+ * Runs indexing on all post type archives in AJAX context.
+ *
+ * @global $wpdb The WordPress database interface.
+ * @global $relevanssi_variables The global Relevanssi variables, used for the
+ *                               database table names.
+ *
+ * @return array $response AJAX response, number of post type archives indexed in the
+ *                         $response['indexed'].
+ */
+function relevanssi_index_post_type_archives_ajax() {
+	global $wpdb, $relevanssi_variables;
+
+	$post_types = relevanssi_get_indexed_post_type_archives();
+
+	if ( empty( $post_types ) ) {
+		$response = array(
+			'indexed' => 0,
+		);
+		return $response;
+	}
+
+	$indexed_post_types = 0;
+	foreach ( $post_types as $post_type ) {
+		relevanssi_index_post_type_archive( $post_type );
+		$indexed_post_types++;
+	}
+
+	$response = array(
+		'indexed' => $indexed_post_types,
+	);
+
+	return $response;
+}
+
+/**
+ * Assigns numeric IDs for post types.
+ *
+ * Relevanssi requires numeric IDs for post types for indexing purposes. This
+ * function assigns numbers for each post type, in alphabetical order. This is a bit
+ * of a hack, and fails if new post types are added, but hopefully that doesn't
+ * happen too often. The assigned numbers are stored in the option
+ * relevanssi_post_type_ids.
+ *
+ * @since 2.2
+ *
+ * @return array The post type ID arrays (by ID and by name).
+ */
+function relevanssi_assign_post_type_ids() {
+	$post_types = relevanssi_get_indexed_post_type_archives();
+	sort( $post_types );
+
+	$post_types_by_id   = array();
+	$post_types_by_name = array();
+
+	$id = 1;
+	foreach ( $post_types as $post_type ) {
+		$post_type_ids_by_id[ $id ]          = $post_type;
+		$post_type_ids_by_name[ $post_type ] = $id;
+		$id++;
+	}
+	update_option( 'relevanssi_post_type_ids', array(
+		'by_id'   => $post_type_ids_by_id,
+		'by_name' => $post_type_ids_by_name,
+	));
+
+	return array(
+		'by_id'   => $post_type_ids_by_id,
+		'by_name' => $post_type_ids_by_name,
+	);
+}
+
+/**
+ * Gets the post type ID by post type name.
+ *
+ * Fetches the post type ID from the relevanssi_post_type_ids option by the post type
+ * name. If the option is empty, will populate it with values.
+ *
+ * @see relevanssi_assign_post_type_ids()
+ * @see relevanssi_get_post_type_by_id()
+ * @since 2.2
+ *
+ * @param string $post_type The name of the post type.
+ *
+ * @return integer|null The post type ID number or null if not a valid post type.
+ */
+function relevanssi_get_post_type_by_name( $post_type ) {
+	$post_type_ids = get_option( 'relevanssi_post_type_ids', false );
+	if ( empty( $post_type_ids ) ) {
+		$post_type_ids = relevanssi_assign_post_type_ids();
+	}
+	if ( isset( $post_type_ids['by_name'][ $post_type ] ) ) {
+		return $post_type_ids['by_name'][ $post_type ];
+	} else {
+		return null;
+	}
+}
+
+/**
+ * Gets the post type name by post type ID.
+ *
+ * Fetches the post type name from the relevanssi_post_type_ids option by the post
+ * type ID. If the option is empty, will populate it with values.
+ *
+ * @see relevanssi_assign_post_type_ids()
+ * @see relevanssi_get_post_type_by_name()
+ * @since 2.2
+ *
+ * @param integer $id The ID number of the post type.
+ *
+ * @return string|null The post type name or null if not a valid post type.
+ */
+function relevanssi_get_post_type_by_id( $id ) {
+	$post_type_ids = get_option( 'relevanssi_post_type_ids', false );
+	if ( empty( $post_type_ids ) ) {
+		$post_type_ids = relevanssi_assign_post_type_ids();
+	}
+	if ( isset( $post_type_ids['by_id'][ $id ] ) ) {
+		return $post_type_ids['by_id'][ $id ];
+	} else {
+		return null;
+	}
+}
+
+/**
+ * Indexes a post type archive page.
+ *
+ * Indexes a post type archive page, indexing the archive label and the description
+ * which can be set when the post type is registered. The filter hook
+ * relevanssi_post_type_additional_content can be used to add additional content to
+ * the post type archive description.
+ *
+ * @since 2.2
+ *
+ * @param string  $post_type    The name of the post type.
+ * @param boolean $remove_first Should the post type be removed first from the index.
+ *
+ * @global object $wpdb                 The WordPress database object.
+ * @global array  $relevanssi_variables The Relevanssi global variables.
+ */
+function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) {
+	$post_type_object = get_post_type_object( $post_type );
+	global $wpdb, $relevanssi_variables;
+
+	$temp_post               = new stdClass();
+	$temp_post->post_content = $post_type_object->description;
+	$temp_post->post_title   = $post_type_object->name;
+
+	/**
+	 * Allows modifying the fake post for the post type archive.
+	 *
+	 * In order to index post type archives, Relevanssi generates fake posts from the
+	 * post types. This filter lets you modify the post object. The post type
+	 * description is in the post_content and the post type name in the post_title.
+	 *
+	 * @param object $temp_post The post object.
+	 * @param object $post_type The post type object.
+	 */
+	$temp_post = apply_filters( 'relevanssi_post_to_index', $temp_post, $post_type_object );
+
+	$post_type_object->description = $temp_post->post_content;
+	$post_type_object->name        = $temp_post->post_title;
+
+	if ( $remove_first ) {
+		// The 0 doesn't mean anything, but because of WP hook parameters, it needs
+		// to be there so the taxonomy can be passed as the third parameter.
+		relevanssi_delete_post_type_object( $post_type );
+	}
+
+	$insert_data      = array();
+	$remove_stopwords = true;
+
+	$min_length = get_option( 'relevanssi_min_word_length', 3 );
+	if ( ! isset( $post_type_object->description ) ) {
+		$post_type_object->description = '';
+	}
+	/**
+	 * Allows adding extra content to the post type before indexing.
+	 *
+	 * The post type description is passed through this filter, so if you want to add
+	 * extra content to the description, you can use this filter.
+	 *
+	 * @param string $post_type_object->description The post type description.
+	 * @param object $post_type_object              The post type object.
+	 */
+	$description = apply_filters( 'relevanssi_post_type_additional_content', $post_type_object->description, $post_type_object );
+	if ( ! empty( $description ) ) {
+		$tokens = relevanssi_tokenize( $description, $remove_stopwords, $min_length );
+		foreach ( $tokens as $t_term => $tf ) {
+			if ( ! isset( $insert_data[ $t_term ]['content'] ) ) {
+				$insert_data[ $t_term ]['content'] = 0;
+			}
+			$insert_data[ $t_term ]['content'] += $tf;
+		}
+	}
+
+	if ( isset( $post_type_object->name ) && ! empty( $post_type_object->name ) ) {
+		$tokens = relevanssi_tokenize( $post_type_object->label, $remove_stopwords, $min_length );
+		foreach ( $tokens as $t_term => $tf ) {
+			if ( ! isset( $insert_data[ $t_term ]['title'] ) ) {
+				$insert_data[ $t_term ]['title'] = 0;
+			}
+			$insert_data[ $t_term ]['title'] += $tf;
+		}
+	}
+
+	$post_type_id = relevanssi_get_post_type_by_name( $post_type );
+	foreach ( $insert_data as $t_term => $data ) {
+		$fields = array( 'content', 'title', 'comment', 'tag', 'link', 'author', 'category', 'excerpt', 'taxonomy', 'customfield' );
+		foreach ( $fields as $field ) {
+			if ( ! isset( $data[ $field ] ) ) {
+				$data[ $field ] = 0;
+			}
+		}
+
+		$content     = $data['content'];
+		$title       = $data['title'];
+		$comment     = $data['comment'];
+		$tag         = $data['tag'];
+		$link        = $data['link'];
+		$author      = $data['author'];
+		$category    = $data['category'];
+		$excerpt     = $data['excerpt'];
+		$customfield = $data['customfield'];
+		$t_term      = trim( $t_term ); // Numeric terms start with a space.
+
+		$wpdb->query(
+			$wpdb->prepare('INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] .
+				' (item, doc, term, term_reverse, content, title, comment, tag, link, author, category, excerpt, taxonomy, customfield, type, customfield_detail, taxonomy_detail, mysqlcolumn_detail)
+			VALUES (%d, %d, %s, REVERSE(%s), %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s)',
+			$post_type_id, -1, $t_term, $t_term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, '', $customfield, 'post_type', '', '', '' )
+		); // WPCS: unprepared SQL ok, database table name.
+	}
+}
+
+/**
+ * Deletes a post type archive from Relevanssi index.
+ *
+ * @global $wpdb The WordPress database interface.
+ * @global $relevanssi_variables The global Relevanssi variables, used for the database table names.
+ *
+ * @param string $post_type Name of the post type to remove.
+ */
+function relevanssi_delete_post_type_object( $post_type ) {
+	global $wpdb, $relevanssi_variables;
+	$id = relevanssi_get_post_type_by_name( $post_type );
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $id AND type = 'post_type'" ); // WPCS: unprepared SQL ok. No user-generated input variables.
+}
+
+/**
+ * Returns the list of post type archives indexed.
+ *
+ * Returns a list of post types that have _builtin set to false and has_archive set
+ * to true. The list can be adjusted with the relevanssi_indexed_post_type_archives
+ * filter hook.
+ *
+ * @return array An array of post types.
+ */
+function relevanssi_get_indexed_post_type_archives() {
+	$args       = array(
+		'_builtin'    => false,
+		'has_archive' => true,
+	);
+	$post_types = get_post_types( $args );
+	/**
+	 * Filters the list of post type archives that are indexed by Relevanssi.
+	 *
+	 * @param array An array of post types.
+	 *
+	 * @return array An array of post types.
+	 */
+	return apply_filters( 'relevanssi_indexed_post_type_archives', $post_types );
 }

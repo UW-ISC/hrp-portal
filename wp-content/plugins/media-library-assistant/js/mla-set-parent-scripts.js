@@ -7,6 +7,7 @@ var jQuery;
  *
  * properties:
  *     mla.settings.useDashicons
+ *     mla.settings.useSpinnerClass
  *     mla.settings.ajaxDoneError
  *     mla.settings.ajaxFailError
  *

@@ -48,9 +48,7 @@ class MLAShortcode_Support {
 	public static function mla_ghostscript_present( $explicit_path = '', $ghostscript_only = false ) {
 		static $ghostscript_present = NULL;
 
-		/*
-		 * If $ghostscript_only = false, let the mla_debug parameter control logging
-		 */
+		// If $ghostscript_only = false, let the mla_debug parameter control logging
 		if ( $ghostscript_only ) {
 			$mla_debug_category = MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL;
 		} else {
@@ -71,18 +69,14 @@ class MLAShortcode_Support {
 				return $ghostscript_present = true;
 			}
 
-			/*
-			 * Imagick must be installed as well
-			 */
+			// Imagick must be installed as well
 			if ( ! class_exists( 'Imagick' ) ) {
 				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, Imagick missing', $mla_debug_category );
 				return $ghostscript_present = false;
 			}
 		} // not ghostscript_only
 
-		/*
-		 * Look for exec() - from http://stackoverflow.com/a/12980534/866618
-		 */
+		// Look for exec() - from http://stackoverflow.com/a/12980534/866618
 		$blacklist = preg_split( '/,\s*/', ini_get('disable_functions') . ',' . ini_get('suhosin.executor.func.blacklist') );
 		if ( in_array('exec', $blacklist) ) {
 			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec in blacklist', $mla_debug_category );
@@ -174,6 +168,61 @@ class MLAShortcode_Support {
 	}
 
 	/**
+	 * Removes MIME type restriction from Photonic Gallery query
+	 *
+	 * @since 2.76
+	 *
+	 * @param	object	$wp_query Current WP_Query object
+	 */
+	public static function _photonic_pre_get_posts( $wp_query ) {
+		// This has already been applied in MLA's database query
+		$wp_query->set( 'post_mime_type', '' );
+	}
+
+	/**
+	 * Filters the image src result, returning the "Featured Image" to represent a non-image attachment.
+	 *
+	 * @since 2.76
+	 *
+	 * @param array|false  $image         Either array with src, width & height, icon src, or false.
+	 * @param int          $attachment_id Image attachment ID.
+	 * @param string|array $size          Size of image. Image size or array of width and height values
+	 *                                    (in that order). Default 'thumbnail'.
+	 * @param bool         $icon          Whether the image should be treated as an icon. Default false.
+  	 */
+	public static function _get_attachment_featured_image( $image, $attachment_id, $size, $icon ) {
+		if ( $image ) {
+			return $image;
+		}
+
+		if ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) {
+			// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
+			$feature = get_the_post_thumbnail( $attachment_id, $size, array( 'class' => 'attachment-thumbnail' ) );
+			if ( ! empty( $feature ) ) {
+				$match_count = preg_match_all( '# width=\"([^\"]+)\" height=\"([^\"]+)\" src=\"([^\"]+)\" #', $feature, $matches, PREG_OFFSET_CAPTURE );
+				if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+					$image = array( $matches[3][0][0], $matches[1][0][0], $matches[2][0][0] );
+					return $image;
+				}
+			}
+		} // enable_featured_image
+
+		if ( $src = wp_mime_type_icon( $attachment_id ) ) {
+			/** This filter is documented in wp-includes/post.php */
+			$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/media' );
+
+			$src_file = $icon_dir . '/' . wp_basename( $src );
+			@list( $width, $height ) = getimagesize( $src_file );
+		}
+
+		if ( $src && $width && $height ) {
+			$image = array( $src, $width, $height );
+		}
+
+		return $image;
+	}
+
+	/**
 	 * Make sure $attr is an array, repair line-break damage, merge with $content
 	 *
 	 * @since 2.20
@@ -223,10 +272,8 @@ class MLAShortcode_Support {
 
 			$attr = shortcode_parse_atts( $new_attr );
 
-			/*
-			 * Remove empty values and still-invalid parameters
-			 */
-			$new_attr = '';
+			// Remove empty values and still-invalid parameters
+			$new_attr = array();
 			foreach ( $attr as $key => $value ) {
 				if ( is_numeric( $key ) || empty( $value ) ) {
 					continue;
@@ -238,9 +285,7 @@ class MLAShortcode_Support {
 			$attr = $new_attr;
 		} // not_valid
 
-		/*
-		 * Look for parameters in an enclosing shortcode
-		 */
+		// Look for parameters in an enclosing shortcode
 		if ( ! ( empty( $content ) || isset( $attr['mla_alt_shortcode'] ) ) ) {
 			$content = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8221;', '&#8243;', '<br />', '<p>', '</p>', "\r", "\n" ), array( '&', '\'', '\'', '"', '"', ' ', ' ', ' ', ' ', ' ' ), $content );
 			$new_attr = shortcode_parse_atts( $content );
@@ -310,9 +355,7 @@ class MLAShortcode_Support {
 	public static function mla_gallery_shortcode( $attr, $content = NULL ) {
 		global $post;
 
-		/*
-		 * Some do_shortcode callers may not have a specific post in mind
-		 */
+		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
 			$post = (object) self::$empty_post;
 		}
@@ -321,9 +364,7 @@ class MLAShortcode_Support {
 		static $instance = 0;
 		$instance++;
 
-		/*
-		 * Some values are already known, and can be used in data selection parameters
-		 */
+		// Some values are already known, and can be used in data selection parameters
 		$upload_dir = wp_upload_dir();
 		$page_values = array(
 			'instance' => $instance,
@@ -354,10 +395,7 @@ class MLAShortcode_Support {
 		 */
 		$attr = self::_validate_attributes( $attr, $content );
 
-		/*
-		 * Filter the attributes before $mla_page_parameter and "request:" prefix processing.
-		 */
-		 
+		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr );
 
 		/*
@@ -383,9 +421,7 @@ class MLAShortcode_Support {
 			}
 		}
 
-		/*
-		 * These are the parameters for gallery display
-		 */
+		// These are the parameters for gallery display
 		$mla_item_specific_arguments = array(
 			'mla_link_attributes' => '',
 			'mla_link_class' => '',
@@ -399,9 +435,7 @@ class MLAShortcode_Support {
 			'mla_caption' => ''
 		);
 
-		/*
-		 * These arguments must not be passed on to alternate gallery shortcodes
-		 */
+		// These arguments must not be passed on to alternate gallery shortcodes
 		$mla_arguments = array_merge( array(
 			'mla_output' => 'gallery',
 			'mla_style' => MLACore::mla_get_option('default_style'),
@@ -500,18 +534,13 @@ class MLAShortcode_Support {
 			$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
 		}
 
-		/*
-		 * Merge gallery arguments with defaults, pass the query arguments on to mla_get_shortcode_attachments.
-		 */
-		 
+		// Merge gallery arguments with defaults, pass the query arguments on to mla_get_shortcode_attachments.
 		$attr = apply_filters( 'mla_gallery_attributes', $attr );
 		$content = apply_filters( 'mla_gallery_initial_content', $content, $attr );
 		$arguments = shortcode_atts( $default_arguments, $attr );
 		$arguments = apply_filters( 'mla_gallery_arguments', $arguments );
 
-		/*
-		 * Decide which templates to use
-		 */
+		// Decide which templates to use
 		if ( ( 'none' !== $arguments['mla_style'] ) && ( 'theme' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'gallery', 'style', '[exists]' ) ) {
 				MLACore::mla_debug_add( '<strong>mla_gallery mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
@@ -524,9 +553,7 @@ class MLAShortcode_Support {
 			$arguments['mla_markup'] = $default_arguments['mla_markup'];
 		}
 
-		/*
-		 * Look for "no effect" alternate gallery shortcode to support plugins such as Justified Image Grid
-		 */
+		// Look for "no effect" alternate gallery shortcode to support plugins such as Justified Image Grid
 		if ( is_string( $arguments['mla_alt_shortcode'] ) && ( in_array( $arguments['mla_alt_shortcode'], array( 'mla_gallery', 'no' ) ) ) ) {
 			$arguments['mla_alt_shortcode'] = NULL;
 			$arguments['mla_alt_ids_name'] = 'ids';
@@ -550,9 +577,7 @@ class MLAShortcode_Support {
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
 
-		/*
-		 * Determine output type
-		 */
+		// Determine output type
 		$output_parameters = array_map( 'strtolower', array_map( 'trim', explode( ',', $arguments['mla_output'] ) ) );
 		if ( ! in_array( $output_parameters[0], array( 'gallery', 'next_link', 'current_link', 'previous_link', 'next_page', 'previous_page', 'paginate_links' ) ) ) {
 			$output_parameters[0] = 'gallery';
@@ -597,15 +622,19 @@ class MLAShortcode_Support {
 				$output =  '';
 			}
 
-			$output .= $arguments['mla_nolink_text'];
+			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments['mla_nolink_text'] ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
+				$output .= MLAData::mla_parse_template( $attr_value, $replacement_values );
+			}
+
 			return $output;
 		} // empty $attachments
 
-		/*
-		 * Look for Photonic-enhanced gallery; use the [gallery] shortcode if found
-		 */
+		// Look for Photonic-enhanced gallery; use the [gallery] shortcode if found
 		global $photonic;
 
+		$is_photonic = false;
 		if ( is_object( $photonic ) && ! empty( $arguments['style'] ) && empty( $arguments['mla_alt_shortcode'] ) ) {
 			if ( 'default' != strtolower( $arguments['type'] ) )  {
 				return '<p>' . __( '<strong>Photonic-enhanced [mla_gallery]</strong> type must be <strong>default</strong>, query = ', 'media-library-assistant' ) . var_export( $attr, true ) . '</p>';
@@ -616,15 +645,12 @@ class MLAShortcode_Support {
 			}
 
 			$arguments['mla_alt_shortcode'] = 'gallery';
+			$is_photonic = true;
 		}
 
-		/*
-		 * Look for user-specified alternate gallery shortcode
-		 */
+		// Look for user-specified alternate gallery shortcode
 		if ( is_string( $arguments['mla_alt_shortcode'] ) ) {
-			/*
-			 * Replace data-selection parameters with the "ids" list
-			 */
+			// Replace data-selection parameters with the "ids" list
 			$blacklist = array_merge( self::$mla_get_shortcode_attachments_parameters, self::$mla_get_shortcode_dynamic_attachments_parameters );
 			if ( 'mla_tag_cloud' !== $arguments['mla_alt_shortcode'] ) {
 				$blacklist = array_merge( $mla_arguments, $blacklist );
@@ -673,14 +699,23 @@ class MLAShortcode_Support {
 					$output = '';
 				}
 
-				/*
-				 * Execute the alternate gallery shortcode with the new parameters
-				 */
+				// Execute the alternate gallery shortcode with the new parameters
 				$content = apply_filters( 'mla_gallery_final_content', $content );
+
+				if ( $is_photonic  ) {
+					add_filter( 'pre_get_posts', 'MLAShortcode_Support::_photonic_pre_get_posts', 10, 4 );
+					add_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_featured_image', 10, 4 );
+				}
+				
 				if ( ! empty( $content ) ) {
 					$output .= do_shortcode( sprintf( '[%1$s %2$s %3$s]%4$s[/%1$s]', $arguments['mla_alt_shortcode'], $mla_alt_shortcode_ids, $mla_alt_shortcode_args, $content ) );
 				} else {
 					$output .= do_shortcode( sprintf( '[%1$s %2$s %3$s]', $arguments['mla_alt_shortcode'], $mla_alt_shortcode_ids, $mla_alt_shortcode_args ) );
+				}
+
+				if ( $is_photonic  ) {
+					remove_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_featured_image' );
+					remove_filter( 'pre_get_posts', 'MLAShortcode_Support::_photonic_pre_get_posts' );
 				}
 
 				do_action( 'mla_gallery_end_alt_shortcode' );
@@ -708,9 +743,7 @@ class MLAShortcode_Support {
 			$show_icon = false;
 		}
 
-		/*
-		 * Feeds such as RSS, Atom or RDF do not require styled and formatted output
-		 */
+		// Feeds such as RSS, Atom or RDF do not require styled and formatted output
 		if ( is_feed() ) {
 			$output = "\n";
 			foreach ( $attachments as $att_id => $attachment )
@@ -718,9 +751,7 @@ class MLAShortcode_Support {
 			return $output;
 		}
 
-		/*
-		 * Check for Imagick thumbnail generation arguments
-		 */
+		// Check for Imagick thumbnail generation arguments
 		$mla_viewer_required = false;
 		if ( 'checked' == MLACore::mla_get_option( 'enable_mla_viewer' ) ) {
 			if ( ! empty( $arguments['mla_viewer'] ) ) {
@@ -745,9 +776,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( $arguments['mla_viewer'] ) {
-			/*
-			 * Test for Ghostscript here so debug messages can be recorded
-			 */
+			// Test for Ghostscript here so debug messages can be recorded
 			$ghostscript_path = MLACore::mla_get_option( 'ghostscript_path' );
 			if ( self::mla_ghostscript_present( $ghostscript_path ) ) {
 				$arguments['mla_viewer_extensions'] = array_filter( array_map( 'trim', explode( ',', $arguments['mla_viewer_extensions'] ) ) );
@@ -755,8 +784,21 @@ class MLAShortcode_Support {
 				$arguments['mla_viewer_extensions'] = array();
 			}
 
-			// convert limit (in MB) to float
+			// Convert limit (in MB) to float
 			$arguments['mla_viewer_limit'] = abs( 0.0 + $arguments['mla_viewer_limit'] );
+
+			// Fill width and/or height from explicit intermediate size
+			if ( ( empty( $attr['mla_viewer_width'] ) && empty( $attr['mla_viewer_height'] ) ) && !empty( $attr['size'] ) ) {
+				$registered_dimensions = self::_registered_dimensions();
+				if ( isset( $registered_dimensions[ $attr['size'] ] ) ) {
+					$arguments['mla_viewer_width'] = absint( $registered_dimensions[ $attr['size'] ][0] );
+					$arguments['mla_viewer_height'] = absint( $registered_dimensions[ $attr['size'] ][1] );
+
+					if ( empty( $attr['mla_viewer_best_fit'] ) ) {
+						$arguments['mla_viewer_best_fit'] = 'true';
+					}
+				}
+			}
 
 			$arguments['mla_viewer_width'] = absint( $arguments['mla_viewer_width'] );
 			$arguments['mla_viewer_height'] = absint( $arguments['mla_viewer_height'] );
@@ -843,14 +885,10 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty ( $style_template ) ) {
-				/*
-				 * Look for 'query' and 'request' substitution parameters
-				 */
+				// Look for 'query' and 'request' substitution parameters
 				$style_values = MLAData::mla_expand_field_level_parameters( $style_template, $attr, $style_values );
 
-				/*
-				 * Clean up the template to resolve width or margin == 'none'
-				 */
+				// Clean up the template to resolve width or margin == 'none'
 				if ( 'none' == $margin_string ) {
 					$style_values['margin'] = '0';
 					$style_template = preg_replace( '/margin:[\s]*\[\+margin\+\][\%]*[\;]*/', '', $style_template );
@@ -866,9 +904,7 @@ class MLAShortcode_Support {
 				$gallery_style = MLAData::mla_parse_template( $style_template, $style_values );
 				$gallery_style = apply_filters( 'mla_gallery_style_parse', $gallery_style, $style_template, $style_values );
 
-				/*
-				 * Clean up the styles to resolve extra "%" suffixes on width or margin (pre v1.42 values)
-				 */
+				// Clean up the styles to resolve extra "%" suffixes on width or margin (pre v1.42 values)
 				$preg_pattern = array( '/([margin|width]:[^\%]*)\%\%/', '/([margin|width]:.*)auto\%/', '/([margin|width]:.*)inherit\%/' );
 				$preg_replacement = array( '${1}%', '${1}auto', '${1}inherit',  );
 				$gallery_style = preg_replace( $preg_pattern, $preg_replacement, $gallery_style );
@@ -882,9 +918,7 @@ class MLAShortcode_Support {
 			$open_template = '';
 		}
 
-		/*
-		 * Emulate [gallery] handling of row open markup for the default template only
-		 */
+		// Emulate [gallery] handling of row open markup for the default template only
 		if ( $html5 && ( 'default' == $markup_values['mla_markup'] ) ) {
 			$row_open_template = '';
 		} else{
@@ -900,9 +934,7 @@ class MLAShortcode_Support {
 			$item_template = '';
 		}
 
-		/*
-		 * Emulate [gallery] handling of row close markup for the default template only
-		 */
+		// Emulate [gallery] handling of row close markup for the default template only
 		if ( $html5 && ( 'default' == $markup_values['mla_markup'] ) ) {
 			$row_close_template = '';
 		} else{
@@ -918,9 +950,7 @@ class MLAShortcode_Support {
 			$close_template = '';
 		}
 
-		/*
-		 * Look for gallery-level markup substitution parameters
-		 */
+		// Look for gallery-level markup substitution parameters
 		$new_text = $open_template . $row_open_template . $row_close_template . $close_template;
 		$markup_values = MLAData::mla_expand_field_level_parameters( $new_text, $attr, $markup_values );
 
@@ -930,9 +960,7 @@ class MLAShortcode_Support {
 			$mla_alt_ids_output = $output = '';
 		}
 
-		/*
-		 * These $markup_values are used for both pagination and gallery output
-		 */
+		// These $markup_values are used for both pagination and gallery output
 		$markup_values = apply_filters( 'mla_gallery_open_values', $markup_values );
 
 		if ( $is_gallery ) {
@@ -946,9 +974,7 @@ class MLAShortcode_Support {
 			$gallery_open = apply_filters( 'mla_gallery_open_parse', $gallery_open, $open_template, $markup_values );
 			$output .= apply_filters( 'mla_gallery_style', $gallery_style . $gallery_open, $style_values, $markup_values, $style_template, $open_template );
 		} else {
-			/*
-			 * Handle 'previous_page', 'next_page', and 'paginate_links'
-			 */
+			// Handle 'previous_page', 'next_page', and 'paginate_links'
 			$pagination_result = self::_process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $found_rows, $output );
 			if ( false !== $pagination_result ) {
 				return $pagination_result;
@@ -1134,9 +1160,7 @@ class MLAShortcode_Support {
 				}
 			} // has parent
 
-			/*
-			 * Add attachment-specific field-level substitution parameters
-			 */
+			// Add attachment-specific field-level substitution parameters
 			$new_text = isset( $item_template ) ? $item_template : '';
 			foreach( $mla_item_specific_arguments as $index => $value ) {
 				$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
@@ -1452,9 +1476,7 @@ class MLAShortcode_Support {
 				$item_values['thumbnail_url'] = '';
 
 				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
-					/*
-					 * Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
-					 */
+					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
 					$feature = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
 					$feature = apply_filters( 'mla_gallery_featured_image', $feature, $attachment, $size, $item_values );
 
@@ -1913,16 +1935,12 @@ class MLAShortcode_Support {
 			}
 		}
 
-		/*
-		 * Process the pagination parameter, if present
-		 */
+		// Process the pagination parameter, if present
 		if ( isset( $arguments[ $mla_page_parameter ] ) ) {
 			$arguments['offset'] = $arguments['limit'] * ( $arguments[ $mla_page_parameter ] - 1);
 		}
 
-		/*
-		 * Clean up the current_item to separate term_id from slug
-		 */
+		// Clean up the current_item to separate term_id from slug
 		if ( ! empty( $arguments['current_item'] ) && ctype_digit( $arguments['current_item'] ) ) {
 			$arguments['current_item'] = absint( $arguments['current_item'] );
 		}
@@ -1946,9 +1964,7 @@ class MLAShortcode_Support {
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
 		}
 
-		/*
-		 * Determine templates and output type
-		 */
+		// Determine templates and output type
 		if ( $arguments['mla_style'] && ( 'none' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'tag-cloud', 'style', '[exists]' ) ) {
 				MLACore::mla_debug_add( '<strong>mla_tag_cloud mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
@@ -2477,15 +2493,14 @@ class MLAShortcode_Support {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				} else {
-					if ( $arguments['current_item'] == $tag->slug ) {
+//					if ( $arguments['current_item'] == $tag->slug ) {
+					if ( $tag->slug == sanitize_title_for_query( $arguments['current_item'] ) ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				}
 			}
 
-			/*
-			 * Add item_specific field-level substitution parameters
-			 */
+			// Add item_specific field-level substitution parameters
 			$new_text = isset( $item_template ) ? $item_template : '';
 			foreach( $mla_item_specific_arguments as $index => $value ) {
 				$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
@@ -2502,9 +2517,7 @@ class MLAShortcode_Support {
 				$item_values['caption'] = '';
 			}
 
-			/*
-			 * Apply the Display Content parameters.
-			 */
+			// Apply the Display Content parameters.
 			if ( ! empty( $arguments['mla_target'] ) ) {
 				$link_attributes = 'target="' . $arguments['mla_target'] . '" ';
 			} else {
@@ -2855,7 +2868,8 @@ class MLAShortcode_Support {
 					}
 
 					if ( $current_is_slug || !( ctype_digit( $current_item ) || is_int( $current_item ) ) ) {
-						if ( $current_item == $term->slug ) {
+//						if ( $current_item == $term->slug ) {
+						if ( $term->slug == sanitize_title_for_query( $current_item ) ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
@@ -3192,7 +3206,6 @@ class MLAShortcode_Support {
 				$arguments[ $mla_item_parameter ] = $attr[ $mla_item_parameter ];
 			} else {
 				$arguments[ $mla_item_parameter ] = $defaults['current_item'];
-
 			}
 		}
 
@@ -3870,18 +3883,14 @@ class MLAShortcode_Support {
 
 		$new_target = ( ! empty( $arguments['mla_target'] ) ) ? 'target="' . $arguments['mla_target'] . '" ' : '';
 
-		/*
-		 * these will add to the default classes
-		 */
+		// these will add to the default classes
 		$new_class = ( ! empty( $arguments['mla_link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_class'], $markup_values ) ) : '';
 
 		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ' : '';
 
 		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? self::_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) : $markup_values['new_url'];
 
-		/*
-		 * Build the array of page links
-		 */
+		// Build the array of page links
 		$page_links = array();
 		$dots = false;
 
@@ -4459,8 +4468,8 @@ class MLAShortcode_Support {
 	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL ) {
 		global $wp_query;
 
-		// Parameters passed to the where and orderby filter functions
-		self::$query_parameters = array();
+		// Parameters passed to the join, where and orderby filter functions
+		self::$query_parameters = array( MLAQuery::MLA_ALT_TEXT_SUBQUERY => false, MLAQuery::MLA_FILE_SUBQUERY => false, );
 
 		// Parameters passed to the posts_search filter function in MLAData
 		MLAQuery::$search_parameters = array( 'debug' => 'none' );
@@ -4538,9 +4547,7 @@ class MLAShortcode_Support {
 			$arguments = apply_filters( 'mla_gallery_query_arguments', $arguments );
 		}
 
-		/*
-		 * Extract taxonomy arguments
-		 */
+		// Extract taxonomy arguments
 		self::$mla_get_shortcode_dynamic_attachments_parameters = array();
 		$query_arguments = array();
 		$no_terms_assigned_query = false;
@@ -5222,11 +5229,17 @@ class MLAShortcode_Support {
 				MLAQuery::$search_parameters['mla_search_fields'] = array( 'title', 'content' );
 			} else {
 				MLAQuery::$search_parameters['mla_search_fields'] = array_filter( array_map( 'trim', explode( ',', MLAQuery::$search_parameters['mla_search_fields'] ) ) );
-				MLAQuery::$search_parameters['mla_search_fields'] = array_intersect( array( 'title', 'content', 'excerpt', 'name', 'terms' ), MLAQuery::$search_parameters['mla_search_fields'] );
+				MLAQuery::$search_parameters['mla_search_fields'] = array_intersect( array( 'title', 'name', 'excerpt', 'content', 'alt-text', 'file', 'terms' ), MLAQuery::$search_parameters['mla_search_fields'] );
 
-				/*
-				 * Look for keyword search including 'terms' 
-				 */
+				if ( in_array( 'alt-text', MLAQuery::$search_parameters['mla_search_fields'] ) ) {
+					self::$query_parameters[MLAQuery::MLA_ALT_TEXT_SUBQUERY] = true;
+				}
+	
+				if ( in_array( 'file', MLAQuery::$search_parameters['mla_search_fields'] ) ) {
+					self::$query_parameters[MLAQuery::MLA_FILE_SUBQUERY] = true;
+				}
+	
+				// Look for keyword search including 'terms' 
 				foreach ( MLAQuery::$search_parameters['mla_search_fields'] as $index => $field ) {
 					if ( 'terms' == $field ) {
 						if ( isset( MLAQuery::$search_parameters['mla_terms_search']['phrases'] ) ) {
@@ -5261,23 +5274,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			global $wp_filter;
-
-			foreach( $wp_filter['posts_where'] as $priority => $filters ) {
-				$debug_message = '<strong>mla_debug $wp_filter[posts_where]</strong> priority = ' . var_export( $priority, true ) . '<br />';
-				foreach ( $filters as $name => $descriptor ) {
-					$debug_message .= 'filter name = ' . var_export( $name, true ) . '<br />';
-				}
-				MLACore::mla_debug_add( $debug_message );
-			}
-
-			foreach( $wp_filter['posts_orderby'] as $priority => $filters ) {
-				$debug_message = '<strong>mla_debug $wp_filter[posts_orderby]</strong> priority = ' . var_export( $priority, true ) . '<br />';
-				foreach ( $filters as $name => $descriptor ) {
-					$debug_message .= 'filter name = ' . var_export( $name, true ) . '<br />';
-				}
-				MLACore::mla_debug_add( $debug_message );
-			}
+			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
+			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
 		}
 
 		/*
@@ -5361,6 +5359,11 @@ class MLAShortcode_Support {
 	public static function mla_shortcode_query_posts_join_filter( $join_clause ) {
 		global $wpdb;
 
+		if ( self::$mla_debug ) {
+			$old_clause = $join_clause;
+			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+		}
+
 		/*
 		 * Set for taxonomy queries unless post_parent=current. If true, we must disable
 		 * the LEFT JOIN clause that get_posts() adds to taxonomy queries.
@@ -5370,9 +5373,7 @@ class MLAShortcode_Support {
 			$join_clause = str_replace( " LEFT JOIN {$wpdb->posts} AS p2 ON ({$wpdb->posts}.post_parent = p2.ID) ", " LEFT JOIN {$wpdb->posts} AS p2 ON (p2.ID = p2.ID) ", $join_clause );
 		}
 
-		/*
-		 * These joins support the 'terms' search_field
-		 */
+		// These joins support the 'terms' search_field
 		if ( isset( MLAQuery::$search_parameters['tax_terms_count'] ) ) {
 			$tax_index = 0;
 			$tax_clause = '';
@@ -5385,6 +5386,23 @@ class MLAShortcode_Support {
 			$join_clause .= $tax_clause;
 		}
 
+		/*
+		 * ALT Text and File Name searches use a subquery to build an intermediate table and
+		 * modify the JOIN to include posts with no value for the metadata field.
+		 */
+		if ( self::$query_parameters[MLAQuery::MLA_ALT_TEXT_SUBQUERY] ) {
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, '_wp_attachment_image_alt' );
+			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, MLAQuery::MLA_ALT_TEXT_SUBQUERY, $wpdb->posts );
+		}
+
+		if ( self::$query_parameters[MLAQuery::MLA_FILE_SUBQUERY] ) {
+			$sub_query = sprintf( 'SELECT post_id, meta_value FROM %1$s WHERE %1$s.meta_key = \'%2$s\'', $wpdb->postmeta, '_wp_attached_file' );
+			$join_clause .= sprintf( ' LEFT JOIN ( %1$s ) %2$s ON (%3$s.ID = %2$s.post_id)', $sub_query, MLAQuery::MLA_FILE_SUBQUERY, $wpdb->posts );
+		}
+
+		if ( self::$mla_debug && ( $old_clause != $join_clause ) ) {
+			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug modified JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+		}
 
 		return $join_clause;
 	}

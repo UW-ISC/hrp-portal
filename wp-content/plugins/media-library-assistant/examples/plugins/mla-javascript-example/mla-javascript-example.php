@@ -14,16 +14,16 @@
  * https://wordpress.org/support/topic/limit-caption-length/
  *
  * @package MLA JavaScript Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA JavaScript Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Enqueues a JavaScript file with some WP Featherlight plugin enhancements
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2018 David Lingren
 

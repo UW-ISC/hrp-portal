@@ -5,16 +5,16 @@
  * Adds a Tools/Unattached Fixit submenu with buttons to perform the operations.
  *
  * @package Unattached Fixit
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Unattached Fixit
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Removes Unattached items from the Media Library
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2015 David Lingren
 

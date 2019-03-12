@@ -7,16 +7,16 @@
  *     - items assigned to a taxonomy term can be excluded from the "Query Attachments" results
  *
  * @package MLA Media Modal Hooks Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Media Modal Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides examples of the filters provided by the "Media Manager Enhancements" feature
 Author: David Lingren
-Version: 1.01
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.02
+Author URI: http://davidlingren.com/
 
 Copyright 2014-2015 David Lingren
 

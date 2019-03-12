@@ -1,5 +1,12 @@
 /* global ajaxurl */
 
+/*
+ * This script requires the global "mla" object to be defined and include the following:
+ *
+ * properties:
+ *     mla.settings.useSpinnerClass
+ */
+
 var jQuery, wpAjax,
 	mla_terms_search_vars,
 	mlaTaxonomy = {

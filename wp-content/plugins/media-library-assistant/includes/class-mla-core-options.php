@@ -507,7 +507,8 @@ class MLACoreOptions {
  . '<br>' .
 						__( 'Check the "<strong>Checklist</strong>" box to enable the checklist-style meta box for a flat taxonomy.', 'media-library-assistant' ) . '&nbsp;' .
 						__( 'You must also check the <strong>"Enable enhanced checklist taxonomies"</strong> box below to enable this feature.', 'media-library-assistant' ) . '<br>' .
-						__( 'Check the "<strong>Checked On Top</strong>" box to moved checked terms to the top of the checklist-style meta box.', 'media-library-assistant' ) . '<br>' .
+						__( 'Check the "<strong>Checked On Top</strong>" box to move checked terms to the top of the checklist-style meta box.', 'media-library-assistant' ) . '<br>' .
+						__( 'Check the "<strong>Inline Add Term</strong>" box to support adding terms in the Quick Edit and Bulk Edit areas.', 'media-library-assistant' ) . '<br>' .
 						__( 'Use the "<strong>List Filter</strong>" option to select the taxonomy (or custom field) on which to filter the Assistant table listing.', 'media-library-assistant' ) . '<br>' .
 						__( 'To <strong>filter on a custom field</strong>, enter the field name and select ASC (Ascending) or DESC (Descending) order.', 'media-library-assistant' ),
  					'std' =>  array (
@@ -525,6 +526,7 @@ class MLACoreOptions {
 						),
 						'tax_flat_checklist' => array(),
 						'tax_checked_on_top' => NULL, // default "true", handled in mla_initialize_tax_checked_on_top
+						'tax_checklist_add_term' => array(),
 						'tax_filter' => 'attachment_category',
 						'tax_metakey_sort' => 'ASC',
 						'tax_metakey' => '',

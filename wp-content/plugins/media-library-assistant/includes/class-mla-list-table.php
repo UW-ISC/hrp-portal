@@ -264,92 +264,95 @@ class MLA_List_Table extends WP_List_Table {
 		$submenu_arguments = array();
 		$has_filters = $include_filters;
 
-		/*
-		 * View arguments
-		 */
+		// View arguments
 		if ( isset( $_REQUEST['post_mime_type'] ) ) {
-			$submenu_arguments['post_mime_type'] = $_REQUEST['post_mime_type'];
+			$submenu_arguments['post_mime_type'] = urlencode( $_REQUEST['post_mime_type'] );
 		}
 
 		if ( isset( $_REQUEST['detached'] ) ) {
-			$submenu_arguments['detached'] = $_REQUEST['detached'];
+			if ( ( '0' === $_REQUEST['detached'] ) || ( '1' === $_REQUEST['detached'] ) ) {
+				$submenu_arguments['detached'] = $_REQUEST['detached'];
+			}
 		}
 
 		if ( isset( $_REQUEST['status'] ) ) {
-			$submenu_arguments['status'] = $_REQUEST['status'];
+			if ( 'trash' === $_REQUEST['status'] ) {
+				$submenu_arguments['status'] = $_REQUEST['status'];
+			}
 		}
 
 		if ( isset( $_REQUEST['meta_query'] ) ) {
 			$submenu_arguments['meta_query'] = urlencode( stripslashes( $_REQUEST['meta_query'] ) );
 		}
 
-		/*
-		 * Search box arguments
-		 */
+		// Search box arguments
 		if ( !empty( $_REQUEST['s'] ) ) {
 			$submenu_arguments['s'] = urlencode( stripslashes( $_REQUEST['s'] ) );
 
 			if ( isset( $_REQUEST['mla_search_connector'] ) ) {
-				$submenu_arguments['mla_search_connector'] = $_REQUEST['mla_search_connector'];
+				$submenu_arguments['mla_search_connector'] = ( 'OR' === strtoupper( $_REQUEST['mla_search_connector'] ) ) ? 'OR' : 'AND';
 			}
 
 			if ( isset( $_REQUEST['mla_search_fields'] ) ) {
-				$submenu_arguments['mla_search_fields'] = $_REQUEST['mla_search_fields'];
+				$submenu_arguments['mla_search_fields'] = array();
+				foreach ( $_REQUEST['mla_search_fields'] as $key => $value ) {
+					$submenu_arguments['mla_search_fields'][ $key ] = urlencode( stripslashes( $value ) );
+				}
 			}
 		}
 
-		/*
-		 * Filter arguments (from table header)
-		 */
+		// Filter arguments (from table header)
 		if ( isset( $_REQUEST['m'] ) && ( '0' != $_REQUEST['m'] ) ) {
-			$submenu_arguments['m'] = $_REQUEST['m'];
+			// Format yyyymm
+			$submenu_arguments['m'] = absint( $_REQUEST['m'] ); 
 		}
 
 		if ( isset( $_REQUEST['mla_filter_term'] ) && ( '0' != $_REQUEST['mla_filter_term'] ) ) {
-			$submenu_arguments['mla_filter_term'] = $_REQUEST['mla_filter_term'];
+			// Format numeric, can be negative
+			$submenu_arguments['mla_filter_term'] = intval( $_REQUEST['mla_filter_term'] );
 		}
 
-		/*
-		 * Sort arguments (from column header)
-		 */
+		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$submenu_arguments['order'] = $_REQUEST['order'];
+			$submenu_arguments['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
-			$submenu_arguments['orderby'] = $_REQUEST['orderby'];
+			foreach ( MLAQuery::$default_sortable_columns as $sortable_column ) {
+				if ( $sortable_column[0] == $_REQUEST['orderby'] ) {
+					$submenu_arguments['orderby'] = urlencode( $_REQUEST['orderby'] );
+				}
+			}
 		}
 
-		/*
-		 * Filter arguments (from interior table cells)
-		 */
+		// Filter arguments (from interior table cells)
 		if ( $include_filters ) {
 			if ( isset( $_REQUEST['heading_suffix'] ) ) {
-				$submenu_arguments['heading_suffix'] = $_REQUEST['heading_suffix'];
+				$submenu_arguments['heading_suffix'] = urlencode( stripslashes( $_REQUEST['heading_suffix'] ) );
 			}
 
 			if ( isset( $_REQUEST['parent'] ) ) {
-				$submenu_arguments['parent'] = $_REQUEST['parent'];
+				$submenu_arguments['parent'] = absint( $_REQUEST['parent'] );
 			}
 
 			if ( isset( $_REQUEST['author'] ) ) {
-				$submenu_arguments['author'] = $_REQUEST['author'];
+				$submenu_arguments['author'] = absint( $_REQUEST['author'] );
 			}
 
 			if ( isset( $_REQUEST['mla-tax'] ) ) {
-				$submenu_arguments['mla-tax'] = $_REQUEST['mla-tax'];
+				$submenu_arguments['mla-tax'] = urlencode( $_REQUEST['mla-tax'] );
 			}
 
 			if ( isset( $_REQUEST['mla-term'] ) ) {
-				$submenu_arguments['mla-term'] = $_REQUEST['mla-term'];
+				$submenu_arguments['mla-term'] = urlencode( $_REQUEST['mla-term'] );
 			}
 
 			if ( isset( $_REQUEST['mla-metakey'] ) ) {
-				$submenu_arguments['mla-metakey'] = $_REQUEST['mla-metakey'];
+				$submenu_arguments['mla-metakey'] = urlencode( $_REQUEST['mla-metakey'] );
 			}
 
 			if ( isset( $_REQUEST['mla-metavalue'] ) ) {
-				$submenu_arguments['mla-metavalue'] = $_REQUEST['mla-metavalue'];
+				$submenu_arguments['mla-metavalue'] = urlencode( $_REQUEST['mla-metavalue'] );
 			}
 		}
 
@@ -1047,10 +1050,10 @@ class MLA_List_Table extends WP_List_Table {
 					'heading_suffix' => urlencode( __( 'Parent', 'media-library-assistant' ) . ': ' .  $parent_title ) 
 				), self::mla_submenu_arguments( false ) ), 'upload.php' ) ), (string) $item->post_parent );
 		} else {// $item->post_parent
-			$parent = __( 'Parent', 'media-library-assistant' ) . ':0';
+			$parent = '<span style="color:silver">' . __( 'Parent', 'media-library-assistant' ) . ':0</span>';
 		}
 
-		$content = sprintf( '%1$s<br><span style="color:silver">%2$s</span>', /*%1$s*/ $item->ID, /*%2$s*/ $parent );
+		$content = sprintf( '%1$s<br>%2$s', /*%1$s*/ $item->ID, /*%2$s*/ $parent );
 		return $this->_handle_primary_column( $item, 'ID_parent', $content );
 	}
 

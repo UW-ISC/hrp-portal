@@ -1,16 +1,51 @@
 <!-- template="category_fieldset" -->
-          <fieldset class="inline-edit-col-center inline-edit-categories"><div class="inline-edit-col">
-[+category_blocks+]          </div></fieldset>
+          <fieldset class="inline-edit-col-center inline-edit-categories">
+            <div class="inline-edit-col">
+[+category_blocks+]
+            </div>
+          </fieldset>
+
 <!-- template="category_block" -->
-            <span class="title inline-edit-categories-label">[+tax_html+]</span>
-            <input type="hidden" name="tax_input[[+tax_attr+]][]" value="0" />
-            <ul class="cat-checklist [+tax_attr+]-checklist">
+              <div id="taxonomy-[+tax_attr+]" class="categorydiv">
+                <span class="title inline-edit-categories-label">[+tax_html+]</span>
+                <input type="hidden" name="tax_input[[+tax_attr+]][]" value="0" />
+                <ul class="cat-checklist [+tax_attr+]checklist form-no-clear" id="[+tax_attr+]checklist" data-wp-lists="list:[+tax_attr+]">
 [+tax_checklist+]
-            </ul>
+                </ul>
+[+category_add_link+]
+				<span><a class="hide-if-no-js" id="[+tax_attr+]-search-toggle" href="#[+tax_attr+]-search">[+Search+]</a></span>
+[+category_adder+]
+                <div id="[+tax_attr+]-searcher" class="wp-hidden-children">
+                  <p id="[+tax_attr+]-search" class="category-add wp-hidden-child">
+                    <label class="screen-reader-text" for="search-category">[+Search Reader+]</label>
+                    <input type="text" name="search-[+tax_attr+]" id="search-[+tax_attr+]" class="form-required form-input-tip" value="[+Search Reader+]" aria-required="true">
+                  </p>
+                </div>
+              </div>
+
+<!-- template="category_add_link" -->
+		<span><a class="hide-if-no-js" id="[+tax_attr+]-add-toggle" href="#[+tax_attr+]-add">[+Add New Term+]</a></span>
+		&nbsp; &nbsp;
+
+<!-- template="category_adder" -->
+		<div id="[+tax_attr+]-adder" class="wp-hidden-children">
+		  <p id="[+tax_attr+]-add" class="category-add wp-hidden-child">
+			<label class="screen-reader-text" for="new[+tax_attr+]">[+Add Reader+]</label>
+			<input name="new[+tax_attr+]" class="form-required form-input-tip" id="new[+tax_attr+]" aria-required="true" type="text" value="[+Add Reader+]">
+[+tax_parents+]
+			<input class="button category-add-submit mla-taxonomy-add-submit" id="[+tax_attr+]-add-submit" type="button"  data-wp-lists="add:[+tax_attr+]checklist:[+tax_attr+]-add"value="[+Add Button+]">
+			[+ajax_nonce_field+]
+			<span id="[+tax_attr+]-ajax-response"></span>
+		  </p>
+		</div>
 
 <!-- template="tag_fieldset" -->
-          <fieldset class="inline-edit-col-right inline-edit-tags"><div class="inline-edit-col">
-[+tag_blocks+]          </div></fieldset>
+          <fieldset class="inline-edit-col-right inline-edit-tags">
+            <div class="inline-edit-col">
+[+tag_blocks+]
+            </div>
+          </fieldset>
+
 <!-- template="tag_block" -->
             <label class="inline-edit-tags">
               <span class="title">[+tax_html+]</span>
@@ -33,6 +68,7 @@
     <tbody id="inlineedit">
       <tr id="inline-edit" class="inline-edit-row inline-edit-row-attachment inline-edit-attachment quick-edit-row quick-edit-row-attachment quick-edit-attachment" style="display: none">
         <td colspan="[+colspan+]" class="colspanchange">
+		<div class="edit-fields-div" id="inline-edit-fields-div">
           <fieldset class="inline-edit-col-left">
             <div class="inline-edit-col">
               <h4>[+Quick Edit+]</h4>
@@ -79,6 +115,7 @@
 [+custom_fields+]
             </div>
           </fieldset>
+		  </div> <!-- inline-edit-fields-div -->
           <p class="submit inline-edit-save">
 		  	<a accesskey="c" href="#inline-edit" title="[+Cancel+]" class="button-secondary cancel alignleft">[+Cancel+]</a>
 		  	<a accesskey="s" href="#inline-edit" title="[+Update+]" class="button-primary save alignright">[+Update+]</a>
@@ -92,6 +129,7 @@
       </tr>
       <tr id="blank-bulk-edit" class="inline-edit-row inline-edit-row-attachment inline-edit-attachment bulk-edit-row bulk-edit-row-attachment bulk-edit-attachment" style="display: none">
         <td colspan="[+colspan+]" class="colspanchange">
+		<div class="edit-fields-div" id="blank-bulk-edit-fields-div">
 [+bulk_middle_column+]
 [+bulk_right_column+]
           <fieldset class="inline-edit-col-right inline-edit-fields">
@@ -137,10 +175,12 @@
 [+bulk_custom_fields+]
             </div>
           </fieldset>
+		</div> <!-- blank-bulk-edit-fields-div -->
         </td>
       </tr>
       <tr id="bulk-edit" class="inline-edit-row inline-edit-row-attachment inline-edit-attachment bulk-edit-row bulk-edit-row-attachment bulk-edit-attachment" style="display: none">
         <td colspan="[+colspan+]" class="colspanchange">
+		<div class="edit-fields-div" id="bulk-edit-fields-div">
           <fieldset class="inline-edit-col-left">
             <div class="inline-edit-col">
               <h4>[+Bulk Edit+]</h4>
@@ -196,6 +236,7 @@
 [+bulk_custom_fields+]
             </div>
           </fieldset>
+		</div> <!-- bulk-edit-fields-div -->
           <p class="submit inline-edit-save">
 		  	<a accesskey="c" href="#inline-edit" title="[+Cancel+]" class="button-secondary cancel alignleft">[+Cancel+]</a>
             <input accesskey="s" type="submit" name="bulk_edit" id="bulk_edit" class="button-primary alignright" value="[+Update+]"  />
@@ -245,6 +286,11 @@
           </p>
         </td>
       </tr>
+	  <tr id="add-term-ajax" style="display: none">
+        <td colspan="[+colspan+]" class="colspanchange">
+          <span id="add-term-ajax-response"></span>
+		</td>
+	  </tr>
     </tbody>
   </table>
 </form>

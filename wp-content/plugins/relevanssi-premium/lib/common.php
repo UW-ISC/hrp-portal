@@ -103,7 +103,6 @@ function relevanssi_show_matches( $data, $hit ) {
 	} else {
 		$term_hits_array = array();
 	}
-
 	$term_hits  = '';
 	$total_hits = 0;
 	foreach ( $term_hits_array as $term => $hits ) {
@@ -169,18 +168,19 @@ function relevanssi_default_post_ok( $post_ok, $post_id ) {
 			$post_ok = true;
 		}
 
-		if ( function_exists( 'members_can_current_user_view_post' ) ) {
-			// Members.
-			$post_ok = members_can_current_user_view_post( $post_id );
+		if ( function_exists( 'members_content_permissions_enabled' ) && function_exists( 'members_can_current_user_view_post' ) ) {
+			// Members. Only use, if 'content permissions' feature is enabled.
+			if ( members_content_permissions_enabled() ) {
+				$post_ok = members_can_current_user_view_post( $post_id );
+			}
 		}
 	}
-
 	if ( defined( 'GROUPS_CORE_VERSION' ) ) {
 		// Groups.
 		$current_user = wp_get_current_user();
 		$post_ok      = Groups_Post_Access::user_can_read_post( $post_id, $current_user->ID );
 	}
-	if ( class_exists( 'MeprUpdateCtrl' ) && MeprUpdateCtrl::is_activated() ) {
+	if ( class_exists( 'MeprUpdateCtrl', false ) && MeprUpdateCtrl::is_activated() ) { // False, because class_exists() can be really slow sometimes otherwise.
 		// Memberpress.
 		$post = get_post( $post_id );
 		if ( MeprRule::is_locked( $post ) ) {
@@ -193,7 +193,10 @@ function relevanssi_default_post_ok( $post_ok, $post_id ) {
 		$post        = get_post( $post_id );
 		$post_ok     = $access_ctrl->can_i_read_post( $post );
 	}
-
+	if ( function_exists( 'wp_jv_prg_user_can_see_a_post' ) ) {
+		// WP JV Post Reading Groups.
+		$post_ok = wp_jv_prg_user_can_see_a_post( get_current_user_id(), $post_id );
+	}
 	/**
 	 * Filters statuses allowed in admin searches.
 	 *
@@ -237,6 +240,7 @@ function relevanssi_populate_array( $matches ) {
 		array_push( $ids, $match->doc );
 	}
 
+	$ids   = array_keys( array_flip( $ids ) ); // Remove duplicate IDs.
 	$ids   = implode( ',', $ids );
 	$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE id IN ($ids)" ); // WPCS: unprepared SQL ok, no user-generated inputs.
 
@@ -333,6 +337,7 @@ function relevanssi_recognize_phrases( $search_query ) {
 	if ( count( $phrases ) > 0 ) {
 		foreach ( $phrases as $phrase ) {
 			$queries = array();
+			$phrase  = $wpdb->esc_like( $phrase );
 			$phrase  = str_replace( '‘', '_', $phrase );
 			$phrase  = str_replace( '’', '_', $phrase );
 			$phrase  = str_replace( "'", '_', $phrase );
@@ -341,7 +346,6 @@ function relevanssi_recognize_phrases( $search_query ) {
 			$phrase  = str_replace( '“', '_', $phrase );
 			$phrase  = str_replace( '„', '_', $phrase );
 			$phrase  = str_replace( '´', '_', $phrase );
-			$phrase  = $wpdb->esc_like( $phrase );
 			$phrase  = esc_sql( $phrase );
 			$excerpt = '';
 			if ( 'on' === get_option( 'relevanssi_index_excerpt' ) ) {
@@ -484,6 +488,9 @@ function relevanssi_remove_punct( $a ) {
 		return '';
 	}
 
+	$a = preg_replace( '/&lt;(\d|\s)/', '\1', $a );
+
+	$a = html_entity_decode( $a, ENT_QUOTES );
 	$a = preg_replace( '/<[^>]*>/', ' ', $a );
 
 	$punct_options = get_option( 'relevanssi_punctuation' );
@@ -530,6 +537,7 @@ function relevanssi_remove_punct( $a ) {
 		'€'                     => '',
 		'®'                     => '',
 		'©'                     => '',
+		'™'                     => '',
 		'&shy;'                 => '',
 		'&nbsp;'                => ' ',
 		chr( 194 ) . chr( 160 ) => ' ',
@@ -798,7 +806,7 @@ function relevanssi_tokenize( $string, $remove_stops = true, $min_word_length = 
 function relevanssi_get_post_status( $post_id ) {
 	global $relevanssi_post_array;
 	$type = substr( $post_id, 0, 2 );
-	if ( '**' === $type || 'u_' === $type ) {
+	if ( '**' === $type || 'u_' === $type || 'p_' === $type ) {
 		// Taxonomy term or user (a Premium feature).
 		return 'publish';
 	}
@@ -1085,11 +1093,13 @@ function relevanssi_get_the_title( $post_id ) {
  *
  * @global object $wpdb                 The WordPress database interface.
  * @global array  $relevanssi_variables The Relevanssi global variable, used for table names.
+ * @return int    The doc count.
  */
 function relevanssi_update_doc_count() {
 	global $wpdb, $relevanssi_variables;
-	$doc_count = $wpdb->get_var( 'SELECT COUNT(DISTINCT(relevanssi.doc)) FROM ' . $relevanssi_variables['relevanssi_table'] . ' AS relevanssi' ); // WPCS: unprepared SQL ok, Relevanssi table name.
+	$doc_count = $wpdb->get_var( 'SELECT COUNT(DISTINCT(doc)) FROM ' . $relevanssi_variables['relevanssi_table'] ); // WPCS: unprepared SQL ok, Relevanssi table name.
 	update_option( 'relevanssi_doc_count', $doc_count );
+	return $doc_count;
 }
 
 /**
@@ -1174,20 +1184,31 @@ function relevanssi_switch_blog( $new_blog, $prev_blog ) {
  * @global object $post The global post object.
  *
  * @param string $permalink The link to patch.
+ * @param object $link_post The post object for the current link, global $post if
+ * the parameter is set to null. Default null.
  *
  * @return string The link with the parameter added.
  */
-function relevanssi_add_highlight( $permalink ) {
+function relevanssi_add_highlight( $permalink, $link_post = null ) {
 	$highlight_docs = get_option( 'relevanssi_highlight_docs' );
 	$query          = get_search_query();
 	if ( isset( $highlight_docs ) && 'off' !== $highlight_docs && ! empty( $query ) ) {
-		global $post;
-		$frontpage_id = get_option( 'page_on_front' );
+		$frontpage_id = intval( get_option( 'page_on_front' ) );
 		// We won't add the highlight parameter for the front page, as that will break the link.
-		if ( is_object( $post ) && $post->ID !== $frontpage_id ) {
+		$front_page = false;
+		if ( is_object( $link_post ) ) {
+			if ( $link_post->ID === $frontpage_id ) {
+				$front_page = true;
+			}
+		} else {
+			global $post;
+			if ( is_object( $post ) && $post->ID === $frontpage_id ) {
+				$front_page = true;
+			}
+		}
+		if ( ! $front_page ) {
 			$query     = str_replace( '&quot;', '"', $query );
-			$permalink = esc_attr( add_query_arg( array( 'highlight' => rawurlencode( $query ) ), $permalink )
-			);
+			$permalink = esc_attr( add_query_arg( array( 'highlight' => rawurlencode( $query ) ), $permalink ) );
 		}
 	}
 	return $permalink;
@@ -1218,7 +1239,7 @@ function relevanssi_get_permalink() {
  * if necessary using relevanssi_add_highlight(), then echoes it out.
  */
 function relevanssi_the_permalink() {
-	echo esc_attr( relevanssi_get_permalink() );
+	echo esc_url( relevanssi_get_permalink() );
 }
 
 /**
@@ -1251,7 +1272,7 @@ function relevanssi_permalink( $link, $link_post = null ) {
 	}
 
 	if ( is_search() ) {
-		$link = relevanssi_add_highlight( $link );
+		$link = relevanssi_add_highlight( $link, $link_post );
 	}
 	return $link;
 }
@@ -1360,13 +1381,27 @@ function relevanssi_simple_didyoumean( $query, $pre, $post, $n = 5 ) {
 function relevanssi_simple_generate_suggestion( $query ) {
 	global $wpdb, $relevanssi_variables;
 
-	$q = 'SELECT query, count(query) as c, AVG(hits) as a FROM ' . $relevanssi_variables['log_table'] . ' WHERE hits > 1 GROUP BY query ORDER BY count(query) DESC';
+	/**
+	 * The minimum limit of occurrances to include a word.
+	 *
+	 * To save resources, only words with more than this many occurrances are fed for
+	 * the spelling corrector. If there are problems with the spelling corrector,
+	 * increasing this value may fix those problems.
+	 *
+	 * @param int $number The number of occurrances must be more than this value,
+	 * default 2.
+	 */
+	$count = apply_filters( 'relevanssi_get_words_having', 2 );
+	if ( ! is_numeric( $count ) ) {
+		$count = 2;
+	}
+	$q = 'SELECT query, count(query) as c, AVG(hits) as a FROM ' . $relevanssi_variables['log_table'] . ' WHERE hits > ' . $count . ' GROUP BY query ORDER BY count(query) DESC';
 	$q = apply_filters( 'relevanssi_didyoumean_query', $q );
 
-	$data = wp_cache_get( 'relevanssi_didyoumean_query' );
+	$data = get_transient( 'relevanssi_didyoumean_query' );
 	if ( empty( $data ) ) {
 		$data = $wpdb->get_results( $q ); // WPCS: unprepared SQL ok. No user-generated input involved.
-		wp_cache_set( 'relevanssi_didyoumean_query', $data );
+		set_transient( 'relevanssi_didyoumean_query', $data, 60 * 60 * 24 * 7 );
 	}
 
 	$query            = htmlspecialchars_decode( $query, ENT_QUOTES );
@@ -1387,8 +1422,7 @@ function relevanssi_simple_generate_suggestion( $query ) {
 				break;
 			} else {
 				$lev = levenshtein( $token, $row->query );
-
-				if ( $lev < $distance || $distance < 0 ) {
+				if ( $lev < 3 && ( $lev < $distance || $distance < 0 ) ) {
 					if ( $row->a > 0 ) {
 						$distance = $lev;
 						$closest  = $row->query;
@@ -1500,4 +1534,97 @@ function relevanssi_sanitize_hex_color( $color ) {
 	}
 
 	return '';
+}
+
+/**
+ * Displays the list of most common words in the index.
+ *
+ * @global object $wpdb                 The WP database interface.
+ * @global array  $relevanssi_variables The global Relevanssi variables.
+ *
+ * @param int     $limit  How many words to display, default 25.
+ * @param boolean $wp_cli If true, return just a list of words. If false, print out
+ * HTML code.
+ *
+ * @return array A list of words, if $wp_cli is true.
+ */
+function relevanssi_common_words( $limit = 25, $wp_cli = false ) {
+	global $wpdb, $relevanssi_variables;
+
+	$plugin = 'relevanssi';
+	if ( RELEVANSSI_PREMIUM ) {
+		$plugin = 'relevanssi-premium';
+	}
+
+	if ( ! is_numeric( $limit ) ) {
+		$limit = 25;
+	}
+
+	$words = $wpdb->get_results( 'SELECT COUNT(*) as cnt, term FROM ' . $relevanssi_variables['relevanssi_table'] . " GROUP BY term ORDER BY cnt DESC LIMIT $limit" ); // WPCS: unprepared sql ok, Relevanssi table name and $limit is numeric.
+
+	if ( ! $wp_cli ) {
+		printf( '<h2>%s</h2>', esc_html__( '25 most common words in the index', 'relevanssi' ) );
+		printf( '<p>%s</p>', esc_html__( "These words are excellent stopword material. A word that appears in most of the posts in the database is quite pointless when searching. This is also an easy way to create a completely new stopword list, if one isn't available in your language. Click the word to add the word to the stopword list. The word will also be removed from the index, so rebuilding the index is not necessary.", 'relevanssi' ) );
+
+?>
+<input type="hidden" name="dowhat" value="add_stopword" />
+<table class="form-table">
+<tr>
+	<th scope="row"><?php esc_html_e( 'Stopword Candidates', 'relevanssi' ); ?></th>
+	<td>
+<ul>
+	<?php
+	$src = plugins_url( 'delete.png', $relevanssi_variables['file'] );
+
+	foreach ( $words as $word ) {
+		$stop = __( 'Add to stopwords', 'relevanssi' );
+		printf( '<li><input style="padding: 0; margin: 0" type="submit" src="%1$s" name="term" value="%2$s"/> (%3$d)</li>', esc_attr( $src ), esc_attr( $word->term ), esc_html( $word->cnt ) );
+	}
+	?>
+	</ul>
+	</td>
+</tr>
+</table>
+	<?php
+
+	}
+
+	return $words;
+}
+
+/**
+ * Returns a list of post types Relevanssi does not want to use.
+ *
+ * @return array An array of post type names.
+ */
+function relevanssi_get_forbidden_post_types() {
+	return array(
+		'nav_menu_item',        // Navigation menu items.
+		'revision',             // Never index revisions.
+		'acf-field',            // Advanced Custom Fields.
+		'acf-field-group',      // Advanced Custom Fields.
+		'oembed_cache',         // Mysterious caches.
+		'customize_changeset',  // Customizer change sets.
+		'user_request',         // User data request.
+		'custom_css',           // Custom CSS data.
+		'cpt_staff_lst_item',   // Staff List.
+		'cpt_staff_lst',        // Staff List.
+		'wp_block',             // Gutenberg block.
+		'amp_validated_url',    // AMP.
+		'jp_pay_order',         // Jetpack.
+		'jp_pay_product',       // Jetpack.
+	);
+}
+
+/**
+ * Returns a list of taxonomies Relevanssi does not want to use.
+ *
+ * @return array An array of taxonomy names.
+ */
+function relevanssi_get_forbidden_taxonomies() {
+	return array(
+		'nav_menu',               // Navigation menus.
+		'link_category',          // Link categories.
+		'amp_validation_error',   // AMP.
+	);
 }

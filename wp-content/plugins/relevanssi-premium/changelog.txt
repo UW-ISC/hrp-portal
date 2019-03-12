@@ -1,3 +1,91 @@
+= 2.1.7 =
+* The API key option in the network options wasn't very intuitive. It's better now.
+* Direct attachment links in search results work better now, especially in cases where the site has moved.
+* Improved handling of certain edge cases in taxonomy search.
+* Home page links were getting the highlight parameter even though they shouldn't. This has been fixed.
+* The Import / Export options tab was missing (very few people complained, so perhaps that feature is not very important...).
+* The status of the 'Index PDF contents for parent post' option didn't show up correctly on the settings page.
+* Added support for WP JV Post Reading Groups.
+* Improved handling of HTML entities.
+* Events Made Easy Calendar shortcodes are now removed when building excerpts.
+* `set_time_limit()` was removed from the indexing; it's no longer necessary, and it can break the indexing on sites that don't allow the use of the function.
+* `relevanssi_post_title_before_tokenize` filter was moved a bit so that it's the last thing that runs before tokenizing.
+* When indexing custom MySQL column data, stopwords and minimum word length weren't applied properly.
+* Disabled shortcodes are handled better in the indexing: the shortcode names won't be indexed anymore like they were before.
+* Fix for pinning in multisite context.
+* Made sure there won't be a warning for non-numeric values when searching.
+* Removed unnecessary post types from the weight setting list.
+* New filter: `relevanssi_clean_excerpt` lets you remove unwanted highlights from excerpts.
+* Highlighting works better with `pre` and `code` tags.
+* New filter: `relevanssi_comment_author_to_index` lets you filter comment author names before indexing.
+* `relevanssi_comment_content_to_index` doesn't include the comment author name anymore.
+
+= 2.1.6.1 =
+* The privacy features caused an error notice with certain Relevanssi configurations, and the plugin required WP 4.9.6.
+
+= 2.1.6 =
+* Privacy: If you log search queries, Relevanssi will suggest some additional content to your privacy policy page.
+* Privacy: Relevanssi now supports the new Privacy Policy and Personal Data tools in WordPress 4.9.6.
+* Improved Polylang support. Now taxonomy terms can be language filtered as well.
+* Saving synonyms with quotes worked, but the synonyms showed up wrong.
+* Taxonomy term indexing had a bug where the `type` column for taxonomy terms would be set to 0.
+* The `relevanssi_user_index_ok` filter is now applied when users are updated.
+* Relevanssi could in some situations override navigation menu links with links to the user profiles or taxonomy terms found in the search. This update fixes that behaviour.
+* Random order works again; using orderby `rand` didn't work properly. The `rand(seed)` format is also supported now.
+* Fixed quotes and apostrophes in Did you mean suggestions.
+
+= 2.1.5 =
+* New feature: WooCommerce product visibility can now be considered better in the indexing. See the filter hook 'relevanssi_woocommerce_indexing' for more details.
+* Phrases were not highlighted correctly on documents. This is now fixed.
+* Shortcode fix: 'wp_show_posts' shouldn't cause problems anymore.
+* Fix for post tag indexing issues.
+* MemberPress post controls were loose and showed drafts to searchers. That is now fixed.
+* Highlighting was too loose, even if matching was set to whole words.
+* Highlighting now works better in cases where there's a hyphen or an apostrophe inside a word.
+
+= 2.1.4 =
+* Fixed cases where Relevanssi added an ellipsis even if the excerpt was from the start of the post.
+* Highlighting now works with numeric search strings.
+* Improved highlighting for accented words. Thanks to Paul Ryan.
+* A surplus comma at the end of post exclusion setting won't break the search anymore.
+* Fixed instructions for adjusting the throttle limit.
+* New "Pin this post for all keywords" feature.
+
+= 2.1.3 =
+* Recent post bonus is now applied to searches.
+* Exact term setting can now be disabled.
+* Users of Members plugin would have drafts appear in search results. This is now fixed.
+* Pinned keywords would appear in the list of exlusion keywords, and you couldn't set exclusion keywords. That is now corrected.
+* "Index unindexed posts" works better.
+* Removing quotes and apostrophes in indexing didn't work properly.
+* Attachment indexing progress meter fixed.
+* The "Highlight from external searches" option was removed. It's not supported by Google or Bing anymore, so there's little point in keeping it.
+
+= 2.1.2 =
+* MemberPress post control was backwards.
+* Fusion Builder shortcodes are automatically removed from excerpts.
+* Indexing failed, when a same word appeared in two different taxonomies.
+* Internal link management had a bit of a bug in the indexing.
+* User searches page reset buttons fixed.
+
+= 2.1.1.1 =
+* Fixes an issue where you can't save taxonomy indexing settings.
+
+= 2.1.1 =
+* Automated testing can't catch everything... There was some overzealous security in place, breaking Network options. That is now fixed.
+* Attachment file name is not prepended to the excerpts automatically.
+
+= 2.1 =
+* Relevanssi code has been reviewed and modified to follow WordPress coding standards. As a result, there have been minor improvements all around the code to make things more robust and secure.
+* Attachment indexing has been extended to many more document types: now it should be able to handle most document types, including Office and OpenDocument formats. It's also slightly faster.
+* There's now an option to do attachment reading in an EU-based server.
+* Custom field detail is no longer serialized. It's now JSON. If you use custom field detail, rebuild the index and change your code to use json_decode() instead of unserialize().
+* `relevanssi_the_tags()` and `relevanssi_get_the_tags()` now have different set of parameters, more in line with `the_tags()` and `get_the_tags()`.
+* Taxonomy indexing settings were emptied out if you saved another options tab. That is now fixed.
+* Improvements to WPML support; WPML is now less likely to be confused in multisite searches.
+* Updated filter: `relevanssi_search_ok` now gets the WP_Query object as a parameter, which is helpful if you're not using the global $wp_query.
+* ACF Flexible Content field indexing didn't work properly, possibly due to a change in ACF. That should now work better.
+
 = 2.0.5 =
 * Fixed a bug in "Did you mean" suggestions.
 * Paid Member Subscription shortcode compatibility.

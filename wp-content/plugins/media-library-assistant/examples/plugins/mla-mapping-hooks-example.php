@@ -9,16 +9,16 @@
  * a supporting function "_export_this_item" and the "mla_end_mapping" action.
  *
  * @package MLA Mapping Hooks Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
 Plugin Name: MLA Mapping Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of the filters provided by the IPTC/EXIF and Custom Field mapping features
 Author: David Lingren
-Version: 1.03
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.04
+Author URI: http://davidlingren.com/
 
 Copyright 2014 David Lingren
 

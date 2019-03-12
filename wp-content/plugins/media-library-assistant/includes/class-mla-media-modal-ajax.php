@@ -59,10 +59,8 @@ class MLAModal_Ajax {
 //$cause_notice = $screen->bad_property;
 //trigger_error( 'mla_print_media_templates_action', E_USER_WARNING );
 //error_log( 'DEBUG: xdebug_get_function_stack = ' . var_export( xdebug_get_function_stack(), true), 0 );		
-		/*
-		 * If there's no action variable, we have nothing to do
-		 */
-		if ( ! isset( $_POST['action'] ) ) {
+		// If there's no action variable, we have nothing to do
+		if ( ! isset( $_REQUEST['action'] ) ) {
 			return;
 		}
 
@@ -99,7 +97,7 @@ class MLAModal_Ajax {
 		 * If the 's' value is an array, the MLA Enhanced elements are present; unpack the arguments
 		 * and substitute our handler for the WordPress default handler.
 		 */
-		if ( ( $_POST['action'] == 'query-attachments' ) && isset( $_POST['query']['s'] ) && is_array( $_POST['query']['s'] ) ){
+		if ( ( $_REQUEST['action'] == 'query-attachments' ) && isset( $_POST['query']['s'] ) && is_array( $_POST['query']['s'] ) ){
 			foreach ( $_POST['query']['s'] as $key => $value ) {
 				$_POST['query'][ $key ] = $value;
 				$_REQUEST['query'][ $key ] = $value;
@@ -118,7 +116,7 @@ class MLAModal_Ajax {
 		 * incoming data. The other taxonomies will be processed by
 		 * /wp-admin/includes/ajax-actions.php, function wp_ajax_save_attachment_compat().
 		 */
-		if ( ( $_POST['action'] == 'save-attachment-compat' ) ){
+		if ( ( $_REQUEST['action'] == 'save-attachment-compat' ) ){
 			if ( empty( $_REQUEST['id'] ) || ! $id = absint( $_REQUEST['id'] ) ) {
 				wp_send_json_error();
 			}
@@ -127,9 +125,7 @@ class MLAModal_Ajax {
 				wp_send_json_error();
 			}
 
-			/*
-			 * Media Categories uses this
-			 */
+			// Media Categories uses this
 			if ( isset( $_REQUEST['category-filter'] ) ) {
 				unset( $_REQUEST['category-filter'] );
 				unset( $_POST['category-filter'] );

@@ -11,16 +11,16 @@
  * https://wordpress.org/support/topic/sorting-based-on-taxonomy-terms/
  *
  * @package MLA Bulk Edit Remap Example
- * @version 1.00
+ * @version 1.01
  */
 
 /*
 Plugin Name: MLA Bulk Edit Remap Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Performs IPTC/EXIF and Custom Field mapping at the conclusion of a Bulk Edit action, so data sources like "terms:" are properly applied.
 Author: David Lingren
-Version: 1.00
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.01
+Author URI: http://davidlingren.com/
 
 Copyright 2016 David Lingren
 

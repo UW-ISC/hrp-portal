@@ -3,16 +3,16 @@
  * Provides an example of hooking the filters provided by the MLA_List_Table class
  *
  * @package MLA List Table Hooks Example
- * @version 1.09
+ * @version 1.10
  */
 
 /*
 Plugin Name: MLA List Table Hooks Example
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the MLA_List_Table class
 Author: David Lingren
-Version: 1.09
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 1.10
+Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2017 David Lingren
 

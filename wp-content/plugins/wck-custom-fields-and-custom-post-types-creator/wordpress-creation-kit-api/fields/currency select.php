@@ -9,10 +9,12 @@ require_once( plugin_dir_path(__FILE__) . '../assets/currency/currency-select.ph
 
 $currencies = wck_get_currencies();
 
+$extra_attr = apply_filters( 'wck_extra_field_attributes', '', $details, $meta );
+
 $element .= '<select name="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'"  id="';
 if( !empty( $frontend_prefix ) )
     $element .=	$frontend_prefix;
-$element .= esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="mb-currency-select mb-field" >';
+$element .= esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="mb-currency-select mb-field" '. $extra_attr .'>';
 $element .= '<option value="">'. __('...Choose', 'wck') .'</option>';
 if( !empty( $currencies ) ){
     foreach( $currencies as $currency_code => $currency_name ){

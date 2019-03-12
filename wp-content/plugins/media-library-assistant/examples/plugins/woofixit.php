@@ -9,6 +9,7 @@
  *  - Delete ALL Title fields for Product Image/Product Gallery items.
  *  - Fill empty item Title field with re-formatted file name.
  *  - Replace ALL item Title fields with re-formatted file name.
+ *  - Replace ALL item Name/Slug fields with (unique) file name.
  *
  *  - Delete ALL ALT Text fields for Product Image/Product Gallery items.
  *  - Fill empty ALT Text field with first top-level Product Category.
@@ -71,19 +72,23 @@
  * opened on 2/21/2017 by "bueyfx".
  * https://wordpress.org/support/topic/regenerate-bulk-alt-text-with-product-name-product-category-keyword/
  *
+ * Enhanced for support topic "WC Fixit Tools: Replace ALL item Name/Slug"
+ * opened on 10/18/2018 by "alx359".
+ * https://wordpress.org/support/topic/wc-fixit-tools-replace-all-item-name-slug/
+ *
  * @package WooCommerce Fixit
- * @version 2.02
+ * @version 2.04
  */
 
 /*
 Plugin Name: WooCommerce Fixit
-Plugin URI: http://fairtradejudaica.org/media-library-assistant-a-wordpress-plugin/
+Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.02
-Author URI: http://fairtradejudaica.org/our-story/staff/
+Version: 2.04
+Author URI: http://davidlingren.com/
 
-Copyright 2014-2017 David Lingren
+Copyright 2014-2018 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -113,7 +118,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.02';
+	const CURRENT_VERSION = '2.04';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -145,6 +150,26 @@ class Woo_Fixit {
 	const INPUT_LAST_PRODUCT = 'upper';
 
 	/**
+	 * Append Item ID to make file name slug unique
+	 *
+	 * @since 2.04
+	 *
+	 * @var	boolean
+	 */
+	private static $append_item_id = false;
+	const APPEND_ITEM_ID = 'append-item-id';
+
+	/**
+	 * Use WordPress unique slug function
+	 *
+	 * @since 2.04
+	 *
+	 * @var	boolean
+	 */
+	private static $check_unique_slug = false;
+	const CHECK_UNIQUE_SLUG = 'check-unique-slug';
+
+	/**
 	 * Content Template for Product Image/Product Gallery Images
 	 *
 	 * @since 1.28
@@ -161,7 +186,7 @@ class Woo_Fixit {
 	 *
 	 * @var	boolean
 	 */
-	private static $process_category = true;
+	private static $process_category = false;
 	const INPUT_PROCESS_CATEGORY = 'category';
 
 	/**
@@ -171,7 +196,7 @@ class Woo_Fixit {
 	 *
 	 * @var	boolean
 	 */
-	private static $process_tag = true;
+	private static $process_tag = false;
 	const INPUT_PROCESS_TAG = 'tag';
 
 	/**
@@ -240,7 +265,7 @@ class Woo_Fixit {
 		if ( empty( $products ) ) {
 			return $custom_value;
 		}
-		
+
 		if ( is_scalar( $products ) ) {
 			$products = array( absint( $products ) => absint( $products ) );
 		}
@@ -258,14 +283,14 @@ class Woo_Fixit {
 					return implode( ',', $terms->get_error_messages() );
 				}
 //error_log( __LINE__ . " Woo_Fixit::_evaluate_terms( {$product}, {$taxonomy}, {$qualifier}, {$option} ) terms = " . var_export( $terms, true ), 0 );
-				
+
 				wp_cache_add( $product, $terms, $taxonomy . '_relationships' );
 			}
 
 			$all_terms = array_merge( $all_terms, $terms );
 		}
 //error_log( __LINE__ . " Woo_Fixit::_evaluate_terms( {$product}, {$taxonomy}, {$qualifier}, {$option} ) all_terms = " . var_export( $all_terms, true ), 0 );
-		
+
 		if ( 'array' == $option ) {
 			$custom_value = array();
 		} else {
@@ -295,7 +320,7 @@ class Woo_Fixit {
 				}
 			}
 		}
-		
+
 //error_log( __LINE__ . " Woo_Fixit::_evaluate_terms( {$product}, {$taxonomy}, {$qualifier}, {$option} ) custom_value = " . var_export( $custom_value, true ), 0 );
 		return $custom_value;
 	} // _evaluate_terms
@@ -316,7 +341,7 @@ class Woo_Fixit {
 	 */
 	public static function mla_expand_custom_prefix( $custom_value, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
 		static $product_cache = array();
-		
+
 		//error_log( __LINE__ . " Woo_Fixit::mla_expand_custom_prefix( {$key}, {$post_id}, {$keep_existing}, {$default_option} ) value = " . var_export( $value, true ), 0 );
 		//error_log( __LINE__ . " Woo_Fixit::mla_expand_custom_prefix( {$key}, {$post_id} ) query = " . var_export( $query, true ), 0 );
 		//error_log( __LINE__ . " Woo_Fixit::mla_expand_custom_prefix( {$key}, {$post_id} ) markup_values = " . var_export( $markup_values, true ), 0 );
@@ -339,7 +364,7 @@ class Woo_Fixit {
 		if ( empty( self::$attachment_products ) ) {
 			self::_build_product_attachments( true );
 		}
-		
+
 		// What product(s) are associated with this item?
 		$products = array();
 		if ( isset( self::$attachment_products[ $post_id ] ) ) {
@@ -348,7 +373,7 @@ class Woo_Fixit {
 					$products[ $product ] = $product;
 				}
 			}
-			
+
 			if ( !empty( self::$attachment_products[ $post_id ]['_product_image_gallery'] ) ) {
 				foreach ( self::$attachment_products[ $post_id ]['_product_image_gallery'] as $product ) {
 					$products[ $product ] = $product;
@@ -368,14 +393,14 @@ class Woo_Fixit {
 					$product = $product_cache[ $product_id ];
 				} else {
 					$product = get_post( $product_id );
-	
+
 					if ( $product instanceof WP_Post && $product->ID == $product_id ) {
 						$product_cache[ $product_id ] = $product;
 					} else {
 						continue;
 					}
 				}
-			
+
 				if ( property_exists( $product, $value['value'] ) ) {
 					$custom_value[] = $product->{$value['value']};
 				} elseif ( 'permalink' == $value['value'] ) {
@@ -409,14 +434,14 @@ class Woo_Fixit {
 
 					foreach ( $custom_value as $element ) {
 						$field_value = sanitize_text_field( $element );
-	
+
 						if ( 'array' == $value['option'] ) {
 							$new_value[] = $field_value;
 						} else {
 							$new_value .= strlen( $new_value ) ? ', ' . $field_value : $field_value;
 						}
 					} // foreach element
-					
+
 					$custom_value = $new_value;
 				}
 			}
@@ -479,12 +504,17 @@ class Woo_Fixit {
 			echo "WooCommerce Fixit - Error</h2>\n";
 			wp_die( 'You do not have permission to manage plugin settings.' );
 		}
-		
+
 		/*
 		 * Extract relevant query arguments
 		 */
 		self::$first_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] : '';
 		self::$last_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] : '';
+
+		self::$append_item_id = isset( $_REQUEST[ self::SLUG_PREFIX . self::APPEND_ITEM_ID ] ) ? true : false;
+		$append_item_id_attr = self::$append_item_id ? ' checked="checked" ' : ' ';
+		self::$check_unique_slug = isset( $_REQUEST[ self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG ] ) ? true : false;
+		$check_unique_slug_attr = self::$check_unique_slug ? ' checked="checked" ' : ' ';
 
 		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) : self::$content_template;
 
@@ -502,7 +532,7 @@ class Woo_Fixit {
 			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
 
 			'c0' => array( 'handler' => '', 'comment' => '<h3>Operations on ALL Media Library Images</h3>' ),
-			'warning2' => array( 'handler' => '', 'comment' => 'The tools in this section <strong>are not restricted</strong> by the First &amp; Last Product IDs above. They operate on <strong>ALL</strong> of the items in your Media Library.' ),
+			'warning2' => array( 'handler' => '', 'comment' => '<strong>The tools in this section are not restricted</strong> by the First &amp; Last Product IDs above. They operate on <strong>ALL</strong> of the items in your Media Library.' ),
 			'Clear Title' => array( 'handler' => '_clear_title',
 				'comment' => '<strong>Delete ALL</strong> item Title fields.' ),
 			'c1' => array( 'handler' => '', 'comment' => '<hr>' ),
@@ -510,6 +540,18 @@ class Woo_Fixit {
 				'comment' => 'Fill empty item Title field with re-formatted file name.' ),
 			'Replace Title' => array( 'handler' => '_replace_title',
 				'comment' => '<strong>Replace ALL</strong> item Title fields with re-formatted file name.' ),
+			'c1a' => array( 'handler' => '', 'comment' => '<hr>' ),
+			't0301' => array( 'open' => '<table><tr>' ),
+			't0302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::APPEND_ITEM_ID . '" type="checkbox"' . $append_item_id_attr . 'value="' . self::APPEND_ITEM_ID . '"></td>' ),
+			't0303' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Append Item ID</td>' ),
+			't0304' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG . '" type="checkbox"' . $check_unique_slug_attr . 'value="' . self::CHECK_UNIQUE_SLUG . '"></td>' ),
+			't0305' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Ensure Unique Slug</td>' ),
+			't0306' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
+			't0307' => array( 'continue' => '</tr><tr>' ),
+			't0308' => array( 'continue' => '<td>&nbsp;</td><td colspan="5">Check Append Item ID to add the ID to the slug value for uniqueness.<br>Check Ensure Unique Slug to activate WordPress slug validation (may be slow).</td>' ),
+			't0309' => array( 'close' => '</tr></table>&nbsp;<br>' ),
+			'Replace Name/Slug' => array( 'handler' => '_replace_slug',
+				'comment' => '<strong>Replace ALL</strong> item Name/Slug fields with file name.' ),
 
 			'c2' => array( 'handler' => '', 'comment' => '<h3>Operations on Product Image/Product Gallery Images</h3>' ),
 			'Clear ALT Text' => array( 'handler' => '_clear_alt_text',
@@ -615,7 +657,7 @@ class Woo_Fixit {
 			'Assign Terms' => array( 'handler' => '_copy_term_assignments',
 				'comment' => 'Copy product_category and/or product_tag term assignments to Media Library items for items used as Product Image or in the Product Gallery.' ),
  		);
-		
+
 		echo '<div class="wrap">' . "\n";
 		echo "\t\t" . '<div id="icon-tools" class="icon32"><br/></div>' . "\n";
 		echo "\t\t" . '<h2>WooCommerce Fixit Tools v' . self::CURRENT_VERSION . '</h2>' . "\n";
@@ -635,7 +677,7 @@ class Woo_Fixit {
 							} else {
 								$messages_class = 'updated notice is-dismissible';
 							}
-						
+
 							echo "  <div class=\"{$messages_class}\" id=\"message\"><p>\n";
 							echo '    ' . $message . "\n";
 							echo "  </p>\n";
@@ -665,11 +707,11 @@ class Woo_Fixit {
 		echo "\t\t" . '      <tr valign="top"><th valign="middle" style="text-align: right;" scope="row">First Product</th><td style="text-align: left;">' . "\n";
 		echo "\t\t" . '        <input name="' . self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT . '" type="text" size="5" value="' . self::$first_product . '">' . "\n";
 		echo "\t\t" . '      </td></tr>' . "\n";
-		
+
 		echo "\t\t" . '      <tr valign="top"><th valign="middle" style="text-align: right;" scope="row">Last Product</th><td style="text-align: left;">' . "\n";
 		echo "\t\t" . '        <input name="' . self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT . '" type="text" size="5" value="' . self::$last_product . '">' . "\n";
 		echo "\t\t" . '      </td></tr>' . "\n";
-		
+
 		foreach ( $setting_actions as $label => $action ) {
 			if ( isset( $action['open'] ) ) {
 				echo "\t\t" . '      <tr><td colspan=2 style="padding: 2px 0px;">' . "\n";
@@ -691,7 +733,7 @@ class Woo_Fixit {
 				}
 			}
 		}
-			
+
 		echo "\t\t" . '    </table>' . "\n";
 		echo "\t\t" . '  </p>' . "\n";
 		echo "\t\t" . '</form>' . "\n";
@@ -728,7 +770,7 @@ class Woo_Fixit {
 	 */
 	private static function _build_product_attachments( $build_pa = true ) {
 		global $wpdb;
-		
+
 		if ( ! empty( self::$first_product ) ) {
 			$lower_bound = (integer) self::$first_product;
 		} else {
@@ -755,7 +797,7 @@ class Woo_Fixit {
 				self::$product_attachments[ $result->post_id ]['post_title'] = trim( $result->post_title );
 				self::$product_attachments[ $result->post_id ][ $result->meta_key ] = trim( $result->meta_value );
 			}
-			
+
 			if ( '_thumbnail_id' == $result->meta_key ) {
 				$key = (integer) $result->meta_value;
 				if ( isset( self::$attachment_products[ $key ] ) ) {
@@ -787,7 +829,7 @@ class Woo_Fixit {
 	 */
 	private static function _clear_title() {
 		global $wpdb;
-		
+
 		$results = $wpdb->query( "UPDATE {$wpdb->posts} SET post_title = '' WHERE post_type = 'attachment'" );
 		return "_clear_title() performed {$results} update(s).\n";
 	} // _clear_title
@@ -801,10 +843,10 @@ class Woo_Fixit {
 	 */
 	private static function _fill_title() {
 		global $wpdb;
-		
+
 		$query = sprintf( 'SELECT m.post_id, m.meta_value FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_title = \'\' ) AND ( p.post_type = \'attachment\' ) AND ( m.meta_key IN ( \'_wp_attached_file\' ) )', $wpdb->postmeta, $wpdb->posts );
 		$results = $wpdb->get_results( $query );
-		
+
 		$update_count = 0;
 		$select_bits = '';
 		$where_bits = array();
@@ -814,10 +856,8 @@ class Woo_Fixit {
 			$new_title = str_replace( array( '-', '_', '.' ), ' ', $path_info['filename'] );
 			$select_bits .= " WHEN ID = {$result->post_id} THEN '{$new_title}'";
 			$where_bits[] = $result->post_id;
-			
-			/*
-			 * Run an update when the chunk is full
-			 */
+
+			// Run an update when the chunk is full
 			if ( 25 <= ++$chunk_count ) {
 				$where_bits = implode( ',', $where_bits );
 				$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
@@ -828,10 +868,8 @@ class Woo_Fixit {
 				$chunk_count = 0;
 			}
 		}
-		
-		/*
-		 * Run a final update if the chunk is partially filled
-		 */
+
+		// Run a final update if the chunk is partially filled
 		if ( $chunk_count ) {
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
@@ -851,10 +889,10 @@ class Woo_Fixit {
 	 */
 	private static function _replace_title() {
 		global $wpdb;
-		
+
 		$query = sprintf( 'SELECT m.post_id, m.meta_value FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_mime_type LIKE \'%3$s\' ) AND ( p.post_type = \'attachment\' ) AND ( m.meta_key IN ( \'_wp_attached_file\' ) )', $wpdb->postmeta, $wpdb->posts, 'image/%' );
 		$results = $wpdb->get_results( $query );
-		
+
 		$update_count = 0;
 		$select_bits = '';
 		$where_bits = array();
@@ -864,10 +902,8 @@ class Woo_Fixit {
 			$new_title = str_replace( array( '-', '_', '.' ), ' ', $path_info['filename'] );
 			$select_bits .= " WHEN ID = {$result->post_id} THEN '{$new_title}'";
 			$where_bits[] = $result->post_id;
-			
-			/*
-			 * Run an update when the chunk is full
-			 */
+
+			// Run an update when the chunk is full
 			if ( 25 <= ++$chunk_count ) {
 				$where_bits = implode( ',', $where_bits );
 				$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
@@ -878,10 +914,8 @@ class Woo_Fixit {
 				$chunk_count = 0;
 			}
 		}
-		
-		/*
-		 * Run a final update if the chunk is partially filled
-		 */
+
+		// Run a final update if the chunk is partially filled
 		if ( $chunk_count ) {
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
@@ -893,6 +927,66 @@ class Woo_Fixit {
 	} // _replace_title
 
 	/**
+	 * Replace ALL item Name/Slug fields with file name
+	 *
+	 * @since 2.04
+	 *
+	 * @return string HTML markup for results/messages
+	 */
+	private static function _replace_slug() {
+		global $wpdb;
+//error_log( __LINE__ . " Woo_Fixit::_replace_slug append_item_id = " . var_export( self::$append_item_id, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::_replace_slug check_unique_slug = " . var_export( self::$check_unique_slug, true ), 0 );
+
+		$query = sprintf( 'SELECT m.post_id, m.meta_value, p.post_status FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_mime_type LIKE \'%3$s\' ) AND ( p.post_type = \'attachment\' ) AND ( m.meta_key IN ( \'_wp_attached_file\' ) )', $wpdb->postmeta, $wpdb->posts, 'image/%' );
+		$results = $wpdb->get_results( $query );
+
+		$update_count = 0;
+		$select_bits = '';
+		$where_bits = array();
+		$chunk_count = 0;
+		foreach( $results as $result ) {
+//error_log( __LINE__ . " Woo_Fixit::_replace_slug result = " . var_export( $result, true ), 0 );
+			$path_info = pathinfo( $result->meta_value );
+			$new_slug = sanitize_title( $path_info['filename'] );
+
+			if ( self::$append_item_id ) {
+				$new_slug .= '-' . $result->post_id;
+			}
+
+			if ( self::$check_unique_slug ) {
+				$new_slug = wp_unique_post_slug( $new_slug, $result->post_id, $result->post_status, 'attachment', 0 );
+			}
+
+			$select_bits .= " WHEN ID = {$result->post_id} THEN '{$new_slug}'";
+			$where_bits[] = $result->post_id;
+
+			// Run an update when the chunk is full
+			if ( 25 <= ++$chunk_count ) {
+				$where_bits = implode( ',', $where_bits );
+				$update_query = "UPDATE {$wpdb->posts} SET post_name = CASE{$select_bits} ELSE post_name END WHERE ID IN ( {$where_bits} )";
+//error_log( __LINE__ . " Woo_Fixit::_replace_slug update_query = " . var_export( $update_query, true ), 0 );
+				$query_result = $wpdb->query( $update_query );
+				$update_count += $chunk_count;
+				$select_bits = '';
+				$where_bits = array();
+				$chunk_count = 0;
+			}
+		}
+
+		// Run a final update if the chunk is partially filled
+		if ( $chunk_count ) {
+			$where_bits = implode( ',', $where_bits );
+			$update_query = "UPDATE {$wpdb->posts} SET post_name = CASE{$select_bits} ELSE post_name END WHERE ID IN ( {$where_bits} )";
+//error_log( __LINE__ . " Woo_Fixit::_replace_slug update_query = " . var_export( $update_query, true ), 0 );
+			$query_result = $wpdb->query( $update_query );
+			$update_count += $chunk_count;
+		}
+
+		return "_replace_slug() performed {$update_count} update(s).\n";
+	} // _replace_slug
+
+	/**
 	 * Empty ALT Text field in all Product Image/Product Gallery items
  	 *
 	 * @since 1.00
@@ -901,7 +995,7 @@ class Woo_Fixit {
 	 */
 	private static function _clear_alt_text() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		ksort( self::$attachment_products );
 		$update_count = 0;
@@ -911,7 +1005,7 @@ class Woo_Fixit {
 			$query_result = $wpdb->query( $delete_query );
 			$update_count += $query_result;
 		}
-		
+
 		return "_clear_alt_text() performed {$update_count} delete(s).\n";
 	} // _clear_alt_text
 
@@ -924,7 +1018,7 @@ class Woo_Fixit {
 	 */
 	private static function _fill_alt_text() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$delete_count = 0;
 		$insert_count = 0;
@@ -934,16 +1028,12 @@ class Woo_Fixit {
 			if ( empty( $terms ) ) {
 				continue;
 			}
-			
-			/*
-			 * Build an array of "first product category" names
-			 */
+
+			// Build an array of "first product category" names
 			$product_terms = array();
 			foreach ( $terms as $term ) {
 				if ( isset( $product_terms[ $term->object_id ] ) ) {
-					/*
-					 * The first top-level term wins
-					 */
+					// The first top-level term wins
 					if ( 0 == $product_terms[ $term->object_id ]['parent'] ) {
 						continue;
 					} elseif ( ( (integer) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
@@ -954,9 +1044,7 @@ class Woo_Fixit {
 				}
 			}
 
-			/*
-			 * Assign the names to each attachment
-			 */				 
+			// Assign the names to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( empty( $product_terms[ $key ] ) ) {
@@ -966,7 +1054,7 @@ class Woo_Fixit {
 				if ( ! empty( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $product_terms[ $key ]['name'];
 				}
-				
+
 				if ( ! empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -975,9 +1063,7 @@ class Woo_Fixit {
 				}
 			}
 
-			/*
-			 * Find the existing ALT Text values and remove them from the update
-			 */
+			// Find the existing ALT Text values and remove them from the update
 			$keys = implode( ',', array_keys( $attachment_values ) );
 			$select_query = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 			$empty_values = array();
@@ -989,20 +1075,16 @@ class Woo_Fixit {
 				}
 				unset( $attachment_values[ (integer) $existing_value->post_id ] );
 			}
-			
-			/*
-			 * Delete empty ALT Text values
-			 */
+
+			// Delete empty ALT Text values
 			if ( ! empty( $empty_values ) ) {
 				$keys = implode( ',', $empty_values );
 				$delete_query = "DELETE FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 				$query_result = $wpdb->query( $delete_query );
 				$delete_count += $query_result;
 			}
-			
-			/*
-			 * Insert the new values
-			 */
+
+			// Insert the new values
 			foreach ( $attachment_values as $attachment => $text ) {
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
@@ -1010,7 +1092,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$insert_count += $query_result;
 			}
 		}
-		
+
 		return "_fill_alt_text() performed {$delete_count} delete(s), {$insert_count} inserts(s).\n";
 	} // _fill_alt_text
 
@@ -1023,7 +1105,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _replace_alt_text() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$delete_count = 0;
 		$insert_count = 0;
@@ -1034,15 +1116,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				continue;
 			}
 
-			/*
-			 * Build an array of "first product category" names
-			 */
+			// Build an array of "first product category" names
 			$product_terms = array();
 			foreach ( $terms as $term ) {
 				if ( isset( $product_terms[ $term->object_id ] ) ) {
-					/*
-					 * The first top-level term wins
-					 */
+					// The first top-level term wins
 					if ( 0 == $product_terms[ $term->object_id ]['parent'] ) {
 						continue;
 					} elseif ( ( (integer) $term->parent ) < $product_terms[ $term->object_id ]['parent'] ) {
@@ -1053,15 +1131,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Assign the names to each attachment
-			 */				 
+			// Assign the names to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( isset( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $product_terms[ $key ]['name'];
 				}
-				
+
 				if ( !empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -1070,17 +1146,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Remove the old ALT Text values
-			 */
+			// Remove the old ALT Text values
 			$keys = implode( ',', array_keys( $attachment_values ) );
 			$delete_query = "DELETE FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 			$query_result = $wpdb->query( $delete_query );
 			$delete_count += $query_result;
-			
-			/*
-			 * Insert the new values
-			 */
+
+			// Insert the new values
 			foreach ( $attachment_values as $attachment => $text ) {
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
@@ -1088,7 +1160,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$insert_count += $query_result;
 			}
 		}
-		
+
 		return "_replace_alt_text() performed {$delete_count} delete(s), {$insert_count} inserts(s).\n";
 	} // _replace_alt_text
 
@@ -1101,20 +1173,18 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _fill_alt_text_t() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$delete_count = 0;
 		$insert_count = 0;
 		foreach ( array_chunk( self::$product_attachments, 25, true ) as $chunk ) {
-			/*
-			 * Assign the Product Title to each attachment
-			 */				 
+			// Assign the Product Title to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( ! empty( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $value['post_title'];
 				}
-				
+
 				if ( ! empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -1123,9 +1193,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Find the existing ALT Text values and remove them from the update
-			 */
+			// Find the existing ALT Text values and remove them from the update
 			$keys = implode( ',', array_keys( $attachment_values ) );
 			$select_query = "SELECT post_id, meta_value FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 			$empty_values = array();
@@ -1137,20 +1205,16 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 				unset( $attachment_values[ (integer) $existing_value->post_id ] );
 			}
-			
-			/*
-			 * Delete empty ALT Text values
-			 */
+
+			// Delete empty ALT Text values
 			if ( ! empty( $empty_values ) ) {
 				$keys = implode( ',', $empty_values );
 				$delete_query = "DELETE FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 				$query_result = $wpdb->query( $delete_query );
 				$delete_count += $query_result;
 			}
-			
-			/*
-			 * Insert the new values
-			 */
+
+			// Insert the new values
 			foreach ( $attachment_values as $attachment => $text ) {
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
@@ -1158,7 +1222,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$insert_count += $query_result;
 			}
 		}
-		
+
 		return "_fill_alt_text_t() performed {$delete_count} delete(s), {$insert_count} inserts(s).\n";
 	} // _fill_alt_text_t
 
@@ -1171,20 +1235,18 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _replace_alt_text_t() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$delete_count = 0;
 		$insert_count = 0;
 		foreach ( array_chunk( self::$product_attachments, 25, true ) as $chunk ) {
-			/*
-			 * Assign the Product Title to each attachment
-			 */				 
+			// Assign the Product Title to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( isset( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $value['post_title'];
 				}
-				
+
 				if ( !empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -1193,17 +1255,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Remove the old ALT Text values
-			 */
+			// Remove the old ALT Text values
 			$keys = implode( ',', array_keys( $attachment_values ) );
 			$delete_query = "DELETE FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 			$query_result = $wpdb->query( $delete_query );
 			$delete_count += $query_result;
-			
-			/*
-			 * Insert the new values
-			 */
+
+			// Insert the new values
 			foreach ( $attachment_values as $attachment => $text ) {
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
@@ -1211,7 +1269,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$insert_count += $query_result;
 			}
 		}
-		
+
 		return "_replace_alt_text_t() performed {$delete_count} delete(s), {$insert_count} inserts(s).\n";
 	} // _replace_alt_text_t
 
@@ -1224,19 +1282,17 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _fill_title_t() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$update_count = 0;
 		foreach ( array_chunk( self::$product_attachments, 25, true ) as $chunk ) {
-			/*
-			 * Assign the Product Title to each attachment
-			 */				 
+			// Assign the Product Title to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( ! empty( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $value['post_title'];
 				}
-				
+
 				if ( ! empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -1245,9 +1301,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Find the non-empty Title values and remove them from the update
-			 */
+			// Find the non-empty Title values and remove them from the update
 			$keys = implode( ',', array_keys( $attachment_values ) );
 			$select_query = "SELECT ID, post_title FROM {$wpdb->posts} WHERE ( ID IN ( {$keys} ) )";
 //error_log( __LINE__ . ' Woo_Fixit::_fill_title_t() $select_query = ' . var_export( $select_query, true ), 0 );
@@ -1258,27 +1312,25 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					unset( $attachment_values[ (integer) $existing_value->ID ] );
 				}
 			}
-			
-			/*
-			 * Update with new values, if any
-			 */
+
+			// Update with new values, if any
 			if ( empty( $attachment_values ) ) {
 				continue;
 			}
-			
+
 			$select_bits = '';
 			$where_bits = array();
 			foreach ( $attachment_values as $attachment => $text ) {
 				$select_bits .= " WHEN ID = {$attachment} THEN '{$text}'";
 				$where_bits[] = $attachment;
 			}
-			
+
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
 			$query_result = $wpdb->query( $update_query );
 			$update_count += absint( $query_result );
 		} // foreach $chunk
-		
+
 		return "_fill_title_t() performed performed {$update_count} update(s).\n";
 	} // _fill_title_t
 
@@ -1291,19 +1343,17 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _replace_title_t() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 		$update_count = 0;
 		foreach ( array_chunk( self::$product_attachments, 25, true ) as $chunk ) {
-			/*
-			 * Assign the Product Title to each attachment
-			 */				 
+			// Assign the Product Title to each attachment
 			$attachment_values = array();
 			foreach ( $chunk as $key => $value ) {
 				if ( isset( $value['_thumbnail_id'] ) ) {
 					$attachment_values[ $value['_thumbnail_id'] ] = $value['post_title'];
 				}
-				
+
 				if ( !empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
@@ -1312,9 +1362,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 
-			/*
-			 * Update with new values, if any
-			 */
+			// Update with new values, if any
 			if ( empty( $attachment_values ) ) {
 				continue;
 			}
@@ -1324,13 +1372,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$select_bits .= " WHEN ID = {$attachment} THEN '{$text}'";
 				$where_bits[] = $attachment;
 			}
-			
+
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->posts} SET post_title = CASE{$select_bits} ELSE post_title END WHERE ID IN ( {$where_bits} )";
 			$query_result = $wpdb->query( $update_query );
 			$update_count += absint( $query_result );
 		} // foreach $chunk
-		
+
 		return "_replace_title_t() performed {$update_count} update(s).\n";
 	} // _replace_title_t
 
@@ -1348,7 +1396,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		global $wpdb;
 
 		$results = array( 'error' => '', 'delete_count' => 0, 'insert_count' => 0 );
-		
+
 		$content_template = self::$content_template;
 		if ( 'template:' == substr( $content_template, 0, 9 ) ) {
 			$content_template = substr( $content_template, 9 );
@@ -1378,19 +1426,19 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			foreach ( $chunk as $key => $value ) {
 				if ( ! empty( $value['_thumbnail_id'] ) ) {
 					$all_values[] = $id = $value['_thumbnail_id'];
-					
+
 					// Evaluate the template for the Product Image
 					$template_value = trim( MLAOptions::mla_get_data_source( $id, 'single_attachment_mapping', $my_setting, NULL ) );
 					if ( !empty( $template_value ) ) {
 						$replace_values[ $id ] = $template_value;
 					}
 				}
-				
+
 				if ( ! empty( $value['_product_image_gallery'] ) ) {
 					$ids = explode( ',', $value['_product_image_gallery'] );
 					foreach( $ids as $id ) {
 						$all_values[] = $id;
-						
+
 						// Evaluate the template for a Product Gallery Image
 						$template_value = trim( MLAOptions::mla_get_data_source( $id, 'single_attachment_mapping', $my_setting, NULL ) );
 						if ( !empty( $template_value ) ) {
@@ -1417,20 +1465,16 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				// Delete all of the existing values
 				$delete_values = $all_values;
 			}
-			
-			/*
-			 * Delete ALT Text values that are empty or will be replaced
-			 */
+
+			// Delete ALT Text values that are empty or will be replaced
 			if ( ! empty( $delete_values ) ) {
 				$keys = implode( ',', $delete_values );
 				$delete_query = "DELETE FROM {$wpdb->postmeta} WHERE ( post_id IN ( {$keys} ) ) AND ( meta_key = '_wp_attachment_image_alt' )";
 				$query_result = $wpdb->query( $delete_query );
 				$delete_count += $query_result;
 			}
-			
-			/*
-			 * Insert the new values
-			 */
+
+			// Insert the new values
 			foreach ( $replace_values as $attachment => $text ) {
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
@@ -1438,7 +1482,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$insert_count += $query_result;
 			}
 		} // each chunk
-		
+
 		$results['delete_count'] =  $delete_count;
 		$results['insert_count'] =  $insert_count;
 		return $results;
@@ -1489,7 +1533,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _remove_feature() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 
 		$update_count = 0;
@@ -1500,11 +1544,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( empty( $result['_thumbnail_id'] ) ) {
 				continue;
 			}
-			
+
 			$feature = (integer) $result['_thumbnail_id'];
 			$gallery = array();
 			$feature_found = false;
-			
+
 			if ( ! empty( $result['_product_image_gallery'] ) ) {
 				foreach ( explode( ',', $result['_product_image_gallery'] ) as $item ) {
 					if ( $feature == (integer) $item ) {
@@ -1514,15 +1558,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					}
 				} // foreach gallery item
 			}
-			
+
 			if ( $feature_found ) {
 				$new_gallery = implode( ',', $gallery );
 				$select_bits .= " WHEN post_id = {$post_id} THEN '{$new_gallery}'";
 				$where_bits[] = $post_id;
-				
-				/*
-				 * Run an update when the chunk is full
-				 */
+
+				// Run an update when the chunk is full
 				if ( 25 <= ++$chunk_count ) {
 					$where_bits = implode( ',', $where_bits );
 					$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1534,10 +1576,8 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			} // feature removed
 		} // foreach product
-		
-		/*
-		 * Run a final update if the chunk is partially filled
-		 */
+
+		// Run a final update if the chunk is partially filled
 		if ( $chunk_count ) {
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1557,7 +1597,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _restore_feature() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 
 		$update_count = 0;
@@ -1568,7 +1608,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( empty( $result['_thumbnail_id'] ) ) {
 				continue;
 			}
-			
+
 			$feature = (integer) $result['_thumbnail_id'];
 			$gallery = array();
 			$feature_found = false;
@@ -1581,20 +1621,18 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					}
 				} // foreach gallery item
 			}
-			
+
 			if ( ! $feature_found ) {
 				if ( count( $gallery ) ) {
 					$new_gallery = implode( ',', $gallery ) . ',' . $feature;
 				} else {
 					$new_gallery = (string) $feature;
 				}
-				
+
 				$select_bits .= " WHEN post_id = {$post_id} THEN '{$new_gallery}'";
 				$where_bits[] = $post_id;
-				
-				/*
-				 * Run an update when the chunk is full
-				 */
+
+				// Run an update when the chunk is full
 				if ( 25 <= ++$chunk_count ) {
 					$where_bits = implode( ',', $where_bits );
 					$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1606,10 +1644,8 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			} // feature restored
 		} // foreach product
-		
-		/*
-		 * Run a final update if the chunk is partially filled
-		 */
+
+		// Run a final update if the chunk is partially filled
 		if ( $chunk_count ) {
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1629,7 +1665,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _reverse_gallery() {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 
 		$update_count = 0;
@@ -1642,15 +1678,13 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$gallery = explode( ',', $result['_product_image_gallery'] );
 			}
-			
+
 			if ( 1 < count( $gallery ) ) {
 				$new_gallery = implode( ',', array_reverse( $gallery ) );
 				$select_bits .= " WHEN post_id = {$post_id} THEN '{$new_gallery}'";
 				$where_bits[] = $post_id;
-				
-				/*
-				 * Run an update when the chunk is full
-				 */
+
+				// Run an update when the chunk is full
 				if ( 25 <= ++$chunk_count ) {
 					$where_bits = implode( ',', $where_bits );
 					$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1662,10 +1696,8 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			} // gallery reversed
 		} // foreach product
-		
-		/*
-		 * Run a final update if the chunk is partially filled
-		 */
+
+		// Run a final update if the chunk is partially filled
 		if ( $chunk_count ) {
 			$where_bits = implode( ',', $where_bits );
 			$update_query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '_product_image_gallery'";
@@ -1705,16 +1737,14 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$thumbnails = $result['_thumbnail_id'];
 			}
-			
+
 			if ( empty( $result['_product_image_gallery'] ) ) {
 				$galleries = array();
 			} else {
 				$galleries = $result['_product_image_gallery'];
 			}
 
-			/*
-			 * Compose references
-			 */
+			// Compose references
 			$references = '';
 			$thumbnail_text = '';
 			foreach ( $thumbnails as $thumbnail ) {
@@ -1723,7 +1753,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( !empty( $thumbnail_text ) ) {
 				$references .= 'Thumbnails: ' . $thumbnail_text;
 			}
-			
+
 			$gallery_text = '';
 			foreach ( $galleries as $gallery ) {
 				$gallery_text .= sprintf( '(%1$d) %2$s,', $gallery, self::$product_attachments[ $gallery ]['post_title'] );
@@ -1735,14 +1765,12 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 
 				$references .= 'Galleries: ' . $gallery_text;
 			}
-			
+
 			if ( !empty( $references ) ) {
 				$thumbnail_count += count( $thumbnails );
 				$gallery_count += count( $galleries );
 
-				/*
-				 * Insert the new values
-				 */
+				// Insert the new values
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
 	VALUES ( {$post_id},'Woo Used In','{$references}' )";
 				$query_result = $wpdb->query( $insert_query );
@@ -1811,7 +1839,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _update_product_tags( $action ) {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 
 		$update_count = 0;
@@ -1832,7 +1860,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( count( $products ) == 0 ) {
 				continue;
 			}
-			
+
 			switch ( $action ) {
 				case 'clear':
 				case 'fill':
@@ -1840,7 +1868,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					$ids = implode( ',', array_keys( $products ) );
 					$query = sprintf( 'SELECT DISTINCT tr.object_id FROM %1$s as tr INNER JOIN %2$s as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE ( tr.object_id IN ( %3$s ) AND tt.taxonomy = \'product_tag\' ) ', $wpdb->term_relationships, $wpdb->term_taxonomy, $ids );
 					$assignments = $wpdb->get_col( $query );
-	
+
 					if ( 'clear' == $action ) {
 						foreach ( $assignments as $assignment ) {
 							wp_delete_object_term_relationships( $assignment, 'product_tag' ); 
@@ -1849,10 +1877,10 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					} else {
 						// Find the products that have no assignments
 						$assignments = array_diff_key( $products, array_flip( $assignments ) );
-		
+
 						foreach ( $assignments as $product_id => $assignment ) {
 							$attachment_tags = wp_get_object_terms( $assignment, 'attachment_tag', array( 'orderby' => 'none', 'fields' => 'names' ) );
-		
+
 							if ( ! empty( $attachment_tags ) ) {
 								$term_taxonomy_ids = wp_set_object_terms( $product_id, $attachment_tags, 'product_tag' );
 								$terms_added += count( $term_taxonomy_ids );
@@ -1865,7 +1893,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				case 'replace':
 					foreach ( $products as $product_id => $assignment ) {
 						$attachment_tags = wp_get_object_terms( $assignment, 'attachment_tag', array( 'orderby' => 'none', 'fields' => 'names' ) );
-	
+
 						if ( 'append' == $action ) {
 							if ( ! empty( $attachment_tags ) ) {
 								$old_term_taxonomy_ids = wp_get_object_terms( $product_id, 'product_tag', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
@@ -1886,7 +1914,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 								}
 							} else {
 								$term_taxonomy_ids = wp_get_object_terms( $product_id, 'product_tag', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
-		
+
 								$old_terms = count( $term_taxonomy_ids );
 								if ( 0 < $old_terms ) {
 									$terms_removed += $old_terms;
@@ -1898,7 +1926,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					} // each assignment
 			} // action
 		} // each chunk
-		
+
 		switch ( $action ) {
 			case 'clear':
 				return "_clear_product_tags() cleared {$update_count} Product(s).\n";
@@ -1912,7 +1940,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			case 'replace':
 				return "_replace_product_tags() replaced {$terms_added} term(s) in {$update_count} Product(s), and deleted {$terms_removed} term(s) from {$delete_count} Product(s).\n";
 		}
-		
+
 		return "ERROR: Unknown _update_product_tags action: {$action}";
 	} // _update_product_tags
 
@@ -1974,7 +2002,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _update_product_categories( $action ) {
 		global $wpdb;
-		
+
 		self::_build_product_attachments();
 
 		if ( 'clear' != $action ) {
@@ -2002,7 +2030,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( count( $products ) == 0 ) {
 				continue;
 			}
-			
+
 			switch ( $action ) {
 				case 'clear':
 				case 'fill':
@@ -2010,7 +2038,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					$ids = implode( ',', array_keys( $products ) );
 					$query = sprintf( 'SELECT DISTINCT tr.object_id FROM %1$s as tr INNER JOIN %2$s as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE ( tr.object_id IN ( %3$s ) AND tt.taxonomy = \'product_cat\' ) ', $wpdb->term_relationships, $wpdb->term_taxonomy, $ids );
 					$assignments = $wpdb->get_col( $query );
-	
+
 					if ( 'clear' == $action ) {
 						foreach ( $assignments as $assignment ) {
 							wp_delete_object_term_relationships( $assignment, 'product_cat' ); 
@@ -2019,11 +2047,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					} else {
 						// Find the products that have no assignments
 						$assignments = array_diff_key( $products, array_flip( $assignments ) );
-		
+
 						foreach ( $assignments as $product_id => $assignment ) {
 							$attachment_tags = wp_get_object_terms( $assignment, 'attachment_tag', array( 'orderby' => 'none', 'fields' => 'names' ) );
 							$common_terms = array_keys( array_intersect( $product_categories, $attachment_tags ) );
-		
+
 							if ( ! empty( $common_terms ) ) {
 								$term_taxonomy_ids = wp_set_object_terms( $product_id, $common_terms, 'product_cat' );
 								$terms_added += count( $term_taxonomy_ids );
@@ -2037,7 +2065,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					foreach ( $products as $product_id => $assignment ) {
 						$attachment_tags = wp_get_object_terms( $assignment, 'attachment_tag', array( 'orderby' => 'none', 'fields' => 'names' ) );
 						$common_terms = array_keys( array_intersect( $product_categories, $attachment_tags ) );
-	
+
 						if ( 'append' == $action ) {
 							if ( ! empty( $common_terms ) ) {
 								$old_term_taxonomy_ids = wp_get_object_terms( $product_id, 'product_cat', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
@@ -2058,7 +2086,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 								}
 							} else {
 								$term_taxonomy_ids = wp_get_object_terms( $product_id, 'product_cat', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
-		
+
 								$old_terms = count( $term_taxonomy_ids );
 								if ( 0 < $old_terms ) {
 									$terms_removed += $old_terms;
@@ -2070,7 +2098,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					} // each assignment
 			} // action
 		} // each chunk
-		
+
 		switch ( $action ) {
 			case 'clear':
 				return "_clear_product_categories() cleared {$update_count} Product(s).\n";
@@ -2084,7 +2112,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			case 'replace':
 				return "_replace_product_categories() replaced {$terms_added} term(s) in {$update_count} Product(s), and deleted {$terms_removed} term(s) from {$delete_count} Product(s).\n";
 		}
-		
+
 		return "ERROR: Unknown _update_product_categories action: {$action}";
 	} // _update_product_categories
 
@@ -2097,11 +2125,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _clear_attachment_categories() {
 		global $wpdb;
-		
+
 		$update_count = 0;
 		$offset = 0;
 		$limit = 25;
-		
+
 		do {
 			// Select a chunk of attachment IDs
 			$query = sprintf( 'SELECT p.ID FROM %1$s as p WHERE ( p.post_type = \'attachment\' ) ORDER BY p.ID LIMIT %2$d, %3$d', $wpdb->posts, $offset, $limit );
@@ -2120,10 +2148,10 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$results = array();
 			}
-			
+
 			$offset += $limit;
 		} while ( count( $results ) == $limit );
-		
+
 		return "_clear_attachment_categories() cleared {$update_count} items(s).\n";
 	} // _clear_attachment_categories
 
@@ -2137,7 +2165,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _fill_attachment_categories() {
 		global $wpdb;
-		
+
 		// Get the array of the Att. Category term objects for comparison
 		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
@@ -2145,7 +2173,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$terms_added = 0;
 		$offset = 0;
 		$limit = 25;
-		
+
 		do {
 			// Select a chunk of attachment IDs
 			$query = sprintf( 'SELECT p.ID FROM %1$s as p WHERE ( p.post_type = \'attachment\' ) ORDER BY p.ID LIMIT %2$d, %3$d', $wpdb->posts, $offset, $limit );
@@ -2156,7 +2184,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$ids = implode( ',', $results );
 				$query = sprintf( 'SELECT DISTINCT tr.object_id FROM %1$s as tr INNER JOIN %2$s as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE ( tr.object_id IN ( %3$s ) AND tt.taxonomy = \'attachment_category\' ) ', $wpdb->term_relationships, $wpdb->term_taxonomy, $ids );
 				$assignments = $wpdb->get_col( $query );
-				
+
 				// find the attachments that have no assignments
 				$assignments = array_diff( $results, $assignments );
 
@@ -2172,7 +2200,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$results = array();
 			}
-			
+
 			$offset += $limit;
 		} while ( count( $results ) == $limit );
 
@@ -2189,7 +2217,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _append_attachment_categories() {
 		global $wpdb;
-		
+
 		// Get the array of the Att. Category term objects for comparison
 		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
@@ -2197,7 +2225,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$terms_added = 0;
 		$offset = 0;
 		$limit = 25;
-		
+
 		do {
 			// Select a chunk of attachment IDs
 			$query = sprintf( 'SELECT p.ID FROM %1$s as p WHERE ( p.post_type = \'attachment\' ) ORDER BY p.ID LIMIT %2$d, %3$d', $wpdb->posts, $offset, $limit );
@@ -2208,7 +2236,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$ids = implode( ',', $results );
 				$query = sprintf( 'SELECT DISTINCT tr.object_id FROM %1$s as tr INNER JOIN %2$s as tt ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE ( tr.object_id IN ( %3$s ) AND tt.taxonomy = \'attachment_tag\' ) ', $wpdb->term_relationships, $wpdb->term_taxonomy, $ids );
 				$assignments = $wpdb->get_col( $query );
-				
+
 				foreach ( $assignments as $assignment ) {
 					$attachment_tags = wp_get_object_terms( $assignment, 'attachment_tag', array( 'orderby' => 'none', 'fields' => 'names' ) );
 					$common_terms = array_keys( array_intersect( $attachment_categories, $attachment_tags ) );
@@ -2226,7 +2254,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$results = array();
 			}
-			
+
 			$offset += $limit;
 		} while ( count( $results ) == $limit );
 
@@ -2243,7 +2271,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _replace_attachment_categories() {
 		global $wpdb;
-		
+
 		// Get the array of the Att. Category term objects for comparison
 		$attachment_categories = MLAQuery::mla_wp_get_terms( 'attachment_category', array( 'orderby' => 'none', 'hide_empty' => 0, 'fields' => 'id=>name' ) );
 
@@ -2254,7 +2282,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 
 		$offset = 0;
 		$limit = 25;
-		
+
 		do {
 			// Select a chunk of attachment IDs
 			$query = sprintf( 'SELECT p.ID FROM %1$s as p WHERE ( p.post_type = \'attachment\' ) ORDER BY p.ID LIMIT %2$d, %3$d', $wpdb->posts, $offset, $limit );
@@ -2285,7 +2313,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} else {
 				$results = array();
 			}
-			
+
 			$offset += $limit;
 		} while ( count( $results ) == $limit );
 
@@ -2302,7 +2330,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _clear_term_assignments() {
 		self::_build_product_attachments( false );
-		
+
 		$item_count = 0;
 		$cat_count = 0;
 		$cat_removed = 0;
@@ -2311,7 +2339,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 
 		foreach ( self::$attachment_products as $ID => $used_in ) {
 			$item_count++;
-			
+
 			if ( self::$process_category ) {
 				$term_taxonomy_ids = wp_get_object_terms( $ID, 'product_cat', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
 				$old_terms = count( $term_taxonomy_ids );
@@ -2321,7 +2349,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 					$term_taxonomy_ids = wp_set_object_terms( $ID, NULL, 'product_cat' );
 				}
 			}
-			
+
 			if ( self::$process_tag ) {
 				$term_taxonomy_ids = wp_get_object_terms( $ID, 'product_tag', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
 				$old_terms = count( $term_taxonomy_ids );
@@ -2332,7 +2360,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 			}
 		} // foreach ID
-		
+
 		$cat_text = ( 1 == $cat_removed ) ? 'category' : 'categories';
 		$tag_text = ( 1 == $tag_removed ) ? 'tag' : 'tags';
 		return "_clear_term_assignments() processed {$item_count} item(s), deleted {$cat_removed} {$cat_text} from {$cat_count} item(s), and deleted {$tag_removed} {$tag_text} from {$tag_count} item(s).\n";
@@ -2348,7 +2376,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _copy_term_assignments() {
 		self::_build_product_attachments( false );
-		
+
 		$item_count = 0;
 		$cat_count = 0;
 		$cat_added = 0;
@@ -2368,7 +2396,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			if ( self::$process_tag ) {
 				$current_product_tag = wp_get_object_terms( $ID, 'product_tag', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
 			}
-			
+
 			$new_product_cat = array();
 			$new_product_tag = array();
 
@@ -2380,45 +2408,43 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 							if ( in_array( $new_cat, $current_product_cat ) ) {
 								continue;
 							}
-							
+
 							$new_product_cat[ $new_cat ] = $new_cat;
 						}
 					}
-					
+
 					if ( self::$process_tag ) {
 						$term_taxonomy_ids = wp_get_object_terms( $product_id, 'product_tag', array( 'orderby' => 'none', 'fields' => 'tt_ids' ) );
 						foreach( $term_taxonomy_ids as $new_tag ) {
 							if ( in_array( $new_tag, $current_product_tag ) ) {
 								continue;
 							}
-							
+
 							$new_product_tag[ $new_tag ] = $new_tag;
 						}
 					}
 				} // foreach product_id
 			} // foreach usage
-						
+
 			if ( 0 < ( $new_terms = count( $new_product_cat ) ) ) {
 				$cat_added += $new_terms;
 				$cat_count++;
 				$term_taxonomy_ids = wp_set_object_terms( $ID, $new_product_cat, 'product_cat', true );
 			}
-			
+
 			if ( 0 < ( $new_terms = count( $new_product_tag ) ) ) {
 				$tag_added += $new_terms;
 				$tag_count++;
 				$term_taxonomy_ids = wp_set_object_terms( $ID, $new_product_tag, 'product_tag', true );
 			}
 		} // foreach ID
-		
+
 		$cat_text = ( 1 == $cat_added ) ? 'category' : 'categories';
 		$tag_text = ( 1 == $tag_added ) ? 'tag' : 'tags';
 		return "_copy_term_assignments() processed {$item_count} item(s), added {$cat_added} {$cat_text} to {$cat_count} item(s), and added {$tag_added} {$tag_text} to {$tag_count} item(s).\n";
 	} // _copy_term_assignments
 } //Woo_Fixit
 
-/*
- * Install the submenu at an early opportunity
- */
+// Install the submenu at an early opportunity
 add_action('init', 'Woo_Fixit::initialize');
 ?>
