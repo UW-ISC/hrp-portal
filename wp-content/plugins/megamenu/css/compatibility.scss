@@ -1,0 +1,6 @@
+@if ($elementor_pro_active == true) {
+	.elementor-sticky__spacer #{$wrap} #{$menu},
+	.elementor-sticky__spacer #{$wrap} #{$menu} .mega-sub-menu {
+	   visibility: inherit !important;
+	}
+}
