@@ -460,17 +460,17 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 
 		if( $meta_name == '' ){
 			$post = get_post( $post_id );
-			switch ( $details['title'] ) {
-				case 'Post Title':
+			switch ( $details['slug'] ) {
+				case 'post-title':
 					$value = get_the_title( $post->ID );
 					break;
-				case 'Post Content':
+				case 'post-content':
 					$value = $post->post_content;
 					break;
-				case 'Post Excerpt':
+				case 'post-excerpt':
 					$value = $post->post_excerpt;
 					break;
-				case 'Featured Image':
+				case 'featured-image':
 					$value = get_post_thumbnail_id( $post->ID );
 				default:
 					/* take care of taxonomies */
