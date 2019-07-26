@@ -411,13 +411,10 @@ class MLASubstitutionParameterExample {
 			} else {
 				// Look for a custom field match
 				$meta_value = get_metadata( 'post', $parent_id, $value['value'], false );
-//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$parent_id} ) meta_value = " . var_export( $meta_value, true ), 0 );
 				if ( !empty( $meta_value ) ) {
 					$custom_value = $meta_value;
 				}
 			}
-
-//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$parent_id} ) custom_value = " . var_export( $custom_value, true ), 0 );
 
 			if ( is_array( $custom_value ) ) {
 				if ( 'single' == $value['option'] || 1 == count( $custom_value ) ) {

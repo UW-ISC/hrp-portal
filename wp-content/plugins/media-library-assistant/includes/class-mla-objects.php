@@ -146,7 +146,7 @@ class MLAObjects {
 			}
 
 			if ( isset ( $columns[ 'posts' ] ) ) {
-				$wp_taxonomy = in_array( $taxonomy, array( 'category', 'post_tag' ) );
+				$wp_taxonomy = true; // in_array( $taxonomy, array( 'category', 'post_tag' ) );
 				if ( ! ( $wp_taxonomy && ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_SHOW_COUNT_COLUMN ) ) ) ) {
 					unset( $columns[ 'posts' ] );
 				}

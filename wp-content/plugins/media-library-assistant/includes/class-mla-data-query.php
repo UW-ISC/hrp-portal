@@ -678,22 +678,23 @@ class MLAQuery {
 	 *
 	 * @uses	array	self::$search_parameters
 	 *
-	 * @param	string	phrases, e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 * @param	string	whole_string e.g., ( "a phrase" separate phrase ) without parens, space delimited
+	 * @param	string	term_delimiter separator between terms for terms search
+	 * @param	string	negative_delimiter delimiter for negative phrases, e.g., /exclude this/, /"exclude also"/
 	 *
 	 * @return	array	( 'original' => all phrases, 'positive' => positive phrases, 'negative' => negative phrases )
 	 */
-	private static function _divide_search_string( $whole_string ) {
-		$separator = ','; // TODO default value
-		$negative_delimiter = '/'; // TODO default value
+	public static function mla_divide_search_string( $whole_string, $term_delimiter = ',', $negative_delimiter = '/' ) {
 		$phrases = array( 'original' => $whole_string, 'positive' => '', 'negative' => '' );
 		
 		$separator_list = " \n\t\r\0\x0B";
-		if ( false === strpos( $separator_list, $separator ) ) {
-			$separator_list .= $separator;
+		if ( false === strpos( $separator_list, $term_delimiter ) ) {
+			$separator_list .= $term_delimiter;
 		} else {
 			$separator_list .= ',';
 		}
 
+		$negative_prepend = false;
 		$in_negative = false;
 		$current_quote = '';
 		$in_trim = false;
@@ -703,21 +704,27 @@ class MLAQuery {
 		
 		while ( $index < strlen( $whole_string ) ) {
 			$byte = $whole_string[ $index++ ];
-//error_log( __LINE__ . " MLAQuery::_divide_search_string byte |{$byte}| in_trim |{$in_trim}| in_negative |{$in_negative}| current_quote |{$current_quote}| current_separator |{$current_separator}| argument |{$argument}| phrases = " . var_export( $phrases, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::mla_divide_search_string byte |{$byte}| in_trim |{$in_trim}| in_negative |{$in_negative}| current_quote |{$current_quote}| current_separator |{$current_separator}| argument |{$argument}| phrases = " . var_export( $phrases, true ), 0 );
 
 			// Are we between arguments?
 			if ( ( false !== strpos( $separator_list, $byte ) ) && !( $in_negative || $current_quote ) ) {
 				$in_trim = true;
 
-				if ( $separator === $byte ) {
-					$current_separator = $separator;
+				if ( $term_delimiter === $byte ) {
+					$current_separator = $term_delimiter;
 				}
 				
 				continue;
 			} elseif ( $in_trim ) {
 				// Have we seen a positive argument?
 				if ( strlen( $argument ) ) {
-					$phrases['positive'] .= $argument;
+					if ( $negative_prepend ) {
+						$phrases['negative'] .= $argument;
+						$negative_prepend = false;
+					} else {
+						$phrases['positive'] .= $argument;
+					}
+					
 					$argument = '';
 				}
 
@@ -737,6 +744,7 @@ class MLAQuery {
 			if ( $in_negative && ( $negative_delimiter == $byte ) ) {
 				if ( strlen( $argument ) ) {
 					$phrases['negative'] .= $argument;
+					$negative_prepend = false; // handle double-delimiting, i.e., -/phrase/
 					$argument = '';
 				}
 
@@ -750,7 +758,12 @@ class MLAQuery {
 					if ( $in_negative ) {
 						$phrases['negative'] .= $current_quote . $argument . $current_quote;
 					} else {
-						$phrases['positive'] .= $current_quote . $argument . $current_quote;
+						if ( $negative_prepend ) {
+							$phrases['negative'] .= $current_quote . $argument . $current_quote;
+							$negative_prepend = false;
+						} else {
+							$phrases['positive'] .= $current_quote . $argument . $current_quote;
+						}
 					}
 
 					$argument = '';
@@ -763,7 +776,12 @@ class MLAQuery {
 			// Are we starting a negative phrase?
 			if ( ( $negative_delimiter == $byte ) && !$current_quote ) {
 				if ( strlen( $argument ) ) {
-					$phrases['positive'] .= $argument;
+					if ( $negative_prepend ) {
+						$phrases['negative'] .= $argument;
+						$negative_prepend = false;
+					} else {
+						$phrases['positive'] .= $argument;
+					}
 					$argument = '';
 				}
 
@@ -777,21 +795,27 @@ class MLAQuery {
 				continue;
 			}
 			
-			// Accumulate a phrase
-			$argument .= $byte;
+			// Look for prepended "-" as added to WP_Query in WP 4.4
+			if ( !$current_quote && empty( $argument ) && '-' === $byte ) {
+				$negative_prepend = true;
+			} else {
+				// Accumulate a phrase
+				$argument .= $byte;
+			}
 		} // index < strlen
 
 		// Close out the final argument
 		if ( strlen( $argument ) ) {
-			// Restore quotes for word-boundary check
-			$phrases['positive'] .= $argument;
+			if ( $negative_prepend ) {
+				$phrases['negative'] .= $argument;
+			} else {
+				$phrases['positive'] .= $argument;
+			}
 		}
-		
-//error_log( __LINE__ . ' MLAQuery::_divide_search_string phrases = ' . var_export( $phrases, true ), 0 );
+//error_log( __LINE__ . ' MLAQuery::mla_divide_search_string phrases = ' . var_export( $phrases, true ), 0 );
 
 		return $phrases;
-		return array( 'original' => 'america /statue/', 'positive' => 'america', 'negative' => 'statue' );
-	} // _divide_search_string
+	} // mla_divide_search_string
 
 	/**
 	 * Sanitize and expand query arguments from request variables
@@ -1215,7 +1239,7 @@ class MLAQuery {
 		} // isset mla_tax
 		
 		if ( !empty( self::$search_parameters['s'] ) ) {
-			$search_phrases = self::_divide_search_string( self::$search_parameters['s'] );
+			$search_phrases = self::mla_divide_search_string( self::$search_parameters['s'] );
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_phrases = " . var_export( $search_phrases, true ), 0 );
 		
 			if ( !empty( $search_phrases['negative'] ) ) {
@@ -1233,7 +1257,7 @@ class MLAQuery {
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_parameters = " . var_export( self::$search_parameters, true ), 0 );
 
 		if ( !empty( self::$search_parameters['mla_terms_search'] ) ) {
-			$search_phrases = self::_divide_search_string( self::$search_parameters['mla_terms_search']['phrases'] );
+			$search_phrases = self::mla_divide_search_string( self::$search_parameters['mla_terms_search']['phrases'] );
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query mla_terms_search search_phrases = " . var_export( $search_phrases, true ), 0 );
 		
 			if ( !empty( $search_phrases['negative'] ) ) {

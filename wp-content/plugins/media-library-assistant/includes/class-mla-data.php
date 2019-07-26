@@ -874,31 +874,55 @@ class MLAData {
 				break;
 			case 'timestamp':
 				if ( is_numeric( $value ) ) {
-					/*
-					 * date "Returns a string formatted according to the given format string using the given integer"
-					 */
+					$modifier = '';
 					$format = empty( $args['args'] ) ? 'd/m/Y H:i:s' : $args['args'];
+
 					if ( is_array( $format ) ) {
+						$modifier = strtolower( trim( $format[1] ) );
 						$format = $format[0];
 					}
 
-					$value = date( $format , (integer) $value );
+					switch ( $modifier ) {
+						case 'i18n':
+							$value = date_i18n( $format, (integer) $value );
+							break;
+						case 'age':
+							$value = sprintf( $format, human_time_diff( (integer) $value ) );
+							break;
+						default:
+							// date "Returns a string formatted according to the given format string using the given integer"
+							$value = date( $format, (integer) $value );
+					}
 				}
+
 				break;
 			case 'date':
 				/*
 				 * strtotime will "Parse about any English textual datetime description into a Unix timestamp"
 				 * If it succeeds we can format the timestamp for display
 				 */
-				$format = empty( $args['args'] ) ? 'd/m/Y H:i:s' : $args['args'];
 				$timestamp = strtotime( $value );
 				if( false !== $timestamp ) {
+					$modifier = '';
+					$format = empty( $args['args'] ) ? 'd/m/Y H:i:s' : $args['args'];
+
 					if ( is_array( $format ) ) {
+						$modifier = strtolower( trim( $format[1] ) );
 						$format = $format[0];
 					}
 
-					$value = date( $format, $timestamp );
+					switch ( $modifier ) {
+						case 'i18n':
+							$value = date_i18n( $format, $timestamp );
+							break;
+						case 'age':
+							$value = sprintf( $format, human_time_diff( $timestamp ) );
+							break;
+						default:
+							$value = date( $format, $timestamp );
+					}
 				}
+
 				break;
 			case 'fraction':
 				$show_fractions = true;

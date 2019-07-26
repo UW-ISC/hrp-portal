@@ -943,11 +943,15 @@ Searching for keywords within the names of taxonomy terms is a completely differ
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_terms_phrases</td>
-<td>The word(s) or phrase(s) you are searching for.</td>
+<td>The word(s) or phrase(s) you are searching for. Prepending a word or quoted phrase with a hyphen will exclude items matching that value, e.g., 'pillow -sofa' will return items containing 'pillow' but not 'sofa'.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_phrase_delimiter</td>
-<td>A single character that separates the phrasesd within a term in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a space (' ').</td>
+<td>A single character that separates the phrases within a term in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a space (' ').</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_negative_delimiter</td>
+<td>A single character that encloses the negative (excluded) phrases within a term in <code>mla_terms_phrases</code>. The <strong>default delimiter</strong> is a slash ('/').</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_phrase_connector</td>
@@ -1131,11 +1135,15 @@ You can use the <code>mla_search_connector</code> and <code>mla_search_fields</c
 <table>
 <tr>
 <td class="mla-doc-table-label">s</td>
-<td>The word(s) or phrase(s) you are searching for.</td>
+<td>The word(s) or phrase(s) you are searching for. Prepending a word or quoted phrase with a hyphen will exclude items matching that value, e.g., 'pillow -sofa' will return items containing 'pillow' but not 'sofa'.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_search_fields</td>
 <td>The fields in which to search. Choose from title, name, excerpt, content, alt-text, file, terms.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_negative_delimiter</td>
+<td>A single character that encloses the negative (excluded) phrases in the search string. The <strong>default delimiter</strong> is a slash ('/').</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_terms_taxonomies</td>
@@ -1574,6 +1582,8 @@ The data selection parameters specify which taxonomy (or taxonomies) the terms a
 <td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
 &nbsp;<br />
 You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
+&nbsp;<br />
+You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the cloud by post-specific values.<br />
 &nbsp;</td>
 </tr>
 <tr>
@@ -2630,6 +2640,8 @@ The data selection parameters specify which taxonomy (or taxonomies) the terms a
 <td>The default, "false", computes a term-specific count of the number of attachments assigned to that term. If you have a large number of terms and/or attachments, this can take a long time.<br />
 &nbsp;<br />
 You can code "true" to omit the attachment-counting process. If you do that, the "post_mime_type", "post_type", "post_status", "minimum", "number" and "orderby=count" parameters are also ignored, since they require counting the attachments.<br />
+&nbsp;<br />
+You can code "internal" to skip the explicit attachment-counting process and use the WordPress-maintained "count" database values. If you code <code>no_count=internal</code>, the "post_mime_type", "post_type" and "post_status" paramerters are ignored, since they require a separate subquery to filter the list by post-specific values.<br />
 &nbsp;</td>
 </tr>
 <tr>
@@ -3074,7 +3086,7 @@ Here is a simple example of a dropdown control for the Att. Categories taxonomy:
 [mla_gallery]<br />
 attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}"<br />
 posts_per_page=3 mla_output="paginate_links,prev_next"<br />
-mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&amp;tax_input[attachment_category]="{+query:attachment_category,text+}"'<br />
+mla_link_href='{+new_url+}?mla_paginate_current={+new_page+}&amp;tax_input[attachment_category]={+query:attachment_category,url+}'<br />
 [/mla_gallery]<br />
 &nbsp;<br />
 [mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|no-term-selected)+}" posts_per_page=3 mla_caption="{+title+} : {+description+}" mla_nolink_text="&lt;br&gt;Select a term to display the gallery.&lt;br&gt;"]
@@ -3085,7 +3097,7 @@ As you can see, the key is passing the selected term from the form to the galler
 </p>
 <p>
 You can experiment with a category checklist format by simply changing <code>mla_output=dropdown</code> to <code>mla_output=checklist</code> in the <code>[mla_term_list]</code> shortcode.
-You will also see that the term you select doesn&rsquo;t &ldquo;stick&rdquo; in the dropdown control when the page is refreshed with the gallery display. That is one motivation or the &ldquo;MLA UI Elements Example&rdquo; plugin. You can use that example plugin to improve the user experience after you have got the basic application going.
+You will also see that the term you select doesn&rsquo;t &ldquo;stick&rdquo; in the dropdown control when the page is refreshed with the gallery display. That is one motivation for the <a title="Find the UI Elements Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+UI+Elements+Example%22" class="mla-doc-bold-link">MLA UI Elements Example</a> plugin. You can use that example plugin to improve the user experience after you have got the basic application going.
 </p>
 <p>
 &nbsp;
@@ -3593,8 +3605,12 @@ The <code>[mla_gallery]</code> shortcode can be used in combination with other g
 <td>(optional, default "ids") the name of the parameter used to pass a list of attachment ID values to the alternate shortcode</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">mla_alt_ids_template</td>
+<td>(optional) a Content Template for the entire parameter value passed to the alternate shortcode. When processing the template, the list of ID values is available as the <code>{+alt_ids+}</code> substitution parameter. See the example below.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">mla_alt_ids_value</td>
-<td>(optional) an item-specific substitution parameter, Content Template or other alternative for the attachment ID value(s) passed to the alternate shortcode</td>
+<td>(optional) an item-specific substitution parameter, Content Template or other alternative for the attachment ID value(s) passed to the alternate shortcode. It is applied once for each item selected for the gallery, and all the item-specific substitution parameters are available to be used.</td>
 </tr>
 </table>
 <p>
@@ -3632,6 +3648,12 @@ The next example selects one PDF document at random and uses the <a href="https:
 </p>
 <code>
 [mla_gallery post_mime_type="application/pdf" orderby=rand numberposts=1 mla_alt_shortcode=pdf-embedder mla_alt_ids_name=url mla_alt_ids_value="{+filelink_url+}"]
+</code>
+<p>
+The next example selects items assigned to a taxonomy term and uses the <a href="https://wordpress.org/plugins/shortcodes-ultimate/" title="Shortcodes Ultimate plugin" target="_blank">Shortcodes Ultimate</a> plugin's <a href="https://getshortcodes.com/shortcodes/custom_gallery/" title="Custom Gallery shortcode" target="_blank">Custom gallery</a> shortcode to display the gallery with a lightbox enhancement. The <code>mla_alt_ids_name</code> and <code>mla_alt_ids_template</code> parameters change the "ids" and attachment ID defaults to the "source" and "media:" values expected by the <code>[su_custom_gallery]</code> shortcode.
+</p>
+<code>
+[mla_gallery attachment_category=accipitridae link="lightbox" mla_alt_shortcode="su_custom_gallery" mla_alt_ids_name="source" mla_alt_ids_template="media: {+alt_ids+}"]
 </code>
 <p>
 You can also use the "enclosing shortcode" form if the alternate shortcode, such as Fullscreen Galleria's "fsg_link", requires it. You would code this form as:
@@ -4365,12 +4387,12 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 <td>Many of the EXIF metadata fields are expressed as "rational" quantities, i.e., separate numerator and denominator values separated by a slash. For example, <code>[+exif:ExposureTime+]</code> can be expressed as "1/200" seconds. The "fraction" format converts these to a more useful format.<br />&nbsp;<br />There two optional arguments; "f" (format_string)and "s" (show_fractions). The "format_string" (default "2") can either be the number of decimal places desired or a sprintf()-style format specification. For example, <code>[+exif:ExposureTime,fraction(4)+]</code> will display 7/6 as "+1.1667". A format specification such as '%1$.2f' will display 7/6 as "1.17". Numbers between -1 and +1, i.e. true fractions, will display in their original form, e.g., "1/6". If the optional "show_fractions" (default true) argument is "false" fractional values will convert to a decimal equivalent. For example, fraction(4,false) will display 1/6 as "+0.1667", and <code>[+exif:ExposureTime,fraction( '%1$.2f', false )+]</code> will display 1/6 as "0.17".</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label" style="white-space:nowrap">,timestamp(f)</td>
-<td>Many date and time values such as <code>[+meta:image_meta.created_timestamp+]</code> are stored as a UNIX timestamp. The ",timestamp" format converts a timestamp into a variety of date and/or time string formats, using the PHP date() function. Details on the format_string argument can be found at: <a href="http://php.net/manual/en/function.date.php" title="PHP Date format parameters" target="_blank">http://php.net/manual/en/function.date.php</a>.<br />&nbsp;<br />The default format string is "d/m/Y H:i:s", e.g., "31/12/2014 23:59:00" (just before midnight on new year's eve). You could code <code>[+meta:image_meta.created_timestamp,timestamp('j F, Y')+]</code> to display "31 December, 2014".</td>
+<td class="mla-doc-table-label" style="white-space:nowrap">,timestamp(f,m)</td>
+<td>Many date and time values such as <code>[+meta:image_meta.created_timestamp+]</code> are stored as a UNIX timestamp. The ",timestamp" format converts a timestamp into a variety of date and/or time string formats, using the PHP date() function. Details on the "f" (format string) argument can be found at: <a href="http://php.net/manual/en/function.date.php" title="PHP Date format parameters" target="_blank">http://php.net/manual/en/function.date.php</a>.<br />&nbsp;<br />The default format string is "d/m/Y H:i:s", e.g., "31/12/2014 23:59:00" (just before midnight on new year's eve). You could code <code>[+meta:image_meta.created_timestamp,timestamp('j F, Y')+]</code> to display "31 December, 2014".<br />&nbsp;<br />The "m" (modifier) argument is optional. If present and set to "i18n" the displayed value will be localized using the site's locale value.<br />&nbsp;<br />If the "m" (modifier) argument is set to "age" it will return a human-readable difference between the source value and the current date/time. In this case you must also code "%s" in the format string, e.g., <code>[+meta:image_meta.created_timestamp,timestamp('%s ago')+]</code> to display something like "2 months ago".</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label" style="white-space:nowrap">,date(f)</td>
-<td>Many EXIF date and time values such as DateTimeOriginal and DateTimeDigitized are stored as strings with a format of "YYYY:MM:DD HH:MM:SS". You can parse this format and just about any English textual datetime description into a Unix timestamp, then format the result by using the ",date" format. This format first uses the PHP strtotime() function, then the date() function. The "Supported Date and Time Formats" can be found at: <a href="http://php.net/manual/en/datetime.formats.php" title="PHP Supported Date and Time Formats" target="_blank">http://php.net/manual/en/datetime.formats.php</a>.<br />&nbsp;<br />The default format string is "d/m/Y H:i:s", e.g., "31/12/2014 23:59:00" (just before midnight on new year's eve). You could code <code>[+exif:DateTimeOriginal,date('j F, Y')+]</code> to display "31 December, 2014".</td>
+<td class="mla-doc-table-label" style="white-space:nowrap">,date(f,m)</td>
+<td>Many EXIF date and time values such as DateTimeOriginal and DateTimeDigitized are stored as strings with a format of "YYYY:MM:DD HH:MM:SS". You can parse this format and just about any English textual datetime description into a Unix timestamp, then format the result by using the ",date" format. This format first uses the PHP strtotime() function, then the date() function. The "Supported Date and Time Formats" can be found at: <a href="http://php.net/manual/en/datetime.formats.php" title="PHP Supported Date and Time Formats" target="_blank">http://php.net/manual/en/datetime.formats.php</a>.<br />&nbsp;<br />The default "f" (format string) argument is "d/m/Y H:i:s", e.g., "31/12/2014 23:59:00" (just before midnight on new year's eve). You could code <code>[+exif:DateTimeOriginal,date('j F, Y')+]</code> to display "31 December, 2014".<br />&nbsp;<br />The "m" (modifier) argument is optional. If present and set to "i18n" the displayed value will be localized using the site's locale value.<br />&nbsp;<br />If the "m" (modifier) argument is set to "age" it will return a human-readable difference between the source value and the current date/time. In this case you must also code "%s" in the format string, e.g., <code>[+exif:DateTimeOriginal,date('%s ago')+]</code> to display something like "2 months ago".</td>
 </tr>
 </table>
 <p>
@@ -5446,7 +5468,10 @@ The Search Terms popup window has an additional capability, "Exact match" and a 
 </p>
 <h4>Excluding phrases</h4>
 <p>
-If you want to exclude items that match a phrase, enclose the phrase in slash ("/") delimiters. For example, enter "/dog/" to exclude terms containing the word dog. To exclude a multi word phrase, enter something like "/bites dog/" to exclude both words or ' /"bites dog"/ ' to exclude the exact phrase. You can combine include and exclude phrases, e.g., something like "man /that/ dog" to select terms containing "man" and "dog" but not containing "that".
+If you want to exclude terms that match a phrase, enclose the phrase in slash ("/") delimiters. For example, enter "/dog/" to exclude terms containing the word dog. To exclude a multi word phrase, enter something like "/bites dog/" to exclude both words or ' /"bites dog"/ ' to exclude the exact phrase. You can combine include and exclude phrases, e.g., something like "man /that/ dog" to select terms containing "man" and "dog" but not containing "that". 
+</p>
+<p>
+You can also exclude terms by prepending a word or quoted phrase with a hyphen, e.g., 'pillow -sofa' will select terms containing 'pillow' but not 'sofa'. 
 </p>
 <p>
 When you add exclude phrases to your search, the phrases you enter are divided into two sub-values, "positive" and "negative", with everything enclosed by the exclude delmiters going to the negative sub-value and everything else to the positive. Two queries are performed. First, the negative sub-value is used and a list of the item IDs that pass the query is compiled. Second, the positive sub-value is used and items with the "negative" IDs are excluded.

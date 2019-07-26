@@ -26,17 +26,35 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 		parent::__construct();
 
 		add_action( 'ac/table/list_screen', array( $this, 'export_table_global' ) );
+		
+		if ( version_compare( ACP()->get_version(), '4.5.4', '>=' ) ) {
+			add_filter('acp/editing/bulk/active', array( $this, 'disable_bulk_editing' ), 10, 2 );
+		}
 	}
 
 	/**
 	 * Set MLA-specific inline editing strategy for Admin Columns Pro
 	 *
 	 * @since 2.71
-	 *
-	 * @param ACP\Editing\Model $model
 	 */
-	public function editing( /* $model */ ) {
-		return new ACP_Addon_MLA_Editing_Strategy( 'attachment' /* $model */ );
+	public function editing() {
+		return new ACP_Addon_MLA_Editing_Strategy( 'attachment' );
+	}
+
+	/**
+	 * Set MLA-specific inline editing strategy for Admin Columns Pro
+	 *
+	 * @since 2.79
+	 *
+	 * @param boolean $active
+	 * @param AC_ListScreen $list_screen
+	 */
+	public function disable_bulk_editing( $active, $list_screen ){
+		if( $list_screen instanceof ACP_Addon_MLA_ListScreen ){
+			return false;
+		}
+
+		return $active;
 	}
 
 	/**
