@@ -3,8 +3,8 @@ Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispi
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 Requires at least: 3.1
-Tested up to: 5.0.1
-Stable tag: 2.2.2
+Tested up to: 5.1.0
+Stable tag: 2.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -137,6 +137,14 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.2.4 =
+* Updated ckeditor for the wysiwyg field
+* Fixed an issue with gutenberg paragraphs that loaded ckeditor toolbar in them
+
+= 2.2.3 =
+* Fixed issue with wysiwyg editor in single meta boxes that wasn't saving
+* Updated translation files
+
 = 2.2.2 =
 * Fixed width of labels in repeaters issue in WordPress 5.0
 
