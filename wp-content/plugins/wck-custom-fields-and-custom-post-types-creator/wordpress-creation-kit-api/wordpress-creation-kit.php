@@ -759,7 +759,9 @@ class Wordpress_Creation_Kit{
 		
 		// wysiwyg				
 		wp_register_script( 'wck-ckeditor', plugins_url( '/assets/js/ckeditor/ckeditor.js', __FILE__ ), array(), '1.0', true );
-		wp_enqueue_script( 'wck-ckeditor' );			
+		wp_enqueue_script( 'wck-ckeditor' );
+		if(!$wck_printed_scripts )
+		    wp_add_inline_script('wck-ckeditor', 'CKEDITOR.disableAutoInline = true;');//fixes issue with auto-initializing on gutenberg blocks
 		
 		//datepicker
 		if ( file_exists( WCK_PLUGIN_DIR. '/wordpress-creation-kit-api/fields/datepicker.php' ) ){
