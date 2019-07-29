@@ -21,8 +21,18 @@ class Mega_Menu_Font_Awesome {
 		add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_fontawesome_scss'), 10 );
 		add_filter( 'megamenu_icon_tabs', array( $this, 'font_awesome_selector'), 10, 5 );
 		add_action( 'megamenu_enqueue_public_scripts', array ( $this, 'enqueue_public_scripts'), 10 );
-
+        add_action( "megamenu_admin_scripts", array( $this, 'enqueue_admin_styles') );
+		add_action( "admin_print_scripts-nav-menus.php", array( $this, 'enqueue_admin_styles' ) );
 	}
+
+    /**
+     * Enqueue required CSS and JS for Mega Menu
+     *
+     */
+    public function enqueue_admin_styles( $hook ) {
+        wp_enqueue_style( 'megamenu-fontawesome4', plugins_url( 'css/font-awesome.min.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
+    }
+
 
 
 	/**
@@ -49,9 +59,13 @@ class Mega_Menu_Font_Awesome {
 	 * @since 1.0
 	 */
 	public function enqueue_public_scripts() {
+		$settings = get_option("megamenu_settings");
+
+        if ( is_array( $settings ) && isset( $settings['enqueue_fa_4'] ) && $settings['enqueue_fa_4'] == 'disabled' ) {
+        	return;
+        }
 
         wp_enqueue_style( 'megamenu-fontawesome', plugins_url( 'css/font-awesome.min.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
-
 	}
 
 
@@ -67,8 +81,13 @@ class Mega_Menu_Font_Awesome {
 	 * @return array
 	 */
 	public function font_awesome_selector( $tabs, $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) {
-
-        $html = "";
+		$settings = get_option("megamenu_settings");
+        
+        if ( is_array( $settings ) && isset( $settings['enqueue_fa_4'] ) && $settings['enqueue_fa_4'] == 'disabled' ) {
+        	$html = "<div class='notice notice-warning'>" . __("Font Awesome 4 has been dequeued under Mega Menu > General Settings.", "megamenupro") . "</div>";
+        } else {
+        	$html = "";
+        }
 
         foreach ( $this->icons() as $code => $class ) {
 
@@ -78,14 +97,14 @@ class Mega_Menu_Font_Awesome {
 
             $html .= "<div class='{$type}'>";
             $html .= "    <input class='radio' id='{$class}' type='radio' rel='{$code}' name='settings[icon]' value='{$class}' " . checked( $menu_item_meta['icon'], $class, false ) . " />";
-            $html .= "    <label rel='{$code}' for='{$class}'></label>";
+            $html .= "    <label rel='{$code}' for='{$class}' title='{$class}'></label>";
             $html .= "</div>";
 
         }
 
 		$tabs['fontawesome'] = array(
-			'title' => __("Font Awesome", "megamenupro"),
-			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("fa") ) === "fa",
+			'title' => __("Font Awesome 4", "megamenupro"),
+			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("fa-") ) === "fa-",
 			'content' => $html
 		);
 

@@ -71,8 +71,16 @@
 	    }
 	}
 
-	@each $item in $replacements_search {
+	@include mobile {
+		#{$menu}[data-effect-mobile^="slide_"] li.mega-menu-item a.mega-menu-link.mega-menu-logo {
+			padding-top: 10px;
+			padding-bottom: 10px;
+	        text-align: center;
+	        height: auto;
+	    }
+	}
 
+	@each $item in $replacements_search {
 		$id: nth($item, 1);
 		$search_height: nth($item, 2);
 		$search_text_color: nth($item, 3);

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2018-03-25 15:56-0700\n"
+"POT-Creation-Date: 2019-04-07 22:24-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@fairtradejudaica.org>\n"
@@ -178,9 +178,7 @@ msgstr ""
 msgid "Show Count Column"
 msgstr ""
 
-msgid ""
-"Check this option to display the Count column on Categories and Tags "
-"taxonomy edit screens."
+msgid "Check this option to display the Count column on taxonomy edit screens."
 msgstr ""
 
 msgid ""
@@ -215,8 +213,13 @@ msgid ""
 msgstr ""
 
 msgid ""
-"Check the \"<strong>Checked On Top</strong>\" box to moved checked terms to "
+"Check the \"<strong>Checked On Top</strong>\" box to move checked terms to "
 "the top of the checklist-style meta box."
+msgstr ""
+
+msgid ""
+"Check the \"<strong>Inline Add Term</strong>\" box to support adding terms "
+"in the Quick Edit and Bulk Edit areas."
 msgstr ""
 
 msgid ""
@@ -1345,10 +1348,13 @@ msgstr ""
 msgid "Last modified"
 msgstr ""
 
-msgid "more"
+msgid "+&nbsp;Add&nbsp;New&nbsp;Term"
 msgstr ""
 
-msgid "less"
+msgid "Add New"
+msgstr ""
+
+msgid "?&nbsp;Search"
 msgstr ""
 
 msgid "Add"
@@ -1608,6 +1614,21 @@ msgstr ""
 msgid "download argument(s) not set."
 msgstr ""
 
+msgid "no ZipArchive support."
+msgstr ""
+
+#, php-format
+msgid "The ZIP archive ( %1$s ) could not be created."
+msgstr ""
+
+#, php-format
+msgid "The file ( %1$s ) could not be added to the ZIP archive."
+msgstr ""
+
+#, php-format
+msgid "The ZIP archive ( %1$s ) could not be closed."
+msgstr ""
+
 msgid "You are not allowed to edit Attachment: "
 msgstr ""
 
@@ -1706,6 +1727,9 @@ msgstr ""
 
 #, php-format
 msgid "Add New %1$s"
+msgstr ""
+
+msgid "Remove term"
 msgstr ""
 
 msgid "Choose from the most used tags"
@@ -2059,6 +2083,9 @@ msgstr ""
 msgid "Checked On Top"
 msgstr ""
 
+msgid "Inline Add Term"
+msgstr ""
+
 msgid "List Filter"
 msgstr ""
 
@@ -2083,6 +2110,10 @@ msgstr ""
 
 #, php-format
 msgid "Checked On Top ignored; %1$s not supported."
+msgstr ""
+
+#, php-format
+msgid "Inline Add Term ignored; %1$s not supported."
 msgstr ""
 
 #, php-format
@@ -3378,26 +3409,6 @@ msgstr ""
 msgid "Delete General options and restore default settings"
 msgstr ""
 
-msgid "Support Our Work"
-msgstr ""
-
-msgid "Donate to FTJ"
-msgstr ""
-
-msgid "Donate"
-msgstr ""
-
-#, php-format
-msgid ""
-"This plugin was inspired by my work on the WordPress web site for our "
-"nonprofit, Fair Trade Judaica. If you find the Media Library Assistant "
-"plugin useful and would like to support a great cause, consider a %1$s to "
-"our work. Thank you!"
-msgstr ""
-
-msgid "tax-deductible donation"
-msgstr ""
-
 msgid "enhanced version of the WordPress [gallery] shortcode."
 msgstr ""
 
@@ -3607,6 +3618,12 @@ msgid "mla_debug query_vars"
 msgstr ""
 
 msgid "mla_debug post_count"
+msgstr ""
+
+msgid "mla_debug JOIN filter"
+msgstr ""
+
+msgid "mla_debug modified JOIN filter"
 msgstr ""
 
 msgid "mla_debug WHERE filter"

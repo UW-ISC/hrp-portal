@@ -27,6 +27,14 @@
 
             @if type-of($id) == number {
 
+                @include mobile {
+                    .mega-sub-menu li#mega-menu-item-#{$id}.mega-icon-top > a.mega-menu-link:before {
+                        width: 100%;
+                        min-width: $custom_icon_width_mobile;
+                        background-position-x: center;
+                    }
+                }
+
                 li#mega-menu-item-#{$id} {
 
                     @if $custom_icon_url != 'false' {

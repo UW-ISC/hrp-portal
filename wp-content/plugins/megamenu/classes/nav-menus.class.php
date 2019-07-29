@@ -31,7 +31,9 @@ class Mega_Menu_Nav_Menus {
             'icon_position' => 'left',
             'panel_columns' => 6, // total number of columns displayed in the panel
             'mega_menu_columns' => 1, // for sub menu items, how many columns to span in the panel,
-            'mega_menu_order' => 0
+            'mega_menu_order' => 0,
+            'collapse_children' => 'false',
+            'submenu_columns' => 1
         );
 
         return apply_filters( "megamenu_menu_item_defaults", $defaults );
@@ -454,7 +456,7 @@ class Mega_Menu_Nav_Menus {
             <tr>
                 <td><?php _e("Effect (Mobile)", "megamenu") ?></td>
                 <td>
-                    <select name='megamenu_meta[<?php echo $location ?>][effect_mobile]'>
+                    <select class='megamenu_effect_mobile' name='megamenu_meta[<?php echo $location ?>][effect_mobile]'>
                     <?php
 
                         $selected = isset( $settings[$location]['effect_mobile'] ) ? $settings[$location]['effect_mobile'] : 'disabled';
@@ -465,8 +467,16 @@ class Mega_Menu_Nav_Menus {
                                 'selected' => $selected == 'disabled',
                             ),
                             "slide" => array(
-                                'label' => __("Slide", "megamenu"),
+                                'label' => __("Slide Down", "megamenu"),
                                 'selected' => $selected == 'slide',
+                            ),
+                            "slide_left" => array(
+                                'label' => __("Slide Left (Off Canvas)", "megamenu"),
+                                'selected' => $selected == 'slide_left',
+                            ),
+                            "slide_right" => array(
+                                'label' => __("Slide Right (Off Canvas)", "megamenu"),
+                                'selected' => $selected == 'slide_right',
                             )
                         ), $selected );
 

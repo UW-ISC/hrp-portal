@@ -1,3 +1,24 @@
+= 1.9 =
+
+* Compatiblity with Max Mega Menu 2.7: Off canvas mobile menu when sticky menu and "Hide until scroll up" has been enabled
+* Compatiblity with Max Mega Menu 2.7: Tabbed sub menu height when "Collapse children" option has been enabled for sub menus within the tabs
+* Fix: Tabs border height when sub menu has top border
+* Fix: Style overrides (Font Weight) Do not apply "font-weight: normal" to :before icon
+* Fix: Sticky menu height when accordion sub menu is open and taller than the height of the window
+
+= 1.8 =
+
+* New: Add support for Font Awesome 5
+* New: Add option to dequeue Font Awesome and Genericons
+* Improvment: Add title attributes to icons in icon selector
+* Improvement: Use core version of CodeMirror
+* Fix: Tab focus on search replacement
+* Fix: Ensure custom icons are centrally positioned within sub menus on mobile
+* Fix: Open search toggle block on focus
+* Fix: Add width: auto to logo toggle block images
+* Fix: HTML replacement when Replacement HTML is exactly equal to the Menu Item Title
+* Change: Use 'wp_get_attachment_url' (instead of wp_upload_dir) to get custom icon URLs
+
 = 1.7.1 =
 
 * New: "Sticky on desktop" option added, making it possible to have a sticky menu on mobile only

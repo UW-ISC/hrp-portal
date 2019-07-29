@@ -307,7 +307,7 @@ class Mega_Menu_Toggle_Blocks {
              *    }
              *    return $attributes;
              * }
-             * add_filter('megamenu_toggle_block_attributes', 'remove_ids_from_toggle_blocks');
+             * add_filter('megamenu_toggle_block_attributes', 'remove_ids_from_toggle_blocks', 10, 6);
              *
              */
 
@@ -990,6 +990,9 @@ class Mega_Menu_Toggle_Blocks {
 
         $icons = array(
             'dash-f333' => 'dashicons-menu',
+            'dash-f228' => 'dashicons-menu-alt',
+            'dash-f329' => 'dashicons-menu-alt2',
+            'dash-f349' => 'dashicons-menu-alt3',
             'dash-f214' => 'dashicons-editor-justify',
             'dash-f158' => 'dashicons-no',
             'dash-f335' => 'dashicons-no-alt',

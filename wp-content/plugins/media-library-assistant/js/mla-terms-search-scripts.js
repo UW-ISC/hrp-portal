@@ -7,7 +7,7 @@
  *     mla.settings.useSpinnerClass
  */
 
-var jQuery, wpAjax,
+var jQuery, wpAjax, ajaxurl,
 	mla_terms_search_vars,
 	mlaTaxonomy = {
 		// Properties

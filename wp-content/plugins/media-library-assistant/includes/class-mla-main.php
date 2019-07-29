@@ -196,6 +196,20 @@ class MLA {
 			exit();
 		}
 
+		$bulk_action = '';
+		if ( isset( $_REQUEST['action'] ) && 'download-zip' == $_REQUEST['action']) {
+			$bulk_action = 'download-zip';
+		} elseif ( isset( $_REQUEST['action2'] ) && 'download-zip' == $_REQUEST['action2']) {
+			$bulk_action = 'download-zip';
+		}
+
+		if ( 'download-zip' == $bulk_action ) {
+			// Exits after redirect unless it returns an error
+			$_REQUEST['mla_zip_archive_error_message'] =  self::_process_zip_archive_download( $_REQUEST );
+			MLACore::mla_debug_add( __LINE__ . " MLA::_process_zip_archive_download message = " . var_export( $_REQUEST['mla_zip_archive_error_message'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			return;
+		}
+
 		// Process row-level actions from the Edit Media screen
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
 			if ( isset( $_REQUEST['mla-set-parent-ajax-nonce'] ) ) {
@@ -225,7 +239,7 @@ class MLA {
 						wp_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?post=' . $_REQUEST['mla_item_ID'] . '&action=edit&message=' . $message ), 302 );
 						exit;
 					case MLACore::MLA_ADMIN_SINGLE_MAP:
-						if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_CUSTOM_FIELD_MAPPING ) ) {
+						if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_IPTC_EXIF_MAPPING ) ) {
 							$item = get_post( $_REQUEST['mla_item_ID'] );
 							do_action( 'mla_begin_mapping', 'single_iptc_exif', $_REQUEST['mla_item_ID'] );
 							$updates = MLAOptions::mla_evaluate_iptc_exif_mapping( $item, 'iptc_exif_mapping' );
@@ -454,7 +468,8 @@ class MLA {
 			'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 			'useSpinnerClass' => false,
 			'ajax_action' => MLACore::JAVASCRIPT_INLINE_EDIT_SLUG,
-			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) 
+			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'deleteAcpBulkEdit' => false,
 		);
 
 		if ( version_compare( get_bloginfo( 'version' ), '4.2', '>=' ) ) {
@@ -465,6 +480,12 @@ class MLA {
 			$script_variables['quickTagsInit'] = array( 'post_content' => array( 'id' => 'post_content', 'buttons' => 'strong,em,link,block,del,ins,img,ul,ol,li,code,close', 'active' => true, ) );
 		}
 
+		if ( function_exists( 'ACP' ) && ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) ) {
+			if ( version_compare( ACP()->get_version(), '4.5.4', '<' ) ) {
+				$script_variables['deleteAcpBulkEdit'] = true;
+			}
+		}
+		
 		wp_localize_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, self::JAVASCRIPT_INLINE_EDIT_OBJECT, $script_variables );
 	}
 
@@ -483,6 +504,26 @@ class MLA {
 		global $submenu;
 
 		add_action( 'load-upload.php', 'MLA::mla_load_media_action' );
+
+		// Disable the MLA Download ZIP Example plugin, if necessary
+		if ( isset( $_REQUEST['page'] ) && 'mla-menu' === $_REQUEST['page'] ) {
+			$bulk_action = '';
+			if ( isset( $_REQUEST['action'] ) && 'download-zip' === $_REQUEST['action']) {
+				$bulk_action = 'download-zip';
+			} elseif ( isset( $_REQUEST['action2'] ) && 'download-zip' === $_REQUEST['action2']) {
+				$bulk_action = 'download-zip';
+			}
+	
+			if ( 'download-zip' === $bulk_action ) {
+				if ( is_plugin_active( 'mla-zip-archive-example/mla-zip-archive-example.php' ) ) {
+					deactivate_plugins( 'mla-zip-archive-example/mla-zip-archive-example.php', true );
+				}
+
+				if ( is_plugin_active( 'mla-zip-archive-example.php' ) ) {
+					deactivate_plugins( 'mla-zip-archive-example.php', true );
+				}
+			}
+		}
 
 		$page_title = MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_PAGE_TITLE );
 		if ( empty( $page_title ) ) {
@@ -829,6 +870,77 @@ class MLA {
 	}
 
 	/**
+	 * Process the 'download-zip' bulk action
+	 *
+	 * @since 2.79
+	 *
+ 	 * @param	array Form elements, e.g., from $_REQUEST
+	 *
+	 * @return	array success/failure message and NULL content
+	 */
+	private static function _process_zip_archive_download( $request ) {
+		// Make sure we have ZIP support
+		if ( !class_exists( 'ZipArchive' ) ) {
+			return __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'no ZipArchive support.', 'media-library-assistant' );
+		}
+
+		// Create unique local names in case the same file name appears in multiple year/month/ directories.
+		$file_names = array();
+		foreach ( $request['cb_attachment'] as $index => $post_id ) {
+			$file_name = get_attached_file( $post_id );
+			$path_info = pathinfo( $file_name  );
+			$local_name = $path_info['basename'];
+			$suffix = 0;
+			while( array_key_exists( $local_name, $file_names ) ) {
+				$suffix++;
+				$local_name = $path_info['filename'] . $suffix . '.' . $path_info['extension'];
+			}
+
+			$file_names[ $local_name ] = $file_name;
+		}
+
+		// Create the ZIP archive
+		$upload_dir = wp_upload_dir();
+		$prefix = ( defined( MLA_OPTION_PREFIX ) ) ? MLA_OPTION_PREFIX : 'mla_';
+		$date = date("Ymd_B");
+		$archive_name = $upload_dir['basedir'] . '/' . "{$prefix}_options_{$date}.zip";
+
+		// Clean up an obsolete file
+		if ( file_exists( $archive_name ) ) {
+			@unlink( $archive_name );
+		}
+
+		$zip = new ZipArchive();
+		if ( true !== $zip->open( $archive_name, ZIPARCHIVE::CREATE ) ) {
+			/* translators: 1: ZIP archive file name */
+			$text = sprintf( __( 'The ZIP archive ( %1$s ) could not be created.', 'media-library-assistant' ), $archive_name );
+			return array(
+				'message' => __( 'ERROR', 'media-library-assistant' ) . ': ' . $text,
+				'body' => '' 
+			);
+		}
+
+		foreach( $file_names as $local_name => $file_name ) {
+			if ( true !== $zip->addFile( $file_name, $local_name ) ) {
+				/* translators: 1: ZIP archive file name */
+				$text = sprintf( __( 'The file ( %1$s ) could not be added to the ZIP archive.', 'media-library-assistant' ), $file_name );
+				return __( 'ERROR', 'media-library-assistant' ) . ': ' . $text;
+			}
+		}
+
+		if ( true !== $zip->close() ) {
+			/* translators: 1: ZIP archive file name */
+			$text = sprintf( __( 'The ZIP archive ( %1$s ) could not be closed.', 'media-library-assistant' ), $archive_name );
+			return __( 'ERROR', 'media-library-assistant' ) . ': ' . $text;
+		}
+
+		$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $archive_name ), 'mla_download_type' => 'application/zip', 'mla_download_disposition' => 'delete' );
+
+		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
+		exit;
+	}
+
+	/**
 	 * Process bulk edit area fields, which may contain a Content Template
 	 *
 	 * @since 1.80
@@ -1142,6 +1254,12 @@ class MLA {
 		$page_content = array( 'message' => '', 'body' => '', 'unchanged' => 0, 'success' => 0, 'failure' => 0, 'item_results' => array() );
 		$custom_field_map = MLACore::mla_custom_field_support( 'bulk_edit' );
 
+		// Check for failed ZIP Archive download request
+		if ( !empty( $_REQUEST['mla_zip_archive_error_message'] ) ) {
+			$page_content['message'] = $_REQUEST['mla_zip_archive_error_message'];
+			return $page_content;
+		}
+		
 		/*
 		 * do_cleanup will remove the bulk edit elements from the $_REQUEST super array.
 		 * It is passed in the $request so it can be filtered.
@@ -1191,6 +1309,7 @@ class MLA {
 			} elseif ( !empty( $request['bulk_map'] ) ) {
 				do_action( 'mla_begin_mapping', 'bulk_iptc_exif', NULL );
 			}
+
 
 			foreach ( $request['cb_attachment'] as $index => $post_id ) {
 				self::$bulk_edit_data_source['cb_index']++;

@@ -91,48 +91,13 @@ class Mega_Menu_Menu_Item_Manager {
             // only check the checkbox values if the general settings form was submitted
             if ( isset( $_POST['tab'] ) && $_POST['tab'] == 'general_settings' ) {
 
-                // Hide Text checkbox is unchecked
-                if ( ! isset( $submitted_settings['hide_text'] ) ) {
+                $checkboxes = array("hide_text", "disable_link", "hide_arrow", "hide_on_mobile", "hide_on_desktop", "hide_sub_menu_on_mobile", "collapse_children");
 
-                    $submitted_settings['hide_text'] = 'false';
-
+                foreach ( $checkboxes as $checkbox ) {
+                    if ( !isset( $submitted_settings[ $checkbox ] ) ) {
+                        $submitted_settings[ $checkbox ] = 'false';
+                    }
                 }
-
-                // Disable Link checkbox is unchecked
-                if ( ! isset( $submitted_settings['disable_link'] ) ) {
-
-                    $submitted_settings['disable_link'] = 'false';
-
-                }
-
-                // Disable arrow checkbox is unchecked
-                if ( ! isset ( $submitted_settings['hide_arrow'] ) ) {
-
-                    $submitted_settings['hide_arrow'] = 'false';
-
-                }
-
-                // Hide on mobile checkbox is unchecked
-                if ( ! isset ( $submitted_settings['hide_on_mobile'] ) ) {
-
-                    $submitted_settings['hide_on_mobile'] = 'false';
-
-                }
-
-                // Hide on mobile checkbox is unchecked
-                if ( ! isset ( $submitted_settings['hide_sub_menu_on_mobile'] ) ) {
-
-                    $submitted_settings['hide_sub_menu_on_mobile'] = 'false';
-
-                }
-
-                // Hide on desktop checkbox is unchecked
-                if ( ! isset ( $submitted_settings['hide_on_desktop'] ) ) {
-
-                    $submitted_settings['hide_on_desktop'] = 'false';
-
-                }
-
             }
 
             $submitted_settings = apply_filters( "megamenu_menu_item_submitted_settings", $submitted_settings, $menu_item_id );
@@ -706,6 +671,31 @@ class Mega_Menu_Menu_Item_Manager {
         $return .= '            </td>';
         $return .= '        </tr>';
 
+        if ( $menu_item_depth > 0 ) {
+            $css_version = get_transient("megamenu_css_version");
+            $notice = "";
+
+            if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
+                $link = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __("Mega Menu") . " > " . __("Tools") . "</a>";
+                $notice = "<div class='notice notice-success'><p>";
+                $notice .= sprintf( __("Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).", "megamenu") , $link);
+                $notice .= "</p></div>";
+                $notice .= "</div><br />";
+            }
+
+
+            $return .= '        <tr>';
+            $return .= '            <td class="mega-name">';
+            $return .=                  __("Collapse sub menu", "megamenu");
+            $return .= '            </td>';
+            $return .= '            <td class="mega-value">';
+            $return .= $notice;
+            $return .= '                <input type="checkbox" name="settings[collapse_children]" value="true" ' . checked( $menu_item_meta['collapse_children'], 'true', false ) . ' />';
+            $return .= '                <em>' . __("Only applies to menu items displayed within mega sub menus.", "megamenu") . '</em>';
+            $return .= '            </td>';
+            $return .= '        </tr>';
+        }
+
         $return .= apply_filters("megamenu_after_menu_item_submenu_settings", "",  $tabs, $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 
         $return .= '    </table>';
@@ -1064,7 +1054,38 @@ class Mega_Menu_Menu_Item_Manager {
             'dash-f328' => 'dashicons-smiley',
             'dash-f529' => 'dashicons-thumbs-up',
             'dash-f542' => 'dashicons-thumbs-down',
-            'dash-f538' => 'dashicons-layout'
+            'dash-f538' => 'dashicons-layout',
+            'dash-f452' => 'dashicons-buddicons-activity',
+            'dash-f477' => 'dashicons-buddicons-bbpress-logo',
+            'dash-f448' => 'dashicons-buddicons-buddypress-logo',
+            'dash-f453' => 'dashicons-buddicons-community',
+            'dash-f449' => 'dashicons-buddicons-forums',
+            'dash-f454' => 'dashicons-buddicons-friends',
+            'dash-f456' => 'dashicons-buddicons-groups',
+            'dash-f457' => 'dashicons-buddicons-pm',
+            'dash-f451' => 'dashicons-buddicons-replies',
+            'dash-f450' => 'dashicons-buddicons-topics',
+            'dash-f455' => 'dashicons-buddicons-tracking',
+            'dash-f12c' => 'dashicons-editor-ol-rtl',
+            'dash-f10c' => 'dashicons-editor-ltr',
+            'dash-f10d' => 'dashicons-tide',
+            'dash-f124' => 'dashicons-rest-api',
+            'dash-f13a' => 'dashicons-code-standards',
+            'dash-f11d' => 'dashicons-admin-site-alt',
+            'dash-f11e' => 'dashicons-admin-site-alt2',
+            'dash-f11f' => 'dashicons-admin-site-alt3',
+            'dash-f228' => 'dashicons-menu-alt',
+            'dash-f329' => 'dashicons-menu-alt2',
+            'dash-f349' => 'dashicons-menu-alt3',
+            'dash-f12d' => 'dashicons-instagram',
+            'dash-f12f' => 'dashicons-businesswoman',
+            'dash-f12e' => 'dashicons-businessperson',
+            'dash-f467' => 'dashicons-email-alt2',
+            'dash-f12a' => 'dashicons-yes-alt',
+            'dash-f129' => 'dashicons-camera-alt',
+            'dash-f485' => 'dashicons-plugins-checked',
+            'dash-f113' => 'dashicons-update-alt',
+            'dash-f121' => 'dashicons-text-page',
         );
 
         $icons = apply_filters( "megamenu_dashicons", $icons );

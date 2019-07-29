@@ -6,7 +6,7 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 2.78
+ * @version 2.79
  */
 
 /*
@@ -16,7 +16,7 @@ Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] 
 Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.78
+Version: 2.79
 Author URI: http://davidlingren.com/
 
 Copyright 2011-2019 David Lingren
@@ -38,9 +38,7 @@ Copyright 2011-2019 David Lingren
 defined( 'ABSPATH' ) or die();
 //error_log( __LINE__ . ' MEMORY index.php ' . number_format( memory_get_peak_usage( true ) ), 0);
 
-/*
- * Translation strings for the plugin data in the comment block above; MUST MATCH
- */
+// Translation strings for the plugin data in the comment block above; MUST MATCH
 if ( false ) {
 	/* translators: Description of the plugin/theme */
 	__ ( 'Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.', 'media-library-assistant' );
@@ -161,9 +159,7 @@ $mla_name_conflict_candidates =
 		//'MLA_BACKUP_DIR' => 'constant'
 	);
 
-/*
- * Check for conflicting names, i.e., already defined by some other plugin or theme
- */
+// Check for conflicting names, i.e., already defined by some other plugin or theme
 foreach ( $mla_name_conflict_candidates as $value => $type ) {
 	switch ($type) {
 		case 'class':
@@ -195,9 +191,7 @@ function mla_name_conflict_reporting_action () {
 	echo '<p>You must resolve these conflicts before this plugin can safely load.</p></div>'."\r\n";
 }
 
-/*
- * Load the plugin or display conflict message(s)
- */
+// Load the plugin or display conflict message(s)
 if ( empty( $mla_name_conflict_error_messages ) ) {
 	require_once('includes/mla-plugin-loader.php');
 
