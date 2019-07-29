@@ -239,9 +239,7 @@ class MLAModal_Ajax {
 						$use_checklist =  MLACore::mla_taxonomy_support( $key, 'flat-checklist' );
 					}
 
-					/*
-					 * Make sure the appropriate MMMW Enhancement option has been checked
-					 */
+					// Make sure the appropriate MMMW Enhancement option has been checked
 					if ( $use_checklist ) {
 						if ( 'checked' !== MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) ) {
 							continue;
@@ -252,9 +250,7 @@ class MLAModal_Ajax {
 						}
 					}
 
-					/*
-					 * Remove "Media Categories" meta box, if present.
-					 */
+					// Remove "Media Categories" meta box, if present.
 					if ( isset( $form_fields[ $key . '_metabox' ] ) ) {
 						unset( $form_fields[ $key . '_metabox' ] );
 					}
@@ -342,9 +338,12 @@ class MLAModal_Ajax {
 			wp_send_json_success( $results );
 		}
 
-		/*
-		 * Match all supported taxonomies against the requested list
-		 */
+		// Flat taxonomy handling is WP version-specific
+		$wp_version = get_bloginfo('version');
+		$generate_tag_buttons = version_compare( $wp_version, '4.6.99', '>' );
+		$generate_tag_ul = version_compare( $wp_version, '4.8.99', '>' );
+
+		// Match all supported taxonomies against the requested list
 		foreach ( get_taxonomies( array ( 'show_ui' => true ), 'objects' ) as $key => $value ) {
 			if ( MLACore::mla_taxonomy_support( $key ) ) {
 				if ( is_integer( $index = array_search( $key, $requested ) ) ) {
@@ -380,9 +379,7 @@ class MLAModal_Ajax {
 						sort( $list );
 						$list = join( ',', $list );
 
-						/*
-						 * Simulate the 'add_meta_boxes' callback
-						 */
+						// Simulate the 'add_meta_boxes' callback
 						$box = array (
 							'id' => $key . 'div',
 							'title' => $label,
@@ -453,13 +450,41 @@ class MLAModal_Ajax {
 						$row .= "\t\t</div>\n"; // ajaxtag
 						$row .= "\t\t<p class='howto'>Separate tags with commas</p>\n";
 						$row .= "\t\t</div>\n"; // jaxtag
-						$row .= "\t\t<div class='tagchecklist'>\n";
-
-						foreach ( $list as $index => $term ) {
-							$row .= "\t\t<span><a class='ntdelbutton' id='post_tag-check-num-{$index}'>X</a>&nbsp;{$term}</span>\n";
+						
+						// initiate tagchecklist
+						if ( $generate_tag_ul ) {
+							$row .= "\t\t<ul class='tagchecklist' role='list'>\n";
+						} else {
+							$row .= "\t\t<div class='tagchecklist'>\n";
 						}
 
-						$row .= "\t\t</div>\n"; // tagchecklist
+						foreach ( $list as $index => $term ) {
+							if ( $generate_tag_buttons ) {
+								if ( $generate_tag_ul ) {
+									$row .= "\t\t<li>";
+								} else {
+									$row .= "\t\t<span>";
+								}
+
+								$row .= "<button class='ntdelbutton' id='post_tag-check-num-{$index}' type='button'><span class='remove-tag-icon' aria-hidden='true'></span><span class='screen-reader-text'>" . __( 'Remove term', 'media-library-assistant' ) . ": {$term}</span></button>&nbsp;{$term}";
+
+								if ( $generate_tag_ul ) {
+									$row .= "</li>\n";
+								} else {
+									$row .= "</span>\n";
+								}
+							} else {
+								$row .= "\t\t<span><a class='ntdelbutton' id='post_tag-check-num-{$index}'>X</a>&nbsp;{$term}</span>\n";
+							}
+						}
+						
+						// terminate tagchecklist
+						if ( $generate_tag_ul ) {
+							$row .= "\t\t</ul>\n";
+						} else {
+							$row .= "\t\t</div>\n";
+						}
+
 						$row .= "\t\t</div>\n"; // tagsdiv
 						$row .= "\t\t<p><a class='tagcloud-link' id='mla-link-{$key}' href='#titlediv'>" . __( 'Choose from the most used tags', 'media-library-assistant' ) . "</a></p>\n";
 						$row .= "\t\t</div>\n"; // mla-taxonomy-field

@@ -23,6 +23,15 @@ class MLAModal {
 	const JAVASCRIPT_MEDIA_MODAL_STYLES = 'mla-media-modal-style';
 
 	/**
+	 * Slug for enqueueing JavaScript - Define ajaxurl if required
+	 *
+	 * @since 2.79
+	 *
+	 * @var	string
+	 */
+	const JAVASCRIPT_DEFINE_AJAXURL_SLUG = 'mla-define-ajaxurl-scripts';
+
+	/**
 	 * Slug for localizing and enqueueing JavaScript - Add Media and related dialogs
 	 *
 	 * @since 1.20
@@ -102,7 +111,7 @@ class MLAModal {
 		if ( is_array( $library_months_with_files ) ) {
 			return $library_months_with_files;
 		}
-		
+
 		$library_months_with_files = $wpdb->get_results( $wpdb->prepare( "
 			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
 			FROM $wpdb->posts
@@ -217,7 +226,6 @@ class MLAModal {
 				'searchConnector' => NULL,
 				'searchFields' => NULL,
 				'searchValue' => NULL,
-				//'termsSearch' => NULL,
 				'searchClicks' => 0,
 			) ),			
 			'allMimeTypes' => array(),
@@ -229,6 +237,9 @@ class MLAModal {
 			'termsCustom' => false,
 			'termsText' => array(),
 			'termsValue' => array(),
+			'generateTagButtons' => false,
+			'generateTagUl' => false,
+			'removeTerm' => '',
 			);
 
 	/**
@@ -243,9 +254,7 @@ class MLAModal {
 	 * @return	array	updated $settings array
 	 */
 	public static function mla_media_view_settings_filter( $settings, $post ) {
-		/*
-		 * If we know what screen we're on we can test our enabling options
-		 */
+		// If we know what screen we're on we can test our enabling options
 		self::$mla_media_modal_settings['screen'] = 'modal';
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
@@ -262,9 +271,7 @@ class MLAModal {
 		self::$mla_media_modal_settings['allMimeTypes']['detached'] = $default_types['detached']['plural'];
 		self::$mla_media_modal_settings['allMimeTypes']['attached'] = $default_types['attached']['plural'];
 
-		/*
-		 * Trash items are allowed in the Media/Library Grid view
-		 */
+		// Trash items are allowed in the Media/Library Grid view
 		if ( EMPTY_TRASH_DAYS && MEDIA_TRASH ) {
 			self::$mla_media_modal_settings['allMimeTypes']['trash'] = $default_types['trash']['plural'];
 		}
@@ -283,6 +290,15 @@ class MLAModal {
 			self::$mla_media_modal_settings['termsIndent'] = '-';
 		}
 
+		if ( version_compare( $current_version, '4.6.99', '>' ) ) {
+			self::$mla_media_modal_settings['generateTagButtons'] = true;
+			self::$mla_media_modal_settings['removeTerm'] = __( 'Remove term', 'media-library-assistant' );
+		}
+		
+		if ( version_compare( $current_version, '4.8.99', '>' ) ) {
+			self::$mla_media_modal_settings['generateTagUl'] = true;
+		}
+		
 		self::$mla_media_modal_settings['enableMediaGrid'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) );
 		self::$mla_media_modal_settings['enableMediaModal'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) );
 		self::$mla_media_modal_settings['enableDetailsCategory'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_CATEGORY_METABOX ) );
@@ -299,9 +315,7 @@ class MLAModal {
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('term-search');
 		self::$mla_media_modal_settings['enableTermsSearch'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) && ( ! empty( $supported_taxonomies ) );
 
-		/*
-		 * Compile a list of the enhanced taxonomies
-		 */
+		// Compile a list of the enhanced taxonomies
 		self::$mla_media_modal_settings['enhancedTaxonomies'] = array();
 		foreach ( get_taxonomies( array ( 'show_ui' => true ), 'objects' ) as $key => $value ) {
 			if ( MLACore::mla_taxonomy_support( $key ) ) {
@@ -324,9 +338,7 @@ class MLAModal {
 			} // taxonomy_support
 		} // each taxonomy
 
-		/*
-		 * Set and filter the initial values for toolbar controls
-		 */
+		// Set and filter the initial values for toolbar controls
 		$search_defaults = MLACore::mla_get_option( MLACoreOptions::MLA_SEARCH_MEDIA_FILTER_DEFAULTS );
 		$initial_values = array(
 			'filterMime' => 'all',
@@ -381,6 +393,7 @@ class MLAModal {
 	 */
 	public static function mla_media_view_strings_filter( $strings, $post ) {
 		$mla_strings = array(
+			'ajaxurl' => admin_url( 'admin-ajax.php', 'relative' ),
 			'searchBoxPlaceholder' => __( 'Search Box', 'media-library-assistant' ),
 			'loadingText' => __( 'Loading...', 'media-library-assistant' ),
 			'searchBoxControlsStyle' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_SEARCHBOX_CONTROLS ) ) ? 'display: inline;' : 'display: none;',
@@ -401,9 +414,7 @@ class MLAModal {
 	public static function mla_wp_enqueue_media_action( ) {
 		global $wp_locale;
 
-		/*
-		 * If we know what screen we're on we can test our enabling options
-		 */
+		// If we know what screen we're on we can test our enabling options
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 
@@ -428,8 +439,16 @@ class MLAModal {
 
 		wp_enqueue_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES );
 
-		wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::CURRENT_MLA_VERSION, false );
+		// Make sure ajaxurl is defined before loading wp-lists and suggest
+		wp_enqueue_script( self::JAVASCRIPT_DEFINE_AJAXURL_SLUG, MLA_PLUGIN_URL . "js/mla-define-ajaxurl-scripts{$suffix}.js", array(), MLACore::CURRENT_MLA_VERSION, false );
 
+		// Gutenberg Block Editor won't tolerate loading 'wp-lists' in the header section; load in footer section
+		if ( ! function_exists( 'use_block_editor_for_post_type' ) || isset( $_GET['classic-editor'] ) ) {
+			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::CURRENT_MLA_VERSION, false );
+		} else {
+			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::CURRENT_MLA_VERSION, true );
+		}
+		
 		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) {
 			MLAModal::mla_add_terms_search_scripts();
 		}
@@ -444,9 +463,7 @@ class MLAModal {
 	 * @return	void	echoes HTML script tags for the templates
 	 */
 	public static function mla_print_media_templates_action( ) {
-		/*
-		 * If we know what screen we're on we can test our enabling options
-		 */
+		// If we know what screen we're on we can test our enabling options
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
 

@@ -135,6 +135,7 @@ final class Mega_Menu_Style_Manager {
             'panel_border_radius_bottom_right'          => '0px',
             'panel_header_color'                        => '#555',
             'panel_header_text_transform'               => 'uppercase',
+            'panel_header_text_align'                   => 'left',
             'panel_header_font'                         => 'inherit',
             'panel_header_font_size'                    => '16px',
             'panel_header_font_weight'                  => 'bold',
@@ -147,7 +148,8 @@ final class Mega_Menu_Style_Manager {
             'panel_header_margin_right'                 => '0px',
             'panel_header_margin_bottom'                => '0px',
             'panel_header_margin_left'                  => '0px',
-            'panel_header_border_color'                 => 'panel_header_color',
+            'panel_header_border_color'                 => 'rgba(0,0,0,0)',
+            'panel_header_border_color_hover'           => 'rgba(0,0,0,0)',
             'panel_header_border_left'                  => '0px',
             'panel_header_border_right'                 => '0px',
             'panel_header_border_top'                   => '0px',
@@ -166,6 +168,7 @@ final class Mega_Menu_Style_Manager {
             'panel_second_level_font_color'             => 'panel_header_color',
             'panel_second_level_font_color_hover'       => 'panel_header_color',
             'panel_second_level_text_transform'         => 'panel_header_text_transform',
+            'panel_second_level_text_align'             => 'left',
             'panel_second_level_font'                   => 'panel_header_font',
             'panel_second_level_font_size'              => 'panel_header_font_size',
             'panel_second_level_font_weight'            => 'panel_header_font_weight',
@@ -182,7 +185,8 @@ final class Mega_Menu_Style_Manager {
             'panel_second_level_margin_right'           => '0px',
             'panel_second_level_margin_top'             => '0px',
             'panel_second_level_margin_bottom'          => '0px',
-            'panel_second_level_border_color'           => 'panel_header_color',
+            'panel_second_level_border_color'           => 'rgba(0,0,0,0)',
+            'panel_second_level_border_color_hover'     => 'rgba(0,0,0,0)',
             'panel_second_level_border_left'            => '0px',
             'panel_second_level_border_right'           => '0px',
             'panel_second_level_border_top'             => '0px',
@@ -190,6 +194,7 @@ final class Mega_Menu_Style_Manager {
             'panel_third_level_font_color'              => 'panel_font_color',
             'panel_third_level_font_color_hover'        => 'panel_font_color',
             'panel_third_level_text_transform'          => 'none',
+            'panel_third_level_text_align'              => 'left',
             'panel_third_level_font'                    => 'panel_font_family',
             'panel_third_level_font_size'               => 'panel_font_size',
             'panel_third_level_font_weight'             => 'normal',
@@ -202,6 +207,16 @@ final class Mega_Menu_Style_Manager {
             'panel_third_level_padding_right'           => '0px',
             'panel_third_level_padding_top'             => '0px',
             'panel_third_level_padding_bottom'          => '0px',
+            'panel_third_level_margin_left'             => '0px',
+            'panel_third_level_margin_right'            => '0px',
+            'panel_third_level_margin_top'              => '0px',
+            'panel_third_level_margin_bottom'           => '0px',
+            'panel_third_level_border_color'            => 'rgba(0,0,0,0)',
+            'panel_third_level_border_color_hover'      => 'rgba(0,0,0,0)',
+            'panel_third_level_border_left'             => '0px',
+            'panel_third_level_border_right'            => '0px',
+            'panel_third_level_border_top'              => '0px',
+            'panel_third_level_border_bottom'           => '0px',
             'flyout_width'                              => '250px',
             'flyout_menu_background_from'               => '#f1f1f1',
             'flyout_menu_background_to'                 => '#f1f1f1',
@@ -250,11 +265,19 @@ final class Mega_Menu_Style_Manager {
             'shadow_color'                              => 'rgba(0, 0, 0, 0.1)',
             'transitions'                               => 'off',
             'resets'                                    => 'off',
-            'mobile_columns'                            => '2',
+            'mobile_columns'                            => '1',
             'toggle_background_from'                    => 'container_background_from',
             'toggle_background_to'                      => 'container_background_to',
             'toggle_font_color'                         => 'rgb(221, 221, 221)', // deprecated
             'toggle_bar_height'                         => '40px',
+            'toggle_bar_border_radius_top_left'         => '2px',
+            'toggle_bar_border_radius_top_right'        => '2px',
+            'toggle_bar_border_radius_bottom_left'      => '2px',
+            'toggle_bar_border_radius_bottom_right'     => '2px',
+            'mobile_menu_padding_left'                  => '0px',
+            'mobile_menu_padding_right'                 => '0px',
+            'mobile_menu_padding_top'                   => '0px',
+            'mobile_menu_padding_bottom'                => '0px',
             'mobile_menu_item_height'                   => '40px',
             'mobile_menu_overlay'                       => 'off',
             'mobile_menu_force_width'                   => 'off',
@@ -266,7 +289,8 @@ final class Mega_Menu_Style_Manager {
             'mobile_menu_item_link_text_align'          => 'menu_item_link_text_align',
             'mobile_menu_item_link_color_hover'         => 'menu_item_link_color_hover',
             'mobile_menu_item_background_hover_from'    => 'menu_item_background_hover_from',
-            'mobile_menu_item_background_hover_to'      => 'menu_item_background_hover_to',            
+            'mobile_menu_item_background_hover_to'      => 'menu_item_background_hover_to',
+            'mobile_menu_off_canvas_width'              => '300px',
             'disable_mobile_toggle'                     => 'off',
             'custom_css'                                => '/** Push menu onto new line **/ 
 #{$wrap} { 
@@ -473,7 +497,7 @@ final class Mega_Menu_Style_Manager {
                 }
             }
 
-            $css = "/** " . date('l jS F Y H:i:s e') . " ({$scss_location}) **/\n/** THIS FILE IS AUTOMATICALLY GENERATED - DO NOT MAKE MANUAL EDITS! **/\n/** Custom CSS should be added to Mega Menu > Menu Themes > Custom Styling **/\n\n.mega-menu-last-modified-" . time() . " {\n\tcontent: '" . date('l jS F Y H:i:s e') . "';\n}\n\n" . $css;
+            $css = "/** " . date('l jS F Y H:i:s e') . " ({$scss_location}) **/\n/** THIS FILE IS AUTOMATICALLY GENERATED - DO NOT MAKE MANUAL EDITS! **/\n/** Custom CSS should be added to Mega Menu > Menu Themes > Custom Styling **/\n\n.mega-menu-last-modified-" . time() . " { content: '" . date('l jS F Y H:i:s e') . "'; }\n\n" . $css;
 
             $css = apply_filters( "megamenu_compiled_css", $css );
 
@@ -678,6 +702,13 @@ final class Mega_Menu_Style_Manager {
         $vars['location'] = "'$sanitized_location'";
         $vars['menu_id'] = "'$menu_id'";
         $vars['elementor_pro_active'] = 'false';
+        $vars['arrow_font'] = 'dashicons';
+        $vars['arrow_font_weight'] = 'normal';
+
+        $current_theme = wp_get_theme();
+        $theme_id = $current_theme->template;
+
+        $vars['wp_theme'] = $theme_id;
 
         if ( ! function_exists( 'is_plugin_active' )) {
             include_once( ABSPATH . 'wp-admin/includes/plugin.php' );
@@ -689,13 +720,30 @@ final class Mega_Menu_Style_Manager {
 
         $settings = $this->get_menu_settings_for_location( $location );
 
-        if ( isset( $settings['effect_speed'] ) && intval( $settings['effect_speed'] ) > 0 ) {
-            $effect_speed = intval( $settings['effect_speed'] ) . 'ms';
+        if ( isset( $settings['effect_speed'] ) && absint( $settings['effect_speed'] ) > 0 ) {
+            $effect_speed = absint( $settings['effect_speed'] ) . 'ms';
         } else {
             $effect_speed = '200ms';
         }
 
         $vars['effect_speed'] = $effect_speed;
+
+        if ( isset( $settings['effect_speed_mobile'] ) && absint( $settings['effect_speed_mobile'] ) > 0 ) {
+            $effect_speed_mobile = absint( $settings['effect_speed_mobile'] ) . 'ms';
+        } else {
+            $effect_speed_mobile = '200ms';
+        }
+
+        $vars['effect_speed_mobile'] = $effect_speed_mobile;
+
+        if ( isset( $settings['effect_mobile'] ) ) {
+            $effect_mobile = $settings['effect_mobile'];
+        } else {
+            $effect_mobile = 'disabled';
+        }
+
+        $vars['effect_mobile'] = $effect_mobile;
+
 
         foreach( $theme as $name => $value ) {
 

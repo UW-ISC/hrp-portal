@@ -1,11 +1,11 @@
-=== Media Library Assistant ===
+﻿=== Media Library Assistant ===
 Contributors: dglingren
 Donate link: http://davidlingren.com/#two
 Tags: attachments, gallery, images, media, media library, tags, categories, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
 Requires at least: 3.5.0
-Tested up to: 5.0.3
+Tested up to: 5.1.1
 Requires PHP: 5.3
-Stable tag: 2.78
+Stable tag: 2.79
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,32 +181,27 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
-= 2.78 =
-* New: For the Media/Assistant "Search Media" and "Terms Search" functions, keywords and terms can be excluded from the results by enclosing them in "/" delimiters, e.g., "/not/ happy" will return items containing "happy" after excluding items containing "not". This new feature also works in the Media/Library "grid" view and in the "Add media" popup window.
-* Fix: Eliminate fatal errors supporting Admin Columns Pro version 4.5.x
-* Fix: When Polylang is active, eliminate PHP error messages from MLA_Polylang_Shortcodes::mla_get_terms_clauses.
-* Fix: For `[mla_gallery]` eliminate PHP warning messages for some invalid parameter situations. 
-* Fix: Simplify MLA_Ajax logging and remove PHP Notice regarding missing "action" value.
-* Fix: For "MLA USP Novo-Map Example" plugin, rewrite the "Introduction" section in the Documentation tab.
+= 2.79 =
+* New: For the `[mla_tag_cloud]` shortcode, a new `no_count=internal` parameter setting substitutes the WordPress-maintained "count" value for the explicitly-computed "attachments per term" value. This can significantly improve shortcode performance.
+* New: For the `[mla_gallery]` "date" and "timestamp" option/format codes, a second argument containing "i18n" will localize the returned value based on the site locale. A second argument containing "age" will return the difference between the source value and the current date/time. See the Documentation tab.
+* New: For all of the keyword search functions,  You can also exclude items/terms by prepending a word or quoted phrase with a hyphen, e.g., "pillow -sofa" will select items/terms containing "pillow" but not "sofa".
+* New: For the `[mla_gallery]` "Keyword(s) Search" and "Taxonomy term keyword(s) search" functions, keywords and terms can be excluded from the results by enclosing them in "/" delimiters, e.g., "/not/ happy" will return items containing "happy" after excluding items containing "not".
+* New: For `[mla_gallery]`, when `mla_alt_shortcode=mla_term_list`, parameters such as `mla_link_href` are passed through to be used by `[mla_term_list]`.
+* New: For the `[mla_gallery]` "Support for Other Gallery-generating Shortcodes", a new <code>mla_alt_ids_template</code> parameter lets you specify a Content Template for the entire parameter value passed to the alternate shortcode.
+* New: For the Media/Assistant admin submenu, a new "Download" Bulk Action has been added. You can select one or more items and use the new action to download a ZIP archive containing the items through your browser. This new feature replaces the "MLA Download ZIP Example" plugin, which is disabled if present.
+* New: The Settings/Media Library Assistant General tab "Show Count Column" option now applies to all taxonomy edit screens, not just Categories and Tags.
+* New: For the "MLA UI Elements Example" plugin, simple taxonomy queries can now be combined with the `add_filters_to` queries.
+* Fix: For the "Media/Edit Media" screen, IPTC/EXIF metadata mapping now works when the "Enable custom field mapping" option is disabled.
+* Fix: For the Media Manager Modal (Popup) Window, formatting and handling of the "Remove term" elements for flat taxonomies has been corrected.
+* Fix: For `[mla_gallery]`, the `link_url` item-level substitution parameter now reflects the `mla_link_href` parameter value.
+* Fix: For the new Gutenberg/Block Editor, load Media Modal scripts in footer section to avoid wp-lists.js conflicts such as failure to update custom fields in Posts/Edit Post and Page/Edit Page.
+* Fix: For the Media/Assistant admin submenu, suppresses the Admin Columns Pro version 4.5.x Bulk Edit feature.
+* Fix: Eliminate "Uncaught ReferenceError: ajaxurl is not defined" error for page builders such as Elementor.
 
-= 2.77 =
-* Fix: Preserve current term assignments for checklist-style taxonomies when opening the Media/Assistant Quick Edit area. This defect was introduced in v2.76.
-
-= 2.76 =
-* New: For the Media/Assistant Quick Edit and Bulk Edit areas, "checklist-style" taxonomies such as Att. Categories now have an <strong>"+ Add New Term"</strong> feature that lets you add a new term to the taxonomy without leaving the area. <strong>You must enable the new feature</strong> by checking the "Inline Add Term" box for each taxonomy in the Settings/Media Library Assistant General tab, "Taxonomy Support" section. 
-* New: For the Media/Assistant Quick Edit and Bulk Edit areas, "checklist-style" taxonomies such as Att. Categories now have a <strong>"? Search"</strong> feature that lets you filter the checklist by entering part or all of the term name.
-* New: For the "WooCommerce Fixit" example plugin, a new "Replace Name/Slug" tool has been added.
-* New: A new example plugin, "MLA USP Novo-Map Example", has been added. The plugin fills posts created by the "User Submitted Posts" plugin with information for the "Novo Map" plugin.
-* New: For `[mla_gallery mla_viewer=true]`, the `size` parameter can be used to set viewer width and height from one of the intermediate sizes your site supports.
-* New: For the "Photonic Gallery" Plugin, non-image items can now be included in Photonic galleries, with optional thumbnail support from the item's Featured Image.
-* New: Removed plugin donation prompts and references.
-* New: Updated plugin and author URLs.
-* Fix: For the Media/Assistant submenu table, the "orderby" argument is now added to pagination links for columns such as "Date" (post_date).
-* Fix: A JavaScript defect that disabled Media/Assistant Bulk Edit operations has been corrected.
-* Fix: Calling `MLAData_Source::mla_get_data_source()` from the WordPress front end now loads the other MLA classes on which it depends, avoiding PHP fatal errors.
-* Fix: For the "MLA Path Mapping Example" plugin, a defect in assigning child terms to their parent term has been corrected.
-
-= 2.70 - 2.75 =
+= 2.70 - 2.78 =
+* 2.78 - Support Admin Columns Pro v4.5.x, add "Search Media" and "Terms Search" exclude logic, Eliminate PHP messages for Polylang and some AJAX actions. One enhancement, five fixes.
+* 2.77 - Preserve current term assignments for checklist-style taxonomies when opening the Media/Assistant Quick Edit area. This defect was introduced in v2.76.
+* 2.76 - "Checklist-style" term search and additions in the Bulk and Quick Edit areas. New and improved example plugins. Seven enhancements, four fixes.
 * 2.75 - Admin Columns (and Pro) fixes to eliminate PHP messages. Five fixes in all.
 * 2.74 - Cross-Site Scripting vulnerabilities have been removed from the Media/Assistant and Settings/Media Library assistant admin submenu screens. One enhancement, seven fixes.
 * 2.73 - Checklist-style flat taxonomy improvements, Admin Columns Pro fix, new and improved example plugins, e.g., "parent search". Five enhancements, four fixes.
@@ -305,8 +300,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.78 =
-Support Admin Columns Pro v4.5.x, add "Search Media" and "Terms Search" exclude logic, Eliminate PHP messages for Polylang and some AJAX actions. One enhancements five fixes.
+= 2.79 =
+[mla_gallery] keyword/term search "exclude" logic, [mla_tag_cloud] performance improvements, Media/Assistant Download bulk action. Nine enhancements in all, six fixes.
 
 == Other Notes ==
 

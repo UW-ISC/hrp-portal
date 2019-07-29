@@ -73,7 +73,7 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
 		// Item Class
         $classes = empty( $item->classes ) ? array() : (array) $item->classes;
 
-		if ( is_array( $item->classes ) && ! in_array( "menu-column", $item->classes ) && ! in_array( "menu-row", $item->classes ) ) {
+		if ( is_array( $classes ) && ! in_array( "menu-column", $classes ) && ! in_array( "menu-row", $classes ) ) {
 			$classes[] = 'menu-item-' . $item->ID;
 		}
 
@@ -86,7 +86,7 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
         $class = str_replace( "mega-menu-widget-class-", "", $class );
 
 		// Item ID
-		if ( is_array( $item->classes ) && ! in_array( "menu-column", $item->classes ) && ! in_array( "menu-row", $item->classes ) ) {
+		if ( is_array( $classes ) && ! in_array( "menu-column", $classes ) && ! in_array( "menu-row", $classes ) ) {
 			$id = "mega-menu-item-{$item->ID}";
 		} else {
 			$id = "mega-menu-{$item->ID}";
@@ -110,31 +110,30 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
 			$atts['class'] = '';
 			$atts['rel'] = ! empty( $item->xfn ) ? $item->xfn : '';
 
-
-			if ( $settings['disable_link'] != 'true') {
+			if ( isset( $settings['disable_link'] ) && $settings['disable_link'] != 'true') {
 				$atts['href'] = ! empty( $item->url ) ? $item->url : '';
 			} else {
 				$atts['tabindex'] = 0;
 			}
 
-			if ( isset( $settings['icon']) && $settings['icon'] != 'disabled' && $settings['icon'] != 'custom' ) {
+			if ( isset( $settings['icon'] ) && $settings['icon'] != 'disabled' && $settings['icon'] != 'custom' ) {
 				$atts['class'] = $settings['icon'];
 			}
-
-			if ( isset( $settings['icon']) && $settings['icon'] == 'custom' ) {
+ 
+			if ( isset( $settings['icon'] ) && $settings['icon'] == 'custom' ) {
 				$atts['class'] = 'mega-custom-icon';
 			}
 
-			if ( in_array('menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout') {
+			if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
 
 				$atts['aria-haspopup'] = "true"; // required for Surface/Win10/Edge
 				$atts['aria-expanded'] = "false";
 
-				if ( in_array('mega-toggle-on', $mega_classes ) ) {
+				if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
 					$atts['aria-expanded'] = "true";
 				}
 
-				if ( $settings['disable_link'] == 'true' ) {
+				if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 					$atts['role'] = 'button';
 				}
 			}
@@ -143,13 +142,13 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
 				$atts['tabindex'] = "0";
 			}
 
-			if ( $settings['hide_text'] == 'true' ) {
+			if ( isset( $settings['hide_text'] ) && $settings['hide_text'] == 'true' ) {
 				$atts['aria-label'] = $item->title;
 			}
 
 			$atts = apply_filters( 'megamenu_nav_menu_link_attributes', $atts, $item, $args );
 
-			if ( strlen( $atts['class'] ) ) {
+			if ( isset( $atts['class'] ) && strlen( $atts['class'] ) ) {
 			    $atts['class'] = $atts['class'] . ' mega-menu-link';
 			} else {
 			    $atts['class'] = 'mega-menu-link';
@@ -158,22 +157,20 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
 			$attributes = '';
 
 			foreach ( $atts as $attr => $value ) {
-
 				if ( strlen( $value ) ) {
 					$value = ( 'href' === $attr ) ? esc_url( $value ) : esc_attr( $value );
 					$attributes .= ' ' . $attr . '="' . $value . '"';
 				}
-
 			}
 
 			$item_output = $args->before;
 			$item_output .= '<a'. $attributes .'>';
 
-			if ( in_array('icon-top', $classes ) ) {
+			if ( is_array( $classes ) && in_array('icon-top', $classes ) ) {
 			   $item_output .= "<span class='mega-title-below'>";
 			}
 
-			if ( $settings['hide_text'] == 'true' ) {
+			if ( isset( $settings['hide_text'] ) && $settings['hide_text'] == 'true' ) {
 				/** This filter is documented in wp-includes/post-template.php */
 			} else if ( property_exists( $item, 'mega_description' ) && strlen( $item->mega_description ) ) {
 		        $item_output .= '<span class="mega-description-group"><span class="mega-menu-title">' . $args->link_before . apply_filters( 'megamenu_the_title', $item->title, $item->ID ) . $args->link_after . '</span><span class="mega-menu-description">' . $item->description . '</span></span>';
@@ -181,18 +178,18 @@ class Mega_Menu_Walker extends Walker_Nav_Menu {
 				$item_output .= $args->link_before . apply_filters( 'megamenu_the_title', $item->title, $item->ID ) . $args->link_after;
 			}
 
-            if ( is_array( $classes ) && in_array('icon-top', $classes ) ) {
+            if ( is_array( $classes ) && in_array( 'icon-top', $classes ) ) {
                 $item_output .= "</span>";
             }
 
-			if ( in_array('menu-item-has-children', $classes ) ) {
+			if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) ) {
 				$item_output .= '<span class="mega-indicator"></span>';
 			}
 
 			$item_output .= '</a>';
 			$item_output .= $args->after;
 
-			if ( is_array( $item->classes ) && in_array( "menu-column", $item->classes ) || in_array( "menu-row", $item->classes ) ) {
+			if ( is_array( $classes ) && ( in_array( "menu-column", $classes ) || in_array( "menu-row", $classes ) ) ) {
 				$item_output = "";
 			}
 

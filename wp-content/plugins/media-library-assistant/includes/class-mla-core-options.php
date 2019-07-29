@@ -496,7 +496,8 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'autoload' => true,
 					'std' => '',
-					'help' => __( 'Check this option to display the Count column on Categories and Tags taxonomy edit screens.', 'media-library-assistant' )),
+					'help' => __( 'Check this option to display the Count column on taxonomy edit screens.', 'media-library-assistant' )),
+					// 'help' => __( 'Check this option to display the Count column on Categories and Tags taxonomy edit screens.', 'media-library-assistant' )),
 
 			self::MLA_TAXONOMY_SUPPORT =>
 				array('tab' => 'general',

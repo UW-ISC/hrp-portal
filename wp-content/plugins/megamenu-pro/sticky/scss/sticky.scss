@@ -26,7 +26,6 @@
     }
 
     &.mega-stuck {
-
         @if $sticky_menu_height == on {
             @include desktop {
                 #{$menu} > li.mega-menu-item > a.mega-menu-link {
@@ -43,20 +42,18 @@
 
         &.mega-hide {
             transform: translateY(-100%);
-            transition: all .25s ease-in-out;
         }
 
-        &.mega-hide.mega-reveal {
-            transform: translateY(0%);
-        }
+        transition: transform .25s ease-in-out;
     }
 
-    @if $sticky_menu_height == on {
+    @if $sticky_menu_height == on and $sticky_menu_transition == on {
         @include desktop {
             #{$menu} > li.mega-menu-item > a.mega-menu-link {
-                @if $sticky_menu_transition == on {
-                    transition: all .25s ease-in-out;               
-                }
+                transition: height .25s ease-in-out, line-height .25s ease-in-out;
+            }
+            #{$menu} > li.mega-menu-item > a.mega-menu-logo > img.mega-menu-logo {
+                transition: all .25s ease-in-out;
             }
         }
     }
@@ -64,11 +61,11 @@
 }
 
 @include mobile {
-    #{$wrap}.mega-sticky #{$menu} {
+    #{$wrap}.mega-sticky #{$menu}:not([data-effect-mobile^="slide_"]) {
         max-height: calc(100vh - #{$toggle_bar_height});
         overflow: auto;
     }
-    body.admin-bar #{$wrap}.mega-sticky #{$menu} {
+    body.admin-bar #{$wrap}.mega-sticky #{$menu}:not([data-effect-mobile^="slide_"]) {
         max-height: calc(100vh - #{$toggle_bar_height} - 42px);
     }
 }

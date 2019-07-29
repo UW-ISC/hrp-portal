@@ -15,8 +15,6 @@ if ( ! class_exists('Mega_Menu_Widget_Manager') ) :
  */
 class Mega_Menu_Widget_Manager {
 
-    var $mega_menu_widgets = false;
-
     /**
      * Constructor
      *
@@ -27,7 +25,9 @@ class Mega_Menu_Widget_Manager {
         add_action( 'init', array( $this, 'register_sidebar' ) );
 
         add_action( 'wp_ajax_mm_edit_widget', array( $this, 'ajax_show_widget_form' ) );
+        add_action( 'wp_ajax_mm_edit_menu_item', array( $this, 'ajax_show_menu_item_form' ) );
         add_action( 'wp_ajax_mm_save_widget', array( $this, 'ajax_save_widget' ) );
+        add_action( 'wp_ajax_mm_save_menu_item', array( $this, 'ajax_save_menu_item' ) );
         add_action( 'wp_ajax_mm_update_widget_columns', array( $this, 'ajax_update_widget_columns' ) );
         add_action( 'wp_ajax_mm_update_menu_item_columns', array( $this, 'ajax_update_menu_item_columns' ) );
         add_action( 'wp_ajax_mm_delete_widget', array( $this, 'ajax_delete_widget' ) );
@@ -40,8 +40,6 @@ class Mega_Menu_Widget_Manager {
         add_action( 'megamenu_after_widget_add', array( $this, 'clear_caches' ) );
         add_action( 'megamenu_after_widget_save', array( $this, 'clear_caches' ) );
         add_action( 'megamenu_after_widget_delete', array( $this, 'clear_caches' ) );
-
-        $this->mega_menu_widgets = $this->get_mega_menu_sidebar_widgets();
 
     }
 
@@ -104,6 +102,100 @@ class Mega_Menu_Widget_Manager {
         if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
 
         wp_die( trim( $this->show_widget_form( $widget_id ) ) );
+
+    }
+
+    /**
+     * Display a menu item settings form
+     *
+     * @since 2.7
+     */
+    public function ajax_show_menu_item_form() {
+
+        check_ajax_referer( 'megamenu_edit' );
+
+        $menu_item_id = sanitize_text_field( $_POST['widget_id'] );
+
+        $nonce = wp_create_nonce('megamenu_save_menu_item_' . $menu_item_id);
+
+        $saved_settings = array_filter( (array) get_post_meta( $menu_item_id, '_megamenu', true ) );
+        $menu_item_meta = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults(), $saved_settings );
+
+        if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
+        ?>
+
+        <form method='post'>
+            <input type='hidden' name='action' value='mm_save_menu_item' />
+            <input type='hidden' name='menu_item_id' value='<?php echo esc_attr( $menu_item_id ) ?>' />
+            <input type='hidden' name='_wpnonce'  value='<?php echo esc_attr( $nonce ) ?>' />
+            <div class='widget-content'>
+                <?php
+                
+                $css_version = get_transient("megamenu_css_version");
+
+                if ( $css_version && version_compare( $css_version, '2.6.1', '<' ) ) {
+                    $link = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __("Mega Menu") . " > " . __("Tools") . "</a>";
+                    $notice = "<div class='notice notice-success'><p>";
+                    $notice .= sprintf( __("Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once).", "megamenu") , $link);
+                    $notice .= "</p></div>";
+                    $notice .= "</div>";
+
+                    echo $notice;
+                }
+
+                ?>
+
+                <p>
+                    <label><?php _e("Sub menu columns", "megamenu"); ?></label>
+
+                    <select name="settings[submenu_columns]">
+                        <option value='1' <?php selected( $menu_item_meta['submenu_columns'], 1, true ) ?> >1 <?php __("column", "megamenu") ?></option>
+                        <option value='2' <?php selected( $menu_item_meta['submenu_columns'], 2, true ) ?> >2 <?php __("columns", "megamenu") ?></option>
+                        <option value='3' <?php selected( $menu_item_meta['submenu_columns'], 3, true ) ?> >3 <?php __("columns", "megamenu") ?></option>
+                        <option value='4' <?php selected( $menu_item_meta['submenu_columns'], 4, true ) ?> >4 <?php __("columns", "megamenu") ?></option>
+                    </select>
+                </p>
+                <p>
+                    <div class='widget-controls'>
+                        <a class='close' href='#close'><?php _e("Close", "megamenu"); ?></a>
+                    </div>
+
+                    <?php
+                        submit_button( __( 'Save' ), 'button-primary alignright', 'savewidget', false );
+                    ?>
+                </p>
+            </div>
+        </form>
+
+        <?php
+
+    }
+
+    /**
+     * Save a menu item
+     *
+     * @since 2.7
+     */
+    public function ajax_save_menu_item() {
+
+        $menu_item_id = absint(sanitize_text_field( $_POST['menu_item_id'] ));
+
+        check_ajax_referer( 'megamenu_save_menu_item_' . $menu_item_id );
+
+        $submitted_settings = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
+
+        if ( $menu_item_id > 0 && is_array( $submitted_settings ) ) {
+
+            $existing_settings = get_post_meta( $menu_item_id, '_megamenu', true);
+
+            if ( is_array( $existing_settings ) ) {
+                $submitted_settings = array_merge( $existing_settings, $submitted_settings );
+            }
+
+            update_post_meta( $menu_item_id, '_megamenu', $submitted_settings );
+        }
+
+        $this->send_json_success( sprintf( __("Saved %s", "megamenu"), $id_base ) );
 
     }
 
@@ -403,9 +495,9 @@ class Mega_Menu_Widget_Manager {
 
         $widgets = array();
 
-        if ( $this->mega_menu_widgets ) {
+        if ( $mega_menu_widgets = $this->get_mega_menu_sidebar_widgets() ) {
 
-            foreach ( $this->mega_menu_widgets as $widget_id ) {
+            foreach ( $mega_menu_widgets as $widget_id ) {
 
                 $settings = $this->get_settings_for_widget_id( $widget_id );
 
@@ -1199,8 +1291,6 @@ class Mega_Menu_Widget_Manager {
         $sidebar_widgets[ 'mega-menu' ] = $widgets;
 
         wp_set_sidebars_widgets( $sidebar_widgets );
-
-        $this->mega_menu_widgets = $this->get_mega_menu_sidebar_widgets();
 
     }
 

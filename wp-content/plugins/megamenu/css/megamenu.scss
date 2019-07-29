@@ -193,7 +193,8 @@
             cursor: default;
         }
 
-        li.mega-menu-item-has-children.mega-disable-link > a.mega-menu-link {
+        li.mega-menu-item-has-children.mega-disable-link > a.mega-menu-link,
+        li.mega-menu-megamenu li.mega-menu-item-has-children.mega-disable-link > a.mega-menu-link  {
             cursor: pointer;
         }
 
@@ -278,6 +279,14 @@
             }
         }
 
+        li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-collapse-children > ul.mega-sub-menu {
+            display: none;
+        }
+
+        li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-collapse-children.mega-toggle-on > ul.mega-sub-menu {
+            display: block;
+        }
+
         &.mega-no-js li.mega-menu-item:hover > ul.mega-sub-menu,
         &.mega-no-js li.mega-menu-item:focus > ul.mega-sub-menu,
         li.mega-menu-item.mega-toggle-on > ul.mega-sub-menu {
@@ -287,6 +296,14 @@
         li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu ul.mega-sub-menu {
             visibility: inherit;
             opacity: 1;
+            display: block;
+        }
+
+        @for $cols from 1 through 4 {
+            li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-#{$cols}-columns > ul.mega-sub-menu > li.mega-menu-item {
+                float: left;
+                width: (100% / $cols);
+            }
         }
 
         li.mega-menu-item a[class^='dashicons']:before {
@@ -323,7 +340,7 @@
             }
 
             &.mega-toggle-on > a.mega-menu-link {
-                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0, 0);
+                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0px, 0px);
             }
         }
 
@@ -333,7 +350,7 @@
             }
 
             &.mega-toggle-on > a.mega-menu-link {
-                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0, 0);
+                @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, 0px, 0px);
             }
         }
 
@@ -345,7 +362,6 @@
 
         // top level items
         > li.mega-menu-item {
-
             margin: 0 $menu_item_spacing 0 0;
             display: inline-block;
             height: auto;
@@ -423,29 +439,24 @@
             }
 
             > a.mega-menu-link {
-                border-top: $menu_item_border_top solid $menu_item_border_color;
-                border-left: $menu_item_border_left solid $menu_item_border_color;
-                border-right: $menu_item_border_right solid $menu_item_border_color;
-                border-bottom: $menu_item_border_bottom solid $menu_item_border_color;
-                outline: none;
-                text-decoration: none;
-                padding: $menu_item_link_padding_top $menu_item_link_padding_right $menu_item_link_padding_bottom $menu_item_link_padding_left;
                 line-height: $menu_item_link_height;
-                font-weight: $menu_item_link_weight;
                 height: $menu_item_link_height;
+                padding: $menu_item_link_padding_top $menu_item_link_padding_right $menu_item_link_padding_bottom $menu_item_link_padding_left;
                 vertical-align: baseline;
-                text-align: $menu_item_link_text_align;
                 width: auto;
                 display: block;
                 color: $menu_item_link_color;
                 text-transform: $menu_item_link_text_transform;
                 text-decoration: $menu_item_link_text_decoration;
+                text-align: $menu_item_link_text_align;
+                text-decoration: none;
                 @include background($menu_item_background_from, $menu_item_background_to);
+                @include border($menu_item_border_top, $menu_item_border_left, $menu_item_border_right, $menu_item_border_bottom, $menu_item_border_color);
                 @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, $menu_item_link_border_radius_bottom_right, $menu_item_link_border_radius_bottom_left);
                 font-family: $menu_item_link_font;
                 font-size: $menu_item_link_font_size;
-
-
+                font-weight: $menu_item_link_weight;
+                outline: none;
             }
 
             // support for multi line links
@@ -473,7 +484,7 @@
                 }
 
                 > a.mega-menu-link {
-                    @include border-radius(0);
+                    @include border-radius(0, 0, 0, 0);
                     border: 0;
                     margin: 0;
                     line-height: $mobile_menu_item_height;
@@ -484,15 +495,21 @@
                     color: $mobile_menu_item_link_color;
                     font-size: $mobile_menu_item_link_font_size;
                 }
-
             }
-
         }
 
         // sub menu items (grid)
         li.mega-menu-megamenu > ul.mega-sub-menu > li.mega-menu-row {
-            width: 100%;
-            float: left;
+
+
+            @if unit($panel_inner_width) == 'px' {
+                max-width: $panel_inner_width; /** Panel Width (Inner) **/
+                margin: 0 auto;
+                display: flex;
+            } @else {
+                width: 100%;
+                float: left;
+            }
 
             .mega-menu-column {
                 float: left;
@@ -538,13 +555,10 @@
             z-index: $z_index;
             @include border-radius($panel_border_radius_top_left, $panel_border_radius_top_right, $panel_border_radius_bottom_right, $panel_border_radius_bottom_left);
             @include background($panel_background_from, $panel_background_to);
+            @include border($panel_border_top, $panel_border_left, $panel_border_right, $panel_border_bottom, $panel_border_color);
             padding: $panel_padding_top $panel_padding_right $panel_padding_bottom $panel_padding_left;
             position: absolute;
             width: $panel_width;
-            border-top: $panel_border_top solid $panel_border_color;
-            border-left: $panel_border_left solid $panel_border_color;
-            border-right: $panel_border_right solid $panel_border_color;
-            border-bottom: $panel_border_bottom solid $panel_border_color;
             max-width: none;
 
             @if unit($panel_width) == '%' {
@@ -615,15 +629,17 @@
                     text-transform: $panel_header_text_transform;
                     text-decoration: $panel_header_text_decoration;
                     font-weight: $panel_header_font_weight;
+                    text-align: $panel_header_text_align;
                     margin: $panel_header_margin_top $panel_header_margin_right $panel_header_margin_bottom $panel_header_margin_left;
                     padding: $panel_header_padding_top $panel_header_padding_right $panel_header_padding_bottom $panel_header_padding_left;
                     vertical-align: top;
                     display: block;
                     visibility: inherit;
-                    border-top: $panel_header_border_top solid $panel_header_border_color;
-                    border-left: $panel_header_border_left solid $panel_header_border_color;
-                    border-right: $panel_header_border_right solid $panel_header_border_color;
-                    border-bottom: $panel_header_border_bottom solid $panel_header_border_color;
+                    @include border($panel_header_border_top, $panel_header_border_left, $panel_header_border_right, $panel_header_border_bottom, $panel_header_border_color);
+
+                    &:hover {
+                        border-color: $panel_header_border_color_hover;
+                    }
                 }
 
                 // Second level menu items
@@ -634,14 +650,16 @@
                     text-transform: $panel_second_level_text_transform;
                     text-decoration: $panel_second_level_text_decoration;
                     font-weight: $panel_second_level_font_weight;
+                    text-align: $panel_second_level_text_align;
                     margin: $panel_second_level_margin_top $panel_second_level_margin_right $panel_second_level_margin_bottom $panel_second_level_margin_left;
                     padding: $panel_second_level_padding_top $panel_second_level_padding_right $panel_second_level_padding_bottom $panel_second_level_padding_left;
                     vertical-align: top;
                     display: block;
-                    border-top: $panel_second_level_border_top solid $panel_second_level_border_color;
-                    border-left: $panel_second_level_border_left solid $panel_second_level_border_color;
-                    border-right: $panel_second_level_border_right solid $panel_second_level_border_color;
-                    border-bottom: $panel_second_level_border_bottom solid $panel_second_level_border_color;
+                    @include border($panel_second_level_border_top, $panel_second_level_border_left, $panel_second_level_border_right, $panel_second_level_border_bottom, $panel_second_level_border_color);
+                
+                    &:hover {
+                        border-color: $panel_second_level_border_color_hover;
+                    }
                 }
 
                 > a.mega-menu-link:hover,
@@ -660,10 +678,16 @@
                         text-transform: $panel_third_level_text_transform;
                         text-decoration: $panel_third_level_text_decoration;
                         font-weight: $panel_third_level_font_weight;
-                        margin: 0;
+                        text-align: $panel_third_level_text_align;
+                        margin: $panel_third_level_margin_top $panel_third_level_margin_right $panel_third_level_margin_bottom $panel_third_level_margin_left;
                         padding: $panel_third_level_padding_top $panel_third_level_padding_right $panel_third_level_padding_bottom $panel_third_level_padding_left;
                         vertical-align: top;
                         display: block;
+                        @include border($panel_third_level_border_top, $panel_third_level_border_left, $panel_third_level_border_right, $panel_third_level_border_bottom, $panel_third_level_border_color);
+                    
+                        &:hover {
+                            border-color: $panel_third_level_border_color_hover;
+                        }
                     }
 
                     &.mega-icon-left.mega-has-description.mega-has-icon > a.mega-menu-link {
@@ -679,12 +703,13 @@
                     text-decoration: $panel_third_level_text_decoration_hover;
                     @include background($panel_third_level_background_hover_from, $panel_third_level_background_hover_to);
                 }
+
             }
 
             @include mobile {
                 border: 0;
                 padding: 10px;
-                @include border-radius(0,0,0,0);
+                @include border-radius(0, 0, 0, 0);
 
                 @if $mobile_columns == 2 {
                     > li.mega-menu-item {
@@ -735,10 +760,7 @@
             z-index: $z_index;
             position: absolute;
             width: $flyout_width;
-            border-top: $flyout_border_top solid $flyout_border_color;
-            border-left: $flyout_border_left solid $flyout_border_color;
-            border-right: $flyout_border_right solid $flyout_border_color;
-            border-bottom: $flyout_border_bottom solid $flyout_border_color;
+            @include border($flyout_border_top, $flyout_border_left, $flyout_border_right, $flyout_border_bottom, $flyout_border_color);
             padding: $flyout_padding_top $flyout_padding_right $flyout_padding_bottom $flyout_padding_left;
             @include background($flyout_menu_background_from, $flyout_menu_background_to);
             max-width: none;
@@ -855,11 +877,11 @@
         // Arrows
         li.mega-menu-item-has-children {
 
-            > a.mega-menu-link:after,
-            > a.mega-menu-link span.mega-indicator:after {
+            > a.mega-menu-link > span.mega-indicator:after {
                 content: $arrow_down;
+                font-family: $arrow_font;
+                font-weight: $arrow_font_weight;
                 display: inline-block;
-                font-family: dashicons;
                 margin: 0 0 0 6px;
                 vertical-align: top;
                 -webkit-font-smoothing: antialiased;
@@ -875,9 +897,8 @@
             }
 
             > a.mega-menu-link > span.mega-indicator {
-                display: none;
-                float: right;
-                height: auto;
+                display: inline-block;
+                height: 100%;
                 width: auto;
                 background: transparent;
                 position: relative;
@@ -887,25 +908,20 @@
                 line-height: inherit;
                 color: inherit;
                 font-size: inherit;
+                padding: 0;
+            }
 
-                &:after {
-                    content: $arrow_up;
-                }
+            li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
+                float: right;
+            }
+
+            &.mega-collapse-children.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+                content: $arrow_up;
             }
 
             @include mobile {
-                > a.mega-menu-link {
-                    &:after {
-                        display: none;
-                    }
-
-                    > span.mega-indicator {
-                        display: inline-block;
-                        
-                        &:after {
-                            content: $arrow_down;
-                        }
-                    }
+                > a.mega-menu-link > span.mega-indicator {
+                    float: right;
                 }
 
                 &.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
@@ -919,59 +935,89 @@
         }
 
         // Hide arrows
-        li.mega-menu-megamenu:not(.mega-menu-tabbed) li.mega-menu-item-has-children > a.mega-menu-link:after,
-        li.mega-menu-megamenu:not(.mega-menu-tabbed) li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator,
-        li.mega-menu-item-has-children.mega-hide-arrow > a.mega-menu-link:after {
+        li.mega-menu-megamenu:not(.mega-menu-tabbed) li.mega-menu-item-has-children:not(.mega-collapse-children) > a.mega-menu-link > span.mega-indicator,
+        li.mega-menu-item-has-children.mega-hide-arrow > a.mega-menu-link > span.mega-indicator {
             display: none;
         }
 
+        // Flyout menus
+        @include desktop {
+            li.mega-menu-flyout {
+                li.mega-menu-item a.mega-menu-link > span.mega-indicator {
+                    &:after {
+                        content: $arrow_right;
+                    }
+                }
 
-        li.mega-menu-item li.mega-menu-item-has-children > a.mega-menu-link:after {
-            content: $arrow_right;
-            float: right;
+                &.mega-align-bottom-right {
+                    li.mega-menu-item a.mega-menu-link {
+                        text-align: right;
 
-            @include mobile {
-                content: $arrow_down;
+                        > span.mega-indicator {
+                            float: left;
+
+                            &:after {
+                                content: $arrow_left;
+                                margin: 0 6px 0 0;
+                            }
+                        }
+
+                        // Icons
+                        &:before {
+                            float: right;
+                            margin: 0 0 0 6px;
+                        }
+                    }
+                    
+                    ul.mega-sub-menu li.mega-menu-item ul.mega-sub-menu {
+                        left: -100%;
+                        top: 0;
+                    }
+                }
             }
         }
 
-        // Right aligned flyout menus
-        li.mega-menu-flyout.mega-align-bottom-right {
-
-            li.mega-menu-item a.mega-menu-link {
-                text-align: right;
-
-                @include mobile {
-                    text-align: left;
-                }
-            }
-
-            li.mega-menu-item a.mega-menu-link:before {
-                float: right;
-                margin: 0 0 0 6px;
-
-                @include mobile {
-                    float: left;
-                    margin: 0 6px 0 0;
-                }
-            }
-
-            li.mega-menu-item-has-children {
-                > a.mega-menu-link:after {
-                    content: $arrow_left;
-                    float: left;
-                    margin: 0;
-
-                    @include mobile {
-                        content: $arrow_down;
+        // arrows
+        @include desktop {
+            &.mega-menu-vertical {
+                li.mega-align-bottom-right.mega-menu-item-has-children,
+                li.mega-align-bottom-right.mega-menu-flyout li.mega-menu-item-has-children {
+                    > a.mega-menu-link > span.mega-indicator {
                         float: right;
+
+                        &:after {
+                            content: $arrow_right;
+                            margin: 0;
+                        }
+                    }
+                }
+
+                li.mega-align-bottom-left.mega-menu-item-has-children,
+                li.mega-align-bottom-left.mega-menu-flyout li.mega-menu-item-has-children {
+                    > a.mega-menu-link > span.mega-indicator {
+                        float: left;
+
+                        &:after {
+                            content: $arrow_left;
+                            margin: 0;
+                        }
                     }
                 }
             }
 
-            ul.mega-sub-menu li.mega-menu-item ul.mega-sub-menu {
-                left: -100%;
-                top: 0;
+            &.mega-menu-accordion {
+                // Arrows
+                > li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
+                    float: right;
+                }
+                li.mega-menu-item-has-children.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+                    content: $arrow_up;
+                }
+            }
+
+            // Arrows
+            li.mega-menu-tabbed > ul.mega-sub-menu > li.mega-menu-item.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator:after {
+                content: $arrow_right;
             }
         }
 
@@ -1002,7 +1048,6 @@
                 display: none;
             }
         }
-
     }
 
     @include mobile {
@@ -1012,14 +1057,6 @@
             clear: both;
         }
 
-        @if ($disable_mobile_toggle == off and $mobile_menu_overlay == on) or ($disable_mobile_toggle == off and $mobile_menu_force_width == on) {
-            #{$menu} {
-                position: absolute;
-                width: 100%;
-                z-index: 9999999;
-                @include background($mobile_background_from, $mobile_background_to);
-            }
-        }
     }
 
     .mega-menu-toggle {
@@ -1027,7 +1064,7 @@
         z-index: 1;
         cursor: pointer;
         @include background($toggle_background_from, $toggle_background_to);
-        @include border-radius(2px, 2px, 2px, 2px);
+        @include border-radius($toggle_bar_border_radius_top_left, $toggle_bar_border_radius_top_right, $toggle_bar_border_radius_bottom_right, $toggle_bar_border_radius_bottom_left);
         line-height: $toggle_bar_height;
         height: $toggle_bar_height;
         text-align: left;
@@ -1130,20 +1167,97 @@
         }
 
         @include mobile {
+
             + #{$menu} {
                 @include background($mobile_background_from, $mobile_background_to);
-                padding: 0;
+                padding: $mobile_menu_padding_top $mobile_menu_padding_right $mobile_menu_padding_bottom $mobile_menu_padding_left;
                 
                 @if $disable_mobile_toggle == on {
                     display: block; 
                 } @else {
                     display: none;
+
+                    @if $mobile_menu_overlay == on or $mobile_menu_force_width == on {
+                        position: absolute;
+                        width: 100%;
+                        z-index: 9999999;
+                    }
                 }
             }
 
             &.mega-menu-open + #{$menu} {
                 display: block;
             }
+
+            @if ( ( $effect_mobile == slide_right or $effect_mobile == slide_left ) and $disable_mobile_toggle == off ) {
+
+                @if unit( $mobile_menu_off_canvas_width ) == '%' {
+                    $mobile_menu_off_canvas_width: 300px;
+                }
+
+                + #{$menu} {
+                    position: fixed;
+                    display: block;
+                    width: $mobile_menu_off_canvas_width;
+                    max-width: 90%;
+                    height: 100vh;
+                    max-height: 100vh;
+                    top: 0;
+                    box-sizing: border-box;
+                    transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out;
+                    overflow: auto;
+                    z-index: 9999999999;
+                }
+
+                @if ($effect_mobile == slide_right ) {
+                    + #{$menu} {
+                        left: -$mobile_menu_off_canvas_width;
+                    }
+
+                    &.mega-menu-open + #{$menu} {
+                        left: 0;
+                    }
+                }
+
+                @if ($effect_mobile == slide_left ) {
+                    + #{$menu} {
+                        right: -$mobile_menu_off_canvas_width;
+                    }
+                    
+                    &.mega-menu-open + #{$menu} {
+                        right: 0;
+                    }
+                }
+
+                &.mega-menu-open:after {
+                    position: fixed;
+                    width: 100%;
+                    height: 99999px;
+                    content: "";
+                    top: 0;
+                    left: 0;
+                    opacity: 0.5;
+                    background: black;
+                    cursor: pointer;
+                    z-index: 9999999998;
+                }
+            }
+        }
+    }
+}
+
+@if ( ( $effect_mobile == slide_right or $effect_mobile == slide_left ) and $disable_mobile_toggle == off ) {
+    html.mega-menu-#{$location}-off-canvas-open {
+        overflow: hidden;
+        height: auto;
+        
+        body {
+            overflow: hidden;
+            height: auto;
+        }
+
+        #wpadminbar {
+           z-index: 0;
         }
     }
 }

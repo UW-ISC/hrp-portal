@@ -4,10 +4,10 @@
  * Plugin Name: Max Mega Menu - Pro Addon
  * Plugin URI:  https://www.megamenu.com
  * Description: Extends the free version of Max Mega Menu with additional functionality.
- * Version:     1.7.1
+ * Version:     1.9
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
- * Copyright:   2018 Tom Hemsley (https://www.megamenu.com)
+ * Copyright:   2019 Tom Hemsley (https://www.megamenu.com)
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +25,7 @@ class Mega_Menu_Pro {
 	/**
 	 * @var string
 	 */
-	public $version = '1.7.1';
+	public $version = '1.9';
 
 
 	/**
@@ -51,21 +51,141 @@ class Mega_Menu_Pro {
 		define( "MEGAMENU_PRO_PLUGIN_FILE", __FILE__ );
 
 		add_filter( "megamenu_versions", array( $this, 'add_version_to_header' ) );
-
+		add_action( 'admin_init', array( $this, 'install_upgrade_check' ) );
         add_action( "admin_print_scripts-nav-menus.php", array( $this, 'enqueue_nav_menu_scripts' ) );
-
         add_action( "megamenu_admin_scripts", array( $this, 'enqueue_admin_scripts') );
-
         add_filter( "megamenu_nav_menu_objects_after", array( $this, 'apply_classes_to_menu_items' ), 7, 2 );
-
 		add_action( "admin_notices", array( $this, 'check_megamenu_is_installed' ) );
-
         add_action( "wp_enqueue_scripts", array( $this, 'enqueue_public_scripts' ), 999 );
+		add_action( 'megamenu_general_settings', array( $this, 'add_icons_settings_to_general_settings' ), 21 );
+	    add_filter( 'megamenu_submitted_settings', array( $this, 'populate_empty_checkbox_values'), 9 );
+	    add_action( "set_transient_megamenu_css", array( $this, 'set_megamenu_pro_css_version' ), 10, 3);
 
 		$this->load();
+	}
+
+
+    /**
+     * Detect new or updated installations and run actions accordingly.
+     *
+     * @since 1.8
+     */
+    public function install_upgrade_check() {
+        $version = get_option( "megamenu_pro_version" );
+
+        if ( $version ) {
+
+            if ( version_compare( $this->version, $version, '!=' ) ) {
+
+                update_option( "megamenu_pro_version", $this->version );
+
+                do_action( "megamenu_pro_after_update" );
+            }
+
+        } else {
+
+            add_option( "megamenu_pro_version", $this->version );
+            add_option( "megamenu_pro_initial_version", $this->version );
+
+            do_action( "megamenu_pro_after_install" );
+        }
+    }
+
+
+	/**
+	 * Record the version that the CSS was generated against
+     * @param mixed  $value      Transient value.
+     * @param int    $expiration Time until expiration in seconds.
+     * @param string $transient  The name of the transient.
+	 */
+	public function set_megamenu_pro_css_version( $value, $expiration, $transient ) {
+        // set a far expiration date to prevent transient from being autoloaded
+        $hundred_years_in_seconds = 3153600000;
+
+        set_transient( 'megamenu_pro_css_version', MEGAMENU_PRO_VERSION, $hundred_years_in_seconds );
+	}
+
+	/**
+	 * Populate empty checkbox values when the general settings form is submitted
+	 *
+	 * @since 1.8
+	 * @param array $settings
+	 */
+	public function populate_empty_checkbox_values( $settings ) {
+
+		if ( ! isset( $settings['enqueue_fa_4'] ) ) {
+			$settings['enqueue_fa_4'] = 'disabled';
+		}
+
+		if ( ! isset( $settings['enqueue_fa_5'] ) ) {
+			$settings['enqueue_fa_5'] = 'disabled';
+		}
+
+		if ( ! isset( $settings['enqueue_genericons'] ) ) {
+			$settings['enqueue_genericons'] = 'disabled';
+		}
+
+		return $settings;
 
 	}
 
+	/**
+	 * Add the font awesome version selector to General Settings page
+	 *
+	 * @since 1.8
+	 * @param array $settings
+	 */
+	public function add_icons_settings_to_general_settings( $saved_settings ) {
+        $enqueue_fa_4 = isset( $saved_settings['enqueue_fa_4'] ) ? $saved_settings['enqueue_fa_4'] : 'enabled';
+        $enqueue_fa_5 = isset( $saved_settings['enqueue_fa_5'] ) ? $saved_settings['enqueue_fa_5'] : 'enabled';
+        $enqueue_genericons = isset( $saved_settings['enqueue_genericons'] ) ? $saved_settings['enqueue_genericons'] : 'enabled';
+
+		?>
+
+        <h3><?php _e("Icons", "megamenupro"); ?></h3>
+
+        <table>
+            <tr>
+                <td class='mega-name'>
+                    <?php _e("Enqueue Icon Styles", "megamenupro"); ?>
+                    <div class='mega-description'>
+                    	<?php _e("", "megamenupro"); ?>
+                    </div>
+                </td>
+                <td class='mega-value'>
+                	<table class='mega-inner-table'>
+                		<tr>
+                			<td>
+                				<input type="checkbox" name="settings[enqueue_fa_4]" value="enabled" <?php checked( $enqueue_fa_4, 'enabled' ); ?> />
+			                </td>
+			                <td>
+			                    <?php _e("Font Awesome 4", "megamenupro"); ?>
+			                </td>
+			            </tr>
+                		<tr>
+                			<td>
+                				<input type="checkbox" name="settings[enqueue_fa_5]" value="enabled" <?php checked( $enqueue_fa_5, 'enabled' ); ?> />
+			                </td>
+			                <td>
+			                    <?php _e("Font Awesome 5", "megamenupro"); ?>
+			                </td>
+			            </tr>
+			            <tr>
+			            	<td>
+                				<input type="checkbox" name="settings[enqueue_genericons]" value="enabled" <?php checked( $enqueue_genericons, 'enabled' ); ?> />
+			                </td>
+			                <td>
+								<?php _e("Genericons", "megamenupro"); ?>
+							</td>
+						</tr>
+					</table>
+                </td>
+            </tr>
+        </table>
+
+		<?php
+
+	}
 
 	/**
 	 * Adds the version number to the header on the general settings page.
@@ -101,17 +221,22 @@ class Mega_Menu_Pro {
         	wp_enqueue_script( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.js', array( 'jquery' ), MEGAMENU_VERSION );
         	wp_enqueue_style( 'spectrum', MEGAMENU_BASE_URL . 'js/spectrum/spectrum.css', false, MEGAMENU_VERSION );
 
-            wp_enqueue_style( 'megamenu-codemirror', MEGAMENU_BASE_URL . 'js/codemirror/codemirror.css', false, MEGAMENU_VERSION );
-	        wp_enqueue_script( 'megamenu-codemirror', MEGAMENU_BASE_URL . 'js/codemirror/codemirror.js', array(), MEGAMENU_VERSION );
+	        if ( function_exists('wp_enqueue_code_editor') ) {
+	            wp_deregister_style('codemirror');
+	            wp_deregister_script('codemirror');
+
+	            $cm_settings['codeEditor'] = wp_enqueue_code_editor(array('type' => 'text/html'));
+	            wp_localize_script('jquery', 'cm_settings', $cm_settings);
+	            wp_enqueue_style('wp-codemirror');
+	        }
         }
 
         wp_enqueue_style( 'megamenu-genericons', plugins_url( 'icons/genericons/genericons/genericons.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
-        wp_enqueue_style( 'megamenu-fontawesome', plugins_url( 'icons/fontawesome/css/font-awesome.min.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
         wp_enqueue_style( 'megamenu-pro-admin', plugins_url( 'assets/admin.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
 
 		wp_enqueue_media();
 
-        wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery', 'megamenu-codemirror'), MEGAMENU_PRO_VERSION );
+        wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery'), MEGAMENU_PRO_VERSION );
 
 		$params = array(
 			'file_frame_title' => __("Media Library", "megamenupro")
@@ -119,6 +244,10 @@ class Mega_Menu_Pro {
 
 		wp_localize_script( 'megamenu-pro-admin', 'megamenu_pro', $params );
 	}
+
+
+
+
 
 
     /**
@@ -130,7 +259,6 @@ class Mega_Menu_Pro {
         wp_enqueue_media();
         wp_enqueue_style( 'megamenu-pro-admin', plugins_url( 'assets/admin.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
         wp_enqueue_script( 'megamenu-pro-admin', plugins_url( 'assets/admin.js' , __FILE__ ), array('jquery'), MEGAMENU_PRO_VERSION );
-        wp_enqueue_style( 'megamenu-fontawesome', plugins_url( 'icons/fontawesome/css/font-awesome.min.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
 
         $params = array(
             'file_frame_title' => __("Media Library", "megamenupro")
@@ -156,13 +284,14 @@ class Mega_Menu_Pro {
 			'Mega_Menu_Google_Fonts' => $plugin_path . 'fonts/google/google-fonts.php',
 			'Mega_Menu_Custom_Fonts' => $plugin_path . 'fonts/custom/custom-fonts.php',
  			'Mega_Menu_Custom_Icon' => $plugin_path . 'icons/custom/custom.php',
-			'Mega_Menu_Font_Awesome' => $plugin_path . 'icons/fontawesome/fontawesome.php',
 			'Mega_Menu_Genericons' => $plugin_path . 'icons/genericons/genericons.php',
 			'Mega_Menu_Style_Overrides' => $plugin_path . 'style-overrides/style-overrides.php',
 			'Mega_Menu_Roles' => $plugin_path . 'roles/roles.php',
 			'Mega_Menu_Vertical' => $plugin_path . 'vertical/vertical.php',
 			'Mega_Menu_Replacements' => $plugin_path . 'replacements/replacements.php',
-            'Mega_Menu_Tabbed' => $plugin_path . 'tabbed/tabbed.php'
+            'Mega_Menu_Tabbed' => $plugin_path . 'tabbed/tabbed.php',
+            'Mega_Menu_Font_Awesome' => $plugin_path . 'icons/fontawesome/fontawesome.php',
+            'Mega_Menu_Font_Awesome_5' => $plugin_path . 'icons/fontawesome5/fontawesome5.php'
 		);
 
 		foreach ( $classes as $classname => $file_path ) {

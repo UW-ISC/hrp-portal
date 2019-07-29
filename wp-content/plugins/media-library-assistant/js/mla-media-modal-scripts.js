@@ -1076,7 +1076,7 @@ console.log( 'listening to controller events' );
 		},
 
 		/**
-		 * Build or rebuild the current tag list prefaced with "X" buttons,
+		 * Build or rebuild the current tag list prefaced with "Remove term" buttons,
 		 * using the hidden '.the-tags' textbox field as input
 		 */
 		quickClicks : function( el ) {
@@ -1095,7 +1095,7 @@ console.log( 'listening to controller events' );
 			tagchecklist.empty();
 
 			$.each( current_tags, function( key, val ) {
-				var span, xbutton;
+				var element, xbutton;
 
 				val = $.trim( val );
 
@@ -1103,18 +1103,27 @@ console.log( 'listening to controller events' );
 					return;
 				}
 
-				// Create a new span, and ensure the text is properly escaped.
-				span = $( '<span />' ).text( val );
-
-				// If tags editing isn't disabled, create the X button.
-				if ( ! disabled ) {
-					xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
-					xbutton.click( function(){ mlaModal.tagBox.parseTags( this ); });
-					span.prepend( '&nbsp;' ).prepend( xbutton );
+				// Create a new element, and ensure the text is properly escaped.
+				if ( mlaModal.settings.generateTagUl ) {
+					element = $( '<li />' ).text( val );
+				} else {
+					element = $( '<span />' ).text( val );
 				}
 
-				// Append the span to the tag list.
-				tagchecklist.append( span );
+				// If tags editing isn't disabled, create the "Remove term" button.
+				if ( ! disabled ) {
+					if ( mlaModal.settings.generateTagButtons ) {
+						xbutton = $( '<button class="ntdelbutton" id="' + id + '-check-num-' + key + '" type="button"><span class="remove-tag-icon" aria-hidden="true"></span><span class="screen-reader-text">' + mlaModal.settings.removeTerm + ': ' + val + '</span></button>' );
+					} else {
+						xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
+					}
+					
+					xbutton.click( function(){ mlaModal.tagBox.parseTags( this ); });
+					element.prepend( '&nbsp;' ).prepend( xbutton );
+				}
+
+				// Append the element to the tag list.
+				tagchecklist.append( element );
 			});
 		},
 

@@ -74,7 +74,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.09';
+	const CURRENT_VERSION = '1.10';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts

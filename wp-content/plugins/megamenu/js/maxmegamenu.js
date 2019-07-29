@@ -9,6 +9,7 @@
         var plugin = this;
         var $menu = $(menu);
         var $toggle_bar = $menu.siblings(".mega-menu-toggle");
+        var html_body_class_timeout;
 
         var defaults = {
             event: $menu.attr("data-event"),
@@ -19,6 +20,7 @@
             panel_width: $menu.attr("data-panel-width"),
             panel_inner_width: $menu.attr("data-panel-inner-width"),
             mobile_force_width: $menu.attr("data-mobile-force-width"),
+            mobile_overlay: $menu.attr("data-mobile-overlay"),
             second_click: $menu.attr("data-second-click"),
             vertical_behaviour: $menu.attr("data-vertical-behaviour"),
             document_click: $menu.attr("data-document-click"),
@@ -33,37 +35,7 @@
                                     "li.mega-menu-tabbed > ul.mega-sub-menu > li.mega-menu-item-has-children," +
                                     "li.mega-menu-flyout li.mega-menu-item-has-children", menu);
 
-        plugin.hidePanel = function(anchor, immediate) {
 
-            anchor.parent().triggerHandler("before_close_panel");
-
-            anchor.attr("aria-expanded", "false");
-
-            if ( (!immediate && plugin.settings.effect === "slide") || (plugin.isMobileView() && plugin.settings.effect_mobile === "slide") ) {
-                var speed = plugin.isMobileView() ? plugin.settings.effect_speed_mobile : plugin.settings.effect_speed;
-
-                anchor.siblings(".mega-sub-menu").animate({"height":"hide", "paddingTop":"hide", "paddingBottom":"hide", "minHeight":"hide"}, speed, function() {
-                    anchor.siblings(".mega-sub-menu").css("display", "");
-                    anchor.parent().removeClass("mega-toggle-on").triggerHandler("close_panel");
-                });
-
-                return;
-            }
-
-            if (immediate) {
-                anchor.siblings(".mega-sub-menu").css("display", "none").delay(plugin.settings.effect_speed).queue(function(){
-                    $(this).css("display", "").dequeue();
-                });
-            }
-
-            // pause video widget videos
-            anchor.siblings(".mega-sub-menu").find(".widget_media_video video").each(function() {
-                this.player.pause();
-            });
-
-            anchor.parent().removeClass("mega-toggle-on").triggerHandler("close_panel");
-            plugin.addAnimatingClass(anchor.parent());
-        };
 
         plugin.addAnimatingClass = function(element) {
             if (plugin.settings.effect === "disabled") {
@@ -112,7 +84,7 @@
                 return;
             }
 
-            if (plugin.isDesktopView() && ($menu.hasClass("mega-menu-horizontal") || $menu.hasClass("mega-menu-vertical"))) {
+            if (plugin.isDesktopView() && ( $menu.hasClass("mega-menu-horizontal") || $menu.hasClass("mega-menu-vertical") ) && !anchor.parent().hasClass("mega-collapse-children")) {
                 plugin.hideSiblingPanels(anchor, true);
             }
 
@@ -123,7 +95,9 @@
             plugin.calculateDynamicSubmenuWidths(anchor);
 
             // apply jQuery transition (only if the effect is set to "slide", other transitions are CSS based)
-            if ( plugin.settings.effect === "slide" || (plugin.isMobileView() && plugin.settings.effect_mobile === "slide")) {
+            if ( anchor.parent().hasClass("mega-collapse-children") || plugin.settings.effect === "slide" || 
+                ( plugin.isMobileView() && ( plugin.settings.effect_mobile === "slide" || plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right" ) )
+               ) {
                 var speed = plugin.isMobileView() ? plugin.settings.effect_speed_mobile : plugin.settings.effect_speed;
 
                 anchor.siblings(".mega-sub-menu").css("display", "none").animate({"height":"show", "paddingTop":"show", "paddingBottom":"show", "minHeight":"show"}, speed, function() {
@@ -132,6 +106,39 @@
             }
 
             anchor.parent().addClass("mega-toggle-on").triggerHandler("open_panel");
+        };
+        
+        plugin.hidePanel = function(anchor, immediate) {
+            anchor.parent().triggerHandler("before_close_panel");
+
+            anchor.attr("aria-expanded", "false");
+
+            if ( anchor.parent().hasClass("mega-collapse-children") || ( ! immediate && plugin.settings.effect === "slide" ) || 
+                ( plugin.isMobileView() && ( plugin.settings.effect_mobile === "slide" || plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right" ) )
+               ) {
+                var speed = plugin.isMobileView() ? plugin.settings.effect_speed_mobile : plugin.settings.effect_speed;
+
+                anchor.siblings(".mega-sub-menu").animate({"height":"hide", "paddingTop":"hide", "paddingBottom":"hide", "minHeight":"hide"}, speed, function() {
+                    anchor.siblings(".mega-sub-menu").css("display", "");
+                    anchor.parent().removeClass("mega-toggle-on").triggerHandler("close_panel");
+                });
+
+                return;
+            }
+
+            if (immediate) {
+                anchor.siblings(".mega-sub-menu").css("display", "none").delay(plugin.settings.effect_speed).queue(function(){
+                    $(this).css("display", "").dequeue();
+                });
+            }
+
+            // pause video widget videos
+            anchor.siblings(".mega-sub-menu").find(".widget_media_video video").each(function() {
+                this.player.pause();
+            });
+
+            anchor.parent().removeClass("mega-toggle-on").triggerHandler("close_panel");
+            plugin.addAnimatingClass(anchor.parent());
         };
 
         plugin.calculateDynamicSubmenuWidths = function(anchor) {
@@ -197,12 +204,15 @@
                 dragging = false;
             });
 
-            $("> a.mega-menu-link", items_with_submenus).on("touchend.megamenu", function(e) {
+            var collapse_children_parents = $("li.mega-menu-megamenu li.mega-menu-item-has-children.mega-collapse-children > a.mega-menu-link");
+            var clickable_parents = $("> a.mega-menu-link", items_with_submenus).add(collapse_children_parents);
+
+            clickable_parents.on("touchend.megamenu", function(e) {
                 plugin.unbindHoverEvents();
                 plugin.unbindHoverIntentEvents();
             });
 
-            $("> a.mega-menu-link", items_with_submenus).on("click.megamenu", function(e) {
+            clickable_parents.on("click.megamenu", function(e) {
                 if (plugin.isDesktopView() && $(this).parent().hasClass("mega-toggle-on") && $(this).parent().parent().parent().hasClass("mega-menu-tabbed") ) {
                     if (plugin.settings.second_click === "go") {
                         return;
@@ -288,7 +298,7 @@
                 var keyCode = e.keyCode || e.which;
                 var active_link = $(e.target);
 
-                if (keyCode === space_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
+                if ( keyCode === space_key && active_link.is(".mega-menu-link") && $menu.parent().hasClass("mega-keyboard-navigation") ) {
                     e.preventDefault();
 
                     // pressing space on a parent item will always toggle the sub menu
@@ -305,7 +315,7 @@
             $menu.parent().on("keyup.megamenu", function(e) {
                 var keyCode = e.keyCode || e.which;
                 var active_link = $(e.target);
-
+                
                 if ( keyCode === tab_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
                     if ( active_link.parent().is(items_with_submenus) && active_link.is("[href]") !== false ) {
                         plugin.showPanel(active_link);
@@ -429,6 +439,7 @@
             plugin.unbindKeyboardEvents();
         };
 
+
         plugin.bindMegaMenuEvents = function() {
             if (plugin.isDesktopView() && plugin.settings.event === "hover_intent") {
                 bindHoverIntentEvents();
@@ -509,8 +520,7 @@
         plugin.initToggleBar = function() {
             // mobile menu
             $toggle_bar.on("click", function(e) {
-                if ( $(e.target).is(".mega-menu-toggle, .mega-menu-toggle-block, .mega-menu-toggle-animated-block, .mega-menu-toggle-animated-block *, .mega-toggle-blocks-left, .mega-toggle-blocks-center, .mega-toggle-blocks-right, .mega-toggle-label, .mega-toggle-label span") ) {
-                    if ($(this).hasClass("mega-menu-open")) {
+                if ( $(e.target).is(".mega-menu-toggle, .mega-menu-toggle-block, .mega-menu-toggle-animated-block, .mega-menu-toggle-animated-block *, .mega-toggle-blocks-left, .mega-toggle-blocks-center, .mega-toggle-blocks-right, .mega-toggle-label, .mega-toggle-label span") ) {                    if ($(this).hasClass("mega-menu-open")) {
                         plugin.hideMobileMenu();
                     } else {
                         plugin.showMobileMenu();
@@ -524,7 +534,10 @@
                 return;
             }
 
-            $("body").removeClass($menu.attr("id") + "-mobile-open");
+            html_body_class_timeout = setTimeout(function() {
+                $("body").removeClass($menu.attr("id") + "-mobile-open");
+                $("html").removeClass($menu.attr("id") + "-off-canvas-open");
+            }, plugin.settings.effect_speed_mobile);
 
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "false");
 
@@ -546,7 +559,13 @@
                 return;
             }
 
+            clearTimeout(html_body_class_timeout);
+
             $("body").addClass($menu.attr("id") + "-mobile-open");
+
+            if ( plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right" ) {
+                $("html").addClass($menu.attr("id") + "-off-canvas-open");
+            }
 
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "true");
 
@@ -560,7 +579,8 @@
         };
 
         plugin.toggleBarForceWidth = function() {
-            if ($(plugin.settings.mobile_force_width).length) {
+
+            if ($(plugin.settings.mobile_force_width).length && ( plugin.settings.effect_mobile == 'slide' || plugin.settings.effect_mobile == 'disabled' ) ) {
                 var submenu_offset = $toggle_bar.offset();
                 var target_offset = $(plugin.settings.mobile_force_width).offset();
 
@@ -582,12 +602,14 @@
                 plugin.unbindAllEvents();
             }
 
-            $("span.mega-indicator", $menu).on("click", function(e) {
+            $("span.mega-indicator", $menu).on("click.megamenu", function(e) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 if ( $(this).parent().parent().hasClass("mega-toggle-on") ) {
-                    plugin.hidePanel($(this).parent(), false);
+                    if ( ! $(this).parent().parent().parent().parent().hasClass("mega-menu-tabbed") || plugin.isMobileView() ) {
+                        plugin.hidePanel($(this).parent(), false);
+                    }
                 } else {
                     plugin.showPanel($(this).parent(), false);
                 }

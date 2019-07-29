@@ -385,6 +385,12 @@
 
             grid.on("click", ".widget-action", function() {
 
+                var action = "mm_edit_widget";
+
+                if ($(this).parent().parent().parent().attr('data-type') == 'item') {
+                    action = "mm_edit_menu_item";
+                }
+
                 var widget = $(this).closest(".widget");
                 var widget_title = widget.find("h4");
                 var id = widget.attr("data-id");
@@ -396,7 +402,7 @@
 
                     // retrieve the widget settings form
                     $.post(ajaxurl, {
-                        action: "mm_edit_widget",
+                        action: action,
                         widget_id: id,
                         _wpnonce: megamenu.nonce
                     }, function(response) {
@@ -984,6 +990,13 @@
 
 
             megamenubuilder.on("click", ".widget .widget-action", function() {
+
+                var action = "mm_edit_widget";
+
+                if ($(this).parent().parent().parent().attr('data-type') == 'menu_item') {
+                    action = "mm_edit_menu_item";
+                }
+
                 var widget = $(this).closest(".widget");
                 var widget_title = widget.find(".widget-title");
                 var widget_inner = widget.find(".widget-inner");
@@ -995,7 +1008,7 @@
 
                     // retrieve the widget settings form
                     $.post(ajaxurl, {
-                        action: "mm_edit_widget",
+                        action: action,
                         widget_id: id,
                         _wpnonce: megamenu.nonce
                     }, function(response) {

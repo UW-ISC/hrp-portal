@@ -1867,6 +1867,10 @@ class MLA_List_Table extends WP_List_Table {
 			}
 		}
 
+		if ( class_exists( 'ZipArchive' ) ) {
+			$actions[ 'download-zip' ] = __( 'Download', 'media-library-assistant' );
+		}
+		
 		return apply_filters( 'mla_list_table_get_bulk_actions', $actions );
 	}
 

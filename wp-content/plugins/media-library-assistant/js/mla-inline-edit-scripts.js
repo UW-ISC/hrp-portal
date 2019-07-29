@@ -138,6 +138,16 @@ var jQuery,
 		init : function(){
 			var t = this, qeRow = $( '#inline-edit' ), bulkRow = $( '#bulk-edit' ), progressRow = $( '#bulk-progress' );
 
+			if ( mla.settings.deleteAcpBulkEdit ) {
+				setTimeout( function() {
+					var elements = document.querySelectorAll( 'body.ac-mla-media-assistant .acp-be-editrow, body.ac-mla-media-assistant .acp-be-noticerow' );
+				
+					for ( i = 0; i < elements.length; ++i ) {
+						elements[ i ].remove();
+					}
+				}, 1000 );
+			}
+			
 			t.type = 'attachment';
 			t.what = '#attachment-';
 

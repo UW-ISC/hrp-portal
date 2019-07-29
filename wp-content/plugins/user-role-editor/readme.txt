@@ -3,8 +3,9 @@ Contributors: shinephp
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=vladimir%40shinephp%2ecom&lc=RU&item_name=ShinePHP%2ecom&item_number=User%20Role%20Editor%20WordPress%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: user, role, editor, security, access, permission, capability
 Requires at least: 4.0
-Tested up to: 5.0.3
-Stable tag: 4.49
+Tested up to: 5.2.2
+Stable tag: 4.51.2
+Requires PHP: 5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,21 +80,36 @@ https://translate.wordpress.org/projects/wp-plugins/user-role-editor/
 
 
 == Changelog =
-= [4.49] 15.01.2019 =
-* Update: Selected role ID was added to "Delete role" confirmation dialog.
-* Update: Method URE_Base_Lib::get_short_list_str() was enhanced.
-* Update: Method URE_Base_Lib::get_blog_ids() was made public.
-* Update: Method URE_Lib::get_usermeta_table_name() was excluded.
-* Fix: PHP warning "Undefined index:'unexisted role ID'" was fixed at URE_Lib::roles_text() (wp-content/plugins/user-role-editor/includes/classes/lib.php:360).
-* Fix: Bug was fixed with incorrect usage of transient for option "Show deprecated capabilities".
 
-= [4.48] 03.01.2019 =
-* Update: Multisite: Sites list is not requested from the database on every page opened in order to reduce server load.
-* Update: URE plugin version update routine is called now at the wp-admin backend only.
-* Update: Direct access to URE_Lib::bbpress property was excluded as a preparation to future code enhancements. 
+= [4.51.2] 15.07.2019 =
+* Fix: Dialog button labels inside User Role Editor ('Cancel' buttons especially) were shown with not correct translation or not translated at all. Thanks to @lucaboccianti for [this bug report](https://wordpress.org/support/topic/buttons-delete-role-cancel-dont-delete-role-inverted-functions-italian/).
+* Update: Roles inside WordPress roles dropdown lists are sorted by alphabet. 
 
-For full list of changes applied to User Role Editor plugin look changelog.txt file.
+= [4.51.1] 15.06.2019 =
+* Fix: Superadmin could not revoke capabilities from 'administrator' role under WordPress multisite.
 
+= [4.51] 21.05.2019 =
+* New: Bulk actions were added to the Users page: "Add Role", "Revoke Role". Select role from the related drop-down menu and add/revoke it to/from the list of pre-selected users.
+* Update: Bulk grant roles feature ("Grant roles" button at the "Users" page) and Bulk grant role to users without role ("Without role" button at the "Users" page) are protected by 'promote_users' capability instead of 'edit_users', exactly the same way as WordPress itself does for its "Change role to".
+* Update: 'load-users.php' action is used instead of 'admin_init' to load support code for "Without role" and "Grant roles" button at the "Users" page.
+* Update: URE ignores now a capability without ID in case it was added to the database somehow (other plugin bug, etc.). Such incorrect empty capability is removed from the capabilities list as a result after any role update.
+
+= [4.50.2] 01.04.2019 =
+* Fix: WordPress multisite: PHP Notice "wpmu_new_blog is deprecated since version 5.1.0! Use wp_insert_site instead." was removed. URE uses 'wp_initialize_site' action now instead of deprecated 'wpmu_new_blog'. This fix provides correct roles replication from the main blog/site to a new created blog/site.
+
+= [4.50.1] 16.03.2019 =
+* Fix: WP Multisite: Users->Capabilities->Update: "Fatal error: Uncaught Error: Call to undefined method URE_Editor::check_blog_user() in /wp-content/plugins/user-role-editor/includes/classes/editor.php on line 576" was fixed. 
+* Fix: WooCommerce group was not shown under "Custom capabilities" section.
+
+= [4.50] 03.03.2019 =
+* PHP version 5.5 was marked as required.
+* Update: General code restructure and optimization.
+* Update: URE_Base_Lib::get_blog_ids() returns null, if it's called under WordPress single site (not multisite).
+* Update: URE_Editor::prepare_capabilities_to_save() : "Invalid argument supplied for foreach()" warning was excluded in case there was no valid data structures initialization.
+* Update: 'administrator' role protection was enhanced. URE always does not allow to revoke capability from 'administrator' role. That was possible earlier after the 'administrator' role update.
+* Update: 2 new actions 'ure_settings_tools_show' and 'ure_settings_tools_exec' allows to extends the list of sections available at the Settings->User Role Editor->Tools tab.
+
+File changelog.txt contains the full list of changes.
 
 == Additional Documentation ==
 
@@ -102,14 +118,9 @@ You can find more information about "User Role Editor" plugin at [this page](htt
 I am ready to answer on your questions about plugin usage. Use [plugin page comments](http://www.shinephp.com/user-role-editor-wordpress-plugin/) for that.
 
 == Upgrade Notice ==
-= [4.49] 15.01.2019 =
-* Update: Selected role ID was added to "Delete role" confirmation dialog.
-* Update: Method URE_Base_Lib::get_short_list_str() was enhanced.
-* Update: Method URE_Base_Lib::get_blog_ids() was made public.
-* Update: Method URE_Lib::get_usermeta_table_name() was excluded.
-* Fix: PHP warning "Undefined index:'unexisted role ID'" was fixed at URE_Lib::roles_text() (wp-content/plugins/user-role-editor/includes/classes/lib.php:360).
-* Fix: Bug was fixed with incorrect usage of transient for option "Show deprecated capabilities".
 
+= [4.51.1] 15.06.2019 =
+* Fix: Superadmin could not revoke capabilities from 'administrator' role under WordPress multisite.
 
 
 

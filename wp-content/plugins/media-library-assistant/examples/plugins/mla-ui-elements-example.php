@@ -41,8 +41,8 @@
  * [mla_tag_cloud taxonomy=attachment_tag number=20 current_item="{+request:current_item+}" mla_link_href="{+currentlink_url+}&tax_input{{+query:taxonomy+}}{}={+slug+}&muie_per_page={+template:({+request:muie_per_page+}|5)+}" mla_link_class="{+current_item_class+}"]
  * </span>
  *
- * This example plugin uses four of the many filters available in the [mla_gallery] shortcode
- * and illustrates some of the techniques you can use to customize the gallery display.
+ * This example plugin uses two of the many filters available in the [mla_gallery] and [mla_term_list] shortcodes
+ * and illustrates some of the techniques you can use to customize the gallery display and term list controls.
  *
  * Created for support topic "How do I provide a front-end search of my media items using Custom Fields?"
  * opened on 4/15/2016 by "direys".
@@ -64,8 +64,12 @@
  * opened on 10/18/2016 by "trinitaa".
  * https://wordpress.org/support/topic/shortcode-456/
  *
+ * Enhanced for support topic "Search solution"
+ * opened on 3/28/2019 by "fabrizioarnone".
+ * https://wordpress.org/support/topic/search-solution/
+ *
  * @package MLA UI Elements Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
@@ -73,10 +77,10 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes
 Author: David Lingren
-Version: 1.10
+Version: 1.11
 Author URI: http://davidlingren.com/
 
-Copyright 2016-2018 David Lingren
+Copyright 2016-2019 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -379,6 +383,42 @@ class MLAUIElementsExample {
 			$tax_input = array();
 		}
 
+		// Add in any simple taxonomy query shortcode parameters
+		if ( ! empty( $shortcode_attributes ) ) {
+			$all_taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'names' );
+			$simple_tax_queries = array();
+			foreach ( $shortcode_attributes as $key => $value ) {
+				if ( 'tax_input' == $key ) {
+					$tax_queries = array();
+					$compound_values = array_filter( array_map( 'trim', explode( ',', $value ) ) );
+					foreach ( $compound_values as $compound_value ) {
+						$value = explode( '.', $compound_value );
+						if ( 2 === count( $value ) ) {
+							if ( array_key_exists( $value[0], $all_taxonomies ) ) {
+								$tax_queries[ $value[0] ][] = $value[1];
+							} // valid taxonomy
+						} // valid coumpound value
+					} // foreach compound_value
+
+					foreach( $tax_queries as $key => $value ) {
+						$simple_tax_queries[ $key ] = implode(',', $value );
+					}
+				} // tax_input
+				elseif ( array_key_exists( $key, $all_taxonomies ) ) {
+					$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', explode( ',', $value ) ) ) );
+					if ( 'no.terms.assigned' === $simple_tax_queries[ $key ] ) {
+						$no_terms_assigned_query = true;
+					}
+				} // array_key_exists
+			} //foreach $shortcode_attributes
+			
+			if ( !empty( $simple_tax_queries ) ) {
+				foreach ( $simple_tax_queries as $key => $value ) {
+					$tax_input[ $key ] = explode( ',', $value );
+				}
+			}
+		}
+
 		// Add the [mla_term_list mla_control_name=] parameter(s)
 		if ( !empty( self::$mla_control_names ) ) {
 			$muie_filters = array_merge( $muie_filters, self::$mla_control_names );
@@ -496,9 +536,7 @@ class MLAUIElementsExample {
 			}
 		}
 
-		/*
-		 * Add the filter settings to pagination URLs
-		 */
+		// Add the filter settings to pagination URLs
 		if ( !empty( $shortcode_attributes['mla_output'] ) ) {
 
 			$filters = urlencode( json_encode( $muie_filters ) );

@@ -26,6 +26,7 @@
                     padding: 0;
                     position: relative;
                     vertical-align: middle;
+                    width: auto;
                 }
             }
         }
@@ -38,6 +39,7 @@
         $color: nth($item, 3);
         $font: nth($item, 4);
         $size: nth($item, 5);
+        $weight: nth($item, 6);
 
         @if type-of($id) == number {
             .mega-toggle-block-#{$id} a.mega-icon:before {
@@ -47,6 +49,7 @@
                 color: $color;
                 width: 40px;
                 height: 100%;
+                font-weight: $weight;
             }
         }
     }
