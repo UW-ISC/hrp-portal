@@ -74,7 +74,7 @@
                 $(".mega-search input[type=text]", $menu).on('focus', function(e) {
                     var form = $(this).parents('.mega-search');
 
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') && $menu.hasClass('mega-keyboard-navigation') ) {
+                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') && $wrap.hasClass('mega-keyboard-navigation') ) {
                         $(this).attr('placeholder', $(this).attr('data-placeholder'));
                         form.removeClass('mega-search-closed');
                         form.addClass('mega-search-open');
@@ -84,7 +84,7 @@
                 $(".mega-search input[type=text]", $menu).on('blur', function(e) {
                     var form = $(this).parents('.mega-search');
 
-                    if ( ! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') && $menu.hasClass('mega-keyboard-navigation') ) {
+                    if ( ! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') && $wrap.hasClass('mega-keyboard-navigation') ) {
                         $(this).attr('placeholder', '');
                         form.removeClass('mega-search-open');
                         form.addClass('mega-search-closed');
@@ -120,6 +120,26 @@
         plugin.init_toggle_search = function() {
 
             $(".mega-menu-toggle .mega-search", $wrap).children('input[type=text]').val("");
+
+            $(".mega-menu-toggle .mega-search input[type=text]", $wrap).on('focus', function(e) {
+                var form = $(this).parents('.mega-search');
+
+                if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') && $wrap.hasClass('mega-keyboard-navigation') ) {
+                    $(this).attr('placeholder', $(this).attr('data-placeholder'));
+                    form.removeClass('mega-search-closed');
+                    form.addClass('mega-search-open');
+                }
+            });
+
+            $(".mega-menu-toggle .mega-search input[type=text]", $wrap).on('blur', function(e) {
+                var form = $(this).parents('.mega-search');
+
+                if ( ! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') && $wrap.hasClass('mega-keyboard-navigation') ) {
+                    $(this).attr('placeholder', '');
+                    form.removeClass('mega-search-open');
+                    form.addClass('mega-search-closed');
+                }
+            });
 
             $(".mega-menu-toggle .mega-search .search-icon", $wrap).on('click', function(e) {
 
@@ -302,7 +322,7 @@
 
         plugin.unstick_menu = function() {
             is_stuck = false;
-
+            
             $wrap.removeClass('mega-sticky').removeClass('mega-hide').removeClass('mega-reveal').unwrap().css({
                 'margin' : '',
                 'width' : '',
@@ -348,14 +368,9 @@
                 }
 
                 var scroll_top = $(window).scrollTop();
-
-                if ( last_scroll_top > 0 ) {
-                    // Only hide once scrolling. Show menu when refreshing page.
-                    $wrap.addClass('mega-hide');
-                }
                 
                 if ( scroll_top < sticky_hide_until_scroll_up_offset ) {
-                    $wrap.addClass('mega-reveal');
+                    $wrap.removeClass('mega-hide');
                 }
                 
                 saved_scroll_top = last_scroll_top;
@@ -363,12 +378,12 @@
                 if (scroll_top < last_scroll_top) {
                     // scroll up
                     if (saved_scroll_top - scroll_top > sticky_hide_until_scroll_up_tolerance) {
-                        $wrap.addClass('mega-reveal');
+                        $wrap.removeClass('mega-hide');
                     }
                 } else {
                     // scroll down
                     if (scroll_top - saved_scroll_top > sticky_hide_until_scroll_up_tolerance) {
-                        $wrap.removeClass('mega-reveal');
+                        $wrap.addClass('mega-hide');
                     }
                 }
 
@@ -400,6 +415,10 @@
         plugin.init = function() {
             plugin.calculate_menu_position();
             plugin.mega_sticky_on_scroll();
+
+            $('.mega-menu-accordion li.mega-menu-item').on('open_panel', function() {
+                plugin.calculate_menu_position();
+            });
 
             var $window = $(window);
 
@@ -486,7 +505,7 @@
                     }
                 });
 
-                var border_top_width = parseInt($('> ul.mega-sub-menu', menu_item).css('borderLeftWidth'),10);
+                var border_top_width = parseInt($('> ul.mega-sub-menu', menu_item).css('borderTopWidth'),10);
                 var border_bottom_width = parseInt($('> ul.mega-sub-menu', menu_item).css('borderBottomWidth'),10);
                 
                 $('> ul.mega-sub-menu', menu_item).css('minHeight', max_height + border_bottom_width + border_top_width);
@@ -506,9 +525,9 @@
             }
         });
 
-        $('li.mega-menu-tabbed').on('open_panel', function() {
+        $('li.mega-menu-tabbed, li.mega-menu-tabbed li.mega-collapse-children').on('open_panel', function() {
             var menu = $(this).parents('.mega-menu');
-            var menu_item = $(this);
+            var menu_item = $(this).closest(".mega-menu-tabbed");
 
             $("> ul.mega-sub-menu", $(this)).promise().done(function(){
                 calculate_tabbed_sub_menu_widths( menu_item );
@@ -523,6 +542,15 @@
 
             $('li.mega-menu-tabbed').on('close_panel', function() {
                 $(".mega-toggle-on", menu).removeClass("mega-toggle-on");
+            });
+
+            $('li.mega-menu-tabbed li.mega-collapse-children').on('close_panel', function() {
+                var menu_item = $(this).closest(".mega-menu-tabbed");
+
+                $("> ul.mega-sub-menu", $(this)).promise().done(function(){
+                    calculate_tabbed_sub_menu_widths( menu_item );
+                    calculate_tabbed_sub_menu_heights( menu_item );
+                });
             });
         });
     });

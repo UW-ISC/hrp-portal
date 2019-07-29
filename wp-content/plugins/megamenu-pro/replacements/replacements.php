@@ -1,7 +1,7 @@
 <?php
 
 if ( ! defined( 'ABSPATH' ) ) {
-    exit; // disable direct access
+	exit; // disable direct access
 }
 
 if ( ! class_exists('Mega_Menu_Replacements') ) :
@@ -65,7 +65,7 @@ class Mega_Menu_Replacements {
 
 		$contents = file_get_contents( $path );
 
- 		return $scss . $contents;
+		return $scss . $contents;
 
 	}
 
@@ -151,7 +151,7 @@ class Mega_Menu_Replacements {
 
 		//$custom_styles:(
 		// (123, red, 150px),
-	    // (456, green, null),
+		// (456, green, null),
 		// (789, blue, 90%),());
 
 		if ( count( $custom_vars ) ) {
@@ -549,9 +549,8 @@ class Mega_Menu_Replacements {
 		$replacement = do_shortcode( $item->megamenu_settings['replacements']['html']['code'] );
 
 		if ( $item->megamenu_settings['replacements']['html']['mode'] == 'inner' ) {
-
-			return str_replace( strip_tags( $item_output ), $replacement, $item_output );
-
+			// ensure we only replace the menu item text
+			return str_replace( ">" . strip_tags($item_output) . "<", ">" . $replacement . "<", $item_output );
 		} elseif ( $item->megamenu_settings['replacements']['html']['mode'] == 'href' ) {
 
 			return str_replace( $item->url, $replacement, $item_output );
@@ -676,8 +675,14 @@ class Mega_Menu_Replacements {
 				$search_icon_html = "<span class='dashicons {$item->megamenu_settings['icon']} search-icon'></span>";
 			}
 
-			if ( strpos( $item->megamenu_settings['icon'], 'fa-' ) !== FALSE ) {
+			$icon_prefix = substr( $item->megamenu_settings['icon'], 0, 3 );
+
+			if ( $icon_prefix == 'fa-' ) {
 				$search_icon_html = "<span class='fa {$item->megamenu_settings['icon']} search-icon'></span>";
+			}
+
+			if ( in_array( $icon_prefix, array( 'fab', 'fas', 'far' ) ) ) {
+				$search_icon_html = "<span class='{$item->megamenu_settings['icon']} search-icon'></span>";
 			}
 
 			if ( strpos( $item->megamenu_settings['icon'], 'genericon-' ) !== FALSE ) {
@@ -692,29 +697,29 @@ class Mega_Menu_Replacements {
 
 		if ( $type == 'expand_to_left' ) {
 			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-left mega-search-closed' role='search' action='" .  $action . "'>
-				        " . $search_icon_html . "
-				        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
-				        <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
-				        " . apply_filters("megamenu_search_inputs", $inputs) . "
-				    </form></div>";
+						" . $search_icon_html . "
+						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
+						" . apply_filters("megamenu_search_inputs", $inputs) . "
+					</form></div>";
 		}
 
 		if ( $type == 'expand_to_right' ) {
 			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-right mega-search-closed' role='search' action='" .  $action . "'>
-				        " . $search_icon_html . "
-				        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
-				        <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
-				        " . apply_filters("megamenu_search_inputs", $inputs) . "
-				    </form></div>";
+						" . $search_icon_html . "
+						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
+						" . apply_filters("megamenu_search_inputs", $inputs) . "
+					</form></div>";
 		}
 
 		if ( $type == 'static' ) {
 			$html = "<div class='mega-search-wrap mega-static'><form class='mega-search mega-search-open' role='search' action='" .  $action . "'>
-				        " . $search_icon_html . "
-				        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
-				        <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
-				        " . apply_filters("megamenu_search_inputs", $inputs) . "
-				    </form></div>";
+						" . $search_icon_html . "
+						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
+						" . apply_filters("megamenu_search_inputs", $inputs) . "
+					</form></div>";
 		}
 
 		if ( function_exists("wpml_get_language_input_field") ) {
@@ -722,7 +727,7 @@ class Mega_Menu_Replacements {
 		}
 
 
-	    return apply_filters('megamenu_search_replacement_html', $html);
+		return apply_filters('megamenu_search_replacement_html', $html);
 	}
 
 
@@ -807,7 +812,7 @@ class Mega_Menu_Replacements {
 		$html .= "                <div class='mega-description'>" . __( "Choose a logo from your Media Library" , "megamenupro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
-		$html .= "				  <div class='mmm_image_selector' data-src='{$logo_src}' data-field='custom_logo_id' data-menu-item-id='" . esc_attr( $menu_item_id ) . "'></div>";
+		$html .= "                <div class='mmm_image_selector' data-src='{$logo_src}' data-field='custom_logo_id' data-menu-item-id='" . esc_attr( $menu_item_id ) . "'></div>";
 		$html .= "                <input type='hidden' id='custom_logo_id' name='settings[replacements][logo][id]' value='{$logo_id}' />";
 		$html .= "            </td>";
 		$html .= "        </tr>";
@@ -880,14 +885,14 @@ class Mega_Menu_Replacements {
 		$html .= "                <div class='mega-description'>" . __("Search icon color", "megamenupro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
-        $html .= "                <label>";
-        $html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
-        $html .=                      $this->print_theme_color_option('icon_color_closed', $search_icon_color_closed);
-        $html .= "                </label>";
-        $html .= "                <label>";
-        $html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
-        $html .=                      $this->print_theme_color_option('icon_color_open', $search_icon_color_open);
-        $html .= "                </label>";
+		$html .= "                <label>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
+		$html .=                      $this->print_theme_color_option('icon_color_closed', $search_icon_color_closed);
+		$html .= "                </label>";
+		$html .= "                <label>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
+		$html .=                      $this->print_theme_color_option('icon_color_open', $search_icon_color_open);
+		$html .= "                </label>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
@@ -908,14 +913,14 @@ class Mega_Menu_Replacements {
 		$html .= "                <div class='mega-description'>" . __("Background color for search icon and search input box", "megamenupro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
-        $html .= "                <label>";
-        $html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
+		$html .= "                <label>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
 		$html .=                      $this->print_theme_color_option('background_color_closed', $search_background_color_closed);
-        $html .= "                </label>";
-        $html .= "                <label>";
-        $html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
-        $html .=                      $this->print_theme_color_option('background_color_open', $search_background_color_open);
-        $html .= "                </label>";
+		$html .= "                </label>";
+		$html .= "                <label>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
+		$html .=                      $this->print_theme_color_option('background_color_open', $search_background_color_open);
+		$html .= "                </label>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
@@ -971,11 +976,11 @@ class Mega_Menu_Replacements {
 		$html .= "                    <option value='outer' " . selected( $html_mode, 'outer', false ) . ">" . __("Replace the whole menu item link", "megamenupro") . "</option>";
 		$html .= "                    <option value='href' " . selected( $html_mode, 'href', false ) . ">" . __("Replace the menu item URL", "megamenupro") . "</option>";
 		$html .= "                </select>";
-        $html .= "                <div class='mega-description'>";
-        $html .= "                    <div class='inner' style='display:{$inner_display}'>&lt;li class='menu-item'&gt;&lt;a href='url'&gt;<span style='color: red'>Link Text</span>&lt;/a&gt;&lt;/li&gt;</div>";
-        $html .= "                    <div class='outer' style='display:{$outer_display}'>&lt;li class='menu-item'&gt;<span style='color: red'>&lt;a href='url'&gt;Link Text&lt;/a&gt;</span>&lt;/li&gt;</div>";
-       $html .= "                    <div class='href' style='display:{$href_display}'>&lt;li class='menu-item'&gt;&lt;a href='<span style='color: red'>url</span>'&gt;Link Text&lt;/a&gt;&lt;/li&gt;</div>";
-        $html .= "                </div>";
+		$html .= "                <div class='mega-description'>";
+		$html .= "                    <div class='inner' style='display:{$inner_display}'>&lt;li class='mega-menu-item'&gt;&lt;a class='mega-menu-link' href='url'&gt;<span style='color: red; font-weight: bold;'>Link Text</span>&lt;/a&gt;&lt;/li&gt;</div>";
+		$html .= "                    <div class='outer' style='display:{$outer_display}'>&lt;li class='mega-menu-item'&gt;<span style='color: red; font-weight: bold;'>&lt;a class='mega-menu-link' href='url'&gt;Link Text&lt;/a&gt;</span>&lt;/li&gt;</div>";
+	   $html .= "                    <div class='href' style='display:{$href_display}'>&lt;li class='mega-menu-item'&gt;&lt;a class='mega-menu-link' href='<span style='color: red; font-weight: bold;'>url</span>'&gt;Link Text&lt;/a&gt;&lt;/li&gt;</div>";
+		$html .= "                </div>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='html' style='display: {$html_display}'>";
@@ -1000,7 +1005,7 @@ class Mega_Menu_Replacements {
 	}
 
 
-    /**
+	/**
 	 * Return the HTML for a color picker
 	 *
 	 * @since 1.3
@@ -1008,95 +1013,95 @@ class Mega_Menu_Replacements {
 	 * @param string $value
 	 * @return string
 	 */
-    public function print_theme_color_option( $key, $value ) {
+	public function print_theme_color_option( $key, $value ) {
 
-        if ( $value == 'transparent' ) {
-            $value = 'rgba(0,0,0,0)';
-        }
+		if ( $value == 'transparent' ) {
+			$value = 'rgba(0,0,0,0)';
+		}
 
-        if ( $value == 'rgba(0,0,0,0)' ) {
-            $value_text = 'transparent';
-        } else {
-            $value_text = $value;
-        }
+		if ( $value == 'rgba(0,0,0,0)' ) {
+			$value_text = 'transparent';
+		} else {
+			$value_text = $value;
+		}
 
-        $html  = "<div class='mm-picker-container'>";
-        $html .= "    <input type='text' class='mm_colorpicker' name='settings[replacements][search][$key]' value='{$value}' />";
-        $html .= "    <div class='chosen-color'>{$value_text}</div>";
-        $html .= "</div>";
+		$html  = "<div class='mm-picker-container'>";
+		$html .= "    <input type='text' class='mm_colorpicker' name='settings[replacements][search][$key]' value='{$value}' />";
+		$html .= "    <div class='chosen-color'>{$value_text}</div>";
+		$html .= "</div>";
 
 		return $html;
 
-    }
+	}
 
-    /**
-     * Return the image URL, crop the image to the correct dimensions if required
-     *
-     * @param int $attachment_id
-     * @param int $dest_width
-     * @param int $dest_height
-     * @since 1.3
-     * @return string resized image URL
-     */
-    public function get_resized_image_url( $attachment_id, $dest_width, $dest_height ) {
+	/**
+	 * Return the image URL, crop the image to the correct dimensions if required
+	 *
+	 * @param int $attachment_id
+	 * @param int $dest_width
+	 * @param int $dest_height
+	 * @since 1.3
+	 * @return string resized image URL
+	 */
+	public function get_resized_image_url( $attachment_id, $dest_width, $dest_height ) {
+		if ( get_post_type( $attachment_id ) != 'attachment' ) {
+			return "false";
+		}
+		
+		$meta = wp_get_attachment_metadata( $attachment_id );
 
-        $meta = wp_get_attachment_metadata( $attachment_id );
+		$full_url = wp_get_attachment_url( $attachment_id );
 
-        $upload_dir = wp_upload_dir();
+		if ( ! isset( $meta['width'], $meta['height'] ) ) {
+			return $full_url; // image is not valid
+		}
 
-        $full_url = set_url_scheme($upload_dir['baseurl'] . "/" . get_post_meta( $attachment_id, '_wp_attached_file', true ));
+		// if the full size is the same as the required size, return the full URL
+		if ( $meta['width'] == $dest_width && $meta['height'] == $dest_height ) {
+			return $full_url;
+		}
 
-        if ( ! isset( $meta['width'], $meta['height'] ) ) {
-            return $full_url; // image is not valid
-        }
+		$path = get_attached_file( $attachment_id );
+		$info = pathinfo( $path );
+		$dir = $info['dirname'];
+		$ext = $info['extension'];
+		$name = wp_basename( $path, ".$ext" );
+		$dest_file_name = "{$dir}/{$name}-{$dest_width}x{$dest_height}.{$ext}";
 
-        // if the full size is the same as the required size, return the full URL
-        if ( $meta['width'] == $dest_width && $meta['height'] == $dest_height ) {
-            return $full_url;
-        }
+		if ( file_exists( $dest_file_name ) ) {
+			// good. no need for resize, just return the URL
+			return str_replace( basename( $full_url ), basename( $dest_file_name ), $full_url );
+		}
 
-        $path = get_attached_file( $attachment_id );
-        $info = pathinfo( $path );
-        $dir = $info['dirname'];
-        $ext = $info['extension'];
-        $name = wp_basename( $path, ".$ext" );
-        $dest_file_name = "{$dir}/{$name}-{$dest_width}x{$dest_height}.{$ext}";
+		$image = wp_get_image_editor( $path );
 
-        if ( file_exists( $dest_file_name ) ) {
-            // good. no need for resize, just return the URL
-            return str_replace( basename( $full_url ), basename( $dest_file_name ), $full_url );
-        }
-
-
-        $image = wp_get_image_editor( $path );
-
-        // editor will return an error if the path is invalid
-        if ( is_wp_error( $image ) ) {
-            return $full_url;
-        }
+		// editor will return an error if the path is invalid
+		if ( is_wp_error( $image ) ) {
+			return $full_url;
+		}
 
 		$image->resize( $dest_width, $dest_height, true );
 
-        $saved = $image->save( $dest_file_name );
+		$saved = $image->save( $dest_file_name );
 
-        if ( is_wp_error( $saved ) ) {
-            return;
-        }
+		if ( is_wp_error( $saved ) ) {
+			return;
+		}
 
-        // Record the new size so that the file is correctly removed when the media file is deleted.
-        $backup_sizes = get_post_meta( $attachment_id, '_wp_attachment_backup_sizes', true );
+		// Record the new size so that the file is correctly removed when the media file is deleted.
+		$backup_sizes = get_post_meta( $attachment_id, '_wp_attachment_backup_sizes', true );
 
-        if ( ! is_array( $backup_sizes ) ) {
-            $backup_sizes = array();
-        }
+		if ( ! is_array( $backup_sizes ) ) {
+			$backup_sizes = array();
+		}
 
-        $backup_sizes["resized-{$dest_width}x{$dest_height}"] = $saved;
-        update_post_meta( $attachment_id, '_wp_attachment_backup_sizes', $backup_sizes );
+		$backup_sizes["resized-{$dest_width}x{$dest_height}"] = $saved;
+		update_post_meta( $attachment_id, '_wp_attachment_backup_sizes', $backup_sizes );
 
-        $url = str_replace( basename( $full_url ), basename( $saved['path'] ), $full_url );
+		$url = str_replace( basename( $full_url ), basename( $saved['path'] ), $full_url );
 
-        return $url;
-    }
+		return $url;
+	}
 
 }
 

@@ -168,8 +168,11 @@ $green: #46b450;
 				padding: 0 20px;
 				background: white;
 				font-size: 1.3em;
-				line-height: 75px;
+			    align-items: center;
+			    display: inline-flex;
+			    line-height: 25px;
 				float: left;
+				height: 75px;
 
 				br {
 					display: none;
@@ -467,9 +470,19 @@ $green: #46b450;
 								top: 0;
 							}
 
-							&[data-type=item] {
-								.widget-title-action {
-									display: none;
+							&[data-type=item] form {
+								input, select {
+									float: right;
+								}
+
+								p {
+									float: left;
+									width: 100%;
+									margin-bottom: 0;
+								}
+
+								.widget-content {
+									padding-top: 10px;
 								}
 							}
 
@@ -686,12 +699,6 @@ $green: #46b450;
 					box-sizing: border-box;
 				}
 
-				.widget[data-type='menu_item'] {
-					.widget-action {
-						display: none;
-					}
-				}
-
 				.widget {
 					width: 100%;
 
@@ -850,6 +857,17 @@ $green: #46b450;
 							top: -1px;
 							position: relative;
 						}
+					}
+				}
+				form {
+					input, select {
+						float: right;
+					}
+
+					p {
+						float: left;
+						width: 100%;
+						margin-bottom: 0;
 					}
 				}
 			}
@@ -1431,7 +1449,7 @@ $green: #46b450;
 		background: $dark_grey;
 		border-color: $text_grey;
 		border-width: 1px;
-		padding: 0 5px;
+		padding: 1px 5px;
 		border-radius: 3px;
 		opacity: 0;
 		-webkit-transition: all 0.3s ease;
@@ -1555,6 +1573,9 @@ $green: #46b450;
 				select {
 					font-size: 0.9em;
 					max-width: 120px;
+				}
+				select.megamenu_effect_mobile {
+					max-width: 80px;
 				}
 				tr {
 					height: 29px;

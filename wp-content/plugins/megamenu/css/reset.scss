@@ -40,6 +40,7 @@
         height: auto;
         outline: none;
         visibility: inherit;
+        pointer-events: auto;
 
         &:before,
         &:after {

@@ -271,10 +271,6 @@
 						}
 
 						@if $custom_menu_item_link_weight_hover != disabled {
-							&:before {
-								font-weight: normal;
-							}
-
 							&:hover {
 								font-weight: $custom_menu_item_link_weight_hover;
 							}

@@ -19,7 +19,7 @@ class Mega_Menu_Custom_Icon {
      */
     public function __construct() {
 
-        add_filter( 'megamenu_icon_tabs', array( $this, 'custom_icon_tab'), 100, 5 );
+        add_filter( 'megamenu_icon_tabs', array( $this, 'custom_icon_tab'), 999, 5 );
         add_filter( 'megamenu_scss_variables', array( $this, 'add_custom_icons_var_to_scss'), 10, 4 );
         add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_scss'), 10 );
 
@@ -82,6 +82,11 @@ class Mega_Menu_Custom_Icon {
 
                         $icon_url_hover = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id_hover, $width, $height ) );
                         $icon_url_2x_hover = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id_hover, $width * 2, $height * 2 ) );
+
+                        if ( $icon_url_hover == $icon_url ) {
+                            $icon_url_hover = 'false';
+                            $icon_url_2x_hover = 'false';
+                        }
 
                         $styles = array(
                             'id' => $item->ID,
@@ -258,9 +263,7 @@ class Mega_Menu_Custom_Icon {
 
         $meta = wp_get_attachment_metadata( $attachment_id );
 
-        $upload_dir = wp_upload_dir();
-
-        $full_url = $upload_dir['baseurl'] . "/" . get_post_meta( $attachment_id, '_wp_attached_file', true );
+        $full_url = wp_get_attachment_url( $attachment_id );
 
         if ( ! isset( $meta['width'], $meta['height'] ) ) {
             return str_replace( array( "http://", "https://" ), "//", $full_url ); // image is not valid
@@ -281,10 +284,8 @@ class Mega_Menu_Custom_Icon {
         if ( file_exists( $dest_file_name ) ) {
             // good. no need for resize, just return the URL
             $url = str_replace( basename( $full_url ), basename( $dest_file_name ), $full_url );
-
             return str_replace( array( "http://", "https://" ), "//", $url );
         }
-
 
         $image = wp_get_image_editor( $path );
 

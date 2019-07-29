@@ -12,9 +12,31 @@ ul.mega-font-selector li {
 
 /** Font Awesome **/
 
-#cboxContent .menu_icon .fa label:before {
+#cboxContent .menu_icon .fa label:before,
+#cboxContent .menu_icon .fab label:before,
+#cboxContent .menu_icon .far label:before,
+#cboxContent .menu_icon .fas label:before {
 	font-size: 24px;
 	text-align: center;
+}
+
+#cboxContent .menu_icon .fa {
+	font-family: 'FontAwesome';
+}
+
+#cboxContent .menu_icon .fab {
+	font-family: 'Font Awesome 5 Brands';
+	font-weight: 400;
+}
+
+#cboxContent .menu_icon .far {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 400;
+}
+
+#cboxContent .menu_icon .fas {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
 }
 
 /** Genericons **/
@@ -23,8 +45,80 @@ ul.mega-font-selector li {
 	font-size: 24px;
 	text-align: center;
 }
+.nav-menus-php #cboxContent .menu_icon .icon_selector > div.notice {
+	float: none;
+	width: 100%;
+	height: auto;
+	padding: 10px;
+	margin:  0 0 20px 0;
+	box-sizing: border-box;
+}
+body[class*='_page_maxmegamenu_'] .toggle_icon_dropdown .select2-results li:first-child {
+	float: left;
+}
+body[class*='_page_maxmegamenu_'] .toggle_icon_dropdown .select2-results li:first-child i {
+	display: block;
+}
+body[class*='_page_maxmegamenu_'] .toggle_icon_dropdown .select2-results-dept-1 .select2-result-label {
+	padding: 5px !important;
+}
+body[class*='_page_maxmegamenu_'] .toggle_icon_dropdown .select2-results ul.select2-result-sub {
+	padding: 10px;
+}
+body[class*='_page_maxmegamenu_'] .toggle_icon_dropdown.select2-drop.select2-drop-active {
+	border: 1px solid #aaa;
+	box-shadow: none;
+	width: 500px !important;
+}
+body[class*='_page_maxmegamenu_'] .select2-choice > .select2-chosen i {
+	font-style: normal;
+}
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
+    font-family: dashicons;
+}
+body[class*='_page_maxmegamenu_'] .select2-choice > .select2-chosen i[class^='fa-'],
+body[class*='_page_maxmegamenu_'] .select2-result-label i[class^='fa-'],
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span[class^='fa']:before {
+    font-family: FontAwesome;
+}
 
+body[class*='_page_maxmegamenu_'] .select2-choice > .select2-chosen i[class^='fab-'],
+body[class*='_page_maxmegamenu_'] .select2-result-label i[class^='fab'],
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span[class^='fab']:before {
+	font-family: 'Font Awesome 5 Brands';
+	font-weight: 400;
+}
 
+body[class*='_page_maxmegamenu_'] .select2-choice > .select2-chosen i[class^='far-'],
+body[class*='_page_maxmegamenu_'] .select2-result-label i[class^='far'],
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span[class^='far']:before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 400;
+}
+
+body[class*='_page_maxmegamenu_'] .select2-choice > .select2-chosen i[class^='fas-'],
+body[class*='_page_maxmegamenu_'] .select2-result-label i[class^='fas'],
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span[class^='fas']:before {
+	font-family: 'Font Awesome 5 Free';
+	font-weight: 900;
+}
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span {
+    font-size: 20px;
+}
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span[class^='fa'] {
+	font-size: 16px;
+}
+body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
+    content: attr(rel);
+}
+
+.select_2_toggle_block_icon_dropdown {
+	float: right;
+}
+.block-settings .select2-chosen i {
+    vertical-align: middle;
+    margin: 3px 3px 0 0;
+}
 /** Custom Icons **/
 
 #cboxContent #mm_icon {
@@ -305,10 +399,7 @@ ul.mega-font-selector li {
 	font-size: 0.9em;
 }
 
-.megamenu_outer_wrap .select2-container-sm .select2-choice > .select2-chosen i[class*='fa'],
-.mega-menu_page_maxmegamenu_theme_editor .select2-result-label i[class*='fa'] {
-    font-family: fontawesome;
-}
+
 .megamenu_outer_wrap .megamenu_right .menu_settings table .toggle-bar-designer .mega-blocks .block .block-title .fa {
     width: 20px;
     height: 20px;
@@ -371,4 +462,14 @@ ul.mega-font-selector li {
 }
 .nav-menus-php #cboxContent .mm_content.mega_menu[data-type='tabbed'] #megamenu-tabbed {
 	display: block;
+}
+
+body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table table.mega-inner-table {
+	width: auto;
+}
+body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table table.mega-inner-table td {
+	padding: 0;
+	padding-top: 0;
+	padding-right: 7px;
+	padding-bottom: 3px;
 }

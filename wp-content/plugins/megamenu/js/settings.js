@@ -30,17 +30,19 @@ jQuery(function ($) {
         }
     });
 
-    if ($('#codemirror').length) {
-        wp.codeEditor.initialize($('#codemirror'), cm_settings);
-    }
+    if (typeof wp.codeEditor !== 'undefined') {
+        if ($('#codemirror').length) {
+            wp.codeEditor.initialize($('#codemirror'), cm_settings);
+        }
 
-    $('[data-tab="mega-tab-content-custom_styling"]').on('click', function() {
-        setTimeout( function() {
-            $('.mega-tab-content-custom_styling').find('.CodeMirror').each(function(key, value) {
-                value.CodeMirror.refresh();
-            });
-        }, 160);
-    });
+        $('[data-tab="mega-tab-content-custom_styling"]').on('click', function() {
+            setTimeout( function() {
+                $('.mega-tab-content-custom_styling').find('.CodeMirror').each(function(key, value) {
+                    value.CodeMirror.refresh();
+                });
+            }, 160);
+        });
+    }
 
     $(".mm_colorpicker").spectrum({
         preferredFormat: "rgb",
@@ -196,7 +198,7 @@ jQuery(function ($) {
             }
 
             if ( ( validation == 'int' && Math.floor(value) != value )
-              || ( validation == 'px' && ! ( value.substr(value.length - 2) == 'px' || value.substr(value.length - 2) == 'em' || value.substr(value.length - 2) == 'vh' || value.substr(value.length - 2) == 'vw' || value.substr(value.length - 2) == 'pt' || value.substr(value.length - 3) == 'rem' || value.substr(value.length - 1) == '%' ) && value != 0 )
+              || ( validation == 'px' && ! ( value.substr(value.length - 2) == 'px' || value.substr(value.length - 2) == 'em' || value.substr(value.length - 2) == 'vh' || value.substr(value.length - 2) == 'vw' || value.substr(value.length - 2) == 'pt' || value.substr(value.length - 3) == 'rem' || value.substr(value.length - 1) == '%' ) && value != 0 && value != 'normal' && value != 'inherit' )
               || ( validation == 'float' && ! $.isNumeric(value) ) ) {
                 label.addClass('mega-error');
                 error_message.show();

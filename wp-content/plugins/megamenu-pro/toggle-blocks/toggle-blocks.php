@@ -674,27 +674,51 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
                 if ( isset( $settings['type'] ) && $settings['type'] == 'icon' ) {
 
-                    if ( isset( $settings['icon'] ) ) {
-                        $icon_parts = explode( '-', $settings['icon'] );
-                        $icon = end( $icon_parts );
-                        $icon_type = reset( $icon_parts );
+                    $icon_code = 'disabled';
+                    $font = 'dashicons';
+                    $weight = 'normal';
 
-                        if ($icon_type == 'dash') {
-                            $font = 'dashicons';
-                        } else {
-                            $font = 'fontawesome';
+                    if ( isset( $settings['icon'] ) ) {
+                        $icon_full = $settings['icon'];
+                        $icon_parts = explode( '-', $settings['icon'] );
+
+                        // e.g. f006
+                        $icon_code = end( $icon_parts );
+                        $icon_type = reset( $icon_parts );
+                        $icon_type_parts = explode( " ", $icon_type);
+                        // e.g. dashicons / fa / fab / fas
+                        $icon_type = reset( $icon_type_parts);
+
+                        if ($icon_type == 'fa') {
+                            $font = 'FontAwesome';
                         }
-                    } else {
-                        $icon = 'disabled';
-                        $font = 'dashicons';
+
+                        if ($icon_type == 'fab') {
+                            $font = "'Font Awesome 5 Brands'";
+                            $weight = '400';
+                        }
+
+                        if ($icon_type == 'far') {
+                            $font = "'Font Awesome 5 Free'";
+                            $weight = '400';
+                        }
+
+                        if ($icon_type == 'fas') {
+                            $font = "'Font Awesome 5 Free'";
+                            $weight = '900';
+                        }
+
                     }
 
                     $styles = array(
                         'id' => $index,
-                        'icon' => $icon != 'disabled' ? "'\\" . $icon  . "'" : "''",
+                        'icon' => $icon_code != 'disabled' ? "'\\" . $icon_code  . "'" : "''",
                         'color' => isset($settings['color']) ? $settings['color'] : '#fff',
                         'font' => $font,
-                        'size' => isset($settings['size']) ? $settings['size'] : '20px'
+                        'size' => isset($settings['size']) ? $settings['size'] : '20px',
+                        'weight' => $weight,
+                        'icon_type' => $icon_type,
+                        'icon_full' => $icon_full
                     );
 
                     $icon_blocks[ $index ] = $styles;
@@ -803,31 +827,27 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
         $settings = array_merge( $defaults, $settings );
 
-        $icon_class = 'dashicon-admin-site';
-        $icons = array();
+        $icon_code = "";
+        $icon_type = "dashicons";
 
-        if ( class_exists( 'Mega_Menu_Menu_Item_Manager') && method_exists( 'Mega_Menu_Menu_Item_Manager', 'all_icons' ) ) {
-            $menu_item_manager = new Mega_Menu_Menu_Item_Manager();
-            $icons = $menu_item_manager->all_icons();
-        }
+        if ( isset( $settings['icon'] ) ) {
+            $icon_full = $settings['icon'];
+            $icon_parts = explode( '-', $settings['icon'] );
 
-        if ( class_exists( 'Mega_Menu_Font_Awesome') && method_exists( 'Mega_Menu_Font_Awesome', 'icons' ) ) {
-            $fontawesome = new Mega_Menu_Font_Awesome();
-            $fa_icons = $fontawesome->icons();
-            $icons = array_merge($icons, $fa_icons);
+            // e.g. f006
+            $icon_code = end( $icon_parts );
 
-        }
-
-        if ( isset( $icons[$settings['icon']] ) ) {
-            $icon_class = $icons[$settings['icon']];
-
-            $icon_type = explode('-', $icon_class);
+            $icon_code_attr = "&#x" . $icon_code . "";
+            $icon_type = reset( $icon_parts );
+            $icon_type_parts = explode( " ", $icon_type);
+            // e.g. dashicons / fa / fab / fas
+            $icon_type = reset( $icon_type_parts);
         }
 
         ?>
 
-        <div class='block'>
-            <div class='block-title'><span title='<?php _e("Icon", "megamenupro"); ?>' class="<?php echo $icon_type[0] ?> <?php echo $icon_class; ?>"></span></div>
+        <div class='block icon_block'>
+            <div class='block-title'><span title='<?php _e("Icon", "megamenupro"); ?>' class="<?php echo $icon_type ?>" rel='<?php echo $icon_code_attr; ?>'></span></div>
             <div class='block-settings'>
                 <h3><?php _e("Icon Settings", "megamenupro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='icon' />
@@ -835,7 +855,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
                 <label>
                     <?php _e("Icon", "megamenupro") ?>
-                    <?php $this->print_icon_option( 'icon', $block_id, $settings['icon'], $icons ); ?>
+                    <?php $this->print_icon_option( 'icon', $block_id, $settings['icon'], array() ); ?>
                 </label>
                 <label>
                     <?php _e("Color", "megamenupro") ?>
@@ -865,6 +885,70 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         <?php
     }
 
+    /**
+     * Print an icon selection box
+     *
+     * @since 2.1
+     * @param string $key
+     * @param int $block_id
+     * @param string $value
+     */
+    public function print_icon_option( $key, $block_id, $value, $icons ) {
+
+        $icons = array();
+
+        ?>
+            <select class='toggle_block_icon_dropdown' name='toggle_blocks[<?php echo $block_id ?>][<?php echo $key ?>]'>
+                <?php
+
+                    if ( class_exists( 'Mega_Menu_Menu_Item_Manager') && method_exists( 'Mega_Menu_Menu_Item_Manager', 'all_icons' ) ) {
+
+                        echo "<optgroup label='Dashicons'>";
+
+                        $menu_item_manager = new Mega_Menu_Menu_Item_Manager();
+                        $icons = $menu_item_manager->all_icons();
+
+                        foreach ($icons as $code => $class) {
+                            echo "<option data-class='dashicons {$class}' value='{$code}'" . selected( $value, $code, false ) . ">{$code}</option>";
+                        }
+
+                        echo "</optgroup>";
+                    }
+
+
+                    if ( class_exists( 'Mega_Menu_Font_Awesome') && method_exists( 'Mega_Menu_Font_Awesome', 'icons' ) ) {
+
+                        echo "<optgroup label='Font Awesome 4'>";
+
+                        $fontawesome = new Mega_Menu_Font_Awesome();
+                        $fa_icons = $fontawesome->icons();
+
+                        foreach ($fa_icons as $code => $class) {
+                            echo "<option data-class='{$class}' value='{$code}'" . selected( $value, $code, false ) . ">{$code}</option>";
+                        }
+
+                        echo "</optgroup>";
+                    }
+
+                    if ( class_exists( 'Mega_Menu_Font_Awesome_5') && method_exists( 'Mega_Menu_Font_Awesome_5', 'icons' ) ) {
+
+                        echo "<optgroup label='Font Awesome 5'>";
+
+                        $fontawesome5 = new Mega_Menu_Font_Awesome_5();
+                        $fa5_icons = $fontawesome5->icons();
+
+                        foreach ($fa5_icons as $code => $class) {
+                            echo "<option data-class='{$class}' value='{$class} {$code}'" . selected( $value, $class . " " . $code, false ) . ">{$class} {$code}</option>";
+                        }
+
+                        echo "</optgroup>";
+                    }
+                    
+                ?>
+            </select>
+
+        <?php
+    }
 
     /**
      * Return the saved toggle blocks for a specified theme

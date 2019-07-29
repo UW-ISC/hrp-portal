@@ -48,9 +48,17 @@ class Mega_Menu_Genericons {
 	 * @since 1.0
 	 */
 	public function enqueue_public_scripts() {
+		$settings = get_option("megamenu_settings");
+
+        if ( ! is_array( $settings ) ) {
+        	return;
+        }
+
+        if ( is_array( $settings ) && isset( $settings['enqueue_genericons'] ) && $settings['enqueue_genericons'] == 'disabled' ) {
+        	return;
+        }
 
         wp_enqueue_style( 'megamenu-genericons', plugins_url( 'genericons/genericons.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
-
 	}
 
 
@@ -66,8 +74,13 @@ class Mega_Menu_Genericons {
 	 * @return array
 	 */
 	public function genericons_selector( $tabs, $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) {
-
-		$html = "";
+		$settings = get_option("megamenu_settings");
+        
+        if ( is_array( $settings ) && isset( $settings['enqueue_genericons'] ) && $settings['enqueue_genericons'] == 'disabled' ) {
+        	$html = "<div class='notice notice-warning'>" . _("Genericons has been dequeued under Mega Menu > General Settings.") . "</div>";
+        } else {
+        	$html = "";
+        }
 		
         foreach ( $this->icons() as $code => $class ) {
 
@@ -77,7 +90,7 @@ class Mega_Menu_Genericons {
 
             $html .= "<div class='{$type}'>";
             $html .= "    <input class='radio' id='{$class}' type='radio' rel='{$code}' name='settings[icon]' value='{$class}' " . checked( $menu_item_meta['icon'], $class, false ) . " />";
-            $html .= "    <label rel='{$code}' for='{$class}'></label>";
+            $html .= "    <label rel='{$code}' for='{$class}' title='{$class}'></label>";
             $html .= "</div>";
         
         }

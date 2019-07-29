@@ -15,7 +15,8 @@
         @if type-of($id) == number {
 
             .mega-toggle-block-#{$id} {
-
+                cursor: pointer;
+                
                 @if $icon_position == before {
                     &:before {
                         content: $closed_icon;
@@ -98,6 +99,7 @@
         @if type-of($id) == number {
 
             .mega-toggle-block-#{$id} {
+                cursor: pointer;
 
                 /*! 
                 * Hamburgers 

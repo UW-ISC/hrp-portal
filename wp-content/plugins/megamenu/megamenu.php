@@ -4,7 +4,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     2.6
+ * Version:     2.7.1.4
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -36,7 +36,7 @@ final class Mega_Menu {
     /**
      * @var string
      */
-    public $version = '2.6';
+    public $version = '2.7.1.4';
 
 
     /**
@@ -250,6 +250,7 @@ final class Mega_Menu {
             if ( ! $settings ) {
                 $settings['prefix'] = 'disabled';
                 $settings['descriptions'] = 'enabled';
+                $settings['second_click'] = 'go';
 
                 add_option( "megamenu_settings", $settings);
             }
@@ -367,8 +368,6 @@ final class Mega_Menu {
 
         switch ( $template ) {
             case "twentyseventeen":
-            case "generatepress":
-            case "twentytwelve":
             case "zerif":
                 if ( is_readable( MEGAMENU_PATH . "integration/{$template}/functions.php" ) ) {
                     require_once( MEGAMENU_PATH . "integration/{$template}/functions.php" );
@@ -923,6 +922,14 @@ final class Mega_Menu {
                 if ( $item->megamenu_settings['disable_link'] == 'true') {
                     $item->classes[] = 'disable-link';
                 }
+
+                if ( $item->megamenu_settings['collapse_children'] == 'true' ) {
+                    $item->classes[] = 'collapse-children';
+                }
+
+                if ( absint($item->megamenu_settings['submenu_columns']) > 1 ) {
+                    $item->classes[] = absint($item->megamenu_settings['submenu_columns']) . '-columns';
+                }
             }
 
             // add column classes for second level menu items displayed in mega menus
@@ -984,14 +991,24 @@ final class Mega_Menu {
 
         $settings = get_option( 'megamenu_settings' );
         $current_theme_location = $args['theme_location'];
+
         $active_instance = isset( $settings['instances'][$current_theme_location] ) ? $settings['instances'][$current_theme_location] : 0;
 
-        if ( $active_instance != 0 && $active_instance != $num_times_called ) {
-            return $args;
-        }
+        if ( $active_instance != '0' && strlen( $active_instance ) ) {
 
-        if ( strlen( $active_instance ) && ! is_numeric( $active_instance ) && isset( $args['container_id'] ) && $active_instance != $args['container_id'] ) {
-            return $args;
+            if ( strpos( $active_instance, "," ) || is_numeric( $active_instance ) ) {
+
+                $active_instances = explode( ",", $active_instance );
+
+                if ( ! in_array( $num_times_called, $active_instances )) {
+                    return $args;
+                }
+
+            } else if ( isset( $args['container_id'] ) && $active_instance != $args['container_id'] ) {
+
+                return $args;
+
+            }
         }
 
         $locations = get_nav_menu_locations();
@@ -1026,7 +1043,7 @@ final class Mega_Menu {
             }
 
             // as set on the main settings page
-            $second_click = isset( $settings['second_click'] ) ? $settings['second_click'] : 'close';
+            $second_click = isset( $settings['second_click'] ) ? $settings['second_click'] : 'go';
 
             if ( isset( $menu_settings['second_click'] ) ) {
                 $second_click = $menu_settings['second_click'];
@@ -1134,6 +1151,10 @@ final class Mega_Menu {
         <?php
 
         endif;
+
+        if ( defined("MEGAMENU_HIDE_CSS_NAG") && MEGAMENU_HIDE_CSS_NAG === true ) {
+            return;
+        }
 
         $css_version = get_transient("megamenu_css_version");
         $css = get_transient("megamenu_css");

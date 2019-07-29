@@ -111,8 +111,11 @@
       padding: 0 20px;
       background: white;
       font-size: 1.3em;
-      line-height: 75px;
-      float: left; }
+      align-items: center;
+      display: inline-flex;
+      line-height: 25px;
+      float: left;
+      height: 75px; }
       .nav-menus-php #cboxContent .mm_header_container .mm_title br {
         display: none; }
     .nav-menus-php #cboxContent .mm_header_container .mm_saving {
@@ -457,8 +460,14 @@
             padding-right: 10px;
             position: absolute;
             top: 0; }
-          .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget[data-type=item] .widget-title-action {
-            display: none; }
+          .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget[data-type=item] form input, .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget[data-type=item] form select {
+            float: right; }
+          .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget[data-type=item] form p {
+            float: left;
+            width: 100%;
+            margin-bottom: 0; }
+          .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget[data-type=item] form .widget-content {
+            padding-top: 10px; }
           .nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-grid .mega-col .mega-col-widgets .widget .widget-title h4 {
             font-weight: normal;
             margin-top: 5px;
@@ -590,8 +599,6 @@
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box; }
-    .nav-menus-php #cboxContent .mm_content.mega_menu #widgets .widget[data-type='menu_item'] .widget-action {
-      display: none; }
     .nav-menus-php #cboxContent .mm_content.mega_menu #widgets .widget {
       width: 100%; }
       .nav-menus-php #cboxContent .mm_content.mega_menu #widgets .widget h4 {
@@ -696,6 +703,12 @@
     vertical-align: middle;
     top: -1px;
     position: relative; }
+  .nav-menus-php #cboxContent .mm_content.mega_menu .widget[data-type='menu_item'] form input, .nav-menus-php #cboxContent .mm_content.mega_menu .widget[data-type='menu_item'] form select {
+    float: right; }
+  .nav-menus-php #cboxContent .mm_content.mega_menu .widget[data-type='menu_item'] form p {
+    float: left;
+    width: 100%;
+    margin-bottom: 0; }
   .nav-menus-php #cboxContent .mm_content.mega_menu .widget-controls {
     float: left; }
     .nav-menus-php #cboxContent .mm_content.mega_menu .widget-controls .delete:hover {
@@ -1038,7 +1051,7 @@
   background: #999;
   border-color: #444;
   border-width: 1px;
-  padding: 0 5px;
+  padding: 1px 5px;
   border-radius: 3px;
   opacity: 0;
   -webkit-transition: all 0.3s ease;
@@ -1132,6 +1145,8 @@
   .nav-menus-php .mega_menu_meta_box div table select {
     font-size: 0.9em;
     max-width: 120px; }
+  .nav-menus-php .mega_menu_meta_box div table select.megamenu_effect_mobile {
+    max-width: 80px; }
   .nav-menus-php .mega_menu_meta_box div table tr {
     height: 29px;
     vertical-align: middle; }
