@@ -13,7 +13,7 @@
  * Plugin Name: Relevanssi Premium
  * Plugin URI: https://www.relevanssi.com/
  * Description: This premium plugin replaces WordPress search with a relevance-sorting search.
- * Version: 2.2.4.2
+ * Version: 2.4.1
  * Author: Mikko Saari
  * Author URI: http://www.mikkosaari.fi/
  * Text Domain: relevanssi
@@ -47,8 +47,7 @@ add_action( 'delete_user', 'relevanssi_delete_user' );
 add_action( 'created_term', 'relevanssi_add_term', 9999, 3 );
 add_action( 'edited_term', 'relevanssi_edit_term', 9999, 3 );
 add_action( 'delete_term', 'relevanssi_delete_taxonomy_term', 9999, 3 );
-add_action( 'wpmu_new_blog', 'relevanssi_new_blog', 10, 1 );
-add_action( 'save_post', 'relevanssi_save_postdata' );
+add_action( 'save_post', 'relevanssi_save_postdata', 10 );
 add_action( 'edit_attachment', 'relevanssi_save_postdata' );
 add_filter( 'wpmu_drop_tables', 'relevanssi_wpmu_drop' );
 add_action( 'network_admin_menu', 'relevanssi_network_menu' );
@@ -56,6 +55,13 @@ add_filter( 'attachment_link', 'relevanssi_post_link_replace', 10, 2 );
 add_action( 'admin_enqueue_scripts', 'relevanssi_premium_add_admin_scripts', 11 );
 add_filter( 'relevanssi_premium_tokenizer', 'relevanssi_enable_stemmer' );
 add_filter( 'query_vars', 'relevanssi_premium_query_vars' );
+
+global $wp_version;
+if ( version_compare( $wp_version, '5.1', '>=' ) ) {
+	add_action( 'wp_insert_site', 'relevanssi_new_blog', 10, 1 );
+} else {
+	add_action( 'wpmu_new_blog', 'relevanssi_new_blog', 10, 1 );
+}
 
 global $wpdb;
 global $relevanssi_variables;
@@ -70,7 +76,7 @@ $relevanssi_variables['title_boost_default']                   = 5;
 $relevanssi_variables['link_boost_default']                    = 0.75;
 $relevanssi_variables['comment_boost_default']                 = 0.75;
 $relevanssi_variables['database_version']                      = 18;
-$relevanssi_variables['plugin_version']                        = '2.2.4.2';
+$relevanssi_variables['plugin_version']                        = '2.4.1';
 $relevanssi_variables['plugin_dir']                            = plugin_dir_path( __FILE__ );
 $relevanssi_variables['plugin_basename']                       = plugin_basename( __FILE__ );
 $relevanssi_variables['file']                                  = __FILE__;
@@ -88,12 +94,14 @@ require_once 'lib/interface.php';
 require_once 'lib/log.php';
 require_once 'lib/privacy.php';
 require_once 'lib/search.php';
+require_once 'lib/search-tax-query.php';
+require_once 'lib/search-query-restrictions.php';
 require_once 'lib/shortcodes.php';
 require_once 'lib/stopwords.php';
 require_once 'lib/sorting.php';
-require_once 'lib/uninstall.php';
 
 require_once 'premium/admin-ajax.php';
+require_once 'premium/body-stopwords.php';
 require_once 'premium/class-relevanssi-wp-auto-update.php';
 require_once 'premium/class-relevanssi-spellcorrector.php';
 require_once 'premium/common.php';
@@ -107,8 +115,17 @@ require_once 'premium/redirects.php';
 require_once 'premium/related.php';
 require_once 'premium/search.php';
 require_once 'premium/search-multi.php';
-require_once 'premium/uninstall.php';
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
 	require_once 'premium/class-relevanssi-wp-cli-command.php';
+}
+
+if ( file_exists( __DIR__ . '/epitrove-helper-installer.php' ) ) {
+	require_once __DIR__ . '/epitrove-helper-installer.php';
+	add_filter(
+		'pre_option_relevanssi_api_key',
+		function() {
+			return get_option( 'epi_relevanssi-premium_license_key', 'wc_order_1111' );
+		}
+	);
 }

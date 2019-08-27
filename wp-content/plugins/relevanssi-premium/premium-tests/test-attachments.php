@@ -31,6 +31,8 @@ class AttachmentTest extends WP_UnitTestCase {
 			update_option( 'relevanssi_implicit_operator', 'AND' );
 			update_option( 'relevanssi_api_key', getenv( 'RELEVANSSI_KEY' ) );
 			update_option( 'relevanssi_link_pdf_files', 'on' );
+			update_option( 'relevanssi_excerpts', false );
+			update_option( 'relevanssi_hilite_title', 'off' );
 
 			// Truncate the index.
 			relevanssi_truncate_index();
@@ -107,6 +109,8 @@ class AttachmentTest extends WP_UnitTestCase {
 
 			// There should be one post matching the search.
 			$this->assertEquals( 1, count( $posts ) );
+		} else {
+			$this->assertTrue( true );
 		}
 	}
 
@@ -114,6 +118,9 @@ class AttachmentTest extends WP_UnitTestCase {
 	 * Uninstalls Relevanssi.
 	 */
 	public static function wpTearDownAfterClass() {
+		require_once dirname( dirname( __FILE__ ) ) . '/lib/uninstall.php';
+		require_once dirname( dirname( __FILE__ ) ) . '/premium/uninstall.php';
+
 		if ( function_exists( 'relevanssi_uninstall' ) ) {
 			relevanssi_uninstall();
 		}

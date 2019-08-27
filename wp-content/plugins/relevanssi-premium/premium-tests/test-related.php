@@ -70,8 +70,6 @@ class RelatedTest extends WP_UnitTestCase {
 
 	/**
 	 * Test how related posts are generated.
-	 *
-	 * @group new
 	 */
 	public function test_generation() {
 		global $wpdb, $relevanssi_variables;
@@ -156,6 +154,9 @@ class RelatedTest extends WP_UnitTestCase {
 	 * Uninstalls Relevanssi.
 	 */
 	public static function wpTearDownAfterClass() {
+		require_once dirname( dirname( __FILE__ ) ) . '/lib/uninstall.php';
+		require_once dirname( dirname( __FILE__ ) ) . '/premium/uninstall.php';
+
 		if ( function_exists( 'relevanssi_uninstall' ) ) {
 			relevanssi_uninstall();
 		}
@@ -163,5 +164,4 @@ class RelatedTest extends WP_UnitTestCase {
 			relevanssi_uninstall_free();
 		}
 	}
-
 }

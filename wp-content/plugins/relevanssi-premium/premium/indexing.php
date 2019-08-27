@@ -86,7 +86,7 @@ function relevanssi_do_term_indexing( $term, $taxonomy, $update ) {
 function relevanssi_delete_user( $user ) {
 	global $wpdb, $relevanssi_variables;
 	$user = intval( $user );
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $user AND type = 'user'" ); // WPCS: unprepared SQL ok. No user-generated input variables.
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $user AND type = 'user'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**
@@ -103,7 +103,7 @@ function relevanssi_delete_user( $user ) {
  */
 function relevanssi_delete_taxonomy_term( $term, $term_taxonomy_id, $taxonomy ) {
 	global $wpdb, $relevanssi_variables;
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $term AND type = '$taxonomy'" ); // WPCS: unprepared SQL ok. No user-generated input variables.
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $term AND type = '$taxonomy'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**
@@ -162,7 +162,7 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 		}
 		$valid_columns = array();
 		foreach ( $column_list as $column ) {
-			array_push( $valid_columns, $column->Field );
+			array_push( $valid_columns, $column->Field ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		}
 
 		// This is to remove problems where the list ends in a comma.
@@ -176,12 +176,13 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 		}
 		$custom_column_list = implode( ', ', $custom_column_list_array );
 
-		$custom_column_data  = $wpdb->get_row( "SELECT $custom_column_list FROM $wpdb->posts WHERE ID=$post_id", ARRAY_A ); // WPCS: unprepared SQL ok. No user-generated input, column list can only contain valid column names.
+		$custom_column_data  = $wpdb->get_row( "SELECT $custom_column_list FROM $wpdb->posts WHERE ID=$post_id", ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		$remove_stopwords    = true;
 		$minimum_word_length = get_option( 'relevanssi_min_word_length', 3 );
 		if ( is_array( $custom_column_data ) ) {
 			foreach ( $custom_column_data as $data ) {
-				$data = relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length );
+				/** This filter is documented in common/indexing.php */
+				$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length ), 'mysql-content' );
 				if ( count( $data ) > 0 ) {
 					foreach ( $data as $term => $count ) {
 						if ( isset( $insert_data[ $term ]['mysqlcolumn'] ) ) {
@@ -224,11 +225,20 @@ function relevanssi_process_internal_links( $contents, $post_id ) {
 			foreach ( $internal_links as $link => $text ) {
 				$link_id = url_to_postid( $link );
 				if ( ! empty( $link_id ) ) {
-					$link_words = relevanssi_tokenize( $text, true, $min_word_length );
+					/** This filter is documented in common/indexing.php */
+					$link_words = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $text, true, $min_word_length ), 'internal-links' );
 					if ( count( $link_words ) > 0 ) {
 						foreach ( $link_words as $word => $count ) {
-							$wpdb->query( $wpdb->prepare( 'INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] . ' (doc, term, term_reverse, link, item)
-							VALUES (%d, %s, REVERSE(%s), %d, %d)', $link_id, $word, $word, $count, $post_id ) ); // WPCS: unprepared SQL ok. Relevanssi table name.
+							$wpdb->query(
+								$wpdb->prepare(
+									'INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] . ' (doc, term, term_reverse, link, item) VALUES (%d, %s, REVERSE(%s), %d, %d)', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+									$link_id,
+									$word,
+									$word,
+									$count,
+									$post_id
+								)
+							);
 						}
 					}
 				}
@@ -290,12 +300,16 @@ function relevanssi_strip_internal_links( $text ) {
 		array(
 			'@<a[^>]*?href="' . home_url() . '[^>]*?>.*?</a>@siu',
 		),
-	' ', $text );
+		' ',
+		$text
+	);
 	$text = preg_replace(
 		array(
 			'@<a[^>]*?href="/[^>]*?>.*?</a>@siu',
 		),
-	' ', $text );
+		' ',
+		$text
+	);
 	return $text;
 }
 
@@ -311,7 +325,7 @@ function relevanssi_strip_internal_links( $text ) {
 function relevanssi_apply_thousands_separator( $string ) {
 	$thousands_separator = get_option( 'relevanssi_thousand_separator', '' );
 	if ( ! empty( $thousands_separator ) ) {
-		$pattern = '/(\d+)' . preg_quote( $thousands_separator ) . '(\d+)/u';
+		$pattern = '/(\d+)' . preg_quote( $thousands_separator, '/' ) . '(\d+)/u';
 		$string  = preg_replace( $pattern, '$1$2', $string );
 	}
 	return $string;
@@ -368,6 +382,9 @@ function relevanssi_simple_english_stemmer( $term ) {
 	if ( 'es' === $end && $len > 3 ) {
 		return substr( $term, 0, -2 );
 	}
+	if ( 'ie' === $end && $len > 3 ) {
+		return substr( $term, 0, -1 );
+	}
 	if ( 'ed' === $end && $len > 3 ) {
 		return substr( $term, 0, -2 );
 	}
@@ -381,45 +398,12 @@ function relevanssi_simple_english_stemmer( $term ) {
 		return substr( $term, 0, -2 );
 	}
 
+	$end = substr( $end, -1 );
+	if ( 'y' === $end && $len > 3 ) {
+		return substr( $term, 0, -1 ) . 'i';
+	}
+
 	return $term;
-}
-
-/**
- * Adds synonyms to post content and titles for indexing.
- *
- * In order to use synonyms in AND searches, the synonyms must be indexed within the posts.
- * This function adds synonyms for post content and titles when indexing posts.
- *
- * @global $relevanssi_variables The global Relevanssi variables, used for the synonym database.
- *
- * @param object $post The post object.
- *
- * @return object $post The post object, with synonyms.
- */
-function relevanssi_add_indexing_synonyms( $post ) {
-	global $relevanssi_variables;
-
-	if ( ! isset( $relevanssi_variables['synonyms'] ) ) {
-		relevanssi_create_synonym_replacement_array();
-	}
-
-	if ( ! empty( $relevanssi_variables['synonyms'] ) ) {
-		$search  = array_keys( $relevanssi_variables['synonyms'] );
-		$replace = array_values( $relevanssi_variables['synonyms'] );
-
-		$post_content = relevanssi_strtolower( $post->post_content );
-		$post_title   = relevanssi_strtolower( $post->post_title );
-
-		$boundary_search = array();
-		foreach ( $search as $term ) {
-			$boundary_search[] = '/\b' . str_replace( '/', '\/', preg_quote( $term ) ) . '\b/u';
-		}
-
-		$post->post_content = preg_replace( $boundary_search, $replace, $post_content );
-		$post->post_title   = preg_replace( $boundary_search, $replace, $post_title );
-	}
-
-	return $post;
 }
 
 /**
@@ -436,8 +420,8 @@ function relevanssi_create_synonym_replacement_array() {
 	global $relevanssi_variables;
 
 	$synonym_data = get_option( 'relevanssi_synonyms' );
+	$synonyms     = array();
 	if ( $synonym_data ) {
-		$synonyms     = array();
 		$synonym_data = relevanssi_strtolower( $synonym_data );
 		$pairs        = explode( ';', $synonym_data );
 
@@ -451,9 +435,83 @@ function relevanssi_create_synonym_replacement_array() {
 				$synonyms[ $value ] .= " $key";
 			}
 		}
-		$relevanssi_variables['synonyms'] = $synonyms;
 	}
+	$relevanssi_variables['synonyms'] = $synonyms;
 }
+
+/**
+ * Adds synonyms to post content and titles for indexing.
+ *
+ * In order to use synonyms in AND searches, the synonyms must be indexed within the posts.
+ * This function adds synonyms for post content and titles when indexing posts.
+ *
+ * @global $relevanssi_variables The global Relevanssi variables, used for the synonym database.
+ *
+ * @param array $tokens An array of tokens and their frequencies.
+ *
+ * @return array An array of filtered token-frequency pairs.
+ */
+function relevanssi_add_indexing_synonyms( $tokens ) {
+	global $relevanssi_variables;
+
+	if ( ! isset( $relevanssi_variables['synonyms'] ) ) {
+		relevanssi_create_synonym_replacement_array();
+	}
+
+	$new_tokens = array();
+	$synonyms   = $relevanssi_variables['synonyms'];
+
+	foreach ( $tokens as $token => $tf ) {
+		if ( isset( $synonyms[ $token ] ) ) {
+			$token_and_the_synonyms = explode( ' ', $synonyms[ $token ] );
+			foreach ( $token_and_the_synonyms as $new_token ) {
+				$new_tokens[ $new_token ] = $tf;
+			}
+		} else {
+			$new_tokens[ $token ] = $tf;
+		}
+	}
+
+	return $new_tokens;
+}
+
+/**
+ * Adds synonyms to a content.
+ *
+ * @global $relevanssi_variables The global Relevanssi variables, used for the synonym database.
+ *
+ * @param string $content The content to add synonyms to.
+ *
+ * @return string $content The content with synonyms.
+ */
+function relevanssi_prepare_indexing_content( $content ) {
+	global $relevanssi_variables;
+
+	if ( ! isset( $relevanssi_variables['synonyms'] ) ) {
+		relevanssi_create_synonym_replacement_array();
+	}
+
+	$synonyms = $relevanssi_variables['synonyms'];
+	$content  = relevanssi_strtolower( $content );
+	$content  = preg_split( '/[\s,.()!?]/', $content );
+	$ret      = [];
+	$len      = count( $content );
+	for ( $i = 0; $i < $len; ++$i ) {
+		$val = $content[ $i ];
+		if ( 0 === strlen( $val ) ) {
+			continue;
+		}
+
+		if ( isset( $synonyms[ $val ] ) ) {
+			$ret[] = $synonyms[ $val ];
+		} else {
+			$ret[] = $val;
+		}
+	}
+
+	return implode( ' ', $ret );
+}
+
 
 /**
  * Adds ACF repeater fields to the list of custom fields.
@@ -514,12 +572,21 @@ function relevanssi_index_pdf_for_parent( $insert_data, $post_id ) {
 
 	global $wpdb;
 
-	$post_id     = intval( $post_id );
-	$pdf_content = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'" ); // WPCS: unprepared SQL ok, database table names and sanitized post ID.
+	$post_id = intval( $post_id );
+	$query   = "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'";
+	/**
+	 * Filters the database query that fetches the PDF content for the parent post.
+	 *
+	 * @param string $query   The MySQL query.
+	 * @param int    $post_id The parent post ID.
+	 */
+	$query       = apply_filters( 'relevanssi_pdf_for_parent_query', $query, $post_id );
+	$pdf_content = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	if ( is_array( $pdf_content ) ) {
 		foreach ( $pdf_content as $row ) {
-			$data = relevanssi_tokenize( $row, true, get_option( 'relevanssi_min_word_length', 3 ) );
+			/** This filter is documented in common/indexing.php */
+			$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $row, true, get_option( 'relevanssi_min_word_length', 3 ) ), 'pdf-content' );
 			if ( count( $data ) > 0 ) {
 				foreach ( $data as $term => $count ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
@@ -533,7 +600,14 @@ function relevanssi_index_pdf_for_parent( $insert_data, $post_id ) {
 		}
 	}
 
-	return $insert_data;
+	/**
+	 * Filters the index data for the PDF contents.
+	 *
+	 * @param array $insert_data The data for INSERT clauses, format is
+	 * $insert_data[ term ][ column ] = frequency.
+	 * @param int   $post_id     The parent post ID.
+	 */
+	return apply_filters( 'relevanssi_pdf_for_parent_insert_data', $insert_data, $post_id );
 }
 
 /**
@@ -548,7 +622,7 @@ function relevanssi_index_users() {
 	global $wpdb, $relevanssi_variables;
 
 	// Delete all users from the Relevanssi index first.
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'user'" ); // WPCS: unprepared SQL ok. Just table names.
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'user'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	$args = array();
 
@@ -557,7 +631,15 @@ function relevanssi_index_users() {
 		$args['role__not_in'] = array( 'subscriber' );
 	}
 
-	$users_list = get_users( $args );
+	/**
+	 * Filters the user fetching arguments.
+	 *
+	 * Useful to control the user role, for example: just set 'role__in' to whatever
+	 * you need.
+	 *
+	 * @param array User fetching arguments.
+	 */
+	$users_list = get_users( apply_filters( 'relevanssi_user_indexing_args', $args ) );
 	$users      = array();
 	foreach ( $users_list as $user ) {
 		$users[] = get_userdata( $user->ID );
@@ -709,7 +791,8 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 			$key    = trim( $key );
 			$values = get_user_meta( $user->ID, $key, false );
 			foreach ( $values as $value ) {
-				$tokens = relevanssi_tokenize( $value, $remove_stopwords, $min_length );
+				/** This filter is documented in common/indexing.php */
+				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $value, $remove_stopwords, $min_length ), 'user-meta' );
 				foreach ( $tokens as $term => $tf ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
 						$insert_data[ $term ]['customfield'] += $tf;
@@ -739,7 +822,8 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 				if ( empty( $to_tokenize ) ) {
 					$to_tokenize = get_user_meta( $user->ID, $field, true );
 				}
-				$tokens = relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length );
+				/** This filter is documented in common/indexing.php */
+				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length ), 'user-fields' );
 				foreach ( $tokens as $term => $tf ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
 						$insert_data[ $term ]['customfield'] += $tf;
@@ -753,7 +837,8 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	}
 
 	if ( isset( $user->description ) && '' !== $user->description ) {
-		$tokens = relevanssi_tokenize( $user->description, $remove_stopwords, $min_length );
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $user->description, $remove_stopwords, $min_length ), 'user-description' );
 		foreach ( $tokens as $term => $tf ) {
 			if ( isset( $insert_data[ $term ]['content'] ) ) {
 				$insert_data[ $term ]['content'] += $tf;
@@ -764,8 +849,11 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	}
 
 	if ( isset( $user->first_name ) && '' !== $user->first_name ) {
-		$parts = explode( ' ', $user->first_name );
+		$parts = explode( ' ', strtolower( $user->first_name ) );
 		foreach ( $parts as $part ) {
+			if ( empty( $part ) ) {
+				continue;
+			}
 			if ( isset( $insert_data[ $part ]['title'] ) ) {
 				$insert_data[ $part ]['title']++;
 			} else {
@@ -775,8 +863,11 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	}
 
 	if ( isset( $user->last_name ) && ' ' !== $user->last_name ) {
-		$parts = explode( ' ', $user->last_name );
+		$parts = explode( ' ', strtolower( $user->last_name ) );
 		foreach ( $parts as $part ) {
+			if ( empty( $part ) ) {
+				continue;
+			}
 			if ( isset( $insert_data[ $part ]['title'] ) ) {
 				$insert_data[ $part ]['title']++;
 			} else {
@@ -786,8 +877,11 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	}
 
 	if ( isset( $user->display_name ) && ' ' !== $user->display_name ) {
-		$parts = explode( ' ', $user->display_name );
+		$parts = explode( ' ', strtolower( $user->display_name ) );
 		foreach ( $parts as $part ) {
+			if ( empty( $part ) ) {
+				continue;
+			}
 			if ( isset( $insert_data[ $part ]['title'] ) ) {
 				$insert_data[ $part ]['title']++;
 			} else {
@@ -827,11 +921,30 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 		$cf_detail   = $data['customfield_detail'];
 
 		$wpdb->query(
-			$wpdb->prepare('INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] .
+			$wpdb->prepare(
+				'INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				' (item, doc, term, term_reverse, content, title, comment, tag, link, author, category, excerpt, taxonomy, customfield, type, customfield_detail, taxonomy_detail, mysqlcolumn_detail)
 			VALUES (%d, %d, %s, REVERSE(%s), %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s)',
-			$user->ID, -1, $term, $term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, $taxonomy, $customfield, 'user', $cf_detail, '', '' )
-		); // WPCS: unprepared SQL ok, database table name.
+				$user->ID,
+				-1,
+				$term,
+				$term,
+				$content,
+				$title,
+				$comment,
+				$tag,
+				$link,
+				$author,
+				$category,
+				$excerpt,
+				$taxonomy,
+				$customfield,
+				'user',
+				$cf_detail,
+				'',
+				''
+			)
+		);
 	}
 }
 
@@ -909,7 +1022,7 @@ function relevanssi_count_taxonomy_terms() {
 			$count = 'AND tt.count > 0';
 		}
 
-		$terms = $wpdb->get_col( "SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt WHERE t.term_id = tt.term_id $count AND tt.taxonomy = '$taxonomy'" ); // WPCS: unprepared SQL ok, $count is not user-generated and $taxonomy can only be a proper taxonomy.
+		$terms = $wpdb->get_col( "SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt WHERE t.term_id = tt.term_id $count AND tt.taxonomy = '$taxonomy'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$count_terms += count( $terms );
 	}
@@ -944,11 +1057,10 @@ function relevanssi_list_taxonomies() {
  * tells whether the taxonomy is indexed completely or not.
  */
 function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
-	global $wpdb, $relevanssi_variables;
+	global $wpdb;
 
-	$indexed_terms    = 0;
-	$relevanssi_table = $relevanssi_variables['relevanssi_table'];
-	$end_reached      = false;
+	$indexed_terms = 0;
+	$end_reached   = false;
 
 	/**
 	 * Determines whether empty terms are indexed or not.
@@ -962,8 +1074,13 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 	}
 
 	$terms = $wpdb->get_col(
-		$wpdb->prepare( "SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s LIMIT %d OFFSET %d", $taxonomy, intval( $limit ), intval( $offset ) )
-	); // WPCS: unprepared SQL ok, table names.
+		$wpdb->prepare(
+			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$taxonomy,
+			intval( $limit ),
+			intval( $offset )
+		)
+	);
 
 	if ( count( $terms ) < $limit ) {
 		$end_reached = true;
@@ -1011,7 +1128,7 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 function relevanssi_index_taxonomies( $is_ajax = false ) {
 	global $wpdb, $relevanssi_variables;
 
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'taxonomy'" ); // WPCS: unprepared SQL ok.
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'taxonomy'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	$taxonomies    = get_option( 'relevanssi_index_terms' );
 	$indexed_terms = 0;
@@ -1072,8 +1189,9 @@ function relevanssi_index_taxonomies( $is_ajax = false ) {
  * @param object|int $term         The term object or term ID.
  * @param string     $taxonomy     The name of the taxonomy.
  * @param boolean    $remove_first Should the term be deleted first or not, default false.
+ * @param boolean    $debug        If true, print out debug information, default false.
  */
-function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false ) {
+function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false, $debug = false ) {
 	global $wpdb, $relevanssi_variables;
 
 	if ( is_numeric( $term ) ) {
@@ -1149,7 +1267,8 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 	 */
 	$description = apply_filters( 'relevanssi_tax_term_additional_content', $term->description, $term );
 	if ( ! empty( $description ) ) {
-		$tokens = relevanssi_tokenize( $description, $remove_stopwords, $min_length );
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $description, $remove_stopwords, $min_length ), 'term-description' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['content'] ) ) {
 				$insert_data[ $t_term ]['content'] = 0;
@@ -1159,7 +1278,8 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 	}
 
 	if ( isset( $term->name ) && ! empty( $term->name ) ) {
-		$tokens = relevanssi_tokenize( $term->name, $remove_stopwords, $min_length );
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $term->name, $remove_stopwords, $min_length ), 'term-name' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['title'] ) ) {
 				$insert_data[ $t_term ]['title'] = 0;
@@ -1188,11 +1308,30 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 		$t_term      = trim( $t_term ); // Numeric terms start with a space.
 
 		$wpdb->query(
-			$wpdb->prepare('INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] .
+			$wpdb->prepare(
+				'INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				' (item, doc, term, term_reverse, content, title, comment, tag, link, author, category, excerpt, taxonomy, customfield, type, customfield_detail, taxonomy_detail, mysqlcolumn_detail)
 			VALUES (%d, %d, %s, REVERSE(%s), %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s)',
-			$term->term_id, -1, $t_term, $t_term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, '', $customfield, $taxonomy, '', '', '' )
-		); // WPCS: unprepared SQL ok, database table name.
+				$term->term_id,
+				-1,
+				$t_term,
+				$t_term,
+				$content,
+				$title,
+				$comment,
+				$tag,
+				$link,
+				$author,
+				$category,
+				$excerpt,
+				'',
+				$customfield,
+				$taxonomy,
+				'',
+				'',
+				''
+			)
+		);
 	}
 }
 
@@ -1222,10 +1361,10 @@ function relevanssi_premium_remove_doc( $post_id, $keep_internal_linking ) {
 		$internal_links = 'AND link = 0';
 	}
 
-	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE doc=%s $internal_links", $post_id ) ); // WPCS: unprepared SQL ok, Relevanssi table name.
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE doc=%s $internal_links", $post_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 	if ( ! $keep_internal_linking ) {
-		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE link > 0 AND doc=%s', $post_id ) ); // WPCS: unprepared SQL ok, Relevanssi table name.
+		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE link > 0 AND doc=%s', $post_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
 
 	relevanssi_update_doc_count();
@@ -1250,7 +1389,7 @@ function relevanssi_remove_item( $item_id, $type ) {
 		return;
 	}
 
-	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE item = %d AND type = %s', $item_id, $type ) ); // WPCS: unprepared SQL ok, Relevanssi table name.
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE item = %d AND type = %s', $item_id, $type ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**
@@ -1285,10 +1424,10 @@ function relevanssi_hide_post( $post_id ) {
  */
 function relevanssi_index_post_type_archives() {
 	if ( 'on' === get_option( 'relevanssi_index_post_type_archives' ) ) {
-		global $wpdb;
+		global $wpdb, $relevanssi_variables;
 
 		// Delete all post types from the Relevanssi index first.
-		$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'post_type'" ); // WPCS: unprepared SQL ok. Just table names.
+		$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'post_type'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$post_types = relevanssi_get_indexed_post_type_archives();
 		if ( ! empty( $post_types ) ) {
@@ -1379,10 +1518,13 @@ function relevanssi_assign_post_type_ids() {
 		$post_type_ids_by_name[ $post_type ] = $id;
 		$id++;
 	}
-	update_option( 'relevanssi_post_type_ids', array(
-		'by_id'   => $post_type_ids_by_id,
-		'by_name' => $post_type_ids_by_name,
-	));
+	update_option(
+		'relevanssi_post_type_ids',
+		array(
+			'by_id'   => $post_type_ids_by_id,
+			'by_name' => $post_type_ids_by_name,
+		)
+	);
 
 	return array(
 		'by_id'   => $post_type_ids_by_id,
@@ -1505,7 +1647,8 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 	 */
 	$description = apply_filters( 'relevanssi_post_type_additional_content', $post_type_object->description, $post_type_object );
 	if ( ! empty( $description ) ) {
-		$tokens = relevanssi_tokenize( $description, $remove_stopwords, $min_length );
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_terms', relevanssi_tokenize( $description, $remove_stopwords, $min_length ), 'posttype-description' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['content'] ) ) {
 				$insert_data[ $t_term ]['content'] = 0;
@@ -1515,7 +1658,8 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 	}
 
 	if ( isset( $post_type_object->name ) && ! empty( $post_type_object->name ) ) {
-		$tokens = relevanssi_tokenize( $post_type_object->label, $remove_stopwords, $min_length );
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_terms', relevanssi_tokenize( $post_type_object->label, $remove_stopwords, $min_length ), 'posttype-name' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['title'] ) ) {
 				$insert_data[ $t_term ]['title'] = 0;
@@ -1545,11 +1689,30 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 		$t_term      = trim( $t_term ); // Numeric terms start with a space.
 
 		$wpdb->query(
-			$wpdb->prepare('INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] .
+			$wpdb->prepare(
+				'INSERT IGNORE INTO ' . $relevanssi_variables['relevanssi_table'] . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 				' (item, doc, term, term_reverse, content, title, comment, tag, link, author, category, excerpt, taxonomy, customfield, type, customfield_detail, taxonomy_detail, mysqlcolumn_detail)
 			VALUES (%d, %d, %s, REVERSE(%s), %d, %d, %d, %d, %d, %d, %d, %d, %d, %d, %s, %s, %s, %s)',
-			$post_type_id, -1, $t_term, $t_term, $content, $title, $comment, $tag, $link, $author, $category, $excerpt, '', $customfield, 'post_type', '', '', '' )
-		); // WPCS: unprepared SQL ok, database table name.
+				$post_type_id,
+				-1,
+				$t_term,
+				$t_term,
+				$content,
+				$title,
+				$comment,
+				$tag,
+				$link,
+				$author,
+				$category,
+				$excerpt,
+				'',
+				$customfield,
+				'post_type',
+				'',
+				'',
+				''
+			)
+		);
 	}
 }
 
@@ -1564,7 +1727,7 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 function relevanssi_delete_post_type_object( $post_type ) {
 	global $wpdb, $relevanssi_variables;
 	$id = relevanssi_get_post_type_by_name( $post_type );
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $id AND type = 'post_type'" ); // WPCS: unprepared SQL ok. No user-generated input variables.
+	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $id AND type = 'post_type'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 }
 
 /**

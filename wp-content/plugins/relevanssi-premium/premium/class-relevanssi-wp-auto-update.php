@@ -121,13 +121,19 @@ class Relevanssi_WP_Auto_Update {
 	 * @return string $remote_version Version number at the remote end.
 	 */
 	public function get_remote_version() {
-		$api_key = get_site_option( 'relevanssi_api_key' );
-		$request = wp_remote_post( $this->update_path, array(
-			'body' => array(
-				'api_key' => $api_key,
-				'action'  => 'version',
-			),
-		) );
+		$api_key = get_network_option( null, 'relevanssi_api_key' );
+		if ( ! $api_key ) {
+			$api_key = get_option( 'relevanssi_api_key' );
+		}
+		$request = wp_remote_post(
+			$this->update_path,
+			array(
+				'body' => array(
+					'api_key' => $api_key,
+					'action'  => 'version',
+				),
+			)
+		);
 		if ( ! is_wp_error( $request ) || 200 === wp_remote_retrieve_response_code( $request ) ) {
 			return $request['body'];
 		}
@@ -140,13 +146,19 @@ class Relevanssi_WP_Auto_Update {
 	 * @return bool|object
 	 */
 	public function get_remote_information() {
-		$api_key = get_site_option( 'relevanssi_api_key' );
-		$request = wp_remote_post( $this->update_path, array(
-			'body' => array(
-				'api_key' => $api_key,
-				'action'  => 'info',
-			),
-		) );
+		$api_key = get_network_option( null, 'relevanssi_api_key' );
+		if ( ! $api_key ) {
+			$api_key = get_option( 'relevanssi_api_key' );
+		}
+		$request = wp_remote_post(
+			$this->update_path,
+			array(
+				'body' => array(
+					'api_key' => $api_key,
+					'action'  => 'info',
+				),
+			)
+		);
 		if ( ! is_wp_error( $request ) || 200 === wp_remote_retrieve_response_code( $request ) ) {
 			if ( is_serialized( $request['body'] ) ) {
 				return unserialize( $request['body'] ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions
@@ -161,13 +173,19 @@ class Relevanssi_WP_Auto_Update {
 	 * @return boolean $remote_license
 	 */
 	public function get_remote_license() {
-		$api_key = get_site_option( 'relevanssi_api_key' );
-		$request = wp_remote_post( $this->update_path, array(
-			'body' => array(
-				'api_key' => $api_key,
-				'action'  => 'license',
-			),
-		) );
+		$api_key = get_network_option( null, 'relevanssi_api_key' );
+		if ( ! $api_key ) {
+			$api_key = get_option( 'relevanssi_api_key' );
+		}
+		$request = wp_remote_post(
+			$this->update_path,
+			array(
+				'body' => array(
+					'api_key' => $api_key,
+					'action'  => 'license',
+				),
+			)
+		);
 		if ( ! is_wp_error( $request ) || 200 === wp_remote_retrieve_response_code( $request ) ) {
 			return $request['body'];
 		}
@@ -184,7 +202,10 @@ class Relevanssi_WP_Auto_Update {
  */
 function relevanssi_activate_auto_update() {
 	global $relevanssi_variables;
-	$api_key = get_site_option( 'relevanssi_api_key' );
+	$api_key = get_network_option( null, 'relevanssi_api_key' );
+	if ( ! $api_key ) {
+		$api_key = get_option( 'relevanssi_api_key' );
+	}
 	if ( 'su9qtC30xCLLA' === crypt( $api_key, 'suolaa' ) ) {
 		$relevanssi_plugin_remote_path = 'https://www.relevanssi.com/update/update-development.php';
 	} else {
