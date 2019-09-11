@@ -60,7 +60,7 @@ function relevanssi_mime_type_ok( $mime_type ) {
 	if ( in_array( $mime_parts[0], array( 'image', 'video' ), true ) ) {
 		$read_this = false;
 	}
-	if ( in_array( $mime_parts[1], array( 'zip', 'octet-stream', 'x-zip-compressed', 'x-zip' ), true ) ) {
+	if ( isset( $mime_parts[1] ) && in_array( $mime_parts[1], array( 'zip', 'octet-stream', 'x-zip-compressed', 'x-zip' ), true ) ) {
 		$read_this = false;
 	}
 	/**
@@ -157,7 +157,7 @@ function relevanssi_attachment_metabox() {
 	$url         = wp_get_attachment_url( $post->ID );
 	$id          = $post->ID;
 	$button_text = __( 'Index attachment content', 'relevanssi' );
-	$api_key     = get_site_option( 'relevanssi_api_key' );
+	$api_key     = get_network_option( null, 'relevanssi_api_key' );
 	$admin_url   = esc_url( admin_url( 'admin-post.php' ) );
 	$action      = 'sendUrl';
 	$explanation = __( 'Indexer will fetch the file from your server.', 'relevanssi' );
@@ -167,10 +167,23 @@ function relevanssi_attachment_metabox() {
 	}
 
 	if ( ! $api_key ) {
+		// get_network_option() falls back to get_option(), but if this is a single
+		// install on a multisite, it won't work correctly.
+		$api_key = get_option( 'relevanssi_api_key' );
+	}
+
+	if ( ! $api_key ) {
 		printf( '<p>%s</p>', esc_html__( 'No API key set. API key is required for attachment indexing.', 'relevanssi' ) );
 	} else {
-		printf( '<p><input type="button" id="%s" value="%s" class="button-primary button-large" data-api_key="%s" data-post_id="%d" data-url="%s" title="%s"/></p>',
-		esc_attr( $action ), esc_attr( $button_text ), esc_attr( $api_key ), intval( $id ), esc_attr( $url ), esc_attr( $explanation ) );
+		printf(
+			'<p><input type="button" id="%s" value="%s" class="button-primary button-large" data-api_key="%s" data-post_id="%d" data-url="%s" title="%s"/></p>',
+			esc_attr( $action ),
+			esc_attr( $button_text ),
+			esc_attr( $api_key ),
+			intval( $id ),
+			esc_attr( $url ),
+			esc_attr( $explanation )
+		);
 
 		$pdf_content = get_post_meta( $post->ID, '_relevanssi_pdf_content', true );
 		if ( $pdf_content ) {
@@ -247,7 +260,10 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 		}
 	}
 
-	$api_key    = get_site_option( 'relevanssi_api_key' );
+	$api_key = get_network_option( null, 'relevanssi_api_key' );
+	if ( ! $api_key ) {
+		get_option( 'relevanssi_api_key' );
+	}
 	$server_url = relevanssi_get_server_url();
 
 	if ( 'on' === get_option( 'relevanssi_do_not_call_home' ) ) {
@@ -265,7 +281,21 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 		}
 	}
 	if ( 'on' === $send_file ) {
-		$file_name = get_attached_file( $post_id );
+		/**
+		 * Filters the attachment file name.
+		 *
+		 * If you want to make Relevanssi index attached file content from
+		 * files that are stored outside the WP attachment system, use this
+		 * filter to provide the name of the file.
+		 *
+		 * @param string The filename of the attached file.
+		 * @param int    The post ID of the attachment post.
+		 */
+		$file_name = apply_filters(
+			'relevanssi_get_attached_file',
+			get_attached_file( $post_id ),
+			$post_id
+		);
 
 		$file = fopen( $file_name, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
 		if ( false === $file ) {
@@ -289,10 +319,27 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 				 */
 				'timeout' => apply_filters( 'relevanssi_pdf_read_timeout', 45 ),
 			);
-			$response = wp_safe_remote_post( $server_url . 'index.php?key=' . $api_key . '&upload=true', $args );
+			$response = wp_safe_remote_post(
+				$server_url . 'index.php?key=' . $api_key . '&upload=true',
+				$args
+			);
 		}
 	} else {
-		$url = wp_get_attachment_url( $post_id );
+		/**
+		 * Filters the attachment URL.
+		 *
+		 * If you want to make Relevanssi index attached file content from
+		 * files that are stored outside the WP attachment system, use this
+		 * filter to provide the URL of the file.
+		 *
+		 * @param string The URL of the attached file.
+		 * @param int    The post ID of the attachment post.
+		 */
+		$url = apply_filters(
+			'relevanssi_get_attachment_url',
+			wp_get_attachment_url( $post_id ),
+			$post_id
+		);
 
 		$args = array(
 			'body'    => array(
@@ -363,10 +410,12 @@ function relevanssi_process_server_response( $response, $post_id ) {
 				$success         = false;
 			} else {
 				delete_post_meta( $post_id, '_relevanssi_pdf_error' );
-				update_post_meta( $post_id, '_relevanssi_pdf_content', $content );
+				$success = update_post_meta( $post_id, '_relevanssi_pdf_content', apply_filters( 'relevanssi_file_content', $content, $post_id ) );
 				relevanssi_index_doc( $post_id, false, relevanssi_get_custom_fields(), true );
 
-				$success = true;
+				if ( ! $success ) {
+					$response_error = "Could not save the file content to the custom field.\n";
+				}
 			}
 		}
 	}
@@ -433,13 +482,47 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 		$meta_where = $meta_query_sql['where'];
 	}
 
+	// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 	if ( $limit > 0 ) {
-		$query = $wpdb->prepare( "SELECT DISTINCT(ID) FROM $wpdb->posts $meta_join WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type LIKE %s $meta_where LIMIT %d", 'application/%', $limit ); // WPCS: unprepared SQL ok.
+		$query = $wpdb->prepare(
+			/**
+			 * Filters the SQL query that fetches posts with attachments.
+			 *
+			 * If you want to make Relevanssi index attachments that are not in
+			 * the WP Media Library, you need to adjust this filter to change
+			 * the SQL query so that it fetches the correct posts.
+			 *
+			 * @param string The SQL query
+			 * @param int    $limit      The number of posts to fetch.
+			 * @param string $meta_join  The SQL query join clause.
+			 * @param string $meta_where The SQL query where clause.
+			 */
+			apply_filters(
+				'relevanssi_get_attachment_posts_query',
+				"SELECT DISTINCT(ID) FROM $wpdb->posts $meta_join WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type LIKE %s $meta_where LIMIT %d",
+				$limit,
+				$meta_join,
+				$meta_where
+			),
+			'application/%',
+			$limit
+		);
 	} else {
-		$query = $wpdb->prepare( "SELECT DISTINCT(ID) FROM $wpdb->posts $meta_join WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type LIKE %s $meta_where", 'application/%' ); // WPCS: unprepared SQL ok.
+		$query = $wpdb->prepare(
+			/** Filter documented in /premium/pdf-upload.php. */
+			apply_filters(
+				'relevanssi_get_attachment_posts_query',
+				"SELECT DISTINCT(ID) FROM $wpdb->posts $meta_join WHERE post_type = 'attachment' AND post_status = 'inherit' AND post_mime_type LIKE %s $meta_where",
+				0,
+				$meta_join,
+				$meta_where
+			),
+			'application/%'
+		);
 	}
+	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
-	$posts = $wpdb->get_col( $query ); // WPCS: unprepared SQL ok.
+	$posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
 	return $posts;
 }
@@ -556,12 +639,12 @@ function relevanssi_pdf_action_javascript() {
 						// Animation complete.
 					});
 					console.log("Heading into step " + response.completed);
-					process_step(parseInt(response.completed), total, total_seconds);                 
+					process_step(parseInt(response.completed), total, total_seconds);
 				}
 			}
-		})        
+		})
 	}
 
 	</script>
-<?php
+	<?php
 }

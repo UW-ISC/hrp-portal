@@ -58,13 +58,15 @@ function relevanssi_recognize_positives( $q ) {
  *
  * Creates the necessary SQL code for positive (AND) and negative (NOT) search terms.
  *
- * @param array  $negative_terms   Negative terms.
- * @param array  $positive_terms   Positive terms.
- * @param string $relevanssi_table Relevanssi table name.
+ * @param array $negative_terms Negative terms.
+ * @param array $positive_terms Positive terms.
  *
  * @return string $query_restrictions MySQL code for the terms.
  */
-function relevanssi_negatives_positives( $negative_terms, $positive_terms, $relevanssi_table ) {
+function relevanssi_negatives_positives( $negative_terms, $positive_terms ) {
+	global $relevanssi_variables;
+	$relevanssi_table = $relevanssi_variables['relevanssi_table'];
+
 	$query_restrictions = '';
 	if ( $negative_terms ) {
 		$size = count( $negative_terms );
@@ -103,10 +105,13 @@ function relevanssi_get_recency_bonus() {
 		$recency_bonus = floatval( $recency_bonus_option['bonus'] );
 	}
 	if ( $recency_bonus && isset( $recency_bonus_option['days'] ) ) {
-		$recency_cutoff_date = time() - 60 * 60 * 24 * $recency_bonus_option['days'];
+		$recency_cutoff_date = time() - DAY_IN_SECONDS * $recency_bonus_option['days'];
 	}
 
-	return array( $recency_bonus, $recency_cutoff_date );
+	return array(
+		'bonus'  => $recency_bonus,
+		'cutoff' => $recency_cutoff_date,
+	);
 }
 
 /**
@@ -141,32 +146,29 @@ function relevanssi_set_operator( $query ) {
 }
 
 /**
- * Forms a tax_query from the taxonomy parameters.
+ * Processes the negative and positive terms (ie. local AND and NOT operators).
  *
- * Improved handling of taxonomy parameters to support multiple taxonomies and terms.
+ * If negative terms are present, will remove them from the $terms array. If negative
+ * or positive terms are present, will return the query restrictions MySQL for them.
  *
- * @param string $taxonomy      Taxonomies, with multiple taxonomies separated by '|'.
- * @param string $taxonomy_term Terms, with multiple terms separated by '|'.
- * @param array  $tax_query     The tax_query array.
+ * @param array  $terms An array of search terms.
+ * @param string $query The search query as a string.
+ *
+ * @return array An array containing the updated terms and the query restrictions.
  */
-function relevanssi_process_taxonomies( $taxonomy, $taxonomy_term, $tax_query ) {
-	$taxonomies = explode( '|', $taxonomy );
-	$terms      = explode( '|', $taxonomy_term );
+function relevanssi_process_terms( $terms, $query ) {
+	$negative_terms = relevanssi_recognize_negatives( $query );
+	$positive_terms = relevanssi_recognize_positives( $query );
 
-	$i = 0;
-	foreach ( $taxonomies as $taxonomy ) {
-		$term_tax_id    = null;
-		$taxonomy_terms = explode( ',', $terms[ $i ] );
-		foreach ( $taxonomy_terms as $taxonomy_term ) {
-			if ( ! empty( $taxonomy_term ) ) {
-				$tax_query[] = array(
-					'taxonomy' => $taxonomy,
-					'field'    => 'slug',
-					'terms'    => $taxonomy_term,
-				);
-			}
-		}
-		$i++;
+	if ( $negative_terms ) {
+		$terms = array_diff( $terms, $negative_terms );
 	}
-	return $tax_query;
+
+	// Clean: escaped in the function.
+	$query_restrictions = relevanssi_negatives_positives( $negative_terms, $positive_terms );
+
+	return array(
+		'terms'              => $terms,
+		'query_restrictions' => $query_restrictions,
+	);
 }

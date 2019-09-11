@@ -300,9 +300,28 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	/**
 	 * Regenerates the related posts for all posts.
 	 *
+	 * ## OPTIONS
+	 *
+	 * [--post_type=<post_types>]
+	 * : A comma-separated list of post types to cover. If empty, generate the post
+	 * types chosen in the Related posts options, or if that's empty, all public post
+	 * types.
+	 *
+	 * [--post_objects=<post_objects>]
+	 * : If true, doesn't generate the related posts HTML code and instead stores the
+	 * post objects of the related posts in the transient. If false, the transient
+	 * will contain the generated related posts HTML code. Default false.
+	 * ---
+	 * default: false
+	 * options:
+	 *   - true
+	 *   - false
+	 * ---
+	 *
 	 * ## EXAMPLES
 	 *
 	 *      wp relevanssi regenerate_related
+	 *      wp relevanssi regenerate_related --post_type=post,page
 	 *
 	 * @param array $args       Command arguments (not used).
 	 * @param array $assoc_args Command arguments as associative array.
@@ -317,32 +336,42 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 		}
 
 		$post_types = array();
-		if ( isset( $settings['append'] ) ) {
+		if ( isset( $settings['append'] ) && ! empty( $settings['append'] ) ) {
 			// Related posts are automatically appended to certain post types, so
 			// regenerate the related posts for those post types.
 			$post_types = explode( ',', $settings['append'] );
 		} else {
 			// Nothing set, so regenerate for all public post types.
-			$args       = array(
+			$pt_args    = array(
 				'public' => true,
 			);
-			$post_types = get_post_types( $args, 'names' );
+			$post_types = get_post_types( $pt_args, 'names' );
 		}
 
-		$args  = array(
+		if ( $assoc_args['post_type'] ) {
+			$post_types = explode( ',', $assoc_args['post_type'] );
+		}
+
+		$post_objects = false;
+		if ( $assoc_args['post_objects'] ) {
+			if ( filter_var( $assoc_args['post_objects'], FILTER_VALIDATE_BOOLEAN ) ) {
+				$post_objects = true;
+			}
+		}
+
+		$post_args = array(
 			'post_type'      => $post_types,
 			'fields'         => 'ids',
 			'posts_per_page' => -1,
 		);
-		$posts = get_posts( $args ); // Get all posts for the wanted post types.
-		$count = count( $posts );
-
+		$posts     = get_posts( $post_args ); // Get all posts for the wanted post types.
+		$count     = count( $posts );
 		WP_CLI::log( 'Regenerating related posts for post types ' . implode( ', ', $post_types ) . ", total $count posts." );
 
 		$progress = relevanssi_generate_progress_bar( 'Regenerating', $count );
 
 		foreach ( $posts as $post_id ) {
-			relevanssi_related_posts( $post_id );
+			relevanssi_related_posts( $post_id, $post_objects );
 			$progress->tick();
 		}
 
@@ -368,3 +397,8 @@ function relevanssi_generate_progress_bar( $title, $count ) {
 	}
 	return $progress;
 }
+
+/**
+ * Necessary, otherwise WP CLI search won't return any results.
+ */
+add_filter( 'relevanssi_search_ok', '__return_true' );

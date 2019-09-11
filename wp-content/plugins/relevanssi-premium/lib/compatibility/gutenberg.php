@@ -10,7 +10,13 @@
  * @see     https://www.relevanssi.com/
  */
 
-add_filter( 'relevanssi_post_content', 'relevanssi_gutenberg_block_rendering', 10, 2 );
+if ( RELEVANSSI_PREMIUM ) {
+	// Gutenberg causes duplicate postmeta to appear in posts. This will remove the
+	// extras when a post is saved.
+	add_action( 'save_post', 'relevanssi_remove_duplicate_postmeta', 100 );
+}
+
+add_filter( 'relevanssi_post_content', 'relevanssi_gutenberg_block_rendering', 10 );
 
 /**
  * Renders Gutenberg reusable blocks.
@@ -19,10 +25,9 @@ add_filter( 'relevanssi_post_content', 'relevanssi_gutenberg_block_rendering', 1
  * picks up the comments and renders the blocks.
  *
  * @param string $content The post content.
- * @param object $post    The post object.
  *
  * @return string The post content with the rendered content added.
  */
-function relevanssi_gutenberg_block_rendering( $content, $post ) {
+function relevanssi_gutenberg_block_rendering( $content ) {
 	return do_blocks( $content );
 }

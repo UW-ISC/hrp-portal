@@ -45,12 +45,12 @@ function relevanssi_attachments_tab() {
 		$indexing_attachments = true;
 	}
 
-?>
+	?>
 	<table class="form-table">
 	<tr>
-		<th scope="row">
+		<td>
 			<input type='button' id='index' value='<?php esc_html_e( 'Read all unread attachments', 'relevanssi' ); ?>' class='button-primary' /><br /><br />
-		</th>
+		</td>
 		<td>
 			<p class="description" id="indexing_button_instructions">
 				<?php /* translators: the placeholder has the name of the custom field for PDF content */ ?>
@@ -58,6 +58,7 @@ function relevanssi_attachments_tab() {
 			</p>
 			<div id='relevanssi-progress' class='rpi-progress'><div></div></div>
 			<div id='relevanssi-timer'><?php esc_html_e( 'Time elapsed', 'relevanssi' ); ?>: <span id="relevanssi_elapsed">0:00:00</span> | <?php esc_html_e( 'Time remaining', 'relevanssi' ); ?>: <span id="relevanssi_estimated"><?php esc_html_e( 'some time', 'relevanssi' ); ?></span></div>
+			<label for="relevanssi_results" class="screen-reader-text"><?php esc_html_e( 'Results', 'relevanssi' ); ?></label>
 			<textarea id='relevanssi_results' rows='10' cols='80'></textarea>
 		</td>
 	</tr>
@@ -82,11 +83,12 @@ function relevanssi_attachments_tab() {
 			<?php if ( $pdf_error_count > 0 ) : ?>
 				<span id="relevanssi_show_pdf_errors"><?php esc_html_e( 'Show errors', 'relevanssi' ); ?></span>.
 			<?php endif; ?></p>
+			<label for="relevanssi_pdf_errors" class="screen-reader-text"><?php esc_html_e( 'Attachment reading errors', 'relevanssi' ); ?></label>
 			<textarea id="relevanssi_pdf_errors" rows="4" cols="120"></textarea>
 		</td>
 	</tr>
 	<tr>
-		<th scope="row"><?php esc_html_e( 'Server location', 'relevanssi' ); ?></th>
+		<th scope="row"><label for="relevanssi_server_location"><?php esc_html_e( 'Server location', 'relevanssi' ); ?></label></th>
 		<td>
 			<select name="relevanssi_server_location" id="relevanssi_server_location">
 				<option value="us" <?php echo esc_html( $us_selected ); ?>><?php esc_html_e( 'United States', 'relevanssi' ); ?></option>
@@ -104,7 +106,7 @@ function relevanssi_attachments_tab() {
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_read_new_files'><?php esc_html_e( 'Read new files', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Read new files', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -119,7 +121,7 @@ function relevanssi_attachments_tab() {
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_send_pdf_files'><?php esc_html_e( 'Upload files', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Upload files', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -134,7 +136,7 @@ function relevanssi_attachments_tab() {
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_link_pdf_files'><?php esc_html_e( 'Link to files', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Link to files', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -145,11 +147,11 @@ function relevanssi_attachments_tab() {
 			</label>
 			<p class="description"><?php esc_html_e( 'If this option is checked, attachment results in search results will link directly to the file. Otherwise the results will link to the attachment page.', 'relevanssi' ); ?></p>
 			<?php if ( ! $indexing_attachments ) : ?>
-			<?php /* translators: the placeholder has name of the post type */ ?>
+				<?php /* translators: the placeholder has name of the post type */ ?>
 			<p class="important description"><?php printf( esc_html__( "You're not indexing the %s post type, so this setting doesn't have any effect.", 'relevanssi' ), '<code>attachment</code>' ); ?>
 			<?php endif; ?>
 			<?php if ( ! $indexing_attachments && ! $index_pdf_parent ) : ?>
-			<?php /* translators: the placeholder has name of the post type */ ?>
+				<?php /* translators: the placeholder has name of the post type */ ?>
 			<p class="important description"><?php printf( esc_html__( "You're not indexing the %s post type and haven't connected the files to the parent posts in the indexing settings. You won't be seeing any files in the results.", 'relevanssi' ), '<code>attachment</code>' ); ?>
 			<?php endif; ?>
 		</fieldset>
@@ -180,5 +182,5 @@ function relevanssi_attachments_tab() {
 		</td>
 	</tr>
 	</table>
-<?php
+	<?php
 }
