@@ -31,7 +31,7 @@ function relevanssi_pinning( $hits ) {
 	global $wpdb, $wp_filter;
 
 	// Is pinning used?
-	$results = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE ( meta_key LIKE '_relevanssi_pin%' OR meta_key LIKE '_relevanssi_unpin%' ) AND meta_value != '' LIMIT 1" );
+	$results = $wpdb->get_results( "SELECT * FROM $wpdb->postmeta WHERE ( meta_key = '_relevanssi_pin' OR meta_key = '_relevanssi_unpin' OR meta_key = '_relevanssi_pin_for_all' ) AND meta_value != '' LIMIT 1" );
 	if ( empty( $results ) ) {
 		// No, nothing is pinned.
 		return $hits;
@@ -64,9 +64,9 @@ function relevanssi_pinning( $hits ) {
 		}
 	}
 
-	/*
-	If the search query is "foo bar baz", $term_list now contains "foo", "bar",
-	"baz", "foo bar", "bar baz", and "foo bar baz".
+	/**
+	 * If the search query is "foo bar baz", $term_list now contains "foo", "bar",
+	 *"baz", "foo bar", "bar baz", and "foo bar baz".
 	*/
 
 	if ( is_array( $term_list ) ) {
@@ -93,21 +93,22 @@ function relevanssi_pinning( $hits ) {
 				$blog_id = $hit->blog_id;
 				switch_to_blog( $blog_id );
 				if ( ! isset( $pins_fetched[ $blog_id ] ) ) {
-					$positive_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_pin' AND meta_value IN ( $term_list )" ); // WPCS: unprepared SQL ok, $term_list is escaped.
-					$negative_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_unpin' AND meta_value IN ( $term_list )" ); // WPCS: unprepared SQL ok, $term_list is escaped.
+					$positive_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_pin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$negative_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_unpin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$pins_fetched[ $blog_id ] = true;
 				}
 				restore_current_blog();
 			} else {
 				// Single site.
 				if ( ! $pins_fetched ) {
-					$positive_ids[0] = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pin' AND meta_value IN ( $term_list )" ); // WPCS: unprepared SQL ok, $term_list is escaped.
-					$negative_ids[0] = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_unpin' AND meta_value IN ( $term_list )" ); // WPCS: unprepared SQL ok, $term_list is escaped.
+					$positive_ids[0] = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					$negative_ids[0] = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_unpin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$pins_fetched    = true;
 				}
 			}
 			$hit_id = strval( $hit->ID ); // The IDs from the database are strings, the one from the post is an integer in some contexts.
 			if ( is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit_id, $positive_ids[ $blog_id ], true ) ) {
+				$hit->relevanssi_pinned = 1;
 				if ( $return_id ) {
 					$pinned_posts[] = $hit->ID;
 				} else {
@@ -122,7 +123,7 @@ function relevanssi_pinning( $hits ) {
 						$pinned_posts[] = $hit;
 					}
 				} elseif ( is_array( $negative_ids[ $blog_id ] ) && count( $negative_ids[ $blog_id ] ) > 0 ) {
-					if ( ! in_array( $hit->ID, $negative_ids[ $blog_id ], true ) ) {
+					if ( ! in_array( $hit_id, $negative_ids[ $blog_id ], true ) ) {
 						if ( $return_id ) {
 							$other_posts[] = $hit->ID;
 						} else {
@@ -159,4 +160,45 @@ function relevanssi_add_pinned_words_to_post_content( $content, $post ) {
 		$content .= " $word";
 	}
 	return $content;
+}
+
+/**
+ * Provides the pinning functionality for the admin search.
+ *
+ * @param object $post  The post object.
+ * @param string $query The search query.
+ *
+ * @return array First item is a string containing the pinning buttons, the second
+ *               item is a string containing the "pinned" notice if the post is
+ *               pinned.
+ */
+function relevanssi_admin_search_pinning( $post, $query ) {
+	$pinned          = '';
+	$pinning_buttons = array();
+
+	$pinned_words = array();
+	if ( isset( $post->relevanssi_pinned ) ) {
+		$pinned_words = get_post_meta( $post->ID, '_relevanssi_pin' );
+		$pinned       = '<strong>' . __( '(pinned)', 'relevanssi' ) . '</strong>';
+	}
+
+	if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+		return array( '', $pinned );
+	}
+
+	$tokens = relevanssi_tokenize( $query );
+	foreach ( array_keys( $tokens ) as $token ) {
+		if ( ! in_array( $token, $pinned_words, true ) ) {
+			/* Translators: %s is the search term. */
+			$pinning_button    = sprintf( '<button type="button" class="pin" data-postid="%1$d" data-keyword="%2$s">%3$s</button>', $post->ID, $token, sprintf( __( "Pin for '%s'", 'relevanssi' ), $token ) );
+			$pinning_buttons[] = $pinning_button;
+		} else {
+			/* Translators: %s is the search term. */
+			$pinning_button    = sprintf( '<button type="button" class="unpin" data-postid="%1$d" data-keyword="%2$s">%3$s</button>', $post->ID, $token, sprintf( __( "Unpin for '%s'", 'relevanssi' ), $token ) );
+			$pinning_buttons[] = $pinning_button;
+		}
+	}
+	$pinning_buttons = implode( ' ', $pinning_buttons );
+
+	return array( $pinning_buttons, $pinned );
 }

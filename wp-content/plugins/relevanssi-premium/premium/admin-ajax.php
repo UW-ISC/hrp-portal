@@ -23,6 +23,8 @@ add_action( 'wp_ajax_relevanssi_list_taxonomies', 'relevanssi_list_taxonomies_wr
 add_action( 'wp_ajax_relevanssi_related_posts', 'relevanssi_get_related_posts' );
 add_action( 'wp_ajax_relevanssi_related_remove', 'relevanssi_add_to_exclude_list' );
 add_action( 'wp_ajax_relevanssi_related_return', 'relevanssi_remove_from_exclude_list' );
+add_action( 'wp_ajax_relevanssi_pin_post', 'relevanssi_pin_post' );
+add_action( 'wp_ajax_relevanssi_unpin_post', 'relevanssi_unpin_post' );
 
 /**
  * Performs the "list PDF files" AJAX action.
@@ -547,4 +549,65 @@ function relevanssi_unexclude_a_related_post( $post_id, $unexcluded_post ) {
 
 	// Excluded IDs have changed, flush the cache.
 	delete_post_meta( $post_id, '_relevanssi_related_posts' );
+}
+
+/**
+ * Adds a keyword to the pinned keywords list for a post.
+ *
+ * @since 2.2.6
+ */
+function relevanssi_pin_post() {
+	check_ajax_referer( 'relevanssi_admin_search_nonce', 'security' );
+
+	$post_id = (int) $_POST['post_id']; // WPCS: input var ok.
+	$keyword = $_POST['keyword']; // WPCS: input var ok.
+
+	if ( 0 === $post_id || empty( $keyword ) ) {
+		wp_die();
+	}
+
+	$result         = false;
+	$already_pinned = false;
+	$pins           = get_post_meta( $post_id, '_relevanssi_pin' );
+	foreach ( $pins as $pin ) {
+		if ( $pin === $keyword ) {
+			$already_pinned = true;
+			break;
+		}
+	}
+	if ( ! $already_pinned ) {
+		$result = add_post_meta( $post_id, '_relevanssi_pin', $keyword );
+	}
+
+	$response = array(
+		'success' => $result,
+	);
+
+	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
+ * Removes a keyword from the pinned keywords list for a post.
+ *
+ * @since 2.2.6
+ */
+function relevanssi_unpin_post() {
+	check_ajax_referer( 'relevanssi_admin_search_nonce', 'security' );
+
+	$post_id = (int) $_POST['post_id']; // WPCS: input var ok.
+	$keyword = $_POST['keyword']; // WPCS: input var ok.
+
+	if ( 0 === $post_id || empty( $keyword ) ) {
+		wp_die();
+	}
+
+	$result = delete_post_meta( $post_id, '_relevanssi_pin', $keyword );
+
+	$response = array(
+		'success' => $result,
+	);
+
+	echo wp_json_encode( $response );
+	wp_die();
 }

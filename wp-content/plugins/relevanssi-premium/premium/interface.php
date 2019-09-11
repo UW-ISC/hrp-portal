@@ -26,18 +26,17 @@ function relevanssi_premium_plugin_page_actions( $plugin_page ) {
  *
  * Prints out table rows and form fields for entering the API key, or if API key is set, controls to remove it.
  *
+ * @param string $context The context for the form. Default null.
+ *
  * @since 2.0.0
  */
-function relevanssi_form_api_key() {
+function relevanssi_form_api_key( $context = null ) {
 	$api_key = get_option( 'relevanssi_api_key' );
-	if ( empty( $api_key ) ) {
-		// In multisite environments, the API key may be empty because it's stored in
-		// the network options. Let's look there!
-		$api_key = get_site_option( 'relevanssi_api_key' );
+	if ( 'network' === $context ) {
+		$api_key = get_network_option( null, 'relevanssi_api_key' );
 	}
-
 	if ( ! empty( $api_key ) ) :
-?>
+		?>
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'API key', 'relevanssi' ); ?>
@@ -48,9 +47,9 @@ function relevanssi_form_api_key() {
 			<p class="description"><?php esc_html_e( 'A valid API key is required to use the automatic update feature and the PDF indexing. Otherwise the plugin will work just fine without an API key. Get your API key from Relevanssi.com.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+		<?php
 	else :
-?>
+		?>
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'API key', 'relevanssi' ); ?>
@@ -61,7 +60,7 @@ function relevanssi_form_api_key() {
 			<p class="description"><?php esc_html_e( 'A valid API key is required to use the automatic update feature and the PDF indexing. Otherwise the plugin will work just fine without an API key. Get your API key from Relevanssi.com.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+		<?php
 	endif;
 }
 
@@ -73,7 +72,7 @@ function relevanssi_form_api_key() {
 function relevanssi_form_do_not_call_home() {
 	$option          = get_option( 'relevanssi_do_not_call_home' );
 	$can_i_call_home = relevanssi_check( $option );
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Disable outside connections', 'relevanssi' ); ?>
@@ -90,7 +89,7 @@ function relevanssi_form_do_not_call_home() {
 		</td>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -104,7 +103,7 @@ function relevanssi_form_internal_links() {
 	$internal_links_dont_strip = relevanssi_select( $internal_links, 'nostrip' );
 	$internal_links_noindex    = relevanssi_select( $internal_links, 'noindex' );
 
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_internal_links'><?php esc_html_e( 'Internal links', 'relevanssi' ); ?></label>
@@ -118,7 +117,7 @@ function relevanssi_form_internal_links() {
 			<p class="description"><?php esc_html_e( 'Internal link anchor tags can be indexed for target document, both target and source or source only. See Help for more details.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -139,7 +138,7 @@ function relevanssi_form_hide_post_controls() {
 	if ( ! empty( $hide_post_controls ) ) {
 		$show_post_controls_class = '';
 	}
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_hide_post_controls'><?php esc_html_e( 'Hide Relevanssi', 'relevanssi' ); ?></label>
@@ -171,7 +170,7 @@ function relevanssi_form_hide_post_controls() {
 		<p class="description"><?php printf( esc_html__( 'If Relevanssi is hidden on post edit pages, enabling this option will show Relevanssi features for admin-level users. Admin-level users are those with %1$s capabilities, but if you want to use a different capability, you can use the %2$s filter to modify that.', 'relevanssi' ), '<code>manage_options</code>', '<code>relevanssi_options_capability</code>' ); ?></p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -181,16 +180,16 @@ function relevanssi_form_hide_post_controls() {
  */
 function relevanssi_form_link_weight() {
 	$link_boost = get_option( 'relevanssi_link_boost' );
-?>
+	?>
 	<tr>
 		<td>
-			<?php esc_html_e( 'Internal links', 'relevanssi' ); ?>
+			<label for="relevanssi_link_boost"><?php esc_html_e( 'Internal links', 'relevanssi' ); ?></label>
 		</td>
 		<td class="col-2">
 			<input type='text' id='relevanssi_link_boost' name='relevanssi_link_boost' size='4' value='<?php echo esc_attr( $link_boost ); ?>' />
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -214,16 +213,16 @@ function relevanssi_form_post_type_weights() {
 		/* translators: name of the post type */
 		$label = sprintf( __( "Post type '%s':", 'relevanssi' ), $type );
 
-?>
+		?>
 	<tr>
 		<td>
-			<?php echo esc_html( $label ); ?>
+			<label for="relevanssi_weight_<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $label ); ?></label>
 		</td>
 		<td class="col-2">
 			<input type='text' id='relevanssi_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
 		</td>
 	</tr>
-<?php
+		<?php
 	}
 }
 
@@ -252,16 +251,16 @@ function relevanssi_form_taxonomy_weights() {
 		/* translators: name of the taxonomy */
 		$label = sprintf( __( "Posts tagged with taxonomy '%s':", 'relevanssi' ), $type );
 
-?>
+		?>
 	<tr>
 	<td>
-		<?php echo esc_html( $label ); ?>
+		<label for="relevanssi_taxonomy_weight_<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $label ); ?></label>
 	</td>
 	<td class="col-2">
 		<input type='text' id='relevanssi_taxonomy_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_taxonomy_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
 	</td>
 </tr>
-<?php
+		<?php
 	}
 
 	$index_taxonomies = get_option( 'relevanssi_index_taxonomies' );
@@ -281,16 +280,16 @@ function relevanssi_form_taxonomy_weights() {
 
 			/* translators: name of the taxonomy */
 			$label = sprintf( __( "Terms in the taxonomy '%s':", 'relevanssi' ), $type );
-?>
+			?>
 	<tr>
 	<td>
-		<?php echo esc_html( $label ); ?>
+			<label for="relevanssi_term_weight_<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $label ); ?></label>
 	</td>
 	<td class="col-2">
 		<input type='text' id='relevanssi_term_weight_<?php echo esc_attr( $type ); ?>' name='relevanssi_term_weight_<?php echo esc_attr( $type ); ?>' size='4' value='<?php echo esc_attr( $value ); ?>' />
 	</td>
 </tr>
-<?php
+			<?php
 		}
 	}
 }
@@ -323,7 +322,7 @@ function relevanssi_form_recency_weight() {
 function relevanssi_form_recency_cutoff() {
 	$recency_bonus_array = get_option( 'relevanssi_recency_bonus' );
 	$recency_bonus_days  = $recency_bonus_array['days'];
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_recency_days'><?php esc_html_e( 'Recent posts bonus cutoff', 'relevanssi' ); ?></label>
@@ -333,7 +332,7 @@ function relevanssi_form_recency_cutoff() {
 			<p class="description"><?php esc_html_e( 'Posts newer than the day cutoff specified here will have their weight multiplied with the bonus above.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -344,10 +343,10 @@ function relevanssi_form_recency_cutoff() {
 function relevanssi_form_hide_branding() {
 	$hide_branding = get_option( 'relevanssi_hide_branding' );
 	$hide_branding = relevanssi_check( $hide_branding );
-?>
+	?>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_hide_branding'><?php esc_html_e( 'Hide Relevanssi branding', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Hide Relevanssi branding', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -361,7 +360,7 @@ function relevanssi_form_hide_branding() {
 		</fieldset>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -371,7 +370,7 @@ function relevanssi_form_hide_branding() {
  */
 function relevanssi_form_thousands_separator() {
 	$thousand_separator = get_option( 'relevanssi_thousand_separator' );
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_thousand_separator'><?php esc_html_e( 'Thousands separator', 'relevanssi' ); ?></label>
@@ -381,7 +380,7 @@ function relevanssi_form_thousands_separator() {
 			<p class="description"><?php esc_html_e( "If Relevanssi sees this character between numbers, it'll stick the numbers together no matter how the character would otherwise be handled. Especially useful if a space is used as a thousands separator.", 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -391,7 +390,7 @@ function relevanssi_form_thousands_separator() {
  */
 function relevanssi_form_disable_shortcodes() {
 	$disable_shortcodes = get_option( 'relevanssi_disable_shortcodes' );
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_disable_shortcodes'><?php esc_html_e( 'Disable these shortcodes', 'relevanssi' ); ?></label>
@@ -401,7 +400,7 @@ function relevanssi_form_disable_shortcodes() {
 			<p class="description"><?php esc_html_e( 'Enter a comma-separated list of shortcodes. These shortcodes will not be expanded if expand shortcodes above is enabled. This is useful if a particular shortcode is causing problems in indexing.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -421,11 +420,11 @@ function relevanssi_form_mysql_columns() {
 	}
 	$columns = array();
 	foreach ( $column_list as $column ) {
-		array_push( $columns, $column->Field );
+		array_push( $columns, $column->Field ); // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 	}
 	$columns = implode( ', ', $columns );
 
-?>
+	?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_mysql_columns'><?php esc_html_e( 'MySQL columns', 'relevanssi' ); ?></label>
@@ -441,7 +440,7 @@ function relevanssi_form_mysql_columns() {
 			</p>
 		</td>
 	</tr>
-<?php
+	<?php
 }
 
 /**
@@ -455,7 +454,7 @@ function relevanssi_form_searchblogs_setting() {
 		$searchblogs_all = get_option( 'relevanssi_searchblogs_all' );
 		$searchblogs_all = relevanssi_check( $searchblogs_all );
 
-?>
+		?>
 	<tr>
 		<th scope="row">
 			<label for='relevanssi_searchblogs_all'><?php esc_html_e( 'Search all subsites', 'relevanssi' ); ?></label>
@@ -486,7 +485,7 @@ function relevanssi_form_searchblogs_setting() {
 			<p class="description"><?php esc_html_e( 'Add a comma-separated list of blog ID values to have all search forms on this site search these multisite subsites. This can be overridden from the search form.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
-<?php
+		<?php
 	endif;
 }
 
@@ -506,13 +505,13 @@ function relevanssi_form_index_users() {
 	if ( ! empty( $index_users ) ) {
 		$fields_display = '';
 	}
-?>
+	?>
 	<h2><?php esc_html_e( 'Indexing user profiles', 'relevanssi' ); ?></h2>
 
 	<table class="form-table">
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_index_users'><?php esc_html_e( 'Index user profiles', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Index user profiles', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -526,9 +525,9 @@ function relevanssi_form_index_users() {
 		</fieldset>
 		</td>
 	</tr>
-	<tr id="index_subscribers" <?php echo $fields_display; // WPCS: XSS ok. ?>>
+	<tr id="index_subscribers" <?php echo $fields_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<th scope="row">
-			<label for='relevanssi_index_subscribers'><?php esc_html_e( 'Index subscribers', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Index subscribers', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -542,7 +541,7 @@ function relevanssi_form_index_users() {
 		</td>
 	</tr>
 
-	<tr id="user_extra_fields" <?php echo $fields_display; // WPCS: XSS ok. ?>>
+	<tr id="user_extra_fields" <?php echo $fields_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<th scope="row">
 			<label for='relevanssi_index_user_fields'><?php esc_html_e( 'Extra fields', 'relevanssi' ); ?></label>
 		</th>
@@ -552,7 +551,7 @@ function relevanssi_form_index_users() {
 		</td>
 	</tr>
 	</table>
-<?php
+	<?php
 }
 
 /**
@@ -563,12 +562,12 @@ function relevanssi_form_index_users() {
 function relevanssi_form_index_synonyms() {
 	$index_synonyms = get_option( 'relevanssi_index_synonyms' );
 	$index_synonyms = relevanssi_check( $index_synonyms );
-?>
+	?>
 	<h3><?php esc_html_e( 'Indexing synonyms', 'relevanssi' ); ?></h3>
 	<table class="form-table">
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_index_synonyms'><?php esc_html_e( 'Index synonyms', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Index synonyms', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -578,13 +577,17 @@ function relevanssi_form_index_synonyms() {
 				<?php esc_html_e( 'Index synonyms for AND searches.', 'relevanssi' ); ?>
 			</label>
 		</fieldset>
-		<p class="description"><?php _e( 'If checked, Relevanssi will use the synonyms in indexing. If you add <code>dog = hound</code> to the synonym list and enable this feature, every time the indexer sees <code>hound</code> in post content or post title, it will index it as <code>hound dog</code>. Thus, the post will be found when searching with either word. This makes it possible to use synonyms with AND searches, but will slow down indexing, especially with large databases and large lists of synonyms. This only works for post titles and post content. You can use multi-word keys and values, but phrases do not work.', 'relevanssi' ); // WPCS: XSS ok. ?></p>
+		<p class="description">
+		<?php
+			_e( 'If checked, Relevanssi will use the synonyms in indexing. If you add <code>dog = hound</code> to the synonym list and enable this feature, every time the indexer sees <code>hound</code> in post content or post title, it will index it as <code>hound dog</code>. Thus, the post will be found when searching with either word. This makes it possible to use synonyms with AND searches, but will slow down indexing, especially with large databases and large lists of synonyms. This only works for post titles and post content. You can use multi-word keys and values, but phrases do not work.', 'relevanssi' ); // phpcs:ignore WordPress.Security.EscapeOutput.UnsafePrintingFunction
+		?>
+		</p>
 		</td>
 	</tr>
 	</table>
 
 	<br /><br />
-<?php
+	<?php
 }
 
 /**
@@ -595,14 +598,14 @@ function relevanssi_form_index_synonyms() {
 function relevanssi_form_index_pdf_parent() {
 	$index_pdf_parent = get_option( 'relevanssi_index_pdf_parent' );
 	$index_pdf_parent = relevanssi_check( $index_pdf_parent );
-	$index_post_types = get_option( 'relevanssi_index_post_types' );
-?>
+	$index_post_types = get_option( 'relevanssi_index_post_types', array() );
+	?>
 	<h2><?php esc_html_e( 'Indexing PDF content', 'relevanssi' ); ?></h2>
 
 	<table class="form-table">
 	<tr>
 	<th scope="row">
-		<label for='relevanssi_index_pdf_parent'><?php esc_html_e( 'Index for parent', 'relevanssi' ); ?></label>
+		<?php esc_html_e( 'Index for parent', 'relevanssi' ); ?>
 	</th>
 	<td>
 	<fieldset>
@@ -614,18 +617,18 @@ function relevanssi_form_index_pdf_parent() {
 		<?php /* translators: name of the attachment post type */ ?>
 		<p class="description"><?php printf( esc_html__( 'If checked, Relevanssi indexes the PDF content both for the attachment post and the parent post. You can control the attachment post visibility by indexing or not indexing the post type %s.', 'relevanssi' ), '<code>attachment</code>' ); ?></p>
 		<?php if ( ! in_array( 'attachment', $index_post_types, true ) && empty( $index_pdf_parent ) ) : ?>
-		<?php /* translators: name of the attachment post type */ ?>
+			<?php /* translators: name of the attachment post type */ ?>
 		<p class="description important"><?php printf( esc_html__( "You have not chosen to index the post type %s. You won't see any PDF content in the search results, unless you check this option.", 'relevanssi' ), '<code>attachment</code>' ); ?></p>
 		<?php endif; ?>
 		<?php if ( in_array( 'attachment', $index_post_types, true ) && ! empty( $index_pdf_parent ) ) : ?>
-		<?php /* translators: name of the attachment post type */ ?>
+			<?php /* translators: name of the attachment post type */ ?>
 		<p class="description important"><?php printf( esc_html__( 'Searching for PDF contents will now return both the attachment itself and the parent post. Are you sure you want both in the results?', 'relevanssi' ), '<code>attachment</code>' ); ?></p>
 		<?php endif; ?>
 	</fieldset>
 	</td>
 	</tr>
 	</table>
-<?php
+	<?php
 }
 
 /**
@@ -636,20 +639,20 @@ function relevanssi_form_index_pdf_parent() {
 function relevanssi_form_index_taxonomies() {
 	$index_taxonomies       = get_option( 'relevanssi_index_taxonomies' );
 	$index_taxonomies       = relevanssi_check( $index_taxonomies );
-	$index_these_taxonomies = get_option( 'relevanssi_index_terms' );
+	$index_these_taxonomies = get_option( 'relevanssi_index_terms', array() );
 
 	$fields_display = 'class="screen-reader-text"';
 	if ( ! empty( $index_taxonomies ) ) {
 		$fields_display = '';
 	}
 
-?>
+	?>
 	<h2><?php esc_html_e( 'Indexing taxonomy terms', 'relevanssi' ); ?></h2>
 
 	<table class="form-table">
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_index_taxonomies'><?php esc_html_e( 'Index taxonomy terms', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Index taxonomy terms', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -662,7 +665,7 @@ function relevanssi_form_index_taxonomies() {
 		</fieldset>
 		</td>
 	</tr>
-	<tr id="taxonomies" <?php echo $fields_display; // WPCS: XSS ok. ?>>
+	<tr id="taxonomies" <?php echo $fields_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<th scope="row">
 			<?php esc_html_e( 'Taxonomies', 'relevanssi' ); ?>
 		</th>
@@ -696,10 +699,10 @@ function relevanssi_form_index_taxonomies() {
 		$label = sprintf( '%s', $taxonomy->name );
 		$type  = $taxonomy->name;
 
-?>
+		?>
 	<tr>
 		<td>
-			<?php echo esc_html( $label ); ?>
+			<label for="relevanssi_index_terms_<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $label ); ?></label>
 		</td>
 		<td>
 			<input type='checkbox' name='relevanssi_index_terms_<?php echo esc_attr( $type ); ?>' id='relevanssi_index_terms_<?php echo esc_attr( $type ); ?>' <?php echo esc_attr( $checked ); ?> />
@@ -708,14 +711,14 @@ function relevanssi_form_index_taxonomies() {
 			<?php echo esc_html( $public ); ?>
 		</td>
 	</tr>
-<?php
+		<?php
 	}
-?>
+	?>
 			</table>
 		</td>
 	</tr>
 	</table>
-<?php
+	<?php
 }
 
 /**
@@ -732,13 +735,13 @@ function relevanssi_form_index_post_type_archives() {
 		$fields_display = '';
 	}
 
-?>
+	?>
 	<h2><?php esc_html_e( 'Indexing post type archives', 'relevanssi' ); ?></h2>
 
 	<table class="form-table">
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_index_post_type_archives'><?php esc_html_e( 'Index post type archives', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Index post type archives', 'relevanssi' ); ?>
 		</th>
 		<td>
 		<fieldset>
@@ -752,7 +755,7 @@ function relevanssi_form_index_post_type_archives() {
 		</fieldset>
 		</td>
 	</tr>
-	<tr id="posttypearchives" <?php echo $fields_display; // WPCS: XSS ok. ?>>
+	<tr id="posttypearchives" <?php echo $fields_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
 		<th scope="row">
 			<?php esc_html_e( 'Post types indexed', 'relevanssi' ); ?>
 		</th>
@@ -766,7 +769,7 @@ function relevanssi_form_index_post_type_archives() {
 		</td>
 	</tr>
 	</table>
-<?php
+	<?php
 }
 
 /**
@@ -789,21 +792,45 @@ function relevanssi_premium_add_admin_scripts( $hook ) {
 		global $post;
 		// Only add the scripts for attachment posts.
 		if ( 'attachment' === $post->post_type ) {
-			$api_key = get_site_option( 'relevanssi_api_key' );
-			wp_enqueue_script( 'relevanssi_admin_pdf_js', $plugin_dir_url . 'premium/admin_pdf_scripts.js', array( 'jquery' ) );
-			wp_localize_script( 'relevanssi_admin_pdf_js', 'admin_pdf_data',
+			$api_key = get_network_option( null, 'relevanssi_api_key' );
+			if ( ! $api_key ) {
+				$api_key = get_option( 'relevanssi_api_key' );
+			}
+			wp_enqueue_script(
+				'relevanssi_admin_pdf_js',
+				$plugin_dir_url . 'premium/admin_pdf_scripts.js',
+				array( 'jquery' ),
+				$relevanssi_variables['plugin_version'],
+				true
+			);
+			wp_localize_script(
+				'relevanssi_admin_pdf_js',
+				'admin_pdf_data',
 				array(
 					'send_pdf_nonce' => wp_create_nonce( 'relevanssi_send_pdf' ),
 				)
 			);
 		}
-		wp_enqueue_script( 'relevanssi_metabox_js', $plugin_dir_url . 'premium/admin_metabox_scripts.js', array( 'jquery' ) );
-		wp_localize_script( 'relevanssi_metabox_js', 'relevanssi_metabox_data',
+		wp_enqueue_script(
+			'relevanssi_metabox_js',
+			$plugin_dir_url . 'premium/admin_metabox_scripts.js',
+			array( 'jquery' ),
+			$relevanssi_variables['plugin_version'],
+			true
+		);
+		wp_localize_script(
+			'relevanssi_metabox_js',
+			'relevanssi_metabox_data',
 			array(
 				'metabox_nonce' => wp_create_nonce( 'relevanssi_metabox_nonce' ),
 			)
 		);
-		wp_enqueue_style( 'relevanssi_metabox_css', $plugin_dir_url . 'premium/metabox_styles.css' );
+		wp_enqueue_style(
+			'relevanssi_metabox_css',
+			$plugin_dir_url . 'premium/metabox_styles.css',
+			array(),
+			$relevanssi_variables['plugin_version']
+		);
 
 	}
 
@@ -944,16 +971,19 @@ function relevanssi_update_premium_options() {
 		if ( isset( $request['relevanssi_related_number'] ) ) {
 			$settings['number'] = intval( $request['relevanssi_related_number'] );
 		}
+		if ( isset( $request['relevanssi_related_months'] ) ) {
+			$settings['months'] = intval( $request['relevanssi_related_months'] );
+		}
 		if ( isset( $request['relevanssi_related_nothing'] ) ) {
 			$settings['nothing'] = 'nothing';
-			if ( 'random' === $request['relevanssi_related_nothing'] ) {
-				$settings['nothing'] = 'random';
+			if ( in_array( $request['relevanssi_related_nothing'], array( 'random', 'random_cat' ), true ) ) {
+				$settings['nothing'] = $request['relevanssi_related_nothing'];
 			}
 		}
 		if ( isset( $request['relevanssi_related_notenough'] ) ) {
 			$settings['notenough'] = 'nothing';
-			if ( 'random' === $request['relevanssi_related_notenough'] ) {
-				$settings['notenough'] = 'random';
+			if ( in_array( $request['relevanssi_related_notenough'], array( 'random', 'random_cat' ), true ) ) {
+				$settings['notenough'] = $request['relevanssi_related_notenough'];
 			}
 		}
 		$settings['append'] = '';

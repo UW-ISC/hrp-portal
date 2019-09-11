@@ -15,24 +15,36 @@
  */
 function relevanssi_import_export_tab() {
 	$serialized_options = relevanssi_serialize_options();
-?>
+	?>
 	<h2 id="options"><?php esc_html_e( 'Import or export options', 'relevanssi' ); ?></h2>
 
 	<p><?php esc_html_e( 'Here you find the current Relevanssi Premium options in a text format. Copy the contents of the text field to make a backup of your settings. You can also paste new settings here to change all settings at the same time. This is useful if you have default settings you want to use on every system.', 'relevanssi' ); ?></p>
 
 	<table class="form-table">
 	<tr>
-		<th scope="row"><?php esc_html_e( 'Current Settings', 'relevanssi' ); ?></th>
+		<th scope="row"><label for="relevanssi_settings"><?php esc_html_e( 'Current Settings', 'relevanssi' ); ?></label></th>
 		<td>
-			<p><textarea name='relevanssi_settings' rows='4' cols='80'><?php echo esc_html( $serialized_options ); ?></textarea></p>
+			<p>
+				<textarea
+					id='relevanssi_settings'
+					name='relevanssi_settings'
+					rows='4'
+					cols='80'><?php echo esc_html( $serialized_options ); ?></textarea>
+			</p>
 
-			<input type='submit' name='import_options' id='import_options' value='<?php esc_html_e( 'Import settings', 'relevanssi' ); ?>' class='button' />
+			<input
+				type='submit'
+				name='import_options'
+				id='import_options'
+				value='<?php esc_html_e( 'Import settings', 'relevanssi' ); ?>'
+				class='button'
+			/>
 		</td>
 	</tr>
 	</table>
 
 	<p><?php esc_html_e( "Note! Make sure you've got correct settings from a right version of Relevanssi. Settings from a different version of Relevanssi may or may not work and may or may not mess your settings.", 'relevanssi' ); ?></p>
-<?php
+	<?php
 }
 
 /**

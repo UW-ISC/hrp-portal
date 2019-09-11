@@ -61,6 +61,8 @@ class DidYouMeanTest extends WP_UnitTestCase {
 
 			$corrected = relevanssi_premium_generate_suggestion( 'profision' );
 			$this->assertEquals( 'provision', $corrected, 'Switched letter.' );
+		} else {
+			$this->assertTrue( true );
 		}
 	}
 
@@ -76,5 +78,22 @@ class DidYouMeanTest extends WP_UnitTestCase {
 
 		$corrected = relevanssi_simple_generate_suggestion( 'fishopric' );
 		$this->assertEquals( 'bishopric', $corrected, 'Switched letter.' );
+	}
+
+	/**
+	 * Uninstalls Relevanssi.
+	 */
+	public static function wpTearDownAfterClass() {
+		require_once dirname( dirname( __FILE__ ) ) . '/lib/uninstall.php';
+		if ( RELEVANSSI_PREMIUM ) {
+			require_once dirname( dirname( __FILE__ ) ) . '/premium/uninstall.php';
+		}
+
+		if ( function_exists( 'relevanssi_uninstall' ) ) {
+			relevanssi_uninstall();
+		}
+		if ( function_exists( 'relevanssi_uninstall_free' ) ) {
+			relevanssi_uninstall_free();
+		}
 	}
 }

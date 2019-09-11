@@ -66,13 +66,11 @@ function relevanssi_network_options() {
 
 	wp_nonce_field( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_network_options' );
 
-	$api_key = get_site_option( 'relevanssi_api_key' );
-
-?>
+	?>
 	<table class="form-table">
-<?php
-	relevanssi_form_api_key( $api_key );
-?>
+	<?php
+	relevanssi_form_api_key( 'network' );
+	?>
 	</table>
 	<input type='submit' name='submit' value='<?php esc_attr_e( 'Save the options', 'relevanssi' ); ?>' class='button button-primary' />
 </form>
@@ -81,7 +79,7 @@ function relevanssi_network_options() {
 <p><?php esc_html_e( "Choose a blog and copy all the options from that blog to all other blogs that have active Relevanssi Premium. Be careful! There's no way to undo the procedure!", 'relevanssi' ); ?></p>
 
 <form id='copy_config' method='post' action='admin.php?page=relevanssi-premium/relevanssi.php'>
-<?php wp_nonce_field( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_network_options' ); ?>
+	<?php wp_nonce_field( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_network_options' ); ?>
 
 <table class="form-table">
 <tr>
@@ -102,14 +100,14 @@ function relevanssi_network_options() {
 	}
 	echo '</select>';
 
-?>
+	?>
 	<input type='submit' name='copytoall' value='<?php esc_attr_e( 'Copy options to all other subsites', 'relevanssi' ); ?>' class='button button-primary' />
 	</td>
 </tr>
 </table>
 </form>
 </div>
-<?php
+	<?php
 }
 
 /**
@@ -122,15 +120,15 @@ function relevanssi_network_options() {
 function relevanssi_update_network_options() {
 	global $relevanssi_variables;
 
-	if ( empty( $_REQUEST['relevanssi_api_key'] ) ) { // WPCS: Input var okay, CSRF ok. Nonce verification done before this function.
-		unset( $_REQUEST['relevanssi_api_key'] ); // WPCS: Input var okay.
+	if ( empty( $_REQUEST['relevanssi_api_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		unset( $_REQUEST['relevanssi_api_key'] ); // phpcs:ignore WordPress.Security.NonceVerification
 	}
 
-	if ( isset( $_REQUEST['relevanssi_remove_api_key'] ) ) { // WPCS: Input var okay, CSRF ok.
+	if ( isset( $_REQUEST['relevanssi_remove_api_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		update_site_option( 'relevanssi_api_key', '' );
 	}
-	if ( isset( $_REQUEST['relevanssi_api_key'] ) ) { // WPCS: Input var okay, CSRF ok.
-		$value = sanitize_text_field( wp_unslash( $_REQUEST['relevanssi_api_key'] ) ); // WPCS: Input var okay, CSRF ok.
+	if ( isset( $_REQUEST['relevanssi_api_key'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$value = sanitize_text_field( wp_unslash( $_REQUEST['relevanssi_api_key'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
 		update_site_option( 'relevanssi_api_key', $value );
 	}
 }
@@ -159,7 +157,7 @@ function relevanssi_copy_options_to_subsites( $data ) {
 	$q = "SELECT * FROM $wpdb->options WHERE option_name LIKE 'relevanssi%'";
 	restore_current_blog();
 
-	$results = $wpdb->get_results( $q ); // WPCS: unprepared SQL ok.
+	$results = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
 	$blog_list = get_sites( array( 'number' => 2000 ) );
 	foreach ( $blog_list as $blog ) {

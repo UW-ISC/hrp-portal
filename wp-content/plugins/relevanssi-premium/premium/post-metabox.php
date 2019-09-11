@@ -20,12 +20,8 @@ function relevanssi_add_metaboxes() {
 	if ( null === $post ) {
 		return;
 	}
-	if ( in_array( $post->post_type, array(
-		'acf', // Advanced Custom Fields fields.
-		'acf-field-group', // Advanced Custom Fields field groups.
-		'cpt_staff_lst_item', // Staff List.
-		'cpt_staff_lst', // Staff List.
-	), true ) ) {
+	$indexed_post_types = get_option( 'relevanssi_index_post_types', array() );
+	if ( ! in_array( $post->post_type, $indexed_post_types, true ) ) {
 		return;
 	}
 	add_meta_box(
@@ -63,9 +59,12 @@ function relevanssi_post_metabox() {
 	$unpin  = implode( ', ', $unpins );
 
 	$terms_list = $wpdb->get_results(
-		$wpdb->prepare( 'SELECT * FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d',
-		$post->ID ), OBJECT
-	); // WPCS: unprepared SQL ok, Relevanssi database table name.
+		$wpdb->prepare(
+			'SELECT * FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+			$post->ID
+		),
+		OBJECT
+	);
 
 	$terms['content']     = array();
 	$terms['title']       = array();
@@ -128,7 +127,7 @@ function relevanssi_post_metabox() {
 	$mysql_terms       = implode( ' ', $terms['mysql'] );
 
 	// The actual fields for data entry.
-?>
+	?>
 	<input type="hidden" id="relevanssi_metabox" name="relevanssi_metabox" value="true" />
 
 	<p><strong><a name="<?php esc_html_e( 'How Relevanssi sees this post', 'relevanssi' ); ?>" href="#TB_inline?width=800&height=600&inlineId=relevanssi_sees_container" class="thickbox"><?php esc_html_e( 'How Relevanssi sees this post', 'relevanssi' ); ?></a></strong></p>
@@ -139,9 +138,9 @@ function relevanssi_post_metabox() {
 
 	<?php
 	if ( 0 === intval( get_option( 'relevanssi_content_boost' ) ) ) {
-	?>
+		?>
 		<p><?php esc_html_e( "NOTE: You have set the post content weight to 0. This means that keywords that don't appear elsewhere in the post won't work, because they are indexed as part of the post content. If you set the post content weight to any positive value, the pinned keywords will work again.", 'relevanssi' ); ?></p>
-	<?php
+		<?php
 	}
 	?>
 
@@ -169,10 +168,10 @@ function relevanssi_post_metabox() {
 	<div id="relevanssi_sees_container" style="display: none">
 	<?php
 	if ( ! empty( $title_terms ) ) {
-	?>
+		?>
 		<h3><?php esc_html_e( 'Post title', 'relevanssi' ); ?>:</h3>
 		<p><?php echo esc_html( $title_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $content_terms ) ) {
 		?>
@@ -184,59 +183,95 @@ function relevanssi_post_metabox() {
 		?>
 	<h3><?php esc_html_e( 'Comments', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $comment_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $tag_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Tags', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $tag_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $category_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Categories', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $category_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $taxonomy_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Other taxonomies', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $taxonomy_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $link_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Links', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $link_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $author_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Authors', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $author_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $excerpt_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Excerpt', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $excerpt_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $customfield_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'Custom fields', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $customfield_terms ); ?></p>
-	<?php
+		<?php
 	}
 	if ( ! empty( $mysql_terms ) ) {
 		?>
 	<h3><?php esc_html_e( 'MySQL content', 'relevanssi' ); ?>:</h3>
 	<p><?php echo esc_html( $mysql_terms ); ?></p>
-	<?php
+		<?php
 	}
 	?>
 	</div>
 	<?php
+}
+
+/**
+ * Removes duplicated postmeta fields from posts.
+ *
+ * This is necessary because Gutenberg saves each post twice and thus triggers
+ * postmeta creation twice (which may or may not be a bug), and that can sometimes
+ * lead to duplicated postmeta fields. This function comes after the postmeta
+ * field creation and removes duplicates.
+ *
+ * @param int $post_id The post ID.
+ */
+function relevanssi_remove_duplicate_postmeta( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	$pins        = get_post_meta( $post_id, '_relevanssi_pin', false );
+	$unique_pins = array();
+	foreach ( $pins as $pin ) {
+		$unique_pins[ $pin ] = true;
+	}
+	delete_post_meta( $post_id, '_relevanssi_pin' );
+	foreach ( array_keys( $unique_pins ) as $pin ) {
+		add_post_meta( $post_id, '_relevanssi_pin', $pin );
+	}
+
+	$unpins        = get_post_meta( $post_id, '_relevanssi_unpin', false );
+	$unique_unpins = array();
+	foreach ( $unpins as $pin ) {
+		$unique_unpins[ $pin ] = true;
+	}
+	delete_post_meta( $post_id, '_relevanssi_unpin' );
+	foreach ( array_keys( $unique_unpins ) as $pin ) {
+		add_post_meta( $post_id, '_relevanssi_unpin', $pin );
+	}
 }
 
 /**
@@ -313,7 +348,9 @@ function relevanssi_save_postdata( $post_id ) {
 		$pins = explode( ',', sanitize_text_field( wp_unslash( $post['relevanssi_pin'] ) ) );
 		foreach ( $pins as $pin ) {
 			$pin = trim( $pin );
-			add_post_meta( $post_id, '_relevanssi_pin', $pin );
+			if ( ! empty( $pin ) ) {
+				add_post_meta( $post_id, '_relevanssi_pin', $pin );
+			}
 		}
 	} else {
 		delete_post_meta( $post_id, '_relevanssi_pin' );
@@ -324,7 +361,9 @@ function relevanssi_save_postdata( $post_id ) {
 		$pins = explode( ',', sanitize_text_field( wp_unslash( $post['relevanssi_unpin'] ) ) );
 		foreach ( $pins as $pin ) {
 			$pin = trim( $pin );
-			add_post_meta( $post_id, '_relevanssi_unpin', $pin );
+			if ( ! empty( $pin ) ) {
+				add_post_meta( $post_id, '_relevanssi_unpin', $pin );
+			}
 		}
 	} else {
 		delete_post_meta( $post_id, '_relevanssi_unpin' );
@@ -382,24 +421,6 @@ function relevanssi_save_postdata( $post_id ) {
 		delete_post_meta( $post_id, '_relevanssi_related_include_ids' );
 	}
 
-	if ( isset( $post['relevanssi_related_exclude_ids'] ) ) {
-		delete_post_meta( $post_id, 'relevanssi_related_exclude_ids' );
-		$exclude_ids_array = explode( ',', $post['relevanssi_related_exclude_ids'] );
-		$valid_ids         = array();
-		foreach ( $exclude_ids_array as $id ) {
-			$id = (int) trim( $id );
-			if ( is_int( $id ) ) {
-				$valid_ids[] = $id;
-			}
-		}
-		if ( ! empty( $valid_ids ) ) {
-			$id_string = implode( ',', $valid_ids );
-			add_post_meta( $post_id, '_relevanssi_related_exclude_ids', $id_string );
-		}
-	} else {
-		delete_post_meta( $post_id, '_relevanssi_related_exclude_ids' );
-	}
-
 	// Clear the related posts cache for this post.
 	delete_post_meta( $post_id, '_relevanssi_related_posts' );
 }
@@ -418,7 +439,7 @@ function relevanssi_related_posts_metabox( $post_id ) {
 	if ( '0' === $include_ids ) {
 		$include_ids = '';
 	}
-?>
+	?>
 	<p><strong><?php esc_html_e( 'Related Posts', 'relevanssi' ); ?></strong></p>
 
 	<p><label><input type="checkbox" name="relevanssi_related_no_append" id="relevanssi_related_no_append" <?php echo esc_attr( $no_append ); ?>/>
@@ -439,14 +460,14 @@ function relevanssi_related_posts_metabox( $post_id ) {
 	<input type="hidden" id="this_post_id" value="<?php echo esc_attr( $post_id ); ?>" />
 	<ol id='related_posts_list'>
 	<?php
-	echo relevanssi_generate_related_list( $post_id ); // WPCS: XSS ok.
+	echo relevanssi_generate_related_list( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	?>
 	</ol>
 
 	<p><?php esc_html_e( 'These posts are excluded from related posts for this post', 'relevanssi' ); ?>:</p>
 	<ul id='excluded_posts_list'>
 	<?php
-	echo relevanssi_generate_excluded_list( $post_id ); // WPCS: XSS ok.
+	echo relevanssi_generate_excluded_list( $post_id ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	?>
 	</ul>
 	<?php
@@ -461,7 +482,17 @@ function relevanssi_generate_related_list( $post_id ) {
 	$list          = '';
 	$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
 	if ( empty( $related_posts ) ) {
-		relevanssi_related_posts( $post_id );
+		/**
+		 * Makes it possible to set $just_objects to true.
+		 *
+		 * Return true here if you wish to use just objects in the related posts.
+		 * If the filter returns false (default), full HTML will be stoerd in the
+		 * transient.
+		 *
+		 * @param boolean Return true, if you want to get post objects in the
+		 * transient.
+		 */
+		relevanssi_related_posts( $post_id, apply_filters( 'relevanssi_related_just_objects', false ), true );
 		$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
 	}
 	$related_array = explode( ',', $related_posts );

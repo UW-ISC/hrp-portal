@@ -52,16 +52,23 @@ function relevanssi_related( $query, $pre = '<ul><li>', $sep = '</li><li>', $pos
 		foreach ( $tokens as $token => $count ) {
 			$escaped_token = '%' . $wpdb->esc_like( "$token" ) . '%';
 			$log_table     = $relevanssi_variables['log_table'];
-			$results       = $wpdb->get_results( $wpdb->prepare("
-				SELECT query
-				FROM $log_table
-				WHERE query LIKE %s
-				AND query NOT IN (%s, %s)
-				AND hits > 1
-				GROUP BY query
-				HAVING count(query) > 1
-				ORDER BY count(query) DESC
-				LIMIT %d", $escaped_token, $token, $query, $number ) ); // WPCS: unprepared SQL ok. The db table name is not user-provided, and can't be prepared.
+			$results       = $wpdb->get_results(
+				$wpdb->prepare(
+					'SELECT query ' .
+					"FROM $log_table " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					'WHERE query LIKE %s
+					AND query NOT IN (%s, %s)
+					AND hits > 1
+					GROUP BY query
+					HAVING count(query) > 1
+					ORDER BY count(query) DESC
+					LIMIT %d',
+					$escaped_token,
+					$token,
+					$query,
+					$number
+				)
+			);
 			foreach ( $results as $result ) {
 				$related[] = $result->query;
 			}
@@ -77,14 +84,17 @@ function relevanssi_related( $query, $pre = '<ul><li>', $sep = '</li><li>', $pos
 	$related = array_keys( array_count_values( $related ) );
 	$related = array_slice( $related, 0, $number );
 	foreach ( $related as $rel ) {
-		$url      = add_query_arg( array(
-			's' => rawurlencode( $rel ),
-		), home_url() );
+		$url      = add_query_arg(
+			array(
+				's' => rawurlencode( $rel ),
+			),
+			home_url()
+		);
 		$rel      = esc_attr( $rel );
 		$output[] = "<a href='$url'>$rel</a>";
 	}
 
-	echo $pre . implode( $sep, $output ) . $post; // WPCS: xss ok. User is responsible for the output, which may for good reason include scripts.
+	echo $pre . implode( $sep, $output ) . $post; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }
 
 /**
@@ -170,7 +180,10 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 		case '**':
 			list( $throwaway, $taxonomy, $id ) = explode( '**', $id );
 
-			$term                  = get_term( $id, $taxonomy );
+			$term = get_term( $id, $taxonomy );
+			if ( is_wp_error( $term ) ) {
+				return new WP_Error( 'term_not_found', "Taxonomy term wasn't found." );
+			}
 			$post                  = new stdClass();
 			$post->post_title      = $term->name;
 			$post->post_content    = $term->description;
@@ -208,17 +221,38 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 			} else {
 				$post = get_post( $id );
 			}
-			if ( 'on' === get_option( 'relevanssi_link_pdf_files' ) && ! empty( $post->post_mime_type ) ) {
-				$post->relevanssi_link = wp_get_attachment_url( $post->ID );
+			if (
+				'on' === get_option( 'relevanssi_link_pdf_files' )
+				&& ! empty( $post->post_mime_type )
+				) {
+				/**
+				 * Filters the URL to the attachment file.
+				 *
+				 * If you set the attachment indexing to index attachments that
+				 * are stored outside the WP attachment system, use this filter
+				 * to provide a link to the attachment.
+				 *
+				 * @param string The URL to the attachment file.
+				 * @param int    The attachment post ID number.
+				 */
+				$post->relevanssi_link = apply_filters(
+					'relevanssi_get_attachment_url',
+					wp_get_attachment_url( $post->ID ),
+					$post->ID
+				);
 			}
 	}
 	return $post;
 }
 
 /**
- * Returns a list of indexed taxonomies (and "user", if user profiles are indexed).
+ * Returns a list of indexed taxonomies.
  *
- * @return array $non_post_post_types_array An array of taxonomies Relevanssi is set to index (and "user").
+ * This will also include "user", if user profiles are indexed, and "post_type", if
+ * post type archives are indexed.
+ *
+ * @return array $non_post_post_types_array An array of taxonomies Relevanssi is set
+ * to index (and "user" or "post_type").
  */
 function relevanssi_get_non_post_post_types() {
 	// These post types are not posts, ie. they are taxonomy terms and user profiles.
@@ -231,6 +265,9 @@ function relevanssi_get_non_post_post_types() {
 	}
 	if ( get_option( 'relevanssi_index_users' ) ) {
 		$non_post_post_types_array[] = 'user';
+	}
+	if ( get_option( 'relevanssi_index_post_type_archives' ) ) {
+		$non_post_post_types_array[] = 'post_type';
 	}
 	return $non_post_post_types_array;
 }
@@ -251,7 +288,7 @@ function relevanssi_get_child_pdf_content( $post_id ) {
 	$pdf_content = '';
 
 	if ( $post_id > 0 ) {
-		$pdf_content = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'" ); // WPCS: unprepared SQL ok.
+		$pdf_content = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// Only user-provided variable is $post_id, and that's from Relevanssi and sanitized as an int.
 		return implode( ' ', $pdf_content );
 	}
@@ -264,9 +301,7 @@ function relevanssi_get_child_pdf_content( $post_id ) {
  *
  * Provides a better version of "Did you mean" recommendations, using the spelling corrector class to generate a correct spelling.
  *
- * @global $wpdb                 The WordPress database interface.
- * @global $relevanssi_variables The global Relevanssi variables, used for database table names.
- * @global $wp_query             The query object, used to check the number of posts found.
+ * @global WP_Query $wp_query The query object, used to check the number of posts found.
  *
  * @param string $query The search query to correct.
  * @param string $pre   Text printed out before the suggestion.
@@ -274,7 +309,7 @@ function relevanssi_get_child_pdf_content( $post_id ) {
  * @param int    $n     Maximum number of hits before the suggestions are shown, default 5.
  */
 function relevanssi_premium_didyoumean( $query, $pre, $post, $n = 5 ) {
-	global $wpdb, $relevanssi_variables, $wp_query;
+	global $wp_query;
 
 	$total_results = $wp_query->found_posts;
 	$result        = '';
@@ -282,10 +317,6 @@ function relevanssi_premium_didyoumean( $query, $pre, $post, $n = 5 ) {
 	if ( $total_results > $n ) {
 		return $result;
 	}
-
-	$suggestion     = '';
-	$suggestion_enc = '';
-	$exact_match    = false;
 
 	$suggestion = relevanssi_premium_generate_suggestion( $query );
 	if ( empty( $suggestion ) ) {
@@ -335,7 +366,7 @@ function relevanssi_premium_generate_suggestion( $query ) {
 
 		$correct       = array();
 		$exact_matches = 0;
-		foreach ( $tokens as $token => $count ) {
+		foreach ( array_keys( $tokens ) as $token ) {
 			$token = trim( $token );
 			$c     = $sc->correct( $token );
 			if ( ! empty( $c ) && strval( $token ) !== $c ) {
@@ -404,11 +435,12 @@ function relevanssi_premium_init() {
 	}
 
 	if ( 'on' === get_option( 'relevanssi_index_synonyms' ) ) {
-		add_filter( 'relevanssi_post_to_index', 'relevanssi_add_indexing_synonyms', 10 );
+		add_filter( 'relevanssi_indexing_tokens', 'relevanssi_add_indexing_synonyms', 10 );
 	}
 
 	// If the relevanssi_save_postdata is not disabled, scheduled publication will swipe out the Relevanssi post controls settings.
-	add_action( 'future_to_publish',
+	add_action(
+		'future_to_publish',
 		function( $post ) {
 			remove_action( 'save_post', 'relevanssi_save_postdata' );
 		}
@@ -469,14 +501,14 @@ function relevanssi_get_words() {
 		}
 		$q = 'SELECT term, SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield) as c FROM ' . $relevanssi_variables['relevanssi_table'] . " GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
 
-		$results = $wpdb->get_results( $q ); // WPCS: Unprepared SQL ok. Only variables are a Relevanssi DB table name and a filtered value, which is sanitized and numeric.
+		$results = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
 		$words = array();
 		foreach ( $results as $result ) {
 			$words[ $result->term ] = $result->c;
 		}
 
-		set_transient( 'relevanssi_words', $words, 60 * 60 * 24 * 7 );
+		set_transient( 'relevanssi_words', $words, WEEK_IN_SECONDS );
 	}
 
 	return $words;
@@ -500,10 +532,13 @@ function relevanssi_premium_install() {
 	add_option( 'relevanssi_thousand_separator', '' );
 	add_option( 'relevanssi_disable_shortcodes', '' );
 	add_option( 'relevanssi_api_key', '' );
-	add_option( 'relevanssi_recency_bonus', array(
-		'bonus' => '',
-		'days'  => '',
-	) );
+	add_option(
+		'relevanssi_recency_bonus',
+		array(
+			'bonus' => '',
+			'days'  => '',
+		)
+	);
 	add_option( 'relevanssi_mysql_columns', '' );
 	add_option( 'relevanssi_hide_post_controls', 'off' );
 	add_option( 'relevanssi_show_post_controls', 'off' );

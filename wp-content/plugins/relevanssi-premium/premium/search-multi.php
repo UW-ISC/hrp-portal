@@ -27,6 +27,8 @@
 function relevanssi_search_multi( $multi_args ) {
 	global $relevanssi_variables, $wpdb;
 
+	$hits = array();
+
 	/**
 	 * Filters the search arguments.
 	 *
@@ -70,8 +72,6 @@ function relevanssi_search_multi( $multi_args ) {
 		$include_attachments = $filtered_values['include_attachments'];
 	}
 
-	$hits = array();
-
 	$remove_stopwords = false;
 	$terms            = relevanssi_tokenize( $q, $remove_stopwords );
 
@@ -109,27 +109,13 @@ function relevanssi_search_multi( $multi_args ) {
 		return $hits;
 	}
 
-	if ( 'always' === $matching_method ) {
-		/**
-		 * Filters the partial matching search query.
-		 *
-		 * By default partial matching matches the beginnings and the ends of the
-		 * words. If you want it to match inside words, add a function to this
-		 * hook that returns '(relevanssi.term LIKE '%#term#%')'.
-		 *
-		 * @param string The partial matching query.
-		 */
-		$o_term_cond = apply_filters( 'relevanssi_fuzzy_query', "(relevanssi.term LIKE '#term#%' OR relevanssi.term_reverse LIKE CONCAT(REVERSE('#term#'), '%')) " );
-	} else {
-		$o_term_cond = " relevanssi.term = '#term#' ";
-	}
-
 	$post_type_weights = get_option( 'relevanssi_post_type_weights' );
 
 	$scores = array();
 
-	$original_blog = $wpdb->blogid;
 	foreach ( $search_blogs as $blogid ) {
+		$search_again = false;
+
 		// Only search blogs that are publicly available (unless filter says otherwise).
 		$public_status = get_blog_status( $blogid, 'public' );
 		if ( null === $public_status ) {
@@ -163,7 +149,7 @@ function relevanssi_search_multi( $multi_args ) {
 		$relevanssi_table = $wpdb->prefix . 'relevanssi';
 
 		// See if Relevanssi tables exist.
-		$exists = $wpdb->get_var( "SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . DB_NAME . "') AND (TABLE_NAME = '$relevanssi_table')" ); // WPCS: unprepared SQL ok, no user-generated input.
+		$exists = $wpdb->get_var( "SELECT count(*) FROM information_schema.TABLES WHERE (TABLE_SCHEMA = '" . DB_NAME . "') AND (TABLE_NAME = '$relevanssi_table')" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 		if ( $exists < 1 ) {
 			restore_current_blog();
 			continue;
@@ -285,15 +271,6 @@ function relevanssi_search_multi( $multi_args ) {
 		}
 
 		$no_matches = true;
-		if ( 'always' === $matching_method ) {
-			$term_query = "(term LIKE '%#term#' OR term LIKE '#term#%') ";
-		} else {
-			$term_query = " term = '#term#' ";
-		}
-
-		$min_length   = get_option( 'relevanssi_min_word_length' );
-		$search_again = false;
-		$fuzzy        = get_option( 'relevanssi_fuzzy' );
 
 		$content_boost = floatval( get_option( 'relevanssi_content_boost', 1 ) );
 		$title_boost   = floatval( get_option( 'relevanssi_title_boost' ) );
@@ -303,7 +280,9 @@ function relevanssi_search_multi( $multi_args ) {
 		$recency_bonus       = false;
 		$recency_cutoff_date = false;
 		if ( function_exists( 'relevanssi_get_recency_bonus' ) ) {
-			list( $recency_bonus, $recency_cutoff_date ) = relevanssi_get_recency_bonus();
+			$recency_details     = relevanssi_get_recency_bonus();
+			$recency_bonus       = $recency_details['bonus'];
+			$recency_cutoff_date = $recency_details['cutoff'];
 		}
 
 		$exact_match_bonus = false;
@@ -316,10 +295,13 @@ function relevanssi_search_multi( $multi_args ) {
 			 * @param array The title bonus under 'title' (default 5) and the content
 			 * bonus under 'content' (default 2).
 			 */
-			$exact_match_boost = apply_filters( 'relevanssi_exact_match_bonus', array(
-				'title'   => 5,
-				'content' => 2,
-			));
+			$exact_match_boost = apply_filters(
+				'relevanssi_exact_match_bonus',
+				array(
+					'title'   => 5,
+					'content' => 2,
+				)
+			);
 		}
 
 		$tag = $relevanssi_variables['post_type_weight_defaults']['post_tag'];
@@ -333,10 +315,11 @@ function relevanssi_search_multi( $multi_args ) {
 
 		$doc_weight = array();
 		$term_hits  = array();
+		$df_counts  = array();
 
 		do {
 			foreach ( $terms as $term ) {
-				$term_cond = relevanssi_generate_term_cond( $term, $o_term_cond );
+				$term_cond = relevanssi_generate_term_where( $term, $search_again, false, $matching_method );
 				if ( null === $term_cond ) {
 					continue;
 				}
@@ -352,16 +335,18 @@ function relevanssi_search_multi( $multi_args ) {
 				 */
 				$query = apply_filters( 'relevanssi_df_query_filter', $query );
 
-				$df = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok.
+				$df = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
-				if ( $df < 1 && 'sometimes' === $fuzzy ) {
-					$query = "SELECT COUNT(DISTINCT(relevanssi.doc)) FROM $relevanssi_table AS relevanssi
-						$query_join WHERE (relevanssi.term LIKE '$term%'
-						OR relevanssi.term_reverse LIKE CONCAT(REVERSE('$term'), '%')) $query_restrictions";
+				if ( $df < 1 && 'sometimes' === $matching_method ) {
+					$term_cond = relevanssi_generate_term_where( $term, true );
+					$query     = "
+					SELECT COUNT(DISTINCT(relevanssi.doc))
+						FROM $relevanssi_table AS relevanssi
+						$query_join WHERE $term_cond $query_restrictions";
 					// Clean: $query_restrictions is escaped, $term is escaped.
 					/** Documented in lib/search.php. */
 					$query = apply_filters( 'relevanssi_df_query_filter', $query );
-					$df    = $wpdb->get_var( $query ); // WPCS: unprepared SQL ok.
+					$df    = $wpdb->get_var( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 				}
 
 				$df_counts[ $term ] = $df;
@@ -373,7 +358,7 @@ function relevanssi_search_multi( $multi_args ) {
 			asort( $df_counts );
 
 			foreach ( $df_counts as $term => $df ) {
-				$term_cond = relevanssi_generate_term_cond( $term, $o_term_cond );
+				$term_cond = relevanssi_generate_term_where( $term, $search_again, false, $matching_method );
 				if ( null === $term_cond ) {
 					continue;
 				}
@@ -392,7 +377,7 @@ function relevanssi_search_multi( $multi_args ) {
 				 */
 				$query = apply_filters( 'relevanssi_query_filter', $query );
 
-				$matches = $wpdb->get_results( $query ); // WPCS: unprepared SQL ok, all user inputs are escaped.
+				$matches = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 				if ( count( $matches ) < 1 ) {
 					continue;
 				} else {
@@ -447,6 +432,9 @@ function relevanssi_search_multi( $multi_args ) {
 					$match->weight = $match->tf * $idf;
 
 					$type = relevanssi_get_post_type( $match->doc );
+					if ( is_wp_error( $type ) ) {
+						continue;
+					}
 					if ( ! empty( $post_type_weights[ $type ] ) ) {
 						$match->weight = $match->weight * $post_type_weights[ $type ];
 					}
@@ -524,7 +512,6 @@ function relevanssi_search_multi( $multi_args ) {
 				} else {
 					if ( 'sometimes' === $matching_method ) {
 						$search_again = true;
-						$term_query   = "(term LIKE '%#term#' OR term LIKE '#term#%') ";
 					}
 				}
 			} else {
@@ -597,7 +584,6 @@ function relevanssi_search_multi( $multi_args ) {
 		}
 	}
 
-	global $wp;
 	$default_order = get_option( 'relevanssi_default_orderby', 'relevance' );
 	if ( empty( $orderby ) ) {
 		$orderby = $default_order;
@@ -655,4 +641,151 @@ function relevanssi_search_multi( $multi_args ) {
 	);
 
 	return $return;
+}
+
+/**
+ * Collects the multisite search arguments from the query variables.
+ *
+ * @param object $query       The WP_Query object that contains the parameters.
+ * @param string $searchblogs A list of blogs to search, or 'all'.
+ * @param string $q           The search query.
+ *
+ * @return array The multisite search parameters.
+ */
+function relevanssi_compile_multi_args( $query, $searchblogs, $q ) {
+	$multi_args = array();
+	if ( isset( $query->query_vars['searchblogs'] ) ) {
+		$multi_args['search_blogs'] = $query->query_vars['searchblogs'];
+	} else {
+		$multi_args['search_blogs'] = $searchblogs;
+	}
+	$multi_args['q'] = $q;
+
+	if ( isset( $query->query_vars['post_type'] ) && 'any' !== $query->query_vars['post_type'] ) {
+		$multi_args['post_type'] = $query->query_vars['post_type'];
+	}
+	if ( isset( $query->query_vars['post_types'] ) && 'any' !== $query->query_vars['post_types'] ) {
+		$multi_args['post_type'] = $query->query_vars['post_types'];
+	}
+
+	if ( isset( $query->query_vars['order'] ) ) {
+		$multi_args['order'] = $query->query_vars['order'];
+	}
+	if ( isset( $query->query_vars['orderby'] ) ) {
+		$multi_args['orderby'] = $query->query_vars['orderby'];
+	}
+
+	$operator = '';
+	if ( function_exists( 'relevanssi_set_operator' ) ) {
+		$operator = relevanssi_set_operator( $query );
+		$operator = strtoupper( $operator ); // Just in case.
+	}
+	if ( 'OR' !== $operator && 'AND' !== $operator ) {
+		$operator = get_option( 'relevanssi_implicit_operator' );
+	}
+	$multi_args['operator'] = $operator;
+
+	$meta_query = array();
+	if ( ! empty( $query->query_vars['meta_query'] ) ) {
+		$meta_query = $query->query_vars['meta_query'];
+	}
+
+	if ( isset( $query->query_vars['customfield_key'] ) ) {
+		$build_meta_query = array();
+
+		// Use meta key.
+		$build_meta_query['key'] = $query->query_vars['customfield_key'];
+
+		/**
+		 * Check the value is not empty for ordering purpose,
+		 * Set it or not for the current meta query
+		 */
+		if ( ! empty( $query->query_vars['customfield_value'] ) ) {
+			$build_meta_query['value'] = $query->query_vars['customfield_value'];
+		}
+
+		// Set the compare.
+		$build_meta_query['compare'] = '=';
+
+		$meta_query[] = $build_meta_query;
+	}
+
+	if ( ! empty( $query->query_vars['meta_key'] ) || ! empty( $query->query_vars['meta_value'] ) || ! empty( $query->query_vars['meta_value_num'] ) ) {
+		$build_meta_query = array();
+
+		// Use meta key.
+		$build_meta_query['key'] = $query->query_vars['meta_key'];
+
+		$value = null;
+		if ( ! empty( $query->query_vars['meta_value'] ) ) {
+			$value = $query->query_vars['meta_value'];
+		} elseif ( ! empty( $query->query_vars['meta_value_num'] ) ) {
+			$value = $query->query_vars['meta_value_num'];
+		}
+
+		/**
+		 * Check the meta value, as it could be not set for ordering purpose
+		 * set it or not for the current meta query.
+		 */
+		if ( ! empty( $value ) ) {
+			$build_meta_query['value'] = $value;
+		}
+
+		// Set meta compare.
+		$build_meta_query['compare'] = '=';
+		if ( ! empty( $query->query_vars['meta_compare'] ) ) {
+			$query->query_vars['meta_compare'];
+		}
+
+		$meta_query[] = $build_meta_query;
+	}
+
+	$multi_args['meta_query'] = $meta_query;
+
+	if ( isset( $query->query_vars['include_attachments'] ) ) {
+		$multi_args['include_attachments'] = $query->query_vars['include_attachments'];
+	}
+
+	return $multi_args;
+}
+
+/**
+ * Checks which blogs should be searched.
+ *
+ * @param object $query The WP Query object to check for the
+ * $query->query_vars['searchblogs'] query variable.
+ *
+ * @return boolean|string False, if not a multisite search; list of blogs or
+ * 'all' otherwise.
+ */
+function relevanssi_is_multisite_search( $query ) {
+	$searchblogs      = false;
+	$search_multisite = false;
+	if ( isset( $query->query_vars['searchblogs'] )
+		&& (string) get_current_blog_id() !== $query->query_vars['searchblogs'] ) {
+		$search_multisite = true;
+		$searchblogs      = $query->query_vars['searchblogs'];
+	}
+
+	if ( ! $search_multisite ) {
+		// Is searching all blogs enabled?
+		$searchblogs_all = get_option( 'relevanssi_searchblogs_all', 'off' );
+		if ( 'off' === $searchblogs_all ) {
+			$searchblogs_all = false;
+		}
+		if ( $searchblogs_all ) {
+			$search_multisite = true;
+			$searchblogs      = 'all';
+		}
+	}
+
+	if ( ! $search_multisite ) {
+		// Searchblogs is not set from the query variables, check the option.
+		$searchblogs_setting = get_option( 'relevanssi_searchblogs' );
+		if ( $searchblogs_setting ) {
+			$search_multisite = true;
+			$searchblogs      = $searchblogs_setting;
+		}
+	}
+	return $searchblogs;
 }
