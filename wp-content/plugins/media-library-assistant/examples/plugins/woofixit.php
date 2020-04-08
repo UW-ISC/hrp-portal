@@ -52,6 +52,9 @@
  *  - Copy product_category and/or product_tag term assignments to Media Library items
  *    for items used as Product Image or in the Product Gallery
  *
+ *  - Populate Product values from Content Template(s) using Product Image data sources
+ *    Name, Description, Short Description, Categories, SKU
+ *
  * Created for support topic "Remove first image in all product galleries"
  * opened on 5/23/2014 by "Dana S".
  * https://wordpress.org/support/topic/remove-first-image-in-all-product-galleries/
@@ -76,8 +79,20 @@
  * opened on 10/18/2018 by "alx359".
  * https://wordpress.org/support/topic/wc-fixit-tools-replace-all-item-name-slug/
  *
+ * Enhanced for support topic "Product categories thumbnails"
+ * opened on 9/18/2019 by "wimvl".
+ * https://wordpress.org/support/topic/product-categories-thumbnails-2/
+ *
+ * Enhanced for support topic "Populating WooCommerce Fields when Uploading Media"
+ * opened on 11/26/2019 by "mrphil".
+ * https://wordpress.org/support/topic/populating-woocommerce-fields-when-uploading-media/
+ *
+ * Enhanced for support topic "Image keywords (tags) into a product tags"
+ * opened on 1/19/2020 by "kuassar".
+ * https://wordpress.org/support/topic/image-keywords-tags-into-a-product-tags/
+ *
  * @package WooCommerce Fixit
- * @version 2.04
+ * @version 2.09
  */
 
 /*
@@ -85,10 +100,10 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.04
+Version: 2.09
 Author URI: http://davidlingren.com/
 
-Copyright 2014-2018 David Lingren
+Copyright 2014-2019 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -118,7 +133,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.04';
+	const CURRENT_VERSION = '2.09';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -160,6 +175,15 @@ class Woo_Fixit {
 	const APPEND_ITEM_ID = 'append-item-id';
 
 	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $append_item_id_attr = ' ';
+
+	/**
 	 * Use WordPress unique slug function
 	 *
 	 * @since 2.04
@@ -168,6 +192,15 @@ class Woo_Fixit {
 	 */
 	private static $check_unique_slug = false;
 	const CHECK_UNIQUE_SLUG = 'check-unique-slug';
+
+	/**
+	 * Use WordPress unique slug checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $check_unique_slug_attr = ' ';
 
 	/**
 	 * Content Template for Product Image/Product Gallery Images
@@ -190,6 +223,15 @@ class Woo_Fixit {
 	const INPUT_PROCESS_CATEGORY = 'category';
 
 	/**
+	 * Process term assignments for Product Category checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $category_attr = ' ';
+
+	/**
 	 * Process term assignments for Product Tag
 	 *
 	 * @since 1.26
@@ -198,6 +240,15 @@ class Woo_Fixit {
 	 */
 	private static $process_tag = false;
 	const INPUT_PROCESS_TAG = 'tag';
+
+	/**
+	 * Process term assignments for Product Tag checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $tag_attr = ' ';
 
 	/**
 	 * Chunk (offset) to start term assignments at
@@ -230,6 +281,212 @@ class Woo_Fixit {
 	const INPUT_CHUNK_SIZE = 'size';
 
 	/**
+	 * Product Name (post_title) Template for Populate Product from Product Image
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	const NAME_TEMPLATE = 'name-template';
+	const DEFAULT_NAME_TEMPLATE = '[+alt_text+]';
+
+	/**
+	 * Product Description (post_content)  Template for Populate Product from Product Image
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	const DESCRIPTION_TEMPLATE = 'description-template';
+	const DEFAULT_DESCRIPTION_TEMPLATE = '[+post_content+]';
+
+	/**
+	 * Product Short Description (post_excerpt) Template for Populate Product from Product Image
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	const SHORT_DESCRIPTION_TEMPLATE = 'short-description-template';
+	const DEFAULT_SHORT_DESCRIPTION_TEMPLATE = '[+post_content+]';
+
+	/**
+	 * Product Categories ( taxonomy product_cat ) Template for Populate Product from Product Image
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	const CATEGORIES_TEMPLATE = 'categories-template';
+	const DEFAULT_CATEGORIES_TEMPLATE = '[+terms:attachment_category+]';
+
+	/**
+	 * Product Tags ( taxonomy product_tag ) Template for Populate Product from Product Image
+	 *
+	 * @since 2.09
+	 *
+	 * @var	string
+	 */
+	const TAGS_TEMPLATE = 'tags-template';
+	const DEFAULT_TAGS_TEMPLATE = '';
+
+	/**
+	 * Product SKU ( postmeta _sku ) Template for Populate Product from Product Image
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	const SKU_TEMPLATE = 'sku-template';
+	const DEFAULT_SKU_TEMPLATE = '[+name_only+]';
+
+	/**
+	 * Populate when Product Image is set
+	 *
+	 * @since 2.06
+	 *
+	 * @var	boolean
+	 */
+	const POPULATE_ON_ADD = 'populate-on-add';
+	const DEFAULT_POPULATE_ON_ADD = false;
+
+	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $populate_on_add_attr = ' ';
+
+	/**
+	 * Populate when Product Image is changed
+	 *
+	 * @since 2.06
+	 *
+	 * @var	boolean
+	 */
+	const POPULATE_ON_UPDATE = 'populate-on-update';
+	const DEFAULT_POPULATE_ON_UPDATE = false;
+
+	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.06
+	 *
+	 * @var	string
+	 */
+	private static $populate_on_update_attr = ' ';
+
+	/**
+	 * Processing options
+	 *
+	 * This array specifies the components used in the pretty links and whether
+	 * the mla_debug=log argument is appended to the links
+	 *
+	 * @since 2.06
+	 *
+	 * @var	array
+	 */
+	private static $settings = array ();
+
+	/**
+	 * Default processing options
+	 *
+	 * @since 2.06
+	 *
+	 * @var	array
+	 */
+	private static $default_settings = array (
+						self::NAME_TEMPLATE => self::DEFAULT_NAME_TEMPLATE,
+						self::DESCRIPTION_TEMPLATE => self::DEFAULT_DESCRIPTION_TEMPLATE,
+						self::SHORT_DESCRIPTION_TEMPLATE => self::DEFAULT_SHORT_DESCRIPTION_TEMPLATE,
+						self::CATEGORIES_TEMPLATE => self::DEFAULT_CATEGORIES_TEMPLATE,
+						self::TAGS_TEMPLATE => self::DEFAULT_TAGS_TEMPLATE,
+						self::SKU_TEMPLATE => self::DEFAULT_SKU_TEMPLATE,
+						self::POPULATE_ON_ADD => self::DEFAULT_POPULATE_ON_ADD,
+						self::POPULATE_ON_UPDATE => self::DEFAULT_POPULATE_ON_UPDATE,
+					);
+
+	/**
+	 * Update the plugin options from the wp_options table or set defaults
+	 *
+	 * @since 2.06
+	 */
+	private static function _load_settings() {
+		$settings = get_option( self::SLUG_PREFIX . 'settings' );
+		if ( is_array( $settings ) ) {
+			self::$settings = $settings;
+			// Adapt old settings from version 2.08
+			if ( !isset( self::$settings[self::TAGS_TEMPLATE] ) ) {
+				self::$settings[self::TAGS_TEMPLATE] = self::$default_settings[self::TAGS_TEMPLATE];
+			}
+			
+			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
+			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
+
+			return 'Settings loaded from database.';
+		} else {
+			self::$settings = self::$default_settings;
+			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
+			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
+
+			return 'No settings in database; defaults loaded.';
+		}
+	}
+
+	/**
+	 * Save settings as a WordPress wp_options entry
+	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _save_setting_changes() {
+		$new_settings = self::$settings;
+
+		// Load old settings from the database or defaults
+		self::_load_product_templates();
+
+		$new_settings[self::NAME_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) );
+		$new_settings[self::DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) );
+		$new_settings[self::SHORT_DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) );
+		$new_settings[self::CATEGORIES_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) );
+		$new_settings[self::TAGS_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) );
+		$new_settings[self::SKU_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) );
+		$new_settings[self::POPULATE_ON_ADD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_ADD ] ) ? true : false;
+		$new_settings[self::POPULATE_ON_UPDATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_UPDATE ] ) ? true : false;
+		
+		if ( $new_settings === self::$settings ) {
+			return "Settings unchanged.\n";
+		}
+
+		$success = update_option( self::SLUG_PREFIX . 'settings', $new_settings, false );
+		if ( $success )  {
+			self::$settings = $new_settings;
+			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
+			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
+			return "Settings have been updated.\n";
+		}
+
+		return "Settings update failed.\n";
+	} // _save_setting_changes
+
+	/**
+	 * Delete WordPress wp_options entry
+	 *
+	 * @since 1.00
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _delete_settings() {
+		delete_option( self::SLUG_PREFIX . 'settings' ); 
+		self::$settings = self::$default_settings;
+
+		return "Settings removed from database and reset to default values.\n";
+	} // _delete_settings
+		
+	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 1.00
@@ -244,7 +501,21 @@ class Woo_Fixit {
 		if ( !is_admin() )
 			return;
 
-		//add_action( 'admin_init', 'Woo_Fixit::admin_init' );
+		self::_load_product_templates();
+//error_log( __LINE__ . " Woo_Fixit::initialize settings = " . var_export( self::$settings, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::initialize populate_on_add_attr = " . var_export( self::$populate_on_add_attr, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::initialize populate_on_update_attr = " . var_export( self::$populate_on_update_attr, true ), 0 );
+
+		if ( self::$settings[self::POPULATE_ON_ADD] ) {
+			// Defined in /wp-includes/meta.php
+			add_action( 'added_post_meta', 'Woo_Fixit::added_post_meta', 10, 4 );
+		}
+
+		if ( self::$settings[self::POPULATE_ON_UPDATE] ) {
+			// Defined in /wp-includes/meta.php
+			add_action( 'updated_postmeta', 'Woo_Fixit::updated_postmeta', 10, 4 );
+		}
+
 		add_action( 'admin_menu', 'Woo_Fixit::admin_menu' );
 	}
 
@@ -326,7 +597,9 @@ class Woo_Fixit {
 	} // _evaluate_terms
 
 	/**
-	 * Add the "product:" and "product_terms:" custom substitution prefixes
+	 * Add the "product:" and "product_terms:" custom substitution prefixes.
+	 * For any Media Library item that is used as a Product Image or Product Gallery item,
+	 * these will return values from the associated Product.
 	 *
 	 * @since 2.00
 	 *
@@ -451,13 +724,55 @@ class Woo_Fixit {
 	} // mla_expand_custom_prefix
 
 	/**
-	 * Admin Init Action
+	 * After adding a post's metadata, check for Product Image add.
 	 *
-	 * @since 1.00
+	 * @since 2.06
 	 *
+	 * @param int    $meta_id    ID of updated metadata entry.
+	 * @param int    $object_id  Post ID.
+	 * @param string $meta_key   Meta key.
+	 * @param mixed  $meta_value Meta value. This will be a PHP-serialized string representation of the value if
+	 *                           the value is an array, an object, or itself a PHP-serialized string.
 	 * @return	void
 	 */
-	public static function admin_init() {
+	public static function added_post_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
+		global $post;
+		
+//error_log( __LINE__ . " Woo_Fixit::added_post_meta( $meta_id, $object_id, $meta_key ) meta_value = " . var_export( $meta_value, true ), 0 );
+		if ( '_thumbnail_id' === $meta_key ) {
+//error_log( __LINE__ . " Woo_Fixit::added_post_meta( $meta_id, $object_id, $meta_key ) post = " . var_export( $post, true ), 0 );
+			if ( !empty( $post->post_type ) && ( 'product' === $post->post_type ) ) {
+				self::$first_product = self::$last_product = $object_id;
+				$result = self::_populate_product_from_product_image();
+//error_log( __LINE__ . " Woo_Fixit::added_post_meta( $meta_id, $object_id, $meta_key ) result = " . var_export( $result, true ), 0 );
+			}
+		}
+	}
+
+	/**
+	 * After updating a post's metadata, check for Product Image add/update.
+	 *
+	 * @since 2.06
+	 *
+	 * @param int    $meta_id    ID of updated metadata entry.
+	 * @param int    $object_id  Post ID.
+	 * @param string $meta_key   Meta key.
+	 * @param mixed  $meta_value Meta value. This will be a PHP-serialized string representation of the value if
+	 *                           the value is an array, an object, or itself a PHP-serialized string.
+	 * @return	void
+	 */
+	public static function updated_postmeta( $meta_id, $object_id, $meta_key, $meta_value ) {
+		global $post;
+		
+//error_log( __LINE__ . " Woo_Fixit::updated_postmeta( $meta_id, $object_id, $meta_key ) meta_value = " . var_export( $meta_value, true ), 0 );
+		if ( '_thumbnail_id' === $meta_key ) {
+//error_log( __LINE__ . " Woo_Fixit::updated_postmeta( $meta_id, $object_id, $meta_key ) post = " . var_export( $post, true ), 0 );
+			if ( !empty( $post->post_type ) && ( 'product' === $post->post_type ) ) {
+				self::$first_product = self::$last_product = $object_id;
+				$result = self::_populate_product_from_product_image();
+//error_log( __LINE__ . " Woo_Fixit::updated_postmeta( $meta_id, $object_id, $meta_key ) result = " . var_export( $result, true ), 0 );
+			}
+		}
 	}
 
 	/**
@@ -492,42 +807,14 @@ class Woo_Fixit {
 	}
 
 	/**
-	 * Render (echo) the "WooCommerce Fixit" submenu in the Tools section
+	 * Compose the Settings Actions table, with the woofixit-acton handlers
 	 *
-	 * @since 1.00
+	 * @since 2.06
 	 *
-	 * @return	void Echoes HTML markup for the submenu page
+	 * @return	array Actions, handlers, comments, input tables, etc.
 	 */
-	public static function render_tools_page() {
-//error_log( __LINE__ . ' Woo_Fixit::render_tools_page() $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
-		if ( !current_user_can( 'manage_options' ) ) {
-			echo "WooCommerce Fixit - Error</h2>\n";
-			wp_die( 'You do not have permission to manage plugin settings.' );
-		}
-
-		/*
-		 * Extract relevant query arguments
-		 */
-		self::$first_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] : '';
-		self::$last_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] : '';
-
-		self::$append_item_id = isset( $_REQUEST[ self::SLUG_PREFIX . self::APPEND_ITEM_ID ] ) ? true : false;
-		$append_item_id_attr = self::$append_item_id ? ' checked="checked" ' : ' ';
-		self::$check_unique_slug = isset( $_REQUEST[ self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG ] ) ? true : false;
-		$check_unique_slug_attr = self::$check_unique_slug ? ' checked="checked" ' : ' ';
-
-		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) : self::$content_template;
-
-		self::$process_category = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_PROCESS_CATEGORY ] ) ? true : false;
-		$category_attr = self::$process_category ? ' checked="checked" ' : ' ';
-		self::$process_tag = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_PROCESS_TAG ] ) ? true : false;
-		$tag_attr = self::$process_tag ? ' checked="checked" ' : ' ';
-
-		self::$start_chunk = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_CHUNK ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_CHUNK ] ) : self::$start_chunk;
-		self::$stop_chunk = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) : self::$stop_chunk;
-		self::$chunk_size = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) : self::$chunk_size;
-
-		$setting_actions = array(
+	private static function _compose_settings_actions() {
+		return array(
 			'help' => array( 'handler' => '', 'comment' => 'Enter first/last Product ID values above to restrict tool application range. You can find ID values by hovering over the "Name" column in the WooCommerce/Products submenu table.' ),
 			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
 
@@ -542,9 +829,9 @@ class Woo_Fixit {
 				'comment' => '<strong>Replace ALL</strong> item Title fields with re-formatted file name.' ),
 			'c1a' => array( 'handler' => '', 'comment' => '<hr>' ),
 			't0301' => array( 'open' => '<table><tr>' ),
-			't0302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::APPEND_ITEM_ID . '" type="checkbox"' . $append_item_id_attr . 'value="' . self::APPEND_ITEM_ID . '"></td>' ),
+			't0302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::APPEND_ITEM_ID . '" type="checkbox"' . self::$append_item_id_attr . 'value="' . self::APPEND_ITEM_ID . '"></td>' ),
 			't0303' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Append Item ID</td>' ),
-			't0304' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG . '" type="checkbox"' . $check_unique_slug_attr . 'value="' . self::CHECK_UNIQUE_SLUG . '"></td>' ),
+			't0304' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG . '" type="checkbox"' . self::$check_unique_slug_attr . 'value="' . self::CHECK_UNIQUE_SLUG . '"></td>' ),
 			't0305' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Ensure Unique Slug</td>' ),
 			't0306' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
 			't0307' => array( 'continue' => '</tr><tr>' ),
@@ -629,9 +916,9 @@ class Woo_Fixit {
 				'comment' => '<strong>Replace ALL</strong> Att. Categories assignments from Att. Tags, where the Att. Tag matches an existing Att. Category.' ),
 			'c9' => array( 'handler' => '', 'comment' => '<h3>Term Assignments for Media Library Items</h3>' ),
 			't0201' => array( 'open' => '<table><tr>' ),
-			't0202' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_PROCESS_CATEGORY . '" type="checkbox"' . $category_attr . 'value="' . self::INPUT_PROCESS_CATEGORY . '"></td>' ),
+			't0202' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_PROCESS_CATEGORY . '" type="checkbox"' . self::$category_attr . 'value="' . self::INPUT_PROCESS_CATEGORY . '"></td>' ),
 			't0203' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">product_category</td>' ),
-			't0204' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_PROCESS_TAG . '" type="checkbox"' . $tag_attr . 'value="' . self::INPUT_PROCESS_TAG . '"></td>' ),
+			't0204' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_PROCESS_TAG . '" type="checkbox"' . self::$tag_attr . 'value="' . self::INPUT_PROCESS_TAG . '"></td>' ),
 			't0205' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">product_tag</td>' ),
 			't0206' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
 			't0207' => array( 'continue' => '</tr><tr>' ),
@@ -656,13 +943,123 @@ class Woo_Fixit {
 				'comment' => '<strong>Delete ALL</strong> product_category and/or product_tag term assignments to Media Library items.' ),
 			'Assign Terms' => array( 'handler' => '_copy_term_assignments',
 				'comment' => 'Copy product_category and/or product_tag term assignments to Media Library items for items used as Product Image or in the Product Gallery.' ),
+
+			'c10' => array( 'handler' => '', 'comment' => '<h3>Populate Product from Product Image</h3>' ),
+			't1001' => array( 'open' => '<table><tr>' ),
+			't1002' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Name</td>' ),
+			't1003' => array( 'continue' => '  <td colspan="4" style="text-align: left; padding-right: 20px">' ),
+			't1004' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::NAME_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::NAME_TEMPLATE] . '">' ),
+			't1005' => array( 'continue' => '  </td>' ),
+			't1006' => array( 'continue' => '</tr><tr>' ),
+			't1007' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Description</td>' ),
+			't1008' => array( 'continue' => '  <td colspan="4" style="text-align: left; padding-right: 20px">' ),
+			't1009' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::DESCRIPTION_TEMPLATE] . '">' ),
+			't1010' => array( 'continue' => '  </td>' ),
+			't1011' => array( 'continue' => '</tr><tr>' ),
+			't1012' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Short Description</td>' ),
+			't1013' => array( 'continue' => '  <td colspan="4" style="text-align: left; padding-right: 20px">' ),
+			't1014' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] . '">' ),
+			't1015' => array( 'continue' => '  </td>' ),
+			't1016' => array( 'continue' => '</tr><tr>' ),
+			't1017' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Categories</td>' ),
+			't1018' => array( 'continue' => '  <td colspan="4" style="text-align: left; padding-right: 20px">' ),
+			't1019' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::CATEGORIES_TEMPLATE] . '">' ),
+			't1020' => array( 'continue' => '  </td>' ),
+			't1021' => array( 'continue' => '</tr><tr>' ),
+			't1022' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Tags</td>' ),
+			't1023' => array( 'continue' => '  <td colspan="4" style="text-align: left; padding-right: 20px">' ),
+			't1024' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::TAGS_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::TAGS_TEMPLATE] . '">' ),
+			't1025' => array( 'continue' => '  </td>' ),
+			't1026' => array( 'continue' => '</tr><tr>' ),
+			't1027' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">SKU</td>' ),
+			't1028' => array( 'continue' => '  <td colspan="4"  style="text-align: left; padding-right: 20px">' ),
+			't1029' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . self::SKU_TEMPLATE . '" type="text" size="60" value="' . self::$settings[self::SKU_TEMPLATE] . '">' ),
+			't1030' => array( 'continue' => '  </td>' ),
+			't1031' => array( 'continue' => '</tr><tr>' ),
+			't1032' => array( 'continue' => '<td>&nbsp;</td><td colspan="4" >Enter Content Template(s) (without the "template:" prefix). To leave a field unchanged, delete the template from the corresponding text box.<br>&nbsp;</td>' ),
+			't1033' => array( 'continue' => '</tr><tr>' ),
+			't1034' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::POPULATE_ON_ADD . '" type="checkbox"' . self::$populate_on_add_attr . 'value="' . self::POPULATE_ON_ADD . '"></td>' ),
+			't1035' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Active for adding Product Image</td>' ),
+			't1036' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::POPULATE_ON_UPDATE . '" type="checkbox"' . self::$populate_on_update_attr . 'value="' . self::POPULATE_ON_UPDATE . '"></td>' ),
+			't1037' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Active for updating Product Image</td>' ),
+			't1038' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
+			't1039' => array( 'continue' => '</tr><tr>' ),
+			't1040' => array( 'continue' => '<td>&nbsp;</td><td colspan="5">Check Active for adding... to populate when Product Image is set.<br>Check Active for updating... to populate when Product Image is changed.</td>' ),
+			't1041' => array( 'close' => '</tr></table>&nbsp;<br>' ),
+			'Populate Products' => array( 'handler' => '_populate_product_from_product_image',
+				'comment' => 'Populate Product values from the attached Product Image item.' ),
+			'Save Templates' => array( 'handler' => '_save_product_templates',
+				'comment' => 'Save current template values to the database.' ),
+			'Load Templates' => array( 'handler' => '_load_product_templates',
+				'comment' => 'Load template values from the database.' ),
+			'Restore Defaults' => array( 'handler' => '_restore_product_template_defaults',
+				'comment' => 'Erase stored values from the database and set the default template values.' ),
  		);
+	}
+
+	/**
+	 * Render (echo) the "WooCommerce Fixit" submenu in the Tools section
+	 *
+	 * @since 1.00
+	 *
+	 * @return	void Echoes HTML markup for the submenu page
+	 */
+	public static function render_tools_page() {
+//error_log( __LINE__ . ' Woo_Fixit::render_tools_page() $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		if ( !current_user_can( 'manage_options' ) ) {
+			echo "WooCommerce Fixit - Error</h2>\n";
+			wp_die( 'You do not have permission to manage plugin settings.' );
+		}
+
+		// Load the Product from Product Image templates from the database or set defaults
+		//self::_load_settings();
+		
+		// Extract relevant query arguments
+		self::$first_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] : '';
+		self::$last_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] : '';
+
+		// Operations on ALL Media Library Images
+		self::$append_item_id = isset( $_REQUEST[ self::SLUG_PREFIX . self::APPEND_ITEM_ID ] ) ? true : false;
+		self::$append_item_id_attr = self::$append_item_id ? ' checked="checked" ' : ' ';
+		self::$check_unique_slug = isset( $_REQUEST[ self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG ] ) ? true : false;
+		self::$check_unique_slug_attr = self::$check_unique_slug ? ' checked="checked" ' : ' ';
+
+		// Apply Template to Product Image/Product Gallery Images
+		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ) : self::$content_template;
+
+		// Term Assignments for Media Library Items
+		self::$process_category = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_PROCESS_CATEGORY ] ) ? true : false;
+		self::$category_attr = self::$process_category ? ' checked="checked" ' : ' ';
+		self::$process_tag = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_PROCESS_TAG ] ) ? true : false;
+		self::$tag_attr = self::$process_tag ? ' checked="checked" ' : ' ';
+
+		self::$start_chunk = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_CHUNK ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_CHUNK ] ) : self::$start_chunk;
+		self::$stop_chunk = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) : self::$stop_chunk;
+		self::$chunk_size = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) : self::$chunk_size;
+
+		// Populate Product from Product Imag
+		self::$settings[self::NAME_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ) : self::$settings[self::NAME_TEMPLATE];
+		self::$settings[self::DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::DESCRIPTION_TEMPLATE];
+		self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::SHORT_DESCRIPTION_TEMPLATE];
+		self::$settings[self::CATEGORIES_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ) : self::$settings[self::CATEGORIES_TEMPLATE];
+		self::$settings[self::TAGS_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ) : self::$settings[self::TAGS_TEMPLATE];
+		self::$settings[self::SKU_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ) : self::$settings[self::SKU_TEMPLATE];
+		
+		// No checkbox settings on initial page load
+		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
+			self::$settings[self::POPULATE_ON_ADD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_ADD ] );
+			self::$settings[self::POPULATE_ON_UPDATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_UPDATE ] );
+		}
+
+		self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
+		self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
 
 		echo '<div class="wrap">' . "\n";
 		echo "\t\t" . '<div id="icon-tools" class="icon32"><br/></div>' . "\n";
 		echo "\t\t" . '<h2>WooCommerce Fixit Tools v' . self::CURRENT_VERSION . '</h2>' . "\n";
 
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
+			$setting_actions = self::_compose_settings_actions();
 			$label = $_REQUEST[ self::SLUG_PREFIX . 'action' ];
 			if( isset( $setting_actions[ $label ] ) ) {
 				$action = $setting_actions[ $label ]['handler'];
@@ -699,6 +1096,10 @@ class Woo_Fixit {
 			}
 		}
 
+		echo "\t\t" . '<p><strong>NOTE:</strong> This plugin adds "product:" and "product_terms:" custom substitution prefixes.<br />' . "\n";
+		echo "\t\t" . 'For any Media Library item that is used as a Product Image or Product Gallery item,<br />' . "\n";
+		echo "\t\t" . 'these will return values from the associated Product.</p>' . "\n";
+
 		echo "\t\t" . '<div style="width:700px">' . "\n";
 		echo "\t\t" . '<form action="' . admin_url( 'tools.php?page=' . self::SLUG_PREFIX . 'tools' ) . '" method="post" class="' . self::SLUG_PREFIX . 'tools-form-class" id="' . self::SLUG_PREFIX . 'tools-form-id">' . "\n";
 		echo "\t\t" . '  <p class="submit" style="padding-bottom: 0;">' . "\n";
@@ -712,6 +1113,8 @@ class Woo_Fixit {
 		echo "\t\t" . '        <input name="' . self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT . '" type="text" size="5" value="' . self::$last_product . '">' . "\n";
 		echo "\t\t" . '      </td></tr>' . "\n";
 
+		// Refresh the settings actions, which may be modified by the just-executed action.
+		$setting_actions = self::_compose_settings_actions();
 		foreach ( $setting_actions as $label => $action ) {
 			if ( isset( $action['open'] ) ) {
 				echo "\t\t" . '      <tr><td colspan=2 style="padding: 2px 0px;">' . "\n";
@@ -753,7 +1156,7 @@ class Woo_Fixit {
 
 	/**
 	 * Array of Attachments giving Product assignments:
-	 * attachment_id => array( '_thumbnail_id' => array( thumbnail_ids ), '_product_image_gallery' => array( gallery_ids )
+	 * attachment_id => array( '_thumbnail_id' => array( thumbnail_ids ), '_product_image_gallery' => array( gallery_ids ), 'category_thumbnail' => array( term_id => name ) )
 	 *
 	 * @since 1.00
 	 *
@@ -785,12 +1188,27 @@ class Woo_Fixit {
 			$upper_bound = 0x7FFFFFFF;
 		}
 
+		self::$product_attachments = array();
+		self::$attachment_products = array();
+
+		$query = sprintf( 'SELECT t.term_id, t.name, tm.meta_value FROM %1$s as t INNER JOIN %2$s as tt ON t.term_id = tt.term_id INNER JOIN %3$s as tm ON t.term_id = tm.term_id  WHERE ( ( tt.taxonomy = \'product_cat\' ) AND ( tm.meta_key = \'thumbnail_id\' ) AND ( tm.meta_value > 0 ) AND ( tm.meta_value >= %4$d ) AND ( tm.meta_value <= %5$d) ) ORDER BY tm.meta_value, t.term_id', $wpdb->terms, $wpdb->term_taxonomy, $wpdb->termmeta, $lower_bound, $upper_bound );
+		$results = $wpdb->get_results( $query );
+//error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() $results = ' . var_export( $results, true ), 0 );
+		foreach ( $results as $result ) {
+			$key = (integer) $result->meta_value;
+			if ( isset( self::$attachment_products[ $key ] ) ) {
+				self::$attachment_products[ $key ]['category_thumbnail'][ (integer) $result->term_id ] = $result->name;
+			} else {
+				self::$attachment_products[ $key ]['category_thumbnail'] = array( (integer) $result->term_id => $result->name );
+			}
+		}
+//error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() self::$attachment_products = ' . var_export( self::$attachment_products, true ), 0 );
+		
+		unset( $results );
+		
 		$query = sprintf( 'SELECT m.*, p.post_title FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_type = \'product\' ) AND ( p.ID >= %3$d ) AND ( p.ID <= %4$d) AND ( m.meta_key IN ( \'_product_image_gallery\', \'_thumbnail_id\' ) ) GROUP BY m.post_id, m.meta_id ORDER BY m.post_id', $wpdb->postmeta, $wpdb->posts, $lower_bound, $upper_bound );
 		$results = $wpdb->get_results( $query );
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() $results = ' . var_export( $results, true ), 0 );
-
-		self::$product_attachments = array();
-		self::$attachment_products = array();
 
 		foreach ( $results as $result ) {
 			if ( $build_pa ) {
@@ -1731,6 +2149,8 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$insert_count = 0;
 		$thumbnail_count = 0;
 		$gallery_count = 0;
+		$category_count = 0;
+		
 		foreach( self::$attachment_products as $post_id => $result ) {
 			if ( empty( $result['_thumbnail_id'] ) ) {
 				$thumbnails = array();
@@ -1742,6 +2162,12 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$galleries = array();
 			} else {
 				$galleries = $result['_product_image_gallery'];
+			}
+
+			if ( empty( $result['category_thumbnail'] ) ) {
+				$categories = array();
+			} else {
+				$categories = $result['category_thumbnail'];
 			}
 
 			// Compose references
@@ -1766,9 +2192,22 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				$references .= 'Galleries: ' . $gallery_text;
 			}
 
+			$category_text = '';
+			foreach ( $categories as $term_id => $category ) {
+				$category_text .= sprintf( '(%1$d) %2$s,', $term_id, $category );
+			}
+			if ( !empty( $category_text ) ) {
+				if ( !empty( $references ) ) {
+					$references .= '; ';
+				}
+
+				$references .= 'Categories: ' . $category_text;
+			}
+
 			if ( !empty( $references ) ) {
 				$thumbnail_count += count( $thumbnails );
 				$gallery_count += count( $galleries );
+				$category_count += count( $categories );
 
 				// Insert the new values
 				$insert_query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
@@ -1778,7 +2217,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			} // found references
 		} // foreach product
 
-		return "_where_used() deleted {$delete_count} items(s) in &quot;Woo Used In&quot;, then inserted {$insert_count} items(s) with {$thumbnail_count} thumbnail(s) and {$gallery_count} gallery(s).\n";
+		return "_where_used() deleted {$delete_count} items(s) in &quot;Woo Used In&quot;, then inserted {$insert_count} items(s) with {$thumbnail_count} thumbnail(s), {$gallery_count} gallery(s) and {$category_count} category thumbnails.\n";
 	} // _where_used
 
 	/**
@@ -2443,6 +2882,304 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$tag_text = ( 1 == $tag_added ) ? 'tag' : 'tags';
 		return "_copy_term_assignments() processed {$item_count} item(s), added {$cat_added} {$cat_text} to {$cat_count} item(s), and added {$tag_added} {$tag_text} to {$tag_count} item(s).\n";
 	} // _copy_term_assignments
+
+	/**
+	 * Restore default values for the Populate Product from Product Image templates
+ 	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _populate_product_from_product_image() {
+		global $wpdb;
+
+		if ( ! empty( self::$first_product ) ) {
+			$lower_bound = (integer) self::$first_product;
+		} else {
+			$lower_bound = 0;
+		}
+
+		if ( ! empty( self::$last_product ) ) {
+			$upper_bound = (integer) self::$last_product;
+		} elseif ( $lower_bound ) {
+			$upper_bound = $lower_bound;
+		} else {
+			$upper_bound = 0x7FFFFFFF;
+		}
+
+		$query = sprintf( 'SELECT m.post_id, m.meta_key, m.meta_value, p.post_title, p.post_content, p.post_excerpt FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_type = \'product\' ) AND ( p.ID >= %3$d ) AND ( p.ID <= %4$d) AND ( m.meta_key IN ( \'_thumbnail_id\', \'_sku\' ) ) GROUP BY m.post_id, m.meta_id ORDER BY m.post_id', $wpdb->postmeta, $wpdb->posts, $lower_bound, $upper_bound );
+		$results = $wpdb->get_results( $query );
+//error_log( __LINE__ . ' Woo_Fixit::_populate_product_from_product_image() $results = ' . var_export( $results, true ), 0 );
+
+		$old_values = array();
+		foreach ( $results as $result ) {
+			$value = isset( $old_values[ $result->post_id ] ) ? $old_values[ $result->post_id ] : array();
+			$value['post_title'] = $result->post_title;
+			$value['post_content'] = $result->post_content;
+			$value['post_excerpt'] = $result->post_excerpt;
+			$value[$result->meta_key] = $result->meta_value;
+			$old_values[ $result->post_id ] = $value;
+		}
+		
+		unset( $reaults, $result );
+		
+		foreach( $old_values as $product_id => $value ) {
+			// Find existing product_cat terms
+			$terms = get_object_term_cache( $product_id, 'product_cat' );
+			if ( false === $terms ) {
+				$terms = wp_get_object_terms( $product_id, 'product_cat' );
+				if ( is_wp_error( $terms ) ) {
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_cat' ) terms error = " . var_export( $terms->get_error_messages(), true ), 0 );
+					continue;
+				}
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_cat' ) terms = " . var_export( $terms, true ), 0 );
+
+				wp_cache_add( $product_id, $terms, 'product_cat' . '_relationships' );
+			}
+
+			foreach ( $terms as $term ) {
+				$old_values[ $product_id ]['product_cat_terms'][] = $term->term_id;
+			}
+			sort( $old_values[ $product_id ]['product_cat_terms'] );
+
+			// Find existing product_tag terms
+			$terms = get_object_term_cache( $product_id, 'product_tag' );
+			if ( false === $terms ) {
+				$terms = wp_get_object_terms( $product_id, 'product_tag' );
+				if ( is_wp_error( $terms ) ) {
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_cat' ) terms error = " . var_export( $terms->get_error_messages(), true ), 0 );
+					continue;
+				}
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_cat' ) terms = " . var_export( $terms, true ), 0 );
+
+				wp_cache_add( $product_id, $terms, 'product_tag' . '_relationships' );
+			}
+
+			foreach ( $terms as $term ) {
+				$old_values[ $product_id ]['product_tag_terms'][] = $term->term_id;
+			}
+			sort( $old_values[ $product_id ]['product_tag_terms'] );
+		} // foreach old_values ID
+//error_log( __LINE__ . ' Woo_Fixit::_populate_product_from_product_image() $old_values = ' . var_export( $old_values, true ), 0 );
+
+		$product_count = 0;
+		$updated_count= 0;
+
+		// Define the template
+		$my_setting = array(
+			'data_source' => 'template',
+			'meta_name' => '',
+			'option' => 'raw'
+		);
+
+		foreach ( $old_values as $product_id => $value ) {
+			$product_count++;
+			$update_count = 0;
+			$attachment_id = $value['_thumbnail_id'];
+			$replace_values = array();
+
+			// Evaluate the template for the Product Name (post_title)
+			if ( !empty( self::$settings[self::NAME_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::NAME_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+				if ( !empty( $template_value ) && ( $template_value !== $value['post_title'] ) ) {
+					$replace_values[ 'post_title' ] = $template_value;
+				}
+			}
+
+			// Evaluate the template for the Product Description (post_content)
+			if ( !empty( self::$settings[self::DESCRIPTION_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::DESCRIPTION_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+				if ( !empty( $template_value ) && ( $template_value !== $value['post_content'] ) ) {
+					$replace_values[ 'post_content' ] = $template_value;
+				}
+			}
+
+			// Evaluate the template for the Product Short Description (post_excerpt)
+			if ( !empty( self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+				if ( !empty( $template_value ) && ( $template_value !== $value['post_excerpt'] ) ) {
+					$replace_values[ 'post_excerpt' ] = $template_value;
+				}
+			}
+
+//error_log( __LINE__ . ' Woo_Fixit::_populate_product_from_product_image() $replace_values = ' . var_export( $replace_values, true ), 0 );
+			$update_count = count( $replace_values );
+			if ( $update_count ) {
+				$replace_values['ID'] = $product_id;
+				$result = wp_update_post( $replace_values );
+			} else {
+				$result = NULL;
+			}
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) result = " . var_export( $result, true ), 0 );
+
+			// Evaluate the template for the Product Categories ( taxonomy product_cat )
+			if ( !empty( self::$settings[self::CATEGORIES_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::CATEGORIES_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) template_value = " . var_export( $template_value, true ), 0 );
+				if ( !empty( $template_value ) ) {
+					/*
+					 * Convert term names to term IDs, to avoid ambiguity.
+					 * Adapted from edit_post() in /wp-admin/includes/post.php
+					 */
+					$comma = _x( ',', 'tag delimiter' );
+					if ( ',' !== $comma ) {
+						$template_value = str_replace( $comma, ',', $template_value );
+					}
+					$tags = explode( ',', trim( $template_value, " \n\t\r\0\x0B," ) );
+
+					$clean_terms = array();
+					foreach ( $tags as $tag ) {
+						// Empty terms are invalid input.
+						if ( empty( $tag ) ) {
+							continue;
+						}
+
+						$tag = trim( $tag );
+						$_term = MLAQuery::mla_wp_get_terms( 'product_cat', array(
+							'name' => $tag,
+							'fields' => 'ids',
+							'hide_empty' => false,
+						) );
+
+						if ( ! empty( $_term ) ) {
+							$clean_terms[] = intval( $_term[0] );
+						} else {
+							// No existing term was found, so pass the string. A new term will be created.
+							$clean_terms[] = $tag;
+						}
+					}
+
+					sort( $clean_terms );
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) clean_terms = " . var_export( $clean_terms, true ), 0 );
+					if ( $clean_terms !== $value['product_cat_terms'] ) {
+						$result = wp_set_object_terms( $product_id, $clean_terms, 'product_cat' );
+						if ( is_wp_error( $result ) ) {
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_cat' ) wp_get_object_terms error = " . var_export( $result->get_error_messages(), true ), 0 );
+						} else {
+							$update_count++;
+						}
+					} // terms unequal
+				} // $template_value
+			} // CATEGORIES_TEMPLATE
+
+			// Evaluate the template for the Product Tags ( taxonomy product_tag )
+			if ( !empty( self::$settings[self::TAGS_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::TAGS_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) template_value = " . var_export( $template_value, true ), 0 );
+				if ( !empty( $template_value ) ) {
+					/*
+					 * Convert term names to term IDs, to avoid ambiguity.
+					 * Adapted from edit_post() in /wp-admin/includes/post.php
+					 */
+					$comma = _x( ',', 'tag delimiter' );
+					if ( ',' !== $comma ) {
+						$template_value = str_replace( $comma, ',', $template_value );
+					}
+					$tags = explode( ',', trim( $template_value, " \n\t\r\0\x0B," ) );
+
+					$clean_terms = array();
+					foreach ( $tags as $tag ) {
+						// Empty terms are invalid input.
+						if ( empty( $tag ) ) {
+							continue;
+						}
+
+						$tag = trim( $tag );
+						$_term = MLAQuery::mla_wp_get_terms( 'product_tag', array(
+							'name' => $tag,
+							'fields' => 'ids',
+							'hide_empty' => false,
+						) );
+
+						if ( ! empty( $_term ) ) {
+							$clean_terms[] = intval( $_term[0] );
+						} else {
+							// No existing term was found, so pass the string. A new term will be created.
+							$clean_terms[] = $tag;
+						}
+					}
+
+					sort( $clean_terms );
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) clean_terms = " . var_export( $clean_terms, true ), 0 );
+					if ( $clean_terms !== $value['product_tag_terms'] ) {
+						$result = wp_set_object_terms( $product_id, $clean_terms, 'product_tag' );
+						if ( is_wp_error( $result ) ) {
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $product_id, 'product_tag' ) wp_get_object_terms error = " . var_export( $result->get_error_messages(), true ), 0 );
+						} else {
+							$update_count++;
+						}
+					} // terms unequal
+				} // $template_value
+			} // TAGS_TEMPLATE
+
+			// Evaluate the template for the Product SKU ( postmeta _sku )
+			if ( !empty( self::$settings[self::SKU_TEMPLATE] ) ) {
+				$my_setting['meta_name'] = '(' . self::$settings[self::SKU_TEMPLATE] . ')';
+
+				$template_value = trim( MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $my_setting, NULL ) );
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) template_value = " . var_export( $template_value, true ), 0 );
+				if ( !empty( $template_value ) && ( $template_value !== $value['_sku'] ) ) {
+					$result = update_post_meta( $product_id, '_sku', $template_value );
+					$update_count++;
+				}
+//error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) SKU result = " . var_export( $result, true ), 0 );
+			} // SKU_TEMPLATE
+			
+			if ( $update_count ) {
+				$updated_count++;
+			}
+		} // foreach product
+
+		return "Populate Product examined {$product_count} Product(s) and updated {$updated_count} Product(s).";
+	} // _populate_product_from_product_image
+
+	/**
+	 * Save the Populate Product from Product Image templates to the database
+ 	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _save_product_templates() {
+		return self::_save_setting_changes();
+	} // _save_product_templates
+
+	/**
+	 * Load the Populate Product from Product Image templates from the database
+ 	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _load_product_templates() {
+		$result = self::_load_settings();
+		
+		return $result;
+	} // _load_product_templates
+
+	/**
+	 * Restore default values for the Populate Product from Product Image templates
+ 	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _restore_product_template_defaults() {
+		self::$populate_on_add_attr = self::DEFAULT_POPULATE_ON_ADD;
+		self::$populate_on_update_attr = self::DEFAULT_POPULATE_ON_UPDATE;
+
+		return self::_delete_settings();
+	} // _restore_product_template_defaults
 } //Woo_Fixit
 
 // Install the submenu at an early opportunity

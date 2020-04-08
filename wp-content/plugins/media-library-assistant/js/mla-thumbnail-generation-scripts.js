@@ -4,13 +4,12 @@ var jQuery,
 	mla_thumbnail_support_vars,
 	mlaThumbnail = {
 		// Properties
-		// mlaThumbnail.settings.noTitle
-		// mlaThumbnail.settings.ntdelTitle
-		// mlaThumbnail.settings.fields
-		// mlaThumbnail.settings.comma
-		// mlaThumbnail.settings.ajax_action
-		// mlaThumbnail.settings.ajax_nonce
 		// mlaThumbnail.settings.error
+		// mlaThumbnail.settings.ntdelTitle
+		// mlaThumbnail.settings.noTitle
+		// mlaThumbnail.settings.bulkTitle
+		// mlaThumbnail.settings.comma
+		// mlaThumbnail.settings.useSpinnerClass
 		settings: {},
 
 		// Utility functions

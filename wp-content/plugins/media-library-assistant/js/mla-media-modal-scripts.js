@@ -605,11 +605,6 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 		}); // wp.media.view.MlaTermsSearch
 	} // mlaModal.settings.enableTermsSearch
 
-/*	for debug : trace every event triggered in the wp.media.view.MlaSearch * /
-function MlaSearchOn( eventName ) {
-	console.log('wp.media.view.MlaSearch Event: ', eventName);
-} // */
-
 	/**
 	 * Extended wp.media.view.Search
 	 */
@@ -633,11 +628,6 @@ function MlaSearchOn( eventName ) {
 
 			initialize: function() {
 				var state = this.controller._state;
-/*	for debug : trace every event triggered in the wp.media.view.MlaSearch * /
-wp.media.view.MlaSearch.off( 'all', MlaSearchOn );
-wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
-// */
-
 				if ( 'undefined' === typeof mlaModal.settings.query[ state ] ) {
 					mlaModal.settings.query[ state ] = _.clone( mlaModal.settings.query.initial );
 					mlaModal.settings.query[ state ].searchFields = _.clone( mlaModal.settings.query.initial.searchFields );
@@ -647,12 +637,23 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 			render: function() {
 				var state = this.controller._state,
 					data = _.extend( mlaModal.strings, mlaModal.settings.query[ state ] );
+
+				searchValues = {
+					'mla_filter_month': mlaModal.settings.query[ state ].filterMonth,
+					'mla_filter_term': mlaModal.settings.query[ state ].filterTerm,
+					'mla_terms_search': mlaModal.settings.query[ state ].termsSearch,
+					'mla_search_clicks': mlaModal.settings.query[ state ].searchClicks++,
+					'mla_search_value': mlaModal.settings.query[ state ].searchValue,
+					'mla_search_fields': mlaModal.settings.query[ state ].searchFields,
+					'mla_search_connector': mlaModal.settings.query[ state ].searchConnector };
+				this.model.set({ 's': searchValues });
+				
 				this.$el.html( this.template( data ) );
 				return this;
 			},
 
 			search: function( event ) {
-				var state = this.controller._state, searchValues, searchFields, index;
+				var state = this.controller._state, searchValues, index;
 
 				if ( ( 'input' == event.type ) && ( 's[mla_search_value]' == event.target.name ) ) {
 					mlaModal.settings.query[ state ].searchValue = event.target.value;
@@ -682,16 +683,19 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 						mlaModal.settings.query[ state ].searchConnector = event.target.value;
 						break;
 					case 's[mla_search_title]':
-						searchFields = mlaModal.settings.query[ state ].searchFields;
-						index = searchFields.indexOf( 'title' );
+						if ( 'change' != event.type )
+							break;
+							
+						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'title' );
 						if ( -1 == index )
-							searchFields.push( 'title' );
+							mlaModal.settings.query[ state ].searchFields.push( 'title' );
 						else
-							searchFields.splice( index, 1 );
-
-						mlaModal.settings.query[ state ].searchFields = searchFields;
+							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_name]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'name' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'name' );
@@ -699,6 +703,9 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_alt_text]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'alt-text' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'alt-text' );
@@ -706,6 +713,9 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_excerpt]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'excerpt' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'excerpt' );
@@ -713,6 +723,9 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_content]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'content' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'content' );
@@ -720,6 +733,9 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_file]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'file' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'file' );
@@ -727,6 +743,9 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 							mlaModal.settings.query[ state ].searchFields.splice( index, 1 );
 						break;
 					case 's[mla_search_terms]':
+						if ( 'change' != event.type )
+							break;
+							
 						index = mlaModal.settings.query[ state ].searchFields.indexOf( 'terms' );
 						if ( -1 == index )
 							mlaModal.settings.query[ state ].searchFields.push( 'terms' );
@@ -773,6 +792,7 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 	 * Add/replace media-toolbar controls with our own
 	 */
 	if ( mlaModal.settings.enableMimeTypes || mlaModal.settings.enableMonthsDropdown || mlaModal.settings.enableTermsDropdown || mlaModal.settings.enableTermsSearch || mlaModal.settings.enableSearchBox ) {
+		
 		wp.media.view.AttachmentsBrowser = wp.media.view.AttachmentsBrowser.extend({
 /*	for debug : trace every event triggered in this.controller * /
 			toolbarEvent: function( eventName ) {
@@ -781,6 +801,69 @@ wp.media.view.MlaSearch.on( 'all', MlaSearchOn );
 				//console.log('toolbarEvent( ', id, ' ) Event: ', eventName);
 				console.log('toolbarEvent(  ) Event: ', eventName);
 			}, // */
+
+			toolbarContentActivateBrowse: function() {
+				var toolbarHeight, primaryHeight, secondaryHeight;
+
+				if ( ( null !== this.models ) && this.models.length && ( null !== this.models[0].active ) ) {
+					mlaModal.settings.$el = this.models[0].frame.$el;
+
+					// Need to find elements with reliable height
+					secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
+					primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
+
+					if ( primaryHeight > secondaryHeight ) {
+						toolbarHeight = primaryHeight;
+					} else {
+						toolbarHeight = secondaryHeight;
+					}
+				
+					if ( ( null !== toolbarHeight ) ) {
+						$( '.attachments-browser .attachments', mlaModal.settings.$el ).css( 'top', toolbarHeight );
+						mlaModal.settings.oldHeight = toolbarHeight;
+					}
+				}
+			},
+
+			toolbarOpen: function() {
+				var toolbarHeight, primaryHeight, secondaryHeight;
+
+				if ( ( null !== this.models ) && this.models.length && ( null !== this.models[0].active ) ) {
+					mlaModal.settings.$el = this.models[0].frame.$el;
+
+					secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
+					primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
+
+					if ( primaryHeight > secondaryHeight ) {
+						toolbarHeight = primaryHeight;
+					} else {
+						toolbarHeight = secondaryHeight;
+					}
+				
+					if ( ( null !== toolbarHeight ) ) {
+						$( '.attachments-browser .attachments', mlaModal.settings.$el ).css( 'top', toolbarHeight );
+						mlaModal.settings.oldHeight = toolbarHeight;
+					}
+
+					$( window ).resize( function() {
+						var toolbarHeight, primaryHeight, secondaryHeight;
+		
+						secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
+						primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
+		
+						if ( primaryHeight > secondaryHeight ) {
+							toolbarHeight = primaryHeight;
+						} else {
+							toolbarHeight = secondaryHeight;
+						}
+						
+						if ( ( null !== toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
+							$( '.attachments-browser .attachments' ).css( 'top', toolbarHeight );
+							mlaModal.settings.oldHeight = toolbarHeight;
+						}
+					} )
+				}
+			},
 
 			createToolbar: function() {
 				var filters, state = this.controller._state;
@@ -803,6 +886,10 @@ this.controller.off( null, this.toolbarEvent );
 this.controller.on( 'all', this.toolbarEvent );
 console.log( 'listening to controller events' );
 // */
+
+				mlaModal.settings.oldHeight = 0;
+				this.controller.on( 'open', this.toolbarOpen );
+				this.controller.on( 'content:activate:browse', this.toolbarContentActivateBrowse );
 
 				// Enhanced Media Library (eml) plugin has CSS styles that require this patch
 				if ( typeof window.eml !== "undefined" ) {
@@ -875,13 +962,15 @@ console.log( 'listening to controller events' );
 			},
 
 			hideDefaultSearch: function() {
-				var defaultSearch = $( '#media-search-input', mlaModal.settings.$el );
+				var defaultSearch = $( '#media-search-input', mlaModal.settings.$el ),
+					defaultSearchLabel = $( '.media-search-input-label', mlaModal.settings.$el );
 
 				if ( 0 === defaultSearch.length ) {
 					defaultSearch = $( 'div.media-toolbar-primary > input.search', mlaModal.settings.$el )
 				}
 
 				defaultSearch.hide();
+				defaultSearchLabel.hide();
 			},
 
 			updateFilters: function( taxonomy, selectMarkup ) {

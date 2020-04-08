@@ -265,6 +265,10 @@ class MLA_Thumbnail {
 	private static function _generate_wordpress_thumbnail( $post_id, $file, $args, $old_sizes = NULL ) {
 		// Get the metadata for the original (PDF) attachment.
 		$item_data = wp_get_attachment_metadata( $post_id );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::_generate_wordpress_thumbnail( $post_id, $file ) item_data = " . var_export( $item_data, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		if ( !is_array( $item_data ) ) {
+			$item_data = array();
+		}
 
 		// Make the file path relative to the upload dir.
 		$item_relative_path = _wp_relative_upload_path( $file );
@@ -384,7 +388,8 @@ class MLA_Thumbnail {
 
 		// If there is a real thumbnail image, no generation is required or allowed except for PDFs
 		$old_sizes = NULL;
-		$thumbnail = image_downsize( $post_id );
+		$thumbnail = image_downsize( $post_id, 'thumbnail' );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action image_downsize( {$post_id} ) thumbnail = " . var_export( $thumbnail, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		if ( ! empty( $thumbnail ) ) {
 			// Special case - allow replacement of WordPress-style thumbnails for PDFs, etc.
 			if ( 'delete' === self::$bulk_action_options['existing_thumbnails'] && 'WordPress' === self::$bulk_action_options['type'] ) {
@@ -403,6 +408,7 @@ class MLA_Thumbnail {
 
 		// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
 		$thumbnail = get_post_thumbnail_id( $post_id );
+		MLACore::mla_debug_add( __LINE__ . " MLA_Thumbnail::mla_list_table_custom_bulk_action get_post_thumbnail_id( {$post_id} ) thumbnail = " . var_export( $thumbnail, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		if ( ! empty( $thumbnail ) ) {
 			switch ( self::$bulk_action_options['existing_thumbnails'] ) {
 				case 'ignore':
@@ -601,9 +607,7 @@ class MLA_Thumbnail {
 	 */
 	public static function mla_list_table_inline_parse( $html_markup, $item_template, $item_values ) {
 
-		/*
-		 * Add the Thumbnail Generation Markup
-		 */
+		// Add the Thumbnail Generation Markup
 		$page_template_array = MLACore::mla_load_template( 'mla-thumbnail-generation.tpl' );
 		if ( ! is_array( $page_template_array ) ) {
 			MLACore::mla_debug_add( 'ERROR: mla-thumbnail-generation.tpl path = ' . var_export( plugin_dir_path( __FILE__ ) . 'mla-thumbnail-generation.tpl', true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
@@ -677,8 +681,6 @@ class MLA_Thumbnail {
 	} // mla_list_table_submenu_arguments
 } // Class MLA_Thumbnail
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLA_Thumbnail::initialize');
 ?>

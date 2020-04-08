@@ -56,6 +56,10 @@
 							<input name="mla_terms_search[exact]" id="mla-terms-search-exact" type="checkbox" value="exact" [+exact_checked+] />
 							[+Exact+]
 						</li>
+						<li>
+							<input name="mla_terms_search[whole_word]" id="mla-terms-search-whole-word" type="checkbox" value="whole_word" [+whole_word_checked+] />
+							[+Whole Word+]
+						</li>
 					</ul>
 				</div>
 			</div>

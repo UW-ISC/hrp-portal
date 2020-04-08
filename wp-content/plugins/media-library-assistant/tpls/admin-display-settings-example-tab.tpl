@@ -9,9 +9,9 @@
 	[+_wpnonce+]
 	<p class="search-box" style="margin-top: 1em">
 		<label class="screen-reader-text" for="mla-search-example-input">[+Search Example Plugins+]:</label>
-		<input type="search" id="mla-search-example-input" name="s" value="[+s+]" />
-		<input type="submit" name="mla-example-search" id="mla-search-example-submit" class="button" value="[+Search Plugins+]" />
-		<span class="description"><br />[+Search help+]</span>
+		<input style="float: left" id="mla-search-example-input" name="s" type="search" value="[+s+]" />
+		<input class="button" style="float: right" name="mla-example-search" id="mla-search-example-submit" type="submit" value="[+Search Plugins+]" />
+		<br /><span class="description" style="float: left">[+Search help+]</span>
 	</p>
 </form>
 <br class="clear" />

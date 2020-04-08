@@ -655,6 +655,8 @@ class MLAModal {
 				'Any term' => __( 'Any term', 'media-library-assistant' ),
 				'exact_checked' => '',
 				'Exact' => __( 'Exact', 'media-library-assistant' ),
+				'whole_word_checked' => '',
+				'Whole Word' => __( 'Whole Word', 'media-library-assistant' ),
 				'mla_terms_search_taxonomies' => $taxonomy_list,
 			);
 			$terms_search_tpl = MLAData::mla_parse_template( $page_template_array['mla-terms-search-div'], $page_values );

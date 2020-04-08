@@ -241,7 +241,7 @@ Class WCK_Plugin_Notifications {
      *
      *
      */
-    protected function is_plugin_page() {
+    public function is_plugin_page() {
         if( !empty( $this->pluginPages ) ){
             foreach ( $this->pluginPages as $pluginPage ){
                 if( ! empty( $_GET['page'] ) && false !== strpos( $_GET['page'], $pluginPage ) )

@@ -67,12 +67,15 @@ class MLAFileDownloader {
 					}
 				}
 
+
 				$file_name = $args['mla_download_file'];
 				$match_name = str_replace( '\\', '/', $file_name );
-				$base_dir = pathinfo( __FILE__, PATHINFO_DIRNAME );
-				$match_dir = str_replace( '\\', '/', $base_dir );
-				$allowed_path = substr( $match_dir, 0, strpos( $match_dir, 'plugins' ) );
 
+
+				$upload_dir = wp_upload_dir();
+				$allowed_path = str_replace( '\\', '/', $upload_dir['basedir'] );
+
+				// Restrict downloads to the WordPress Uploads directory tree
 				if ( 0 !== strpos( $match_name, $allowed_path ) ) {
 					$message = 'ERROR: download path out of bounds.';
 				} elseif ( false !== strpos( $match_name, '..' ) ) {

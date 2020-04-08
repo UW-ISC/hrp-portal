@@ -13,6 +13,9 @@
 
 require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-file-downloader.php' );
 
+MLAFileDownloader::mla_process_download_file( array( 'error' => 'MLA File Downloader no longer supported because it allowed Local File Disclosure attacks.' ) );
+
+// NO LONGER ALLOWED AS OF v2.82
 if ( isset( $_REQUEST['mla_download_file'] ) && isset( $_REQUEST['mla_download_type'] ) ) {
 	MLAFileDownloader::$mla_debug = isset( $_REQUEST['mla_debug'] ) && 'log' == $_REQUEST['mla_debug'];
 	MLAFileDownloader::mla_process_download_file();

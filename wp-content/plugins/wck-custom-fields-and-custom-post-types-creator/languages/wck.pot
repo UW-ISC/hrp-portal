@@ -1661,11 +1661,11 @@ msgid "<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid 
 msgstr ""
 
 #: wck-sas.php:345
-msgid "<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 40&#37; off %4$s %5$sDismiss%6$s</p>"
+msgid "<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>"
 msgstr ""
 
 #: wck-sas.php:349
-msgid "<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now and get 40&#37; off %4$s %6$sDismiss%7$s</p>"
+msgid "<p style=\"position:relative;\">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>"
 msgstr ""
 
 #: wck-stp.php:14

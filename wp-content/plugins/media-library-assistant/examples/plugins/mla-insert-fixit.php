@@ -32,8 +32,20 @@
  * opened on 3/01/2018 by "diesel33"
  * https://wordpress.org/support/topic/mla-shortcode-to-show-images-of-all-posts-of-a-wp-category
  *
+ * Enhanced for support topic "Updating decsription and alternative text for image already linked to a post"
+ * opened on 1/28/2019 by "scubarob"
+ * https://wordpress.org/support/topic/updating-decsription-and-alternative-text-for-image-already-linked-to-a-post/
+ *
+ * Enhanced for support topic "Custom Post Type Mapping with MLA"
+ * opened on 3/07/2020 by "visualsuplex"
+ * https://wordpress.org/support/topic/updating-decsription-and-alternative-text-for-image-already-linked-to-a-post/
+ *
+ * Enhanced for support topic "Update/Add/Replace Image figcaption on Post"
+ * opened on 3/28/2020 by "liaris"
+ * https://wordpress.org/support/topic/update-add-replace-image-figcaption-on-post/
+ *
  * @package Insert Fixit
- * @version 1.10
+ * @version 1.16
  */
 
 /*
@@ -41,10 +53,10 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.10
+Version: 1.16
 Author URI: http://davidlingren.com/
 
-Copyright 2015-2018 David Lingren
+Copyright 2015-2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -74,7 +86,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.10';
+	const CURRENT_VERSION = '1.16';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -167,7 +179,7 @@ class Insert_Fixit {
 	 * @return	void Echoes HTML markup for the submenu page
 	 */
 	public static function render_tools_page() {
-//error_log( __LINE__ . ' Insert_Fixit::render_tools_page() $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::render_tools_page() $_REQUEST = ' . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		if ( !current_user_can( 'manage_options' ) ) {
 			echo "Insert Fixit - Error</h2>\n";
 			wp_die( 'You do not have permission to manage plugin settings.' );
@@ -182,12 +194,18 @@ class Insert_Fixit {
 		$attachment_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] : '';
 		$old_attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] : '';
 		$attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] : '';
+		// Copy ALT Text between Media Library items and Post/Page inserts
+		$old_post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) ? stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) : '';
+		$post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ? stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) : "'post', 'page'";
 
-		// Post/Page Insert Image Tag Attribute Modification
+		// Post/Page Item Insert Modification
 		$old_data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] : '';
 		$data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] : '[+alt_text+]';
 		$old_attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] : '';
 		$attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] : 'data-pin-description';
+
+		$old_figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] : '';
+		$figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] : '([+post_excerpt+])';
 
 		// Attach Media Library items
 		self::$attach_all = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_ATTACH_ALL ] ) ? true : false;
@@ -208,18 +226,33 @@ class Insert_Fixit {
 		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] : 'attachment_tag';
 		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] : 'post_tag';
 
+		$item_fields = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] : '';
+		$fields_option = isset( $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] : 'text';
+		$fields_option_text = ( 'text' === $fields_option ) ? 'selected="selected" ' : '';
+		$fields_option_single = ( 'single' === $fields_option ) ? 'selected="selected" ' : '';
+//		$fields_option_export = ( 'export' === $fields_option ) ? 'selected="selected" ' : '';
+		$fields_option_multi = ( 'multi' === $fields_option ) ? 'selected="selected" ' : '';
+
 		$setting_actions = array(
 			'help' => array( 'handler' => '', 'comment' => '<strong>Enter first and (optional) last ID values above to restrict tool application range</strong>. To operate on one ID, enter just the "First ID". The default is to perform the operation on <strong>all posts/pages</strong> and <strong>all Media Library items (attachments)</strong>.<br />&nbsp;<br />You can find post/page ID values by hovering over the post/page title in the "Title" column of the All Posts/All Pages submenu tables; look for the number following <code>post=</code>.<br />' ),
 			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
 
 			'c00' => array( 'handler' => '', 'comment' => '<h3>Copy ALT Text between Media Library items and Post/Page inserts</h3>' ),
+			'c01' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> Tools in this section use the post type values below. Single quotes and commas are required.' ),
+			't1501' => array( 'open' => '<table><tr>' ),
+			't1502' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Post Type(s)</td>' ),
+			't1503' => array( 'continue' => '  <td style="text-align: left">' ),
+			't1504' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'old_post_types" type="hidden" value="' . $post_types . '">' ),
+			't1505' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'post_types" type="text" size="30" value="' . $post_types . '">' ),
+			't1506' => array( 'continue' => '  </td>' ),
+			't1507' => array( 'close' => '</tr></table>' ),
 			'ALT from Item' => array( 'handler' => '_copy_alt_from_media_library',
 				'comment' => 'Copy ALT Text from Media Library item to Post/Page inserts.' ),
 			'ALT to Item' => array( 'handler' => '_copy_alt_to_media_library',
 				'comment' => 'Copy ALT Text from Post/Page inserts to Media Library item' ),
-			'c01' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c02' => array( 'handler' => '', 'comment' => '<h3>Post/Page Insert Image Tag Attribute Modification</h3>' ),
-			'c03' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> Tools in this section use the Data Source and Attribute values below.' ),
+			'c02' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c03' => array( 'handler' => '', 'comment' => '<h3>Post/Page Item Insert Modification</h3>' ),
+			'c04' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The Attribute tools in this section use the Data Source and Attribute values below.' ),
 			't0101' => array( 'open' => '<table><tr>' ),
 			't0102' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Data Source</td>' ),
 			't0103' => array( 'continue' => '  <td style="text-align: left; padding-right: 20px">' ),
@@ -238,9 +271,23 @@ class Insert_Fixit {
 				'comment' => 'Replace (or add) an HTML attribute, e.g., data-pin-description=alt_text, to Post/Page inserts.' ),
 			'Delete Attribute' => array( 'handler' => '_delete_attribute',
 				'comment' => 'Delete an HTML attribute, e.g., data-pin-description, from Post/Page inserts' ),
-			'c04' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c05' => array( 'handler' => '', 'comment' => '<h3>Attach Media Library items</h3>' ),
-			'c06' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> By default, tools in this section operate only on <strong>unattached</strong> Media Library items.<br />&nbsp;' ),
+
+			'c31' => array( 'handler' => '', 'comment' => '&nbsp;<br>The Figure Caption tools find items inserted in the body of a Post or Page with <code>&lt;figure&gt;</code> tags and adds or replaces the content of the <code>&lt;figcaption&gt;</code> tag for each insert.<br>&nbsp;<br><strong>NOTE:</strong> The Figure Caption tools use the Template value below. Leave the text box empty to delete the Figure Caption(s).' ),
+			't1601' => array( 'open' => '<table><tr>' ),
+			't1602' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Template</td>' ),
+			't1603' => array( 'continue' => '  <td style="text-align: left">' ),
+			't1604' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'old_figcaption_template" type="hidden" value="' . $figcaption_template . '">' ),
+			't1605' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'figcaption_template" type="text" size="60" value="' . $figcaption_template . '">' ),
+			't1606' => array( 'continue' => '  </td>' ),
+			't1607' => array( 'close' => '</tr></table>' ),
+			'Add Figure Caption' => array( 'handler' => '_add_figcaption',
+				'comment' => 'Populate empty <code>&lt;figcaption&gt;</code> with "Template" value' ),
+			'Replace Figure Caption' => array( 'handler' => '_replace_figcaption',
+				'comment' => 'Replace (or add) <code>&lt;figcaption&gt;</code> with "Template" value' ),
+
+			'c05' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c06' => array( 'handler' => '', 'comment' => '<h3>Attach Media Library items</h3>' ),
+			'c07' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> By default, tools in this section operate only on <strong>unattached</strong> Media Library items.<br />&nbsp;' ),
 			't1201' => array( 'open' => '<table><tr>' ),
 			't1202' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_ATTACH_ALL . '" type="checkbox"' . $attach_all_attr . 'value="' . self::INPUT_ATTACH_ALL . '"></td>' ),
 			't1203' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Replace existing parent</td>' ),
@@ -263,9 +310,9 @@ class Insert_Fixit {
 				'comment' => 'Attach items to the first Post/Page for which they are the Featured Image' ),
 			'Attach Referenced In' => array( 'handler' => '_attach_referenced_in',
 				'comment' => 'Attach items to the first Post/Page where they appear in a "class wp-image-" or "ids=" element' ),
-			'c07' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c08' => array( 'handler' => '', 'comment' => '<h3>Copy Post/Page values to inserted Media Library items</h3>' ),
-			'c09' => array( 'handler' => '', 'comment' => 'This tool finds items inserted in the body of a Post or Page and composes a new Title for the items based on values in the Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of inserted items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Post to Item Title tool uses the Template value below.' ),
+			'c08' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c09' => array( 'handler' => '', 'comment' => '<h3>Copy Post/Page values to inserted Media Library items</h3>' ),
+			'c10' => array( 'handler' => '', 'comment' => 'This tool finds items inserted in the body of a Post or Page and composes a new Title for the items based on values in the Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of inserted items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Post to Item Title tool uses the Template value below.' ),
 			't0201' => array( 'open' => '<table><tr>' ),
 			't0202' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Template</td>' ),
 			't0203' => array( 'continue' => '  <td style="text-align: left">' ),
@@ -274,9 +321,9 @@ class Insert_Fixit {
 			't0207' => array( 'close' => '</tr></table>' ),
 			'Post to Item Title' => array( 'handler' => '_copy_post_values_to_items',
 				'comment' => 'Copy "Template" value from Post/Page inserts to Media Library item' ),
-			'c13' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c14' => array( 'handler' => '', 'comment' => '<h3>Copy Parent values to attached Media Library items</h3>' ),
-			'c15' => array( 'handler' => '', 'comment' => 'The "Parent to Item Title" tool finds items attached to a Post or Page and composes a new Title for the items based on values in the parent Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of attached items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Parent to Item Title tool uses the Template value below.' ),
+			'c11' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c12' => array( 'handler' => '', 'comment' => '<h3>Copy Parent values to attached Media Library items</h3>' ),
+			'c13' => array( 'handler' => '', 'comment' => 'The "Parent to Item Title" tool finds items attached to a Post or Page and composes a new Title for the items based on values in the parent Post/Page, adding a sequence number (<code>[+index+]</code>) to make the Title unique. The number of attached items is available in <code>[+found_rows+]</code>.<br>&nbsp;<br><strong>NOTE:</strong> The Parent to Item Title tool uses the Template value below.' ),
 			't0301' => array( 'open' => '<table><tr>' ),
 			't0302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Template</td>' ),
 			't0303' => array( 'continue' => '  <td style="text-align: left">' ),
@@ -285,7 +332,7 @@ class Insert_Fixit {
 			't0307' => array( 'close' => '</tr></table>' ),
 			'Parent to Item Title' => array( 'handler' => '_copy_parent_values_to_items',
 				'comment' => 'Copy "Template" value from parent Post/Page to (attached) Media Library items' ),
-			'c39' => array( 'handler' => '', 'comment' => '&nbsp;<br />The "Parent Terms to Item" tool finds items attached to a Post or Page and copies terms assigned to the parent to the items.<br><strong>NOTE:</strong> The Parent Terms to Item tool uses the Taxonomy name/slug values below.' ),
+			'c14' => array( 'handler' => '', 'comment' => '&nbsp;<br />The "Parent Terms to Item" tool finds items attached to a Post or Page and copies terms assigned to the parent to the items.<br><strong>NOTE:</strong> The Parent Terms to Item tool uses the Taxonomy name/slug values below. You can enter multiple taxonomy pairs separated by commas.' ),
 			't1401' => array( 'open' => '<table><tr>' ),
 			't1407' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">from Parent Taxonomy</td>' ),
 			't1408' => array( 'continue' => '  <td style="text-align: left; padding-right: 15px">' ),
@@ -304,10 +351,10 @@ class Insert_Fixit {
             't1418' => array( 'close' => '</tr></table>' ),
 			'Parent Terms to Item' => array( 'handler' => '_copy_parent_terms_to_items',
 				'comment' => 'Copy assigned terms from the parent Post/Page to attached items' ),
-			'c17' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c18' => array( 'handler' => '', 'comment' => '<h3>Copy attached Media Library item values to Parent Post/Page</h3>' ),
-			'c19' => array( 'handler' => '', 'comment' => 'This tool finds items attached to a Post or Page and copies terms assigned to the items to the parent.' ),
-			'c16' => array( 'handler' => '', 'comment' => '<br><strong>NOTE:</strong> The Item Terms to Parent tool uses the Taxonomy name/slug values below.' ),
+			'c15' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c16' => array( 'handler' => '', 'comment' => '<h3>Copy attached Media Library item values to Parent Post/Page</h3>' ),
+			'c17' => array( 'handler' => '', 'comment' => 'This tool finds items attached to a Post or Page and copies terms assigned to the items to the parent.' ),
+			'c18' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The Item Terms to Parent tool uses the Taxonomy name/slug values below. You can enter multiple taxonomy pairs separated by commas.' ),
 			't0401' => array( 'open' => '<table><tr>' ),
 			't0402' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">from Item Taxonomy</td>' ),
 			't0403' => array( 'continue' => '  <td style="text-align: left; padding-right: 15px">' ),
@@ -326,9 +373,27 @@ class Insert_Fixit {
             't0418' => array( 'close' => '</tr></table>' ),
 			'Item Terms to Parent' => array( 'handler' => '_copy_item_terms_to_parent',
 				'comment' => 'Copy assigned terms from attached items to the parent Post/Page' ),
-			'c10' => array( 'handler' => '', 'comment' => '<hr>' ),
-			'c11' => array( 'handler' => '', 'comment' => '<h3>Refresh Caches</h3>' ),
-			'c12' => array( 'handler' => '', 'comment' => 'If you have a large number of posts/pages and/or Media Library items you can use the cache refresh operation to break up processing into smaller steps. Try clicking the "Refresh Caches" button to build these intermediate data structures and save them in the WordPress cache for fifteen minutes. That will make the "Copy", "Modification" and "Attach" operations above go quicker.<br>&nbsp;' ),
+			'c19' => array( 'handler' => '', 'comment' => '<br>This tool finds items attached to a Post or Page and copies custom field values from the items to the parent.' ),
+			'c20' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The Item Fields to Parent tool uses the custom field name values below. You can enter multiple field names separated by commas.' ),
+			't1301' => array( 'open' => '<table><tr>' ),
+			't1302' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Custom field list</td>' ),
+			't1303' => array( 'continue' => '  <td style="text-align: left; padding-right: 15px">' ),
+			't1305' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'item_fields" type="text" size="40" value="' . $item_fields . '">' ),
+			't1306' => array( 'continue' => '  </td>' ),
+			't1307' => array( 'continue' => '  <td style="text-align: left;">' ),
+			't1308' => array( 'continue' => '    <select name="' . self::SLUG_PREFIX . 'fields_option">' ),
+			't1309' => array( 'continue' => '      <option ' . $fields_option_text . 'value="text">Text</option>' ),
+			't1310' => array( 'continue' => '      <option ' . $fields_option_single . 'value="single">Single</option>' ),
+//			't1311' => array( 'continue' => '      <option ' . $fields_option_export . 'value="export">Export</option>' ),
+			't1312' => array( 'continue' => '      <option ' . $fields_option_multi . 'value="multi">Multi</option>' ),
+			't1313' => array( 'continue' => '    </select>' ),
+			't1314' => array( 'continue' => '  </td>' ),
+            't1318' => array( 'close' => '</tr></table>' ),
+			'Item Fields to Parent' => array( 'handler' => '_copy_item_fields_to_parent',
+				'comment' => 'Copy custom fields from attached items to the parent Post/Page' ),
+			'c21' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c22' => array( 'handler' => '', 'comment' => '<h3>Refresh Caches</h3>' ),
+			'c23' => array( 'handler' => '', 'comment' => 'If you have a large number of posts/pages and/or Media Library items you can use the cache refresh operation to break up processing into smaller steps. Try clicking the "Refresh Caches" button to build these intermediate data structures and save them in the WordPress cache for fifteen minutes. That will make the "Copy", "Modification" and "Attach" operations above go quicker.<br>&nbsp;' ),
 			'Refresh Caches' => array( 'handler' => '_refresh_caches',
 				'comment' => 'rebuild arrays and save in cache for fifteen minutes' ),
  		);
@@ -356,10 +421,9 @@ class Insert_Fixit {
 			}
 		}
 
-		/*
-		 * Invalidate the caches if anything has changed
-		 */
-		if ( $old_post_lower !== $post_lower || $old_post_upper !== $post_upper || $old_attachment_lower !== $attachment_lower || $old_attachment_upper !== $attachment_upper || $old_data_source !== $data_source || $old_attribute_name !== $attribute_name ) {
+		// Invalidate the caches if anything has changed
+		if ( $old_post_lower !== $post_lower || $old_post_upper !== $post_upper || $old_attachment_lower !== $attachment_lower || $old_attachment_upper !== $attachment_upper || $old_post_types !== $post_types || $old_data_source !== $data_source || $old_attribute_name !== $attribute_name || $old_figcaption_template !== $figcaption_template ) {
+			delete_transient( self::SLUG_PREFIX . 'figure_inserts' );
 			delete_transient( self::SLUG_PREFIX . 'image_inserts' );
 			delete_transient( self::SLUG_PREFIX . 'image_objects' );
 		}
@@ -490,11 +554,26 @@ class Insert_Fixit {
 	/**
 	 * Array of post/page IDs giving inserted image URL and ALT Text:
 	 * post/page ID => array( 
-	 *      'content' => post_content,
-	 *      'files' => URL to img src,
-	 *      'inserts' => array( 'src', 'src_offset', 'alt', 'alt_offset' )
-	 *      'replacements' => array()
-	 *      )
+	 *     'content' => post_content,
+	 *     'files' => URL to img src,
+	 *     'inserts' => array(
+	 *         'img' => complete <img ...> tag,
+	 *         'img_offset' => offset within post_content,
+	 *         'src_att' => complete src="..." attribute,
+	 *         'src_att_offset' => offset within post_content,
+	 *         'src' => URL portion of src= attribute,
+	 *         'src_offset' => offset within post_content,
+	 *         'alt' => content of alt="..." attribute,
+	 *         'alt_offset' => offset within post_content
+	 *         )
+	 *      // For the add/replace/delete attribute tools:
+	 *     'replacements' => array(
+	 *         new_offset => array (
+	 *             'length' => strlen of the replacement 
+	 *             'text' => new value
+	 *             )
+	 *         )
+	 *     )
 	 *
 	 * @since 1.00
 	 *
@@ -517,7 +596,7 @@ class Insert_Fixit {
 		if ( $use_cache ) {
 			self::$image_inserts = get_transient( self::SLUG_PREFIX . 'image_inserts' );
 			if ( is_array( self::$image_inserts ) ) {
-//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache using cached self::\$image_inserts " . var_export( self::$image_inserts, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_inserts_cache using cached self::\$image_inserts " . var_export( self::$image_inserts, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				return 'Using cached image inserts with ' . count( self::$image_inserts ) . ' post/page elements.';
 			}
 		}
@@ -539,18 +618,31 @@ class Insert_Fixit {
 			$upper_bound = 0x7FFFFFFF;
 		}
 
-		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( \'post\', \'page\' ) AND ( post_status = \'publish\' ) AND ( ID >= %2$d ) AND ( ID <= %3$d ) AND ( post_content LIKE \'%4$s\' ) ) ORDER BY ID', $wpdb->posts, $lower_bound, $upper_bound, '%<img%' );
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ) {
+			$post_types = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] );
+		} else {
+			$post_types = "'post', 'page'";
+		}
+//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache post_types = " . var_export( $post_types, true ), 0 );
+
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<img%' );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $query = ' . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		$results = $wpdb->get_results( $query );
-//error_log( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $results = ' . var_export( $results, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		$upload_dir = wp_upload_dir();
-//error_log( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $upload_dir = ' . var_export( $upload_dir, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $upload_dir = ' . var_export( $upload_dir, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		$upload_dir = $upload_dir['baseurl'] . '/';
+		$site_url = get_site_url();
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $site_url = ' . var_export( $site_url, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		$upload_subdir = str_replace( $site_url, '', $upload_dir );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $upload_subdir = ' . var_export( $upload_subdir, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		$image_inserts = array();
 		foreach ( $results as $result ) {
-			$match_count = preg_match_all( '/\<img[^src]*(src="([^"]*)")[^\>]*\>/', $result->post_content, $matches, PREG_OFFSET_CAPTURE );
-//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$result->ID} ) \$matches = " . var_export( $matches, true ), 0 );
+			$match_count = preg_match_all( '/\<img .*?(src="([^"]*?)")[^\>]*?\>/', $result->post_content, $matches, PREG_OFFSET_CAPTURE );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), 0 );
 			if ( $match_count ) {
 				$image_inserts[ $result->ID ]['content'] = $result->post_content;
 
@@ -567,7 +659,8 @@ class Insert_Fixit {
 
 				// src= file URL
 				foreach( $matches[2] as $index => $match ) {
-					$file = str_replace( $upload_dir, '', $match[0] );
+					// Remove absolute and relative paths to the upload directory
+					$file = str_replace( $upload_subdir, '', str_replace( $upload_dir, '', $match[0] ) );
 					$image_inserts[ $result->ID ]['files'][] = $file;
 					$image_inserts[ $result->ID ]['inserts'][ $index ]['src'] = $file;
 					$image_inserts[ $result->ID ]['inserts'][ $index ]['src_offset'] = $match[1];
@@ -576,7 +669,7 @@ class Insert_Fixit {
 				// alt= value if present
 				foreach ( $image_inserts[ $result->ID ]['inserts'] as $index => $insert ) {
 					$match_count = preg_match( '/alt="([^"]*)"/', $insert['img'], $matches, PREG_OFFSET_CAPTURE );
-//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$result->ID} ) \$matches = " . var_export( $matches, true ), 0 );
+					MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$result->ID} ) count = {$match_count}, alt \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 					if ( $match_count ) {
 						$image_inserts[ $result->ID ]['inserts'][ $index ]['alt'] = $matches[1][0];
 						$image_inserts[ $result->ID ]['inserts'][ $index ]['alt_offset'] = $insert['img_offset'] + $matches[1][1];
@@ -589,11 +682,145 @@ class Insert_Fixit {
 
 		$return = set_transient( self::SLUG_PREFIX . 'image_inserts', $image_inserts, 900 ); // fifteen minutes
 //error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache set_transient return = " . var_export( $return, true ), 0 );
-//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache image_inserts " . var_export($image_inserts, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_inserts_cache() return = {$return}, \$image_inserts = " . var_export( $image_inserts, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		self::$image_inserts = $image_inserts;
 
+//error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache image_inserts = " . var_export( $image_inserts, true ), 0 );
 		return 'Image inserts cache refreshed with ' . count( self::$image_inserts ) . ' post/page elements.';
 	} // _build_image_inserts_cache
+
+	/**
+	 * Array of post/page IDs giving inserted <figcaption> content:
+	 * post/page ID => array( 
+	 *     'content' => post_content,
+	 *     'inserts' => array(
+	 *         // array key 'ID' => ID value of the corresponding Media Library item,
+	 *         'ID' => array (
+	 *             'figcaption' => content of <figcaption> tag,
+	 *             'figcaption_offset' => offset within post_content
+	 *             )
+	 *         )
+	 *      // For the add/replace <figcaption> tools:
+	 *     'replacements' => array(
+	 *         new_offset => array (
+	 *             'length' => strlen of the replacement 
+	 *             'text' => new value
+	 *             )
+	 *         )
+	 *     )
+	 *
+	 * @since 1.16
+	 *
+	 * @var	array
+	 */
+	private static $figcaption_inserts = array();
+
+	/**
+	 * Compile array of <figcaption> content inserted in posts/pages
+ 	 *
+	 * @since 1.16
+	 *
+	 * @param	boolean	$use_cache True to use an existing cache, false to force rebuild
+	 *
+	 * @return	string	Cache or rebuild results
+	 */
+	private static function _build_figcaption_inserts_cache( $use_cache = false ) {
+		global $wpdb;
+
+		if ( $use_cache ) {
+			self::$figcaption_inserts = get_transient( self::SLUG_PREFIX . 'figcaption_inserts' );
+			if ( is_array( self::$figcaption_inserts ) ) {
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache using cached self::\$figcaption_inserts " . var_export( self::$figcaption_inserts, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return 'Using cached figcaption inserts with ' . count( self::$figcaption_inserts ) . ' post/page elements.';
+			}
+		}
+
+		$return = delete_transient( self::SLUG_PREFIX . 'figcaption_inserts' );
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache delete_transient return = " . var_export( $return, true ), 0 );
+
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
+			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
+		} else {
+			$lower_bound = 0;
+		}
+
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ) {
+			$upper_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ];
+		} elseif ( $lower_bound ) {
+			$upper_bound = $lower_bound;
+		} else {
+			$upper_bound = 0x7FFFFFFF;
+		}
+
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ) {
+			$post_types = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] );
+		} else {
+			$post_types = "'post', 'page'";
+		}
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache post_types = " . var_export( $post_types, true ), 0 );
+
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<figcaption%' );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_figcaption_inserts_cache() $query = ' . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		$results = $wpdb->get_results( $query );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_figcaption_inserts_cache() $results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+
+		$gallery_items = array();
+		$figcaption_inserts = array();
+		foreach ( $results as $result ) {
+
+			// Items within a gallery require a different <figcaption> tag
+			$match_count = preg_match_all( '/\<\!-- wp:gallery \{"ids":\[([^\]]*?)\]/', $result->post_content, $matches );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), 0 );
+			if ( $match_count ) {
+				foreach( $matches[1] as $match ) {
+					$match = explode( ',', $match );
+					foreach( $match as $index ) {
+						$gallery_items[ $index ] = (integer) $index;
+					}
+				}
+			}
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$gallery_items = " . var_export( $gallery_items, true ), 0 );
+			
+			$match_count = preg_match_all( '/\<figure[^\>]*?\>\<img.*?(wp-image-([0-9]*)).*?(\<figcaption.*?\>(.*?)\<\/figcaption\>|)\<\/figure\>/', $result->post_content, $matches, PREG_OFFSET_CAPTURE );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), 0 );
+
+			if ( $match_count ) {
+				$figcaption_inserts[ $result->ID ]['content'] = $result->post_content;
+
+				// media item ID
+				foreach( $matches[2] as $index => $match ) {
+					$item_id = (integer) $match[0];
+					$match = array();
+					
+					// Missing figcaptions return an empty string in $matches[4], not an array
+					if ( empty( $matches[4][$index] ) ) {
+						$match['figcaption'] = $matches[3][$index][0];
+						$match['figcaption_offset'] = $matches[3][$index][1];
+						$match['add_tag'] = true;
+					} else {
+						$match['figcaption'] = $matches[4][$index][0];
+						$match['figcaption_offset'] = $matches[4][$index][1];
+						$match['add_tag'] = false;
+					}
+
+					$match['gallery_item'] = array_key_exists( $item_id, $gallery_items );
+					$figcaption_inserts[ $result->ID ]['inserts'][ $item_id ] = $match;
+				}
+
+				$figcaption_inserts[ $result->ID ]['replacements'] = array();
+			}
+		}
+
+		$return = set_transient( self::SLUG_PREFIX . 'figcaption_inserts', $figcaption_inserts, 900 ); // fifteen minutes
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache set_transient return = " . var_export( $return, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache() return = {$return}, \$figcaption_inserts = " . var_export( $figcaption_inserts, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+		self::$figcaption_inserts = $figcaption_inserts;
+
+//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache figcaption_inserts = " . var_export( $figcaption_inserts, true ), 0 );
+		return 'Image inserts cache refreshed with ' . count( self::$figcaption_inserts ) . ' post/page elements.';
+	} // _build_figcaption_inserts_cache
 
 	/**
 	 * Array of attachment IDs giving post_parent and Featured Image post/page IDs:
@@ -622,7 +849,7 @@ class Insert_Fixit {
 		if ( $use_cache ) {
 			self::$featured_objects = get_transient( self::SLUG_PREFIX . 'featured_objects' );
 			if ( is_array( self::$featured_objects ) ) {
-//error_log( __LINE__ . " Insert_Fixit::_build_featured_objects_cache using cached self::\$featured_objects " . var_export( self::$featured_objects, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_featured_objects_cache using cached self::\$featured_objects " . var_export( self::$featured_objects, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				return 'Using cached featured objects with ' . count( self::$featured_objects ) . ' attachment elements.';
 			}
 		}
@@ -657,9 +884,9 @@ class Insert_Fixit {
 		$query[] = "AND ( ID >= {$lower_bound} ) AND ( ID <= {$upper_bound} ) ) ORDER BY ID ) AS p ON m.meta_value = p.ID";
 		$query[] = "WHERE m.meta_key = '_thumbnail_id'";
 		$query = implode( ' ', $query );
-//error_log( __LINE__ . ' Insert_Fixit::_build_featured_objects_cache() $query = ' . var_export( $query, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_featured_objects_cache() $query = ' . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		$results = $wpdb->get_results( $query );
-//error_log( __LINE__ . ' Insert_Fixit::_build_featured_objects_cache() $results = ' . var_export( $results, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_featured_objects_cache() $results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		$references = array();
 		if ( is_array( $results ) ) {
@@ -680,7 +907,7 @@ class Insert_Fixit {
 
 		$return = set_transient( self::SLUG_PREFIX . 'featured_objects', $references, 900 ); // fifteen minutes
 //error_log( __LINE__ . " Insert_Fixit::_build_featured_objects_cache set_transient return = " . var_export( $return, true ), 0 );
-//error_log( __LINE__ . " Insert_Fixit::_build_featured_objects_cache references = " . var_export( $references, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_featured_objects_cache return = {$return}, references = " . var_export( $references, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		self::$featured_objects = $references;
 
 		return 'Featured objects cache refreshed with ' . count( self::$featured_objects ) . ' attachment elements.';
@@ -688,7 +915,9 @@ class Insert_Fixit {
 
 	/**
 	 * Array of attachment IDs giving posts/pages their ID appears in
-	 * attachment ID => array( 'parent' => post_parent, post/page IDs => post/page IDs )
+	 * attachment ID => array( post/page ID => post/page ID )
+	 *
+	 * Used exclusively by _attach_referenced_in()
 	 *
 	 * @since 1.08
 	 *
@@ -711,7 +940,7 @@ class Insert_Fixit {
 		if ( $use_cache ) {
 			self::$item_references = get_transient( self::SLUG_PREFIX . 'item_references' );
 			if ( is_array( self::$item_references ) ) {
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache using cached self::\$item_references " . var_export( self::$item_references, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_item_references_cache using cached self::\$item_references " . var_export( self::$item_references, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				return 'Using cached item references with ' . count( self::$item_references ) . ' attachment elements.';
 			}
 		}
@@ -733,15 +962,23 @@ class Insert_Fixit {
 			$upper_bound = 0x7FFFFFFF;
 		}
 
-		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( \'post\', \'page\' ) AND ( post_status = \'publish\' ) AND ( ID >= %2$d ) AND ( ID <= %3$d ) AND ( ( post_content LIKE \'%4$s\' ) OR ( post_content LIKE \'%5$s\' ) ) ) ORDER BY ID', $wpdb->posts, $lower_bound, $upper_bound, '%wp-image-%', '%ids=%' );
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ) {
+			$post_types = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] );
+		} else {
+			$post_types = "'post', 'page'";
+		}
+//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache post_types = " . var_export( $post_types, true ), 0 );
+
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( ( post_content LIKE \'%5$s\' ) OR ( post_content LIKE \'%6$s\' ) ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%wp-image-%', '%ids=%' );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $query = ' . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		$results = $wpdb->get_results( $query );
-//error_log( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $results = ' . var_export( $results, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		self::$item_references = array();
 		foreach ( $results as $result ) {
 			// Find the class="wp-image-" references
 			$match_count = preg_match_all( '/wp-image-([0-9]{1,6})/', $result->post_content, $matches );
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache( {$result->ID} ) \$matches = " . var_export( $matches, true ), 0 );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_item_references_cache( {$result->ID} ) class \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			if ( $match_count ) {
 				foreach ( $matches[1] as $match ) {
 					self::$item_references[ absint( $match ) ][ absint( $result->ID ) ] = absint( $result->ID );
@@ -750,7 +987,7 @@ class Insert_Fixit {
 
 			// Find the ids= references
 			$match_count = preg_match_all( '/(\[gallery|\[mla_gallery)[^\]]*ids=([0-9,\\\'\"]*)/', $result->post_content, $matches );
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache( {$result->ID} ) \$matches = " . var_export( $matches, true ), 0 );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_item_references_cache( {$result->ID} ) ids \$matches = " . var_export( $matches, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			if ( $match_count ) {
 				foreach ( $matches[2] as $match ) {
 					$items = explode( ',', trim( $match, '\'"' ) );
@@ -762,15 +999,20 @@ class Insert_Fixit {
 		}
 
 		$return = set_transient( self::SLUG_PREFIX . 'item_references', self::$item_references, 900 ); // fifteen minutes
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache set_transient return = " . var_export( $return, true ), 0 );
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache item_references " . var_export( self::$item_references, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_item_references_cache return = {$return}, self::\$item_references " . var_export( self::$item_references, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
+//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache item_references = " . var_export( self::$item_references, true ), 0 );
 		return 'Item references cache refreshed with ' . count( self::$item_references ) . ' items referenced in ' . count( $results ) . ' post/page elements.';
 	} // _build_item_references_cache
 
 	/**
 	 * Array of attachment IDs giving inserted image files:
-	 * attachment ID => array( 'parent' => post_parent, post/page IDs => array( URLs to inserted file ) )
+	 * attachment ID => array(
+	 *     post/page ID => array(
+	 *         [] => URLs to inserted file
+	 *         ),
+	 *     'parent' => attachment parent ID, // optional for _attach_inserted_in()
+	 *     )
 	 *
 	 * @since 1.00
 	 *
@@ -796,7 +1038,7 @@ class Insert_Fixit {
 		if ( $use_cache ) {
 			self::$image_objects = get_transient( self::SLUG_PREFIX . 'image_objects' );
 			if ( is_array( self::$image_objects ) ) {
-//error_log( __LINE__ . " Insert_Fixit::_build_image_objects_cache using cached self::\$image_objects " . var_export( self::$image_objects, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_objects_cache using cached self::\$image_objects " . var_export( self::$image_objects, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				return 'Using cached image objects with ' . count( self::$image_objects ) . ' attachment elements.';
 			}
 		}
@@ -825,8 +1067,9 @@ class Insert_Fixit {
 		}
 
 		$query = sprintf( 'SELECT ID, post_parent FROM %1$s WHERE ( ( post_type = \'attachment\' ) %2$s AND ( ID >= %3$d ) AND ( ID <= %4$d ) ) ORDER BY ID', $wpdb->posts, $where, $lower_bound, $upper_bound );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_objects_cache() $query = ' . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		$results = $wpdb->get_results( $query );
-//error_log( __LINE__ . ' Insert_Fixit::_build_image_objects_cache() $results = ' . var_export( $results, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_objects_cache() $results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 		// Load the image_inserts array
 		self::_build_image_inserts_cache( true );
@@ -857,7 +1100,7 @@ class Insert_Fixit {
 			}
 
 			$sizes = isset( $attachment_metadata['sizes'] ) ? $attachment_metadata['sizes'] : NULL;
-//error_log( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$result->ID} ) sizes = " . var_export( $sizes, true ), 0 );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$result->ID} ) sizes = " . var_export( $sizes, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			if ( ! empty( $sizes ) && is_array( $sizes ) ) {
 				// Using the path and name as the array key ensures each name is added only once
 				foreach ( $sizes as $size => $size_info ) {
@@ -869,7 +1112,7 @@ class Insert_Fixit {
 				//$files[ $path . $base_file ] = $path . $base_file;
 				$files[ $base_file ] = $base_file;
 			}
-//error_log( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$result->ID} ) files = " . var_export( $files, true ), 0 );
+			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$result->ID} ) files = " . var_export( $files, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 			/*
 			 * inserts	Array of specific files (i.e., sizes) found in one or more posts/pages
@@ -879,7 +1122,9 @@ class Insert_Fixit {
 			$inserts = array();
 
 			foreach( $files as $file ) {
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$result->ID} ) file = " . var_export( $file, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				foreach ( self::$image_inserts as $insert_id => $value ) {
+					MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_array_image_inserts_references( {$insert_id} ) value = " . var_export( $value, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 					if ( in_array( $file, $value['files'] ) ) {
 						$inserts[ $insert_id ][] = $file;
 					}
@@ -902,10 +1147,10 @@ class Insert_Fixit {
 		} // each result
 
 		$return = set_transient( self::SLUG_PREFIX . 'image_objects', $references, 900 ); // fifteen minutes
-//error_log( __LINE__ . " Insert_Fixit::_build_image_objects_cache set_transient return = " . var_export( $return, true ), 0 );
-//error_log( __LINE__ . " Insert_Fixit::_build_image_objects_cache references = " . var_export( $references, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_image_objects_cache return = {$return}, self::\$image_objects = " . var_export( $references, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		self::$image_objects = $references;
 
+//error_log( __LINE__ . " Insert_Fixit::_build_image_objects_cache image_objects = " . var_export( $references, true ), 0 );
 		return 'Image objects cache refreshed with ' . count( self::$image_objects ) . ' attachment elements.';
 	} // _build_image_objects_cache
 
@@ -954,6 +1199,8 @@ class Insert_Fixit {
  	 *
 	 * @since 1.02
 	 *
+	 * @param	string	Desired operation, 'Add', 'Replace', 'Delete'
+	 *
 	 * @return	string	HTML markup for results/messages
 	 */
 	private static function _evaluate_add_attribute( $operation = 'Add' ) {
@@ -963,14 +1210,10 @@ class Insert_Fixit {
 		$preg_pattern = '/ ' . $attribute_name . '="([^"]*)"[ ]*/';
 //error_log( __LINE__ . " Insert_Fixit::_build_image_inserts_cache( {$operation} ) \$preg_pattern = " . var_export( $preg_pattern, true ), 0 );
 
-		/*
-		 * Load the image_inserts array
-		 */
+		// Load the image_inserts array
 		self::_build_image_inserts_cache( true );
 
-		/*
-		 * Load the image_objects array
-		 */
+		// Load the image_objects array
 		self::_build_image_objects_cache( true );
 
 		// Initialize statistics
@@ -1137,12 +1380,12 @@ class Insert_Fixit {
 				$inserts = self::$image_inserts[ $post_id ];
 				foreach ( $files as $file ) {
 					foreach ( $inserts['inserts'] as $insert ) {
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library file test '{$file}' == " . var_export( $insert['src'], true ), 0 );
+						MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library file test '{$file}' == " . var_export( $insert['src'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 						if ( $file != $insert['src'] || ! isset( $insert['alt'] ) ) {
 							continue;
 						}
 
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library ALT text test '{$alt_text}' ==  " . var_export( $insert['alt'], true ), 0 );
+						MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library ALT text test '{$alt_text}' ==  " . var_export( $insert['alt'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 						if ( $alt_text == $insert['alt'] ) {
 							continue;
 						}
@@ -1159,21 +1402,23 @@ class Insert_Fixit {
 			$replacements = $inserts['replacements'];
 			if ( ! empty( $replacements ) ) {
 				krsort( $replacements );
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) replacements =  " . var_export( $replacements, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) replacements =  " . var_export( $replacements, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$post_content = $inserts['content'];
 				foreach ( $replacements as $offset => $replacement ) {
 					$post_content = substr_replace( $post_content, $replacement['text'], $offset, $replacement['length'] );
 					$updates++;
 				} // foreach replacement
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) new post_content =  " . var_export( $post_content, true ), 0 );
 				$new_content = array( 'ID' => $post_id, 'post_content' => $post_content );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) new post_content =  " . var_export( $post_content, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$result = wp_update_post( $new_content, true );
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) update result =  " . var_export( $result, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) update result =  " . var_export( $result, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				if ( is_wp_error( $result ) ) {
 					$errors++;
 				}
 				$updated_posts++;
-			} // has replacements
+			} else { // has replacements
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_from_media_library( {$post_id} ) no replacements =  " . var_export( $replacements, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			} // no replacements
 		} // foreach post/page
 
 		/*
@@ -1292,6 +1537,126 @@ class Insert_Fixit {
 	} // _delete_attribute
 
 	/**
+	 * Populate empty <figcaption> content from template
+	 * @since 1.16
+	 *
+ 	 * @param	string	Desired operation, 'Add', 'Replace'
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _evaluate_figcaption( $operation = 'Add' ) {
+		// Load the figcaption_inserts array
+		self::_build_figcaption_inserts_cache( false );
+
+		$examined_posts = count( self::$figcaption_inserts );
+		if ( 0 === $examined_posts ) {
+			return 'No <figcaption> tags found; nothing updated.';
+		}
+
+		$figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] : '([+post_excerpt+])';
+		if ( 'template:' == substr( $figcaption_template, 0, 9 ) ) {
+			$figcaption_template = substr( $figcaption_template, 9 );
+		} else {
+			$figcaption_template = '(' . $figcaption_template . ')';
+		}
+
+		$data_source = array(
+			'data_source' => 'template',
+			'meta_name' => $figcaption_template,
+			'option' => 'text',
+			'format' => 'raw',
+		);
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption( {$operation} ) data_source = " . var_export( $data_source, true ), 0 );
+
+		$examined_items = 0;
+		$updated_posts = 0;
+		$updates = 0;
+		$errors = 0;
+
+		// Accumulate replacements
+		foreach ( self::$figcaption_inserts as $post_id => $post_data ) {
+			$post_updates = 0;
+
+			foreach ( $post_data['inserts'] as $attachment_id => $insert ) {
+				$examined_items++;
+				$old_value = $insert['figcaption'];
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption( {$attachment_id} ) old_value = " . var_export( $old_value, true ), 0 );
+				if ( strlen( trim( $old_value ) ) && 'Add' === $operation ) {
+					continue;
+				}
+
+				$new_value = MLAOptions::mla_get_data_source( $attachment_id, 'single_attachment_mapping', $data_source, NULL );
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption( {$attachment_id} ) new_value = " . var_export( $new_value, true ), 0 );
+				if ( empty( $new_value ) ) {
+					$new_value = '';
+				}
+
+				if ( $old_value === $new_value ) {
+					continue;
+				}
+
+				if ( $insert['add_tag'] ) {
+					if ( $insert['gallery_item'] ) {
+						$new_value = '<figcaption class="blocks-gallery-item__caption">' . $new_value . '</figcaption>';
+					} else {
+						$new_value = '<figcaption>' . $new_value . '</figcaption>';
+					}
+				}
+				
+				self::$figcaption_inserts[ $post_id ]['replacements'][ $insert['figcaption_offset'] ] = array( 'text' => $new_value, 'length' => strlen( $old_value ) );
+			} // foreach examined_item
+
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption replacements = " . var_export(  self::$figcaption_inserts, true ), 0 );
+
+			// Apply the updates, if any
+			$replacements = self::$figcaption_inserts[ $post_id ]['replacements'];
+			if ( ! empty( $replacements ) ) {
+				krsort( $replacements );
+				$post_content = self::$figcaption_inserts[ $post_id ]['content'];
+				foreach ( $replacements as $offset => $replacement ) {
+					$post_updates ++;
+					$post_content = substr_replace( $post_content, $replacement['text'], $offset, $replacement['length'] );
+				} // foreach replacement
+			}
+
+			if ( $post_updates ) {
+				$new_content = array( 'ID' => $post_id, 'post_content' => $post_content );
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption new_content = " . var_export(  $new_content, true ), 0 );
+				$result = wp_update_post( $new_content, true );
+//error_log( __LINE__ . " Insert_Fixit::_evaluate_figcaption( {$post_id} ) update result =  " . var_export( $result, true ), 0 );
+				if ( is_wp_error( $result ) ) {
+					$errors++;
+				} else {
+					$updated_posts++;
+					$updates += $post_updates;
+				}
+			}
+		} // foreach examined_post
+
+		return "<br>{$operation} Figure Caption matched {$examined_posts} posts/pages to {$examined_items} attachments and made {$updates} update(s) in {$updated_posts} posts/pages. There were {$errors} error(s).\n";
+	} // _evaluate_figcaption
+
+	/**
+	 * Populate empty <figcaption> content from template
+	 * @since 1.16
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _add_figcaption() {
+		return self::_evaluate_figcaption( 'Add' );
+	} // _add_figcaption
+
+	/**
+	 * Replace <figcaption> content from template
+	 * @since 1.16
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _replace_figcaption() {
+		return self::_evaluate_figcaption( 'Replace' );
+	} // _replace_figcaption
+
+	/**
 	 * Attach items to the first Post/Page they are inserted in
  	 *
 	 * @since 1.01
@@ -1383,7 +1748,7 @@ class Insert_Fixit {
 	private static function _attach_referenced_in() {
 		// Load the self::$item_references array
 		self::_build_item_references_cache( true );
-		
+
 		// Initialize statistics
 		$reference_count = 0;
 		$referenced_items = 0;
@@ -1399,7 +1764,7 @@ class Insert_Fixit {
 			if ( NULL === $attachment ) {
 				continue;
 			}
-			
+
 			if ( !self::$attach_all && $attachment->post_parent ) {
 				$skipped++;
 				continue;
@@ -1571,28 +1936,43 @@ class Insert_Fixit {
 	private static function _copy_parent_terms_to_items() {
 		self::_build_attached_items_cache();
 
-		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] : 'attachment_category';
-		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] : 'category';
+		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] : '';
+		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] : '';
 		$append = 'add' === ( isset( $_REQUEST[ self::SLUG_PREFIX . 'item_add_replace' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_add_replace' ] : 'add' );
+
+		$item_taxonomies = explode( ',', $item_taxonomy );
+		$parent_taxonomies = explode( ',', $parent_taxonomy );
+
+		if ( count( $item_taxonomies ) !== count( $parent_taxonomies ) ) {
+			return 'ERROR - Parent and item taxonomy input counts are not equal.';
+		}
+
+		$attachment_taxonomies = get_object_taxonomies( 'attachment', 'objects' );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items attachment taxonomies = " . var_export( $attachment_taxonomies, true ), 0 );
+
+		// Hard-code additional taxonomy pairs ( item => parent ) here
+		$taxonomy_pairs = array ();
+
+		foreach ( $item_taxonomies as $index => $item_taxonomy ) {
+			if ( isset( $attachment_taxonomies[ $item_taxonomy ] ) ) {
+				$taxonomy_pairs[ $item_taxonomy ] = $parent_taxonomies[ $index ];
+			} else {
+				return "ERROR - Item Taxonomy {$item_taxonomy} not valid for post_type 'attachment'.";
+			}
+		}
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent taxonomy_pairs = " . var_export( $taxonomy_pairs, true ), 0 );
 
 		$attached_parents = count( self::$attached_items );
 		$attached_items = 0;
-		$updated_parents = 0;
+		$updated_items = 0;
 		$skipped = 0;
 		$errors = 0;
-
-		$taxonomies = get_object_taxonomies( 'attachment', 'objects' );
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items attachment taxonomies = " . var_export( $taxonomies, true ), 0 );
-
-		if ( ! isset( $taxonomies[ $item_taxonomy ] ) ) {
-			return "ERROR - Item Taxonomy \"$item_taxonomy\" not valid for post_type \"attachment\".";
-		}
-
-		$item_is_hierarchical = $taxonomies[ $item_taxonomy ]->hierarchical;
 
 		$skipped_messages = array();
 		$parent_taxonomies = array();
 		foreach ( self::$attached_items as $post_id => $attachments ) {
+			$attached_items += count( $attachments );
+
 			// get the post/page object
 			$post = get_post( $post_id );
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items attachment post = " . var_export( $post, true ), 0 );
@@ -1607,94 +1987,95 @@ class Insert_Fixit {
 				$taxonomies = $parent_taxonomies[ $post->post_type ];
 			} else {
 				$taxonomies = $parent_taxonomies[ $post->post_type ] = get_object_taxonomies( $post, 'objects' );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items parent_taxonomies[ $post->post_type ] = " . var_export( $taxonomies, true ), 0 );
 			}
 
-			if ( ! isset( $taxonomies[ $parent_taxonomy ] ) ) {
-				$skipped_messages[ $parent_taxonomy . $post->post_type ] = array( 'taxonomy' => $parent_taxonomy, 'post_type' => $post->post_type );
-				$skipped++;
-				continue;
-			}
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items taxonomies = " . var_export( $taxonomies, true ), 0 );
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items parent_taxonomies = " . var_export( $parent_taxonomies, true ), 0 );
+			foreach ( $taxonomy_pairs as $item_taxonomy => $parent_taxonomy ) {
+				$item_is_hierarchical = $attachment_taxonomies[ $item_taxonomy ]->hierarchical;
 
-			$parent_terms = wp_get_object_terms( $post_id, $parent_taxonomy );
-			$term_map = array();
-			$item_terms = array();
-
-			// If both taxonomies are hiearchical we must add parent term(s) before adding item terms
-			if ( $item_is_hierarchical && $taxonomies[ $parent_taxonomy ]->hierarchical ) {
-				$ancestors = array();
-				foreach ( $parent_terms as $term ) {
-					$level = 0;
-					while ( $term->parent ) {
-						$term = get_term( $term->parent, $parent_taxonomy );
-						$ancestors[ $level++ ][ $term->term_id ] = $term;
-					}
+				if ( ! isset( $taxonomies[ $parent_taxonomy ] ) ) {
+					$skipped_messages[ $parent_taxonomy . $post->post_type ] = array( 'taxonomy' => $parent_taxonomy, 'post_type' => $post->post_type );
+					$skipped++;
+					continue;
 				}
 
-				krsort( $ancestors, SORT_NUMERIC );
+				$parent_terms = wp_get_object_terms( $post_id, $parent_taxonomy );
+				$term_map = array();
+				$item_terms = array();
+
+				// If both taxonomies are hiearchical we must add parent term(s) before adding item terms
+				if ( $item_is_hierarchical && $taxonomies[ $parent_taxonomy ]->hierarchical ) {
+					$ancestors = array();
+					foreach ( $parent_terms as $term ) {
+						$level = 0;
+						while ( $term->parent ) {
+							$term = get_term( $term->parent, $parent_taxonomy );
+							$ancestors[ $level++ ][ $term->term_id ] = $term;
+						}
+					}
+
+					krsort( $ancestors, SORT_NUMERIC );
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items ancestors = " . var_export( $ancestors, true ), 0 );
 
-				foreach ( $ancestors as $level => $terms ) {
-					foreach ( $terms as $term_id => $term ) {
-						$ancestor = get_term_by( 'name', $term->name, $item_taxonomy );
-						if ( false !== $ancestor ) {
-							$term_map[ $term->term_id ] = $ancestor->term_id;
+					foreach ( $ancestors as $level => $terms ) {
+						foreach ( $terms as $term_id => $term ) {
+							$ancestor = get_term_by( 'name', $term->name, $item_taxonomy );
+							if ( false !== $ancestor ) {
+								$term_map[ $term->term_id ] = $ancestor->term_id;
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items( $level, $term->term_id ) found ancestor = " . var_export( $ancestor, true ), 0 );
-						} else {
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items( $level, $term->term_id ) inserting = " . var_export( $term, true ), 0 );
-							if ( $term->parent && !empty( $term_map[ $term->parent ] ) ) {
-								$ancestor = wp_insert_term( $term->name, $item_taxonomy, array( 'parent' => $term_map[ $term->parent ] ) );
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items child ancestor = " . var_export( $ancestor, true ), 0 );
 							} else {
-								$ancestor = wp_insert_term( $term->name, $item_taxonomy );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items( $level, $term->term_id ) inserting = " . var_export( $term, true ), 0 );
+								if ( $term->parent && !empty( $term_map[ $term->parent ] ) ) {
+									$ancestor = wp_insert_term( $term->name, $item_taxonomy, array( 'parent' => $term_map[ $term->parent ] ) );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items child ancestor = " . var_export( $ancestor, true ), 0 );
+								} else {
+									$ancestor = wp_insert_term( $term->name, $item_taxonomy );
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items root ancestor = " . var_export( $ancestor, true ), 0 );
+								}
+								if ( ( ! is_wp_error( $ancestor ) ) && isset( $ancestor['term_id'] ) ) {
+									$term_map[ $term->term_id ] = (integer) $ancestor['term_id'];
+								}
 							}
-							if ( ( ! is_wp_error( $ancestor ) ) && isset( $ancestor['term_id'] ) ) {
-								$term_map[ $term->term_id ] = (integer) $ancestor['term_id'];
-							}
-						}
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items updated term_map = " . var_export( $term_map, true ), 0 );
-					} // foreach term
-				} // foreach level
-			}
-
-			foreach ( $parent_terms as $term ) {
-				if ( $item_is_hierarchical ) {
-					$item_term = term_exists( $term->name, $item_taxonomy );
-
-					if ( $item_term !== 0 && $item_term !== NULL ) {
-						$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
-					} else {
-						if ( $term->parent && !empty( $term_map[ $term->parent ] ) ) {
-							$item_term = wp_insert_term( $term->name, $item_taxonomy, array( 'parent' => $term_map[ $term->parent ] ) );
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items child item_term = " . var_export( $item_term, true ), 0 );
-						} else {
-							$item_term = wp_insert_term( $term->name, $item_taxonomy );
-//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items root item_term = " . var_export( $item_term, true ), 0 );
-						}
-
-						if ( ( ! is_wp_error( $item_term ) ) && isset( $item_term['term_id'] ) ) {
-							$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
-						}
-					}
-				} else {
-					$item_terms[ $term->term_taxonomy_id ] = $term->name;
+						} // foreach term
+					} // foreach level
 				}
-			}
+
+				foreach ( $parent_terms as $term ) {
+					if ( $item_is_hierarchical ) {
+						$item_term = term_exists( $term->name, $item_taxonomy );
+
+						if ( $item_term !== 0 && $item_term !== NULL ) {
+							$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
+						} else {
+							if ( $term->parent && !empty( $term_map[ $term->parent ] ) ) {
+								$item_term = wp_insert_term( $term->name, $item_taxonomy, array( 'parent' => $term_map[ $term->parent ] ) );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items child item_term = " . var_export( $item_term, true ), 0 );
+							} else {
+								$item_term = wp_insert_term( $term->name, $item_taxonomy );
+//error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items root item_term = " . var_export( $item_term, true ), 0 );
+							}
+
+							if ( ( ! is_wp_error( $item_term ) ) && isset( $item_term['term_id'] ) ) {
+								$item_terms[ $item_term['term_id'] ] = (integer) $item_term['term_id'];
+							}
+						}
+					} else {
+						$item_terms[ $term->term_taxonomy_id ] = $term->name;
+					}
+				}
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items( {$post_id} ) item_terms = " . var_export( $item_terms, true ), 0 );
 
-			foreach ( $attachments as $sequence => $attachment_id ) {
-				$attached_items++;
-
-				$result = wp_set_object_terms( $attachment_id, $item_terms, $item_taxonomy, $append );
-				if ( is_array( $result) ) {
-					$updated_parents++;
-				} else {
-					$errors++;
-				}
+				foreach ( $attachments as $sequence => $attachment_id ) {
+					$result = wp_set_object_terms( $attachment_id, $item_terms, $item_taxonomy, $append );
+					if ( is_array( $result) ) {
+						$updated_items++;
+					} else {
+						$errors++;
+					}
 //error_log( __LINE__ . " Insert_Fixit::_copy_parent_terms_to_items( {$post_id}, {$attachment_id}, {$append} ) result = " . var_export( $result, true ), 0 );
-			} // foreach attachment
+				} // foreach attachment
+			} // foreach taxonomy pair
 		} // foreach post
 
 		$messages = '';
@@ -1705,9 +2086,9 @@ class Insert_Fixit {
 		}
 
 		// Flush the Media/Edit Taxonomy Attachments column cache; see MLAObjects in class-mla-objects.php
-		delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $item_taxonomy, $terms );
+		delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $item_taxonomy );
 
-		return $messages . "<br>Item Terms to Parent matched {$attached_parents} posts/pages to {$attached_items} items and updated {$updated_parents} parent posts/pages. There were {$skipped} skipped parents and {$errors} error(s).\n";
+		return $messages . "<br>Parent Terms to Items matched {$attached_parents} posts/pages to {$attached_items} items and updated {$updated_items} item+taxonomy assignments. There were {$skipped} skipped parents and {$errors} error(s).\n";
 	} // _copy_parent_terms_to_items
 
 	/**
@@ -1720,9 +2101,30 @@ class Insert_Fixit {
 	private static function _copy_item_terms_to_parent() {
 		self::_build_attached_items_cache();
 
-		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] : 'attachment_tag';
-		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] : 'post_tag';
+		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] : '';
+		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] : '';
 		$append = 'add' === ( isset( $_REQUEST[ self::SLUG_PREFIX . 'add_replace' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'add_replace' ] : 'add' );
+		$item_taxonomies = explode( ',', $item_taxonomy );
+		$parent_taxonomies = explode( ',', $parent_taxonomy );
+
+		if ( count( $item_taxonomies ) !== count( $parent_taxonomies ) ) {
+			return 'ERROR - Item and parent taxonomy input counts are not equal.';
+		}
+
+		$taxonomies = get_object_taxonomies( 'attachment', 'objects' );
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent attachment taxonomies = " . var_export( $taxonomies, true ), 0 );
+
+		// Hard-code additional taxonomy pairs ( item => parent ) here
+		$taxonomy_pairs = array ();
+
+		foreach ( $item_taxonomies as $index => $item_taxonomy ) {
+			if ( isset( $taxonomies[ $item_taxonomy ] ) ) {
+				$taxonomy_pairs[ $item_taxonomy ] = $parent_taxonomies[ $index ];
+			} else {
+				return "ERROR - Item Taxonomy {$item_taxonomy} not valid for post_type 'attachment'.";
+			}
+		}
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent taxonomy_pairs = " . var_export( $taxonomy_pairs, true ), 0 );
 
 		$attached_parents = count( self::$attached_items );
 		$attached_items = 0;
@@ -1730,65 +2132,186 @@ class Insert_Fixit {
 		$skipped = 0;
 		$errors = 0;
 
-		$taxonomies = get_object_taxonomies( 'attachment', 'objects' );
-//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent attachment taxonomies = " . var_export( $taxonomies, true ), 0 );
-
-		if ( ! isset( $taxonomies[ $item_taxonomy ] ) ) {
-			return 'ERROR - Item Taxonomy not valid for post_type "attachment".';
-		}
-
 		foreach ( self::$attached_items as $post_id => $attachments ) {
 			// get the post/page object
 			$post = get_post( $post_id );
 			$taxonomies = get_object_taxonomies( $post, 'objects' );
 
-			if ( ! isset( $taxonomies[ $parent_taxonomy ] ) ) {
-				$skipped++;
-				continue;
-			}
-
-			$parent_is_hierarchical = $taxonomies[ $parent_taxonomy ]->hierarchical;
-
-			$item_terms = array();
-			foreach ( $attachments as $sequence => $attachment_id ) {
-				$attached_items++;
-
-				$terms = wp_get_object_terms( $attachment_id, $item_taxonomy );
-				foreach( $terms as $term ) {
-					$item_terms[ $term->term_taxonomy_id ] = $term;
+			foreach ( $taxonomy_pairs as $item_taxonomy => $parent_taxonomy ) {
+				if ( ! isset( $taxonomies[ $parent_taxonomy ] ) ) {
+					$skipped++;
+					continue;
 				}
-			} // foreach attachment
-//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent( {$post_id} ) item_terms = " . var_export( $item_terms, true ), 0 );
 
-			$parent_terms = array();
-			foreach ( $item_terms as $term_taxonomy_id => $term ) {
-				if ( $parent_is_hierarchical ) {
-					$parent_term = term_exists( $term->name, $parent_taxonomy );
+				$parent_is_hierarchical = $taxonomies[ $parent_taxonomy ]->hierarchical;
 
-					if ( $parent_term !== 0 && $parent_term !== NULL ) {
-						$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
-					} else {
-						$parent_term = wp_insert_term( $term->name, $parent_taxonomy );
-						if ( ( ! is_wp_error( $parent_term ) ) && isset( $parent_term['term_id'] ) ) {
-							$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
-						}
+				$item_terms = array();
+				foreach ( $attachments as $sequence => $attachment_id ) {
+					$attached_items++;
+
+					$terms = wp_get_object_terms( $attachment_id, $item_taxonomy );
+					foreach( $terms as $term ) {
+						$item_terms[ $term->term_taxonomy_id ] = $term;
 					}
-				} else {
-					$parent_terms[ $term->term_taxonomy_id ] = $term->name;
-				}
-			}
-//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent( {$post_id} ) parent_terms = " . var_export( $parent_terms, true ), 0 );
+				} // foreach attachment
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent( {$post_id} {$item_taxonomy} {$parent_taxonomy} ) item_terms = " . var_export( $item_terms, true ), 0 );
 
-			$result = wp_set_object_terms( $post_id, $parent_terms, $parent_taxonomy, $append );
-			if ( is_array( $result) ) {
-				$updated_parents++;
-			} else {
-				$errors++;
-			}
+				$parent_terms = array();
+				foreach ( $item_terms as $term_taxonomy_id => $term ) {
+					if ( $parent_is_hierarchical ) {
+						$parent_term = term_exists( $term->name, $parent_taxonomy );
+
+						if ( $parent_term !== 0 && $parent_term !== NULL ) {
+							$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
+						} else {
+							$parent_term = wp_insert_term( $term->name, $parent_taxonomy );
+							if ( ( ! is_wp_error( $parent_term ) ) && isset( $parent_term['term_id'] ) ) {
+								$parent_terms[ $parent_term['term_id'] ] = (integer) $parent_term['term_id'];
+							}
+						}
+					} else {
+						$parent_terms[ $term->term_taxonomy_id ] = $term->name;
+					}
+				}
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_terms_to_parent( {$post_id} {$item_taxonomy} {$parent_taxonomy} ) parent_terms = " . var_export( $parent_terms, true ), 0 );
+
+				if ( (  0 < count( $parent_terms ) ) || ( false == $append ) ) {
+					$result = wp_set_object_terms( $post_id, $parent_terms, $parent_taxonomy, $append );
+					if ( is_array( $result) ) {
+						$updated_parents++;
+					} else {
+						$errors++;
+					}
+				}
+			} // foreach taxonomy_pair
 		} // foreach post
 
 		return "<br>Item Terms to Parent matched {$attached_parents} posts/pages to {$attached_items} items and updated {$updated_parents} parent posts/pages. There were {$skipped} skipped parents and {$errors} error(s).\n";
 	} // _copy_item_terms_to_parent
+
+
+	/**
+	 * Convert a custom field value to a string
+ 	 *
+	 * @since 1.15
+	 *
+	 * @param	string	Custom Field value
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _custom_value_to_text( $field_value ) {
+		if ( is_scalar( $field_value ) ) {
+			$field_value = (string) $field_value;
+			return trim( $field_value );
+		}
+
+		if ( is_array( $field_value ) ) {
+			$value_array = array();
+			foreach ( $field_value as $value ) {
+				$value = self::_custom_value_to_text( $value );
+
+				if ( !empty( $value ) ) {
+					$value_array[] = self::_custom_value_to_text( $value );
+				}
+			}
+
+			return implode( ',', $value_array );
+		}
+
+		return  var_export( $field_value, true );
+	} // _custom_value_to_text
+
+	/**
+	 * Copy assigned terms from attached items to the parent post/page
+ 	 *
+	 * @since 1.04
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _copy_item_fields_to_parent() {
+		self::_build_attached_items_cache();
+
+		$item_fields = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] : '';
+		$item_fields = explode( ',', $item_fields );
+		$fields_option = isset( $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] : 'text';
+
+		// Hard-code additional custom field names in the second array() here
+		$item_fields = array_merge( $item_fields, array () );
+
+		if ( empty( $item_fields ) ) {
+			return 'ERROR - Custom field list is empty.';
+		}
+
+		$attached_parents = count( self::$attached_items );
+		$attached_items = 0;
+		$updated_parents = 0;
+		$skipped = 0;
+		$errors = 0;
+
+		foreach ( self::$attached_items as $post_id => $attachments ) {
+			// get the post/page object
+			$post = get_post( $post_id );
+
+			foreach ( $item_fields as $item_field_name ) {
+				$item_field_values = array();
+				foreach ( $attachments as $sequence => $attachment_id ) {
+					$attached_items++;
+
+					$values = get_metadata( 'post', $attachment_id, $item_field_name, false );
+					if ( false !== $values && !empty( $values ) ) {
+						$item_field_values[ $attachment_id ] = get_metadata( 'post', $attachment_id, $item_field_name, false );
+					}
+				} // foreach attachment
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_fields_to_parent( {$post_id} $item_field_name ) item_field_values = " . var_export( $item_field_values, true ), 0 );
+
+				if (  0 < count( $item_field_values ) ) {
+					$parent_value = array();
+
+					switch ( $fields_option ) {
+						case 'single':
+							reset( $item_field_values );
+							$parent_value = self::_custom_value_to_text( current( $item_field_values ) );
+							break;
+//						case 'export':
+//							break;
+						case 'multi':
+							foreach ( $item_field_values as $value ) {
+								$parent_value = array_merge( $parent_value, $value );
+							}
+
+							$parent_value = array_unique( $parent_value );
+							break;
+						case 'text':
+						default:
+							foreach ( $item_field_values as $value ) {
+								$parent_value[] = self::_custom_value_to_text( $value );
+							}
+
+							$parent_value = implode( ',', $parent_value );							
+					}
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_fields_to_parent( {$post_id} $item_field_name ) parent_value = " . var_export( $parent_value, true ), 0 );
+					$result = delete_metadata( 'post', $post_id, $item_field_name, NULL, false );
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_fields_to_parent( {$post_id} $item_field_name ) delete result = " . var_export( $result, true ), 0 );
+					if ( 'multi' === $fields_option ) {
+						foreach ( $parent_value as $value ) {
+							$result = add_post_meta( $post_id, $item_field_name, $value );
+						}
+					} else {
+						$result = update_metadata( 'post', $post_id, $item_field_name, $parent_value );
+					}
+//error_log( __LINE__ . " Insert_Fixit::_copy_item_fields_to_parent( {$post_id} $item_field_name ) update result = " . var_export( $result, true ), 0 );
+
+					if ( false !== $result ) {
+						$updated_parents++;
+					} else {
+						$errors++;
+					}
+				}
+			} // foreach item_field_name
+		} // foreach post
+
+		return "<br>Item Fields to Parent matched {$attached_parents} posts/pages to {$attached_items} items and updated {$updated_parents} parent posts/pages. There were {$skipped} skipped parents and {$errors} error(s).\n";
+	} // _copy_item_fields_to_parent
 
 	/**
 	 * Rebuild the Image Inserts and Image Objects arrays and cache them

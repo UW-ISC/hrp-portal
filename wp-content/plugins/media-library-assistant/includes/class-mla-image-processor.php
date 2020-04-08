@@ -336,6 +336,8 @@ class MLAImageProcessor {
 	 * @return	array	file attributes ( 'file', 'url', 'type' ) on success, ( 'error' ) on failure
 	 */
 	public static function mla_handle_thumbnail_sideload( $input_file, $args ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAImageProcessor::mla_handle_thumbnail_sideload( {$input_file} ) args = " . var_export( $args, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+
 		if ( ! class_exists( 'Imagick' ) ) {
 			return self::_mla_error_return( 'Imagick not installed', __LINE__ );
 		}
@@ -348,9 +350,7 @@ class MLAImageProcessor {
 			return self::_mla_error_return( 'File not found: ' . $input_file, __LINE__ );
 		}
 
-		/*
-		 * Process generation parameters and supply defaults
-		 */
+		// Process generation parameters and supply defaults
 		$width = isset( $args['width'] ) ? abs( intval( $args['width'] ) ) : 0;
 		$height = isset( $args['height'] ) ? abs( intval( $args['height'] ) ) : 0;
 		$type = isset( $args['type'] ) ? $args['type'] : 'image/jpeg';
@@ -368,10 +368,9 @@ class MLAImageProcessor {
 			$mime_type = $type;
 		}
 
-		/*
-		 * Convert the file to an image format and load it
-		 */
+		// Convert the file to an image format and load it
 		try {
+			$try_step = __LINE__ . ' new Imagick()';
 			self::$image = new Imagick();
 
 			/*
@@ -380,15 +379,19 @@ class MLAImageProcessor {
 			 * this is important to give good quality output, otherwise text might be unclear
 			 * default resolution is 72,72 or 128,128 for WordPress thumbnails
 			 */
+			$try_step = __LINE__ . ' setResolution';
 			self::$image->setResolution( $resolution, $resolution );
 
+			$try_step = __LINE__ . ' _ghostscript_convert';
 			$result = self::_ghostscript_convert( $input_file, $frame, $resolution, $mime_type, $ghostscript_path );
 
 			if ( false === $result ) {
 				try {
+					$try_step = __LINE__ . " readImage [{$frame}]";
 					self::$image->readImage( $input_file . '[' . $frame . ']' );
 				}
 				catch ( Exception $e ) {
+					$try_step = __LINE__ . ' readImage [0]';
 					self::$image->readImage( $input_file . '[0]' );
 				}
 
@@ -398,39 +401,41 @@ class MLAImageProcessor {
 					$extension = 'PNG';
 				}
 
+				$try_step = __LINE__ . " setImageFormat( {$extension} )";
 				self::$image->setImageFormat( $extension );
 			}
 
 			if ( ! self::$image->valid() ) {
 				self::_mla_die( 'File not loaded', __LINE__, 404 );
 			}
+		} catch ( Throwable $e ) { // PHP 7
+			return self::_mla_error_return( 'Image load Throwable: ' . $e->getMessage() . ' from step ' . $try_step, __LINE__ );
+		} catch ( Exception $e ) { // PHP 5
+			return self::_mla_error_return( 'Image load Exception: ' . $e->getMessage() . ' from step ' . $try_step, __LINE__ );
 		}
-		catch ( Exception $e ) {
-			return self::_mla_error_return( 'Image load exception: ' . $e->getMessage(), __LINE__ );
-		}
-
+		
 		/*
 		 * Prepare the output image; resize and flatten, if necessary.
 		 * $type retains "WordPress" selection
 		 */
 		try {
 			self::_prepare_image( $width, $height, $best_fit, $type, $quality );
-			}
-		catch ( Exception $e ) {
-			return self::_mla_error_return( '_prepare_image exception: ' . $e->getMessage(), __LINE__ );
+		} catch ( Throwable $e ) { // PHP 7
+			return self::_mla_error_return( '_prepare_image Throwable: ' . $e->getMessage(), __LINE__ );
+		} catch ( Exception $e ) { // PHP 5
+			return self::_mla_error_return( '_prepare_image Exception: ' . $e->getMessage(), __LINE__ );
 		}
 
-		/*
-		 * Write the image to an appropriately-named file
-		 */
+		// Write the image to an appropriately-named file
 		try {
 			$output_file = wp_tempnam( $input_file );
 			self::$image->writeImage( $output_file );
 			$dimensions = self::$image->getImageGeometry();
-		}
-		catch ( Exception $e ) {
+		} catch ( Throwable $e ) { // PHP 7
+			return self::_mla_error_return( 'Image write Throwable: ' . $e->getMessage(), __LINE__ );
+		} catch ( Exception $e ) { // PHP 5
 			@unlink( $output_file );
-			return self::_mla_error_return( 'Image write exception: ' . $e->getMessage(), __LINE__ );
+			return self::_mla_error_return( 'Image write Exception: ' . $e->getMessage(), __LINE__ );
 		}
 
 		// array based on $_FILE as seen in PHP file uploads
@@ -444,6 +449,7 @@ class MLAImageProcessor {
 			'height' => $dimensions['height'],
 		);		
 
+		MLACore::mla_debug_add( __LINE__ . " MLAImageProcessor::mla_handle_thumbnail_sideload( {$input_file} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		return	$results;
 	}
 

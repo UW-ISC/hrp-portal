@@ -167,8 +167,7 @@ class URE_Capabilities {
                 
         foreach ( array_keys( $this->built_in_wp_caps ) as $cap ) {
             $this->add_capability_to_full_caps_list( $cap, $full_list );
-        }        
-        
+        }                
     }
     // end of add_wordpress_caps()
 
@@ -187,10 +186,30 @@ class URE_Capabilities {
     // end of add_create_caps_to_admin()
     
     
+    public static function add_cap_to_roles( $roles, $cap ) {
+        global $wp_roles;
+        
+        if ( !is_array( $roles ) || count( $roles )==0 ) {
+            return;
+        }
+        
+        foreach( $roles as $role ) {
+            if ( isset( $wp_roles->role_objects[$role] ) && 
+                 !isset( $wp_roles->role_objects[$role]->capabilities[$cap] ) ) {
+                $wp_roles->role_objects[$role]->add_cap( $cap, true );
+            }
+        }
+        
+    }
+    // end of add_cap_to_roles()
+    
+    
     protected function add_custom_post_type_caps( &$full_list ) {
         global $wp_roles;
         
         $multisite = $this->lib->get( 'multisite' );
+        // admin should be capable to edit any posts
+        $cpt_editor_roles0 = !$multisite ? array('administrator') : array();                
         $capabilities = $this->lib->get_edit_post_capabilities();
         $post_types = get_post_types( array(), 'objects' );
         $_post_types = $this->lib->_get_post_types();
@@ -199,7 +218,7 @@ class URE_Capabilities {
         if ( $attachment_post_type->cap->edit_posts!=='edit_posts' ) {
             $post_types['attachment'] = $attachment_post_type;
         }
-        
+                
         foreach( $post_types as $post_type ) {
             if ( !isset( $_post_types[$post_type->name] ) ) {
                 continue;
@@ -207,18 +226,14 @@ class URE_Capabilities {
             if ( !isset($post_type->cap) ) {
                 continue;
             }
+            $cpt_editor_roles = apply_filters( 'ure_cpt_editor_roles', $cpt_editor_roles0, $post_type->name );            
             foreach( $capabilities as $capability ) {
                 if ( !isset( $post_type->cap->$capability ) ) {
                     continue;                    
                 }    
                 $cap_to_check = $post_type->cap->$capability;
-                $this->add_capability_to_full_caps_list( $cap_to_check, $full_list );
-                if ( !$multisite &&
-                    isset($wp_roles->role_objects['administrator']) && 
-                    !isset($wp_roles->role_objects['administrator']->capabilities[$cap_to_check])) {
-                    // admin should be capable to edit any posts
-                    $wp_roles->role_objects['administrator']->add_cap($cap_to_check, true);
-                }                
+                $this->add_capability_to_full_caps_list( $cap_to_check, $full_list );                
+                self::add_cap_to_roles( $cpt_editor_roles, $cap_to_check );
             }                        
         }
         

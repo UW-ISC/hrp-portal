@@ -193,32 +193,7 @@ function wck_ctc_create_taxonomy(){
 
             if( !empty( $object_type ) && !empty( $args['show_admin_column'] ) && $args['show_admin_column'] == true && !empty( $ct['sortable-admin-column'] ) && $ct['sortable-admin-column'] === 'true' ) {
 
-                if ( version_compare( phpversion(), '5.4.0', '<' ) ) {
-
-                    foreach( $object_type as $post_type ) {
-                        add_filter("manage_edit-{$post_type}_sortable_columns", create_function('$columns', '$columns["taxonomy-' . $ct["taxonomy"] . '"] = "taxonomy-' . $ct["taxonomy"] . '";return $columns;'));
-                    }
-
-                    add_filter( 'posts_clauses', create_function( '$clauses, $wp_query', 'global $wpdb;
-                    if ( is_admin() && isset( $wp_query->query[\'orderby\'] ) && \'taxonomy-'.$ct["taxonomy"].'\' == $wp_query->query[\'orderby\'] ) {
-
-                        $clauses[\'join\'] .= <<<SQL
-    LEFT OUTER JOIN {$wpdb->term_relationships} ON {$wpdb->posts}.ID={$wpdb->term_relationships}.object_id
-    LEFT OUTER JOIN {$wpdb->term_taxonomy} USING (term_taxonomy_id)
-    LEFT OUTER JOIN {$wpdb->terms} USING (term_id)
-    SQL;
-
-                        $clauses[\'where\'] .= " AND (taxonomy = \''.$ct["taxonomy"].'\' OR taxonomy IS NULL)";
-                        $clauses[\'groupby\'] = "object_id";
-                        $clauses[\'orderby\']  = "GROUP_CONCAT({$wpdb->terms}.name ORDER BY name ASC) ";
-                        $clauses[\'orderby\'] .= ( \'ASC\' == strtoupper( $wp_query->get(\'order\') ) ) ? \'ASC\' : \'DESC\';
-                    }
-
-                    return $clauses;' ), 10, 2 );
-
-                } else {
-
-                    foreach( $object_type as $post_type ) {
+                foreach( $object_type as $post_type ) {
                         add_filter("manage_edit-{$post_type}_sortable_columns", function ( $columns ) use ( $ct ) {
                             $columns['taxonomy-' . $ct['taxonomy']] = 'taxonomy-' . $ct['taxonomy'];
 
@@ -243,7 +218,7 @@ function wck_ctc_create_taxonomy(){
                         return $clauses;
                     }, 10, 2);
 
-                }
+
             }
         }
     }
