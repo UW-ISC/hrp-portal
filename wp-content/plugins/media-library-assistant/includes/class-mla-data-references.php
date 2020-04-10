@@ -352,9 +352,7 @@ class MLAReferences {
 	public static function mla_attachment_array_fetch_references_handler( &$attachments ) {
 		global $wpdb;
 
-		/*
-		 * See element definitions above
-		 */
+		// See element definitions above
 		$initial_references = array(
 			'inserted_option' => '',
 			'tested_reference' => false,
@@ -378,9 +376,7 @@ class MLAReferences {
 		$inserted_in_option = MLACore::mla_get_option( MLACoreOptions::MLA_INSERTED_IN_TUNING );
 		$initial_references['inserted_option'] = $inserted_in_option;
 
-		/*
-		 * Make sure there's work to do; otherwise initialize the attachment data and return
-		 */
+		// Make sure there's work to do; otherwise initialize the attachment data and return
 		if ( false == ( MLACore::$process_featured_in || MLACore::$process_inserted_in || MLACore::$process_gallery_in || MLACore::$process_mla_gallery_in ) ) {
 			foreach ( $attachments as $attachment_index => $attachment ) {
 				$attachments[ $attachment_index ]->mla_references = $initial_references;
@@ -389,9 +385,7 @@ class MLAReferences {
 			return;
 		}
 
-		/*
-		 * Collect the raw data for where-used analysis
-		 */
+		// Collect the raw data for where-used analysis
 		$attachment_ids = array();
 		$files = array();
 		foreach ( $attachments as $index => $attachment ) {
@@ -497,9 +491,7 @@ class MLAReferences {
 				$wpdb->prepare( $query, $query_parameters )
 			);
 
-			/*
-			 * Match each post with inserts back to the attachments
-			 */
+			// Match each post with inserts back to the attachments
 			$inserts = array();
 			if ( ! empty( $results ) ) {
 				foreach ( $files as $index => $file ) {
@@ -532,9 +524,7 @@ class MLAReferences {
 		foreach ( $attachments as $attachment_index => $attachment ) {
 			$references = array_merge( $initial_references, $files[ $attachment_index ] );
 
-			/*
-			 * Fill in Parent data
-			 */
+			// Fill in Parent data
 			if ( ( (int) $attachment->post_parent ) === 0 ) {
 				$references['is_unattached'] = true;
 			} else {
@@ -553,14 +543,10 @@ class MLAReferences {
 				}
 			}
 
-			/*
-			 * Accumulate reference test types, e.g., 0 = no tests, 4 = all tests
-			 */
+			// Accumulate reference test types, e.g., 0 = no tests, 4 = all tests
 			$reference_tests = 0;
 
-			/*
-			 * Look for the "Featured Image(s)", if enabled
-			 */
+			// Look for the "Featured Image(s)", if enabled
 			if ( MLACore::$process_featured_in ) {
 				$reference_tests++;
 				if ( isset( $features[ $attachment->ID ] ) ) {
@@ -575,9 +561,7 @@ class MLAReferences {
 				}
 			} // $process_featured_in
 
-			/*
-			 * Look for item(s) inserted in post_content
-			 */
+			// Look for item(s) inserted in post_content
 			if ( MLACore::$process_inserted_in ) {
 				$reference_tests++;
 
@@ -603,9 +587,7 @@ class MLAReferences {
 				}
 			} // $process_inserted_in
 
-			/*
-			 * Look for [mla_gallery] references
-			 */
+			// Look for [mla_gallery] references
 			if ( MLACore::$process_mla_gallery_in ) {
 				$reference_tests++;
 				if ( self::_build_mla_galleries( MLACoreOptions::MLA_MLA_GALLERY_IN_TUNING, self::$mla_galleries, '[mla_gallery', $exclude_revisions ) ) {
@@ -625,9 +607,7 @@ class MLAReferences {
 				}
 			} // $process_mla_gallery_in
 
-			/*
-			 * Look for [gallery] references
-			 */
+			// Look for [gallery] references
 			if ( MLACore::$process_gallery_in ) {
 				$reference_tests++;
 				if ( self::_build_mla_galleries( MLACoreOptions::MLA_GALLERY_IN_TUNING, self::$galleries, '[gallery', $exclude_revisions ) ) {
@@ -647,9 +627,7 @@ class MLAReferences {
 				}
 			} // $process_gallery_in
 
-			/*
-			 * Evaluate and summarize reference tests
-			 */
+			// Evaluate and summarize reference tests
 			$errors = '';
 			if ( 0 == $reference_tests ) {
 				$references['tested_reference'] = false;
@@ -752,6 +730,7 @@ class MLAReferences {
 	 */
 	private static function _build_mla_galleries( $option_name, &$galleries_array, $shortcode, $exclude_revisions ) {
 		global $wpdb, $post;
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $option_name, $shortcode, $exclude_revisions )", 0 );
 
 		if ( is_array( $galleries_array ) ) {
 			if ( ! empty( $galleries_array ) ) {
@@ -784,9 +763,7 @@ class MLAReferences {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
 		}
 		
-		/*
-		 * $galleries_array is null, so build the array
-		 */
+		// $galleries_array is null, so build the array
 		$galleries_array = array();
 
 		if ( $exclude_revisions ) {
@@ -818,31 +795,69 @@ class MLAReferences {
 		}
 
 		foreach ( $results as $result ) {
+			$result_id = $result->ID;
+			$galleries_array[ $result_id ]['parent_title'] = $result->post_title;
+			$galleries_array[ $result_id ]['parent_type'] = $result->post_type;
+			$galleries_array[ $result_id ]['parent_status'] = $result->post_status;
+			$galleries_array[ $result_id ]['results'] = array();
+			$galleries_array[ $result_id ]['galleries'] = array();
+			$instance = 0;
+
+			// Look for and process enclosing shortcode ayntax first
+			if ( strpos( $result->post_content, '[/mla_gallery]' ) ) {
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $option_name, $shortcode, $exclude_revisions ) result = " . var_export( $result, true ), 0 );
+				$count = preg_match_all( "/\\[mla_gallery([^\\]]*)\\](.*?)(\\[\\/mla_gallery\\])/s", $result->post_content, $matches, PREG_PATTERN_ORDER + PREG_OFFSET_CAPTURE );
+				if ( $count ) {
+					$cleanup = array();
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) matches = " . var_export( $matches, true ), 0 );
+					foreach ( $matches[0] as $index => $match ) {
+						$instance++;
+						$cleanup[ $match[1] ] = $match[0];
+						$galleries_array[ $result_id ]['galleries'][ $instance ]['query'] = MLAShortcode_Support::mla_validate_attributes( $matches[1][$index][0], $matches[2][$index][0] );
+						$galleries_array[ $result_id ]['galleries'][ $instance ]['results'] = array();
+						$post = $result; // set global variable for mla_gallery_shortcode
+						$attr = array_merge( $galleries_array[ $result_id ]['galleries'][ $instance ]['query'],
+								array(  'cache_results' => 'false', 'update_post_meta_cache' => 'false', 'update_post_term_cache' => 'false', 'where_used_query' => 'this-is-a-where-used-query' ) );
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) attr = " . var_export( $attr, true ), 0 );
+						$attachments = MLAShortcodes::mla_get_shortcode_attachments( $result_id, $attr );
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) attachments = " . var_export( $attachments, true ), 0 );
+
+						if ( is_string( $attachments ) ) {
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $index ) query = " . var_export( $galleries_array[ $result_id ]['galleries'][ $instance ]['query'] . ' cache_results=false update_post_meta_cache=false update_post_term_cache=false where_used_query=this-is-a-where-used-query', true ), 0 );
+							/* translators: 1: post_type, 2: post_title, 3: post ID, 4: query string, 5: error message */
+							trigger_error( htmlentities( sprintf( __( '(%1$s) %2$s (ID %3$d) query "%4$s" failed, returning "%5$s"', 'media-library-assistant' ), $result->post_type, $result->post_title, $result->ID, $galleries_array[ $result_id ]['galleries'][ $instance ]['query'], $attachments) ), E_USER_WARNING );
+						} elseif ( ! empty( $attachments ) ) {
+							foreach ( $attachments as $attachment ) {
+								$galleries_array[ $result_id ]['results'][ $attachment->ID ] = $attachment->ID;
+								$galleries_array[ $result_id ]['galleries'][ $instance ]['results'][] = $attachment->ID;
+							}
+						} // ! empty( $attachments )
+					} // foreach $match
+					krsort( $cleanup );
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) cleanup = " . var_export( $cleanup, true ), 0 );
+					foreach ( $cleanup as $offset => $content ) {
+						$result->post_content = substr_replace( $result->post_content, '', $offset, strlen( $content ) );
+					}
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) post_content = " . var_export( $result->post_content, true ), 0 );
+				} // $count
+			} // enclosing shortcode(s)
+
 			$count = preg_match_all( "/\\{$shortcode}([^\\]]*)\\]/", $result->post_content, $matches, PREG_PATTERN_ORDER );
 			if ( $count ) {
-				$result_id = $result->ID;
-				$galleries_array[ $result_id ]['parent_title'] = $result->post_title;
-				$galleries_array[ $result_id ]['parent_type'] = $result->post_type;
-				$galleries_array[ $result_id ]['parent_status'] = $result->post_status;
-				$galleries_array[ $result_id ]['results'] = array();
-				$galleries_array[ $result_id ]['galleries'] = array();
-				$instance = 0;
-
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id ) matches = " . var_export( $matches, true ), 0 );
 				foreach ( $matches[1] as $index => $match ) {
-					/*
-					 * Filter out shortcodes that are not an exact match
-					 */
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $index ) match = " . var_export( $match, true ), 0 );
+					// Filter out shortcodes that are not an exact match
 					if ( empty( $match ) || ( ' ' == substr( $match, 0, 1 ) ) ) {
 						$instance++;
-						/*
-						 * Remove trailing "/" from XHTML-style self-closing shortcodes
-						 */
+						// Remove trailing "/" from XHTML-style self-closing shortcodes
 						$galleries_array[ $result_id ]['galleries'][ $instance ]['query'] = trim( rtrim( $matches[1][$index], '/' ) );
 						$galleries_array[ $result_id ]['galleries'][ $instance ]['results'] = array();
 						$post = $result; // set global variable for mla_gallery_shortcode
 						$attachments = MLAShortcodes::mla_get_shortcode_attachments( $result_id, $galleries_array[ $result_id ]['galleries'][ $instance ]['query'] . ' cache_results=false update_post_meta_cache=false update_post_term_cache=false where_used_query=this-is-a-where-used-query' );
 
 						if ( is_string( $attachments ) ) {
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $index ) query = " . var_export( $galleries_array[ $result_id ]['galleries'][ $instance ]['query'] . ' cache_results=false update_post_meta_cache=false update_post_term_cache=false where_used_query=this-is-a-where-used-query', true ), 0 );
 							/* translators: 1: post_type, 2: post_title, 3: post ID, 4: query string, 5: error message */
 							trigger_error( htmlentities( sprintf( __( '(%1$s) %2$s (ID %3$d) query "%4$s" failed, returning "%5$s"', 'media-library-assistant' ), $result->post_type, $result->post_title, $result->ID, $galleries_array[ $result_id ]['galleries'][ $instance ]['query'], $attachments) ), E_USER_WARNING );
 						} elseif ( ! empty( $attachments ) ) {
@@ -854,15 +869,19 @@ class MLAReferences {
 					} // exact match
 				} // foreach $match
 			} // if $count
+			
+			// Back out results with no galleries found
+			if ( 0 === $instance ) {
+				unset( $galleries_array[ $result_id ] );
+			}
 		} // foreach $result
 
-	/*
-	 * Maybe cache the results
-	 */	
+	// Maybe cache the results
 	if ( 'cached' == $option_value ) {
 		set_transient( MLA_OPTION_PREFIX . 't_' . $option_name, $galleries_array, 900 ); // fifteen minutes
 	}
 
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries(  ) galleries_array = " . var_export( $galleries_array, true ), 0 );
 	return true;
 	}
 

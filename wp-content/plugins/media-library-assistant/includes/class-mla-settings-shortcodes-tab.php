@@ -707,7 +707,7 @@ class MLASettings_Shortcodes {
 			'_wp_http_referer' => wp_referer_field( false ),
 			'Add New Template' => __( 'Add New Template', 'media-library-assistant' ),
 			'Search Templates' => __( 'Search Templates', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
 			'results' => ! empty( $_REQUEST['s'] ) ? '<span class="alignright" style="margin-top: .5em; font-weight: bold">' . __( 'Search results for', 'media-library-assistant' ) . ':&nbsp;</span>' : '',
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),

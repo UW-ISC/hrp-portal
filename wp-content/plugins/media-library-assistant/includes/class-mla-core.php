@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.79';
+	const CURRENT_MLA_VERSION = '2.83';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -518,11 +518,8 @@ class MLACore {
 	 * @return	void
 	 */
 	public static function mla_plugins_loaded_action_wpml(){
-		/*
-		 * Defined in /sitepress-multilingual-cms/sitepress.class.php
-		 */
+		// Defined in /sitepress-multilingual-cms/sitepress.class.php
 		add_filter( 'wpml_unset_lang_admin_bar', 'MLACore::wpml_unset_lang_admin_bar', 10, 1 );
-//error_log( __LINE__ . " wpml_unset_lang_admin_bar added ", 0 );
 	} // mla_plugins_loaded_action_wpml
 
 	/**
@@ -535,7 +532,6 @@ class MLACore {
 	public static function wpml_unset_lang_admin_bar( $suppress_all_languages ) {
 		global $pagenow, $mode;
 
-//error_log( __LINE__ . " wpml_unset_lang_admin_bar( {$pagenow}, {$mode}, {$suppress_all_languages}  ) returning " . var_export( $pagenow === 'upload.php' && $mode === 'grid', true ), 0 );
 		return $pagenow === 'upload.php' && $mode === 'grid';
 	}
 
@@ -552,7 +548,12 @@ class MLACore {
 	 */
 	public static function mla_plugins_loaded_action(){
 		$text_domain = 'media-library-assistant';
-		$locale = apply_filters( 'mla_plugin_locale', get_locale(), $text_domain );
+		$locale = function_exists( 'get_user_locale' ) ? get_user_locale() : get_locale();
+		$locale = apply_filters( 'mla_plugin_locale', $locale, $text_domain );
+
+		if ( is_admin() && 'en_US' === $locale ) {
+			$result = unload_textdomain( $text_domain );
+		}
 
 		/*
 		 * To override the plugin's translation files for one, some or all strings,
@@ -1492,7 +1493,7 @@ class MLACore {
 					$hook_list .= "{$tag} => ";
 					if ( is_string( $reference['function'] ) ) {
 						$hook_list .= $reference['function'] . "()\n";
-					} else {
+					} elseif ( is_array( $reference['function'] ) ) {
 						if ( is_object( $reference['function'][0] ) ) {
 							$hook_list .= get_class( $reference['function'][0] ) . '->';
 						} else {
@@ -1500,6 +1501,8 @@ class MLACore {
 						}
 						
 						$hook_list .= $reference['function'][1] . "()\n";
+					} else {
+						$hook_list .= 'unknown reference type: ' . gettype( $reference['function'] ) . "\n";
 					}
 				} // foreach tag
 			} // foreach proprity
@@ -1776,6 +1779,8 @@ class MLACore {
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support.php' );
 
 		if ( function_exists( 'ACP' ) ) {
+			$legacy_version = version_compare( ACP()->get_version(), '5.0.0', '<' );
+
 			if ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) {
 				// Load the latest version, with bulk edit changes
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support.php' );
@@ -1793,7 +1798,11 @@ class MLACore {
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-40.php' );
 			}
 
-			AC()->register_list_screen( new ACP_Addon_MLA_ListScreen );
+			if ( $legacy_version ) {
+				AC()->register_list_screen( new ACP_Addon_MLA_ListScreen );
+			} else {
+				AC\ListScreenTypes::instance()->register_list_screen( new ACP_Addon_MLA_ListScreen );
+			}
 		} else {
 			AC()->register_list_screen( new AC_Addon_MLA_ListScreen );
 		}

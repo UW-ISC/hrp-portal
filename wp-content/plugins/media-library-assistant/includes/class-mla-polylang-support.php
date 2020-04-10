@@ -162,15 +162,26 @@ class MLA_Polylang {
 	private static function _get_translation( $post_id, $new_language ) {
 		global $polylang;
 
-		/*
-		 * Get the existing translations, if any
-		 */
+		// Get the existing translations, if any
 		if ( self::$polylang_1dot8_plus ) {
 			$lang = PLL()->model->post->get_language( $post_id );
 			$translations = PLL()->model->post->get_translations( $post_id );
 		} else {
 			$lang = $polylang->model->get_post_language( $post_id );
 			$translations = $polylang->model->get_translations( 'post', $post_id );
+		}
+
+		// Handle "no language" case
+		if ( empty( $lang ) ) {
+			if ( self::$polylang_1dot8_plus ) {
+				PLL()->model->post->set_language($post_id, pll_default_language() );
+				$lang = PLL()->model->post->get_language( $post_id );
+				$translations = PLL()->model->post->get_translations( $post_id );
+			} else {
+				$polylang->model->set_post_language($post_id, pll_default_language() );
+				$lang = $polylang->model->get_post_language( $post_id );
+				$translations = $polylang->model->get_translations( 'post', $post_id );
+			}
 		}
 
 		if ( ! $translations && $lang ) {
@@ -213,12 +224,12 @@ class MLA_Polylang {
 			self::$existing_terms = array( 'element_id' => 0 );
 			self::$relevant_terms = array();
 
-			$polylang->model->set_post_language($new_id, $new_language);
-
 			if ( self::$polylang_1dot8_plus ) {
+				PLL()->model->post->set_language($new_id, $new_language);
 				$lang = PLL()->model->post->get_language( $post_id );
 				$translations = PLL()->model->post->get_translations( $post_id );
 			} else {
+				$polylang->model->set_post_language($new_id, $new_language);
 				$lang = $polylang->model->get_post_language( $post_id );
 				$translations = $polylang->model->get_translations( 'post', $post_id );
 			}

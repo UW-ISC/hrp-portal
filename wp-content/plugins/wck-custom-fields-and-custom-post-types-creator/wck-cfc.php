@@ -184,7 +184,7 @@ function wck_cfc_create_box(){
         array( 'type' => 'text', 'title' => __( 'Default Longitude', 'wck' ), 'slug' => 'map-default-longitude', 'description' => __( 'The longitude at which the map should be displayed when no pins are attached.', 'wck' ), 'default' => 0 ),
         array( 'type' => 'text', 'title' => __( 'Default Zoom', 'wck' ), 'slug' => 'map-default-zoom', 'description' => __( 'Add a number from 0 to 19. The higher the number the higher the zoom.', 'wck' ), 'default' => 15 ),
         array( 'type' => 'text', 'title' => __( 'Map Height', 'wck' ), 'slug' => 'map-height', 'description' => __( 'The height of the map.', 'wck' ), 'default' => 350 ),
-		array( 'type' => 'select', 'title' => __( 'Date Format', 'wck' ), 'slug' => 'date-format', 'description' => __( 'The format of the datepicker date', 'wck' ), 'options' => array( '%Default - dd-mm-yy%dd-mm-yy', '%Datepicker default - mm/dd/yy%mm/dd/yy', '%ISO 8601 (extended) - yy-mm-dd%yy-mm-dd', '%ISO 8601 (basic) - yymmdd%yymmdd', '%Short - d M, y%d M, y', '%Medium - d MM, y%d MM, y', '%Full - DD, d MM, yy%DD, d MM, yy', '%With text - \'day\' d \'of\' MM \'in the year\' yy%\'day\' d \'of\' MM \'in the year\' yy' ), 'default' => 'dd-mm-yy' ),
+		array( 'type' => 'select', 'title' => __( 'Date Format', 'wck' ), 'slug' => 'date-format', 'description' => __( 'The format of the datepicker date', 'wck' ), 'options' => array( '%Default - dd-mm-yy%dd-mm-yy', '%Datepicker default - mm/dd/yy%mm/dd/yy', '%ISO 8601 (extended) - yy-mm-dd%yy-mm-dd', '%ISO 8601 (basic) - yymmdd%yymmdd', '%Short - d M, y%d M, y', '%Medium - d MM, y%d MM, y', '%Full - DD, d MM, yy%DD, d MM, yy', '%With text - \'day\' d \'of\' MM \'in the year\' yy%\'day\' d \'of\' MM \'in the year\' yy', '%Two digit year - dd-mm-y%dd-mm-y' ), 'default' => 'dd-mm-yy' ),
 	));
 
 
@@ -973,57 +973,42 @@ function wck_number_field_error( $bool, $value, $id, $field, $meta, $fields ) {
 		if( $field_slug == $field ) {
 			if( ! empty( $value ) && ! is_numeric( $value ) ) {
 
-				if ( version_compare( phpversion(), '5.4.0', '<' ) )
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$message = apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" ); return $message;' ), 10, 3 );
-				else {
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) {
-						return apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" );
-					}, 10, 3 );
-				}
+                add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) {
+                    return apply_filters( "wck_number_error_message", __( "Please enter numbers only for field ", "wck" ) . "$required_field \n" );
+                }, 10, 3 );
 
 				return true;
 			}
 
 			if( ! empty( $field_array['number-step-value'] ) && ! empty( $value ) && ( sprintf( round( $value / $field_array['number-step-value'] ) ) != sprintf( $value / $field_array['number-step-value'] ) ) ) {
 
-				if ( version_compare( phpversion(), '5.4.0', '<' ) )
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_step = '. $field_array['number-step-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" ); return $message;' ), 10, 3 );
-				else {
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
 						$number_step = $field_array['number-step-value'];
-
 						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be a multiplier of ", "wck" ) . "$number_step \n" );
 					}, 10, 3 );
-				}
 
 				return true;
 			}
 
 			if( ( ! empty( $field_array['min-number-value'] ) || (isset($field_array['min-number-value']) && $field_array['min-number-value'] == '0' )) && ( ! empty( $value ) || $value == '0' ) && $value < $field_array['min-number-value'] ) {
 
-				if ( version_compare( phpversion(), '5.4.0', '<' ) )
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_min = '. $field_array['min-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" ); return $message;' ), 10, 3 );
-				else {
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
 						$number_min = $field_array['min-number-value'];
 
 						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be greater than or equal to ", "wck" ) . "$number_min \n" );
 					}, 10, 3 );
-				}
+
 
 				return true;
 			}
 
 			if( ( ! empty( $field_array['max-number-value'] ) || (isset($field_array['max-number-value']) && $field_array['max-number-value'] == '0' )) && ( ! empty( $value ) || $value == '0' ) && $value > $field_array['max-number-value'] ) {
-				if ( version_compare( phpversion(), '5.4.0', '<' ) )
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", create_function( '$message, $value, $required_field', '$number_max = '. $field_array['max-number-value'] .'; $message = apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" ); return $message;' ), 10, 3 );
-				else {
-					add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
+				add_filter( "wck_required_message_{$meta}_{$field_slug}", function ( $message, $value, $required_field ) use ( $field_array ) {
 						$number_max = $field_array['max-number-value'];
 
 						return apply_filters( "wck_number_error_message", "$required_field" . __( " field value must be less than or equal to ", "wck" ) . "$number_max \n" );
 					}, 10, 3 );
-				}
+
 
 				return true;
 			}

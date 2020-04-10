@@ -110,9 +110,9 @@
 	[+results+]
 	<p class="search-box" style="margin-top: 1em">
 		<label class="screen-reader-text" for="mla-search-uploads-input">Search Upload MIME Types:</label>
-		<input type="search" id="mla-search-uploads-input" name="s" value="[+s+]" />
-		<input type="submit" name="" id="mla-search-uploads-submit" class="button" value="[+Search Uploads+]" />
-		<span class="description"><br />[+To search by+]</span>
+		<input style="float: left;" id="mla-search-uploads-input" name="s" type="search" value="[+s+]" />
+		<input style="float: right;" name="" id="mla-search-uploads-submit" class="button" type="submit" value="[+Search Uploads+]" />
+		<br /><span class="description" style="float: left;">[+To search by+]</span>
 	</p>
 </form>
 <br class="clear" />

@@ -183,7 +183,7 @@ class MLASettings_Documentation {
 		);
 
 		$page_values = array(
-			'results' => ! empty( $_REQUEST['s'] ) ? ' - ' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . $_REQUEST['s'] . '"' : '',
+			'results' => ! empty( $_REQUEST['s'] ) ? ' - ' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . esc_html( stripslashes( trim( $_REQUEST['s'] ) ) ) . '"' : '',
 			'In this tab' => __( 'In this tab you can browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. <strong>To activate, deactivate or delete</strong> the plugins you must go to the Plugins/Installed Plugins admin submenu.' ),
 			/* translators: 1: Documentation hyperlink */
 			'You can find' => sprintf( __( 'You can find more information about using the example plugins in the %1$s section of the Documentation or by clicking the <strong>"Help"</strong> tab in the upper-right corner of this screen.', 'media-library-assistant' ), '<a href="[+settingsURL+]?page=mla-settings-menu-documentation&amp;mla_tab=documentation#mla_example_plugins" title="' . __( 'Example plugin documentation', 'media-library-assistant' ) . '">' . __( 'The Example Plugins', 'media-library-assistant' ) . '</a>' ),
@@ -193,7 +193,7 @@ class MLASettings_Documentation {
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'Example Plugins' => __( 'Example Plugins', 'media-library-assistant' ),
 			'Search Example Plugins' => __( 'Search Example Plugins', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( $_REQUEST['s'] ) ) : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
 			'Search Plugins' => __( 'Search Plugins', 'media-library-assistant' ),
 			'Search help' => __( 'Searches Name, Description, File Name and Tags', 'media-library-assistant' ),
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
@@ -989,7 +989,12 @@ class MLA_Example_List_Table extends WP_List_Table {
 		$source_root = MLA_PLUGIN_PATH . 'examples/plugins/' . $source_dir;
 		$target_root = WP_PLUGIN_DIR . '/' . $source_dir;
 
-		$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin() );
+		if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
+			$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin_53() );
+		} else {
+			$upgrader = new WP_Upgrader( new MLA_Upgrader_Skin() );
+		}
+		
 		$upgrader->init();
 		$result = $upgrader->fs_connect( array( WP_PLUGIN_DIR, $target_root ) );
 		if ( is_wp_error($result) ) {
@@ -1614,50 +1619,104 @@ class MLA_Example_List_Table extends WP_List_Table {
 	}
 } // class MLA_Example_List_Table
 
-/**
- * Skin for the MLA_Example_List_Table Install and Update functions.
- *
- * Extends the core WP_Upgrader_Skin class.
- *
- * @package Media Library Assistant
- * @since 2.32
- */
-class MLA_Upgrader_Skin extends WP_Upgrader_Skin {
+if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
 	/**
-	 * Messages sent to MLA_Upgrader_Skin::feedback()
+	 * Skin for the MLA_Example_List_Table Install and Update functions.
 	 *
-	 * @since 2.32
+	 * Extends the core WP_Upgrader_Skin class for WP Version 5.3 and later.
 	 *
-	 * @var	array
+	 * @package Media Library Assistant
+	 * @since 2.81
 	 */
-	public $feedback = array();
-
-	/**
-	 * Receive feedback from the WP_Upgrader::install() process
-	 *
-	 * @since 2.32
-	 *
-	 * @param string $string
-	 */
-	public function feedback($string) {
-		if ( isset( $this->upgrader->strings[$string] ) )
-			$string = $this->upgrader->strings[$string];
-
-		if ( strpos($string, '%') !== false ) {
-			$args = func_get_args();
-			$args = array_splice($args, 1);
-			if ( $args ) {
-				$args = array_map( 'strip_tags', $args );
-				$args = array_map( 'esc_html', $args );
-				$string = vsprintf($string, $args);
+	class MLA_Upgrader_Skin_53 extends WP_Upgrader_Skin {
+		/**
+		 * Messages sent to MLA_Upgrader_Skin::feedback()
+		 *
+		 * @since 2.32
+		 *
+		 * @var	array
+		 */
+		public $feedback = array();
+	
+		/**
+		 * Receive feedback from the WP_Upgrader::install() process
+		 *
+		 * @since 2.32
+		 *
+		 * @param string $string
+		 * @param mixed  ...$args Optional text replacements.
+		 */
+		public function feedback( $string, ...$args ) {
+			if ( isset( $this->upgrader->strings[$string] ) ) {
+				$feedback = $this->upgrader->strings[$string];
+			} else {
+				$feedback = $string;
 			}
+	
+			if ( strpos( $feedback, '%' ) !== false ) {
+				if ( $args ) {
+					$args = array_map( 'strip_tags', $args );
+					$args = array_map( 'esc_html', $args );
+					$feedback = vsprintf( $feedback, $args );
+				}
+			}
+	
+			if ( empty( $feedback ) ) {
+				return;
+			}
+	
+			$this->feedback[] = $feedback;
 		}
-
-		if ( empty($string) ) {
-			return;
+	}
+} else {
+	/**
+	 * Skin for the MLA_Example_List_Table Install and Update functions.
+	 *
+	 * Extends the core WP_Upgrader_Skin class.
+	 *
+	 * @package Media Library Assistant
+	 * @since 2.32
+	 */
+	class MLA_Upgrader_Skin extends WP_Upgrader_Skin {
+		/**
+		 * Messages sent to MLA_Upgrader_Skin::feedback()
+		 *
+		 * @since 2.32
+		 *
+		 * @var	array
+		 */
+		public $feedback = array();
+	
+		/**
+		 * Receive feedback from the WP_Upgrader::install() process
+		 *
+		 * @since 2.32
+		 *
+		 * @param string $string
+		 */
+		public function feedback( $string ) {
+			if ( isset( $this->upgrader->strings[$string] ) ) {
+				$feedback = $this->upgrader->strings[$string];
+			} else {
+				$feedback = $string;
+			}
+	
+			if ( strpos( $feedback, '%' ) !== false ) {
+				$args = func_get_args();
+				$args = array_splice( $args, 1 );
+				if ( $args ) {
+					$args = array_map( 'strip_tags', $args );
+					$args = array_map( 'esc_html', $args );
+					$feedback = vsprintf( $feedback, $args );
+				}
+			}
+	
+			if ( empty( $feedback ) ) {
+				return;
+			}
+	
+			$this->feedback[] = $feedback;
 		}
-
-		$this->feedback[] = $string;
 	}
 }
 

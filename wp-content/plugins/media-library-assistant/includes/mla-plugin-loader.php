@@ -52,9 +52,7 @@ function mla_plugin_loader_reporting_action () {
 	echo '<p>' . __( 'You must resolve these conflicts before this plugin can safely load.', 'media-library-assistant' ) . '</p></div>'."\r\n";
 }
 
-/*
- * Basic library of run-time tests.
- */
+// Basic library of run-time tests.
 require_once( MLA_PLUGIN_PATH . 'tests/class-mla-tests.php' );
 
 $mla_plugin_loader_error_messages .= MLATest::min_php_version( '5.3' );
@@ -71,6 +69,9 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	add_action( 'plugins_loaded', 'MLACore::mla_plugins_loaded_action', 0x7FFFFFFF );
 	add_action( 'init', 'MLACore::initialize', 0x7FFFFFFF );
 
+	// WP/LR Sync plugin has its own protocol to process uploads
+	$is_wplr_sync = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' );
+
 	// Check for XMLPRC, WP REST API and front end requests
 	if( !( defined('WP_ADMIN') && WP_ADMIN ) ) {
 		$front_end_only = true;
@@ -83,6 +84,11 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		// WP REST API calls need everything loaded to process uploads
 		if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) {
 			$front_end_only = false; // TODO be more selective
+		}
+
+		// WP/LR Sync plugin has its own protocol to process uploads
+		if ( $is_wplr_sync ) {
+			$front_end_only = false;
 		}
 
 		// Front end posts/pages only need shortcode support; load the interface shims.
@@ -168,8 +174,13 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 
 	// Plugin settings management
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
-	add_action( 'init', 'MLAOptions::initialize', 0x7FFFFFFF );
-	 
+	if ( $is_wplr_sync ) {
+		// WP/LR Sync runs in the plugin's "init" action, so we must set our hooks before that
+		add_action( 'init', 'MLAOptions::initialize', 9 );
+	} else {
+		add_action( 'init', 'MLAOptions::initialize', 0x7FFFFFFF );
+	}
+
 	// Plugin settings management page
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings.php' );
 	add_action( 'init', 'MLASettings::initialize', 0x7FFFFFFF );

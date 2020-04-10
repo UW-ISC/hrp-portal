@@ -227,6 +227,27 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 	}
 
 	/**
+	 * @return ListTable
+	 */
+	protected function get_list_table() {
+		global $wp_list_table;
+
+		if ( ! class_exists( 'MLA_List_Table' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-list-table.php' );
+			MLA_List_Table::mla_admin_init_action();
+		}
+
+		if ( $wp_list_table instanceof MLA_List_Table ) {
+			return $wp_list_table;
+		}
+
+		$wp_list_table = new MLA_List_Table();
+		$wp_list_table->prepare_items();
+
+		return $wp_list_table;
+	}
+
+	/**
 	 * Retrieve the headers for the columns
 	 *
 	 * @param AC\Column[] $columns

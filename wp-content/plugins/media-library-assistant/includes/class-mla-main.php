@@ -1677,6 +1677,13 @@ class MLA {
 			unset( $_GET[ $argument ] );
 		}
 
+		// Avoid "headers already sent" error with JoomUnited's WP Media Folders
+		if (isset($_REQUEST['s']) && $_REQUEST['s'] === '') {
+			unset( $_REQUEST['s'] );
+			unset( $_POST['s'] );
+			unset( $_GET['s'] );
+		}
+
 		if ( !empty( $page_content['body'] ) ) {
 			if ( !empty( $page_content['message'] ) ) {
 				if ( false !== strpos( $page_content['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
@@ -1737,8 +1744,6 @@ class MLA {
 			}
 
 			// Forms are NOT created automatically, wrap the table in one to use features like bulk actions
-			// method chnged from post to get fo ACP Export compatibility 20180221
-//			echo "\n" . '<form action="' . admin_url( $form_url ) . '" method="post" id="mla-filter">' . "\n";
 			echo "\n" . '<form action="' . admin_url( $form_url ) . '" method="get" id="mla-filter">' . "\n";
 
 			// Include the Search Media box
