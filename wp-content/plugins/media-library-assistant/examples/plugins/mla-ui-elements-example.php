@@ -68,8 +68,12 @@
  * opened on 3/28/2019 by "fabrizioarnone".
  * https://wordpress.org/support/topic/search-solution/
  *
+ * Enhanced (bug fixes) for support topic "Drop down not sticking"
+ * opened on 12/10/2019 by "ageingdj".
+ * https://wordpress.org/support/topic/drop-down-not-sticking/
+ *
  * @package MLA UI Elements Example
- * @version 1.11
+ * @version 1.12
  */
 
 /*
@@ -77,7 +81,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes
 Author: David Lingren
-Version: 1.11
+Version: 1.12
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2019 David Lingren
@@ -183,7 +187,12 @@ class MLAUIElementsExample {
 		}
 
 		// Pass "slug" overides to mla_gallery_attributes; using the slug is a common practice
-		$mla_option_value = in_array( $shortcode_attributes['mla_option_value'], array( '{+slug+}', '[+slug+]' ) ) ? 'slug' : 'term_id';
+		if ( empty( $shortcode_attributes['mla_option_value'] ) ) {
+			$mla_option_value =  'term_id';
+		} else {
+			$mla_option_value = in_array( $shortcode_attributes['mla_option_value'], array( '{+slug+}', '[+slug+]' ) ) ? 'slug' : 'term_id';
+		}
+		
 		foreach( explode( ',', $shortcode_attributes['taxonomy'] ) as $taxonomy ) {
 			self::$mla_option_values[ $taxonomy ] = $mla_option_value;
 		}
@@ -241,7 +250,10 @@ class MLAUIElementsExample {
 		}
 
 		$terms = $_REQUEST['tax_input'][ $taxonomy ];
-
+		if ( is_string( $terms ) ) {
+			$terms = (array) trim( stripslashes( $terms ), ' \'"' );
+		}
+		
 		// Check for a dropdown control with "All Terms" selected
 		if ( empty( $shortcode_attributes['option_all_value'] ) ) {
 			$option_all = array_search( '0', $terms );

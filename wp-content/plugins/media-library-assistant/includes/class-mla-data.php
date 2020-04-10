@@ -81,11 +81,12 @@ class MLAData {
 	 *
 	 * @param	string	A formatting string containing [+placeholders+]
 	 * @param	array	An associative array containing keys and values e.g. array('key' => 'value')
+	 * @param	string	Option value
 	 *
 	 * @return	mixed	string or array, depending on placeholder values. Placeholders corresponding
 	 * to the keys of the markup_values will be replaced with their values.
 	 */
-	public static function mla_parse_array_template( $tpl, $markup_values ) {
+	public static function mla_parse_array_template( $tpl, $markup_values, $option = 'export' ) {
 		$result = array();	
 		$offset = 0;
 		while ( false !== $start = strpos( $tpl, '[+', $offset ) ) {
@@ -124,9 +125,7 @@ class MLAData {
 			$result[] = substr( $tpl, $offset );
 		}
 
-		/*
-		 * Build a final result, eliminating empty elements and expanding array elements
-		 */
+		// Build a final result, eliminating empty elements and expanding array elements
 		$final = array();
 		foreach ( $result as $element ) {
 			if ( is_scalar( $element ) ) {
@@ -138,13 +137,13 @@ class MLAData {
 				foreach ($element as $key => $value ) {
 					if ( is_scalar( $value ) ) {
 						$value = trim( $value );
+					} elseif ( is_array( $value ) && 'array' === $option ) {
+						// no change
 					} elseif ( ! empty( $value ) ) {
 						$value = var_export( $value, true );
 					}
 
-					/*
-					 * Preserve any keys with string values
-					 */
+					// Preserve any keys with string values
 					if ( ! empty( $value ) ) {
 						if ( is_integer( $key ) ) {
 							$final[] = $value;
@@ -178,9 +177,7 @@ class MLAData {
 	 * @return	strng	Placeholders corresponding to the keys of the markup_values will be replaced with their values.
 	 */
 	public static function mla_parse_template( $tpl, $markup_values ) {
-		/*
-		 * If templates are present we must step through $tpl and expand them
-		 */
+		// If templates are present we must step through $tpl and expand them
 		if ( isset( $markup_values['[+template_count+]'] ) ) {
 			$offset = 0;
 			while ( false !== $start = strpos( $tpl, '[+', $offset ) ) {
@@ -207,9 +204,7 @@ class MLAData {
 				} // simple substitution
 			} // while substitution parameter present
 		} else { // template(s) present
-			/*
-			 * No templates means a simple string substitution will suffice
-			 */
+			// No templates means a simple string substitution will suffice
 			foreach ( $markup_values as $key => $value ) {
 				if ( is_scalar( $value ) ) {
 					$tpl = str_replace( '[+' . $key . '+]', $value, $tpl );
@@ -435,9 +430,8 @@ class MLAData {
 	 */
 	private static function _evaluate_template_array_node( $node, $markup_values = array() ) {
 		$result = array();
-		/*
-		 * Check for an array of sub-nodes
-		 */
+
+		// Check for an array of sub-nodes
 		if ( ! isset( $node['type'] ) ) {
 			foreach ( $node as $value ) {
 				$node_result = self::_evaluate_template_array_node( $value, $markup_values );
@@ -447,7 +441,7 @@ class MLAData {
 		} else { // array of sub-nodes
 			switch ( $node['type'] ) {
 				case 'string':
-					$result[] = self::mla_parse_array_template( $node['value'], $markup_values );
+					$result[] = self::mla_parse_array_template( $node['value'], $markup_values, 'array' );
 					break;
 				case 'test':
 					$node_value = $node['value'];
@@ -600,9 +594,7 @@ class MLAData {
 			}
 		}
 
-		/*
-		 * Step 3: walk the element tree and process each node
-		 */
+		// Step 3: walk the element tree and process each node
 		if ( $return_arrays ) {
 			$results = self::_evaluate_template_array_node( $root_element, $markup_values );
 		} else {
@@ -780,13 +772,20 @@ class MLAData {
 	 *
 	 * @since 2.71
 	 *
+	 * @param	int		current attachment ID
 	 */
-	public static function mla_reset_regex_matches() {
-		MLAData::$regex_matches = array();
+	public static function mla_reset_regex_matches( $post_id ) {
+		static $current_id = 0;
+
+		// Do this once per post.
+		if ( $current_id != $post_id ) {
+			$current_id = $post_id;
+			MLAData::$regex_matches = array();
+		}
 	}
 
 	/**
-	 * Intercept thumbnail file deletion errors
+	 * Intercept regex pattern matching errors
 	 * 
 	 * @since 2.54
 	 *
@@ -1039,7 +1038,11 @@ class MLAData {
 						$pattern = trim( $args['args'][0] );
 
 						if ( 1 < count( $args['args'] ) ) {
-							$return_value = intval( $args['args'][1] );
+							$return_value = $args['args'][1];
+
+							if ( is_numeric( $return_value ) ) {
+								$return_value = intval( $return_value );
+							}
 						}
 					} else {
 						$pattern = trim( $args['args'] );
@@ -1099,7 +1102,7 @@ class MLAData {
 					}
 				}
 
-				if ( empty( $pattern ) || empty( $replacement ) ) {
+				if ( empty( $pattern ) || is_null( $replacement ) ) {
 					// No pattern or no replacement - return unaltered value
 					break;
 				}
@@ -1151,7 +1154,7 @@ class MLAData {
 	 * Analyze a template, expanding Field-level Markup Substitution Parameters
 	 *
 	 * Field-level parameters must have one of the following prefix values:
-	 * template, request, query, custom, terms, meta, iptc, exif, xmp, pdf.
+	 * template, meta, query, request, terms, custom, iptc, exif, xmp, id3, pdf, matches.
 	 * All but request and query require an attachment ID.
 	 *
 	 * @since 1.50
@@ -1173,7 +1176,7 @@ class MLAData {
 			$item_metadata = NULL;
 			$attachment_metadata = NULL;
 			$id3_metadata = NULL;
-			MLAData::mla_reset_regex_matches();
+			MLAData::mla_reset_regex_matches( $post_id );
 			$cached_post_id = $post_id;
 		}
 
@@ -1425,6 +1428,17 @@ class MLAData {
 					}
 
 					break;
+				case 'mso':
+					if ( is_null( $attachment_metadata ) ) {
+						if ( 0 < $post_id ) {
+							$attachment_metadata = self::mla_fetch_attachment_image_metadata( $post_id );
+						} else {
+							break;
+						}
+					}
+
+					$markup_values[ $key ] = self::mla_mso_metadata_value( $value['value'], $attachment_metadata['mla_mso_metadata'], $value['option'], $keep_existing );
+					break;
 				case 'matches':
 					$markup_values[ $key ] = isset( MLAData::$regex_matches[ $value['value'] ] ) ? MLAData::$regex_matches[ $value['value'] ] : '';
 					break;
@@ -1619,6 +1633,7 @@ class MLAData {
 	 * ['mla_search_fields'] => 'title', 'name', 'alt-text', 'excerpt', 'content', 'file' ,'terms'
 	 * Note: 'alt-text' and 'file' are not supported in [mla_gallery]
 	 * ['mla_search_connector'] => AND/OR
+	 * ['whole_word'] => each word must match as one "keyword", e.g. "man" won't match "woman"
 	 * ['sentence'] => entire string must match as one "keyword"
 	 * ['exact'] => entire string must match entire field value
 	 * ['debug'] => internal element, console/log/shortcode/none
@@ -2030,91 +2045,44 @@ class MLAData {
 	}
 
 	/**
-	 * Extract XMP meta data from a file
+	 * Extract XML meta data from a string; for XMP and MS Office files
 	 * 
-	 * @since 2.10
+	 * @since 2.82
 	 *
-	 * @param	string	full path and file name
-	 * @param	integer	offset within the file of the search start point
+	 * @param	string	XML structure
 	 *
 	 * @return	mixed	array of metadata values or NULL on failure
 	 */
-	public static function mla_parse_xmp_metadata( $file_name, $file_offset ) {
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$file_name}, {$file_offset} ) ", 0 );
-		$chunksize = 16384;			
-		$xmp_chunk = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$file_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
+	public static function mla_parse_xml_string( &$xml_string ) {
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_string = " . var_export( $xml_string, true ), 0 );
+//error_log( __LINE__ . "  MLAData::mla_parse_xml_string xml_string = \r\n" . MLAData::mla_hex_dump( $xml_string ), 0 );
 
-		/*
-		 * If necessary and possible, advance the $xmp_chunk through the file until it contains the start tag
-		 */
-		if ( false === ( $start_tag = strpos( $xmp_chunk, '<x:xmpmeta' ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
-			$new_offset = $file_offset + ( $chunksize - 16 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) ", 0 );
-			$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $chunksize );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
-			while ( false === ( $start_tag = strpos( $xmp_chunk, '<x:xmpmeta' ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
-				$new_offset = $new_offset + ( $chunksize - 16 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) ", 0 );
-				$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $chunksize );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
-			} // while not found
-		} else { // if not found
-			$new_offset = $file_offset;
-		}
-
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$start_tag} ) ", 0 );
-		if ( false === $start_tag ) {
-			return NULL;
-		}
-
-		/*
-		 * If necessary and possible, expand the $xmp_chunk until it contains the start tag
-		 */
-		if ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>', $start_tag ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
-			$new_offset = $new_offset + $start_tag;
-			$start_tag = 0;
-			$new_chunksize = $chunksize + $chunksize;
-			$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $new_chunksize );
-			while ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>' ) ) && ( $new_chunksize == strlen( $xmp_chunk ) ) ) {
-				$new_chunksize = $new_chunksize + $chunksize;
-				$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $new_chunksize );
-			} // while not found
-		} // if not found
-
-		if ( false === $end_tag ) {
-			return NULL;
-		}
-
-		$xmp_string = "<?xml version='1.0'?>\n" . substr($xmp_chunk, $start_tag, ( $end_tag + 12 ) - $start_tag );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_string = " . var_export( $xmp_string, true ), 0 );
-//error_log( __LINE__ . "  MLAData::mla_parse_xmp_metadata xmp_string = \r\n" . MLAData::mla_hex_dump( $xmp_string ), 0 );
-		// experimental damage repair for GodsHillPC 
-		$xmp_string = str_replace( "\000", '0', $xmp_string );
-		$xmp_values = array();
+		// damage repair for GodsHillPC 
+		$xml_string = str_replace( "\000", '0', $xml_string );
+		$xml_values = array();
 		$xml_parser = xml_parser_create('UTF-8');
 		if ( xml_parser_set_option( $xml_parser, XML_OPTION_SKIP_WHITE, 0 ) && xml_parser_set_option( $xml_parser, XML_OPTION_CASE_FOLDING, 0 ) ) {
-			if ( 0 == xml_parse_into_struct( $xml_parser, $xmp_string, $xmp_values ) ) {
-				MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xmp_metadata xml_parse_into_struct failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-				$xmp_values = array();
+			if ( 0 == xml_parse_into_struct( $xml_parser, $xml_string, $xml_values ) ) {
+				MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xml_string xml_parse_into_struct failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				$xml_values = array();
 			}
 		} else {
-			MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xmp_metadata set option failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			MLACore::mla_debug_add( __LINE__ . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_parse_xml_string set option failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 		}
 
 		xml_parser_free($xml_parser);
 
-		if ( empty( $xmp_values ) ) {
+		if ( empty( $xml_values ) ) {
 			return NULL;
 		}
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values = " . var_export( $xmp_values, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values = " . var_export( $xml_values, true ), 0 );
 
 		$levels = array();
 		$current_level = 0;
 		$results = array();
 		$xmlns = array();
-		foreach ( $xmp_values as $index => $value ) {
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index} ) value = " . var_export( $value, true ), 0 );
+		foreach ( $xml_values as $index => $value ) {
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) value = " . var_export( $value, true ), 0 );
 			$language = 'x-default';
 			$node_attributes = array();
 			if ( isset( $value['attributes'] ) ) {
@@ -2154,13 +2122,13 @@ class MLAData {
 			switch ( $value['type'] ) {
 				case 'open':
 					$levels[ ++$current_level ] = array( 'key' => $value['tag'], 'values' => $node_attributes );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$current_level}, {$index} ) case 'open': top_level = " . var_export( $levels[ $current_level ], true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$current_level}, {$index} ) case 'open': top_level = " . var_export( $levels[ $current_level ], true ), 0 );
 					break;
 				case 'close':
 					if ( 0 < --$current_level ) {
 						$top_level = array_pop( $levels );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$current_level}, {$index} ) case 'close': top_level = " . var_export( $top_level, true ), 0 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$current_level}, {$index} ) case 'close': levels( {$current_level} ) before = " . var_export( $levels, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$current_level}, {$index} ) case 'close': top_level = " . var_export( $top_level, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$current_level}, {$index} ) case 'close': levels( {$current_level} ) before = " . var_export( $levels, true ), 0 );
 						if ( 'rdf:li' == $top_level['key'] ) {
 							$levels[ $current_level ]['values'][] = $top_level['values'];
 						} else {
@@ -2171,14 +2139,14 @@ class MLAData {
 							}
 						}
 					}
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$current_level}, {$index} ) case 'close': levels( {$current_level} ) after = " . var_export( $levels, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$current_level}, {$index} ) case 'close': levels( {$current_level} ) after = " . var_export( $levels, true ), 0 );
 					break;
 				case 'complete':
 					if ( 'x-default' != $language ) {
 						break;
 					}
 
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index} ) case 'complete': node_attributes = " . var_export( $node_attributes, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': node_attributes = " . var_export( $node_attributes, true ), 0 );
 					if ( empty( $node_attributes ) ) {
 						if ( isset( $value['value'] ) ) {
 							$complete_value = self::_bin_to_utf8( $value['value'] );
@@ -2186,12 +2154,17 @@ class MLAData {
 							$complete_value = '';
 						}
 					} else {
-						$complete_value = $node_attributes;
+						// Check for MS Office handling of dcterms
+						if ( 0 === strpos( $value['tag'], 'dcterms:' ) && isset( $value['value'] ) ) {
+							$complete_value = self::_bin_to_utf8( $value['value'] );
+						} else {
+							$complete_value = $node_attributes;
+						}
 					}
 
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index} ) case 'complete': value = " . var_export( $value, true ), 0 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index} ) case 'complete': complete_value = " . var_export( $complete_value, true ), 0 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index} ) case 'complete': (array) complete_value = " . var_export( (array) $complete_value, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': value = " . var_export( $value, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': complete_value = " . var_export( $complete_value, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': (array) complete_value = " . var_export( (array) $complete_value, true ), 0 );
 					if ( 'rdf:li' == $value['tag'] ) {
 						$levels[ $current_level ]['values'][] = $complete_value;
 					} else {
@@ -2203,47 +2176,92 @@ class MLAData {
 						}
 					}
 
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index}, {$current_level} ) case 'complete': values = " . var_export( $levels[ $current_level ]['values'], true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index}, {$current_level} ) case 'complete': values = " . var_export( $levels[ $current_level ]['values'], true ), 0 );
 					break;
 				default:
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index}, {$current_level} ) ignoring type = " . var_export( $value['type'], true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index}, {$current_level} ) ignoring type = " . var_export( $value['type'], true ), 0 );
 			} // switch on type
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_values( {$index}, {$current_level} ) levels = " . var_export( $levels, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index}, {$current_level} ) levels = " . var_export( $levels, true ), 0 );
 		} // foreach value
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata levels = " . var_export( $levels, true ), 0 );
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmlns = " . var_export( $xmlns, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string levels = " . var_export( $levels, true ), 0 );
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xmlns = " . var_export( $xmlns, true ), 0 );
 
-		/*
-		 * Parse "namespace:name" names into arrays of simple names
-		 * NOTE: The string "XAP" or "xap" appears in some namespaces, keywords,
-		 * and related names in stored XMP data. It reflects an early internal
-		 * code name for XMP; the names have been preserved for compatibility purposes.
-		 */
+		// Parse "namespace:name" names into arrays of simple names
 		$namespace_arrays = array();
-		if ( isset( $levels[1] ) && isset( $levels[1]['values'] ) && isset( $levels[1]['values']['rdf:RDF'] ) && isset( $levels[1]['values']['rdf:RDF']['rdf:Description'] ) ) {
-			foreach ( $levels[1]['values']['rdf:RDF']['rdf:Description'] as $key => $value ) {
-				if ( is_string( $value ) ) {
-					$value = self::_parse_iso8601_date( self::mla_parse_pdf_date( $value ) );
-				} elseif ( is_array( $value ) ) {
-					$value = self::_parse_xmp_array( $value );
-				}
-
-				if ( false !== ($colon = strpos( $key, ':' ) ) ) {
-					$array_name = substr( $key, 0, $colon );
-					$array_index = substr( $key, $colon + 1 );
-					$namespace_arrays[ $array_name ][ $array_index ] = $value;
-
-					if ( ! isset( $results[ $array_index ] ) && in_array( $array_name, array( 'xmp', 'xmpMM', 'xmpRights', 'xap', 'xapMM', 'dc', 'pdf', 'pdfx', 'mwg-rs' ) ) ) {
-						if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
-							$results[ $array_index ] = $value[0];
-						} else {
-							$results[ $array_index ] = $value;
-						}
+		$metadata_source = '';
+		if ( isset( $levels[1] ) && isset( $levels[1]['values'] ) ) {
+			if ( isset( $levels[1]['values']['rdf:RDF'] ) && isset( $levels[1]['values']['rdf:RDF']['rdf:Description'] ) ) {
+				/*
+				 * XMP parsing
+				 * NOTE: The string "XAP" or "xap" appears in some namespaces, keywords,
+				 * and related names in stored XMP data. It reflects an early internal
+				 * code name for XMP; the names have been preserved for compatibility purposes.
+				 */
+				$metadata_source = 'xmp';
+				foreach ( $levels[1]['values']['rdf:RDF']['rdf:Description'] as $key => $value ) {
+					if ( is_string( $value ) ) {
+						$value = self::_parse_iso8601_date( self::mla_parse_pdf_date( $value ) );
+					} elseif ( is_array( $value ) ) {
+						$value = self::_parse_xmp_array( $value );
 					}
-				} // found namespace
-			} // foreach Description
-		}
-//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata results = " . var_export( $results, true ), 0 );
+
+					if ( false !== ($colon = strpos( $key, ':' ) ) ) {
+						$array_name = substr( $key, 0, $colon );
+						$array_index = substr( $key, $colon + 1 );
+						$namespace_arrays[ $array_name ][ $array_index ] = $value;
+
+						if ( ! isset( $results[ $array_index ] ) && in_array( $array_name, array( 'xmp', 'xmpMM', 'xmpRights', 'xap', 'xapMM', 'dc', 'pdf', 'pdfx', 'mwg-rs' ) ) ) {
+							if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
+								$results[ $array_index ] = $value[0];
+							} else {
+								$results[ $array_index ] = $value;
+							}
+						}
+					} // found namespace
+				} // foreach Description
+			} else {
+				/*
+				 * Microsoft Office parsing
+				 * Core properties are similar to XMP; Extended properties in "app.xml" do not have
+				 * a namespace prepended to them.
+				 */
+				$metadata_source = 'mso';
+				$is_app_xml = isset( $levels[1]['key'] ) && ( 'Properties' === $levels[1]['key'] );
+				foreach ( $levels[1]['values'] as $key => $value ) {
+					if ( is_string( $value ) ) {
+						$value = self::_parse_iso8601_date( self::mla_parse_pdf_date( $value ) );
+					} elseif ( is_array( $value ) ) {
+						$value = self::_parse_xmp_array( $value );
+					}
+
+					if ( false !== ($colon = strpos( $key, ':' ) ) ) {
+						$array_name = substr( $key, 0, $colon );
+						$array_index = substr( $key, $colon + 1 );
+						$namespace_arrays[ $array_name ][ $array_index ] = $value;
+
+						if ( ! isset( $results[ $array_index ] ) && in_array( $array_name, array( 'cp', 'dc', 'dcterms' ) ) ) {
+							if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
+								$results[ $array_index ] = $value[0];
+							} else {
+								$results[ $array_index ] = $value;
+							}
+						}
+					// found namespace
+					} elseif ( $is_app_xml ) {
+						$namespace_arrays[ 'app' ][ $key ] = $value;
+
+						if ( ! isset( $results[ $key ] ) ) {
+							if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
+								$results[ $key ] = $value[0];
+							} else {
+								$results[ $key ] = $value;
+							}
+						}
+					} // $is_app_xml
+				} // foreach Description				
+			}
+		} // isset( $levels[1]['values'] 
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string results = " . var_export( $results, true ), 0 );
 
 		/*
 		 * Try to populate all the PDF-standard keys (except Trapped)
@@ -2271,7 +2289,12 @@ class MLAData {
 		}
 
 		if ( ! isset( $results['Subject'] ) ) {
-			$replacement = self::_nonempty_value( $namespace_arrays, 'dc', 'description' );
+			if ( 'xmp' == $metadata_source ) {
+				$replacement = self::_nonempty_value( $namespace_arrays, 'dc', 'description' );
+			} else {
+				$replacement = self::_nonempty_value( $namespace_arrays, 'dc', 'subject' );
+			}
+
 			if ( ! empty( $replacement ) ) {
 				$results['Subject'] = $replacement;
 			}
@@ -2304,7 +2327,53 @@ class MLAData {
 			}
 		} // Keywords
 
-		if ( isset( $namespace_arrays['dc'] ) && isset( $namespace_arrays['dc']['subject'] ) ) {
+		// MS Office has both keywords and categories
+		if ( ( 'mso' == $metadata_source ) && isset( $namespace_arrays['cp'] ) && isset( $namespace_arrays['cp']['keywords'] ) ) {
+			$cp_keywords = $namespace_arrays['cp']['keywords'];
+			if ( false !== strpos( $cp_keywords, ';' ) ) {
+				$terms = array_map( 'trim', explode( ';', $cp_keywords ) );
+				foreach ( $terms as $term )
+					if ( ! empty( $term ) ) {
+						$keywords[ $term ] = $term;
+					}
+			} elseif ( false !== strpos( $cp_keywords, ',' ) ) {
+				$terms = array_map( 'trim', explode( ',', $cp_keywords ) );
+				foreach ( $terms as $term )
+					if ( ! empty( $term ) ) {
+						$keywords[ $term ] = $term;
+					}
+			} else {
+				$term = trim( $cp_keywords );
+				if ( ! empty( $term ) ) {
+					$keywords[ $term ] = $term;
+				}
+			}
+		} // MSO cp:keywords
+
+		if ( ( 'mso' == $metadata_source ) && isset( $namespace_arrays['cp'] ) && isset( $namespace_arrays['cp']['category'] ) ) {
+			$cp_keywords = $namespace_arrays['cp']['category'];
+			if ( false !== strpos( $cp_keywords, ';' ) ) {
+				$terms = array_map( 'trim', explode( ';', $cp_keywords ) );
+				foreach ( $terms as $term )
+					if ( ! empty( $term ) ) {
+						$keywords[ $term ] = $term;
+					}
+			} elseif ( false !== strpos( $cp_keywords, ',' ) ) {
+				$terms = array_map( 'trim', explode( ',', $cp_keywords ) );
+				foreach ( $terms as $term )
+					if ( ! empty( $term ) ) {
+						$keywords[ $term ] = $term;
+					}
+			} else {
+				$term = trim( $cp_keywords );
+				if ( ! empty( $term ) ) {
+					$keywords[ $term ] = $term;
+				}
+			}
+		} // MSO cp:category
+
+		// XMP puts keywords in the"dc:subject" field, unlike MSO
+		if ( ( 'xmp' == $metadata_source ) && isset( $namespace_arrays['dc'] ) && isset( $namespace_arrays['dc']['subject'] ) ) {
 			if ( is_array( $namespace_arrays['dc']['subject'] ) ) {
 				foreach ( $namespace_arrays['dc']['subject'] as $term ) {
 					$term = trim( $term, " \n\t\r\0\x0B," );
@@ -2318,7 +2387,7 @@ class MLAData {
 					$keywords[ $term ] = $term;
 				}
 			}
-		} // dc:subject
+		} // XMP dc:subject
 
 		if ( ! empty( $keywords ) ) {
 			if ( 1 == count( $keywords ) ) {
@@ -2339,11 +2408,16 @@ class MLAData {
 			if ( ! empty( $replacement ) ) {
 				$results['Creator'] = $replacement;
 			} else {
-				$replacement = self::_nonempty_value( $namespace_arrays, 'xap', 'CreatorTool' );
+				$replacement = self::_nonempty_value( $namespace_arrays, 'app', 'Application' );
 				if ( ! empty( $replacement ) ) {
 					$results['Creator'] = $replacement;
-				} elseif ( ! empty( $results['Producer'] ) ) {
-					$results['Creator'] = $results['Producer'];
+				} else {
+					$replacement = self::_nonempty_value( $namespace_arrays, 'xap', 'CreatorTool' );
+					if ( ! empty( $replacement ) ) {
+						$results['Creator'] = $replacement;
+					} elseif ( ! empty( $results['Producer'] ) ) {
+						$results['Creator'] = $results['Producer'];
+					}
 				}
 			}
 		}
@@ -2356,6 +2430,11 @@ class MLAData {
 				$replacement = self::_nonempty_value( $namespace_arrays, 'xap', 'CreateDate' );
 				if ( ! empty( $replacement ) ) {
 					$results['CreationDate'] = $replacement;
+				} else {
+					$replacement = self::_nonempty_value( $namespace_arrays, 'dcterms', 'created' );
+					if ( ! empty( $replacement ) ) {
+						$results['CreationDate'] = $replacement;
+					}
 				}
 			}
 		}
@@ -2368,6 +2447,11 @@ class MLAData {
 				$replacement = self::_nonempty_value( $namespace_arrays, 'xap', 'ModifyDate' );
 				if ( ! empty( $replacement ) ) {
 					$results['ModDate'] = $replacement;
+				} else {
+					$replacement = self::_nonempty_value( $namespace_arrays, 'dcterms', 'modified' );
+					if ( ! empty( $replacement ) ) {
+						$results['ModDate'] = $replacement;
+					}
 				}
 			}
 		}
@@ -2377,6 +2461,67 @@ class MLAData {
 		}
 
 		$results = array_merge( $results, $namespace_arrays );
+		return $results;
+	}
+
+	/**
+	 * Extract XMP meta data from a file
+	 * 
+	 * @since 2.10
+	 *
+	 * @param	string	full path and file name
+	 * @param	integer	offset within the file of the search start point
+	 *
+	 * @return	mixed	array of metadata values or NULL on failure
+	 */
+	public static function mla_parse_xmp_metadata( $file_name, $file_offset ) {
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$file_name}, {$file_offset} ) ", 0 );
+		$chunksize = 16384;			
+		$xmp_chunk = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$file_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
+
+		// If necessary and possible, advance the $xmp_chunk through the file until it contains the start tag
+		if ( false === ( $start_tag = strpos( $xmp_chunk, '<x:xmpmeta' ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
+			$new_offset = $file_offset + ( $chunksize - 16 );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) ", 0 );
+			$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $chunksize );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
+			while ( false === ( $start_tag = strpos( $xmp_chunk, '<x:xmpmeta' ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
+				$new_offset = $new_offset + ( $chunksize - 16 );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) ", 0 );
+				$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $chunksize );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$new_offset} ) chunk = \r\n" . MLAData::mla_hex_dump( $xmp_chunk ), 0 );
+			} // while not found
+		} else { // if not found
+			$new_offset = $file_offset;
+		}
+
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata( {$start_tag} ) ", 0 );
+		if ( false === $start_tag ) {
+			return NULL;
+		}
+
+		// If necessary and possible, expand the $xmp_chunk until it contains the start tag
+		if ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>', $start_tag ) ) && ( $chunksize == strlen( $xmp_chunk ) ) ) {
+			$new_offset = $new_offset + $start_tag;
+			$start_tag = 0;
+			$new_chunksize = $chunksize + $chunksize;
+			$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $new_chunksize );
+			while ( false === ( $end_tag = strpos( $xmp_chunk, '</x:xmpmeta>' ) ) && ( $new_chunksize == strlen( $xmp_chunk ) ) ) {
+				$new_chunksize = $new_chunksize + $chunksize;
+				$xmp_chunk = file_get_contents( $file_name, true, NULL, $new_offset, $new_chunksize );
+			} // while not found
+		} // if not found
+
+		if ( false === $end_tag ) {
+			return NULL;
+		}
+
+		$xmp_string = "<?xml version='1.0'?>\n" . substr($xmp_chunk, $start_tag, ( $end_tag + 12 ) - $start_tag );
+//error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata xmp_string = " . var_export( $xmp_string, true ), 0 );
+//error_log( __LINE__ . "  MLAData::mla_parse_xmp_metadata xmp_string = \r\n" . MLAData::mla_hex_dump( $xmp_string ), 0 );
+
+		$results = MLAData::mla_parse_xml_string( $xmp_string );
 //error_log( __LINE__ . " MLAData::mla_parse_xmp_metadata results = " . var_export( $results, true ), 0 );
 		return $results;
 	}
@@ -2899,6 +3044,41 @@ class MLAData {
 	}
 
 	/**
+	 * Parse one MS Office metadata field
+	 * 
+	 * Also handles the special pseudo-value 'ALL_MSO'.
+	 *
+	 * @since 2.82
+	 *
+	 * @param	string	field name
+	 * @param	array	MS Office metadata array
+	 * @param	string	data option; 'text'|'single'|'export'|'array'|'multi'
+	 * @param	boolean	Optional: for option 'multi', retain existing values
+	 *
+	 * @return	mixed	string/array representation of metadata value or an empty string
+	 */
+	public static function mla_mso_metadata_value( $mso_key, $mso_metadata, $option = 'text', $keep_existing = false ) {
+		if ( 'ALL_MSO' == $mso_key ) {
+			$clean_data = array();
+			if ( is_array( $mso_metadata ) ) {
+				foreach ( $mso_metadata as $key => $value ) {
+					if ( is_array( $value ) ) {
+						$clean_data[ $key ] = '(ARRAY)';
+					} elseif ( is_string( $value ) ) {
+						$clean_data[ $key ] = self::_bin_to_utf8( substr( $value, 0, 256 ) );
+					} else {
+						$clean_data[ $key ] = $value;
+					}
+				}
+			}
+
+			return var_export( $clean_data, true);
+		}
+
+		return self::mla_find_array_element($mso_key, $mso_metadata, $option, $keep_existing );
+	}
+
+	/**
 	 * Parse one XMP metadata field
 	 * 
 	 * Also handles the special pseudo-value 'ALL_XMP'.
@@ -3233,11 +3413,21 @@ class MLAData {
 			'mla_iptc_metadata' => array(),
 			'mla_exif_metadata' => array(),
 			'mla_xmp_metadata' => array(),
-			'mla_pdf_metadata' => array()
+			'mla_pdf_metadata' => array(),
+			'mla_mso_metadata' => array()
 			);
 
 		if ( 0 != $post_id ) {
-			$path = get_attached_file($post_id);
+			$path = false;
+
+			// WP 5.3+ produces "scaled" images without metadata; we need the original.
+			if ( function_exists( 'wp_get_original_image_path' ) ) {
+				$path = wp_get_original_image_path( $post_id );
+			}
+
+			if ( false === $path ) {
+				$path = get_attached_file($post_id);
+			}
 		}
 
 		if ( ! empty( $path ) ) {
@@ -3258,7 +3448,21 @@ class MLAData {
 				return $results;
 			}
 
+			$filetype = wp_check_filetype( $path );
+			if ( false !== strpos( $filetype['type'], 'vnd.openxmlformats-officedocument' ) ) {
+				if ( !class_exists( 'MLAOffice' ) ) {
+					require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-office.php' );
+				}
+
+				$mso_metadata = MLAOffice::mla_extract_office_metadata( $path );
+				$results['mla_mso_metadata'] = $mso_metadata['mso'];
+				MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+				return $results;
+			}
+
 			$size = getimagesize( $path, $info );
+			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize returns ' . var_export( $size, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize info keys =  ' . var_export( array_keys( $info ), true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
 			if ( is_callable( 'iptcparse' ) ) {
 				if ( ! empty( $info['APP13'] ) ) {
@@ -3788,7 +3992,7 @@ class MLAData {
 			}
 
 			// mla_fetch_attachment_metadata doesn't return "hidden" fields
-			if ( '_' === $meta_key{0} ) {
+			if ( '_' === $meta_key[0] ) {
 				$old_meta_value = get_post_meta( $post_id, $meta_key );
 
 				if ( !empty( $old_meta_value ) ) {

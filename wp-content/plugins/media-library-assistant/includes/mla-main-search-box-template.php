@@ -25,7 +25,7 @@ if ( !empty( $_REQUEST['s'] ) ) {
 }
 
 if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_SEARCH_MEDIA_FILTER_SHOW_CONTROLS ) ) {
-	$controls_style = 'style="display: inline;"';
+	$controls_style = 'style="float: left;"';
 } else {
 	$controls_style = 'style="display: none;"';
 }

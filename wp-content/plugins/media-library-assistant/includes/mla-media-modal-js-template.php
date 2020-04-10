@@ -13,6 +13,23 @@
  */
 global $post;
 
+if ( version_compare( get_bloginfo('version'), '5.2.9', '>' ) ) {
+	$margin = 'margin-top: 32px; ';
+
+	// Do not adjust margin-top for Media/Library Grid mode
+	if ( function_exists( 'get_current_screen' ) ) {
+		$screen = get_current_screen();
+	
+		if ( is_object( $screen ) ) {
+			if ( 'upload' == $screen->base ) {
+				$margin = '';
+			}
+		}
+	}
+} else {
+	$margin = '';
+}
+		
 $supported_taxonomies = MLACore::mla_supported_taxonomies('support');
 if ( empty( $supported_taxonomies ) ) {
 	$terms_style = 'style="display: none;"';
@@ -25,7 +42,7 @@ if ( empty( $supported_taxonomies ) ) {
 		<label class="screen-reader-text" for="mla-media-search-input"><?php _e( 'Search Media', 'media-library-assistant' ); ?>:</label>
 	    <input name="s[mla_search_value]" class="search" id="mla-media-search-input" style="width: 100%; max-width: 100%" type="search" value="{{ data.searchValue }}" placeholder="{{ data.searchBoxPlaceholder }}" />
 	</div>
-	<input name="mla_search_submit" class="button media-button mla-search-submit-button" id="mla-search-submit" type="submit" style="float: none" value="<?php _e( 'Search', 'media-library-assistant' ); ?>"  /><br>
+	<input name="mla_search_submit" class="button media-button mla-search-submit-button" id="mla-search-submit" type="submit" style="<?php echo $margin; ?>float: none" value="<?php _e( 'Search', 'media-library-assistant' ); ?>"  /><br>
     <ul class="mla-search-options" style="{{ data.searchBoxControlsStyle }}">
         <li>
             <input type="radio" name="s[mla_search_connector]" value="AND" <# if ( 'OR' !== data.searchConnector ) { #>checked="checked"<# } #> />
@@ -69,7 +86,7 @@ if ( empty( $supported_taxonomies ) ) {
     </ul>
 </script>
 <script type="text/html" id="tmpl-mla-terms-search-button">
-	<input type="button" name="mla_terms_search" id="mla-terms-search" class="button media-button button-large mla-terms-search-button" value="<?php _e( 'Terms Search', 'media-library-assistant' ); ?>"  />
+	<input name="mla_terms_search" id="mla-terms-search" class="button media-button button-large mla-terms-search-button" style="<?php echo $margin; ?>" type="button" value="<?php _e( 'Terms Search', 'media-library-assistant' ); ?>"  />
 </script>
 <script type="text/html" id="tmpl-mla-simulate-search-button">
 	<input style="display:none" type="button" name="mla_search_submit" id="mla-search-submit" class="button" value="<?php _e( 'Search', 'media-library-assistant' ); ?>"  />

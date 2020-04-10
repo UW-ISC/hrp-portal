@@ -151,7 +151,7 @@ function WCK_Map( $jq_obj ) {
                 infoWindow.open( _this.map, marker );
 
                 // Bind remove marker
-                jQuery('.wck-map-remove-marker').click( function(e) {
+                jQuery(document).on( 'click', '.wck-map-remove-marker', function(e) {
                     e.preventDefault();
                     _this.remove_marker( jQuery(this).data('marker') );
                 });

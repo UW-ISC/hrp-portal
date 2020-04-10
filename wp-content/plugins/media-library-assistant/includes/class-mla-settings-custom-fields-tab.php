@@ -750,7 +750,7 @@ class MLASettings_CustomFields {
 			'results' => ! empty( $_REQUEST['s'] ) ? '<span class="alignright" style="margin-top: .5em; font-weight: bold">' . __( 'Search results for', 'media-library-assistant' ) . ':&nbsp;</span>' : '',
 			// '_wp_http_referer' => wp_referer_field( false ),
 			'Search Rules Text' => __( 'Search Rules Text', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
 			'Search Rules' => __( 'Search Rules', 'media-library-assistant' ),
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),

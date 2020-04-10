@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2019-04-07 22:24-0700\n"
+"POT-Creation-Date: 2020-03-31 20:11-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@fairtradejudaica.org>\n"
@@ -976,6 +976,28 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
+msgctxt "error_log"
+msgid "mla_extract_office_metadata zip open failed."
+msgstr ""
+
+msgctxt "error_log"
+msgid ""
+"mla_extract_office_metadata mla_parse_xml_string( docProps/app.xml ) failed."
+msgstr ""
+
+msgctxt "error_log"
+msgid "mla_extract_office_metadata locateName( docProps/app.xml ) failed."
+msgstr ""
+
+msgctxt "error_log"
+msgid ""
+"mla_extract_office_metadata mla_parse_xml_string( docProps/core.xml ) failed."
+msgstr ""
+
+msgctxt "error_log"
+msgid "mla_extract_office_metadata locateName( docProps/core.xml ) failed."
+msgstr ""
+
 #, php-format
 msgctxt "error_log"
 msgid "%1$s: _build_pdf_indirect_objects bad value at $index = \"%2$d\"."
@@ -1203,11 +1225,11 @@ msgid "%1$s: mla_get_attachment_by_id(%2$d) wrong post_type \"%3$s\"."
 msgstr ""
 
 msgctxt "error_log"
-msgid "mla_parse_xmp_metadata xml_parse_into_struct failed."
+msgid "mla_parse_xml_string xml_parse_into_struct failed."
 msgstr ""
 
 msgctxt "error_log"
-msgid "mla_parse_xmp_metadata set option failed."
+msgid "mla_parse_xml_string set option failed."
 msgstr ""
 
 msgid "Yes"
@@ -1767,6 +1789,9 @@ msgid "Any term"
 msgstr ""
 
 msgid "Exact"
+msgstr ""
+
+msgid "Whole Word"
 msgstr ""
 
 msgctxt "post_mime_types"
@@ -3577,6 +3602,9 @@ msgid "not found"
 msgstr ""
 
 msgid "mla_debug REQUEST"
+msgstr ""
+
+msgid "mla_debug attributes_errors"
 msgstr ""
 
 msgid "mla_debug attributes"

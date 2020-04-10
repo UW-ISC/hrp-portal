@@ -7,8 +7,12 @@
  * A custom shortcode parameter, "my_custom_sql", activates the logic in this plugin.
  *
  * The "my_custom_sql" parameter accepts these query arguments:
- *  - ONE taxonomy=(/)slug(,(/)slug)... argument, to INCLUDE or /EXCLUDE terms
- *    i.e. put a slash in front of a term to EXCLUDE items assigned to it
+ *  - taxonomy=(/)slug(,(/)slug)... argument, to INCLUDE or /EXCLUDE terms
+ *    i.e. put a slash in front of a term to EXCLUDE items assigned to it.
+ *    You can enter more than one taxonomy; all terms from all taxonomies are combined
+ *    into one list. There is no tax_relation capability.
+ *  - tax_operator=AND - changes the INCLUDE portion of the query to require a match
+ *    on ALL of the assigned terms. The EXCLUDE portion is inchanged.
  *  - include_children=true
  *  - author=ID(,ID...)
  *  - order and/or orderby
@@ -53,8 +57,12 @@
  * opened on 10/19/2017 by "ratterizzo".
  * https://wordpress.org/support/topic/504-time-out-issue/
  *
+ * Enhanced for support topic "MLA Tax Query Example plugin syntax"
+ * opened on 12/15/2019 by "feelee".
+ * https://wordpress.org/support/topic/mla-tax-query-example-plugin-syntax/
+ *
  * @package MLA tax query Example
- * @version 1.09
+ * @version 1.10
  */
 
 /*
@@ -62,10 +70,10 @@ Plugin Name: MLA tax query Example
 Plugin URI: http://davidlingren.com/
 Description: Replaces the WP_Query tax_query with a more efficient, direct SQL query
 Author: David Lingren
-Version: 1.09
+Version: 1.10
 Author URI: http://davidlingren.com/
 
-Copyright 2013 - 2017 David Lingren
+Copyright 2013 - 2019 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -329,14 +337,15 @@ class MLATaxQueryExample {
 		$exclude_ttids = array();
 
 		// Find taxonomy argument, if present, and collect terms
-		$taxonomies = get_object_taxonomies( 'attachment', 'names' );
-		foreach( $taxonomies as $taxonomy ) {
+		$taxonomies = get_object_taxonomies( 'attachment', 'objects' );
+		foreach( $taxonomies as $taxonomy_object ) {
+			$taxonomy = $taxonomy_object->name;
 			if ( empty( $my_query_vars[ $taxonomy ] ) ) {
 				continue;
 			}
 
-			// Found the taxonomy; collect the terms
-			$include_children =  isset( $my_query_vars['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) );
+			// Found a taxonomy; collect the terms
+			$include_children =  isset( $my_query_vars['include_children'] ) && 'true' == strtolower( trim( $my_query_vars['include_children'] ) ) && $taxonomy_object->hierarchical;
 
 			// Allow for multiple term slug values, separate includes from excludes
 			$terms = array();
@@ -358,7 +367,7 @@ class MLATaxQueryExample {
 
 				if ( $include_children ) {
 					$args = array( 'child_of' => $term->term_id, 'hide_empty' => false );
-					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
+					$children = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 					foreach( $children as $child ) {
 						$include_ttids[] = $child->term_taxonomy_id;
 					}
@@ -371,14 +380,14 @@ class MLATaxQueryExample {
 
 				if ( $include_children ) {
 					$args = array( 'child_of' => $exclude->term_id, 'hide_empty' => false );
-					$children = MLAQuery::mla_wp_get_terms( 'attachment_category', $args );
+					$children = MLAQuery::mla_wp_get_terms( $taxonomy, $args );
 					foreach( $children as $child ) {
 						$exclude_ttids[] = $child->term_taxonomy_id;
 					}
 				} // include_children
 			} // $exclude
 
-			break;
+			//break; // Remove single-taxonomy restriction
 		} // foreach $taxonomy
 	} // _find_ttids
 
@@ -422,6 +431,13 @@ class MLATaxQueryExample {
 			$my_query_vars = shortcode_parse_atts( $my_query_vars );
 		}
 
+		// Extract and validate tax_operator
+		$tax_operator = isset( $my_query_vars['tax_operator'] ) ? strtoupper( $my_query_vars['tax_operator'] ) : 'IN';
+		if ( ! in_array( $tax_operator, array( 'AND', 'IN' ) ) ) {
+			$tax_operator = 'IN';
+		}
+//error_log( __LINE__ . " single_query( $tax_operator ) my_query_vars = " . var_export( $my_query_vars, true ), 0 );
+
 		self::_find_ttids( $my_query_vars, $ttids, $exclude_ttids );
 
 		// Build an array of SQL clauses
@@ -452,7 +468,14 @@ class MLATaxQueryExample {
 			// No includes, only excludes
 			$query[] = 'WHERE ( 1=1';
 		} else {
-			$query[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+			switch ( $tax_operator ) {
+				case 'AND':
+					$query[] = "WHERE ( ( SELECT COUNT(1) FROM {$wpdb->term_relationships} WHERE ( term_taxonomy_id IN (" . join( ',', $placeholders ) . ') ) AND object_id = tr.object_id ) = ' . count( $placeholders );
+					break;
+				case 'IN':
+				default:
+					$query[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+			} // tax_operator
 		}
 
 		if ( !empty( $exclude_ttids ) ) {
@@ -537,8 +560,10 @@ class MLATaxQueryExample {
 		if ( $is_pagination ) {
 			return $wpdb->get_var( $query );
 		}
+//error_log( __LINE__ . ' single_query query = ' . var_export( $query, true ), 0 );
 
 		$ids = $wpdb->get_results( $query );
+//error_log( __LINE__ . ' single_query ids = ' . var_export( $ids, true ), 0 );
 		if ( is_array( $ids ) ) {
 			$includes = array();
 			foreach ( $ids as $id ) {
@@ -718,6 +743,13 @@ class MLATaxQueryExample {
 			$my_query_vars = shortcode_parse_atts( $my_query_vars );
 		}
 
+		// Extract and validate tax_operator
+		$tax_operator = isset( $my_query_vars['tax_operator'] ) ? strtoupper( $my_query_vars['tax_operator'] ) : 'IN';
+		if ( ! in_array( $tax_operator, array( 'AND', 'IN' ) ) ) {
+			$tax_operator = 'IN';
+		}
+//error_log( __LINE__ . " double_query( $tax_operator ) my_query_vars = " . var_export( $my_query_vars, true ), 0 );
+
 		self::_find_ttids( $my_query_vars, $ttids, $exclude_ttids );
 
 		// Build an array of SQL clauses for the term_relationships query
@@ -744,7 +776,14 @@ class MLATaxQueryExample {
 			// No includes, only excludes
 			$subquery[] = 'WHERE ( 1=1';
 		} else {
-			$subquery[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+			switch ( $tax_operator ) {
+				case 'AND':
+					$subquery[] = "WHERE ( ( SELECT COUNT(1) FROM {$wpdb->term_relationships} WHERE ( term_taxonomy_id IN (" . join( ',', $placeholders ) . ') ) AND object_id = tr.object_id ) = ' . count( $placeholders );
+					break;
+				case 'IN':
+				default:
+					$subquery[] = 'WHERE ( tr.term_taxonomy_id IN (' . join( ',', $placeholders ) . ')';
+			} // tax_operator
 		}
 
 		if ( !empty( $exclude_ttids ) ) {
@@ -774,7 +813,10 @@ class MLATaxQueryExample {
 			$query[] = "SELECT ID FROM {$wpdb->posts} as p";
 		}
 
+//error_log( __LINE__ . " double_query( $tax_operator ) subquery = " . var_export( $subquery, true ), 0 );
+//error_log( __LINE__ . " double_query( $tax_operator ) subquery_parameters = " . var_export( $subquery_parameters, true ), 0 );
 		$query[] = 'WHERE ( ( p.ID IN ( ' . $wpdb->prepare( $subquery, $subquery_parameters ) . ' ) )';
+//error_log( __LINE__ . " double_query( $tax_operator ) query = " . var_export( $query, true ), 0 );
 
 		if ( ! empty( self::$shortcode_attributes['post_mime_type'] ) ) {
 			if ( 'all' != strtolower( self::$shortcode_attributes['post_mime_type'] ) ) {
@@ -882,8 +924,10 @@ class MLATaxQueryExample {
 		if ( $is_pagination ) {
 			return $wpdb->get_var( $query );
 		}
+//error_log( __LINE__ . ' double_query query = ' . var_export( $query, true ), 0 );
 
 		$ids = $wpdb->get_results( $query );
+//error_log( __LINE__ . ' double_query ids = ' . var_export( $ids, true ), 0 );
 		if ( is_array( $ids ) ) {
 			$includes = array();
 			foreach ( $ids as $id ) {

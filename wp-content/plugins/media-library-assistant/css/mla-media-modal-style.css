@@ -10,6 +10,7 @@
 
 .attachments-browser .media-toolbar {
 	overflow: visible;
+	height: auto;
 }
 
 .attachments-browser .media-toolbar .media-toolbar-secondary {
