@@ -111,7 +111,7 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 		$exclude_ids[] = $post_id; // Always exclude the current post.
 
 		// These posts are marked as "not related to anything".
-		$global_exclude_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_not_related'" );
+		$global_exclude_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_not_related' AND meta_value <> ''" );
 
 		$exclude_ids = array_merge( $exclude_ids, $global_exclude_ids );
 		$exclude_ids = array_keys( array_flip( $exclude_ids ) );
@@ -125,19 +125,19 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 		if ( ! empty( $words ) ) {
 			$count = count( $related_posts );
 			if ( $settings['number'] - $count > 0 ) {
-				$query = new WP_Query();
-				$args  = array(
+				$args = array(
 					's'              => $words,
 					'posts_per_page' => $settings['number'] - $count,
-					'operator'       => 'AND',
 					'post_type'      => $post_types,
 					'post__not_in'   => $exclude_ids,
 					'fields'         => 'ids',
+					'operator'       => 'OR',
 					'post_status'    => 'publish',
 				);
 				if ( $date_query ) {
 					$args['date_query'] = $date_query;
 				}
+				$related_posts_query = new WP_Query();
 				/**
 				 * Filters the related posts search arguments.
 				 *
@@ -147,33 +147,9 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 				 * @param array  The related posts arguments.
 				 * @param string Which query is run. Values include "and", "or", "random fill", random".
 				 */
-				$query->parse_query( apply_filters( 'relevanssi_related_args', $args, 'and' ) );
-				relevanssi_do_query( $query );
-				$related_posts = array_merge( $related_posts, $query->posts );
-			}
-
-			if ( count( $related_posts ) < $settings['number'] ) {
-				// Not enough results with AND search, try OR.
-				$already_in = array_merge( $exclude_ids, $query->posts );
-
-				$args = array(
-					's'              => $words,
-					'posts_per_page' => $settings['number'] - count( $related_posts ),
-					'post_type'      => $post_types,
-					'post__not_in'   => $already_in,
-					'fields'         => 'ids',
-					'operator'       => 'OR',
-					'post_status'    => 'publish',
-				);
-				if ( $date_query ) {
-					$args['date_query'] = $date_query;
-				}
-				$more_related_posts = new WP_Query();
-				/** Documented in premium/related.php */
-				$more_related_posts->parse_query( apply_filters( 'relevanssi_related_args', $args, 'or' ) );
-				relevanssi_do_query( $more_related_posts );
-				$related_posts = array_merge( $related_posts, $more_related_posts->posts );
-
+				$related_posts_query->parse_query( apply_filters( 'relevanssi_related_args', $args, 'or' ) );
+				relevanssi_do_query( $related_posts_query );
+				$related_posts = array_merge( $related_posts, $related_posts_query->posts );
 			}
 		}
 
@@ -328,6 +304,7 @@ function relevanssi_related_default_settings() {
 		'append'           => '',
 		'cache_for_admins' => 'off',
 		'months'           => 0,
+		'restrict'         => '',
 	);
 }
 
@@ -375,6 +352,7 @@ function relevanssi_related_generate_keywords( $post_id ) {
 
 	$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
 	$keywords = explode( ',', $settings['keyword'] );
+	$restrict = explode( ',', $settings['restrict'] );
 
 	$title_words = array();
 	$tag_words   = array();
@@ -414,6 +392,15 @@ function relevanssi_related_generate_keywords( $post_id ) {
 					'%' . $keyword . '%'
 				)
 			);
+			$new_tax_words = array_map(
+				function ( $a ) use ( $keyword ) {
+					return array(
+						'word'     => $a,
+						'taxonomy' => $keyword,
+					);
+				},
+				$new_tax_words
+			);
 			$tax_words     = array_merge( $tax_words, $new_tax_words );
 		}
 	}
@@ -423,6 +410,33 @@ function relevanssi_related_generate_keywords( $post_id ) {
 		$custom_words = explode( ',', $custom_words );
 	} else {
 		$custom_words = array();
+	}
+
+	$tax_words = array_map(
+		function ( $word ) use ( $restrict ) {
+			return in_array(
+				$word['taxonomy'],
+				$restrict,
+				true
+			) ? '{' . $word['taxonomy'] . ':' . $word['word'] . '}' : $word['word'];
+		},
+		$tax_words
+	);
+	if ( in_array( 'post_tag', $restrict, true ) ) {
+		$tag_words = array_map(
+			function ( $word ) {
+				return '{post_tag:' . $word . '}';
+			},
+			$tag_words
+		);
+	}
+	if ( in_array( 'category', $restrict, true ) ) {
+		$cat_words = array_map(
+			function ( $word ) {
+				return '{category:' . $word . '}';
+			},
+			$cat_words
+		);
 	}
 
 	$words = array_merge( $title_words, $tag_words, $cat_words, $tax_words, $custom_words );
@@ -435,8 +449,13 @@ function relevanssi_related_generate_keywords( $post_id ) {
 	 * the related posts.
 	 *
 	 * @param string A space-separated list of keywords for related posts.
+	 * @param int    The post ID.
 	 */
-	return apply_filters( 'relevanssi_related_words', implode( ' ', $words ) );
+	return apply_filters(
+		'relevanssi_related_words',
+		implode( ' ', $words ),
+		$post_id
+	);
 }
 
 /**
@@ -502,6 +521,8 @@ add_action( 'pre_relevanssi_related', 'relevanssi_pre_related_posts' );
 function relevanssi_pre_related_posts() {
 	// We don't want to log these queries.
 	add_filter( 'relevanssi_ok_to_log', '__return_false' );
+	add_filter( 'pre_option_relevanssi_searchblogs', '__return_false' );
+	add_filter( 'pre_option_relevanssi_searchblogs_all', 'relevanssi_return_off' );
 }
 
 add_action( 'post_relevanssi_related', 'relevanssi_post_related_posts' );
@@ -510,4 +531,6 @@ add_action( 'post_relevanssi_related', 'relevanssi_post_related_posts' );
  */
 function relevanssi_post_related_posts() {
 	remove_filter( 'relevanssi_ok_to_log', '__return_false' );
+	remove_filter( 'pre_option_relevanssi_searchblogs', '__return_false' );
+	remove_filter( 'pre_option_relevanssi_searchblogs_all', 'relevanssi_return_off' );
 }

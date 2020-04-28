@@ -30,12 +30,14 @@ function relevanssi_related_tab() {
 	$number           = $settings['number'];
 	$months           = $settings['months'];
 	$keyword          = $settings['keyword'];
+	$restrict         = $settings['restrict'];
 	$nothing          = $settings['nothing'];
 	$notenough        = $settings['notenough'];
 	$post_types       = $settings['post_types'];
 	$cache_for_admins = $settings['cache_for_admins'];
 
 	$keyword_sources = explode( ',', $keyword );
+	$restrict_taxos  = explode( ',', $restrict );
 
 	$nothing_selected    = '';
 	$random_selected     = '';
@@ -60,7 +62,7 @@ function relevanssi_related_tab() {
 	if ( 'random' === $notenough ) {
 		$randomfillup_selected = 'selected="selected"';
 	}
-	if ( 'random_Cat' === $notenough ) {
+	if ( 'random_cat' === $notenough ) {
 		$randomcatfillup_selected = 'selected="selected"';
 	}
 
@@ -107,26 +109,23 @@ function relevanssi_related_tab() {
 
 <h3><?php esc_html_e( 'Displaying the related posts', 'relevanssi' ); ?></h3>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Enable related posts', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Enable related posts', 'relevanssi' ); ?></legend>
 			<label>
 				<input type='checkbox' name='relevanssi_related_enabled' id='relevanssi_related_enabled' <?php echo esc_html( $enabled ); ?> />
 				<?php esc_html_e( 'If this is unchecked, related posts will be completely disabled.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		</td>
 	</tr>
 	<tr id="tr_relevanssi_related_append">
 		<th scope="row"><?php esc_html_e( 'Automatically add to these post types', 'relevanssi' ); ?></th>
 		<td>
 			<fieldset>
-				<legend><?php esc_html_e( 'Automatically add to these post types', 'relevanssi' ); ?></legend>
+				<legend class="screen-reader-text"><?php esc_html_e( 'Automatically add to these post types', 'relevanssi' ); ?></legend>
 			<?php
 			$args       = array(
 				'public' => true,
@@ -152,6 +151,7 @@ function relevanssi_related_tab() {
 			</fieldset>
 			<?php // Translators: %1$s is the_content, %2$s is relevanssi_related_priority. ?>
 			<p class="description"><?php printf( esc_html__( 'The related posts will be automatically displayed for these post types. The element is added using %1$s filter hook with priority 99 (you can adjust that with the %2$s filter hook).', 'relevanssi' ), '<code>the_content</code>', '<code>relevanssi_related_priority</code>' ); ?></p>
+			<?php // Translators: %1$s is the template function name, %2$s is the shortcode name. ?>
 			<p class="description"><?php printf( esc_html__( "If you don't choose to display the related posts automatically, you need to add them manually to your template. You can use the template function %1\$s or the shortcode %2\$s to display the related posts.", 'relevanssi' ), '<code>relevanssi_related_posts( $post_id )</code>', '<code>[relevanssi_related_posts]</code>' ); ?></p>
 		</td>
 	</tr>
@@ -159,12 +159,14 @@ function relevanssi_related_tab() {
 
 <h3><?php esc_html_e( 'Choosing the related posts', 'relevanssi' ); ?></h3>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 	<tr id="tr_relevanssi_related_keyword">
 		<th scope="row"><?php esc_html_e( 'Keyword sources', 'relevanssi' ); ?></th>
 		<td>
 			<fieldset>
-				<legend><?php esc_html_e( 'Keyword sources', 'relevanssi' ); ?></legend>
+				<legend class="screen-reader-text"><?php esc_html_e( 'Keyword sources', 'relevanssi' ); ?></legend>
+				<table>
+					<tbody>
 	<?php
 	$title_object               = new stdClass();
 	$title_object->name         = 'title';
@@ -191,19 +193,37 @@ function relevanssi_related_tab() {
 		if ( in_array( $taxonomy->name, $keyword_sources, true ) ) {
 			$checked = 'checked="checked"';
 		}
+		$restrict_checked = '';
+		if ( in_array( $taxonomy->name, $restrict_taxos, true ) ) {
+			$restrict_checked = 'checked="checked"';
+		}
 		printf(
-			'<p><label><input type="checkbox" name="relevanssi_related_keyword[]" %1$s value="%2$s" %4$s/> %3$s</label></p>',
+			'<tr><td style="padding-top: 5px; padding-bottom: 5px"><label><input type="checkbox" name="relevanssi_related_keyword[]" %1$s value="%2$s" %4$s/> %3$s</label><td style="padding-top: 5px; padding-bottom: 5px">',
 			$checked, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			esc_attr( $taxonomy->name ),
 			esc_html( $taxonomy->labels->name ),
 			$disabled // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		);
+		if ( 'title' !== $taxonomy->name ) {
+			printf(
+				'<label><input type="checkbox" name="relevanssi_related_restrict[]" %1$s value="%2$s" %3$s/> %4$s %5$s</label>',
+				$restrict_checked, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_attr( $taxonomy->name ),
+				$disabled, // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				esc_html__( 'Restrict to taxonomy ', 'relevanssi' ),
+				esc_html( $taxonomy->labels->name )
+			);
+		}
+		echo '</td></tr>';
 	}
 
 	$not_indexed = implode( ', ', $not_indexed );
 	?>
+		</tbody>
+	</table>
 	</fieldset>
 	<p class="description"><?php esc_html_e( "The sources Relevanssi uses for related post keywords. Keywords from these sources are then used to search the Relevanssi index to find related posts. Make sure you choose something, otherwise you won't see results or will see random results. In addition of these sources, you can also define your own keywords for each post from the post edit screen.", 'relevanssi' ); ?></p>
+	<p class="description"><?php esc_html_e( 'If you choose to restrict to the taxonomy, those keywords will only match in the same category. For example restricted category search terms will only match to category, not to post content. This may lead to better precision, depending on how the taxonomy terms are used.', 'relevanssi' ); ?></p>
 	<?php
 	if ( ! empty( $not_indexed ) ) {
 		?>
@@ -248,6 +268,7 @@ function relevanssi_related_tab() {
 						<?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 						/>
 							<?php esc_html_e( 'Matching post type', 'relevanssi' ); ?>
+							<span class="screen-reader-text"><?php esc_html_e( 'Uncheck this option to choose other post types.', 'relevanssi' ); ?></span>
 				</label>
 			</p>
 			<?php
@@ -310,21 +331,23 @@ function relevanssi_related_tab() {
 
 <p><?php esc_html_e( 'When you add the related posts to your site, Relevanssi will use a template to print out the results. These settings control how that template displays the posts. If you need to modify the related posts in a way these settings do not allow, you can always create your own template.', 'relevanssi' ); ?></p>
 
-<p><?php printf( esc_html__( "To create your own template, it's best if you begin with the default Relevanssi template, which can be found in the file %1\$s. Copy the template in the %2\$s folder in your theme and make the necessary changes. Relevanssi will then use your template file to display the related posts.", 'relevanssi' ), '<code>' . esc_html( $relevanssi_variables['plugin_dir'] ) . 'premium/templates/relevanssi-related.php</code>', '<code>' . esc_html( get_stylesheet_directory() ) . '/templates/</code>' ); ?></p>
+<p>
+	<?php
+	// Translators: %1$s is the default template filename, %2$s is the theme template directory.
+	printf( esc_html__( "To create your own template, it's best if you begin with the default Relevanssi template, which can be found in the file %1\$s. Copy the template in the %2\$s folder in your theme and make the necessary changes. Relevanssi will then use your template file to display the related posts.", 'relevanssi' ), '<code>' . esc_html( $relevanssi_variables['plugin_dir'] ) . 'premium/templates/relevanssi-related.php</code>', '<code>' . esc_html( get_stylesheet_directory() ) . '/templates/</code>' );
+	?>
+</p>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Display titles', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Display titles for related posts', 'relevanssi' ); ?></legend>
 			<label>
 				<input type='checkbox' name='relevanssi_related_titles' id='relevanssi_related_titles' <?php echo esc_html( $titles ); ?> <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<?php esc_html_e( 'Display titles for related posts.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		</td>
 	</tr>
 	<tr>
@@ -332,13 +355,10 @@ function relevanssi_related_tab() {
 			<?php esc_html_e( 'Display thumbnails', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Display thumbnails for related posts', 'relevanssi' ); ?></legend>
 			<label>
 				<input type='checkbox' name='relevanssi_related_thumbnails' id='relevanssi_related_thumbnails' <?php echo esc_html( $thumbnails ); ?> <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<?php esc_html_e( 'Display thumbnails for related posts.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		<p class="description"><?php esc_html_e( 'If enabled, this will show the featured image for the post if the post has one.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
@@ -367,20 +387,21 @@ function relevanssi_related_tab() {
 			<?php esc_html_e( 'Display excerpts', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Display excerpts for related posts', 'relevanssi' ); ?></legend>
 			<label >
 				<input type='checkbox' name='relevanssi_related_excerpts' id='relevanssi_related_excerpts' <?php echo esc_html( $excerpts ); ?> <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<?php esc_html_e( 'Display excerpts for related posts.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		<?php // Translators: name of the filter hook. ?>
 		<p class="description"><?php printf( esc_html__( 'This uses the manually created post excerpt if one exists, otherwise the beginning of the post is used. Default length is 50 characters, use the %s filter hook to adjust that.', 'relevanssi' ), '<code>relevanssi_related_excerpt_length</code>' ); ?></p>
 		</td>
 	</tr>
 
 	<tr>
-		<th scope="row"><label for="relevanssi_related_width"><?php esc_html_e( 'Minimum width', 'relevanssi' ); ?></label></th>
+		<th scope="row">
+			<label for="relevanssi_related_width"><?php esc_html_e( 'Minimum width', 'relevanssi' ); ?>
+				<span class="screen-reader-text"><?php esc_html_e( 'in pixels', 'relevanssi' ); ?></span>
+			</label>
+		</th>
 		<td>
 			<input type='text' name='relevanssi_related_width' id='relevanssi_related_width' size='4' value='<?php echo esc_attr( $width ); ?>' <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/> px
 			<p class="description"><?php esc_html_e( 'The minimum width of the related post element.', 'relevanssi' ); ?></p>
@@ -392,19 +413,16 @@ function relevanssi_related_tab() {
 
 <p><?php esc_html_e( 'The related posts are cached using WordPress transients. The related posts for each post are stored in a transient that is stored for two weeks. The cache for each post is flushed whenever the post is saved. When a post is made non-public (returned to draft, trashed), Relevanssi automatically flushes all related post caches where that post appears.', 'relevanssi' ); ?></p>
 
-<table class="form-table">
+<table class="form-table" role="presentation">
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Use cache for admins', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Use cache for admins', 'relevanssi' ); ?></legend>
 			<label >
 				<input type='checkbox' name='relevanssi_related_cache_for_admins' id='relevanssi_related_cache_for_admins' <?php echo esc_html( $cache_for_admins ); ?> <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<?php esc_html_e( 'Use the cache for admin users.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		<p class="description"><?php esc_html_e( 'Disable this option when adjusting the settings to see changes on the site.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
@@ -414,13 +432,10 @@ function relevanssi_related_tab() {
 			<?php esc_html_e( 'Flush cache', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Flush cache', 'relevanssi' ); ?></legend>
 			<label >
 				<input type='checkbox' name='relevanssi_flush_related_cache' id='relevanssi_flush_related_cache' <?php echo $disabled; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>/>
 				<?php esc_html_e( 'Flush the caches.', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		<p class="description"><?php esc_html_e( 'Check this box to flush all related posts caches.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>

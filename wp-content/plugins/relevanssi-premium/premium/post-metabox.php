@@ -13,7 +13,8 @@
 /**
  * Adds the Relevanssi metaboxes for post edit pages.
  *
- * Adds the Relevanssi Post Controls meta box on the post edit pages. Will skip ACF pages.
+ * Adds the Relevanssi Post Controls meta box on the post edit pages on post
+ * types that are indexed by Relevanssi.
  */
 function relevanssi_add_metaboxes() {
 	global $post;
@@ -31,7 +32,7 @@ function relevanssi_add_metaboxes() {
 		array( $post->post_type, 'edit-category' ),
 		'side',
 		'default',
-		array( '__block_editor_compatible_meta_box' => true )
+		array( '__back_compat_meta_box' => true )
 	);
 	add_thickbox(); // Make sure Thickbox is enabled.
 }
@@ -134,6 +135,7 @@ function relevanssi_post_metabox() {
 
 	<p><strong><?php esc_html_e( 'Pin this post', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be moved on top of the search results.', 'relevanssi' ); ?></p>
+	<label for="relevanssi_pin" class="screen-reader-text"><?php esc_html_e( 'Pinned keywords for this post', 'relevanssi' ); ?></label>
 	<textarea id="relevanssi_pin" name="relevanssi_pin" cols="30" rows="2"><?php echo esc_html( $pin ); ?></textarea/>
 
 	<?php
@@ -151,6 +153,7 @@ function relevanssi_post_metabox() {
 
 	<p><strong><?php esc_html_e( 'Exclude this post', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be removed from the search results.', 'relevanssi' ); ?></p>
+	<label for="relevanssi_unpin" class="screen-reader-text"><?php esc_html_e( 'Excluded keywords for this post', 'relevanssi' ); ?></label>
 	<textarea id="relevanssi_unpin" name="relevanssi_unpin" cols="30" rows="2"><?php echo esc_html( $unpin ); ?></textarea>
 
 	<p><input type="checkbox" id="relevanssi_hide_post" name="relevanssi_hide_post" <?php echo esc_attr( $hide_post ); ?> />
@@ -167,6 +170,13 @@ function relevanssi_post_metabox() {
 
 	<div id="relevanssi_sees_container" style="display: none">
 	<?php
+	$reason = get_post_meta( $post->ID, '_relevanssi_noindex_reason', true );
+	if ( ! empty( $reason ) ) {
+		?>
+		<h3><?php esc_html_e( 'Reason this post is not indexed', 'relevanssi' ); ?>:</h3>
+		<p><?php echo esc_html( $reason ); ?></p>
+		<?php
+	}
 	if ( ! empty( $title_terms ) ) {
 		?>
 		<h3><?php esc_html_e( 'Post title', 'relevanssi' ); ?>:</h3>
@@ -239,59 +249,74 @@ function relevanssi_post_metabox() {
 }
 
 /**
- * Removes duplicated postmeta fields from posts.
+ * Saves the Relevanssi Gutenberg sidebar meta data.
  *
- * This is necessary because Gutenberg saves each post twice and thus triggers
- * postmeta creation twice (which may or may not be a bug), and that can sometimes
- * lead to duplicated postmeta fields. This function comes after the postmeta
- * field creation and removes duplicates.
+ * When a post is saved in Gutenberg, this function saves the Relevanssi
+ * sidebar meta data.
  *
- * @param int $post_id The post ID.
+ * @param object $post The post object.
  */
-function relevanssi_remove_duplicate_postmeta( $post_id ) {
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-		return;
-	}
-
-	$pins        = get_post_meta( $post_id, '_relevanssi_pin', false );
-	$unique_pins = array();
-	foreach ( $pins as $pin ) {
-		$unique_pins[ $pin ] = true;
-	}
-	delete_post_meta( $post_id, '_relevanssi_pin' );
-	foreach ( array_keys( $unique_pins ) as $pin ) {
-		add_post_meta( $post_id, '_relevanssi_pin', $pin );
-	}
-
-	$unpins        = get_post_meta( $post_id, '_relevanssi_unpin', false );
-	$unique_unpins = array();
-	foreach ( $unpins as $pin ) {
-		$unique_unpins[ $pin ] = true;
-	}
-	delete_post_meta( $post_id, '_relevanssi_unpin' );
-	foreach ( array_keys( $unique_unpins ) as $pin ) {
-		add_post_meta( $post_id, '_relevanssi_unpin', $pin );
-	}
-}
-
-/**
- * Saves Relevanssi metabox data.
- *
- * When a post is saved, this function saves the Relevanssi Post Controls metabox data.
- *
- * @param int $post_id The post ID that is being saved.
- */
-function relevanssi_save_postdata( $post_id ) {
-	global $relevanssi_variables;
+function relevanssi_save_gutenberg_postdata( $post ) {
 	// Verify if this is an auto save routine.
 	// If it is, our form has not been submitted, so we dont want to do anything.
 	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
 	}
 
+	// Check nonce here?
+
+	$pin = get_post_meta( $post->ID, '_relevanssi_pin_keywords', true );
+	if ( $pin ) {
+		delete_post_meta( $post->ID, '_relevanssi_pin' );
+		$pins = explode( ',', sanitize_text_field( wp_unslash( $pin ) ) );
+		foreach ( $pins as $pin ) {
+			$pin = trim( $pin );
+			if ( ! empty( $pin ) ) {
+				add_post_meta( $post->ID, '_relevanssi_pin', $pin );
+			}
+		}
+	} else {
+		delete_post_meta( $post->ID, '_relevanssi_pin' );
+	}
+
+	$pin = get_post_meta( $post->ID, '_relevanssi_unpin_keywords', false );
+	if ( $pin ) {
+		delete_post_meta( $post->ID, '_relevanssi_unpin' );
+		$pins = explode( ',', sanitize_text_field( wp_unslash( $pin ) ) );
+		foreach ( $pins as $pin ) {
+			$pin = trim( $pin );
+			if ( ! empty( $pin ) ) {
+				add_post_meta( $post->ID, '_relevanssi_unpin', $pin );
+			}
+		}
+	} else {
+		delete_post_meta( $post->ID, '_relevanssi_unpin' );
+	}
+}
+
+/**
+ * Saves Relevanssi metabox data.
+ *
+ * When a post is saved in the Classic Editor, this function saves the
+ * Relevanssi Post Controls metabox data.
+ *
+ * @param int $post_id The post ID that is being saved.
+ */
+function relevanssi_save_postdata( $post_id ) {
+	global $relevanssi_variables;
+	// Verify if this is an auto save routine. If it is, our form has not been
+	// submitted, so we dont want to do anything.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
 	// Verify the nonce.
 	if ( isset( $_POST['relevanssi_hidepost'] ) ) { // WPCS: input var okey.
-		if ( ! wp_verify_nonce( sanitize_key( $_POST['relevanssi_hidepost'] ), plugin_basename( $relevanssi_variables['file'] ) ) ) { // WPCS: input var okey.
+		if ( ! wp_verify_nonce(
+			sanitize_key( $_POST['relevanssi_hidepost'] ),
+			plugin_basename( $relevanssi_variables['file'] )
+		)
+		) { // WPCS: input var okey.
 			return;
 		}
 	}
@@ -450,9 +475,10 @@ function relevanssi_related_posts_metabox( $post_id ) {
 
 	<p><strong><?php esc_html_e( 'Related Posts keywords', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of keywords to use for the Related Posts feature. Anything entered here will used when searching for related posts. Using phrases with quotes is allowed, but will restrict the related posts to posts including that phrase.', 'relevanssi' ); ?></p>
+	<label for="relevanssi_related_keywords" class="screen-reader-text"><?php esc_html_e( 'Related posts keywords for this post', 'relevanssi' ); ?></label>
 	<p><textarea id="relevanssi_related_keywords" name="relevanssi_related_keywords" cols="30" rows="2"><?php echo esc_html( $related ); ?></textarea></p>
 
-	<p><?php esc_html_e( 'A comma-separated list of post IDs to use as related posts for this post', 'relevanssi' ); ?>:</p>
+	<p><label for="relevanssi_related_include_ids"><?php esc_html_e( 'A comma-separated list of post IDs to use as related posts for this post', 'relevanssi' ); ?></label>:</p>
 	<p><input type="text" id="relevanssi_related_include_ids" name="relevanssi_related_include_ids" value="<?php echo esc_html( $include_ids ); ?>"/></p>
 
 	<p><?php esc_html_e( 'These are the related posts Relevanssi currently will show for this post:', 'relevanssi' ); ?></p>
@@ -476,10 +502,17 @@ function relevanssi_related_posts_metabox( $post_id ) {
 /**
  * Generates a list of related posts for the related posts metabox.
  *
- * @param int $post_id The post ID.
+ * @param int    $post_id The post ID.
+ * @param string $output  If 'HTML', output HTML code. If 'ARRAY', output an
+ * array. Default value is 'HTML'.
  */
-function relevanssi_generate_related_list( $post_id ) {
-	$list          = '';
+function relevanssi_generate_related_list( $post_id, $output = 'HTML' ) {
+	$output_html = 'ARRAY' !== $output ? true : false;
+	if ( $output_html ) {
+		$list = '';
+	} else {
+		$list = array();
+	}
 	$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
 	if ( empty( $related_posts ) ) {
 		/**
@@ -499,7 +532,15 @@ function relevanssi_generate_related_list( $post_id ) {
 	foreach ( $related_array as $related_post_id ) {
 		$title = get_the_title( $related_post_id );
 		$link  = get_permalink( $related_post_id );
-		$list .= '<li><a href="' . esc_attr( $link ) . '">' . esc_html( $title ) . '</a> (<button type="button" class="removepost" data-removepost="' . esc_attr( $related_post_id ) . '">' . esc_html__( 'not this', 'relevanssi' ) . '</button>)</li>';
+		if ( $output_html ) {
+			$list .= '<li><a href="' . esc_attr( $link ) . '">' . esc_html( $title ) . '</a> (<button type="button" class="removepost" data-removepost="' . esc_attr( $related_post_id ) . '">' . esc_html__( 'not this', 'relevanssi' ) . '</button>)</li>';
+		} else {
+			$list[] = array(
+				'id'    => $related_post_id,
+				'title' => $title,
+				'link'  => $link,
+			);
+		}
 	}
 	return $list;
 }
@@ -507,20 +548,37 @@ function relevanssi_generate_related_list( $post_id ) {
 /**
  * Generates a list of excluded posts for the related posts metabox.
  *
- * @param int $post_id The post ID.
+ * @param int    $post_id The post ID.
+ * @param string $output  If 'HTML', output HTML code. If 'ARRAY', output an
+ * array. Default value is 'HTML'.
  */
-function relevanssi_generate_excluded_list( $post_id ) {
-	$list           = '';
+function relevanssi_generate_excluded_list( $post_id, $output = 'HTML' ) {
+	$output_html = 'ARRAY' !== $output ? true : false;
+	if ( $output_html ) {
+		$list = '';
+	} else {
+		$list = array();
+	}
 	$excluded_posts = get_post_meta( $post_id, '_relevanssi_related_exclude_ids', true );
 	if ( $excluded_posts ) {
 		$excluded_array = explode( ',', $excluded_posts );
 		foreach ( $excluded_array as $excluded_post_id ) {
 			$title = get_the_title( $excluded_post_id );
 			$link  = get_permalink( $excluded_post_id );
-			$list .= '<li><a href="' . esc_attr( $link ) . '">' . esc_html( $title ) . '</a> (<button type="button" class="returnpost" data-returnpost="' . esc_attr( $excluded_post_id ) . '">' . esc_html__( 'use this', 'relevanssi' ) . '</button>)</li>';
+			if ( $output_html ) {
+				$list .= '<li><a href="' . esc_attr( $link ) . '">' . esc_html( $title ) . '</a> (<button type="button" class="returnpost" data-returnpost="' . esc_attr( $excluded_post_id ) . '">' . esc_html__( 'use this', 'relevanssi' ) . '</button>)</li>';
+			} else {
+				$list[] = array(
+					'id'    => $excluded_post_id,
+					'title' => $title,
+					'link'  => $link,
+				);
+			}
 		}
 	} else {
-		$list .= '<li>' . esc_html__( 'Nothing excluded.', 'relevanssi' ) . '</li>';
+		if ( $output_html ) {
+			$list .= '<li>' . esc_html__( 'Nothing excluded.', 'relevanssi' ) . '</li>';
+		}
 	}
 	return $list;
 }

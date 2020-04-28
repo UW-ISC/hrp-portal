@@ -13,6 +13,12 @@ add_filter( 'relevanssi_index_custom_fields', 'relevanssi_add_pdf_customfield' )
 add_action( 'add_attachment', 'relevanssi_read_attachment', 10 );
 add_filter( 'relevanssi_pre_excerpt_content', 'relevanssi_add_pdf_content_to_excerpt', 10, 2 );
 
+define( 'RELEVANSSI_ERROR_01', 'R_ERR01: ' . __( 'Post excluded from the index by the user.', 'relevanssi' ) );
+define( 'RELEVANSSI_ERROR_02', 'R_ERR02: ' . __( 'Relevanssi is in privacy mode and not allowed to contact Relevanssiservices.com.', 'relevanssi' ) );
+define( 'RELEVANSSI_ERROR_03', 'R_ERR03: ' . __( 'Attachment MIME type blocked.', 'relevanssi' ) );
+define( 'RELEVANSSI_ERROR_04', 'R_ERR04: ' . __( 'Attachment file size is too large.', 'relevanssi' ) );
+define( 'RELEVANSSI_ERROR_05', 'R_ERR05: ' . __( 'Attachment reading in process, please try again later.', 'relevanssi' ) );
+
 /**
  * Reads the attachment content when an attachment is saved.
  *
@@ -36,12 +42,13 @@ function relevanssi_read_attachment( $post_id ) {
 	$mime_type = get_post_mime_type( $post_id );
 	$read_this = relevanssi_mime_type_ok( $mime_type );
 	if ( $read_this ) {
-		$result = relevanssi_index_pdf( $post_id );
-		if ( is_array( $result ) && isset( $result['success'] ) && true === $result['success'] ) {
-			// Remove the usual relevanssi_publish action because
-			// relevanssi_index_pdf() already indexes the post.
-			remove_action( 'add_attachment', 'relevanssi_publish', 12 );
-		}
+		relevanssi_launch_ajax_action(
+			'relevanssi_index_pdf',
+			array( 'post_id' => $post_id )
+		);
+		// Remove the usual relevanssi_publish action because
+		// relevanssi_index_pdf() already indexes the post.
+		remove_action( 'add_attachment', 'relevanssi_publish', 12 );
 	}
 }
 
@@ -149,16 +156,21 @@ function relevanssi_add_pdf_metaboxes( $post ) {
  * examining the read attachment content.
  *
  * @global object $post The global post object.
+ * @global array  $relevanssi_variables The Relevanssi global variables array,
+ * used to get the file name for nonce.
  *
  * @since 2.0.0
  */
 function relevanssi_attachment_metabox() {
-	global $post;
+	global $post, $relevanssi_variables;
+	wp_nonce_field( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_pdfcontent' );
+
+	$pdf_modified = get_post_meta( $post->ID, '_relevanssi_pdf_modified', true );
+
 	$url         = wp_get_attachment_url( $post->ID );
 	$id          = $post->ID;
-	$button_text = __( 'Index attachment content', 'relevanssi' );
+	$button_text = $pdf_modified ? __( 'Reread the attachment content', 'relevanssi' ) : __( 'Read the attachment content', 'relevanssi' );
 	$api_key     = get_network_option( null, 'relevanssi_api_key' );
-	$admin_url   = esc_url( admin_url( 'admin-post.php' ) );
 	$action      = 'sendUrl';
 	$explanation = __( 'Indexer will fetch the file from your server.', 'relevanssi' );
 	if ( 'on' === get_option( 'relevanssi_send_pdf_files' ) ) {
@@ -185,20 +197,40 @@ function relevanssi_attachment_metabox() {
 			esc_attr( $explanation )
 		);
 
+		if ( $pdf_modified ) {
+			esc_html_e( "The attachment content has been modified and won't be reread from the file when doing a general rereading. If you want to reread the attachment contents from the file, you can force rereading here.", 'relevanssi' );
+		}
+
 		$pdf_content = get_post_meta( $post->ID, '_relevanssi_pdf_content', true );
 		if ( $pdf_content ) {
 			$pdf_content_title = __( 'Attachment content', 'relevanssi' );
-			printf( '<h3>%s</h3> <p><textarea cols="80" rows="4" readonly>%s</textarea></p>', esc_html( $pdf_content_title ), esc_html( $pdf_content ) );
+			printf(
+				'<h3><label for="relevanssi_pdf_content">%s</label></h3> <p><textarea id="relevanssi_pdf_content" name="relevanssi_pdf_content" cols="80" rows="4">%s</textarea></p>',
+				esc_html( $pdf_content_title ),
+				esc_html( $pdf_content )
+			);
 		}
 
 		$pdf_error = get_post_meta( $post->ID, '_relevanssi_pdf_error', true );
-		if ( $pdf_error ) {
+		if ( false !== strpos( $pdf_error, 'R_ERR05' ) ) {
+			printf(
+				'<h3>%s</h3>',
+				esc_html__( 'Relevanssi is currently in process of reading the file contents, please return here later.', 'relevanssi' )
+			);
+		} elseif ( $pdf_error ) {
 			$pdf_error_title = __( 'Attachment error message', 'relevanssi' );
-			printf( '<h3>%s</h3> <p><textarea cols="80" rows="4" readonly>%s</textarea></p>', esc_html( $pdf_error_title ), esc_html( $pdf_error ) );
+			printf(
+				'<h3><label for="relevanssi_pdf_error">%s</label></h3> <p><textarea id="relevanssi_pdf_error" cols="80" rows="4" readonly>%s</textarea></p>',
+				esc_html( $pdf_error_title ),
+				esc_html( $pdf_error )
+			);
 		}
 
 		if ( empty( $pdf_content ) && empty( $pdf_error ) ) {
-			printf( '<p>%s</p>', esc_html__( 'This page will reload after indexing and you can see the response from the attachment extracting server.', 'relevanssi' ) );
+			printf(
+				'<p>%s</p>',
+				esc_html__( 'No attachment content found for this post at the moment.', 'relevanssi' )
+			);
 		}
 	}
 }
@@ -214,6 +246,9 @@ function relevanssi_attachment_metabox() {
  * @param string  $send_file Should the file be sent ('on'), or just the URL ('off')?
  * Default null.
  *
+ * @return array An array with two items: boolean 'success' and 'error'
+ * containing the possible error message.
+ *
  * @since 2.0.0
  */
 function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
@@ -221,18 +256,18 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 	/**
 	 * Filters whether the attachment should be read or not.
 	 *
-	 * @param boolean $hide_post True if ok, false if not ok to read.
+	 * @param boolean $hide_post True if the attachment shouldn't be read,
+	 * false if it should.
 	 * @param int     $post_id   The attachment post ID.
 	 */
 	$hide_post = apply_filters( 'relevanssi_do_not_read', $hide_post, $post_id );
 	if ( $hide_post ) {
-		$error = 'R_ERR01: ' . __( 'Post excluded from the index by the user.', 'relevanssi' );
 		delete_post_meta( $post_id, '_relevanssi_pdf_content' );
-		update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
+		update_post_meta( $post_id, '_relevanssi_pdf_error', RELEVANSSI_ERROR_01 );
 
 		$result = array(
 			'success' => false,
-			'error'   => $error,
+			'error'   => RELEVANSSI_ERROR_01,
 		);
 
 		return $result;
@@ -240,13 +275,12 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 
 	$mime_type = get_post_mime_type( $post_id );
 	if ( ! relevanssi_mime_type_ok( $mime_type ) ) {
-		$error = 'R_ERR03: ' . __( 'Attachment MIME type blocked.', 'relevanssi' );
 		delete_post_meta( $post_id, '_relevanssi_pdf_content' );
-		update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
+		update_post_meta( $post_id, '_relevanssi_pdf_error', RELEVANSSI_ERROR_03 );
 
 		$result = array(
 			'success' => false,
-			'error'   => $error,
+			'error'   => RELEVANSSI_ERROR_03,
 		);
 
 		return $result;
@@ -260,6 +294,19 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 		}
 	}
 
+	/**
+	 * Filters whether the PDF files are uploaded for indexing or not.
+	 *
+	 * If you have some files that need to be uploaded and some where it's
+	 * better if the indexer reads them from a URL, you can use this filter
+	 * hook to adjust the setting on a per-file basis.
+	 *
+	 * @param string $sendfile If 'on', upload the file, otherwise the file
+	 * will be read from the URL.
+	 * @param int    $post_id  The post ID of the attachment post.
+	 */
+	$send_file = apply_filters( 'relevanssi_send_pdf_files', $send_file, $post_id );
+
 	$api_key = get_network_option( null, 'relevanssi_api_key' );
 	if ( ! $api_key ) {
 		get_option( 'relevanssi_api_key' );
@@ -268,13 +315,12 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 
 	if ( 'on' === get_option( 'relevanssi_do_not_call_home' ) ) {
 		if ( in_array( $server_url, array( RELEVANSSI_EU_SERVICES_URL, RELEVANSSI_US_SERVICES_URL ), true ) ) {
-			$error = 'R_ERR02: ' . __( 'Relevanssi is in privacy mode and not allowed to contact Relevanssiservices.com.', 'relevanssi' );
 			delete_post_meta( $post_id, '_relevanssi_pdf_content' );
-			update_post_meta( $post_id, '_relevanssi_pdf_error', $error );
+			update_post_meta( $post_id, '_relevanssi_pdf_error', RELEVANSSI_ERROR_02 );
 
 			$result = array(
 				'success' => false,
-				'error'   => $error,
+				'error'   => RELEVANSSI_ERROR_02,
 			);
 
 			return $result;
@@ -395,6 +441,7 @@ function relevanssi_process_server_response( $response, $post_id ) {
 		$response_error .= $error_message . '\n';
 
 		delete_post_meta( $post_id, '_relevanssi_pdf_content' );
+		delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
 		update_post_meta( $post_id, '_relevanssi_pdf_error', $error_message );
 		$success = false;
 	} else {
@@ -402,19 +449,31 @@ function relevanssi_process_server_response( $response, $post_id ) {
 			$content = $response['body'];
 			$content = json_decode( $content );
 
+			if ( 413 === $response['response']['code'] ) {
+				$content->error = RELEVANSSI_ERROR_04;
+			}
+
 			if ( isset( $content->error ) ) {
 				delete_post_meta( $post_id, '_relevanssi_pdf_content' );
+				delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
 				update_post_meta( $post_id, '_relevanssi_pdf_error', $content->error );
 
 				$response_error .= $content->error;
 				$success         = false;
 			} else {
 				delete_post_meta( $post_id, '_relevanssi_pdf_error' );
+				delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
+				/**
+				 * Filters the read file content before it is saved.
+				 *
+				 * @param string $content The file content as a string.
+				 * @param int    $post_id The post ID of the attachment post.
+				 */
 				$success = update_post_meta( $post_id, '_relevanssi_pdf_content', apply_filters( 'relevanssi_file_content', $content, $post_id ) );
 				relevanssi_index_doc( $post_id, false, relevanssi_get_custom_fields(), true );
 
 				if ( ! $success ) {
-					$response_error = "Could not save the file content to the custom field.\n";
+					$response_error = __( 'Could not save the file content to the custom field.', 'relevanssi' ) . "\n";
 				}
 			}
 		}
@@ -431,9 +490,12 @@ function relevanssi_process_server_response( $response, $post_id ) {
 /**
  * Gets the posts with attachments.
  *
- * Finds the posts with non-image attachments that don't have read content or errors,
- * including those with timeout or connection errors and those that haven't been read
- * for privacy mode issues.
+ * Finds the posts with non-image attachments that don't have read content or
+ * errors. The posts that have timeout or connection errors (cURL error 7 and
+ * 28) and those that haven't been read for privacy mode issues (R_ERR02) will
+ * be included for indexing, but the posts with other errors (R_ERR01: post
+ * excluded by user, R_ERR03: blocked MIME type and R_ERR04: file too large)
+ * will not be indexed.
  *
  * @since 2.0.0
  *
@@ -587,7 +649,12 @@ function relevanssi_pdf_action_javascript() {
 					'security': '<?php echo esc_html( $wipe_pdfs_nonce ); ?>'
 				}
 				jQuery.post(ajaxurl, data, function(response ) {
-					alert( relevanssi.pdf_reset_done );
+					var delete_response = JSON.parse(response);
+					if ( ! delete_response.deleted_content && ! delete_response.deleted_errors ) {
+						alert( relevanssi.pdf_reset_problems );
+					} else {
+						alert( relevanssi.pdf_reset_done );
+					}
 					jQuery("#stateofthepdfindex").html(relevanssi.reload_state);
 				});
 			}
@@ -647,4 +714,72 @@ function relevanssi_pdf_action_javascript() {
 
 	</script>
 	<?php
+}
+
+/**
+ * Saves attachment edit page metadata.
+ *
+ * Saves the attachment content metadata if it has been edited and sets the
+ * _relevanssi_pdf_modified flag if necessary.
+ *
+ * @global $relevanssi_variables The global Relevanssi variables array.
+ *
+ * @param int $post_id The attachment post ID.
+ */
+function relevanssi_save_pdf_postdata( $post_id ) {
+	global $relevanssi_variables;
+	// Verify if this is an auto save routine. If it is, our form has not been
+	// submitted, so we dont want to do anything.
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+
+	// Verify the nonce.
+	if ( isset( $_POST['relevanssi_pdfcontent'] ) ) { // WPCS: input var okey.
+		if ( ! wp_verify_nonce(
+			sanitize_key( $_POST['relevanssi_pdfcontent'] ),
+			plugin_basename( $relevanssi_variables['file'] )
+		)
+		) { // WPCS: input var okey.
+			return;
+		}
+	}
+
+	$post = $_POST; // WPCS: input var okey.
+
+	// If relevanssi_pdf_content is not set, it's a quick edit.
+	if ( ! isset( $post['relevanssi_pdf_content'] ) ) {
+		return;
+	}
+
+	// Check permissions.
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+
+	$original_post_meta = get_post_meta( $post_id, '_relevanssi_pdf_content', true );
+	$new_post_meta      = stripslashes( $post['relevanssi_pdf_content'] );
+	if ( $new_post_meta !== $original_post_meta ) {
+		if ( $new_post_meta ) {
+			update_post_meta(
+				$post_id,
+				'_relevanssi_pdf_content',
+				$new_post_meta
+			);
+			update_post_meta(
+				$post_id,
+				'_relevanssi_pdf_modified',
+				true
+			);
+		} else {
+			delete_post_meta(
+				$post_id,
+				'_relevanssi_pdf_content'
+			);
+			delete_post_meta(
+				$post_id,
+				'_relevanssi_pdf_modified'
+			);
+		}
+	}
 }

@@ -13,14 +13,14 @@
  * Plugin Name: Relevanssi Premium
  * Plugin URI: https://www.relevanssi.com/
  * Description: This premium plugin replaces WordPress search with a relevance-sorting search.
- * Version: 2.4.1
+ * Version: 2.8.2
  * Author: Mikko Saari
  * Author URI: http://www.mikkosaari.fi/
  * Text Domain: relevanssi
  */
 
 /*
-	Copyright 2019 Mikko Saari  (email: mikko@mikkosaari.fi)
+	Copyright 2020 Mikko Saari  (email: mikko@mikkosaari.fi)
 
 	This file is part of Relevanssi Premium, a search plugin for WordPress.
 
@@ -49,6 +49,7 @@ add_action( 'edited_term', 'relevanssi_edit_term', 9999, 3 );
 add_action( 'delete_term', 'relevanssi_delete_taxonomy_term', 9999, 3 );
 add_action( 'save_post', 'relevanssi_save_postdata', 10 );
 add_action( 'edit_attachment', 'relevanssi_save_postdata' );
+add_action( 'edit_attachment', 'relevanssi_save_pdf_postdata' );
 add_filter( 'wpmu_drop_tables', 'relevanssi_wpmu_drop' );
 add_action( 'network_admin_menu', 'relevanssi_network_menu' );
 add_filter( 'attachment_link', 'relevanssi_post_link_replace', 10, 2 );
@@ -76,7 +77,7 @@ $relevanssi_variables['title_boost_default']                   = 5;
 $relevanssi_variables['link_boost_default']                    = 0.75;
 $relevanssi_variables['comment_boost_default']                 = 0.75;
 $relevanssi_variables['database_version']                      = 18;
-$relevanssi_variables['plugin_version']                        = '2.4.1';
+$relevanssi_variables['plugin_version']                        = '2.8.2';
 $relevanssi_variables['plugin_dir']                            = plugin_dir_path( __FILE__ );
 $relevanssi_variables['plugin_basename']                       = plugin_basename( __FILE__ );
 $relevanssi_variables['file']                                  = __FILE__;
@@ -84,6 +85,9 @@ $relevanssi_variables['file']                                  = __FILE__;
 define( 'RELEVANSSI_PREMIUM', true );
 define( 'RELEVANSSI_EU_SERVICES_URL', 'https://eu.relevanssiservices.com/' );
 define( 'RELEVANSSI_US_SERVICES_URL', 'https://us.relevanssiservices.com/' );
+if ( ! defined( 'RELEVANSSI_DEVELOP' ) ) {
+	define( 'RELEVANSSI_DEVELOP', false );
+}
 
 require_once 'lib/common.php';
 require_once 'lib/excerpts-highlights.php';
@@ -116,16 +120,10 @@ require_once 'premium/related.php';
 require_once 'premium/search.php';
 require_once 'premium/search-multi.php';
 
-if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	require_once 'premium/class-relevanssi-wp-cli-command.php';
+if ( version_compare( $wp_version, '5.0', '>=' ) ) {
+	require_once 'premium/gutenberg-sidebar.php';
 }
 
-if ( file_exists( __DIR__ . '/epitrove-helper-installer.php' ) ) {
-	require_once __DIR__ . '/epitrove-helper-installer.php';
-	add_filter(
-		'pre_option_relevanssi_api_key',
-		function() {
-			return get_option( 'epi_relevanssi-premium_license_key', 'wc_order_1111' );
-		}
-	);
+if ( defined( 'WP_CLI' ) && WP_CLI ) {
+	require_once 'premium/class-relevanssi-wp-cli-command.php';
 }

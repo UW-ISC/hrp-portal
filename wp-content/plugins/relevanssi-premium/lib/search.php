@@ -50,8 +50,11 @@ function relevanssi_query( $posts, $query = false ) {
 		$search_ok = false; // No search term.
 	}
 
-	// Disable Relevanssi in the media library search.
-	if ( $search_ok ) {
+	$indexed_post_types = array_flip(
+		get_option( 'relevanssi_index_post_types', array() )
+	);
+	$images_indexed     = get_option( 'relevanssi_index_image_files', 'off' );
+	if ( $search_ok && ( false === isset( $indexed_post_types['attachment'] ) || 'off' === $images_indexed ) ) {
 		if ( 'attachment' === $query->query_vars['post_type'] && 'inherit,private' === $query->query_vars['post_status'] ) {
 			$search_ok = false;
 		}
@@ -129,6 +132,10 @@ function relevanssi_search( $args ) {
 	$query_restrictions = $query_data['query_restrictions'];
 	$query_join         = $query_data['query_join'];
 	$q                  = $query_data['query_query'];
+	$q_no_synonyms      = $query_data['query_no_synonyms'];
+	$phrase_queries     = $query_data['phrase_queries'];
+
+	$min_length = get_option( 'relevanssi_min_word_length' );
 
 	/**
 	 * Filters whether stopwords are removed from titles.
@@ -137,7 +144,7 @@ function relevanssi_search( $args ) {
 	 */
 	$remove_stopwords = apply_filters( 'relevanssi_remove_stopwords_in_titles', true );
 
-	$terms = relevanssi_tokenize( $q, $remove_stopwords );
+	$terms = relevanssi_tokenize( $q, $remove_stopwords, $min_length );
 	$terms = array_keys( $terms ); // Don't care about tf in query.
 
 	if ( function_exists( 'relevanssi_process_terms' ) ) {
@@ -180,15 +187,18 @@ function relevanssi_search( $args ) {
 
 	$total_hits = 0;
 
-	$title_matches    = array();
-	$tag_matches      = array();
-	$comment_matches  = array();
-	$link_matches     = array();
-	$body_matches     = array();
-	$category_matches = array();
-	$taxonomy_matches = array();
-	$scores           = array();
-	$term_hits        = array();
+	$title_matches       = array();
+	$tag_matches         = array();
+	$comment_matches     = array();
+	$link_matches        = array();
+	$body_matches        = array();
+	$category_matches    = array();
+	$taxonomy_matches    = array();
+	$customfield_matches = array();
+	$mysqlcolumn_matches = array();
+	$author_matches      = array();
+	$excerpt_matches     = array();
+	$term_hits           = array();
 
 	$fuzzy = get_option( 'relevanssi_fuzzy' );
 
@@ -222,8 +232,6 @@ function relevanssi_search( $args ) {
 		);
 
 	}
-
-	$min_length = get_option( 'relevanssi_min_word_length' );
 
 	$search_again = false;
 
@@ -265,9 +273,17 @@ function relevanssi_search( $args ) {
 			if ( null === $term_cond ) {
 				continue;
 			}
+
+			$this_query_restrictions = relevanssi_add_phrase_restrictions(
+				$query_restrictions,
+				$phrase_queries,
+				$term,
+				$operator
+			);
+
 			$query = "SELECT COUNT(DISTINCT(relevanssi.doc)) FROM $relevanssi_table AS relevanssi
-				$query_join WHERE $term_cond $query_restrictions";
-			// Clean: $query_restrictions is escaped, $term_cond is escaped.
+				$query_join WHERE $term_cond $this_query_restrictions";
+			// Clean: $this_query_restrictions is escaped, $term_cond is escaped.
 			/**
 			 * Filters the DF query.
 			 *
@@ -302,13 +318,20 @@ function relevanssi_search( $args ) {
 		foreach ( $df_counts as $term => $df ) {
 			$term_cond = relevanssi_generate_term_where( $term, $search_again, $no_terms );
 
+			$this_query_restrictions = relevanssi_add_phrase_restrictions(
+				$query_restrictions,
+				$phrase_queries,
+				$term,
+				$operator
+			);
+
 			$query = "SELECT DISTINCT(relevanssi.doc), relevanssi.*, relevanssi.title * $title_boost +
 				relevanssi.content * $content_boost + relevanssi.comment * $comment_boost +
 				relevanssi.tag * $tag + relevanssi.link * $link_boost +
 				relevanssi.author + relevanssi.category * $cat + relevanssi.excerpt +
 				relevanssi.taxonomy + relevanssi.customfield + relevanssi.mysqlcolumn AS tf
-				FROM $relevanssi_table AS relevanssi $query_join WHERE $term_cond $query_restrictions";
-			/** Clean: $query_restrictions is escaped, $term_cond is escaped. */
+				FROM $relevanssi_table AS relevanssi $query_join WHERE $term_cond $this_query_restrictions";
+			/** Clean: $this_query_restrictions is escaped, $term_cond is escaped. */
 
 			/**
 			 * Filters the Relevanssi MySQL query.
@@ -332,7 +355,7 @@ function relevanssi_search( $args ) {
 					$added_post_ids = array_diff( array_keys( $include_these_posts ), $existing_ids );
 					if ( count( $added_post_ids ) > 0 ) {
 						$offset       = 0;
-						$slice_length = 1;
+						$slice_length = 20;
 						$total_ids    = count( $added_post_ids );
 						do {
 							$current_slice   = array_slice( $added_post_ids, $offset, $slice_length );
@@ -470,7 +493,7 @@ function relevanssi_search( $args ) {
 
 				if ( $exact_match_bonus ) {
 					$post    = relevanssi_get_post( $match->doc );
-					$clean_q = str_replace( array( '"', '”', '“' ), '', $q );
+					$clean_q = str_replace( array( '"', '”', '“' ), '', $q_no_synonyms );
 					if ( $post && $clean_q ) {
 						if ( stristr( $post->post_title, $clean_q ) !== false ) {
 							$match->weight *= $exact_match_boost['title'];
@@ -502,13 +525,29 @@ function relevanssi_search( $args ) {
 				if ( ! isset( $comment_matches[ $match->doc ] ) ) {
 					$comment_matches[ $match->doc ] = 0;
 				}
-				$body_matches[ $match->doc ]     += $match->content;
-				$title_matches[ $match->doc ]    += $match->title;
-				$link_matches[ $match->doc ]     += $match->link;
-				$tag_matches[ $match->doc ]      += $match->tag;
-				$category_matches[ $match->doc ] += $match->category;
-				$taxonomy_matches[ $match->doc ] += $match->taxonomy;
-				$comment_matches[ $match->doc ]  += $match->comment;
+				if ( ! isset( $customfield_matches[ $match->doc ] ) ) {
+					$customfield_matches[ $match->doc ] = 0;
+				}
+				if ( ! isset( $author_matches[ $match->doc ] ) ) {
+					$author_matches[ $match->doc ] = 0;
+				}
+				if ( ! isset( $excerpt_matches[ $match->doc ] ) ) {
+					$excerpt_matches[ $match->doc ] = 0;
+				}
+				if ( ! isset( $mysqlcolumn_matches[ $match->doc ] ) ) {
+					$mysqlcolumn_matches[ $match->doc ] = 0;
+				}
+				$body_matches[ $match->doc ]        += $match->content;
+				$title_matches[ $match->doc ]       += $match->title;
+				$link_matches[ $match->doc ]        += $match->link;
+				$tag_matches[ $match->doc ]         += $match->tag;
+				$category_matches[ $match->doc ]    += $match->category;
+				$taxonomy_matches[ $match->doc ]    += $match->taxonomy;
+				$comment_matches[ $match->doc ]     += $match->comment;
+				$customfield_matches[ $match->doc ] += $match->customfield;
+				$author_matches[ $match->doc ]      += $match->author;
+				$excerpt_matches[ $match->doc ]     += $match->excerpt;
+				$mysqlcolumn_matches[ $match->doc ] += $match->mysqlcolumn;
 
 				/* Post type weights. */
 				$type = null;
@@ -560,10 +599,6 @@ function relevanssi_search( $args ) {
 						$doc_weight[ $match->doc ] = 0;
 					}
 					$doc_weight[ $match->doc ] += $match->weight;
-					if ( ! isset( $scores[ $match->doc ] ) ) {
-						$scores[ $match->doc ] = 0;
-					}
-					$scores[ $match->doc ] += $match->weight;
 					// For AND searches, add the posts to the $include_these lists, so that
 					// nothing is missed.
 					if ( is_numeric( $match->doc ) && 'AND' === $operator ) {
@@ -668,19 +703,25 @@ function relevanssi_search( $args ) {
 			global $wp_query;
 			$wp_query->set( 'operator', 'OR' );
 
-			$or_args['q'] = relevanssi_add_synonyms( $q );
-			$return       = relevanssi_search( $or_args );
+			$or_args['q_no_synonyms'] = $q;
+			$or_args['q']             = relevanssi_add_synonyms( $q );
+			$return                   = relevanssi_search( $or_args );
 
-			$hits             = $return['hits'];
-			$body_matches     = $return['body_matches'];
-			$title_matches    = $return['title_matches'];
-			$tag_matches      = $return['tag_matches'];
-			$category_matches = $return['category_matches'];
-			$taxonomy_matches = $return['taxonomy_matches'];
-			$comment_matches  = $return['comment_matches'];
-			$link_matches     = $return['link_matches'];
-			$term_hits        = $return['term_hits'];
-			$q                = $return['query'];
+			$hits                = $return['hits'];
+			$body_matches        = $return['body_matches'];
+			$title_matches       = $return['title_matches'];
+			$tag_matches         = $return['tag_matches'];
+			$category_matches    = $return['category_matches'];
+			$taxonomy_matches    = $return['taxonomy_matches'];
+			$comment_matches     = $return['comment_matches'];
+			$link_matches        = $return['link_matches'];
+			$author_matches      = $return['author_matches'];
+			$customfield_matches = $return['customfield_matches'];
+			$mysqlcolumn_matches = $return['mysqlcolumn_matches'];
+			$excerpt_matches     = $return['excerpt_matches'];
+			$term_hits           = $return['term_hits'];
+			$doc_weight          = $return['doc_weights'];
+			$q                   = $return['query'];
 		}
 		$params = array( 'args' => $args );
 		/**
@@ -695,18 +736,22 @@ function relevanssi_search( $args ) {
 		$params = apply_filters( 'relevanssi_fallback', $params );
 		$args   = $params['args'];
 		if ( isset( $params['return'] ) ) {
-			$return           = $params['return'];
-			$hits             = $return['hits'];
-			$body_matches     = $return['body_matches'];
-			$title_matches    = $return['title_matches'];
-			$tag_matches      = $return['tag_matches'];
-			$category_matches = $return['category_matches'];
-			$taxonomy_matches = $return['taxonomy_matches'];
-			$comment_matches  = $return['comment_matches'];
-			$body_matches     = $return['body_matches'];
-			$link_matches     = $return['link_matches'];
-			$term_hits        = $return['term_hits'];
-			$q                = $return['query'];
+			$return              = $params['return'];
+			$hits                = $return['hits'];
+			$body_matches        = $return['body_matches'];
+			$title_matches       = $return['title_matches'];
+			$tag_matches         = $return['tag_matches'];
+			$category_matches    = $return['category_matches'];
+			$taxonomy_matches    = $return['taxonomy_matches'];
+			$comment_matches     = $return['comment_matches'];
+			$link_matches        = $return['link_matches'];
+			$author_matches      = $return['author_matches'];
+			$customfield_matches = $return['customfield_matches'];
+			$mysqlcolumn_matches = $return['mysqlcolumn_matches'];
+			$excerpt_matches     = $return['excerpt_matches'];
+			$term_hits           = $return['term_hits'];
+			$doc_weight          = $return['doc_weights'];
+			$q                   = $return['query'];
 		}
 	}
 
@@ -718,10 +763,10 @@ function relevanssi_search( $args ) {
 		/**
 		 * Filters the 'orderby' value just before sorting.
 		 *
-		 * Relevanssi can use both array orderby ie. array( orderby => order ) with
-		 * multiple orderby parameters, or a single pair of orderby and order
-		 * parameters. To avoid problems, try sticking to one and don't use this
-		 * filter to make surprising changes between different formats.
+		 * Relevanssi can use both array orderby ie. array( orderby => order )
+		 * with multiple orderby parameters, or a single pair of orderby and
+		 * order parameters. To avoid problems, try sticking to one and don't
+		 * use this filter to make surprising changes between different formats.
 		 *
 		 * @param string The 'orderby' parameter.
 		 */
@@ -753,17 +798,21 @@ function relevanssi_search( $args ) {
 		}
 	}
 	$return = array(
-		'hits'             => $hits,
-		'body_matches'     => $body_matches,
-		'title_matches'    => $title_matches,
-		'tag_matches'      => $tag_matches,
-		'category_matches' => $category_matches,
-		'taxonomy_matches' => $taxonomy_matches,
-		'comment_matches'  => $comment_matches,
-		'scores'           => $scores,
-		'term_hits'        => $term_hits,
-		'query'            => $q,
-		'link_matches'     => $link_matches,
+		'hits'                => $hits,
+		'body_matches'        => $body_matches,
+		'title_matches'       => $title_matches,
+		'tag_matches'         => $tag_matches,
+		'category_matches'    => $category_matches,
+		'comment_matches'     => $comment_matches,
+		'taxonomy_matches'    => $taxonomy_matches,
+		'link_matches'        => $link_matches,
+		'customfield_matches' => $customfield_matches,
+		'mysqlcolumn_matches' => $mysqlcolumn_matches,
+		'author_matches'      => $author_matches,
+		'excerpt_matches'     => $excerpt_matches,
+		'term_hits'           => $term_hits,
+		'query'               => $q,
+		'doc_weights'         => $doc_weight,
 	);
 
 	return $return;
@@ -905,44 +954,43 @@ function relevanssi_do_query( &$query ) {
 			$highlight                    = get_option( 'relevanssi_highlight' );
 			if ( 'none' !== $highlight ) {
 				if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-					$post->post_highlighted_title = relevanssi_highlight_terms( $post->post_highlighted_title, $q );
+					$post->post_highlighted_title = relevanssi_highlight_terms(
+						$post->post_highlighted_title,
+						$q
+					);
 				}
 			}
 		}
+
+		/*
+		 * If you need to modify these on the go, use
+		 * 'pre_option_relevanssi_excerpt_length' and
+		 * pre_option_relevanssi_excerpt_type' filters.
+		 */
+		$excerpt_length = get_option( 'relevanssi_excerpt_length' );
+		$excerpt_type   = get_option( 'relevanssi_excerpt_type' );
 
 		if ( 'on' === $make_excerpts && empty( $search_params['fields'] ) ) {
 			if ( isset( $post->blog_id ) ) {
 				switch_to_blog( $post->blog_id );
 			}
 			$post->original_excerpt = $post->post_excerpt;
-			$post->post_excerpt     = relevanssi_do_excerpt( $post, $q );
+			$post->post_excerpt     = relevanssi_do_excerpt(
+				$post,
+				$q,
+				$excerpt_length,
+				$excerpt_type
+			);
+
 			if ( isset( $post->blog_id ) ) {
 				restore_current_blog();
 			}
 		}
-		if ( 'on' === get_option( 'relevanssi_show_matches' ) && empty( $search_params['fields'] ) ) {
-			$post_id = $post->ID;
-			if ( 'user' === $post->post_type ) {
-				$post_id = 'u_' . $post->user_id;
-			} elseif ( 'post_type' === $post->post_type ) {
-				$post_id = 'p_' . $post->ID;
-			} elseif ( isset( $post->term_id ) ) {
-				$post_id = '**' . $post->post_type . '**' . $post->term_id;
-			}
-			if ( isset( $post->blog_id ) ) {
-				$post_id = $post->blog_id . '|' . $post->ID;
-			}
-			$post->post_excerpt .= relevanssi_show_matches( $return, $post_id );
-		}
-
 		if ( empty( $search_params['fields'] ) ) {
-			$post_id = $post->ID;
-			if ( isset( $post->blog_id ) ) {
-				$post_id = $post->blog_id . '|' . $post->ID;
-			}
-			if ( isset( $return['scores'][ $post_id ] ) ) {
-				$post->relevance_score = round( $return['scores'][ $post_id ], 2 );
-			}
+			relevanssi_add_matches( $post, $return );
+		}
+		if ( 'on' === get_option( 'relevanssi_show_matches' ) && empty( $search_params['fields'] ) ) {
+			$post->post_excerpt .= relevanssi_show_matches( $post );
 		}
 
 		$posts[] = $post;
@@ -964,7 +1012,9 @@ function relevanssi_do_query( &$query ) {
  * @return string The query with the LIMIT parameter added, if necessary.
  */
 function relevanssi_limit_filter( $query ) {
-	if ( 'on' === get_option( 'relevanssi_throttle', 'on' ) ) {
+	$termless_search = strstr( $query, 'relevanssi.term = relevanssi.term' );
+
+	if ( $termless_search || 'on' === get_option( 'relevanssi_throttle', 'on' ) ) {
 		$limit = get_option( 'relevanssi_throttle_limit', 500 );
 		if ( ! is_numeric( $limit ) ) {
 			$limit = 500;
@@ -1245,8 +1295,6 @@ function relevanssi_compile_search_args( $query, $q ) {
 				'operator' => 'NOT IN',
 			);
 		}
-
-		$query->tax_query = $tax_query;
 	}
 
 	$author = false;
@@ -1273,8 +1321,8 @@ function relevanssi_compile_search_args( $query, $q ) {
 	}
 
 	$parent_query = array();
-	if ( isset( $query->query_vars['post_parent'] ) ) {
-		$parent_query = array( 'parent in' => array( $query->query_vars['post_parent'] ) );
+	if ( isset( $query->query_vars['post_parent'] ) && '' !== $query->query_vars['post_parent'] ) {
+		$parent_query = array( 'parent in' => array( (int) $query->query_vars['post_parent'] ) );
 	}
 	if ( isset( $query->query_vars['post_parent__in'] ) && is_array( $query->query_vars['post_parent__in'] ) && ! empty( $query->query_vars['post_parent__in'] ) ) {
 		$parent_query = array( 'parent in' => $query->query_vars['post_parent__in'] );
@@ -1456,8 +1504,13 @@ function relevanssi_compile_search_args( $query, $q ) {
 		$include_attachments = $query->query_vars['include_attachments'];
 	}
 
+	if ( function_exists( 'relevanssi_extract_specifier' ) ) {
+		$q = relevanssi_extract_specifier( $q );
+	}
+
 	// Add synonyms.
 	// This is done here so the new terms will get highlighting.
+	$q_no_synonyms = $q;
 	if ( 'OR' === $operator ) {
 		// Synonyms are only used in OR queries.
 		$q = relevanssi_add_synonyms( $q );
@@ -1465,6 +1518,7 @@ function relevanssi_compile_search_args( $query, $q ) {
 
 	$search_params = array(
 		'q'                   => $q,
+		'q_no_synonyms'       => $q_no_synonyms,
 		'tax_query'           => $tax_query,
 		'tax_query_relation'  => $tax_query_relation,
 		'post_query'          => $post_query,

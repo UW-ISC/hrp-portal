@@ -51,68 +51,145 @@ function relevanssi_strtolower( $string ) {
 }
 
 /**
+ * Multibyte friendly substr.
+ *
+ * If multibyte string functions are available, returns mb_substr() and falls
+ * back to substr() if multibyte functions are not available.
+ *
+ * @param string $string The source string.
+ * @param int    $start  If start is non-negative, the returned string will
+ * start at the start'th position in str, counting from zero. If start is
+ * negative, the returned string will start at the start'th character from the
+ * end of string.
+ * @param int    $length Maximum number of characters to use from string. If
+ * omitted or null is passed, extract all characters to the end of the string.
+ *
+ * @return string $string The string in lowercase.
+ */
+function relevanssi_substr( $string, $start, $length = null ) {
+	if ( ! function_exists( 'mb_substr' ) ) {
+		return substr( $string, $start, $length );
+	} else {
+		return mb_substr( $string, $start, $length );
+	}
+}
+
+/**
+ * Adds the search result match breakdown to the post object.
+ *
+ * Reads in the number of matches and stores it in the relevanssi_hits filed
+ * of the post object. The post object is passed as a reference and modified
+ * on the fly.
+ *
+ * @param object $post The post object, passed as a reference.
+ * @param array  $data The source data.
+ */
+function relevanssi_add_matches( &$post, $data ) {
+	$hits = array(
+		'body'        => 0,
+		'title'       => 0,
+		'comment'     => 0,
+		'author'      => 0,
+		'excerpt'     => 0,
+		'customfield' => 0,
+		'mysqlcolumn' => 0,
+		'taxonomy'    => array(
+			'tag'      => 0,
+			'category' => 0,
+			'taxonomy' => 0,
+		),
+		'score'       => 0,
+		'terms'       => array(),
+	);
+	if ( isset( $data['body_matches'][ $post->ID ] ) ) {
+		$hits['body'] = $data['body_matches'][ $post->ID ];
+	}
+	if ( isset( $data['title_matches'][ $post->ID ] ) ) {
+		$hits['title'] = $data['title_matches'][ $post->ID ];
+	}
+	if ( isset( $data['tag_matches'][ $post->ID ] ) ) {
+		$hits['taxonomy']['tag'] = $data['tag_matches'][ $post->ID ];
+	}
+	if ( isset( $data['category_matches'][ $post->ID ] ) ) {
+		$hits['taxonomy']['category'] = $data['category_matches'][ $post->ID ];
+	}
+	if ( isset( $data['taxonomy_matches'][ $post->ID ] ) ) {
+		$hits['taxonomy']['taxonomy'] = $data['taxonomy_matches'][ $post->ID ];
+	}
+	if ( isset( $data['comment_matches'][ $post->ID ] ) ) {
+		$hits['comment'] = $data['comment_matches'][ $post->ID ];
+	}
+	if ( isset( $data['author_matches'][ $post->ID ] ) ) {
+		$hits['author'] = $data['author_matches'][ $post->ID ];
+	}
+	if ( isset( $data['excerpt_matches'][ $post->ID ] ) ) {
+		$hits['excerpt'] = $data['excerpt_matches'][ $post->ID ];
+	}
+	if ( isset( $data['customfield_matches'][ $post->ID ] ) ) {
+		$hits['customfield'] = $data['customfield_matches'][ $post->ID ];
+	}
+	if ( isset( $data['mysqlcolumn_matches'][ $post->ID ] ) ) {
+		$hits['mysqlcolumn'] = $data['mysqlcolumn_matches'][ $post->ID ];
+	}
+	if ( isset( $data['doc_weights'][ $post->ID ] ) ) {
+		$hits['score'] = round( $data['doc_weights'][ $post->ID ], 2 );
+	}
+	if ( isset( $data['term_hits'][ $post->ID ] ) ) {
+		$hits['terms'] = $data['term_hits'][ $post->ID ];
+		arsort( $hits['terms'] );
+	}
+	$post->relevanssi_hits = $hits;
+}
+
+/**
  * Generates the search result breakdown added to the search results.
  *
- * Gets the source data, generates numbers of it and then replaces the placeholders
+ * Gets the source data from the post object and then replaces the placeholders
  * in the breakdown template with the data.
  *
- * @param array $data The source data.
- * @param int   $hit  The post ID.
+ * @param object $post The post object.
  *
  * @return string The search results breakdown for the post.
  */
-function relevanssi_show_matches( $data, $hit ) {
-	if ( isset( $data['body_matches'][ $hit ] ) ) {
-		$body = $data['body_matches'][ $hit ];
-	} else {
-		$body = 0;
-	}
-	if ( isset( $data['title_matches'][ $hit ] ) ) {
-		$title = $data['title_matches'][ $hit ];
-	} else {
-		$title = 0;
-	}
-	if ( isset( $data['tag_matches'][ $hit ] ) ) {
-		$tag = $data['tag_matches'][ $hit ];
-	} else {
-		$tag = 0;
-	}
-	if ( isset( $data['category_matches'][ $hit ] ) ) {
-		$category = $data['category_matches'][ $hit ];
-	} else {
-		$category = 0;
-	}
-	if ( isset( $data['taxonomy_matches'][ $hit ] ) ) {
-		$taxonomy = $data['taxonomy_matches'][ $hit ];
-	} else {
-		$taxonomy = 0;
-	}
-	if ( isset( $data['comment_matches'][ $hit ] ) ) {
-		$comment = $data['comment_matches'][ $hit ];
-	} else {
-		$comment = 0;
-	}
-	if ( isset( $data['scores'][ $hit ] ) ) {
-		$score = round( $data['scores'][ $hit ], 2 );
-	} else {
-		$score = 0;
-	}
-	if ( isset( $data['term_hits'][ $hit ] ) ) {
-		$term_hits_array = $data['term_hits'][ $hit ];
-		arsort( $term_hits_array );
-	} else {
-		$term_hits_array = array();
-	}
+function relevanssi_show_matches( $post ) {
 	$term_hits  = '';
 	$total_hits = 0;
-	foreach ( $term_hits_array as $term => $hits ) {
+	foreach ( $post->relevanssi_hits['terms'] as $term => $hits ) {
 		$term_hits  .= " $term: $hits";
 		$total_hits += $hits;
 	}
 
 	$text          = stripslashes( get_option( 'relevanssi_show_matches_text' ) );
-	$replace_these = array( '%body%', '%title%', '%tags%', '%categories%', '%taxonomies%', '%comments%', '%score%', '%terms%', '%total%' );
-	$replacements  = array( $body, $title, $tag, $category, $taxonomy, $comment, $score, $term_hits, $total_hits );
+	$replace_these = array(
+		'%body%',
+		'%title%',
+		'%tags%',
+		'%categories%',
+		'%taxonomies%',
+		'%comments%',
+		'%customfields%',
+		'%author%',
+		'%excerpt%',
+		'%mysqlcolumns%',
+		'%score%',
+		'%terms%',
+		'%total%',
+	);
+	$replacements  = array(
+		$post->relevanssi_hits['body'],
+		$post->relevanssi_hits['title'],
+		$post->relevanssi_hits['taxonomy']['tag'],
+		$post->relevanssi_hits['taxonomy']['category'],
+		$post->relevanssi_hits['taxonomy']['taxonomy'],
+		$post->relevanssi_hits['comment'],
+		$post->relevanssi_hits['customfield'],
+		$post->relevanssi_hits['author'],
+		$post->relevanssi_hits['excerpt'],
+		$post->relevanssi_hits['mysqlcolumn'],
+		$post->relevanssi_hits['score'],
+		$term_hits,
+		$total_hits,
+	);
 	$result        = ' ' . str_replace( $replace_these, $replacements, $text );
 
 	/**
@@ -225,14 +302,17 @@ function relevanssi_populate_array( $matches ) {
 		array_push( $ids, $match->doc );
 	}
 
-	$ids   = array_keys( array_flip( $ids ) ); // Remove duplicate IDs.
-	$ids   = implode( ', ', $ids );
-	$posts = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE id IN ( $ids )", OBJECT ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$ids = array_keys( array_flip( $ids ) ); // Remove duplicate IDs.
+	do {
+		$hundred_ids = array_splice( $ids, 0, 100 );
+		$id_list     = implode( ', ', $hundred_ids );
+		$posts       = $wpdb->get_results( "SELECT * FROM $wpdb->posts WHERE id IN ( $id_list )", OBJECT ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-	foreach ( $posts as $post ) {
-		$relevanssi_post_array[ $post->ID ] = $post;
-		$relevanssi_post_types[ $post->ID ] = $post->post_type;
-	}
+		foreach ( $posts as $post ) {
+			$relevanssi_post_array[ $post->ID ] = $post;
+			$relevanssi_post_types[ $post->ID ] = $post->post_type;
+		}
+	} while ( $ids );
 
 	// Re-enable caching.
 	wp_suspend_cache_addition( false );
@@ -281,9 +361,15 @@ function relevanssi_extract_phrases( $query ) {
 
 	$phrases = array();
 	while ( false !== $pos ) {
-		$start = $pos;
-		$end   = call_user_func( $strpos_function, $normalized_query, '"', $start + 1 );
-
+		if ( $pos + 2 > relevanssi_strlen( $normalized_query ) ) {
+			$pos = false;
+			continue;
+		}
+		$start = call_user_func( $strpos_function, $normalized_query, '"', $pos );
+		$end   = false;
+		if ( false !== $start ) {
+			$end = call_user_func( $strpos_function, $normalized_query, '"', $start + 2 );
+		}
 		if ( false === $end ) {
 			// Just one " in the query.
 			$pos = $end;
@@ -296,7 +382,7 @@ function relevanssi_extract_phrases( $query ) {
 		if ( ! empty( $phrase ) && count( explode( ' ', $phrase ) ) > 1 ) {
 			$phrases[] = $phrase;
 		}
-		$pos = $end;
+		$pos = $end + 1;
 	}
 
 	return $phrases;
@@ -305,69 +391,74 @@ function relevanssi_extract_phrases( $query ) {
 /**
  * Generates the MySQL code for restricting the search to phrase hits.
  *
- * This function uses relevanssi_extract_phrases() to figure out the phrases in the
- * search query, then generates MySQL queries to restrict the search to the posts
- * containing those phrases in the title, content, taxonomy terms or meta fields.
+ * This function uses relevanssi_extract_phrases() to figure out the phrases in
+ * the search query, then generates MySQL queries to restrict the search to the
+ * posts containing those phrases in the title, content, taxonomy terms or meta
+ * fields.
  *
- * @global object $wpdb The WordPress database interface.
+ * @global array $relevanssi_variables The global Relevanssi variables.
  *
  * @param string $search_query The search query.
  * @param string $operator     The search operator (AND or OR).
  *
- * @return string $queries If not phrase hits are found, an empty string; otherwise
- * MySQL queries to restrict the search.
+ * @return string $queries If not phrase hits are found, an empty string;
+ * otherwise MySQL queries to restrict the search.
  */
 function relevanssi_recognize_phrases( $search_query, $operator = 'AND' ) {
-	global $wpdb;
+	global $relevanssi_variables;
 
 	$phrases = relevanssi_extract_phrases( $search_query );
-	$status  = relevanssi_valid_status_array();
 
 	$all_queries = array();
-	if ( count( $phrases ) > 0 ) {
+	if ( 0 === count( $phrases ) ) {
+		return $all_queries;
+	}
+
+	$taxonomies       = get_option( 'relevanssi_index_taxonomies_list', array() );
+	$custom_fields    = relevanssi_get_custom_fields();
+	$excerpts         = get_option( 'relevanssi_index_excerpt', 'off' );
+	$index_pdf_parent = get_option( 'relevanssi_index_pdf_parent' );
+
+	$phrase_queries = array();
+	$queries        = array();
+
+	if (
+		isset( $relevanssi_variables['phrase_targets'] ) &&
+		is_array( $relevanssi_variables['phrase_targets'] )
+		) {
+		$non_targeted_phrases = array();
 		foreach ( $phrases as $phrase ) {
-			$queries = array();
-			$phrase  = $wpdb->esc_like( $phrase );
-			$phrase  = str_replace( '‘', '_', $phrase );
-			$phrase  = str_replace( '’', '_', $phrase );
-			$phrase  = str_replace( "'", '_', $phrase );
-			$phrase  = str_replace( '"', '_', $phrase );
-			$phrase  = str_replace( '”', '_', $phrase );
-			$phrase  = str_replace( '“', '_', $phrase );
-			$phrase  = str_replace( '„', '_', $phrase );
-			$phrase  = str_replace( '´', '_', $phrase );
-			$phrase  = esc_sql( $phrase );
-			$excerpt = '';
-			if ( 'on' === get_option( 'relevanssi_index_excerpt' ) ) {
-				$excerpt = " OR post_excerpt LIKE '%$phrase%'";
+			if (
+				isset( $relevanssi_variables['phrase_targets'][ $phrase ] ) &&
+				function_exists( 'relevanssi_targeted_phrases' )
+			) {
+				$queries = relevanssi_targeted_phrases( $phrase );
+			} else {
+				$non_targeted_phrases[] = $phrase;
 			}
-
-			$query = "(SELECT ID FROM $wpdb->posts
-				WHERE (post_content LIKE '%$phrase%' OR post_title LIKE '%$phrase%' $excerpt)
-				AND post_status IN ($status))";
-
-			$queries[] = $query;
-
-			$query = "(SELECT ID FROM $wpdb->posts as p, $wpdb->term_relationships as r, $wpdb->term_taxonomy as s, $wpdb->terms as t
-				WHERE r.term_taxonomy_id = s.term_taxonomy_id AND s.term_id = t.term_id AND p.ID = r.object_id
-				AND t.name LIKE '%$phrase%' AND p.post_status IN ($status))";
-
-			$queries[] = $query;
-
-			$query = "(SELECT ID
-              FROM $wpdb->posts AS p, $wpdb->postmeta AS m
-              WHERE p.ID = m.post_id
-              AND m.meta_value LIKE '%$phrase%'
-              AND p.post_status IN ($status))";
-
-			$queries[] = $query;
-
-			$queries       = implode( ' OR relevanssi.doc IN ', $queries );
-			$queries       = "(relevanssi.doc IN $queries)";
-			$all_queries[] = $queries;
 		}
-	} else {
-		$phrases = '';
+		$phrases = $non_targeted_phrases;
+	}
+
+	$queries = array_merge(
+		$queries,
+		relevanssi_generate_phrase_queries(
+			$phrases,
+			$taxonomies,
+			$custom_fields,
+			$excerpts,
+			$index_pdf_parent
+		)
+	);
+
+	$phrase_queries = array();
+
+	foreach ( $queries as $phrase => $p_queries ) {
+		$p_queries     = implode( ' OR relevanssi.doc IN ', $p_queries );
+		$p_queries     = "(relevanssi.doc IN $p_queries)";
+		$all_queries[] = $p_queries;
+
+		$phrase_queries[ $phrase ] = $p_queries;
 	}
 
 	$operator = strtoupper( $operator );
@@ -379,7 +470,134 @@ function relevanssi_recognize_phrases( $search_query, $operator = 'AND' ) {
 		$all_queries = ' AND ( ' . implode( ' ' . $operator . ' ', $all_queries ) . ' ) ';
 	}
 
-	return $all_queries;
+	return array(
+		'and' => $all_queries,
+		'or'  => $phrase_queries,
+	);
+}
+
+/**
+ * Generates the phrase queries from phrases.
+ *
+ * Takes in phrases and a bunch of parameters and generates the MySQL queries
+ * that restrict the main search query to only posts that have the phrase.
+ *
+ * @param array  $phrases          A list of phrases to handle.
+ * @param array  $taxonomies       An array of taxonomy names to use.
+ * @param array  $custom_fields    A list of custom field names to use.
+ * @param string $excerpts         If 'on', include excerpts.
+ * @param string $index_pdf_parent If 'on', include PDF parent.
+ *
+ * @global object $wpdb The WordPress database interface.
+ *
+ * @return array An array of queries sorted by phrase.
+ */
+function relevanssi_generate_phrase_queries( $phrases, $taxonomies, $custom_fields, $excerpts, $index_pdf_parent ) {
+	global $wpdb;
+
+	$status = relevanssi_valid_status_array();
+
+	// Add "inherit" to the list of allowed statuses to include attachments.
+	if ( ! strstr( $status, 'inherit' ) ) {
+		$status .= ",'inherit'";
+	}
+
+	$phrase_queries = array();
+
+	foreach ( $phrases as $phrase ) {
+		$queries = array();
+		$phrase  = $wpdb->esc_like( $phrase );
+		$phrase  = str_replace( '‘', '_', $phrase );
+		$phrase  = str_replace( '’', '_', $phrase );
+		$phrase  = str_replace( "'", '_', $phrase );
+		$phrase  = str_replace( '"', '_', $phrase );
+		$phrase  = str_replace( '”', '_', $phrase );
+		$phrase  = str_replace( '“', '_', $phrase );
+		$phrase  = str_replace( '„', '_', $phrase );
+		$phrase  = str_replace( '´', '_', $phrase );
+		$phrase  = esc_sql( $phrase );
+
+		$excerpt = '';
+		if ( 'on' === $excerpts ) {
+			$excerpt = "OR post_excerpt LIKE '%$phrase%'";
+		}
+
+		$query = "(SELECT ID FROM $wpdb->posts
+			WHERE (post_content LIKE '%$phrase%' OR post_title LIKE '%$phrase%' $excerpt)
+			AND post_status IN ($status))";
+
+		$queries[] = $query;
+
+		if ( $taxonomies ) {
+			$taxonomies_escaped = implode( "','", array_map( 'esc_sql', $taxonomies ) );
+			$taxonomies_sql     = "AND s.taxonomy IN ('$taxonomies_escaped')";
+
+			$query = "(SELECT ID FROM $wpdb->posts as p, $wpdb->term_relationships as r, $wpdb->term_taxonomy as s, $wpdb->terms as t
+				WHERE r.term_taxonomy_id = s.term_taxonomy_id AND s.term_id = t.term_id AND p.ID = r.object_id
+				$taxonomies_sql
+				AND t.name LIKE '%$phrase%' AND p.post_status IN ($status))";
+
+			$queries[] = $query;
+		}
+
+		if ( $custom_fields ) {
+			$keys = '';
+
+			if ( is_array( $custom_fields ) ) {
+				array_push( $custom_fields, '_relevanssi_pdf_content' );
+				$custom_fields_escaped = implode(
+					"','",
+					array_map(
+						'esc_sql',
+						$custom_fields
+					)
+				);
+
+				$keys = "AND m.meta_key IN ('$custom_fields_escaped')";
+			}
+
+			if ( 'visible' === $custom_fields ) {
+				$keys = "AND (m.meta_key NOT LIKE '_%' OR m.meta_key = '_relevanssi_pdf_content')";
+			}
+
+			$query = "(SELECT ID
+				FROM $wpdb->posts AS p, $wpdb->postmeta AS m
+				WHERE p.ID = m.post_id
+				$keys
+				AND m.meta_value LIKE '%$phrase%'
+				AND p.post_status IN ($status))";
+
+			$queries[] = $query;
+		} elseif ( RELEVANSSI_PREMIUM ) {
+			$index_post_types = get_option( 'relevanssi_index_post_types', array() );
+			if ( in_array( 'attachment', $index_post_types, true ) ) {
+				$query = "(SELECT ID
+				FROM $wpdb->posts AS p, $wpdb->postmeta AS m
+				WHERE p.ID = m.post_id
+				AND m.meta_key = '_relevanssi_pdf_content'
+				AND m.meta_value LIKE '%$phrase%'
+				AND p.post_status IN ($status))";
+
+				$queries[] = $query;
+			}
+		}
+
+		if ( 'on' === $index_pdf_parent ) {
+			$query = "(SELECT parent.ID
+			FROM $wpdb->posts AS p, $wpdb->postmeta AS m, $wpdb->posts AS parent
+			WHERE p.ID = m.post_id
+			AND p.post_parent = parent.ID
+			AND m.meta_key = '_relevanssi_pdf_content'
+			AND m.meta_value LIKE '%$phrase%'
+			AND p.post_status = 'inherit')";
+
+			$queries[] = $query;
+		}
+
+		$phrase_queries[ $phrase ] = $queries;
+	}
+
+	return $phrase_queries;
 }
 
 /**
@@ -427,10 +645,10 @@ function relevanssi_get_custom_fields() {
 		} elseif ( 'visible' === $custom_fields ) {
 			return $custom_fields;
 		} else {
-			$custom_fields       = explode( ',', $custom_fields );
-			$count_custom_fields = count( $custom_fields );
-			for ( $i = 0; $i < $count_custom_fields; $i++ ) {
-				$custom_fields[ $i ] = trim( $custom_fields[ $i ] );
+			$custom_fields_raw = explode( ',', $custom_fields );
+			$custom_fields     = false;
+			if ( is_array( $custom_fields_raw ) ) {
+				$custom_fields = array_filter( array_map( 'trim', $custom_fields_raw ) );
 			}
 		}
 	} else {
@@ -531,6 +749,7 @@ function relevanssi_remove_punct( $a ) {
 
 	$replacement_array = array(
 		'ß'                     => 'ss',
+		'₂'                     => '2',
 		'·'                     => '',
 		'…'                     => '',
 		'€'                     => '',
@@ -598,7 +817,6 @@ function relevanssi_remove_punct( $a ) {
 	return $a;
 }
 
-
 /**
  * Prevents the default search from running.
  *
@@ -615,10 +833,16 @@ function relevanssi_remove_punct( $a ) {
  */
 function relevanssi_prevent_default_request( $request, $query ) {
 	if ( $query->is_search ) {
-		if ( isset( $query->query_vars['post_type'] ) && isset( $query->query_vars['post_status'] ) ) {
-			if ( 'attachment' === $query->query_vars['post_type'] && 'inherit,private' === $query->query_vars['post_status'] ) {
-				// This is a media library search; do not meddle.
-				return $request;
+		$indexed_post_types = array_flip(
+			get_option( 'relevanssi_index_post_types', array() )
+		);
+		$images_indexed     = get_option( 'relevanssi_index_image_files', 'off' );
+		if ( false === isset( $indexed_post_types['attachment'] ) || 'off' === $images_indexed ) {
+			if ( isset( $query->query_vars['post_type'] ) && isset( $query->query_vars['post_status'] ) ) {
+				if ( 'attachment' === $query->query_vars['post_type'] && 'inherit,private' === $query->query_vars['post_status'] ) {
+					// This is a media library search; do not meddle.
+					return $request;
+				}
 			}
 		}
 
@@ -702,11 +926,13 @@ function relevanssi_prevent_default_request( $request, $query ) {
  *
  * @param string|array   $string          The string, or an array of strings, to
  *                                        tokenize.
- * @param boolean|string $remove_stops    If true, stopwords are removed. If 'body',
- *                                        also removes the body stopwords. Default
- *                                        true.
+ * @param boolean|string $remove_stops    If true, stopwords are removed. If
+ * 'body', also removes the body stopwords. Default true.
  * @param int            $min_word_length The minimum word length to include.
- *                                        Default -1.
+ * Default -1.
+ *
+ * @return int[] An array of tokens as the keys and their frequency as the
+ * value.
  */
 function relevanssi_tokenize( $string, $remove_stops = true, $min_word_length = -1 ) {
 	$tokens = array();
@@ -732,6 +958,15 @@ function relevanssi_tokenize( $string, $remove_stops = true, $min_word_length = 
 	}
 	if ( 'body' === $remove_stops && function_exists( 'relevanssi_fetch_body_stopwords' ) ) {
 		$stopword_list = array_merge( $stopword_list, relevanssi_fetch_body_stopwords() );
+	}
+
+	/**
+	 * Disables stopwords completely.
+	 *
+	 * @param boolean If true, stopwords are not used. Default false.
+	 */
+	if ( apply_filters( 'relevanssi_disable_stopwords', false ) ) {
+		$stopword_list = array();
 	}
 
 	if ( function_exists( 'relevanssi_apply_thousands_separator' ) ) {
@@ -896,7 +1131,7 @@ function relevanssi_the_tags( $before = null, $separator = ', ', $after = '', $e
 
 		$count = count( $matches[0] );
 		for ( $i = 0; $i < $count; $i++ ) {
-			$highlighted_tag_name = relevanssi_highlight_terms( $tag_names[ $i ], get_search_query() );
+			$highlighted_tag_name = relevanssi_highlight_terms( $tag_names[ $i ], get_search_query(), true );
 			$highlighted[ $i ]    = str_replace( '>' . $tag_names[ $i ] . '<', '>' . $highlighted_tag_name . '<', $originals[ $i ] );
 		}
 
@@ -1203,7 +1438,6 @@ function relevanssi_switch_blog( $new_blog, $prev_blog ) {
 	}
 
 	$relevanssi_variables['relevanssi_table'] = $wpdb->prefix . 'relevanssi';
-	$relevanssi_variables['stopword_table']   = $wpdb->prefix . 'relevanssi_stopwords';
 	$relevanssi_variables['log_table']        = $wpdb->prefix . 'relevanssi_log';
 }
 
@@ -1225,7 +1459,7 @@ function relevanssi_switch_blog( $new_blog, $prev_blog ) {
  * @return string The link with the parameter added.
  */
 function relevanssi_add_highlight( $permalink, $link_post = null ) {
-	$highlight_docs = get_option( 'relevanssi_highlight_docs' );
+	$highlight_docs = get_option( 'relevanssi_highlight_docs', 'off' );
 	$query          = get_search_query();
 	if ( isset( $highlight_docs ) && 'off' !== $highlight_docs && ! empty( $query ) ) {
 		$frontpage_id = intval( get_option( 'page_on_front' ) );
@@ -1436,7 +1670,7 @@ function relevanssi_simple_generate_suggestion( $query ) {
 	$data = get_transient( 'relevanssi_didyoumean_query' );
 	if ( empty( $data ) ) {
 		$data = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-		set_transient( 'relevanssi_didyoumean_query', $data, 60 * 60 * 24 * 7 );
+		set_transient( 'relevanssi_didyoumean_query', $data, MONTH_IN_SECONDS );
 	}
 
 	$query            = htmlspecialchars_decode( $query, ENT_QUOTES );
@@ -1653,9 +1887,38 @@ function relevanssi_get_forbidden_post_types() {
 		'jp_pay_product',       // Jetpack.
 		'jp_mem_plan',          // Jetpack.
 		'tablepress_table',     // TablePress.
+		'ninja-table',          // Ninja Tables.
 		'shop_order',           // WooCommerce.
 		'shop_order_refund',    // WooCommerce.
+		'wc_order_status',      // WooCommerce.
+		'wc_order_email',       // WooCommerce.
 		'shop_webhook',         // WooCommerce.
+		'et_theme_builder',     // Divi.
+		'et_template',          // Divi.
+		'et_header_layout',     // Divi.
+		'et_body_layout',       // Divi.
+		'et_footer_layout',     // Divi.
+		'wpforms',              // WP Forms.
+		'amn_wpforms',          // WP Forms.
+		'wpforms_log',          // WP Forms.
+		'dlm_download_version', // Download Monitor.
+		'wpcf7_contact_form',   // WP Contact Form 7.
+		'amn_exact-metrics',    // Google Analytics Dashboard.
+		'edd_commission',       // Easy Digital Downloads.
+		'edd_payment',          // Easy Digital Downloads.
+		'edd_discount',         // Easy Digital Downloads.
+		'eddpointslog',         // Easy Digital Downloads.
+		'edd_log',              // Easy Digital Downloads.
+		'edd-zapier-sub',       // Easy Digital Downloads.
+		'pys_event',            // Pixel Your Site.
+		'wp-types-group',       // WP Types.
+		'wp-types-term-group',  // WP Types.
+		'wp-types-user-group',  // WP Types.
+		'vc_grid_item',         // Visual Composer.
+		'bigcommerce_task',     // BigCommerce.
+		'slides',               // Qoda slides.
+		'carousels',            // Qoda carousels.
+
 	);
 }
 
@@ -1670,5 +1933,190 @@ function relevanssi_get_forbidden_taxonomies() {
 		'link_category',          // Link categories.
 		'amp_validation_error',   // AMP.
 		'product_visibility',     // WooCommerce.
+		'wpforms_log_type',       // WP Forms.
+		'amp_template',           // AMP.
+		'edd_commission_status',  // Easy Digital Downloads.
+		'edd_log_type',           // Easy Digital Downloads.
 	);
+}
+
+/**
+ * Returns "off".
+ *
+ * Useful for returning "off" to filters easily.
+ *
+ * @return string A string with value "off".
+ */
+function relevanssi_return_off() {
+	return 'off';
+}
+
+/**
+ * Filters out unwanted custom fields.
+ *
+ * Added to the relevanssi_custom_field_value filter hook.
+ *
+ * @see relevanssi_index_custom_fields()
+ *
+ * @param array  $values The custom field values.
+ * @param string $field  The custom field name.
+ *
+ * @return array Empty array for unwanted custom fields.
+ */
+function relevanssi_filter_custom_fields( $values, $field ) {
+	$unwanted_custom_fields = array(
+		'classic-editor-remember' => true,
+		'php_everywhere_code'     => true,
+	);
+	if ( isset( $unwanted_custom_fields[ $field ] ) ) {
+		$values = array();
+	}
+	return $values;
+}
+
+
+/**
+ * Removes page builder short codes from content.
+ *
+ * Page builder shortcodes cause problems in excerpts and add junk to posts in
+ * indexing. This function cleans them out.
+ *
+ * @param string $content The content to clean.
+ *
+ * @return string The content without page builder shortcodes.
+ */
+function relevanssi_remove_page_builder_shortcodes( $content ) {
+	$context = current_filter();
+	/**
+	 * Filters the page builder shortcode.
+	 *
+	 * @param array  An array of page builder shortcode regexes.
+	 * @param string Context, ie. the current filter hook, if you want your
+	 * changes to only count for indexing or for excerpts. In indexing, this
+	 * is 'relevanssi_post_content', for excerpts it's
+	 * 'relevanssi_pre_excerpt_content'.
+	 */
+	$search_array = apply_filters(
+		'relevanssi_page_builder_shortcodes',
+		array(
+			// Remove content.
+			'/\[et_pb_code.*?\].*\[\/et_pb_code\]/im',
+			'/\[et_pb_sidebar.*?\].*\[\/et_pb_sidebar\]/im',
+			'/\[et_pb_fullwidth_slider.*?\].*\[\/et_pb_fullwidth_slider\]/im',
+			'/\[vc_raw_html.*?\].*\[\/vc_raw_html\]/im',
+			'/\[fusion_imageframe.*?\].*\[\/fusion_imageframe\]/im',
+			'/\[fusion_code.*?\].*\[\/fusion_code\]/im',
+			// Remove only the tags.
+			'/\[\/?et_pb.*?\]/im',
+			'/\[\/?vc.*?\]/im',
+			'/\[\/?mk.*?\]/im',
+			'/\[\/?cs_.*?\]/im',
+			'/\[\/?av_.*?\]/im',
+			'/\[\/?fusion_.*?\]/im',
+			'/\[maxmegamenu.*?\]/im',
+			'/\[ai1ec.*?\]/im',
+			'/\[eme_.*?\]/im',
+			'/\[layerslider.*?\]/im',
+		),
+		$context
+	);
+	$content      = preg_replace( $search_array, ' ', $content );
+	return $content;
+}
+
+/**
+ * Blocks Relevanssi from the admin searches on specific post types.
+ *
+ * This function is added to relevanssi_search_ok, relevanssi_admin_search_ok,
+ * and relevanssi_prevent_default_request hooks. When a search is made with
+ * one of the listed post types, these filters will get a false response, which
+ * means Relevanssi won't search and won't block the default request.
+ *
+ * @see relevanssi_prevent_default_request
+ * @see relevanssi_search
+ *
+ * @param boolean  $allow Should the admin search be allowed.
+ * @param WP_Query $query The query object.
+ */
+function relevanssi_block_on_admin_searches( $allow, $query ) {
+	$blocked_post_types = array(
+		'rc_blocks', // Reusable Content Blocks.
+	);
+	/**
+	 * Filters the post types that are blocked in the admin search.
+	 *
+	 * In some cases you may want to enable Relevanssi in the admin backend,
+	 * but don't want Relevanssi to search certain post types. To block
+	 * Relevanssi from a specific post type, add the post type to this filter.
+	 *
+	 * @param array List of post types Relevanssi shouldn't try searching.
+	 */
+	$blocked_post_types = apply_filters(
+		'relevanssi_admin_search_blocked_post_types',
+		$blocked_post_types
+	);
+	if (
+		isset( $query->query_vars['post_type'] ) &&
+		in_array( $query->query_vars['post_type'], $blocked_post_types, true )
+		) {
+		$allow = false;
+	}
+	return $allow;
+}
+
+/**
+ * Checks if user has relevanssi_indexing_restriction filter functions in use.
+ *
+ * Temporary check for the changes in the relevanssi_indexing_restriction filter
+ * in 2.8/4.7. Remove eventually. The function runs all non-Relevanssi filters
+ * on relevanssi_indexing_restriction and reports all that return a string.
+ *
+ * @see relevanssi_init()
+ *
+ * @return string The notice, if there's something to complain about, empty
+ * string otherwise.
+ */
+function relevanssi_check_indexing_restriction() {
+	$notice = '';
+	if ( has_filter( 'relevanssi_indexing_restriction' ) ) {
+		global $wp_filter;
+		$callbacks = array_flip(
+			array_keys(
+				array_merge(
+					[],
+					...$wp_filter['relevanssi_indexing_restriction']->callbacks
+				)
+			)
+		);
+		if ( isset( $callbacks['relevanssi_yoast_exclude'] ) ) {
+			unset( $callbacks['relevanssi_yoast_exclude'] );
+		}
+		if ( isset( $callbacks['relevanssi_seopress_exclude'] ) ) {
+			unset( $callbacks['relevanssi_seopress_exclude'] );
+		}
+		if ( isset( $callbacks['relevanssi_woocommerce_restriction'] ) ) {
+			unset( $callbacks['relevanssi_woocommerce_restriction'] );
+		}
+		if ( ! empty( $callbacks ) ) {
+			$returns_string = array();
+			foreach ( array_keys( $callbacks ) as $callback ) {
+				$return = call_user_func( $callback, array( 'mysql' => '', 'reason' => '' ) );
+				if ( is_string( $return ) ) {
+					$returns_string[] = '<code>' . $callback . '</code>';
+				}
+			}
+			if ( $returns_string ) {
+				$list_of_callbacks = implode( ', ', $returns_string );
+				$notice            = <<<EOH
+<div id="relevanssi-indexing_restriction-warning" class="notice notice-warn">
+<p>The filter hook <code>relevanssi_indexing_restriction</code> was changed
+recently. <a href="https://www.relevanssi.com/knowledge-base/controlling-attachment-types-index/">More
+information can be found here</a>. You're using the filter, so make sure your
+filter functions have been updated. Check these functions that return wrong
+format: $list_of_callbacks.</p></div>
+EOH;
+			}
+		}
+	}
+	return $notice;
 }

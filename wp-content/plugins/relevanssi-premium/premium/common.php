@@ -299,14 +299,17 @@ function relevanssi_get_child_pdf_content( $post_id ) {
 /**
  * Provides the Premium version "Did you mean" recommendations.
  *
- * Provides a better version of "Did you mean" recommendations, using the spelling corrector class to generate a correct spelling.
+ * Provides a better version of "Did you mean" recommendations, using the
+ * spelling corrector class to generate a correct spelling.
  *
- * @global WP_Query $wp_query The query object, used to check the number of posts found.
+ * @global WP_Query $wp_query The query object, used to check the number of
+ * posts found.
  *
  * @param string $query The search query to correct.
  * @param string $pre   Text printed out before the suggestion.
  * @param string $post  Text printed out after the suggestion.
- * @param int    $n     Maximum number of hits before the suggestions are shown, default 5.
+ * @param int    $n     Maximum number of hits before the suggestions are shown,
+ * default 5.
  */
 function relevanssi_premium_didyoumean( $query, $pre, $post, $n = 5 ) {
 	global $wp_query;
@@ -349,11 +352,13 @@ function relevanssi_premium_didyoumean( $query, $pre, $post, $n = 5 ) {
 /**
  * Generates the "Did you mean" suggestion.
  *
- * Generates "Did you mean" suggestions given a query to correct, using the spelling corrector method.
+ * Generates "Did you mean" suggestions given a query to correct, using the
+ * spelling corrector method.
  *
  * @param string $query The search query to correct.
  *
- * @return string $query Corrected query, empty if there are no corrections available.
+ * @return string $query Corrected query, empty if there are no corrections
+ * available.
  */
 function relevanssi_premium_generate_suggestion( $query ) {
 	$corrected_query = '';
@@ -403,8 +408,9 @@ function relevanssi_premium_generate_suggestion( $query ) {
 function relevanssi_get_multisite_post( $blogid, $id ) {
 	switch_to_blog( $blogid );
 	if ( ! is_numeric( mb_substr( $id, 0, 1 ) ) ) {
-		// The post ID does not start with a number; this is a user or a taxonomy term,
-		// so suspend cache addition to avoid getting garbage in the cache.
+		// The post ID does not start with a number; this is a user or a
+		// taxonomy term, so suspend cache addition to avoid getting garbage in
+		// the cache.
 		wp_suspend_cache_addition( true );
 	}
 	$post = relevanssi_get_post( $id, $blogid );
@@ -415,18 +421,24 @@ function relevanssi_get_multisite_post( $blogid, $id ) {
 /**
  * Initializes things for Relevanssi Premium.
  *
- * Adds metaboxes, depending on settings; adds synonym indexing filter if necessary and removes an unnecessary action.
+ * Adds metaboxes, depending on settings; adds synonym indexing filter if
+ * necessary and removes an unnecessary action.
  */
 function relevanssi_premium_init() {
 	$show_post_controls = true;
 	if ( 'on' === get_option( 'relevanssi_hide_post_controls' ) ) {
 		$show_post_controls = false;
 		/**
-		 * Adjusts the capability required to show the Relevanssi post controls for admins.
+		 * Adjusts the capability required to show the Relevanssi post controls
+		 * for admins.
 		 *
-		 * @param string $capability The minimum capability required, default 'manage_options'.
+		 * @param string $capability The minimum capability required, default
+		 * 'manage_options'.
 		 */
-		if ( 'on' === get_option( 'relevanssi_show_post_controls' ) && current_user_can( apply_filters( 'relevanssi_options_capability', 'manage_options' ) ) ) {
+		if (
+			'on' === get_option( 'relevanssi_show_post_controls' ) &&
+			current_user_can( apply_filters( 'relevanssi_options_capability', 'manage_options' ) )
+			) {
 			$show_post_controls = true;
 		}
 	}
@@ -438,13 +450,18 @@ function relevanssi_premium_init() {
 		add_filter( 'relevanssi_indexing_tokens', 'relevanssi_add_indexing_synonyms', 10 );
 	}
 
-	// If the relevanssi_save_postdata is not disabled, scheduled publication will swipe out the Relevanssi post controls settings.
+	// If the relevanssi_save_postdata is not disabled, scheduled publication
+	// will swipe out the Relevanssi post controls settings.
 	add_action(
 		'future_to_publish',
 		function( $post ) {
 			remove_action( 'save_post', 'relevanssi_save_postdata' );
 		}
 	);
+
+	if ( function_exists( 'do_blocks' ) ) {
+		add_action( 'init', 'relevanssi_register_gutenberg_actions', 11 );
+	}
 
 	// Add the related posts filters if necessary.
 	relevanssi_related_init();
@@ -471,47 +488,69 @@ function relevanssi_post_link_replace( $permalink, $post_id ) {
 /**
  * Fetches a list of words from the Relevanssi database for spelling corrector.
  *
- * A helper function for the spelling corrector. Fetches all the words from the
- * Relevanssi database to use as a source material for spelling suggestions.
+ * A helper function for the spelling corrector. Gets the word list from the
+ * 'relevanssi_words' option. If the data is expired (more than a month old),
+ * this function triggers an asynchronous refresh action that fetches new words
+ * from the Relevanssi database to use as a source material for spelling
+ * suggestions.
  *
- * @global $wpdb The WordPress database interface.
- * @global $relevanssi_variables The global Relevanssi variables, used for the database table names.
- *
- * @return array $words An array of words, with the word as the key and number of occurrances as the value.
+ * @return array $words An array of words, with the word as the key and number
+ * of occurrances as the value.
  */
 function relevanssi_get_words() {
-	global $wpdb, $relevanssi_variables;
+	$data = get_option(
+		'relevanssi_words',
+		array(
+			'expire' => 0,
+			'words'  => array(),
+		)
+	);
 
-	$words = get_transient( 'relevanssi_words' );
-
-	if ( ! $words ) {
-		/**
-		 * The minimum limit of occurrances to include a word.
-		 *
-		 * To save resources, only words with more than this many occurrances are fed for
-		 * the spelling corrector. If there are problems with the spelling corrector,
-		 * increasing this value may fix those problems.
-		 *
-		 * @param int $number The number of occurrances must be more than this value,
-		 * default 2.
-		 */
-		$count = apply_filters( 'relevanssi_get_words_having', 2 );
-		if ( ! is_numeric( $count ) ) {
-			$count = 2;
-		}
-		$q = 'SELECT term, SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield) as c FROM ' . $relevanssi_variables['relevanssi_table'] . " GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
-
-		$results = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-		$words = array();
-		foreach ( $results as $result ) {
-			$words[ $result->term ] = $result->c;
-		}
-
-		set_transient( 'relevanssi_words', $words, WEEK_IN_SECONDS );
+	if ( time() > $data['expire'] ) {
+		relevanssi_launch_ajax_action( 'relevanssi_get_words' );
 	}
 
-	return $words;
+	return $data['words'];
+}
+
+/**
+ * Launches an asynchronous Ajax action.
+ *
+ * Makes a wp_remote_post() call with the specific action. Handles nonce
+ * verification.
+ *
+ * @see wp_remove_post()
+ * @see wp_create_nonce()
+ *
+ * @param string $action       The action to trigger (also the name of the
+ * nonce).
+ * @param array  $payload_args The parameters sent to the action. Defaults to
+ * an empty array.
+ *
+ * @return WP_Error|array The wp_remote_post() response or WP_Error on failure.
+ */
+function relevanssi_launch_ajax_action( $action, $payload_args = array() ) {
+	$cookies = array();
+	foreach ( $_COOKIE as $name => $value ) {
+		$cookies[] = "$name=" . rawurlencode(
+			is_array( $value ) ? wp_json_encode( $value ) : $value
+		);
+	}
+	$default_payload = array(
+		'action' => $action,
+		'_nonce' => wp_create_nonce( $action ),
+	);
+	$payload         = array_merge( $default_payload, $payload_args );
+	$args            = array(
+		'timeout'  => 0.01,
+		'blocking' => false,
+		'body'     => $payload,
+		'headers'  => array(
+			'cookie' => implode( '; ', $cookies ),
+		),
+	);
+	$url             = admin_url( 'admin-ajax.php' );
+	return wp_remote_post( $url, $args );
 }
 
 /**
@@ -574,4 +613,205 @@ function relevanssi_get_server_url() {
 	 * @param string The server URL.
 	 */
 	return apply_filters( 'relevanssi_attachment_server_url', $server );
+}
+
+/**
+ * Extracts taxonomy specifiers from the search query.
+ *
+ * Finds all {taxonomy:search term} specifiers from the query. If any are
+ * found, they are stored in $relevanssi_variables global variable and the
+ * filtering function is activated.
+ *
+ * @global array $relevanssi_variables Used to store the target data.
+ *
+ * @param string $query The query.
+ *
+ * @return string The query with the specifier tags removed.
+ */
+function relevanssi_extract_specifier( $query ) {
+	global $relevanssi_variables;
+
+	$targets = array();
+
+	if ( preg_match_all( '/{(.*?):(.*?)}/', $query, $matches, PREG_SET_ORDER ) ) {
+		foreach ( $matches as $match ) {
+			list( $whole, $target, $keyword ) = $match;
+
+			$phrases = relevanssi_extract_phrases( $keyword );
+			if ( ! empty( $phrases ) ) {
+				foreach ( $phrases as $phrase ) {
+					$relevanssi_variables['phrase_targets'][ $phrase ] = $target;
+				}
+			} else {
+				if ( is_numeric( $keyword ) ) {
+					$keyword = ' ' . $keyword;
+				}
+				$targets[ $keyword ][] = $target;
+			}
+
+			$query = str_replace( $whole, $keyword, $query );
+		}
+	}
+
+	if ( ! empty( $targets ) ) {
+		$relevanssi_variables['targets'] = $targets;
+		add_filter( 'relevanssi_match', 'relevanssi_target_matches' );
+	}
+
+	return $query;
+}
+
+/**
+ * Filters posts by taxonomy specifiers.
+ *
+ * If taxonomy specifiers are found in the query, this filtering function is
+ * activated and will set the post weight to 0 in the cases where the post
+ * matches the search term, but not the specifiers.
+ *
+ * @global array $relevanssi_variables Used to store the target data.
+ *
+ * @param object $match The Relevanssi match object.
+ *
+ * @return object The match object, with the weight modified if necessary.
+ */
+function relevanssi_target_matches( $match ) {
+	global $relevanssi_variables;
+
+	if ( is_numeric( $match->term ) ) {
+		$match->term = ' ' . $match->term;
+	}
+
+	$fuzzy = get_option( 'relevanssi_fuzzy' );
+	if ( 'always' === $fuzzy || 'sometimes' === $fuzzy ) {
+		foreach ( $relevanssi_variables['targets'] as $term => $target ) {
+			if (
+				substr( $match->term, 0, strlen( $term ) ) === $term ||
+				substr( strrev( $match->term ), 0, strlen( $term ) ) === strrev( $term )
+			) {
+				$relevanssi_variables['targets'][ $match->term ] =
+					$relevanssi_variables['targets'][ $term ];
+			}
+		}
+	}
+
+	$no_matches = false;
+	if ( isset( $relevanssi_variables['targets'][ $match->term ] ) ) {
+		$no_matches = true;
+		foreach ( $relevanssi_variables['targets'][ $match->term ] as $target ) {
+			if ( isset( $match->$target ) && '0' !== $match->$target ) {
+				$no_matches = false;
+				break;
+			}
+			if ( ! is_object( $match->customfield_detail ) ) {
+				$match->customfield_detail = json_decode( $match->customfield_detail );
+			}
+			if (
+				! empty( $match->customfield_detail ) &&
+				isset( $match->customfield_detail->$target ) &&
+				'0' !== $match->customfield_detail->$target
+				) {
+				$no_matches = false;
+				break;
+			}
+			if ( ! is_object( $match->taxonomy_detail ) ) {
+				$match->taxonomy_detail = json_decode( $match->taxonomy_detail );
+			}
+			if (
+				! empty( $match->taxonomy_detail ) &&
+				isset( $match->taxonomy_detail->$target ) &&
+				'0' !== $match->taxonomy_detail->$target
+				) {
+				$no_matches = false;
+				break;
+			}
+			if ( ! is_object( $match->mysqlcolumn_detail ) ) {
+				$match->mysqlcolumn_detail = json_decode( $match->mysqlcolumn_detail );
+			}
+			if (
+				! empty( $match->mysqlcolumn_detail ) &&
+				isset( $match->mysqlcolumn_detail->$target ) &&
+				'0' !== $match->mysqlcolumn_detail->$target
+				) {
+				$no_matches = false;
+				break;
+			}
+		}
+	}
+	if ( $no_matches ) {
+		$match->weight = 0;
+	}
+
+	return $match;
+}
+
+/**
+ * Generates queries for targeted phrases.
+ *
+ * Goes through the targeted phrases from the Relevanssi global variable
+ * $relevanssi_variables['phrase_targets'] and generates the queries for the
+ * phrases taking note of the target restrictions. Some of this is slightly
+ * hacky, as some default inclusions generated by the
+ * relevanssi_generate_phrase_queries() are simply removed.
+ *
+ * @see relevanssi_generate_phrase_queries()
+ *
+ * @global array $relevanssi_variables The global Relevanssi variables.
+ *
+ * @param string $phrase The source phrase for the queries.
+ *
+ * @return array An array of queries per phrase.
+ */
+function relevanssi_targeted_phrases( $phrase ) {
+	global $relevanssi_variables;
+
+	$target = $relevanssi_variables['phrase_targets'][ $phrase ];
+
+	$taxonomies = null;
+	$excerpt    = null;
+	$fields     = null;
+
+	if ( 'excerpt' === $target ) {
+		$excerpt = 'on';
+	}
+	if ( 'tag' === $target ) {
+		$target = 'post_tag';
+	}
+	if ( taxonomy_exists( $target ) ) {
+		$taxonomies = array( $target );
+	} else {
+		$fields = array( $target );
+	}
+
+	$queries = relevanssi_generate_phrase_queries(
+		array( $phrase ),
+		$taxonomies,
+		$fields,
+		$excerpt,
+		null
+	);
+
+	if ( 'excerpt' === $target ) {
+		$find                  = array(
+			"post_content LIKE '%$phrase%' OR ",
+			"post_title LIKE '%$phrase%' OR ",
+		);
+		$queries[ $phrase ][0] = str_replace( $find, '', $queries[ $phrase ][0] );
+	} elseif ( 'title' === $target ) {
+		$find                  = array(
+			"post_content LIKE '%$phrase%' OR ",
+		);
+		$queries[ $phrase ][0] = str_replace( $find, '', $queries[ $phrase ][0] );
+	} else {
+		unset( $queries[ $phrase ][0] ); // Remove the generic post content or title query.
+	}
+	if ( $fields ) {
+		// Custom field targeting, remove PDF content custom frield from the list.
+		$queries[ $phrase ][1] = str_replace(
+			",'_relevanssi_pdf_content'",
+			'',
+			$queries[ $phrase ][1]
+		);
+	}
+
+	return $queries;
 }

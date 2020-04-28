@@ -38,4 +38,12 @@ jQuery(document).ready(function() {
 			}
 		})
 	})
+
+	jQuery("textarea#relevanssi_pdf_content").focus(function() {
+		jQuery(this).animate({ rows: 40, cols: 120 }, 500)
+	})
+
+	jQuery("textarea#relevanssi_pdf_content").focusout(function() {
+		jQuery(this).animate({ rows: 4, cols: 80 }, 500)
+	})
 })

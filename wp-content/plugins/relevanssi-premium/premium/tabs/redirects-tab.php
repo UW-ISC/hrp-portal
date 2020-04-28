@@ -14,13 +14,28 @@
  * Prints out the Premium Redirects tab in Relevanssi settings.
  */
 function relevanssi_redirects_tab() {
+	$site_url  = site_url();
 	$redirects = get_option( 'relevanssi_redirects' );
+	if ( ! isset( $redirects['empty'] ) ) {
+		$redirects['empty'] = '';
+	}
+
 	?>
 <h2 id="options"><?php esc_html_e( 'Redirects', 'relevanssi' ); ?></h2>
 
 <p><?php esc_html_e( 'If you want a particular search to always lead to a specific page, you can use the redirects. Whenever the search query matches a redirect, the search is automatically bypassed and the user is redirected to the target page.', 'relevanssi' ); ?></p>
 
 <p><?php esc_html_e( 'Enter the search term and the target URL, which may be relative to your site home page or an absolute URL. If "Partial match" is checked, the redirect happens if the query word appears anywhere in the search query, even inside a word, so use it with care. If the search query matches multiple redirections, the first one it matches will trigger.', 'relevanssi' ); ?></p>
+
+<table class="form-table" role="presentation">
+	<tbody>
+		<tr>
+			<th scope="row"><label for="redirect_empty_searches"><?php esc_html_e( 'Redirect empty searches', 'relevanssi' ); ?></label></th>
+			<td><input type="text" id="redirect_empty_searches" name="redirect_empty_searches" size="60" value="<?php echo esc_attr( str_replace( $site_url, '', $redirects['empty'] ) ); ?>" />
+			<p class="description"><?php esc_html_e( 'Enter an URL here to redirect all searches that find nothing to this URL.', 'relevanssi' ); ?></p></td>
+		</tr>
+	</tbody>
+</table>
 
 <table class="form-table" id="redirect_table">
 	<thead>
@@ -32,7 +47,7 @@ function relevanssi_redirects_tab() {
 	</thead>
 	<tbody>
 	<?php
-	if ( empty( $redirects ) ) {
+	if ( 1 === count( $redirects ) ) {
 		?>
 	<tr class="redirect_table_row" id="row_0">
 	<td><input type="text" name="query_0" size="60" />
@@ -47,9 +62,12 @@ function relevanssi_redirects_tab() {
 	</tr>
 		<?php
 	} else {
-		$row      = 0;
-		$site_url = site_url();
+		$row = 0;
 		foreach ( $redirects as $redirect ) {
+			if ( ! isset( $redirect['query'] ) ) {
+				continue;
+			}
+
 			$row_id  = esc_attr( $row );
 			$query   = esc_attr( $redirect['query'] );
 			$partial = '';

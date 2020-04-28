@@ -67,6 +67,12 @@ function relevanssi_options() {
 			relevanssi_remove_all_stopwords();
 		}
 
+		if ( isset( $_REQUEST['repopulatestopwords'] ) ) {
+			check_admin_referer( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_options' );
+			$verbose = true;
+			relevanssi_populate_stopwords( $verbose );
+		}
+
 		if ( isset( $_REQUEST['addbodystopword'] ) ) {
 			check_admin_referer( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_options' );
 			relevanssi_add_body_stopword( $_REQUEST['addbodystopword'] );
@@ -130,6 +136,10 @@ function update_relevanssi_options() {
 
 		if ( ! isset( $_REQUEST['relevanssi_expand_shortcodes'] ) ) {
 			$_REQUEST['relevanssi_expand_shortcodes'] = 'off';
+		}
+
+		if ( ! isset( $_REQUEST['relevanssi_index_image_files'] ) ) {
+			$_REQUEST['relevanssi_index_image_files'] = 'off';
 		}
 	}
 
@@ -309,7 +319,7 @@ function update_relevanssi_options() {
 		}
 		if ( 'some' === $_REQUEST['relevanssi_index_fields_select'] ) {
 			if ( isset( $_REQUEST['relevanssi_index_fields'] ) ) {
-				$fields_option = $_REQUEST['relevanssi_index_fields'];
+				$fields_option = rtrim( $_REQUEST['relevanssi_index_fields'], " \t\n\r\0\x0B," );
 			}
 		}
 		update_option( 'relevanssi_index_fields', $fields_option );
@@ -399,7 +409,7 @@ function update_relevanssi_options() {
 		update_option( 'relevanssi_class', $_REQUEST['relevanssi_class'] );
 	}
 	if ( isset( $_REQUEST['relevanssi_expst'] ) ) {
-		update_option( 'relevanssi_exclude_posts', $_REQUEST['relevanssi_expst'] );
+		update_option( 'relevanssi_exclude_posts', trim( $_REQUEST['relevanssi_expst'], ' ,' ) );
 	}
 	if ( isset( $_REQUEST['relevanssi_hilite_title'] ) ) {
 		update_option( 'relevanssi_hilite_title', $_REQUEST['relevanssi_hilite_title'] );
@@ -413,6 +423,9 @@ function update_relevanssi_options() {
 	if ( isset( $_REQUEST['relevanssi_index_excerpt'] ) ) {
 		update_option( 'relevanssi_index_excerpt', $_REQUEST['relevanssi_index_excerpt'] );
 	}
+	if ( isset( $_REQUEST['relevanssi_index_image_files'] ) ) {
+		update_option( 'relevanssi_index_image_files', $_REQUEST['relevanssi_index_image_files'] );
+	}
 	if ( isset( $_REQUEST['relevanssi_fuzzy'] ) ) {
 		update_option( 'relevanssi_fuzzy', $_REQUEST['relevanssi_fuzzy'] );
 	}
@@ -424,9 +437,6 @@ function update_relevanssi_options() {
 	}
 	if ( isset( $_REQUEST['relevanssi_omit_from_logs'] ) ) {
 		update_option( 'relevanssi_omit_from_logs', $_REQUEST['relevanssi_omit_from_logs'] );
-	}
-	if ( isset( $_REQUEST['relevanssi_index_limit'] ) ) {
-		update_option( 'relevanssi_index_limit', $_REQUEST['relevanssi_index_limit'] );
 	}
 	if ( isset( $_REQUEST['relevanssi_disable_or_fallback'] ) ) {
 		update_option( 'relevanssi_disable_or_fallback', $_REQUEST['relevanssi_disable_or_fallback'] );
@@ -633,16 +643,15 @@ function relevanssi_query_log() {
 		print( "<form method='post'>" );
 		wp_nonce_field( 'relevanssi_reset_logs', '_relresnonce', true, true );
 		printf(
-			'<p><label for="relevanssi_reset_code">%s</label></p></form>',
-			sprintf(
-				// Translators: %1$s is the input field, %2$s is the submit button.
-				__( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-					'To reset the logs, type "reset" into the box here %1$s and click %2$s',
-					'relevanssi'
-				),
-				' <input type="text" id="relevanssi_reset_code" name="relevanssi_reset_code" />',
-				' <input type="submit" name="relevanssi_reset" value="Reset" class="button" />'
-			)
+			'<p><label for="relevanssi_reset_code">%s</label>
+			<input type="text" id="relevanssi_reset_code" name="relevanssi_reset_code" />
+			<input type="submit" name="relevanssi_reset" value="%s" class="button" /></p></form>',
+			// Translators: do not translate "reset".
+			esc_html__(
+				'To reset the logs, type "reset" into the box here and click the Reset button',
+				'relevanssi'
+			),
+			esc_html__( 'Reset', 'relevanssi' )
 		);
 	}
 
@@ -746,7 +755,12 @@ function relevanssi_date_queries( $days, $title, $version = 'good' ) {
 		$url = get_bloginfo( 'url' );
 		foreach ( $queries as $query ) {
 			$search_parameter = rawurlencode( $query->query );
-			$query_url        = $url . '/?s=' . $search_parameter;
+			/**
+			 * Filters the query URL for the user searches page.
+			 *
+			 * @param string Query URL.
+			 */
+			$query_url = apply_filters( 'relevanssi_user_searches_query_url', $url . '/?s=' . $search_parameter );
 			printf(
 				"<tr><td><a href='%s'>%s</a></td><td style='padding: 3px 5px; text-align: center'>%d</td><td style='padding: 3px 5px; text-align: center'>%d</td></tr>",
 				esc_attr( $query_url ),
@@ -981,6 +995,7 @@ function relevanssi_add_admin_scripts( $hook ) {
 		'reload_state'         => __( 'Reload the page to refresh the state of the index.', 'relevanssi' ),
 		'pdf_reset_confirm'    => __( 'Are you sure you want to delete all attachment content from the index?', 'relevanssi' ),
 		'pdf_reset_done'       => __( 'Relevanssi attachment data wiped clean.', 'relevanssi' ),
+		'pdf_reset_problems'   => __( 'There were problems wiping the Relevanssi attachment data clean.', 'relevanssi' ),
 		'hour'                 => __( 'hour', 'relevanssi' ),
 		'hours'                => __( 'hours', 'relevanssi' ),
 		'about'                => __( 'about', 'relevanssi' ),
@@ -1003,8 +1018,40 @@ function relevanssi_add_admin_scripts( $hook ) {
 		wp_localize_script( 'relevanssi_admin_js', 'nonce', $nonce );
 	}
 
+	/**
+	 * Sets the indexing limit, ie. how many posts are indexed at once.
+	 *
+	 * Relevanssi starts by indexing this many posts at once. If the process
+	 * goes fast enough, Relevanssi will then increase the limit and if the
+	 * process is slow, the limit will be decreased. If necessary, you can
+	 * use the relevanssi_indexing_adjust filter hook to disable that
+	 * adjustment.
+	 *
+	 * @param int The indexing limit, default 10.
+	 */
 	$indexing_limit = apply_filters( 'relevanssi_indexing_limit', 10 );
-	wp_localize_script( 'relevanssi_admin_js', 'relevanssi_params', array( 'indexing_limit' => $indexing_limit ) );
+
+	/**
+	 * Sets the indexing adjustment.
+	 *
+	 * Relevanssi will adjust the number of posts indexed at once to speed
+	 * up the process if it goes fast and to slow down, if the posts are
+	 * slow to index. You can use this filter to stop that behaviour, making
+	 * Relevanssi index posts at constant pace. That's generally slower, but
+	 * more reliable.
+	 *
+	 * @param boolean Should the limit be adjusted, default true.
+	 */
+	$indexing_adjust = apply_filters( 'relevanssi_indexing_adjust', true );
+
+	wp_localize_script(
+		'relevanssi_admin_js',
+		'relevanssi_params',
+		array(
+			'indexing_limit'  => $indexing_limit,
+			'indexing_adjust' => $indexing_adjust,
+		)
+	);
 }
 
 /**
