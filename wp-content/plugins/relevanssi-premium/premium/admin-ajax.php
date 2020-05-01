@@ -25,6 +25,9 @@ add_action( 'wp_ajax_relevanssi_related_remove', 'relevanssi_add_to_exclude_list
 add_action( 'wp_ajax_relevanssi_related_return', 'relevanssi_remove_from_exclude_list' );
 add_action( 'wp_ajax_relevanssi_pin_post', 'relevanssi_pin_post' );
 add_action( 'wp_ajax_relevanssi_unpin_post', 'relevanssi_unpin_post' );
+add_action( 'wp_ajax_relevanssi_get_words', 'relevanssi_ajax_get_words' );
+add_action( 'wp_ajax_nopriv_relevanssi_get_words', 'relevanssi_ajax_get_words' );
+add_action( 'wp_ajax_relevanssi_index_pdf', 'relevanssi_ajax_index_pdf' );
 
 /**
  * Performs the "list PDF files" AJAX action.
@@ -49,14 +52,20 @@ function relevanssi_list_pdfs_action() {
 /**
  * Performs the "wipe PDF content" AJAX action.
  *
- * Removes all '_relevanssi_pdf_content' and '_relevanssi_pdf_error' post meta fields from the wp_postmeta table.
+ * Removes all '_relevanssi_pdf_content' and '_relevanssi_pdf_error' post meta
+ * fields from the wp_postmeta table. However, if '_relevanssi_pdf_modified' is
+ * set, the content is not removed for that post.
  *
  * @since 2.0.0
  */
 function relevanssi_wipe_pdfs_action() {
 	check_ajax_referer( 'relevanssi-wipe-pdfs', 'security' );
 
-	$deleted_content = delete_post_meta_by_key( '_relevanssi_pdf_content' );
+	$deleted_content = relevanssi_delete_all_but(
+		'_relevanssi_pdf_content',
+		'_relevanssi_pdf_modified',
+		'1'
+	);
 	$deleted_errors  = delete_post_meta_by_key( '_relevanssi_pdf_error' );
 
 	$response                    = array();
@@ -73,6 +82,48 @@ function relevanssi_wipe_pdfs_action() {
 	echo wp_json_encode( $response );
 
 	wp_die();
+}
+
+/**
+ * Deletes all post meta for certain meta key unless another meta key is set.
+ *
+ * @global object $wpdb The WordPress database interface.
+ *
+ * @param string $meta_key      The meta key to delete.
+ * @param string $exclusion_key The conditional meta key.
+ * @param string $value         Value for the conditional meta to check.
+ *
+ * @return boolean True if something was deleted, false if not.
+ *
+ * @since 2.5.0
+ */
+function relevanssi_delete_all_but( $meta_key, $exclusion_key, $value ) {
+	global $wpdb;
+
+	$query = $wpdb->prepare(
+		"SELECT meta_id FROM $wpdb->postmeta WHERE meta_key = %s
+		AND post_id NOT IN (
+			SELECT post_id FROM $wpdb->postmeta WHERE meta_key = %s AND meta_value = %s
+		)",
+		$meta_key,
+		$exclusion_key,
+		$value
+	);
+
+	$meta_ids = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+	if ( ! count( $meta_ids ) ) {
+		return false;
+	}
+
+	$query = "DELETE FROM $wpdb->postmeta WHERE meta_id IN ( " . implode( ',', $meta_ids ) . ' )';
+
+	$count = $wpdb->query( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
+
+	if ( ! $count ) {
+		return false;
+	}
+
+	return true;
 }
 
 /**
@@ -609,5 +660,78 @@ function relevanssi_unpin_post() {
 	);
 
 	echo wp_json_encode( $response );
+	wp_die();
+}
+
+/**
+ * Fetches database words to the relevanssi_words option.
+ *
+ * @global $wpdb The WordPress database interface.
+ * @global $relevanssi_variables The global Relevanssi variables, used for the
+ * database table names.
+ *
+ * @since 2.5.0
+ */
+function relevanssi_ajax_get_words() {
+	global $wpdb, $relevanssi_variables;
+
+	if ( ! wp_verify_nonce( $_REQUEST['_nonce'], 'relevanssi_get_words' ) ) {
+		wp_die();
+	}
+
+	/**
+	 * The minimum limit of occurrances to include a word.
+	 *
+	 * To save resources, only words with more than this many occurrances are
+	 * fed to the spelling corrector. If there are problems with the spelling
+	 * corrector, increasing this value may fix those problems.
+	 *
+	 * @param int $number The number of occurrances must be more than this
+	 * value, default 2.
+	 */
+	$count = apply_filters( 'relevanssi_get_words_having', 2 );
+	if ( ! is_numeric( $count ) ) {
+		$count = 2;
+	}
+	$q = 'SELECT term,
+		SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield)
+		AS c FROM ' . $relevanssi_variables['relevanssi_table'] .
+		" GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
+
+	$results = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	$words = array();
+	foreach ( $results as $result ) {
+		$words[ $result->term ] = $result->c;
+	}
+
+	$expire = time() + MONTH_IN_SECONDS;
+	$data   = array(
+		'expire' => $expire,
+		'words'  => $words,
+	);
+
+	update_option( 'relevanssi_words', $data, false );
+
+	wp_die();
+}
+
+/**
+ * Launches the attachment content indexing.
+ *
+ * Sets the _relevanssi_pdf_error for the post to show RELEVANSSI_ERROR_05
+ * (ie. "work in progress"), then launches the indexing and dies off.
+ *
+ * @since 2.5.0
+ */
+function relevanssi_ajax_index_pdf() {
+	if ( ! wp_verify_nonce( $_REQUEST['_nonce'], 'relevanssi_index_pdf' ) ) {
+		wp_die();
+	}
+
+	update_post_meta( $_REQUEST['post_id'], '_relevanssi_pdf_error', RELEVANSSI_ERROR_05 );
+
+	relevanssi_index_pdf( $_REQUEST['post_id'] );
+
 	wp_die();
 }

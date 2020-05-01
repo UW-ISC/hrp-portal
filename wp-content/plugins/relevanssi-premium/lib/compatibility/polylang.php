@@ -17,9 +17,9 @@ add_filter( 'relevanssi_hits_filter', 'relevanssi_polylang_term_filter' );
 /**
  * Removes the Polylang language filters.
  *
- * If the Polylang allow all option is enabled ('relevanssi_polylang_all_languages'),
- * removes the Polylang language filter. By default Polylang filters the languages
- * using a taxonomy query.
+ * If the Polylang allow all option ('relevanssi_polylang_all_languages') is
+ * enabled this removes the Polylang language filter. By default Polylang
+ * filters the languages using a taxonomy query.
  *
  * @param object $query WP_Query object we need to clean up.
  */
@@ -75,10 +75,10 @@ function relevanssi_polylang_filter( $query ) {
 /**
  * Allows taxonomy terms in language-restricted searches.
  *
- * This is a bit of a hack, where the language taxonomy WHERE clause is modified on
- * the go to allow all posts with the post ID -1 (which means taxonomy terms and
- * users). This may break suddenly in updates, but I haven't come up with a better
- * way so far.
+ * This is a bit of a hack, where the language taxonomy WHERE clause is modified
+ * on the go to allow all posts with the post ID -1 (which means taxonomy terms
+ * and users). This may break suddenly in updates, but I haven't come up with a
+ * better way so far.
  *
  * @param string $where The WHERE clause to modify.
  *
@@ -87,11 +87,20 @@ function relevanssi_polylang_filter( $query ) {
  * @since 2.1.6
  */
 function relevanssi_polylang_where_include_terms( $where ) {
-	$current_language = pll_current_language();
-	$languages        = get_terms( array( 'taxonomy' => 'language' ) );
-	$language_id      = 0;
+	global $wpdb;
+
+	$current_language = substr( get_locale(), 0, 2 );
+	if ( function_exists( 'pll_current_language' ) ) {
+		$current_language = pll_current_language();
+	}
+	$languages   = get_terms( array( 'taxonomy' => 'language' ) );
+	$language_id = 0;
 	foreach ( $languages as $language ) {
-		if ( ! is_wp_error( $language ) && $language instanceof WP_Term && $language->slug === $current_language ) {
+		if (
+			! is_wp_error( $language ) &&
+			$language instanceof WP_Term &&
+			$language->slug === $current_language
+			) {
 			$language_id = intval( $language->term_id );
 			break;
 		}
@@ -100,9 +109,10 @@ function relevanssi_polylang_where_include_terms( $where ) {
 	if ( 0 !== $language_id ) {
 		// Do a simple search-and-replace to modify the query.
 		$where = preg_replace( '/\s+/', ' ', $where );
+		$where = preg_replace( '/\(\s/', '(', $where );
 		$where = str_replace(
-			"AND relevanssi.doc IN (SELECT DISTINCT(tr.object_id) FROM wp_term_relationships AS tr WHERE tr.term_taxonomy_id IN ($language_id))",
-			"AND (relevanssi.doc IN (SELECT DISTINCT(tr.object_id) FROM wp_term_relationships AS tr WHERE tr.term_taxonomy_id IN ($language_id)) OR (relevanssi.doc = -1))",
+			"AND relevanssi.doc IN (SELECT DISTINCT(tr.object_id) FROM {$wpdb->prefix}term_relationships AS tr WHERE tr.term_taxonomy_id IN ($language_id))",
+			"AND (relevanssi.doc IN ( SELECT DISTINCT(tr.object_id) FROM {$wpdb->prefix}term_relationships AS tr WHERE tr.term_taxonomy_id IN ($language_id)) OR (relevanssi.doc = -1))",
 			$where
 		);
 	}
@@ -112,9 +122,10 @@ function relevanssi_polylang_where_include_terms( $where ) {
 /**
  * Filters out taxonomy terms in the wrong language.
  *
- * If all languages are not allowed, this filter goes through the results and removes
- * the taxonomy terms in the wrong language. This can't be done in the original query
- * because the term language information is slightly hard to find.
+ * If all languages are not allowed, this filter goes through the results and
+ * removes the taxonomy terms in the wrong language. This can't be done in the
+ * original query because the term language information is slightly hard to
+ * find.
  *
  * @param array $hits The found posts are in $hits[0].
  *
@@ -125,17 +136,35 @@ function relevanssi_polylang_where_include_terms( $where ) {
 function relevanssi_polylang_term_filter( $hits ) {
 	$polylang_allow_all = get_option( 'relevanssi_polylang_all_languages' );
 	if ( 'on' !== $polylang_allow_all ) {
-		$current_language = pll_current_language();
-		$accepted_hits    = array();
+		$current_language = substr( get_locale(), 0, 2 );
+		if ( function_exists( 'pll_current_language' ) ) {
+			$current_language = pll_current_language();
+		}
+		$accepted_hits = array();
 		foreach ( $hits[0] as $hit ) {
+			$original_hit = $hit;
+			if ( is_numeric( $hit ) ) {
+				// In case "fields" is set to "ids", fetch the post object we need.
+				$original_hit = $hit;
+				$hit          = get_post( $hit );
+			}
+			if ( ! isset( $hit->post_content ) ) {
+				// The "fields" is set to "id=>parent".
+				$original_hit = $hit;
+				$hit          = get_post( $hit->ID );
+			}
+
 			if ( -1 === $hit->ID && isset( $hit->term_id ) ) {
 				$term_id      = intval( $hit->term_id );
 				$translations = pll_get_term_translations( $term_id );
-				if ( isset( $translations[ $current_language ] ) && $translations[ $current_language ] === $term_id ) {
-					$accepted_hits[] = $hit;
+				if (
+					isset( $translations[ $current_language ] ) &&
+					$translations[ $current_language ] === $term_id
+					) {
+					$accepted_hits[] = $original_hit;
 				}
 			} else {
-				$accepted_hits[] = $hit;
+				$accepted_hits[] = $original_hit;
 			}
 		}
 		$hits[0] = $accepted_hits;

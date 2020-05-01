@@ -35,9 +35,7 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	 * : Post ID, if you only want to reindex one post.
 	 *
 	 * [--limit=<limit>]
-	 * : Number of posts you want to index at one go. If you are extending
-	 * the indexing, the relevanssi_index_limit option is used for limit
-	 * if this value is left empty.
+	 * : Number of posts you want to index at one go.
 	 *
 	 * [--extend=<extend>]
 	 * : If true, do not truncate the index or index users and taxonomies.
@@ -73,6 +71,8 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	 * @param array $assoc_args Command arguments as associative array.
 	 */
 	public function index( $args, $assoc_args ) {
+		remove_filter( 'relevanssi_search_ok', '__return_true' );
+
 		$post_id = null;
 		if ( isset( $assoc_args['post'] ) ) {
 			$post_id = $assoc_args['post'];
@@ -398,7 +398,18 @@ function relevanssi_generate_progress_bar( $title, $count ) {
 	return $progress;
 }
 
+add_filter( 'relevanssi_search_ok', 'relevanssi_cli_query_ok', 10, 2 );
 /**
- * Necessary, otherwise WP CLI search won't return any results.
+ * Sets the relevanssi_search_ok true for searches.
+ *
+ * @param boolean  $ok    Whether it's ok to do a Relevanssi search or not.
+ * @param WP_Query $query The query object.
+ *
+ * @return boolean Whether it's ok to do a Relevanssi search or not.
  */
-add_filter( 'relevanssi_search_ok', '__return_true' );
+function relevanssi_cli_query_ok( $ok, $query ) {
+	if ( $query->is_search() ) {
+		return true;
+	}
+	return $ok;
+}

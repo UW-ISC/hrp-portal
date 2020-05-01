@@ -8,6 +8,8 @@
  * @see     https://www.relevanssi.com/
  */
 
+add_filter( 'relevanssi_match', 'relevanssi_block_body_stopwords', 10, 3 );
+
 /**
  * Adds a stopword to the list of stopwords.
  *
@@ -74,28 +76,37 @@ function relevanssi_add_single_body_stopword( $term ) {
 		return false;
 	}
 
-	$term = stripslashes( $term );
+	$term = stripslashes( relevanssi_strtolower( $term ) );
 
-	$body_stopwords  = get_option( 'relevanssi_body_stopwords', '' );
-	$body_stopwords .= ',' . $term;
+	$body_stopwords = get_option( 'relevanssi_body_stopwords', '' );
+	if ( ! empty( $body_stopwords ) ) {
+		$body_stopwords .= ',';
+
+	}
+	$body_stopwords .= $term;
 	$success         = update_option( 'relevanssi_body_stopwords', $body_stopwords );
 
-	if ( $success ) {
-		global $wpdb, $relevanssi_variables;
-
-		// Remove from index.
-		$wpdb->query(
-			$wpdb->prepare(
-				'UPDATE ' . $relevanssi_variables['relevanssi_table'] . ' SET content = 0 WHERE term=%s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-				$term
-			)
-		);
-		// Remove all lines with all zeros, ie. no matches.
-		$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE content + title + comment + tag + link + author + category + excerpt + taxonomy + customfield + mysqlcolumn = 0' ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-		return true;
-	} else {
+	if ( ! $success ) {
 		return false;
 	}
+
+	global $wpdb, $relevanssi_variables;
+
+	// Remove from index.
+	$wpdb->query(
+		$wpdb->prepare(
+			'UPDATE ' . $relevanssi_variables['relevanssi_table'] . ' SET content = 0 WHERE term=%s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$term
+		)
+	);
+	// Remove all lines with all zeros, ie. no matches.
+	$wpdb->query(
+		'DELETE FROM '
+		. $relevanssi_variables['relevanssi_table']  // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		. ' WHERE content + title + comment + tag + link + author + category + excerpt + taxonomy + customfield + mysqlcolumn = 0'
+	);
+
+	return true;
 }
 
 /**
@@ -107,9 +118,15 @@ function relevanssi_remove_all_body_stopwords() {
 	$success = update_option( 'relevanssi_body_stopwords', '' );
 
 	if ( $success ) {
-		printf( "<div id='message' class='updated fade'><p>%s</p></div>", esc_html__( 'All content stopwords removed! Remember to re-index.', 'relevanssi' ) );
+		printf(
+			"<div id='message' class='updated fade'><p>%s</p></div>",
+			esc_html__( 'All content stopwords removed! Remember to re-index.', 'relevanssi' )
+		);
 	} else {
-		printf( "<div id='message' class='updated fade'><p>%s</p></div>", esc_html__( "There was a problem, and content stopwords couldn't be removed.", 'relevanssi' ) );
+		printf(
+			"<div id='message' class='updated fade'><p>%s</p></div>",
+			esc_html__( "There was a problem, and content stopwords couldn't be removed.", 'relevanssi' )
+		);
 	}
 }
 
@@ -137,14 +154,32 @@ function relevanssi_remove_body_stopword( $term, $verbose = true ) {
 
 	if ( $success ) {
 		if ( $verbose ) {
-			// Translators: %s is the stopword.
-			printf( "<div id='message' class='updated fade'><p>%s</p></div>", sprintf( esc_html__( "Term '%s' removed from content stopwords! Re-index to get it back to index.", 'relevanssi' ), esc_html( stripslashes( $term ) ) ) );
+			printf(
+				"<div id='message' class='updated fade'><p>%s</p></div>",
+				sprintf(
+					// Translators: %s is the stopword.
+					esc_html__(
+						"Term '%s' removed from content stopwords! Re-index to get it back to index.",
+						'relevanssi'
+					),
+					esc_html( stripslashes( $term ) )
+				)
+			);
 		}
 		return true;
 	} else {
 		if ( $verbose ) {
-			// Translators: %s is the stopword.
-			printf( "<div id='message' class='updated fade'><p>%s</p></div>", sprintf( esc_html__( "Couldn't remove term '%s' from content stopwords!", 'relevanssi' ), esc_html( stripslashes( $term ) ) ) );
+			printf(
+				"<div id='message' class='updated fade'><p>%s</p></div>",
+				sprintf(
+					// Translators: %s is the stopword.
+					esc_html__(
+						"Couldn't remove term '%s' from content stopwords!",
+						'relevanssi'
+					),
+					esc_html( stripslashes( $term ) )
+				)
+			);
 		}
 		return false;
 	}
@@ -168,12 +203,12 @@ function relevanssi_fetch_body_stopwords() {
  * Displays a list of body stopwords.
  *
  * Displays the list of body stopwords and gives the controls for adding new stopwords.
- *
- * @global object $wpdb                 The WP database interface.
- * @global array  $relevanssi_variables The global Relevanssi variables array.
  */
 function relevanssi_show_body_stopwords() {
-	printf( '<p>%s</p>', esc_html__( 'Post content stopwords are like stopwords, but they are only applied to the post content. These words can be used for searching and will be found in post titles, custom fields and other indexed content – just not in the post body content. Sometimes a word can be very common, but also have a more specific meaning and use on your site, and making it a content stopword will make it easier to find the specific use cases.', 'relevanssi' ) );
+	printf(
+		'<p>%s</p>',
+		esc_html__( 'Post content stopwords are like stopwords, but they are only applied to the post content. These words can be used for searching and will be found in post titles, custom fields and other indexed content – just not in the post body content. Sometimes a word can be very common, but also have a more specific meaning and use on your site, and making it a content stopword will make it easier to find the specific use cases.', 'relevanssi' )
+	);
 	?>
 <table class="form-table">
 <tr>
@@ -196,19 +231,17 @@ function relevanssi_show_body_stopwords() {
 	<td>
 		<ul>
 	<?php
-	$results    = get_option( 'relevanssi_body_stopwords', '' );
-	$results    = explode( ',', $results );
-	$exportlist = array();
-	foreach ( $results as $stopword ) {
-		if ( empty( $stopword ) ) {
-			continue;
+	$stopword_list  = get_option( 'relevanssi_body_stopwords', '' );
+	$stopword_array = array_map( 'stripslashes', explode( ',', $stopword_list ) );
+	sort( $stopword_array );
+	array_walk(
+		$stopword_array,
+		function ( $term ) {
+			printf( '<li style="display: inline;"><input type="submit" name="removebodystopword" value="%s"/></li>', esc_attr( $term ) );
 		}
-		$sw = stripslashes( $stopword );
-		printf( '<li style="display: inline;"><input type="submit" name="removebodystopword" value="%s"/></li>', esc_attr( $sw ) );
-		array_push( $exportlist, $sw );
-	}
+	);
 
-	$exportlist = htmlspecialchars( implode( ', ', $exportlist ) );
+	$exportlist = htmlspecialchars( str_replace( ',', ', ', $stopword_list ) );
 	?>
 	</ul>
 	<p><input type="submit" id="removeallbodystopwords" name="removeallbodystopwords" value="<?php esc_attr_e( 'Remove all content stopwords', 'relevanssi' ); ?>" class='button' /></p>
@@ -227,4 +260,39 @@ function relevanssi_show_body_stopwords() {
 </table>
 
 	<?php
+}
+
+/**
+ * Blocks body stopwords from partial matches.
+ *
+ * If the search term is a body stopword, all cases where all the matches are
+ * in the post content are removed from the results by setting the match
+ * weight to 0. This will eliminate all partial matches based on body stopwords
+ * from the results.
+ *
+ * @param object $match The match object.
+ * @param int    $idf   The IDF value (not used here).
+ * @param string $term  The original search term.
+ *
+ * @return object The match object.
+ */
+function relevanssi_block_body_stopwords( $match, $idf, $term ) {
+	$body_stopwords = relevanssi_fetch_body_stopwords();
+	if ( in_array( $term, $body_stopwords, true ) ) {
+		$sum = $match->content
+			+ $match->title
+			+ $match->comment
+			+ $match->link
+			+ $match->author
+			+ $match->excerpt
+			+ $match->customfield
+			+ $match->mysqlcolumn
+			+ $match->tag
+			+ $match->taxonomy
+			+ $match->category;
+		if ( (int) $match->content === (int) $sum ) {
+			$match->weight = 0;
+		}
+	}
+	return $match;
 }

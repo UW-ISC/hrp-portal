@@ -21,7 +21,7 @@ function relevanssi_overview_tab() {
 	?>
 	<h2><?php esc_html_e( 'Welcome to Relevanssi!', 'relevanssi' ); ?></h2>
 
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 
 	<?php
 	if ( ! is_plugin_active_for_network( plugin_basename( $relevanssi_variables['file'] ) ) && function_exists( 'relevanssi_form_api_key' ) ) {
@@ -43,9 +43,9 @@ function relevanssi_overview_tab() {
 					<?php // Translators: %1$s opens the link, %2$s is the anchor text, %3$s closes the link. ?>
 				<li><p><?php printf( esc_html__( 'Now, you need an index. Head over to the %1$s%2$s%3$s tab to set up the basic indexing options and to build the index.', 'relevanssi' ), "<a href='" . esc_attr( $this_page ) . "&amp;tab=indexing'>", esc_html__( 'Indexing', 'relevanssi' ), '</a>' ); ?></p>
 					<p><?php esc_html_e( 'You need to check at least the following options:', 'relevanssi' ); ?><br />
-				– <?php esc_html_e( 'Make sure the post types you want to include in the index are indexed.', 'relevanssi' ); ?><br />
+				&ndash; <?php esc_html_e( 'Make sure the post types you want to include in the index are indexed.', 'relevanssi' ); ?><br />
 					<?php // Translators: %s is '_sku'. ?>
-				– <?php printf( esc_html__( 'Do you use custom fields to store content you want included? If so, add those too. WooCommerce user? You probably want to include %s.', 'relevanssi' ), '<code>_sku</code>' ); ?></p>
+				&ndash; <?php printf( esc_html__( 'Do you use custom fields to store content you want included? If so, add those too. WooCommerce user? You probably want to include %s.', 'relevanssi' ), '<code>_sku</code>' ); ?></p>
 					<p><?php esc_html_e( "Then just save the options and build the index. First time you have to do it manually, but after that, it's fully automatic: all changes are reflected in the index without reindexing. (That said, it's a good idea to rebuild the index once a year.)", 'relevanssi' ); ?></p>
 				</li>
 				<?php else : ?>
@@ -106,7 +106,7 @@ function relevanssi_overview_tab() {
 		<td>
 			<p><a href="https://www.relevanssi.com/buy-premium"><?php esc_html_e( 'Buy Relevanssi Premium now', 'relevanssi' ); ?></a> –
 			<?php // Translators: %1$s is the coupon code, %2$s is the year it expires. ?>
-			<?php printf( esc_html__( 'use coupon code %1$s for 20%% discount (valid at least until the end of %2$s)', 'relevanssi' ), '<strong>FREE2019</strong>', '2019' ); ?></p>
+			<?php printf( esc_html__( 'use coupon code %1$s for 20%% discount (valid at least until the end of %2$s)', 'relevanssi' ), '<strong>FREE2020</strong>', '2020' ); ?></p>
 			<p><?php esc_html_e( 'Here are some improvements Relevanssi Premium offers:', 'relevanssi' ); ?></p>
 			<ul class="relevanssi_ul">
 				<li><?php esc_html_e( 'PDF content indexing', 'relevanssi' ); ?></li>
