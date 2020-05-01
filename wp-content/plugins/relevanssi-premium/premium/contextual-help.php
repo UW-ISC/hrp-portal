@@ -32,18 +32,23 @@ function relevanssi_premium_admin_help() {
 				'</ul>',
 		)
 	);
+
+	/* Translators:  first placeholder is the_permalink(), the second is relevanssi_the_permalink() */
+	$permalinks_to_users = sprintf( esc_html__( "Permalinks to user profiles may not always work on search results templates. %1\$s should work, but if it doesn't, you can replace it with %2\$s.", 'relevanssi' ), '<code>the_permalink()</code>', '<code>relevanssi_the_permalink()</code>' );
+	/* Translators:  the placeholder is the name of the relevanssi_index_user_fields option */
+	$index_user_fields = sprintf( esc_html__( 'To control which user meta fields are indexed, you can use the %s option. It should have a comma-separated list of user meta fields. It can be set like this (you only need to run this code once):', 'relevanssi' ), '<code>relevanssi_index_user_fields</code>' );
+	/* Translators: the first placeholder opens the link, the second closes the link */
+	$knowledge_base = sprintf( esc_html__( 'For more details on user profiles and search results templates, see %1$sthis knowledge base entry%2$s.', 'relevanssi' ), "<a href='https://www.relevanssi.com/knowledge-base/user-profile-search/'>", '</a>' );
+
 	$screen->add_help_tab(
 		array(
 			'id'      => 'relevanssi-title-user-profiles',
 			'title'   => __( 'User profiles', 'relevanssi' ),
 			'content' => '<ul>' .
-				/* translators:  first placeholder is the_permalink(), the second is relevanssi_the_permalink() */
-				'<li>' . sprintf( esc_html__( "Permalinks to user profiles may not always work on search results templates. %1\$s should work, but if it doesn't, you can replace it with %2\$s.", 'relevanssi' ), '<code>the_permalink()</code>', '<code>relevanssi_the_permalink()</code>' ) . '</li>' .
-				/* translators:  the placeholder is the name of the relevanssi_index_user_fields option */
-				'<li>' . sprintf( esc_html__( 'To control which user meta fields are indexed, you can use the %s option. It should have a comma-separated list of user meta fields. It can be set like this (you only need to run this code once):', 'relevanssi' ), '<code>relevanssi_index_user_fields</code>' ) .
+				"<li>$permalinks_to_users</li>" .
+				"<li>$index_user_fields" .
 				"<pre>update_option( 'relevanssi_index_user_fields', 'field_a,field_b,field_c' );</pre></li>" .
-				/* translators: the first placeholder opens the link, the second closes the link */
-				'<li>' . sprintf( esc_html__( 'For more details on user profiles and search results templates, see %1$sthis knowledge base entry%2$s.', 'relevanssi' ), "<a href='https://www.relevanssi.com/knowledge-base/user-profile-search/'>", '</a>' ) . '</li>' .
+				"<li>$knowledge_base</li>" .
 				'</ul>',
 		)
 	);
@@ -71,16 +76,20 @@ function relevanssi_premium_admin_help() {
 				'</ul>',
 		)
 	);
+
+	/* Translators: the placeholder has the WP CLI command */
+	$wp_cli_command = sprintf( esc_html__( 'If you have WP CLI installed, Relevanssi Premium has some helpful commands. Use %s to get a list of available commands.', 'relevanssi' ), '<code>wp help relevanssi</code>' );
+	/* Translators: the first placeholder opens the link, the second closes the link */
+	$wp_cli_manual = sprintf( esc_html__( 'You can also see %1$sthe user manual page%2$s.', 'relevanssi' ), "<a href='https://www.relevanssi.com/user-manual/wp-cli/'>", '</a>' );
+
 	$screen->add_help_tab(
 		array(
 			'id'      => 'relevanssi-wpcli',
 			'title'   => __( 'WP CLI', 'relevanssi' ),
-			'content' => '<ul>' .
-				/* translators: the placeholder has the WP CLI command */
-				'<li>' . sprintf( esc_html__( 'If you have WP CLI installed, Relevanssi Premium has some helpful commands. Use %s to get a list of available commands.', 'relevanssi' ), '<code>wp help relevanssi</code>' ) . '</li>' .
-				/* translators: the first placeholder opens the link, the second closes the link */
-				'<li>' . sprintf( esc_html__( 'You can also see %1$sthe user manual page%2$s.', 'relevanssi' ), "<a href='https://www.relevanssi.com/user-manual/wp-cli/'>", '</a>' ) . '</li>' .
-				'</ul>',
+			'content' => "<ul>
+				<li>$wp_cli_command</li>
+				<li>$wp_cli_manual</li>
+				</ul>",
 		)
 	);
 

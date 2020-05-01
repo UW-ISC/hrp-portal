@@ -11,7 +11,8 @@
 /**
  * Adds the Premium page actions.
  *
- * Adds the Premium contextual help in the load-{page} hook and the Premium admin JS to admin_footer-{page} hook.
+ * Adds the Premium contextual help in the load-{page} hook and the Premium
+ * admin JS to admin_footer-{page} hook.
  *
  * @param string $plugin_page The plugin page name for the hooks.
  */
@@ -24,7 +25,8 @@ function relevanssi_premium_plugin_page_actions( $plugin_page ) {
 /**
  * Prints out the form fields for entering the API key.
  *
- * Prints out table rows and form fields for entering the API key, or if API key is set, controls to remove it.
+ * Prints out table rows and form fields for entering the API key, or if API key
+ * is set, controls to remove it.
  *
  * @param string $context The context for the form. Default null.
  *
@@ -78,13 +80,10 @@ function relevanssi_form_do_not_call_home() {
 			<?php esc_html_e( 'Disable outside connections', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Disable update version checking and attachment indexing', 'relevanssi' ); ?></legend>
 			<label for='relevanssi_do_not_call_home'>
 				<input type='checkbox' name='relevanssi_do_not_call_home' id='relevanssi_do_not_call_home' <?php echo esc_attr( $can_i_call_home ); ?> />
 				<?php esc_html_e( 'Disable update version checking and attachment indexing', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
 		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will stop all outside connections. This means the plugin won't check for updates from Relevanssi.com and won't read attachment contents using Relevanssiservices.com attachment reader (using custom attachment reader is still allowed). Do not check this box unless you know what you're doing, because this will disable Relevanssi updates.", 'relevanssi' ); ?></p>
 		</td>
 		</td>
@@ -95,7 +94,8 @@ function relevanssi_form_do_not_call_home() {
 /**
  * Prints out the form fields for controlling internal links.
  *
- * Prints out the form fields that control how the internal links are handled in indexing.
+ * Prints out the form fields that control how the internal links are handled in
+ * indexing.
  */
 function relevanssi_form_internal_links() {
 	$internal_links            = get_option( 'relevanssi_internal_links' );
@@ -123,7 +123,8 @@ function relevanssi_form_internal_links() {
 /**
  * Prints out the form fields for hiding post controls.
  *
- * Prints out the form fields that hide the post controls on edit pages, or allow them for admins.
+ * Prints out the form fields that hide the post controls on edit pages, or
+ * allow them for admins.
  *
  * @since 2.0.0
  */
@@ -141,17 +142,14 @@ function relevanssi_form_hide_post_controls() {
 	?>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_hide_post_controls'><?php esc_html_e( 'Hide Relevanssi', 'relevanssi' ); ?></label>
+			<?php esc_html_e( 'Hide Relevanssi', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Hide Relevanssi on edit pages', 'relevanssi' ); ?></legend>
 			<label for='relevanssi_hide_post_controls'>
 				<input type='checkbox' name='relevanssi_hide_post_controls' id='relevanssi_hide_post_controls' <?php echo esc_attr( $hide_post_controls ); ?> />
 				<?php esc_html_e( 'Hide Relevanssi on edit pages', 'relevanssi' ); ?>
 			</label>
-		</fieldset>
-		<p class="description"><?php esc_html_e( 'Enabling this option hides Relevanssi on all post edit pages.', 'relevanssi' ); ?></p>
+			<p class="description"><?php esc_html_e( 'Enabling this option hides Relevanssi on all post edit pages.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
 	<tr id="show_post_controls" class="<?php echo esc_attr( $show_post_controls_class ); ?>">
@@ -195,14 +193,17 @@ function relevanssi_form_link_weight() {
 /**
  * Prints out the form fields for post type weights.
  *
- * Prints out the form fields for adjusting the post type weights. Automatically skips 'nav_menu_item' and 'revision'.
+ * Prints out the form fields for adjusting the post type weights. Automatically
+ * skips post types blocked by relevanssi_get_forbidden_post_types().
+ *
+ * @see relevanssi_get_forbidden_post_types
  */
 function relevanssi_form_post_type_weights() {
 	$post_type_weights = get_option( 'relevanssi_post_type_weights' );
 
 	$post_types = get_post_types();
 	foreach ( $post_types as $type ) {
-		if ( in_array( $type, array( 'nav_menu_item', 'revision', 'acf-field', 'acf-field-group', 'oembed_cache', 'customize_changeset', 'custom_css' ), true ) ) {
+		if ( in_array( $type, relevanssi_get_forbidden_post_types(), true ) ) {
 			continue;
 		}
 		if ( isset( $post_type_weights[ $type ] ) ) {
@@ -229,7 +230,8 @@ function relevanssi_form_post_type_weights() {
 /**
  * Prints out the form fields for taxonomy weights.
  *
- * Prints out the form fields for adjusting the taxonomy weights. Automatically skips forbidden taxonomies.
+ * Prints out the form fields for adjusting the taxonomy weights. Automatically
+ * skips forbidden taxonomies.
  */
 function relevanssi_form_taxonomy_weights() {
 	$taxonomy_weights = get_option( 'relevanssi_post_type_weights' );
@@ -338,7 +340,8 @@ function relevanssi_form_recency_cutoff() {
 /**
  * Prints out the form fields for hiding Relevanssi branding.
  *
- * Prints out the form fields for hiding the Relevanssi branding on user searches screen.
+ * Prints out the form fields for hiding the Relevanssi branding on user
+ * searches screen.
  */
 function relevanssi_form_hide_branding() {
 	$hide_branding = get_option( 'relevanssi_hide_branding' );
@@ -602,14 +605,12 @@ function relevanssi_form_index_pdf_parent() {
 	?>
 	<h2><?php esc_html_e( 'Indexing PDF content', 'relevanssi' ); ?></h2>
 
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 	<tr>
 	<th scope="row">
 		<?php esc_html_e( 'Index for parent', 'relevanssi' ); ?>
 	</th>
 	<td>
-	<fieldset>
-		<legend class="screen-reader-text"><?php esc_html_e( 'Index PDF contents for parent post', 'relevanssi' ); ?></legend>
 		<label for='relevanssi_index_pdf_parent'>
 			<input type='checkbox' name='relevanssi_index_pdf_parent' id='relevanssi_index_pdf_parent' <?php echo esc_attr( $index_pdf_parent ); ?> />
 			<?php esc_html_e( 'Index PDF contents for parent post', 'relevanssi' ); ?>
@@ -624,7 +625,6 @@ function relevanssi_form_index_pdf_parent() {
 			<?php /* translators: name of the attachment post type */ ?>
 		<p class="description important"><?php printf( esc_html__( 'Searching for PDF contents will now return both the attachment itself and the parent post. Are you sure you want both in the results?', 'relevanssi' ), '<code>attachment</code>' ); ?></p>
 		<?php endif; ?>
-	</fieldset>
 	</td>
 	</tr>
 	</table>
@@ -649,20 +649,17 @@ function relevanssi_form_index_taxonomies() {
 	?>
 	<h2><?php esc_html_e( 'Indexing taxonomy terms', 'relevanssi' ); ?></h2>
 
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 	<tr>
 		<th scope="row">
 			<?php esc_html_e( 'Index taxonomy terms', 'relevanssi' ); ?>
 		</th>
 		<td>
-		<fieldset>
-			<legend class="screen-reader-text"><?php esc_html_e( 'Index taxonomy terms.', 'relevanssi' ); ?></legend>
 			<label for='relevanssi_index_taxonomies'>
 				<input type='checkbox' name='relevanssi_index_taxonomies' id='relevanssi_index_taxonomies' <?php echo esc_attr( $index_taxonomies ); ?> />
 				<?php esc_html_e( 'Index taxonomy terms.', 'relevanssi' ); ?>
 			</label>
 			<p class="description"><?php esc_html_e( 'Relevanssi will index taxonomy terms (categories, tags and custom taxonomies). Searching for taxonomy term name will return the taxonomy term page.', 'relevanssi' ); ?></p>
-		</fieldset>
 		</td>
 	</tr>
 	<tr id="taxonomies" <?php echo $fields_display; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -696,19 +693,30 @@ function relevanssi_form_index_taxonomies() {
 			$public = __( 'no', 'relevanssi' );
 		}
 
-		$label = sprintf( '%s', $taxonomy->name );
-		$type  = $taxonomy->name;
-
+		// Translators: %s is the post type name.
+		$screen_reader_label = sprintf( __( 'Index terms for taxonomy %s', 'relevanssi' ), $taxonomy->name );
+		$public              = __( 'no', 'relevanssi' );
+		// Translators: %s is the post type name.
+		$screen_reader_public = sprintf( __( 'Taxonomy %s is not public', 'relevanssi' ), $taxonomy->name );
+		if ( $taxonomy->public ) {
+			$public = __( 'yes', 'relevanssi' );
+			// Translators: %s is the post type name.
+			$screen_reader_public = sprintf( __( 'Taxonomy %s is public', 'relevanssi' ), $taxonomy->name );
+		}
 		?>
 	<tr>
+		<th scope="row">
+			<label class="screen-reader-text" for="relevanssi_index_terms_<?php echo esc_attr( $taxonomy->name ); ?>">
+			<?php echo esc_html( $screen_reader_label ); ?></label>
+			<?php echo esc_html( $taxonomy->name ); ?>
+		</th>
 		<td>
-			<label for="relevanssi_index_terms_<?php echo esc_attr( $type ); ?>"><?php echo esc_html( $label ); ?></label>
+			<input type='checkbox' name='relevanssi_index_terms_<?php echo esc_attr( $taxonomy->name ); ?>'
+			id='relevanssi_index_terms_<?php echo esc_attr( $taxonomy->name ); ?>' <?php echo esc_attr( $checked ); ?> />
 		</td>
 		<td>
-			<input type='checkbox' name='relevanssi_index_terms_<?php echo esc_attr( $type ); ?>' id='relevanssi_index_terms_<?php echo esc_attr( $type ); ?>' <?php echo esc_attr( $checked ); ?> />
-		</td>
-		<td>
-			<?php echo esc_html( $public ); ?>
+			<span aria-hidden="true"><?php echo esc_html( $public ); ?></span>
+			<span class="screen-reader-text"><?php echo esc_html( $screen_reader_public ); ?></span>
 		</td>
 	</tr>
 		<?php
@@ -775,7 +783,8 @@ function relevanssi_form_index_post_type_archives() {
 /**
  * Adds admin PDF scripts for Relevanssi Premium.
  *
- * Adds the admin-side Javascript for Relevanssi Premium PDF controls and includes some script localizations.
+ * Adds the admin-side Javascript for Relevanssi Premium PDF controls and
+ * includes some script localizations.
  *
  * @global Object $post The global post object.
  *
@@ -848,16 +857,30 @@ function relevanssi_premium_add_admin_scripts( $hook ) {
 /**
  * Imports Relevanssi Premium options.
  *
- * Takes the options array and does the actual updating of options using update_options().
+ * Takes the options array and does the actual updating of options using
+ * update_options().
  *
  * @param array $options Key has the option name, value the option value.
  */
 function relevanssi_import_options( $options ) {
 	$unserialized = json_decode( stripslashes( $options ) );
 	foreach ( $unserialized as $key => $value ) {
-		if ( in_array( $key, array( 'relevanssi_post_type_weights', 'relevanssi_recency_bonus', 'relevanssi_punctuation', 'relevanssi_related_style' ), true ) ) {
+		if ( in_array(
+			$key,
+			array(
+				'relevanssi_post_type_weights',
+				'relevanssi_recency_bonus',
+				'relevanssi_punctuation',
+				'relevanssi_related_style',
+				'relevanssi_related_settings',
+			),
+			true
+		) ) {
 			// The options are associative arrays that are translated to objects in JSON and need to be changed back to arrays.
 			$value = (array) $value;
+		}
+		if ( 'relevanssi_redirects' === $key ) {
+			$value = json_decode( wp_json_encode( $value ), true );
 		}
 		update_option( $key, $value );
 	}
@@ -868,9 +891,11 @@ function relevanssi_import_options( $options ) {
 /**
  * Updates Relevanssi Premium options.
  *
- * @global array $relevanssi_variables Relevanssi global variables, used to access the plugin file name.
+ * @global array $relevanssi_variables Relevanssi global variables, used to
+ * access the plugin file name.
  *
- * Reads in the options from $_REQUEST and updates the correct options, depending on which tab has been active.
+ * Reads in the options from $_REQUEST and updates the correct options,
+ * depending on which tab has been active.
  */
 function relevanssi_update_premium_options() {
 	global $relevanssi_variables;
@@ -1000,6 +1025,10 @@ function relevanssi_update_premium_options() {
 		$settings['keyword'] = '';
 		if ( isset( $request['relevanssi_related_keyword'] ) && is_array( $request['relevanssi_related_keyword'] ) ) {
 			$settings['keyword'] = implode( ',', $request['relevanssi_related_keyword'] );
+		}
+		$settings['restrict'] = '';
+		if ( isset( $request['relevanssi_related_restrict'] ) && is_array( $request['relevanssi_related_restrict'] ) ) {
+			$settings['restrict'] = implode( ',', $request['relevanssi_related_restrict'] );
 		}
 		$settings['cache_for_admins'] = 'off';
 		if ( isset( $request['relevanssi_related_cache_for_admins'] ) && 'off' !== $request['relevanssi_related_cache_for_admins'] ) {

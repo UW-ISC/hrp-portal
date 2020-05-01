@@ -88,7 +88,6 @@ function relevanssi_search_multi( $multi_args ) {
 	$link_matches    = array();
 	$comment_matches = array();
 	$body_matches    = array();
-	$scores          = array();
 	$term_hits       = array();
 	$hitsbyweight    = array();
 
@@ -111,13 +110,11 @@ function relevanssi_search_multi( $multi_args ) {
 
 	$post_type_weights = get_option( 'relevanssi_post_type_weights' );
 
-	$scores = array();
-
 	foreach ( $search_blogs as $blogid ) {
 		$search_again = false;
 
 		// Only search blogs that are publicly available (unless filter says otherwise).
-		$public_status = get_blog_status( $blogid, 'public' );
+		$public_status = (bool) get_blog_status( $blogid, 'public' );
 		if ( null === $public_status ) {
 			// Blog doesn't actually exist.
 			continue;
@@ -136,7 +133,10 @@ function relevanssi_search_multi( $multi_args ) {
 			continue;
 		}
 
-		// Don't search blogs that are marked "spam" or "deleted".
+		// Don't search blogs that are marked "archived", "spam" or "deleted".
+		if ( get_blog_status( $blogid, 'archived' ) ) {
+			continue;
+		}
 		if ( get_blog_status( $blogid, 'spam' ) ) {
 			continue;
 		}
@@ -486,16 +486,10 @@ function relevanssi_search_multi( $multi_args ) {
 					$doc_id = $blogid . '|' . $match->doc;
 
 					$doc_terms[ $match->doc ][ $term ] = true; // Count how many terms are matched to a doc.
-					if ( isset( $doc_weight[ $doc_id ] ) ) {
-						$doc_weight[ $match->doc ] += $match->weight;
-					} else {
-						$doc_weight[ $match->doc ] = $match->weight;
+					if ( ! isset( $doc_weight[ $doc_id ] ) ) {
+						$doc_weight[ $match->doc ] = 0;
 					}
-					if ( isset( $scores[ $doc_id ] ) ) {
-						$scores[ $doc_id ] += $match->weight;
-					} else {
-						$scores[ $doc_id ] = $match->weight;
-					}
+					$doc_weight[ $match->doc ] += $match->weight;
 
 					$body_matches[ $doc_id ]    = $match->content;
 					$title_matches[ $doc_id ]   = $match->title;
@@ -531,15 +525,14 @@ function relevanssi_search_multi( $multi_args ) {
 					// AND operator in action: $doc didn't match all terms, so it's discarded.
 					continue;
 				}
-				$status  = relevanssi_get_post_status( $doc );
 				$post_ok = true;
 				/**
 				 * Filters whether the user is allowed to see the post.
 				 *
 				 * Can this post be included in the search results? This is the hook
 				 * you’ll use if you want to add support for a membership plugin, for
-				 * example. Based on the post ID, your function needs to return tru
-				 *  or false.
+				 * example. Based on the post ID, your function needs to return true
+				 * or false.
 				 *
 				 * @param boolean $post_ok Can the post be shown in results?
 				 * @param int     $doc     The post ID.
@@ -577,10 +570,10 @@ function relevanssi_search_multi( $multi_args ) {
 			$title_matches       = $return['title_matches'];
 			$tag_matches         = $return['tag_matches'];
 			$comment_matches     = $return['comment_matches'];
-			$scores              = $return['scores'];
 			$term_hits           = $return['term_hits'];
 			$query               = $return['query'];
 			$link_matches        = $return['link_matches'];
+			$doc_weight          = $return['doc_weights'];
 		}
 	}
 
@@ -634,10 +627,10 @@ function relevanssi_search_multi( $multi_args ) {
 		'title_matches'   => $title_matches,
 		'tag_matches'     => $tag_matches,
 		'comment_matches' => $comment_matches,
-		'scores'          => $scores,
 		'term_hits'       => $term_hits,
 		'query'           => $q,
 		'link_matches'    => $link_matches,
+		'doc_weights'     => $doc_weight,
 	);
 
 	return $return;

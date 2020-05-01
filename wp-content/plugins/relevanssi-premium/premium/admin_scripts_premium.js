@@ -74,6 +74,7 @@ jQuery(document).ready(function($) {
 		$("#tr_relevanssi_related_append input").attr("disabled", !this.checked)
 		$("#tr_relevanssi_related_keyword input").attr("disabled", !this.checked)
 		$("#relevanssi_related_number").attr("disabled", !this.checked)
+		$("#relevanssi_related_months").attr("disabled", !this.checked)
 		$("#tr_relevanssi_related_post_types input").attr("disabled", !this.checked)
 		$("#relevanssi_related_nothing").attr("disabled", !this.checked)
 		$("#relevanssi_related_notenough").attr("disabled", !this.checked)
@@ -228,6 +229,7 @@ jQuery(document).ready(function($) {
 										offset: 0,
 										total_seconds: 0,
 										limit: relevanssi_params.indexing_limit,
+										adjust: relevanssi_params.indexing_adjust,
 										extend: false,
 										security: nonce.indexing_nonce
 									}
@@ -308,6 +310,7 @@ function process_user_step(args) {
 						offset: 0,
 						total_seconds: 0,
 						limit: relevanssi_params.indexing_limit,
+						adjust: relevanssi_params.indexing_adjust,
 						extend: false
 					}
 					process_indexing_step(new_args)
@@ -426,6 +429,7 @@ function process_taxonomy_step(args) {
 						offset: 0,
 						total_seconds: 0,
 						limit: relevanssi_params.indexing_limit,
+						adjust: relevanssi_params.indexing_adjust,
 						extend: false,
 						security: nonce.indexing_nonce
 					}
@@ -499,6 +503,7 @@ function process_taxonomy_step(args) {
 			offset: 0,
 			total_seconds: 0,
 			limit: relevanssi_params.indexing_limit,
+			adjust: relevanssi_params.indexing_adjust,
 			extend: false,
 			security: nonce.indexing_nonce
 		}

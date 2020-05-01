@@ -25,9 +25,20 @@ if ( ! empty( $related_posts ) ) :
 	<?php
 
 	/**
-	 * The related posts are stored in the $related_posts WP_Query object. Each post is
-	 * just the post ID number, so if you want to access the whole post object, use
-	 * get_post() to fetch it.
+	 * Allows adjusting the image size.
+	 *
+	 * The default value for the image size is "post-thumbnail", but if you for
+	 * example want a non-square image size, you can use this filter to set the
+	 * image size to "medium".
+	 *
+	 * @param string The image size.
+	 */
+	$image_size = apply_filters( 'relevanssi_related_image_size', 'post-thumbnail' );
+
+	/**
+	 * The related posts are stored in the $related_posts WP_Query object. Each
+	 * post is just the post ID number, so if you want to access the whole post
+	 * object, use get_post() to fetch it.
 	 */
 	foreach ( $related_posts as $related_post_id ) {
 		$the_post     = get_post( $related_post_id );
@@ -37,10 +48,10 @@ if ( ! empty( $related_posts ) ) :
 		$thumb = '';
 		if ( isset( $style['thumbnails'] ) && 'off' !== $style['thumbnails'] ) {
 			if ( has_post_thumbnail( $related_post_id ) ) {
-				$thumb = get_the_post_thumbnail( $related_post_id, 'post-thumbnail' );
+				$thumb = get_the_post_thumbnail( $related_post_id, $image_size );
 			}
 			if ( ! $thumb && isset( $style['default_thumbnail'] ) ) {
-				$thumb = wp_get_attachment_image( $style['default_thumbnail'], 'post-thumbnail', false, array( 'class' => 'wp-post-image' ) );
+				$thumb = wp_get_attachment_image( $style['default_thumbnail'], $image_size, false, array( 'class' => 'wp-post-image' ) );
 			}
 		}
 

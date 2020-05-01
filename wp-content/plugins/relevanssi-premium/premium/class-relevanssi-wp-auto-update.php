@@ -99,20 +99,22 @@ class Relevanssi_WP_Auto_Update {
 	/**
 	 * Adds our self-hosted description to the filter.
 	 *
-	 * @param boolean $false Result object or array, should return false.
-	 * @param array   $action Type of information request.
-	 * @param object  $arg Plugin API arguments.
+	 * @param object $api    Result object or array, should return false.
+	 * @param array  $action Type of information request.
+	 * @param object $args   Plugin API arguments.
 	 *
-	 * @return bool|object
+	 * @return object $api   New stdClass with plugin information on success, default response on failure.
 	 */
-	public function check_info( $false, $action, $arg ) {
-		if ( isset( $arg->slug ) ) {
-			if ( $arg->slug === $this->slug ) {
+	public function check_info( $api, $action, $args ) {
+		$plugin = ( 'plugin_information' === $action ) && isset( $args->slug ) && ( $this->slug === $args->slug );
+
+		if ( $plugin ) {
+			if ( $args->slug === $this->slug ) {
 				$information = $this->get_remote_information();
 				return $information;
 			}
 		}
-		return false;
+		return $api;
 	}
 
 	/**

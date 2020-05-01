@@ -46,7 +46,7 @@ function relevanssi_attachments_tab() {
 	}
 
 	?>
-	<table class="form-table">
+	<table class="form-table" role="presentation">
 	<tr>
 		<td>
 			<input type='button' id='index' value='<?php esc_html_e( 'Read all unread attachments', 'relevanssi' ); ?>' class='button-primary' /><br /><br />
@@ -102,6 +102,7 @@ function relevanssi_attachments_tab() {
 			<input type="button" id="reset" value="<?php esc_html_e( 'Reset all attachment data from posts', 'relevanssi' ); ?>" class="button-primary" />
 			<?php /* translators: the placeholders are the names of the custom fields */ ?>
 			<p class="description"><?php printf( esc_html__( "This will remove all %1\$s and %2\$s custom fields from all posts. If you want to reread all attachment files, use this to clean up; clicking the reading button doesn't wipe the slate clean like it does in regular indexing.", 'relevanssi' ), '<code>_relevanssi_pdf_content</code>', '<code>_relevanssi_pdf_error</code>' ); ?></p>
+			<p class="description"><?php esc_html_e( 'If you have posts where you have modified the attachment content after reading it, this will leave those posts untouched.', 'relevanssi' ); ?></p>
 		</td>
 	</tr>
 	<tr>
@@ -173,6 +174,7 @@ function relevanssi_attachments_tab() {
 		<th scope="row"><?php esc_html_e( 'Key not valid?', 'relevanssi' ); ?></th>
 		<td>
 			<p><?php esc_html_e( "Are you a new Relevanssi customer and seeing 'Key xxxxxx is not valid' error messages? New API keys are delivered to the server once per hour, so if try again an hour later, the key should work.", 'relevanssi' ); ?></p>
+			<p><?php esc_html_e( "A 'Key 0 is not valid' error message means you're on a multisite, but have only entered the API key In the subsite settings. Set the API key in the network settings to fix that.", 'relevanssi' ); ?></p>
 		</td>
 	</tr>
 	<tr>
