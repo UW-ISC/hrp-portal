@@ -4,7 +4,11 @@
  *
  * Template for printing out the related posts.
  *
- * Make sure this template does not overwrite $post_id.
+ * Make sure this template does not overwrite $post_id. Also note that the
+ * template will be cached, so for example don't do separate code for mobile
+ * and desktop users, because the caching won't care about whether the user
+ * is a mobile or a desktop user and will randomly provide the wrong version to
+ * users.
  *
  * @package Relevanssi_Premium
  * @author  Mikko Saari
@@ -17,7 +21,6 @@ $style = get_option( 'relevanssi_related_style' );
 if ( ! empty( $related_posts ) ) :
 	?>
 	<div id="relevanssi_related">
-		<!-- debug: <?php echo $words; // // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> -->
 		<div class="relevanssi_related_grid_header">
 			<h3><?php esc_html_e( 'Related Posts', 'relevanssi' ); ?></h3>
 		</div>

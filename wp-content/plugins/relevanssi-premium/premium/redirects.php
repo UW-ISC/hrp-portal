@@ -24,8 +24,12 @@ function relevanssi_redirects() {
 	if ( empty( $redirects ) || ! is_array( $redirects ) ) {
 		return;
 	}
-	$query = relevanssi_strtolower( get_search_query() );
+	$query = relevanssi_strtolower( get_search_query( false ) );
 	foreach ( $redirects as $redirect ) {
+		if ( ! $redirect ) {
+			continue;
+		}
+
 		if ( is_string( $redirect ) ) {
 			// Empty search results redirection.
 			global $wp_query;
@@ -38,11 +42,17 @@ function relevanssi_redirects() {
 		if ( $redirect['partial'] ) {
 			if ( stristr( $query, $redirect['query'] ) ) {
 				$url = $redirect['url'];
+
+				$redirect['hits'] = isset( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
+				relevanssi_update_redirect( $redirect );
 				break;
 			}
 		} else {
 			if ( $query === $redirect['query'] ) {
 				$url = $redirect['url'];
+
+				$redirect['hits'] = isset( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
+				relevanssi_update_redirect( $redirect );
 				break;
 			}
 		}
@@ -52,6 +62,28 @@ function relevanssi_redirects() {
 			exit();
 		}
 	}
+}
+
+/**
+ * Helper function to update the redirect for the hit counting.
+ *
+ * Takes the new redirect, finds the old one by the `query` field and replaces
+ * the redirect in the option.
+ *
+ * @param array $redirect The redirect array to be added to the option.
+ */
+function relevanssi_update_redirect( $redirect ) {
+	$redirects = get_option( 'relevanssi_redirects', array() );
+	$key       = array_search(
+		$redirect['query'],
+		array_column( $redirects, 'query' ),
+		true
+	);
+
+	update_option(
+		'relevanssi_redirects',
+		array_replace( $redirects, array( $key => $redirect ) )
+	);
 }
 
 /**
@@ -86,7 +118,7 @@ function relevanssi_process_redirects( $request ) {
 			continue;
 		}
 		$suffix  = substr( $key, 5 );
-		$query   = relevanssi_strtolower( $value );
+		$query   = stripslashes( relevanssi_strtolower( $value ) );
 		$partial = false;
 		if ( isset( $request[ 'partial' . $suffix ] ) ) {
 			$partial = true;
@@ -103,11 +135,13 @@ function relevanssi_process_redirects( $request ) {
 			}
 			$url = wp_http_validate_url( $url );
 		}
+		$hits = $request[ 'hits' . $suffix ] ?? 0;
 		if ( ! empty( $url ) && ! empty( $query ) ) {
 			$redirect    = array(
 				'query'   => $query,
 				'partial' => $partial,
 				'url'     => $url,
+				'hits'    => $hits,
 			);
 			$redirects[] = $redirect;
 		}

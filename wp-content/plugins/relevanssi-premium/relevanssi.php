@@ -13,10 +13,12 @@
  * Plugin Name: Relevanssi Premium
  * Plugin URI: https://www.relevanssi.com/
  * Description: This premium plugin replaces WordPress search with a relevance-sorting search.
- * Version: 2.8.2
+ * Version: 2.10.3
  * Author: Mikko Saari
  * Author URI: http://www.mikkosaari.fi/
  * Text Domain: relevanssi
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
  */
 
 /*
@@ -56,6 +58,7 @@ add_filter( 'attachment_link', 'relevanssi_post_link_replace', 10, 2 );
 add_action( 'admin_enqueue_scripts', 'relevanssi_premium_add_admin_scripts', 11 );
 add_filter( 'relevanssi_premium_tokenizer', 'relevanssi_enable_stemmer' );
 add_filter( 'query_vars', 'relevanssi_premium_query_vars' );
+add_filter( 'relevanssi_tabs', 'relevanssi_premium_add_tabs', 10 );
 
 global $wp_version;
 if ( version_compare( $wp_version, '5.1', '>=' ) ) {
@@ -76,8 +79,8 @@ $relevanssi_variables['content_boost_default']                 = 5;
 $relevanssi_variables['title_boost_default']                   = 5;
 $relevanssi_variables['link_boost_default']                    = 0.75;
 $relevanssi_variables['comment_boost_default']                 = 0.75;
-$relevanssi_variables['database_version']                      = 18;
-$relevanssi_variables['plugin_version']                        = '2.8.2';
+$relevanssi_variables['database_version']                      = 19;
+$relevanssi_variables['plugin_version']                        = '2.10.3';
 $relevanssi_variables['plugin_dir']                            = plugin_dir_path( __FILE__ );
 $relevanssi_variables['plugin_basename']                       = plugin_basename( __FILE__ );
 $relevanssi_variables['file']                                  = __FILE__;

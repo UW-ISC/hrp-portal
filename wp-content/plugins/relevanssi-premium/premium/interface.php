@@ -1068,82 +1068,82 @@ function relevanssi_update_premium_options() {
 	}
 
 	if ( isset( $request['relevanssi_remove_api_key'] ) ) {
-		update_option( 'relevanssi_api_key', '' );
+		update_option( 'relevanssi_api_key', '', false );
 	}
 	if ( isset( $request['relevanssi_api_key'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_api_key'] ) );
-		update_option( 'relevanssi_api_key', $value );
+		update_option( 'relevanssi_api_key', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_synonyms'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_synonyms'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_synonyms', $value );
+		update_option( 'relevanssi_index_synonyms', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_post_type_archives'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_post_type_archives'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_post_type_archives', $value );
+		update_option( 'relevanssi_index_post_type_archives', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_users'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_users'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_users', $value );
+		update_option( 'relevanssi_index_users', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_subscribers'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_subscribers'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_subscribers', $value );
+		update_option( 'relevanssi_index_subscribers', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_user_fields'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_index_user_fields'] ) );
-		update_option( 'relevanssi_index_user_fields', $value );
+		update_option( 'relevanssi_index_user_fields', $value, false );
 	}
 	if ( isset( $request['relevanssi_internal_links'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_internal_links'] ) );
-		update_option( 'relevanssi_internal_links', $value );
+		update_option( 'relevanssi_internal_links', $value, false );
 	}
 	if ( isset( $request['relevanssi_hide_branding'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_hide_branding'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_hide_branding', $value );
+		update_option( 'relevanssi_hide_branding', $value, false );
 	}
 	if ( isset( $request['relevanssi_hide_post_controls'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_hide_post_controls'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_hide_post_controls', $value );
+		update_option( 'relevanssi_hide_post_controls', $value, false );
 	}
 	if ( isset( $request['relevanssi_show_post_controls'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_show_post_controls'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_show_post_controls', $value );
+		update_option( 'relevanssi_show_post_controls', $value, false );
 	}
 	if ( isset( $request['relevanssi_do_not_call_home'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_do_not_call_home'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_do_not_call_home', $value );
+		update_option( 'relevanssi_do_not_call_home', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_taxonomies'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_taxonomies'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_taxonomies', $value );
+		update_option( 'relevanssi_index_taxonomies', $value, false );
 	}
 	if ( isset( $request['relevanssi_thousand_separator'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_thousand_separator'] ) );
@@ -1155,7 +1155,7 @@ function relevanssi_update_premium_options() {
 	}
 	if ( isset( $request['relevanssi_mysql_columns'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_mysql_columns'] ) );
-		update_option( 'relevanssi_mysql_columns', $value );
+		update_option( 'relevanssi_mysql_columns', $value, false );
 	}
 	if ( isset( $request['relevanssi_searchblogs'] ) ) {
 		$value = sanitize_text_field( wp_unslash( $request['relevanssi_searchblogs'] ) );
@@ -1173,21 +1173,21 @@ function relevanssi_update_premium_options() {
 		if ( 'off' !== $request['relevanssi_read_new_files'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_read_new_files', $value );
+		update_option( 'relevanssi_read_new_files', $value, false );
 	}
 	if ( isset( $request['relevanssi_send_pdf_files'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_send_pdf_files'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_send_pdf_files', $value );
+		update_option( 'relevanssi_send_pdf_files', $value, false );
 	}
 	if ( isset( $request['relevanssi_index_pdf_parent'] ) ) {
 		$value = 'off';
 		if ( 'off' !== $request['relevanssi_index_pdf_parent'] ) {
 			$value = 'on';
 		}
-		update_option( 'relevanssi_index_pdf_parent', $value );
+		update_option( 'relevanssi_index_pdf_parent', $value, false );
 	}
 	if ( isset( $request['relevanssi_link_pdf_files'] ) ) {
 		$value = 'off';
@@ -1201,11 +1201,64 @@ function relevanssi_update_premium_options() {
 		if ( 'eu' === $request['relevanssi_server_location'] ) {
 			$value = 'eu';
 		}
-		update_option( 'relevanssi_server_location', $value );
+		update_option( 'relevanssi_server_location', $value, false );
 	}
 
 	if ( 'redirects' === $request['tab'] ) {
 		$value = relevanssi_process_redirects( $request );
 		update_option( 'relevanssi_redirects', $value );
 	}
+}
+
+/**
+ * Adds Relevanssi Premium tabs to Relevanssi settings page.
+ *
+ * @global array $relevanssi_variables Used for the plugin path.
+ *
+ * @param array $tabs The array of tab items.
+ *
+ * @return array The tab array with Premium tabs added.
+ */
+function relevanssi_premium_add_tabs( $tabs ) {
+	global $relevanssi_variables;
+
+	$slugs          = wp_list_pluck( $tabs, 'slug' );
+	$redirects_id   = array_search( 'redirects', $slugs, true );
+	$attachments_id = array_search( 'attachments', $slugs, true );
+
+	$tabs[ $redirects_id ]   = array(
+		'slug'     => 'redirects',
+		'name'     => __( 'Redirects', 'relevanssi' ),
+		'require'  => dirname( $relevanssi_variables['file'] )
+					. '/premium/tabs/redirects-tab.php',
+		'callback' => 'relevanssi_redirects_tab',
+		'save'     => true,
+	);
+	$tabs[ $attachments_id ] = array(
+		'slug'     => 'attachments',
+		'name'     => __( 'Attachments', 'relevanssi' ),
+		'require'  => dirname( $relevanssi_variables['file'] )
+					. '/premium/tabs/attachments-tab.php',
+		'callback' => 'relevanssi_attachments_tab',
+		'save'     => true,
+	);
+
+	$tabs[] = array(
+		'slug'     => 'importexport',
+		'name'     => __( 'Import / Export options', 'relevanssi' ),
+		'require'  => dirname( $relevanssi_variables['file'] )
+					. '/premium/tabs/import-export-tab.php',
+		'callback' => 'relevanssi_import_export_tab',
+		'save'     => true,
+	);
+	$tabs[] = array(
+		'slug'     => 'related',
+		'name'     => __( 'Related', 'relevanssi' ),
+		'require'  => dirname( $relevanssi_variables['file'] )
+			. '/premium/tabs/related-tab.php',
+		'callback' => 'relevanssi_related_tab',
+		'save'     => true,
+	);
+
+	return $tabs;
 }

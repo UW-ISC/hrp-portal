@@ -1,8 +1,8 @@
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	// Show and hide the "Show Relevanssi for admins" setting on the Overview tab depending
 	// on whether the "Hide Relevanssi" setting is enabled.
 	var show_post_controls = $("#show_post_controls")
-	$("#relevanssi_hide_post_controls").change(function() {
+	$("#relevanssi_hide_post_controls").change(function () {
 		show_post_controls.toggleClass("screen-reader-text")
 	})
 
@@ -18,7 +18,7 @@ jQuery(document).ready(function($) {
 	}
 
 	// Adds a new row to the redirect table on the Redirects tab.
-	$("#add_redirect").click(function(e) {
+	$("#add_redirect").click(function (e) {
 		redirect_row_index++
 		$(".redirect_table_row:last")
 			.clone(true)
@@ -28,18 +28,29 @@ jQuery(document).ready(function($) {
 		var query = $("#row_" + redirect_row_index + " input:first")
 		query.val("")
 		query.attr("name", "query_" + redirect_row_index)
+		query.attr("id", "query_" + redirect_row_index)
 
 		var partial = $("#row_" + redirect_row_index + " input:checkbox")
 		partial.prop("checked", false)
 		partial.attr("name", "partial_" + redirect_row_index)
+		partial.attr("id", "partial_" + redirect_row_index)
 
-		var url = $("#row_" + redirect_row_index + " input:last")
+		var url = $("#row_" + redirect_row_index + " input:eq(2)")
 		url.val("")
+		url.attr("id", "url_" + redirect_row_index)
 		url.attr("name", "url_" + redirect_row_index)
+
+		var hits = $("#row_" + redirect_row_index + " input:last")
+		hits.val("")
+		hits.attr("name", "hits_" + redirect_row_index)
+		hits.attr("id", "hits_" + redirect_row_index)
+
+		var hitsNumber = $("#row_" + redirect_row_index + " span:last")
+		hitsNumber.html("0")
 	})
 
 	// Related posts tab: if "Matching post types" is checked, disable and uncheck other options.
-	$("input.matching").click(function(e) {
+	$("input.matching").click(function (e) {
 		if ($(this).is(":checked")) {
 			$("input.nonmatching").prop("checked", false)
 			$("input.nonmatching").attr("disabled", true)
@@ -49,18 +60,16 @@ jQuery(document).ready(function($) {
 	})
 
 	// Related posts tab: Display default thumbnail option.
-	$("#relevanssi_related_thumbnails").click(function(e) {
+	$("#relevanssi_related_thumbnails").click(function (e) {
 		$("#defaultthumbnail").toggleClass("screen-reader-text", !this.checked)
 	})
 
 	// Redirects tab redirect table row removal.
-	$(".remove").click(function(e) {
+	$(".remove").click(function (e) {
 		e.preventDefault()
 		if ($("#redirect_table >tbody >tr").length > 1) {
 			// If there is more than one row in the table, remove the last row.
-			$(this)
-				.closest("tr")
-				.remove()
+			$(this).closest("tr").remove()
 		} else {
 			// Only one row left, don't remove it (because adding rows is based on cloning).
 			// Instead empty out the values.
@@ -70,7 +79,7 @@ jQuery(document).ready(function($) {
 	})
 
 	// Related posts tab: Toggle settings for main switch.
-	$("#relevanssi_related_enabled").click(function() {
+	$("#relevanssi_related_enabled").click(function () {
 		$("#tr_relevanssi_related_append input").attr("disabled", !this.checked)
 		$("#tr_relevanssi_related_keyword input").attr("disabled", !this.checked)
 		$("#relevanssi_related_number").attr("disabled", !this.checked)
@@ -86,7 +95,7 @@ jQuery(document).ready(function($) {
 	})
 
 	// Redirects tab redirect table row cloning.
-	$("a.copy").click(function(e) {
+	$("a.copy").click(function (e) {
 		e.preventDefault()
 		redirect_row_index++
 		$(this)
@@ -97,15 +106,26 @@ jQuery(document).ready(function($) {
 
 		var query = $("#row_" + redirect_row_index + " input:first")
 		query.attr("name", "query_" + redirect_row_index)
+		query.attr("id", "query_" + redirect_row_index)
 
 		var partial = $("#row_" + redirect_row_index + " input:checkbox")
 		partial.attr("name", "partial_" + redirect_row_index)
+		partial.attr("id", "partial_" + redirect_row_index)
 
-		var url = $("#row_" + redirect_row_index + " input:last")
+		var url = $("#row_" + redirect_row_index + " input:eq(2)")
 		url.attr("name", "url_" + redirect_row_index)
+		url.attr("name", "url_" + redirect_row_index)
+
+		var hits = $("#row_" + redirect_row_index + " input:last")
+		hits.val("")
+		hits.attr("name", "hits_" + redirect_row_index)
+		hits.attr("id", "hits_" + redirect_row_index)
+
+		var hitsNumber = $("#row_" + redirect_row_index + " span:last")
+		hitsNumber.html("0")
 	})
 
-	$("#build_index").click(function() {
+	$("#build_index").click(function () {
 		$("#relevanssi-progress").show()
 		$("#results").show()
 		$("#relevanssi-timer").show()
@@ -116,14 +136,14 @@ jQuery(document).ready(function($) {
 		results.value = ""
 
 		var data = {
-			action: "relevanssi_truncate_index"
+			action: "relevanssi_truncate_index",
 		}
 
 		intervalID = window.setInterval(relevanssiUpdateClock, 1000)
 
 		console.log("Truncating index.")
 		results.value += relevanssi.truncating_index + " "
-		jQuery.post(ajaxurl, data, function(response) {
+		jQuery.post(ajaxurl, data, function (response) {
 			truncate_response = JSON.parse(response)
 			console.log("Truncate index: " + truncate_response)
 			if (truncate_response == true) {
@@ -131,20 +151,20 @@ jQuery(document).ready(function($) {
 			}
 			var data = {
 				action: "relevanssi_index_post_type_archives",
-				security: nonce.post_type_archive_indexing_nonce
+				security: nonce.post_type_archive_indexing_nonce,
 			}
 			console.log("Indexing post type archives.")
 			results.value += "Indexing post type archives... "
-			jQuery.post(ajaxurl, data, function(response) {
+			jQuery.post(ajaxurl, data, function (response) {
 				console.log("Done")
 				response = JSON.parse(response)
 				results.value += response.feedback
 				var data = {
-					action: "relevanssi_count_users"
+					action: "relevanssi_count_users",
 				}
 				console.log("Counting users.")
 				results.value += relevanssi.counting_users + " "
-				jQuery.post(ajaxurl, data, function(response) {
+				jQuery.post(ajaxurl, data, function (response) {
 					count_response = JSON.parse(response)
 					console.log("Counted " + count_response + " users.")
 					if (count_response < 0) {
@@ -157,11 +177,11 @@ jQuery(document).ready(function($) {
 					var user_total = count_response
 
 					var data = {
-						action: "relevanssi_count_taxonomies"
+						action: "relevanssi_count_taxonomies",
 					}
 					console.log("Counting taxonomies.")
 					results.value += relevanssi.counting_terms + " "
-					jQuery.post(ajaxurl, data, function(response) {
+					jQuery.post(ajaxurl, data, function (response) {
 						count_response = JSON.parse(response)
 						console.log("Counted " + count_response + " taxonomy terms.")
 						if (count_response < 0) {
@@ -174,11 +194,11 @@ jQuery(document).ready(function($) {
 						var taxonomy_total = count_response
 
 						var data = {
-							action: "relevanssi_count_posts"
+							action: "relevanssi_count_posts",
 						}
 						console.log("Counting posts.")
 						results.value += relevanssi.counting_posts + " "
-						jQuery.post(ajaxurl, data, function(response) {
+						jQuery.post(ajaxurl, data, function (response) {
 							count_response = JSON.parse(response)
 							console.log("Counted " + count_response + " posts.")
 							var post_total = parseInt(count_response)
@@ -186,10 +206,10 @@ jQuery(document).ready(function($) {
 								count_response + " " + relevanssi.posts_found + "\n"
 
 							var data = {
-								action: "relevanssi_list_taxonomies"
+								action: "relevanssi_list_taxonomies",
 							}
 							console.log("Listing taxonomies.")
-							jQuery.post(ajaxurl, data, function(response) {
+							jQuery.post(ajaxurl, data, function (response) {
 								taxonomies_response = JSON.parse(response)
 								console.log("Listing taxonomies: " + taxonomies_response)
 								console.log("Starting indexing.")
@@ -203,7 +223,7 @@ jQuery(document).ready(function($) {
 										post_total: post_total,
 										limit: 10,
 										taxonomies: taxonomies_response,
-										taxonomies_total: taxonomy_total
+										taxonomies_total: taxonomy_total,
 									}
 									process_user_step(args)
 								} else if (taxonomy_total > 0) {
@@ -218,7 +238,7 @@ jQuery(document).ready(function($) {
 										post_total: post_total,
 										current_taxonomy: "",
 										offset: 0,
-										limit: 20
+										limit: 20,
 									}
 									process_taxonomy_step(args)
 								} else {
@@ -231,7 +251,7 @@ jQuery(document).ready(function($) {
 										limit: relevanssi_params.indexing_limit,
 										adjust: relevanssi_params.indexing_adjust,
 										extend: false,
-										security: nonce.indexing_nonce
+										security: nonce.indexing_nonce,
 									}
 									process_indexing_step(args)
 								}
@@ -261,10 +281,10 @@ function process_user_step(args) {
 			offset: args.offset,
 			completed: completed,
 			total: total,
-			security: nonce.user_indexing_nonce
+			security: nonce.user_indexing_nonce,
 		},
 		dataType: "json",
-		success: function(response) {
+		success: function (response) {
 			console.log(response)
 			if (response.completed == "done") {
 				var t1 = performance.now()
@@ -279,10 +299,10 @@ function process_user_step(args) {
 
 				jQuery(".rpi-progress div").animate(
 					{
-						width: percentage_rounded + "%"
+						width: percentage_rounded + "%",
 					},
 					50,
-					function() {
+					function () {
 						// Animation complete.
 					}
 				)
@@ -299,7 +319,7 @@ function process_user_step(args) {
 						offset: 0,
 						total_seconds: total_seconds,
 						limit: 20,
-						extend: false
+						extend: false,
 					}
 					process_taxonomy_step(new_args)
 				} else {
@@ -311,7 +331,7 @@ function process_user_step(args) {
 						total_seconds: 0,
 						limit: relevanssi_params.indexing_limit,
 						adjust: relevanssi_params.indexing_adjust,
-						extend: false
+						extend: false,
 					}
 					process_indexing_step(new_args)
 				}
@@ -354,10 +374,10 @@ function process_user_step(args) {
 
 				jQuery(".rpi-progress div").animate(
 					{
-						width: percentage_rounded + "%"
+						width: percentage_rounded + "%",
 					},
 					50,
-					function() {
+					function () {
 						// Animation complete.
 					}
 				)
@@ -370,11 +390,11 @@ function process_user_step(args) {
 					limit: args.limit,
 					post_total: args.post_total,
 					taxonomies: args.taxonomies,
-					taxonomies_total: args.taxonomies_total
+					taxonomies_total: args.taxonomies_total,
 				}
 				process_user_step(new_args)
 			}
-		}
+		},
 	})
 }
 
@@ -407,10 +427,10 @@ function process_taxonomy_step(args) {
 				taxonomy: taxonomy,
 				offset: args.offset,
 				limit: args.limit,
-				security: nonce.taxonomy_indexing_nonce
+				security: nonce.taxonomy_indexing_nonce,
 			},
 			dataType: "json",
-			success: function(response) {
+			success: function (response) {
 				console.log(response)
 				if (response.completed == "done") {
 					var t1 = performance.now()
@@ -431,7 +451,7 @@ function process_taxonomy_step(args) {
 						limit: relevanssi_params.indexing_limit,
 						adjust: relevanssi_params.indexing_adjust,
 						extend: false,
-						security: nonce.indexing_nonce
+						security: nonce.indexing_nonce,
 					}
 					process_indexing_step(new_args)
 				} else {
@@ -473,10 +493,10 @@ function process_taxonomy_step(args) {
 
 					jQuery(".rpi-progress div").animate(
 						{
-							width: percentage_rounded + "%"
+							width: percentage_rounded + "%",
 						},
 						50,
-						function() {
+						function () {
 							// Animation complete.
 						}
 					)
@@ -490,11 +510,11 @@ function process_taxonomy_step(args) {
 						post_total: args.post_total,
 						current_taxonomy: taxonomy,
 						offset: response.offset,
-						limit: args.limit
+						limit: args.limit,
 					}
 					process_taxonomy_step(new_args)
 				}
-			}
+			},
 		})
 	} else {
 		var new_args = {
@@ -505,7 +525,7 @@ function process_taxonomy_step(args) {
 			limit: relevanssi_params.indexing_limit,
 			adjust: relevanssi_params.indexing_adjust,
 			extend: false,
-			security: nonce.indexing_nonce
+			security: nonce.indexing_nonce,
 		}
 		process_indexing_step(new_args)
 	}
