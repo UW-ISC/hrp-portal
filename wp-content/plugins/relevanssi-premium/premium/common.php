@@ -119,7 +119,7 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 	$type = substr( $id, 0, 2 );
 	switch ( $type ) {
 		case 'u_':
-			list( $throwaway, $id ) = explode( '_', $id );
+			list( , $id ) = explode( '_', $id );
 
 			$user                  = get_userdata( $id );
 			$post                  = new stdClass();
@@ -129,7 +129,7 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 			$post->ID              = $id;
 			$post->relevanssi_link = get_author_posts_url( $id );
 			$post->post_status     = 'publish';
-			$post->post_date       = date( 'Y-m-d H:i:s' );
+			$post->post_date       = gmdate( 'Y-m-d H:i:s' );
 			$post->post_author     = 0;
 			$post->post_name       = '';
 			$post->post_excerpt    = '';
@@ -159,7 +159,7 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 			$post->ID              = $id;
 			$post->relevanssi_link = get_post_type_archive_link( $post_type_name );
 			$post->post_status     = 'publish';
-			$post->post_date       = date( 'Y-m-d H:i:s' );
+			$post->post_date       = gmdate( 'Y-m-d H:i:s' );
 			$post->post_author     = 0;
 			$post->post_name       = '';
 			$post->post_excerpt    = '';
@@ -178,7 +178,7 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 			$post = apply_filters( 'relevanssi_post_type_to_post', $post );
 			break;
 		case '**':
-			list( $throwaway, $taxonomy, $id ) = explode( '**', $id );
+			list( , $taxonomy, $id ) = explode( '**', $id );
 
 			$term = get_term( $id, $taxonomy );
 			if ( is_wp_error( $term ) ) {
@@ -190,7 +190,7 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 			$post->post_type       = $taxonomy;
 			$post->ID              = -1;
 			$post->post_status     = 'publish';
-			$post->post_date       = date( 'Y-m-d H:i:s' );
+			$post->post_date       = gmdate( 'Y-m-d H:i:s' );
 			$post->relevanssi_link = get_term_link( $term, $taxonomy );
 			$post->post_author     = 0;
 			$post->post_name       = '';
@@ -220,6 +220,8 @@ function relevanssi_premium_get_post( $id, $blog_id = -1 ) {
 				$post = $relevanssi_post_array[ $cache_id ];
 			} else {
 				$post = get_post( $id );
+
+				$relevanssi_post_array[ $cache_id ] = $post;
 			}
 			if (
 				'on' === get_option( 'relevanssi_link_pdf_files' )
@@ -463,6 +465,35 @@ function relevanssi_premium_init() {
 		add_action( 'init', 'relevanssi_register_gutenberg_actions', 11 );
 	}
 
+	global $pagenow, $relevanssi_variables;
+	$on_relevanssi_page = false;
+	if ( isset( $_GET['page'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		$page = sanitize_file_name( wp_unslash( $_GET['page'] ) ); // phpcs:ignore WordPress.Security.NonceVerification
+		$base = sanitize_file_name( wp_unslash( plugin_basename( $relevanssi_variables['file'] ) ) );
+		if ( $base === $page ) {
+			$on_relevanssi_page = true;
+		}
+	}
+
+	if ( function_exists( 'get_blog_status' ) ) {
+		$public = (bool) get_blog_status( get_current_blog_id(), 'public' );
+		if ( ! $public && 'options-general.php' === $pagenow && $on_relevanssi_page ) {
+			add_action(
+				'admin_notices',
+				function() {
+					printf(
+						"<div id='relevanssi-warning' class='update-nag'><p><strong>%s</strong></p></div>",
+						esc_html__( 'Your site is not public. By default, Relevanssi does not search private sites. If you want to be able to search on this site, either make it public or add a filter function that returns true on \'relevanssi_multisite_public_status\' filter hook.', 'relevanssi' )
+					);
+				}
+			);
+		}
+	}
+
+	add_filter( 'relevanssi_remove_punctuation', 'relevanssi_wildcards_pre', 8 );
+	add_filter( 'relevanssi_remove_punctuation', 'relevanssi_wildcards_post', 12 );
+	add_filter( 'relevanssi_term_where', 'relevanssi_query_wildcards' );
+
 	// Add the related posts filters if necessary.
 	relevanssi_related_init();
 }
@@ -511,46 +542,6 @@ function relevanssi_get_words() {
 	}
 
 	return $data['words'];
-}
-
-/**
- * Launches an asynchronous Ajax action.
- *
- * Makes a wp_remote_post() call with the specific action. Handles nonce
- * verification.
- *
- * @see wp_remove_post()
- * @see wp_create_nonce()
- *
- * @param string $action       The action to trigger (also the name of the
- * nonce).
- * @param array  $payload_args The parameters sent to the action. Defaults to
- * an empty array.
- *
- * @return WP_Error|array The wp_remote_post() response or WP_Error on failure.
- */
-function relevanssi_launch_ajax_action( $action, $payload_args = array() ) {
-	$cookies = array();
-	foreach ( $_COOKIE as $name => $value ) {
-		$cookies[] = "$name=" . rawurlencode(
-			is_array( $value ) ? wp_json_encode( $value ) : $value
-		);
-	}
-	$default_payload = array(
-		'action' => $action,
-		'_nonce' => wp_create_nonce( $action ),
-	);
-	$payload         = array_merge( $default_payload, $payload_args );
-	$args            = array(
-		'timeout'  => 0.01,
-		'blocking' => false,
-		'body'     => $payload,
-		'headers'  => array(
-			'cookie' => implode( '; ', $cookies ),
-		),
-	);
-	$url             = admin_url( 'admin-ajax.php' );
-	return wp_remote_post( $url, $args );
 }
 
 /**

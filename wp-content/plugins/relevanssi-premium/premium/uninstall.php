@@ -92,12 +92,15 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_show_matches_text' );
 	delete_option( 'relevanssi_show_post_controls' );
 	delete_option( 'relevanssi_synonyms' );
+	delete_option( 'relevanssi_taxterm_count' );
+	delete_option( 'relevanssi_terms_count' );
 	delete_option( 'relevanssi_thousand_separator' );
 	delete_option( 'relevanssi_throttle' );
 	delete_option( 'relevanssi_throttle_limit' );
 	delete_option( 'relevanssi_title_boost' );
 	delete_option( 'relevanssi_trim_logs' );
 	delete_option( 'relevanssi_txt_col' );
+	delete_option( 'relevanssi_user_count' );
 	delete_option( 'relevanssi_word_boundaries' );
 	delete_option( 'relevanssi_words' );
 	delete_option( 'relevanssi_wpml_only_current' );
@@ -139,6 +142,8 @@ function relevanssi_uninstall() {
 		// The if clause is required to avoid nagging from testing.
 		define( 'UNINSTALLING_RELEVANSSI_PREMIUM', true );
 	}
+
+	wp_clear_scheduled_hook( 'relevanssi_update_counts' );
 
 	relevanssi_drop_database_tables();
 }

@@ -71,6 +71,10 @@ function relevanssi_search_multi( $multi_args ) {
 	if ( isset( $filtered_values['include_attachments'] ) ) {
 		$include_attachments = $filtered_values['include_attachments'];
 	}
+	$date_query = '';
+	if ( isset( $filtered_values['date_query'] ) ) {
+		$date_query = $filtered_values['date_query'];
+	}
 
 	$remove_stopwords = false;
 	$terms            = relevanssi_tokenize( $q, $remove_stopwords );
@@ -239,6 +243,10 @@ function relevanssi_search_multi( $multi_args ) {
 			$query_restrictions .= " AND ((relevanssi.doc IN (SELECT DISTINCT(posts.ID) FROM $wpdb->posts AS posts
 				WHERE posts.post_type NOT IN ( $negative_post_type))) OR (relevanssi.doc = -1))";
 			// Clean: $negative_post_type is escaped.
+		}
+
+		if ( $date_query ) {
+			$query_restrictions .= relevanssi_process_date_query( $date_query );
 		}
 
 		/**
@@ -737,6 +745,57 @@ function relevanssi_compile_multi_args( $query, $searchblogs, $q ) {
 
 	if ( isset( $query->query_vars['include_attachments'] ) ) {
 		$multi_args['include_attachments'] = $query->query_vars['include_attachments'];
+	}
+
+	$date_query = false;
+	if ( ! empty( $query->date_query ) ) {
+		if ( is_object( $query->date_query ) && 'WP_Date_Query' === get_class( $query->date_query ) ) {
+			$date_query = $query->date_query;
+		} else {
+			$date_query = new WP_Date_Query( $query->date_query );
+		}
+	} elseif ( ! empty( $query->query_vars['date_query'] ) ) {
+		// The official date query is in $query->date_query, but this allows
+		// users to set the date query from query variables.
+		$date_query = new WP_Date_Query( $query->query_vars['date_query'] );
+	}
+	if ( ! $date_query ) {
+		$date_query = array();
+		if ( ! empty( $query->query_vars['year'] ) ) {
+			$date_query['year'] = intval( $query->query_vars['year'] );
+		}
+		if ( ! empty( $query->query_vars['monthnum'] ) ) {
+			$date_query['month'] = intval( $query->query_vars['monthnum'] );
+		}
+		if ( ! empty( $query->query_vars['w'] ) ) {
+			$date_query['week'] = intval( $query->query_vars['w'] );
+		}
+		if ( ! empty( $query->query_vars['day'] ) ) {
+			$date_query['day'] = intval( $query->query_vars['day'] );
+		}
+		if ( ! empty( $query->query_vars['hour'] ) ) {
+			$date_query['hour'] = intval( $query->query_vars['hour'] );
+		}
+		if ( ! empty( $query->query_vars['minute'] ) ) {
+			$date_query['minute'] = intval( $query->query_vars['minute'] );
+		}
+		if ( ! empty( $query->query_vars['second'] ) ) {
+			$date_query['second'] = intval( $query->query_vars['second'] );
+		}
+		if ( ! empty( $query->query_vars['m'] ) ) {
+			if ( 6 === strlen( $query->query_vars['m'] ) ) {
+				$date_query['year']  = intval( substr( $query->query_vars['m'], 0, 4 ) );
+				$date_query['month'] = intval( substr( $query->query_vars['m'], -2, 2 ) );
+			}
+		}
+		if ( ! empty( $date_query ) ) {
+			$date_query = new WP_Date_Query( $date_query );
+		} else {
+			$date_query = false;
+		}
+	}
+	if ( isset( $date_query ) ) {
+		$multi_args['date_query'] = $date_query;
 	}
 
 	return $multi_args;

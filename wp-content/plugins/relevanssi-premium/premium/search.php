@@ -172,3 +172,67 @@ function relevanssi_process_terms( $terms, $query ) {
 		'query_restrictions' => $query_restrictions,
 	);
 }
+
+/**
+ * Replaces the wildcards (?, *) with strings to let them pass intact.
+ *
+ * The wildcards are only allowed inside words, so they must have a word
+ * character on both sides of them.
+ *
+ * @param string $str The query or content string to modify.
+ *
+ * @return string The parameter string modified.
+ */
+function relevanssi_wildcards_pre( $str ) {
+	/**
+	 * If true, enables wildcard operators (*, ?).
+	 *
+	 * @param boolean If true, enable wildcard operator. Default false.
+	 */
+	if ( apply_filters( 'relevanssi_wildcard_search', false ) ) {
+		$str = preg_replace( '/(\w)\?(\w)/', '\1SINGLEWILDCARDSYMBOL\2', $str );
+		$str = preg_replace( '/(\w)\*(\w)/', '\1MULTIWILDCARDSYMBOL\2', $str );
+	}
+	return $str;
+}
+
+/**
+ * Replaces the wildcard strings with wildcards (?, *).
+ *
+ * @param string $str The query or content string to modify.
+ *
+ * @return string The parameter string modified.
+ */
+function relevanssi_wildcards_post( $str ) {
+	/**
+	 * Documented in /premium/search.php.
+	 */
+	if ( apply_filters( 'relevanssi_wildcard_search', false ) ) {
+		$str = preg_replace( '/SINGLEWILDCARDSYMBOL/', '?', $str );
+		$str = preg_replace( '/MULTIWILDCARDSYMBOL/', '*', $str );
+	}
+	return $str;
+}
+
+/**
+ * Replaces the wildcards (?, *) with their MySQL equivalents (_, %).
+ *
+ * The ? is converted to _ (single character), while * is converted to %
+ * (zero or more). Hooks to the relevanssi_term_where filter hook to only
+ * apply this to the term WHERE condition part of the query.
+ *
+ * @see relevanssi_term_where
+ *
+ * @param string $query MySQL query to modify.
+ *
+ * @return string The modified MySQL query.
+ */
+function relevanssi_query_wildcards( $query ) {
+	/**
+	 * Documented in /premium/search.php.
+	 */
+	if ( apply_filters( 'relevanssi_wildcard_search', false ) ) {
+		$query = str_replace( array( '?', '*' ), array( '_', '%' ), $query );
+	}
+	return $query;
+}

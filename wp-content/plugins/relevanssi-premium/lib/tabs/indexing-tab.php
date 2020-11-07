@@ -89,14 +89,17 @@ function relevanssi_indexing_tab() {
 	$punct_hyphens_remove     = relevanssi_select( $punctuation['hyphens'], 'remove' );
 	$punct_hyphens_keep       = relevanssi_select( $punctuation['hyphens'], 'keep' );
 
-	$docs_count  = $wpdb->get_var( 'SELECT COUNT(DISTINCT doc) FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc != -1' );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-	$terms_count = $wpdb->get_var( 'SELECT COUNT(*) FROM ' . $relevanssi_variables['relevanssi_table'] );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+	$docs_count  = get_option( 'relevanssi_doc_count', 0 );
+	$terms_count = get_option( 'relevanssi_terms_count', 0 );
 	$lowest_doc  = $wpdb->get_var( 'SELECT doc FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc > 0 ORDER BY doc ASC LIMIT 1' );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
 	if ( RELEVANSSI_PREMIUM ) {
-		$user_count    = $wpdb->get_var( 'SELECT COUNT(DISTINCT item) FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'user'" );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-		$taxterm_count = $wpdb->get_var( 'SELECT COUNT(DISTINCT item) FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE (type != 'post' AND type != 'attachment' AND type != 'user')" );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+		$user_count    = get_option( 'relevanssi_user_count', 0 );
+		$taxterm_count = get_option( 'relevanssi_taxterm_count', 0 );
 	}
+
+	$this_page  = '?page=' . plugin_basename( $relevanssi_variables['file'] );
+	$update_url = wp_nonce_url( $this_page . '&tab=indexing&update_counts=1', 'update_counts' );
 
 	?>
 	<div id="indexing_tab">
@@ -123,7 +126,7 @@ function relevanssi_indexing_tab() {
 			</div>
 			<div id='relevanssi-note' style='display: none'></div>
 			<div id='relevanssi-progress' class='rpi-progress'><div class="rpi-indicator"></div></div>
-			<div id='relevanssi-timer'><?php esc_html_e( 'Time elapsed', 'relevanssi' ); ?>: <span id="relevanssi_elapsed">0:00:00</span> | <?php esc_html_e( 'Time remaining', 'relevanssi' ); ?>: <span id="relevanssi_estimated"><?php esc_html_e( 'some time', 'relevanssi' ); ?></span></div>
+			<div id='relevanssi-timer'><?php esc_html_e( 'Time elapsed', 'relevanssi' ); ?>: <span id="relevanssi_elapsed">0:00:00</span> | <?php esc_html_e( 'Time remaining', 'relevanssi' ); ?>: <span id="relevanssi_estimated"><?php esc_html_e( 'some time', 'relevanssi' ); ?></span></div>
 			<label for="results" class="screen-reader-text"><?php esc_html_e( 'Results', 'relevanssi' ); ?></label><textarea id='results' rows='10' cols='80'></textarea>
 			<div id='relevanssi-indexing-instructions' style='display: none'><?php esc_html_e( "Indexing should respond quickly. If nothing happens in couple of minutes, it's probably stuck. The most common reasons for indexing issues are incompatible shortcodes, so try disabling the shortcode expansion setting and try again. Also, if you've just updated Relevanssi, doing a hard refresh in your browser will make sure your browser is not trying to use an outdated version of the Relevanssi scripts.", 'relevanssi' ); ?></div>
 		</td>
@@ -138,6 +141,8 @@ function relevanssi_indexing_tab() {
 		</p>
 		<p><?php echo esc_html( $terms_count ); ?> <?php echo esc_html( _n( 'term in the index.', 'terms in the index.', $terms_count, 'relevanssi' ) ); ?><br />
 		<?php echo esc_html( $lowest_doc ); ?> <?php esc_html_e( 'is the lowest post ID indexed.', 'relevanssi' ); ?></p>
+		<?php /* Translators: %1$s opens the a tag, %2$s closes it. */ ?>
+		<p class="description">(<?php printf( esc_html__( 'These values may be inaccurate. If you need exact values, %1$supdate the counts%2$s', 'relevanssi' ), '<a href="' . esc_attr( $update_url ) . '">', '</a>' ); ?>.)</p>
 		</td>
 	</tr>
 	</table>

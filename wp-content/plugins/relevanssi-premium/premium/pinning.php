@@ -65,6 +65,18 @@ function relevanssi_pinning( $hits ) {
 	}
 
 	/**
+	 * Doing this instead of individual get_post_meta() calls can cut hundreds
+	 * of database queries!
+	 */
+	$posts_pinned_for_all = array_flip(
+		$wpdb->get_col(
+			"SELECT post_id FROM $wpdb->postmeta
+			WHERE meta_key = '_relevanssi_pin_for_all'
+			AND meta_value = 'on'"
+		)
+	);
+
+	/**
 	 * If the search query is "foo bar baz", $term_list now contains "foo", "bar",
 	 *"baz", "foo bar", "bar baz", and "foo bar baz".
 	*/
@@ -115,7 +127,7 @@ function relevanssi_pinning( $hits ) {
 					$pinned_posts[] = $hit;
 				}
 			} else {
-				if ( 'on' === get_post_meta( $hit->ID, '_relevanssi_pin_for_all', true ) ) {
+				if ( isset( $posts_pinned_for_all[ $hit->ID ] ) ) {
 					$hit->relevanssi_pinned = 1;
 					if ( $return_id ) {
 						$pinned_posts[] = $hit->ID;
