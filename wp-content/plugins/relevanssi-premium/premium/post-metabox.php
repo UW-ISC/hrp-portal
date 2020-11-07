@@ -513,27 +513,17 @@ function relevanssi_generate_related_list( $post_id, $output = 'HTML' ) {
 	} else {
 		$list = array();
 	}
-	$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
-	if ( empty( $related_posts ) ) {
-		/**
-		 * Makes it possible to set $just_objects to true.
-		 *
-		 * Return true here if you wish to use just objects in the related posts.
-		 * If the filter returns false (default), full HTML will be stoerd in the
-		 * transient.
-		 *
-		 * @param boolean Return true, if you want to get post objects in the
-		 * transient.
-		 */
-		relevanssi_related_posts( $post_id, apply_filters( 'relevanssi_related_just_objects', false ), true );
-		$related_posts = get_post_meta( $post_id, '_relevanssi_related_posts', true );
-	}
-	$related_array = explode( ',', $related_posts );
-	foreach ( $related_array as $related_post_id ) {
+	$related_posts = relevanssi_get_related_post_ids( $post_id );
+	foreach ( $related_posts as $related_post_id ) {
 		$title = get_the_title( $related_post_id );
 		$link  = get_permalink( $related_post_id );
 		if ( $output_html ) {
-			$list .= '<li><a href="' . esc_attr( $link ) . '">' . esc_html( $title ) . '</a> (<button type="button" class="removepost" data-removepost="' . esc_attr( $related_post_id ) . '">' . esc_html__( 'not this', 'relevanssi' ) . '</button>)</li>';
+			$list .= '<li><a href="' . esc_attr( $link ) . '">'
+				. esc_html( $title ) . '</a> '
+				. '(<button type="button" class="removepost" data-removepost="'
+				. esc_attr( $related_post_id ) . '">'
+				. esc_html__( 'not this', 'relevanssi' ) .
+				'</button>)</li>';
 		} else {
 			$list[] = array(
 				'id'    => $related_post_id,

@@ -494,7 +494,7 @@ function relevanssi_prepare_indexing_content( $content ) {
 	$synonyms = $relevanssi_variables['synonyms'];
 	$content  = relevanssi_strtolower( $content );
 	$content  = preg_split( '/[\s,.()!?]/', $content );
-	$ret      = [];
+	$ret      = array();
 	$len      = count( $content );
 	for ( $i = 0; $i < $len; ++$i ) {
 		$val = $content[ $i ];
@@ -688,8 +688,6 @@ function relevanssi_index_users() {
  * @return array $response AJAX response, number of users indexed in the $response['indexed'].
  */
 function relevanssi_index_users_ajax( $limit, $offset ) {
-	global $wpdb, $relevanssi_variables;
-
 	$args = array(
 		'number' => intval( $limit ),
 		'offset' => intval( $offset ),
@@ -700,7 +698,10 @@ function relevanssi_index_users_ajax( $limit, $offset ) {
 		$args['role__not_in'] = array( 'subscriber' );
 	}
 
-	$users_list = get_users( $args );
+	/**
+	 * Documented in /premium/indexing.php.
+	 */
+	$users_list = get_users( apply_filters( 'relevanssi_user_indexing_args', $args ) );
 
 	if ( empty( $users_list ) ) {
 		$response = array(
@@ -715,11 +716,8 @@ function relevanssi_index_users_ajax( $limit, $offset ) {
 	}
 
 	$indexed_users = 0;
+	$update        = false;
 	foreach ( $users as $user ) {
-		$update = false;
-		if ( empty( $user->roles ) ) {
-			continue;
-		}
 		/**
 		 * Checks if the user can be indexed.
 		 *
@@ -963,20 +961,22 @@ function relevanssi_count_users() {
 		return -1;
 	}
 
-	global $wpdb;
+	$args = array(
+		'fields' => 'ID',
+	);
 
-	$users             = count_users( 'time' );
 	$index_subscribers = get_option( 'relevanssi_index_subscribers' );
-
-	$count_users = $users['total_users'];
-	if ( empty( $index_subscribers ) || 'off' === $index_subscribers ) {
-		if ( isset( $users['avail_roles']['subscriber'] ) ) {
-			$count_users -= $users['avail_roles']['subscriber'];
-		}
+	if ( 'on' !== $index_subscribers ) {
+		$args['role__not_in'] = array( 'subscriber' );
 	}
 
-	// Exclude users with no role in the current blog.
-	$count_users -= $users['avail_roles']['none'];
+	$users = get_users(
+		/**
+		 * Documented in /premium/indexing.php.
+		 */
+		apply_filters( 'relevanssi_user_indexing_args', $args )
+	);
+	$count_users = count( $users );
 
 	return $count_users;
 }

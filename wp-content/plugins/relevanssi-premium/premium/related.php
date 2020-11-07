@@ -51,11 +51,19 @@ function relevanssi_related_init() {
  * @return string The related posts HTML element.
  */
 function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_template = false ) {
-	global $relevanssi_variables, $wpdb;
+	global $relevanssi_variables;
+
+	$related = '';
+
+	if ( $just_objects ) {
+		trigger_error( "You're using relevanssi_related_posts() to fetch post objects. This is deprecated, use relevanssi_get_related_post_objects() instead.", E_USER_DEPRECATED ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+	}
+	if ( $no_template ) {
+		trigger_error( "You're using relevanssi_related_posts() to generate related posts without printing out the template. This is deprecated, use relevanssi_get_related_post_ids() instead.", E_USER_DEPRECATED ); // phpcs:ignore WordPress.PHP.DevelopmentFunctions
+	}
 
 	if ( ! $post_id ) {
-		global $post;
-		$post_id = $post->ID;
+		$post_id = get_the_ID();
 		if ( ! $post_id ) {
 			return '';
 		}
@@ -63,197 +71,55 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 
 	$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
 
-	// For cache control: if the meta field is empty, cache has been flushed.
-	$post_ids = get_post_meta( $post_id, '_relevanssi_related_posts', true );
-	$related  = get_transient( 'relevanssi_related_posts_' . $post_id );
-
-	if ( 'on' !== $settings['cache_for_admins'] && current_user_can( 'manage_options' ) ) {
-		$related = null;
+	$transient_name = 'relevanssi_related_posts_' . $post_id;
+	if ( $just_objects ) {
+		$transient_name .= '_jo';
+	}
+	if ( $no_template ) {
+		$transient_name .= '_nt';
 	}
 
-	/**
-	 * Disables the caching for related posts. Do not use unless you know exactly
-	 * what you are doing.
-	 *
-	 * @param boolean Set true to disable caching. Default false.
-	 */
-	if ( apply_filters( 'relevanssi_disable_related_cache', false ) ) {
-		$related = null;
+	$use_cache = relevanssi_related_cache_available( $post_id, $settings );
+
+	if ( $use_cache ) {
+		$related = get_transient( $transient_name );
+		if ( $related ) {
+			if ( ! $just_objects && ! $no_template ) {
+				$related .= '<!-- Fetched from cache -->';
+			}
+			/**
+			 * Filters the related posts output.
+			 *
+			 * @param string The output, ready to be displayed.
+			 */
+			return apply_filters( 'relevanssi_related_output', $related );
+		} else {
+			// Post ID custom field returned results, but the transient has
+			// expired. Let's refresh the custom field as well.
+			$use_cache = false;
+		}
 	}
-	if ( empty( $post_ids ) || empty( $related ) ) {
-		$post_types = explode( ',', $settings['post_types'] );
 
-		if ( 'matching_post_type' === $settings['post_types'] ) {
-			$post_types = array( get_post_type( $post_id ) );
+	$related_posts = relevanssi_get_related_post_ids( $post_id, $use_cache );
+
+	if ( $just_objects ) {
+		// Deprecated, remove this functionality eventually.
+		$related_post_objects = array();
+		foreach ( $related_posts as $related_id ) {
+			array_push( $related_post_objects, get_post( $related_id ) );
+		}
+		set_transient( $transient_name, $related_post_objects, WEEK_IN_SECONDS * 2 );
+	} elseif ( ! $no_template ) {
+		$template = locate_template( 'templates/relevanssi-related.php', false );
+		if ( ! $template ) {
+			$template = $relevanssi_variables['plugin_dir'] . 'premium/templates/relevanssi-related.php';
 		}
 
-		/**
-		 * Runs before the related posts searches and can be used to adjust the
-		 * Relevanssi settings. By default disables query logging.
-		 */
-		do_action( 'pre_relevanssi_related' );
+		ob_start();
+		include $template;
+		$related = ob_get_clean();
 
-		$words         = relevanssi_related_generate_keywords( $post_id );
-		$related_posts = array();
-
-		$include_ids = get_post_meta( $post_id, '_relevanssi_related_include_ids', true );
-		if ( $include_ids ) {
-			$related_posts = explode( ',', $include_ids );
-		}
-
-		$exclude_ids = get_post_meta( $post_id, '_relevanssi_related_exclude_ids', true );
-		if ( $exclude_ids ) {
-			$exclude_ids = explode( ',', $exclude_ids );
-		}
-		if ( ! is_array( $exclude_ids ) ) {
-			$exclude_ids = array();
-		}
-		$exclude_ids[] = $post_id; // Always exclude the current post.
-
-		// These posts are marked as "not related to anything".
-		$global_exclude_ids = $wpdb->get_col( "SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_not_related' AND meta_value <> ''" );
-
-		$exclude_ids = array_merge( $exclude_ids, $global_exclude_ids );
-		$exclude_ids = array_keys( array_flip( $exclude_ids ) );
-
-		$date_query = array();
-		if ( isset( $settings['months'] ) && intval( $settings['months'] ) > 0 ) {
-			$date_query = array(
-				'after' => '-' . $settings['months'] . ' months',
-			);
-		}
-		if ( ! empty( $words ) ) {
-			$count = count( $related_posts );
-			if ( $settings['number'] - $count > 0 ) {
-				$args = array(
-					's'              => $words,
-					'posts_per_page' => $settings['number'] - $count,
-					'post_type'      => $post_types,
-					'post__not_in'   => $exclude_ids,
-					'fields'         => 'ids',
-					'operator'       => 'OR',
-					'post_status'    => 'publish',
-				);
-				if ( $date_query ) {
-					$args['date_query'] = $date_query;
-				}
-				$related_posts_query = new WP_Query();
-				/**
-				 * Filters the related posts search arguments.
-				 *
-				 * Notice that the defaults vary depending on which related posts query is done.
-				 * Avoid overriding default values; preferably just add extra criteria.
-				 *
-				 * @param array  The related posts arguments.
-				 * @param string Which query is run. Values include "and", "or", "random fill", random".
-				 */
-				$related_posts_query->parse_query( apply_filters( 'relevanssi_related_args', $args, 'or' ) );
-				relevanssi_do_query( $related_posts_query );
-				$related_posts = array_merge( $related_posts, $related_posts_query->posts );
-			}
-		}
-
-		$tax_query = array();
-		if ( 'random_cat' === $settings['notenough'] || 'random_cat' === $settings['nothing'] ) {
-			$cats      = get_the_category( $post_id );
-			$cat_ids   = array_map(
-				function( $cat ) {
-					return $cat->term_id;
-				},
-				$cats
-			);
-			$tax_query = array(
-				'relation' => 'OR',
-				array(
-					'taxonomy' => 'category',
-					'field'    => 'term_id',
-					'terms'    => $cat_ids,
-					'operator' => 'IN',
-				),
-			);
-		}
-		$random = in_array( $settings['notenough'], array( 'random', 'random_cat' ), true ) ? true : false;
-		if ( $random && ( null === $related_posts || count( $related_posts ) < $settings['number'] ) ) {
-			// Not enough results and user wants a random fillup.
-			if ( null === $related_posts ) {
-				$related_posts = array();
-			}
-			$count = count( $related_posts );
-
-			$args = array(
-				'posts_per_page' => $settings['number'] - $count,
-				'post_type'      => $post_types,
-				'post__not_in'   => $exclude_ids,
-				'fields'         => 'ids',
-				'orderby'        => 'rand',
-				'post_status'    => 'publish',
-			);
-			if ( $date_query ) {
-				$args['date_query'] = $date_query;
-			}
-			if ( 'random_cat' === $settings['notenough'] ) {
-				$args['tax_query'] = $tax_query;
-			}
-			/** Documented in premium/related.php */
-			$more_related_posts = new WP_Query( apply_filters( 'relevanssi_related_args', $args, 'random fill' ) );
-			$related_posts      = array_merge( $related_posts, $more_related_posts->posts );
-		}
-		$random = in_array( $settings['nothing'], array( 'random', 'random_cat' ), true ) ? true : false;
-		if ( empty( $related_posts ) && $random ) {
-			$query = new WP_Query();
-			// No related posts found, user has requested random posts.
-			$args = array(
-				'posts_per_page' => $settings['number'],
-				'post_type'      => $post_types,
-				'post__not_in'   => $exclude_ids,
-				'fields'         => 'ids',
-				'orderby'        => 'rand',
-				'post_status'    => 'publish',
-			);
-			if ( $date_query ) {
-				$args['date_query'] = $date_query;
-			}
-			if ( 'random_cat' === $settings['nothing'] ) {
-				$args['tax_query'] = $tax_query;
-			}
-			/** Documented in premium/related.php */
-			$query->query( apply_filters( 'relevanssi_related_args', $args, 'random' ) );
-			$related_posts = $query->posts;
-		}
-
-		if ( ! $related_posts ) {
-			// For some reason nothing was found.
-			$related_posts = array();
-		}
-
-		$related_posts_string = implode( ',', $related_posts );
-		update_post_meta( $post_id, '_relevanssi_related_posts', $related_posts_string );
-
-		if ( $just_objects ) {
-			$related_post_objects = array();
-			foreach ( $related_posts as $related_id ) {
-				array_push( $related_post_objects, get_post( $related_id ) );
-			}
-			set_transient( 'relevanssi_related_posts_' . $post_id, $related_post_objects, WEEK_IN_SECONDS * 2 );
-		} elseif ( ! $no_template ) {
-			$template = locate_template( 'templates/relevanssi-related.php', false );
-			if ( ! $template ) {
-				$template = $relevanssi_variables['plugin_dir'] . 'premium/templates/relevanssi-related.php';
-			}
-
-			ob_start();
-			include $template;
-			$related = ob_get_clean();
-
-			set_transient( 'relevanssi_related_posts_' . $post_id, $related, WEEK_IN_SECONDS * 2 );
-		}
-		/**
-		 * Runs after the related posts searches and can be used to return the
-		 * adjusted Relevanssi settings. By default re-enables query logging.
-		 */
-		do_action( 'post_relevanssi_related' );
-	} else {
-		$related .= '<!-- Fetched from cache -->';
+		set_transient( $transient_name, $related, WEEK_IN_SECONDS * 2 );
 	}
 
 	/**
@@ -262,6 +128,334 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 	 * @param string The output, ready to be displayed.
 	 */
 	return apply_filters( 'relevanssi_related_output', $related );
+}
+
+/**
+ * Returns related post objects for the specific post.
+ *
+ * @param int $post_id  The post ID. Default null, in which case global $post
+ * is used.
+ *
+ * @return WP_Post[] An array of WordPress post objects.
+ */
+function relevanssi_get_related_post_objects( $post_id ) {
+	if ( ! $post_id ) {
+		$post_id = get_the_ID();
+		if ( ! $post_id ) {
+			return array();
+		}
+	}
+
+	$settings = get_option(
+		'relevanssi_related_settings',
+		relevanssi_related_default_settings()
+	);
+
+	$transient_name = 'relevanssi_related_posts_' . $post_id . '_jo';
+	$use_cache      = relevanssi_related_cache_available( $post_id, $settings );
+
+	if ( $use_cache ) {
+		$related = get_transient( $transient_name );
+		if ( $related ) {
+			/**
+			 * Filters the related posts object output.
+			 *
+			 * @param WP_Post[] Array of related post objects.
+			 */
+			return apply_filters( 'relevanssi_related_output_objects', $related );
+		} else {
+			$use_cache = false;
+		}
+	}
+
+	$related_posts = relevanssi_get_related_post_ids( $post_id, $use_cache );
+
+	$related_post_objects = array();
+	foreach ( $related_posts as $related_id ) {
+		array_push( $related_post_objects, get_post( $related_id ) );
+	}
+	set_transient( $transient_name, $related_post_objects, WEEK_IN_SECONDS * 2 );
+
+	/**
+	 * Filters the related posts object output.
+	 *
+	 * @param WP_Post[] Array of related post objects.
+	 */
+	return apply_filters( 'relevanssi_related_output_objects', $related );
+}
+
+/**
+ * Returns true if related post cache is available for the current post.
+ *
+ * @param int   $post_id  The post ID.
+ * @param array $settings The Relevanssi related posts settings.
+ *
+ * @return boolean True, if related post IDs have been cached for the post.
+ */
+function relevanssi_related_cache_available( $post_id, $settings ) {
+	$use_cache = true;
+	/**
+	 * Disables the caching for related posts. Do not use unless you know
+	 * what you are doing.
+	 *
+	 * @param boolean Set true to disable caching. Default false.
+	 */
+	if ( apply_filters( 'relevanssi_disable_related_cache', false ) ) {
+		$use_cache = false;
+	} elseif ( 'on' !== $settings['cache_for_admins'] && current_user_can( 'manage_options' ) ) {
+		$use_cache = false;
+	} else {
+		// For cache control: if the meta field is empty, cache has been flushed.
+		$post_ids = get_post_meta( $post_id, '_relevanssi_related_posts', true );
+		if ( empty( $post_ids ) ) {
+			$use_cache = false;
+		}
+	}
+
+	return $use_cache;
+}
+
+/**
+ * Fetches related post IDs.
+ *
+ * @param int     $post_id   The post ID.
+ * @param boolean $use_cache If false, discard cached results. Default true.
+ *
+ * @return int[] An array of related post IDs.
+ */
+function relevanssi_get_related_post_ids( $post_id, $use_cache = true ) {
+	global $wpdb;
+
+	$settings = get_option(
+		'relevanssi_related_settings',
+		relevanssi_related_default_settings()
+	);
+
+	$related_posts_string = get_post_meta(
+		$post_id,
+		'_relevanssi_related_posts',
+		true
+	);
+
+	if ( ! empty( $related_posts_string ) && $use_cache ) {
+		$related_posts = explode( ',', $related_posts_string );
+		return $related_posts;
+	}
+
+	$post_types = explode( ',', $settings['post_types'] );
+
+	if ( 'matching_post_type' === $settings['post_types'] || empty( $post_types ) ) {
+		$post_types = array( get_post_type( $post_id ) );
+	}
+
+	/**
+	 * Runs before the related posts searches and can be used to adjust the
+	 * Relevanssi settings. By default disables query logging.
+	 */
+	do_action( 'pre_relevanssi_related' );
+
+	$words         = relevanssi_related_generate_keywords( $post_id );
+	$related_posts = array();
+
+	$include_ids = get_post_meta(
+		$post_id,
+		'_relevanssi_related_include_ids',
+		true
+	);
+	if ( $include_ids ) {
+		$related_posts = explode( ',', $include_ids );
+	}
+
+	$exclude_ids = get_post_meta(
+		$post_id,
+		'_relevanssi_related_exclude_ids',
+		true
+	);
+	if ( $exclude_ids ) {
+		$exclude_ids = explode( ',', $exclude_ids );
+	}
+	if ( ! is_array( $exclude_ids ) ) {
+		$exclude_ids = array();
+	}
+	$exclude_ids[] = $post_id; // Always exclude the current post.
+
+	// These posts are marked as "not related to anything".
+	$global_exclude_ids = $wpdb->get_col(
+		"SELECT post_id FROM $wpdb->postmeta
+		WHERE meta_key = '_relevanssi_related_not_related'
+		AND meta_value <> ''"
+	);
+
+	$exclude_ids = array_merge( $exclude_ids, $global_exclude_ids );
+	$exclude_ids = array_keys( array_flip( $exclude_ids ) );
+
+	$date_query = array();
+	if ( isset( $settings['months'] ) && intval( $settings['months'] ) > 0 ) {
+		$date_query = array(
+			'after' => '-' . $settings['months'] . ' months',
+		);
+	}
+	if ( ! empty( $words ) ) {
+		$count = count( $related_posts );
+		if ( $settings['number'] - $count > 0 ) {
+			$args = array(
+				's'              => $words,
+				'posts_per_page' => $settings['number'] - $count,
+				'post_type'      => $post_types,
+				'post__not_in'   => $exclude_ids,
+				'fields'         => 'ids',
+				'operator'       => 'OR',
+				'post_status'    => 'publish',
+			);
+			if ( $date_query ) {
+				$args['date_query'] = $date_query;
+			}
+			$related_posts_query = new WP_Query();
+			$related_posts_query->parse_query(
+				/**
+				 * Filters the related posts search arguments.
+				 *
+				 * Notice that the defaults vary depending on which related posts
+				 * query is done. Avoid overriding default values; preferably just
+				 * add extra criteria.
+				 *
+				 * @param array  The related posts arguments.
+				 * @param string Which query is run. Values include or",
+				 * "random fill", random".
+				 */
+				apply_filters(
+					'relevanssi_related_args',
+					$args,
+					'or'
+				)
+			);
+			relevanssi_do_query( $related_posts_query );
+			$related_posts = array_merge( $related_posts, $related_posts_query->posts );
+		}
+	}
+
+	/**
+	 * Runs after the related posts searches and can be used to adjust the
+	 * Relevanssi settings.
+	 */
+	do_action( 'post_relevanssi_related' );
+
+	$tax_query = array();
+	if ( 'random_cat' === $settings['notenough'] || 'random_cat' === $settings['nothing'] ) {
+		$cats      = get_the_category( $post_id );
+		$cat_ids   = array_map(
+			function( $cat ) {
+				return $cat->term_id;
+			},
+			$cats
+		);
+		$tax_query = array(
+			'relation' => 'OR',
+			array(
+				'taxonomy' => 'category',
+				'field'    => 'term_id',
+				'terms'    => $cat_ids,
+				'operator' => 'IN',
+			),
+		);
+	}
+	$random_fill = in_array(
+		$settings['notenough'],
+		array( 'random', 'random_cat' ),
+		true
+	) ? true : false;
+	if ( $random_fill && ( null === $related_posts || count( $related_posts ) < $settings['number'] ) ) {
+		// Not enough results and user wants a random fillup.
+		if ( null === $related_posts ) {
+			$related_posts = array();
+		}
+		$count = count( $related_posts );
+
+		$args = array(
+			'posts_per_page' => $settings['number'] - $count,
+			'post_type'      => $post_types,
+			'post__not_in'   => $exclude_ids,
+			'fields'         => 'ids',
+			'orderby'        => 'rand',
+			'post_status'    => 'publish',
+		);
+		if ( $date_query ) {
+			$args['date_query'] = $date_query;
+		}
+		if ( 'random_cat' === $settings['notenough'] ) {
+			$args['tax_query'] = $tax_query;
+		}
+		/** Documented in premium/related.php */
+		$more_related_posts = new WP_Query(
+			apply_filters(
+				'relevanssi_related_args',
+				$args,
+				'random fill'
+			)
+		);
+		$related_posts      = array_merge(
+			$related_posts,
+			$more_related_posts->posts
+		);
+	}
+	$all_random = in_array(
+		$settings['nothing'],
+		array( 'random', 'random_cat' ),
+		true
+	) ? true : false;
+	if ( empty( $related_posts ) && $all_random ) {
+		$query = new WP_Query();
+		// No related posts found, user has requested random posts.
+		$args = array(
+			'posts_per_page' => $settings['number'],
+			'post_type'      => $post_types,
+			'post__not_in'   => $exclude_ids,
+			'fields'         => 'ids',
+			'orderby'        => 'rand',
+			'post_status'    => 'publish',
+		);
+		if ( $date_query ) {
+			$args['date_query'] = $date_query;
+		}
+		if ( 'random_cat' === $settings['nothing'] ) {
+			$args['tax_query'] = $tax_query;
+		}
+		$query->query(
+			/** Documented in premium/related.php */
+			apply_filters(
+				'relevanssi_related_args',
+				$args,
+				'random'
+			)
+		);
+		$related_posts = $query->posts;
+	}
+
+	/*
+	 * Sometimes a thoughtless relevanssi_hits_filter filter function may
+	 * cause the $related_posts array to contain post objects instead of
+	 * post IDs. This step makes sure the array has post IDs.
+	 */
+	$related_posts = array_map(
+		function( $item ) {
+			if ( is_object( $item ) && isset( $item->ID ) ) {
+				return $item->ID;
+			} else {
+				return $item;
+			}
+		},
+		$related_posts
+	);
+
+	if ( ! $related_posts ) {
+		// For some reason nothing was found.
+		$related_posts = array();
+	}
+
+	$related_posts_string = implode( ',', $related_posts );
+	update_post_meta( $post_id, '_relevanssi_related_posts', $related_posts_string );
+
+	return $related_posts;
 }
 
 /**
@@ -331,7 +525,10 @@ function relevanssi_related_default_styles() {
  * @return string The post content with the related posts appended.
  */
 function relevanssi_related_posts_the_content_wrapper( $content ) {
-	$settings   = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
+	$settings   = get_option(
+		'relevanssi_related_settings',
+		relevanssi_related_default_settings()
+	);
 	$post_types = explode( ',', $settings['append'] );
 	if ( is_singular() && in_the_loop() && in_array( get_post_type(), $post_types, true ) ) {
 		global $post;
@@ -350,7 +547,10 @@ function relevanssi_related_posts_the_content_wrapper( $content ) {
 function relevanssi_related_generate_keywords( $post_id ) {
 	global $wpdb, $relevanssi_variables;
 
-	$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
+	$settings = get_option(
+		'relevanssi_related_settings',
+		relevanssi_related_default_settings()
+	);
 	$keywords = explode( ',', $settings['keyword'] );
 	$restrict = explode( ',', $settings['restrict'] );
 
@@ -366,28 +566,36 @@ function relevanssi_related_generate_keywords( $post_id ) {
 		if ( 'title' === $keyword ) {
 			$title_words = $wpdb->get_col(
 				$wpdb->prepare(
-					'SELECT term FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d AND title > 0', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					'SELECT term FROM '
+					. $relevanssi_variables['relevanssi_table'] // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					. ' WHERE doc = %d AND title > 0',
 					$post_id
 				)
 			);
 		} elseif ( 'post_tag' === $keyword ) {
 			$tag_words = $wpdb->get_col(
 				$wpdb->prepare(
-					'SELECT term FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d AND tag > 0 ORDER BY tag DESC', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					'SELECT term FROM '
+					. $relevanssi_variables['relevanssi_table'] // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					. ' WHERE doc = %d AND tag > 0 ORDER BY tag DESC',
 					$post_id
 				)
 			);
 		} elseif ( 'category' === $keyword ) {
 			$cat_words = $wpdb->get_col(
 				$wpdb->prepare(
-					'SELECT term FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d AND category > 0 ORDER BY category DESC', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					'SELECT term FROM '
+					. $relevanssi_variables['relevanssi_table'] // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					. ' WHERE doc = %d AND category > 0 ORDER BY category DESC',
 					$post_id
 				)
 			);
 		} else {
 			$new_tax_words = $wpdb->get_col(
 				$wpdb->prepare(
-					'SELECT term FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d AND taxonomy > 0 AND taxonomy_detail LIKE %s ORDER BY taxonomy DESC', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					'SELECT term FROM '
+					. $relevanssi_variables['relevanssi_table'] // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+					. ' WHERE doc = %d AND taxonomy > 0 AND taxonomy_detail LIKE %s ORDER BY taxonomy DESC',
 					$post_id,
 					'%' . $keyword . '%'
 				)
@@ -439,14 +647,20 @@ function relevanssi_related_generate_keywords( $post_id ) {
 		);
 	}
 
-	$words = array_merge( $title_words, $tag_words, $cat_words, $tax_words, $custom_words );
+	$words = array_merge(
+		$title_words,
+		$tag_words,
+		$cat_words,
+		$tax_words,
+		$custom_words
+	);
 	$words = array_keys( array_flip( $words ) );
 
 	/**
 	 * Filters the source words for related posts.
 	 *
-	 * This filter sees the words right before they are fed into Relevanssi to find
-	 * the related posts.
+	 * This filter sees the words right before they are fed into Relevanssi to
+	 * find the related posts.
 	 *
 	 * @param string A space-separated list of keywords for related posts.
 	 * @param int    The post ID.
@@ -461,30 +675,37 @@ function relevanssi_related_generate_keywords( $post_id ) {
 /**
  * Flushes the related post caches.
  *
- * Deletes all the _relevanssi_related_posts meta fields. This flushes the cache. The
- * actual cache is stored in transients, but we don't have a list of all the transient
- * names and one shouldn't simply remove the transients from the wp_options database
- * table, because it's possible they're not there.
+ * Deletes all the _relevanssi_related_posts meta fields. This flushes the
+ * cache. The actual cache is stored in transients, but we don't have a list of
+ * all the transient names and one shouldn't simply remove the transients from
+ * the wp_options database table, because it's possible they're not there.
  *
- * So, instead of deleting the transients, Relevanssi deletes the meta fields which
- * contain a list of post IDs (this is helpful for other uses as well), which then
- * forces a cache flush.
+ * So, instead of deleting the transients, Relevanssi deletes the meta fields
+ * which contain a list of post IDs (this is helpful for other uses as well),
+ * which then forces a cache flush.
  *
  * @global object $wpdb The WordPress database object.
  *
- * @param int $clean_id If specified, only remove meta fields that contain this ID.
- * Default null, which flushes all caches.
+ * @param int $clean_id If specified, only remove meta fields that contain this
+ * ID. Default null, which flushes all caches.
  */
 function relevanssi_flush_related_cache( $clean_id = null ) {
 	global $wpdb;
 
 	if ( is_int( $clean_id ) ) {
 		$clean_id = '%' . $clean_id . '%';
-		$wpdb->query( $wpdb->prepare( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_posts' AND meta_value LIKE %s", $clean_id ) );
+		$wpdb->query(
+			$wpdb->prepare(
+				"DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_posts' AND meta_value LIKE %s",
+				$clean_id
+			)
+		);
 		// Not perfect, since this will match also rows where post ID contains the
 		// wanted ID, but it's an acceptable minor cost for a simple solution.
 	} else {
-		$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_posts'" );
+		$wpdb->query(
+			"DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_related_posts'"
+		);
 	}
 }
 

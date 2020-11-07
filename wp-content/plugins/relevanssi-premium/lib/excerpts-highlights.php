@@ -134,8 +134,14 @@ function relevanssi_do_excerpt( $t_post, $query, $excerpt_length = null, $excerp
 	// don't want that.
 	remove_filter( 'the_content', 'prepend_attachment' );
 
+	remove_shortcode( 'noindex' );
+	add_shortcode( 'noindex', 'relevanssi_noindex_shortcode_indexing' );
+
 	/** This filter is documented in wp-includes/post-template.php */
 	$content = apply_filters( 'the_content', $content );
+
+	remove_shortcode( 'noindex' );
+	add_shortcode( 'noindex', 'relevanssi_noindex_shortcode' );
 
 	/**
 	 * Filters the post content after 'the_content'.
@@ -518,6 +524,13 @@ function relevanssi_highlight_terms( $content, $query, $in_docs = false ) {
 		$pr_term = preg_quote( $term, '/' );
 		$pr_term = relevanssi_add_accent_variations( $pr_term );
 
+		// Support for wildcard matching (a Premium feature).
+		$pr_term = str_replace(
+			array( '\*', '\?' ),
+			array( '\S*', '.' ),
+			$pr_term
+		);
+
 		if ( $word_boundaries_available ) {
 			$regex = "/(\b$pr_term\b)/iu";
 			if ( 'never' !== get_option( 'relevanssi_fuzzy' ) ) {
@@ -873,6 +886,13 @@ function relevanssi_count_matches( $words, $complete_text ) {
 			),
 			'UTF-8'
 		);
+		// Support for wildcard matching (a Premium feature).
+		$word_slice = str_replace(
+			array( '\*', '\?' ),
+			array( '\S*', '.' ),
+			$word_slice
+		);
+
 		if ( $word_boundaries_available ) {
 			if ( 'never' !== get_option( 'relevanssi_fuzzy' ) ) {
 				$regex = "/\b$word_slice|$word_slice\b/";
@@ -1202,7 +1222,10 @@ function relevanssi_get_custom_field_content( $post_id ) {
 					array_walk_recursive(
 						$value,
 						function( $val ) use ( &$value_as_string ) {
-							$value_as_string .= ' ' . $val;
+							if ( is_string( $val ) ) {
+								// Sometimes this can be something weird.
+								$value_as_string .= ' ' . $val;
+							}
 						}
 					);
 					$value = $value_as_string;

@@ -92,7 +92,26 @@ class Relevanssi_WP_Auto_Update {
 			$obj->banners     = $info->banners;
 
 			$transient->response[ $this->plugin_slug ] = $obj;
+		} else {
+			global $relevanssi_variables;
+			// No update is available.
+			$item = (object) array(
+				'id'            => 'relevanssi-premium/relevanssi.php',
+				'slug'          => 'my-plugin',
+				'plugin'        => 'relevanssi-premium/relevanssi.php',
+				'new_version'   => $relevanssi_variables['plugin_version'],
+				'url'           => '',
+				'package'       => '',
+				'icons'         => array(),
+				'banners'       => array(),
+				'banners_rtl'   => array(),
+				'tested'        => '',
+				'requires_php'  => '',
+				'compatibility' => new stdClass(),
+			);
+			$transient->no_update['relevanssi-premium/relevanssi.php'] = $item;
 		}
+
 		return $transient;
 	}
 

@@ -27,6 +27,8 @@ function relevanssi_redirects_tab() {
 
 <p><?php esc_html_e( 'Enter the search term and the target URL, which may be relative to your site home page or an absolute URL. If "Partial match" is checked, the redirect happens if the query word appears anywhere in the search query, even inside a word, so use it with care. If the search query matches multiple redirections, the first one it matches will trigger.', 'relevanssi' ); ?></p>
 
+<p><?php esc_html_e( 'The "Hits" column shows how many times each redirect has been used.', 'relevanssi' ); ?></p>
+
 <table class="form-table" role="presentation">
 	<tbody>
 		<tr>
@@ -43,6 +45,7 @@ function relevanssi_redirects_tab() {
 	<th><?php esc_html_e( 'Query', 'relevanssi' ); ?></th>
 	<th><?php esc_html_e( 'Partial match', 'relevanssi' ); ?></th>
 	<th><?php esc_html_e( 'URL', 'relevanssi' ); ?></th>
+	<th><?php esc_html_e( 'Hits', 'relevanssi' ); ?></th>
 	</tr>
 	</thead>
 	<tbody>
@@ -58,6 +61,7 @@ function relevanssi_redirects_tab() {
 	</td>
 	<td><input type="checkbox" name="partial_0" /></td>
 	<td><input type="text" name="url_0" size="60" /></td>
+	<td><input type="hidden" name="hits_0" /><span>0</span></td>
 	</tbody>
 	</tr>
 		<?php
@@ -76,6 +80,8 @@ function relevanssi_redirects_tab() {
 			}
 			$url = esc_attr( $redirect['url'] );
 			$url = str_replace( $site_url, '', $url );
+
+			$hits = $redirect['hits'] ?? 0;
 			// phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<tr class="redirect_table_row" id="row_<?php echo $row_id; ?>">
 		<td>
@@ -119,6 +125,14 @@ function relevanssi_redirects_tab() {
 				id="url_<?php echo $row_id; ?>"
 				size="60"
 				value="<?php echo $url; ?>" />
+		</td>
+		<td>
+			<input
+				type="hidden"
+				name="hits_<?php echo $row_id; ?>"
+				id="hits_<?php echo $row_id; ?>"
+				value="<?php echo $hits; ?>" />
+			<span><?php echo $hits; ?></span>
 		</td>
 		</tr>
 			<?php

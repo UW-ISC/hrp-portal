@@ -428,8 +428,8 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
  * Takes in the response from the attachment reading server and stores the attachment
  * content or the error message to the appropriate custom fields.
  *
- * @param array $response The server response.
- * @param int   $post_id  The attachment post ID.
+ * @param array|object $response The server response.
+ * @param int          $post_id  The attachment post ID.
  *
  * @since 2.0.0
  */
