@@ -15,15 +15,15 @@
  * https://wordpress.org/support/topic/search-wordpress-media-library-by-attached-post-title/
  *
  * @package MLA Parent Search Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Parent Search Example
 Plugin URI: http://davidlingren.com/
-Description: Extends the Media/Assistant "Search Media" box to custom field values
+Description: Extends the Media/Assistant "Search Media" box the parent elements of attached items
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
 Copyright 2018 David Lingren
@@ -123,8 +123,8 @@ class MLAParentSearchExample {
 				self::$parent_search_parameters = array();
 			}
 		} // isset s=parent:
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_new_instance parent_search_parameters = ' . var_export( self::$parent_search_parameters, true ), 0 );
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_new_instance _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_new_instance parent_search_parameters = ' . var_export( self::$parent_search_parameters, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_new_instance _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 
 		return $mla_list_table;
 	} // mla_list_table_new_instance
@@ -161,7 +161,7 @@ error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_new_instance _REQ
 		if ( ! ( isset( $request['offset'] ) && isset( $request['posts_per_page'] ) ) ) {
 			return $request;
 		}
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms request = ' . var_export( $request, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms request = ' . var_export( $request, true ), 0 );
 
 		if ( empty( self::$parent_search_parameters ) ) {
 			return $request;
@@ -184,15 +184,15 @@ error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms
 			'mla_search_connector' => self::$parent_search_parameters['mla_search_connector'],
 			'mla_search_fields' => implode( ',', self::$parent_search_parameters['mla_search_fields'] ),
 		);
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms parent_query = ' . var_export( $parent_query, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms parent_query = ' . var_export( $parent_query, true ), 0 );
 		$parents = MLAShortcodes::mla_get_shortcode_attachments( 0, $parent_query );
 		$ids = array();
 		foreach( $parents as $parent ) {
 			$ids[] = $parent->ID;
 		}
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms ids = ' . var_export( $ids, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms ids = ' . var_export( $ids, true ), 0 );
 		$request['post_parent__in'] = $ids;
-error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms request = ' . var_export( $request, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms request = ' . var_export( $request, true ), 0 );
 		
 		return $request;
 	} // mla_list_table_query_final_terms
@@ -239,8 +239,8 @@ error_log( __LINE__ . ' MLAParentSearchExample::mla_list_table_query_final_terms
 				self::$parent_search_parameters = array();
 			}
 		} // isset mla_search_value=parent:
-error_log( __LINE__ . ' MLAParentSearchExample::mla_media_modal_query_initial_terms query = ' . var_export( $query, true ), 0 );
-error_log( __LINE__ . ' MLAParentSearchExample::mla_media_modal_query_initial_terms parent_search_parameters = ' . var_export( self::$parent_search_parameters, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_media_modal_query_initial_terms query = ' . var_export( $query, true ), 0 );
+//error_log( __LINE__ . ' MLAParentSearchExample::mla_media_modal_query_initial_terms parent_search_parameters = ' . var_export( self::$parent_search_parameters, true ), 0 );
 
 		return $query;
 	}

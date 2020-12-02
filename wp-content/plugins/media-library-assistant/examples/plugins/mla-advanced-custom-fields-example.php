@@ -10,28 +10,40 @@
  * 	2. an Advanced Custom Fields "repeater" custom field is analyzed to display
  * 	   "where used" information in the Media/Assistant submenu table.
  *
- * The ACF checkbox custom field name is "acf_checkbox"; this is the ACF "Field Name",
- * not the "Field Label". You can support another field by changing all occurances of
- * the name to match the field you want.
+ * 	3. Advanced Custom Fields "image" custom field(s) are analyzed to display
+ * 	   "where used" information in the Media/Assistant submenu table.
  *
- * You must also define an MLA Custom Field mapping rule for the field.  You can leave
- * the Data Source as "-- None (select a value) --" and the other defaults. Check the
- * three boxes for MLA Column, Quick Edit and Bulk Edit support.
- * 
+ * 	4. Advanced Custom Fields "image" custom field(s) are made available as custom data substitution
+ *     parameters, using the prefix "acf:", e.g., "acf:search_bar_image". Three format/option values
+ *     can be added: 1) "acf:search_bar_image(count)" returns the number of item references,
+ *     2) "acf:search_bar_image(present)" returns 1 if there are references present, and 3) a numeric
+ *     value, e.g., "acf:search_bar_image(3)" returns the count only if it is equal to or greater than
+ *     the number of references.
+ *
+ * You can turn each of the three field types on or off by setting the corresponding "_ENABLE" constant
+ * to true or false. You can change the field names and labels by editing the corresponding constants.
+ *
+ * Created for support topic "Advanced Custom Fields repeater"
+ * opened on 3/1/2015 by "ncj"
+ * https://wordpress.org/support/topic/advanced-custom-fields-repeater/
+ *
+ * Enhanced for support topic "finding “where used” in custom field"
+ * opened on 4/19/2020 by "maven1129"
+ * https://wordpress.org/support/topic/finding-where-used-in-custom-field/
  *
  * @package MLA Advanced Custom Fields Example
- * @version 1.03
+ * @version 1.05
  */
 
 /*
 Plugin Name: MLA Advanced Custom Fields Example
 Plugin URI: http://davidlingren.com/
-Description: Supports an ACF checkbox and "where-used" in an ACF repeater
+Description: Supports an ACF checkbox, "where-used" in an ACF repeater and one or more ACF "image" variables.
 Author: David Lingren
-Version: 1.03
+Version: 1.05
 Author URI: http://davidlingren.com/
 
-Copyright 2014 - 2015 David Lingren
+Copyright 2014 - 2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -48,7 +60,7 @@ Copyright 2014 - 2015 David Lingren
 */
 
 /**
- * Class MLA Advanced Custom Fields Example hooks some of the filters provided by the MLA_List_Table class
+ * Class MLA Advanced Custom Fields Example hooks some of the filters provided by the MLA_List_Table and MLAData classes
  *
  * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
  * else inside a class means this is the only name you have to worry about.
@@ -58,44 +70,13 @@ Copyright 2014 - 2015 David Lingren
  */
 class MLAACFExample {
 	/**
-	 * Initialization function, similar to __construct()
+	 * True to enable the checkbox field, false to disable
 	 *
-	 * @since 1.00
+	 * @since 1.04
 	 *
-	 * @return	void
+	 * @var	string
 	 */
-	public static function initialize() {
-		/*
-		 * The filters are only useful for the admin section; exit in the front-end posts/pages
-		 */
-		if ( ! is_admin() )
-			return;
-
-		/*
-		 * add_filter parameters:
-		 * $tag - name of the hook you're filtering; defined by [mla_gallery]
-		 * $function_to_add - function to be called when [mla_gallery] applies the filter
-		 * $priority - default 10; lower runs earlier, higher runs later
-		 * $accepted_args - number of arguments your function accepts
-		 */
-		 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-main.php
-		  */
-		add_filter( 'mla_list_table_inline_action', 'MLAACFExample::mla_list_table_inline_action', 10, 2 ); //
-		add_filter( 'mla_list_table_bulk_action_initial_request', 'MLAACFExample::mla_list_table_bulk_action_initial_request', 10, 3 );
-		add_filter( 'mla_list_table_bulk_action', 'MLAACFExample::mla_list_table_bulk_action', 10, 3 ); //
-		add_filter( 'mla_list_table_inline_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 ); //
-
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-list-table.php
-		  */
-		add_filter( 'mla_list_table_get_columns', 'MLAACFExample::mla_list_table_get_columns', 10, 1 ); //
-		add_filter( 'mla_list_table_get_hidden_columns', 'MLAACFExample::mla_list_table_get_hidden_columns', 10, 1 ); //
-		add_filter( 'mla_list_table_get_sortable_columns', 'MLAACFExample::mla_list_table_get_sortable_columns', 10, 1 ); //
-		add_filter( 'mla_list_table_column_default', 'MLAACFExample::mla_list_table_column_default', 10, 3 ); //
-		add_filter( 'mla_list_table_build_inline_data', 'MLAACFExample::mla_list_table_build_inline_data', 10, 2 );
-	}
+	const ACF_CHECKBOX_ENABLED = true;
 
 	/**
 	 * Field name of the checkbox field
@@ -114,6 +95,15 @@ class MLAACFExample {
 	 * @var	string
 	 */
 	const ACF_CHECKBOX_TITLE = 'ACF Checkbox';
+
+	/**
+	 * True to enable the repeater field, false to disable
+	 *
+	 * @since 1.04
+	 *
+	 * @var	string
+	 */
+	const ACF_REPEATER_ENABLED = true;
 
 	/**
 	 * Field name of the "parent" repeater field
@@ -143,6 +133,163 @@ class MLAACFExample {
 	const ACF_SUB_FIELD = 'photo';
 
 	/**
+	 * True to enable the image field(s), false to disable
+	 *
+	 * @since 1.04
+	 *
+	 * @var	string
+	 */
+	const ACF_IMAGE_ENABLED = true;
+
+	/**
+	 * Field name(s) of the image field(s)
+	 *
+	 * @since 1.04
+	 *
+	 * @var	string
+	 */
+	const ACF_IMAGE_FIELDS = 'search_bar_image,rates_search_bar_image';
+
+	/**
+	 * Field Label(s) of the image field(s)
+	 *
+	 * @since 1.04
+	 *
+	 * @var	string
+	 */
+	const ACF_IMAGE_TITLES = 'Header Image,Header Image Alt';
+
+	/**
+	 * Initialization function, similar to __construct()
+	 *
+	 * @since 1.00
+	 *
+	 * @return	void
+	 */
+	public static function initialize() {
+		// The filters are only useful for the admin section; exit in the front-end posts/pages
+		if ( ! is_admin() )
+			return;
+
+		// Defined in /media-library-assistant/includes/class-mla-main.php
+		if ( self::ACF_CHECKBOX_ENABLED ) {
+			add_filter( 'mla_list_table_inline_action', 'MLAACFExample::mla_list_table_inline_action', 10, 2 );
+			add_filter( 'mla_list_table_bulk_action_initial_request', 'MLAACFExample::mla_list_table_bulk_action_initial_request', 10, 3 );
+			add_filter( 'mla_list_table_bulk_action', 'MLAACFExample::mla_list_table_bulk_action', 10, 3 );
+			add_filter( 'mla_list_table_inline_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 );
+		}
+
+		// Defined in /media-library-assistant/includes/class-mla-list-table.php
+		add_filter( 'mla_list_table_get_columns', 'MLAACFExample::mla_list_table_get_columns', 10, 1 );
+		add_filter( 'mla_list_table_column_default', 'MLAACFExample::mla_list_table_column_default', 10, 3 );
+
+		if ( self::ACF_CHECKBOX_ENABLED ) {
+			add_filter( 'mla_list_table_get_hidden_columns', 'MLAACFExample::mla_list_table_get_hidden_columns', 10, 1 );
+			add_filter( 'mla_list_table_get_sortable_columns', 'MLAACFExample::mla_list_table_get_sortable_columns', 10, 1 );
+			add_filter( 'mla_list_table_build_inline_data', 'MLAACFExample::mla_list_table_build_inline_data', 10, 2 );
+		}
+
+		// Defined in /media-library-assistant/includes/class-mla-data.php
+		if ( self::ACF_IMAGE_ENABLED ) {
+			add_filter( 'mla_expand_custom_prefix', 'MLAACFExample::mla_expand_custom_prefix', 10, 8 );
+		}
+	}
+
+	/**
+	 * MLA Expand Custom Prefix Filter
+	 *
+	 * Gives you an opportunity to generate your custom data value when a parameter's prefix value is not recognized.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	string	NULL, indicating that by default, no custom value is available
+	 * @param	string	the data-source name 
+	 * @param	array	data-source components; prefix (empty), value, option, format and args (if present)
+	 * @param	array	values from the query, if any, e.g. shortcode parameters
+	 * @param	array	item-level markup template values, if any
+	 * @param	integer	attachment ID for attachment-specific values
+	 * @param	boolean	for option 'multi', retain existing values
+	 * @param	string	default option value
+	 */
+	public static function mla_expand_custom_prefix( $custom_value, $key, $value, $query, $markup_values, $post_id, $keep_existing, $default_option ) {
+		if ( 'acf' !== strtolower( $value['prefix'] ) ) {
+			return $custom_value;
+		}
+		
+		//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$keep_existing}, {$default_option} ) value = " . var_export( $value, true ), 0 );
+		//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id} ) query = " . var_export( $query, true ), 0 );
+		//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id} ) markup_values = " . var_export( $markup_values, true ), 0 );
+
+		// Look for field/value qualifier
+		$match_count = preg_match( '/^(.+)\((.+)\)/', $value['value'], $matches );
+		if ( $match_count ) {
+			$field = $matches[1];
+			$qualifier = $matches[2];
+		} else {
+			$field = $value['value'];
+			$qualifier = '';
+		}
+//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id} ) field = {$field}, qualifier = {$qualifier}", 0 );
+
+		// Set debug mode
+		$debug_active = isset( $query['mla_debug'] ) && ( 'false' !== trim( strtolower( $query['mla_debug'] ) ) );
+		if ( $debug_active ) {
+			$old_mode = MLACore::mla_debug_mode( 'log' );
+			MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id}, {$keep_existing}, {$default_option} ) \$_REQUEST = " . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$field}, {$qualifier} ) \$value = " . var_export( $value, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_expand_custom_prefix() \$query = " . var_export( $query, true ) );
+			MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_expand_custom_prefix() \$markup_values = " . var_export( $markup_values, true ) );
+		}
+
+		$posts = self::_find_field_references( $field, $post_id );
+		//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id} ) posts = " . var_export( $posts, true ), 0 );
+		if (  !empty( $posts ) ) {
+			switch ( $qualifier ) {
+				case 'count':
+					$custom_value = count( $posts );
+					break;
+				case 'present':
+					$custom_value = ( count( $posts ) ) ? 1 : 0;
+					break;
+				default:
+					$low_bound = absint( $qualifier );
+					if ( $low_bound ) {
+						$custom_value = count( $posts );
+						if ( $low_bound > $custom_value ) {
+							$custom_value = NULL;
+						}
+
+						break;
+					}
+					
+					$custom_value = '';
+					$item = get_post( $post_id );
+		
+					foreach ( $posts as $post_id => $post ) {
+						$reference = self::$field_parents[ $post ];
+						$status = self::_format_post_status( $reference->post_status );
+		
+						if ( $post_id == $item->post_parent ) {
+							$parent = ', ' . __( 'PARENT', 'media-library-assistant' );
+						} else {
+							$parent = '';
+						}
+		
+						$custom_value .= sprintf( '%1$s (%2$s %3$s%4$s%5$s), ',
+							/*%1$s*/ esc_attr( $reference->post_title ),
+							/*%2$s*/ esc_attr( $reference->post_type ),
+							/*%3$s*/ $post_id,
+							/*%4$s*/ $status,
+							/*%5$s*/ $parent );
+					} // foreach $reference
+			}
+		}
+		
+//error_log( __LINE__ . " MLAACFExample::mla_expand_custom_prefix( {$key}, {$post_id} ) custom_value = " . var_export( $custom_value, true ), 0 );
+		return $custom_value;
+	} // mla_expand_custom_prefix
+
+	/**
 	 * Process an MLA_List_Table inline action, i.e., Quick Edit 
 	 *
 	 * This filter gives you an opportunity to pre-process an MLA_List_Table "Quick Edit"
@@ -158,10 +305,7 @@ class MLAACFExample {
 	 *					  'prevent_default' => true to bypass the MLA handler )
 	 */
 	public static function mla_list_table_inline_action( $item_content, $post_id ) {
-		/*
-		 * Convert the comma-delimited string of "checked" checkbox values back to
-		 * an ACF-compatible array
-		 */
+		// Convert the comma-delimited string of "checked" checkbox values back to an ACF-compatible array
 		if ( isset( $_REQUEST['custom_updates'] ) && isset( $_REQUEST['custom_updates'][ self::ACF_CHECKBOX_FIELD ] ) ) {
 			if ( ! empty( $_REQUEST['custom_updates'][ self::ACF_CHECKBOX_FIELD ] ) ) {
 				$_REQUEST['custom_updates'][ self::ACF_CHECKBOX_FIELD ] = explode( ',', $_REQUEST['custom_updates'][ self::ACF_CHECKBOX_FIELD ] );
@@ -257,9 +401,7 @@ class MLAACFExample {
 	 * @return	array	updated substitution parameter name => value pairs
 	 */
 	public static function mla_list_table_inline_values( $item_values ) {
-		/*
-		 * Replace the ACF Field Name with a more friendly Field Label
-		 */
+		// Replace the ACF Field Name with a more friendly Field Label
 		$item_values['custom_fields'] = str_replace( '>acf_checkbox<', '>' . self::ACF_CHECKBOX_TITLE . '<', $item_values['custom_fields'] );
 		$item_values['bulk_custom_fields'] = str_replace( '>acf_checkbox<', '>' . self::ACF_CHECKBOX_TITLE . '<', $item_values['bulk_custom_fields'] );
 
@@ -288,34 +430,50 @@ class MLAACFExample {
 	 * @return	array	updated array of columns.
 	 */
 	public static function mla_list_table_get_columns( $columns ) {
-		/*
-		 * The Quick and Bulk Edit forms substitute arbitrary "slugs" for the
-		 * custom field names. Remember them for table column and bulk update processing.
-		 */
-		if ( false !== $slug = array_search( self::ACF_CHECKBOX_FIELD, $columns ) ) {
-			self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] = $slug;
-
+		if ( self::ACF_CHECKBOX_ENABLED ) {
 			/*
-			 * Change the column slug so we can provide our own friendly content.
-			 * Replace the entry for the column we're capturing, preserving its place in the list
+			 * The Quick and Bulk Edit forms substitute arbitrary "slugs" for the
+			 * custom field names. Remember them for table column and bulk update processing.
 			 */
-			$new_columns = array();
+			if ( false !== $slug = array_search( self::ACF_CHECKBOX_FIELD, $columns ) ) {
+				self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] = $slug;
 
-			foreach ( $columns as $key => $value ) {
-				if ( $key == $slug ) {
-					$new_columns[ self::ACF_CHECKBOX_FIELD ] = self::ACF_CHECKBOX_TITLE;
-				} else {
-					$new_columns[ $key ] = $value;
-				}
-			} // foreach column
+				/*
+				 * Change the column slug so we can provide our own friendly content.
+				 * Replace the entry for the column we're capturing, preserving its place in the list
+				 */
+				$new_columns = array();
 
-			$columns = $new_columns;
+				foreach ( $columns as $key => $value ) {
+					if ( $key == $slug ) {
+						$new_columns[ self::ACF_CHECKBOX_FIELD ] = self::ACF_CHECKBOX_TITLE;
+					} else {
+						$new_columns[ $key ] = $value;
+					}
+				} // foreach column
+
+				$columns = $new_columns;
+			}
 		}
 
-		/*
-		 * Add a column of our own for the repeater "where-used" information
-		 */
-		$columns[ 'acf_' . self::ACF_REPEATER_FIELD ] = self::ACF_REPEATER_TITLE;
+		// Add a column of our own for the repeater "where-used" information
+		if ( self::ACF_REPEATER_ENABLED ) {
+			$columns[ 'acf_' . self::ACF_REPEATER_FIELD ] = self::ACF_REPEATER_TITLE;
+		}
+
+		// Add columns of our own for the image "where-used" information
+		if ( self::ACF_IMAGE_ENABLED ) {
+			$image_fields = explode( ',', self::ACF_IMAGE_FIELDS );
+			$image_titles = explode( ',', self::ACF_IMAGE_TITLES );
+
+			if ( count( $image_fields ) === count( $image_titles ) ) {
+				foreach( $image_fields as $index => $field_name ) {
+					self::$field_slugs[ 'acf_' . $field_name ] = $field_name;
+					$columns[ 'acf_' . $field_name ] = $image_titles[ $index ];
+				}
+			}
+		}
+
 		return $columns;
 	} // mla_list_table_get_columns
 
@@ -332,9 +490,7 @@ class MLAACFExample {
 	 * @return	array	updated array of columns.
 	 */
 	public static function mla_list_table_get_hidden_columns( $hidden_columns ) {
-		/*
-		 * Replace the MLA custom field slug with our own slug value
-		 */
+		// Replace the MLA custom field slug with our own slug value
 		if ( isset( self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] ) ) {
 			$index = array_search( self::$field_slugs[ self::ACF_CHECKBOX_FIELD ], $hidden_columns );
 			if ( false !== $index ) {
@@ -362,9 +518,7 @@ class MLAACFExample {
 	 * @return	array	updated array of columns.
 	 */
 	public static function mla_list_table_get_sortable_columns( $sortable_columns ) {
-		/*
-		 * Replace the slug for the column we've captured, preserving its place in the list
-		 */
+		// Replace the slug for the column we've captured, preserving its place in the list
 		if ( isset( self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] ) ) {
 			$slug = self::$field_slugs[ self::ACF_CHECKBOX_FIELD ];
 			if ( isset( $sortable_columns[ $slug ] ) ) {
@@ -429,24 +583,19 @@ class MLAACFExample {
 	 * @return	string	Text or HTML to be placed inside the column
 	 */
 	public static function mla_list_table_column_default( $content, $item, $column_name ) {
-		/*
-		 * Convert the ACF-compatible array to a comma-delimited list of
-		 * "checked" checkbox values.
-		 */
+		// Convert the ACF-compatible array to a comma-delimited list of "checked" checkbox values.
 		if ( self::ACF_CHECKBOX_FIELD == $column_name ) {
 			$values = isset( $item->mla_item_acf_checkbox ) ? $item->mla_item_acf_checkbox : '';
 			if ( empty( $values ) ) {
 				return '';
 			} elseif ( is_array( $values ) ) {
 				return '[' . implode( '],[', $values ) . ']';
-			} else {
-				return $values;
 			}
+
+			return $values;
 		}
 
-		/*
-		 * Retrieve and format the repeater field "where-used" information
-		 */
+		// Retrieve and format the repeater field "where-used" information
 		if ( ( 'acf_' . self::ACF_REPEATER_FIELD ) == $column_name ) {
 			global $wpdb;
 
@@ -494,7 +643,37 @@ class MLAACFExample {
 						/*%6$s*/ $parent ) . "<br>\r\n";
 				} // foreach $reference
 			} // found $references
+
+			return $content;
 		} // found repeater column
+
+
+		// Retrieve and format the image field(s) "where-used" information
+		if ( array_key_exists( $column_name, self::$field_slugs ) ) {
+			$content = '';
+
+			$posts = self::_find_field_references( self::$field_slugs[ $column_name ], $item->ID );
+			foreach ( $posts as $post_id => $post ) {
+				$reference = self::$field_parents[ $post ];
+				$status = self::_format_post_status( $reference->post_status );
+
+				if ( $post_id == $item->post_parent ) {
+					$parent = ',<br>' . __( 'PARENT', 'media-library-assistant' );
+				} else {
+					$parent = '';
+				}
+
+				$content .= sprintf( '<a href="%1$s" title="' . __( 'Edit', 'media-library-assistant' ) . ' &#8220;%2$s&#8221;">%2$s</a> (%3$s %4$s%5$s%6$s), ',
+					/*%1$s*/ esc_url( add_query_arg( array('post' => $post_id, 'action' => 'edit'), 'post.php' ) ),
+					/*%2$s*/ esc_attr( $reference->post_title ),
+					/*%3$s*/ esc_attr( $reference->post_type ),
+					/*%4$s*/ $post_id,
+					/*%5$s*/ $status,
+					/*%6$s*/ $parent ) . "<br>\r\n";
+			} // foreach $reference
+
+			return $content;
+		} // found image column
 
 		return $content;
 	} // mla_list_table_column_default
@@ -513,17 +692,12 @@ class MLAACFExample {
 	 * @return	string	updated HTML markup for inline data.
 	 */
 	public static function mla_list_table_build_inline_data( $inline_data, $item ) {
-		/*
-		 * See if the field is present
-		 */
+		// See if the field is present
 		if ( ! isset( self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] ) ) {
 			return $inline_data;
 		}
 
-		/*
-		 * Convert the ACF-compatible array to a comma-delimited list of
-		 * "checked" checkbox values.
-		 */
+		// Convert the ACF-compatible array to a comma-delimited list of "checked" checkbox values.
 		$match_count = preg_match_all( '/\<div class="' . self::$field_slugs[ self::ACF_CHECKBOX_FIELD ] . '"\>(.*)\<\/div\>/', $inline_data, $matches, PREG_OFFSET_CAPTURE );
 		if ( ( $match_count == false ) || ( $match_count == 0 ) ) {
 			return $inline_data;
@@ -541,10 +715,101 @@ class MLAACFExample {
 
 		return $inline_data;
 	} // mla_list_table_build_inline_data
+
+	/**
+	 * Cached values for the ACF Image fields
+	 *
+	 * @since 1.05
+	 *
+	 * @var	array( field_slug => array( item_ID => array( reference_ID => reference_ID ) ) )
+	 */
+	private static $field_instances = array();
+
+	/**
+	 * Cached "parent post" values for the ACF Image fields
+	 *
+	 * @since 1.05
+	 *
+	 * @var	array( post_ID => array( post_type, post_status, post_title ) )
+	 */
+	private static $field_parents = array();
+
+	/**
+	 * Filter the data for inline (Quick and Bulk) editing
+	 *
+	 * This filter gives you an opportunity to filter the data passed to the
+	 * JavaScript functions for Quick and Bulk editing.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	string	$field_slug	ACF Image variable slug.
+	 * @param	integer	$item_ID	Media Library item ID.
+	 *
+	 * @return	array	post_id values referencing the item.
+	 */
+	private static function _find_field_references( $field_slug, $item_ID ) {
+		global $wpdb;
+
+		if ( !isset( self::$field_instances[ $field_slug ] ) ) {
+			$references = $wpdb->get_results( 
+				"
+				SELECT post_id, meta_value
+				FROM {$wpdb->postmeta}
+				WHERE meta_key LIKE '{$field_slug}'
+				"
+			);
+
+			$post_ids = array();
+			foreach ( $references as $reference ) {
+				$post_id = (int) $reference->post_id;
+				$meta_value = (int) $reference->meta_value;
+				self::$field_instances[ $field_slug ][ $meta_value ][ $post_id ] = $post_id;
+				$post_ids[ $post_id ] = $post_id;
+			}
+
+			// Find the post information, excluding revisions
+			$parents = implode( ',', $post_ids );
+			$references = $wpdb->get_results(
+				"
+				SELECT ID, post_type, post_status, post_title
+				FROM {$wpdb->posts}
+				WHERE ( post_type <> 'revision' ) AND ( ID IN ({$parents}) )
+				"
+			);
+
+			foreach ( $references as $reference ) {
+				$post_id = (int) $reference->ID;
+				unset( $reference->ID );
+				self::$field_parents[ $post_id ] = $reference;
+			}
+//error_log( __LINE__ . " MLAACFExample::_find_field_references( {$field_slug} ) field_parents = " . var_export( self::$field_parents, true ), 0 );
+
+			// Remove the revisions from the field references
+			foreach ( self::$field_instances[ $field_slug ] as $meta_value => $post_ids ) {
+				$references = array();
+				foreach ( $post_ids as $post_id ) {
+					if ( array_key_exists(  $post_id, self::$field_parents ) ) {
+						$references[ $post_id ] = $post_id;
+					}
+				}
+
+				if ( count( $references ) ) {
+					self::$field_instances[ $field_slug ][ $meta_value ] = $references;
+				} else {
+					unset( self::$field_instances[ $field_slug ][ $meta_value ] );
+				}
+			}
+//error_log( __LINE__ . " MLAACFExample::_find_field_references( {$field_slug} ) field_instances = " . var_export( self::$field_instances, true ), 0 );
+		} // !isset( self::$field_instances[ $field_slug ] )
+		
+		if ( isset( self::$field_instances[ $field_slug ][ $item_ID ] ) ) {
+			return self::$field_instances[ $field_slug ][ $item_ID ];
+		}
+
+		return array();
+	} // _find_field_references
 } // Class MLAACFExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAACFExample::initialize');
 ?>

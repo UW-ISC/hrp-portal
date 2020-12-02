@@ -37,7 +37,7 @@ mlaInlineEditSettings = {
 		});
 
 		// add events
-		$('a.editinline').live('click', function(){
+		$( document ).on('click', 'a.editinline', function(){
 			mlaInlineEditSettings.edit(this);
 			return false;
 		});

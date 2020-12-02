@@ -60,6 +60,43 @@ class MLASettings_Documentation {
 	}
 
 	/**
+	 * Compose view arguments from $_REQUEST elements
+	 *
+	 * @since 2.90
+ 	 *
+	 * @param array $view_args Initial array values
+ 	 *
+	 * @return array Initial values plus view arguments
+	 */
+	public static function mla_compose_view_arguments( $view_args ) {
+		$field = isset( $_REQUEST['mla_example_view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_example_view'] ) ) : 'all';
+		if ( in_array( $field, array( 'all', 'installed', 'active', 'inactive', 'network', 'uninstalled' ) ) ) {
+			$view_args['mla_example_view'] = $field;
+		}
+
+		// Search box arguments
+		if ( !empty( $_REQUEST['s'] ) ) {
+			$view_args['s'] = urlencode( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) );
+		}
+
+		if ( isset( $_REQUEST['order'] ) ) {
+			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$view_args['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
+		}
+
+		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
+		if ( array_key_exists( $field, MLA_Example_List_Table::$default_sortable_columns ) ) {
+			$view_args['orderby'] = $field;
+		}
+
+		if ( isset( $_REQUEST['paged'] ) && absint( $_REQUEST['paged'] ) ) {
+			$view_args['paged'] = absint( $_REQUEST['paged'] );
+		}
+
+		return $view_args;
+	}
+
+	/**
 	 * Display (read-only) an Example Plugin
 	 *
 	 * @since 2.40
@@ -83,37 +120,11 @@ class MLASettings_Documentation {
 			return $page_content;
 		}
 
-		// Compose view arguments
-		$view_args = array(
+		$view_args = MLASettings_Documentation::mla_compose_view_arguments( array(
 			'page' => MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation',
 			'mla_tab' => 'documentation',
 			'mla-example-search' => 'Search'
-		);
-
-		if ( isset( $_REQUEST['s'] ) ) {
-			$view_args['s'] = urlencode( stripslashes( $_REQUEST['s'] ) );
-		}
-
-		// See also _build_rollover_actions, _tabulate_example_items
-		if ( isset( $_REQUEST['mla_example_view'] ) ) {
-			if ( in_array( $_REQUEST['mla_example_view'], array( 'all', 'installed', 'active', 'inactive', 'network', 'uninstalled' ) ) ) {
-				$view_args['mla_example_view'] = urlencode( $_REQUEST['mla_example_view'] );
-			}
-		}
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			if ( array_key_exists( $_REQUEST['orderby'], MLA_Example_List_Table::$default_sortable_columns ) ) {
-				$view_args['orderby'] = urlencode( $_REQUEST['orderby'] );
-			}
-		}
-
-		if ( isset( $_REQUEST['order'] ) ) {
-			$view_args['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
-		}
-
-		if ( isset( $_REQUEST['paged'] ) && absint( $_REQUEST['paged'] ) ) {
-			$view_args['paged'] = absint( $_REQUEST['paged'] );
-		}
+		) );
 
 		$form_url = add_query_arg( $view_args, admin_url( 'options-general.php' ) );
 
@@ -130,7 +141,7 @@ class MLASettings_Documentation {
 			/* translators: 1: ERROR tag 2: file type 3: file name 4: error message*/
 			$page_content['message'] = sprintf( __( '%1$s: Reading the %2$s file ( %3$s ) "%4$s".', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), __( 'plugin', 'media-library-assistant' ), $plugin->file, $php_errormsg );
 			$file_contents = '';
-		}
+		} // file error
 
 		// Compose tab content
 		$page_template_array = MLACore::mla_load_template( 'admin-display-settings-example-tab.tpl' );
@@ -169,7 +180,7 @@ class MLASettings_Documentation {
 			'action2',
 			'cb_attachment',
 			'mla-example-search'
-		), $_SERVER['REQUEST_URI'] ) );
+		), $_SERVER['REQUEST_URI'] ) ); // phpcs:ignore
 
 		//	Create an instance of our package class
 		$MLAListExampleTable = new MLA_Example_List_Table();
@@ -183,7 +194,7 @@ class MLASettings_Documentation {
 		);
 
 		$page_values = array(
-			'results' => ! empty( $_REQUEST['s'] ) ? ' - ' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . esc_html( stripslashes( trim( $_REQUEST['s'] ) ) ) . '"' : '',
+			'results' => ! empty( $_REQUEST['s'] ) ? ' - ' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) . '"' : '',
 			'In this tab' => __( 'In this tab you can browse the list of MLA example plugins, install or update them in the Plugins/Installed Plugins area and see which examples you have already installed. <strong>To activate, deactivate or delete</strong> the plugins you must go to the Plugins/Installed Plugins admin submenu.' ),
 			/* translators: 1: Documentation hyperlink */
 			'You can find' => sprintf( __( 'You can find more information about using the example plugins in the %1$s section of the Documentation or by clicking the <strong>"Help"</strong> tab in the upper-right corner of this screen.', 'media-library-assistant' ), '<a href="[+settingsURL+]?page=mla-settings-menu-documentation&amp;mla_tab=documentation#mla_example_plugins" title="' . __( 'Example plugin documentation', 'media-library-assistant' ) . '">' . __( 'The Example Plugins', 'media-library-assistant' ) . '</a>' ),
@@ -193,7 +204,7 @@ class MLASettings_Documentation {
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 			'Example Plugins' => __( 'Example Plugins', 'media-library-assistant' ),
 			'Search Example Plugins' => __( 'Search Example Plugins', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) : '',
 			'Search Plugins' => __( 'Search Plugins', 'media-library-assistant' ),
 			'Search help' => __( 'Searches Name, Description, File Name and Tags', 'media-library-assistant' ),
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
@@ -252,7 +263,8 @@ class MLASettings_Documentation {
 		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
 			$bulk_message = '';
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
-				foreach ( $_REQUEST['cb_mla_item_ID'] as $ID ) {
+				$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
+				foreach ( $post_ids as $post_ID ) {
 					switch ( $bulk_action ) {
 						case 'install':
 							$item_content = MLA_Example_List_Table::mla_install_example_plugin( $ID );
@@ -281,21 +293,23 @@ class MLASettings_Documentation {
 
 		// Process row-level actions that affect a single item
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
+			$mla_admin_action = sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) );
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			$action_content = array( 'message' => '' );
 			if ( empty( $_REQUEST['mla_item_ID'] ) ) {
 				/* translators: 1: bulk_action, e.g., single_item_delete, single_item_edit */
-				$action_content['message'] = sprintf( __( 'Empty mla_item_ID - "%1$s"', 'media-library-assistant' ), $_REQUEST['mla_admin_action'] );
+				$action_content['message'] = sprintf( __( 'Empty mla_item_ID - "%1$s"', 'media-library-assistant' ), $mla_admin_action );
 			} else {
-				switch ( $_REQUEST['mla_admin_action'] ) {
+				$mla_item_ID = absint( $_REQUEST['mla_item_ID'] );
+				switch ( $mla_admin_action ) {
 					case MLACore::MLA_ADMIN_SINGLE_EDIT_INSTALL:
-						$action_content = MLA_Example_List_Table::mla_install_example_plugin( $_REQUEST['mla_item_ID'] );
+						$action_content = MLA_Example_List_Table::mla_install_example_plugin( $mla_item_ID );
 						break;
 					case MLACore::MLA_ADMIN_SINGLE_EDIT_UPDATE:
-						$action_content = MLA_Example_List_Table::mla_update_example_plugin( $_REQUEST['mla_item_ID'] );
+						$action_content = MLA_Example_List_Table::mla_update_example_plugin( $mla_item_ID );
 						break;
 					case MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY:
-						$action_content = MLASettings_Documentation::_display_example_plugin( $_REQUEST['mla_item_ID'] );
+						$action_content = MLASettings_Documentation::_display_example_plugin( $mla_item_ID );
 						if ( !empty( $action_content['body'] ) ) {
 							return $action_content;
 						}
@@ -304,7 +318,7 @@ class MLASettings_Documentation {
 						break;
 					default:
 						/* translators: 1: bulk_action, e.g., single_item_delete, single_item_edit */
-						$action_content = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $_REQUEST['mla_admin_action'] );
+						$action_content = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $mla_admin_action );
 						break;
 				} // switch ($_REQUEST['mla_admin_action'])
 			}
@@ -564,7 +578,6 @@ class MLA_Example_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	public static function mla_admin_init( ) {
-//error_log( __LINE__ . ' MLA_Example_List_Table::mla_admin_init request = ' . var_export( $_REQUEST, true ), 0 );
 		if ( isset( $_REQUEST['mla-example-cancel'] ) ) {
 			unset( $_REQUEST['mla-example-display'] );
 		}
@@ -634,41 +647,13 @@ class MLA_Example_List_Table extends WP_List_Table {
 	 */
 	private function _build_rollover_actions( $item, $column ) {
 		$actions = array();
-//error_log( __LINE__ . " MLASettings_Documentation::_build_rollover_actions( {$column} ) _REQUEST = " . var_export( $_REQUEST, true ), 0 );
 
-		// Compose view arguments
-		$view_args = array(
+		$view_args = MLASettings_Documentation::mla_compose_view_arguments( array(
 			'page' => MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation',
 			'mla_tab' => 'documentation',
 			'mla-example-display' => 'true',
 			'mla_item_ID' => urlencode( $item->post_ID )
-		);
-
-		if ( isset( $_REQUEST['s'] ) ) {
-			$view_args['s'] = urlencode( $_REQUEST['s'] );
-		}
-
-		// See also _display_example_plugin, _tabulate_example_items
-		if ( isset( $_REQUEST['mla_example_view'] ) ) {
-			if ( in_array( $_REQUEST['mla_example_view'], array( 'all', 'installed', 'active', 'inactive', 'network', 'uninstalled' ) ) ) {
-				$view_args['mla_example_view'] = urlencode( $_REQUEST['mla_example_view'] );
-			}
-		}
-
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			if ( array_key_exists( $_REQUEST['orderby'], self::$default_sortable_columns ) ) {
-				$view_args['orderby'] = urlencode( $_REQUEST['orderby'] );
-			}
-		}
-
-		if ( isset( $_REQUEST['order'] ) ) {
-			$view_args['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
-		}
-
-		if ( isset( $_REQUEST['paged'] ) && absint( $_REQUEST['paged'] ) ) {
-			$view_args['paged'] = absint( $_REQUEST['paged'] );
-		}
-//error_log( __LINE__ . " MLASettings_Documentation::_build_rollover_actions( {$column} ) view_args = " . var_export( $view_args, true ), 0 );
+		) );
 
 		if ( empty( $item->installed_version ) ) {
 			if ( current_user_can( 'install_plugins' ) ) {
@@ -825,17 +810,13 @@ class MLA_Example_List_Table extends WP_List_Table {
 
 		$class = ( $view_slug == $current_view ) ? ' class="current"' : '';
 
-		/*
-		 * Calculate the common values once per page load
-		 */
+		// Calculate the common values once per page load
 		if ( is_null( $base_url ) ) {
-			/*
-			 * Remember the view filters
-			 */
+			// Remember the view filters
 			$base_url = MLACore::mla_nonce_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation&mla_tab=documentation&mla-example-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 			if ( isset( $_REQUEST['s'] ) ) {
-				$base_url = add_query_arg( array( 's' => $_REQUEST['s'] ), $base_url );
+				$base_url = add_query_arg( array( 's' => wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ), $base_url );
 			}
 		}
 
@@ -855,15 +836,11 @@ class MLA_Example_List_Table extends WP_List_Table {
 	 * @return	array	View information,e.g., array ( id => link )
 	 */
 	function get_views( ) {
-		/*
-		 * Find current view
-		 */
-		$current_view = isset( $_REQUEST['mla_example_view'] ) ? $_REQUEST['mla_example_view'] : 'all';
+		// Find current view
+		$current_view = isset( $_REQUEST['mla_example_view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_example_view'] ) ) : 'all';
 
-		/*
-		 * Generate the list of views, retaining keyword search criterion
-		 */
-		$s = isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
+		// Generate the list of views, retaining keyword search criterion
+		$s = isset( $_REQUEST['s'] ) ? wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) : '';
 		$example_items = self::_tabulate_example_items( $s );
 		$view_links = array();
 		foreach ( $example_items as $slug => $item )
@@ -950,8 +927,8 @@ class MLA_Example_List_Table extends WP_List_Table {
 		static $row_class = '';
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
-		echo '<tr id="example-' . $item->post_ID . '"' . $row_class . '>';
-		echo parent::single_row_columns( $item );
+		echo '<tr id="example-' . absint( $item->post_ID ) . '"' . esc_html( $row_class ) . '>';
+		echo parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 
@@ -1445,12 +1422,10 @@ class MLA_Example_List_Table extends WP_List_Table {
 			$sorted_types = array_reverse( $sorted_types, true );
 		}
 
-		/*
-		 * Paginate the sorted list
-		 */
+		// Paginate the sorted list
 		$results = array();
-		$offset = isset( $request['offset'] ) ? $request['offset'] : 0;
-		$count = isset( $request['posts_per_page'] ) ? $request['posts_per_page'] : -1;
+		$offset = isset( $request['offset'] ) ? absint( $request['offset'] ) : 0;
+		$count = isset( $request['posts_per_page'] ) ? absint( $request['posts_per_page'] ) : -1;
 		foreach ( $sorted_types as $value ) {
 			if ( $offset ) {
 				$offset--;
@@ -1565,7 +1540,6 @@ class MLA_Example_List_Table extends WP_List_Table {
 
 		$items = self::_query_example_items( $request, 0, 0 );
 
-		// See also _display_example_plugin, _build_rollover_actions
 		$example_items = array(
 			'all' => array(
 				'singular' => _x( 'All', 'table_view_singular', 'media_library-assistant' ),

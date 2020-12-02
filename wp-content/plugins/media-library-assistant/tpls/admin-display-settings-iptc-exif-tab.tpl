@@ -84,6 +84,14 @@ href="#mla-new-iptc-exif"> [+Cancel Name Change+] </a>
                 <option [+replace_selected+] value="">[+Replace+]</option>
             </select></td>
 			</tr>
+			<tr class="form-field iptc-exif-option-wrap [+taxonomy_class+]">
+				<th scope="row"> <label for="mla-iptc-exif-tax-option">[+Option+]</label>
+				</th>
+				<td><select name="mla_iptc_exif_rule[tax_option]" id="mla-iptc-exif-tax-option">
+						<option [+array_option+] value="array">[+Array+]</option>
+						<option [+text_option+] value="text">[+Text+]</option>
+					</select></td>
+			</tr>
 			<tr class="form-field iptc-exif-delimiters-wrap [+taxonomy_class+]">
 				<th scope="row"> <label for="mla-iptc-exif-delimiters">[+Delimiters+]</label>
 				</th>
@@ -342,6 +350,12 @@ href="#mla-new-iptc-exif"> [+Cancel new field+] </a></td>
 									<select name="keep_existing">
 										<option value="1">[+Keep+]</option>
 										<option value="">[+Replace+]</option>
+									</select>
+									</span> </label>
+								<label class="alignleft inline-taxonomy-group"> <span class="dropdown-title">[+Option+]</span> <span class="input-dropdown-wrap">
+									<select name="tax_option">
+										<option value="array">[+Array+]</option>
+										<option value="text">[+Text+]</option>
 									</select>
 									</span> </label>
 								<label class="alignleft"> <span class="dropdown-title">[+Status+]</span> <span class="input-dropdown-wrap">

@@ -83,9 +83,7 @@ class MLA_WPML {
 	 * @return	void
 	 */
 	public static function admin_init() {
-		/*
-		 * Add styles for the language management column
-		 */
+		// Add styles for the language management column
 		if ( isset( $_REQUEST['page'] ) && ( MLACore::ADMIN_PAGE_SLUG == $_REQUEST['page'] ) ) {
 			add_action( 'admin_print_styles', 'MLA_WPML_Table::mla_list_table_add_icl_styles' );
 		}
@@ -103,7 +101,7 @@ class MLA_WPML {
 						$default_language = $sitepress->get_default_language();
 
 						// Look for an ID from the Media/Edit Media screen
-						$query_string = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_QUERY );
+						$query_string = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_QUERY ); // phpcs:ignore
 						$query = array();
 						parse_str( strval( $query_string ), $query );
 
@@ -114,26 +112,25 @@ class MLA_WPML {
 						}
 
 						// WPML overides switch_lang() from the HTTP_REFERER
-						$referer = remove_query_arg( 'lang', $_SERVER[ 'HTTP_REFERER' ] );
+						$referer = remove_query_arg( 'lang', $_SERVER[ 'HTTP_REFERER' ] ); // phpcs:ignore
 						$_SERVER[ 'HTTP_REFERER' ] = add_query_arg( 'lang', $default_language, $referer );
 					} // HTTP_REFERER
 				} // no ID
 			} // ajax-tag-search
 		}
 
-		/*
-		 * Localize $mla_language_option_definitions array
-		 */
+		// Localize $mla_language_option_definitions array
 		self::mla_localize_language_option_definitions();
 		
-		/*
-		 * Apply the "Always Translate Media" override
-		 */
+		// Apply the "Always Translate Media" override
 		if ( ! empty( $_REQUEST['mlaAddNewBulkEditFormString'] ) && class_exists( 'WPML_Media' ) && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT ) ) ) {
 			$content_defaults = WPML_Media::get_setting( 'new_content_settings' );
 			$wpml_value = isset( $content_defaults['always_translate_media'] ) && $content_defaults['always_translate_media'];
 
-			$args = wp_parse_args( stripslashes( urldecode( $_REQUEST['mlaAddNewBulkEditFormString'] ) ) );
+			//$args = wp_parse_args( stripslashes( urldecode( $_REQUEST['mlaAddNewBulkEditFormString'] ) ) );
+			$args = str_replace( '&amp;', '&', str_replace( '%5C%5C', '%5C%5C%5C%5C', wp_kses( wp_unslash( $_REQUEST['mlaAddNewBulkEditFormString'] ), 'post' ) ) );
+			$args = wp_parse_args( $args );
+
 			if ( isset( $args['mla_always_translate_media'] ) ) {
 				$form_value = 'true' == $args['mla_always_translate_media'];
 			} else {
@@ -270,15 +267,29 @@ class MLA_WPML {
 
 		self::_build_existing_terms( $post_id );
 		if ( isset( $_REQUEST['action'] ) && 'mla-inline-edit-scripts' === $_REQUEST['action'] && isset( $_REQUEST['tax_input'] ) ) {
-			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_inline_action( {$post_id} ) Quick Edit initial \$_REQUEST['tax_input'] = " . var_export( $_REQUEST['tax_input'], true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_inline_action( {$post_id} ) Quick Edit initial \$_REQUEST['tax_input'] = " . var_export( $_REQUEST['tax_input'], true ), MLACore::MLA_DEBUG_CATEGORY_AJAX ); // phpcs:ignore
 
 			if ( 'checked' == MLACore::mla_get_option( 'term_assignment', false, false, MLA_WPML::$mla_language_option_definitions ) ) {
 				// Quick Edit calls update_single_item right after this filter
-				self::_build_tax_input( $post_id, $_REQUEST['tax_input'], NULL, true );
+				$tax_inputs = array();
+				$taxonomies = array_keys( array_map( 'absint', wp_unslash( $_REQUEST['tax_input'] ) ) );
+				foreach ( $taxonomies as $tax_name ) {
+					if ( isset( $_REQUEST['tax_input'][ $tax_name ] ) ) {
+						if ( is_array( $_REQUEST['tax_input'][ $tax_name ] ) ) {
+							$tax_value = array_map( 'absint', $_REQUEST['tax_input'][ $tax_name ] );
+						} else {
+							$tax_value = sanitize_text_field( wp_unslash( $_REQUEST['tax_input'][ $tax_name ] ) );
+						}
+					}
+
+					$tax_inputs[$tax_name] = $tax_value;
+				} // foreach tax_input
+
+				self::_build_tax_input( $post_id, $tax_inputs, NULL, true );
 				$_REQUEST['tax_input'] = self::_apply_tax_input( $post_id );
 			}
 
-			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_inline_action( {$post_id} ) Quick Edit final \$_REQUEST['tax_input'] = " . var_export( $_REQUEST['tax_input'], true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_inline_action( {$post_id} ) Quick Edit final \$_REQUEST['tax_input'] = " . var_export( $_REQUEST['tax_input'], true ), MLACore::MLA_DEBUG_CATEGORY_AJAX ); // phpcs:ignore
 		}
 
 		return $item_content;
@@ -397,8 +408,24 @@ class MLA_WPML {
 	 */
 	public static function mla_list_table_custom_admin_action( $mla_admin_action, $mla_item_ID ) {
 		if ( 'wpml_create_translation' == $mla_admin_action ) {
-			$new_item = WPML_Media::create_duplicate_attachment( $mla_item_ID, $_REQUEST['mla_parent_ID'], $_REQUEST['lang'] );
-			$view_args = isset( $_REQUEST['mla_source'] ) ? array( 'mla_source' => $_REQUEST['mla_source']) : array();
+			$mla_parent_ID = isset( $_REQUEST['mla_parent_ID'] ) ? absint( $_REQUEST['mla_parent_ID'] ) : 0;
+			$lang = isset( $_REQUEST['lang'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['lang'] ) ) : 'all';
+
+			if ( method_exists( 'WPML_Media', 'create_duplicate_attachment' ) ) {
+				$new_item = WPML_Media::create_duplicate_attachment( $mla_item_ID, $mla_parent_ID, $lang );
+			} else {
+				global $sitepress, $wpdb, $wpml_language_resolution;
+				$media_attachment_duplication = new WPML_Media_Attachments_Duplication(
+					$sitepress,
+					new WPML_Model_Attachments( $sitepress, wpml_get_post_status_helper() ),
+					$wpdb,
+					$wpml_language_resolution
+				);
+	
+				$new_item = $media_attachment_duplication->create_duplicate_attachment( $mla_item_ID, $mla_parent_ID, $lang );
+			}
+			
+			$view_args = isset( $_REQUEST['mla_source'] ) ? array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ) : array();
 			wp_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?action=edit&post=' . $new_item . '&message=201' ), 302 );
 			exit;
 		}
@@ -1477,9 +1504,7 @@ class MLA_WPML {
 			$already_updating = $post_id;
 		}
 
-		/*
-		 * Check for Bulk Edit during Add New Media
-		 */
+		// Check for Bulk Edit during Add New Media
 		if ( ! empty( $_REQUEST['mlaAddNewBulkEditFormString'] ) ) {
 			if ( ! empty( self::$bulk_edit_request['tax_input'] ) ) {
 				$tax_inputs = self::$bulk_edit_request['tax_input'];
@@ -1500,27 +1525,35 @@ class MLA_WPML {
 			return;
 		} // Upload New Media Bulk Edit
 
-		/*
-		 * For the Bulk Edit action on the Media/Assistant screen, only synchronization is needed
-		 */
+		// For the Bulk Edit action on the Media/Assistant screen, only synchronization is needed
 		if ( ! ( isset( $_REQUEST['bulk_action'] ) && 'bulk_edit' == $_REQUEST['bulk_action'] ) ) {
 			/*
 			 * This is the Media/Edit Media screen.
 			 * The category taxonomy (edit screens) is a special case because 
 			 * post_categories_meta_box() changes the input name
 			 */
+			$tax_inputs = array();
 			if ( isset( $_REQUEST['tax_input'] ) ) {
-				$tax_inputs = $_REQUEST['tax_input'];
-			} else {
-				$tax_inputs = array();
+				$taxonomies = array_keys( array_map( 'absint', wp_unslash( $_REQUEST['tax_input'] ) ) );
+				foreach ( $taxonomies as $tax_name ) {
+					if ( isset( $_REQUEST['tax_input'][ $tax_name ] ) ) {
+						if ( is_array( $_REQUEST['tax_input'][ $tax_name ] ) ) {
+							$tax_value = array_map( 'absint', $_REQUEST['tax_input'][ $tax_name ] );
+						} else {
+							$tax_value = sanitize_text_field( wp_unslash( $_REQUEST['tax_input'][ $tax_name ] ) );
+						}
+					}
+
+					$tax_inputs[$tax_name] = $tax_value;
+				} // foreach tax_input
 			}
 
 			if ( isset( $_REQUEST['post_category'] ) ) {
-				$tax_inputs['category'] = $_REQUEST['post_category'];
+				$tax_inputs['category'] = array_map( 'absint', wp_unslash( $_REQUEST['post_category'] ) );
 			}
 
 			if ( isset( $_REQUEST['tax_action'] ) ) {
-				$tax_actions = $_REQUEST['tax_action'];
+				$tax_actions = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['tax_action'] ) );
 			} else {
 				$tax_actions = NULL;
 			}
@@ -2033,7 +2066,7 @@ class MLA_WPML_Table {
 		if ( isset( $_GET['meta_slug'] ) ) {
 			$save_lang = $sitepress->get_current_language();
 			$sitepress->switch_lang( $lang['code'] );
-			$meta_view = $this->mla_list_table->mla_get_view( $_GET['meta_slug'], '' );
+			$meta_view = $this->mla_list_table->mla_get_view( sanitize_text_field( wp_unslash( $_GET['meta_slug'] ) ), '' );
 			$sitepress->switch_lang( $save_lang );
 
 			if ( false !== $meta_view ) {
@@ -2079,7 +2112,7 @@ class MLA_WPML_Table {
 		global $sitepress;
 
 		if ( isset( $_REQUEST['lang'] ) ) {
-			$submenu_arguments['lang'] = $_REQUEST['lang'];
+			$submenu_arguments['lang'] = sanitize_text_field( wp_unslash( $_REQUEST['lang'] ) );
 		} else {		 
 			$submenu_arguments['lang'] = self::mla_get_table_language();
 		}
@@ -2101,10 +2134,10 @@ class MLA_WPML_Table {
 		global $sitepress;
  
 		if ( !empty( $_REQUEST['lang'] ) ) {
-			$table_language = $_REQUEST['lang'];
+			$table_language = sanitize_text_field( wp_unslash( $_REQUEST['lang'] ) );
 		} else {
 			if ( empty( $table_language ) && ( ! empty( $_SERVER[ 'HTTP_REFERER' ] ) ) ) {
-				$query_string = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_QUERY );
+				$query_string = parse_url( $_SERVER[ 'HTTP_REFERER' ], PHP_URL_QUERY ); // phpcs:ignore
 				$query = array();
 				parse_str( strval( $query_string ), $query );
 				if ( !empty( $query['lang'] ) ) {
@@ -2146,7 +2179,7 @@ class MLA_WPML_Table {
 			$show_language = 'checked' == MLACore::mla_get_option( 'language_column', false, false, MLA_WPML::$mla_language_option_definitions );
 			$table_language = self::mla_get_table_language();
 			$languages = $sitepress->get_active_languages();
-			$view_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : '';
+			$view_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
 			if ( 1 < count( $languages ) && $view_status != 'trash' ) {
 				$show_translations = 'checked' == MLACore::mla_get_option( 'translations_column', false, false, MLA_WPML::$mla_language_option_definitions );
 			} else {
@@ -2216,11 +2249,11 @@ class MLA_WPML_Table {
 
 		$current_language = self::mla_get_table_language();
 		$languages = count( $sitepress->get_active_languages() );
-		$view_status = isset( $_REQUEST['status'] ) ? $_REQUEST['status'] : '';
+		$view_status = isset( $_REQUEST['status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['status'] ) ) : '';
 
 		if ( 1 < $languages && $view_status != 'trash' ) {
 			$w = 22 * ( 'all' == $current_language ? $languages : $languages - 1 );
-			echo '<style type="text/css">.column-icl_translations{width:' . $w . 'px;}.column-icl_translations img{margin:2px;}</style>';
+			echo '<style type="text/css">.column-icl_translations{width:' . absint( $w ) . 'px;}.column-icl_translations img{margin:2px;}</style>';
 		}
 	}
 

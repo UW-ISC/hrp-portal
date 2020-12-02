@@ -6,11 +6,13 @@
  *     - a "parent_terms:" prefix accesses taxonomy terms assigned to an item's parent post/page
  *     - a "page_terms:" prefix accesses taxonomy terms assigned to the current post/page
  *     - a "parent:" prefix accesses all of the WP_Post properties, custom fields and the permalink for an item's parent
+ *     - a "page:" prefix accesses the featured image ID of the parent page/post, i.e. [+page:featured+]
  *     - an "author:" prefix accesses all of the WP_User properties for an item's author
  *     - an "conditional:" prefix returns a value when a condition is true, e.g., during the upload process
  *     - a "wp_query_vars:" prefix accesses all of the "global $wp_query->query_vars" properties
  *     - a "current_term:" prefix accesses the term named in a $_REQUEST variable
  *         e.g. {+current_term:taxonomy.default_value(term_field)+}
+ *     - a "ucwords" custom format value uppercases the first character of each word in a string
  *
  * Created for support topic "Parent category tag"
  * opened on 5/20/2016 by "Levy":
@@ -44,19 +46,23 @@
  * opened on 5/9/2018 by "antonstepichev":
  * https://wordpress.org/support/topic/sorting-items-in-tag-cloud-by-parent-child/
  *
+ * Enhanced for support topic "Auto alt text from field in exif or iptc"
+ * opened on 8/1/2020 by "perchera":
+ * https://wordpress.org/support/topic/auto-alt-text-from-field-in-exif-or-iptc/
+ *
  * @package MLA Substitution Parameter Hooks Example
- * @version 1.12
+ * @version 1.13
  */
 
 /*
 Plugin Name: MLA Substitution Parameter Hooks Example
 Plugin URI: http://davidlingren.com/
-Description: Adds "parent_terms:", "page_terms:", "parent:", "author:", "conditional:", "wp_query_vars" and "current_term" Field-level Substitution Parameters
+Description: Adds "parent_terms:", "page_terms:", "parent:", "author:", "conditional:", "wp_query_vars" and "current_term" Field-level Substitution Parameters and "ucwords" custom format value
 Author: David Lingren
-Version: 1.12
+Version: 1.13
 Author URI: http://davidlingren.com/
 
-Copyright 2016-2018 David Lingren
+Copyright 2016-2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -97,7 +103,7 @@ class MLASubstitutionParameterExample {
 		// Defined in /media-library-assistant/includes/class-mla-data.php
 		//add_filter( 'mla_expand_custom_data_source', 'MLASubstitutionParameterExample::mla_expand_custom_data_source', 10, 9 );
 		add_filter( 'mla_expand_custom_prefix', 'MLASubstitutionParameterExample::mla_expand_custom_prefix', 10, 8 );
-		//add_filter( 'mla_apply_custom_format', 'MLASubstitutionParameterExample::mla_apply_custom_format', 10, 2 );
+		add_filter( 'mla_apply_custom_format', 'MLASubstitutionParameterExample::mla_apply_custom_format', 10, 2 );
 
 		// Defined in /media-library-assistant/includes/class-mla-data-source.php
 		//add_filter( 'mla_evaluate_custom_data_source', 'MLASubstitutionParameterExample::mla_evaluate_custom_data_source', 10, 5 );
@@ -559,6 +565,21 @@ class MLASubstitutionParameterExample {
 	public static function mla_apply_custom_format( $value, $args ) {
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_apply_custom_format( {$value} ) args = " . var_export( $args, true ), 0 );
 
+		if ( 'ucwords' === $args['format'] ) {
+			if ( isset( $args['args'] ) ) {
+				if ( is_array( $args['args'] ) ) {
+					$delimiters = stripslashes( $args['args'][0] );
+				} else {
+					$delimiters = stripslashes( $args['args'] );
+				}
+			} else {
+				$delimiters = " \t\r\n\f\v";
+			}
+			
+			$value = ucwords( $value, $delimiters );
+		}
+		
+		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_apply_custom_format( {$value} ) delimiters = " . var_export( $delimiters, true ), 0 );
 		return $value;
 	} // mla_apply_custom_format
 

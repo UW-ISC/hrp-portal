@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2020-03-31 20:12-0700\n"
-"PO-Revision-Date: 2020-03-31 20:12-0700\n"
-"Language-Team: David Lingren <david@fairtradejudaica.org>\n"
+"POT-Creation-Date: 2020-11-20 16:53-0800\n"
+"PO-Revision-Date: 2020-11-20 16:53-0800\n"
+"Language-Team: David Lingren <david@davidlingren.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11,7 +11,8 @@ msgstr ""
 "X-Poedit-Basepath: ..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
-"_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c\n"
+"_n_noop:1,2;_c;_nc:4c,1,2;_x:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;_ex:1,2c;"
+"esc_html__;esc_html_e;esc_html_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "Last-Translator: David Lingren <dlingren@comcast.net>\n"
 "Language: en_US\n"
@@ -58,6 +59,38 @@ msgid "Media Library Assistant"
 msgstr ""
 
 msgid "Assistant"
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: mla_mmmw_query_posts_clauses_filter = \"%2$s\"."
+msgstr ""
+
+msgid "DEBUG"
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: mla_mmmw_query_posts_clauses_request_filter = \"%2$s\"."
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: mla_mmmw_query_posts_request_filter = \"%2$s\"."
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid ""
+"%1$s: mla_mmmw_query_posts_results_filter post_count = \"%2$d\", found_posts "
+"= \"%3$d\" count = %4$d."
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid ""
+"%1$s: mla_mmmw_query_the_posts_filter post_count = \"%2$d\", found_posts = "
+"\"%3$d\" count = %4$d."
 msgstr ""
 
 msgid "Title"
@@ -901,6 +934,14 @@ msgid ""
 "then click <strong>Save Changes</strong> to record the new setting."
 msgstr ""
 
+msgid "Always Use MLA MIME Type"
+msgstr ""
+
+msgid ""
+"Check this option to override WordPress MIME Type security checks, then "
+"click <strong>Save Changes</strong> to record the new setting."
+msgstr ""
+
 msgid "Display Limit"
 msgstr ""
 
@@ -1112,9 +1153,6 @@ msgctxt "error_log"
 msgid "%1$s: _execute_list_table_query $wp_filter = \"%2$s\"."
 msgstr ""
 
-msgid "DEBUG"
-msgstr ""
-
 #, php-format
 msgctxt "error_log"
 msgid "%1$s: _execute_list_table_query WP_Query = \"%2$s\"."
@@ -1186,6 +1224,11 @@ msgstr ""
 #, php-format
 msgctxt "error_log"
 msgid "%1$s: mla_parse_template no end delimiter, tail = \"%2$s\"."
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: _find_parameter no end delimiter, tail = \"%2$s\"."
 msgstr ""
 
 #, php-format
@@ -1665,6 +1708,10 @@ msgid "Bulk Action %1$s - no items selected."
 msgstr ""
 
 msgid "You do not have permission to manage attachments."
+msgstr ""
+
+msgctxt "file"
+msgid "Add New"
 msgstr ""
 
 #, php-format
@@ -2613,10 +2660,10 @@ msgstr ""
 msgid "Nothing to execute"
 msgstr ""
 
-msgid "Rule ID not found"
+msgid "Rule not found"
 msgstr ""
 
-msgid "Rule not found"
+msgid "Rule ID not found"
 msgstr ""
 
 msgctxt "list_table_column"

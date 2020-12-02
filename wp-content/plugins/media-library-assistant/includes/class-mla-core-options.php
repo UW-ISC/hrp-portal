@@ -313,6 +313,11 @@ class MLACoreOptions {
 	const MLA_ENABLE_MLA_ICONS = 'enable_mla_icons';
 
 	/**
+	 * Provides a unique name for the Always Use MLA MIME Type option
+	 */
+	const MLA_FORCE_MLA_MIME_TYPE = 'force_mla_mime_type';
+
+	/**
 	 * Provides a unique name for the Enable Custom Field Mapping option
 	 */
 	const MLA_ALLOW_CUSTOM_FIELD_MAPPING = 'allow_custom_field_mapping';
@@ -1358,6 +1363,13 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => 'checked',
 					'help' => __( 'Check/uncheck this option to enable/disable MLA File Type Icons Support, then click <strong>Save Changes</strong> to record the new setting.', 'media-library-assistant' )),
+
+			self::MLA_FORCE_MLA_MIME_TYPE =>
+				array('tab' => 'upload',
+					'name' => __( 'Always Use MLA MIME Type', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check this option to override WordPress MIME Type security checks, then click <strong>Save Changes</strong> to record the new setting.', 'media-library-assistant' )),
 
 			self::MLA_DEBUG_DISPLAY_LIMIT =>
 				array('tab' => 'debug',

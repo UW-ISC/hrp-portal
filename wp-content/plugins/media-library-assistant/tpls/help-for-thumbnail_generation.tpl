@@ -48,10 +48,6 @@ You can select "Delete" to replace WordPress-style thumbnails (Type "WP") like t
 <td class="mla-doc-table-label">Suffix</td>
 <td>the suffix added to the source item's Title to create the thumbnail's Title. Suffix is ignored when generating WordPress-style thumbnails.</td>
 </tr>
-<tr>
-<td class="mla-doc-table-label">Clear Filter-by</td>
-<td>remove the "Filter-by" criteria when refreshing the display. Leaving criteria such as year/month or Search Media values in place can prevent the display of the new, generated items.</td>
-</tr>
 </table>
 <p>After you click Generate Thumbnails, the Media/Assistant submenu table will be refreshed to display all the new items generated and added to the Media Library. You can use Quick Edit and Bulk Edit to make additional changes to the new items.</p>
 <!-- template="sidebar" -->

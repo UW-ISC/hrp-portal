@@ -177,7 +177,7 @@ class MLA_Thumbnail {
 		}
 
 		self::$bulk_action_options = array();
-		$request_options = isset( $_REQUEST['mla_thumbnail_options'] ) ? $_REQUEST['mla_thumbnail_options'] : array();
+		$request_options = isset( $_REQUEST['mla_thumbnail_options'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['mla_thumbnail_options'] ) ) : array();
 		$request_options['ghostscript_path'] = MLACore::mla_get_option( 'ghostscript_path' );
 
 		if ( empty( $request_options['existing_thumbnails'] ) ) {
@@ -185,6 +185,10 @@ class MLA_Thumbnail {
 		}
 
 		foreach ( $request_options as $key => $value ) {
+			if ( in_array( $key, array( 'width', 'height', 'page', 'resolution', 'quality', ) ) ) {
+				$value = absint( $value );
+			}
+			
 			if ( ! empty( $value ) ) {
 				self::$bulk_action_options[ $key ] = $value;
 			}
@@ -192,11 +196,10 @@ class MLA_Thumbnail {
 
 		// Convert checkboxes to booleans
 		self::$bulk_action_options['best_fit'] = isset( $request_options['best_fit'] );
-		self::$bulk_action_options['clear_filters'] = isset( $request_options['clear_filters'] );
 
 		// Convert page number to frame
 		if ( isset( self::$bulk_action_options['page'] ) ) {
-			$page = abs( intval( self::$bulk_action_options['page'] ) );
+			$page = self::$bulk_action_options['page'];
 			self::$bulk_action_options['frame'] = ( 0 < $page ) ? $page - 1 : 0;
 			unset( self::$bulk_action_options['page'] );
 		}
@@ -307,13 +310,13 @@ class MLA_Thumbnail {
 
 		foreach ( $fallback_sizes as $s ) {
 			if ( isset( $_wp_additional_image_sizes[ $s ]['width'] ) ) {
-				$sizes[ $s ]['width'] = intval( $_wp_additional_image_sizes[ $s ]['width'] );
+				$sizes[ $s ]['width'] = (int) $_wp_additional_image_sizes[ $s ]['width'];
 			} else {
 				$sizes[ $s ]['width'] = get_option( "{$s}_size_w" );
 			}
 
 			if ( isset( $_wp_additional_image_sizes[ $s ]['height'] ) ) {
-				$sizes[ $s ]['height'] = intval( $_wp_additional_image_sizes[ $s ]['height'] );
+				$sizes[ $s ]['height'] = (int) $_wp_additional_image_sizes[ $s ]['height'];
 			} else {
 				$sizes[ $s ]['height'] = get_option( "{$s}_size_h" );
 			}

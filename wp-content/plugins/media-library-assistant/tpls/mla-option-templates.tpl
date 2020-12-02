@@ -74,7 +74,7 @@
 
 <!-- template="taxonomy-metakey-row" -->
         <tr valign="top">
-		<td colspan="5" style="text-align:right;">
+		<td colspan="6" style="text-align:right;">
             <input type="radio" name="tax_metakey_sort" id="tax_metakey_asc" [+asc_checked+] value="ASC" /> ASC&nbsp;&nbsp;
             <input type="radio" name="tax_metakey_sort" id="tax_metakey_desc" [+desc_checked+] value="DESC" /> DESC&nbsp;&nbsp;
             <select name="tax_metakey" id="tax_metakey">

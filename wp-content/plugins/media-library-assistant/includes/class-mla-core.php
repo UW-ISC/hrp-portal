@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.83';
+	const CURRENT_MLA_VERSION = '2.92';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -121,6 +121,15 @@ class MLACore {
 	 * @var	integer
 	 */
 	const MLA_DEBUG_CATEGORY_MIME_TYPE = 0x00000080;
+
+	/**
+	 * Constant to log Media Manager "query_attachments" activity
+	 *
+	 * @since 2.84
+	 *
+	 * @var	integer
+	 */
+	const MLA_DEBUG_CATEGORY_MMMW = 0x00000100;
 
 	/**
 	 * Slug for adding plugin submenu
@@ -380,6 +389,11 @@ class MLACore {
 			MLACore::$process_mla_gallery_in = false;
 		}
 
+		// Look for Postie chron job
+		if ( isset( $_REQUEST['doing_wp_cron'] ) && class_exists( 'Postie', false ) ) {
+			add_action( 'postie_session_start', 'MLACore::mla_postie_session_start' );
+		}
+
 		/*
 		 * Look for redirects from the Media/Edit Media screen when it was picked from the
 		 * "Edit" rollover action on the Media/Assistant submenu
@@ -403,7 +417,7 @@ class MLACore {
 
 				if ( $user_id && $not_super_admin ) {
 					if ( isset( $_COOKIE['wp-settings-' . $user_id] ) ) {
-						$cookie = preg_replace( '/[^A-Za-z0-9=&_]/', '', $_COOKIE['wp-settings-' . $user_id] );
+						$cookie = preg_replace( '/[^A-Za-z0-9=&_]/', '', sanitize_text_field( wp_unslash( $_COOKIE['wp-settings-' . $user_id] ) ) );
 					} else {
 						$cookie = (string) get_user_option( 'user-settings', $user_id );
 					}
@@ -446,6 +460,31 @@ class MLACore {
 		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) {
 			add_filter( 'media_view_settings', 'MLACore::mla_media_view_settings_filter', 10, 2 );
 		}
+	}
+
+	/**
+	 * Ensures that MLA mapping rules can be run from the Postie cron job.
+	 * Declared public because it is an action.
+	 *
+	 * @since 2.90
+	 */
+	public static function mla_postie_session_start() {
+		// Template file and database access functions.
+		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
+		MLAQuery::initialize();
+	
+		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
+		MLAData::initialize();
+	
+		// Shortcode shim functions
+		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
+		MLAShortcodes::initialize();
+	
+		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+	
+		// Plugin settings management
+		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
+		MLAOptions::initialize();
 	}
 
 	/**
@@ -590,7 +629,7 @@ class MLACore {
 			$mla_reporting = trim( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_LEVEL ) );
 			if ( strlen( $mla_reporting ) ) {
 				if ( ctype_digit( $mla_reporting ) ) {
-					$mla_reporting = intval( $mla_reporting ); 
+					$mla_reporting = (int) $mla_reporting; 
 				} else{
 					$mla_reporting = hexdec( $mla_reporting ); 
 				}
@@ -599,6 +638,14 @@ class MLACore {
 					MLACore::$mla_debug_level = $mla_reporting | 1;
 					if ( class_exists( 'MLA' ) && ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
 						MLACore::mla_debug_add( __LINE__ . sprintf( ' MLACore::mla_plugins_loaded_action() MLA %s (%s) mla_debug_level 0x%X', MLACore::CURRENT_MLA_VERSION, MLA::MLA_DEVELOPMENT_VERSION, MLACore::$mla_debug_level, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+
+						if ( ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_METADATA ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+							$is_wplr_sync = false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' ); // phpcs:ignore
+							MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action( {$is_wplr_sync} ) \$_SERVER[REQUEST_URI] = " . var_export( $_SERVER['REQUEST_URI'], true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );  // phpcs:ignore
+							if ( $is_wplr_sync && isset( $_POST['action'] ) ) {
+								MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action wplr action = " . var_export( $_POST['action'], true ), MLACore::MLA_DEBUG_CATEGORY_METADATA ); // phpcs:ignore
+							}
+						}
 					}
 				} else {
 					MLACore::$mla_debug_level = 0;
@@ -613,8 +660,8 @@ class MLACore {
 				}
 
 				// WP REST API calls need everything loaded to process uploads
-				if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) {
-					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json REQUEST_URI = " . var_export( $_SERVER['REQUEST_URI'], true ), MLACore::MLA_DEBUG_CATEGORY_REST );
+				if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) {  // phpcs:ignore
+					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json REQUEST_URI = " . var_export( $_SERVER['REQUEST_URI'], true ), MLACore::MLA_DEBUG_CATEGORY_REST );  // phpcs:ignore
 					//MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _GET = " . var_export( $_GET, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 					//MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _POST = " . var_export( $_POST, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
 					MLACore::mla_debug_add( __LINE__ . " MLACore::mla_plugins_loaded_action() wp-json _REQUEST = " . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_REST );
@@ -659,11 +706,11 @@ class MLACore {
 	 * @param int    $status   Status code to use.
 	 */
 	public static function mla_wp_redirect_filter( $location, $status ) {
-		/*
-		 * Check for Update, Trash or Delete Permanently on Media/Edit Media screen,
-		 */
+		// Check for Update, Trash or Delete Permanently on Media/Edit Media screen,
 		if ( ( false !== strpos( $location, 'upload.php?' ) ) || ( false !== strpos( $location, 'post.php?' ) ) ) {
-			$location = add_query_arg( array( 'mla_source' => $_REQUEST['mla_source'] ), $location );
+			if ( isset( $_REQUEST['mla_source'] ) ) {
+				$location = add_query_arg( array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ), $location );
+			}
 		}
 
 		return $location;
@@ -1002,7 +1049,7 @@ class MLACore {
 				}
 
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					$tax_filter = isset( $_REQUEST['tax_filter'] ) ? $_REQUEST['tax_filter'] : '';
+					$tax_filter = isset( $_REQUEST['tax_filter'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_filter'] ) ) : '';
 					return ( $tax_name == $tax_filter );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_key_exists( $tax_name, MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'] );
@@ -1011,7 +1058,7 @@ class MLACore {
 				return ( $tax_name == $tax_filter );
 			case 'metakey':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_metakey'] ) ? $_REQUEST['tax_metakey'] : '';
+					return isset( $_REQUEST['tax_metakey'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey'] ) ) : '';
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 				}
@@ -1019,7 +1066,7 @@ class MLACore {
 				return isset( $tax_options['tax_metakey'] ) ? $tax_options['tax_metakey'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 			case 'metakey_sort':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_metakey_sort'] ) ? $_REQUEST['tax_metakey_sort'] : '';
+					return isset( $_REQUEST['tax_metakey_sort'] ) ? sanitize_text_field( wp_unslash ( $_REQUEST['tax_metakey_sort'] ) ) : '';
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey_sort'];
 				}
@@ -1041,12 +1088,13 @@ class MLACore {
 	 *			array	taxonomies assigned to $support_type; can be empty.
 	 *			string if $support_type is 'metakey', returns the custom field to filter by.
 	 */
-	public static function mla_supported_taxonomies($support_type = 'support') {
+	public static function mla_supported_taxonomies( $support_type = 'support' ) {
 		$tax_options =  MLACore::mla_get_option( MLACoreOptions::MLA_TAXONOMY_SUPPORT );
 		switch ( $support_type ) {
 			case 'support': 
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_support'] ) ? array_keys( $_REQUEST['tax_support'] ) : array();
+					$tax_support = isset( $_REQUEST['tax_support'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_support'] ) ) : array();
+					return array_keys( $tax_support );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'] );
 				}
@@ -1054,7 +1102,8 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_support'] ) ? $tax_options['tax_support'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_support'] );
 			case 'quick-edit':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_quick_edit'] ) ? array_keys( $_REQUEST['tax_quick_edit'] ) : array();
+					$tax_quick_edit = isset( $_REQUEST['tax_quick_edit'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_quick_edit'] ) ) : array();
+					return array_keys( $tax_quick_edit );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'] );
 				}
@@ -1062,7 +1111,8 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_quick_edit'] ) ? $tax_options['tax_quick_edit'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_quick_edit'] );
 			case 'term-search':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_term_search'] ) ? array_keys( $_REQUEST['tax_term_search'] ) : array();
+					$tax_term_search = isset( $_REQUEST['tax_term_search'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_term_search'] ) ) : array();
+					return array_keys( $tax_term_search );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'] );
 				}
@@ -1070,7 +1120,8 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_term_search'] ) ? $tax_options['tax_term_search'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_term_search'] );
 			case 'flat-checklist':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_flat_checklist'] ) ? array_keys( $_REQUEST['tax_flat_checklist'] ) : array();
+					$tax_flat_checklist = isset( $_REQUEST['tax_flat_checklist'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_flat_checklist'] ) ) : array();
+					return array_keys( $tax_flat_checklist );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'] );
 				}
@@ -1078,7 +1129,8 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_flat_checklist'] ) ? $tax_options['tax_flat_checklist'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_flat_checklist'] );
 			case 'checked-on-top':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_checked_on_top'] ) ? array_keys( $_REQUEST['tax_checked_on_top'] ) : array();
+					$tax_checked_on_top = isset( $_REQUEST['tax_checked_on_top'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_checked_on_top'] ) ) : array();
+					return array_keys( $tax_checked_on_top );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
 				}
@@ -1086,7 +1138,8 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_checked_on_top'] ) ? $tax_options['tax_checked_on_top'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checked_on_top'] );
 			case 'checklist-add-term':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_checklist_add_term'] ) ? array_keys( $_REQUEST['tax_checklist_add_term'] ) : array();
+					$tax_checklist_add_term = isset( $_REQUEST['tax_checklist_add_term'] ) ? array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['tax_checklist_add_term'] ) ) : array();
+					return array_keys( $tax_checklist_add_term );
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return array_keys( MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 				}
@@ -1094,7 +1147,7 @@ class MLACore {
 				return array_keys( isset( $tax_options['tax_checklist_add_term'] ) ? $tax_options['tax_checklist_add_term'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_checklist_add_term'] );
 			case 'filter':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_filter'] ) ? (array) $_REQUEST['tax_filter'] : array();
+					return isset( $_REQUEST['tax_filter'] ) ? (array) sanitize_text_field( wp_unslash( $_REQUEST['tax_filter'] ) ) : array();
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return (array) MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 				}
@@ -1102,7 +1155,7 @@ class MLACore {
 				return (array) isset( $tax_options['tax_filter'] ) ? $tax_options['tax_filter'] : MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_filter'];
 			case 'metakey':
 				if ( !empty( $_REQUEST['mla-general-options-save'] ) ) {
-					return isset( $_REQUEST['tax_metakey'] ) ? $_REQUEST['tax_metakey'] : '';
+					return isset( $_REQUEST['tax_metakey'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tax_metakey'] ) ) : '';
 				} elseif ( !empty( $_REQUEST['mla-general-options-reset'] ) ) {
 					return MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ]['std']['tax_metakey'];
 				}
@@ -1393,24 +1446,24 @@ class MLACore {
 			$span_search_ajax_id = "{$taxonomy}-search-ajax-response";
 		}
 		?>
-		<div id="<?php echo $div_taxonomy_id; ?>" class="categorydiv">
-			<ul id="<?php echo $tabs_ul_id; ?>" class="category-tabs">
-				<li class="tabs"><a href="#<?php echo $tab_all_id; ?>"><?php echo $tax->labels->all_items; ?></a></li>
-				<li class="hide-if-no-js"><a href="#<?php echo $tab_pop_id; ?>"><?php _e( 'Most Used' ); ?></a></li>
+		<div id="<?php echo esc_html( $div_taxonomy_id ); ?>" class="categorydiv">
+			<ul id="<?php echo esc_html( $tabs_ul_id ); ?>" class="category-tabs">
+				<li class="tabs"><a href="#<?php echo esc_html( $tab_all_id ); ?>"><?php echo esc_html( $tax->labels->all_items ); ?></a></li>
+				<li class="hide-if-no-js"><a href="#<?php echo esc_html( $tab_pop_id ); ?>"><?php esc_html_e( 'Most Used' ); ?></a></li>
 			</ul>
 
-			<div id="<?php echo $tab_pop_id; ?>" class="tabs-panel" style="display: none;">
-				<ul id="<?php echo $tab_pop_ul_id; ?>" class="categorychecklist form-no-clear" >
+			<div id="<?php echo esc_html( $tab_pop_id ); ?>" class="tabs-panel" style="display: none;">
+				<ul id="<?php echo esc_html( $tab_pop_ul_id ); ?>" class="categorychecklist form-no-clear" >
 					<?php $popular_ids = wp_popular_terms_checklist($taxonomy); ?>
 				</ul>
 			</div>
 
-			<div id="<?php echo $tab_all_id; ?>" class="tabs-panel">
+			<div id="<?php echo esc_html( $tab_all_id ); ?>" class="tabs-panel">
 				<?php
 				// Allows for an empty term set to be sent. 0 is an invalid Term ID and will be ignored by empty() checks.
-				echo "<input type='hidden' name='{$input_terms_name}' id='{$input_terms_id}' value='0' />";
+				echo "<input type='hidden' name='" . esc_html( $input_terms_name) . "' id='" . esc_html( $input_terms_id ) . "' value='0' />";
 				?>
-				<ul id="<?php echo $tab_all_ul_id; ?>" data-wp-lists="list:<?php echo $taxonomy?>" class="categorychecklist form-no-clear">
+				<ul id="<?php echo esc_html( $tab_all_ul_id ); ?>" data-wp-lists="list:<?php echo esc_html( $taxonomy )?>" class="categorychecklist form-no-clear">
 					<?php if ( $tax->hierarchical ): ?>
 					<?php wp_terms_checklist($post->ID, array( 'taxonomy' => $taxonomy, 'popular_cats' => $popular_ids, 'checked_ontop'=> MLACore::mla_taxonomy_support( $taxonomy, 'checked-on-top' ) ) ) ?>
 					<?php else: ?>
@@ -1420,44 +1473,44 @@ class MLACore {
 				</ul>
 			</div>
 		<?php if ( current_user_can($tax->cap->edit_terms) ) : ?>
-				<div id="<?php echo $div_adder_id; ?>" class="<?php echo $div_adder_class; ?>">
+				<div id="<?php echo esc_html( $div_adder_id ); ?>" class="<?php echo esc_html( $div_adder_class ); ?>">
 					<h4>
-						<a id="<?php echo $link_adder_id; ?>" href="#<?php echo $link_adder_p_id; ?>" class="hide-if-no-js">
+						<a id="<?php echo esc_html( $link_adder_id ); ?>" href="#<?php echo esc_html( $link_adder_p_id ); ?>" class="hide-if-no-js">
 							<?php
 								/* translators: %s: add new taxonomy label */
-								printf( __( '+ %s', 'media-library-assistant' ), $tax->labels->add_new_item );
+								echo esc_html( sprintf( __( '+ %s', 'media-library-assistant' ), $tax->labels->add_new_item ) );
 							?>
 						</a>
 						&nbsp;&nbsp;
-						<a id="<?php echo $link_search_id; ?>" href="#<?php echo $link_search_p_id; ?>" class="hide-if-no-js">
+						<a id="<?php echo esc_html( $link_search_id ); ?>" href="#<?php echo esc_html( $link_search_p_id ); ?>" class="hide-if-no-js">
 							<?php
-								echo '?&nbsp;' . __( 'Search', 'media-library-assistant' );
+								echo '?&nbsp;' . esc_html( __( 'Search', 'media-library-assistant' ) );
 							?>
 						</a>
 					</h4>
-					<p id="<?php echo $link_adder_p_id; ?>" class="category-add wp-hidden-child">
-						<label class="screen-reader-text" for="<?php echo $input_new_name; ?>"><?php echo $tax->labels->add_new_item; ?></label>
-						<input type="text" name="<?php echo $input_new_name; ?>" id="<?php echo $input_new_id; ?>" class="form-required form-input-tip" value="<?php echo esc_attr( $tax->labels->new_item_name ); ?>" aria-required="true"/>
+					<p id="<?php echo esc_html( $link_adder_p_id ); ?>" class="category-add wp-hidden-child">
+						<label class="screen-reader-text" for="<?php echo esc_html( $input_new_name ); ?>"><?php echo esc_html( $tax->labels->add_new_item ); ?></label>
+						<input type="text" name="<?php echo esc_html( $input_new_name ); ?>" id="<?php echo esc_html( $input_new_id ); ?>" class="form-required form-input-tip" value="<?php echo esc_attr( esc_html( $tax->labels->new_item_name ) ); ?>" aria-required="true"/>
 
 						<?php if ( $tax->hierarchical ): ?>
-						<label class="screen-reader-text" for="<?php echo $input_new_parent_name; ?>">
-							<?php echo $tax->labels->parent_item_colon; ?>
+						<label class="screen-reader-text" for="<?php echo esc_html( $input_new_parent_name ); ?>">
+							<?php echo esc_html( $tax->labels->parent_item_colon ); ?>
 						</label>
 						<?php wp_dropdown_categories( array( 'taxonomy' => $taxonomy, 'hide_empty' => 0, 'name' => $input_new_parent_name, 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax->labels->parent_item . ' &mdash;' ) ); ?>
 						<?php else:
-						echo "<input type='hidden' name='{$input_new_parent_name}' id='{$input_new_parent_name}' value='-1' />";	
+						echo "<input type='hidden' name='" . esc_html( $input_new_parent_name ) . "' id='" . esc_html( $input_new_parent_name ) . "' value='-1' />";	
 						endif; ?>
-						<input type="button" id="<?php echo $input_new_submit_id; ?>" data-wp-lists="add:<?php echo $tab_all_ul_id ?>:<?php echo $link_adder_p_id ?>" class="button category-add-submit mla-taxonomy-add-submit" value="<?php echo esc_attr( $tax->labels->add_new_item ); ?>" />
+						<input type="button" id="<?php echo esc_html( $input_new_submit_id ); ?>" data-wp-lists="add:<?php echo esc_html( $tab_all_ul_id ); ?>:<?php echo esc_html( $link_adder_p_id ); ?>" class="button category-add-submit mla-taxonomy-add-submit" value="<?php echo esc_html( esc_attr( $tax->labels->add_new_item ) ); ?>" />
 						<?php wp_nonce_field( 'add-'.$taxonomy, '_ajax_nonce-add-'.$taxonomy, false ); ?>
-						<span id="<?php echo $span_new_ajax_id; ?>"></span>
+						<span id="<?php echo esc_html( $span_new_ajax_id ); ?>"></span>
 					</p>
 				</div>
-				<div id="<?php echo $div_search_id; ?>" class="<?php echo $div_search_class; ?>">
-					<p id="<?php echo $link_search_p_id; ?>" class="category-add wp-hidden-child">
-						<label class="screen-reader-text" for="<?php echo $input_search_name; ?>"><?php echo $tax->labels->search_items; ?></label>
-						<input type="text" name="<?php echo $input_search_name; ?>" id="<?php echo $input_search_id; ?>" class="form-required form-input-tip" value="<?php echo esc_attr( $tax->labels->search_items ); ?>" aria-required="true"/>
+				<div id="<?php echo esc_html( $div_search_id ); ?>" class="<?php echo esc_html( $div_search_class ); ?>">
+					<p id="<?php echo esc_html( $link_search_p_id ); ?>" class="category-add wp-hidden-child">
+						<label class="screen-reader-text" for="<?php echo esc_html( $input_search_name ); ?>"><?php echo esc_html( $tax->labels->search_items ); ?></label>
+						<input type="text" name="<?php echo esc_html( $input_search_name ); ?>" id="<?php echo esc_html( $input_search_id ); ?>" class="form-required form-input-tip" value="<?php echo esc_html( esc_attr( $tax->labels->search_items ) ); ?>" aria-required="true"/>
 						<?php wp_nonce_field( 'search-'.$taxonomy, '_ajax_nonce-search-'.$taxonomy, false ); ?>
-						<span id="<?php echo $span_search_ajax_id; ?>"></span>
+						<span id="<?php echo esc_html( $span_search_ajax_id ); ?>"></span>
 					</p>
 				</div>
 			<?php endif; ?>
@@ -1644,7 +1697,7 @@ class MLACore {
 				break;
 			case 'console':
 				foreach( self::$mla_debug_messages as $message ) {
-					trigger_error( $message, E_USER_WARNING );
+					trigger_error( esc_html( $message ), E_USER_WARNING );
 				}
 				break;
 			case 'log':
@@ -1711,7 +1764,7 @@ class MLACore {
 				self::$mla_debug_messages[] = $message;
 				break;
 			case 'console':
-				trigger_error( $message, E_USER_WARNING );
+				trigger_error( esc_html( $message ), E_USER_WARNING );
 				break;
 			case 'log':
 				self::_debug_log( $message );
@@ -1741,9 +1794,7 @@ class MLACore {
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-support-deprecated.php' );
 		MLACore::$admin_columns_storage_model = new CPAC_Deprecated_Storage_Model_MLA();
 
-		/*
-		 * Put MLA before/after WP Media Library so is_columns_screen() will work
-		 */
+		// Put MLA before/after WP Media Library so is_columns_screen() will work
 		$new_models = array();
 		foreach ( $storage_models as $key => $model ) {
 			if ( 'wp-media' == $key ) {
@@ -1759,9 +1810,7 @@ class MLACore {
 			}
 		}
 
-		/*
-		 * If we didn't find wp-media, add our entry to the end
-		 */
+		// If we didn't find wp-media, add our entry to the end
 		if ( count( $storage_models ) == count( $new_models ) ) {
 			$new_models[ $storage_model->key ] = MLACore::$admin_columns_storage_model;
 		}
@@ -1804,7 +1853,13 @@ class MLACore {
 				AC\ListScreenTypes::instance()->register_list_screen( new ACP_Addon_MLA_ListScreen );
 			}
 		} else {
-			AC()->register_list_screen( new AC_Addon_MLA_ListScreen );
+			$legacy_version = version_compare( AC()->get_version(), '4.1.0', '<' );
+
+			if ( $legacy_version ) {
+				AC()->register_list_screen( new AC_Addon_MLA_ListScreen );
+			} else {
+				AC\ListScreenTypes::instance()->register_list_screen( new AC_Addon_MLA_ListScreen );
+			}
 		}
 	}
 } // Class MLACore

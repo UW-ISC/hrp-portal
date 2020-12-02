@@ -9,7 +9,7 @@
  * a supporting function "_export_this_item" and the "mla_end_mapping" action.
  *
  * @package MLA Mapping Hooks Example
- * @version 1.04
+ * @version 1.05
  */
 
 /*
@@ -17,10 +17,10 @@ Plugin Name: MLA Mapping Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of the filters provided by the IPTC/EXIF and Custom Field mapping features
 Author: David Lingren
-Version: 1.04
+Version: 1.05
 Author URI: http://davidlingren.com/
 
-Copyright 2014 David Lingren
+Copyright 2014-2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -56,9 +56,7 @@ class MLAMappingHooksExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
-		 */
+		// The filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() )
 			return;
 
@@ -84,11 +82,14 @@ class MLAMappingHooksExample {
 		add_filter( 'mla_mapping_settings', 'MLAMappingHooksExample::mla_mapping_settings', 10, 4 );
 		add_filter( 'mla_mapping_rule', 'MLAMappingHooksExample::mla_mapping_rule', 10, 4 );
 		add_filter( 'mla_mapping_custom_value', 'MLAMappingHooksExample::mla_mapping_custom_value', 10, 5 );
+		add_filter( 'mla_mapping_old_custom_value', 'MLAMappingHooksExample::mla_mapping_old_custom_value', 10, 5 );
 		add_filter( 'mla_mapping_iptc_value', 'MLAMappingHooksExample::mla_mapping_iptc_value', 10, 5 );
 		add_filter( 'mla_mapping_exif_value', 'MLAMappingHooksExample::mla_mapping_exif_value', 10, 5 );
 		add_filter( 'mla_mapping_new_text', 'MLAMappingHooksExample::mla_mapping_new_text', 10, 5 );
 		add_filter( 'mla_mapping_updates', 'MLAMappingHooksExample::mla_mapping_updates', 10, 5 );
 		add_action( 'mla_end_mapping', 'MLAMappingHooksExample::mla_end_mapping', 10, 0 );
+
+		add_filter( 'mla_purge_custom_field_values', 'MLAMappingHooksExample::mla_purge_custom_field_values', 10, 4 );
 
 		add_filter( 'mla_get_options_tablist', 'MLAMappingHooksExample::mla_get_options_tablist', 10, 3 );
 	}
@@ -428,11 +429,45 @@ class MLAMappingHooksExample {
 		//$size_names = MLAOptions::mla_get_data_source($post_id, $category, $my_setting, $attachment_metadata);
 		//error_log( __LINE__ . ' MLAMappingHooksExample::mla_mapping_custom_value_filter $size_names = ' . var_export( $size_names, true ), 0 );
 
-		/*
-		 * For "empty" values, return ' '.
-		 */
+		// For "empty" values, return ' '.
 		return $new_text;
 	} // mla_mapping_custom_value_filter
+
+	/**
+	 * MLA Mapping Old Value Filter
+	 *
+	 * This filter is called once for each Custom Field mapping rule, after the "old text" 
+	 * portion of the rule is evaluated. You can change the old value produced by the rule.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	mixed 	current target value returned by the rule
+	 * @param	array 	rule slug
+	 * @param	integer post ID to be evaluated
+	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
+	 * @param	array 	attachment_metadata, default NULL
+	 *
+	 * @return	array	updated current target value
+	 */
+	public static function mla_mapping_old_custom_value( $old_text, $setting_value, $post_id, $category, $attachment_metadata ) {
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_custom_value_filter( {$post_id}, {$category} ) new_text = " . var_export( $old_text, true ), 0 );
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_custom_value_filter( {$post_id}, {$category} ) setting_value = " . var_export( $setting_value, true ), 0 );
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_mapping_custom_value_filter( {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
+
+		/*
+		 * You can use MLAOptions::mla_get_data_source() to get anything available;
+		 * for example:
+		 * /
+		$my_setting = array(
+			'data_source' => 'size_names',
+			'option' => 'array'
+		); // */
+		//$size_names = MLAOptions::mla_get_data_source($post_id, $category, $my_setting, $attachment_metadata);
+		//error_log( __LINE__ . ' MLAMappingHooksExample::mla_mapping_custom_value_filter $size_names = ' . var_export( $size_names, true ), 0 );
+
+		// For "empty" values, return ' '.
+		return $old_text;
+	} // mla_mapping_old_custom_value_filter
 
 	/**
 	 * MLA Mapping IPTC Value Filter
@@ -739,6 +774,28 @@ class MLAMappingHooksExample {
 	} // mla_end_mapping_action
 
 	/**
+	 * MLA Settings Purge Custom Field Values Filter
+	 *
+	 * This filter is applied for each rule before the default processing takes place.
+	 * You can apply your own logic or prevent the purge.
+	 *
+	 * @since 1.05
+	 *
+	 * @param	string|NULL	Text message describing the results of applying the purge. Default NULL.
+	 * @param	string		Category; 'custom_field_mapping' or 'iptc_exif_custom_mapping'
+	 * @param	string		Name/slug of the rule
+	 * @param	array		Rule parameters
+	 *
+	 * @return	string|NULL	Updated text message describing the results of applying the purge
+	 */
+	public static function mla_purge_custom_field_values( $results, $category, $rule_name, $rule ) {
+		//error_log( __LINE__ . " MLAMappingHooksExample::mla_purge_custom_field_values( {$category}, {$rule_name} ) rule = " . var_export( $rule, true ), 0 );
+
+		// Return processing result or NULL (the default) to allow default processing
+		return $results;
+	} // mla_purge_custom_field_values_filter
+
+	/**
 	 * MLA Settings Tab List Filter
 	 *
 	 * This filter is before the Settings/Media Library Assistant screen is displayed.
@@ -757,14 +814,10 @@ class MLAMappingHooksExample {
 		//error_log( __LINE__ . ' MLAMappingHooksExample::mla_get_options_tablist_filter $mla_tablist = ' . var_export( $mla_tablist, true ), 0 );
 		//error_log( __LINE__ . ' MLAMappingHooksExample::mla_get_options_tablist_filter $tab = ' . var_export( $tab, true ), 0 );
 
-		/*
-		 * Return an updated $mla_tablist ( $tab = NULL ), an updated single element or false
-		 */
+		// Return an updated $mla_tablist ( $tab = NULL ), an updated single element or false
 		return $results;
 
-		/*
-		 * Comment out the above return statement to fall through to the example, which removes the "Uploads" tab.
-		 */
+		// Comment out the above return statement to fall through to the example, which removes the "Uploads" tab.
 		if ( NULL == $tab ) {
 			unset( $results['upload'] );
 		}

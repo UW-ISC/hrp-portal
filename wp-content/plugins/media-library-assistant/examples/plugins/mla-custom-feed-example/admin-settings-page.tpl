@@ -62,17 +62,17 @@
 			<tr class="form-field custom-feed-title-wrap">
 				<th scope="row"> <label for="mla-custom-feed-title">Title</label>
 				</th>
-				<td><input name="mla_edit_custom_feed[title]" id="mla-custom-feed-title" type="text" value="" /></td>
+				<td><input name="mla_edit_custom_feed[title]" id="mla-custom-feed-title" type="text" value="[+title+]" /></td>
 			</tr>
 			<tr class="form-field custom-feed-link-wrap">
 				<th scope="row"> <label for="mla-custom-feed-link">Link</label>
 				</th>
-				<td><input name="mla_edit_custom_feed[link]" id="mla-custom-feed-link" type="text" value="" /></td>
+				<td><input name="mla_edit_custom_feed[link]" id="mla-custom-feed-link" type="text" value="[+link+]" /></td>
 			</tr>
 			<tr class="form-field custom-feed-description-wrap">
 				<th scope="row"> <label for="mla-custom-feed-description">Description</label>
 				</th>
-				<td><input name="mla_edit_custom_feed[description]" id="mla-custom-feed-description" type="text" value="" /></td>
+				<td><input name="mla_edit_custom_feed[description]" id="mla-custom-feed-description" type="text" value="[+description+]" /></td>
 			</tr>
 			<tr class="form-field custom-feed-last_build_date-wrap">
 				<th scope="row"> <label for="mla-custom-feed-last_build_date">Last Built</label>
@@ -601,7 +601,7 @@ You can use all of the WordPress template tags to access item values within the 
 </p>
 <h4>Theme-based Templates</h4>
 <p>
-You can create your own template file and add it to your theme or child theme. Defining your own template file goves you complete control over the feed content.
+You can create your own template file and add it to your theme or child theme. Defining your own template file gives you complete control over the feed content.
 </p>
 <p>
 If you define your own template file you can substitute it for the default file by filling in the "Tpl. Slug" and optionally the "Tpl. Name" fields in the Add New Theme area. For example, let's say you have created a template file:<br />&nbsp;<br /> 

@@ -226,7 +226,7 @@ The <code>[mla_gallery]</code> shortcode is used in a post, page or custom post 
 If you're new to Media Library Assistant and the <code>[mla_gallery]</code> shortcode you should read through the material in the <a href="#gallery_examples">MLA Gallery Examples</a> section.
 </p>
 <p>
-All of the options/parameters documented for the <code>[gallery]</code> shortcode are supported by the <code>[mla_gallery]</code> shortcode; you can find them in the <a href="http://codex.wordpress.org/Gallery_Shortcode" title="WordPress Codex link" target="_blank">WordPress Codex</a>. Most of the parameters documented for the WP_Query class are also supported; see the <a href="http://codex.wordpress.org/Class_Reference/WP_Query" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>. Because the <code>[mla_gallery]</code> shortcode is designed to work with Media Library items, there are some parameter differences and extensions; these are documented below.
+All of the options/parameters documented for the <code>[gallery]</code> shortcode are supported by the <code>[mla_gallery]</code> shortcode; you can find them in the <a href="http://codex.wordpress.org/Gallery_Shortcode" title="WordPress Codex link" target="_blank">WordPress Codex</a>. Most of the parameters documented for the WP_Query class are also supported; see the <a href="https://developer.wordpress.org/reference/classes/wp_query/" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>. Because the <code>[mla_gallery]</code> shortcode is designed to work with Media Library items, there are some parameter differences and extensions; these are documented below.
 <a name="gallery_substitution"></a>
 </p>
 <h4>Substitution Parameters</h4>
@@ -436,7 +436,10 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 </tr>
 </table>
 <p>
-All but the "mla_target" parameter support the <a href="#mla_markup_parameters">Markup</a>, <a href="#mla_attachment_parameters">Attachment-specific</a>, <a href="#mla_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p>
+All but the "mla_target" parameter support the <a href="#mla_markup_parameters">Markup</a>, <a href="#mla_attachment_parameters">Attachment-specific</a>, <a href="#mla_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code <code>mla_rollover_text='{+date+} : {+description+}'</code>, the rollover text will contain the upload date, a colon, and the full description of each gallery item. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
 <p>
 The "mla_link_href" parameter is a great way to change the destination your gallery item links to or add arguments to the link for later processing. For example, to make a gallery item link back to the page/post it is attached to, you can code: <code>mla_link_href='{+site_url+}/?page_id={+parent+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+link_url+}?myarg1=myvalue1&amp;amp;myarg2=myvalue2'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameter modified by this parameter is "link". Other markup parameters such as "pagelink", "filelink" and "link_url" are not modified.
@@ -445,7 +448,13 @@ The "mla_link_href" parameter is a great way to change the destination your gall
 The "mla_link_attributes" and "mla_image_attributes" parameters accept any value and adds it to the "&lt;a&gt;" or "&lt;img&gt;" tags for the gallery item. For example, you can create a Shadowbox JS (plugin) album by adding <code>mla_link_attributes='rel="shadowbox{sbalbum-{+instance+}};player=img"'</code> to your shortcode query (note the use of single quotes around the parameter value and the double quotes within the parameter). <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets (as this example does). In this case, the actual attribute added to the link will be <code>rel="shadowbox[sbalbum-1];player=img"</code>. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.
 </p>
 <p>
-The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+The "mla_caption" parameter can be used, for example, to replace the default caption to a hyperlink containing the item's Title You can code something like this:<br />
+&nbsp;<br /> 
+<code>[mla_gallery size=icon post_mime_type=application/pdf post_parent=all link=file]<br />
+mla_caption='&lt;a href="{+file_url+}" target="_blank"&gt;{+title+}&lt;/a&gt;'<br />
+[/mla_gallery]</code><br />
+&nbsp;<br />
+Note the use of the alternative "enclosing shortcode" syntax in this example, which avoids the WordPress issues with including HTML markup in shortcode parameters.
 <a name="thumbnail_substitution"></a>
 </p>
 <h4>Thumbnail Substitution Support, mla_viewer</h4>
@@ -530,7 +539,7 @@ If your Ghostscript software is in a non-standard location, enter the full path 
 <a name="order_orderby"></a>&nbsp;
 <h4>Order, Orderby</h4>
 <p>
-The Orderby parameter specifies which database field(s) are used to sort the gallery. You can sort the gallery by one or more of these values (there is additional information on some of these values in the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Order_.26_Orderby_Parameters" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>):
+The Orderby parameter specifies which database field(s) are used to sort the gallery. You can sort the gallery by one or more of these values (there is additional information on some of these values in the <a href="https://developer.wordpress.org/reference/classes/wp_query/#order-orderby-parameters" title="WordPress Codex link" target="_blank">Codex WP_Query class reference</a>):
 </p>
 <table>
 <tr>
@@ -620,6 +629,10 @@ The Size parameter specifies the image size to use for the thumbnail display; "t
 <tr>
 <td class="mla-doc-table-label">icon</td>
 <td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_feature</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel icon for <strong>ALL</strong> items, image and non-image. If, however, an item has a "Featured Image" it will replace the icon.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon_only</td>
@@ -790,7 +803,7 @@ The Category parameters search in the WordPress core &quot;Categories&quot; taxo
 </tr>
 </table>
 <p>
-More information and examples can be found on the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Category_Parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
+More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#category-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
 <a name="tag_parameters"></a>
 </p>
 <h4>Tag Parameters</h4>
@@ -798,13 +811,13 @@ More information and examples can be found on the <a href="http://codex.wordpres
 The Tag parameters search in the WordPress core &quot;Tags&quot; taxonomy. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
 </p>
 <p>
-More information and examples can be found on the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Tag_Parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
+More information and examples can be found on the <a href="https://developer.wordpress.org/reference/classes/wp_query/#tag-parameters" title="WordPress Codex page" target="_blank">WordPress Codex WP_Query Class Reference</a> page.
 Note that the "tag_id" parameter requires exactly one tag ID; multiple IDs are not allowed. You can use the "tag__in" parameter to query for multiple values.
 <a name="simple_taxonomy_parameters"></a>
 </p>
 <h4>Simple Taxonomy Parameters</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the simple "{tax} (string)" values (deprecated as of WordPress version 3.1) as well as the more powerful "<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters" title="WordPress Codex Documentation for tax_query" target="_blank">tax_query</a>" value. Use these queries for your custom taxonomies (and for the MLA attachment_category and attachment_tag taxonomies); use the above Category and Tag parameters for the WordPress-provided taxonomies. If you do use a tax_query for Categories and Tags, the slug values are "category" and "post_tag". 
+The <code>[mla_gallery]</code> shortcode supports the simple "{tax} (string)" values (deprecated as of WordPress version 3.1) as well as the more powerful "<a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">tax_query</a>" value. Use these queries for your custom taxonomies (and for the MLA attachment_category and attachment_tag taxonomies); use the above Category and Tag parameters for the WordPress-provided taxonomies. If you do use a tax_query for Categories and Tags, the slug values are "category" and "post_tag". 
 </p>
 <p>
 For simple queries, enter the custom taxonomy name and the term(s) that must be matched, e.g.:
@@ -882,7 +895,7 @@ In the example, <code>animal.invalid-slug</code> is a taxonomy.term combination 
 </p>
 <h4>Taxonomy Queries, the "tax_query"</h4>
 <p>
-More complex queries can be specified by using <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Taxonomy_Parameters" title="WordPress Codex Documentation for tax_query" target="_blank">WP_Query's "tax_query"</a>, e.g.:
+More complex queries can be specified by using <a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">WP_Query's "tax_query"</a>, e.g.:
 </p>
 <p><code>[mla_gallery]<br />
 tax_query="array(<br />
@@ -1080,10 +1093,10 @@ The task of dividing a large <code>[mla_gallery]</code> into two or more pages i
 </p>
 <h4>Date and Time Parameters, the "date query"</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the "<a href="http://codex.wordpress.org/Class_Reference/WP_Query#Date_Parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
+The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
 </p>
 <p>
-As the <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Date_Parameters" title="WordPress Codex Documentation for date_query" target="_blank">Codex date_query documentation</a> suggests, "before" and "after" values can use any of the <a href="http://php.net/strtotime" title="PHP Date and Time Formats">PHP strtotime()-compatible string values</a>, which are quite powerful. For example, you can use relative values such as <code>'after' => 'second tuesday of last month'</code>. Careful study of the PHP documentation can be most rewarding. You can use <code>mla_debug=true</code> to see how PHP and WordPress translate your query to specific date-time values.
+As the <a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">Codex date_query documentation</a> suggests, "before" and "after" values can use any of the <a href="http://php.net/strtotime" title="PHP Date and Time Formats">PHP strtotime()-compatible string values</a>, which are quite powerful. For example, you can use relative values such as <code>'after' => 'second tuesday of last month'</code>. Careful study of the PHP documentation can be most rewarding. You can use <code>mla_debug=true</code> to see how PHP and WordPress translate your query to specific date-time values.
 </p>
 <p>
 When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
@@ -1122,7 +1135,7 @@ Remember to use <code>post_parent=current</code> if you want to restrict your qu
 </p>
 <h4>Custom Field Queries, the "meta_query"</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="http://codex.wordpress.org/Class_Reference/WP_Query#Custom_Field_Parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
+The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
 </p>
 <p>
 When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
@@ -1627,11 +1640,16 @@ You can code "internal" to skip the explicit attachment-counting process and use
 </tr>
 <tr>
 <td class="mla-doc-table-label">orderby</td>
-<td>The final sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular terms for the cloud).</td>
+<td>The final sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug". Coding "none" is equivalent to "orderby=count order=DESC" (the initial sort to qualify the most popular terms for the cloud).<br />
+&nbsp;<br />
+If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;<br />
+Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">order</td>
-<td>Can be "ASC" (ascending, the default) or "DESC" (descending).</td>
+<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">no_orderby</td>
@@ -2691,11 +2709,16 @@ You can code "internal" to skip the explicit attachment-counting process and use
 </tr>
 <tr>
 <td class="mla-doc-table-label">orderby</td>
-<td>The sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug".</td>
+<td>The sort order of the retrieved terms. Can be one or more of "count", "id" (term_id), "name" (the default), "none", "random", or "slug".<br />
+&nbsp;<br />
+If you install and activate the <a href="https://wordpress.org/plugins/simple-custom-post-order/" target="_blank" rel="noopener noreferrer nofollow">Simple Custom Post Order</a> plugin you can code "term_order" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;<br />
+Or, if you install and activate the <a href="https://wordpress.org/plugins/simple-taxonomy-ordering/" target="_blank" rel="noopener noreferrer nofollow">Simple Taxonomy Ordering</a> plugin you can code "tax_position" to sort the cloud into the "drag and drop" order supported by that plugin.<br />
+&nbsp;</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">order</td>
-<td>Can be "ASC" (ascending, the default) or "DESC" (descending).</td>
+<td>Can be "ASC" (ascending, the default) or "DESC" (descending). Note that DESC is not supported for <code>orderby=tax_position</code>.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">preserve_case</td>
@@ -4559,6 +4582,18 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td style="padding-bottom: 2em;">ALT text, for image types. If there are multiple values (unlikely) they will be returned as a comma-separated list. You can use the ",single" or ",export" option values to change that.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">site_url</td>
+<td style="vertical-align: top">absolute URL to the site directory, without trailing slash.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_url</td>
+<td>absolute URL to the upload directory, without trailing slash.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">base_dir</td>
+<td style="padding-bottom: 2em;">absolute (full) path to the upload directory, without trailing slash.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">absolute_path</td>
 <td>complete path portion of the attachment file, e.g., C:/site/wordpress/wp-content/uploads/2012/11/</td>
 </tr>
@@ -4753,6 +4788,9 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <a href="#backtotop">Go to Top</a>
 </p>
 <h4>Field-level IPTC Identifiers and Friendly Names</h4>
+<p>
+IPTC Photo Metadata provides data about photographs and the values can be processed by software. Each individual metadata entity is called a property and they are grouped into Administrative, Descriptive and Rights-related properties. IPTC Photo Metadata properties have photo specific definitions that are widely supported by imaging software. You can find complete documentation of IPTC properites at the <a href="https://www.iptc.org/std/photometadata/specification/IPTC-PhotoMetadata" title="IPTC Photo Metadata Standard 2019.1" target="_blank">IPTC Photo Metadata Standard 2019.1 web site.</a>
+</p>
 <p>
 The IPTC specification defines all of the allowed fields and organizes them into "Records" and "DataSets" (fields). When you use the "iptc:" prefix to source a field-level substitution parameter you can specify the field you want in either of two ways. First you can use the Record number and DataSet tag, such as "2#005" for Record 2, DataSet 005; this is the "Object Name" DataSet. Second, you can use the Friendly Name, such as "object-name". The MLA Friendly Name values differ in some cases from the names in the IPTC specification but the table below should be easy to follow.
 </p>
@@ -6099,7 +6137,8 @@ The file extension/MIME Type associations are used by WordPress to decide what k
 <p>
 The first time it is invoked, MLA will retrieve the current list of extensions and  MIME Types and use it to initialize the list. MLA will add any custom items it finds added to the list by other plugins and code. Once the list is initialized, MLA's list will be used and other plugins and code will have no effect. You can disable MLA handling of the list by clearing the <em><strong>Enable Upload MIME Type Support</strong></em> checkbox at the bottom of the screen and clicking "Save Changes".
 </p>
-<h4>Extension and MIME Type</h4>
+<p>WordPress examines the content of a file during upload to more carefully validate the file's MIME type. Sometimes this extra validation prevents valid files from being added to the Media Library. For example, a CSV or plain text file that contains some HTML tags will be classified as "text/html" instead of text/csv or text/plain. This causes the upload to fail for "security reasons".</p>
+<p>You can check the <em><strong>Always Use MLA MIME Type</strong></em> option to bypass this extra security and use the MIME Type defined here in all uploads. Consider using this option carefully, only when you are having trouble uploading a file or files you know to be valid.</p><h4>Extension and MIME Type</h4>
 <p>
 The Extension is the file extension for this type, and unique key for the item. It must be all lowercase and contain only letters, numbers and hyphens (-). The MIME Type value must be all lowercase and contain only letters, numbers, periods (.), slashes (/) and hyphens (-). The MIME type specification must be a single, valid MIME specification, e.g., "image" or "image/jpeg". These two values are used to compose the list of valid extension/type associations for use within WordPress.
 </p>
@@ -6885,6 +6924,10 @@ The current mapping hooks are:
 <td class="mla-doc-hook-definition">called once for each custom field mapping rule, after the rule is evaluated. You can change the new value produced by the rule.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">mla_mapping_old_custom_value</td>
+<td class="mla-doc-hook-definition">called once for each Custom Field mapping rule, after the "old text" portion of the rule is evaluated. You can change the old value produced by the rule.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">mla_mapping_iptc_value</td>
 <td class="mla-doc-hook-definition">called once for each IPTC/EXIF mapping rule, after the IPTC portion of the rule is evaluated. You can change the new value produced by the rule.</td>
 </tr>
@@ -6903,6 +6946,10 @@ The current mapping hooks are:
 <tr>
 <td class="mla-doc-table-label">mla_end_mapping</td>
 <td class="mla-doc-hook-definition">called once, after mapping rules for any/all attachment(s) are executed. This is a good place to close files, perform cleanup, etc.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_purge_custom_field_values</td>
+<td class="mla-doc-hook-definition">called once for each custom field mapping rule, when the "Purge Values" rollover or Bulk action is executed. This is a good place to apply your own purge logic or prevent the purge from taking place.</td>
 </tr>
 </table>
 <p>
@@ -7032,6 +7079,10 @@ The MLA_DEBUG_LEVEL is also used to turn categories of debug messages on and off
 <tr>
 <td class="mla-doc-table-label">128, or 0x0080</td>
 <td>writes MLA-specific messages to the log for MIME Type processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">256, or 0x0100</td>
+<td>writes MLA-specific messages to the log for Media Manager Modal Window actions, e.g., "query_attachments".</td>
 </tr>
 </table>
 <p>
@@ -7254,6 +7305,9 @@ The Example plugins submenu lists all of the MLA example plugins and identifies 
 <li>bulk and rollover actions are provided to install or update example plugins</li>
 <li>the table can be sorted by any of the displayed columns</li>
 </ul>
+<p>
+You can use the "View" rollover action to display the source code for an example plugin. Many of the plugins have documentation and use notes in a comment area at the top of the source file. They also have references to the Support Forum topics that inspired them, which can be an additional source of information.
+</p>
 <p>
 Once you have installed an example plugin you can use the WordPress Plugins/Editor submenu to view the source code and (with extreme caution) make small changes to the code. <strong>Be very careful if you choose to modify the code!</strong> Making changes to active plugins is not recommended. If your changes cause a fatal error, the plugin will be automatically deactivated. It is much safer to download the file(s) or use FTP access to your site to modify the code offline in a more robust HTML/PHP editor.
 </p>

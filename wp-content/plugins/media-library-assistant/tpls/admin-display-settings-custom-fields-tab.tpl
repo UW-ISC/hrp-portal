@@ -421,7 +421,7 @@ href="#mla-new-custom-field">
 								</span> <span class="checkbox-title">[+Delete NULL+]</span>
 								</label> 
 								<label class="alignleft"> <span class="dropdown-title">[+Status+]</span> <span class="input-dropdown-wrap">
-								<select name="status">
+								<select name="active">
 									<option value="1">[+Active+]</option>
 									<option value="">[+Inactive+]</option>
 								</select>
