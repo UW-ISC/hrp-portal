@@ -56,7 +56,7 @@
             </select>
               </label></td>
               <td><label> <span class="title">[+Suffix+]</span>
-                <input name="mla_thumbnail_options[suffix]" id="mla-thumbnail-options-quality" type="text" size="15" value="[+default_suffix+]" />
+                <input name="mla_thumbnail_options[suffix]" id="mla-thumbnail-options-suffix" type="text" size="15" value="[+default_suffix+]" />
               </label></td>
 			  </tr></table>
 			  <p>&nbsp;&nbsp;[+WP Help+]</p>

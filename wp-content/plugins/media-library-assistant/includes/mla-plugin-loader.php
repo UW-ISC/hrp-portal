@@ -47,9 +47,9 @@ $mla_plugin_loader_error_messages = '';
 function mla_plugin_loader_reporting_action () {
 	global $mla_plugin_loader_error_messages;
 
-	echo '<div class="error"><p><strong>' . __( 'The Media Library Assistant cannot load.', 'media-library-assistant' ) . '</strong></p>'."\r\n";
-	echo "<ul>{$mla_plugin_loader_error_messages}</ul>\r\n";
-	echo '<p>' . __( 'You must resolve these conflicts before this plugin can safely load.', 'media-library-assistant' ) . '</p></div>'."\r\n";
+	echo '<div class="error"><p><strong>' . esc_html__( 'The Media Library Assistant cannot load.', 'media-library-assistant' ) . '</strong></p>'."\r\n";
+	echo "<ul>" . esc_html( $mla_plugin_loader_error_messages ) . "</ul>\r\n";
+	echo '<p>' . esc_html__( 'You must resolve these conflicts before this plugin can safely load.', 'media-library-assistant' ) . '</p></div>'."\r\n";
 }
 
 // Basic library of run-time tests.
@@ -70,7 +70,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 	add_action( 'init', 'MLACore::initialize', 0x7FFFFFFF );
 
 	// WP/LR Sync plugin has its own protocol to process uploads
-	$is_wplr_sync = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' );
+	$is_wplr_sync = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' ); // phpcs:ignore
 
 	// Check for XMLPRC, WP REST API and front end requests
 	if( !( defined('WP_ADMIN') && WP_ADMIN ) ) {
@@ -82,7 +82,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 		}
 
 		// WP REST API calls need everything loaded to process uploads
-		if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) {
+		if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) { // phpcs:ignore
 			$front_end_only = false; // TODO be more selective
 		}
 

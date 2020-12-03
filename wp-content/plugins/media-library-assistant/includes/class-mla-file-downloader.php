@@ -114,7 +114,7 @@ class MLAFileDownloader {
 			echo '</head>';
 			echo '';
 			echo '<body>';
-			echo $message;
+			echo esc_html( $message );
 			echo '</body>';
 			echo '</html> ';
 		}

@@ -216,6 +216,53 @@ class MLAData {
 	}
 
 	/**
+	 * Find a complete substitution parameter/template, balancing nested delimiters
+	 *
+	 * @since 2.84
+	 *
+	 * @param	string	$tpl A string possibly starting with '[+' at $offset
+	 * @param	integer	$offset Position within $tpl to start parsing
+	 *
+	 * @return	integer	length of substitution parameter
+	 */
+	private static function _find_parameter( $tpl, $offset ) {
+		// Parameter must start with opening delimiter 
+		if ( $offset === strpos( $tpl, '[+', $offset ) ) {
+			$start = $offset;
+			$offset += 2;
+			$level = 1;
+			do {
+				$next_open = strpos( $tpl, '[+', $offset ); 
+				$next_close = strpos( $tpl, '+]', $offset ); 
+
+				// See if a nested opening delimiter is next
+				if ( ( false !== $next_open ) && ( $next_open < $next_close ) ) {
+					$offset = $next_open + 2;
+					$level++;
+					continue;
+				}
+
+				// See if a closing delimiter is next
+				if ( false !== $next_close )  {
+					$offset = $next_close + 2;
+					$level--;
+					continue;
+				}
+
+				// Delimiters are not balanced - abort
+				/* translators: 1: ERROR tag 2: template string */
+				MLACore::mla_debug_add( __LINE__ . ' ' . sprintf( _x( '%1$s: _find_parameter no end delimiter, tail = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), substr( $tpl, $offset ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return strlen( $tpl ) - $offset;
+			} while ( $level );
+
+			return $offset - $start;
+		} // found opening delimiter
+
+		// No opening delimiter - abort
+		return strlen( $tpl ) - $offset;
+	}
+
+	/**
 	 * Find a complete delimited element, balancing opening and closing delimiters
 	 *
 	 * @since 1.50
@@ -227,35 +274,59 @@ class MLAData {
 	 * @return	string	'' or template substring including the opening and closing delimiters
 	 */
 	private static function _find_delimited_substring( $tpl, $open_delimiter = '(', $close_delimiter = ')' ) {
+		// Template must start with opening delimiter 
 		if ( $open_delimiter == $tpl[0] ) {
-			$nest = 1;
+			$offset = 1;
 			$level = 1;
 			do {
-				$test_end = strpos( $tpl, $close_delimiter, $nest );
-				if ( false === $test_end ) {
-					/* translators: 1: ERROR tag 2: template string */
-					MLACore::mla_debug_add( __LINE__ . ' ' . sprintf( _x( '%1$s: _find_delimited_substring no end delimiter, tail = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), substr( $tpl, $nest ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-					return '';
+				$next_parameter = strpos( $tpl, '[+', $offset ); 
+
+				$next_open = strpos( $tpl, $open_delimiter, $offset ); 
+				// Skip over escaped delimiters
+				if ( $next_open ) {
+					while ( $next_open && '\\' === $tpl[ $next_open - 1 ] ) {
+						$next_open = strpos( $tpl, $open_delimiter, $next_open + 1 );
+					}
 				}
 
-				$nest = strpos( $tpl, $open_delimiter, $nest );
-				if ( false === $nest ) {
-					$nest = $test_end + 1;
-					$level--;
-				} elseif ( $nest < $test_end ) {
-					$nest += 1;
-					$level++;
-				} else {
-					$nest = $test_end + 1;
-					$level--;
+				$next_close = strpos( $tpl, $close_delimiter, $offset ); 
+				// Skip over escaped delimiters
+				if ( $next_close ) {
+					while ( $next_close && '\\' === $tpl[ $next_close - 1 ] ) {
+						$next_close = strpos( $tpl, $close_delimiter, $next_close + 1 );
+					}
 				}
+
+				// See if a parameter is next
+				if ( ( false !== $next_parameter ) && ( $next_parameter < $next_open ) && ( $next_parameter < $next_close ) ) {
+					$offset += self::_find_parameter( $tpl, $next_parameter );
+					continue;
+				}
+
+				// See if a nested opening delimiter is next
+				if ( ( false !== $next_open ) && ( $next_open < $next_close ) ) {
+					$offset = $next_open + 1;
+					$level++;
+					continue;
+				}
+
+				// See if a closing delimiter is next
+				if ( false !== $next_close )  {
+					$offset = $next_close + 1;
+					$level--;
+					continue;
+				}
+
+				// Delimiters are not balanced - abort
+				/* translators: 1: ERROR tag 2: template string */
+				MLACore::mla_debug_add( __LINE__ . ' ' . sprintf( _x( '%1$s: _find_delimited_substring no end delimiter, tail = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), substr( $tpl, $offset ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return '';
 			} while ( $level );
 
-			$test_length = $test_end + 1;
-			$test_content = substr( $tpl, 0, $test_length );
-			return $test_content;
-		} // found test element
+			return substr( $tpl, 0, $offset );
+		} // found opening delimiter
 
+		// No opening delimiter - abort
 		return '';
 	}
 
@@ -342,10 +413,7 @@ class MLAData {
 				} // bad test string
 			} // (test) element
 			elseif ( '|' == $byte ) {
-				/*
-				 * Turn each alternative within a choice element into a conditional
-				 */
-
+				// Turn each alternative within a choice element into a conditional
 				if ( ! empty( $output ) ) {
 					$output_values[] = array( 'type' => 'string', 'value' => $output, 'length' => strlen( $output ) );
 					$output = '';				
@@ -972,13 +1040,13 @@ class MLAData {
 
 				if ( ! empty( $args['args'] ) ) {
 					if ( is_array( $args['args'] ) ) {
-						$start = intval( $args['args'][0] );
+						$start = (int) $args['args'][0];
 
 						if ( 1 < count( $args['args'] ) ) {
-							$length = intval( $args['args'][1] );
+							$length = (int) $args['args'][1];
 						}
 					} else {
-						$start = intval( $args['args'] );
+						$start = (int) $args['args'];
 					}
 				}
 
@@ -1041,7 +1109,7 @@ class MLAData {
 							$return_value = $args['args'][1];
 
 							if ( is_numeric( $return_value ) ) {
-								$return_value = intval( $return_value );
+								$return_value = (int) $return_value;
 							}
 						}
 					} else {
@@ -1217,12 +1285,12 @@ class MLAData {
 					break;
 				case 'request':
 					if ( isset( $_REQUEST[ $value['value'] ] ) ) {
-						$record = $_REQUEST[ $value['value'] ];
+						$record = sanitize_text_field( wp_unslash( $_REQUEST[ $value['value'] ] ) );
 					} else {
 						// Look for compound names, e.g., tax_input.attachment_category
 						$key_array = explode( '.', $value['value'] );
 						if ( 1 < count( $key_array ) && isset( $_REQUEST[ $key_array[0] ] ) ) {
-							$array_value = array( $key_array[0] => $_REQUEST[ $key_array[0] ] );
+							$array_value = array( $key_array[0] => sanitize_text_field( wp_unslash( $_REQUEST[ $key_array[0] ] ) ) );
 							$record = MLAData::mla_find_array_element( $value['value'], $array_value, $value['option'], false, ',' );
 						} else {
 							$record = '';
@@ -1772,7 +1840,7 @@ class MLAData {
 			$haystack[ $key ] = array();
 		}
 
-		return self::_set_array_element( implode( $key_array, '.' ), $value, $haystack[ $key ] );
+		return self::_set_array_element( implode( '.', $key_array ), $value, $haystack[ $key ] );
 	}
 
 	/**
@@ -1799,7 +1867,7 @@ class MLAData {
 		} // lowest level
 
 		if ( isset( $haystack[ $key ] ) ) {
-			return self::_unset_array_element( implode( $key_array, '.' ), $haystack[ $key ] );
+			return self::_unset_array_element( implode( '.', $key_array ), $haystack[ $key ] );
 		}
 
 		return false;
@@ -1907,7 +1975,7 @@ class MLAData {
 			} // $option
 		} // is_array
 
-		return self::_bin_to_utf8( $haystack );
+		return self::_bin_to_utf8( (string) $haystack );
 	} // mla_find_array_element
 
 	/**
@@ -3237,7 +3305,7 @@ class MLAData {
 						if ( ( -1 <= $value ) && ( 1 >= $value ) ) {
 							return sprintf( $fraction_format, $fragments[0], $fragments[1] );
 						} else {
-							if ( $value == intval( $value ) ) {
+							if ( $value == (int) $value ) {
 								return sprintf( $integer_format, $value );
 							}else {
 								return sprintf( $mixed_format, $value );
@@ -3464,6 +3532,11 @@ class MLAData {
 			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize returns ' . var_export( $size, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize info keys =  ' . var_export( array_keys( $info ), true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
+			/*/ SVG and some other types don't have metadata: removed v2.90
+			if ( false === $size ) {
+				return $results;
+			} // */
+
 			if ( is_callable( 'iptcparse' ) ) {
 				if ( ! empty( $info['APP13'] ) ) {
 					set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
@@ -3509,7 +3582,7 @@ class MLAData {
 				} // ! empty
 			} // iptcparse
 
-			if ( is_callable( 'exif_read_data' ) && in_array( $size[2], array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) ) ) {
+			if ( is_callable( 'exif_read_data' ) && !empty( $size[2] ) && in_array( $size[2], array( IMAGETYPE_JPEG, IMAGETYPE_TIFF_II, IMAGETYPE_TIFF_MM ) ) ) {
 				set_error_handler( 'MLAData::mla_IPTC_EXIF_error_handler' );
 				try {
 					$exception = NULL;
@@ -3589,7 +3662,7 @@ class MLAData {
 				$results['mla_xmp_metadata'] = array();
 			}
 
-			// experimental damage repair for Robert O'Conner (Rufus McDufus)
+			// damage repair for Robert O'Conner (Rufus McDufus)
 			if ( isset( $exif_data['DateTimeOriginal'] ) && ( 8 > strlen( $exif_data['DateTimeOriginal'] ) ) ) {
 				if ( isset( $results['mla_xmp_metadata']['CreateDate'] )&& ( is_numeric( strtotime( $results['mla_xmp_metadata']['CreateDate'] ) ) ) ) {
 					$exif_data['BadDateTimeOriginal'] = $exif_data['DateTimeOriginal'];
@@ -3764,9 +3837,7 @@ class MLAData {
 			$results['mla_exif_metadata']['CAMERA'] = $new_data;
 		}
 
-		/*
-		 * Expand EXIF GPS values
-		 */
+		// Expand EXIF GPS values
 		$new_data = array();
 		if ( isset( $exif_data['GPSVersion'] ) ) {
 			$new_data['Version'] = sprintf( '%1$d.%2$d.%3$d.%4$d', ord( $exif_data['GPSVersion'][0] ), ord( $exif_data['GPSVersion'][1] ), ord( $exif_data['GPSVersion'][2] ), ord( $exif_data['GPSVersion'][3] ) );
@@ -3967,7 +4038,14 @@ class MLAData {
 	 */
 	public static function mla_update_item_postmeta( $post_id, $new_meta ) {
 		$post_data = MLAQuery::mla_fetch_attachment_metadata( $post_id );
-		$message = '';
+		
+		// Check for updates from "mla_mapping_updates" filters
+		if ( !empty( $new_meta[0x80000000] ) ) {
+			$message = $new_meta[0x80000000];
+			unset( $new_meta[0x80000000] );
+		} else {
+			$message = '';
+		}
 
 		$attachment_meta_values = array();
 		foreach ( $new_meta as $meta_key => $meta_value ) {
@@ -4144,6 +4222,25 @@ class MLAData {
 		return $message;
 	}
 
+    /**
+     * Fires after an object's terms have been set.
+     *
+     * @since 2.84
+     *
+     * @param int    $object_id  Object ID.
+     * @param array  $terms      An array of object terms.
+     * @param array  $tt_ids     An array of term taxonomy IDs.
+     * @param string $taxonomy   Taxonomy slug.
+     * @param bool   $append     Whether to append new terms to the old terms.
+     * @param array  $old_tt_ids Old array of term taxonomy IDs.
+     */
+	public static function mla_set_object_terms_action( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
+		$append_replace = $append ? 'append' : 'replace';
+		MLACore::mla_debug_add( __LINE__ . " MLAData::mla_set_object_terms_action( $object_id, $taxonomy, $append_replace ) terms = " . var_export( $terms, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		MLACore::mla_debug_add( __LINE__ . " MLAData::mla_set_object_terms_action( $object_id, $taxonomy, $append_replace ) tt_ids = " . var_export( $tt_ids, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		MLACore::mla_debug_add( __LINE__ . " MLAData::mla_set_object_terms_action( $object_id, $taxonomy, $append_replace ) old_tt_ids = " . var_export( $old_tt_ids, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+	}
+
 	/**
 	 * Update a single item; change the "post" data, taxonomy terms 
 	 * and meta data for a single attachment
@@ -4176,6 +4273,8 @@ class MLAData {
 		$new_data = stripslashes_deep( $new_data );
 		$new_meta = NULL;
 
+		$log_details = ( MLACore::$mla_debug_level & 1 ) && ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
 		foreach ( $new_data as $key => $value ) {
 			switch ( $key ) {
 				case 'post_title':
@@ -4194,9 +4293,7 @@ class MLAData {
 
 					$value = sanitize_title( $value );
 
-					/*
-					 * Make sure new slug is unique
-					 */
+					// Make sure new slug is unique
 					$args = array(
 						'name' => $value,
 						'post_type' => 'attachment',
@@ -4216,11 +4313,11 @@ class MLAData {
 					break;
 				/*
 				 * bulk_image_alt requires a separate key because some attachment types
-				 * should not get a value, e.g., text or PDF documents
+				 * should not get a value. MLA v2.84 allows all application/ MIME types.
 				 */
 				case 'bulk_image_alt':
-					// wp_attachment_is_image( $post_id );
-					if ( 'image/' !== substr( $post_data[ 'post_mime_type' ], 0, 6 ) ) {
+					if ( ( 'image/' !== substr( $post_data[ 'post_mime_type' ], 0, 6 ) )
+					    && ( 'application/' !== substr( $post_data[ 'post_mime_type' ], 0, 12 ) ) ) {
 						break;
 					}
 					// fallthru
@@ -4371,10 +4468,14 @@ class MLAData {
 
 				$taxonomy_obj = get_taxonomy( $taxonomy );
 
-				if ( ! current_user_can( $taxonomy_obj->cap->assign_terms ) ) {
-					/* translators: 1: taxonomy */
-					$message .= sprintf( __( 'You cannot assign "%1$s" terms', 'media-library-assistant' ) . '<br>', $taxonomy );
-					continue;
+				// Check if logged-in user can assign terms
+				$current_user = wp_get_current_user();
+				if ( $current_user->ID ) {
+					if ( ! current_user_can( $taxonomy_obj->cap->assign_terms ) ) {
+						/* translators: 1: taxonomy */
+						$message .= sprintf( __( 'You cannot assign "%1$s" terms', 'media-library-assistant' ) . '<br>', $taxonomy );
+						continue;
+					}
 				}
 
 				// array of int = hierarchical, comma-delimited string = flat.
@@ -4405,7 +4506,7 @@ class MLAData {
 						) );
 
 						if ( ! empty( $_term ) ) {
-							$clean_terms[] = intval( $_term[0] );
+							$clean_terms[] = (int) $_term[0];
 						} else {
 							// No existing term was found, so pass the string. A new term will be created.
 							$clean_terms[] = $tag;
@@ -4413,6 +4514,12 @@ class MLAData {
 					}
 
 					$tags = $clean_terms;
+				}
+
+				if ( $log_details ) {
+					MLACore::mla_debug_add( __LINE__ . " MLAData::mla_update_single_item( $post_id, $taxonomy ) \$tags = " . var_export( $tags, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
+					add_action( 'set_object_terms', 'MLAData::mla_set_object_terms_action', 10, 6 );
 				}
 
 				switch ( $tax_action ) {
@@ -4443,6 +4550,10 @@ class MLAData {
 						$action_name = __( 'Ignoring', 'media-library-assistant' );
 						$result = NULL;
 						// ignore anything else
+				}
+
+				if ( $log_details ) {
+					remove_action( 'set_object_terms', 'MLAData::mla_set_object_terms_action' );
 				}
 
 				/*
@@ -4501,6 +4612,10 @@ class MLAData {
 				 */
 				// $final_message .= '<br>' . $message;
 				//error_log( __LINE__ . ' MLAData::mla_update_single_item message = ' . var_export( $message, true ), 0 );
+
+				if ( $log_details ) {
+					MLACore::mla_debug_add( __LINE__ . " MLAData::mla_update_single_item( $post_id ) message = " . var_export( $final_message . '<br>' . $message, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+				}
 
 				return array(
 					'message' => $final_message,

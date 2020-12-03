@@ -108,14 +108,14 @@ class Insert_Fixit {
 	const INPUT_ATTACH_ALL = 'attach-all';
 
 	/**
-	 * Make "Attach" tools unconditional, i.e., overwrite existing parent values
+	 * Make "Attach Media Library items" first item the newest item, not the oldest.
 	 *
 	 * @since 1.06
 	 *
 	 * @var	boolean
 	 */
 	private static $reverse_sort = false;
-	const INPUT_REVERSE_SORT = 'reverse-sort';
+	const INPUT_FIRST_ITEM = 'first-item';
 
 	/**
 	 * WordPress version test for $wpdb->esc_like() Vs esc_sql()
@@ -210,7 +210,7 @@ class Insert_Fixit {
 		// Attach Media Library items
 		self::$attach_all = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_ATTACH_ALL ] ) ? true : false;
 		$attach_all_attr = self::$attach_all ? ' checked="checked" ' : ' ';
-		self::$reverse_sort = isset( $_REQUEST[ self::SLUG_PREFIX . 'first_item' ] ) ? 'highest' === $_REQUEST[ self::SLUG_PREFIX . 'first_item' ] : self::$reverse_sort;
+		self::$reverse_sort = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_ITEM ] ) ? 'highest' === $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_ITEM ] : self::$reverse_sort;
 		$lowest_attr = self::$reverse_sort ? ' ' : ' selected="selected" ';
 		$highest_attr = self::$reverse_sort ? ' selected="selected" ' : ' ';
 
@@ -296,7 +296,7 @@ class Insert_Fixit {
 			't1206' => array( 'continue' => '</tr><tr>' ),
 			't1207' => array( 'continue' => '  <td>&nbsp;</td>' ),
 			't1208' => array( 'continue' => '  <td>' ),
-			't1209' => array( 'continue' => '    <select name="' . self::SLUG_PREFIX . 'first_item">' ),
+			't1209' => array( 'continue' => '    <select name="' . self::SLUG_PREFIX . self::INPUT_FIRST_ITEM . '">' ),
 			't1210' => array( 'continue' => '      <option' . $lowest_attr . 'value="lowest">Oldest (lowest ID)</option>' ),
 			't1211' => array( 'continue' => '      <option' . $highest_attr . 'value="highest">Newest (highest ID)</option>' ),
 			't1212' => array( 'continue' => '    </select>' ),
@@ -1550,7 +1550,7 @@ class Insert_Fixit {
 
 		$examined_posts = count( self::$figcaption_inserts );
 		if ( 0 === $examined_posts ) {
-			return 'No <figcaption> tags found; nothing updated.';
+			return 'No &lt;figcaption&gt; tags found; nothing updated.';
 		}
 
 		$figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] : '([+post_excerpt+])';

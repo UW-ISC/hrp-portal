@@ -38,9 +38,7 @@ class MLASettings_View {
 			return;
 		}
 
-		/*
-		 * Initialize common script variables
-		 */
+		// Initialize common script variables
 		$script_variables = array(
 			'error' => __( 'Error while making the changes.', 'media-library-assistant' ),
 			'ntdeltitle' => __( 'Remove From Bulk Edit', 'media-library-assistant' ),
@@ -91,9 +89,7 @@ class MLASettings_View {
 			'body' => '' 
 		);
 
-		/*
-		 * Uncomment this for debugging.
-		 */
+		// Uncomment this for debugging.
 		// $page_content['message'] .= $message_list;
 
 		return $page_content;
@@ -153,6 +149,35 @@ class MLASettings_View {
 	}
 
 	/**
+	 * Validate an incoming $_REQUEST['mla_view_item']
+	 *
+	 * @since 2.90
+ 	 *
+	 * @return array Sanitized view item
+	 */
+	private static function _sanitize_view_item() {
+		$item = array();
+
+		if ( isset( $_REQUEST['mla_view_item']['original_slug'] ) ) {
+			$item['original_slug'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['original_slug'] ) );
+		}
+		
+		$item['slug'] = isset( $_REQUEST['mla_view_item']['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['slug'] ) ) : '';
+		$item['singular'] = isset( $_REQUEST['mla_view_item']['singular'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['singular'] ) ) : '';
+		$item['plural'] = isset( $_REQUEST['mla_view_item']['plural'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['plural'] ) ) : '';
+		$item['specification'] = isset( $_REQUEST['mla_view_item']['specification'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['specification'] ) ) : '';
+		$item['post_mime_type'] = isset( $_REQUEST['mla_view_item']['post_mime_type'] );
+		$item['table_view'] = isset( $_REQUEST['mla_view_item']['table_view'] );
+		$item['menu_order'] = isset( $_REQUEST['mla_view_item']['menu_order'] ) ? absint( $_REQUEST['mla_view_item']['menu_order'] ) : 0;
+
+		if ( isset( $_REQUEST['mla_view_item']['description'] )  ) {
+			$item['description'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_view_item']['description'] ) );
+		}
+
+		return $item;
+	}
+
+	/**
 	 * Compose the Post MIME Type Views tab content for the Settings subpage
 	 *
 	 * @since 1.40
@@ -167,17 +192,7 @@ class MLASettings_View {
 			return '';
 		}
 
-		/*
-		 * Convert checkbox values, if present
-		 */
-		if ( isset( $_REQUEST['mla_view_item'] ) ) {
-			$_REQUEST['mla_view_item']['post_mime_type'] = isset( $_REQUEST['mla_view_item']['post_mime_type'] );
-			$_REQUEST['mla_view_item']['table_view'] = isset( $_REQUEST['mla_view_item']['table_view'] );
-		}
-
-		/*
-		 * Set default values, check for Add New Post MIME Type View button
-		 */
+		// Set default values, check for Add New Post MIME Type View button
 		$add_form_values = array (
 			'slug' => '',
 			'singular' => '',
@@ -194,9 +209,9 @@ class MLASettings_View {
 			$page_content = self::_save_view_settings( );
 		} elseif ( !empty( $_REQUEST['mla-add-view-submit'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			$page_content = MLAMime::mla_add_post_mime_type( $_REQUEST['mla_view_item'] );
+			$page_content = MLAMime::mla_add_post_mime_type( self::_sanitize_view_item() );
 			if ( false !== strpos( $page_content['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
-				$add_form_values = $_REQUEST['mla_view_item'];
+				$add_form_values = self::_sanitize_view_item();
 				$add_form_values['post_mime_type'] = $add_form_values['post_mime_type'] ? 'checked="checked"' : '';
 				$add_form_values['table_view'] = $add_form_values['table_view'] ? 'checked="checked"' : '';
 			}
@@ -207,18 +222,16 @@ class MLASettings_View {
 			);
 		}
 
-		/*
-		 * Process bulk actions that affect an array of items
-		 */
+		// Process bulk actions that affect an array of items
 		$bulk_action = MLASettings::mla_current_bulk_action();
 		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
-				/*
-				 * Convert post-ID to slug; separate loop required because delete changes post_IDs
-				 */
+				// Convert post-ID to slug; separate loop required because delete changes post_IDs
 				$slugs = array();
-				foreach ( $_REQUEST['cb_mla_item_ID'] as $post_ID )
+				$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
+				foreach ( $post_ids as $post_ID ) {
 					$slugs[] = MLAMime::mla_get_post_mime_type_slug( $post_ID );
+				}
 
 				foreach ( $slugs as $slug ) {
 					switch ( $bulk_action ) {
@@ -227,14 +240,14 @@ class MLASettings_View {
 							break;
 						case 'edit':
 							$request = array( 'slug' => $slug );
-							if ( '-1' != $_REQUEST['post_mime_type'] ) {
-								$request['post_mime_type'] = '1' == $_REQUEST['post_mime_type'];
+							if ( isset( $_REQUEST['post_mime_type'] ) && '-1' !== $_REQUEST['post_mime_type'] ) {
+								$request['post_mime_type'] = '1' === $_REQUEST['post_mime_type'];
 							}
-							if ( '-1' != $_REQUEST['table_view'] ) {
-								$request['table_view'] = '1' == $_REQUEST['table_view'];
+							if ( isset( $_REQUEST['table_view'] ) && '-1' !== $_REQUEST['table_view'] ) {
+								$request['table_view'] = '1' === $_REQUEST['table_view'];
 							}
 							if ( !empty( $_REQUEST['menu_order'] ) ) {
-								$request['menu_order'] = $_REQUEST['menu_order'];
+								$request['menu_order'] = absint( $_REQUEST['menu_order'] );
 							}
 							$item_content = MLAMime::mla_update_post_mime_type( $request );
 							break;
@@ -255,32 +268,32 @@ class MLASettings_View {
 			}
 		} // $bulk_action
 
-		/*
-		 * Process row-level actions that affect a single item
-		 */
+		// Process row-level actions that affect a single item
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+			$mla_item_slug = isset( $_REQUEST['mla_item_slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_item_slug'] ) ) : '';
 
 			switch ( $_REQUEST['mla_admin_action'] ) {
 				case MLACore::MLA_ADMIN_SINGLE_DELETE:
-					$page_content = MLAMime::mla_delete_post_mime_type( $_REQUEST['mla_item_slug'] );
+					$page_content = MLAMime::mla_delete_post_mime_type( $mla_item_slug );
 					break;
 				case MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY:
-					$view = MLAMime::mla_get_post_mime_type( $_REQUEST['mla_item_slug'] );
+					$view = MLAMime::mla_get_post_mime_type( $mla_item_slug );
 					$page_content = self::_compose_edit_view_tab( $view, $page_template_array['single-item-edit'] );
 					break;
 				case MLACore::MLA_ADMIN_SINGLE_EDIT_UPDATE:
+					$mla_view_item = self::_sanitize_view_item();
 					if ( !empty( $_REQUEST['update'] ) ) {
-						$page_content = MLAMime::mla_update_post_mime_type( $_REQUEST['mla_view_item'] );
+						$page_content = MLAMime::mla_update_post_mime_type( $mla_view_item );
 						if ( false !== strpos( $page_content['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
 							$message = $page_content['message'];
-							$page_content = self::_compose_edit_view_tab( $_REQUEST['mla_view_item'], $page_template_array['single-item-edit'] );
+							$page_content = self::_compose_edit_view_tab( $mla_view_item, $page_template_array['single-item-edit'] );
 							$page_content['message'] = $message;
 						}
 			} else {
 						$page_content = array(
 							/* translators: 1: view name/slug */
-							'message' => sprintf( __( 'Edit view "%1$s" cancelled.', 'media-library-assistant' ), $_REQUEST['mla_view_item']['original_slug'] ),
+							'message' => sprintf( __( 'Edit view "%1$s" cancelled.', 'media-library-assistant' ), $mla_view_item['mla_view_item']['original_slug'] ),
 							'body' => '' 
 						);
 					}
@@ -288,7 +301,7 @@ class MLASettings_View {
 				default:
 					$page_content = array(
 						/* translators: 1: bulk_action, e.g., single_item_delete, single_item_edit */
-						 'message' => sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $_REQUEST['mla_admin_action'] ),
+						 'message' => sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) ) ),
 						'body' => '' 
 					);
 					break;
@@ -299,13 +312,9 @@ class MLASettings_View {
 			return $page_content;
 		}
 
-		/*
-		 * Check for disabled status
-		 */
+		// Check for disabled status
 		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_POST_MIME_TYPES ) ) {
-			/*
-			 * Fill in with any page-level options
-			 */
+			// Fill in with any page-level options
 			$options_list = '';
 			foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
 				if ( MLACoreOptions::MLA_ENABLE_POST_MIME_TYPES == $key ) {
@@ -325,9 +334,7 @@ class MLASettings_View {
 			return $page_content;
 		}
 
-		/*
-		 * Display the View Table
-		 */
+		// Display the View Table
 		$_SERVER['REQUEST_URI'] = remove_query_arg( array(
 			'mla_admin_action',
 			'mla_item_slug',
@@ -337,9 +344,7 @@ class MLASettings_View {
 			'action',
 			'action2',
 			'cb_mla_item_ID',
-			'mla-optional-uploads-search',
-			'mla-optional-uploads-display'
-		), $_SERVER['REQUEST_URI'] );
+		), $_SERVER['REQUEST_URI'] ); // phpcs:ignore
 
 		//	Create an instance of our package class
 		$MLAListViewTable = new MLA_View_List_Table();
@@ -347,9 +352,7 @@ class MLASettings_View {
 		//	Fetch, prepare, sort, and filter our data
 		$MLAListViewTable->prepare_items();
 
-		/*
-		 * Start with any page-level options
-		 */
+		// Start with any page-level options
 		$options_list = '';
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
 			if ( 'view' == $value['tab'] ) {
@@ -365,9 +368,9 @@ class MLASettings_View {
 			'settingsURL' => admin_url('options-general.php'),
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-view&mla_tab=view',
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
-			'results' => ! empty( $_REQUEST['s'] ) ? '<h2 class="alignleft">' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . esc_html( stripslashes( trim( $_REQUEST['s'] ) ) ) . '"</h2>' : '',
+			'results' => ! empty( $_REQUEST['s'] ) ? '<h2 class="alignleft">' . __( 'Displaying search results for', 'media-library-assistant' ) . ': "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) . '"</h2>' : '',
 			'Search Views' => __( 'Search Views', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) : '',
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
 			/* translators: %s: add new View */
@@ -425,32 +428,35 @@ class MLASettings_View {
 	 * @return	void	echo HTML <tr> markup for updated row or error message, then die()
 	 */
 	public static function mla_inline_edit_view_action() {
-		set_current_screen( $_REQUEST['screen'] );
+		if ( isset( $_REQUEST['screen'] ) ) {
+			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
+		}
 
 		check_ajax_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		if ( empty( $_REQUEST['original_slug'] ) ) {
-			echo __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'No view slug found', 'media-library-assistant' );
+			echo esc_html__( 'ERROR', 'media-library-assistant' ) . ': ' . esc_html__( 'No view slug found', 'media-library-assistant' );
 			die();
 		}
 
-		$request = array( 'original_slug' => $_REQUEST['original_slug'] );
-		$request['slug'] = $_REQUEST['slug'];
-		$request['specification'] = $_REQUEST['specification'];
-		$request['singular'] = $_REQUEST['singular'];
-		$request['plural'] = $_REQUEST['plural'];
-		$request['post_mime_type'] = isset( $_REQUEST['post_mime_type'] ) && ( '1' == $_REQUEST['post_mime_type'] );
-		$request['table_view'] = isset( $_REQUEST['table_view'] ) && ( '1' == $_REQUEST['table_view'] );
-		$request['menu_order'] = $_REQUEST['menu_order'];
+		$request = array();
+		$request['original_slug'] = isset( $_REQUEST['original_slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['original_slug'] ) ) : '';
+		$request['slug'] = isset( $_REQUEST['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ) : '';
+		$request['specification'] = isset( $_REQUEST['specification'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['specification'] ) ) : '';
+		$request['singular'] = isset( $_REQUEST['singular'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['singular'] ) ) : '';
+		$request['plural'] = isset( $_REQUEST['plural'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['plural'] ) ) : '';
+		$request['post_mime_type'] = isset( $_REQUEST['post_mime_type'] );
+		$request['table_view'] = isset( $_REQUEST['table_view'] );
+		$request['menu_order'] = isset( $_REQUEST['menu_order'] ) ? absint( $_REQUEST['menu_order'] ) : 0;
 		$results = MLAMime::mla_update_post_mime_type( $request );
 
 		if ( false === strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
-			$new_item = (object) MLAMime::mla_get_post_mime_type( $_REQUEST['slug'] );
+			$new_item = (object) MLAMime::mla_get_post_mime_type( $request['slug'] );
 		} else {
-			$new_item = (object) MLAMime::mla_get_post_mime_type( $_REQUEST['original_slug'] );
+			$new_item = (object) MLAMime::mla_get_post_mime_type( $request['original_slug'] );
 		}
 
-		$new_item->post_ID = $_REQUEST['post_ID'];
+		$new_item->post_ID = isset( $_REQUEST['post_ID'] ) ? absint( $_REQUEST['post_ID'] ) : 0;
 
 		//	Create an instance of our package class and echo the new HTML
 		$MLAListViewTable = new MLA_View_List_Table();
@@ -694,13 +700,13 @@ class MLA_View_List_Table extends WP_List_Table {
 		}
 
 		if ( isset( $_REQUEST['order'] ) ) {
-			$view_args['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
+			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$view_args['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
 		}
 
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			if ( array_key_exists( $_REQUEST['orderby'], MLAMime::$default_sortable_view_columns ) ) {
-				$view_args['orderby'] = urlencode( $_REQUEST['orderby'] );
-			}
+		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
+		if ( array_key_exists( $field, MLAMime::$default_sortable_view_columns ) ) {
+			$view_args['orderby'] = urlencode( $field );
 		}
 
 		// Get the standard and custom types
@@ -989,8 +995,8 @@ class MLA_View_List_Table extends WP_List_Table {
 		static $row_class = '';
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
-		echo '<tr id="view-' . $item->post_ID . '"' . $row_class . '>';
-		echo parent::single_row_columns( $item );
+		echo '<tr id="view-' . $item->post_ID . '"' . $row_class . '>'; // phpcs:ignore
+		echo parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_View_List_Table

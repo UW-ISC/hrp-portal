@@ -227,6 +227,8 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 	}
 
 	/**
+	 * Creates and returns the MLA_List_Table object
+	 *
 	 * @return ListTable
 	 */
 	protected function get_list_table() {

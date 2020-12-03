@@ -17,7 +17,10 @@
  *    present) and add that query to the taxonomy queries. If the simple query is 'muie-no-terms',
  *    it will be ignored.
  *
- * 4. Shortcodes are provided to generate text box controls and retain their settings when the
+ * 4. If you add "default_empty_gallery=true" an [mla_gallery] shortcode the initial gallery display
+ *    will show no items, until a selection is made from the other controls.
+ *
+ * 5. Shortcodes are provided to generate text box controls and retain their settings when the
  *    page is refreshed or pagination moves to a new page:
  *
  *    [muie_terms_search] generates a terms search text box
@@ -28,7 +31,7 @@
  *    [muie_assigned_items_count] returns the number of items assigned to any term(s) in the
  *    selected taxonomy
  *
- * 5. With a bit of work you can add a tag cloud that works with these filters. Here's an example
+ * 6. With a bit of work you can add a tag cloud that works with these filters. Here's an example
  *    you can adapt for your application:
  *
  * <style type='text/css'>
@@ -72,8 +75,12 @@
  * opened on 12/10/2019 by "ageingdj".
  * https://wordpress.org/support/topic/drop-down-not-sticking/
  *
+ * Enhanced (default_empty_gallery) for support topic "Search fields and presentation of results"
+ * opened on 6/2/2020 by "ernstwg".
+ * https://wordpress.org/support/topic/search-fields-and-presentation-of-results/
+ *
  * @package MLA UI Elements Example
- * @version 1.12
+ * @version 1.13
  */
 
 /*
@@ -81,7 +88,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes
 Author: David Lingren
-Version: 1.12
+Version: 1.13
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2019 David Lingren
@@ -192,7 +199,7 @@ class MLAUIElementsExample {
 		} else {
 			$mla_option_value = in_array( $shortcode_attributes['mla_option_value'], array( '{+slug+}', '[+slug+]' ) ) ? 'slug' : 'term_id';
 		}
-		
+
 		foreach( explode( ',', $shortcode_attributes['taxonomy'] ) as $taxonomy ) {
 			self::$mla_option_values[ $taxonomy ] = $mla_option_value;
 		}
@@ -227,7 +234,7 @@ class MLAUIElementsExample {
 			} else {
 				$input = $_REQUEST[ $mla_control_name ];
 			}
-			
+
 			foreach( $input as $input_element ) {
 				$value = explode( '.', $input_element );
 
@@ -253,7 +260,7 @@ class MLAUIElementsExample {
 		if ( is_string( $terms ) ) {
 			$terms = (array) trim( stripslashes( $terms ), ' \'"' );
 		}
-		
+
 		// Check for a dropdown control with "All Terms" selected
 		if ( empty( $shortcode_attributes['option_all_value'] ) ) {
 			$option_all = array_search( '0', $terms );
@@ -300,7 +307,8 @@ class MLAUIElementsExample {
 	} // mla_term_list_attributes
 
 	/**
-	 * Add the taxonomy query to the shortcode, limit posts_per_page and encode filters for pagination links
+	 * Add the taxonomy, terms, keyword queries and sort parameters to the shortcode,
+	 * limit posts_per_page and encode filters for pagination links
 	 *
 	 * @since 1.00
 	 *
@@ -367,8 +375,12 @@ class MLAUIElementsExample {
 			$muie_filters['muie_order'] = $shortcode_attributes['order'] = $_REQUEST['muie_order'];
 		}
 
+		// Flag for the "empty_default_gallery" parameter
+		$default_gallery = true;
+
 		// Add the terms search parameters, if present
 		if ( !empty( $_REQUEST['muie_terms_search'] ) && is_array( $_REQUEST['muie_terms_search'] ) && !empty( $_REQUEST['muie_terms_search']['mla_terms_phrases'] ) ) {
+			$default_gallery = false;
 			$muie_filters['muie_terms_search'] =  $_REQUEST['muie_terms_search'];
 			foreach( $muie_filters['muie_terms_search'] as $key => $value ) {
 				if ( !empty( $value ) ) {
@@ -379,6 +391,7 @@ class MLAUIElementsExample {
 
 		// Add the keyword search parameters, if present
 		if ( !empty( $_REQUEST['muie_keyword_search'] ) && is_array( $_REQUEST['muie_keyword_search'] ) && !empty( $_REQUEST['muie_keyword_search']['s'] ) ) {
+			$default_gallery = false;
 			$muie_filters['muie_keyword_search'] = $_REQUEST['muie_keyword_search'];
 			foreach( $muie_filters['muie_keyword_search'] as $key => $value ) {
 				if ( !empty( $value ) ) {
@@ -423,7 +436,7 @@ class MLAUIElementsExample {
 					}
 				} // array_key_exists
 			} //foreach $shortcode_attributes
-			
+
 			if ( !empty( $simple_tax_queries ) ) {
 				foreach ( $simple_tax_queries as $key => $value ) {
 					$tax_input[ $key ] = explode( ',', $value );
@@ -544,7 +557,16 @@ class MLAUIElementsExample {
 			}
 
 			if ( ! empty( $tax_query ) ) {
+				$default_gallery = false;
 				$shortcode_attributes['tax_query'] = "array( 'relation' => '" . $tax_relation . "', " . $tax_query . ')';
+			}
+		}
+
+		// Check for an initial display of an empty gallery	instead of all images.
+		if ( $default_gallery && !empty( $shortcode_attributes['default_empty_gallery'] ) ) {
+			if ( 'true' === trim( strtolower( $shortcode_attributes['default_empty_gallery'] ) ) ) {
+				$shortcode_attributes['s'] = 'mla-default-empty-gallery-keyword-search-string';
+				$shortcode_attributes['mla_search_fields'] = 'title';
 			}
 		}
 

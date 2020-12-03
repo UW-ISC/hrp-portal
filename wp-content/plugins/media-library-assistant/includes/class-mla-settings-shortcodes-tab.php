@@ -61,15 +61,38 @@ class MLASettings_Shortcodes {
 	}
 
 	/**
+	 * Validate an incoming $_REQUEST['mla_template_item']
+	 *
+	 * @since 2.90
+ 	 *
+	 * @return array Sanitized template item
+	 */
+	private static function _sanitize_template_item() {
+		$template = array();
+		$template['post_ID'] = isset( $_REQUEST['mla_template_item']['post_ID'] ) ? absint( $_REQUEST['mla_template_item']['post_ID'] ) : 0;
+		$template['type'] = isset( $_REQUEST['mla_template_item']['type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_template_item']['type'] ) ) : 'any';
+		$template['shortcode'] = isset( $_REQUEST['mla_template_item']['shortcode'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_template_item']['shortcode'] ) ) : 'any';
+		$template['name'] = isset( $_REQUEST['mla_template_item']['name'] ) ? sanitize_title( wp_unslash( $_REQUEST['mla_template_item']['name'] ) ) : '';
+
+		$template['sections'] = array();
+		$sections = isset( $_REQUEST['mla_template_item']['sections'] ) ? array_keys( array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['mla_template_item']['sections'] ) ) ) : array();
+		foreach ( $sections as $section ) {
+			// Must allow arbitrary HTML tags, e.g., <[+itemtag+] class=\'gallery-item [+last_in_row+]\'>
+			$template['sections'][ $section ] = isset( $_REQUEST['mla_template_item']['sections'][ $section ] ) ? wp_unslash( $_REQUEST['mla_template_item']['sections'][ $section ] ) : ''; // phpcs:ignore
+		}
+
+		return $template;
+	}
+
+	/**
 	 * Process a shortcode template add action.
 	 *
 	 * @since 2.40
  	 *
-	 * @param array $value New template values.
 	 * @return string Action status/error messages.
 	 */
-	public static function mla_add_template( $value ) {
-		$value = stripslashes_deep( $value );
+	private static function _add_template() {
+		$value = self::_sanitize_template_item();
 		$value['default'] = false;
 		$value['changed'] = true;
 		$value['deleted'] = false;
@@ -182,12 +205,11 @@ class MLASettings_Shortcodes {
 	 *
 	 * @since 2.40
  	 *
-	 * @param array $value New template values.
 	 * @return string Action status/error messages.
 	 */
-	public static function mla_update_template( $value ) {
+	private static function _update_template() {
+		$value = self::_sanitize_template_item();
 		$ID = $value['post_ID'];
-		$value = stripslashes_deep( $value );
 		$old_value = MLA_Template_Query::mla_find_shortcode_template( $ID );
 		$template_changed = false;
 		$message_list = '';
@@ -282,17 +304,18 @@ class MLASettings_Shortcodes {
 			if ( 'mla_gallery' == $value['tab'] ) {
 				$this_setting_changed = false;
 				$old_value = MLACore::mla_get_option( $key );
+				$current = isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ? wp_kses( wp_unslash( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ), 'post' ) : '';
 
 				if (  'select' == $value['type'] ) {
-					if ( $old_value != $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) {
+					if ( $old_value != $current ) {
 						$this_setting_changed = true;
 					}
 				} elseif ( 'text' == $value['type'] ) {
-					if ( '' == $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) {
+					if ( '' == $current ) {
 						$_REQUEST[ MLA_OPTION_PREFIX . $key ] = $value['std'];
 					}
 
-					if ( $old_value != $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) {
+					if ( $old_value != $current ) {
 						$this_setting_changed = true;
 					}
 				} elseif ( 'checkbox' == $value['type'] ) {
@@ -303,9 +326,7 @@ class MLASettings_Shortcodes {
 					}
 				}
 
-				/*
-				 * Always update to scrub default settings
-				 */
+				// Always update to scrub default settings
 				$message = MLASettings::mla_update_option_row( $key, $value );
 				if ( $this_setting_changed ) {
 					$settings_changed = true;
@@ -513,11 +534,11 @@ class MLASettings_Shortcodes {
 			$page_content = self::_compose_add_template_tab( $page_template_array );
 		} elseif ( !empty( $_REQUEST['mla-add-template-submit'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			$page_content['message'] = MLASettings_Shortcodes::mla_add_template( $_REQUEST['mla_template_item'] );
+			$page_content['message'] = self::_add_template();
 			MLA_Template_Query::mla_put_shortcode_template_items();
 		} elseif ( !empty( $_REQUEST['mla-edit-template-submit'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			$page_content['message'] = MLASettings_Shortcodes::mla_update_template( $_REQUEST['mla_template_item'] );
+			$page_content['message'] = self::_update_template();
 			MLA_Template_Query::mla_put_shortcode_template_items();
 		} elseif ( !empty( $_REQUEST['mla-add-template-cancel'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
@@ -537,7 +558,8 @@ class MLASettings_Shortcodes {
 		$bulk_action = MLASettings::mla_current_bulk_action();
 		if ( $bulk_action && ( $bulk_action != 'none' ) ) {
 			if ( isset( $_REQUEST['cb_mla_item_ID'] ) ) {
-				foreach ( $_REQUEST['cb_mla_item_ID'] as $post_ID ) {
+				$post_ids = !empty( $_REQUEST['cb_mla_item_ID'] ) ? array_map( 'absint', stripslashes_deep( $_REQUEST['cb_mla_item_ID'] ) ) : array();
+				foreach ( $post_ids as $post_ID ) {
 					switch ( $bulk_action ) {
 						case 'delete':
 							$item_content = MLASettings_Shortcodes::mla_delete_template( $post_ID );
@@ -565,32 +587,30 @@ class MLASettings_Shortcodes {
 			}
 		} // $bulk_action
 
-		/*
-		 * Process row-level actions that affect a single item
-		 */
+		// Process row-level actions that affect a single item
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
+			$mla_admin_action = sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) );
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-
 			$page_content = array( 'message' => '', 'body' => '' );
-
-			switch ( $_REQUEST['mla_admin_action'] ) {
+			$mla_item_ID = isset( $_REQUEST['mla_item_ID'] ) ? absint( $_REQUEST['mla_item_ID'] ) : 0;
+			switch ( $mla_admin_action ) {
 				case MLACore::MLA_ADMIN_SINGLE_COPY:
-					$content =  MLASettings_Shortcodes::mla_copy_template( $_REQUEST['mla_item_ID'] );
+					$content =  MLASettings_Shortcodes::mla_copy_template( $mla_item_ID );
 					MLA_Template_Query::mla_put_shortcode_template_items();
 					$item = MLA_Template_Query::mla_find_shortcode_template_ID( $content['type'], $content['name'] );
 					$item = MLA_Template_Query::mla_find_shortcode_template( $item );
 					$page_content = self::_compose_edit_template_tab( $item, $page_template_array );
 					break;
 				case MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY:
-					$item = MLA_Template_Query::mla_find_shortcode_template( $_REQUEST['mla_item_ID'] );
+					$item = MLA_Template_Query::mla_find_shortcode_template( $mla_item_ID );
 					$page_content = self::_compose_edit_template_tab( $item, $page_template_array );
 					break;
 				case MLACore::MLA_ADMIN_SINGLE_DELETE:
-					$page_content['message'] = MLASettings_Shortcodes::mla_delete_template( $_REQUEST['mla_item_ID'] );
+					$page_content['message'] = MLASettings_Shortcodes::mla_delete_template( $mla_item_ID );
 					MLA_Template_Query::mla_put_shortcode_template_items();
 					break;
 				default:
-					$page_content['message'] = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $_REQUEST['mla_admin_action'] );
+					$page_content['message'] = sprintf( __( 'Unknown mla_admin_action - "%1$s"', 'media-library-assistant' ), $mla_admin_action );
 					break;
 			} // switch ($_REQUEST['mla_admin_action'])
 		} // (!empty($_REQUEST['mla_admin_action'])
@@ -614,7 +634,7 @@ class MLASettings_Shortcodes {
 			'mla-edit-template-cancel',
 			'mla-edit-template-submit',
 			'mla-shortcodes-options-save',
-		), $_SERVER['REQUEST_URI'] );
+		), $_SERVER['REQUEST_URI'] ); // phpcs:ignore
 
 		// Create an instance of our package class
 		$MLATemplateListTable = new MLA_Template_List_Table();
@@ -689,9 +709,9 @@ class MLASettings_Shortcodes {
 
 			if ( is_array( $value ) ) {
 				foreach ( $value as $element_key => $element_value )
-					$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s[%2$s]" value="%3$s" />', $key, $element_key, esc_attr( $element_value ) ) . "\n";
+					$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s[%2$s]" value="%3$s" />', $key, $element_key, esc_attr( urldecode( $element_value ) ) ) . "\n";
 			} else {
-				$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s" value="%2$s" />', $key, esc_attr( $value ) ) . "\n";
+				$view_args .= "\t" . sprintf( '<input type="hidden" name="%1$s" value="%2$s" />', $key, esc_attr( urldecode( $value ) ) ) . "\n";
 			}
 		}
 
@@ -707,7 +727,7 @@ class MLASettings_Shortcodes {
 			'_wp_http_referer' => wp_referer_field( false ),
 			'Add New Template' => __( 'Add New Template', 'media-library-assistant' ),
 			'Search Templates' => __( 'Search Templates', 'media-library-assistant' ),
-			's' => isset( $_REQUEST['s'] ) ? esc_attr( stripslashes( trim( $_REQUEST['s'] ) ) ) : '',
+			's' => isset( $_REQUEST['s'] ) ? esc_attr( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) : '',
 			'results' => ! empty( $_REQUEST['s'] ) ? '<span class="alignright" style="margin-top: .5em; font-weight: bold">' . __( 'Search results for', 'media-library-assistant' ) . ':&nbsp;</span>' : '',
 			'options_list' => $options_list,
 			'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
@@ -873,32 +893,34 @@ class MLA_Template_List_Table extends WP_List_Table {
 
 		// View arguments - see also mla_tabulate_template_items
 		if ( isset( $_REQUEST['mla_template_view'] ) ) {
-			if ( in_array( $_REQUEST['mla_template_view'], array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list' ) ) ) {
-				$submenu_arguments['mla_template_view'] = $_REQUEST['mla_template_view'];
+			$field = sanitize_text_field( wp_unslash( $_REQUEST['mla_template_view'] ) );
+			if ( in_array( $field, array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list' ) ) ) {
+				$submenu_arguments['mla_template_view'] = $field;
 			}
 		}
 
 		// Search box arguments
 		if ( !empty( $_REQUEST['s'] ) ) {
-			$submenu_arguments['s'] = urlencode( stripslashes( $_REQUEST['s'] ) );
+			$submenu_arguments['s'] = urlencode( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) );
 		}
 
 		// Filter arguments (from table header)
 		if ( isset( $_REQUEST['mla_template_status'] ) && ( 'any' != $_REQUEST['mla_template_status'] ) ) {
-			if ( in_array( $_REQUEST['mla_template_status'], array( 'default', 'custom' ) ) ) {
-				$submenu_arguments['mla_template_status'] = $_REQUEST['mla_template_status'];
+			$field = sanitize_text_field( wp_unslash( $_REQUEST['mla_template_status'] ) );
+			if ( in_array( $field, array( 'default', 'custom' ) ) ) {
+				$submenu_arguments['mla_template_status'] = $field;
 			}
 		}
 
 		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$submenu_arguments['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
+			$field = strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$submenu_arguments['order'] = 'DESC' === $field ? 'DESC' : 'ASC';
 		}
 
-		if ( isset( $_REQUEST['orderby'] ) ) {
-			if ( array_key_exists( $_REQUEST['orderby'], self::$default_sortable_columns ) ) {
-				$submenu_arguments['orderby'] = $_REQUEST['orderby'];
-			}
+		$field = strtolower( sanitize_text_field( isset( $_REQUEST['orderby'] ) ? wp_unslash( $_REQUEST['orderby'] ) : '' ) );
+		if ( array_key_exists( $field, self::$default_sortable_columns ) ) {
+			$submenu_arguments['orderby'] = $field;
 		}
 
 		return $submenu_arguments;
@@ -1146,7 +1168,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @param	string	'top' | 'bottom'
 	 */
 	function pagination( $which ) {
-		$save_uri = $_SERVER['REQUEST_URI'];
+		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
 		$_SERVER['REQUEST_URI'] = add_query_arg( MLA_Template_List_Table::mla_submenu_arguments(), $save_uri );
 		parent::pagination( $which );
 		$_SERVER['REQUEST_URI'] = $save_uri;
@@ -1202,7 +1224,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @param bool $with_id Whether to set the id attribute or not
 	 */
 	function print_column_headers( $with_id = true ) {
-		$save_uri = $_SERVER['REQUEST_URI'];
+		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
 		$_SERVER['REQUEST_URI'] = add_query_arg( MLA_Template_List_Table::mla_submenu_arguments(), $save_uri );
 		parent::print_column_headers( $with_id );
 		$_SERVER['REQUEST_URI'] = $save_uri;
@@ -1224,17 +1246,13 @@ class MLA_Template_List_Table extends WP_List_Table {
 
 		$class = ( $view_slug == $current_view ) ? ' class="current"' : '';
 
-		/*
-		 * Calculate the common values once per page load
-		 */
+		// Calculate the common values once per page load
 		if ( is_null( $base_url ) ) {
-			/*
-			 * Remember the view filters
-			 */
+			// Remember the view filters
 			$base_url = MLACore::mla_nonce_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-shortcodes&mla_tab=shortcodes', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 			if ( isset( $_REQUEST['s'] ) ) {
-				$base_url = add_query_arg( array( 's' => $_REQUEST['s'] ), $base_url );
+				$base_url = add_query_arg( array( 's' => wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ), $base_url );
 			}
 		}
 
@@ -1254,16 +1272,13 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @return	array	View information,e.g., array ( id => link )
 	 */
 	function get_views( ) {
-		/*
-		 * Find current view
-		 */
-		$current_view = isset( $_REQUEST['mla_template_view'] ) ? $_REQUEST['mla_template_view'] : 'all';
+		// Find current view
+		$current_view = isset( $_REQUEST['mla_template_view'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_template_view'] ) ) : 'all';
 
-		/*
-		 * Generate the list of views, retaining keyword search criterion
-		 */
+		// Generate the list of views, retaining keyword search criterion
 		//$s = isset( $_REQUEST['s'] ) ? $_REQUEST['s'] : '';
 		$s = '';
+		$s = isset( $_REQUEST['s'] ) ? wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) : '';
 		$template_items = MLA_Template_Query::mla_tabulate_template_items( $s );
 		$view_links = array();
 		foreach ( $template_items as $slug => $item )
@@ -1324,9 +1339,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	function extra_tablenav( $which ) {
-		/*
-		 * Decide which actions to show
-		 */
+		// Decide which actions to show
 		if ( 'top' == $which ) {
 			$actions = array( 'mla_template_status', 'mla_filter' );
 		} else {
@@ -1342,7 +1355,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 		foreach ( $actions as $action ) {
 			switch ( $action ) {
 				case 'mla_template_status':
-					echo self::mla_get_template_status_dropdown( isset( $_REQUEST['mla_template_status'] ) ? $_REQUEST['mla_template_status'] : 'any' );
+					echo self::mla_get_template_status_dropdown( isset( $_REQUEST['mla_template_status'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_template_status'] ) ) : 'any' ); // phpcs:ignore
 					break;
 				case 'mla_filter':
 					submit_button( __( 'Filter', 'media-library-assistant' ), 'secondary', 'mla_filter', false, array( 'id' => 'template-query-submit' ) );
@@ -1422,8 +1435,8 @@ class MLA_Template_List_Table extends WP_List_Table {
 		static $row_class = '';
 		$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 
-		echo '<tr id="template-' . $item->post_ID . '"' . $row_class . '>';
-		echo parent::single_row_columns( $item );
+		echo '<tr id="template-' . absint( $item->post_ID ) . '"' . esc_html( $row_class ) . '>';
+		echo parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_Template_List_Table
@@ -1790,12 +1803,10 @@ class MLA_Template_Query {
 			$sorted_items = array_reverse( $sorted_items, true );
 		}
 
-		/*
-		 * Paginate the sorted list
-		 */
+		// Paginate the sorted list
 		$results = array();
-		$offset = isset( $request['offset'] ) ? $request['offset'] : 0;
-		$count = isset( $request['posts_per_page'] ) ? $request['posts_per_page'] : -1;
+		$offset = isset( $request['offset'] ) ? absint( $request['offset'] ) : 0;
+		$count = isset( $request['posts_per_page'] ) ? absint( $request['posts_per_page'] ) : -1;
 		foreach ( $sorted_items as $value ) {
 			if ( $offset ) {
 				$offset--;
