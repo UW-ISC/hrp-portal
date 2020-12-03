@@ -13,6 +13,10 @@
 <p>You can change the icon image associated with any file extension by selecting a new value from the dropdown list on the Edit Upload MIME Type screen or in the Quick Edit area. You can change the icon image for several extensions at once using the Bulk Edit action.</p>
 <p>If you have some other plugin or mechanism for handling the Upload MIME Type items, you can disable MLA support entirely. Clear the checkbox at the bottom-left corner of the screen and click "Save Changes".</p>
 <!-- template="mla-source-status" -->
+<!-- title="Force MLA MIME Type" order="25" -->
+<p>WordPress examines the content of a file during upload to more carefully validate the file's MIME type. Sometimes this extra validation prevents valid files from being added to the Media Library. For example, a CSV or plain text file that contains some HTML tags will be classified as "text/html" instead of text/csv or text/plain. This causes the upload to fail for "security reasons".</p>
+<p>You can check the "Always Use MLA MIME Type" option to bypass this extra security and use the MIME Type defined here in all uploads. Consider using this option carefully, only when you are having trouble uploading a file or files you know to be valid.</p>
+<!-- template="mla-source-status" -->
 <!-- title="Source and Status" order="30" -->
 <p>The "Source" of an Upload MIME Type reveals where the extension/MIME Type association comes from:</p>
 <ul>

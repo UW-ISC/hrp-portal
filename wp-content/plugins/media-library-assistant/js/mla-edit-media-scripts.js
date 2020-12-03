@@ -209,7 +209,7 @@ var jQuery,
 			if ( ! $div.length )
 				return true;
 
-			var attemptedDate, originalDate, currentDate,
+			var attemptedDate, originalDate, currentDate, label, value,
 			    aa = $( '#aa', $div ).val(), mm = $( '#mm', $div ).val(), jj = $( '#jj', $div ).val(),
 			    hh = $( '#hh', $div ).val(), mn = $( '#mn', $div ).val();
 
@@ -231,15 +231,26 @@ var jQuery,
 				$( stampdiv ).html( stamp );
 			} else {
 				label = '#upload-timestamp' == stampdiv ? mla.settings.uploadLabel : mla.settings.modifyLabel;
-				$( stampdiv ).html(
-					label + '<b>' +
-					postL10n.dateFormat
+
+				// wp.i18n replaced postL10n in WP 5.0
+				if ( 'object' === typeof wp.i18n ) {
+					value = wp.i18n.__( '%1$s %2$s, %3$s at %4$s:%5$s' )
 						.replace( '%1$s', $( 'option[value="' + mm + '"]', '#mm' ).attr( 'data-text' ) )
 						.replace( '%2$s', parseInt( jj, 10 ) )
 						.replace( '%3$s', aa )
 						.replace( '%4$s', ( '00' + hh ).slice( -2 ) )
-						.replace( '%5$s', ( '00' + mn ).slice( -2 ) ) +
-						'</b> '
+						.replace( '%5$s', ( '00' + mn ).slice( -2 ) );
+				} else {
+					value = postL10n.dateFormat
+						.replace( '%1$s', $( 'option[value="' + mm + '"]', '#mm' ).attr( 'data-text' ) )
+						.replace( '%2$s', parseInt( jj, 10 ) )
+						.replace( '%3$s', aa )
+						.replace( '%4$s', ( '00' + hh ).slice( -2 ) )
+						.replace( '%5$s', ( '00' + mn ).slice( -2 ) );
+				}
+				
+				$( stampdiv ).html(
+					label + '<b>' + value +	'</b> '
 				);
 			}
 

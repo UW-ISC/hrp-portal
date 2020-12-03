@@ -122,10 +122,45 @@ class MLA_List_Table extends WP_List_Table {
 	protected static $default_sortable_columns = array();
 
 	/**
+	 * Count number of attachments for the mime type(s)
+	 *
+	 * Modeled after wp_count_attachments in wp-includes/post.php,
+	 * but supports the Featured Image from URL plugin.
+	 *
+	 * @since 2.84
+	 *
+	 * @param	mixed (Optional) Array or comma-separated list of MIME patterns. Default ''
+	 *
+	 * @return	object	Attachment counts by mime type.
+	 */
+	protected static function _count_attachments( $mime_type = '' ) {
+		global $wpdb;
+		
+		// Support Plugin Name: Featured Image from URL, "Media Library" option setting
+	    if ( function_exists('fifu_is_off') && fifu_is_off('fifu_media_library')) {
+			$author = 'AND post_author <> 77777';
+		} else {
+			$author = '';
+		}
+
+		$and   = wp_post_mime_type_where( $mime_type );
+		$count = $wpdb->get_results( "SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and $author GROUP BY post_mime_type", ARRAY_A );
+		
+		$counts = array();
+		foreach ( (array) $count as $row ) {
+			$counts[ $row['post_mime_type'] ] = $row['num_posts'];
+		}
+		$counts['trash'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'trash' $and $author" );
+		
+		// Modify returned attachment counts by mime type.
+		return apply_filters( 'wp_count_attachments', (object) $counts, $mime_type );
+	}
+
+	/**
 	 * Get MIME types with one or more attachments for view preparation
 	 *
 	 * Modeled after get_available_post_mime_types in wp-admin/includes/post.php,
-	 * but uses the output of wp_count_attachments() as input.
+	 * but uses the output of self::_count_attachments() as input.
 	 *
 	 * @since 0.1
 	 *
@@ -204,7 +239,7 @@ class MLA_List_Table extends WP_List_Table {
 		$tax_filter =  MLACore::mla_taxonomy_support('', 'filter');
 
 		if ( MLACoreOptions::MLA_FILTER_METAKEY == $tax_filter ) {
-			if ( 0 == intval( $selected ) ) {
+			if ( 0 === $selected ) {
 				$selected = MLACoreOptions::ALL_MLA_FILTER_METAKEY;
 			}
 
@@ -266,37 +301,38 @@ class MLA_List_Table extends WP_List_Table {
 
 		// View arguments
 		if ( isset( $_REQUEST['post_mime_type'] ) ) {
-			$submenu_arguments['post_mime_type'] = urlencode( $_REQUEST['post_mime_type'] );
+			$submenu_arguments['post_mime_type'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) );
 		}
 
 		if ( isset( $_REQUEST['detached'] ) ) {
 			if ( ( '0' === $_REQUEST['detached'] ) || ( '1' === $_REQUEST['detached'] ) ) {
-				$submenu_arguments['detached'] = $_REQUEST['detached'];
+				$submenu_arguments['detached'] = ( '1' === $_REQUEST['detached'] ) ? '1' : 0;
 			}
 		}
 
 		if ( isset( $_REQUEST['status'] ) ) {
 			if ( 'trash' === $_REQUEST['status'] ) {
-				$submenu_arguments['status'] = $_REQUEST['status'];
+				$submenu_arguments['status'] = 'trash';
 			}
 		}
 
 		if ( isset( $_REQUEST['meta_query'] ) ) {
-			$submenu_arguments['meta_query'] = urlencode( stripslashes( $_REQUEST['meta_query'] ) );
+			$submenu_arguments['meta_query'] = urlencode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ) );
 		}
 
 		// Search box arguments
 		if ( !empty( $_REQUEST['s'] ) ) {
-			$submenu_arguments['s'] = urlencode( stripslashes( $_REQUEST['s'] ) );
+			$submenu_arguments['s'] = urlencode( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) );
 
 			if ( isset( $_REQUEST['mla_search_connector'] ) ) {
-				$submenu_arguments['mla_search_connector'] = ( 'OR' === strtoupper( $_REQUEST['mla_search_connector'] ) ) ? 'OR' : 'AND';
+				$submenu_arguments['mla_search_connector'] = ( 'OR' === strtoupper( sanitize_text_field( wp_unslash( $_REQUEST['mla_search_connector'] ) ) ) ) ? 'OR' : 'AND';
 			}
 
 			if ( isset( $_REQUEST['mla_search_fields'] ) ) {
+				$mla_search_fields = array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['mla_search_fields'] ) );
 				$submenu_arguments['mla_search_fields'] = array();
-				foreach ( $_REQUEST['mla_search_fields'] as $key => $value ) {
-					$submenu_arguments['mla_search_fields'][ $key ] = urlencode( stripslashes( $value ) );
+				foreach ( $mla_search_fields as $key => $value ) {
+					$submenu_arguments['mla_search_fields'][ $key ] = urlencode( $value );
 				}
 			}
 		}
@@ -307,20 +343,30 @@ class MLA_List_Table extends WP_List_Table {
 			$submenu_arguments['m'] = absint( $_REQUEST['m'] ); 
 		}
 
-		if ( isset( $_REQUEST['mla_filter_term'] ) && ( '0' != $_REQUEST['mla_filter_term'] ) ) {
-			// Format numeric, can be negative
-			$submenu_arguments['mla_filter_term'] = intval( $_REQUEST['mla_filter_term'] );
+		// ['mla_filter_term'] - filter by taxonomy term ID (-1 allowed), or by custom field
+		if ( isset( $_REQUEST['mla_filter_term'] ) ) {
+			if ( MLACoreOptions::MLA_FILTER_METAKEY == MLACore::mla_taxonomy_support('', 'filter') ) {
+				if ( MLACoreOptions::ALL_MLA_FILTER_METAKEY != $_REQUEST['mla_filter_term'] ) {
+					$submenu_arguments['mla_filter_term'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_filter_term'] ) );
+				}
+			} else {
+				if ( '0' !== $_REQUEST['mla_filter_term'] ) {
+					// Format numeric, can be negative
+					$submenu_arguments['mla_filter_term'] = (int) $_REQUEST['mla_filter_term'];
+				}
+			}
 		}
 
 		// Sort arguments (from column header)
 		if ( isset( $_REQUEST['order'] ) ) {
-			$submenu_arguments['order'] = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'desc' : 'asc';
+			$field = strtolower( sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) );
+			$submenu_arguments['order'] = ( 'desc' === $field ) ? 'desc' : 'asc';
 		}
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
 			foreach ( MLAQuery::$default_sortable_columns as $sortable_column ) {
-				if ( $sortable_column[0] == $_REQUEST['orderby'] ) {
-					$submenu_arguments['orderby'] = urlencode( $_REQUEST['orderby'] );
+				if ( $sortable_column[0] === $_REQUEST['orderby'] ) {
+					$submenu_arguments['orderby'] = urlencode( $sortable_column[0] );
 				}
 			}
 		}
@@ -328,7 +374,7 @@ class MLA_List_Table extends WP_List_Table {
 		// Filter arguments (from interior table cells)
 		if ( $include_filters ) {
 			if ( isset( $_REQUEST['heading_suffix'] ) ) {
-				$submenu_arguments['heading_suffix'] = urlencode( stripslashes( $_REQUEST['heading_suffix'] ) );
+				$submenu_arguments['heading_suffix'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['heading_suffix'] ) ) );
 			}
 
 			if ( isset( $_REQUEST['parent'] ) ) {
@@ -340,19 +386,19 @@ class MLA_List_Table extends WP_List_Table {
 			}
 
 			if ( isset( $_REQUEST['mla-tax'] ) ) {
-				$submenu_arguments['mla-tax'] = urlencode( $_REQUEST['mla-tax'] );
+				$submenu_arguments['mla-tax'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['mla-tax'] ) ) );
 			}
 
 			if ( isset( $_REQUEST['mla-term'] ) ) {
-				$submenu_arguments['mla-term'] = urlencode( $_REQUEST['mla-term'] );
+				$submenu_arguments['mla-term'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['mla-term'] ) ) );
 			}
 
 			if ( isset( $_REQUEST['mla-metakey'] ) ) {
-				$submenu_arguments['mla-metakey'] = urlencode( $_REQUEST['mla-metakey'] );
+				$submenu_arguments['mla-metakey'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['mla-metakey'] ) ) );
 			}
 
 			if ( isset( $_REQUEST['mla-metavalue'] ) ) {
-				$submenu_arguments['mla-metavalue'] = urlencode( $_REQUEST['mla-metavalue'] );
+				$submenu_arguments['mla-metavalue'] = urlencode( wp_kses( wp_unslash( $_REQUEST['mla-metavalue'] ), 'post' ) );
 			}
 		}
 
@@ -544,7 +590,8 @@ class MLA_List_Table extends WP_List_Table {
 				 * Use "@" because embedded arrays throw PHP Warnings from implode.
 				 */
 				if ( is_array( $value ) ) {
-					$list[] = 'array( ' . @implode( ', ', $value ) . ' )'; // TODO PHP 7 error handling
+//					$list[] = var_export( $value, true ); // Verbose output!
+					$list[] = 'array( ' . @implode( ', ', $value ) . ' )';
 				} elseif ( $is_meta ) {
 					$list[] = $value;
 				} else {
@@ -719,14 +766,12 @@ class MLA_List_Table extends WP_List_Table {
 		$att_title = _draft_or_post_title( $item );
 
 		if ( ( $this->rollover_id != $item->ID ) && !in_array( $column, $this->currently_hidden ) ) {
-			/*
-			 * Build rollover actions
-			 */
+			// Build rollover actions
 			$view_args = array_merge( array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_item_ID' => $item->ID ),
 				self::mla_submenu_arguments() );
 
 			if ( isset( $_REQUEST['paged'] ) ) {
-				$view_args['paged'] = $_REQUEST['paged'];
+				$view_args['paged'] = absint( $_REQUEST['paged'] );
 			}
 
 			if ( $this->is_trash ) {
@@ -821,8 +866,18 @@ class MLA_List_Table extends WP_List_Table {
 		}
 
 		$dimensions = array( $icon_width, $icon_height );
-		$thumb = wp_get_attachment_image( $item->ID, $dimensions, true, array( 'class' => 'mla_media_thumbnail' ) );
 
+		// For non-image types, check for a Featured Image	
+		if ( 0 === strpos( $item->post_mime_type, 'image' ) ) {
+			$thumb = '';
+		} else {
+			$thumb = get_the_post_thumbnail( $item->ID, $dimensions, array( 'class' => 'mla_media_thumbnail' ) );
+		}
+
+		if ( empty( $thumb ) ) {		
+			$thumb = wp_get_attachment_image( $item->ID, $dimensions, true, array( 'class' => 'mla_media_thumbnail' ) );
+		}
+		
 		if ( in_array( $item->post_mime_type, array( 'image/svg+xml' ) ) ) {
 			$thumb = preg_replace( '/width=\"[^\"]*\"/', sprintf( 'width="%1$d"', $dimensions[0] ), $thumb );
 			$thumb = preg_replace( '/height=\"[^\"]*\"/', sprintf( 'height="%1$d"', $dimensions[1] ), $thumb );
@@ -848,7 +903,9 @@ class MLA_List_Table extends WP_List_Table {
 		$inline_data .= '	<div class="post_excerpt">' . esc_attr( $item->post_excerpt ) . "</div>\r\n";
 		$inline_data .= '	<div class="post_content">' . esc_attr( $item->post_content ) . "</div>\r\n";
 
-		if ( !empty( $item->mla_wp_attachment_metadata ) ) {
+//		if ( !empty( $item->mla_wp_attachment_metadata ) ) {
+		if ( ( 'image/' === substr( $item->post_mime_type, 0, 6 ) )
+		    || ( 'application/' === substr( $item->post_mime_type, 0, 12 ) ) ) {
 			$inline_data .= '	<div class="image_alt">';
 
 			if ( isset( $item->mla_wp_attachment_image_alt ) ) {
@@ -1576,7 +1633,7 @@ class MLA_List_Table extends WP_List_Table {
 	 * @param	string	'top' | 'bottom'
 	 */
 	function pagination( $which ) {
-		$save_uri = $_SERVER['REQUEST_URI'];
+		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
 		$_SERVER['REQUEST_URI'] = add_query_arg( self::mla_submenu_arguments(), $save_uri );
 		parent::pagination( $which );
 		$_SERVER['REQUEST_URI'] = $save_uri;
@@ -1638,7 +1695,7 @@ class MLA_List_Table extends WP_List_Table {
 	 * @param bool $with_id Whether to set the id attribute or not
 	 */
 	function print_column_headers( $with_id = true ) {
-		$save_uri = $_SERVER['REQUEST_URI'];
+		$save_uri = $_SERVER['REQUEST_URI']; // phpcs:ignore
 		$_SERVER['REQUEST_URI'] = add_query_arg( self::mla_submenu_arguments(), $save_uri );
 		parent::print_column_headers( $with_id );
 		$_SERVER['REQUEST_URI'] = $save_uri;
@@ -1687,7 +1744,7 @@ class MLA_List_Table extends WP_List_Table {
 			}
 
 			$default_types = MLACore::mla_get_option( MLACoreOptions::MLA_POST_MIME_TYPES, true );
-			$posts_per_type = (array) wp_count_attachments();
+			$posts_per_type = (array) self::_count_attachments();
 			$post_mime_types = get_post_mime_types();
 			$avail_post_mime_types = self::_avail_mime_types( $posts_per_type );
 			$matches = wp_match_mime_types( array_keys( $post_mime_types ), array_keys( $posts_per_type ) );
@@ -1799,9 +1856,7 @@ class MLA_List_Table extends WP_List_Table {
 	 * @return	array	View information,e.g., array ( id => link )
 	 */
 	function get_views( ) {
-		/*
-		 * Find current view
-		 */
+		// Find current view
 		if ( $this->detached  ) {
 			$current_view = 'detached';
 		} elseif ( $this->attached ) {
@@ -1810,13 +1865,13 @@ class MLA_List_Table extends WP_List_Table {
 			$current_view = 'trash';
 		} elseif ( empty( $_REQUEST['post_mime_type'] ) ) {
 			if ( isset( $_REQUEST['meta_query'] ) ) {
-				$query = json_decode( stripslashes( $_REQUEST['meta_query'] ), true );
+				$query = json_decode( wp_kses( wp_unslash( $_REQUEST['meta_query'] ), 'post' ), true );
 				$current_view = $query['slug'];
 			} else {
 				$current_view = 'all';
 			}
 		} else {
-			$current_view = $_REQUEST['post_mime_type'];
+			$current_view = sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) );
 		}
 
 		$mla_types = MLAMime::mla_query_view_items( array( 'orderby' => 'menu_order' ), 0, 0 );
@@ -1824,9 +1879,7 @@ class MLA_List_Table extends WP_List_Table {
 			$mla_types = array ();
 		}
 
-		/*
-		 * Filter the list, generate the views
-		 */
+		// Filter the list, generate the views
 		$view_links = array();
 		foreach ( $mla_types as $value ) {
 			if ( $value->table_view ) {
@@ -1891,7 +1944,7 @@ class MLA_List_Table extends WP_List_Table {
 
 	<div class="tablenav <?php echo esc_attr( $which ); ?>">
 		<?php if ( 'top' === $which && MLAQuery::$wp_4dot0_plus && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_SWITCHER ) )): ?>
-		<div class="view-switch media-grid-view-switch" style="float: left"> <a class="view-list current" href="<?php echo admin_url( 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG ); ?>"> <span class="screen-reader-text">List View</span> </a> <a class="view-grid" href="<?php echo admin_url( 'upload.php?mode=grid' ); ?>"> <span class="screen-reader-text">Grid View</span> </a> </div>
+		<div class="view-switch media-grid-view-switch" style="float: left"> <a class="view-list current" href="<?php echo esc_url( admin_url( 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG ) ); ?>"> <span class="screen-reader-text">List View</span> </a> <a class="view-grid" href="<?php echo esc_url( admin_url( 'upload.php?mode=grid' ) ); ?>"> <span class="screen-reader-text">Grid View</span> </a> </div>
 		<?php endif; ?>
 
 		<?php if ( $this->has_items() ): ?>
@@ -1920,9 +1973,7 @@ class MLA_List_Table extends WP_List_Table {
 	 * @return	void
 	 */
 	function extra_tablenav( $which ) {
-		/*
-		 * Decide which actions to show
-		 */
+		// Decide which actions to show
 		if ( 'top' == $which ) {
 			$actions = array( 'month', 'mla_filter_term', 'mla_filter' );
 
@@ -1956,7 +2007,7 @@ class MLA_List_Table extends WP_List_Table {
 					$this->months_dropdown( 'attachment' );
 					break;
 				case 'mla_filter_term':
-					echo self::mla_get_taxonomy_filter_dropdown( isset( $_REQUEST['mla_filter_term'] ) ? $_REQUEST['mla_filter_term'] : 0 );
+					echo self::mla_get_taxonomy_filter_dropdown( isset( $_REQUEST['mla_filter_term'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_filter_term'] ) ) : 0 ); // phpcs:ignore
 					break;
 				case 'mla_filter':
 					submit_button( __( 'Filter', 'media-library-assistant' ), 'secondary', 'mla_filter', false, array( 'id' => 'post-query-submit' ) );
@@ -2053,8 +2104,8 @@ class MLA_List_Table extends WP_List_Table {
 			$row_class = ( $row_class == '' ? ' class="alternate"' : '' );
 		}
 
-		echo '<tr id="attachment-' . $item->ID . '"' . $row_class . '>';
-		echo parent::single_row_columns( $item );
+		echo '<tr id="attachment-' . absint( $item->ID ) . '"' . esc_html( $row_class ) . '>';
+		echo parent::single_row_columns( $item ); // phpcs:ignore
 		echo '</tr>';
 	}
 } // class MLA_List_Table

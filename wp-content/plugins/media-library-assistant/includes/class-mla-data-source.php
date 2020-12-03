@@ -45,6 +45,10 @@ class MLAData_Source {
 		'comment_count',
 		'alt_text',
 
+		'site_url',
+		'base_url',
+		'base_dir',
+
 		'absolute_path',
 		'absolute_file_name',
 		'base_file',
@@ -375,7 +379,7 @@ class MLAData_Source {
 	 */
 	private static function _evaluate_data_source( $post_id, $category, $data_value, $attachment_metadata = NULL ) {
 		global $wpdb;
-		static $upload_dir, $intermediate_sizes = NULL, $wp_attached_files = NULL, $wp_attachment_metadata = NULL;
+		static $upload_dir_array, $upload_dir, $intermediate_sizes = NULL, $wp_attached_files = NULL, $wp_attachment_metadata = NULL;
 		static $current_id = 0, $file_info = NULL, $parent_info = NULL, $references = NULL, $alt_text = NULL;
 
 		if ( 'none' == $data_value['data_source'] ) {
@@ -386,8 +390,8 @@ class MLAData_Source {
 
 		// Do this once per page load; cache attachment metadata if mapping all attachments
 		if ( NULL == $intermediate_sizes ) {
-			$upload_dir = wp_upload_dir();
-			$upload_dir = $upload_dir['basedir'] . '/';
+			$upload_dir_array = wp_upload_dir();
+			$upload_dir = $upload_dir_array['basedir'] . '/';
 			$intermediate_sizes = get_intermediate_image_sizes();
 
 			if ( 'custom_field_mapping' == $category ) {
@@ -536,6 +540,15 @@ class MLAData_Source {
 			case 'guid':
 			case 'post_mime_type': 
 				$result = MLAData_Source::_evaluate_post_information( $post_id, $category, $data_source );
+				break;
+			case 'site_url': 
+				$result = site_url();
+				break;
+			case 'base_url': 
+				$result = $upload_dir_array['baseurl'];
+				break;
+			case 'base_dir': 
+				$result = wptexturize( str_replace( '\\', '/', $upload_dir_array['basedir'] ) );
 				break;
 			case 'absolute_path':
 			case 'absolute_file_name':

@@ -124,7 +124,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 	 */
 	mlaModal.utility.originalMediaAjax = wp.media.ajax;
 	wp.media.ajax = function( action, options ) {
-		var state = mlaModal.settings.state, query, stype, s, searchValues;
+		var state = mlaModal.settings.state, query, stype, s, searchValues, parentArray;
 
 		if ( _.isObject( action ) ) {
 			options = action;
@@ -172,13 +172,22 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				'mla_search_clicks': mlaModal.settings.query[state].searchClicks,
 				'mla_search_value': mlaModal.settings.query[state].searchValue,
 				'mla_search_fields': mlaModal.settings.query[state].searchFields,
-				'mla_search_connector': mlaModal.settings.query[state].searchConnector };
+				'mla_search_connector': mlaModal.settings.query[state].searchConnector,
+				};
 
 			//Terms Search is not sticky
 			mlaModal.settings.query[state].termsSearch = '';
 			$( '#mla-terms-search-input' ).html( '' ).val( '' );
 
 			options.data.query.s = searchValues;
+
+			// Look for ACF Gallery queries to apply filters
+			if ( $( document.activeElement ).hasClass( 'acf-button' ) ) {
+				parentArray = $( document.activeElement ).parentsUntil("div.acf-fields");
+				if ( parentArray.length ) {
+					options.data.query._acfuploader = $( parentArray[parentArray.length - 1] ).attr('data-key');
+				}
+			}
 		}
 
 		return mlaModal.utility.originalMediaAjax.call(this, options );
@@ -1772,7 +1781,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 					var t = $(this), c = t.is(':checked'), id = t.val();
 
 					if ( id && t.parents( '#mla-taxonomy-'+ taxonomy ).length ) {
-						$('#in-' + taxonomy + '-' + id + ', #in-popular-' + taxonomy + '-' + id).prop( 'checked', c );
+						$('#in-' + taxonomy + '-' + id + ', #in-popular-' + taxonomy + '-' + id, '#mla-taxonomy-'+ taxonomy).prop( 'checked', c );
 					}
 				});
 

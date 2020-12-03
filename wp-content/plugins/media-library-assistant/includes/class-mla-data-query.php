@@ -965,7 +965,7 @@ class MLAQuery {
 						break;
 					}
 
-					$clean_request[ $key ] = intval( $value );
+					$clean_request[ $key ] = (int) $value;
 					break;
 				case 'order':
 					switch ( $value = strtoupper ($value ) ) {
@@ -1934,6 +1934,11 @@ class MLAQuery {
 			} elseif ( '0' == self::$query_parameters['detached'] ) {
 				$where_clause .= sprintf( ' AND %1$s.post_parent > 0', $wpdb->posts );
 			}
+		}
+
+		// Support Plugin Name: Featured Image from URL, "Media Library" option setting
+	    if ( function_exists('fifu_is_off') && fifu_is_off('fifu_media_library')) {
+			$where_clause .= sprintf( ' AND %1$s.post_author <> 77777', $wpdb->posts );
 		}
 
 		if ( isset( self::$query_parameters['debug'] ) ) {

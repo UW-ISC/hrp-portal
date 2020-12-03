@@ -131,8 +131,8 @@ class MLAObjects {
 	public static function mla_taxonomy_get_columns_filter( $columns ) {
 		// Adding or inline-editing a tag is done with AJAX, and there's no current screen object
 		if ( isset( $_REQUEST['action'] ) && in_array( $_REQUEST['action'], array( 'add-tag', 'inline-save-tax' ) ) ) {
-			$post_type = !empty($_POST['post_type']) ? $_POST['post_type'] : 'post';
-			$taxonomy = !empty($_POST['taxonomy']) ? $_POST['taxonomy'] : 'post_tag';
+			$post_type = !empty($_POST['post_type']) ? sanitize_text_field( wp_unslash( $_POST['post_type'] ) ) : 'post';
+			$taxonomy = !empty($_POST['taxonomy']) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : 'post_tag';
 		} else {
 			$screen = get_current_screen();
 			$post_type = !empty( $screen->post_type ) ? $screen->post_type : 'post';
@@ -178,7 +178,7 @@ class MLAObjects {
 		if ( NULL == $taxonomy ) {
 			// Adding or inline-editing a tag is done with AJAX, and there's no current screen object
 			if ( defined('DOING_AJAX') && DOING_AJAX ) {
-				$taxonomy = !empty($_POST['taxonomy']) ? $_POST['taxonomy'] : 'post_tag';
+				$taxonomy = !empty($_POST['taxonomy']) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : 'post_tag';
 			} else {
 				$screen = get_current_screen();
 				$taxonomy = !empty( $screen->taxonomy ) ? $screen->taxonomy : 'post_tag';
@@ -198,7 +198,7 @@ class MLAObjects {
 		if ( NULL == $tax_object ) {
 			// Adding or inline-editing a tag is done with AJAX, and there's no current screen object
 			if ( defined('DOING_AJAX') && DOING_AJAX ) {
-				$taxonomy = !empty($_POST['taxonomy']) ? $_POST['taxonomy'] : 'post_tag';
+				$taxonomy = !empty($_POST['taxonomy']) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : 'post_tag';
 			} else {
 				$screen = get_current_screen();
 				$taxonomy = !empty( $screen->taxonomy ) ? $screen->taxonomy : 'post_tag';
@@ -322,13 +322,13 @@ class MLATextWidget extends WP_Widget {
 	function widget( $args, $instance ) {
 		$title = apply_filters( 'widget_title', empty( $instance['title'] ) ? '' : $instance['title'], $instance, $this->id_base );
 		$text = do_shortcode( apply_filters( 'widget_text', empty( $instance['text'] ) ? '' : $instance['text'], $instance ) );
-		echo $args['before_widget'];
-		if ( !empty( $title ) ) { echo $args['before_title'] . $title . $args['after_title']; } ?>
+		echo $args['before_widget']; // phpcs:ignore
+		if ( !empty( $title ) ) { echo $args['before_title'] . $title . $args['after_title']; }  // phpcs:ignore?>
 			<?php if ( !empty( $instance['textwidget_div'] ) ) echo '<div class="textwidget">';
-			      echo !empty( $instance['filter'] ) ? wpautop( $text ) : $text;
+			      echo !empty( $instance['filter'] ) ? wpautop( $text ) : $text; // phpcs:ignore
 			      if ( !empty( $instance['textwidget_div'] ) ) echo '</div>'; ?>
 		<?php
-		echo $args['after_widget'];
+		echo $args['after_widget']; // phpcs:ignore
 	}
 
 	/**
@@ -345,13 +345,13 @@ class MLATextWidget extends WP_Widget {
 		$title = strip_tags( $instance['title'] );
 		$text = esc_textarea( $instance['text'] );
 ?>
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php echo __( 'Title', 'media-library-assistant' ) . ':'; ?></label>
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
+		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html__( 'Title', 'media-library-assistant' ) . ':'; ?></label>
+		<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
 
-		<textarea class="widefat" rows="16" cols="20" id="<?php echo $this->get_field_id( 'text' ); ?>" name="<?php echo $this->get_field_name( 'text' ); ?>"><?php echo $text; ?></textarea>
+		<textarea class="widefat" rows="16" cols="20" id="<?php echo esc_attr( $this->get_field_id( 'text' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'text' ) ); ?>"><?php echo esc_textarea( $text ); ?></textarea>
 
-		<p><input id="<?php echo $this->get_field_id( 'filter' ); ?>" name="<?php echo $this->get_field_name( 'filter' ); ?>" type="checkbox" <?php checked( isset( $instance['filter'] ) ? $instance['filter'] : 0 ); ?> />&nbsp;<label for="<?php echo $this->get_field_id( 'filter' ); ?>"><?php _e( 'Automatically add paragraphs', 'media-library-assistant' ); ?></label></p>
-		<p><input id="<?php echo $this->get_field_id( 'textwidget_div' ); ?>" name="<?php echo $this->get_field_name( 'textwidget_div' ); ?>" type="checkbox" <?php checked( isset( $instance['textwidget_div'] ) ? $instance['textwidget_div'] : 1 ); ?> />&nbsp;<label for="<?php echo $this->get_field_id( 'textwidget_div' ); ?>"><?php _e( 'Add .textwidget div tags', 'media-library-assistant' ); ?></label></p>
+		<p><input id="<?php echo esc_attr( $this->get_field_id( 'filter' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'filter' ) ); ?>" type="checkbox" <?php checked( isset( $instance['filter'] ) ? $instance['filter'] : 0 ); ?> />&nbsp;<label for="<?php echo esc_attr( $this->get_field_id( 'filter' ) ); ?>"><?php esc_html_e( 'Automatically add paragraphs', 'media-library-assistant' ); ?></label></p>
+		<p><input id="<?php echo esc_attr( $this->get_field_id( 'textwidget_div' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'textwidget_div' ) ); ?>" type="checkbox" <?php checked( isset( $instance['textwidget_div'] ) ? $instance['textwidget_div'] : 1 ); ?> />&nbsp;<label for="<?php echo esc_attr( $this->get_field_id( 'textwidget_div' ) ); ?>"><?php esc_html_e( 'Add .textwidget div tags', 'media-library-assistant' ); ?></label></p>
 <?php
 	}
 

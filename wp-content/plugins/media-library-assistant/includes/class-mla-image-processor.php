@@ -351,19 +351,19 @@ class MLAImageProcessor {
 		}
 
 		// Process generation parameters and supply defaults
-		$width = isset( $args['width'] ) ? abs( intval( $args['width'] ) ) : 0;
-		$height = isset( $args['height'] ) ? abs( intval( $args['height'] ) ) : 0;
+		$width = isset( $args['width'] ) ? abs( (int) $args['width'] ) : 0;
+		$height = isset( $args['height'] ) ? abs( (int) $args['height'] ) : 0;
 		$type = isset( $args['type'] ) ? $args['type'] : 'image/jpeg';
-		$quality = isset( $args['quality'] ) ? abs( intval( $args['quality'] ) ) : 0;
-		$frame = isset( $args['frame'] ) ? abs( intval( $args['frame'] ) ) : 0;
-		$resolution = isset( $args['resolution'] ) ? abs( intval( $args['resolution'] ) ) : 72;
+		$quality = isset( $args['quality'] ) ? abs( (int) $args['quality'] ) : 0;
+		$frame = isset( $args['frame'] ) ? abs( (int) $args['frame'] ) : 0;
+		$resolution = isset( $args['resolution'] ) ? abs( (int) $args['resolution'] ) : 72;
 		$best_fit = isset( $args['best_fit'] ) ? (boolean) $args['best_fit'] : false;
 		$ghostscript_path = isset( $args['ghostscript_path'] ) ? $args['ghostscript_path'] : '';
 
 		// Retain WordPress type for _prepare_image and adjust defaults
 		if ( 'WordPress' === $type ) {
 			$mime_type = 'image/jpeg';
-			$resolution = isset( $args['resolution'] ) ? abs( intval( $args['resolution'] ) ) : 128;
+			$resolution = isset( $args['resolution'] ) ? abs( (int) $args['resolution'] ) : 128;
 		} else {
 			$mime_type = $type;
 		}
@@ -475,23 +475,23 @@ class MLAImageProcessor {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		$file = $_REQUEST['mla_stream_file'];
+		$file = wp_kses( isset( $_REQUEST['mla_stream_file'] ) ? wp_unslash( $_REQUEST['mla_stream_file'] ) : '', 'post' );
 		if ( ! is_file( $file ) ) {
 			self::_mla_die( 'File not found', __LINE__, 404 );
 		}
 
 		$use_mutex = isset( $_REQUEST['mla_single_thread'] );
-		$width = isset( $_REQUEST['mla_stream_width'] ) ? abs( intval( $_REQUEST['mla_stream_width'] ) ) : 0;
-		$height = isset( $_REQUEST['mla_stream_height'] ) ? abs( intval( $_REQUEST['mla_stream_height'] ) ) : 0;
-		$type = isset( $_REQUEST['mla_stream_type'] ) ? $_REQUEST['mla_stream_type'] : 'image/jpeg';
-		$quality = isset( $_REQUEST['mla_stream_quality'] ) ? abs( intval( $_REQUEST['mla_stream_quality'] ) ) : 0;
-		$frame = isset( $_REQUEST['mla_stream_frame'] ) ? abs( intval( $_REQUEST['mla_stream_frame'] ) ) : 0;
-		$resolution = isset( $_REQUEST['mla_stream_resolution'] ) ? abs( intval( $_REQUEST['mla_stream_resolution'] ) ) : 72;
+		$width = isset( $_REQUEST['mla_stream_width'] ) ? abs( (int) $_REQUEST['mla_stream_width'] ) : 0;
+		$height = isset( $_REQUEST['mla_stream_height'] ) ? abs( (int) $_REQUEST['mla_stream_height'] ) : 0;
+		$type = isset( $_REQUEST['mla_stream_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_stream_type'] ) ) : 'image/jpeg';
+		$quality = isset( $_REQUEST['mla_stream_quality'] ) ? abs( (int) $_REQUEST['mla_stream_quality'] ) : 0;
+		$frame = isset( $_REQUEST['mla_stream_frame'] ) ? abs( (int) $_REQUEST['mla_stream_frame'] ) : 0;
+		$resolution = isset( $_REQUEST['mla_stream_resolution'] ) ? abs( (int) $_REQUEST['mla_stream_resolution'] ) : 72;
 		/*
 		 * If mla_ghostscript_path is present, a non-standard GS location can be found in a file written by
 		 * the [mla_gallery] shortcode processor.
 		 */
-		$ghostscript_path = isset( $_REQUEST['mla_ghostscript_path'] ) ? $_REQUEST['mla_ghostscript_path'] : '';
+		$ghostscript_path = wp_kses( isset( $_REQUEST['mla_ghostscript_path'] ) ? wp_unslash( $_REQUEST['mla_ghostscript_path'] ) : '', 'post' );
 		if ( ! empty( $ghostscript_path ) ) {
 			$ghostscript_path = @file_get_contents( dirname( __FILE__ ) . '/' . 'mla-ghostscript-path.txt' );
 		}
@@ -570,7 +570,7 @@ class MLAImageProcessor {
 		 */
 		try {
 			header( "Content-Type: $type" );
-			echo self::$image->getImageBlob();
+			echo self::$image->getImageBlob(); // phpcs:ignore
 		}
 		catch ( Exception $e ) {
 			self::_mla_die( 'Image stream exception: ' . $e->getMessage(), __LINE__, 500 );

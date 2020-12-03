@@ -9,6 +9,7 @@
 	#[+selector+] .gallery-item {
 		float: [+float+];
 		margin: [+margin+];
+		display: inline-block;
 		text-align: center;
 		width: [+itemwidth+];
 	}
@@ -37,9 +38,7 @@ mla_shortcode_slug="gallery"
 	<[+icontag+] class='gallery-icon [+orientation+]'>
 		[+link+]
 	</[+icontag+]>
-	[+captiontag_content+]
-</[+itemtag+]>
-
+	[+captiontag_content+]</[+itemtag+]>
 <!-- template="default-row-close-markup" -->
 <br style="clear: both" />
 

@@ -59,7 +59,7 @@ class MLAjhdeanMappingHooksExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.04';
+	const CURRENT_VERSION = '1.05';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts

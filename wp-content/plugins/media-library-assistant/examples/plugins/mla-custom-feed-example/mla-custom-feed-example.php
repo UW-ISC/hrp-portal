@@ -18,7 +18,7 @@
  * https://wordpress.org/support/topic/create-a-feed-out-of-the-media-library/
  *
  * @package MLA Custom Feed Example
- * @version 1.11
+ * @version 1.12
  */
 
 /*
@@ -26,10 +26,10 @@ Plugin Name: MLA Custom Feed Example
 Plugin URI: http://davidlingren.com/
 Description: Configures and processes custom RSS2 feeds for Media Library items
 Author: David Lingren
-Version: 1.11
+Version: 1.12
 Author URI: http://davidlingren.com/
 
-Copyright 2017 David Lingren
+Copyright 2017-2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ class MLACustomFeedExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.11';
+	const CURRENT_VERSION = '1.12';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -351,28 +351,28 @@ class MLACustomFeedExample {
 			'old_slug' => $item['slug'],
 			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
 
-			'slug' => $item['slug'],
+			'slug' => esc_attr( $item['slug'] ),
 			'rss_selected' => '', // Set below
 			'rss2_selected' => '',
 			'rss_http_selected' => '',
-			'title' => $item['title'],
-			'link' => $item['link'],
-			'description' => $item['description'],
+			'title' => esc_attr( $item['title'] ),
+			'link' => esc_attr( $item['link'] ),
+			'description' => esc_attr( $item['description'] ),
 			'current_selected' => 'current' === $item['last_build_date'] ? 'selected=selected' : '',
 			'modified_selected' => 'modified' === $item['last_build_date'] ? 'selected=selected' : '',
-			'ttl' => !empty( $item['ttl'] ) ? $item['ttl'] : '',
+			'ttl' => !empty( $item['ttl'] ) ? esc_attr( $item['ttl'] ) : '',
 			'none_selected' => '', // Set below
 			'hourly_selected' => '',
 			'daily_selected' => '',
 			'weekly_selected' => '',
 			'monthly_selected' => '',
 			'yearly_selected' => '',
-			'update_frequency' => !empty( $item['update_frequency'] ) ? $item['update_frequency'] : '',
-			'update_base' => $item['update_base'],
-			'taxonomies' => $item['taxonomies'],
-			'parameters' => $item['parameters'],
-			'template_slug' => $item['template_slug'],
-			'template_name' => $item['template_name'],
+			'update_frequency' => !empty( $item['update_frequency'] ) ? esc_attr( $item['update_frequency'] ) : '',
+			'update_base' => esc_attr( $item['update_base'] ),
+			'taxonomies' => esc_attr( $item['taxonomies'] ),
+			'parameters' => esc_attr( $item['parameters'] ),
+			'template_slug' => esc_attr( $item['template_slug'] ),
+			'template_name' => esc_attr( $item['template_name'] ),
 			
 			'active_selected' => $item['active'] ? 'selected=selected' : '',
 			'inactive_selected' => $item['active'] ? '' : 'selected=selected',

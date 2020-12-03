@@ -600,7 +600,7 @@ class MLAModal {
 	 * @return	void	Echos the HTML <form> markup for hidden form
 	 */
 	public static function mla_echo_terms_search_form() {
-		echo MLAModal::mla_terms_search_form();
+		echo MLAModal::mla_terms_search_form(); // phpcs:ignore
 	}
 
 	/**
