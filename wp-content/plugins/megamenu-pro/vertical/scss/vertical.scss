@@ -239,6 +239,12 @@
         }
 
         // Arrows
+        @include desktop {
+            li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
+                float: right;
+            }
+        }
+
         li.mega-menu-item li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator:after {
             content: $arrow_down;
         }

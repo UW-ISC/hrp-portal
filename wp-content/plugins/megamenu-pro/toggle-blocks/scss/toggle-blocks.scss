@@ -1,6 +1,42 @@
 #{$wrap} .mega-menu-toggle {
 
-    /** Menu Toggle Blocks **/
+
+    /** Menu Toggle - Custom Blocks **/
+    @each $item in $menu_toggle_custom_blocks {
+        $id: nth($item, 1);
+
+        @if type-of($id) == number {
+
+            .mega-toggle-block-#{$id} {
+                .mega-toggle-label {
+                    .mega-toggle-label-open {
+                        display: none;
+                    }
+                    
+                    .mega-toggle-label-closed {
+                        display: inline;
+                    }
+                }
+
+                img {
+                    max-height: $toggle_bar_height;
+                }
+            }
+
+            &.mega-menu-open {
+                .mega-toggle-block-#{$id} {
+                    .mega-toggle-label-open {
+                        display: inline;
+                    }
+                    .mega-toggle-label-closed {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    /** Logo Blocks **/
     @each $item in $logo_blocks {
         $id: nth($item, 1);
         $logo_id: nth($item, 2);
@@ -131,7 +167,6 @@
                         box-sizing: border-box;
                         border-radius: $search_border_radius;
                         vertical-align: top;
-                        padding: 0;
                         @include box-shadow(none);
                     }
 

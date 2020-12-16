@@ -19,7 +19,6 @@ class Mega_Menu_Style_Overrides {
 	public function __construct() {
 
 		add_filter( 'megamenu_tabs', array( $this, 'add_styling_tab'), 10, 5 );
-        add_action( 'wp_ajax_mm_save_menu_item_styles', array( $this, 'ajax_save_menu_item_styles') );
 		add_filter( 'megamenu_scss_variables', array( $this, 'add_style_overrides'), 10, 4 );
 		add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_scss'), 10 );
 

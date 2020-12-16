@@ -97,7 +97,7 @@ class Mega_Menu_Custom_Fonts {
                 	    echo "<textarea name='settings[fonts][custom]'>";
 
                 	    if (isset($settings['fonts']['custom'])) {
-                	    	echo $settings['fonts']['custom'];
+                	    	echo esc_textarea(stripslashes($settings['fonts']['custom']));
                 	    }
 
                 	    echo "</textarea>";

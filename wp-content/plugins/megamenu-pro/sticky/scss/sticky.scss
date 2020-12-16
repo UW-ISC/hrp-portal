@@ -54,6 +54,8 @@
             }
             #{$menu} > li.mega-menu-item > a.mega-menu-logo > img.mega-menu-logo {
                 transition: all .25s ease-in-out;
+                max-height: 100%;
+                width: auto;
             }
         }
     }

@@ -66,9 +66,9 @@ class Mega_Menu_Custom_Icon {
 
                 if ( $settings = get_post_meta($item->ID, "_megamenu", true ) ) {
 
-                    if ( isset( $settings['icon'] ) && $settings['icon'] == 'custom' && isset( $settings['custom_icon']['id'] ) && intval( $settings['custom_icon']['id'] ) > 0 ) {
+                    if ( isset( $settings['icon'] ) && $settings['icon'] == 'custom' && isset( $settings['custom_icon']['id'] ) && ( intval( $settings['custom_icon']['id'] ) > 0 || intval( $settings['custom_icon']['id_hover'] ) > 0 ) ) {
 
-                        $id = $settings['custom_icon']['id'];
+                        $id = isset( $settings['custom_icon']['id'] ) ? $settings['custom_icon']['id'] : false;
                         $id_hover = isset( $settings['custom_icon']['id_hover'] ) ? $settings['custom_icon']['id_hover'] : false;
                         $width = $settings['custom_icon']['width'];
                         $height = $settings['custom_icon']['height'];
@@ -77,11 +77,11 @@ class Mega_Menu_Custom_Icon {
                         $height_mobile = isset( $settings['custom_icon']['height_mobile'] ) ? $settings['custom_icon']['height_mobile'] : $height;
                         $width_mobile = isset( $settings['custom_icon']['width_mobile'] ) ? $settings['custom_icon']['width_mobile'] : $width;
 
-                        $icon_url = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id, $width, $height ) );
-                        $icon_url_2x = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id, $width * 2, $height * 2 ) );
+                        $icon_url = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id, $width, $height ), $id, $width, $height );
+                        $icon_url_2x = apply_filters("megamenu_custom_icon_url_2x", $this->get_resized_image_url( $id, $width * 2, $height * 2 ), $id, $width, $height );
 
-                        $icon_url_hover = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id_hover, $width, $height ) );
-                        $icon_url_2x_hover = apply_filters("megamenu_custom_icon_url", $this->get_resized_image_url( $id_hover, $width * 2, $height * 2 ) );
+                        $icon_url_hover = apply_filters("megamenu_custom_icon_url_hover", $this->get_resized_image_url( $id_hover, $width, $height ), $id_hover, $width, $height  );
+                        $icon_url_2x_hover = apply_filters("megamenu_custom_icon_url_2x_hover", $this->get_resized_image_url( $id_hover, $width * 2, $height * 2 ), $id_hover, $width, $height  );
 
                         if ( $icon_url_hover == $icon_url ) {
                             $icon_url_hover = 'false';
@@ -102,7 +102,7 @@ class Mega_Menu_Custom_Icon {
                             'custom_icon_width_mobile' => $width_mobile . 'px',
                             'custom_icon_height_mobile' => $height_mobile . 'px',
                         );
-
+                        
                         $custom_vars[ $item->ID ] = $styles;
 
                     }
@@ -193,7 +193,7 @@ class Mega_Menu_Custom_Icon {
         $html .= "            <td class='mega-name'>" . __("Icon (Hover)", "megamenupro") . "</td>";
         $html .= "            <td class='mega-value'>";
         $html .= "                <div class='mmm_image_selector' data-src='{$icon_url_hover}' data-field='custom_icon_id_hover'></div>";
-        $html .= "                <input type='hidden' id='custom_icon_id_hover' name='settings[custom_icon][id_hover]' value='{$icon_id}' />";
+        $html .= "                <input type='hidden' id='custom_icon_id_hover' name='settings[custom_icon][id_hover]' value='{$icon_id_hover}' />";
         $html .= "            </td>";
         $html .= "        </tr>";
         $html .= "        <tr>";
@@ -269,8 +269,8 @@ class Mega_Menu_Custom_Icon {
             return str_replace( array( "http://", "https://" ), "//", $full_url ); // image is not valid
         }
 
-        // if the full size is the same as the required size, return the full URL
-        if ( $meta['width'] == $dest_width && $meta['height'] == $dest_height ) {
+        // if the required size is equal or greater than the actual size, return the full URL
+        if ( $dest_width >= $meta['width'] && $dest_height >= $meta['height'] ) {
             return str_replace( array( "http://", "https://" ), "//", $full_url );
         }
 

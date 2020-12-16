@@ -218,9 +218,7 @@
 						}
 					}
 
-					&.mega-toggle-on > a.mega-menu-link,
-					> a.mega-menu-link:hover,
-					> a.mega-menu-link:focus {
+					&.mega-toggle-on > a.mega-menu-link {
 						@if $custom_menu_item_background_hover_from != disabled and $custom_menu_item_background_hover_to != disabled {
 					    	@include background($custom_menu_item_background_hover_from, $custom_menu_item_background_hover_to);
 						}
@@ -236,6 +234,29 @@
 						@if $custom_menu_item_icon_color_hover != disabled {
 							&:before {
 								color: $custom_menu_item_icon_color_hover;
+							}
+						}
+					}
+
+					@include desktop {
+						> a.mega-menu-link:hover,
+						> a.mega-menu-link:focus {
+							@if $custom_menu_item_background_hover_from != disabled and $custom_menu_item_background_hover_to != disabled {
+						    	@include background($custom_menu_item_background_hover_from, $custom_menu_item_background_hover_to);
+							}
+
+							@if $custom_menu_item_link_color_hover != disabled {
+								color: $custom_menu_item_link_color_hover;
+							}
+
+							@if $custom_menu_item_border_color_hover != disabled {
+								border-color: $custom_menu_item_border_color_hover;
+							}
+
+							@if $custom_menu_item_icon_color_hover != disabled {
+								&:before {
+									color: $custom_menu_item_icon_color_hover;
+								}
 							}
 						}
 					}

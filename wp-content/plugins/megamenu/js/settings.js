@@ -30,7 +30,15 @@ jQuery(function ($) {
         }
     });
 
-    if (typeof wp.codeEditor !== 'undefined') {
+    $('.menu_settings_menu_locations .mega-enabled input[type="checkbox"]').on("change", function() {
+        if ( $(this).is(":checked")) {
+            $(this).closest('.mega-location').removeClass('mega-location-disabled').addClass('mega-location-enabled');
+        } else {
+            $(this).closest('.mega-location').removeClass('mega-location-enabled').addClass('mega-location-disabled');
+        }
+    });
+
+    if (typeof wp.codeEditor !== 'undefined' && typeof cm_settings !== 'undefined') {
         if ($('#codemirror').length) {
             wp.codeEditor.initialize($('#codemirror'), cm_settings);
         }
@@ -43,7 +51,7 @@ jQuery(function ($) {
             }, 160);
         });
     }
-
+    
     $(".mm_colorpicker").spectrum({
         preferredFormat: "rgb",
         showInput: true,
@@ -51,7 +59,7 @@ jQuery(function ($) {
         clickoutFiresChange: true,
         showSelectionPalette: true,
         showPalette: true,
-        palette: [ ],
+        palette: $.isArray(megamenu_spectrum_settings.palette) ? megamenu_spectrum_settings.palette : [],
         localStorageKey: "maxmegamenu.themeeditor",
         change: function(color) {
             if (color.getAlpha() === 0) {
@@ -112,15 +120,15 @@ jQuery(function ($) {
         selected_tab.siblings().removeClass('nav-tab-active');
         selected_tab.addClass('nav-tab-active');
         var content_to_show = $(this).attr('data-tab');
-        $('.mega-tab-content').hide();
-        $('.' + content_to_show).show();
+        $(this).parent().parent().find('.mega-tab-content').hide();
+        $(this).parent().parent().find('.' + content_to_show).show();
     });
 
     $(".theme_editor").on("submit", function(e) {
         e.preventDefault();
         $(".theme_result_message").remove();
-        $(".spinner").css('visibility', 'visible').css('display', 'block');
-        $("input#submit").attr('disabled', 'disabled');
+        var original_value = $("input#submit").attr('value');
+        $("input#submit").addClass('is-busy').attr('value', megamenu_settings.saving + "…");
         var memory_limit_link = $("<a>").attr('href', megamenu_settings.increase_memory_limit_url).html(megamenu_settings.increase_memory_limit_anchor_text);
 
         $.ajax({
@@ -157,8 +165,7 @@ jQuery(function ($) {
 
             },
             complete: function() {
-                $(".spinner").hide();
-                $("input#submit").removeAttr('disabled');
+                $("input#submit").removeClass('is-busy').attr('value', original_value);
             }
         });
 
@@ -211,4 +218,49 @@ jQuery(function ($) {
 
     });
 
+    $(".mega-accordion-title").on('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        var title = $(this);
+        var content = title.next('.mega-accordion-content');
+
+        $(".mega-accordion-content:visible").slideUp('fast');
+
+        if ( content.is(':hidden') ) {
+            content.slideDown('fast', function() {
+                title.addClass('mega-accordion-open');
+            });
+        } else {
+            content.slideUp('fast', function() {
+                title.removeClass('mega-accordion-open');
+            });
+        }
+    });
+
+    $(".mega-ellipsis").on('click', function(e) {
+        e.stopPropagation();
+
+        var ellipsis = $(this);
+
+        $(".mega-ellipsis").not(ellipsis).removeClass('mega-ellipsis-open');
+
+        if ( ellipsis.hasClass('mega-ellipsis-open') ) {
+            ellipsis.removeClass('mega-ellipsis-open');
+        } else {
+            ellipsis.addClass('mega-ellipsis-open');
+        }
+    });
+
+    $(document).on("click", function(e) { // hide menu when clicked away from
+        if ( ! $(e.target).closest(".mega-ellipsis").length ) {
+            $(".mega-ellipsis").removeClass('mega-ellipsis-open');
+        }
+    });
+
+    $('.megamenu-edit-theme').on("click", function() {
+        var url = $(this).siblings("select").find(":selected").attr('data-url');
+        window.location.href = url;
+    });
+    
 });

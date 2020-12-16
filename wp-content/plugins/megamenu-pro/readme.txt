@@ -1,3 +1,91 @@
+=== Max Mega Menu Pro ===
+Requires at least: 4.9
+Tested up to: 5.5
+Requires PHP: 5.6
+
+== Changelog ==
+
+= 2.2 =
+
+* New Feature: Image Swap
+* New: Add 'Expand all' behaviour option to accordion menu
+* Fix: Unable to disable sticky "Expand Background" option once it has been enabled
+* Improvement: Improve error message when licence activation fails
+
+= 2.1.3 =
+
+* Fix: Accordion menus not respecting the 'Mobile Menu Behaviour' setting
+
+= 2.1.2 =
+
+* New: Add "Menu Toggle - Custom" toggle block
+* Fix: HTML editor for Replacements not loading in WordPress 5.5
+
+= 2.1.1 =
+
+* Fix: Tabbed sub menus: Auto select the active/parent tab
+* Fix: Static search box on mobile, impossible to click on the search icon
+* Fix: PHP warning (logo size in admin)
+* Fix: Remove custom icon hover styling from mobile (active/toggle-on styling remains)
+* Fix: IE11 JavaScript Error
+* Fix: Only generate 2x custom icon size if source file is large enough to allow it
+* New: Add support for megamenu_scripts_in_footer filter
+
+= 2.1 =
+
+* New: Add sticky options to Menu Locations page
+* Update: Font Awesome to v5.13.0
+* Improvement: Ensure the configured logo width and height match the aspect ratio of the source file
+* Improvement: Add 'mega-svg' class to SVG logos
+* Improvement: Styling fixes for WordPress 5.4
+* Improvement: Add support for megamenu_javascript_handle filter
+* Improvement: Automatically select the 'Replacements' tab if a replacement is being used
+* Improvement: Automatically select the 'Tab content' tab if a tabbed sub menu is being used
+* Fix: Accordion arrow position
+* Fix: PHP 5.2 compatibility
+* Fix: Sticky menu behaviour when resizing window
+* Fix: Hover text decoration not applied when Icon Position is set to "Top"
+* Fix: Tab content positioning when sub menu effect is set to Slide and dynamic sub menu widths are being used
+
+= 2.0.1 =
+
+* Fix: PHP Warning
+* Fix: Fonts on tabbed sub menus when Font Family is set to "Theme Default"
+
+= 2.0 =
+
+* New Feature: Menu Item Badges
+* Improvement: Add megamenu_licence_key_field_type filter
+* Fix: Sticky menu logo transition when menu becomes unstuck (i.e. when user scrolls back to top of page)
+
+= 1.9.4 =
+
+* Fix: Smush Lazy load on Logo Toggle Block (use double quotes instead of single quotes for logo attributes)
+
+= 1.9.3 =
+
+* Fix: Static search box closes when page background is clicked
+
+= 1.9.2 =
+
+* Fix: Sticky Mobile Menu position in Vantage theme
+* Fix: Mobile Toggle search box padding
+* Fix: Mobile accordion menu when tabbed sub menus are used
+* Fix: Allow double quotes in custom font names
+* Fix: Sticky menu does not work when minification plugins strip zero value attributes
+* Fix: Hover transitions on custom icons
+* Fix: custom icon transition
+* Improvement: Refactor expanding search box JavaScript
+* Improvement: Close search box if page background is clicked
+* Improvement: Allow custom icons to only appear on hover
+* Improvement: Add title attribute to icon toggle blocks
+* Improvement: Add support for MEGAMENU_SCRIPTS_IN_FOOTER option
+
+= 1.9.1 =
+
+* Improvement: Add megamenu_accordion_parent_classes filter
+* Fix: Content below menu 'bounces' when unsticking menu
+
 = 1.9 =
 
 * Compatiblity with Max Mega Menu 2.7: Off canvas mobile menu when sticky menu and "Hide until scroll up" has been enabled
@@ -72,8 +160,6 @@ Update Instructions: Update Max Mega Menu (free) to v2.5+. Update Max Mega Menu 
 
 = 1.6.4 =
 
-13 November 2017
-
 * Fix: JavaScript error/incompatiblity with the HTML Editor in the "Replacements" tab. Introduced due to an update in core WordPress 4.9.
 * Fix: Style override font color when sub menu is open
 * Fix: Add WPML language input to search form
@@ -91,8 +177,6 @@ Update Instructions: Update Max Mega Menu (free) to v2.5+. Update Max Mega Menu 
 
 = 1.6.3 =
 
-04 July 2017
-
 * Fix: Sub menu width override on vertical menus
 * Fix: Sticky item option not saving
 * Fix: Custom icon hover option not applied when sub menu is opened
@@ -108,44 +192,31 @@ Update Instructions: Update Max Mega Menu (free) to v2.5+. Update Max Mega Menu 
 
 = 1.6.2.1 =
 
-24 January 2017
-
 * Fix: Background color of tabbed menu items in mobile menu
 
 = 1.6.2 =
-
-23 January 2017
 
 * Fix: Clearing menu items in tabbed sub menus
 * Fix: Mobile menu background color
 
 = 1.6.1 =
 
-17 January 2017
-
 * Improvement: Add Text Decoration, Text Decoration (Hover) and Font Weight (Hover) options to Style Overrides
 * Improvement: Add Hover option for Custom Icons
 
 = 1.6 =
-
-16 January 2017
 
 * New Feature: Tabbed Mega Menus
 * New Feature: Add "Hide until scroll up" option for sticky menus
 * Fix: Accordion and Vertical menu item height when menu text wraps onto 2 lines
 * Change: Center align custom icons when icon position is set to "Top"
 
-= 1.5.4 =
-
-27 December 2016
 
 * Fix: Static search box placeholder text disappears if window.resize() is called
 * Improvement: Mobile search toggle block styling
 * Improvement: Add vertical offset option to search toggle block
 
 = 1.5.3 =
-
-20 December 2016
 
 Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please also update Max Mega Menu (free) to v2.3.1+
 
@@ -158,8 +229,6 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.5.2 =
 
-24 November 2016
-
 * Change: Leave the licence input field active/editable when the licence is activated
 * Fix: Add alt text to Logo toggle block
 * Fix: Update sticky menu z-index so that it sits below the WordPress admin bar (if logged in)
@@ -171,14 +240,10 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.5.1 =
 
-17 August 2016
-
 * Fix: Search box loses focus when mobile menu is stuck
 * Fix: Panel Background color not working in Theme Editor
 
 = 1.5 =
-
-15 August 2016
 
 * New Feature: Allow multiple menus to be stuck (move Sticky Menu settings to Appearance > Menus)
 * New Feature: 'Expand background' sticky option
@@ -199,8 +264,6 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.4.5 =
 
-01 June 2016
-
 * Change: Load javascript in footer
 * Improvement: Add icon color and icon color (hover) options to style overrides
 * New feature: Accessibility: Open search box when tabbed to
@@ -208,13 +271,9 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.4.4 =
 
-03 May 2016
-
 * Fix: "select()" function echoing output (breaking mega menu builder on some installations)
 
 = 1.4.3 =
-
-03 May 2016
 
 * New Feature: Accordion Menu sub menu visibility option added (keep sub menus of active parents open)
 * Improvement: Add Font Weight option to style overrides
@@ -226,19 +285,13 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.4.2 =
 
-24 March 2016
-
 * Change: Update URL changed to https to avoid SSL verification errors on some servers
 
 = 1.4.1 =
 
-22 March 2016
-
 * Fix: Class not exists error when Mega Menu is not installed
 
 = 1.4 =
-
-22 March 2016
 
 * New Feature: "Logo / Image" mobile toggle block
 * New Feature: "HTML" mobile toggle block
@@ -247,8 +300,6 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 * Fix: Logo Width/Height
 
 = 1.3.13 =
-
-11 March 2016
 
 * Improvement: Add Sub Menu - Vertical Offset and Sub Menu - Horizontal Offset settings to custom item styling
 * Fix: Use max-height: none; for logo menu items
@@ -261,21 +312,15 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.3.12 =
 
-20 January 2016
-
 * Fix: PHP Warnings
 
 = 1.3.11 =
-
-20 January 2016
 
 * Update: FontAwesome from 4.3 to 4.5
 * Improvement: Add support for Retina custom icons
 * Fix: Check Mega_Menu_Style_Manager class exists before attempting to load
 
 = 1.3.10 =
-
-18 January 2016
 
 * Fix: Use protocol relative URLs for custom icons in CSS output
 * Fix: Sticky on mobile setting
@@ -290,8 +335,6 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.3.9 =
 
-03 December 2015
-
 * Improvement: Sub Menu - Background Color added to Style Override options
 * Fix: Static search box markup
 * New feature: Accordion style vertical menus
@@ -301,14 +344,10 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.3.8 =
 
-05 November 2015
-
 * Fix: Allow Replacements option to save script tags
 * Fix: PHP Warning
 
 = 1.3.7 =
-
-29 October 2015
 
 * Fix sticky menu pixel rounding width issue
 * Fix licence activation/deactivation redirect
@@ -316,22 +355,16 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.3.6 =
 
-01 September 2015
-
 * Add sub menu background image options to Custom Styling
 * Fix Logo Replacement styling
 
 = 1.3.5 =
-
-14 August 2015
 
 * Add "Sticky on mobile" setting
 * Add Border Width and Border Radius style override options
 * Fix: Apply menu item spacing styling option to vertical menus
 
 = 1.3.4 =
-
-27 July 2015
 
 * Remove item highlighting from menu logo
 * Add replacements for EDD Cart Total / Quantity
@@ -340,20 +373,14 @@ Note: If you are using the Tabbed Mega Menu (Beta) Functionality in Pro, please 
 
 = 1.3.3 =
 
-14 July 2015
-
 * Add border color to style overrides
 * Update licence verification URL
 
 = 1.3.2 =
 
-22 June 2015
-
 * Fix: Search box mobile styling
 
 = 1.3.1 =
-
-09 June 2015
 
 * Fix: Vertical Menu top level menu items width
 

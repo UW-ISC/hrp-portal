@@ -45,7 +45,7 @@ ul.mega-font-selector li {
 	font-size: 24px;
 	text-align: center;
 }
-.nav-menus-php #cboxContent .menu_icon .icon_selector > div.notice {
+#cboxContent .menu_icon .icon_selector > div.notice {
 	float: none;
 	width: 100%;
 	height: auto;
@@ -244,17 +244,24 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 .mmm_image_selector {
 	position: relative;
 }
-
+.mmm_image_selector img {
+	float: left;
+	max-width: 100%;
+	display: none;
+	margin-bottom: 5px;
+}
+.mmm_image_selector.has_image img {
+	display: block;
+}
 
 .megamenu_outer_wrap .megamenu_right .menu_settings .mmm_image_selector {
 	float: right;
 	width: 50%;
 }
-.megamenu_outer_wrap .megamenu_right .menu_settings .mmm_image_selector img {
-	max-width: 100%;
-}
+
 .megamenu_outer_wrap .megamenu_right .menu_settings .mmm_image_selector .dashicons-trash {
 	left: 123px;
+	margin-left: 0;
 }
 .megamenu_outer_wrap .megamenu_right .menu_settings .mmm_image_selector .dashicons-edit {
     left: 90px;
@@ -294,6 +301,7 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 	background-size:20px 20px;
 	background-position:0 0, 10px 10px;
 	max-width: 150px;
+	max-height: 150px;
 }
 /** Replacements **/
 
@@ -314,7 +322,7 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 	width: 150px;
 	float: left;
 }
-.nav-menus-php #cboxContent table td.mega-value .mega-desc-with-input input[type=number] {
+#cboxContent table td.mega-value .mega-desc-with-input input[type=number] {
 	margin-right: 0;
 }
 #cboxContent .mega-desc-with-input .mega-short-desc {
@@ -365,6 +373,15 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 #cboxContent table tr.logo_tip td.mega-value {
     font-style: italic;
 }
+#cboxContent table td.mega-value .mega-width-height {
+    width: 90px;
+    float: left;
+}
+#cboxContent table td.mega-value .mega-width-height > span {
+    margin-bottom: 5px;
+    display: block;
+}
+
 
 /** Sticky **/
 
@@ -398,7 +415,12 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 .licence_warning code {
 	font-size: 0.9em;
 }
-
+.licence_info button {
+	    padding: 0;
+    border: 0;
+    margin-right: 5px;
+    color: #0074a2;
+}
 
 .megamenu_outer_wrap .megamenu_right .menu_settings table .toggle-bar-designer .mega-blocks .block .block-title .fa {
     width: 20px;
@@ -417,21 +439,23 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
     margin-right: 0;
 }
 .mega_menu_meta_box div table tr span.mega-after {
-    height: 28px;
-    border: 1px solid #ddd;
+    height: 30px;
+    border: 1px solid #7e8993;
     border-left: 0;
     line-height: 26px;
     display: inline-block;
     float: right;
     box-sizing: border-box;
-    margin-top: 1px;
     background: #eee;
     font-size: 0.9em;
     padding: 0 5px 0 4px;
-    -webkit-box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
-    box-shadow: inset 0 1px 2px rgba( 0, 0, 0, 0.07 );
     color: #32373c;
     outline: none;
+    border-radius: 0 3px 3px 0;
+}
+.mega_menu_meta_box div table tr.megamenu_sticky_behaviour input[type=number],
+.mega_menu_meta_box div table tr.megamenu_sticky_husu input[type=number] {
+	border-radius: 3px 0 0 3px;
 }
 .mega_menu_meta_box div table {
 	margin-bottom: 0;
@@ -453,14 +477,14 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 	width: auto !important;
 }
 
-.nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-tabbed {
+#cboxContent .mm_content.mega_menu #megamenu-tabbed {
 	display: none;
 	margin-top: 20px;
 }
-.nav-menus-php #cboxContent .mm_content.mega_menu #megamenu-tabbed p {
+#cboxContent .mm_content.mega_menu #megamenu-tabbed p {
 	font-style: italic;
 }
-.nav-menus-php #cboxContent .mm_content.mega_menu[data-type='tabbed'] #megamenu-tabbed {
+#cboxContent .mm_content.mega_menu[data-type='tabbed'] #megamenu-tabbed {
 	display: block;
 }
 
@@ -472,4 +496,19 @@ body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table table.mega-i
 	padding-top: 0;
 	padding-right: 7px;
 	padding-bottom: 3px;
+}
+#cboxContent .mm_tab_container .mm_tab.styling:before {
+	content: "\f540"; 
+}
+#cboxContent .mm_tab_container .mm_tab.roles:before {
+	content: "\f110"; 
+}
+#cboxContent .mm_tab_container .mm_tab.badge:before {
+	content: "\f484"; 
+}
+#cboxContent .mm_tab_container .mm_tab.image_swap:before {
+	content: "\f233"; 
+}
+#cboxContent .badge table td.mega-value input[type=text] {
+	width: 200px;
 }

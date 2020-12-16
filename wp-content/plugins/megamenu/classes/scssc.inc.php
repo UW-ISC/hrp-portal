@@ -1691,7 +1691,13 @@ class scssc {
 
 		foreach ($args as $arg) {
 			list($key, $value) = $arg;
-			$key = $key[1];
+			
+			if (is_array($key)) {
+				$key = $key[1];
+			} else {
+				$key = null;
+			}
+			
 			if (empty($key)) {
 				$posArgs[] = $value;
 			} else {
@@ -3010,13 +3016,13 @@ class scss_parser {
 
 	protected function stripDefault(&$value) {
 		$def = end($value[2]);
-		if ($def[0] == "keyword" && $def[1] == "!default") {
+		if (is_array($def) && $def[0] == "keyword" && $def[1] == "!default") {
 			array_pop($value[2]);
 			$value = $this->flattenList($value);
 			return true;
 		}
 
-		if ($def[0] == "list") {
+		if (is_array($def) && $def[0] == "list") {
 			return $this->stripDefault($value[2][count($value[2]) - 1]);
 		}
 
