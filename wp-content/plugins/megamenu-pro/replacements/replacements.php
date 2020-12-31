@@ -595,6 +595,12 @@ class Mega_Menu_Replacements {
 			'alt' => get_post_meta( $id, '_wp_attachment_image_alt', true )
 		);
 
+		$filetype = wp_check_filetype($src);
+
+		if ( isset( $filetype['ext'] ) && $filetype['ext'] == 'svg' ) {
+			$attributes['class'] = $attributes['class'] . " mega-svg";
+		}
+
 		// check image is large enough to create 2x version
 		if ( ( isset( $img_meta['width'] ) && $img_meta['width'] >= $width_2x ) && ( isset( $img_meta['height'] ) && $img_meta['height'] >= $height_2x ) ) {
 			// double the size for 2x logo
@@ -746,6 +752,10 @@ class Mega_Menu_Replacements {
 
 		$type = isset( $menu_item_meta['replacements']['type'] ) ? $menu_item_meta['replacements']['type'] : 'disabled';
 
+		if ( $type !== 'disabled' ) {
+			$tabs['active_tab'] = 'replacements';
+		}
+
 		$html_code = isset( $menu_item_meta['replacements']['html']['code'] ) ? $menu_item_meta['replacements']['html']['code'] : '';
 		$html_mode = isset( $menu_item_meta['replacements']['html']['mode'] ) ? $menu_item_meta['replacements']['html']['mode'] : 'inner';
 		$logo_id = isset( $menu_item_meta['replacements']['logo']['id'] ) ? $menu_item_meta['replacements']['logo']['id'] : false;
@@ -768,10 +778,14 @@ class Mega_Menu_Replacements {
 		$search_woocommerce = isset( $menu_item_meta['replacements']['search']['woocommerce'] ) ? $menu_item_meta['replacements']['search']['woocommerce'] : 'false';
 
 		$logo_src = "";
+		$logo_src_width = "";
+		$logo_src_height = "";
 
 		if ( $logo_id ) {
-			$logo = wp_get_attachment_image_src( $logo_id, 'thumbnail' );
+			$logo = wp_get_attachment_image_src( $logo_id, 'full' );
 			$logo_src = $logo[0];
+			$logo_src_width = $logo[1];
+			$logo_src_height = $logo[2];
 		}
 
 		$inner_display = $html_mode == 'inner' ? 'block' : 'none';
@@ -809,7 +823,7 @@ class Mega_Menu_Replacements {
 		$html .= "        <tr class='logo' style='display: {$logo_display}'>";
 		$html .= "            <td class='mega-name'>";
 		$html .=                  __("Logo", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __( "Choose a logo from your Media Library" , "megamenupro") . "</div>";
+		$html .= "                <div class='mega-description'>" . __( "Choose an image from your Media Library" , "megamenupro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <div class='mmm_image_selector' data-src='{$logo_src}' data-field='custom_logo_id' data-menu-item-id='" . esc_attr( $menu_item_id ) . "'></div>";
@@ -818,25 +832,32 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='logo' style='display: {$logo_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Width", "megamenupro");
+		$html .=                  __("Size", "megamenupro");
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
-		$html .= "                <input type='number' name='settings[replacements][logo][width]' class='mm_logo_width' value='{$logo_width}' required='required' />px";
-		$html .= "            </td>";
-		$html .= "        </tr>";
-		$html .= "        <tr class='logo' style='display: {$logo_display}'>";
-		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Height", "megamenupro");
-		$html .=              "</td>";
-		$html .= "            <td class='mega-value'>";
-		$html .= "                <input type='number' name='settings[replacements][logo][height]' class='mm_logo_width' value='{$logo_height}' required='required' />px";
+		$html .= "                <div class='mega-width-height'>";
+		$html .= "                    <span>Width (px)</span>";
+		$html .= "                    <span><input data-src-width='{$logo_src_width}' type='number' name='settings[replacements][logo][width]' class='mm_logo_width' value='{$logo_width}' required='required' /></span>";
+		$html .= "                </div>";
+		$html .= "                <div class='mega-width-height'>";
+		$html .= "                    <span>Height (px)</span>";
+		$html .= "                    <span><input data-src-height='{$logo_src_height}' type='number' name='settings[replacements][logo][height]' class='mm_logo_height' value='{$logo_height}' required='required' /></span>";
+		$html .= "                </div>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='logo logo_tip' style='display: {$logo_display}'>";
 		$html .= "            <td class='mega-name'>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
+		$html .= "                <p>";
+		$html .=                  __("The logo height should be smaller than the menu height (configured under Mega Menu > Menu Themes > Menu Bar > Menu Height).", "megamenupro");
+		$html .= "                </p>";
+		$html .= "                <p>";
+		$html .=                  __("Enter the desired visual size for the logo (we'll automatically handle outputting a 2x logo for retina displays).", "megamenupro");
+		$html .= "                </p>";
+		$html .= "                <p>";
 		$html .=                  __("Mobile Menu Tip: To hide this logo from the list of items in your mobile menu, go to the 'Settings' tab and enable 'Hide Item on Mobile'. Then you can add the logo directly to your mobile toggle bar, under Mega Menu > Menu Themes > Mobile Menu > Toggle Bar Designer", "megamenupro");
+		$html .= "                </p>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";

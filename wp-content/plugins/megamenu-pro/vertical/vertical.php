@@ -42,7 +42,6 @@ class Mega_Menu_Vertical {
 
         if ( isset( $menu_settings['orientation'] ) && $menu_settings['orientation'] == 'accordion' ) {
             $attributes['data-document-click'] = 'disabled';
-            $attributes['data-vertical-behaviour'] = isset ( $settings['mobile_behaviour'] ) ? $settings['mobile_behaviour'] : 'accordion';
         }
 
         return $attributes;
@@ -69,13 +68,26 @@ class Mega_Menu_Vertical {
             if ( isset( $settings[$location]['accordion_behaviour'] ) && $settings[$location]['accordion_behaviour'] == 'open_parents' || ! isset( $settings[$location]['accordion_behaviour'] ) ) {
 
                 if ( in_array( 'mega-menu-item-has-children', $classes ) ) {
-                    if ( in_array( 'mega-current_page_ancestor', $classes ) || 
-                         in_array( 'mega-current_page_item', $classes ) || 
-                         in_array( 'mega-current-menu-ancestor', $classes ) || 
-                         in_array( 'mega-current-menu-item', $classes ) || 
-                         in_array( 'mega-current-menu-parent', $classes ) ) {
-                             $classes[] = 'mega-toggle-on';
+                    $needles = apply_filters('megamenu_accordion_parent_classes', array(
+                        'mega-current_page_ancestor',
+                        'mega-current_page_item',
+                        'mega-current-menu-ancestor',
+                        'mega-current-menu-item',
+                        'mega-current-menu-parent'
+                    ));
+
+                    $parent_is_current = array_intersect( $needles, $classes );
+
+                    if ( ! empty( $parent_is_current ) ) {
+                        $classes[] = 'mega-toggle-on';
                     }
+                } 
+            }
+
+
+            if ( isset( $settings[$location]['accordion_behaviour'] ) && $settings[$location]['accordion_behaviour'] == 'open_all' ) {
+                if ( in_array( 'mega-menu-item-has-children', $classes ) ) {
+                    $classes[] = 'mega-toggle-on';
                 } 
             }
 
@@ -83,9 +95,7 @@ class Mega_Menu_Vertical {
 
         return $classes;
     }
-
-
-
+    
 
 	/**
 	 * Change the orientation class to 'mega-menu-vertical'
@@ -142,6 +152,7 @@ class Mega_Menu_Vertical {
                 <td>
                     <select name='megamenu_meta[<?php echo $location ?>][accordion_behaviour]'>
                         <option value='open_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_parents' ) ?>><?php _e("Expand active sub menus", "megamenupro"); ?></option>
+                        <option value='open_all' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_all' ) ?>><?php _e("Expand all sub menus", "megamenupro"); ?></option>
                         <option value='collapse_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'collapse_parents' ) ?>><?php _e("Always collapse submenus", "megamenupro"); ?></option>
                     </select>
                 </td>

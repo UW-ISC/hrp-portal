@@ -1,9 +1,10 @@
 === Max Mega Menu ===
 Contributors: megamenu
-Tags: menu, megamenu, mega menu, navigation, widget, dropdown menu, drag and drop, mobile, responsive, retina, theme editor, widget, shortcode, sidebar, icons, dashicons
+Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
-Tested up to: 5.2
-Stable tag: 2.7.1.3
+Tested up to: 5.6
+Stable tag: 2.9.1
+Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +18,18 @@ https://www.youtube.com/watch?v=44dJwP1AXT8
 
 Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 
-###Features:
+[](http://coderisk.com/wp/plugin/megamenu/RIPS-1tlo19jJE_)
+
+###Mobile
+
+* Automatic support for native touch events
+* Off Canvas Mobile Menu option built in
+* Specify your own Responsive Breakpoint
+* For items with sub menus, choose between "First click opens sub menu, second click closes sub menu" or "First click opens sub menu, second click follows link"
+* Option to hide sub menus on mobile
+* Mobile Toggle Bar designer allows you to tailor the toggle bar elements to fit in with your site design
+
+###Features
 
 * Builds upon the standard WordPress menus system
 * Supports multiple menu locations each with their own configuration
@@ -32,6 +44,15 @@ Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 * Menu item options including Hide Text, Disable Link, Hide on Mobile etc
 * Align menu items to the left or right of the menu bar
 * Align sub menus to left or right of parent menu item
+
+###Accessibility
+
+* Keyboard Navigation built in
+* `TAB` activates keyboard navigation and navigates through the menu
+* `ENTER` on a parent item opens a sub menu (pressing `ENTER` a second time will respect the "Second Click Behaviour" setting)
+* `ENTER` on a standard item will follow the link
+* `SPACE` toggles the sub menu visibility
+* `ESC` closes all open sub menus
 
 Max Mega Menu is developed with a focus on code quality, performance and usability.
 
@@ -51,7 +72,7 @@ Max Mega Menu is developed with a focus on code quality, performance and usabili
 > * Tabbed Mega Menus
 > * Sticky Menu
 > * Vertical & Accordion Menus
-> * FontAwesome, Genericon & Custom Icons
+> * FontAwesome 5, Genericon & Custom Icons
 > * Custom Item Styling
 > * Menu Logo
 > * Search box
@@ -65,6 +86,9 @@ Max Mega Menu is developed with a focus on code quality, performance and usabili
 > Find out more: [https://www.megamenu.com/upgrade/](https://www.megamenu.com/upgrade/)
 
 == Frequently Asked Questions ==
+
+= Is it compatible with Elementor? =
+Yes! See: [https://www.megamenu.com/documentation/elementor/](https://www.megamenu.com/documentation/elementor/)
 
 = Where do I start? =
 [https://www.megamenu.com/documentation/installation/](https://www.megamenu.com/documentation/installation/)
@@ -109,6 +133,112 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 2.9.2 =
+
+* New: Add Mobile Sub Menu Default State option to menu location settings
+* New: Add support for 'expand-on-mobile' custom class to expand sub menu by default on mobile
+* Fix: Theme export always exported the 'Default' theme
+* Fix: Check depth property exists for compatibility with plugins that dynamically add items to the menu
+* Improvement: Localise widget title string
+
+= 2.9.1 =
+
+* Fix: Error when clearing cache on some installations
+* Fix: Menu item ordering incorrect on some installations
+* Fix: Invalid 'max-width' CSS rule
+* Fix: Conflict with Eduma theme - only load scss class when required
+* New: Add support for 'never-highlight' custom class
+* New: Add new dashicons introduced in WordPress 5.5
+
+= 2.9.0.2 =
+
+* Fix: Active Menu Instance incorrectly applied
+
+= 2.9.0.1 =
+
+* Fix: Ordering of widgets when displayed within a standard mega menu
+
+= 2.9 =
+
+If you have PHP Opcache enabled you may want to update to WordPress 5.5 before applying this update, as it includes this change:
+
+https://make.wordpress.org/core/2020/07/27/opcode-cache-invalidation-in-wordpress-5-5/
+
+This release continues to pave the way for the new Appearance > Menus screen coming in WordPress 5.6 by allowing all location related settings to be managed from the Mega Menu > Menu Locations page.
+
+* Improvement: Click Event Behaviour, Mobile Menu Behaviour, Menu Item Descriptions, Unbind JavaScript Events, Prefix Menu Item Classes and Active Menu Instance options have been moved from the General Settings page and can now be configured per menu location on the updated Mega Menu > Menu Locations page.
+* Improvement: Move theme import/export options to theme editor page
+* Improvement: Improve flow for creating new menu locations
+* Improvement: Add overflow-behaviour to offcanvas menu
+* Improvement: Remove jquery accordion dependency on nav-menus.php
+* Improvement: Trigger custom events when the mobile menu is opened and closed
+* New: Add container option to specify whether menu should be wrapped in a `div` or a `nav` element
+* Experimental: Add sandbox option to preview your menu (without theme interference)
+* Fix: Indent third level items in mobile menu
+* Fix: Divi adding linting to Custom CSS area of menu theme
+* Fix: Indent third level items in mobile menu
+* Fix: Ensure page remains scrollable when off canvas mode is enabled, when the off canvas menu is open, and when the browser window is resized from mobile to desktop
+
+= 2.8 =
+
+* New: Allow menu location settings to be adjusted from the Mega Menu > Menu Locations page
+* Fix: Trim "Panel Width" settings in theme editor to prevent attributes from being malformed
+* Fix: Hover text decoration not applied when Icon Position is set to "Top"
+* Fix: Divi reload bug, ensure sidebar is registered on front and back end
+* Fix: Collapsable sub menus open and close themselves in mobile view
+
+= 2.7.7 =
+
+* Refactor: Improve method to determine the depth of a menu item (when loading menu item options in back end)
+
+= 2.7.6 =
+
+* Fix: Revert "Refactor: Improve method to determine the depth of a menu item", causing infinite loop on some installations
+
+= 2.7.5 =
+
+* Improvement: Add megamenu_javascript_handle filter
+* Improvement: Tidy up CSS for backwards compatibility with previous versions of Pro
+* Improvement: Pave the way for removing JavaScript localisation by moving hover intent options to wrap attributes
+* Improvement: Allow third level items to be distributed over 6 columns (previously 4) (requires clearing the Menu CSS Cache)
+* Improvement: Increase number of available columns for "Mega Menu - Standard Layout" from 9 to 12 (requires clearing the Menu CSS Cache)
+* Fix: Unquote font family CSS when Reset Widget Styling is enabled
+* Fix: Edge case PHP warning when using widget
+* Fix: Workaround for when wp_get_theme() fails to return name of active theme
+* Fix: Correctly sanitise theme import data and escape output. Thanks to polyplanet.de for reporting this!
+* Refactor: Decouple menu items lightbox options from nav-menus.php screen. When opening lightbox settings on nav-menus.php, use PHP to determine these values rather than JavaScript
+* Refactor: Improve method to determine the depth of a menu item
+
+= 2.7.4 =
+
+* Fix: Allow double quotes in custom font names
+* Fix: Border radius on Flyout Menus
+* Fix: PHP 7.4 warning in theme editor
+* Fix: Unable to select/paste text within HTML replacement editor using Safari
+* Fix: Intermittent issue with Image Widget settings not loading correctly in back end
+* Improvement: Add support for MEGAMENU_SCRIPTS_IN_FOOTER constant in wp-config.php
+
+= 2.7.3 =
+
+* Improvement: Styling updates for WordPress 5.3
+* Improvement: Add script localisation for spectrum
+* Improvement: Always show WooCommerce Tags and Categories meta boxes on nav-menus.php
+* Fix: Compatibility fix for TemplatesNext ToolKit (menu item settings inaccessible)
+* Fix: Default white-space to normal in menu CSS
+* Fix: Unsaved changes prompt incorrectly appears when changing menu icon
+* Fix: Disable Link cursor style
+* Fix: Edge Case PHP Warning
+
+= 2.7.2 =
+
+* Improvement: Show warning if there are unsaved changes when closing the menu item settings lightbox
+* Improvement: Admin styling updates for menu item settings
+* Improvement: Convert select "Yes/No" dropdowns to checkboxes
+* Fix: CSS compilation fails when theme directory name contains dots and spaces
+* Fix: Arrow position in FireFox - apply display: inline;
+* Fix: Remove the delay in removing the "mobile-open" body class when mobile effect is disabled
+* Fix: Add extra checks before initialising codemirror
 
 = 2.7.1.4 =
 

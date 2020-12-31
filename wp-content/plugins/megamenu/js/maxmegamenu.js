@@ -21,11 +21,14 @@
             panel_inner_width: $menu.attr("data-panel-inner-width"),
             mobile_force_width: $menu.attr("data-mobile-force-width"),
             mobile_overlay: $menu.attr("data-mobile-overlay"),
+            mobile_state: $menu.attr("data-mobile-state"),
             second_click: $menu.attr("data-second-click"),
             vertical_behaviour: $menu.attr("data-vertical-behaviour"),
             document_click: $menu.attr("data-document-click"),
             breakpoint: $menu.attr("data-breakpoint"),
-            unbind_events: $menu.attr("data-unbind")
+            unbind_events: $menu.attr("data-unbind"),
+            hover_intent_timeout: $menu.attr("data-hover-intent-timeout"),
+            hover_intent_interval: $menu.attr("data-hover-intent-interval")
         };
 
         plugin.settings = {};
@@ -35,7 +38,7 @@
                                     "li.mega-menu-tabbed > ul.mega-sub-menu > li.mega-menu-item-has-children," +
                                     "li.mega-menu-flyout li.mega-menu-item-has-children", menu);
 
-
+        var collapse_children_parents = $("li.mega-menu-megamenu li.mega-menu-item-has-children.mega-collapse-children > a.mega-menu-link", menu);
 
         plugin.addAnimatingClass = function(element) {
             if (plugin.settings.effect === "disabled") {
@@ -58,6 +61,28 @@
                 plugin.hidePanel($(this), false);
             });
         };
+
+        plugin.expandMobileSubMenus = function() {
+            $(".mega-menu-item-has-children.mega-expand-on-mobile > a.mega-menu-link", $menu).each(function() {
+                plugin.showPanel($(this));
+            });
+
+            if ( plugin.settings.mobile_state == 'expand_all' ) {
+                $(".mega-menu-item-has-children > a.mega-menu-link", $menu).each(function() {
+                    plugin.showPanel($(this));
+                });
+            }
+
+            if ( plugin.settings.mobile_state == 'expand_active' ) {
+                $("li.mega-current-menu-ancestor.mega-menu-item-has-children > a.mega-menu-link," + 
+                  "li.mega-current-menu-item.mega-menu-item-has-children > a.mega-menu-link" + 
+                  "li.mega-current-menu-parent.mega-menu-item-has-children > a.mega-menu-link" + 
+                  "li.mega-current_page_ancestor.mega-menu-item-has-children > a.mega-menu-link" + 
+                  "li.mega-current_page_item.mega-menu-item-has-children > a.mega-menu-link", $menu).each(function() {
+                    plugin.showPanel($(this));
+                });
+            }
+        }
 
         plugin.hideSiblingPanels = function(anchor, immediate) {
             anchor.parent().parent().find(".mega-toggle-on").children("a.mega-menu-link").each(function() { // all open children of open siblings
@@ -188,7 +213,7 @@
             }
         };
 
-        var bindClickEvents = function() {
+        plugin.bindClickEvents = function() {
             var dragging = false;
 
             $(document).on({
@@ -204,7 +229,6 @@
                 dragging = false;
             });
 
-            var collapse_children_parents = $("li.mega-menu-megamenu li.mega-menu-item-has-children.mega-collapse-children > a.mega-menu-link");
             var clickable_parents = $("> a.mega-menu-link", items_with_submenus).add(collapse_children_parents);
 
             clickable_parents.on("touchend.megamenu", function(e) {
@@ -212,7 +236,7 @@
                 plugin.unbindHoverIntentEvents();
             });
 
-            clickable_parents.on("click.megamenu", function(e) {
+            clickable_parents.not("[data-has-click-event]").on("click.megamenu", function(e) {
                 if (plugin.isDesktopView() && $(this).parent().hasClass("mega-toggle-on") && $(this).parent().parent().parent().hasClass("mega-menu-tabbed") ) {
                     if (plugin.settings.second_click === "go") {
                         return;
@@ -242,9 +266,13 @@
                     }
                 }
             });
+
+            collapse_children_parents.each(function() {
+                $(this).attr('data-has-click-event', 'true');
+            });
         };
 
-        var bindHoverEvents = function() {
+        plugin.bindHoverEvents = function() {
             items_with_submenus.on({
                 "mouseenter.megamenu" : function() {
                     plugin.unbindClickEvents();
@@ -260,7 +288,7 @@
             });
         };
 
-        var bindHoverIntentEvents = function() {
+        plugin.bindHoverIntentEvents = function() {
             items_with_submenus.hoverIntent({
                 over: function () {
                     plugin.unbindClickEvents();
@@ -273,12 +301,12 @@
                         plugin.hidePanel($(this).children("a.mega-menu-link"), false);
                     }
                 },
-                timeout: megamenu.timeout,
-                interval: megamenu.interval
+                timeout: plugin.settings.hover_intent_timeout,
+                interval: plugin.settings.hover_intent_interval
             });
         };
 
-        var bindKeyboardEvents = function() {
+        plugin.bindKeyboardEvents = function() {
             var tab_key = 9;
             var escape_key = 27;
             var enter_key = 13;
@@ -411,7 +439,8 @@
         };
 
         plugin.unbindClickEvents = function() {
-            $("> a.mega-menu-link", items_with_submenus).off("click.megamenu touchend.megamenu");
+            // collapsable parents always have a click event
+            $("> a.mega-menu-link", items_with_submenus).not(collapse_children_parents).off("click.megamenu touchend.megamenu");
         };
 
         plugin.unbindHoverEvents = function() {
@@ -439,43 +468,27 @@
             plugin.unbindKeyboardEvents();
         };
 
-
         plugin.bindMegaMenuEvents = function() {
+            plugin.unbindMegaMenuEvents();
+
             if (plugin.isDesktopView() && plugin.settings.event === "hover_intent") {
-                bindHoverIntentEvents();
+                plugin.bindHoverIntentEvents();
             }
 
             if (plugin.isDesktopView() && plugin.settings.event === "hover") {
-                bindHoverEvents();
+                plugin.bindHoverEvents();
             }
 
-            bindClickEvents(); // always bind click events for touch screen devices
-            bindKeyboardEvents();
-        };
-
-        plugin.monitorView = function() {
-            if (plugin.isDesktopView()) {
-                $menu.data("view", "desktop");
-            } else {
-                $menu.data("view", "mobile");
-                plugin.switchToMobile();
-            }
-
-            plugin.checkWidth();
-
-            $(window).resize(function() {
-                plugin.checkWidth();
-            });
+            plugin.bindClickEvents(); // always bind click events for touch screen devices
+            plugin.bindKeyboardEvents();
         };
 
         plugin.checkWidth = function() {
             if ( plugin.isMobileView() && $menu.data("view") === "desktop" ) {
-                $menu.data("view", "mobile");
                 plugin.switchToMobile();
             }
 
             if ( plugin.isDesktopView() && $menu.data("view") === "mobile" ) {
-                $menu.data("view", "desktop");
                 plugin.switchToDesktop();
             }
 
@@ -494,33 +507,40 @@
             });
         };
 
-        plugin.switchToMobile = function() {
-            plugin.unbindMegaMenuEvents();
+        plugin.initDesktop = function() {
+            $menu.data("view", "desktop");
             plugin.bindMegaMenuEvents();
-            plugin.reverseRightAlignedItems();
-            plugin.addClearClassesToMobileItems();
-            plugin.hideAllPanels();
+            plugin.initIndicators();
         };
 
         plugin.switchToDesktop = function() {
-            plugin.unbindMegaMenuEvents();
+            $menu.data("view", "desktop");
             plugin.bindMegaMenuEvents();
             plugin.reverseRightAlignedItems();
             plugin.hideAllPanels();
+            plugin.hideMobileMenu(true);
+        };
 
-            $menu.css({
-                width: "",
-                left: "",
-                display: ""
-            });
+        plugin.initMobile = function() {
+            plugin.switchToMobile();
+        };
 
-            $toggle_bar.removeClass("mega-menu-open");
+        plugin.switchToMobile = function() {
+            $menu.data("view", "mobile");
+            plugin.bindMegaMenuEvents();
+            plugin.initIndicators();
+            plugin.reverseRightAlignedItems();
+            plugin.addClearClassesToMobileItems();
+            plugin.hideAllPanels();
+            plugin.expandMobileSubMenus();
         };
 
         plugin.initToggleBar = function() {
-            // mobile menu
             $toggle_bar.on("click", function(e) {
-                if ( $(e.target).is(".mega-menu-toggle, .mega-menu-toggle-block, .mega-menu-toggle-animated-block, .mega-menu-toggle-animated-block *, .mega-toggle-blocks-left, .mega-toggle-blocks-center, .mega-toggle-blocks-right, .mega-toggle-label, .mega-toggle-label span") ) {                    if ($(this).hasClass("mega-menu-open")) {
+                if ( $(e.target).is(".mega-menu-toggle, .mega-menu-toggle-custom-block *, .mega-menu-toggle-block, .mega-menu-toggle-animated-block, .mega-menu-toggle-animated-block *, .mega-toggle-blocks-left, .mega-toggle-blocks-center, .mega-toggle-blocks-right, .mega-toggle-label, .mega-toggle-label span") ) {
+                    e.preventDefault();
+                    
+                    if ($(this).hasClass("mega-menu-open")) {
                         plugin.hideMobileMenu();
                     } else {
                         plugin.showMobileMenu();
@@ -529,8 +549,29 @@
             });
         };
 
-        plugin.hideMobileMenu = function() {
-            if ( ! $toggle_bar.is(":visible")) {
+        plugin.initIndicators = function() {
+            $("span.mega-indicator", $menu).not("[data-has-click-event]").on("click.megamenu", function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                if ( $(this).parent().parent().hasClass("mega-toggle-on") ) {
+                    if ( ! $(this).parent().parent().parent().parent().hasClass("mega-menu-tabbed") || plugin.isMobileView() ) {
+                        plugin.hidePanel($(this).parent(), false);
+                    }
+                } else {
+                    plugin.showPanel($(this).parent(), false);
+                }
+            });
+
+            $("span.mega-indicator", $menu).each(function() {
+                $(this).attr('data-has-click-event', 'true');
+            });
+        }
+
+        plugin.hideMobileMenu = function(force) {
+            force = force || false;
+
+            if ( ! $toggle_bar.is(":visible") && ! force ) {
                 return;
             }
 
@@ -541,7 +582,7 @@
 
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "false");
 
-            if (plugin.settings.effect_mobile === "slide") {
+            if (plugin.settings.effect_mobile === "slide" && ! force ) {
                 $menu.animate({"height":"hide"}, plugin.settings.effect_speed_mobile, function() {
                     $menu.css({
                         width: "",
@@ -551,7 +592,15 @@
                 });
             }
 
+            $menu.css({
+                width: "",
+                left: "",
+                display: ""
+            });
+                
             $toggle_bar.removeClass("mega-menu-open");
+
+            $menu.triggerHandler("mmm:hideMobileMenu");
         };
 
         plugin.showMobileMenu = function() {
@@ -576,11 +625,12 @@
             }
 
             $toggle_bar.addClass("mega-menu-open");
+
+            $menu.triggerHandler("mmm:showMobileMenu");
         };
 
         plugin.toggleBarForceWidth = function() {
-
-            if ($(plugin.settings.mobile_force_width).length && ( plugin.settings.effect_mobile == 'slide' || plugin.settings.effect_mobile == 'disabled' ) ) {
+            if ($(plugin.settings.mobile_force_width).length && ( plugin.settings.effect_mobile === "slide" || plugin.settings.effect_mobile === "disabled" ) ) {
                 var submenu_offset = $toggle_bar.offset();
                 var target_offset = $(plugin.settings.mobile_force_width).offset();
 
@@ -602,25 +652,20 @@
                 plugin.unbindAllEvents();
             }
 
-            $("span.mega-indicator", $menu).on("click.megamenu", function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                if ( $(this).parent().parent().hasClass("mega-toggle-on") ) {
-                    if ( ! $(this).parent().parent().parent().parent().hasClass("mega-menu-tabbed") || plugin.isMobileView() ) {
-                        plugin.hidePanel($(this).parent(), false);
-                    }
-                } else {
-                    plugin.showPanel($(this).parent(), false);
-                }
-            });
-
             $(window).on("load", function() {
                 plugin.calculateDynamicSubmenuWidths($("> li.mega-menu-megamenu > a.mega-menu-link", $menu));
             });
 
-            plugin.bindMegaMenuEvents();
-            plugin.monitorView();
+            if ( plugin.isDesktopView() ) {
+                plugin.initDesktop();
+            } else {
+                plugin.initMobile();
+            }
+
+            $(window).resize(function() {
+                plugin.checkWidth();
+            });
+
             $menu.triggerHandler("after_mega_menu_init");
         };
 

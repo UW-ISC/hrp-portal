@@ -3,10 +3,7 @@
     #{$menu} {
 
         @if $transitions == 'on' {
-            a.custom.mega-menu-link:before {
-                -webkit-transition: background 200ms linear;
-                -moz-transition: background 200ms linear;
-                -o-transition: background 200ms linear;
+            a.mega-custom-icon.mega-menu-link:before {
                 transition: background 200ms linear;
             }
         }
@@ -38,7 +35,6 @@
                 li#mega-menu-item-#{$id} {
 
                     @if $custom_icon_url != 'false' {
-
                         @include desktop {
                             &.mega-icon-top > a.mega-menu-link:before {
                                 width: 100%;
@@ -67,11 +63,48 @@
                                 height: $custom_icon_height_mobile;
                                 line-height: $custom_icon_height_mobile;
                             }
+                        }
+                    }
 
+
+                    @if $custom_icon_url_hover != 'false' {
+
+                        @if $custom_icon_url == 'false' {
+                            @include desktop {
+                                &.mega-icon-top > a.mega-menu-link:hover:before {
+                                    width: 100%;
+                                    min-width: $custom_icon_width;
+                                    background-position-x: center;
+                                }
+                            }
+
+                            > a.mega-menu-link:hover:before {
+                                content: "";
+                                background-size: $custom_icon_width $custom_icon_height;
+                                background-repeat: no-repeat;
+                                width: $custom_icon_width;
+                                height: $custom_icon_height;
+                                line-height: $custom_icon_height;
+                                vertical-align: $custom_icon_vertical_align;
+
+                                @include mobile {
+                                    background-size: $custom_icon_width_mobile $custom_icon_height_mobile;
+                                    width: $custom_icon_width_mobile;
+                                    height: $custom_icon_height_mobile;
+                                    line-height: $custom_icon_height_mobile;
+                                }
+                            }
                         }
 
-                        @if $custom_icon_url_hover != 'false' {
-                            &.mega-toggle-on > a.mega-menu-link:before,
+                        &.mega-toggle-on > a.mega-menu-link:before {
+                            background-image: url($custom_icon_url_hover);
+
+                            @media (-webkit-min-device-pixel-ratio: 2) {
+                                background-image: url($custom_icon_2x_url_hover);
+                            }
+                        }
+
+                        @include desktop {
                             > a.mega-menu-link:hover:before {
                                 background-image: url($custom_icon_url_hover);
 
@@ -79,17 +112,17 @@
                                     background-image: url($custom_icon_2x_url_hover);
                                 }
                             }
+                        }
 
-                            @if $menu_item_highlight_current == 'on' {
-                                &.mega-current-menu-item,
-                                &.mega-current-menu-ancestor,
-                                &.mega-current-page-ancestor {
-                                    > a.mega-menu-link:before {
-                                        background-image: url($custom_icon_url_hover);
+                        @if $menu_item_highlight_current == 'on' {
+                            &.mega-current-menu-item:not(.mega-remove-active-highlight),
+                            &.mega-current-menu-ancestor:not(.mega-remove-active-highlight),
+                            &.mega-current-page-ancestor:not(.mega-remove-active-highlight) {
+                                > a.mega-menu-link:before {
+                                    background-image: url($custom_icon_url_hover);
 
-                                        @media (-webkit-min-device-pixel-ratio: 2) {
-                                            background-image: url($custom_icon_2x_url_hover);
-                                        }
+                                    @media (-webkit-min-device-pixel-ratio: 2) {
+                                        background-image: url($custom_icon_2x_url_hover);
                                     }
                                 }
                             }
