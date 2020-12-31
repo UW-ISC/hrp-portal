@@ -28,6 +28,14 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         add_action( 'megamenu_output_admin_toggle_block_logo', array( $this, 'logo_output_block_admin'), 10, 2 );
         add_filter( 'megamenu_output_public_toggle_block_logo', array( $this, 'logo_output_block_public'), 10, 2 );
 
+        // Menu Toggle - Custom Block
+        add_filter( 'megamenu_scss_variables', array( $this, 'menu_toggle_custom_add_block_vars_to_scss'), 10, 5 );
+        add_filter( 'megamenu_registered_toggle_blocks', array( $this, 'menu_toggle_custom_add_as_available_block_option') );
+        add_action( 'wp_ajax_mm_get_toggle_block_menu_toggle_custom', array( $this, 'menu_toggle_custom_output_block_admin' ) );
+        add_action( 'megamenu_output_admin_toggle_block_menu_toggle_custom', array( $this, 'menu_toggle_custom_output_block_admin'), 10, 2 );
+        add_filter( 'megamenu_output_public_toggle_block_menu_toggle_custom', array( $this, 'menu_toggle_custom_output_block_public'), 10, 2 );
+        add_filter( 'megamenu_toggle_block_attributes', array( $this, 'menu_toggle_custom_add_class' ), 10, 6);
+
         // Search Block
         add_filter( 'megamenu_scss_variables', array( $this, 'search_add_block_vars_to_scss'), 10, 5 );
         add_filter( 'megamenu_registered_toggle_blocks', array( $this, 'search_add_as_available_block_option') );
@@ -116,7 +124,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
         foreach ( $anchor_attributes as $name => $val ) {
             if ( strlen( $val ) ) {
-                $html .= " " . $name ."='" . esc_attr( $val ) . "'";
+                $html .= " " . $name .'="' . esc_attr( $val ) . '"';
             }
         }
 
@@ -124,7 +132,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
         foreach ( $logo_attributes as $name => $val ) {
             if ( strlen( $val ) ) {
-                $html .= " " . $name ."='" . esc_attr( $val ) . "'";
+                $html .= " " . $name .'="' . esc_attr( $val ) . '"';
             }
         }
 
@@ -292,7 +300,229 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
     }
 
 
+    /**
+     * Add "Menu Toggle - Custom" as a drop down option to the toggle block editor
+     *
+     * @since 2.1.2
+     * @param array $options
+     * @return array
+     */
+    public function menu_toggle_custom_add_as_available_block_option( $options ) {
+        $options['menu_toggle_custom'] = __("Menu Toggle (Custom)", "megamenu_pro");
 
+        return $options;
+
+    }
+
+
+    /**
+     * Add 'mega-menu-toggle-animated-block' as an extra block class, to allow clicking on it to open/close the sub menu
+     *
+     * @since 2.1.2
+     * @param array $options
+     * @return array
+     */
+    public function menu_toggle_custom_add_class( $atts, $block, $content, $nav_menu, $args, $theme_id ) {
+        if ( $block['type'] == 'menu_toggle_custom' ) {
+            $atts['class'] = $atts['class'] .= ' mega-menu-toggle-animated-block';
+        }
+        return $atts;
+
+    }
+
+
+    /**
+     * Output the Menu Toggle - Custom block HTML (front end)
+     *
+     * @since 2.1.2
+     * @param string $html
+     * @param array $settings
+     * @return string
+     */
+    public function menu_toggle_custom_output_block_public( $html, $settings ) {
+
+        $open_img = "";
+        $closed_img = "";
+
+        if ( isset( $settings['open_id'] ) ) {
+            $id = intval( $settings['open_id'] );
+            $open_img = wp_get_attachment_image_src( $id, 'full' );
+            $src = $open_img[0];
+            $alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
+
+            $open_img_attributes = apply_filters( "megamenu_menu_toggle_custom_open_attributes", array(
+                'src' => $src,
+                'alt' => $alt
+            ), $settings );
+
+            $open_img = "<img";
+
+            foreach ( $open_img_attributes as $name => $val ) {
+                if ( strlen( $val ) ) {
+                    $open_img .= " " . $name .'="' . esc_attr( $val ) . '"';
+                }
+            }
+
+            $open_img .= "></img>";
+        }
+
+        if ( isset( $settings['closed_id'] ) ) {
+            $id = intval( $settings['closed_id'] );
+            $closed_img = wp_get_attachment_image_src( $id, 'full' );
+            $src = $closed_img[0];
+            $alt = get_post_meta( $id, '_wp_attachment_image_alt', true );
+
+            $closed_img_attributes = apply_filters( "megamenu_menu_toggle_custom_closed_attributes", array(
+                'src' => $src,
+                'alt' => $alt
+            ), $settings );
+
+            $closed_img = "<img";
+
+            foreach ( $closed_img_attributes as $name => $val ) {
+                if ( strlen( $val ) ) {
+                    $closed_img .= " " . $name .'="' . esc_attr( $val ) . '"';
+                }
+            }
+
+            $closed_img .= "></img>";
+        }
+
+        $html = '<span class="mega-toggle-label" role="button" aria-expanded="false">';
+        $html .=     '<span class="mega-toggle-label-closed">';
+        $html .=         $closed_img;
+        $html .=     '</span>';
+        $html .=     '<span class="mega-toggle-label-open">';
+        $html .=         $open_img;
+        $html .=     '</span>';
+        $html .= '</span>';
+
+        return apply_filters("megamenu_toggle_block_menu_toggle_custom_html", $html, $settings);
+
+    }
+
+
+    /**
+     * Output the HTML for the "Menu Toggle - Custom" block settings
+     *
+     * @since 2.1.2
+     * @param int $block_id
+     * @param array $settings
+     */
+    public function menu_toggle_custom_output_block_admin( $block_id, $settings = array() ) {
+
+        if ( empty( $settings ) ) {
+            $block_id = "0";
+        }
+
+        $defaults = array(
+            "align" => 'left',
+            "open_id" => 0,
+            "closed_id" => 0,
+            "open_src" => "",
+            "closed_src" => ""
+        );
+
+        $settings = array_merge( $defaults, $settings );
+
+        if ( isset( $settings['open_id'] ) && intval( $settings['open_id'] ) > 0 ) {
+            $open_img = wp_get_attachment_image_src( intval( $settings['open_id'] ), 'thumbnail' );
+            $settings['open_src'] = $open_img[0];
+        }
+
+        if ( isset( $settings['closed_id'] ) && intval( $settings['closed_id'] ) > 0 ) {
+            $closed_img = wp_get_attachment_image_src( intval( $settings['closed_id'] ), 'thumbnail' );
+            $settings['closed_src'] = $closed_img[0];
+        }
+
+        ?>
+
+        <div class='block'>
+            <div class='block-title'><?php _e("TOGGLE", "megamenupro"); ?> <span title='<?php _e("Menu Toggle", "megamenupro"); ?>' class="dashicons dashicons-menu"></span></div>
+            <div class='block-settings'>
+                <h3><?php _e("Menu Toggle (Custom) Settings", "megamenupro") ?></h3>
+                <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle_custom' />
+                <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
+                <label>
+                    <?php _e("Open Icon", "megamenupro") ?>
+
+                    <div class='mmm_image_selector' data-src='<?php echo $settings['open_src']; ?>' data-field='open_id_<?php echo $block_id; ?>'></div>
+                    <input type='hidden' id='open_id_<?php echo $block_id; ?>' name='toggle_blocks[<?php echo $block_id; ?>][open_id]' value='<?php echo $settings['open_id']; ?>' />
+                </label>
+                <label>
+                    <?php _e("Closed Icon", "megamenupro") ?>
+
+                    <div class='mmm_image_selector' data-src='<?php echo $settings['closed_src']; ?>' data-field='closed_id_<?php echo $block_id; ?>'></div>
+                    <input type='hidden' id='closed_id_<?php echo $block_id; ?>' name='toggle_blocks[<?php echo $block_id; ?>][closed_id]' value='<?php echo $settings['closed_id']; ?>' />
+                </label>
+                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+            </div>
+        </div>
+
+        <?php
+    }
+
+
+
+    /**
+     * Create a new variable containing the toggle blocks to be used by the SCSS file
+     *
+     * @param array $vars
+     * @param string $location
+     * @param string $theme
+     * @param int $menu_id
+     * @param string $theme_id
+     * @return array - all custom SCSS vars
+     * @since 2.1.2
+     */
+    public function menu_toggle_custom_add_block_vars_to_scss( $vars, $location, $theme, $menu_id, $theme_id ) {
+
+        $toggle_blocks = $this->get_toggle_blocks_for_theme( $theme_id );
+
+        $menu_toggle_custom_blocks = array();
+
+        if ( is_array( $toggle_blocks ) ) {
+
+            foreach( $toggle_blocks as $index => $settings ) {
+
+                if ( isset( $settings['type'] ) && $settings['type'] == 'menu_toggle_custom' ) {
+
+                    $styles = array(
+                        'id' => $index
+                    );
+
+                    $menu_toggle_custom_blocks[ $index ] = $styles;
+                }
+
+            }
+        }
+
+        //$menu_toggle_blocks(
+        // (123, red, 150px),
+        // (456, green, null),
+        // (789, blue, 90%),());
+        if ( count( $menu_toggle_custom_blocks ) ) {
+
+            $list = "(";
+
+            foreach ( $menu_toggle_custom_blocks as $id => $vals ) {
+                $list .= "(" . implode( ",", $vals ) . "),";
+            }
+
+            // Always add an empty list item to meke sure there are always at least 2 items in the list
+            // Lists with a single item are not treated the same way by SASS
+            $list .= "());";
+
+            $vars['menu_toggle_custom_blocks'] = $list;
+
+        } else {
+
+            $vars['menu_toggle_custom_blocks'] = "()";
+
+        }
+
+        return $vars;
+    }
 
 
     /**
@@ -785,7 +1015,8 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         $anchor_attributes = apply_filters( "megamenu_toggle_icon_attributes", array(
             'class' => 'mega-icon',
             'href' => isset($settings['url']) ? $settings['url'] : get_home_url(),
-            'target' => isset($settings['target']) ? $settings['target'] : '_self'
+            'target' => isset($settings['target']) ? $settings['target'] : '_self',
+            'title' => isset($settings['title']) ? $settings['title'] : ''
         ), $settings );
 
         $html = "<a";
@@ -822,7 +1053,8 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
             'color' => '#fff',
             'url' => '',
             'size' => '20px',
-            'target' => '_self'
+            'target' => '_self',
+            'title' => ''
         );
 
         $settings = array_merge( $defaults, $settings );
@@ -877,7 +1109,10 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
                     <?php _e("Size", "megamenupro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][size]' value='<?php echo $settings['size']; ?>' />
                 </label>
-
+                <label>
+                    <?php _e("Title", "megamenupro") ?>
+                    <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][title]' value='<?php echo $settings['title']; ?>' />
+                </label>
                 <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
             </div>
         </div>

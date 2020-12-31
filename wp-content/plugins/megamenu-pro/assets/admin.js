@@ -8,7 +8,8 @@ jQuery(document).ready(function($) {
             var image_selector = $(this);
             var image_src = image_selector.attr('data-src');
             var input_field = image_selector.attr('data-field');
-            var input = $('input#' + input_field);
+            var escaped_input_field = input_field.replace(/(:|\.|\[|\])/g,'\\$1');
+            var input = $('input#' + escaped_input_field);
             var image = $('<img>').attr('src', image_src);
 
             if (image_src.length > 0) {
@@ -39,19 +40,26 @@ jQuery(document).ready(function($) {
                         attachment_id = attachment.id;
 
                         if(attachment.sizes){
-                            if (attachment.sizes.thumbnail) {
-                                attachment_url = attachment.sizes.thumbnail.url;
-                            } else {
-                                attachment_url = attachment.sizes.full.url;
-                            }
+                            attachment_url = attachment.sizes.full.url;
                         } else {
                             attachment_url = attachment.url;
                         }
+
+                        attachment_height = attachment.height;
+                        attachment_width = attachment.width;
                     });
 
                     image.attr('src', attachment_url);
                     input.attr('value', attachment_id);
-                    image_selector.addClass('has_image')
+                    image_selector.addClass('has_image');
+
+                    if ( attachment_width > 0 && $(".mm_logo_width").is(":visible") ) {
+                        $(".mm_logo_width").val(attachment_width).attr('data-src-width', attachment_width);
+                    }
+
+                    if ( attachment_height > 0 && $(".mm_logo_height").is(":visible") ) {
+                        $(".mm_logo_height").val(40).attr('data-src-height', attachment_height).trigger('change');
+                    }
                 });
 
                 mm_choose_icon_frame.open();
@@ -72,6 +80,9 @@ jQuery(document).ready(function($) {
         media_file_selector();
     });
 
+    $(document).on('widget-added', function() {
+        media_file_selector();
+    });
 
     $(document).on('megamenu_content_loaded', function() {
         if (typeof wp.codeEditor !== 'undefined') {
@@ -136,6 +147,35 @@ jQuery(document).ready(function($) {
         });
 
     });
+
+    $(document).on('keyup keypress blur change mousedown', '.mm_logo_width', function() {
+
+        var src_height = $(".mm_logo_height").attr('data-src-height');
+        var src_width = $(".mm_logo_width").attr('data-src-width');
+
+        if (src_width == 0 || src_height == 0) {
+            return;
+        }
+
+        var configured_width = $(this).val();
+        var ratio = src_height / src_width;
+        $(".mm_logo_height").val(parseInt(configured_width * ratio));
+    });
+
+    $(document).on('keyup keypress blur change mousedown', '.mm_logo_height', function() {
+
+        var src_height = $(".mm_logo_height").attr('data-src-height');
+        var src_width = $(".mm_logo_width").attr('data-src-width');
+
+        if (src_width == 0 || src_height == 0) {
+            return;
+        }
+
+        var configured_height = $(this).val();
+        var ratio = src_width / src_height;
+        $(".mm_logo_width").val(parseInt(configured_height * ratio));
+    });
+
 
 	/** Roles **/
     $(document).on('change', '#mm_roles select', function() {
@@ -269,10 +309,8 @@ jQuery(document).ready(function($) {
         var sticky_husu_rows = $(this).parent().parent().parent().children('tr.megamenu_sticky_husu');
 
         if ( $(this).is(":checked") ) {
-            console.log('checked');
             sticky_husu_rows.show();
         } else {
-            console.log('unchecked');
             sticky_husu_rows.hide();
         }
     });

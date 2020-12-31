@@ -6,7 +6,7 @@
     #{$wrap} #{$menu} div,
     #{$wrap} #{$menu} a {
         color: $panel_font_color;
-        font-family: $panel_font_family;
+        font-family: unquote($panel_font_family);
         font-size: $panel_font_size;
         background: none;
         border: 0;

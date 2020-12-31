@@ -28,8 +28,135 @@ class Mega_Menu_Sticky {
         add_action( 'wp_ajax_mm_get_sticky_notes', array( $this, 'ajax_get_sticky_notes' ) );
         add_filter( 'megamenu_default_theme', array($this, 'add_theme_placeholders'), 10 );
         add_filter( 'megamenu_theme_editor_settings', array( $this, 'add_theme_editor_settings' ), 10 );
+        add_filter( 'megamenu_location_settings', array( $this, 'add_location_settings' ), 10, 3 );
 
     }
+
+    /**
+     * Filter the settings displayed on the Mega Menu > Menu Locations/Settings page to add the sticky options
+     *
+     * @param array $options
+     * @param string $location
+     * @param array $settings
+     * @return array
+     * @since 2.0.2
+     */
+    public function add_location_settings($options, $location, $settings ) {
+
+        $options['sticky'] = array(
+            'priority' => 20,
+            'title' => __( "Sticky", "megamenu" ),
+            'settings' => array(
+                'sticky_enabled' => array(
+                    'priority' => 50,
+                    'title' => __( "Enabled", "megamenu" ),
+                    'description' => __( "Stick the menu for this location", "megamenu" ),
+                    'settings' => array(
+                        array(
+                            'type' => 'checkbox',
+                            'key' => 'sticky_enabled',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_enabled' )
+                        )
+                    )
+                ),
+                'sticky_desktop' => array(
+                    'priority' => 50,
+                    'title' => __( "Stick on Desktop", "megamenu" ),
+                    'description' => __("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenupro"),
+                    'settings' => array(
+                        array(
+                            'type' => 'checkbox',
+                            'key' => 'sticky_desktop',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_desktop' )
+                        )
+                    )
+                ),
+                'sticky_mobile' => array(
+                    'priority' => 50,
+                    'title' => __( "Stick on Mobile", "megamenu" ),
+                    'description' => __( "Enable the sticky menu on screen widths below the configured Responsive Breakpoint?", "megamenu" ),
+                    'settings' => array(
+                        array(
+                            'type' => 'checkbox',
+                            'key' => 'sticky_mobile',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_mobile' )
+                        )
+                    )
+                ),
+                'sticky_opacity' => array(
+                    'priority' => 50,
+                    'title' => __( "Sticky Opacity", "megamenu" ),
+                    'description' => __("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenupro"),
+                    'settings' => array(
+                        array(
+                            'type' => 'freetext',
+                            'key' => 'sticky_opacity',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_opacity' )
+                        )
+                    )
+                ),
+                'sticky_offset' => array(
+                    'priority' => 50,
+                    'title' => __( "Sticky Offset", "megamenu" ),
+                    'description' => __("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenupro"),
+                    'settings' => array(
+                        array(
+                            'type' => 'freetext',
+                            'key' => 'sticky_offset',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_offset' )
+                        )
+                    )
+                ),
+                'sticky_expand' => array(
+                    'priority' => 50,
+                    'title' => __( "Expand Background", "megamenu" ),
+                    'description' => __("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus.", "megamenupro"),
+                    'settings' => array(
+                        array(
+                            'title' => __("Desktop", "megamenupro"),
+                            'type' => 'checkbox',
+                            'key' => 'sticky_expand',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_expand' )
+                        ),
+                        array(
+                            'title' => __("Mobile", "megamenupro"),
+                            'type' => 'checkbox',
+                            'key' => 'sticky_expand_mobile',
+                            'value' => $this->get_sticky_setting( $settings, $location, 'sticky_expand' )
+                        )
+                    )
+                ),
+                'sticky_hide_until_scroll_up' => array(
+                    'priority' => 50,
+                    'title' => __( "Hide Until Scroll Up", "megamenu" ),
+                    'description' => __("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus.", "megamenupro"),
+                    'settings' => array(
+                        array(
+                            'title' => __("Enabled", "megamenupro"),
+                            'type' => 'checkbox',
+                            'key' => 'sticky_hide_until_scroll_up',
+                            'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up')
+                        ),
+                        array(
+                            'title' => __("Tolerance", "megamenupro"),
+                            'type' => 'freetext',
+                            'key' => 'sticky_hide_until_scroll_up_tolerance',
+                            'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_tolerance')
+                        ),
+                        array(
+                            'title' => __("Offset", "megamenupro"),
+                            'type' => 'freetext',
+                            'key' => 'sticky_hide_until_scroll_up_offset',
+                            'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_offset')
+                        )
+                    )
+                )
+            )
+        );
+
+        return $options;
+    }
+
 
     /**
      * Insert theme placeholder values.
@@ -39,7 +166,6 @@ class Mega_Menu_Sticky {
      * @return array
      */
     public function add_theme_placeholders( $theme ) {
-
         $theme['sticky_menu_height'] = 'off';
         $theme['sticky_menu_transition'] = 'off';
         $theme['sticky_menu_item_link_height'] = 'menu_item_link_height';
@@ -56,7 +182,6 @@ class Mega_Menu_Sticky {
      * @return array
      */
     public function add_theme_editor_settings( $settings ) {
-
         $new_settings = array(
             'sticky_menu_item_link_height' => array(
                 'priority' => 06,
@@ -109,10 +234,11 @@ class Mega_Menu_Sticky {
         wp_send_json_success( json_encode( $response ) );
     }
 
+
     /**
-     * Makr sure 'sticky enabled' really is set to false if the checkbox is unchecked.
+     * Make sure 'sticky enabled' really is set to false if the checkbox is unchecked.
      */
-    public function filter_submitted_settings($settings) {
+    public function filter_submitted_settings( $settings ) {
         if ( is_array( $settings ) ) {
             foreach ( $settings as $location => $vars ) {
                 if ( ! isset( $vars['sticky_enabled'] ) ) {
@@ -127,8 +253,16 @@ class Mega_Menu_Sticky {
                     $settings[$location]['sticky_desktop'] = 'false';
                 }
 
+                if ( ! isset( $vars['sticky_expand'] ) ) {
+                    $settings[$location]['sticky_expand'] = 'false';
+                }
+
                 if ( ! isset( $vars['sticky_expand_mobile'] ) ) {
                     $settings[$location]['sticky_expand_mobile'] = 'false';
+                }
+
+                if ( ! isset( $vars['sticky_hide_until_scroll_up'] ) ) {
+                    $settings[$location]['sticky_hide_until_scroll_up'] = 'false';
                 }
             }
         }
@@ -136,8 +270,9 @@ class Mega_Menu_Sticky {
         return $settings;
     }
     
+
     /**
-     * Add sticky menu item visibility option
+     * Add sticky menu item visibility option to the individual menu item settings
      *
      * @since 1.5.2
      */
@@ -167,13 +302,23 @@ class Mega_Menu_Sticky {
 
 
     /**
-     * Add Orientation setting to menu options
+     * Add Sticky settings to menu options
      *
      * @since 1.1
      * @param string $location
      * @param array $settings
      */
     public function add_sticky_setting( $location, $settings ) {
+        global $current_screen;
+     
+        if ( ! isset( $current_screen ) ) {
+            return null;
+        }
+        
+        if( 'nav-menus' != $current_screen->base ) {
+            return null;
+        }
+
         ?>
             </table>
             <table class='sticky_settings'>
@@ -335,13 +480,19 @@ class Mega_Menu_Sticky {
             $attributes['data-sticky-expand'] = $this->get_sticky_setting( $settings, $current_theme_location, 'sticky_expand' );
             $attributes['data-sticky-expand-mobile'] = $this->get_sticky_setting( $settings, $current_theme_location, 'sticky_expand_mobile' );
 
+            $menu_theme = mmm_get_theme_for_location( $current_theme_location );
+
+            if ( $menu_theme['sticky_menu_height'] == "on" && $menu_theme['sticky_menu_transition'] === "on" ) {
+                $attributes['data-sticky-transition'] = 'true';
+            } else {
+                $attributes['data-sticky-transition'] = 'false';
+            }
 
             if ($this->get_sticky_setting( $settings, $current_theme_location, 'sticky_hide_until_scroll_up' ) == 'true') {
                 $attributes['data-sticky-hide'] = $this->get_sticky_setting( $settings, $current_theme_location, 'sticky_hide_until_scroll_up' );
                 $attributes['data-sticky-hide-tolerance'] = $this->get_sticky_setting( $settings, $current_theme_location, 'sticky_hide_until_scroll_up_tolerance' );
                 $attributes['data-sticky-hide-offset'] = $this->get_sticky_setting( $settings, $current_theme_location, 'sticky_hide_until_scroll_up_offset' );
             }
-
         }
 
         return $attributes;
@@ -356,7 +507,7 @@ class Mega_Menu_Sticky {
     private function get_sticky_setting( $saved_settings, $location, $setting ) {
 
         if ( isset( $saved_settings[$location][$setting] ) ) {
-            return $saved_settings[$location][$setting];
+            return esc_attr( $saved_settings[$location][$setting] );
         }
 
         // backwards compatibility from this point onwards
@@ -367,11 +518,11 @@ class Mega_Menu_Sticky {
         $old_setting_name = substr($setting, 7);
 
         if ( isset( $saved_settings['sticky'][$old_setting_name]) && $location == $saved_settings['sticky']['location'] ) {
-            return $saved_settings['sticky'][$old_setting_name];
+            return esc_attr( $saved_settings['sticky'][$old_setting_name] );
         }
         
         if ( $setting == 'sticky_expand_mobile' && ! isset( $saved_settings[$location]['sticky_expand_mobile'] ) && isset( $saved_settings[$location]['sticky_expand'] ) ) {
-            return $saved_settings[$location]['sticky_expand'];
+            return esc_attr( $saved_settings[$location]['sticky_expand'] );
         }
 
         // defaults
@@ -390,7 +541,7 @@ class Mega_Menu_Sticky {
 
 
         if ( isset( $defaults[$setting] ) ) {
-            return $defaults[$setting];
+            return esc_attr( $defaults[$setting] );
         }
 
         return 'false';

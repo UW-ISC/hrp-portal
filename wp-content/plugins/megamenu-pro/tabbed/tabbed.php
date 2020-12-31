@@ -359,7 +359,7 @@ class Mega_Menu_Tabbed {
         if ( $menu_item_depth !== 1 ) {
             return $tabs;
         }
-
+        
         $parent_menu_item_id = $this->get_parent_menu_item_id( $menu_id, $menu_item_id );
 
         $parent_megamenu_settings = get_post_meta( $parent_menu_item_id, '_megamenu', true );
@@ -435,6 +435,8 @@ class Mega_Menu_Tabbed {
             'title' => __('Tab Content', 'megamenu'),
             'content' => $return
         );
+
+        $tabs['active_tab'] = 'mega_menu';
 
         return $tabs;
     }
