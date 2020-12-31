@@ -23,7 +23,7 @@
       });
     });
 
-    $('.wdt-hide-rating').click(function (e) {
+    $(document).on('click', '.wdt-hide-rating', function (e) {
       e.preventDefault();
       $.ajax({
         url: ajaxurl,
@@ -41,7 +41,7 @@
       });
     })
 
-    $('.wpdt-md-news-notice .notice-dismiss').click(function (e) {
+    $('.wpdt-md-news-notice .notice-dismiss').on('click', function (e) {
       e.preventDefault();
       $.ajax({
         url: ajaxurl,

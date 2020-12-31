@@ -541,6 +541,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpDataTablesWrapper
     display: inline-flex;
     min-width: 200px;
     margin-left: 20px;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -o-pre-wrap;
 }
 .wpdt-c .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnTitle{
     display: inline-block;

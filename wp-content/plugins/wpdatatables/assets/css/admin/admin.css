@@ -224,6 +224,21 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c div.wpdt-tab {
     background-color: #fff;
 }
+
+.wpdt-c #google_sheet_settings .wpdt-icon-filled-check {
+    font-size: 20px;
+    line-height: 20px;
+    color: #008CFF;
+}
+
+.wpdt-c #google_sheet_settings textarea {
+    background: #FFFFFF;
+    border: 1px solid #D7D9E2 !important;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
+    border-radius: 3px;
+    padding: 10px 12px;
+}
 .wpdt-c .wdt-datatables-admin-wrap .bg-white {
     background: #ffffff;
 }
@@ -700,6 +715,8 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c #wdt-rb-backend-close-modal .modal-content .modal-footer #wdt-rb-backend-close-button,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-continue-button,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-close-button,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-warning-continue-button,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-clear-table-data-button,
 .wpdt-c #wdt-error-modal .modal-content .modal-footer button,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-cancel-delete-button,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-browse-delete-button,
@@ -715,6 +732,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 
 .wpdt-c #wdt-rb-backend-close-modal .modal-content .modal-footer #wdt-rb-backend-continue-button,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-continue-button,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-warning-continue-button,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-cancel-delete-button,
 .wpdt-c #wdt-error-modal .modal-content .modal-footer button,
 .wpdt-c #wdt-range-picker .modal-content .modal-footer #wdt-cancel-range {
@@ -726,6 +744,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 }
 .wpdt-c #wdt-rb-backend-close-modal .modal-content .modal-footer #wdt-rb-backend-continue-button:hover,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-continue-button:hover,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-warning-continue-button:hover,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-cancel-delete-button:hover,
 .wpdt-c #wdt-error-modal .modal-content .modal-footer button:hover,
 .wpdt-c #wdt-range-picker .modal-content .modal-footer #wdt-cancel-range:hover {
@@ -737,6 +756,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c #separate-connection .wdt-my-sql-delete,
 .wpdt-c #wdt-rb-backend-close-modal .modal-content .modal-footer #wdt-rb-backend-close-button,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-close-button,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-clear-table-data-button,
 .wpdt-c #wdt-remove-column-modal #wdt-remove-column-submit,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-browse-delete-button{
     background: #F03E3E;
@@ -744,6 +764,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 }
 .wpdt-c #separate-connection .wdt-my-sql-delete:hover,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-close-button:hover,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-clear-table-data-button:hover,
 .wpdt-c #wdt-rb-backend-close-modal .modal-content .modal-footer #wdt-rb-backend-close-button:hover,
 .wpdt-c #wdt-remove-column-modal #wdt-remove-column-submit:hover,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-browse-delete-button:hover{
@@ -873,8 +894,15 @@ div.mce-widget button i.mce-i-wpdatachart{
     top: 50%;
 }
 
-.wpdt-c .wpcolorpicker {
+.wpdt-c .wdt-color-picker {
     width: 100%;
+}
+.wpdt-c #wpdt-table-editor img{
+   max-width: 100%;
+    height: auto;
+}
+.wpdt-c #wpdt-table-editor .ht_clone_left table tbody tr th{
+   vertical-align: middle;
 }
 
 .wpdt-c .wpcolorpicker-icon.input-group-addon {
@@ -885,15 +913,19 @@ div.mce-widget button i.mce-i-wpdatachart{
     height: 25px;
     width: 25px;
     padding: 0;
+    pointer-events: none;
 }
 .wpdt-c #column-conditional-formatting-settings .wdt-conditional-formatting-rule .wpcolorpicker-icon.input-group-addon {
     right: 13px;
 }
 
-.wpdt-c .colorpicker-element .wpcolorpicker-icon.add-on>i,
-.wpdt-c .colorpicker-element .wpcolorpicker-icon.input-group-addon>i {
+.wpdt-c .wpcolorpicker-icon.add-on>i,
+.wpdt-c .wpcolorpicker-icon.input-group-addon>i {
     height: 28px;
     width: 28px;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: text-top;
 }
 .wpdt-c .wdt-conditional-formatting-rule {
     padding-top: 12px;
@@ -1155,6 +1187,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c .wdt-store-activate-plugin i,
 .wpdt-c .wdt-envato-activation .wdt-envato-deactivation-button i,
 .wpdt-c #wdt-backend-close-modal .modal-content .modal-footer #wdt-backend-close-button i,
+.wpdt-c #wdt-backend-warning-modal .modal-content .modal-footer #wdt-backend-clear-table-data-button i,
 .wpdt-c #wdt-delete-modal .modal-content .modal-footer .wdt-cancel-delete-button i{
     margin-right: 8px;
     vertical-align: baseline;
@@ -1385,6 +1418,36 @@ div.mce-widget button i.mce-i-wpdatachart{
     color: #8796AF;
     background: #F8F8FA;
     border-radius: 0 2px 2px 0;
+}
+#wpdt-views {
+    display: flex;
+    justify-content: flex-start;
+}
+#wpdt-views .nav-link {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #5A6C89;
+    background-color: #fff !important;
+}
+#wpdt-views .nav-item {
+    cursor: pointer;
+}
+#wpdt-views .nav-item:hover {
+    border-bottom: 1px solid #008CFF;
+    color: #008CFF;
+    background-color: #fff !important;
+}
+#wpdt-views .nav-item.active {
+    border-bottom: 1px solid #008CFF;
+}
+
+#wpdt-views .nav-item .nav-link:hover,
+#wpdt-views .nav-item.active .nav-link{
+    color: #008CFF;
+    background-color: #fff !important;
 }
 
 @media only screen and (max-width : 1025px) {

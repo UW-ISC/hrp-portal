@@ -85,6 +85,15 @@ var wpdatatable_plugin_config = {
         }
     },
 
+    setSortingOrderBrowseTables: function ( wdtSortingOrderBrowseTables ) {
+        if( wdt_current_config.wdtSortingOrderBrowseTables != wdtSortingOrderBrowseTables ){
+            wdt_current_config.wdtSortingOrderBrowseTables = wdtSortingOrderBrowseTables;
+        }
+        if( jQuery('#wdt-sorting-order-browse-tables').val() != wdtSortingOrderBrowseTables ){
+            jQuery('#wdt-sorting-order-browse-tables').selectpicker( 'val', wdtSortingOrderBrowseTables );
+        }
+    },
+
     setRenderPosition: function ( renderPosition ) {
         if( wdt_current_config.wdtRenderFilter != renderPosition ){
             wdt_current_config.wdtRenderFilter = renderPosition;
@@ -198,7 +207,9 @@ var wpdatatable_plugin_config = {
                     jQuery('input[data-name=' + settingName + ']').val( settingValue );
                     break;
                 default:
-                    jQuery('input[data-name=' + settingName + ']').closest('.color-picker').colorpicker('setValue', settingValue);
+                    jQuery('input[data-name=' + settingName + ']').val( settingValue );
+                    jQuery('input[data-name=' + settingName + '] + .wpcolorpicker-icon i').css( "background-color",  settingValue );
+
             }
         }
     },
@@ -227,7 +238,7 @@ var wpdatatable_plugin_config = {
     },
 
     setCustomJs: function ( customJs ) {
-        if( wdt_current_config.customJs != customJs ){
+        if( wdt_current_config.wdtCustomJs != customJs ){
             wdt_current_config.wdtCustomJs = customJs;
         }
         if( jQuery('#wdt-custom-js').val() != customJs ){

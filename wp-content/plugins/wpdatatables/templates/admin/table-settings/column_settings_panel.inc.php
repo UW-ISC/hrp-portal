@@ -285,9 +285,9 @@
                                     <div class="form-group">
                                         <div class="fg-line dropdown">
                                             <div id="cp"
-                                                 class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                                 class="input-group wdt-color-picker">
                                                 <input type="text" id="wdt-column-color" value=""
-                                                       class="form-control cp-value cp-inside"/>
+                                                       class="form-control cp-value cp-inside wdt-add-picker"/>
                                                 <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                             </div>
                                         </div>

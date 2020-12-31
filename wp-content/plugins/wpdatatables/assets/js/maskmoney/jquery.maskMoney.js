@@ -379,6 +379,7 @@
 
                 function blurEvent(e) {
 
+
                     if (!!settings.formatOnBlur && $input.val() !== onFocusValue) {
                         applyMask(e);
                     }

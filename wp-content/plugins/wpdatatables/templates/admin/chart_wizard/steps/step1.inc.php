@@ -28,7 +28,7 @@
             <?php _e('Chart render engine', 'wpdatatables'); ?>
 
             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-               title="<?php _e('Please choose the render engine.', 'wpdatatables'); ?> <?php _e('Please note that HighCharts license is NOT included with wpDataTables and you must purchase the license separately on', 'wpdatatables'); ?> http://highcharts.com"></i>
+               title="<?php _e('Please choose the render engine.', 'wpdatatables'); ?> <?php _e(' Please note that HighCharts license from verion 3.0.4 IS included with wpDataTables and you DON\'T NEED to purchase the license separately on', 'wpdatatables'); ?> http://highcharts.com"></i>
         </h4>
         <div class="form-group col-sm-6 col-md-6">
             <div class="fg-line">

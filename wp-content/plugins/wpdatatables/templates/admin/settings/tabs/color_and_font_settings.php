@@ -75,9 +75,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-table-font-color" data-name="wdtTableFontColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -110,9 +110,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-base-color" data-name="wdtHeaderBaseColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -129,9 +129,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-border-color"
-                                                   data-name="wdtHeaderBorderColor" class="form-control cp-value"
+                                                   data-name="wdtHeaderBorderColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -149,9 +149,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-font-color" data-name="wdtHeaderFontColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -168,9 +168,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-header-active-color"
-                                                   data-name="wdtHeaderActiveColor" class="form-control cp-value"
+                                                   data-name="wdtHeaderActiveColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -204,9 +204,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-table-inner-border-color"
-                                                   data-name="wdtTableInnerBorderColor" class="form-control cp-value"
+                                                   data-name="wdtTableInnerBorderColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -224,9 +224,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-table-outer-border-color"
-                                                   data-name="wdtTableOuterBorderColor" class="form-control cp-value"
+                                                   data-name="wdtTableOuterBorderColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -267,7 +267,7 @@
                 <div class="panel-heading" role="tab" id="heading-four">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-four" aria-expanded="false"
-                           aria-controls="collapse-four" class="collapsed">Row color</a>
+                           aria-controls="collapse-four" class="collapsed"> <?php _e('Row color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-four" class="collapse" role="tabpanel" aria-labelledby="heading-four">
@@ -282,9 +282,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-even-row-color" data-name="wdtEvenRowColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -301,9 +301,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-odd-row-color" data-name="wdtOddRowColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -320,9 +320,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-hover-row-color" data-name="wdtHoverRowColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -339,9 +339,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-selected-row-color"
-                                                   data-name="wdtSelectedRowColor" class="form-control cp-value"
+                                                   data-name="wdtSelectedRowColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -375,9 +375,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-active-even-cell-color"
-                                                   data-name="wdtActiveEvenCellColor" class="form-control cp-value"
+                                                   data-name="wdtActiveEvenCellColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -395,9 +395,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-active-odd-cell-color"
-                                                   data-name="wdtActiveOddCellColor" class="form-control cp-value"
+                                                   data-name="wdtActiveOddCellColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -431,9 +431,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-color" data-name="wdtButtonColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -450,9 +450,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-border-color"
-                                                   data-name="wdtButtonBorderColor" class="form-control cp-value"
+                                                   data-name="wdtButtonBorderColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -470,9 +470,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-font-color" data-name="wdtButtonFontColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -489,10 +489,10 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-background-hover-color"
                                                    data-name="wdtButtonBackgroundHoverColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -509,9 +509,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-font-hover-color"
-                                                   data-name="wdtButtonFontHoverColor" class="form-control cp-value"
+                                                   data-name="wdtButtonFontHoverColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -529,9 +529,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-button-border-hover-color"
-                                                   data-name="wdtButtonBorderHoverColor" class="form-control cp-value"
+                                                   data-name="wdtButtonBorderHoverColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -590,9 +590,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-modal-font-color" data-name="wdtModalFontColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -610,9 +610,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-modal-background-color"
-                                                   data-name="wdtModalBackgroundColor" class="form-control cp-value"
+                                                   data-name="wdtModalBackgroundColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -631,9 +631,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-overlay-color" data-name="wdtOverlayColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -666,9 +666,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-background-color"
-                                                   data-name="wdtPaginationBackgroundColor" class="form-control cp-value"
+                                                   data-name="wdtPaginationBackgroundColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -686,9 +686,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination--color"
-                                                   data-name="wdtPaginationColor" class="form-control cp-value"
+                                                   data-name="wdtPaginationColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -706,9 +706,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-current-background-color" data-name="wdtPaginationCurrentBackgroundColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -725,9 +725,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-current-color"
-                                                   data-name="wdtPaginationCurrentColor" class="form-control cp-value"
+                                                   data-name="wdtPaginationCurrentColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
@@ -745,9 +745,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-hover-background-color" data-name="wdtPaginationHoverBackgroundColor"
-                                                   class="form-control cp-value" value=""/>
+                                                   class="form-control cp-value wdt-add-picker" value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>
                                     </div>
@@ -764,9 +764,9 @@
                                 <div class="form-group">
                                     <div class="fg-line dropdown">
                                         <div id="cp"
-                                             class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
+                                             class="input-group wdt-color-picker">
                                             <input type="text" id="wdt-pagination-hover-color"
-                                                   data-name="wdtPaginationHoverColor" class="form-control cp-value"
+                                                   data-name="wdtPaginationHoverColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                         </div>

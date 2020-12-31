@@ -533,6 +533,36 @@ var singleClick = false;
             if (wpDataTables[tableDescription.tableId].fnSettings()._iDisplayLength >= wpDataTables[tableDescription.tableId].fnSettings().fnRecordsTotal() || dataTableOptions.iDisplayLength === -1) {
                 $('#' +  tableDescription.tableId + '_paginate').hide();
             }
+
+            /**
+             * Set pagination alignment classes
+             */
+            if (tableDescription.paginationAlign) {
+                switch (tableDescription.paginationAlign){
+                    case "right":
+                        $(tableDescription.selector + '_wrapper').addClass('wpdt-pagination-right');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-left');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-center');
+                        break;
+                    case "left":
+                        $(tableDescription.selector + '_wrapper').addClass('wpdt-pagination-left');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-right');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-center');
+                        break;
+                    case "center":
+                        $(tableDescription.selector + '_wrapper').addClass('wpdt-pagination-center');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-left');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-right');
+                        break;
+                    default:
+                        $(tableDescription.selector + '_wrapper').addClass('wpdt-pagination-right');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-left');
+                        $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-center');
+                        break;
+                }
+
+            }
+
             /**
              * Remove pagination when "All" is selected from length menu or
              * if value length menu is greater than total records
@@ -542,11 +572,14 @@ var singleClick = false;
                 fn: function (oSettings) {
                     var api = oSettings.oInstance.api();
 
-                    if (api.page.len() >= api.page.info().recordsDisplay || api.data().page.len() == -1) {
-                        $('#' +  tableDescription.tableId + '_paginate').hide();
-                    } else {
-                        $('#' +  tableDescription.tableId + '_paginate').show();
+                    if (typeof (api.page.info()) != 'undefined'){
+                        if (api.page.len() >= api.page.info().recordsDisplay || api.data().page.len() == -1) {
+                            $('#' +  tableDescription.tableId + '_paginate').hide();
+                        } else {
+                            $('#' +  tableDescription.tableId + '_paginate').show();
+                        }
                     }
+
                 }
             });
 
@@ -1458,7 +1491,7 @@ var singleClick = false;
         /**
          * Loop through all tables on the page and render the wpDataTables elements
          */
-        $('table.wpDataTable').each(function () {
+        $('table.wpDataTable:not(.wpdtSimpleTable)').each(function () {
             var tableDescription = JSON.parse($('#' + $(this).data('described-by')).val());
             wdtRenderDataTable($(this), tableDescription);
         });

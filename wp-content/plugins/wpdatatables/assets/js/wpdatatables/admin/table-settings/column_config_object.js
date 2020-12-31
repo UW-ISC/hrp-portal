@@ -930,10 +930,10 @@ WDTColumn.prototype.renderConditionalFormattingBlock = function (formattingRule)
         e.preventDefault();
         e.stopImmediatePropagation();
         if (['setCellColor', 'setRowColor', 'setColumnColor'].indexOf(jQuery(this).val()) !== -1) {
-            if (!$block.find('div.colorpicker-component').length) {
+            if (!$block.find('div.wdt-color-picker').length) {
                 wdtInputToColorpicker($block.find('input.formatting-rule-set-value'));
             }
-        } else if ($block.find('div.colorpicker-component').length) {
+        } else if ($block.find('div.wdt-color-picker').length) {
             wdtColorPickerToInput($block.find('input.formatting-rule-set-value'));
         }
     }).change();
@@ -999,6 +999,7 @@ WDTColumn.prototype.fillInputs = function () {
     wpdatatable_config.server_side == 1 ? jQuery('div.wdt-group-column-block').hide() : jQuery('div.wdt-group-column-block').show();
     jQuery('#wdt-group-column').prop('checked', this.groupColumn);
     jQuery('#wdt-column-color').val(this.color).keyup();
+    jQuery('#wdt-column-color').siblings('.wpcolorpicker-icon').find('i').css("background", this.color);
     jQuery('#wdt-column-visible').prop('checked', this.visible);
     jQuery('#wdt-column-width').val(this.width);
     jQuery('#wdt-link-target-attribute').prop('checked', this.linkTargetAttribute === '_self' ? 0 : 1);

@@ -78,7 +78,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating tables from CSV files', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating data tables from CSV files', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -90,7 +90,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating tables from JSON files', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating data tables from JSON files', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -102,7 +102,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating tables from XML files', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating data tables from XML files', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -114,7 +114,33 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating tables from Serialized PHP array', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating data tables from Serialized PHP array', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php _e('Create a Simple tables', 'wpdatatables'); ?>
+                                    <span style="color: #008CFF;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php _e('Merge cells', 'wpdatatables'); ?>
+                                    <span style="color: #008CFF;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -210,7 +236,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Create a table manually', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Create a data table manually', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
@@ -222,7 +248,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating tables from Google Spreadsheet', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating data tables from Google Spreadsheet', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
@@ -234,7 +260,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating MySQL-based tables from database', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating MySQL-based data tables from database', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
@@ -246,7 +272,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php _e('Creating MySQL-based tables from Wordpress post types', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php _e('Creating MySQL-based data tables from Wordpress post types', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
@@ -415,12 +441,12 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php _e('Made by', 'wpdatatables'); ?>
-                <a href="https://tms-outsource.com/" target="_blank">
+                <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
                 <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
                 </li>

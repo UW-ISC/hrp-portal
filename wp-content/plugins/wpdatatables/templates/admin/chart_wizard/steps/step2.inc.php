@@ -13,12 +13,11 @@
                     <select class="selectpicker" name="wpdatatables-chart-source" id="wpdatatables-chart-source"
                             data-live-search="true">
                         <option value=""><?php _e('Pick a wpDataTable', 'wpdatatables'); ?></option>
-                        <?php foreach (WPDataTable::getAllTables() as $table) { ?>
+                        <?php foreach (WPDataTable::getAllTablesExceptSimple() as $table) { ?>
                             <option value="<?php echo $table['id'] ?>">
                                 <?php echo "{$table['title']} (id: {$table['id']}" . (Connection::enabledSeparate() ? ', connection: ' . Connection::getName($table['connection']) : '') . ')';?>
                             </option>
                         <?php } ?>
-                    </select>
                     </select>
                 </div>
             </div>

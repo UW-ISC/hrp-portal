@@ -513,6 +513,104 @@
                     </div>
                     <!-- /.row -->
 
+                    <div class="row">
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Pagination', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="pagination">
+                                <div class="popover-heading">
+                                    <?php _e('Pagination', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php _e('Enable to show a pagination', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-pagination" type="checkbox" checked="checked">
+                                <label for="wdt-pagination"
+                                       class="ts-label"><?php _e('Show pagination block below the table', 'wpdatatables'); ?></label>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16 pagination-align-settings-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Pagination Alignment', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination-align"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="pagination-align">
+                                <div class="popover-heading">
+                                    <?php _e('Pagination Alignment', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php _e('Here you can set pagination position: right, center or left.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-pagination-align">
+                                    <option value="right"><?php _e('Right', 'wpdatatables'); ?></option>
+                                    <option value="center"><?php _e('Center', 'wpdatatables'); ?></option>
+                                    <option value="left"><?php _e('Left', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16 pagination-layout-settings-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Pagination Layout', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination-layout"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="pagination-layout">
+                                <div class="popover-heading">
+                                    <?php _e('Pagination Layout', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php _e('Here you can choose between different pagination layout.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-pagination-layout">
+                                    <option value="full_numbers"><?php _e('"First", "Previous", "Next" and "Last" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                    <option value="simple"><?php _e('"Previous" and "Next" buttons only', 'wpdatatables'); ?></option>
+                                    <option value="simple_numbers"><?php _e('"Previous" and "Next" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                    <option value="full"><?php _e('"First", "Previous", "Next" and "Last" buttons', 'wpdatatables'); ?></option>
+                                    <option value="numbers"><?php _e('Page number buttons only', 'wpdatatables'); ?></option>
+                                    <option value="first_last_numbers"><?php _e('"First" and "Last" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+
                 </div>
                 <!-- /Table display settings -->
 

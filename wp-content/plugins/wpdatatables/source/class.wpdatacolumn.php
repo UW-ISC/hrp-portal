@@ -113,7 +113,7 @@ class WDTColumn {
      * @return string
      */
     public function getTitle() {
-        return $this->_title;
+        return apply_filters('wpdatatables_filter_column_title', $this->_title, $this->getOriginalHeader(), $this);
     }
 
     /**
@@ -806,9 +806,9 @@ class WDTColumn {
         if (in_array($this->getFilterType(), array('select', 'multiselect', 'checkbox')) || in_array($this->getInputType(), array('selectbox', 'multi-selectbox'))) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
-                    $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, false, true);
+                    $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $distValues = self::getPossibleValuesRead($this, false, true);
+                    $distValues = self::getPossibleValuesRead($this, true,false);
                 }
                 foreach ($distValues as $value) {
                     $distinctValue['value'] = $value;
@@ -824,7 +824,7 @@ class WDTColumn {
             } elseif ($this->_possibleValuesType === 'foreignkey' && $parentTable->serverSide()) {
                 $readValues = [];
                 if ($this->getParentTable()->getOnlyOwnRows()) {
-                    $readValues = self::getPossibleValuesRead($this, false, true);
+                    $readValues = self::getPossibleValuesRead($this, true,false);
                 }
                 foreach ($this->getPossibleValuesList() as $value => $label) {
                     // If foreign key is used with "User can see only own rows"
@@ -889,9 +889,9 @@ class WDTColumn {
         if (in_array($this->getInputType(), array('selectbox', 'multi-selectbox'))) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
-                    $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, false, true);
+                    $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $distValues = self::getPossibleValuesRead($this, false, true);
+                    $distValues = self::getPossibleValuesRead($this, true,false);
                 }
                 foreach ($distValues as $value) {
                     $distinctValue['value'] = $value;
@@ -909,7 +909,7 @@ class WDTColumn {
                 $foreignKeyRule = $this->getForeignKeyRule();
                 $allowAllPossibleValuesForeignKey = $foreignKeyRule->allowAllPossibleValuesForeignKey;
                 if ($this->getParentTable()->getOnlyOwnRows()) {
-                    $readValues = self::getPossibleValuesRead($this, false, true);
+                    $readValues = self::getPossibleValuesRead($this, true,false);
                 }
                 foreach ($this->getPossibleValuesList() as $value => $label) {
                     // If foreign key is used with "User can see only own rows"
@@ -956,9 +956,9 @@ class WDTColumn {
         if (empty($this->_formula) && $this->getDataType() !== '' && !in_array($this->getDataType(), array('date', 'datetime', 'time', 'formula'), true)) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
-                    $values = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, false, true);
+                    $values = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);
                 } else {
-                    $values = self::getPossibleValuesRead($this, false, true);
+                    $values = self::getPossibleValuesRead($this, true,false);
                 }
             } elseif ($this->_possibleValuesType === 'list' || ($this->_possibleValuesType === 'foreignkey' && $parentTable->serverSide() == false)) {
                 $values = $this->getPossibleValuesList();
@@ -987,7 +987,7 @@ class WDTColumn {
      * @param           $filterByUserId
      * @return array|bool
      */
-    public static function getPossibleValuesRead($column, $tableData = null, $filterByUserId) {
+    public static function getPossibleValuesRead($column, $filterByUserId, $tableData = null) {
         global $wdtVar1, $wdtVar2, $wdtVar3;
         $distValues = array();
         /** @var WPDataTable $parentTable */

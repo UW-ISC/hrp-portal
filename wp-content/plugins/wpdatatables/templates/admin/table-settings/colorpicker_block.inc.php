@@ -5,8 +5,8 @@
     <div class="cp-container">
         <div class="form-group">
             <div class="fg-line dropdown">
-                <div class="input-group colorpicker-component colorpicker-element color-picker wpcolorpicker">
-                    <input type="text" value="" class="cp-value"/>
+                <div id="cp" class="input-group wdt-color-picker">
+                    <input id="test" type="text" value="" class="cp-value wdt-add-picker"/>
                     <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                 </div>
             </div>

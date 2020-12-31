@@ -9,7 +9,7 @@ defined('ABSPATH') or die('Access denied.');
 
 // Current version
 //[<-- Full version -->]//
-define('WDT_CURRENT_VERSION', '3.0.4');
+define('WDT_CURRENT_VERSION', '3.3');
 //[<--/ Full version -->]//
 //[<-- Full version insertion #15 -->]//
 

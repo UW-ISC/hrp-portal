@@ -181,9 +181,10 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
     else
         th.wrapInner('<span class="filter_column wdt-filter-text" data-filter_type="text" data-index="' + columnIndex + '"/>');
 
-    input.on('keyup input',function (e) {
+    input.on('keyup input',_.debounce(function (e) {
         inputSearch(this.value, e.keyCode);
-    });
+    }, 500)
+    )
 
     function inputSearch(value, keyCode) {
         if (typeof keyCode !== 'undefined' && jQuery.inArray(keyCode, [16, 37, 38, 39, 40]) !== -1) {
