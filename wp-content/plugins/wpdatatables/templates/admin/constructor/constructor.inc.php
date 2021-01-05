@@ -37,6 +37,8 @@
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1.inc.php'; ?>
 
+                    <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_0.inc.php'; ?>
+
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_1.inc.php'; ?>
 
                     <?php include WDT_TEMPLATE_PATH . 'admin/constructor/steps/constructor_1_2.inc.php'; ?>

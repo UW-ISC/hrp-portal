@@ -124,7 +124,7 @@
                         <?php } else {
                             $lastTableData = WDTTools::getLastTableData('table');
                             $tableType = WDTTools::getConvertedTableType($lastTableData->table_type);
-
+                            $simpleType = $lastTableData->table_type == 'simple' ? '&simple': '';
                             ?>
                             <div class="card-body wpdt-flex card-padding">
                             <div class="wdt-table-count text-center">
@@ -132,7 +132,7 @@
                                 <p><?php _e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-table-last-created">
-                                <a href="admin.php?page=wpdatatables-constructor&source&table_id=<?php echo (int)$lastTableData->id; ?>"
+                                <a href="admin.php?page=wpdatatables-constructor&source<?php echo $simpleType ?>&table_id=<?php echo (int)$lastTableData->id; ?>"
                                    class="wdt-table-link">
                                     <?php echo $lastTableData->title ?>
                                 </a>
@@ -263,20 +263,18 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            <?php _e('A regular update including some stability improvements and bugfixes.', 'wpdatatables'); ?>
+                            <?php _e('A major update with a couple of new features, bug fixes and stability improvements:', 'wpdatatables'); ?>
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><?php _e('Fixed issue with the slow backend', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with checkbox labels in modal', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with filters and clear button on Firefox', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with loader after saving global plugin settings', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with error $ is not a function in columnFilter.js', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with selected value in select-box, after clicking on the clear button', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with custom settings of decimal and a thousand separators on page with function Highcharts.setOptions', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with CURRENT_POST_ID placeholder', 'wpdatatables'); ?></li>
-                                <li><?php _e('Fixed issue with creating two Formidable and Gravity tables', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Feature: Connect Google Spreadsheets tables with Google Spreadsheet API', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Feature: Instant synchronization in wpdatatables after changes in Google sheets', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Feature: Creating tables from Private Google Spreadsheets', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Feature: New option to set tables sorting order on browse pages.', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Compatibility with WordPress 5.6 approved.', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Compatibility with PHP 8 approved.', 'wpdatatables'); ?></li>
+                                <li> <?php _e('Other small bug fixes and stability improvements.', 'wpdatatables'); ?></li>
                             </ul>
                         </div>
 
@@ -657,7 +655,7 @@
                                 <span class="wdt-rating"> <?php _e('Rating: 4.8 - ‎123 reviews') ?></span>
 
                             </p>
-                            <a href="https://wpamelia.com/" target="_blank" class="btn btn-primary">
+                            <a href="https://wpamelia.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank" class="btn btn-primary">
                                 <?php _e('Learn More', 'wpdatatables'); ?>
                                 <i class="wpdt-icon-external-link-square-alt"></i>
                             </a>
@@ -670,12 +668,12 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php _e('Made by', 'wpdatatables'); ?>
-                <a href="https://tms-outsource.com/" target="_blank">
+                <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
                 <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
                 </li>

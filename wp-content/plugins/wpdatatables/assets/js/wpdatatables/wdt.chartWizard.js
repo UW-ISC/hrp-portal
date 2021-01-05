@@ -464,8 +464,12 @@ var wdtChartColumnsData = {};
                             }
                         }
 
-                        $(".color-picker").each(function () {
-                            wdtApplyColorPicker(this);
+                        $(".chart-series-color .wdt-add-picker").each(function (i) {
+                            jQuery(this).addClass('pickr');
+                            jQuery(this)
+                                .closest('.wdt-color-picker')
+                                .find('.wpcolorpicker-icon i')
+                                .css("background", this.value);
                         });
 
 
@@ -559,7 +563,9 @@ var wdtChartColumnsData = {};
                             '#legend_background_color,' +
                             '#legend_border_color,' +
                             '#exporting_button_color_container input.exporting-button-color'
-                        ).on('changeColor', function (e, ui) {
+                        ).on('change', function (e, ui) {
+                            e.stopImmediatePropagation()
+                            e.preventDefault()
                             renderChart(false);
                         });
 

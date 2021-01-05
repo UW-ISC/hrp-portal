@@ -56,11 +56,11 @@ jQuery('.wdt-documentation').click(function (e) {
     switch (jQuery(this).data('doc-page')) {
         case 'table_settings':
             activeTab = jQuery('div.wdt-table-settings div.tab-content div.tab-pane.active').prop('id');
-            if (activeTab == 'master-detail-settings'){
+            if (activeTab == 'master-detail-settings') {
                 window.open(docsHomeUrl + '/documentation/addons/master-detail-tables/');
-            }else if (activeTab == 'gravity-settings') {
+            } else if (activeTab == 'gravity-settings') {
                 window.open(docsHomeUrl + '/documentation/addons/gravity-forms-integration/');
-            }else if (activeTab == 'formidable-settings') {
+            } else if (activeTab == 'formidable-settings') {
                 window.open(docsHomeUrl + '/documentation/addons/formidable-forms-integration/');
             } else {
                 window.open(docsHomeUrl + '/documentation/general/table-configuration-page-overview/' + tableSettingsLinks[activeTab]);
@@ -69,6 +69,9 @@ jQuery('.wdt-documentation').click(function (e) {
         case 'column_settings':
             activeTab = jQuery('div.column-settings-panel div.tab-content div.tab-pane.active').prop('id');
             window.open(docsHomeUrl + '/documentation/general/table-configuration-page-overview/' + columnSettingsLinks[activeTab]);
+            break;
+        case 'simple_table_settings':
+            window.open(docsHomeUrl + '/documentation/creating-new-wpdatatables-with-table-constructor/creating-a-simple-table-with-wpdatatables/');
             break;
         case 'table_preview':
             window.open(docsHomeUrl + '/documentation/general/table-configuration-page-overview/#table-settings-preview');

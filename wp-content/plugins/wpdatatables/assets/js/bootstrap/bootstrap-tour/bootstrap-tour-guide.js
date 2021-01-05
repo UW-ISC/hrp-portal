@@ -1,7 +1,8 @@
 (function ($) {
     $(function () {
-        var $demo1, $demo2, $demo3, $demo4, $demo5, $demo6, tour1, tour2, tour3, tour4, tour5, tour6;
+        var $demo0, $demo1, $demo2, $demo3, $demo4, $demo5, $demo6, tour0, tour1, tour2, tour3, tour4, tour5, tour6;
 
+        $demo0 = $("#wdt-tutorial-simple-table");
         $demo1 = $("#wdt-tutorial-data-source");
         $demo2 = $("#wdt-tutorial-create-manual");
         $demo3 = $("#wdt-tutorial-data-import");
@@ -117,6 +118,284 @@
             }
         }
 
+        tour0 = new Tour({
+            name: "create-simple-table",
+            keyboard: false,
+            steps: [
+                {
+                    // step 0
+                    orphan: true,
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step0.title,
+                    content: wpdtTutorialStrings.tour0.step0.content,
+                }, {
+                    // step 1
+                    element: "#toplevel_page_wpdatatables-dashboard ul li:nth-child(4) a",
+                    placement: "right",
+                    reflex: true,
+                    title: wpdtTutorialStrings.tour0.step1.title,
+                    content: wpdtTutorialStrings.tour0.step1.content,
+                    onShown: function () {
+                        $('#toplevel_page_wpdatatables-dashboard ul li:nth-child(4) a').css("background-color", "#F88F20");
+                    },
+                    onHidden: function () {
+                        $('#toplevel_page_wpdatatables-dashboard ul li:nth-child(4) a').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 2
+                    path: document.location.pathname + "?page=wpdatatables-constructor",
+                    element: ".wdt-first-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
+                    placement: "right",
+                    title: wpdtTutorialStrings.tour0.step2.title,
+                    content: wpdtTutorialStrings.tour0.step2.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                        $('.wdt-constructor-type-selecter-block .card:not([data-value="simple"])').addClass('disabled');
+                        window.localStorage.removeItem('create-simple-table_redirect_to');
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 3
+                    element: "#wdt-constructor-next-step",
+                    placement: "left",
+                    title: wpdtTutorialStrings.tour0.step3.title,
+                    content: wpdtTutorialStrings.tour0.step3.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropPadding: 5,
+                    duration: 3000,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                        $('.wdt-constructor-type-selecter-block .card:not([data-value="simple"])').addClass('disabled');
+                    },
+                    onNext: function () {
+                        $('#wdt-constructor-next-step').click();
+                    }
+                }, {
+                    // step 4
+                    orphan: true,
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step4.title,
+                    content: wpdtTutorialStrings.tour0.step4.content,
+                }, {
+                    // step 5
+                    element: "#wdt-constructor-simple-table-name",
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour0.step5.title,
+                    content: wpdtTutorialStrings.tour0.step5.content,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 6
+                    element: "#wdt-simple-table-number-of-columns",
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step6.title,
+                    content: wpdtTutorialStrings.tour0.step6.content,
+                    backdrop: true,
+                    backdropPadding: 5,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 7
+                    element: "#wdt-simple-table-number-of-rows",
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step7.title,
+                    content: wpdtTutorialStrings.tour0.step7.content,
+                    backdrop: true,
+                    backdropPadding: 5,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 8
+                    element: "#wdt-simple-table-constructor",
+                    placement: "left",
+                    title: wpdtTutorialStrings.tour0.step8.title,
+                    content: wpdtTutorialStrings.tour0.step8.content,
+                    reflex: true,
+                    backdrop: true,
+                    redirect:false,
+                    backdropContainer: '#wdt-tour-actions',
+                    backdropPadding: 5,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 9
+                    redirect:false,
+                    orphan: true,
+                    element: "#edit-table-settings",
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour0.step9.title,
+                    content: wpdtTutorialStrings.tour0.step9.content,
+
+                }, {
+                    // step 10
+                    orphan: true,
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour0.step10.title,
+                    content: wpdtTutorialStrings.tour0.step10.content,
+
+                }, {
+                    // step 11
+                    element: "#wpdt-table-editor",
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour0.step11.title,
+                    content: wpdtTutorialStrings.tour0.step11.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function (tour) {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                        $('#wpdt-table-editor').css("z-index", "1101");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                        $('#wpdt-table-editor').css("z-index", "10");
+                    }
+                }, {
+                    // step 11
+                    element: "#wpdt-cell-action-buttons",
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step12.title,
+                    content: wpdtTutorialStrings.tour0.step12.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function (tour) {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    },
+                }, {
+                    // step 12
+                    element: "#wpdt-views .nav.nav-pills",
+                    placement: "right",
+                    title: wpdtTutorialStrings.tour0.step13.title,
+                    content: wpdtTutorialStrings.tour0.step13.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function (tour) {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 13
+                    element: "#wpdt-view-container",
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour0.step14.title,
+                    content: wpdtTutorialStrings.tour0.step14.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function (tour) {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                }, {
+                    // step 14
+                    element: "#wdt-table-id",
+                    placement: "bottom",
+                    title: wpdtTutorialStrings.tour0.step15.title,
+                    content: wpdtTutorialStrings.tour0.step15.content,
+                    reflex: true,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function (tour) {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    }
+                },
+            ],
+            template: function () {
+                var showButtons = '';
+                var tour0NextButtonSteps = [4, 5, 6, 7, 9, 10, 11, 12, 13, 14];
+                if (typeof tour0 == 'undefined' && localStorage.getItem("create-simple-table_current_step") !== null) {
+                    window.localStorage.removeItem('create-simple-table_current_step');
+                    window.localStorage.removeItem('create-simple-table_redirect_to');
+                    return "<div class='popover tour'>" +
+                        "<div class='arrow'></div>" +
+                        "<p>" + wpdtTutorialStrings.cancel_tour + "</p>" +
+                        "<div class='popover-navigation d-flex flex-nowrap'>" +
+                        "<span class='popover-separator' data-role='separator'> </span>" +
+                        "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button></div></div>";
+                } else if (tour0.getCurrentStep() === 0) {
+                    showButtons = "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button><button class='btn btn-primary float-right' data-role='next'>" + wpdtTutorialStrings.start_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "</div></div>"
+                } else if (jQuery.inArray(tour0.getCurrentStep(), tour0NextButtonSteps) !== -1) {
+                    showButtons = "<button class='btn btn-primary' data-role='next'>" + wpdtTutorialStrings.next_button + " <i class='wpdt-icon-chevron-right'></i></button>" + "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
+                } else if (tour0.getCurrentStep() === 15) {
+                    showButtons = "<button class='btn btn-primary float-right' data-role='end'><i class='wpdt-icon-trophy m-r-5'></i> " + wpdtTutorialStrings.finish_button + " </button>" + "</div></div>";
+                } else {
+                    showButtons = "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
+                }
+
+                return "<div class='popover tour'>" +
+                    "<div class='arrow'></div>" +
+                    "<h3 class='popover-title'></h3>" +
+                    "<div class='popover-content'></div>" +
+                    "<div class='popover-navigation d-flex flex-nowrap'>" +
+                    "<span class='popover-separator' data-role='separator'> </span>" +
+                    showButtons;
+
+            },
+            onStart: function () {
+                $demo0.addClass("disabled");
+                $demo1.addClass("disabled");
+                $demo2.addClass("disabled");
+                $demo3.addClass("disabled");
+                $demo4.addClass("disabled");
+                $demo5.addClass("disabled");
+                $demo6.addClass("disabled");
+            },
+            onEnd: function () {
+                window.localStorage.removeItem('create-simple-table_current_step');
+                window.localStorage.removeItem('create-simple-table_redirect_to');
+                $demo0.removeClass("disabled");
+                $demo1.removeClass("disabled");
+                $demo2.removeClass("disabled");
+                $demo3.removeClass("disabled");
+                $demo4.removeClass("disabled");
+                $demo5.removeClass("disabled");
+                $demo6.removeClass("disabled");
+                $('.wdt-constructor-type-selecter-block .card:not([data-value="simple"])').removeClass('disabled');
+            }
+        }).init();
 
         tour1 = new Tour({
             name: "create-table-data-source",
@@ -144,8 +423,8 @@
                 }, {
                     // step 2
                     path: document.location.pathname + "?page=wpdatatables-constructor",
-                    element: ".wdt-first-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
-                    placement: "right",
+                    element: ".wdt-first-row .wdt-constructor-type-selecter-block:nth-child(2) .card",
+                    placement: "left",
                     title: wpdtTutorialStrings.tour1.step2.title,
                     content: wpdtTutorialStrings.tour1.step2.content,
                     reflex: true,
@@ -359,6 +638,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -369,6 +649,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-table-data-source_current_step');
                 window.localStorage.removeItem('create-table-data-source_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -414,8 +695,8 @@
                 }, {
                     // step 2
                     path: document.location.pathname + "?page=wpdatatables-constructor",
-                    element: ".wdt-first-row .wdt-constructor-type-selecter-block:nth-child(2) .card",
-                    placement: "left",
+                    element: ".wdt-second-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
+                    placement: "right",
                     title: wpdtTutorialStrings.tour2.step2.title,
                     content: wpdtTutorialStrings.tour2.step2.content,
                     reflex: true,
@@ -557,6 +838,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -567,6 +849,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-manual-table_current_step');
                 window.localStorage.removeItem('create-manual-table_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -608,8 +891,8 @@
                 }, {
                     // step 2
                     path: document.location.pathname + "?page=wpdatatables-constructor",
-                    element: ".wdt-second-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
-                    placement: "right",
+                    element: ".wdt-second-row .wdt-constructor-type-selecter-block:nth-child(2) .card",
+                    placement: "left",
                     title: wpdtTutorialStrings.tour3.step2.title,
                     content: wpdtTutorialStrings.tour3.step2.content,
                     reflex: true,
@@ -792,6 +1075,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -802,6 +1086,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-table-import-data_current_step');
                 window.localStorage.removeItem('create-table-import-data_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -843,8 +1128,8 @@
                 }, {
                     // step 2
                     path: document.location.pathname + "?page=wpdatatables-constructor",
-                    element: ".wdt-second-row .wdt-constructor-type-selecter-block:nth-child(2) .card",
-                    placement: "left",
+                    element: ".wdt-third-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
+                    placement: "right",
                     title: wpdtTutorialStrings.tour4.step2.title,
                     content: wpdtTutorialStrings.tour4.step2.content,
                     reflex: true,
@@ -1119,6 +1404,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -1129,6 +1415,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-table-from-wordpress-database_current_step');
                 window.localStorage.removeItem('create-table-from-wordpress-database_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -1169,8 +1456,8 @@
                 }, {
                     // step 2
                     path: document.location.pathname + "?page=wpdatatables-constructor",
-                    element: ".wdt-third-row .wdt-constructor-type-selecter-block:nth-child(1) .card",
-                    placement: "right",
+                    element: ".wdt-third-row .wdt-constructor-type-selecter-block:nth-child(2) .card",
+                    placement: "left",
                     title: wpdtTutorialStrings.tour5.step2.title,
                     content: wpdtTutorialStrings.tour5.step2.content,
                     reflex: true,
@@ -1422,6 +1709,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -1432,6 +1720,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-table-from-mysql-database_current_step');
                 window.localStorage.removeItem('create-table-from-mysql-database_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -2019,6 +2308,7 @@
 
             },
             onStart: function () {
+                $demo0.addClass("disabled");
                 $demo1.addClass("disabled");
                 $demo2.addClass("disabled");
                 $demo3.addClass("disabled");
@@ -2029,6 +2319,7 @@
             onEnd: function () {
                 window.localStorage.removeItem('create-chart_current_step');
                 window.localStorage.removeItem('create-chart_redirect_to');
+                $demo0.removeClass("disabled");
                 $demo1.removeClass("disabled");
                 $demo2.removeClass("disabled");
                 $demo3.removeClass("disabled");
@@ -2045,6 +2336,13 @@
             }
         }).init();
 
+        $(document).on("click", "#wdt-tutorial-simple-table", function (e) {
+            e.preventDefault();
+            if ($(this).hasClass("disabled")) {
+                return;
+            }
+            tour0.restart();
+        });
         $(document).on("click", "#wdt-tutorial-data-source", function (e) {
             e.preventDefault();
             if ($(this).hasClass("disabled")) {
@@ -2093,6 +2391,8 @@
             window.location.href.includes('wpdatatables-chart-wizard')) &&
             (localStorage.getItem("create-table-data-source_redirect_to") !== null ||
                 localStorage.getItem("create-table-data-source_current_step") !== null ||
+                localStorage.getItem("create-simple-table_current_step") !== null ||
+                localStorage.getItem("create-simple-table_redirect_to") !== null ||
                 localStorage.getItem("create-manual-table_redirect_to") !== null ||
                 localStorage.getItem("create-manual-table_current_step") !== null ||
                 localStorage.getItem("create-table-import-data_redirect_to") !== null ||
@@ -2105,6 +2405,8 @@
                 localStorage.getItem("create-chart_current_step") !== null)) {
             window.localStorage.removeItem('create-table-data-source_current_step');
             window.localStorage.removeItem('create-table-data-source_redirect_to');
+            window.localStorage.removeItem('create-simple-table_current_step');
+            window.localStorage.removeItem('create-simple-table_redirect_to');
             window.localStorage.removeItem('create-manual-table_current_step');
             window.localStorage.removeItem('create-manual-table_redirect_to');
             window.localStorage.removeItem('create-table-import-data_current_step');

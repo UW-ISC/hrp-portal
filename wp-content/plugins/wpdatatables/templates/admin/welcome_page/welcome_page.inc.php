@@ -51,7 +51,7 @@
                                     <?php _e('The Best Tables & Charts WordPress Plugin', 'wpdatatables'); ?>
                                 </h2>
                                 <p>
-                                    <?php _e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 30,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
+                                    <?php _e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 40,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
                                 </p>
                                 <div class="wdt-changelog-button">
                                     <div class="wdt-changelog-button-background">
@@ -78,10 +78,20 @@
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/create-simple-table.png">
+                                </div>
+                                <div class="wdt-wizard-options-desc pull-left">
+                                    <span class="text-left"><?php _e('NEW! Create Simple tables', 'wpdatatables'); ?>.</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="col-sm-4 p-0 wdt-wizard-options-details">
+                                <div class="wdt-wizard-options-img pull-left">
+                                    <img class="img-responsive"
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/add-from-data-source.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a table linked to an existing data source', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php _e('Create a data table linked to an existing data source', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -91,17 +101,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/manual.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a table manually', 'wpdatatables'); ?>.</span>
-                                </div>
-                                <div class="clear"></div>
-                            </div>
-                            <div class="col-sm-4 p-0 wdt-wizard-options-details">
-                                <div class="wdt-wizard-options-img pull-left">
-                                    <img class="img-responsive"
-                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/import-data-from-data-source.png">
-                                </div>
-                                <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a table by importing data from a data source', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php _e('Create a data table manually', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -111,6 +111,16 @@
 
                         <!-- .wdt-wizard-options-->
                         <div class="row m-l-0 m-r-0 wdt-wizard-options m-b-42">
+                            <div class="col-sm-4 p-0 wdt-wizard-options-details">
+                                <div class="wdt-wizard-options-img pull-left">
+                                    <img class="img-responsive"
+                                         src="<?php echo WDT_ASSETS_PATH ?>img/constructor/import-data-from-data-source.png">
+                                </div>
+                                <div class="wdt-wizard-options-desc pull-left">
+                                    <span class="text-left"><?php _e('Create a data table by importing data from a data source', 'wpdatatables'); ?>.</span>
+                                </div>
+                                <div class="clear"></div>
+                            </div>
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
@@ -131,6 +141,10 @@
                                 </div>
                                 <div class="clear"></div>
                             </div>
+                        </div>
+                        <div class="clear"></div>
+                        <!-- /.wdt-wizard-options-->
+                        <div class="row m-l-0 m-r-0 wdt-wizard-options m-b-42">
                             <div class="col-sm-4 p-0 wdt-wizard-options-details">
                                 <div class="wdt-wizard-options-img pull-left">
                                     <img class="img-responsive"
@@ -332,12 +346,12 @@
     <div class="row">
         <h6 class="text-center wdt-footer-title">
             <?php _e('Made by', 'wpdatatables'); ?>
-            <a href="https://tms-outsource.com/" target="_blank">
+            <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                 <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
             </a>
         </h6>
         <ul class="wpdt-footer-links text-center">
-            <li><a href="https://wpdatatables.com/" target="_blank">wpDataTables.com</a></li>
+            <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
             <li>|</li>
             <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
             </li>

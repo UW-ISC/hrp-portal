@@ -88,7 +88,7 @@ function wdtAdminMenu()
         'wdtSupport'
     );
     add_submenu_page(
-        get_option('wdtLiteVSPremiumPageStatus') ? null :'wpdatatables-dashboard',
+        get_option('wdtLiteVSPremiumPageStatus') ? null : 'wpdatatables-dashboard',
         __('Lite vs Premium', 'wpdatatables'),
         __('Lite vs Premium', 'wpdatatables'),
         'manage_options',
@@ -123,7 +123,26 @@ add_action('admin_menu', 'wdtAdminMenu');
  */
 function wdtAdminEnqueue($hook)
 {
-    add_filter('admin_body_class', 'wdtAddBodyClass');
+    if (in_array($hook, array(
+        'toplevel_page_wpdatareports',
+        'report-builder_page_wpdatareports-wizard',
+        'toplevel_page_wpdatatables-dashboard',
+        'wpdatatables_page_wpdatatables-administration',
+        'wpdatatables_page_wpdatatables-constructor',
+        'wpdatatables_page_wpdatatables-charts',
+        'wpdatatables_page_wpdatatables-chart-wizard',
+        'wpdatatables_page_wpdatatables-settings',
+        'wpdatatables_page_wpdatatables-support',
+        'wpdatatables_page_wpdatatables-system-info',
+        'admin_page_wpdatatables-getting-started',
+        'wpdatatables_page_wpdatatables-getting-started',
+        'admin_page_wpdatatables-welcome-page',
+        'admin_page_wpdatatables-lite-vs-premium',
+        'wpdatatables_page_wpdatatables-lite-vs-premium',
+        'wpdatatables_page_wpdatatables-add-ons'))) {
+
+        add_filter('admin_body_class', 'wdtAddBodyClass');
+    }
 
     wp_register_style('wdt-dragula', WDT_CSS_PATH . 'dragula/dragula.min.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-browse-css', WDT_CSS_PATH . 'admin/browse.css', array(), WDT_CURRENT_VERSION);
@@ -132,12 +151,15 @@ function wdtAdminEnqueue($hook)
     wp_register_script('wdt-jsrender', WDT_JS_PATH . 'jsrender/jsrender.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-dragula', WDT_JS_PATH . 'dragula/dragula.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-ace', WDT_JS_PATH . 'ace/ace.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-color-pickr', WDT_JS_PATH . 'color-pickr/pickr.min.js', array(), WDT_CURRENT_VERSION, true);
+    wp_register_script('wdt-color-pickr-init', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/wdt.color-picker-init.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-doc-js', WDT_JS_PATH . 'wpdatatables/admin/doc.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
 
     wp_enqueue_style('wdt-admin', WDT_CSS_PATH . 'admin/admin.css', array(), WDT_CURRENT_VERSION);
-    wp_enqueue_script('wdt-rating', WDT_JS_PATH . 'wpdatatables/admin/wdtRating.js', array('jquery'), 1.12, true);
+    wp_enqueue_style('wdt-color-pickr-classic', WDT_CSS_PATH . 'color-pickr/classic-theme.min.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_script('wdt-rating', WDT_JS_PATH . 'wpdatatables/admin/wdtRating.js', array('jquery'), WDT_CURRENT_VERSION, true);
 
     wp_enqueue_script('media-upload');
 
@@ -213,11 +235,12 @@ function wdtBrowseTablesEnqueue()
  */
 function wdtEditEnqueue()
 {
-
+    $jsExt = get_option('wdtMinifiedJs') ? '.min.js' : '.js';
     WDTTools::wdtUIKitEnqueue();
 
     wp_enqueue_style('wdt-wpdatatables');
     wp_enqueue_style('wdt-edit-table-css', WDT_CSS_PATH . 'admin/edit_table.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-handsontable-css', WDT_CSS_PATH . 'handsontable.full.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-table-tools', WDT_CSS_PATH . 'TableTools.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-datatables-responsive', WDT_CSS_PATH . 'datatables.responsive.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-dragula');
@@ -265,9 +288,23 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-responsive', WDT_JS_PATH . 'responsive/datatables.responsive.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-column-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/column_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-table-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/table_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-edit-main-js', WDT_JS_PATH . 'wpdatatables/admin/table-settings/main.js', array(), WDT_CURRENT_VERSION, true);
+    if (isset($_GET['table_id']) && isset($_GET['simple'])) {
+        wp_enqueue_style('wdt-star-rating-css', WDT_CSS_PATH . 'admin/starRating.min.css', array(), WDT_CURRENT_VERSION);
+        wp_register_script('handsontable-6.2.2', WDT_JS_PATH . 'handsontable/handsontable.full.6.2.2' . $jsExt, array('jquery'), WDT_CURRENT_VERSION);
+        wp_enqueue_script('handsontable-6.2.2');
+        wp_enqueue_script('wdt-star-rating-js', WDT_JS_PATH . 'wpdatatables/admin/starRating.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-simple-table-js', WDT_JS_PATH . 'wpdatatables/admin/constructor/wdt.simpleTable.js', array('jquery'), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-simple-table-responsive-min-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-simple-table-responsive-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.init.js', array('jquery'), WDT_CURRENT_VERSION, true);
+        wp_dequeue_style('wdt-skin');
+    } else {
+        wp_register_script('handsontable', WDT_JS_PATH . 'handsontable/handsontable.full' . $jsExt, array('jquery'), WDT_CURRENT_VERSION);
+        wp_enqueue_script('handsontable');
+    }
     wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-add-remove-column', WDT_JS_PATH . 'wpdatatables/wdt.addRemoveColumn.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('jquery-effects-core');
@@ -298,6 +335,7 @@ function wdtConstructorEnqueue()
     wp_enqueue_script('wdt-jsrender');
     wp_enqueue_script('wdt-dragula');
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-funcs-js');
     wp_enqueue_script('wdt-constructor-main-js', WDT_JS_PATH . 'wpdatatables/admin/constructor/wdt.constructor.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
@@ -342,6 +380,7 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wpdatatables/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wpdatatables/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-highcharts', WDT_JS_PATH . 'wpdatatables/wdt.highcharts.js', array(), WDT_CURRENT_VERSION, true);
@@ -362,6 +401,7 @@ function wdtSettingsEnqueue()
     wp_enqueue_style('wdt-settings-css', WDT_CSS_PATH . 'admin/settings.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-plugin-config', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/plugin-settings/plugin_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-settings-main-js', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/plugin-settings/main.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-settings-psl', WDT_ROOT_URL . 'assets/js/psl/psl.min.js', array(), WDT_CURRENT_VERSION, true);
@@ -526,7 +566,10 @@ function wdtEdit()
     }
 
     if (isset($_GET['table_id'])) {
-        if (isset($_GET['table_view'])) {
+        if (isset($_GET['simple'])) {
+            $tableID = (int)$_GET['table_id'];
+            $tableData = WDTConfigController::loadSimpleTableConfig($tableID);
+        } else if (isset($_GET['table_view'])) {
             $tableData = WDTConfigController::loadTableConfig((int)$_GET['table_id'], $_GET['table_view']);
         } else {
             $tableData = WDTConfigController::loadTableConfig((int)$_GET['table_id']);
@@ -541,7 +584,7 @@ function wdtEdit()
     /** @noinspection PhpUnusedLocalVariableInspection */
     $wdtUserRoles = get_editable_roles();
 
-    if (isset($tableData)) {
+    if (isset($tableData) && isset($tableData->table)) {
         $connection = $tableData->table->connection;
     } elseif (isset($_GET['connection'])) {
         $connection = $_GET['connection'];
@@ -550,13 +593,23 @@ function wdtEdit()
     }
 
 
-    ob_start();
-    include WDT_ROOT_PATH . 'templates/admin/table-settings/edit_table.inc.php';
-    $editPage = ob_get_contents();
-    ob_end_clean();
+    if (isset($_GET['table_id']) && isset($_GET['simple'])) {
+        ob_start();
+        include WDT_ROOT_PATH . 'templates/admin/table-settings/edit_simple_table.inc.php';
+        $editPage = ob_get_contents();
+        ob_end_clean();
 
-    $editPage = apply_filters('wpdatatables_filter_edit_page', $editPage);
-    echo $editPage;
+        $editPage = apply_filters('wpdatatables_filter_edit_page_simple_table', $editPage);
+        echo $editPage;
+    } else {
+        ob_start();
+        include WDT_ROOT_PATH . 'templates/admin/table-settings/edit_table.inc.php';
+        $editPage = ob_get_contents();
+        ob_end_clean();
+
+        $editPage = apply_filters('wpdatatables_filter_edit_page', $editPage);
+        echo $editPage;
+    }
 }
 
 /**
@@ -715,6 +768,7 @@ function wdtSupport()
 
     do_action('wpdatatables_support_page');
 }
+
 /**
  * Render Welcome page
  */

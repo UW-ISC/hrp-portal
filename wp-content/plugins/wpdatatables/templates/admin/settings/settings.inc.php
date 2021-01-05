@@ -55,6 +55,10 @@
                                 <a href="#custom-js-and-css" aria-controls="custom-js-and-css" role="tab"
                                    data-toggle="tab"><?php _e('Custom JS and CSS', 'wpdatatables'); ?></a>
                             </li>
+                            <li class="google_sheet_settings-tab">
+                                <a href="#google_sheet_settings" aria-controls="google_sheet_settings" role="tab"
+                                   data-toggle="tab"><?php _e('Google Spreadsheet settings', 'wpdatatables'); ?></a>
+                            </li>
                             <li class="wdt-activation-tab">
                                 <a href="#wdt-activation" aria-controls="wdt-activation" role="tab"
                                    data-toggle="tab"><?php _e('Activation', 'wpdatatables'); ?></a>
@@ -77,6 +81,10 @@
                             <!-- Custom JS and CSS settings tab-->
                             <?php include 'tabs/custom_js_and_css.php' ?>
                             <!-- /Custom JS and CSS settings tab-->
+
+                            <!-- Google Sheet settings tab-->
+                            <?php include 'tabs/google_sheet_settings.php' ?>
+                            <!-- /Google Sheet settings tab-->
 
                             <!-- Activation tab-->
                             <?php include 'tabs/activation.php' ?>

@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 3.0.4
+ * @version 3.3
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 3.0.4
+Version: 3.3
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -68,6 +68,8 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.sql.pdo.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatacolumn.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablerows.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wdtgooglesheets.php');
     //[<-- Full version -->]//
     require_once(WDT_ROOT_PATH . 'source/class.wpexceldatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpexcelcolumn.php');
@@ -79,6 +81,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/GutenbergBlock.php');
     require_once(WDT_ROOT_PATH . 'source/WpDataTablesGutenbergBlock.php');
     require_once(WDT_ROOT_PATH . 'source/WpDataChartsGutenbergBlock.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wdtelementorblock.php');
 
     add_action('plugins_loaded', 'wdtLoadTextdomain');
 

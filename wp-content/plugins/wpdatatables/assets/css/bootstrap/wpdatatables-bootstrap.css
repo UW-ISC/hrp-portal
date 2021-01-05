@@ -4332,6 +4332,10 @@
     display: block;
 }
 
+.wpdt-c .open > ul.dropdown-menu {
+    padding: 0 !important;
+}
+
 .wpdt-c .open > a {
     outline: 0;
 }
@@ -13658,4 +13662,8 @@ input:focus {
     left: -1px;
     top: -1px;
     opacity: 1
+}
+.wpdt-c .wpdt-custom-center-flex{
+    display: flex;
+    justify-content: center;
 }

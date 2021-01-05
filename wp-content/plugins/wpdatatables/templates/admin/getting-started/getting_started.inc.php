@@ -65,10 +65,31 @@ $tables = \WDTTools::getTablesCount('table');
                             <div class="card-body wpdt-flex card-padding">
                                 <div class="wdt-tutorial-img">
                                     <img
+                                            src="<?php echo WDT_ASSETS_PATH ?>img/constructor/create-simple-table.svg">
+                                </div>
+                                <div class="wdt-tutorial-desc">
+                                    <span class="d-block"><?php _e('Create a simple table from scratch:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a simple table with any data, merged cells, styling, star rating and a lot more.', 'wpdatatables'); ?></span></span>
+                                    <a href="https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/creating-a-simple-table-with-wpdatatables/"
+                                       target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
+                                </div>
+                                <div class="wdt-tutorial-button">
+                                    <button class="btn btn-primary" id="wdt-tutorial-simple-table">
+                                        <i class="wpdt-icon-play"></i>
+                                        <?php _e('Launch tutorial', 'wpdatatables'); ?>
+                                    </button>
+                                </div>
+
+                            </div>
+                            <div class="clear"></div>
+                        </div>
+                        <div class="card wdt-tutorial-card m-b-18">
+                            <div class="card-body wpdt-flex card-padding">
+                                <div class="wdt-tutorial-img">
+                                    <img
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/add-from-data-source.png">
                                 </div>
                                 <div class="wdt-tutorial-desc">
-                                    <span><?php _e('Create a table linked to an existing data source:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a wpDataTables based on your Excel, CSV file or other data source in a few steps.', 'wpdatatables'); ?></span></span>
+                                    <span><?php _e('Create a data table linked to an existing data source:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a wpDataTables based on your Excel, CSV file or other data source in a few steps.', 'wpdatatables'); ?></span></span>
                                     <a href="https://wpdatatables.com/documentation/general/features-overview/"
                                        target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
                                 </div>
@@ -89,7 +110,7 @@ $tables = \WDTTools::getTablesCount('table');
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/manual.png">
                                 </div>
                                 <div class="wdt-tutorial-desc">
-                                    <span><?php _e('Create a table manually:', 'wpdatatables'); ?><span class="f-400"><?php _e(' learn how to build a table completely from the WordPress admin.', 'wpdatatables'); ?></span></span>
+                                    <span><?php _e('Create a data table manually:', 'wpdatatables'); ?><span class="f-400"><?php _e(' learn how to build a table completely from the WordPress admin.', 'wpdatatables'); ?></span></span>
                                     <a href="https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/building-and-filling-in-the-tables-manually/"
                                        target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
                                 </div>
@@ -108,7 +129,7 @@ $tables = \WDTTools::getTablesCount('table');
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/import-data-from-data-source.png">
                                 </div>
                                 <div class="wdt-tutorial-desc">
-                                    <span><?php _e('Create a table by importing data from a data source:', 'wpdatatables'); ?><span class="f-400"><?php _e(' extract data from your existing table to be able to edit it from WordPress.', 'wpdatatables'); ?></span>
+                                    <span><?php _e('Create a data table by importing data from a data source:', 'wpdatatables'); ?><span class="f-400"><?php _e(' extract data from your existing table to be able to edit it from WordPress.', 'wpdatatables'); ?></span>
                                     <a href="https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/importing-data-to-editable-mysql-table-from-excel-or-csv-with-table-constructor/"
                                        target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
                                 </div>
@@ -126,7 +147,7 @@ $tables = \WDTTools::getTablesCount('table');
                                     <img src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-mysql-database.png">
                                 </div>
                                 <div class="wdt-tutorial-desc">
-                                    <span><?php _e('Generate a query to the MySQL database:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a table based on your DB data without having to learn SQL', 'wpdatatables'); ?> </span></span>
+                                    <span><?php _e('Generate a query to the MySQL database:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a data table based on your DB data without having to learn SQL', 'wpdatatables'); ?> </span></span>
                                     <a href="https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/building-mysql-queries-with-table-constructor/"
                                        target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
                                 </div>
@@ -144,7 +165,7 @@ $tables = \WDTTools::getTablesCount('table');
                                     <img src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-wordpress-database.png">
                                 </div>
                                 <div class="wdt-tutorial-desc">
-                                    <span><?php _e('Generate a query to the WordPress database:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a table based on your WP data (posts, meta, taxonomies)', 'wpdatatables'); ?></span></span>
+                                    <span><?php _e('Generate a query to the WordPress database:', 'wpdatatables'); ?><span class="f-400"><?php _e(' create a data table based on your WP data (posts, meta, taxonomies)', 'wpdatatables'); ?></span></span>
                                     <a href="https://wpdatatables.com/documentation/creating-new-wpdatatables-with-table-constructor/generating-wordpress-db-queries-with-table-constructor/"
                                        target="_blank"><?php _e('View documentation', 'wpdatatables'); ?></a>
                                 </div>
@@ -198,12 +219,12 @@ $tables = \WDTTools::getTablesCount('table');
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php _e('Made by', 'wpdatatables'); ?>
-                <a href="https://tms-outsource.com/" target="_blank">
+                <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
                 <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
                 </li>

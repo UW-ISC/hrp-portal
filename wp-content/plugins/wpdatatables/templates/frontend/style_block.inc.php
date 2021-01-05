@@ -3,6 +3,8 @@
 <style>
 <?php if(!empty($wdtFontColorSettings['wdtTableFontColor'])){ ?>
 /* table font color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead th,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tbody td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tbody td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTabletable tfoot td {
@@ -11,6 +13,8 @@
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtHeaderBaseColor'])){ ?>
 /* th background color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable.bt[data-has-header='1'] td.wpdt-header-classes,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting {
 	background-color: <?php echo $wdtFontColorSettings['wdtHeaderBaseColor'] ?> !important;
@@ -19,6 +23,7 @@
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtHeaderBorderColor'])){ ?>
 /* th border color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting {
 	border-color: <?php echo $wdtFontColorSettings['wdtHeaderBorderColor'] ?> !important;
@@ -26,6 +31,8 @@
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtHeaderFontColor'])){ ?>
 /* th font color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable.bt[data-has-header='1'] td.wpdt-header-classes,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th {
 	color: <?php echo $wdtFontColorSettings['wdtHeaderFontColor'] ?> !important;
 }
@@ -41,7 +48,9 @@
 /* th active/hover background color */
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc,
-.wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting:hover {
+.wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting:hover,
+.wpdt-c .wpDataTablesWrapper table.wpDataTable.wpdtSimpleTable thead th:hover,
+.wpdt-c.wpDataTablesWrapper table.wpDataTable.wpdtSimpleTable thead th:hover {
 	background-color: <?php echo $wdtFontColorSettings['wdtHeaderActiveColor'] ?> !important;
     background-image: none !important;
 }
@@ -49,30 +58,36 @@
 
 <?php if(!empty($wdtFontColorSettings['wdtTableInnerBorderColor'])){ ?>
 /* td inner border color */
+.wpdt-c.wpDataTablesWrapper table.wpDataTable.wpdtSimpleTable td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable td {
 	border-color: <?php echo $wdtFontColorSettings['wdtTableInnerBorderColor'] ?> !important;
 }
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtTableOuterBorderColor'])){ ?>
 /* table outer border color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr:last-child td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr:last-child td {
 	border-bottom-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr td:first-child,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr td:first-child {
 	border-left-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr td:last-child,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr td:last-child {
 	border-right-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtOddRowColor'])){ ?>
 /* odd rows background color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr.odd td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.odd td {
 	background-color: <?php echo $wdtFontColorSettings['wdtOddRowColor'] ?> !important;
 }
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtEvenRowColor'])){ ?>
 /* even rows background color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr.even td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.even td,
 .wpdt-c .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td {
 	background-color: <?php echo $wdtFontColorSettings['wdtEvenRowColor'] ?> !important;
@@ -92,9 +107,11 @@
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtHoverRowColor'])){ ?>
 /* rows hover background color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr.odd:hover > td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.odd:hover > td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.odd:hover > td.sorting_1,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.even:hover > td,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr.even:hover > td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr.even:hover > td.sorting_1 {
 	background-color: <?php echo $wdtFontColorSettings['wdtHoverRowColor'] ?> !important;
 }
@@ -225,14 +242,16 @@ div.dt-button-collection a.dt-button.active:not(.disabled):hover {
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtTableFont'])){ ?>
 /* table font color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable {
     font-family: <?php echo $wdtFontColorSettings['wdtTableFont'] ?> !important;
 }
 <?php } ?>
 <?php if( !empty($wdtFontColorSettings['wdtFontSize'] ) ) { ?>
 /* table font size */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable {
-    font-size:<?php echo $wdtFontColorSettings['wdtFontSize'] ?>px;
+    font-size:<?php echo $wdtFontColorSettings['wdtFontSize'] ?>px !important;
 }
  <?php } ?>
 <?php if( !empty($wdtFontColorSettings['wdtPaginationCurrentBackgroundColor'] ) ) { ?>

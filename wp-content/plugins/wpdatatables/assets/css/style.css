@@ -26,6 +26,69 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.wpdt-icon-star-half:before {
+  content: "\e92c";
+}
+.wpdt-icon-wrap-text:before {
+  content: "\e929";
+}
+.wpdt-icon-clip-text:before {
+  content: "\e92a";
+}
+.wpdt-icon-overflow-text:before {
+  content: "\e92b";
+}
+.wpdt-icon-rows-1:before {
+  content: "\e921";
+}
+.wpdt-icon-columns-1:before {
+  content: "\e926";
+}
+.wpdt-icon-rows-2:before {
+  content: "\e927";
+}
+.wpdt-icon-columns-2:before {
+  content: "\e928";
+}
+.wpdt-icon-vertical-align-top:before {
+  content: "\e918";
+}
+.wpdt-icon-vertical-align-center:before {
+  content: "\e919";
+}
+.wpdt-icon-vertical-align-bottom:before {
+  content: "\e91a";
+}
+.wpdt-icon-remove-row:before {
+  content: "\e91d";
+}
+.wpdt-icon-add-row-top:before {
+  content: "\e91e";
+}
+.wpdt-icon-add-row-bottom:before {
+  content: "\e91f";
+}
+.wpdt-icon-add-column-right:before {
+  content: "\e920";
+}
+.wpdt-icon-add-column-left:before {
+  content: "\e91b";
+}
+.wpdt-icon-remove-column:before {
+  content: "\e91c";
+}
+.wpdt-icon-insert-column-after:before {
+  content: "\e922";
+}
+.wpdt-icon-insert-column-before:before {
+  content: "\e923";
+}
+.wpdt-icon-insert-row-after:before {
+  content: "\e924";
+}
+.wpdt-icon-insert-row-before:before {
+  content: "\e925";
+}
 .wpdt-icon-g-cap:before {
   content: "\e917";
 }
@@ -479,6 +542,9 @@
 .wpdt-icon-percent:before {
   content: "\f295";
 }
+.wpdt-icon-undo-alt:before {
+  content: "\f2ea";
+}
 .wpdt-icon-long-arrow-alt-down:before {
   content: "\f309";
 }
@@ -566,6 +632,9 @@
 .wpdt-icon-file-csv:before {
   content: "\f6dd";
 }
+.wpdt-icon-brackets:before {
+  content: "\f7e9";
+}
 .wpdt-icon-line-columns:before {
   content: "\f870";
 }
@@ -598,6 +667,9 @@
 }
 .wpdt-icon-clock-full:before {
   content: "\f018";
+}
+.wpdt-icon-tint:before {
+  content: "\f044";
 }
 .wpdt-icon-step-backward:before {
   content: "\f048";
@@ -881,6 +953,9 @@
 .wpdt-icon-layer-group:before {
   content: "\f5fd";
 }
+.wpdt-icon-brackets1:before {
+  content: "\f7ea";
+}
 .wpdt-icon-sort-alpha-down-alt:before {
   content: "\f662";
 }
@@ -925,6 +1000,12 @@
 }
 .wpdt-icon-calendar-times-thin:before {
   content: "\f274";
+}
+.wpdt-icon-undo2:before {
+  content: "\e967";
+}
+.wpdt-icon-redo2:before {
+  content: "\e968";
 }
 .wpdt-icon-spinner9:before {
   content: "\e982";
