@@ -139,7 +139,7 @@
 
 .wdt-datatables-admin-wrap .card.wdt-browse-table table thead th.sorted.desc .sorting-indicator:before {
     font-family: "wpDataTablesIcons";
-    content: "\f0e1";
+    content: "\f0dd";
 }
 
 .wdt-datatables-admin-wrap .card.wdt-browse-table table thead th.sorted.asc .sorting-indicator:before {
@@ -149,7 +149,7 @@
 
 .wdt-datatables-admin-wrap .card.wdt-browse-table table thead th.sorted.desc:hover .sorting-indicator:before {
     font-family: "wpDataTablesIcons";
-    content: "\f0dd";
+    content: "\f0e1";
 }
 
 .wdt-datatables-admin-wrap .card.wdt-browse-table table thead th.sorted.asc:hover .sorting-indicator:before {

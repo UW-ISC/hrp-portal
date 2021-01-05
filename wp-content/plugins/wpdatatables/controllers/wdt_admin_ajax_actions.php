@@ -119,6 +119,49 @@ function wdtSavePluginSettings()
 add_action('wp_ajax_wpdatatables_save_plugin_settings', 'wdtSavePluginSettings');
 
 /**
+ * Save Google settings
+ */
+function wdtSaveGoogleSettings()
+{
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtSettingsNonce')) {
+        exit();
+    }
+    $result = [];
+    $settings = json_decode(stripslashes_deep($_POST['settings']),true);
+    if (json_last_error() === JSON_ERROR_NONE) {
+        WDTSettingsController::saveGoogleSettings($settings);
+        $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google_sheet_settings');
+        echo json_encode($result);
+        exit();
+    } else {
+        $result['error'] = 'Data don\'t have valid JSON format';
+        echo json_encode($result) ;
+        exit();
+    }
+
+}
+
+add_action('wp_ajax_wpdatatables_save_google_settings', 'wdtSaveGoogleSettings');
+
+/**
+ * Delete Google settings
+ */
+function wdtDeleteGoogleSettings()
+{
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtSettingsNonce')) {
+        exit();
+    }
+
+    update_option('wdtGoogleSettings', '');
+    update_option('wdtGoogleToken', '');
+
+    echo admin_url('admin.php?page=wpdatatables-settings#google_sheet_settings');
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_delete_google_settings', 'wdtDeleteGoogleSettings');
+
+/**
  * Duplicate the table
  */
 function wdtDuplicateTable()
@@ -141,62 +184,65 @@ function wdtDuplicateTable()
     $mySqlTableName = $tableData->mysql_table_name;
     $content = $tableData->content;
 
-    // Create duplicate version of input table if checkbox is selected
-    if ($manualDuplicateInput) {
+    if ($tableData->table_type != 'simple') {
 
-        // Generating new input table name
-        $cnt = 1;
-        $newNameGenerated = false;
-        while (!$newNameGenerated) {
-            $newName = $tableData->mysql_table_name . '_' . $cnt;
-            $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+        // Create duplicate version of input table if checkbox is selected
+        if ($manualDuplicateInput) {
+
+            // Generating new input table name
+            $cnt = 1;
+            $newNameGenerated = false;
+            while (!$newNameGenerated) {
+                $newName = $tableData->mysql_table_name . '_' . $cnt;
+                $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+                if (!(Connection::isSeparate($tableData->connection))) {
+                    $res = $wpdb->get_results($checkTableQuery);
+                } else {
+                    $sql = Connection::create($tableData->connection);
+                    $res = $sql->getRow($checkTableQuery);
+                }
+                if (!empty($res)) {
+                    $cnt++;
+                } else {
+                    $newNameGenerated = true;
+                }
+            }
+
+            // Input table queries
+
+            $vendor = Connection::getVendor($tableData->connection);
+            $isMySql = $vendor === Connection::$MYSQL;
+            $isMSSql = $vendor === Connection::$MSSQL;
+            $isPostgreSql = $vendor === Connection::$POSTGRESQL;
+
+            if ($isMySql) {
+                $query1 = "CREATE TABLE {$newName} LIKE {$tableData->mysql_table_name};";
+                $query2 = "INSERT INTO {$newName} SELECT * FROM {$tableData->mysql_table_name};";
+            }
+
+            if ($isMSSql || $isPostgreSql) {
+                $query1 = "SELECT * INTO {$newName} FROM {$tableData->mysql_table_name};";
+            }
+
             if (!(Connection::isSeparate($tableData->connection))) {
-                $res = $wpdb->get_results($checkTableQuery);
+                $wpdb->query($query1);
+                $wpdb->query($query2);
             } else {
-                $sql = Connection::create($tableData->connection);
-                $res = $sql->getRow($checkTableQuery);
+                $sql->doQuery($query1);
+
+                if ($query2) {
+                    $sql->doQuery($query2);
+                }
             }
-            if (!empty($res)) {
-                $cnt++;
+            $mySqlTableName = $newName;
+
+            if ($tableData->table_type != 'gravity') {
+                $content = str_replace($tableData->mysql_table_name, $newName, $tableData->content);
             } else {
-                $newNameGenerated = true;
+                $content = $tableData->content;
             }
+
         }
-
-        // Input table queries
-
-        $vendor = Connection::getVendor($tableData->connection);
-        $isMySql = $vendor === Connection::$MYSQL;
-        $isMSSql = $vendor === Connection::$MSSQL;
-        $isPostgreSql = $vendor === Connection::$POSTGRESQL;
-
-        if ($isMySql) {
-            $query1 = "CREATE TABLE {$newName} LIKE {$tableData->mysql_table_name};";
-            $query2 = "INSERT INTO {$newName} SELECT * FROM {$tableData->mysql_table_name};";
-        }
-
-        if ($isMSSql || $isPostgreSql) {
-            $query1 = "SELECT * INTO {$newName} FROM {$tableData->mysql_table_name};";
-        }
-
-        if (!(Connection::isSeparate($tableData->connection))) {
-            $wpdb->query($query1);
-            $wpdb->query($query2);
-        } else {
-            $sql->doQuery($query1);
-
-            if ($query2) {
-                $sql->doQuery($query2);
-            }
-        }
-        $mySqlTableName = $newName;
-
-        if ($tableData->table_type != 'gravity'){
-            $content = str_replace($tableData->mysql_table_name, $newName, $tableData->content);
-        } else {
-            $content = $tableData->content;
-        }
-
     }
 
     // Creating new table
@@ -238,53 +284,66 @@ function wdtDuplicateTable()
 
     $newTableId = $wpdb->insert_id;
 
-    // Getting the column data
-    $columns = WDTConfigController::loadColumnsFromDB($tableId);
+    if ($tableData->table_type != 'simple') {
+        // Getting the column data
+        $columns = WDTConfigController::loadColumnsFromDB($tableId);
 
-    // Creating new columns
-    foreach ($columns as $column) {
-        $wpdb->insert(
-            $wpdb->prefix . 'wpdatatables_columns',
-            array(
-                'table_id' => $newTableId,
-                'orig_header' => $column->orig_header,
-                'display_header' => $column->display_header,
-                'filter_type' => $column->filter_type,
-                'column_type' => $column->column_type,
-                'input_type' => $column->input_type,
-                'input_mandatory' => $column->input_mandatory,
-                'id_column' => $column->id_column,
-                'group_column' => $column->group_column,
-                'sort_column' => $column->sort_column,
-                'hide_on_phones' => $column->hide_on_phones,
-                'hide_on_tablets' => $column->hide_on_tablets,
-                'visible' => $column->visible,
-                'sum_column' => $column->sum_column,
-                'skip_thousands_separator' => $column->skip_thousands_separator,
-                'width' => $column->width,
-                'possible_values' => $column->possible_values,
-                'default_value' => $column->default_value,
-                'css_class' => $column->css_class,
-                'text_before' => $column->text_before,
-                'text_after' => $column->text_after,
-                'formatting_rules' => $column->formatting_rules,
-                'calc_formula' => $column->calc_formula,
-                'color' => $column->color,
-                'pos' => $column->pos,
-                'advanced_settings' => $column->advanced_settings
-            )
-        );
+        // Creating new columns
+        foreach ($columns as $column) {
+            $wpdb->insert(
+                $wpdb->prefix . 'wpdatatables_columns',
+                array(
+                    'table_id' => $newTableId,
+                    'orig_header' => $column->orig_header,
+                    'display_header' => $column->display_header,
+                    'filter_type' => $column->filter_type,
+                    'column_type' => $column->column_type,
+                    'input_type' => $column->input_type,
+                    'input_mandatory' => $column->input_mandatory,
+                    'id_column' => $column->id_column,
+                    'group_column' => $column->group_column,
+                    'sort_column' => $column->sort_column,
+                    'hide_on_phones' => $column->hide_on_phones,
+                    'hide_on_tablets' => $column->hide_on_tablets,
+                    'visible' => $column->visible,
+                    'sum_column' => $column->sum_column,
+                    'skip_thousands_separator' => $column->skip_thousands_separator,
+                    'width' => $column->width,
+                    'possible_values' => $column->possible_values,
+                    'default_value' => $column->default_value,
+                    'css_class' => $column->css_class,
+                    'text_before' => $column->text_before,
+                    'text_after' => $column->text_after,
+                    'formatting_rules' => $column->formatting_rules,
+                    'calc_formula' => $column->calc_formula,
+                    'color' => $column->color,
+                    'pos' => $column->pos,
+                    'advanced_settings' => $column->advanced_settings
+                )
+            );
 
-        if ($column->id == $tableData->userid_column_id) {
-            $userIdColumnNewId = $wpdb->insert_id;
+            if ($column->id == $tableData->userid_column_id) {
+                $userIdColumnNewId = $wpdb->insert_id;
 
-            $wpdb->update(
-                $wpdb->prefix . 'wpdatatables',
-                array('userid_column_id' => $userIdColumnNewId),
-                array('id' => $newTableId)
+                $wpdb->update(
+                    $wpdb->prefix . 'wpdatatables',
+                    array('userid_column_id' => $userIdColumnNewId),
+                    array('id' => $newTableId)
+                );
+            }
+
+        }
+    } else {
+        $rows = WDTConfigController::loadRowsDataFromDB($tableId);
+        foreach ($rows as $row) {
+            $wpdb->insert(
+                $wpdb->prefix . "wpdatatables_rows",
+                array(
+                    'table_id' => $newTableId,
+                    'data' => json_encode($row)
+                )
             );
         }
-
     }
 
     exit();
@@ -334,6 +393,182 @@ function wdtDuplicateChart()
 }
 
 add_action('wp_ajax_wpdatatables_duplicate_chart', 'wdtDuplicateChart');
+
+
+function wdtCreateSimpleTable()
+{
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
+        exit();
+    }
+    $tableData = apply_filters(
+        'wpdatatables_before_create_simple_table',
+        json_decode(
+            stripslashes_deep(
+                $_POST['tableData']
+            )
+        )
+    );
+
+    $wpDataTableRows = new WPDataTableRows($tableData);
+
+    // Generate new id and save settings in wpdatatables table in DB
+    $newTableId = generateSimpleTableID($wpDataTableRows);
+
+    // Save table with empty data
+    $wpDataTableRows->saveTableWithEmptyData($newTableId);
+
+    // Generate a link for new table
+    echo admin_url('admin.php?page=wpdatatables-constructor&source&simple&table_id=' . $newTableId);
+
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_create_simple_table', 'wdtCreateSimpleTable');
+
+function wdtGetHandsontableData()
+{
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtEditNonce')) {
+        exit();
+    }
+
+    $tableID = (int)$_POST['tableID'];
+    $res = new stdClass();
+
+    try {
+        $wpDataTableRows = WPDataTableRows::loadWpDataTableRows($tableID);
+        $res->tableData = $wpDataTableRows->getRowsData();
+        $res->tableMeta = $wpDataTableRows->getTableSettingsData()->content;
+    } catch (Exception $e) {
+        $res->error = ltrim($e->getMessage(), '<br/><br/>');
+    }
+    echo json_encode($res);
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_get_handsontable_data', 'wdtGetHandsontableData');
+
+function generateSimpleTableID($wpDataTableRows)
+{
+    global $wpdb;
+    $tableContent = new stdClass();
+    $tableContent->rowNumber = $wpDataTableRows->getRowNumber();
+    $tableContent->colNumber = $wpDataTableRows->getColNumber();
+    $tableContent->colWidths = $wpDataTableRows->getColWidths();
+    $tableContent->colHeaders = $wpDataTableRows->getColHeaders();
+    $tableContent->reloadCounter = $wpDataTableRows->getReloadCounter();
+    $tableContent->mergedCells = $wpDataTableRows->getMergeCells();
+
+    // Create the wpDataTable metadata
+    $wpdb->insert(
+        $wpdb->prefix . "wpdatatables",
+        array(
+            'title' => sanitize_text_field($wpDataTableRows->getTableName()),
+            'table_type' => $wpDataTableRows->getTableType(),
+            'connection' => '',
+            'content' => json_encode($tableContent),
+            'server_side' => 0,
+            'mysql_table_name' => '',
+            'tabletools_config' => serialize(array(
+                'print' => 1,
+                'copy' => 1,
+                'excel' => 1,
+                'csv' => 1,
+                'pdf' => 0
+            )),
+            'advanced_settings' => json_encode(array(
+                'simpleResponsive' => 0,
+                'simpleHeader' => 0,
+                'stripeTable' => 0,
+                'cellPadding' => 10,
+                'verticalScroll' => 0,
+                'verticalScrollHeight' => 600
+                )
+            )
+        )
+    );
+
+    // Store the new table metadata ID
+    return $wpdb->insert_id;
+}
+
+/**
+ * Save data in database for Simple table
+ */
+function wdtSaveDataSimpleTable()
+{
+    global $wpdb;
+
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtEditNonce')) {
+        exit();
+    }
+    $turnOffSimpleHeader = 0;
+    $rowsData = json_decode(stripslashes_deep($_POST['rowsData']));
+    $tableSettings = json_decode(stripslashes_deep($_POST['tableSettings']));
+    $tableID = intval($tableSettings->id);
+    $scrollable = intval($tableSettings->scrollable);
+    $fixedLayout = intval($tableSettings->fixed_layout);
+    $wordWrap = intval($tableSettings->word_wrap);
+    $showTitle = intval($tableSettings->show_title);
+    $title = sanitize_text_field($tableSettings->title);
+    $result = new stdClass();
+
+    if ($tableSettings->content->mergedCells){
+        $mergedCells = $tableSettings->content->mergedCells;
+        foreach ($mergedCells as $mergedCell){
+            if($mergedCell->row == 0 && $mergedCell->rowspan > 1){
+                $turnOffSimpleHeader = 1;
+            }
+        }
+    }
+
+    $wpdb->update(
+        $wpdb->prefix . "wpdatatables",
+        array(
+            'content' => json_encode($tableSettings->content),
+            'scrollable' => $scrollable,
+            'fixed_layout' => $fixedLayout,
+            'word_wrap' => $wordWrap,
+            'show_title' => $showTitle,
+            'title' => $title,
+            'advanced_settings' => json_encode(
+                array(
+                    'simpleResponsive' => $tableSettings->simpleResponsive,
+                    'simpleHeader' => $turnOffSimpleHeader ? 0 : $tableSettings->simpleHeader,
+                    'stripeTable' => $tableSettings->stripeTable,
+                    'cellPadding' => $tableSettings->cellPadding,
+                    'verticalScroll' => $tableSettings->verticalScroll,
+                    'verticalScrollHeight' => $tableSettings->verticalScrollHeight,
+                )
+            )
+        ),
+        array('id' => $tableID)
+    );
+
+    if ($wpdb->last_error == '') {
+        try {
+            $wpDataTableRows = new WPDataTableRows($tableSettings);
+
+            if ($wpDataTableRows->checkIsExistTableID($tableID)) {
+                $wpDataTableRows->deleteRowsData($tableID);
+            }
+            foreach ($rowsData as $rowData){
+                WDTConfigController::saveRowData($rowData, $tableID);
+            }
+            $wpDataTableRows = WPDataTableRows::loadWpDataTableRows($tableID);
+            $result->reload =  $wpDataTableRows->getTableSettingsData()->content->reloadCounter;
+            $result->tableHTML = $wpDataTableRows->generateTable($tableID);
+        } catch (Exception $e) {
+            $result->error = ltrim($e->getMessage(), '<br/><br/>');
+        }
+    } else {
+        $result->error = $wpdb->last_error;
+    }
+
+    echo json_encode($result);
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_save_simple_table_data', 'wdtSaveDataSimpleTable');
 
 /**
  * Create a manually built table and open in Edit Page
@@ -396,7 +631,7 @@ function wdtRefreshWPQueryPreview()
         exit();
     }
 
-    $query = sanitize_text_field($_POST['query']);
+    $query = $_POST['query'];
 
     $constructor = new wpDataTableConstructor($_POST['connection']);
     $constructor->setQuery($query);
@@ -438,7 +673,7 @@ function wdtConstructorGetMySqlTableColumns()
     if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
         exit();
     }
-    if (isset($_POST['tables'])){
+    if (isset($_POST['tables'])) {
         $tables = array_map('sanitize_text_field', $_POST['tables']);
         $columns = wpDataTableConstructor::listMySQLColumns($tables, $_POST['connection']);
     } else {
@@ -687,7 +922,7 @@ function wdtReadDistinctValuesFromTable()
     $columnData = WDTConfigController::loadSingleColumnFromDB($columnId);
     $column = $wpDataTable->getColumn($columnData['orig_header']);
 
-    $distValues = WDTColumn::getPossibleValuesRead($column, $tableData, false);
+    $distValues = WDTColumn::getPossibleValuesRead($column, false, $tableData );
     echo json_encode($distValues);
     exit();
 }
@@ -835,8 +1070,8 @@ function wdtParseServerName()
         exit();
     }
     /** @var array $serverName */
-    $serverName['domain']    = filter_var($_POST['domain'], FILTER_SANITIZE_STRING);
-    $serverName['domain']    = WDTTools::getDomain($serverName['domain']);
+    $serverName['domain'] = filter_var($_POST['domain'], FILTER_SANITIZE_STRING);
+    $serverName['domain'] = WDTTools::getDomain($serverName['domain']);
     $serverName['subdomain'] = filter_var($_POST['subdomain'], FILTER_SANITIZE_STRING);
     $serverName['subdomain'] = WDTTools::getSubDomain($serverName['subdomain']);
 

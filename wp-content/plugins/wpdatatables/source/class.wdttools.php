@@ -204,23 +204,27 @@ class WDTTools
         curl_setopt($ch, CURLOPT_USERAGENT, $agent);
         curl_setopt($ch, CURLOPT_REFERER, site_url());
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        $data = curl_exec($ch);
-        if (curl_error($ch)) {
-            $error = curl_error($ch);
+
+        $data = apply_filters('wpdatatables_curl_get_data', null, $ch, $url);
+        if( null === $data ) {
+            $data = curl_exec($ch);
+            if (curl_error($ch)) {
+                $error = curl_error($ch);
+                curl_close($ch);
+
+                throw new Exception($error);
+            }
+            if (strpos($data, '<TITLE>Moved Temporarily</TITLE>')) {
+                throw new Exception(__('wpDataTables was unable to read your Google Spreadsheet, probably it is not published correctly. <br/> You can publish it by going to <b>File -> Publish to the web</b> ', 'wpdatatables'));
+            }
+            $info = curl_getinfo($ch);
             curl_close($ch);
 
-            throw new Exception($error);
+            if ($info['http_code'] === 404) {
+                return NULL;
+            }
         }
-        if (strpos($data, '<TITLE>Moved Temporarily</TITLE>')) {
-            throw new Exception(__('wpDataTables was unable to read your Google Spreadsheet, probably it is not published correctly. <br/> You can publish it by going to <b>File -> Publish to the web</b> ', 'wpdatatables'));
-        }
-        $info = curl_getinfo($ch);
-        curl_close($ch);
-        if ($info['http_code'] !== 404) {
-            return $data;
-        } else {
-            return NULL;
-        }
+        return $data;
     }
 
     /**
@@ -316,8 +320,19 @@ class WDTTools
         foreach ($lines as $row) {
             $arr[] = str_getcsv($row, ",");
         }
+        return self::gsArrayToWDTArray($arr);
+    }
+
+    /**
+     * Helper function that convert Google Sheet array to adopt in wpdt Array
+     * @param $arr
+     * @return array
+     */
+    public static function gsArrayToWDTArray($arr)
+    {
         $count = count($arr) - 1;
         $labels = array_shift($arr);
+        $countLabels = count($labels);
         $keys = array();
         foreach ($labels as $label) {
             $keys[] = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $label)));
@@ -325,10 +340,51 @@ class WDTTools
         $keys = array_map('trim', $keys);
         $returnArray = array();
         for ($j = 0; $j < $count; $j++) {
+            if (count($arr[$j]) < $countLabels){
+                for ($k = 0; $k < $countLabels; $k++){
+                    if(!isset($arr[$j][$k])){
+                        $arr[$j][$k] = '';
+                    }
+                }
+            }
             $d = array_combine($keys, $arr[$j]);
             $returnArray[$j] = $d;
         }
         return $returnArray;
+    }
+    /**
+     * Helper function that extract Google Spreadsheet URL and get ID
+     * @param $url
+     * @return string
+     */
+    public static function getGoogleSpreadsheetID($url)
+    {
+        $url_arr = explode('/', $url);
+        return $url_arr[count($url_arr) - 2];
+    }
+    /**
+     * Helper function that extract Google Spreadsheet URL and get Worksheets ID
+     * @param $url
+     * @return string
+     */
+    public static function getGoogleWorksheetsID($url)
+    {
+        if (strpos($url, '#') !== false) {
+            $url_query = parse_url($url, PHP_URL_FRAGMENT);
+        } else {
+            $url_query = parse_url($url, PHP_URL_QUERY);
+        }
+
+        if (!empty($url_query)) {
+            parse_str($url_query, $url_query_params);
+            if (!empty($url_query_params['gid'])) {
+                return $url_query_params['gid'];
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -408,6 +464,8 @@ class WDTTools
             'modalTitle' => __('Row details', 'wpdatatables'),
             'newColumnName' => __('New column', 'wpdatatables'),
             'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+            'numberOfColumnsError' => __('Number of columns can not be empty or 0', 'wpdatatables'),
+            'numberOfRowsError' => __('Number of rows can not be empty or 0', 'wpdatatables'),
             'oAria' => array(
                 'sSortAscending' => __(': activate to sort column ascending', 'wpdatatables'),
                 'sSortDescending' => __(': activate to sort column descending', 'wpdatatables')
@@ -518,6 +576,72 @@ class WDTTools
             'next_button' => __('Continue', 'wpdatatables'),
             'start_button' => __('Start', 'wpdatatables'),
             'skip_button' => __('Skip Tutorial', 'wpdatatables'),
+            'tour0' => array(
+                'step0' => array(
+                    'title' => $guideTeacherIMG . __('Welcome to the tutorial!', 'wpdatatables'),
+                    'content' => __('Hello ', 'wpdatatables') . $username . $waveIMG  .  __(', in this tutorial, we will show you how to create a simple table from scratch by choosing a custom number of columns and rows. How to customize each cell, merge cells and a lot more.', 'wpdatatables'),
+                ),
+                'step1' => array(
+                    'title' => __(' Let\'s create a new wpDataTable from scratch!', 'wpdatatables'),
+                    'content' => __('Click on \'Create a Table\' to access the wpDataTables Table Wizard.', 'wpdatatables'),
+                ),
+                'step2' => array(
+                    'title' => __('Choose this option', 'wpdatatables'),
+                    'content' => __('Please select \'Create a simple table from scratch\'.', 'wpdatatables'),
+                ),
+                'step3' => array(
+                    'title' => __('Click Next', 'wpdatatables'),
+                    'content' => __('Please click the \'Next\' button to continue.', 'wpdatatables'),
+                ),
+                'step4' => array(
+                    'title' => __('Welcome to the Simple table wizard!', 'wpdatatables'),
+                    'content' => __('Please click \'Continue\' button to move on.', 'wpdatatables'),
+                ),
+                'step5' => array(
+                    'title' => __('Choose a name for your table', 'wpdatatables'),
+                    'content' => __('After inserting table name, click \'Continue\' to move on.', 'wpdatatables'),
+                ),
+                'step6' => array(
+                    'title' => __('Choose the number of columns for your table', 'wpdatatables'),
+                    'content' => __('Please choose how many columns it will have. Remember that you can always add or reduce the number of columns later. Click \'Continue\' when you finish.', 'wpdatatables'),
+                ),
+                'step7' => array(
+                    'title' => __('Choose the number of rows for your table.', 'wpdatatables'),
+                    'content' => __('Please choose how many rows it will have. Remember that you can always add or reduce the number of rows later. Click \'Continue\' when you finish.', 'wpdatatables'),
+                ),
+                'step8' => array(
+                    'title' => __('Click on the \'Generate Table\' button', 'wpdatatables'),
+                    'content' => __('When you click on the button, the empty table will be ready for you. ', 'wpdatatables'),
+                ),
+                'step9' => array(
+                    'title' => $hourglassIMG .__('We are generating the table...', 'wpdatatables'),
+                    'content' => __('Please, when you see the table, click \'Continue\' to move on.', 'wpdatatables'),
+                ),
+                'step10' => array(
+                    'title' => __('Nice job! You just configured your table and it is ready to fill it with data.', 'wpdatatables') . $raisedHandsIMG,
+                    'content' => __('Now we will guide you on how to insert data and check table layout throw Simple table editor, table toolbar and table preview. Please click \'Continue\' to move on.', 'wpdatatables'),
+                ),
+                'step11' => array(
+                    'title' => __('This is Simple table editor', 'wpdatatables'),
+                    'content' => __('Here you can populate your table with data. <br><br>You can move around the cells using keyboard arrows and the Tab button. <br><br>Rearrange columns or rows by drag and drop column or row headers. Easily resize column width and row height by dragging the right corner of the column header, or the bottom line of the row header. Click \'Continue\' to move on.', 'wpdatatables'),
+                   ),
+                'step12' => array(
+                    'title' => __('Check out the Simple table toolbar', 'wpdatatables'),
+                    'content' => __('Here you can style and insert custom data for each cell or range of cells. You can add or delete columns and rows, merge cells, customize sections by colors, background, alignment, insert custom links, media, shortcodes, star ratings or custom HTML code.', 'wpdatatables'),
+                ),
+                'step13' => array(
+                    'title' => __('Responsive table views', 'wpdatatables'),
+                    'content' => __('You can switch between Desktop, Tablet or Mobile devices by clicking on the tab that you need, so you can make sure your table looks excellent across all devices. ', 'wpdatatables'),
+                ),
+                'step14' => array(
+                    'title' => __('Real-time preview', 'wpdatatables'),
+                    'content' => __('Here you will see how your table will look like on the page. Please click \'Continue\' to move on.', 'wpdatatables'),
+                ),
+                'step15' => array(
+                    'title' =>$partyTitleIMG .  __('Congrats! Your table is ready.', 'wpdatatables'),
+                    'content' => __('Now you can copy the shortcode for this table, and check out how it looks on your website when you paste it to a post or page. You can always come back and edit the table as you like.', 'wpdatatables'),
+                )
+            ),
             'tour1' => array(
                 'step0' => array(
                     'title' => $guideTeacherIMG . __('Welcome to the tutorial!', 'wpdatatables'),
@@ -815,7 +939,7 @@ class WDTTools
                 ),
                 'step15' => array(
                     'title' => __('Meet the wpDataTable Column Blocks', 'wpdatatables'),
-                    'content' => __('Here you will choose columns you want to use in the chart. Drag and drop it, or click on the arrow to move the desired column to the \'Columns used in the chart\' section.<br><br> When you finish please, click \'NEXT.\'', 'wpdatatables'),
+                    'content' => __('Here you will choose columns you want to use in the chart. Drag and drop it, or click on the arrow to move the desired column to the \'Columns used in the chart\' section.<br><br> When you finish please, click \'Continue.\'', 'wpdatatables'),
                 ),
                 'step16' => array(
                     'title' => __('Well done!', 'wpdatatables') . $raisedHandsIMG,

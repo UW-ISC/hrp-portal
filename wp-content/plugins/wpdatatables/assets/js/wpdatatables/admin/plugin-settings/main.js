@@ -73,6 +73,13 @@
         });
 
         /**
+         * Change Table sorting direction on Browse pages
+         */
+        $('#wdt-sorting-order-browse-tables').change(function(e){
+            wpdatatable_plugin_config.setSortingOrderBrowseTables( $(this).val() );
+        });
+
+        /**
          * Change position of advance filter - "Render advanced filter"
          */
         $('#wp-render-filter').change(function (e) {
@@ -202,7 +209,7 @@
         /**
          * Change table font color
          */
-        $('.color-picker').on('changeColor', function (e) {
+        $('.wdt-color-picker').change(function (e) {
             wpdatatable_plugin_config.setColorFontSetting($(this).find('.cp-value').data('name'), $(this).find('input').val());
         });
 
@@ -274,6 +281,7 @@
         wpdatatable_plugin_config.setBaseSkin(wdt_current_config.wdtBaseSkin);
         wpdatatable_plugin_config.setNumberFormat(wdt_current_config.wdtNumberFormat);
         wpdatatable_plugin_config.setCSVDelimiter(wdt_current_config.wdtCSVDelimiter);
+        wpdatatable_plugin_config.setSortingOrderBrowseTables( wdt_current_config.wdtSortingOrderBrowseTables );
         wpdatatable_plugin_config.setRenderPosition(wdt_current_config.wdtRenderFilter);
         wpdatatable_plugin_config.setDecimalPlaces(wdt_current_config.wdtDecimalPlaces);
         wpdatatable_plugin_config.setTabletWidth(wdt_current_config.wdtTabletWidth);
@@ -312,12 +320,29 @@
             }
         });
 
+        var hash = window.location.hash;
+        hash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + hash + '"]').tab('show');
+
+        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) a').click(function (e) {
+            $(this).tab('show');
+            var scrollmem = $('body').scrollTop();
+            window.location.hash = this.hash;
+            $('html,body').scrollTop(scrollmem);
+        });
+
+        // Change tab on hashchange
+        window.addEventListener('hashchange', function() {
+            var changedHash = window.location.hash;
+            changedHash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + changedHash + '"]').tab('show');
+        }, false);
+
         /**
          * Reset color settings
          */
         $('.reset-color-settings').click(function (e) {
             e.preventDefault();
             $('#color-and-font-settings input.cp-value').val('').change();
+            $('#color-and-font-settings .wpcolorpicker-icon i').css('background','#fff');
             wdt_current_config.wdtFontColorSettings = _.mapObject(
                 wdt_current_config.wdtFontColorSettings,
                 function (color) {
@@ -327,6 +352,8 @@
             $('#color-and-font-settings .selectpicker').selectpicker('val', '');
             $('input#wdt-border-input-radius').val('');
             $('input#wdt-font-size').val('');
+            $('#wdt-remove-borders').prop( 'checked', false ).change();
+            $('#wdt-remove-borders-header').prop( 'checked', false ).change();
         });
 
         /**
@@ -360,6 +387,32 @@
             } else {
                 savePluginSettings(null);
             }
+        });
+
+        /**
+         * Save settings on Apply button
+         */
+        $(document).on('click', '#wdt-save-google-settings', function (e) {
+            var credentials =  $('#wdt-google-sheet-settings').val();
+
+            if (credentials != '') {
+                $('.wdt-preload-layer').animateFadeIn();
+                saveGoogleAccountSettings(credentials);
+            } else {
+                $('#wdt-error-modal .modal-body').html("Google service account data can not be empty!");
+                $('#wdt-error-modal').modal('show');
+                $('.wdt-preload-layer').animateFadeOut();
+                return false;
+            }
+        });
+
+
+        /**
+         * Delete Google settings
+         */
+        $(document).on('click', '#wdt-delete-google-settings', function (e) {
+            $('.wdt-preload-layer').animateFadeIn();
+            deleteGoogleAccountSettings();
         });
 
         /**
@@ -671,6 +724,55 @@
             }
 
             return true;
+        }
+
+        function saveGoogleAccountSettings(credentials) {
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_save_google_settings',
+                    settings: credentials,
+                    wdtNonce: $('#wdtNonce').val()
+                },
+                success: function (data) {
+                    data = JSON.parse(data);
+                    if (data.error){
+                        $('#wdt-error-modal .modal-body').html('There was an error while trying to save google settings!\n ' + data.error);
+                        $('#wdt-error-modal').modal('show');
+                        $('.wdt-preload-layer').animateFadeOut();
+                    } else {
+                        window.location = data.link;
+                        window.location.reload();
+                    }
+
+                },
+                error: function (){
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to save google settings!');
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            });
+        }
+
+        function deleteGoogleAccountSettings() {
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_delete_google_settings',
+                    wdtNonce: $('#wdtNonce').val()
+                },
+                success: function (link) {
+                    window.location = link;
+                    window.location.reload();
+                },
+                error: function (data){
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to delete google settings! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            });
         }
 
         function savePluginSettings(connections) {

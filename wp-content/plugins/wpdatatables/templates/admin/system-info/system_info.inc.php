@@ -498,12 +498,12 @@
         <div class="row">
             <h6 class="text-center wdt-footer-title">
                 <?php _e('Made by', 'wpdatatables'); ?>
-                <a href="https://tms-outsource.com/" target="_blank">
+                <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
             </h6>
             <ul class="wpdt-footer-links text-center">
-                <li><a href="https://wpdatatables.com/" target="_blank">wpDataTables.com</a></li>
+                <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
                 <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
                 </li>

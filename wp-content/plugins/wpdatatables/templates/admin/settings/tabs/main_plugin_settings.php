@@ -202,6 +202,23 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-4 sorting-browse-tables">
+            <h4 class="c-title-color m-b-2">
+                <?php _e('Tables sorting direction in admin page', 'wpdatatables'); ?>
+                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php _e('Here you can set sorting direction by id for browse tables and charts. By default is ascending order.', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="form-group">
+                <div class="fg-line">
+                    <div class="select">
+                        <select class="selectpicker" id="wdt-sorting-order-browse-tables">
+                            <option value="ASC"> <?php _e('Ascending', 'wpdatatables'); ?></option>
+                            <option value="DESC"> <?php _e('Descending', 'wpdatatables'); ?></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="row">
         <div class="col-sm-4 tablet-width">

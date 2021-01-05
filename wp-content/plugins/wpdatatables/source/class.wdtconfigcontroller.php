@@ -161,11 +161,20 @@ class WDTConfigController {
             $table->tabletools_config = unserialize($table->tabletools_config);
             $table->columns = self::getColumnsConfig($tableId);
             $table->info_block = (isset($advancedSettings->info_block)) ? $advancedSettings->info_block : 1;
+            $table->pagination = (isset($advancedSettings->pagination)) ? $advancedSettings->pagination : 1;
+            $table->paginationAlign = (isset($advancedSettings->paginationAlign)) ? $advancedSettings->paginationAlign : 'right';
+            $table->paginationLayout = (isset($advancedSettings->paginationLayout)) ? $advancedSettings->paginationLayout : 'full_numbers';
             $table->global_search = (isset($advancedSettings->global_search)) ? $advancedSettings->global_search : 1;
             $table->showRowsPerPage = (isset($advancedSettings->showRowsPerPage)) ? $advancedSettings->showRowsPerPage : 1;
             $table->showAllRows = (isset($advancedSettings->showAllRows)) ? $advancedSettings->showAllRows : false;
             $table->clearFilters = (isset($advancedSettings->clearFilters)) ? $advancedSettings->clearFilters : 0;
             $table->connection = (isset($table->connection)) ? $table->connection : null;
+            $table->simpleHeader = (isset($advancedSettings->simpleHeader)) ? $advancedSettings->simpleHeader : 0;
+            $table->simpleResponsive = (isset($advancedSettings->simpleResponsive)) ? $advancedSettings->simpleResponsive : 0;
+            $table->stripeTable = (isset($advancedSettings->stripeTable)) ? $advancedSettings->stripeTable : 0;
+            $table->cellPadding = (isset($advancedSettings->cellPadding)) ? $advancedSettings->cellPadding : 10;
+            $table->verticalScroll = (isset($advancedSettings->verticalScroll)) ? $advancedSettings->verticalScroll : 0;
+            $table->verticalScrollHeight = (isset($advancedSettings->verticalScrollHeight)) ? $advancedSettings->verticalScrollHeight : 0;
 
             $table = self::sanitizeTableConfig($table);
 
@@ -212,6 +221,19 @@ class WDTConfigController {
 
         $columns = $wpdb->get_results($columnsQuery);
         $columns = apply_filters('wpdatatables_filter_columns_metadata', $columns, $tableId);
+
+        if (!defined('WDT_MD_VERSION')){
+            $columnPosition = -1;
+            foreach ($columns as $key=>$column){
+                if ($column->orig_header == 'masterdetail') {
+                    $columnPosition = $column->pos;
+                    unset($columns[$key]);
+                }
+                if ($columnPosition > -1){
+                    $column->pos = $column->pos - 1;
+                }
+            }
+        }
 
         return $columns;
     }
@@ -280,10 +302,19 @@ class WDTConfigController {
             'advanced_settings' => json_encode(
                 array(
                     'info_block' => $table->info_block,
+                    'pagination' => $table->pagination,
+                    'paginationAlign' => $table->paginationAlign,
+                    'paginationLayout' => $table->paginationLayout,
                     'global_search' => $table->global_search,
                     'showRowsPerPage' => $table->showRowsPerPage,
                     'showAllRows' => $table->showAllRows,
-                    'clearFilters' => $table->clearFilters
+                    'clearFilters' => $table->clearFilters,
+                    'simpleResponsive' => $table->simpleResponsive,
+                    'simpleHeader' => $table->simpleHeader,
+                    'stripeTable' => $table->stripeTable,
+                    'cellPadding' => $table->cellPadding,
+                    'verticalScroll' => $table->verticalScroll,
+                    'verticalScrollHeight' => $table->verticalScrollHeight
                 )
             )
         );
@@ -330,11 +361,20 @@ class WDTConfigController {
         $table->hide_before_load = (int)$table->hide_before_load;
         $table->fixed_layout = (int)$table->fixed_layout;
         $table->scrollable = (int)$table->scrollable;
+        $table->verticalScroll = (int)$table->verticalScroll;
         $table->sorting = (int)$table->sorting;
         $table->word_wrap = (int)$table->word_wrap;
         $table->server_side = (int)$table->server_side;
         $table->auto_refresh = (int)$table->auto_refresh;
         $table->info_block = (int)$table->info_block;
+        $table->pagination = (int)$table->pagination;
+        $table->paginationAlign = sanitize_text_field($table->paginationAlign);
+        $table->paginationLayout = sanitize_text_field($table->paginationLayout);
+        $table->simpleResponsive = (int)$table->simpleResponsive;
+        $table->simpleHeader = (int)$table->simpleHeader;
+        $table->stripeTable = (int)$table->stripeTable;
+        $table->cellPadding = (int)$table->cellPadding;
+        $table->verticalScrollHeight = (int)$table->verticalScrollHeight;
         $table->filtering = (int)$table->filtering;
         $table->global_search = (int)$table->global_search;
         $table->editable = (int)$table->editable;
@@ -1003,11 +1043,20 @@ class WDTConfigController {
         $table->hide_before_load = 1;
         $table->fixed_layout = 0;
         $table->scrollable = 0;
+        $table->verticalScroll = 0;
         $table->sorting = 1;
         $table->word_wrap = 0;
         $table->server_side = 0;
         $table->auto_refresh = 0;
         $table->info_block = 1;
+        $table->pagination = 1;
+        $table->paginationAlign = 'right';
+        $table->paginationLayout = 'full_numbers';
+        $table->simpleResponsive = 0;
+        $table->simpleHeader = 0;
+        $table->stripeTable = 0;
+        $table->cellPadding = 10;
+        $table->verticalScrollHeight = 600;
         $table->filtering = 1;
         $table->global_search = 1;
         $table->editable = 0;
@@ -1033,6 +1082,68 @@ class WDTConfigController {
         $table->content = '';
 
         return $table;
+    }
+
+    /**
+     * Helper method that load table config data for Simple table from DB
+     * @param int $tableID
+     */
+    public static function loadSimpleTableConfig($tableID){
+        $res = new stdClass();
+
+        try {
+            $wpDataTableRows = WPDataTableRows::loadWpDataTableRows($tableID);
+            $res->tableID = $wpDataTableRows->getTableID();
+            $res->table = $wpDataTableRows->getTableSettingsData();
+            $res->wdtHtml = $wpDataTableRows->generateTable($tableID);
+        } catch (Exception $e) {
+            $res->error = ltrim($e->getMessage(), '<br/><br/>');
+        }
+        return $res;
+    }
+    /**
+     * Helper method that load rows config data from DB
+     * @param int $tableID
+     */
+    public static function loadRowsDataFromDB($tableID){
+        global $wpdb;
+
+        do_action('wpdatatables_before_get_rows_metadata', $tableID);
+
+        $rowsQuery = $wpdb->prepare(
+            "SELECT data FROM " . $wpdb->prefix . "wpdatatables_rows WHERE table_id = %d ORDER BY id ASC", $tableID);
+
+        $rows = $wpdb->get_results($rowsQuery);
+
+        foreach ($rows as $key=> $row){
+            $rows[$key] = json_decode($row->data);
+        }
+
+        $rows = apply_filters('wpdatatables_filter_rows_metadata', $rows, $tableID);
+
+        return $rows;
+    }
+
+    /**
+     * Save row data from Simple table in database
+     * @param stdClass $rowData
+     * @param int $tableID
+     */
+    public static function saveRowData($rowData, $tableID)
+    {
+        global $wpdb;
+
+        do_action('wpdatatables_before_create_row', $tableID, $rowData);
+
+        $wpdb->insert(
+            $wpdb->prefix . "wpdatatables_rows",
+            array(
+                'table_id' => $tableID,
+                'data' => json_encode($rowData)
+            )
+        );
+
+        do_action('wpdatatables_after_save_row');
     }
 
 }

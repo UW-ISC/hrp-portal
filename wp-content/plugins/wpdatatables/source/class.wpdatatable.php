@@ -36,7 +36,6 @@ class WPDataTable {
     private $_hide_before_load = false;
     public static $wdt_internal_idcount = 0;
     public static $modalRendered = false;
-    private $_pagination = true;
     private $_showFilter = true;
     private $_firstOnPage = false;
     private $_groupingEnabled = false;
@@ -76,6 +75,15 @@ class WPDataTable {
     private $_tableToolsConfig = array();
     private $_autoRefreshInterval = 0;
     private $_infoBlock = true;
+    private $_pagination = true;
+    private $_paginationAlign = 'right';
+    private $_paginationLayout = 'full_numbers';
+    private $_simpleResponsive = false;
+    private $_verticalScroll = false;
+    private $_simpleHeader = false;
+    private $_stripeTable= false;
+    private $_cellPadding= 10;
+    private $_verticalScrollHeight= 600;
     private $_globalSearch = true;
     private $_showRowsPerPage = true;
     private $_showAllRows = false;
@@ -83,7 +91,7 @@ class WPDataTable {
     private $_ajaxReturn = false;
     private $_clearFilters = false;
     public $connection;
-    public static $allowedTableTypes = array('xls', 'csv', 'manual', 'mysql', 'json', 'google_spreadsheet', 'xml', 'serialized');
+    public static $allowedTableTypes = array('xls', 'csv', 'manual', 'mysql', 'json', 'google_spreadsheet', 'xml', 'serialized', 'simple');
 
     /**
      * @return bool
@@ -392,8 +400,22 @@ class WPDataTable {
     public function isScrollable() {
         return $this->_scrollable;
     }
+    public function setVerticalScroll($verticalScroll) {
+        if ($verticalScroll) {
+            $this->_verticalScroll = true;
+        } else {
+            $this->_verticalScroll = false;
+        }
+    }
+
+    public function isVerticalScroll() {
+        return $this->_verticalScroll;
+    }
 
     public function setInterfaceLanguage($lang) {
+
+        $lang = apply_filters('wpdatatables_filter_interface_lang', $lang, WDTSettingsController::getArrInterfaceLanguages(), $this->getWpId());
+
         if (empty($lang)) {
             throw new WDTException('Incorrect language parameter!');
         }
@@ -522,6 +544,121 @@ class WPDataTable {
      */
     public function setInfoBlock($infoBlock) {
         $this->_infoBlock = (bool)$infoBlock;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isPagination()
+    {
+        return $this->_pagination;
+    }
+
+    /**
+     * @param bool $pagination
+     */
+    public function setPagination($pagination)
+    {
+        $this->_pagination = $pagination;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaginationAlign()
+    {
+        return $this->_paginationAlign;
+    }
+
+    /**
+     * @param string $paginationAlign
+     */
+    public function setPaginationAlign($paginationAlign)
+    {
+        $this->_paginationAlign = $paginationAlign;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaginationLayout()
+    {
+        return $this->_paginationLayout;
+    }
+
+    /**
+     * @param string $paginationLayout
+     */
+    public function setPaginationLayout($paginationLayout)
+    {
+        $this->_paginationLayout = $paginationLayout;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isSimpleResponsive() {
+        return $this->_simpleResponsive;
+    }
+
+    /**
+     * @param boolean $simpleResponsive
+     */
+    public function setSimpleResponsive($simpleResponsive) {
+        $this->_simpleResponsive = (bool)$simpleResponsive;
+    }
+    /**
+     * @return boolean
+     */
+    public function isSimpleHeader() {
+        return $this->_simpleHeader;
+    }
+
+    /**
+     * @param boolean $simpleHeader
+     */
+    public function setSimpleHeader($simpleHeader) {
+        $this->_simpleHeader = (bool)$simpleHeader;
+    }
+    /**
+     * @return boolean
+     */
+    public function isStripeTable() {
+        return $this->_stripeTable;
+    }
+
+    /**
+     * @param boolean $stripeTable
+     */
+    public function setStripeTable($stripeTable) {
+        $this->_stripeTable = (bool)$stripeTable;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getCellPadding() {
+        return $this->_cellPadding;
+    }
+
+    /**
+     * @param boolean $cellPadding
+     */
+    public function setCellPadding($cellPadding) {
+        $this->_cellPadding = (bool)$cellPadding;
+    }
+    /**
+     * @return boolean
+     */
+    public function getVerticalScrollHeight() {
+        return $this->_verticalScrollHeight;
+    }
+
+    /**
+     * @param boolean $verticalScrollHeight
+     */
+    public function setVerticalScrollHeight($verticalScrollHeight) {
+        $this->_verticalScrollHeight = (bool)$verticalScrollHeight;
     }
 
     /**
@@ -2350,7 +2487,7 @@ class WPDataTable {
         } else {
             throw new WDTException('File format not supported!');
         }
-
+        $xls_url = apply_filters( 'wpdatatables_filter_excel_based_data_url', $xls_url, $this->getWpId() );
         $objPHPExcel = $objReader->load($xls_url);
         $objWorksheet = $objPHPExcel->getActiveSheet();
         $highestRow = $objWorksheet->getHighestRow();
@@ -2886,7 +3023,14 @@ class WPDataTable {
                 );
                 break;
             case 'google_spreadsheet':
-                $array = WDTTools::extractGoogleSpreadsheetArray($tableData->content);
+                $credentials = get_option('wdtGoogleSettings');
+                $token = get_option('wdtGoogleToken');
+                if ($credentials) {
+                    $googleSheet = new WPDataTable_Google_Sheet();
+                    $array = $googleSheet->getData($tableData->content, $credentials, $token);
+                } else{
+                    $array = WDTTools::extractGoogleSpreadsheetArray($tableData->content);
+                }
                 $this->arrayBasedConstruct(
                     $array,
                     $params
@@ -2988,11 +3132,29 @@ class WPDataTable {
             $this->setGlobalSearch($advancedSettings->global_search);
             $this->setShowRowsPerPage($advancedSettings->showRowsPerPage);
             isset($advancedSettings->showAllRows) ? $this->setShowAllRows($advancedSettings->showAllRows) : $this->setShowAllRows(false);
+            isset($advancedSettings->simpleResponsive) ? $this->setSimpleResponsive($advancedSettings->simpleResponsive) : $this->setSimpleResponsive(false);
+            isset($advancedSettings->simpleHeader) ? $this->setSimpleHeader($advancedSettings->simpleHeader) : $this->setSimpleHeader(false);
+            isset($advancedSettings->stripeTable) ? $this->setStripeTable($advancedSettings->stripeTable) : $this->setStripeTable(false);
+            isset($advancedSettings->cellPadding) ? $this->setCellPadding($advancedSettings->cellPadding) : $this->setCellPadding(10);
+            isset($advancedSettings->verticalScroll) ? $this->setVerticalScroll($advancedSettings->verticalScroll) : $this->setVerticalScroll(false);
+            isset($advancedSettings->verticalScrollHeight) ? $this->setVerticalScrollHeight($advancedSettings->verticalScrollHeight) : $this->setVerticalScrollHeight(600);
+            isset($advancedSettings->pagination) ? $this->setPagination($advancedSettings->pagination) : $this->setPagination(true);
+            isset($advancedSettings->paginationAlign) ? $this->setPaginationAlign($advancedSettings->paginationAlign) : $this->setPaginationAlign('right');
+            isset($advancedSettings->paginationLayout) ? $this->setPaginationLayout($advancedSettings->paginationLayout) : $this->setPaginationLayout('full_numbers');
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
             $this->setShowRowsPerPage(true);
             $this->setShowAllRows(false);
+            $this->setSimpleHeader(false);
+            $this->setSimpleResponsive(false);
+            $this->setStripeTable(false);
+            $this->setCellPadding(10);
+            $this->setVerticalScroll(false);
+            $this->setVerticalScrollHeight(600);
+            $this->setPagination(true);
+            $this->setPaginationAlign('right');
+            $this->setPaginationLayout('full_numbers');
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -3168,6 +3330,9 @@ class WPDataTable {
         $obj->editable = $this->isEditable();
         $obj->inlineEditing = $this->inlineEditingEnabled();
         $obj->infoBlock = $this->isInfoBlock();
+        $obj->pagination = $this->isPagination();
+        $obj->paginationAlign = $this->getPaginationAlign();
+        $obj->paginationLayout = $this->getPaginationLayout();
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
         $obj->popoverTools = $this->popoverToolsEnabled();
@@ -3195,8 +3360,9 @@ class WPDataTable {
         $infoBlock = ($obj->infoBlock == true) ? 'i' : '';
         $globalSearch = ($obj->globalSearch == true) ? 'f' : '';
         $showRowsPerPage = ($obj->showRowsPerPage == true) ? 'l' : '';
+        $pagination = ($obj->pagination == true) ? 'p' : '';
         $scrollable = ($this->isScrollable() == true) ? "<'wdtscroll't>" : 't';
-        $obj->dataTableParams->sDom = "BT<'clear'>{$showRowsPerPage}{$globalSearch}{$scrollable}{$infoBlock}p";
+        $obj->dataTableParams->sDom = "BT<'clear'>{$showRowsPerPage}{$globalSearch}{$scrollable}{$infoBlock}{$pagination}";
 
         $obj->dataTableParams->bSortCellsTop = false;
         //[<-- Full version -->]//
@@ -3204,10 +3370,12 @@ class WPDataTable {
         //[<--/ Full version -->]//
         if ($this->paginationEnabled()) {
             $obj->dataTableParams->bPaginate = true;
+            $obj->dataTableParams->sPaginationType = $this->getPaginationLayout();
             $obj->dataTableParams->aLengthMenu = json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
             $obj->dataTableParams->iDisplayLength = (int)$this->getDisplayLength();
         } else {
-            $obj->dataTableParams->bPaginate = false;
+            $obj->dataTableParams->aLengthMenu = json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
+            $obj->dataTableParams->iDisplayLength = (int)$this->getDisplayLength();
             if ($this->groupingEnabled()) {
                 $obj->dataTableParams->aaSortingFixed = json_decode('[[' . $this->groupingColumn() . ', "asc"]]');
             }
@@ -3496,7 +3664,6 @@ class WPDataTable {
             $obj->serverSide = false;
         }
         //[<--/ Full version -->]//
-        $obj->dataTableParams->sPaginationType = 'full_numbers';
         $obj->columnsFixed = 0;
         //[<-- Full version -->]//
         $sumColumns = $this->getSumColumns();
@@ -3683,6 +3850,7 @@ class WPDataTable {
 
         $wpdb->delete("{$wpdb->prefix}wpdatatables", array('id' => (int)$tableId));
         $wpdb->delete("{$wpdb->prefix}wpdatatables_columns", array('table_id' => (int)$tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatatables_rows", array('table_id' => (int)$tableId));
         $wpdb->delete("{$wpdb->prefix}wpdatacharts", array('wpdatatable_id' => (int)$tableId));
 
         return true;
@@ -3696,6 +3864,18 @@ class WPDataTable {
         global $wpdb;
 
         $query = "SELECT id, title, IF(table_type = 'mysql', 'SQL', table_type) AS table_type, connection, server_side FROM {$wpdb->prefix}wpdatatables ORDER BY id";
+
+        $allTables = $wpdb->get_results($query, ARRAY_A);
+        return $allTables;
+    }
+    /**
+     * Get all tables except simple tables
+     * @return array|null|object
+     */
+    public static function getAllTablesExceptSimple() {
+        global $wpdb;
+
+        $query = "SELECT id, title, connection, server_side FROM {$wpdb->prefix}wpdatatables WHERE NOT table_type = 'simple' ORDER BY id";
 
         $allTables = $wpdb->get_results($query, ARRAY_A);
         return $allTables;

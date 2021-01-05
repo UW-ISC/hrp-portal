@@ -67,6 +67,13 @@
         });
 
         /**
+         * Toggle Vertical scroll
+         */
+        $('#wdt-vertical-scroll').change(function (e) {
+            wpdatatable_config.setVerticalScroll($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Toggle Hide until loaded
          */
         $('#wdt-hide-until-loaded').change(function (e) {
@@ -113,6 +120,62 @@
          */
         $('#wdt-info-block').change(function (e) {
             wpdatatable_config.setInfoBlock($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Enable pagination
+         */
+        $('#wdt-pagination').change(function (e) {
+            wpdatatable_config.setPagination($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Set pagination alignment
+         */
+        $('#wdt-pagination-align').change(function (e) {
+            wpdatatable_config.setPaginationAlign($(this).val());
+        });
+
+        /**
+         * Set pagination layout
+         */
+        $('#wdt-pagination-layout').change(function (e) {
+            wpdatatable_config.setPaginationLayout($(this).val());
+        });
+
+        /**
+         * Toggle simple responsive
+         */
+        $('#wdt-simple-responsive').change(function (e) {
+            wpdatatable_config.setSimpleResponsive($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Toggle simple header
+         */
+        $('#wdt-simple-header').change(function (e) {
+            wpdatatable_config.setSimpleHeader($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Toggle stripe table
+         */
+        $('#wdt-stripe-table').change(function (e) {
+            wpdatatable_config.setStripeTable($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Set cell padding for simple table
+         */
+        $('#wdt-cell-padding').change(function (e) {
+            wpdatatable_config.setCellPadding($(this).val());
+        });
+
+        /**
+         * Set cell padding for simple table
+         */
+        $('#wdt-vertical-scroll-height').change(function (e) {
+            wpdatatable_config.setVerticalScrollHeight($(this).val());
         });
 
         /**
@@ -986,6 +1049,9 @@
             if (wpdatatable_config.table_type == 'gravity' ||
                 wpdatatable_config.table_type == 'formidable' ) return;
 
+            if (wpdatatable_config.table_type == 'gravity' ||
+                wpdatatable_config.table_type == 'formidable') return;
+
             // Validation for valid URL link of Google spreadsheet
             if (wpdatatable_config.table_type == 'google_spreadsheet' && wpdatatable_config.content.indexOf("2PACX") != -1) {
                 $('#wdt-error-modal .modal-body').html('URL from Google spreadsheet publish modal(popup) is not valid for wpDataTables. Please provide a valid URL link that you get from the browser address bar. More info in our documentation on this <a href="https://wpdatatables.com/documentation/creating-wpdatatables/creating-wpdatatables-from-google-spreadsheets/" target="_blank">link</a>.');
@@ -1297,6 +1363,5 @@
             delimiterRegex: '|',
             tagClass: 'label label-primary'
         });
-
     });
 })(jQuery);

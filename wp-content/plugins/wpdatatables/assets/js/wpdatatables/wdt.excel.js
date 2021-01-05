@@ -1295,9 +1295,11 @@ if( typeof wpDataTablesExcelOptions == 'undefined' ) {
 
 (function ($) {
     $(function () {
-        $('div.wpExcelTable').handsontable({
-            wpDataTablesExcelPlugin: true
-        });
+        $('div.wpExcelTable').each( function (){
+            $(this).handsontable({
+                wpDataTablesExcelPlugin: true
+            });
+        })
     })
 })(jQuery);
 

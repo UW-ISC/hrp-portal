@@ -1544,6 +1544,7 @@ class wpDataTableConstructor
      *
      * @param $tableData
      * @return array
+     * @throws WDTException
      */
     public function previewFileTable($tableData)
     {
@@ -1562,7 +1563,14 @@ class wpDataTableConstructor
 
         if (strpos(strtolower($xls_url), 'https://docs.google.com/spreadsheets') !== false) {
             // Preview from Google Spreadsheet
-            $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
+            $credentials = get_option('wdtGoogleSettings');
+            $token = get_option('wdtGoogleToken');
+            if ($credentials) {
+                $googleSheet = new WPDataTable_Google_Sheet();
+                $namedDataArray = $googleSheet->getData($xls_url, $credentials, $token);
+            } else {
+                $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
+            }
             if (!empty($namedDataArray)) {
                 $headingsArray = array_keys($namedDataArray[0]);
                 $namedDataArray = array_slice($namedDataArray, 0, 4);
@@ -1637,6 +1645,8 @@ class wpDataTableConstructor
      *
      * @param $tableData
      * @return mixed|string
+     * @throws WDTException
+     * @throws Exception
      */
     public function readFileData($tableData)
     {
@@ -1668,7 +1678,14 @@ class wpDataTableConstructor
 
         if (strpos(strtolower($xls_url), 'https://docs.google.com/spreadsheets') !== false) {
             $table_type = 'google';
-            $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
+            $credentials = get_option('wdtGoogleSettings');
+            $token = get_option('wdtGoogleToken');
+            if ($credentials) {
+                $googleSheet = new WPDataTable_Google_Sheet();
+                $namedDataArray = $googleSheet->getData($xls_url, $credentials, $token);
+            } else {
+                $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
+            }
             $headingsArray = array_keys($namedDataArray[0]);
             $highestRow = count($namedDataArray) - 1;
         } else {

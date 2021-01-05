@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6
+class ComposerStaticInit5a2747e13b776b45483ebf5e395f091e
 {
     public static $files = array (
         'abede361264e2ae69ec1eee813a101af' => __DIR__ . '/..' . '/markbaker/complex/classes/src/functions/abs.php',
@@ -62,6 +62,10 @@ class ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6
             'Psr\\Log\\' => 8,
             'PhpOffice\\PhpSpreadsheet\\' => 25,
         ),
+        'F' => 
+        array (
+            'Firebase\\JWT\\' => 13,
+        ),
         'C' => 
         array (
             'Complex\\' => 8,
@@ -84,6 +88,10 @@ class ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6
         'PhpOffice\\PhpSpreadsheet\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
+        ),
+        'Firebase\\JWT\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'Complex\\' => 
         array (
@@ -111,9 +119,9 @@ class ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit1501a7402b67eae2ac9795e1cc6856e6::$prefixesPsr0;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5a2747e13b776b45483ebf5e395f091e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5a2747e13b776b45483ebf5e395f091e::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit5a2747e13b776b45483ebf5e395f091e::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

@@ -78,7 +78,7 @@
 }
 
 .wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block-file .card {
-    min-height: 460px;
+    min-height: 540px;
 }
 
 .wpdt-c .wdt-constructor-column-block.gu-mirror .card, tr.gu-mirror {
@@ -506,6 +506,7 @@
     padding: 0 20px 0 0;
     margin-bottom: 15px;
     margin-top: 13px;
+    min-height: 107px;
 }
 .wpdt-c .wdt-table-constructor .wdt-constructor-type-selecter-block .card.selected {
     border: 1px solid #008CFF;
@@ -580,8 +581,6 @@
 .wdt-table-constructor .wdt-constructor-type-selecter-block .card.not-selected:hover .card-header {
     opacity: 1;
 }
-
-
 
 .wpdt-c .wdt-table-constructor #wdt-constructor-post-add-grouping-rule,
 .wpdt-c .wdt-table-constructor #wdt-constructor-add-post-condition,
@@ -683,7 +682,6 @@
     text-overflow: ellipsis;
 }
 
-
 .wpdt-c .wdt-table-constructor .wdt-constructor-step[data-step="1-2"] .fg-line {
     width: 75%;
 }
@@ -712,4 +710,71 @@
 
 .wpdt-c .wdt-constructor-create-buttons button {
     text-transform: uppercase;
+}
+.wpdt-c #wdt-simple-table-constructor{
+    background: #008CFF;
+    border: none;
+    box-sizing: border-box;
+    font-style: normal;
+    color: #FFFFFF;
+    font-family: Inter;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    border-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.06) !important;
+}
+.wdt-constructor-type-selecter-block .card .ribbon {
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    z-index: 1;
+    overflow: hidden;
+    width: 75px;
+    height: 75px;
+    text-align: right;
+}
+
+.wdt-constructor-type-selecter-block .card .ribbon span {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 20px;
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    width: 100px;
+    display: block;
+    background: #79a70a;
+    background: linear-gradient(#091D70 0, #091D70 100%);
+    box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+    position: absolute;
+    top: 19px;
+    right: -21px;
+}
+
+.wdt-constructor-type-selecter-block .card .ribbon span::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid #091D70;
+    border-right: 3px solid transparent;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #091D70;
+}
+
+.wdt-constructor-type-selecter-block .card .ribbon span::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 100%;
+    z-index: -1;
+    border-left: 3px solid transparent;
+    border-right: 3px solid #091D70;
+    border-bottom: 3px solid transparent;
+    border-top: 3px solid #091D70;
 }

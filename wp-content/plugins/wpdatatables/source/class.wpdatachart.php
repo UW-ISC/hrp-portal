@@ -1393,6 +1393,7 @@ class WPDataChart {
 
         $this->_type_counters = array(
             'date' => 0,
+            'datetime' => 0,
             'string' => 0,
             'number' => 0
         );
@@ -2305,10 +2306,10 @@ class WPDataChart {
         } else {
             if (in_array($this->_type, $chartToSetOptionBeginAtZero)){
                 $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['beginAtZero'] = true;
+                $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['min'] = 0;
             } else {
                 $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['beginAtZero'] = false;
             }
-            $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['min'] = 0;
         }
         if ($this->getVerticalAxisMax() != 0) {
             $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['max'] = intval($this->getVerticalAxisMax());

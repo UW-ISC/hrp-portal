@@ -87,6 +87,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
         global $wpdb;
         $predifinedOrderByValue = ['id', 'title', 'engine', 'type'];
         $orderByValue = 'id';
+        $defaultSortingOrder = get_option('wdtSortingOrderBrowseTables');
         $query = "SELECT id, title, type, engine
                     FROM {$wpdb->prefix}wpdatacharts ";
 
@@ -116,7 +117,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
                 }
             }
         } else {
-            $query .= " ORDER BY id ASC ";
+            $query .= " ORDER BY id " . $defaultSortingOrder . ' ';
         }
 
         if (isset($_REQUEST['paged'])) {
@@ -402,6 +403,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
     function print_column_headers($with_id = true) {
         list($columns, $hidden, $sortable, $primary) = $this->get_column_info();
 
+        $defaultSortingOrder = get_option('wdtSortingOrderBrowseTables');
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
 
@@ -448,9 +450,9 @@ class WDTBrowseChartsTable extends WP_List_Table {
                     $class[] = 'sorted';
                     $class[] = $current_order;
                 } else {
-                    $order = $desc_first ? 'desc' : 'asc';
-                    $class[] =  ($current_orderby == '' && $column_key == 'id' ) ? 'sorted' : 'sortable';
-                    $class[] = $desc_first ? 'asc' : 'desc';
+                    $order = strtolower($defaultSortingOrder) == 'desc' ? 'desc' : 'asc';
+                    $class[] = ($current_orderby == '' && $column_key == 'id') ? 'sorted' : 'sortable';
+                    $class[] = strtolower($defaultSortingOrder) == 'desc' ? 'desc' : 'asc';
                 }
 
                 $column_display_name = '<a href="' . esc_url(add_query_arg(compact('orderby', 'order'), $current_url)) . '"><span>' . $column_display_name . '</span><span class="sorting-indicator"></span></a>';

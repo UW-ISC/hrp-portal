@@ -154,6 +154,13 @@ var aceEditor = null;
                 var inputMethod = $('.wdt-constructor-type-selecter-block .card.selected').data('value');
                 constructedTableData.method = inputMethod;
                 switch (inputMethod) {
+                    case 'simple':
+                        $('div.wdt-constructor-step[data-step="1-0"]').animateFadeIn();
+                        nextStepButton.hide();
+                        previousStepButton.prop('disabled', false);
+                        previousStepButton.hide();
+                        $('.wdt-constructor-create-custom-buttons').show();
+                        break;
                     case 'source':
                         $('.wdt-preload-layer').animateFadeIn();
                         var connection = (constructedTableData.connection !== '') ? '&connection=' + constructedTableData.connection : '&connection';
@@ -322,6 +329,74 @@ var aceEditor = null;
                 nextStepButton.prop('disabled', false);
                 nextStepButton.animateFadeIn();
                 break;
+        }
+
+    });
+
+    /**
+     * Change table name for Simple table
+     */
+    $('#wdt-constructor-simple-table-name').change(function (e) {
+        e.preventDefault();
+        constructedTableData.name = $(this).val();
+    });
+
+    /**
+     * Handler which creates the table
+     */
+    $('#wdt-simple-table-constructor').click(function (e) {
+        e.preventDefault();
+        $('.wdt-preload-layer').animateFadeIn();
+        if (constructedTableData.method == 'simple'){
+
+            var columns = $('#wdt-simple-table-number-of-columns').val(),
+                rows = $('#wdt-simple-table-number-of-rows').val(),
+                wdtNonce = $('#wdtNonce').val();
+
+            if (columns == "" || columns == 0) {
+                wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.numberOfColumnsError, 'danger');
+                $('.wdt-preload-layer').animateFadeOut();
+                return;
+            }
+
+            if ( rows == "" || rows == 0) {
+                wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.numberOfRowsError, 'danger');
+                $('.wdt-preload-layer').animateFadeOut();
+                return;
+            }
+
+            var colWidths = Array(parseInt(columns)).fill(null).map((u, i) => i)
+
+            $('#wdt-constructor-simple-table-name').change();
+
+            constructedTableData.title = constructedTableData.name;
+            constructedTableData.table_type = constructedTableData.method;
+            constructedTableData.content = {};
+            constructedTableData.content.rowNumber = parseInt(rows);
+            constructedTableData.content.colNumber = parseInt(columns);
+            constructedTableData.content.colHeaders = [];
+            constructedTableData.content.mergedCells = [];
+            constructedTableData.content.reloadCounter = 0;
+            constructedTableData.content.colWidths = colWidths.fill(100,0,parseInt(columns));
+
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'wpdatatables_create_simple_table',
+                    tableData: JSON.stringify(constructedTableData),
+                    wdtNonce: wdtNonce
+                },
+                success: function (link) {
+                    window.location = link;
+                },
+                error: function (data) {
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            })
+
         }
 
     });

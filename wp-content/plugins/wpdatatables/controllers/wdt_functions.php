@@ -97,11 +97,18 @@ function wdtActivationCreateTables() {
                                   json_render_data text NOT NULL,
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
-
+    $rowsTableName = $wpdb->prefix . 'wpdatatables_rows';
+    $rowsSql = "CREATE TABLE {$rowsTableName} (
+                                  id int(11) NOT NULL AUTO_INCREMENT,
+                                  table_id int(11) NOT NULL,
+                                  data TEXT NOT NULL default '',
+                                  UNIQUE KEY id (id)
+                                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($tablesSql);
     dbDelta($columnsSql);
     dbDelta($chartsSql);
+    dbDelta($rowsSql);
     if (!get_option('wdtUseSeparateCon')) {
         update_option('wdtUseSeparateCon', false);
     }
@@ -144,6 +151,9 @@ function wdtActivationCreateTables() {
     if (!get_option('wdtCSVDelimiter')) {
         update_option('wdtCSVDelimiter', ',');
     }
+    if (!get_option('wdtSortingOrderBrowseTables')) {
+        update_option('wdtSortingOrderBrowseTables', 'ASC');
+    }
     if (!get_option('wdtDateFormat')) {
         update_option('wdtDateFormat', 'd/m/Y');
     }
@@ -167,6 +177,12 @@ function wdtActivationCreateTables() {
     }
     if (!get_option('wdtCustomCss')) {
         update_option('wdtCustomCss', '');
+    }
+    if (!get_option('wdtGoogleSettings')) {
+        update_option('wdtGoogleSettings', '');
+    }
+    if (!get_option('wdtGoogleToken')) {
+        update_option('wdtGoogleToken', '');
     }
     if (get_option('wdtMinifiedJs') === false) {
         update_option('wdtMinifiedJs', 1);
@@ -299,6 +315,8 @@ function wdtUninstallDelete() {
         delete_option('wdtCSVDelimiter');
         delete_option('wdtDateFormat');
         delete_option('wdtCustomJs');
+        delete_option('wdtGoogleSettings');
+        delete_option('wdtGoogleToken');
         delete_option('wdtCustomCss');
         delete_option('wdtBaseSkin');
         delete_option('wdtAvgFunctionsLabel');
@@ -306,10 +324,28 @@ function wdtUninstallDelete() {
         delete_option('wdtRatingDiv');
         delete_option('wdtMDNewsDiv');
         delete_option('wdtTempFutureDate');
+        delete_option('wdtActivated');
+        delete_option('wdtPurchaseCodeStore');
+        delete_option('wdtEnvatoTokenEmail');
+        delete_option('wdtActivatedPowerful');
+        delete_option('wdtPurchaseCodeStorePowerful');
+        delete_option('wdtEnvatoTokenEmailPowerful');
+        delete_option('wdtActivatedMasterDetail');
+        delete_option('wdtPurchaseCodeStoreMasterDetail');
+        delete_option('wdtActivatedReport');
+        delete_option('wdtPurchaseCodeStoreReport');
+        delete_option('wdtEnvatoTokenEmailReport');
+        delete_option('wdtActivatedGravity');
+        delete_option('wdtPurchaseCodeStoreGravity');
+        delete_option('wdtEnvatoTokenEmailGravity');
+        delete_option('wdtActivatedFormidable');
+        delete_option('wdtPurchaseCodeStoreFormidable');
+        delete_option('wdtEnvatoTokenEmailFormidable');
 
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_columns");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatacharts");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_rows");
     }
 }
 
@@ -408,11 +444,13 @@ add_action( 'admin_notices', 'wdtAdminRatingMessages' );
 /**
  * Remove rating message
  */
-function wpdtHideRatingDiv() {
+function wdtHideRating() {
     update_option( 'wdtRatingDiv', 'yes' );
     echo json_encode( array("success") );
     exit;
 }
+
+add_action( 'wp_ajax_wdtHideRating', 'wdtHideRating' );
 
 /**
  * Remove Master Detail news message
@@ -562,39 +600,49 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
     /** @var mixed $export_file_name */
     $wdtExportFileName = $export_file_name !== '%%no_val%%' ? $export_file_name : '';
 
-    do_action('wpdatatables_before_get_table_metadata');
+    do_action('wpdatatables_before_get_table_metadata',$id);
 
-    try{
-        /** @var mixed $table_view */
-        if ($table_view == 'excel') {
-            /** @var WPExcelDataTable $wpDataTable */
-            $wpDataTable = new WPExcelDataTable($tableData->connection);
-        } else {
-            /** @var WPDataTable $wpDataTable */
-            $wpDataTable = new WPDataTable($tableData->connection);
+    if ($tableData->table_type === 'simple'){
+        try {
+            $wpDataTableRows = WPDataTableRows::loadWpDataTableRows($id);
+            $output = $wpDataTableRows->generateTable($id);
+        } catch (Exception $e) {
+            $output = ltrim($e->getMessage(), '<br/><br/>');
         }
-    } catch (Exception $e) {
-        echo WDTTools::wdtShowError($e->getMessage());
-        return;
+    } else {
+        try{
+            /** @var mixed $table_view */
+            if ($table_view == 'excel') {
+                /** @var WPExcelDataTable $wpDataTable */
+                $wpDataTable = new WPExcelDataTable($tableData->connection);
+            } else {
+                /** @var WPDataTable $wpDataTable */
+                $wpDataTable = new WPDataTable($tableData->connection);
+            }
+        } catch (Exception $e) {
+            echo WDTTools::wdtShowError($e->getMessage());
+            return;
+        }
+
+
+        $wpDataTable->setWpId($id);
+
+        $columnDataPrepared = $wpDataTable->prepareColumnData($tableData);
+
+        try {
+            $wpDataTable->fillFromData($tableData, $columnDataPrepared);
+            $wpDataTable = apply_filters('wpdatatables_filter_initial_table_construct', $wpDataTable);
+
+            $output = '';
+            if ($tableData->show_title && $tableData->title) {
+                $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h2 class="wpdt-c" id="wdt-table-title-'. $id .'">' . $tableData->title . '</h2>'), $id);
+            }
+            $output .= $wpDataTable->generateTable($tableData->connection);
+        } catch (Exception $e) {
+            $output = WDTTools::wdtShowError($e->getMessage());
+        }
     }
 
-
-    $wpDataTable->setWpId($id);
-
-    $columnDataPrepared = $wpDataTable->prepareColumnData($tableData);
-
-    try {
-        $wpDataTable->fillFromData($tableData, $columnDataPrepared);
-        $wpDataTable = apply_filters('wpdatatables_filter_initial_table_construct', $wpDataTable);
-
-        $output = '';
-        if ($tableData->show_title && $tableData->title) {
-            $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h2 class="wpdt-c" id="wdt-table-title-'. $id .'">' . $tableData->title . '</h2>'), $id);
-        }
-        $output .= $wpDataTable->generateTable($tableData->connection);
-    } catch (Exception $e) {
-        $output = WDTTools::wdtShowError($e->getMessage());
-    }
     $output = apply_filters('wpdatatables_filter_rendered_table', $output, $id);
 
     return $output;
@@ -745,6 +793,8 @@ function wdtSanitizeQuery($query) {
     $query = str_replace('DROP', '', $query);
     $query = str_replace('INSERT', '', $query);
     $query = stripslashes($query);
+
+    $query = apply_filters('wpdt_sanitize_query',$query);
 
     return $query;
 }

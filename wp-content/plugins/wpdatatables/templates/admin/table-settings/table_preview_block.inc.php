@@ -76,13 +76,14 @@
 
         </div>
         <div class="clear"></div>
-
-        <div class="row wpDataTableContainer wpDataTables wpDataTablesWrapper" id="wpdatatable-preview-container">
-            <?php if (isset($tableData)) {
-                echo $tableData->wdtHtml;
-            } ?>
+        <div id="wpdt-view-container">
+            <div class="row wpDataTableContainer wpDataTables wpDataTablesWrapper" id="wpdatatable-preview-container">
+                <?php if (isset($tableData)) {
+                    echo $tableData->wdtHtml;
+                } ?>
+            </div>
+            <!-- /.wpDataTableContainer -->
         </div>
-        <!-- /.wpDataTableContainer -->
 
     </div>
     <!-- /.card-body -->
