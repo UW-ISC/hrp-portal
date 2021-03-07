@@ -21,8 +21,12 @@
  * opened on  8/4/2016 by "ciano":
  * https://wordpress.org/support/topic/replacing-sort-order-attribute
  *
+ * Enhanced for support topic "Plugin ‘MLA Simple Mapping Hooks Example’"
+ * opened on  12/7/2020 by "ernstwg":
+ * https://wordpress.org/support/topic/plugin-mla-simple-mapping-hooks-example/
+ *
  * @package MLA Simple Mapping Hooks Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -30,10 +34,10 @@ Plugin Name: MLA Simple Mapping Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Populates custom fields based on a regular expression; updates menu_order; cleans up Title and ALT Text
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
-Copyright 2014 - 2016 David Lingren
+Copyright 2014 - 2020 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -69,17 +73,17 @@ class MLASimpleMappingHooksExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
-		 */
-		if ( ! is_admin() )
-			return;
+		// WP/LR Sync plugin has its own protocol to process uploads
+		$is_wplr_sync = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' ); // phpcs:ignore
 
-		/*
-		 * This filter is applied in class-mla-options.php functions
-		 * mla_evaluate_iptc_exif_mapping and mla_evaluate_custom_field_mapping
-		 */
-		add_filter( 'mla_mapping_updates', 'MLASimpleMappingHooksExample::mla_mapping_updates', 10, 5 );
+		// The filters are only useful in the admin section or during WP/LR Sync; exit if in the "front-end" posts/pages. 
+		if ( is_admin() || $is_wplr_sync ) {
+			/*
+			 * This filter is applied in class-mla-options.php functions
+			 * mla_evaluate_iptc_exif_mapping and mla_evaluate_custom_field_mapping
+			 */
+			add_filter( 'mla_mapping_updates', 'MLASimpleMappingHooksExample::mla_mapping_updates', 10, 5 );
+		}
 	}
 
 	/**

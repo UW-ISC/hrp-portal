@@ -1714,9 +1714,9 @@ class MLA {
 		if ( !empty( $page_content['body'] ) ) {
 			if ( !empty( $page_content['message'] ) ) {
 				if ( false !== strpos( $page_content['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
-					$messages_class = 'mla_errors';
+					$messages_class = 'updated error';
 				} else {
-					$messages_class = 'mla_messages';
+					$messages_class = 'updated notice is-dismissible';
 				}
 
 				echo "  <div class=\"" . esc_html( $messages_class ) . "\"><p>\n";
@@ -1733,7 +1733,7 @@ class MLA {
 					echo ' - ' . esc_html__( 'term search results for', 'media-library-assistant' ) . ' "' . esc_html( trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) ) ). "\"" . wp_kses( $heading_tail, 'post' );
 			} elseif ( !empty( $_REQUEST['s'] ) ) {
 				if ( empty( $_REQUEST['mla_search_fields'] ) ) {
-					echo ' - ' . esc_html__( 'post/parent results for', 'media-library-assistant' ) . ' "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] , 'post' ) ) ) ) . "\"" . wp_kses( $heading_tail, 'post' );
+					echo ' - ' . esc_html__( 'post/parent results for', 'media-library-assistant' ) . ' "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] ) , 'post' ) ) ) . "\"" . wp_kses( $heading_tail, 'post' );
 				} else {
 					echo ' - ' . esc_html__( 'search results for', 'media-library-assistant' ) . ' "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] ), 'post' ) ) ) . "\"" . wp_kses( $heading_tail, 'post' );
 				}
@@ -1743,9 +1743,9 @@ class MLA {
 
 			if ( !empty( $page_content['message'] ) ) {
 				if ( false !== strpos( $page_content['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {
-					$messages_class = 'mla_errors';
+					$messages_class = 'updated error';
 				} else {
-					$messages_class = 'mla_messages';
+					$messages_class = 'updated notice is-dismissible';
 				}
 
 				echo "  <div class=\"" . esc_html( $messages_class ) . "\"><p>\n";
@@ -2156,6 +2156,19 @@ class MLA {
 	}
 
 	/**
+	 * Suppress term_meta cache update for taxonomy checklists
+	 *
+	 * @since 2.94
+	 *
+	 * @param array    $args       An array of get_terms() arguments.
+	 * @param string[] $taxonomies An array of taxonomy names.
+	 */
+	public static function mla_get_terms_args_filter( $args, $taxonomies ) {
+		$args['update_term_meta_cache'] = false;
+		return $args;
+	}
+
+	/**
 	 * Build the hidden row templates for inline editing (quick and bulk edit)
 	 *
 	 * inspired by inline_edit() in wp-admin\includes\class-wp-posts-list-table.php.
@@ -2217,7 +2230,9 @@ class MLA {
 			foreach ( $hierarchical_taxonomies as $tax_name => $tax_object ) {
 				if ( current_user_can( $tax_object->cap->assign_terms ) ) {
 					ob_start();
+					add_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 					wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
+					remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 					$tax_checklist = ob_get_contents();
 					ob_end_clean();
 					
@@ -2226,7 +2241,7 @@ class MLA {
 							'tax_attr' => esc_attr( $tax_name ),
 							'Add New Term' => __( '+&nbsp;Add&nbsp;New&nbsp;Term', 'media-library-assistant' ),
 							'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
-							'tax_parents' => wp_dropdown_categories( array( 'taxonomy' => $tax_name, 'hide_empty' => 0, 'name' => "new{$tax_name}_parent", 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax_object->labels->parent_item . ' &mdash;', 'echo' => 0 ) ),
+							'tax_parents' => wp_dropdown_categories( array( 'taxonomy' => $tax_name, 'hide_empty' => 0, 'name' => "new{$tax_name}_parent", 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax_object->labels->parent_item . ' &mdash;', 'echo' => 0, 'update_term_meta_cache' => false ) ),
 							'Add Button' => esc_html( $tax_object->labels->add_new_item ),
 							'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
 						);
@@ -2281,7 +2296,9 @@ class MLA {
 				if ( current_user_can( $tax_object->cap->assign_terms ) ) {
 					if ( MLACore::mla_taxonomy_support( $tax_name, 'flat-checklist' ) ) {
 						ob_start();
+						add_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 						wp_terms_checklist( NULL, array( 'taxonomy' => $tax_name, 'popular_cats' => array(), ) );
+						remove_filter( 'get_terms_args', 'MLA::mla_get_terms_args_filter', 10, 2 );
 						$tax_checklist = ob_get_contents();
 						ob_end_clean();
 						

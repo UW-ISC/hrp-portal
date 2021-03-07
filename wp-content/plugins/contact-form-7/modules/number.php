@@ -11,7 +11,11 @@ add_action( 'wpcf7_init', 'wpcf7_add_form_tag_number', 10, 0 );
 
 function wpcf7_add_form_tag_number() {
 	wpcf7_add_form_tag( array( 'number', 'number*', 'range', 'range*' ),
-		'wpcf7_number_form_tag_handler', array( 'name-attr' => true ) );
+		'wpcf7_number_form_tag_handler',
+		array(
+			'name-attr' => true,
+		)
+	);
 }
 
 function wpcf7_number_form_tag_handler( $tag ) {
@@ -46,7 +50,14 @@ function wpcf7_number_form_tag_handler( $tag ) {
 		$atts['aria-required'] = 'true';
 	}
 
-	$atts['aria-invalid'] = $validation_error ? 'true' : 'false';
+	if ( $validation_error ) {
+		$atts['aria-invalid'] = 'true';
+		$atts['aria-describedby'] = wpcf7_get_validation_error_reference(
+			$tag->name
+		);
+	} else {
+		$atts['aria-invalid'] = 'false';
+	}
 
 	$value = (string) reset( $tag->values );
 
@@ -74,7 +85,8 @@ function wpcf7_number_form_tag_handler( $tag ) {
 
 	$html = sprintf(
 		'<span class="wpcf7-form-control-wrap %1$s"><input %2$s />%3$s</span>',
-		sanitize_html_class( $tag->name ), $atts, $validation_error );
+		sanitize_html_class( $tag->name ), $atts, $validation_error
+	);
 
 	return $html;
 }
@@ -97,13 +109,13 @@ function wpcf7_number_validation_filter( $result, $tag ) {
 	$min = $tag->get_option( 'min', 'signed_int', true );
 	$max = $tag->get_option( 'max', 'signed_int', true );
 
-	if ( $tag->is_required() and '' == $value ) {
+	if ( $tag->is_required() and '' === $value ) {
 		$result->invalidate( $tag, wpcf7_get_message( 'invalid_required' ) );
-	} elseif ( '' != $value and ! wpcf7_is_number( $value ) ) {
+	} elseif ( '' !== $value and ! wpcf7_is_number( $value ) ) {
 		$result->invalidate( $tag, wpcf7_get_message( 'invalid_number' ) );
-	} elseif ( '' != $value and '' != $min and (float) $value < (float) $min ) {
+	} elseif ( '' !== $value and false !== $min and (float) $value < (float) $min ) {
 		$result->invalidate( $tag, wpcf7_get_message( 'number_too_small' ) );
-	} elseif ( '' != $value and '' != $max and (float) $max < (float) $value ) {
+	} elseif ( '' !== $value and false !== $max and (float) $max < (float) $value ) {
 		$result->invalidate( $tag, wpcf7_get_message( 'number_too_large' ) );
 	}
 

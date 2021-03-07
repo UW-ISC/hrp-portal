@@ -94,11 +94,11 @@ class MLAParentSearchExample {
 		 */
 		if ( isset( $_REQUEST['s'] ) ) {
 			switch ( substr( $_REQUEST['s'], 0, 3 ) ) {
-				case '>|<':
+				case '}|{':
 					self::$parent_search_parameters['debug'] = 'console';
 					$start = 3;
 					break;
-				case '<|>':
+				case '{|}':
 					self::$parent_search_parameters['debug'] = 'log';
 					$start = 3;
 					break;
@@ -216,11 +216,11 @@ class MLAParentSearchExample {
 		 */
 		if ( isset( $query['mla_search_value'] ) ) {
 			switch ( substr( $query['mla_search_value'], 0, 3 ) ) {
-				case '>|<':
+				case '}|{':
 					self::$parent_search_parameters['debug'] = 'console';
 					$start = 3;
 					break;
-				case '<|>':
+				case '{|}':
 					self::$parent_search_parameters['debug'] = 'log';
 					$start = 3;
 					break;

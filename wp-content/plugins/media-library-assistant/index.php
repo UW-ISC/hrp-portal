@@ -6,17 +6,17 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 2.92
+ * @version 2.94
  */
 
 /*
 Plugin Name: Media Library Assistant
 Plugin URI: http://davidlingren.com/#two
-Description: 20201124 Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
+Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
 Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.92
+Version: 2.94
 Author URI: http://davidlingren.com/
 
 Copyright 2011-2020 David Lingren

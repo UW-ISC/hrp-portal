@@ -268,7 +268,8 @@ class MLA_List_Table extends WP_List_Table {
 				'hierarchical' => true,
 				'pad_counts' => false,
 				'taxonomy' => $tax_filter,
-				'hide_if_empty' => false 
+				'hide_if_empty' => false,
+				'update_term_meta_cache' => false,
 			), $dropdown_options );
 
 			ob_start();
@@ -590,7 +591,6 @@ class MLA_List_Table extends WP_List_Table {
 				 * Use "@" because embedded arrays throw PHP Warnings from implode.
 				 */
 				if ( is_array( $value ) ) {
-//					$list[] = var_export( $value, true ); // Verbose output!
 					$list[] = 'array( ' . @implode( ', ', $value ) . ' )';
 				} elseif ( $is_meta ) {
 					$list[] = $value;

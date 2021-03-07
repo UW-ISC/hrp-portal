@@ -5,7 +5,7 @@ Tags: media, media library, gallery, images, categories, tags, attachments, IPTC
 Requires at least: 3.5.0
 Tested up to: 5.6
 Requires PHP: 5.3
-Stable tag: 2.92
+Stable tag: 2.94
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -181,6 +181,27 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 2.94 =
+* New: <strong>The "MLA Custom Field Search Example" plugin has been substantially upgraded.</strong> The new version has many more parameters and a new plugin settings page. A Documentation tab on the settings page contains all the information you need to understand and use the new version.
+* New: <strong>A new example plugin, "MLA Postie Post After Example"</strong>, adds support for running MLA mapping rules after the "Postie" plugin chron job creates posts and attachments from an email.
+* New: The Library Views/Post MIME Type "Table View" custom field queries have been enhanced to allow searching multiple field names or "all fields" for one or more values.
+* Fix: The "Smart Media Categories" example plugin has been enhanced to handle additional WordPress alternatives for term assignments and a new option is provided to exclude the Default Post Category from sync processing.
+* Fix: Wildcard values for Library Views/Post MIME Type "Table View" custom field queries have been restored.
+* Fix: PDF thumbnail streaming for <code>mla_viewer</code> processing has been restored.
+* Fix: For the `[mla_gallery]` shortcode, error reporting for the tax_query, date_query and meta_query parameters has been improved.
+* Fix: For the `[mla_gallery]` shortcode, proper handling of the <code>size=</code> "icon", "icon_only" and "icon_feature" options has been restored.
+* Fix: For the `[mla_gallery]` shortcode, performance is improved by avoiding a redundant LEFT JOIN database query clause (added by WP_Query).
+* Fix: For the `[mla_gallery]` shortcode, performance is improved by avoiding LEFT JOIN and WHERE database query clauses added by Real Media Library.
+* Fix: Unnecessary "term meta cache" queries have been removed from the Media/Assistant submenu table generation.
+* Fix: Handling of disimissible admin messages has been restored.
+
+= 2.93 =
+* New: The "MLA Simple Mapping Hooks Example" plugin has been updated so it will run when attachments are uploaded or updated by the WP/LR Sync plugin.
+* New: For the "Smart Media Categories" example plugin, support has been added for the "Postie" plugin chron job that creates posts and attachments from an email.
+* Fix: <strong>Correct defect in parsing `request:` substitution parameters containing compound names to access array elements, e.g., `tax_input`.</strong>
+* Fix: <strong>For `[mla_gallery]` pagination shortcodes, correct defects in handling substitution parameters containing array values, e.g., `tax_input`.</strong>
+* Fix: For the "Smart Media Categories" example plugin, term synchronization now works when multiple attachments are added to a parent in the same page load.
+
 = 2.92 =
 * Fix: Correct Media/Assistant Quick Edit error that deleted term assignments in the WordPress Categories taxonomy.
 
@@ -314,8 +335,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.92 =
-Correct Media/Assistant Quick Edit error that deleted term assignments in the WordPress Categories taxonomy.
+= 2.94 =
+For [mla_gallery], icon handling, mla_viewer, and performance fixes. New and enhanced example plugins. Three enhancements in all, nine fixes.
 
 == Other Notes ==
 
