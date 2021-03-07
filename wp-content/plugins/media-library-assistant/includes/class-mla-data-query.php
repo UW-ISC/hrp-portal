@@ -995,10 +995,10 @@ class MLAQuery {
 				 */
 				case 's':
 					switch ( substr( $value, 0, 3 ) ) {
-						case '>|<':
+						case '}|{':
 							$clean_request['debug'] = 'console';
 							break;
-						case '<|>':
+						case '{|}':
 							$clean_request['debug'] = 'log';
 							break;
 					}
@@ -1920,9 +1920,16 @@ class MLAQuery {
 
 		// WordPress modifies the LIKE clause - which we must reverse
 		if ( isset( self::$query_parameters['patterns'] ) ) {
+			// WP after 4.8.3 replaces "%" with a long, complex placeholder
+			if ( method_exists( $wpdb, 'placeholder_escape' ) ) {
+				$placeholder = $wpdb->placeholder_escape();
+			} else {
+				$placeholder = '%';
+			}
+				
 			foreach ( self::$query_parameters['patterns'] as $pattern ) {
-				$pattern = str_replace( '_', '\\\\_', $pattern );
-				$match_clause = '%' . str_replace( '%', '\\\\%', $pattern ) . '%';
+				$pattern = str_replace( array( '_', '%' ), array( '\\\\_', $placeholder ), $pattern );
+				$match_clause = $placeholder . str_replace( $placeholder, '\\\\' . $placeholder, $pattern ) . $placeholder;
 				$where_clause = str_replace( "LIKE '{$match_clause}'", "LIKE '{$pattern}'", $where_clause );
 			}
 		}

@@ -628,7 +628,7 @@ The Size parameter specifies the image size to use for the thumbnail display; "t
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files.</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files. If, however, a non-image item has a "Featured Image" it will replace the icon.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon_feature</td>
@@ -6116,12 +6116,23 @@ Within WordPress, the Post MIME Types list is returned from <code>/wp-includes/p
 The Table View list adds several enhancements to the Post MIME Type list. In the Specification field you can select several MIME types with a comma-separated list, e.g., "audio,video". Wildcard specifications are also supported. For example, "*/mpeg" to select audio and video mpeg formats or "application/*ms*" to select all Microsoft application formats (Word, Excel, etc.). In the Menu Order field you can enter numeric values to re-arrange the order in which the list entries are displayed in, for example, the Media/Assistant screen.
 </p>
 <p>
-The Table View list also supports custom field queries. You can choose from three forms of the custom field specification:
+The Table View list also supports custom field queries. A custom field query has four parts:
+</p>
+<ol>
+<li>A prefix, "custom:"</li>
+<li>A comma-separated list of one or more custom field names</li>
+<li>An equals sign ("="), to divide the field names from the values</li>
+<li>A comma-separated list of one or more values</li>
+</ol>
+<p>
+To return all items that match one or more values, enter the prefix "custom:" followed by the custom field name(s) and then "=" followed by a list of values. For example, <code>custom:Color=red</code> or <code>custom:Color=red,green,blue</code>. To search multiple fields, enter something like <code>custom:Artist,Patron=smith,jones</code>. To search <strong>all</strong> custom fields, enter an asterisk ("*"), e.g., <code>custom:*=smith,jones</code>. Wildcard specifications are also supported; for example, "*post" to match anything ending in "post" or "th*da*" to match values like "the date" and "this day". As explained below, a value of "*" will match any non-NULL value for a custom field.
+</p>
+<p>
+There are two special forms of the custom field specification used to test for the presence (non-NULL) or absence (NULL) of <strong>any</strong> values:
 </p>
 <ul class="mla_settings">
-<li>To return all items that have a non-NULL value in the field, simply enter the prefix "custom:" followed by the custom field name. For example, <code>custom:My Featured Items</code>. You can also enter the custom field name and then "=*", e.g., <code>custom:My Featured Items=*</code>.</li>
-<li>To return all items that have a NULL value in the field, enter the prefix "custom:" followed by the custom field name and then ",null". For example, <code>custom:My Featured Items,null</code>. You can also enter the custom field name and then "=", e.g., <code>custom:My Featured Items=</code>.</li>
-<li>To return all items that match one or more values, enter the prefix "custom:" followed by the custom field name and then "=" followed by a list of values. For example, <code>custom:Color=red</code> or <code>custom:Color=red,green,blue</code>. Wildcard specifications are also supported; for example, "*post" to match anything ending in "post" or "th*da*" to match values like "the date" and "this day".</li>
+<li>To return all items that have a non-NULL value in the field, enter the custom field name and then "=*", e.g., <code>custom:My Featured Items=*</code>. You can also enter the prefix "custom:" followed by just the custom field name(s). For example, <code>custom:My Featured Items</code>.</li>
+<li>To return all items that have a NULL value in the field, enter the prefix "custom:" followed by the custom field name(s) and then "=", e.g., <code>custom:My Featured Items,My Inserted Items=</code>. You can also enter a single custom field name and then ",null". For example, <code>custom:My Featured Items,null</code>.</li>
 </ul>
 <p>
 If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media Manager/Add Media "media items" drop down list.
@@ -6715,7 +6726,7 @@ The Format element has a "commas" value that can improve the results of sorting 
 If you code the "template:" prefix at the beginning of the EXIF/Template value you have all the power of Content Templates at your disposal. Do <strong>not</strong> add the "[+" and "+]" delimiters; the prefix is all you need.
 </p>
 <p>
-A template can be used to access any XMP metadata your items contain. For example:<br />
+A template can be used to access any IPTC, EXIF or XMP metadata your items contain, as well as any of the <a href="#field_level_data_sources">field-level data sources</a>. For example:<br />
 &nbsp;<br />
 <code>template:([+xmp:Title+])</code><br />
 <code>template:([+xmp:Regions.RegionList.*.*.Name,array+])</code><br />
@@ -6769,6 +6780,23 @@ The first example above sets the date to a fixed value. The second example uses 
 <a href="#backtotop">Go to Top</a>
 </p>
 <h4>IPTC/EXIF Mapping for PDF Documents</h4>
+<p>
+PDF documents contain a Document Information Dictionary (D.I.D.) and many also contain XMP metadata. For the <code>pdf:</code> prefix, you can code any of the nine D.I.D. entries:
+</p>
+<ul class="mla_settings">
+<li><strong>Title</strong> - The document's title</li>
+<li><strong>Author</strong> - The name of the person who created the document</li>
+<li><strong>Subject</strong> - The subject of the document</li>
+<li><strong>Keywords</strong> - Keywords associated with the document</li>
+<li><strong>Creator</strong> - the name of the conforming product that created the original document</li>
+<li><strong>Producer</strong> - the name of the conforming product that converted it to PDF</li>
+<li><strong>CreationDate</strong> - The date and time the document was created</li>
+<li><strong>ModDate</strong> - The date and time the document was most recently modified</li>
+<li><strong>Trapped</strong> - indicates whether the document has been modified to include trapping information</li>
+</ul>
+<p>
+MLA contains logic that attempts to fill in the entries from the dictionary or from any XMP metadata the document contains. This gives you a simple way to access the information regardless of where in the metadata it appears.
+</p>
 <p>
 You can use Content Templates in the EXIF/Template Value text box to extract metadata from your PDF documents and add it to the Standard Fields and Taxonomy Terms of your Media Library items. The templates can be coded to select the appropriate source whether the item is a PDF document or an image. Here are three rules for metadata contained in PDF documents:
 </p>

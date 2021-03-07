@@ -108,7 +108,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			$edit_table['visibility'] = (array) json_decode( $edit_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
-			$table = TablePress::$model_table->prepare_table( $existing_table, $edit_table, true, true );
+			$table = TablePress::$model_table->prepare_table( $existing_table, $edit_table, true );
 			if ( is_wp_error( $table ) ) {
 				// Add an error code to the existing WP_Error.
 				$table->add( 'ajax_save_table_prepare', '', $edit_table['id'] );
@@ -116,7 +116,7 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 				break;
 			}
 
-			// DataTables Custom Commands can only be edit by trusted users.
+			// DataTables Custom Commands can only be edited by trusted users.
 			if ( ! current_user_can( 'unfiltered_html' ) ) {
 				$table['options']['datatables_custom_commands'] = $existing_table['options']['datatables_custom_commands'];
 			}
@@ -225,12 +225,12 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 			$preview_table['visibility'] = (array) json_decode( $preview_table['visibility'], true );
 
 			// Check consistency of new table, and then merge with existing table.
-			$table = TablePress::$model_table->prepare_table( $existing_table, $preview_table, true, true );
+			$table = TablePress::$model_table->prepare_table( $existing_table, $preview_table, true );
 			if ( is_wp_error( $table ) ) {
 				break;
 			}
 
-			// DataTables Custom Commands can only be edit by trusted users.
+			// DataTables Custom Commands can only be edited by trusted users.
 			if ( ! current_user_can( 'unfiltered_html' ) ) {
 				$table['options']['datatables_custom_commands'] = $existing_table['options']['datatables_custom_commands'];
 			}
@@ -240,15 +240,14 @@ class TablePress_Admin_AJAX_Controller extends TablePress_Controller {
 				$table['id'] = $table['new_id'];
 			}
 
-			// Sanitize all table data to remove unsafe HTML from the preview output.
-			$table = TablePress::$model_table->sanitize( $table );
+			// Sanitize all table data to remove unsafe HTML from the preview output, if the user is not allowed to work with unfiltered HTML.
+			if ( ! current_user_can( 'unfiltered_html' ) ) {
+				$table = TablePress::$model_table->sanitize( $table );
+			}
 
 			// At this point, the table data is valid and sanitized and can be rendered.
 			$success = true;
 		} while ( false ); // Do-while-loop through this exactly once, to be able to "break;" early.
-
-		// Initialize i18n support, load plugin's textdomain, to retrieve correct translations for the description of the preview.
-		load_plugin_textdomain( 'tablepress', false, dirname( TABLEPRESS_BASENAME ) . '/i18n' );
 
 		if ( $success ) {
 			// Create a render class instance.

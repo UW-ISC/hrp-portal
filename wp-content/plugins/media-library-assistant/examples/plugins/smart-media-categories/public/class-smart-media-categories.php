@@ -3,9 +3,9 @@
  * The Smart Media Categories (SMC) Plugin.
  *
  * @package   Smart_Media_Categories
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 
@@ -14,7 +14,7 @@
  * public-facing side of the WordPress site.
  *
  * @package Smart_Media_Categories
- * @author  David Lingren <dlingren@comcast.net>
+ * @author  David Lingren <david@davidlingren.com>
  */
 class Smart_Media_Categories {
 
@@ -25,7 +25,7 @@ class Smart_Media_Categories {
 	 *
 	 * @var     string
 	 */
-	const VERSION = '1.1.3';
+	const VERSION = '1.1.6';
 
 	/**
 	 * Unique identifier for your plugin.

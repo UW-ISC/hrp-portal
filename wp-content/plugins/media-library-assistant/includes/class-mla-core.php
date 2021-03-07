@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.92';
+	const CURRENT_MLA_VERSION = '2.94';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -472,16 +472,16 @@ class MLACore {
 		// Template file and database access functions.
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 		MLAQuery::initialize();
-	
+
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
 		MLAData::initialize();
-	
+
 		// Shortcode shim functions
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
 		MLAShortcodes::initialize();
-	
+
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
-	
+
 		// Plugin settings management
 		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
 		MLAOptions::initialize();
@@ -693,7 +693,7 @@ class MLACore {
 		if ( '_wpnonce' !== $name ) {
 			$actionurl = str_replace( '_wpnonce', $name, $actionurl );
 		}
-		
+
 		return $actionurl;
 	}
 
@@ -1245,7 +1245,7 @@ class MLACore {
 			'update_post_meta_cache' => 'false',
 			'update_post_term_cache' => 'false',
 		);
-		
+
 		$specification = self::mla_parse_view_specification( $specification );
 		if ( 'mime' == $specification['prefix'] ) {
 			$query['post_mime_type'] = $specification['value'];
@@ -1255,13 +1255,14 @@ class MLACore {
 				case 'match':
 					$patterns = array_map( 'trim', explode( ',', $specification['value'] ) );
 					foreach ( (array) $patterns as $pattern ) {
+						$meta_key = ( !empty( $specification['name'] ) ) ? array( 'key' => $specification['name'] ) : array();
 						$pattern = preg_replace( '/\*+/', '%', $pattern );
 						if ( false !== strpos( $pattern, '%' ) ) {
 							// Preserve the pattern - it will be used in the "where" filter
 							$meta_query['patterns'][] = $pattern;
-							$meta_query[] = array( 'key' => $specification['name'], 'value' => $pattern, 'compare' => 'LIKE' );
+							$meta_query[] = array_merge( $meta_key, array( 'value' => $pattern, 'compare' => 'LIKE' ) );
 						} else {
-							$meta_query[] = array( 'key' => $specification['name'], 'value' => $pattern, 'compare' => '=' );
+							$meta_query[] = array_merge( $meta_key, array( 'value' => $pattern, 'compare' => '=' ) );
 						}
 					} // foreach pattern
 
@@ -1271,16 +1272,24 @@ class MLACore {
 
 					break;
 				case 'null':
-					$meta_query['key'] = $specification['name'];
+					if ( !empty( $specification['name'] ) ) {
+						$meta_query['key'] = $specification['name'];
+					}
+
 					$meta_query['value'] = 'NULL';
 					break;
 				default: // '', 'any'
-					$meta_query[] = array( 'key' => $specification['name'], 'value' => NULL, 'compare' => '!=' );
+					if ( !empty( $specification['name'] ) ) {
+						$meta_query[] = array( 'key' => $specification['name'], 'value' => NULL, 'compare' => '!=' );
+					} else {
+						$meta_query[] = array( 'value' => NULL, 'compare' => '!=' );
+					}
 			}
 
 			$query['meta_query'] = $meta_query;
 		} // custom field specification
 
+//error_log( __LINE__ . ' MLACore::mla_prepare_view_query query = ' . var_export( $query, true ), 0 );
 		return $query;
 	}
 
@@ -1297,16 +1306,34 @@ class MLACore {
 			if ( is_array( $specification ) ) {
 				$specification = @implode( ',', $specification );
 			}
+//error_log( __LINE__ . ' MLACore::mla_parse_view_specification specification = ' . var_export( $specification, true ), 0 );
 
 			$result = array( 'prefix' => '', 'name' => '', 'value' => '', 'option' => '' );
 			$match_count = preg_match( '/^(.+):(.+)/', $specification, $matches );
 			if ( 1 == $match_count ) {
 				$result['prefix'] = trim( strtolower( $matches[1] ) );
 				$tail = $matches[2];
+//error_log( __LINE__ . ' MLACore::mla_parse_view_specification tail = ' . var_export( $tail, true ), 0 );
+
+				// Look for field name(s)
+				$flag = '<found multiple names in the tail>';
+				$match_count = preg_match( '/([^=]+)((=)(.*))$/', $tail, $matches );
+				if ( 1 == $match_count ) {
+//error_log( __LINE__ . ' MLACore::mla_parse_view_specification matches = ' . var_export( $matches, true ), 0 );
+					$result['name'] = explode( ',', $matches[1] );
+					// Flag multiple field names for preservation
+					if ( 1 < count( $result['name'] ) ) {
+						$tail = $flag . $matches[2];
+					}
+				}
 
 				$match_count = preg_match( '/([^,=]+)((,|=)(.*))$/', $tail, $matches );
 				if ( 1 == $match_count ) {
-					$result['name'] = $matches[1];
+//error_log( __LINE__ . ' MLACore::mla_parse_view_specification matches = ' . var_export( $matches, true ), 0 );
+					// Preserve multiple field names, handle "any field"; name = *
+					if ( $flag !== $matches[1] ) {
+						$result['name'] = ( '*' === $matches[1] ) ? '' : $matches[1];
+					}
 
 					if ( ',' == $matches[3] ) {
 						$result['option'] = trim( strtolower( $matches[4] ));
@@ -1329,9 +1356,7 @@ class MLACore {
 				$result['value'] = $specification;
 			}
 
-			/*
-			 * Validate the results
-			 */
+			// Validate the results
 			if ( 'mime' == $result['prefix'] ) {
 				$mime_types = array_map( 'trim', explode( ',', $result['value'] ) );
 				foreach ( (array) $mime_types as $raw_mime_type ) {
@@ -1345,13 +1370,14 @@ class MLACore {
 			} elseif ( 'custom' == $result['prefix'] ) {
 				if ( ! in_array( $result['option'], array( '', 'any', 'match', 'null' ) ) ) {
 					/* translators: 1: ERROR tag 2: option, e.g., any, match, null */
-					$result['error'] = '<br>' . sprintf( __( '%1$s: Bad specification option "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $specification['option'] );
+					$result['error'] = '<br>' . sprintf( __( '%1$s: Bad specification option "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $result['option'] );
 				}
 			} else {
 				/* translators: 1: ERROR tag 2: prefix, e.g., custom */
-				$result['error'] = '<br>' . sprintf( __( '%1$s: Bad specification prefix "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $specification['prefix'] );
+				$result['error'] = '<br>' . sprintf( __( '%1$s: Bad specification prefix "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $result['prefix'] );
 			}
 
+//error_log( __LINE__ . ' MLACore::mla_parse_view_specification result = ' . var_export( $result, true ), 0 );
 		return $result;
 	}
 
@@ -1539,7 +1565,7 @@ class MLACore {
 			} else {
 				$callback_array = $wp_filter[ $filter ];
 			}
-			
+
 			foreach ( $callback_array as $priority => $callbacks ) {
 				$hook_list .= "Priority: {$priority}\n";
 				foreach ( $callbacks as $tag => $reference ) {
@@ -1552,7 +1578,7 @@ class MLACore {
 						} else {
 							$hook_list .= $reference['function'][0] . '::';
 						}
-						
+
 						$hook_list .= $reference['function'][1] . "()\n";
 					} else {
 						$hook_list .= 'unknown reference type: ' . gettype( $reference['function'] ) . "\n";
@@ -1560,7 +1586,7 @@ class MLACore {
 				} // foreach tag
 			} // foreach proprity
 		} // filters exist
-		
+
 		return $hook_list;
 	}
 

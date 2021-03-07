@@ -22,6 +22,45 @@ class Redirection_Cli extends WP_CLI_Command {
 	}
 
 	/**
+	 * Import from another plugin to Redirection.
+	 *
+	 * Supports:
+	 *   - wp-simple-redirect
+	 *   - seo-redirection
+	 *   - safe-redirect-manager
+	 *   - wordpress-old-slugs
+	 *   - rank-math
+	 *   - quick-redirects
+	 *
+	 * ## OPTIONS
+	 *
+	 * <name>
+	 * : The plugin name to import from (see above)
+	 *
+	 * [--group=<groupid>]
+	 * : The group ID to import into. Defaults to the first available group.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp redirection plugin quick-redirects
+	 */
+	public function plugin( $args, $extra ) {
+		include_once __DIR__ . '/models/importer.php';
+
+		$name = $args[0];
+		$group = $this->get_group( isset( $extra['group'] ) ? intval( $extra['group'], 10 ) : 0 );
+
+		$importer = Red_Plugin_Importer::get_importer( $name );
+		if ( $importer ) {
+			$count = $importer->import_plugin( $group );
+			WP_CLI::success( sprintf( 'Imported %d redirects from plugin %s', $count, $name ) );
+			return;
+		}
+
+		WP_CLI::error( 'Invalid plugin name' );
+	}
+
+	/**
 	 * Get or set a Redirection setting
 	 *
 	 * ## OPTIONS
@@ -175,12 +214,16 @@ class Redirection_Cli extends WP_CLI_Command {
 	 * <action>
 	 * : The database action to perform: install, remove, upgrade
 	 *
+	 * [--skip-errors]
+	 * : Skip errors and keep on upgrading
+	 *
 	 * ## EXAMPLES
 	 *
 	 *     wp redirection database install
 	 */
 	public function database( $args, $extra ) {
 		$action = false;
+		$skip = isset( $extra['skip-errors'] ) ? true : false;
 
 		if ( count( $args ) === 0 || ! in_array( $args[0], array( 'install', 'remove', 'upgrade' ), true ) ) {
 			WP_CLI::error( 'Invalid database action - please use install, remove, or upgrade' );
@@ -197,6 +240,10 @@ class Redirection_Cli extends WP_CLI_Command {
 
 			WP_CLI::success( 'Database install finished' );
 		} elseif ( $args[0] === 'upgrade' ) {
+			global $wpdb;
+
+			$wpdb->show_errors( false );
+
 			Red_Database::apply_to_sites( function() {
 				$database = new Red_Database();
 				$status = new Red_Database_Status();
@@ -216,9 +263,14 @@ class Redirection_Cli extends WP_CLI_Command {
 						break;
 					}
 
-					if ( $info['status'] === 'error' ) {
-						WP_CLI::error( 'Site ' . get_current_blog_id() . ' database failed to upgrade: ' . $info['reason'] );
-						return;
+					if ( $info['result'] === 'error' ) {
+						if ( $skip === false ) {
+							WP_CLI::error( 'Site ' . get_current_blog_id() . ' database failed to upgrade: ' . $info['reason'] . ' - ' . $info['debug'][0] );
+							return;
+						}
+
+						WP_CLI::warning( 'Site ' . get_current_blog_id() . ' database failed to upgrade: ' . $info['reason'] . ' - ' . $info['debug'][0] );
+						$status->set_next_stage();
 					}
 
 					$loop++;
@@ -240,10 +292,9 @@ class Redirection_Cli extends WP_CLI_Command {
 }
 
 if ( defined( 'WP_CLI' ) && WP_CLI ) {
-	WP_CLI::add_command( 'redirection import', [ 'Redirection_Cli', 'import' ] );
-	WP_CLI::add_command( 'redirection export', [ 'Redirection_Cli', 'export' ] );
-	WP_CLI::add_command( 'redirection database', [ 'Redirection_Cli', 'database' ] );
-	WP_CLI::add_command( 'redirection setting', [ 'Redirection_Cli', 'setting' ] );
+
+	// Register "redirection" as top-level command, and all public methods as sub-commands
+	WP_CLI::add_command( 'redirection', 'Redirection_Cli' );
 
 	add_action( Red_Flusher::DELETE_HOOK, function() {
 		$flusher = new Red_Flusher();

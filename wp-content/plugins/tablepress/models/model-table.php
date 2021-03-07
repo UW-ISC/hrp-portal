@@ -222,6 +222,9 @@ class TablePress_Table_Model extends TablePress_Model {
 	 * @return array Post.
 	 */
 	protected function _table_to_post( array $table, $post_id ) {
+		// Run filters on content in each cell and other fields.
+		$table = $this->filter_content( $table );
+
 		// Sanitize each cell, table name, and table description, if the user is not allowed to work with unfiltered HTML.
 		if ( ! current_user_can( 'unfiltered_html' ) ) {
 			$table = $this->sanitize( $table );
@@ -380,8 +383,8 @@ class TablePress_Table_Model extends TablePress_Model {
 	 */
 	public function sanitize( array $table ) {
 		// Sanitize the table name and description.
-		$fields_to_sanitize = array( 'name', 'description' );
-		foreach ( $fields_to_sanitize as $field ) {
+		$fields = array( 'name', 'description' );
+		foreach ( $fields as $field ) {
 			$table[ $field ] = wp_kses_post( $table[ $field ] );
 		}
 
@@ -389,6 +392,44 @@ class TablePress_Table_Model extends TablePress_Model {
 		foreach ( $table['data'] as $row_idx => $row ) {
 			foreach ( $row as $column_idx => $cell_content ) {
 				$table['data'][ $row_idx ][ $column_idx ] = wp_kses_post( $cell_content ); // equals wp_filter_post_kses(), but without the unncessary slashes handling
+			}
+		}
+
+		return $table;
+	}
+
+	/**
+	 * Filter/modify the content of table cells and other fields, e.g. for security hardening.
+	 *
+	 * This is similar to the `sanitize()` method, but executed for all users.
+	 * In 1.10.0, adding `rel="noopener noreferrer"` to all HTML link elements like `<a target=` was added. See https://core.trac.wordpress.org/ticket/43187.
+	 *
+	 * @since 1.10.0
+	 *
+	 * @param array $table Table.
+	 * @return array Filtered/modified table.
+	 */
+	public function filter_content( array $table ) {
+		/**
+		 * Filter whether the contents of table cells and fields should be filtered/modified.
+		 *
+		 * @since 1.10.0
+		 *
+		 * @param bool $filter Whether to filter the content of table cells and other fields. Default true.
+		 */
+		if ( ! apply_filters( 'tablepress_filter_table_cell_content', true ) ) {
+			return;
+		}
+
+		// Filter the table name and description.
+		$fields = array( 'name', 'description' );
+		foreach ( $fields as $field ) {
+			$table[ $field ] = wp_targeted_link_rel( $table[ $field ] );
+		}
+
+		foreach ( $table['data'] as $row_idx => $row ) {
+			foreach ( $row as $column_idx => $cell_content ) {
+				$table['data'][ $row_idx ][ $column_idx ] = wp_targeted_link_rel( $cell_content );
 			}
 		}
 
@@ -880,10 +921,9 @@ class TablePress_Table_Model extends TablePress_Model {
 	 * @param array $table                     Table to merge into.
 	 * @param array $new_table                 Table to merge.
 	 * @param bool  $table_size_check          Optional. Whether to check the number of rows and columns (e.g. not necessary for added or copied tables).
-	 * @param bool  $extended_visibility_check Optional. Whether to check the counts of hidden rows and columns (only possible for Admin_AJAX controller as of now).
 	 * @return array|WP_Error Merged table on success, WP_Error on error.
 	 */
-	public function prepare_table( array $table, array $new_table, $table_size_check = true, $extended_visibility_check = false ) {
+	public function prepare_table( array $table, array $new_table, $table_size_check = true ) {
 		// Table ID must be the same (if there was an ID already).
 		if ( false !== $table['id'] ) {
 			if ( $table['id'] !== $new_table['id'] ) {
@@ -929,31 +969,6 @@ class TablePress_Table_Model extends TablePress_Model {
 			|| count( $new_table['visibility']['columns'] ) !== $new_table['number']['columns'] ) {
 				return new WP_Error( 'table_prepare_size_check_visibility_doesnt_match' );
 			}
-
-			if ( $extended_visibility_check ) { // only for Admin_AJAX controller
-				if ( ! isset( $new_table['number']['hidden_rows'] )
-				|| ! isset( $new_table['number']['hidden_columns'] ) ) {
-					return new WP_Error( 'table_prepare_extended_visibility_check_numbers_not_set' );
-				}
-				$new_table['number']['hidden_rows'] = intval( $new_table['number']['hidden_rows'] );
-				$new_table['number']['hidden_columns'] = intval( $new_table['number']['hidden_columns'] );
-				// Count hidden and visible rows.
-				$num_visible_rows = count( array_keys( $new_table['visibility']['rows'], 1 ) );
-				$num_hidden_rows = count( array_keys( $new_table['visibility']['rows'], 0 ) );
-				// Check number of hidden and visible rows.
-				if ( $new_table['number']['hidden_rows'] !== $num_hidden_rows
-				|| ( $new_table['number']['rows'] - $new_table['number']['hidden_rows'] ) !== $num_visible_rows ) {
-					return new WP_Error( 'table_prepare_extended_visibility_check_rows_dont_match' );
-				}
-				// Count hidden and visible columns.
-				$num_visible_columns = count( array_keys( $new_table['visibility']['columns'], 1 ) );
-				$num_hidden_columns = count( array_keys( $new_table['visibility']['columns'], 0 ) );
-				// Check number of hidden and visible columns.
-				if ( $new_table['number']['hidden_columns'] !== $num_hidden_columns
-				|| ( $new_table['number']['columns'] - $new_table['number']['hidden_columns'] ) !== $num_visible_columns ) {
-					return new WP_Error( 'table_prepare_extended_visibility_check_columns_dont_match' );
-				}
-			}
 		}
 
 		// All checks were successful, replace original values with new ones.
@@ -972,7 +987,7 @@ class TablePress_Table_Model extends TablePress_Model {
 			// Specials check for certain options.
 			if ( isset( $new_table['options']['extra_css_classes'] ) ) {
 				$new_table['options']['extra_css_classes'] = explode( ' ', $new_table['options']['extra_css_classes'] );
-				$new_table['options']['extra_css_classes'] = array_map( 'sanitize_html_class', $new_table['options']['extra_css_classes'] );
+				$new_table['options']['extra_css_classes'] = array_map( array( 'TablePress', 'sanitize_css_class' ), $new_table['options']['extra_css_classes'] );
 				$new_table['options']['extra_css_classes'] = array_unique( $new_table['options']['extra_css_classes'] );
 				$new_table['options']['extra_css_classes'] = trim( implode( ' ', $new_table['options']['extra_css_classes'] ) );
 			}
@@ -1118,70 +1133,6 @@ class TablePress_Table_Model extends TablePress_Model {
 	}
 
 	/**
-	 * Merge changes made for TablePress 0.6-beta:
-	 * Table Name/Table Description.
-	 *
-	 * @since 0.6-beta
-	 */
-	public function merge_table_options_tp06() {
-		$table_post = $this->tables->get( 'table_post' );
-		if ( empty( $table_post ) ) {
-			return;
-		}
-
-		// Prime the meta cache with the table options of all tables.
-		update_meta_cache( 'post', array_values( $table_post ) );
-
-		// Go through all tables.
-		foreach ( $table_post as $table_id => $post_id ) {
-			$table_options = $this->_get_table_options( $post_id );
-
-			// Move "Print Name" to new format.
-			$print_name = in_array( $table_options['print_name'], array( 'above', 'below' ), true );
-			if ( $print_name ) {
-				$table_options['print_name_position'] = $table_options['print_name'];
-			}
-			$table_options['print_name'] = $print_name;
-			// Move "Print Description" to new format.
-			$print_description = in_array( $table_options['print_description'], array( 'above', 'below' ), true );
-			if ( $print_description ) {
-				$table_options['print_description_position'] = $table_options['print_description'];
-			}
-			$table_options['print_description'] = $print_description;
-
-			$this->_update_table_options( $post_id, $table_options );
-		}
-	}
-
-	/**
-	 * Merge changes made for TablePress 0.8-beta:
-	 * Conversion of parameter "datatables_scrollX" to "datatables_scrollx".
-	 * Fixes a bug that affects about the first 600 downloaders of 0.8-beta.
-	 *
-	 * @since 0.8-beta
-	 */
-	public function merge_table_options_tp08() {
-		$table_post = $this->tables->get( 'table_post' );
-		if ( empty( $table_post ) ) {
-			return;
-		}
-
-		// Prime the meta cache with the table options of all tables.
-		update_meta_cache( 'post', array_values( $table_post ) );
-
-		foreach ( $table_post as $table_id => $post_id ) {
-			$table_options = $this->_get_table_options( $post_id );
-
-			// Convert parameter "datatables_scrollX" to "datatables_scrollx".
-			if ( isset( $table_options['datatables_scrollX'] ) && ! isset( $table_options['datatables_scrollx'] ) ) {
-				$table_options['datatables_scrollx'] = $table_options['datatables_scrollX'];
-			}
-
-			$this->_update_table_options( $post_id, $table_options );
-		}
-	}
-
-	/**
 	 * Convert old parameter names to new ones in DataTables "Custom Commands".
 	 * DataTables 1.9 used Hungarian notation, while DataTables 1.10+ (used since TablePress 1.5) uses camelCase notation.
 	 *
@@ -1218,9 +1169,7 @@ class TablePress_Table_Model extends TablePress_Model {
 	/**
 	 * Invalidate all table output caches, e.g. after a plugin update.
 	 *
-	 * For TablePress 0.9-RC and onwards.
-	 *
-	 * @since 0.9-RC
+	 * @since 1.0.0
 	 */
 	public function invalidate_table_output_caches() {
 		$table_post = $this->tables->get( 'table_post' );
@@ -1230,30 +1179,6 @@ class TablePress_Table_Model extends TablePress_Model {
 
 		foreach ( $table_post as $table_id => $post_id ) {
 			$this->invalidate_table_output_cache( $table_id );
-		}
-	}
-
-	/**
-	 * Invalidate all table output caches, e.g. after a plugin update.
-	 * For TablePress pre-0.9-RC updates.
-	 *
-	 * @since 0.9-RC
-	 */
-	public function invalidate_table_output_caches_tp09() {
-		$table_post = $this->tables->get( 'table_post' );
-		if ( empty( $table_post ) ) {
-			return;
-		}
-
-		foreach ( $table_post as $table_id => $post_id ) {
-			$caches_list_transient_name = 'tablepress_c_' . md5( $table_id );
-			$caches_list = get_transient( $caches_list_transient_name );
-			if ( is_array( $caches_list ) ) {
-				foreach ( $caches_list as $cache_transient_name => $dummy_value ) {
-					delete_transient( $cache_transient_name );
-				}
-			}
-			delete_transient( $caches_list_transient_name );
 		}
 	}
 

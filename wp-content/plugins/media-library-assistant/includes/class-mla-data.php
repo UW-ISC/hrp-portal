@@ -1285,12 +1285,12 @@ class MLAData {
 					break;
 				case 'request':
 					if ( isset( $_REQUEST[ $value['value'] ] ) ) {
-						$record = sanitize_text_field( wp_unslash( $_REQUEST[ $value['value'] ] ) );
+						$record = wp_kses( wp_unslash( $_REQUEST[ $value['value'] ] ), 'post' );
 					} else {
 						// Look for compound names, e.g., tax_input.attachment_category
 						$key_array = explode( '.', $value['value'] );
 						if ( 1 < count( $key_array ) && isset( $_REQUEST[ $key_array[0] ] ) ) {
-							$array_value = array( $key_array[0] => sanitize_text_field( wp_unslash( $_REQUEST[ $key_array[0] ] ) ) );
+							$array_value = array( $key_array[0] => wp_unslash( $_REQUEST[ $key_array[0] ] ) ); // phpcs:ignore
 							$record = MLAData::mla_find_array_element( $value['value'], $array_value, $value['option'], false, ',' );
 						} else {
 							$record = '';
