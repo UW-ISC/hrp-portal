@@ -210,10 +210,10 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 		}
 
 		$args = tribe_get_listview_args( $page, $direction, $currently_displaying );
-		$link = add_query_arg( array(
+		$link = add_query_arg( [
 			'tribe_event_display' => $args['display'],
-			'tribe_paged'         => $args['page'],
-		), $link );
+			'tribe_paged'         => absint( $args['page'] ),
+		], $link );
 
 		return apply_filters( 'tribe_get_listview_dir_link', $link, $term );
 	}
@@ -251,10 +251,10 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 			$page--;
 		}
 
-		return array(
+		return [
 			'display' => $display,
 			'page'    => $page,
-		);
+		];
 	}
 
 	/**
@@ -267,7 +267,7 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	function tribe_get_listview_display() {
 		$default_display = 'list';
 		$display         = tribe_get_request_var( 'tribe_event_display', $default_display );
-		$valid_values    = array( 'list', 'past' );
+		$valid_values    = [ 'list', 'past' ];
 
 		return in_array( $display, $valid_values ) ? $display : $default_display;
 	}
@@ -320,7 +320,7 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 		}
 
 		if ( $full_link ) {
-			$title_args = array( 'post' => $post_id, 'echo' => false );
+			$title_args = [ 'post' => $post_id, 'echo' => false ];
 			$name       = get_the_title( $post_id );
 			$attr_title = the_title_attribute( $title_args );
 			$link       = false;
@@ -358,18 +358,47 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	 */
 	function tribe_get_event_website_link( $event = null, $label = null ) {
 		$url = tribe_get_event_website_url( $event );
+
+		/**
+		 * Filter the target attribute for the event website link
+		 *
+		 * @since 5.1.0
+		 *
+		 * @param string          $target The target attribute string. Defaults to "_self".
+		 * @param string          $url    The link URL.
+		 * @param null|object|int $event  The event the url is attached to.
+		 */
+		$target = apply_filters( 'tribe_get_event_website_link_target', '_self', $url, $event );
+		$rel    = ( '_blank' === $target ) ? 'noopener noreferrer' : 'external';
+
 		if ( ! empty( $url ) ) {
 			$label = is_null( $label ) ? $url : $label;
+			/**
+			 * Filter the website link label
+			 *
+			 * @since 3.0
+			 *
+			 * @param string the link label/text.
+			 */
+			$label = apply_filters( 'tribe_get_event_website_link_label', $label );
 			$html  = sprintf(
-				'<a href="%s" target="%s">%s</a>',
+				'<a href="%s" target="%s" rel="%s">%s</a>',
 				esc_url( $url ),
-				apply_filters( 'tribe_get_event_website_link_target', '_self' ),
-				apply_filters( 'tribe_get_event_website_link_label', $label )
+				esc_attr( $target ),
+				esc_attr( $rel ),
+				esc_html( $label )
 			);
 		} else {
 			$html = '';
 		}
 
+		/**
+		 * Filter the website link HTML
+		 *
+		 * @since 3.0
+		 *
+		 * @param string the link HTML.
+		 */
 		return apply_filters( 'tribe_get_event_website_link', $html );
 	}
 

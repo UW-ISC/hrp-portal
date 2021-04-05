@@ -3,9 +3,9 @@
  * Support functions for the SMC automatic actions.
  *
  * @package   Smart_Media_Categories_Admin
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 
@@ -16,7 +16,7 @@
  * no need to create a new instance of the class.
  *
  * @package Smart_Media_Categories_Admin
- * @author  David Lingren <dlingren@comcast.net>
+ * @author  David Lingren <david@davidlingren.com>
  */
 class SMC_Automatic_Support {
 	/**
@@ -38,10 +38,22 @@ class SMC_Automatic_Support {
 	 * @return	void
 	 */
 	public static function initialize() {
+		// Look for Postie chron job
+		if ( isset( $_REQUEST['doing_wp_cron'] ) && class_exists( 'Postie', false ) ) {
+			if ( false === (boolean) SMC_Settings_Support::get_option( 'postie_sync' ) ) {
+				//error_log( __LINE__ . ' SMC_Automatic_Support::initialize() no Postie Support', 0 );
+				return;
+			}
+			//error_log( __LINE__ . ' SMC_Automatic_Support::initialize() Postie Support in Cron Job', 0 );
+		}
+
 		//error_log( __LINE__ . ' SMC_Automatic_Support::initialize() $_REQUEST = ' . var_export( $_REQUEST, true), 0 );
 
 		add_filter( 'wp_handle_upload_prefilter', 'SMC_Automatic_Support::filter_wp_handle_upload_prefilter', 0x7FFFFFFE, 1 );
 		add_filter( 'wp_handle_upload', 'SMC_Automatic_Support::filter_wp_handle_upload_filter', 0x7FFFFFFE, 2 );
+
+		add_filter( 'wp_insert_post_data', 'SMC_Automatic_Support::filter_wp_insert_post_data', 0x7FFFFFFE, 3 );
+		add_action( 'wp_insert_post', 'SMC_Automatic_Support::action_wp_insert_post', 0x7FFFFFFE, 3 );
 
 		add_action( 'pre_post_update', 'SMC_Automatic_Support::action_pre_post_update', 0x7FFFFFFE, 2 );
 		add_action( 'edit_attachment', 'SMC_Automatic_Support::action_edit_attachment', 0x7FFFFFFE, 1 );
@@ -103,6 +115,54 @@ class SMC_Automatic_Support {
  	} // filter_wp_handle_upload_filter
 
 	/**
+	 * Filters slashed post data just before it is inserted into the database.
+	 *
+	 * Called from /wp-includes/post.php, function wp_insert_post
+	 *
+	 * @since 1.1.6
+	 *
+	 * @param array $data                An array of slashed, sanitized, and processed post data.
+	 * @param array $postarr             An array of sanitized (and slashed) but otherwise unmodified post data.
+	 * @param array $unsanitized_postarr An array of slashed yet *unsanitized* and unprocessed post data as
+	 *                                   originally passed to wp_insert_post().
+	 */
+	public static function filter_wp_insert_post_data( $data, $postarr, $unsanitized_postarr ) {
+		//error_log( __LINE__ . ' SMC_Automatic_Support::filter_wp_insert_post_data $data = ' . var_export( $data, true), 0 );
+		//error_log( __LINE__ . ' SMC_Automatic_Support::filter_wp_insert_post_data $postarr = ' . var_export( $postarr, true), 0 );
+		//error_log( __LINE__ . ' SMC_Automatic_Support::filter_wp_insert_post_data $unsanitized_postarr = ' . var_export( $unsanitized_postarr, true), 0 );
+
+		// Handle the case of setting terms during original post insert
+		if ( empty( $postarr['ID'] ) ) {
+			if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+				$post_type = isset( $postarr['post_type'] ) ? $postarr['post_type'] : 'post';
+				SMC_Automatic_support::rule_update_post_terms( 0, $post_type, NULL, NULL, 'before' );
+			}
+		}
+
+		return $data;
+	} // filter_wp_insert_post_data
+
+	/**
+	 * Fires once a post has been saved.
+	 *
+	 * Called from /wp-includes/post.php, function wp_insert_post
+	 *
+	 * @since 1.1.6
+	 *
+	 * @param int     $post_ID Post ID.
+	 * @param WP_Post $post    Post object.
+	 * @param bool    $update  Whether this is an existing post being updated.
+	 */
+	public static function action_wp_insert_post( $post_ID, $post, $update ) {
+		//error_log( __LINE__ . " SMC_Automatic_Support::filter_wp_insert_post( {$post_ID}, {$update} ) \$post = " . var_export( $post, true), 0 );
+
+		// Handle the case of setting terms during original post insert
+		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
+			SMC_Automatic_support::rule_update_post_terms( $post_ID, NULL, NULL, NULL, 'after' );
+		}
+	} // action_wp_insert_post
+
+	/**
 	 *  Fires immediately before an existing post/attachment is updated in the database
  	 *
 	 * Called from /wp-includes/post.php, function wp_insert_post
@@ -122,6 +182,11 @@ class SMC_Automatic_Support {
 			SMC_Automatic_support::rule_update_post_terms( $post_id, NULL, NULL, NULL, 'before' );
 		}
 
+		// This action can be called for any post_type, e.g., post or page in addition to attachment
+		if ( 'attachment' !== $data['post_type'] ) {
+			return;
+		}
+		
 		if ( (boolean) SMC_Settings_Support::get_option( 'attach_orphan' ) ) {
 			SMC_Automatic_support::rule_attach_orphan( $data['post_parent'], $post_id, true );
 		}
@@ -169,6 +234,9 @@ class SMC_Automatic_Support {
 	public static function action_add_attachment( $post_id ) {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_add_attachment $post_id = ' . var_export( $post_id, true), 0 );
 		//error_log( __LINE__ . ' SMC_Automatic_Support::action_add_attachment $post = ' . var_export( get_post( $post_id ), true), 0 );
+
+		// Flush the cache of parent/child term assignments to force resynch
+		SMC_Sync_Support::get_posts_per_view( NULL, true );
 		
 		if ( (boolean) SMC_Settings_Support::get_option( 'upload_item' ) ) {
 			SMC_Automatic_support::rule_upload_item( $post_id );
@@ -388,12 +456,9 @@ class SMC_Automatic_Support {
 	 * @param array  $old_tt_ids Old array of term taxonomy IDs.
 	 */
 	public static function action_set_object_terms( $object_id, $terms, $tt_ids, $taxonomy, $append, $old_tt_ids ) {
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $object_id = ' . var_export( $object_id, true), 0 );
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $terms = ' . var_export( $terms, true), 0 );
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $tt_ids = ' . var_export( $tt_ids, true), 0 );
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $taxonomy = ' . var_export( $taxonomy, true), 0 );
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $append = ' . var_export( $append, true), 0 );
-		//error_log( __LINE__ . ' SMC_Automatic_Support::action_set_object_terms $old_tt_ids = ' . var_export( $old_tt_ids, true), 0 );
+		//error_log( __LINE__ . " SMC_Automatic_Support::action_set_object_terms( {$object_id}, {$taxonomy}, {$append} ) \$terms = " . var_export( $terms, true), 0 );
+		//error_log( __LINE__ . " SMC_Automatic_Support::action_set_object_terms( {$object_id}, {$taxonomy}, {$append} ) \$tt_ids = " . var_export( $tt_ids, true), 0 );
+		//error_log( __LINE__ . " SMC_Automatic_Support::action_set_object_terms( {$object_id}, {$taxonomy}, {$append} ) \$old_tt_ids = " . var_export( $old_tt_ids, true), 0 );
 
 		if ( (boolean) SMC_Settings_Support::get_option( 'update_post_terms' ) ) {
 			SMC_Automatic_support::rule_update_post_terms( $object_id, $taxonomy, $tt_ids, $old_tt_ids, 'during' );
@@ -591,7 +656,7 @@ class SMC_Automatic_Support {
 			$sql = "UPDATE $wpdb->posts SET post_parent = {$parent_id}
 			WHERE ID = {$insert_id}";
 			$results = $wpdb->query( $sql );
-//error_log( "rule_insert_orphan SET post_parent({$insert_id}) $results = " . var_export( $results, true), 0 );
+//error_log( __LINE__ . " SMC_Automatic_Support::rule_insert_orphan SET post_parent({$insert_id}) $results = " . var_export( $results, true), 0 );
 			clean_attachment_cache( $insert_id );
 		} // each insert
 		
@@ -652,7 +717,7 @@ class SMC_Automatic_Support {
 			$sql = "UPDATE $wpdb->posts SET post_parent = {$parent_id}
 			WHERE ID = {$insert_id}";
 			$results = $wpdb->query( $sql );
-//error_log( "rule_insert_attached SET post_parent({$insert_id}) $results = " . var_export( $results, true), 0 );
+//error_log( __LINE__ . " SMC_Automatic_Support::rule_insert_attached SET post_parent({$insert_id}) $results = " . var_export( $results, true), 0 );
 			clean_attachment_cache( $insert_id );
 		} // each insert
 		
@@ -671,9 +736,9 @@ class SMC_Automatic_Support {
 	 *
 	 * @since 1.0.6
 	 *
-	 * @param	integer	Post ID.
+	 * @param	integer	Post ID or zero (0) in 'before' phase when inserting a new post.
+	 * @param	string	Taxonomy slug or post_type in 'before' phase when inserting a new post.
 	 * @param	array	An array of new term taxonomy IDs.
-	 * @param	string	Taxonomy slug.
 	 * @param	array	Old array of term taxonomy IDs.
 	 * @param	string	Update phase; 'before', 'during', 'after'.
 	 *
@@ -683,59 +748,86 @@ class SMC_Automatic_Support {
 //error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms( {$post_id}, {$taxonomy}, {$phase} ) \$tt_ids = " . var_export( $tt_ids, true), 0 );
 //error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms( {$post_id}, {$taxonomy}, {$phase} ) \$old_tt_ids = " . var_export( $old_tt_ids, true), 0 );
 		static $update_post = NULL, $update_type = NULL, $active_taxonomies = NULL, $terms_changed = false;
+
+		// Make sure the object is a supported Post Type
+		if ( 0 === $post_id ) {
+			// Inserting a new post
+			$update_type = $taxonomy;
+		} else {
+			$post = get_post( $post_id );
+			$update_type = $post->post_type;
+		}
+//error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms( {$post_id}, {$update_type} )", 0 );
+		
+		if ( is_null( $active_taxonomies ) ) {
+			$active_taxonomies = SMC_Sync_Support::get_active_taxonomies( $update_type );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $active_taxonomies = ' . var_export( $active_taxonomies, true), 0 );
+		}
+		
+		if ( !SMC_Settings_Support::is_smc_post_type( $update_type ) ) {
+			return;
+		}
 		
 		switch ( $phase ) {
 			case 'before':
 				$terms_changed = false;
-
-				// Make sure the object is a supported Post Type
-				$post = get_post( $post_id );
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $post = ' . var_export( $post, true), 0 );
-				if ( !SMC_Settings_Support::is_smc_post_type( $post->post_type ) ) {
-					$update_post = NULL;
-					$update_type = NULL;
-					return;
-				}
-				
 				$update_post = $post_id;
-				$update_type = $post->post_type;
-				if ( is_null( $active_taxonomies ) ) {
-					$active_taxonomies = SMC_Sync_Support::get_active_taxonomies( $update_type );
-				}
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $active_taxonomies = ' . var_export( $active_taxonomies, true), 0 );
 				break;
 			case 'during':
 //error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms during $update_post = ' . var_export( $update_post, true), 0 );
-				// Make sure it's the right Post
-				if ( is_null( $update_post ) || ( $update_post != $post_id ) ) {
-					return;
-				}
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms during $taxonomy = ' . var_export( $taxonomy, true), 0 );
-				
+
 				// Make sure it's an active taxonomy
 				if ( ! array_key_exists( $taxonomy, $active_taxonomies ) ) {
 					return;
 				}
 				
 				// tt_ids are strings on input, old_tt_ids are integers
-				$tt_ids = array_map( absint, $tt_ids );
+				$tt_ids = array_map( 'absint', $tt_ids );
 //error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms mapped $tt_ids = ' . var_export( $tt_ids, true), 0 );
-				if ( $tt_ids != $old_tt_ids ) {
-					$terms_changed = true;
+				$current_terms_changed = ( $tt_ids != $old_tt_ids );
+//error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms ({$taxonomy}) \$current_terms_changed = " . var_export( $current_terms_changed, true), 0 );
+				
+				// Check for stand-alone terms update, i.e., not part of an insert/update post event
+				if ( is_null( $update_post ) ) {
+					// If terms have changed go ahead and sync
+					if ( $current_terms_changed ) {
+						SMC_Sync_Support::get_posts_per_view( NULL, true );
+						$all_assignments = SMC_Sync_Support::get_posts_per_view( array( 'post_type' => $update_type, 'smc_status' => 'unsync', 'post_parents' => array( $post_id ), 'fields' => 'all' ) );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms standalone $all_assignments = ' . var_export( $all_assignments, true ), 0 );
+						$results = SMC_Sync_Support::sync_all( $all_assignments );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms standalone $results = ' . var_export( $results, true ), 0 );
+					}
+
+					return;
+				} // is_null 
+				
+				// Inserting a new post?
+				if ( 0 === $update_post ) {
+					$update_post = $post_id;
+				}
+
+				// Make sure it's the right Post
+				if ( $update_post !== $post_id ) {
+//error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms( {$post_id}, {$update_post} ) wrong post", 0 );
+					return;
 				}
 				
+				$terms_changed |= $current_terms_changed;
 //error_log( __LINE__ . " SMC_Automatic_Support::rule_update_post_terms ({$taxonomy}) \$terms_changed = " . var_export( $terms_changed, true), 0 );
 				break;
 			case 'after':
 				// Make sure terms have changed and it's the right Post
-				if ( $terms_changed && $update_post == $post_id ) {
+				if ( $terms_changed && $update_post === $post_id ) {
+					SMC_Sync_Support::get_posts_per_view( NULL, true );
 					$all_assignments = SMC_Sync_Support::get_posts_per_view( array( 'post_type' => $update_type, 'smc_status' => 'unsync', 'post_parents' => array( $post_id ), 'fields' => 'all' ) );
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $all_assignments = ' . var_export( $all_assignments, true ), 0 );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms after $all_assignments = ' . var_export( $all_assignments, true ), 0 );
 					$results = SMC_Sync_Support::sync_all( $all_assignments );
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $results = ' . var_export( $results, true ), 0 );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms after $results = ' . var_export( $results, true ), 0 );
 				}
 
 				$update_post = NULL;
+				$update_type = NULL;
+				$active_taxonomies = NULL;
 				$terms_changed = false;
 				break;
 		} // phase

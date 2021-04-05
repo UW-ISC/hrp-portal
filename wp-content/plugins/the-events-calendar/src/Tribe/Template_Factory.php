@@ -63,88 +63,46 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 		$ajax_hook     = constant( $current_class . '::AJAX_HOOK' );
 
 		// set up queries, vars, etc that needs to be used in this view
-		add_action( 'tribe_events_before_view', array( $this, 'setup_view' ), 10 );
+		add_action( 'tribe_events_before_view', [ $this, 'setup_view' ], 10 );
 
 		// ajax requests
-		add_action( 'wp_ajax_' . $ajax_hook, array( $this, 'ajax_response' ) );
-		add_action( 'wp_ajax_nopriv_' . $ajax_hook, array( $this, 'ajax_response' ) );
+		add_action( 'wp_ajax_' . $ajax_hook, [ $this, 'ajax_response' ] );
+		add_action( 'wp_ajax_nopriv_' . $ajax_hook, [ $this, 'ajax_response' ] );
 
 		// set notices
-		add_action( 'tribe_events_before_view', array( $this, 'set_notices' ), 15 );
+		add_action( 'tribe_events_before_view', [ $this, 'set_notices' ], 15 );
 
 		// Don't show the comments form inside the view (if comments are enabled,
 		// they'll show on their own after the loop)
 		if ( ! ( tribe_get_option( 'tribeEventsTemplate', 'default' ) == '' ) ) {
-			add_filter( 'comments_template', array( $this, 'remove_comments_template' ) );
+			add_filter( 'comments_template', [ $this, 'remove_comments_template' ] );
 		}
 
 		// Remove the comments template entirely if needed
-		add_filter( 'tribe_get_option', array( $this, 'comments_off' ), 10, 2 );
+		add_filter( 'tribe_get_option', [ $this, 'comments_off' ], 10, 2 );
 
 		// cleanup after view (reset query, etc)
-		add_action( 'tribe_events_after_view', array( $this, 'shutdown_view' ) );
+		add_action( 'tribe_events_after_view', [ $this, 'shutdown_view' ] );
 
 		// add wrapper html and input hash to non-ajax request
-		add_action( 'tribe_events_before_template', array( $this, 'view_wrapper_open' ) );
-		add_filter( 'tribe_events_before_template', array( $this, 'add_input_hash' ) );
-		add_action( 'tribe_events_after_template', array( $this, 'view_wrapper_close' ) );
+		add_action( 'tribe_events_before_template', [ $this, 'view_wrapper_open' ] );
+		add_filter( 'tribe_events_before_template', [ $this, 'add_input_hash' ] );
+		add_action( 'tribe_events_after_template', [ $this, 'view_wrapper_close' ] );
 
 		// hide sensitive event info if post is password protected
-		add_action( 'the_post', array( $this, 'manage_sensitive_info' ) );
+		add_action( 'the_post', [ $this, 'manage_sensitive_info' ] );
 
 		// implement a filter for the page title. Support WordPress < 4.4
-		add_filter( 'wp_title', array( $this, 'title_tag' ), 10, 2 );
+		add_filter( 'wp_title', [ $this, 'title_tag' ], 10, 2 );
 
 		// implement a filter for the page title. Support WordPress >= 4.4
-		add_filter( 'document_title_parts', array( $this, 'title_tag' ) );
+		add_filter( 'document_title_parts', [ $this, 'title_tag' ] );
 
 		// add body class
-		add_filter( 'body_class', array( $this, 'body_class' ) );
+		add_filter( 'body_class', [ $this, 'body_class' ] );
 
 		// event classes
-		add_filter( 'tribe_events_event_classes', array( $this, 'event_classes' ) );
-
-	}
-
-	/**
-	 * Asset calls for vendor packages
-	 *
-	 * @param string $name
-	 * @param array  $deps Dependents
-	 */
-	public static function asset_package( $name, $deps = array() ) {
-
-		$common = Tribe__Events__Main::instance();
-		$prefix = 'tribe-events'; // Tribe__Events__Main::POSTTYPE;
-
-		// setup plugin resources & 3rd party vendor urls
-		$vendor_url = trailingslashit( $common->plugin_url ) . 'vendor/';
-
-		self::handle_asset_package_request( $name, $deps, $vendor_url, $prefix, $common );
-	}
-
-	/**
-	 * Handles an asset package request.
-	 *
-	 * @param string      $name       The asset name in the `hyphen-separated-format`
-	 * @param array       $deps       An array of dependency handles
-	 * @param string      $vendor_url URL to vendor scripts and styles dir
-	 * @param string      $prefix     MT script and style prefix
-	 * @param Tribe__Main $tec        An instance of the main plugin class
-	 */
-	protected static function handle_asset_package_request( $name, $deps, $vendor_url, $prefix, $tec ) {
-
-		$asset = self::get_asset_factory_instance( $name );
-
-		self::prepare_asset_package_request( $asset, $name, $deps, $vendor_url, $prefix, $tec );
-	}
-
-	/**
-	 * Retrieves the appropriate asset factory instance
-	 */
-	protected static function get_asset_factory_instance( $name ) {
-		$asset = Tribe__Events__Asset__Factory::instance()->make_for_name( $name );
-		return $asset;
+		add_filter( 'tribe_events_event_classes', [ $this, 'event_classes' ] );
 	}
 
 	/**
@@ -154,7 +112,7 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 	 *
 	 * @return array
 	 */
-	public function body_class( $classes = array() ) {
+	public function body_class( $classes = [] ) {
 
 		// view class
 		$classes[] = $this->body_class;
@@ -204,34 +162,6 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 	}
 
 	/**
-	 * Setup meta display in this template
-	 *
-	 * @deprecated 4.3
-	 **/
-	public function setup_meta() {
-		_deprecated_function( __METHOD__, '4.3' );
-
-		// customize meta items
-		tribe_set_the_meta_template( 'tribe_event_venue_name', array(
-				'before'       => '',
-				'after'        => '',
-				'label_before' => '',
-				'label_after'  => '',
-				'meta_before'  => '<span class="%s">',
-				'meta_after'   => '</span>',
-			) );
-		tribe_set_meta_label( 'tribe_event_venue_address', '' );
-		tribe_set_the_meta_template( 'tribe_event_venue_address', array(
-				'before'       => '',
-				'after'        => '',
-				'label_before' => '',
-				'label_after'  => '',
-				'meta_before'  => '',
-				'meta_after'   => '',
-			) );
-	}
-
-	/**
 	 * Set up the notices for this template
 	 *
 	 **/
@@ -266,20 +196,24 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 			$search_term = $wp_query->query_vars['s'];
 		} elseif ( ! empty( $_REQUEST['tribe-bar-search'] ) ) {
 			$search_term = $_REQUEST['tribe-bar-search'];
-		} elseif ( ! empty( $_REQUEST['tribe-bar-geoloc'] ) ) {
+		}
+
+		if ( ! empty( $_REQUEST['tribe-bar-geoloc'] ) ) {
 			$geographic_term = $_REQUEST['tribe-bar-geoloc'];
 		}
-		if ( is_tax( $tribe->get_event_taxonomy() ) ) {
-			$tax_term = get_term_by( 'slug', get_query_var( 'term' ), $tribe->get_event_taxonomy() );
+
+		$maybe_term = get_query_var( 'term' );
+		if ( is_tax( $tribe->get_event_taxonomy() ) && ! empty( $maybe_term ) ) {
+			$tax_term = get_term_by( 'slug', $maybe_term, $tribe->get_event_taxonomy() );
 			$tax_term = esc_html( $tax_term->name );
 		}
 
 		// Set an appropriate no-results-found message
-		return array(
+		return [
 			$search_term,
 			$tax_term,
 			$geographic_term,
-		);
+		];
 	}
 
 	/**
@@ -327,10 +261,10 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 
 		// set up the excerpt
 		if ( is_int( $this->excerpt_length ) ) {
-			add_filter( 'excerpt_length', array( $this, 'excerpt_length' ) );
+			add_filter( 'excerpt_length', [ $this, 'excerpt_length' ] );
 		}
 		if ( is_string( $this->excerpt_more ) ) {
-			add_filter( 'excerpt_more', array( $this, 'excerpt_more' ) );
+			add_filter( 'excerpt_more', [ $this, 'excerpt_more' ] );
 		}
 	}
 
@@ -422,43 +356,42 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 
 		// reset the excerpt
 		if ( is_int( $this->excerpt_length ) ) {
-			remove_filter( 'excerpt_length', array( $this, 'excerpt_length' ) );
+			remove_filter( 'excerpt_length', [ $this, 'excerpt_length' ] );
 		}
 		if ( is_string( $this->excerpt_more ) ) {
-			remove_filter( 'excerpt_more', array( $this, 'excerpt_more' ) );
+			remove_filter( 'excerpt_more', [ $this, 'excerpt_more' ] );
 		}
 
 		// set up queries, vars, etc that needs to be used in this view
-		remove_action( 'tribe_events_before_view', array( $this, 'setup_view' ) );
+		remove_action( 'tribe_events_before_view', [ $this, 'setup_view' ] );
 
 		// set notices
-		remove_action( 'tribe_events_before_view', array( $this, 'set_notices' ) );
+		remove_action( 'tribe_events_before_view', [ $this, 'set_notices' ] );
 
 		// Remove the comments template
 		if ( ! ( tribe_get_option( 'tribeEventsTemplate', 'default' ) == '' ) ) {
-			remove_filter( 'comments_template', array( $this, 'remove_comments_template' ) );
+			remove_filter( 'comments_template', [ $this, 'remove_comments_template' ] );
 		}
 
 		// set up meta used in this view
-		remove_action( 'tribe_events_before_view', array( $this, 'setup_meta' ) );
+		remove_action( 'tribe_events_before_view', [ $this, 'setup_meta' ] );
 
 		// cleanup after view (reset query, etc)
-		remove_action( 'tribe_events_after_view', array( $this, 'shutdown_view' ) );
+		remove_action( 'tribe_events_after_view', [ $this, 'shutdown_view' ] );
 
 		// add wrapper html and input hash to non-ajax request
-		remove_action( 'tribe_events_before_template', array( $this, 'view_wrapper_open' ) );
-		remove_filter( 'tribe_events_before_template', array( $this, 'add_input_hash' ) );
-		remove_action( 'tribe_events_after_template', array( $this, 'view_wrapper_close' ) );
+		remove_action( 'tribe_events_before_template', [ $this, 'view_wrapper_open' ] );
+		remove_filter( 'tribe_events_before_template', [ $this, 'add_input_hash' ] );
+		remove_action( 'tribe_events_after_template', [ $this, 'view_wrapper_close' ] );
 
 		// hide sensitive event info if post is password protected
-		remove_action( 'the_post', array( $this, 'manage_sensitive_info' ) );
+		remove_action( 'the_post', [ $this, 'manage_sensitive_info' ] );
 
 		// add body class
-		remove_filter( 'body_class', array( $this, 'body_class' ) );
+		remove_filter( 'body_class', [ $this, 'body_class' ] );
 
 		// event classes
-		remove_filter( 'tribe_events_event_classes', array( $this, 'event_classes' ) );
-
+		remove_filter( 'tribe_events_event_classes', [ $this, 'event_classes' ] );
 	}
 
 	/**
@@ -473,8 +406,19 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 			add_filter( 'tribe_events_recurrence_tooltip', '__return_false' );
 			add_filter( 'tribe_event_meta_venue_name', '__return_empty_string' );
 			add_filter( 'tribe_event_meta_venue_address', '__return_empty_string' );
+			add_filter( 'tribe_get_full_address', '__return_empty_string' );
 			add_filter( 'tribe_event_featured_image', '__return_empty_string' );
 			add_filter( 'tribe_get_venue', '__return_empty_string' );
+			add_filter( 'tribe_get_cost', '__return_empty_string' );
+
+			if ( wp_doing_ajax() ) {
+				add_filter( 'the_title', [ $this, 'filter_get_the_title' ], 10, 2 );
+			}
+
+			if ( is_singular( Tribe__Events__Main::POSTTYPE ) ) {
+				add_filter( 'the_title', '__return_empty_string' );
+				add_filter( 'tribe_get_template_part_templates', '__return_empty_array' );
+			}
 		} else {
 			remove_filter( 'tribe_events_event_schedule_details', '__return_empty_string' );
 			remove_filter( 'tribe_events_recurrence_tooltip', '__return_false' );
@@ -482,6 +426,16 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 			remove_filter( 'tribe_event_meta_venue_address', '__return_empty_string' );
 			remove_filter( 'tribe_event_featured_image', '__return_empty_string' );
 			remove_filter( 'tribe_get_venue', '__return_empty_string' );
+			remove_filter( 'tribe_get_cost', '__return_empty_string' );
+
+			if ( wp_doing_ajax() ) {
+				remove_filter( 'the_title', [ $this, 'filter_get_the_title' ], 10 );
+			}
+
+			if ( is_singular( Tribe__Events__Main::POSTTYPE ) ) {
+				remove_filter( 'the_title', '__return_empty_string' );
+				remove_filter( 'tribe_get_template_part_templates', '__return_empty_array' );
+			}
 		}
 	}
 
@@ -538,6 +492,118 @@ class Tribe__Events__Template_Factory extends Tribe__Template_Factory {
 		}
 
 		return $option_value;
+	}
 
+	/************************
+	 *                      *
+	 *  Deprecated Methods  *
+	 *                      *
+	 ************************/
+
+	/**
+	 * Asset calls for vendor packages
+	 *
+	 * @deprecated 4.6.21
+	 *
+	 * @param string $name
+	 * @param array  $deps Dependents
+	 */
+	public static function asset_package( $name, $deps = [] ) {
+
+		$common = Tribe__Events__Main::instance();
+		$prefix = 'tribe-events'; // Tribe__Events__Main::POSTTYPE;
+
+		// setup plugin resources & 3rd party vendor urls
+		$vendor_url = trailingslashit( $common->plugin_url ) . 'vendor/';
+
+		self::handle_asset_package_request( $name, $deps, $vendor_url, $prefix, $common );
+	}
+
+	/**
+	 * Handles an asset package request.
+	 *
+	 * @deprecated 4.6.21
+	 *
+	 * @param string      $name       The asset name in the `hyphen-separated-format`
+	 * @param array       $deps       An array of dependency handles
+	 * @param string      $vendor_url URL to vendor scripts and styles dir
+	 * @param string      $prefix     MT script and style prefix
+	 * @param Tribe__Main $tec        An instance of the main plugin class
+	 */
+	protected static function handle_asset_package_request( $name, $deps, $vendor_url, $prefix, $tec ) {
+
+		$asset = self::get_asset_factory_instance( $name );
+
+		self::prepare_asset_package_request( $asset, $name, $deps, $vendor_url, $prefix, $tec );
+	}
+
+	/**
+	 * Retrieves the appropriate asset factory instance
+	 *
+	 * @deprecated 4.6.21
+	 */
+	protected static function get_asset_factory_instance( $name ) {
+		$asset = Tribe__Events__Asset__Factory::instance()->make_for_name( $name );
+		return $asset;
+	}
+
+	/**
+	 * Setup meta display in this template
+	 *
+	 * @deprecated 4.3
+	 **/
+	public function setup_meta() {
+		_deprecated_function( __METHOD__, '4.3' );
+
+		// customize meta items
+		tribe_set_the_meta_template( 'tribe_event_venue_name', [
+			'before'       => '',
+			'after'        => '',
+			'label_before' => '',
+			'label_after'  => '',
+			'meta_before'  => '<span class="%s">',
+			'meta_after'   => '</span>',
+		] );
+		tribe_set_meta_label( 'tribe_event_venue_address', '' );
+		tribe_set_the_meta_template( 'tribe_event_venue_address', [
+			'before'       => '',
+			'after'        => '',
+			'label_before' => '',
+			'label_after'  => '',
+			'meta_before'  => '',
+			'meta_after'   => '',
+		] );
+	}
+
+	/**
+	 * Filters the post title as WordPress does in `get_the_title` to apply the password-protected prefix in
+	 * the context of AJAX requests.
+	 *
+	 * @since 5.0.0
+	 *
+	 * @param string      $title   The post title.
+	 * @param int|WP_Post $post_id The post ID, or object, to apply the filter for.
+	 *
+	 * @return string The filtered post title.
+	 */
+	public function filter_get_the_title( $title, $post_id = 0 ) {
+		$post = get_post( $post_id );
+
+		if ( ! $post instanceof WP_Post ) {
+			return $title;
+		}
+
+		if ( ! empty( $post->post_password ) ) {
+			/* translators: %s: Protected post title. */
+			$prepend = __( 'Protected: %s' );
+
+			/**
+			 * @see get_the_title() for the original filter documentation.
+			 */
+			$protected_title_format = apply_filters( 'protected_title_format', $prepend, $post );
+			$title                  = sprintf( $protected_title_format, $title );
+		}
+
+		return $title;
 	}
 }

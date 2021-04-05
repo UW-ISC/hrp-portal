@@ -36,9 +36,7 @@ class MLAImageProcessor {
 	private static function _get_temp_file( $extension = '.tmp' ) {
 		static $temp = NULL;
 
-		/*
-		 * Find a temp directory
-		 */
+		// Find a temp directory
 		if ( NULL == $temp ) {
 			if ( function_exists('sys_get_temp_dir') ) {
 				$temp = sys_get_temp_dir();
@@ -59,9 +57,7 @@ class MLAImageProcessor {
 			}
 		}
 
-		/*
-		 * Create a unique file
-		 */
+		// Create a unique file
 		$path = $temp . uniqid( mt_rand() ) . $extension;
 		$f = @fopen( $path, 'a' );
 		if ( $f === false ) {
@@ -97,18 +93,14 @@ class MLAImageProcessor {
 	 * @return	boolean	true if conversion succeeds else false
 	 */
 	private static function _ghostscript_convert( $file, $frame, $resolution, $output_type, $explicit_path = '' ) {
-		/*
-		 * Look for exec() - from http://stackoverflow.com/a/12980534/866618
-		 */
+		// Look for exec() - from http://stackoverflow.com/a/12980534/866618
 		$blacklist = preg_split( '/,\s*/', ini_get('disable_functions') . ',' . ini_get('suhosin.executor.func.blacklist') );
 		if ( in_array('exec', $blacklist) ) {
 			self::_mla_debug_add( 'MLAImageProcessor::_ghostscript_convert blacklist failure' );
 			return false;
 		}
 
-		/*
-		 * Look for the Ghostscript executable
-		 */
+		// Look for the Ghostscript executable
 		$ghostscript_path = NULL;
 		do {
 
@@ -178,9 +170,7 @@ class MLAImageProcessor {
 				$extension = '.png';
 			}
 
-			/*
-			 * Generate a unique temporary file
-			 */
+			// Generate a unique temporary file
 			$output_file = self::_get_temp_file( $extension );
 
 			$cmd = escapeshellarg( $ghostscript_path ) . ' -sDEVICE=%1$s -r%2$dx%2$d -dFirstPage=%3$d -dLastPage=%3$d -dFitPage -o %4$s %5$s 2>&1';
@@ -475,7 +465,7 @@ class MLAImageProcessor {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		$file = wp_kses( isset( $_REQUEST['mla_stream_file'] ) ? wp_unslash( $_REQUEST['mla_stream_file'] ) : '', 'post' );
+		$file = isset( $_REQUEST['mla_stream_file'] ) ? $_REQUEST['mla_stream_file'] : ''; // phpcs:ignore
 		if ( ! is_file( $file ) ) {
 			self::_mla_die( 'File not found', __LINE__, 404 );
 		}
@@ -491,7 +481,7 @@ class MLAImageProcessor {
 		 * If mla_ghostscript_path is present, a non-standard GS location can be found in a file written by
 		 * the [mla_gallery] shortcode processor.
 		 */
-		$ghostscript_path = wp_kses( isset( $_REQUEST['mla_ghostscript_path'] ) ? wp_unslash( $_REQUEST['mla_ghostscript_path'] ) : '', 'post' );
+		$ghostscript_path = isset( $_REQUEST['mla_ghostscript_path'] ) ? $_REQUEST['mla_ghostscript_path'] : ''; // phpcs:ignore
 		if ( ! empty( $ghostscript_path ) ) {
 			$ghostscript_path = @file_get_contents( dirname( __FILE__ ) . '/' . 'mla-ghostscript-path.txt' );
 		}
@@ -507,9 +497,7 @@ class MLAImageProcessor {
 			self::_mla_debug_add( 'MLAImageProcessor::mla_process_stream_image begin file = ' . var_export( $file, true ) );
 		}
 
-		/*
-		 * Convert the file to an image format and load it
-		 */
+		// Convert the file to an image format and load it
 		try {
 			self::$image = new Imagick();
 
@@ -549,9 +537,7 @@ class MLAImageProcessor {
 			self::_mla_die( 'Image load exception: ' . $e->getMessage(), __LINE__, 404 );
 		}
 
-		/*
-		 * Prepare the output image; resize and flatten, if necessary
-		 */
+		// Prepare the output image; resize and flatten, if necessary
 		try {
 			if ( isset( $_REQUEST['mla_stream_fit'] ) ) {
 				$best_fit = ( '1' == $_REQUEST['mla_stream_fit'] );
@@ -565,9 +551,7 @@ class MLAImageProcessor {
 			self::_mla_die( '_prepare_image exception: ' . $e->getMessage(), __LINE__, 500 );
 		}
 
-		/*
-		 * Stream the image back to the requestor
-		 */
+		// Stream the image back to the requestor
 		try {
 			header( "Content-Type: $type" );
 			echo self::$image->getImageBlob(); // phpcs:ignore
@@ -649,9 +633,7 @@ class MLAMutex {
 	 * @return	void
 	 */
 	function __construct( $use_lock = false ) 	{
-		/*
-		 * If sem_ functions are not available require file locking
-		 */
+		// If sem_ functions are not available require file locking
 		if ( ! is_callable( 'sem_get' ) ) {
 			$use_lock = true;
 		}

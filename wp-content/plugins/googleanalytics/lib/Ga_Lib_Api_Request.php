@@ -11,10 +11,10 @@ class Ga_Lib_Api_Request {
 	const USER_AGENT				 = 'googleanalytics-wordpress-plugin';
 
 	private $headers = array();
-	
+
 	// Whether to cache or not
 	private $cache = false;
-	
+
 	private $appendix = '';
 
 	private function __construct( $cache = false, $appendix = '' ) {
@@ -165,20 +165,28 @@ class Ga_Lib_Api_Request {
 			$body		 = substr( $response, $headerSize, strlen( $response ) );
 			if ( preg_match( '/^(4|5)[0-9]{2}/', $httpCode ) ) {
 
-				// Store last cache time when unsuccessful
-				if ( false === $force_no_cache ) {
-					if ( true === $this->cache ) {
-						Ga_Cache::set_last_cache_time( $wp_transient_name );
-						Ga_Cache::set_last_time_attempt();
-					}
-				}
-
 				throw new Ga_Lib_Api_Request_Exception( ( $httpCode == 404 ? _( 'Requested URL doesn\'t exists: ' . $url ) : $body ) );
 			}
 
 			curl_close( $ch );
 
 			$response_data = array( $header, $body );
+
+			if (isset($_REQUEST['key'])) {
+				$profile = array(
+					'key'      => sanitize_text_field( $_REQUEST['key'] ),
+					'token'    => sanitize_text_field( $_REQUEST['token'] ),
+					'ua'       => monsterinsights_is_valid_ua( $_REQUEST['ua'] ),
+					'viewname' => sanitize_text_field( $_REQUEST['miview'] ),
+					'a'        => sanitize_text_field( $_REQUEST['a'] ), // AccountID
+					'w'        => sanitize_text_field( $_REQUEST['w'] ), // PropertyID
+					'p'        => sanitize_text_field( $_REQUEST['p'] ), // View ID
+					'siteurl'  => site_url(),
+					'neturl'   => network_admin_url(),
+				);
+			}
+
+
 
 			// Cache result
 			if ( false === $force_no_cache ) {

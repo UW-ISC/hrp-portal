@@ -759,6 +759,7 @@ function wpsc_delete_files( $dir, $delete = true ) {
 		wp_cache_debug( 'wpsc_delete_files: directory is blank' );
 		return false;
 	}
+	wp_cache_debug( 'wpsc_delete_files: deleting ' . $dir );
 
 	// only do this once, this function will be called many times
 	if ( $protected == '' ) {
@@ -778,24 +779,35 @@ function wpsc_delete_files( $dir, $delete = true ) {
 	$dir = trailingslashit( $dir );
 
 	if ( ! wpsc_is_in_cache_directory( $dir ) ) {
+		wp_cache_debug( 'wpsc_delete_files: directory is not in cache directory: ' . $dir );
 		return false;
 	}
 
-	if ( in_array( $dir, $protected ) )
+	if ( in_array( $dir, $protected ) ) {
+		wp_cache_debug( 'wpsc_delete_files: directory is protected ' . $dir );
 		return false;
+	}
 
 	if ( is_dir( $dir ) && $dh = @opendir( $dir ) ) {
 		while ( ( $file = readdir( $dh ) ) !== false ) {
+			wp_cache_debug( 'wpsc_delete_files: reading files: ' . $file );
 			if ( $file != '.' && $file != '..' && $file != '.htaccess' && is_file( $dir . $file ) )
-				if ( $delete )
+				if ( $delete ) {
+					wp_cache_debug( 'wpsc_delete_files: deleting ' . $dir . $file );
 					@unlink( $dir . $file );
-				else
+				} else {
+					wp_cache_debug( 'wpsc_delete_files: rebuild or delete ' . $dir . $file );
 					@wp_cache_rebuild_or_delete( $dir . $file );
+				}
 		}
 		closedir( $dh );
 
-		if ( $delete )
+		if ( $delete ) {
+			wp_cache_debug( 'wpsc_delete_files: remove directory ' . $dir );
 			@rmdir( $dir );
+		}
+	} else {
+		wp_cache_debug( 'wpsc_delete_files: could not open directory ' . $dir );
 	}
 	return true;
 }
@@ -1326,20 +1338,6 @@ function wp_cache_phase2() {
 		header( 'Vary: Accept-Encoding, Cookie' );
 	}
 
-	if ( wpsc_is_caching_user_disabled() ) {
-		wp_cache_debug( 'wp_cache_phase2: Caching disabled for known user! Exit.' );
-		define( 'WPSCSHUTDOWNMESSAGE', __( 'Caching disabled for known user. User logged in or cookie found.', 'wp-super-cache' ) );
-		add_action( 'wp_footer', 'wpsc_shutdown_message' );
-		return false;
-	}
-
-	if ( wp_cache_user_agent_is_rejected() ) {
-		define( 'WPSCSHUTDOWNMESSAGE', __( 'Caching disabled because user agent was rejected.', 'wp-super-cache' ) );
-		wp_cache_debug( 'wp_cache_phase2: No caching to do as user agent rejected.' );
-		add_action( 'wp_footer', 'wpsc_shutdown_message' );
-		return false;
-	}
-
 	ob_start( 'wp_cache_ob_callback' );
 	wp_cache_debug( 'Created output buffer', 4 );
 
@@ -1858,6 +1856,12 @@ function wp_cache_ob_callback( $buffer ) {
 		$cache_this_page = false;
 	} elseif ( empty( $wp_super_cache_query ) && !empty( $buffer ) && apply_filters( 'wpsc_only_cache_known_pages', 1 ) ) {
 		wp_cache_debug( 'wp_cache_ob_callback: wp_super_cache_query is empty. Not caching unknown page type. Return 0 to the wpsc_only_cache_known_pages filter to cache this page.' );
+		$cache_this_page = false;
+	} elseif ( wpsc_is_caching_user_disabled() ) {
+		wp_cache_debug( 'wp_cache_ob_callback: Caching disabled for known user. User logged in or cookie found.' );
+		$cache_this_page = false;
+	} elseif ( wp_cache_user_agent_is_rejected() ) {
+		wp_cache_debug( 'wp_cache_ob_callback: Caching disabled because user agent was rejected.' );
 		$cache_this_page = false;
 	}
 

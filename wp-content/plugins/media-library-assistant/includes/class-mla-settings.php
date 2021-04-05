@@ -1486,7 +1486,8 @@ class MLASettings {
 				$dismiss_button = '';
 			} else {
 				$messages_class = 'updated notice is-dismissible';
-				$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
+//				$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
+				$dismiss_button = ''; // /wp-admin/js/common.js function makeNoticesDismissible() since WP 4.4.0
 			}
 
 			$page_values['messages'] = MLAData::mla_parse_template( self::$page_template_array['messages'], array(

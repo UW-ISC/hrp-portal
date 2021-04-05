@@ -6,7 +6,7 @@ class Ga_Autoloader {
 	 * Registers clas loader.
 	 */
 	public static function register() {
-		spl_autoload_register( "Ga_Autoloader::loader" );
+		spl_autoload_register( 'Ga_Autoloader::loader' );
 	}
 
 	/**

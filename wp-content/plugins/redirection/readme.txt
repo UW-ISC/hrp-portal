@@ -2,10 +2,10 @@
 Contributors: johnny5
 Donate link: https://redirection.me/donation/
 Tags: redirect, htaccess, 301, 404, seo, permalink, apache, nginx, post, admin
-Requires at least: 4.9
-Tested up to: 5.3.2
-Stable tag: 4.6.2
-Requires PHP: 5.4
+Requires at least: 5.1
+Tested up to: 5.7
+Stable tag: trunk
+Requires PHP: 5.6
 License: GPLv3
 
 Manage 301 redirections, keep track of 404 errors, and improve your site, with no knowledge of Apache or Nginx needed.
@@ -20,7 +20,7 @@ It has been a WordPress plugin for over 10 years and has been recommended countl
 
 Full documentation can be found at [https://redirection.me](https://redirection.me)
 
-Redirection is compatible with PHP from 5.4 and upwards (including 7.2).
+Redirection is compatible with PHP from 5.6 and upwards (including 8.0).
 
 = Redirect manager =
 
@@ -53,11 +53,13 @@ Logs can be exported for external viewing, and can be searched and filtered for 
 
 Display geographic information about an IP address, as well as a full user agent information, to try and understand who the visitor is.
 
-You are able to disable or reduce IP collection to meet the legal requirements of your geographic region.
+You are able to disable or reduce IP collection to meet the legal requirements of your geographic region, and can change the amount of information captured from the bare minimum to HTTP headers.
+
+You can also log any redirect happening on your site, including those performed outside of Redirection.
 
 = Add HTTP headers =
 
-HTTP headers can be adder to redirects or your entire site that help reduce the impact of redirects or help increase security. You can also add your own custom headers.
+HTTP headers can be added to redirects or your entire site that help reduce the impact of redirects or help increase security. You can also add your own custom headers.
 
 = Track 404 errors =
 
@@ -68,6 +70,10 @@ Errors can be grouped to show where you should focus your attention, and can be 
 = Query parameter handling =
 
 You can match query parameters exactly, ignore them, and even pass them through to your target.
+
+= Migrate Permalinks =
+
+Changed your permalink structure? You can migrate old permalinks simply by entering the old permalink structure. Multiple migrations are supported.
 
 = Apache & Nginx support =
 
@@ -96,6 +102,11 @@ You can also import from the following plugins:
 - Safe Redirect Manager
 - Rank Math
 - WordPress old slug redirects
+- Quick Post/Pages redirects
+
+= Search Regex compatible =
+
+Redirection is compatible with [Search Regex](https://searchregex.com), allowing you to bulk update your redirects.
 
 = Wait, it's free? =
 
@@ -119,11 +130,11 @@ The plugin is simple to install:
 1. Unzip
 1. Upload `redirection` directory to your `/wp-content/plugins` directory
 1. Go to the plugin management page and enable the plugin
-1. Configure the options from the `Manage/Redirection` page
+1. Configure the options from the `Tools/Redirection` page
 
 You can find full details of installing a plugin on the [plugin installation page](https://redirection.me/support/installation/).
 
-Full documentation can be found on the [Redirection](https://redirection.me/support/) page.
+Full documentation can be found on the [Redirection](https://redirection.me/support/) site.
 
 == Screenshots ==
 
@@ -160,7 +171,76 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 = 4.0 =
 * Alters database to support case insensitivity, trailing slashes, and query params. Please backup your data
 
+= 4.7 =
+* Requires minimum PHP 5.6+. Do not upgrade if you are still using PHP < 5.6
+
+= 4.9 =
+* Alters database to support enhanced logging. Please backup your data
+
 == Changelog ==
+
+A x.1 version increase introduces new or updated features and can be considered to contain 'breaking' changes. A x.x.1 increase is purely a bug fix and introduces no new features, and can be considered as containing no breaking changes.
+
+= 5.0.1 - 26th Jan 2021 =
+* Fix incorrect warning when creating a regular expression with captured data
+* Fix JS error when upgrading a database with a broken REST API
+* Increase regular expression redirect limit
+* PHP8 support
+
+= 5.0 - 16th Jan 2021 =
+* Add caching support
+* Add support for migrated permalink structures
+* Add dynamic URL variables
+* Add fully automatic database upgrade option
+* Add a new version release information prompt
+* Improve performance when many redirects have the same path
+* Move bulk all action to a separate button after selecting all
+* Fix error in display with restricted capabilities
+* Avoid problems with 7G Firewall
+* Improve handling of invalid encoded characters
+
+= 4.9.2 - 30th October =
+* Fix warning with PHP 5.6
+* Improve display of long URLs
+
+= 4.9.1 - 26th October 2020 =
+* Restore missing time and referrer URL from log pages
+* Restore missing client information from debug reports
+* Fix order by count when grouping by URL
+* Check for duplicate columns in DB upgrade
+
+= 4.9 - 24th October 2020 =
+* Expand log information to capture HTTP headers, domain, HTTP code, and HTTP method
+* Allow non-Redirection redirects to be logged - allows tracking of all redirects on a site
+* Expand log and 404 pages with greatly improved filters
+* Bulk delete logs and 404s by selected filter
+* Logging is now optional per redirect rule
+* Fix random action on a site with non-root URL
+* Fix group and search being reset when searching
+* Fix canonical alias not using request server name
+
+= 4.8 - 23rd May 2020 =
+* Add importer for Quick Post/Page Redirects plugin
+* Add plugin imports to WP CLI
+* Fix install wizard using wrong relative API
+* Fix sub menu outputting invalid HTML
+
+= 4.7.2 - 8th May 2020 =
+* Fix PHP warning decoding an encoded question mark
+* Fix site adding an extra period in a domain name
+* Fix protocol appearing in .htaccess file server redirect
+
+= 4.7.1 - 14th March 2020 =
+* Fix HTTP header over-sanitizing the value
+* Fix inability to remove .htaccess location
+* Fix 404 group by 'delete all'
+* Fix import of empty 'old slugs'
+
+= 4.7 - 15th February 2020 =
+* Relocate entire site to another domain, with exceptions
+* Site aliases to map another site to current site
+* Canonical settings for www/no-www
+* Change content-type for API requests to help with mod_security
 
 = 4.6.2 - 6th January 2020 =
 * Fix 404 log export button
@@ -679,21 +759,13 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 * Fix order of redirects, thanks to Nicolas Hatier
 
 = 2.2.10 =
-* Fix XSS in referrers log
-
-= 2.2.9 =
-* Fix XSS in admin menu
+* Fix XSS in admin menu & referrers log
 * Update Russian translation, thanks to Alexey Pazdnikov
-
-= 2.2.8 and earlier
 * Add Romanian translation, thanks to Alina
 * Add Greek, thanks to Stefanos Kofopoulos
 * Better database compatibility
 * Remove warning from VaultPress
 * Add Turkish translation, thanks to Fatih Cevik
-* Fix search box
-* Fix 410 error code
-* Fix DB errors when MySQL doesn't auto-convert data types
 * Remove debug from htaccess module
 * Fix encoding of JS strings
 * Use fgetcsv for CSV importer - better handling
@@ -706,33 +778,17 @@ The plugin works in a similar manner to how WordPress handles permalinks and sho
 * Change to jQuery
 * Nonce protection
 * Disable category monitor in 2.7
-* Fix small issues in display with WP 2.7
-* Fix delete redirects
 * Refix log delete
-* Fix incorrect automatic redirection with static home pages
-* Support for wp-load.php
 * get_home_path seems not be available for some people
 * Update plugin.php to better handle odd directories
 * Correct DB install
-* Fix IIS problem
 * Install defaults when no existing redirection setup
 * Fix problem with custom post types auto-redirecting (click on 'groups' and then 'modified posts' and clear any entries for '/' from your list)
-* WP 3.0 compatibility
-* Fix deep slashes
 * Database optimization
 * Add patch to disable logs (thanks to Simon Wheatley!)
-* Pre WP2.8 compatibility fix
 * Fix for some users with problems deleting redirections
-* Fix some ajax
-* Fix module deletion
-* Log JS fixes
 * Fix group edit and log add entry
-* Use WP Ajax
-* WP2.8 compatibility
 * Disable category monitoring
 * Fix 'you do not permissions' error on some non-English sites
 * Fix category change 'quick edit'
-* Redirection loops
 * RSS feed token
-* Re-enable import feature
-* Fix log deletion

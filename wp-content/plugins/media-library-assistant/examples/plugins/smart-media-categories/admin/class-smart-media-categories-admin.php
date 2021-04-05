@@ -3,9 +3,9 @@
  * The Smart Media Categories (SMC) Plugin, Admin Mode.
  *
  * @package   Smart_Media_Categories_Admin
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 
@@ -23,7 +23,7 @@ SMC_Automatic_Support::initialize();
  * administrative-side of the WordPress site.
  *
  * @package Smart_Media_Categories_Admin
- * @author  David Lingren <dlingren@comcast.net>
+ * @author  David Lingren <david@davidlingren.com>
  */
 class Smart_Media_Categories_Admin {
 
@@ -622,7 +622,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 	 * @return	void	echoes HTML markup for the column content
 	 */
 	public function action_manage_posts_custom_column( $column_name, $post_id ) {
-//		global $wp, $wp_query, $wp_the_query;
+//		global $wp, $wp_query, $wp_the_query; // for error_log debug only
 		global $post;
 		static $smc_status = NULL;
 //error_log( __LINE__ . " Smart_Media_Categories_Admin::action_manage_posts_custom_column( {$column_name}, {$post_id} )", 0 );
