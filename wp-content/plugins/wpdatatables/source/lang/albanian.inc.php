@@ -9,6 +9,7 @@
    "sLoadingRecords": "Duke punuar...",
    "sProcessing":     "Duke procesuar...",
    "sSearch":         "Kërkoni:",
+   "sSearchPlaceholder": "Tabela e kërkimit",
    "sZeroRecords":    "Asnjë e dhënë nuk u gjet",
    "oPaginate": {
        "sFirst":    "E para",

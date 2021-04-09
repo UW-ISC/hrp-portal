@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrowanie spośród _MAX_ dostępnych pozycji)",
     "sInfoPostFix":  "",
     "sSearch":       "Szukaj:",
+    "sSearchPlaceholder": "Przeszukaj tabelę",
     "sUrl":          "",
     "oPaginate": {
     "sFirst":    "Pierwsza",

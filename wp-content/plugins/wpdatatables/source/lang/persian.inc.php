@@ -7,6 +7,7 @@
     "sInfoFiltered": "(فیلتر شده از مجموع _MAX_ مورد)",
     "sInfoPostFix":  "",
     "sSearch":       "جستجو:",
+    "sSearchPlaceholder": "جدول جستجو",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "ابتدا",

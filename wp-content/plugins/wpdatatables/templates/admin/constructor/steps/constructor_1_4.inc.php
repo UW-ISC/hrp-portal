@@ -7,7 +7,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
         <span class="wdt-alert-title f-600"><?php _e('Please choose the SQL data which will be used to create a table.', 'wpdatatables'); ?></span><br>
-        <span class="wdt-alert-subtitle"><?php _e('This constructor type will create a query to any SQL database database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your SQL database.', 'wpdatatables'); ?></span>
+        <span class="wdt-alert-subtitle"><?php _e('This constructor type will create a query to any SQL database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your SQL database.', 'wpdatatables'); ?></span>
     </div>
 
     <div class="row">
@@ -15,7 +15,7 @@
             <h4 class="c-title-color m-b-2">
                 <?php _e('Table name', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                   title="<?php _e('What is the header of the table that will be visible to the site visitors', 'wpdatatables'); ?>?"></i>
+                   title="<?php _e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
             </h4>
             <div class="form-group">
                 <div class="fg-line">

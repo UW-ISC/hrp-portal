@@ -8,7 +8,8 @@ var tableSettingsLinks = {
     'table-sorting-filtering-settings': '#table-settings-sorting-filtering',
     'editing-settings': '#table-settings-editing',
     'table-tools-settings': '#table-settings-tools',
-    'placeholders-settings': '#table-settings-placeholders'
+    'placeholders-settings': '#table-settings-placeholders',
+    'customize-table-settings': '#customize-table-settings'
 };
 
 var columnSettingsLinks = {
@@ -30,6 +31,7 @@ var settingsPageLinks = {
     'separate-connection': '#separate-connection',
     'color-and-font-settings': '#color-font-settings',
     'custom-js-and-css': '#custom-js-css',
+    'google-sheet-api-settings': '#google-sheet-api-settings',
     'wdt-activation': '#activation'
 };
 

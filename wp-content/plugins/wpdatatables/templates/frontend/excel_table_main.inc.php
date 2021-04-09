@@ -29,7 +29,7 @@
                                                           aria-controls="<?php echo $this->getId() ?>"></label>
 </div>
 
-<div id="<?php echo $this->getId() ?>" class="<?php echo $this->getCSSClasses() ?> wpExcelTable"
+<div id="<?php echo $this->getId() ?>" class="<?php echo $this->getCSSClasses() ?> wpExcelTable wpExcelTableID-<?php echo $this->getWpId(); ?>"
      data-described-by='<?php echo $this->getId() ?>_desc'
      data-wpdatatable_id="<?php echo $this->getWpId(); ?>">
 </div>

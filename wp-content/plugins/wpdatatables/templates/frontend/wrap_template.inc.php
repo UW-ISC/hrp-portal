@@ -4,6 +4,6 @@
 /** @var string $tableContent */
 /** @var WPDataTable $this */
 ?>
-<div class="wpdt-c">
+<div class="wpdt-c <?php echo 'wdt-skin-' . $this->getTableSkin()?>">
     <?php echo $tableContent; ?>
 </div>

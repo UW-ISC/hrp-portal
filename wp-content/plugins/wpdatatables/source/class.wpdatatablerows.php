@@ -322,7 +322,7 @@ class WPDataTableRows
      * @throws Exception
      */
     public static function loadWpDataTableRows($tableId){
-        $tableData = WDTConfigController::loadTableFromDB($tableId);
+        $tableData = WDTConfigController::loadTableFromDB($tableId, false);
         $tableData->content = json_decode($tableData->content);
         $tableData->simpleResponsive = json_decode($tableData->advanced_settings)->simpleResponsive;
         $tableData->simpleHeader = json_decode($tableData->advanced_settings)->simpleHeader;

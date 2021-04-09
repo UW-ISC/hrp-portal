@@ -45,9 +45,11 @@ class WPDataCharts_Elementor_Widget extends Widget_Base {
     protected function render() {
 
         $settings = $this->get_settings_for_display();
-        $chartShortcodeParams = 'wpdatachart id=' . $settings['wpdt-chart-id'];
+        $chartShortcodeParams = '[wpdatachart id=' . $settings['wpdt-chart-id'] . ']';
 
-        echo $settings['wpdt-chart-id'] != '' ? '[' . $chartShortcodeParams. ']' : self::wdt_create_chart_notice();
+        $chartShortcodeParams = apply_filters('wpdatatables_filter_elementor_chart_shortcode', $chartShortcodeParams);
+
+        echo $settings['wpdt-chart-id'] != '' ?  $chartShortcodeParams : self::wdt_create_chart_notice();
 
     }
 

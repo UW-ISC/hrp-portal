@@ -17,9 +17,11 @@
 
         <?php if(isset($tableData)) do_action('wpdt_add_small_column_block', $tableData);?>
 
-        <span class="pull-right wdt-column-block-icon" data-toggle="tooltip" title="<?php _e('Show/hide filters'); ?>"><i
+        <span class="pull-right wdt-column-block-icon formula-remove-option" data-toggle="tooltip" title="<?php _e('Enable/disable in global search'); ?>"><i
+                    class="wpdt-icon-search2 column-control wdt-toggle-global-search"></i></span>
+        <span class="pull-right wdt-column-block-icon formula-remove-option" data-toggle="tooltip" title="<?php _e('Show/hide filters'); ?>"><i
                     class="wpdt-icon-filter column-control wdt-toggle-show-filters"></i></span>
-        <span class="pull-right wdt-column-block-icon" data-toggle="tooltip" title="<?php _e('Show/hide sorting'); ?>"><i
+        <span class="pull-right wdt-column-block-icon formula-remove-option" data-toggle="tooltip" title="<?php _e('Show/hide sorting'); ?>"><i
                     class="wpdt-icon-sort-alpha-up column-control wdt-toggle-show-sorting"></i></span>
         <span class="pull-right wdt-column-block-icon" data-toggle="tooltip" title="<?php _e('Show/hide the column'); ?>"><i
                     class="wpdt-icon-eye-full column-control toggle-visibility"></i></span>

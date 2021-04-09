@@ -7,6 +7,7 @@
     "sInfoFiltered": "(φιλτραρισμένες από _MAX_ συνολικά εγγραφές)",
     "sInfoPostFix":  "",
     "sSearch":       "Αναζήτηση:",
+    "sSearchPlaceholder": "Πίνακας αναζήτησης",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Πρώτη",

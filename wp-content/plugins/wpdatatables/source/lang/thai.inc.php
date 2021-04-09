@@ -7,6 +7,7 @@
     "sInfoFiltered": "(กรองข้อมูล _MAX_ ทุกแถว)",
     "sInfoPostFix":  "",
     "sSearch":       "ค้นหา:",
+    "sSearchPlaceholder": "ตารางค้นหา",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "เิริ่มต้น",

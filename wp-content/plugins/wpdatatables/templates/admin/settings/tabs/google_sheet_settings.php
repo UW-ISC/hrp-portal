@@ -4,7 +4,7 @@
 $googleSettings = get_option('wdtGoogleSettings');
 ?>
 
-<div role="tabpanel" class="tab-pane" id="google_sheet_settings">
+<div role="tabpanel" class="tab-pane" id="google-sheet-api-settings">
     <?php if (!$googleSettings) { ?>
         <div class="row">
             <div class="col-sm-12">
@@ -15,10 +15,7 @@ $googleSettings = get_option('wdtGoogleSettings');
                                     class="wpdt-icon-times-full"></i></span></button>
                     <span class="wdt-alert-title f-600">
                        <?php _e('Detail instruction how to enable Google API\'s and create your service account you can find on this', 'wpdatatables'); ?>
-                <a href="#" target="_blank"><?php _e('link', 'wpdatatables'); ?></a>.
-
-                    </span>
-
+                        <a href="https://wpdatatables.com/documentation/connect-wordpress-tables-with-google-sheets-api/" target="_blank"><?php _e('link', 'wpdatatables'); ?></a>.
                     </span>
                 </div>
             </div>
@@ -54,7 +51,8 @@ $googleSettings = get_option('wdtGoogleSettings');
                         <ul class="m-l-20" style="list-style: disc;">
                         <li class="m-t-15 m-b-0"><?php _e('Now all your already created, published and shared Google Spreadsheets that you are using in wpDataTables will be automatically synchronised and when you update data in your Google Sheet it will be instantly shown in wpDataTables as well. No more cache issues.', 'wpdatatables'); ?></li>
                          <li class="m-t-15 m-b-0"><?php _e('If you need to show data from Private Sheets (not published on the web or share it with everyone), please copy your Google service account and then share it with those Private Google spreadsheets that you will use in wpDataTables. You can check out detail instruction how to do that on this', 'wpdatatables'); ?>
-                            <a href="https://wpdatatables.com/documentation/connect-wordpress-tables-with-google-sheets-api" target="_blank"><?php _e('link', 'wpdatatables'); ?></a>.
+                            <a href="https://wpdatatables.com/documentation/connect-wordpress-tables-with-google-sheets-api"
+                               target="_blank"><?php _e('link', 'wpdatatables'); ?></a>.
                         </li>
                         </ul>
                     </span>

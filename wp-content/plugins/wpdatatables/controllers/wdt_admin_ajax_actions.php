@@ -187,7 +187,7 @@ function wdtDuplicateTable()
     if ($tableData->table_type != 'simple') {
 
         // Create duplicate version of input table if checkbox is selected
-        if ($manualDuplicateInput) {
+        if ($manualDuplicateInput && $tableData->table_type == 'manual') {
 
             // Generating new input table name
             $cnt = 1;

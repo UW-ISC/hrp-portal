@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrirano od ukupno _MAX_ elemenata)",
     "sInfoPostFix":  "",
     "sSearch":       "Pretraga:",
+    "sSearchPlaceholder": "Pretraži tabelu",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Početna",

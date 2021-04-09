@@ -7,6 +7,7 @@
    "sInfoFiltered": "(disaring dari _MAX_ entri keseluruhan)",
    "sInfoPostFix":  "",
    "sSearch":       "Cari:",
+   "sSearchPlaceholder": "Tabel pencarian",
    "sUrl":          "",
    "oPaginate": {
        "sFirst":    "Awal",

@@ -10,7 +10,7 @@
  */
 var wdtHideTooltip = function () {
     jQuery('[data-toggle="tooltip"]').click(function () {
-        jQuery(this).tooltip('hide');
+        jQuery(this).wdtBootstrapTooltip('hide');
     });
 
     jQuery('[data-toggle="tooltip"]').mouseout(function (event) {
@@ -18,9 +18,15 @@ var wdtHideTooltip = function () {
         if (e != null && (e.parentNode == this || e == this)) {
             return;
         }
-        jQuery(this).tooltip('hide');
+        jQuery(this).wdtBootstrapTooltip('hide');
     });
 };
+
+/**
+  * Extend jQuery to use our custom function for tooltip
+  */
+jQuery.fn.wdtBootstrapTooltip = jQuery.fn.tooltip;
+/**
 
 /**
  * Extend jQuery to use AnimateCSS
@@ -224,6 +230,7 @@ jQuery.fn.extend({
             var type = $(this).attr('data-type');
             var input = $("input[name='" + fieldName + "']");
             var currentVal = parseInt(input.val());
+            var fontSizesArr = ['font-size','wdt-font-size','wdt-table-font-size'];
             if (!isNaN(currentVal)) {
                 if (type == 'minus') {
 
@@ -239,7 +246,12 @@ jQuery.fn.extend({
                     $('.wdt-button-minus').attr('disabled', false);
                 }
             } else {
-                input.val(0);
+                if (fontSizesArr.includes(fieldName)){
+                    input.val(parseInt(input.attr('min')));
+                } else {
+                    input.val(1);
+                }
+
             }
         });
         $(".input-number").on("change", function (e) {

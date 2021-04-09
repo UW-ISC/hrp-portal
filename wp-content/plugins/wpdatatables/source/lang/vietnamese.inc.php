@@ -7,6 +7,7 @@
     "sInfoFiltered": "(được lọc từ _MAX_ mục)",
     "sInfoPostFix":  "",
     "sSearch":       "Tìm:",
+    "sSearchPlaceholder": "Bảng tìm kiếm",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Đầu",

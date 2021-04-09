@@ -935,7 +935,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
     } else {
         select.selectpicker('refresh');
         // Hide search in selectbox if possibleValuesAjax is All
-        jQuery('.bs-searchbox').hide();
+        jQuery(th).find('.bs-searchbox').hide();
 
         // Filter the table if default value is set
         if (aoColumn.defaultValue && !serverSide) {
@@ -1091,7 +1091,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
     } else {
         select.selectpicker('refresh');
         // Hide search in multi-selectbox if possibleValuesAjax is All
-        jQuery('.bs-searchbox').hide();
+        jQuery(th).find('.bs-searchbox').hide();
 
         // Filter the table if default value is set
         if (aoColumn.defaultValue[0] && !serverSide) {
@@ -1219,10 +1219,12 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
     if (dialogRender) {
         var dlg = jQuery('#' + checkboxesDivId).wrap('<div class="wdt-checkbox-modal-wrap ' + checkboxesDivId + '" />').hide();
         var $modal = jQuery('#wdt-frontend-modal');
+        var tableDesc =  JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
         $modal.on('click', 'button.close', function (e) {
             $modal.fadeOut(300, function () {
                 jQuery(this).find('#' + checkboxesDivId).remove();
+                $modal.removeClass('wdt-skin-' + tableDesc.tableSkin);
             });
         });
 
@@ -1230,12 +1232,14 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             if (e.keyCode === 27) {
                 $modal.fadeOut(300, function () {
                     jQuery(this).find('#' + checkboxesDivId).remove();
+                    $modal.removeClass('wdt-skin-' + tableDesc.tableSkin);
                 });
             }
         });
 
         jQuery('#' + buttonId).on('click', function (e) {
             e.preventDefault();
+
             jQuery('#wdt-frontend-modal .modal-title').html(labelBtn);
             jQuery('#wdt-frontend-modal .modal-body').append(dlg.show());
             jQuery('#wdt-frontend-modal .modal-footer').html('<button class="btn btn-danger btn-icon-text" id="wdt-checkbox-filter-reset" href="#">Reset</button><button class="btn btn-success btn-icon-text" id="wdt-checkbox-filter-close" href="#"><i class="wpdt-icon-check-full"></i>OK</button>');
@@ -1250,6 +1254,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
                 }
             }
             $modal.attr('data-current-checkbox-dialog', dlg.attr('id'));
+            $modal.addClass('wdt-skin-' + tableDesc.tableSkin);
             $modal.modal('show');
         });
 

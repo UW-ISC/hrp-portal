@@ -7,11 +7,12 @@
     "sInfoFiltered": "(filtrert fra _MAX_ totalt antall linjer)",
     "sInfoPostFix":  "",
     "sSearch":       "S&oslash;k:",
+    "sSearchPlaceholder": "Søk i tabellen",
     "sUrl":          "",
-  "oPaginate": {
+    "oPaginate": {
         "sFirst":    "F&oslash;rste",
         "sPrevious": "Forrige",
         "sNext":     "Neste",
         "sLast":     "Siste"
-   }
+    }
 }

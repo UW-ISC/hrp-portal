@@ -56,8 +56,8 @@
                                    data-toggle="tab"><?php _e('Custom JS and CSS', 'wpdatatables'); ?></a>
                             </li>
                             <li class="google_sheet_settings-tab">
-                                <a href="#google_sheet_settings" aria-controls="google_sheet_settings" role="tab"
-                                   data-toggle="tab"><?php _e('Google Spreadsheet settings', 'wpdatatables'); ?></a>
+                                <a href="#google-sheet-api-settings" aria-controls="google_sheet_settings" role="tab"
+                                   data-toggle="tab"><?php _e('Google Spreadsheet API settings', 'wpdatatables'); ?></a>
                             </li>
                             <li class="wdt-activation-tab">
                                 <a href="#wdt-activation" aria-controls="wdt-activation" role="tab"

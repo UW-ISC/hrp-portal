@@ -7,6 +7,7 @@
     "sInfoFiltered": "(מסונן מסך _MAX_  רשומות)",
     "sInfoPostFix":  "",
     "sSearch":       "חפש:",
+    "sSearchPlaceholder": "טבלת חיפוש",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "ראשון",

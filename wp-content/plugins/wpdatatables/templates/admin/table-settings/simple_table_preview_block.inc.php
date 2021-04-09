@@ -1,5 +1,23 @@
 <?php defined('ABSPATH') or die('Access denied.');
-?>
+$showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
+    ?>
+    <div class="alert alert-warning alert-dismissible wdt-simple-table-alert" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">×</span>
+        </button>
+        <p><?php _e('When working with this table type please note that at the moment:', 'wpdatatables'); ?></p>
+        <ul style="list-style-type: disc;padding-inline-start: 40px;margin-top: 5px;">
+            <li> <?php _e('There is no data functionality like front-end editing, sorting, filtering, search, export or pagination in this table type.', 'wpdatatables'); ?></li>
+            <li> <?php _e('Creating charts from this table type is not yet possible.', 'wpdatatables'); ?></li>
+            <li> <?php _e('You can’t use foreign keys, placeholders or conditional formatting, but each cell can be formatted separately.', 'wpdatatables'); ?></li>
+            <li> <?php _e('Add-ons can’t be used with Simple tables.', 'wpdatatables'); ?></li>
+            <li> <?php _e('If you need those features, please consider creating tables with any other options from table wizard.', 'wpdatatables'); ?>
+            <li> <?php _e('To remove this notice, please click on X in top right corner.', 'wpdatatables'); ?>
+            </li>
+        </ul>
+        <?php _e('Depends of users requests, we will add it in our road map and implement it based on priority. Thank you for understanding.', 'wpdatatables'); ?>
+    </div>
+<?php } ?>
 
 <div class="card column-settings ">
 
