@@ -9,6 +9,7 @@
   "sLoadingRecords": "Laddar...",
   "sProcessing": "Bearbetar...",
   "sSearch": "Sök:",
+  "sSearchPlaceholder": "Sök tabell",
   "sZeroRecords": "Hittade inga matchande resultat",
   "oPaginate": {
     "sFirst": "Första",

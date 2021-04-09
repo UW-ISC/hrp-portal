@@ -22,7 +22,7 @@ if ($this->getFilteringForm()) {
     <input type="hidden" id="<?php echo $this->getId() ?>_desc" value='<?php echo $this->getJsonDescription(); ?>'/>
 
     <table id="<?php echo $this->getId() ?>"
-           class="<?php if ($this->isScrollable()) { ?>scroll<?php } ?> <?php if ($this->isResponsive()) { ?>responsive<?php } ?> display nowrap <?php echo $this->getCssClassesArr() ?> <?php echo apply_filters('wdt_add_class_to_table_html_element', $this->getCSSClasses(), $this->getWpId()) ?> wpDataTable"
+           class="<?php if ($this->isScrollable()) { ?>scroll<?php } ?> <?php if ($this->isResponsive()) { ?>responsive<?php } ?> display nowrap <?php echo $this->getCssClassesArr() ?> <?php echo apply_filters('wdt_add_class_to_table_html_element', $this->getCSSClasses(), $this->getWpId()) ?> wpDataTable wpDataTableID-<?php echo $this->getWpId() ?>"
            style="<?php echo $this->getCSSStyle() ?>"
            data-described-by='<?php echo $this->getId() ?>_desc'
            data-wpdatatable_id="<?php echo $this->getWpId(); ?>

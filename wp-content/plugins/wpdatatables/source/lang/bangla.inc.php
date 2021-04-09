@@ -7,6 +7,7 @@
     "sInfoFiltered": "(মোট _MAX_ টা এন্ট্রির মধ্যে থেকে বাছাইকৃত)",
     "sInfoPostFix":  "",
     "sSearch":       "অনুসন্ধান:",
+    "sSearchPlaceholder": "সারণী সন্ধান করুন",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "প্রথমটা",

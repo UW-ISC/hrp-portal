@@ -1,6 +1,5 @@
 (function($){
-    $(window).on('load', function(){
-
+    $(window).on('load',function(){
         var wdtGoogleCharts = [];
 
         if (typeof wpDataCharts !== 'undefined') {
@@ -78,7 +77,13 @@
                     wdtGoogleCharts[i].render();
                 }
             }
-            google.charts.setOnLoadCallback( wdtGoogleRenderCallback );
+            if (typeof google.charts.setOnLoadCallback !== "undefined"){
+                google.charts.setOnLoadCallback(wdtGoogleRenderCallback);
+            } else {
+                for (var i in wdtGoogleCharts) {
+                    wdtGoogleCharts[i].render();
+                }
+            }
         }
 
     })

@@ -7,6 +7,7 @@
     "sInfoFiltered": "(由 _MAX_ 项结果过滤)",
     "sInfoPostFix":  "",
     "sSearch":       "搜索:",
+    "sSearchPlaceholder": "搜索表",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "首页",

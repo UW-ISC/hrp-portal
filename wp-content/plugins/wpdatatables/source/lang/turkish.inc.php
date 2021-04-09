@@ -7,6 +7,7 @@
     "sInfoFiltered": "( _MAX_ Kayıt İçerisinden Bulunan)",
     "sInfoPostFix":  "",
     "sSearch":       "Bul:",
+    "sSearchPlaceholder": "Arama tablosu",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "İlk",

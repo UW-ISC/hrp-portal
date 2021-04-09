@@ -94,6 +94,7 @@ class WPDataTable_Google_Sheet
         $spreadsheetID = WDTTools::getGoogleSpreadsheetID($spreadsheetsURL);
         $sheetID = WDTTools::getGoogleWorksheetsID($spreadsheetsURL);
         if ($credentials && $token && time() > $token['expires_in']) {
+            $credentials = $this->convertPrivateKeyFormat($credentials);
             $newToken = $this->getToken($credentials);
             if ($newToken[0]) {
                 $newToken[1]['expires_in'] = time() + $newToken[1]['expires_in'];
@@ -115,21 +116,39 @@ class WPDataTable_Google_Sheet
                         $worksheetsName = $sheet['properties']['title'];
                     }
                 }
-                $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . $worksheetsName . '?access_token=' . $token['access_token']);
+                $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . urlencode($worksheetsName) . '?access_token=' . $token['access_token']);
 
                 if (!is_wp_error($googleSheetDataRequest) && isset($googleSheetDataRequest['response']['code']) && $googleSheetDataRequest['response']['code'] == 200) {
                     $googleSheetData = json_decode($googleSheetDataRequest['body'], TRUE);
                     return WDTTools::gsArrayToWDTArray($googleSheetData['values']);
                 } else {
-                    $errorMsg = isset($googleSheetDataRequest['response']['message']) ? json_encode($googleSheetDataRequest['response']['message']) : "Google sheet data is not sent";
+                    if (is_wp_error($googleSheetDataRequest)){
+                        $errorMsg = $googleSheetDataRequest->get_error_message();
+                    } else {
+                        $errorMsg = isset($googleSheetDataRequest['response']) && isset($googleSheetDataRequest['response']['message']) ? json_encode($googleSheetDataRequest['response']['message']) : "Google sheet meta data is not sent";
+                    }
                     throw new WDTException($errorMsg);
                 }
             } else {
-                $errorMsg = isset($requestGoogleSheetMetaData['response']['message']) ? json_encode($requestGoogleSheetMetaData['response']['message']) : "Google sheet meta data is not sent";
+                if (is_wp_error($requestGoogleSheetMetaData)){
+                    $errorMsg = $requestGoogleSheetMetaData->get_error_message();
+                } else {
+                    $errorMsg = isset($requestGoogleSheetMetaData['response']) && isset($requestGoogleSheetMetaData['response']['message']) ? json_encode($requestGoogleSheetMetaData['response']['message']) : "Google sheet meta data is not sent";
+                }
                 throw new WDTException($errorMsg);
             }
         } else {
             throw new WDTException('Token is not valid!');
         }
+    }
+
+    private function convertPrivateKeyFormat($credentials) {
+        $removeBegin = str_replace('-----BEGIN PRIVATE KEY-----','', $credentials['private_key']);
+        $removeEnd = str_replace('-----END PRIVATE KEY-----','', $removeBegin);
+        if (strrpos($removeEnd,' ') != false){
+            $replaceSpaces = str_replace(' ',PHP_EOL, $removeEnd);
+            $credentials['private_key'] = '-----BEGIN PRIVATE KEY-----' .  $replaceSpaces  . '-----END PRIVATE KEY-----' . PHP_EOL;
+        }
+        return $credentials;
     }
 }

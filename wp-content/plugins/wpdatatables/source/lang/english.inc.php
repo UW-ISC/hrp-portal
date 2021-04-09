@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtered from _MAX_ total entries)",
     "sInfoPostFix":  "",
     "sSearch":       "Search:",
+    "sSearchPlaceholder": "Search table",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "First",

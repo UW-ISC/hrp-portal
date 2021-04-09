@@ -7,6 +7,7 @@
     "sInfoFiltered": "(_MAX_ összes rekord közül szűrve)",
     "sInfoPostFix":  "",
     "sSearch":       "Keresés:",
+    "sSearchPlaceholder": "Keresési táblázat",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Első",

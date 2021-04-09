@@ -8,7 +8,7 @@
                 <h4 class="c-title-color m-b-2">
                     <?php _e('Table name', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('What is the header of the table that will be visible to the site visitors', 'wpdatatables'); ?>?"></i>
+                       title="<?php _e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line">
@@ -24,7 +24,7 @@
                 <h4 class="c-title-color m-b-2">
                     <?php _e('Number of columns', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('What is the header of the table that will be visible to the site visitors', 'wpdatatables'); ?>?"></i>
+                       title="<?php _e('What is the number columns that you need?', 'wpdatatables'); ?>?"></i>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line wdt-custom-number-input">

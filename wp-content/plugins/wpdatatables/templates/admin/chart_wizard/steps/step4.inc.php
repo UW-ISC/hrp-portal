@@ -359,7 +359,7 @@
                                             <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="font-size">
                                                 <i class="wpdt-icon-minus"></i>
                                             </button>
-                                            <input type="number" name="font-size" value="" min="0" class="form-control input-sm input-number"
+                                            <input type="number" name="font-size" value="" min="8" class="form-control input-sm input-number"
                                                    id="font-size">
                                             <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="font-size">
                                                 <i class="wpdt-icon-plus-full"></i>
@@ -447,7 +447,7 @@
                             </h4>
                             <div class="toggle-switch p-b-16" data-ts-color="blue">
                                 <input id="show-grid" type="checkbox" checked>
-                                <label for="show-grid"><?php _e('Do you want to show grid on the chart', 'wpdatatables'); ?></label>
+                                <label for="show-grid"><?php _e('Do you want to show grid on the chart?', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                         <div class="highcharts">
@@ -641,7 +641,7 @@
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Chart title', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('Do you want to show the chart title on the page', 'wpdatatables'); ?>"></i>
+                                   title="<?php _e('Do you want to show the chart title on the page?', 'wpdatatables'); ?>"></i>
                             </h4>
                             <div class="toggle-switch p-b-16" data-ts-color="blue">
                                 <input id="show-chart-title" type="checkbox" checked>

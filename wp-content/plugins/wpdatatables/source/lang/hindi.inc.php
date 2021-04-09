@@ -7,6 +7,7 @@
     "sInfoFiltered": "(_MAX_ कुल प्रविष्टियों में से छठा हुआ)",
     "sInfoPostFix":  "",
     "sSearch":       "खोजें:",
+    "sSearchPlaceholder": "खोज तालिका",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "प्रथम",

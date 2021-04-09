@@ -7,6 +7,7 @@
     "sInfoFiltered": "(suodatettu _MAX_ tuloksen joukosta)",
     "sInfoPostFix":  "",
     "sSearch":       "Etsi:",
+    "sSearchPlaceholder": "Hakutaulukko",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Ensimmäinen",

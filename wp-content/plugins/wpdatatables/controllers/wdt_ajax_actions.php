@@ -28,9 +28,11 @@ function wdtGetAjaxData() {
     $columnTypes = array();
     $decimalPlaces = array();
     $exactFiltering = array();
+    $globalSearchColumn = array();
     $foreignKeyRule = array();
     $idColumn = '';
     $linkTargetAttribute = array();
+    $linkNoFollowAttribute = array();
     $linkButtonAttribute = array();
     $linkButtonLabel = array();
     $linkButtonClass = array();
@@ -112,7 +114,9 @@ function wdtGetAjaxData() {
 
         $decimalPlaces[$column->orig_header] = isset($advancedSettings->decimalPlaces) ? $advancedSettings->decimalPlaces : null;
         $exactFiltering[$column->orig_header] = isset($advancedSettings->exactFiltering) ? $advancedSettings->exactFiltering : null;
+        $globalSearchColumn[$column->orig_header] = isset($advancedSettings->globalSearchColumn) ? $advancedSettings->globalSearchColumn : null;
         $linkTargetAttribute[$column->orig_header] = isset($advancedSettings->linkTargetAttribute) ? $advancedSettings->linkTargetAttribute : null;
+        $linkNoFollowAttribute[$column->orig_header] = isset($advancedSettings->linkNoFollowAttribute) ? $advancedSettings->linkNoFollowAttribute : null;
         $linkButtonAttribute[$column->orig_header] = isset($advancedSettings->linkButtonAttribute) ? $advancedSettings->linkButtonAttribute : null;
         $linkButtonLabel[$column->orig_header] = isset($advancedSettings->linkButtonLabel) ? $advancedSettings->linkButtonLabel : null;
         $linkButtonClass[$column->orig_header] = isset($advancedSettings->linkButtonClass) ? $advancedSettings->linkButtonClass : null;
@@ -186,11 +190,13 @@ function wdtGetAjaxData() {
         'data_types'          => $columnTypes,
         'decimalPlaces'       => $decimalPlaces,
         'exactFiltering'      => $exactFiltering,
+        'globalSearchColumn'  => $globalSearchColumn,
         'filterTypes'         => $columnFilterTypes,
         'foreignKeyRule'      => $foreignKeyRule,
         'idColumn'            => $idColumn,
         'input_types'         => $columnEditorTypes,
         'linkTargetAttribute' => $linkTargetAttribute,
+        'linkNoFollowAttribute' => $linkNoFollowAttribute,
         'linkButtonAttribute' => $linkButtonAttribute,
         'linkButtonLabel'     => $linkButtonLabel,
         'linkButtonClass'     => $linkButtonClass,
@@ -242,6 +248,9 @@ function wdtSaveTableFrontend() {
     $returnResult = array('success' => '', 'error' => '', 'is_new' => false);
 
     $tableId = (int)$formData['table_id'];
+
+    do_action('wpdatatables_before_frontend_edit_row', $formData, $returnResult, $tableId);
+
     unset($formData['table_id'], $formData['nonce']);
 
     $formData = apply_filters('wpdatatables_filter_frontend_formdata', $formData, $tableId);
@@ -260,6 +269,12 @@ function wdtSaveTableFrontend() {
 
     if ($wp_version < 4.4) {
         $nullValue = (!$tableData->connection) ? WDTTools::wrapQuotes('NULL', $tableData->connection) : "NULL";
+    }
+
+    if ($tableData->edit_only_own_rows) {
+        $action = 'save';
+        // Check if current user can update own rows not others
+        WDTTools::checkCurrentUsersActionsPermissions($tableData, $mySqlTableName, $columnsData, $formData, $action);
     }
 
     foreach ($columnsData as $column) {
@@ -291,7 +306,7 @@ function wdtSaveTableFrontend() {
                 // Sanitize data
                 $formData[$column->orig_header] = strip_tags(
                     $formData[$column->orig_header],
-                    '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><button>'
+                    '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><pre><button>'
                 );
 
                 // Formatting for DB based on column type
@@ -336,14 +351,14 @@ function wdtSaveTableFrontend() {
                         }
                         $value = WDTTools::wrapQuotes((float)$formData[$column->orig_header], $tableData->connection);
                         if ($formData[$column->orig_header] === '') {
-                            $value = (!$tableData->connection) ? NULL : "NULL";
+                            $value = $nullValue;
                         }
                         $formData[$column->orig_header] = $value;
                         break;
                     case 'int':
                         $value = WDTTools::wrapQuotes((int)$formData[$column->orig_header], $tableData->connection);
                         if ($formData[$column->orig_header] === '') {
-                            $value = (!$tableData->connection) ? NULL : "NULL";
+                            $value = $nullValue;
                         }
                         $formData[$column->orig_header] = $value;
                         break;
@@ -354,7 +369,12 @@ function wdtSaveTableFrontend() {
                         if ($column->input_type === 'textarea') {
                             $formData[$column->orig_header] = str_replace("\n", '<br/>', $formData[$column->orig_header]);
                         }
-                        $formData[$column->orig_header] = WDTTools::prepareStringCell($formData[$column->orig_header], $tableData->connection);
+                        if ($formData[$column->orig_header] === '') {
+                            $value = $nullValue;
+                        }else{
+                            $value = WDTTools::prepareStringCell($formData[$column->orig_header], $tableData->connection);
+                        }
+                        $formData[$column->orig_header] = $value;
                         break;
                     case 'link':
                         $formData[$column->orig_header] = WDTTools::prepareStringCell($formData[$column->orig_header], $tableData->connection);
@@ -566,7 +586,7 @@ function wdtSaveTableCellsFrontend() {
                     if (in_array($allColumnsTypes[$columnName], array('string', 'email', 'link', 'image'))) {
                         $cellData[$columnName] = strip_tags(
                             $cellData[$columnName],
-                            '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><button>'
+                            '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><pre><button>'
                         );
                         $cellData[$columnName] = WDTTools::prepareStringCell($cellData[$columnName], $tableData->connection);
                     }
@@ -748,24 +768,48 @@ function wdtDeleteTableRow() {
     $idKey = sanitize_text_field($_POST['id_key']);
     $idVal = (int)$_POST['id_val'];
 
+    $returnResult = array('success' => '', 'error' => '');
+
     $tableData = WDTConfigController::loadTableFromDB($tableId);
-    $mySqlTableName = $tableData->mysql_table_name;
+    $mySqlTableName = WDTTools::applyPlaceholders($tableData->mysql_table_name);
+    $columnsData = WDTConfigController::loadColumnsFromDB($tableId);
 
     // If current user cannot edit - do nothing
     if (!wdtCurrentUserCanEdit($tableData->editor_roles, $tableId)) {
         exit();
     }
 
+    if ($tableData->edit_only_own_rows) {
+        $action = 'delete';
+        // Check if current user can  delete own rows
+        WDTTools::checkCurrentUsersActionsPermissions($tableData, $mySqlTableName, $columnsData, $idVal, $action);
+    }
+
     do_action('wpdatatables_before_delete_row', $idVal, $tableId, $idKey);
 
     // If the plugin is using WP DB
     if (!(Connection::isSeparate($tableData->connection))) {
-        $wpdb->delete($mySqlTableName, array($idKey => $idVal));
+        $res = $wpdb->delete($mySqlTableName, array($idKey => $idVal));
+        if (!$res){
+            if (!empty($wpdb->last_error)) {
+                $returnResult['error'] = __('There was an error trying to delete the row! Error: ', 'wpdatatables') . $wpdb->last_error;
+            } else {
+                $returnResult['error'] = __('There was an error in your database when you are trying to delete the row! ', 'wpdatatables') ;
+            }
+        } else {
+            $returnResult['success'] = true;
+        }
     } else {
         $sql = Connection::create($tableData->connection);
         $query = "DELETE FROM " . $mySqlTableName . " WHERE " . $idKey . "='" . $idVal . "'";
         $sql->doQuery($query);
+        if ($sql->getLastError() !== '') {
+            $returnResult['error'] = __('There was an error trying to delete the row! Error: ', 'wpdatatables') . $sql->getLastError();
+        } else {
+            $returnResult['success'] = true;
+        }
     }
+    echo json_encode($returnResult);
 
     exit();
 }

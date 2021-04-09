@@ -7948,4 +7948,3 @@ class Xls extends BaseReader
         return $value;
     }
 }
-

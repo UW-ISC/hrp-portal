@@ -16,6 +16,15 @@
          * Init wpdtEditor (instance of Handsontable)
          */
         if (container.length) {
+
+            var perfEntries = performance.getEntriesByType("navigation");
+
+            // Reload page with simple table editor if is coming from some
+            // page after back button in browser
+            if (perfEntries[0].type === "back_forward") {
+                location.reload(true);
+            }
+
             var wpdtEditor = new Handsontable(container[0], {
                 startRows: rowNumber,
                 startCols: colNumber,
@@ -249,7 +258,7 @@
                 type: 'POST',
                 data: {
                     action: 'wpdatatables_get_handsontable_data',
-                    tableID: wpdatatable_config.id,
+                    tableID: wpdatatable_config.id != null ? wpdatatable_config.id : $('#wpdt-table-editor').data('wpdt-id'),
                     wdtNonce: $('#wdtNonce').val()
                 },
                 success: function (result) {
@@ -1217,6 +1226,7 @@
             wp.media.editor.send.attachment = function (props, attachment) {
                 window.wpActiveEditor = null;
                 wpdtEditor.setDataAtCell(highlightRow, highlightCol, adoptToHTML(attachment, props));
+                $('.wdt-save-data').click();
             };
             if (typeof wp !== 'undefined' && wp.media && wp.media.editor)
                 wp.media.editor.open();
@@ -1297,6 +1307,7 @@
                 $('#wpdt-link-url').val(linkData.data('link-url'));
                 $('#wpdt-link-text').val(linkData.data('link-text'));
                 $("#wpdt-link-target-attribute").prop("checked", linkData.data('link-target') === true);
+                $("#wpdt-link-nofollow-attribute").prop("checked", linkData.data('link-nofollow') === true);
                 $("#wpdt-link-button-attribute").prop("checked", linkData.data('link-btn-status') === true);
                 if (linkData.data('link-btn-status') === true) {
                     $('div.wpdt-link-button-class-block').show();
@@ -1309,6 +1320,7 @@
                 $('#wpdt-link-url').val('');
                 $('#wpdt-link-text').val('');
                 $("#wpdt-link-target-attribute").prop("checked", false);
+                $("#wpdt-link-nofollow-attribute").prop("checked", false);
                 $("#wpdt-link-button-attribute").prop("checked", false);
                 $('div.wpdt-link-button-text-block').hide();
                 $('div.wpdt-link-button-class-block').hide();
@@ -1326,11 +1338,13 @@
                     linkText = $('#wpdt-link-text'),
                     linkTextValue = linkText.val(),
                     linkTarget = $("#wpdt-link-target-attribute").is(":checked") || 0,
+                    linkNoFollow = $("#wpdt-link-nofollow-attribute").is(":checked") || 0,
                     linkButtonStatus = $("#wpdt-link-button-attribute").is(":checked") || 0,
                     buttonClass = $("#wpdt-button-class").val(),
                     pattern = new RegExp('^(https?)://');
 
                 targetAttr = linkTarget ? "_blank" : "_self";
+                noFollowAttr = linkNoFollow ? 'rel="nofollow"' : '';
 
                 if (linkUrlValue == '') {
                     linkUrl.closest('.col-sm-12').siblings('.error-msg').show();
@@ -1351,14 +1365,15 @@
                 dataAttr += ' data-link-url="' + linkUrl + '"';
                 dataAttr += ' data-link-text="' + linkTextValue + '"';
                 dataAttr += ' data-link-target="' + linkTarget + '"';
+                dataAttr += ' data-link-nofollow="' + linkNoFollow + '"';
                 dataAttr += ' data-link-btn-status="' + linkButtonStatus + '"';
                 dataAttr += ' data-link-btn-class="' + buttonClass + '"';
                 dataAttr += ' data-link-content="wpdt-link-content"';
 
                 if (!linkButtonStatus) {
-                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" target="' + targetAttr + '"' + dataAttr + '>' + linkTextValue + '</a>';
+                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + noFollowAttr + ' target="' + targetAttr + '"' + dataAttr + '>' + linkTextValue + '</a>';
                 } else {
-                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" target="' + targetAttr + '" ' + dataAttr + '><button class="' + buttonClass + '">' + linkTextValue + '</button></a>';
+                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + noFollowAttr + ' target="' + targetAttr + '" ' + dataAttr + '><button class="' + buttonClass + '">' + linkTextValue + '</button></a>';
                 }
 
                 wpdtEditor.setDataAtCell(highlightRow, highlightCol, formdata);
@@ -1856,6 +1871,27 @@
                 $('.wdt-save-data').click()
             }, 1000);
         });
+
+        /**
+         * Remove Simple Table alert message
+         */
+        $(document).on('click', '.wdt-simple-table-alert button', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: ajaxurl,
+                method: "POST",
+                data: {
+                    'action': 'wdtHideSimpleTableAlert'
+                },
+                dataType: "json",
+                async: !0,
+                success: function (e) {
+                    if (e == "success") {
+                        $('.wdt-simple-table-alert').slideUp('fast');
+                    }
+                }
+            });
+        })
     });
 
 })(jQuery);

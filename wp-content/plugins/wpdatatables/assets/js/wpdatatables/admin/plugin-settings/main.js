@@ -368,6 +368,13 @@
         });
 
         /**
+         * Switch tabs in plugin settings
+         */
+        $('.wdt-datatables-admin-wrap .plugin-settings .tab-nav:not(.mysql-serverside-settings-block) a').click(function (e) {
+            $(this).tab('show');
+        });
+
+        /**
          * Save settings on Apply button
          */
         $(document).on('click', 'button.wdt-apply', function (e) {
@@ -390,7 +397,7 @@
         });
 
         /**
-         * Save settings on Apply button
+         * Save Google settings on Apply button
          */
         $(document).on('click', '#wdt-save-google-settings', function (e) {
             var credentials =  $('#wdt-google-sheet-settings').val();
@@ -421,6 +428,16 @@
         $('#wp-my-sql-add').click(function () {
             addNewConnection();
         });
+
+        /**
+         * Add ace editor on Global custom CSS
+         */
+        createAceEditor('wdt-custom-css');
+
+        /**
+         * Add ace editor on Global custom JS
+         */
+        createAceEditor('wdt-custom-js');
 
         /**
          * Change connection default status

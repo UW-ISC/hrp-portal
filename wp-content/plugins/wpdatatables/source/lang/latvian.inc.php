@@ -7,6 +7,7 @@
     "sInfoFiltered": "(atlasīts no pavisam _MAX_ ierakstiem)",
     "sInfoPostFix":  "",
     "sSearch":       "Meklēt:",
+    "sSearchPlaceholder": "Meklēšanas tabula",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Pirmā",

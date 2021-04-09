@@ -13,6 +13,8 @@
             wdtApplyColorPicker(this)
         });
         jQuery(document).on('focus', '.wdt-add-picker', function (e) {
+            e.preventDefault()
+            e.stopImmediatePropagation()
             wdtApplyColorPicker(this)
         })
     });

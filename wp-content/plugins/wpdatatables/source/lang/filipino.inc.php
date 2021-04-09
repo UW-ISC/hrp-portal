@@ -7,6 +7,7 @@
     "sInfoFiltered": "(na-filter mula _MAX_ kabuuang entries)",
     "sInfoPostFix":  "",
     "sSearch":       "Paghahanap:",
+    "sSearchPlaceholder": "Talaan ng paghahanap",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Unang",
