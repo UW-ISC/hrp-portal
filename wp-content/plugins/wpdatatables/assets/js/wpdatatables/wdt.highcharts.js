@@ -244,7 +244,7 @@ var wpDataTablesHighchart = function(){
                 case 'highcharts_pie_with_gradient_chart':
                     this.options.chart.type = 'pie';
                     // Radialize the colors
-                    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+                    Highcharts.getOptions().colors = Highcharts.getOptions().colors.map( function (color) {
                         return {
                             radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
                             stops: [

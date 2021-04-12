@@ -7,6 +7,7 @@
     "sInfoFiltered": "（全 _MAX_ 件より抽出）",
     "sInfoPostFix":  "",
     "sSearch":       "検索:",
+    "sSearchPlaceholder": "T検索テーブル",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "先頭",

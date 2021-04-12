@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrováno z celkem _MAX_ záznamů)",
     "sInfoPostFix":  "",
     "sSearch":       "Hledat:",
+    "sSearchPlaceholder": "Vyhledávací tabulka",
     "sUrl":          "",
     "oPaginate": {
        "sFirst":    "První",

@@ -1076,6 +1076,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c button#wdt-constructor-browse-button,
 .wpdt-c button.wdt-cancel-column-settings,
 .wpdt-c button.wdt-backend-close,
+.wpdt-c button.wdt-reset-customize-options,
 .wpdt-c button.wdt-backend-chart-close,
 .wpdt-c button.wdt-foreign-key-close,
 .wpdt-c button#wdt-foreign-key-open,
@@ -1122,6 +1123,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c #wdt-possible-values-merge-list-modal .btn-danger,
 .wpdt-c #reset-color-settings,
 .wpdt-c button.wdt-backend-close,
+.wpdt-c button.wdt-reset-customize-options,
 .wpdt-c button.wdt-backend-chart-close {
     background-color: #ffffff!important;
     color: #253858 !important;
@@ -1140,6 +1142,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c #wdt-possible-values-merge-list-modal .btn-danger:hover,
 .wpdt-c #reset-color-settings:hover,
 .wpdt-c button.wdt-backend-close:hover,
+.wpdt-c button.wdt-reset-customize-options:hover,
 .wpdt-c button.wdt-backend-chart-close:hover {
     background: linear-gradient(0deg, rgba(0, 0, 0, 0.03), rgba(0, 0, 0, 0.03)), #FFFFFF;
     border: 1px solid #DFE1E6;

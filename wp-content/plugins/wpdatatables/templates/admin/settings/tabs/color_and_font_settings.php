@@ -54,7 +54,7 @@
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="text" name="wdt-font-size" min="1" value="" class="form-control input-sm input-number" data-name="wdtFontSize"
+                                                <input type="text" name="wdt-font-size" min="8" value="" class="form-control input-sm input-number" data-name="wdtFontSize"
                                                        id="wdt-font-size">
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-plus-full"></i>
@@ -687,7 +687,7 @@
                                     <div class="fg-line dropdown">
                                         <div id="cp"
                                              class="input-group wdt-color-picker">
-                                            <input type="text" id="wdt-pagination--color"
+                                            <input type="text" id="wdt-pagination-color"
                                                    data-name="wdtPaginationColor" class="form-control cp-value wdt-add-picker"
                                                    value=""/>
                                             <span class="input-group-addon wpcolorpicker-icon"><i></i></span>

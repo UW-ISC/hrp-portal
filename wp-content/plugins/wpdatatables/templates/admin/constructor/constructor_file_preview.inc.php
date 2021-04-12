@@ -56,7 +56,6 @@
                             <div class="fg-line">
                                 <div class="select">
                                     <select class="selectpicker wdt-constructor-date-input-format">
-                                        <option value=""></option>
                                         <option value="d/m/Y"> 15/07/2005 (d/m/Y)</option>
                                         <option value="m/d/Y"> 07/15/2005 (m/d/Y)</option>
                                         <option value="Y/m/d"> 2005/15/07 (Y/m/d)</option>
@@ -68,6 +67,7 @@
                                         <option value="Y-m-d"> 2005-07-15 (Y-m-d)</option>
                                         <option value="d.m.y"> 15.07.05 (d.m.y)</option>
                                         <option value="m.d.y"> 07.15.05 (m.d.y)</option>
+                                        <option value="d.m">15.07 (d.m)</option>
                                         <option value="d-m-y"> 15-07-05 (d-m-y)</option>
                                         <option value="m-d-y"> 07-15-05 (m-d-y)</option>
                                         <option value="d M Y"> 15 July 2005 (d Mon Y)</option>

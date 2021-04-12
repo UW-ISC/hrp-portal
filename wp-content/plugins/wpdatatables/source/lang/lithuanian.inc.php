@@ -7,6 +7,7 @@
     "sInfoFiltered": "(atrinkta iš _MAX_ įrašų)",
     "sInfoPostFix":  "",
     "sSearch":       "Ieškoti:",
+    "sSearchPlaceholder": "Paieškos lentelė",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Pirmas",

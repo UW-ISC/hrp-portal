@@ -128,7 +128,16 @@ function wdtActivationCreateTables() {
         update_option('wdtLeftOffset', '0');
     }
     if (!get_option('wdtBaseSkin')) {
-        update_option('wdtBaseSkin', 'skin1');
+        update_option('wdtBaseSkin', 'light');
+    }
+    if (get_option('wdtBaseSkin') && get_option('wdtBaseSkin') == 'skin0') {
+        update_option('wdtBaseSkin', 'material');
+    }
+    if (get_option('wdtBaseSkin') && get_option('wdtBaseSkin') == 'skin1') {
+        update_option('wdtBaseSkin', 'light');
+    }
+    if (get_option('wdtBaseSkin') && get_option('wdtBaseSkin') == 'skin2') {
+        update_option('wdtBaseSkin', 'graphite');
     }
     if (!get_option('wdtTimeFormat')) {
         update_option('wdtTimeFormat', 'h:i A');
@@ -268,6 +277,9 @@ function wdtActivationCreateTables() {
     if (get_option('wdtMDNewsDiv') === false) {
         update_option('wdtMDNewsDiv', 'no' );
     }
+    if (get_option('wdtSimpleTableAlert') === false) {
+        update_option('wdtSimpleTableAlert', true );
+    }
     if (get_option('wdtTempFutureDate') === false) {
         update_option('wdtTempFutureDate', date( 'Y-m-d'));
     }
@@ -324,6 +336,7 @@ function wdtUninstallDelete() {
         delete_option('wdtRatingDiv');
         delete_option('wdtMDNewsDiv');
         delete_option('wdtTempFutureDate');
+        delete_option('wdtSimpleTableAlert');
         delete_option('wdtActivated');
         delete_option('wdtPurchaseCodeStore');
         delete_option('wdtEnvatoTokenEmail');
@@ -451,6 +464,17 @@ function wdtHideRating() {
 }
 
 add_action( 'wp_ajax_wdtHideRating', 'wdtHideRating' );
+
+/**
+ * Remove Simple Table alert message
+ */
+function wdtHideSimpleTableAlert() {
+        update_option( 'wdtSimpleTableAlert', false );
+        echo json_encode( array("success") );
+    exit;
+}
+
+add_action( 'wp_ajax_wdtHideSimpleTableAlert', 'wdtHideSimpleTableAlert' );
 
 /**
  * Remove Master Detail news message
@@ -746,6 +770,46 @@ function wdtRenderScriptStyleBlock($connection) {
     $returnHtml .= $styleBlockHtml;
     return $returnHtml;
 }
+function wdtTableRenderScriptStyleBlock($obj) {
+
+    // Generate the style block for table
+    $styleBlockHtml = '';
+    $returnData = "<style>\n";
+
+    $tableCustomCss = $obj->getTableCustomCss();
+
+    if ($tableCustomCss) {
+        $returnData .= stripslashes_deep($tableCustomCss);
+    }
+
+    if ($obj->getTableBorderRemoval()) {
+        $returnData .= ".wpDataTablesWrapper table.wpDataTable[data-wpdatatable_id='" .  $obj->getWpId() . "'] > tbody > tr > td{ border: none !important; }\n";
+        $returnData .= ".wpDataTablesWrapper table.wpDataTable[data-wpdatatable_id='" .  $obj->getWpId() . "'] > thead { border: none !important; }\n";
+        $returnData .= ".wpDataTablesWrapper table.wpDataTable[data-wpdatatable_id='" .  $obj->getWpId() . "'] > tfoot > tr > td{ border: none !important; }\n";
+        $returnData .= ".wpDataTablesWrapper table.wpDataTable[data-wpdatatable_id='" .  $obj->getWpId() . "'] > tfoot { border: none !important; }\n";
+    }
+    if ($obj->getTableBorderRemovalHeader()) {
+        $returnData .= ".wpDataTablesWrapper table.wpDataTable[data-wpdatatable_id='" .  $obj->getWpId() . "'] > thead > tr > th{ border: none !important; }\n";
+    }
+
+    $returnData .= "</style>\n";
+
+    $returnHtml = $returnData;
+    $wdtTableFontColorSettings = $obj->getTableFontColorSettings();
+
+     //Color and font settings
+    if (!empty($wdtTableFontColorSettings)) {
+        /** @noinspection PhpUnusedLocalVariableInspection */
+        ob_start();
+        include WDT_TEMPLATE_PATH . 'frontend/style_table_block.inc.php';
+        $styleBlockHtml = ob_get_contents();
+        ob_end_clean();
+        $styleBlockHtml = apply_filters('wpdatatables_filter_style_table_block', $styleBlockHtml, $obj->getWpId());
+    }
+
+    $returnHtml .= $styleBlockHtml;
+    return $returnHtml;
+}
 
 /**
  * Checks if current user can edit table on the front-end
@@ -1026,6 +1090,68 @@ function welcome_page_activation_redirect( $plugin ) {
 }
 
 add_action( 'activated_plugin', 'welcome_page_activation_redirect' );
+
+
+
+/**
+ *  Add plugin action links Plugins page
+ */
+function wpdt_add_plugin_action_links( $links ) {
+
+    // Settings link.
+    $action_links['settings'] = '<a href="' . admin_url( 'admin.php?page=wpdatatables-settings' ) . '" aria-label="' . esc_attr( __( 'Go to Settings', 'wpdatatables' ) ) . '">' . esc_html__( 'Settings', 'wpdatatables' ) . '</a>';
+
+    // Add ons link.
+    $action_links['addons'] = '<a href="' .  esc_url( 'https://wpdatatables.com/addons/' )  . '" aria-label="' . esc_attr( __( 'Add-ons', 'wpdatatables' ) ) . '" style="color: #ff8c00;" target="_blank">' . esc_html__( 'Add-ons', 'wpdatatables' ) . '</a>';
+
+    // Documentation link.
+    $action_links['docs'] = '<a href="' . esc_url( 'https://wpdatatables.com/documentation/general/features-overview/' ) . '" aria-label="' . esc_attr( __( 'Docs', 'wpdatatables' ) ) . '" target="_blank">' . esc_html__( 'Docs', 'wpdatatables' ) . '</a>';
+
+    return array_merge( $action_links, $links );
+}
+add_filter( 'plugin_action_links_' . WDT_BASENAME , 'wpdt_add_plugin_action_links'  );
+
+
+/**
+ *  Add links next to plugin details on Plugins page
+ */
+function wpdt_plugin_row_meta( $links, $file, $plugin_data ) {
+
+    if ( WDT_BASENAME === $file ) {
+        // Show network meta links only when activated network wide.
+        if ( is_network_admin() ) {
+            return $links;
+        }
+
+        // Change AuthorURI link.
+        if ( isset( $links[1] ) ){
+            $author_uri = sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                $plugin_data['AuthorURI'],
+                $plugin_data['Author']
+            );
+            $links[1] = sprintf( __( 'By %s' ), $author_uri );
+        }
+        // Change View details link.
+        if ( isset( $links[2] ) ) {
+            $links[2] = sprintf(
+                '<a href="%s" target="_blank">%s</a>',
+                esc_url( 'https://wpdatatables.com/features/'  ),
+                __( 'View details' )
+            );
+        }
+        // Add Docs and Premium support links
+        $row_meta['docs'] = '<a href="' . esc_url( 'https://wpdatatables.com/documentation/general/features-overview/' ) . '" aria-label="' . esc_attr__( 'Docs', 'wpdatatables' ) . '" target="_blank">' . esc_html__( 'Docs', 'wpdatatables' ) . '</a>';
+        $row_meta['support'] = '<a href="' . admin_url( 'admin.php?page=wpdatatables-support' ) . '" aria-label="' . esc_attr__( 'Support Center', 'wpdatatables' ) . '" target="_blank">' . esc_html__( 'Support Center', 'wpdatatables' ) . '</a>';
+
+        return array_merge( $links, $row_meta );
+    }
+
+    return $links;
+
+}
+
+add_filter( 'plugin_row_meta', 'wpdt_plugin_row_meta' , 10, 3 );
 
 /**
  * Optional Visual Composer integration

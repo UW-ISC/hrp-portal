@@ -7,6 +7,7 @@
     "sInfoFiltered": "(فہرست ہوئ چھني سے ميں _MAX_ قل)",
     "sInfoPostFix":  "",
     "sSearch":       "کرو تلاش:",
+    "sSearchPlaceholder": "Arama tablosu",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "پہلا",

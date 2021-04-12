@@ -7,6 +7,7 @@
     "sInfoFiltered": "(отфильтровано из _MAX_ записей)",
     "sInfoPostFix":  "",
     "sSearch":       "Поиск:",
+    "sSearchPlaceholder": "Таблица поиска",
     "sUrl":          "",
     "oPaginate": {
         "sFirst": "Первая",

@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrate dintr-un total de _MAX_ inregistrari)",
     "sInfoPostFix":  "",
     "sSearch":       "Cauta:",
+    "sSearchPlaceholder": "Caută tabelul",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Prima",

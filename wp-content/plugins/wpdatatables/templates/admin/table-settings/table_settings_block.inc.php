@@ -49,12 +49,19 @@
             <li>
                 <button class="btn wdt-collapse-table-settings <?php if (isset($_GET['collapsed'])) { ?>collapsed <?php } else { ?>expanded <?php } ?>">
                     <?php _e('Settings', 'wpdatatables'); ?>
-                    <i style="color: #008CFF;" class="wpdt-icon-angle-<?php if (isset($_GET['collapsed'])) { ?>down <?php } else { ?>up <?php } ?>"></i>
+                    <i style="color: #008CFF;"
+                       class="wpdt-icon-angle-<?php if (isset($_GET['collapsed'])) { ?>down <?php } else { ?>up <?php } ?>"></i>
                 </button>
             </li>
             <li>
                 <button class="btn wdt-backend-close">
                     <?php _e('Cancel', 'wpdatatables'); ?>
+                </button>
+            </li>
+            <li>
+                <button class="btn wdt-reset-customize-options" style="display: none"
+                        title="<?php _e('Reset customize options to default', 'wpdatatables'); ?>" data-toggle="tooltip">
+                    <?php _e('Reset options', 'wpdatatables'); ?>
                 </button>
             </li>
             <li>
@@ -69,7 +76,7 @@
     <!-- /.card-header -->
     <div class="card-body card-padding" <?php if (isset($_GET['collapsed'])) { ?> style="display: none" <?php } ?>>
         <div role="tabpanel">
-            <ul class="tab-nav" role="tablist">
+            <ul class="tab-nav wdt-main-menu" role="tablist">
                 <li class="active main-table-settings-tab">
                     <a href="#main-table-settings" aria-controls="main-table-settings" role="tab"
                        data-toggle="tab"><?php _e('Data source', 'wpdatatables'); ?></a>
@@ -93,6 +100,12 @@
                 <li class="placeholders-settings-tab hidden">
                     <a href="#placeholders-settings" aria-controls="placeholders-settings" role="tab"
                        data-toggle="tab"><?php _e('Placeholders', 'wpdatatables'); ?></a>
+                </li>
+                <li class="customize-table-settings-tab hidden">
+                    <a href="#customize-table-settings" aria-controls="customize-table-settings" role="tab"
+                       data-toggle="tab"><strong
+                                style="color: #ef8137"><?php _e('NEW!', 'wpdatatables'); ?></strong> <?php _e(' Customize', 'wpdatatables'); ?>
+                    </a>
                 </li>
 
                 <?php do_action('wdt_add_table_configuration_tab'); ?>
@@ -323,7 +336,7 @@
                                     <div class="thumbnail">
                                         <img src="<?php echo WDT_ASSETS_PATH ?>img/hint-pictures/rows_per_page.png"/>
                                     </div>
-                                    <?php _e('How many rows to show per page by default.', 'wpdatatables'); ?>
+                                    <?php _e('How many rows to show per page by default?', 'wpdatatables'); ?>
                                 </div>
                             </div>
                             <!-- /Hidden popover with image hint -->
@@ -1030,6 +1043,30 @@
                             </div>
 
                         </div>
+
+                        <!-- .row -->
+                        <div class="col-sm-4 m-b-16 editing-settings-block hidden">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Edit buttons to be displayed on the front-end', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin"  data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('If you want to include only certain editing buttons on the front-end, select them from this dropdown. Leave unchecked to show all buttons.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="select">
+                                <select class="form-control selectpicker" multiple="multiple"
+                                        title="<?php _e('All', 'wpdatatables'); ?>" id="wdt-edit-buttons-displayed">
+                                   <?php $wdtEditButtonsDisplayed = array('New Entry', 'Edit', 'Delete');
+                                   foreach ($wdtEditButtonsDisplayed as $wdtEditButtonDisplayed) {
+                                        /** @noinspection $wdtEditButtonsDisplayed */ ?>
+                                    <option value="<?php echo (str_replace(' ','_',strtolower($wdtEditButtonDisplayed))) ?>"><?php echo $wdtEditButtonDisplayed ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+
+                        </div>
+                        <!-- /.row -->
+
                     </div>
                     <!-- /.row -->
 
@@ -1359,6 +1396,678 @@
                     </div>
                 </div>
                 <!-- /Placeholders settings -->
+
+                <!-- Customize table settings -->
+                <div role="tabpanel" class="tab-pane fade" id="customize-table-settings">
+
+                    <div role="tabpanel">
+                        <p style="font-size: 15px"><?php _e('Now you can customize each table with different skin, font, background , colors and lot more. Checkout new table customize settings below.', 'wpdatatables'); ?></p>
+                        <ul class="tab-nav" role="tablist">
+                            <li class="active main-customize-table-settings-tab">
+                                <a href="#main-customize-table-settings" aria-controls="main-customize-table-settings"
+                                   role="tab"
+                                   data-toggle="tab"><?php _e('Main', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="font-settings-tab">
+                                <a href="#font-settings" aria-controls="font-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Font', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="header-settings-tab">
+                                <a href="#header-settings" aria-controls="header-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Header', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="table-border-settings-tab">
+                                <a href="#table-border-settings" aria-controls="table-border-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Table border', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="row-color-settings-tab">
+                                <a href="#row-color-settings" aria-controls="row-color-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Row color', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="cell-color-settings-tab">
+                                <a href="#cell-color-settings" aria-controls="cell-color-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Cell color', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="pagination-settings-tab">
+                                <a href="#pagination-settings" aria-controls="pagination-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Pagination', 'wpdatatables'); ?></a>
+                            </li>
+                            <li class="custom-css-settings-tab">
+                                <a href="#custom-css-settings" aria-controls="custom-css-settings" role="tab"
+                                   data-toggle="tab"><?php _e('Custom CSS', 'wpdatatables'); ?></a>
+                            </li>
+
+
+                            <?php do_action('wdt_add_customize_table_configuration_tab'); ?>
+
+                        </ul>
+                        <!-- /ul .tab-nav -->
+
+                        <div class="tab-content">
+                            <!-- Main table settings -->
+                            <div role="tabpanel" class="tab-pane active" id="main-customize-table-settings">
+
+                                <div class="row">
+                                    <div class="col-sm-4 table-interface-language">
+                                        <h4 class="c-title-color m-b-2">
+                                            <?php _e('Interface language', 'wpdatatables'); ?>
+                                            <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('Pick the language which will be used in tables interface.', 'wpdatatables'); ?>"></i>
+                                        </h4>
+                                        <div class="form-group">
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="selectpicker" id="wdt-table-interface-language">
+                                                        <option value=""><?php _e('English (default)', 'wpdatatables'); ?></option>
+                                                        <?php foreach (WDTSettingsController::getInterfaceLanguages() as $language) { ?>
+                                                            <option value="<?php echo $language['file'] ?>">
+                                                                <?php echo $language['name']; ?>
+                                                            </option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 wdt-table-base-skin">
+                                        <h4 class="c-title-color m-b-2">
+                                            <?php _e('Base skin', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('Choose the base skin for the plugin.', 'wpdatatables'); ?>"></i>
+                                        </h4>
+                                        <div class="form-group">
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select class="selectpicker" name="wdt-table-base-skin"
+                                                            id="wdt-table-base-skin">
+                                                        <option value="material"><?php _e('Material', 'wpdatatables'); ?></option>
+                                                        <option value="light"><?php _e('Light', 'wpdatatables'); ?></option>
+                                                        <option value="graphite"><?php _e('Graphite', 'wpdatatables'); ?></option>
+                                                        <option value="aqua"><?php _e('Aqua', 'wpdatatables'); ?></option>
+                                                        <option value="purple"><?php _e('Purple', 'wpdatatables'); ?></option>
+                                                        <option value="dark"><?php _e('Dark', 'wpdatatables'); ?></option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Main table settings -->
+
+                            <!-- Font settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="font-settings">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Font', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This font will be used in rendered tables. Leave blank not to override default theme settings', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="form-group">
+                                            <div class="fg-line">
+                                                <div class="select">
+                                                    <select id="wdt-table-font" data-name="wdtTableFont"
+                                                            class="selectpicker"
+                                                            title="Choose font for the table">
+                                                        <option value=""></option>
+                                                        <?php foreach (WDTSettingsController::wdtGetSystemFonts() as $font) { ?>
+                                                            <option value="<?php echo $font ?>"><?php echo $font ?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Font size', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('Define the font size', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="form-group">
+                                            <div class="fg-line">
+                                                <div class="row">
+                                                    <div class="col-sm-12">
+                                                        <div class="fg-line wdt-custom-number-input">
+                                                            <button type="button"
+                                                                    class="btn btn-default wdt-btn-number wdt-button-minus"
+                                                                    data-type="minus" data-field="wdt-table-font-size">
+                                                                <i class="wpdt-icon-minus"></i>
+                                                            </button>
+                                                            <input type="text" name="wdt-table-font-size" min="8"
+                                                                   value="" class="form-control cp-value input-sm input-number"
+                                                                   data-name="wdtTableFontSize"
+                                                                   id="wdt-table-font-size">
+                                                            <button type="button"
+                                                                    class="btn btn-default wdt-btn-number wdt-button-plus"
+                                                                    data-type="plus" data-field="wdt-table-font-size">
+                                                                <i class="wpdt-icon-plus-full"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Font color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the main font in table cells.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-font-color"
+                                                               data-name="wdtTableFontColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Font settings -->
+
+                            <!-- Header settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="header-settings">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Background color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('The color is used for background of the table header.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-header-base-color"
+                                                               data-name="wdtTableHeaderBaseColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Border color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the border in the table header.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-header-border-color"
+                                                               data-name="wdtTableHeaderBorderColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Font color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the font in the table header.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-header-font-color"
+                                                               data-name="wdtTableHeaderFontColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Active and hover color	', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used when you hover the mouse above the table header, or when you choose a column.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-header-active-color"
+                                                               data-name="wdtTableHeaderActiveColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Header settings -->
+
+                            <!-- Table border settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="table-border-settings">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Inner border', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the inner border in the table between cells.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-inner-border-color"
+                                                               data-name="wdtTableInnerBorderColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Outer border', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the outer border of the whole table body.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-outer-border-color"
+                                                               data-name="wdtTableOuterBorderColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 wdt-remove-borders">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Table borders', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('When this is checked, borders in table will be removed ', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="toggle-switch" data-ts-color="blue">
+                                            <input type="checkbox" name="wdt-table-remove-borders"
+                                                   id="wdt-table-remove-borders"/>
+                                            <label for="wdt-table-remove-borders"
+                                                   class="ts-label"><?php _e('Remove borders in table', 'wpdatatables'); ?></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3 wdt-remove-borders-header">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Header border', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('When this is checked,borders in header will be removed  ', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="toggle-switch" data-ts-color="blue">
+                                            <input type="checkbox" name="wdt-table-remove-borders-header"
+                                                   id="wdt-table-remove-borders-header"/>
+                                            <label for="wdt-table-remove-borders-header"
+                                                   class="ts-label"><?php _e('Remove borders in table header', 'wpdatatables'); ?></label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Table border settings -->
+
+                            <!-- Row color settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="row-color-settings">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Even row background', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for for background in even rows.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-even-row-color"
+                                                               data-name="wdtTableEvenRowColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Odd row background', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for for background in odd rows.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-odd-row-color"
+                                                               data-name="wdtTableOddRowColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Hover row', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for to highlight the row when you hover your mouse above it.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-hover-row-color"
+                                                               data-name="wdtTableHoverRowColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Background for selected rows', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for background in selected rows.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-selected-row-color"
+                                                               data-name="wdtTableSelectedRowColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- /Row color settings -->
+
+                            <!-- Cell color settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="cell-color-settings">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Sorted columns, even rows', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for background in cells which are in the active columns (columns used for sorting) in even rows.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-active-even-cell-color"
+                                                               data-name="wdtTableActiveEvenCellColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Sorted columns, odd rows', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for background in cells which are in the active columns (columns used for sorting) in odd rows.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-active-odd-cell-color"
+                                                               data-name="wdtTableActiveOddCellColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Cell color settings -->
+
+                            <!-- Pagination color settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="pagination-settings">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Background color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the background of the pagination', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-pagination-background-color"
+                                                               data-name="wdtTablePaginationBackgroundColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the color of the links in the pagination.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-pagination-color"
+                                                               data-name="wdtTablePaginationColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Current page background color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('The color is used for background of the current page', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text"
+                                                               id="wdt-table-pagination-current-background-color"
+                                                               data-name="wdtTablePaginationCurrentBackgroundColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Current page color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used for the color of the current page.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-pagination-current-color"
+                                                               data-name="wdtTablePaginationCurrentColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Other pages hover background color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This background color is used when you hover the mouse above the other pages', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text"
+                                                               id="wdt-table-pagination-hover-background-color"
+                                                               data-name="wdtTablePaginationHoverBackgroundColor"
+                                                               class="form-control cp-value wdt-add-picker" value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <h5 class="c-title-color m-b-2">
+                                            <?php _e('Other pages hover color', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This color is used when you hover the mouse above the other pages.', 'wpdatatables'); ?>"></i>
+                                        </h5>
+                                        <div class="cp-container">
+                                            <div class="form-group">
+                                                <div class="fg-line dropdown">
+                                                    <div id="cp"
+                                                         class="input-group wdt-color-picker">
+                                                        <input type="text" id="wdt-table-pagination-hover-color"
+                                                               data-name="wdtTablePaginationHoverColor"
+                                                               class="form-control cp-value wdt-add-picker"
+                                                               value=""/>
+                                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Pagination color settings -->
+
+                            <!-- Custom CSS settings -->
+                            <div role="tabpanel" class="tab-pane fade" id="custom-css-settings">
+                                <div class="row">
+                                    <div class="col-sm-6 custom-css">
+                                        <h4 class="c-title-color m-b-2">
+                                            <?php _e('Custom wpDataTables CSS', 'wpdatatables'); ?>
+                                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
+                                               data-placement="right"
+                                               title="<?php _e('This CSS will be inserted as an inline style block on every page that has this wpDataTable.', 'wpdatatables'); ?>"></i>
+                                        </h4>
+                                        <div class="form-group">
+                                            <div class="fg-line">
+                                                <pre id="wdt-table-custom-css" class="m-0" style="width: 100%; height: 300px"></pre>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /Custom CSS settings -->
+
+
+                            <?php do_action('wdt_add_customize_table_configuration_tabpanel'); ?>
+
+                        </div>
+                        <!-- /.tab-content - end of table settings tabs -->
+
+                    </div>
+
+                </div>
+                <!-- /Customize table settings -->
 
                 <?php do_action('wdt_add_table_configuration_tabpanel'); ?>
 

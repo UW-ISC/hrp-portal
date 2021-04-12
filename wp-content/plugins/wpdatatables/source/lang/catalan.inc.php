@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrat de _MAX_ total registres)",
     "sInfoPostFix":  "",
     "sSearch":       "Filtrar:",
+    "sSearchPlaceholder": "Taula de cerca",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Primer",

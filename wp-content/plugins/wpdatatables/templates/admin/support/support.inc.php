@@ -66,7 +66,7 @@
                 <div class="card m-b-16">
                     <div class="card-body card-padding wdt-support-img">
                         <h5 class="wdt-large-title m-t-0 card-title"><?php _e('Still need help?', 'wpdatatables'); ?></h5>
-                        <p class="card-text m-b-28"><?php _e('We provde proffesional support to all our users via our tiketing system.', 'wpdatatables'); ?></p>
+                        <p class="card-text m-b-28"><?php _e('We provide proffesional support to all our users via our tiketing system.', 'wpdatatables'); ?></p>
                         <a href="https://tmsplugins.ticksy.com/" target="_blank" rel=”nofollow” class="btn btn-primary"><i class="wpdt-icon-envelope"></i><?php _e('Submit a ticket', 'wpdatatables'); ?></a>
                     </div>
                 </div>

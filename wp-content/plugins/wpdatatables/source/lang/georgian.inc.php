@@ -7,6 +7,7 @@
     "sInfoFiltered": "(გაფილტრული შედეგი _MAX_ ჩანაწერიდან)",
     "sInfoPostFix":  "",
     "sSearch":       "ძიება:",
+    "sSearchPlaceholder": "ძებნის ცხრილი",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "პირველი",

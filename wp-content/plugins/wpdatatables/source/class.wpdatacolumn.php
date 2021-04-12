@@ -28,6 +28,7 @@ class WDTColumn {
     protected $_searchable = true;
     protected $_decimalPlaces = -1;
     protected $_exactFiltering;
+    protected $_globalSearchColumn = 1;
     protected $_filterLabel;
     protected $_checkboxesInModal = false;
     protected $_possibleValuesType;
@@ -54,6 +55,8 @@ class WDTColumn {
         $this->_width = WDTTools::defineDefaultValue($properties, 'width', '');
         $this->_orig_header = WDTTools::defineDefaultValue($properties, 'orig_header', '');
         $this->_exactFiltering = WDTTools::defineDefaultValue($properties, 'exactFiltering', '');
+        $this->setGlobalSearchColumn(WDTTools::defineDefaultValue($properties,'globalSearchColumn', 1));
+        $this->_searchable = WDTTools::defineDefaultValue($properties, 'searchable', true);
         $this->setFilterDefaultValue(WDTTools::defineDefaultValue($properties, 'filterDefaultValue', null));
         $this->setFilterLabel(WDTTools::defineDefaultValue($properties, 'filterLabel', null));
         $this->setCheckboxesInModal(WDTTools::defineDefaultValue($properties, 'checkboxesInModal', false));
@@ -465,6 +468,20 @@ class WDTColumn {
     }
 
     /**
+     * @return int
+     */
+    public function getGlobalSearchColumn() {
+        return $this->_globalSearchColumn;
+    }
+
+    /**
+     * @param int $globalSearchColumn
+     */
+    public function setGlobalSearchColumn($globalSearchColumn) {
+        $this->_globalSearchColumn = $globalSearchColumn;
+    }
+
+    /**
      * @return string
      */
     public function getRangeSlider() {
@@ -768,7 +785,7 @@ class WDTColumn {
         $colJsDefinition->wdtType = $this->_dataType;
         $colJsDefinition->bVisible = $this->isVisible();
         $colJsDefinition->orderable = $this->getSorting();
-        $colJsDefinition->searchable = $this->_searchable;
+        $colJsDefinition->searchable = $this->_searchable && $this->_globalSearchColumn;
         $colJsDefinition->InputType = $this->_inputType;
         $colJsDefinition->name = $this->_orig_header;
         $colJsDefinition->origHeader = $this->_orig_header;
@@ -801,9 +818,10 @@ class WDTColumn {
         $jsFilterDef->columnType = $this->getDataType();
         $jsFilterDef->numberOfDecimalPlaces = $this->getDecimalPlaces() === -1 ? get_option('wdtDecimalPlaces') : $this->getDecimalPlaces();
         $jsFilterDef->possibleValuesType = $this->getPossibleValuesType();
+        $jsFilterDef->globalSearchColumn = $this->getGlobalSearchColumn();
 
         $jsFilterDef->values = null;
-        if (in_array($this->getFilterType(), array('select', 'multiselect', 'checkbox')) || in_array($this->getInputType(), array('selectbox', 'multi-selectbox'))) {
+        if ((in_array($this->getFilterType(), array('select', 'multiselect', 'checkbox')) || in_array($this->getInputType(), array('selectbox', 'multi-selectbox')))) {
             if ($this->_possibleValuesType === 'read' && $parentTable->serverSide()) {
                 if (has_filter('wpdatatables_possible_values_' . $parentTable->getTableType())) {
                     $distValues = apply_filters('wpdatatables_possible_values_' . $parentTable->getTableType(), $this, true, false);

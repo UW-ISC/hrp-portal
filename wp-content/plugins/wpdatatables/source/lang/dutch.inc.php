@@ -7,6 +7,7 @@
     "sInfoFiltered": " (gefilterd uit _MAX_ resultaten)",
     "sInfoPostFix": "",
     "sSearch": "Zoeken:",
+    "sSearchPlaceholder": "Zoek tabel",
     "sEmptyTable": "Geen resultaten aanwezig in de tabel",
     "sInfoThousands": ".",
     "sLoadingRecords": "Een moment geduld aub - bezig met laden...",

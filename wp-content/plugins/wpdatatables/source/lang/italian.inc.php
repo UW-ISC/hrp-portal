@@ -9,6 +9,7 @@
     "sLoadingRecords": "Caricamento...",
     "sProcessing":     "Elaborazione...",
     "sSearch":         "Cerca:",
+    "sSearchPlaceholder": "Tabella di ricerca",
     "sZeroRecords":    "La ricerca non ha portato alcun risultato.",
     "oPaginate": {
         "sFirst":      "Inizio",

@@ -7,7 +7,7 @@
 .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tbody td,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tbody td,
-.wpdt-c .wpDataTablesWrapper table.wpDataTabletable tfoot td {
+.wpdt-c .wpDataTablesWrapper table.wpDataTable tfoot td {
 	color: <?php echo $wdtFontColorSettings['wdtTableFontColor'] ?> !important;
 }
 <?php } ?>

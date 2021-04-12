@@ -295,6 +295,42 @@
                             </td>
                         </tr>
                         <tr>
+                            <td data-export-label="XML extension"><?php esc_attr_e('XML extension:', 'wpdatatables'); ?>
+                                <?php if (extension_loaded('xml')) { ?>
+                            </td>
+                            <td class="wpdt-relative">
+                                <span class="wpdt-inline"><?php esc_html_e('Installed', 'wpdatatables'); ?></span>
+                            </td>
+                            <?php } else { ?>
+                                <i class="wpdt-icon-exclamation-triangle wpdt-error"></i>
+                                </td>
+                                <td class="wpdt-relative">
+                                    <span class="wpdt-inline wpdt-error"><?php esc_html_e('Not installed - Please install or enable PHP XML Extension on your server.', 'wpdatatables'); ?></span>
+                                </td>
+                            <?php } ?>
+                            <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
+                                                title="<?php _e('XML support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td data-export-label="DOM extension"><?php esc_attr_e('DOM extension:', 'wpdatatables'); ?>
+                                <?php if (extension_loaded('dom')) { ?>
+                            </td>
+                            <td class="wpdt-relative">
+                                <span class="wpdt-inline"><?php esc_html_e('Installed', 'wpdatatables'); ?></span>
+                            </td>
+                            <?php } else { ?>
+                                <i class="wpdt-icon-exclamation-triangle wpdt-error"></i>
+                                </td>
+                                <td class="wpdt-relative">
+                                    <span class="wpdt-inline wpdt-error"><?php esc_html_e('Not installed - Please install or enable PHP DOM Extension on your server.', 'wpdatatables'); ?></span>
+                                </td>
+                            <?php } ?>
+                            <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
+                                                title="<?php _e('DOM support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
+                            </td>
+                        </tr>
+                        <tr>
                             <td data-export-label="Libxml extension">
                                 <?php esc_html_e('Libxml extension: ', 'wpdatatables'); ?>
 

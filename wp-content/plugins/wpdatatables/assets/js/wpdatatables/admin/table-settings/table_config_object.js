@@ -39,6 +39,7 @@ var wpdatatable_config = {
     mysql_table_name: '',
     connection: '',
     edit_only_own_rows: 0,
+    editButtonsDisplayed: ["all"],
     userid_column_id: null,
     showAllRows: false,
     inline_editing: 0,
@@ -68,6 +69,11 @@ var wpdatatable_config = {
     currentDateTimePlaceholder: jQuery('#wdt-datetime-palceholder').val(),
     currentTimePlaceholder: jQuery('#wdt-time-palceholder').val(),
     wpdbPlaceholder: jQuery('#wdt-wpdb-placeholder').val(),
+    language: '',
+    tableSkin: '',
+    tableBorderRemoval: 0,
+    tableBorderRemovalHeader: 0,
+    tableCustomCss: '',
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, serialized, csv, excel
@@ -178,6 +184,7 @@ var wpdatatable_config = {
                 jQuery('.display-settings-tab').animateFadeIn();
                 jQuery('.table-sorting-filtering-settings-tab').animateFadeIn();
                 jQuery('.table-tools-settings-tab').animateFadeIn();
+                jQuery('.customize-table-settings-tab').animateFadeIn();
             }
             if( wpdatatable_config.table_type == 'mysql' ) {
                 if( !jQuery('.placeholders-settings-tab').is(':visible') ){
@@ -559,6 +566,12 @@ var wpdatatable_config = {
             jQuery( '#wdt-editor-roles' )
                 .val( '' )
                 .selectpicker( 'refresh' );
+
+            wpdatatable_config.editButtonsDisplayed = ["all"];
+            jQuery( '#wdt-edit-buttons-displayed' )
+                .val( '' )
+                .selectpicker( 'refresh' );
+
             wpdatatable_config.edit_only_own_rows = 0;
             wpdatatable_config.showAllRows = false;
             wpdatatable_config.userid_column_id = null;
@@ -618,6 +631,17 @@ var wpdatatable_config = {
         wpdatatable_config.editor_roles = editorRoles;
         jQuery( '#wdt-editor-roles')
             .val( editorRoles )
+            .selectpicker( 'refresh' );
+    },
+    /**
+     * Set the displayed edit buttons
+     * @param editButtonsDisplayed array
+     */
+
+    setEditButtonsDisplayed: function( editButtonsDisplayed ){
+        wpdatatable_config.editButtonsDisplayed = editButtonsDisplayed;
+        jQuery( '#wdt-edit-buttons-displayed')
+            .val( editButtonsDisplayed )
             .selectpicker( 'refresh' );
     },
     /**
@@ -796,6 +820,92 @@ var wpdatatable_config = {
         }
     },
     /**
+     * Set language for table interface
+     */
+    setLanguage: function( language ){
+        if( wpdatatable_config.language != language ){
+            wpdatatable_config.language = language;
+        }
+        if( jQuery('#wdt-table-interface-language').val() != language ){
+            jQuery('#wdt-table-interface-language').selectpicker( 'val', language );
+        }
+    },
+    /**
+     * Set skin for table
+     */
+    setTableSkin: function ( tableSkin ) {
+        if( wpdatatable_config.tableSkin != tableSkin ){
+            wpdatatable_config.tableSkin = tableSkin;
+        }
+        if( jQuery('#wdt-table-base-skin').val() != tableSkin ){
+            jQuery('#wdt-table-base-skin').selectpicker( 'val', tableSkin );
+        }
+    },
+    /**
+     * Set table colors
+     */
+    setTableFontColorSettings: function( settingName, settingValue ) {
+        if( typeof wpdatatable_config.tableFontColorSettings != 'object' ){
+            wpdatatable_config.tableFontColorSettings = {};
+        }
+        if (wpdatatable_config.tableFontColorSettings[settingName] != settingValue) {
+            wpdatatable_config.tableFontColorSettings[settingName] = settingValue;
+        }
+        if (jQuery('input[data-name=' + settingName + '], select[data-name=' + settingName + ']').val() != settingValue) {
+            switch (settingName) {
+                case "wdtTableBorderInputRadius":
+                    jQuery('input[data-name=' + settingName + ']').val( settingValue );
+                    break;
+                case "wdtTableFont":
+                    jQuery('select[data-name=' + settingName + ']').selectpicker( 'val', settingValue );
+                    break;
+                case "wdtTableFontSize":
+                    jQuery('input[data-name=' + settingName + ']').val( settingValue );
+                    break;
+                default:
+                    jQuery('input[data-name=' + settingName + ']').val( settingValue );
+                    jQuery('input[data-name=' + settingName + '] + .wpcolorpicker-icon i').css( "background-color",  settingValue );
+
+            }
+        }
+    },
+    /**
+     * Set option for removing border of the table
+     */
+    setTableBorderRemoval: function ( tableBorderRemoval ) {
+        wpdatatable_config.tableBorderRemoval = tableBorderRemoval;
+        if( jQuery('#wdt-table-remove-borders').val() != tableBorderRemoval ){
+            jQuery('#wdt-table-remove-borders').prop( 'checked', tableBorderRemoval );
+        }
+    },
+    /**
+     * Set option for removing border of the table header
+     */
+    setTableBorderRemovalHeader: function ( tableBorderRemovalHeader ) {
+        wpdatatable_config.tableBorderRemovalHeader = tableBorderRemovalHeader;
+        if( jQuery('#wdt-table-remove-borders-header').val() != tableBorderRemovalHeader ){
+            jQuery('#wdt-table-remove-borders-header').prop( 'checked', tableBorderRemovalHeader );
+        }
+    },
+    /**
+     * Set custom CSS for table
+     */
+    setTableCustomCss: function ( tableCustomCss ) {
+        if( wpdatatable_config.tableCustomCss != tableCustomCss ){
+            wpdatatable_config.tableCustomCss = tableCustomCss;
+        }
+        if( wpdatatable_config.table_type != 'simple' ) {
+            var aceEditorTableCSS = ace.edit('wdt-table-custom-css');
+            aceEditorTableCSS.$blockScrolling = Infinity;
+            if (aceEditorTableCSS.getValue() != tableCustomCss) {
+                aceEditorTableCSS.setValue(tableCustomCss);
+            }
+        }
+        if( jQuery('#wdt-custom-css').val() != tableCustomCss ){
+            jQuery('#wdt-custom-css').val( tableCustomCss );
+        }
+    },
+    /**
      * Add a column to the list
      * @param column
      */
@@ -933,6 +1043,7 @@ var wpdatatable_config = {
             wpdatatable_config.setEditorRoles( tableJSON.editor_roles );
             wpdatatable_config.setInlineEditing( tableJSON.inline_editing );
             wpdatatable_config.setPopoverTools( tableJSON.popover_tools );
+            wpdatatable_config.setEditButtonsDisplayed( tableJSON.editButtonsDisplayed );
         }
         wpdatatable_config.setAdvancedFiltering( parseInt( tableJSON.filtering ) );
         if( wpdatatable_config.filtering ){
@@ -960,6 +1071,16 @@ var wpdatatable_config = {
         wpdatatable_config.setPlaceholderVar1( tableJSON.var1 );
         wpdatatable_config.setPlaceholderVar2( tableJSON.var2 );
         wpdatatable_config.setPlaceholderVar3( tableJSON.var3 );
+        wpdatatable_config.setLanguage( tableJSON.language );
+        wpdatatable_config.setTableSkin( tableJSON.tableSkin );
+        wpdatatable_config.setTableBorderRemoval( tableJSON.tableBorderRemoval );
+        wpdatatable_config.setTableBorderRemovalHeader( tableJSON.tableBorderRemovalHeader );
+        wpdatatable_config.setTableCustomCss( tableJSON.tableCustomCss );
+
+        for (var value in tableJSON.tableFontColorSettings) {
+            wpdatatable_config.setTableFontColorSettings(value, tableJSON.tableFontColorSettings[value]);
+        }
+
     },
     /**
      * Method which draws the "column settings" and "delete formula" buttons in wpDataTable

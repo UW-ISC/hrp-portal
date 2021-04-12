@@ -7,6 +7,7 @@
     "sInfoFiltered": "(منتقاة من مجموع _MAX_ مُدخل)",
     "sInfoPostFix":  "",
     "sSearch":       "ابحث:",
+    "sSearchPlaceholder": "جدول البحث",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "الأول",

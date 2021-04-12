@@ -450,7 +450,6 @@
                                     <div class="fg-line">
                                         <div class="select">
                                             <select class="selectpicker" id="wdt-date-input-format">
-                                                <option value=""></option>
                                                 <option value="d/m/Y"> 15/07/2005 (d/m/Y)</option>
                                                 <option value="m/d/Y"> 07/15/2005 (m/d/Y)</option>
                                                 <option value="Y/m/d"> 2005/15/07 (Y/m/d)</option>
@@ -462,11 +461,15 @@
                                                 <option value="Y-m-d"> 2005-07-15 (Y-m-d)</option>
                                                 <option value="d.m.y"> 15.07.05 (d.m.y)</option>
                                                 <option value="m.d.y"> 07.15.05 (m.d.y)</option>
+                                                <option value="d.m">15.07 (d.m)</option>
                                                 <option value="d-m-y"> 15-07-05 (d-m-y)</option>
                                                 <option value="m-d-y"> 07-15-05 (m-d-y)</option>
                                                 <option value="d M Y"> 15 July 2005 (d Mon Y)</option>
                                                 <option value="m/Y"> 07/2005 (m/Y)</option>
-                                                <option value="M Y"> July 2005 (Mon Y)</option>
+                                                <option value="M Y"> Jul 2005 (Mon Y)</option>
+                                                <option value="F Y"> July 2005 (F Y)</option>
+                                                <option value="F j, Y"> July 15, 2005 (F j, Y)</option>
+                                                <option value="j. F Y."> 15. July 2005. (j. F Y.)</option>
                                                 <option value="Y">2005 (Y)</option>
                                             </select>
                                         </div>
@@ -686,6 +689,22 @@
 
                             </div>
 
+                            <div class="col-sm-6 wdt-link-nofollow-attribute-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Make NOFOLLOW link', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('Set the link to a nofollow link', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-link-nofollow-attribute" type="checkbox">
+                                        <label for="wdt-link-nofollow-attribute"
+                                               class="ts-label"><?php _e('Make the link a nofollow link', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+
+                            </div>
+
                             <div class="col-sm-6 wdt-link-button-attribute-block">
                                 <h4 class="c-title-color m-b-2">
                                     <?php _e('Show link as a button', 'wpdatatables'); ?>
@@ -832,7 +851,23 @@
                                 </div>
                             </div>
 
+                            <div class="col-sm-6 wdt-global-search-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Global search', 'wpdatatables'); ?>
+                                    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('If this option is turned off, the column will not appear in your global search results. The filtering option will also be disabled.', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-column-enable-global-search" type="checkbox">
+                                        <label for="wdt-column-enable-global-search"
+                                               class="ts-label"><?php _e('Enable this column in Global search', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /.row -->
 
+                            <!-- .row -->
                             <div class="col-sm-6 wdt-filtering-enabled-block">
                                 <h4 class="c-title-color m-b-2">
                                     <?php _e('Filter type', 'wpdatatables'); ?>
@@ -857,14 +892,7 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
-
-                        </div>
-                        <!-- /.row -->
-
-                        <!-- .row -->
-                        <div class="row">
 
                             <div class="col-sm-6 wdt-filtering-enabled-block">
                                 <h4 class="c-title-color m-b-2">
@@ -895,6 +923,9 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- /.row -->
+
+                            <!-- .row -->
 
                             <div class="col-sm-6 wdt-filtering-enabled-block wdt-exact-filtering-block">
                                 <h4 class="c-title-color m-b-2">
@@ -924,11 +955,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <!--/ .row -->
-
-                        <!-- .row -->
-                        <div class="row">
 
                             <div class="col-sm-6 wdt-filtering-enabled-block">
                                 <h4 class="c-title-color m-b-2">
@@ -981,7 +1007,6 @@
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                         <!--/ .row -->
 
