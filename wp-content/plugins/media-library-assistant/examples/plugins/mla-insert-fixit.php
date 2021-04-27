@@ -44,8 +44,12 @@
  * opened on 3/28/2020 by "liaris"
  * https://wordpress.org/support/topic/update-add-replace-image-figcaption-on-post/
  *
+ * Enhanced for support topic "Updating alt text for images already in post [Insert Fixit Tools]"
+ * opened on 2/20/2021 by "jamiedelaney"
+ * https://wordpress.org/support/topic/updating-alt-text-for-images-already-in-post-insert-fixit-tools/
+ *
  * @package Insert Fixit
- * @version 1.16
+ * @version 1.18
  */
 
 /*
@@ -53,7 +57,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.16
+Version: 1.18
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2020 David Lingren
@@ -86,7 +90,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.16';
+	const CURRENT_VERSION = '1.18';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -638,6 +642,11 @@ class Insert_Fixit {
 		$upload_subdir = str_replace( $site_url, '', $upload_dir );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $upload_subdir = ' . var_export( $upload_subdir, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
+		// Use two uoload directory URLs to handle HTTP/HTTPS mismatches
+		$root_dir = str_replace( 'http', '', str_replace( 'https', '', $upload_dir ) );
+		$http_dir = 'http' . $root_dir;
+		$https_dir = 'https' . $root_dir;
+		
 		$image_inserts = array();
 		foreach ( $results as $result ) {
 			$match_count = preg_match_all( '/\<img .*?(src="([^"]*?)")[^\>]*?\>/', $result->post_content, $matches, PREG_OFFSET_CAPTURE );
@@ -660,7 +669,7 @@ class Insert_Fixit {
 				// src= file URL
 				foreach( $matches[2] as $index => $match ) {
 					// Remove absolute and relative paths to the upload directory
-					$file = str_replace( $upload_subdir, '', str_replace( $upload_dir, '', $match[0] ) );
+					$file = str_replace( $upload_subdir, '', str_replace( $http_dir, '', str_replace( $https_dir, '', $match[0] ) ) );
 					$image_inserts[ $result->ID ]['files'][] = $file;
 					$image_inserts[ $result->ID ]['inserts'][ $index ]['src'] = $file;
 					$image_inserts[ $result->ID ]['inserts'][ $index ]['src_offset'] = $match[1];
@@ -1074,6 +1083,10 @@ class Insert_Fixit {
 		// Load the image_inserts array
 		self::_build_image_inserts_cache( true );
 
+		// We need this for wp_get_original_image_path() processing
+		$upload_dir = wp_upload_dir();
+		$upload_dir = $upload_dir['basedir'];
+
 		$references = array();
 		foreach ( $results as $result ) {
 			// assemble the files
@@ -1093,6 +1106,18 @@ class Insert_Fixit {
 			}
 
 			$file = $pathinfo['basename'];
+
+			// WP 5.3+ produces "scaled" images with "-scaled" appended to the name. We also need the original.
+			if ( function_exists( 'wp_get_original_image_path' ) ) {
+				$original_file = str_replace( $upload_dir . '/', '', wp_get_original_image_path( $result->ID ) );
+				
+				if ( $original_file ) {
+					$files[ $original_file ] = $original_file;
+				}
+			} else {
+				$original_file = false;
+			}
+			MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_objects_cache() $original_file = ' . var_export( $original_file, true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 
 			$attachment_metadata = get_metadata( 'post', $result->ID, '_wp_attachment_metadata', true );
 			if ( empty( $attachment_metadata ) ) {

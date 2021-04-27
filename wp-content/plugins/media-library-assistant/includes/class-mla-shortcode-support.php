@@ -6,9 +6,7 @@
  * @since 2.20
  */
 
-/* 
- * The MLA database access functions aren't available to "front end" posts/pages
- */
+// The MLA database access functions aren't available to "front end" posts/pages
 if ( !class_exists( 'MLAQuery' ) ) {
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
 	MLAQuery::initialize();
@@ -55,23 +53,23 @@ class MLAShortcode_Support {
 			$mla_debug_category = NULL;
 		}
 
-		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) explicit_path = " . var_export( $explicit_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) ghostscript_present = " . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . " MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) explicit_path = " . var_export( $explicit_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . " MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) ghostscript_present = " . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 
 		if ( ! $ghostscript_only ) {
 			if ( isset( $ghostscript_present ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, ghostscript_present = ' . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, ghostscript_present = ' . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 				return $ghostscript_present;
 			}
 
 			if ( 'checked' != MLACore::mla_get_option( 'enable_ghostscript_check' ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, disabled', $mla_debug_category );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, disabled', $mla_debug_category );
 				return $ghostscript_present = true;
 			}
 
 			// Imagick must be installed as well
 			if ( ! class_exists( 'Imagick' ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, Imagick missing', $mla_debug_category );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, Imagick missing', $mla_debug_category );
 				return $ghostscript_present = false;
 			}
 		} // not ghostscript_only
@@ -79,14 +77,14 @@ class MLAShortcode_Support {
 		// Look for exec() - from http://stackoverflow.com/a/12980534/866618
 		$blacklist = preg_split( '/,\s*/', ini_get('disable_functions') . ',' . ini_get('suhosin.executor.func.blacklist') );
 		if ( in_array('exec', $blacklist) ) {
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec in blacklist', $mla_debug_category );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec in blacklist', $mla_debug_category );
 			return $ghostscript_present = false;
 		}
 
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3) ) ) {
 			if ( ! empty( $explicit_path ) ) {
 				$return = exec( 'dir /o:n/s/b "' . $explicit_path . '"' );
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN explicit path = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN explicit path = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 				if ( ! empty( $return ) ) {
 					return $ghostscript_present = true;
 				} else {
@@ -95,41 +93,41 @@ class MLAShortcode_Support {
 			}
 
 			$return = getenv('GSC');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, getenv(GSC) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, getenv(GSC) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('where gswin*c.exe');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(where gswin*c.exe) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(where gswin*c.exe) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe"');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe"');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN detection failed', $mla_debug_category );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN detection failed', $mla_debug_category );
 			return $ghostscript_present = false;
 		} // Windows platform
 
 		if ( ! empty( $explicit_path ) ) {
 			exec( 'test -e ' . $explicit_path, $dummy, $ghostscript_path );
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, explicit path = ' . var_export( $explicit_path, true ) . ', ghostscript_path = ' . var_export( $ghostscript_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, explicit path = ' . var_export( $explicit_path, true ) . ', ghostscript_path = ' . var_export( $ghostscript_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			return ( $explicit_path === $ghostscript_path );
 		}
 
 		$return = exec('which gs');
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec(which gs) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec(which gs) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		if ( ! empty( $return ) ) {
 			return $ghostscript_present = true;
 		}
@@ -138,8 +136,8 @@ class MLAShortcode_Support {
 		$output = array();
 		$return_arg = -1;
 		$return = exec( 'test -e ' . $test_path, $output, $return_arg );
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, test_path = ' . var_export( $test_path, true ) . ', return_arg = ' . var_export( $return_arg, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, return = ' . var_export( $return, true ) . ', output = ' . var_export( $output, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, test_path = ' . var_export( $test_path, true ) . ', return_arg = ' . var_export( $return_arg, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, return = ' . var_export( $return, true ) . ', output = ' . var_export( $output, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		return $ghostscript_present = ( $test_path === $return_arg );
 	}
 
@@ -178,7 +176,19 @@ class MLAShortcode_Support {
 	public static function _get_attachment_image_src( $image, $attachment_id, $size, $icon ) {
 		static $nested_call = false;
 
-		if ( $nested_call || ( $image && ( 'icon_only' !== self::$size_parameter ) && ( 'icon_feature' !== self::$size_parameter ) ) ) {
+		if ( $nested_call ) {
+			return $image;
+		}
+
+		if ( 'none' === self::$size_parameter ) {
+			return false;
+		} elseif ( ( 'icon_only' === self::$size_parameter ) ||  ( 'icon_feature' === self::$size_parameter ) ) {
+			// No native images allowed
+			$image = false;
+		}
+
+		// If a native image exists, we're done
+		if ( false !== $image ) {
 			return $image;
 		}
 
@@ -197,16 +207,19 @@ class MLAShortcode_Support {
 			}
 		} // enable_featured_image
 
-		if ( $src = wp_mime_type_icon( $attachment_id ) ) {
-			/** This filter is documented in wp-includes/post.php */
-			$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/media' );
-
-			$src_file = $icon_dir . '/' . wp_basename( $src );
-			@list( $width, $height ) = getimagesize( $src_file );
-		}
-
-		if ( $src && $width && $height ) {
-			$image = array( $src, $width, $height );
+		// For any of the three "icon" variations, try to substitute an icon image
+		if ( 0 === strpos( self::$size_parameter, 'icon' )  ) {
+			if ( $src = wp_mime_type_icon( $attachment_id ) ) {
+				/** This filter is documented in wp-includes/post.php */
+				$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/media' );
+	
+				$src_file = $icon_dir . '/' . wp_basename( $src );
+				@list( $width, $height ) = getimagesize( $src_file );
+			}
+	
+			if ( $src && $width && $height ) {
+				$image = array( $src, $width, $height );
+			}
 		}
 
 		return $image;
@@ -385,6 +398,7 @@ class MLAShortcode_Support {
 	public static function mla_gallery_shortcode( $attr, $content = NULL ) {
 //error_log( __LINE__ . " mla_gallery_shortcode() _REQUEST = " . var_export( $_REQUEST, true ), 0 );
 //error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
+//error_log( __LINE__ . " mla_gallery_shortcode() content = " . var_export( $content, true ), 0 );
 		global $post;
 
 		// Some do_shortcode callers may not have a specific post in mind
@@ -426,7 +440,6 @@ class MLAShortcode_Support {
 		 * and repair damage caused by link-breaks in the source text
 		 */
 		$attr = self::mla_validate_attributes( $attr, $content );
-//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr );
@@ -479,6 +492,9 @@ class MLAShortcode_Support {
 			'mla_margin' => MLACore::mla_get_option('mla_gallery_margin'),
 			'mla_target' => '',
 			'mla_debug' => false,
+			'mla_allow_rml' => false,
+			'mla_rml_folder' => NULL,
+			'mla_rml_include_children' => false,
 
 			'mla_named_transfer' => false,
 			'mla_viewer' => false,
@@ -567,7 +583,6 @@ class MLAShortcode_Support {
 			$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
 			$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
 		}
-//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		// Merge gallery arguments with defaults, pass the query arguments on to mla_get_shortcode_attachments.
 		$attr = apply_filters( 'mla_gallery_attributes', $attr );
@@ -578,13 +593,13 @@ class MLAShortcode_Support {
 		// Decide which templates to use
 		if ( ( 'none' !== $arguments['mla_style'] ) && ( 'theme' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'gallery', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_gallery mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_gallery mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = $default_arguments['mla_style'];
 			}
 		}
 
 		if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'gallery', 'markup', '[exists]' ) ) {
-			MLACore::mla_debug_add( '<strong>mla_gallery mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_gallery mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			$arguments['mla_markup'] = $default_arguments['mla_markup'];
 		}
 
@@ -713,7 +728,7 @@ class MLAShortcode_Support {
 
 		if ( ( $is_gallery && empty($attachments) ) || ( $is_pagination && empty( $found_rows ) ) ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
 				$output = MLACore::mla_debug_flush();
 			} else {
 				$output =  '';
@@ -850,16 +865,12 @@ class MLAShortcode_Support {
 			}
 		} // mla_alt_shortcode
 
-		if ( 'icon' == strtolower( $size) ) {
+		if ( 'icon' == strtolower( $size ) ) {
 			if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
 				$size = array( 64, 64 );
 			} else {
 				$size = array( 60, 60 );
 			}
-
-			$show_icon = true;
-		} else {
-			$show_icon = false;
 		}
 
 		// Feeds such as RSS, Atom or RDF do not require styled and formatted output
@@ -1321,8 +1332,9 @@ class MLAShortcode_Support {
 				} else {
 					add_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_image_src', 10, 4 );
 
-					$item_values['pagelink'] = wp_get_attachment_link($attachment->ID, $size, true, $show_icon, $link_text);
-					$item_values['filelink'] = wp_get_attachment_link($attachment->ID, $size, false, $show_icon, $link_text);
+					// The fourth argument, "show icon" is always false because we handle it in _get_attachment_image_src()
+					$item_values['pagelink'] = wp_get_attachment_link($attachment->ID, $size, true, false, $link_text);
+					$item_values['filelink'] = wp_get_attachment_link($attachment->ID, $size, false, false, $link_text);
 
 					remove_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_image_src' );
 				}
@@ -2077,14 +2089,14 @@ class MLAShortcode_Support {
 		// Determine templates and output type
 		if ( $arguments['mla_style'] && ( 'none' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'tag-cloud', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_tag_cloud mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_tag_cloud mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = NULL;
 			}
 		}
 
 		if ( $arguments['mla_markup'] ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'tag-cloud', 'markup', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_tag_cloud mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_tag_cloud mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_markup'] = NULL;
 			}
 		}
@@ -2202,7 +2214,7 @@ class MLAShortcode_Support {
 
 		if ( 0 == $found_rows ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$cloud = MLACore::mla_debug_flush();
 
 				if ( '<p></p>' == $cloud ) {
@@ -3397,14 +3409,14 @@ class MLAShortcode_Support {
 		// Determine templates and output type
 		if ( $arguments['mla_style'] && ( 'none' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'term-list', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_term_list mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_term_list mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = NULL;
 			}
 		}
 
 		if ( $arguments['mla_markup'] ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'term-list', 'markup', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_term_list mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_term_list mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_markup'] = NULL;
 			}
 		}
@@ -3525,7 +3537,7 @@ class MLAShortcode_Support {
 		$show_empty = false;
 		if ( 0 == $found_rows ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$list = MLACore::mla_debug_flush();
 
 				if ( '<p></p>' == $list ) {
@@ -3933,16 +3945,22 @@ class MLAShortcode_Support {
 			$parts['path'] = '';
 		}
 
-		$clean_query = '';
+		// Fragments must come at the end of the URL and be preceded by a #
+		if ( !empty( $parts['fragment'] ) ) {
+			$parts['fragment'] = '#' . $parts['fragment'];
+		} else {
+			$parts['fragment'] = '';
+		}
+
+		$clean_query = array();
 		if ( empty( $parts['query'] ) ) {
 			// No existing query arguments; create query if requested
 			if ( false !== $value ) {
-				$clean_query = '?' . urlencode( $key ) . '=' . urlencode( $value );
+				$clean_query[ $key ] = $value;
 			}
 		} else {
 			parse_str( $parts['query'], $query );
 
-			$query_prefix = '?';
 			$add_it = true;
 			foreach ( $query as $query_key => $query_value ) {
 				// Query argument names cannot have URL special characters
@@ -3957,17 +3975,24 @@ class MLAShortcode_Support {
 						$query_value = $value;
 					}
 
-					$clean_query .= $query_prefix . urlencode( $query_key ) . '=' . urlencode( $query_value );
-					$query_prefix = '&';
+					$clean_query[ $query_key ] = $query_value;
 				}
 			}
 
 			if ( $add_it && ( false !== $value ) ) {
-				$clean_query .= $query_prefix . urlencode( $key ) . '=' . urlencode( $value );
+				$clean_query[ $key ] = $value;
 			}
 		}
 
-		return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . $clean_query;
+		$clean_query = urlencode_deep( $clean_query );
+		$clean_query = build_query( $clean_query );
+
+		// Query arguments must come before the fragment, if any
+		if ( !empty( $clean_query ) ) {
+			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' . $clean_query . $parts['fragment'];
+		} else {
+			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . $parts['fragment'];
+		}
 	}
 
 	/**
@@ -4251,19 +4276,25 @@ class MLAShortcode_Support {
 		// Validate the query arguments to prevent cross-site scripting (reflection) attacks
 		$test_query = array();
 		parse_str( strval( $uri_query ), $test_query );
-
-		$clean_query = '';
-		$query_prefix = '?';
+		
+		$clean_query = array();
 		foreach ( $test_query as $test_key => $test_value ) {
 			// Query argument names cannot have URL special characters
 			if ( $test_key === urldecode( $test_key ) ) {
-				$clean_query .= $query_prefix . urlencode( $test_key ) . '=' . urlencode( $test_value );
-				$query_prefix = '&';
+				$clean_query[ $test_key ] = $test_value;
 			}
 		}
 
+		$clean_query = urlencode_deep( $clean_query );
+		$clean_query = build_query( $clean_query );
 		$markup_values['query_string'] = $clean_query;
-		$markup_values['request_uri'] = $uri_path . $markup_values['query_string'];	
+
+		if ( !empty( $clean_query ) ) {
+			$markup_values['request_uri'] = $uri_path .  '?' . $clean_query;	
+		} else {
+			$markup_values['request_uri'] = $uri_path;
+		}
+
 		$markup_values['new_url'] = set_url_scheme( $markup_values['scheme'] . $markup_values['http_host'] . $markup_values['request_uri'] );
 		$markup_values = apply_filters( 'mla_gallery_pagination_values', $markup_values );
 
@@ -4356,6 +4387,15 @@ class MLAShortcode_Support {
 	private static $query_parameters = array();
 
 	/**
+	 * Error details from _validate_array_specification()
+	 *
+	 * @since 2.94
+	 *
+	 * @var	string
+	 */
+	private static $array_specification_error = '';
+
+	/**
 	 * Checks for valid, perhaps nested PHP array specification
 	 *
 	 * @since 2.82
@@ -4366,9 +4406,12 @@ class MLAShortcode_Support {
 	 */
 	private static function _validate_array_specification( $specification ) {
 //error_log( __LINE__ . " _validate_array_specification() specification = " . var_export( $specification, true ), 0 );
+		self::$array_specification_error = '';
 
 		// Check for outer array specification(s) and reject anything else.
 		if ( 1 !== preg_match( '/^array\s*\((.*)\)[\s\,]*$/', $specification, $matches ) ) {
+//error_log( __LINE__ . " _validate_array_specification() specification = " . var_export( $specification, true ), 0 );
+			self::$array_specification_error = " FAILED outer array = " . var_export( $specification, true );
 			return false;
 		}
 
@@ -4381,6 +4424,8 @@ class MLAShortcode_Support {
 				foreach ( $matches[0] as $search ) {
 					// Replace valid arrays with a harmless literal value
 					if ( false === self::_validate_array_specification( $search ) ) {
+						self::$array_specification_error = " FAILED nested array = " . var_export( $search, true );
+//error_log( __LINE__ . " _validate_array_specification() search = " . var_export( $search, true ), 0 );
 						return false;
 					}
 
@@ -4417,6 +4462,7 @@ class MLAShortcode_Support {
 //error_log( __LINE__ . " _validate_array_specification() boolean and array() matches = " . var_export( $matches[10], true ), 0 );
 					if ( false === in_array( strtolower( $matches[11] ), array( 'false', 'true', 'array' ) ) ) {
 //error_log( __LINE__ . " _validate_array_specification() FAILED boolean matches = " . var_export( $matches[7], true ), 0 );
+						self::$array_specification_error = " FAILED boolean matches = " . var_export( $matches[7], true );
 						return false;
 					}
 				}
@@ -4429,11 +4475,12 @@ class MLAShortcode_Support {
 			if ( 1 === preg_match( '/^(([\'\"](.+?)[\'\"])|(\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))(.*)$/', $interior, $matches ) ) {
 //error_log( __LINE__ . " _validate_array_specification() simple matches = " . var_export( $matches, true ), 0 );
 
-				$interior = trim( $matches[5], ' ,' );
+				$interior = trim( $matches[6], ' ,' );
 				continue;
 			}
 
 //error_log( __LINE__ . " _validate_array_specification() FAILED interior = " . var_export( $interior, true ), 0 );
+			self::$array_specification_error = " FAILED interior = " . var_export( $interior, true );
 			return false;
 		}
 
@@ -4463,11 +4510,12 @@ class MLAShortcode_Support {
 //error_log( __LINE__ . " _sanitize_query_specification() candidate = " . var_export( $candidate, true ), 0 );
 
 		// Check for nested array specification(s) and reject anything else.
-		if ( self::_validate_array_specification( $candidate ) ) {
+		$result = self::_validate_array_specification( $candidate );
+		if ( true === $result ) {
 			return $candidate;
 		}
 
-//error_log( __LINE__ . " _sanitize_query_specification() FAILED", 0 );
+//error_log( __LINE__ . " _sanitize_query_specification() FAILED array_specification_error = " . var_export( self::$array_specification_error, true ), 0 );
 		return 'false';
 	}
 
@@ -4650,6 +4698,11 @@ class MLAShortcode_Support {
 			'mla_paginate_current' => NULL,
 			'mla_paginate_total' => NULL,
 			// Date and Time Queries
+			'year' => '',
+			'monthnum' => '',
+			'w' => '',
+			'day' => '',
+			'm' => '',
 			'date_query' => '',
 			// Custom Field
 			'meta_key' => '',
@@ -4677,6 +4730,9 @@ class MLAShortcode_Support {
 			'cache_results' => NULL,
 			'update_post_meta_cache' => NULL,
 			'update_post_term_cache' => NULL,
+			'mla_allow_rml' => false,
+			'mla_rml_folder' => NULL,
+			'mla_rml_include_children' => false,
 		);
 
 	/**
@@ -4777,6 +4833,14 @@ class MLAShortcode_Support {
 		$mla_page_parameter = $arguments['mla_page_parameter'];
 		unset( $arguments['mla_page_parameter'] );
 
+		// Convert to boolean, detect mla_rml_folder
+		$arguments['mla_allow_rml'] = 'true' === ( ( ! empty( $arguments['mla_allow_rml'] ) ) ? trim( strtolower( $arguments['mla_allow_rml'] ) ) : 'false' );
+		$arguments['mla_rml_include_children'] = 'true' === ( ( ! empty( $arguments['mla_rml_include_children'] ) ) ? trim( strtolower( $arguments['mla_rml_include_children'] ) ) : 'false' );
+		if ( ! empty( $arguments['mla_rml_folder'] ) ) {
+			$arguments['mla_rml_folder'] = absint( $arguments['mla_rml_folder'] );
+			$arguments['mla_allow_rml'] = 0 < $arguments['mla_rml_folder'];
+		}
+
 		/*
 		 * $mla_page_parameter, if set, doesn't make it through the shortcode_atts filter,
 		 * so we handle it separately
@@ -4826,6 +4890,11 @@ class MLAShortcode_Support {
 						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
 							$value = "array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) )";
+						} else {
+							// If sanitization fails, return an error message
+							if ( 'false' === $value ) {
+								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' tax_query = ' . self::$array_specification_error . '</p>';
+							}
 						}
 
 						try {
@@ -5250,6 +5319,49 @@ class MLAShortcode_Support {
 
 				unset( $arguments[ $key ] );
 				break;
+			case 'year': // 4 digit year, e.g., 2021
+				if ( 4 === strlen( $value ) && is_numeric( $value ) ) {
+					$query_arguments[ $key ] = (int) $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'monthnum': // Month number (from 1 to 12)
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 13 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'w': // Week of the year (from 0 to 53). Uses MySQL WEEK command. The mode is dependent on the “start_of_week” option.
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 54 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'day': // Day of the month (from 1 to 31)
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 32 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'm': //YearMonth, e.g., 202101
+				if ( 6 === strlen( $value ) && is_numeric( $value ) ) {
+					$query_arguments[ $key ] = (int) $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
 			case 'date_query':
 				if ( ! empty( $value ) ) {
 					if ( is_array( $value ) ) {
@@ -5260,6 +5372,11 @@ class MLAShortcode_Support {
 						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
 							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
+						} else {
+							// If sanitization fails, return an error message
+							if ( 'false' === $value ) {
+								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' date_query = ' . self::$array_specification_error . '</p>';
+							}
 						}
 
 						try {
@@ -5279,6 +5396,7 @@ class MLAShortcode_Support {
 
 					$use_children = false;
 				}
+
 				unset( $arguments[ $key ] );
 				break;
 			case 'meta_query':
@@ -5291,6 +5409,11 @@ class MLAShortcode_Support {
 						// Replace invalid queries from "where-used" callers with a harmless equivalent
 						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
 							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
+						} else {
+							// If sanitization fails, return an error message
+							if ( 'false' === $value ) {
+								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . self::$array_specification_error . '</p>';
+							}
 						}
 
 						try {
@@ -5310,6 +5433,7 @@ class MLAShortcode_Support {
 
 					$use_children = false;
 				}
+
 				unset( $arguments[ $key ] );
 				break;
 			case 'fields':
@@ -5349,8 +5473,8 @@ class MLAShortcode_Support {
 		 * search results or archive pages.
 		 */
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>mla_debug is_archive()</strong> = ' . var_export( is_archive(), true ) );
-			MLACore::mla_debug_add( '<strong>mla_debug is_search()</strong> = ' . var_export( is_search(), true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_archive()</strong> = ' . var_export( is_archive(), true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_search()</strong> = ' . var_export( is_search(), true ) );
 		}
 
 		if ( isset( $query_arguments['posts_per_archive_page'] ) && ( is_archive() || is_search() ) ) {
@@ -5525,8 +5649,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
-			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
 		}
 
 		/*
@@ -5548,6 +5672,31 @@ class MLAShortcode_Support {
 		if( defined('PMPRO_VERSION') ) {
 			add_filter( 'pmpro_search_filter_post_types', 'MLAShortcode_Support::mla_pmp_hide_attachments_filter' );
 		}
+
+		if ( isset( $query_arguments['post_type'] ) && is_string( $query_arguments['post_type'] ) && ( 'attachment' === $query_arguments['post_type'] ) ) {
+			if ( self::$query_parameters['disable_tax_join'] ) {
+				// Suppress WordPress WP_Query LEFT JOIN on post_parent, etc.
+				$query_arguments['post_type'] = 'mladisabletaxjoin';
+			} 
+			
+			if ( defined('RML_FILE') ) {
+				if ( $arguments['mla_allow_rml'] ) {
+					add_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9, 2 );
+
+					if ( ! empty( $arguments['mla_rml_folder'] ) ) {
+						unset( $query_arguments['post_parent'] );
+						$query_arguments['rml_folder'] = $arguments['mla_rml_folder'];
+
+						if ( $arguments['mla_rml_include_children'] ) {
+							$query_arguments['rml_include_children'] = $arguments['mla_rml_include_children'];
+						}
+					}
+				} else {
+					// Suppress RML additions to MLA queries
+					$query_arguments['post_type'] = 'mladisablerml';
+				}
+			}
+		} // post_type is attachment
 
 		MLAShortcodes::$mla_gallery_wp_query_object = new WP_Query;
 		$attachments = MLAShortcodes::$mla_gallery_wp_query_object->query( $query_arguments );
@@ -5595,10 +5744,10 @@ class MLAShortcode_Support {
 			remove_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_filter', 0x7FFFFFFF );
 			remove_filter( 'posts_clauses_request', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_request_filter', 0x7FFFFFFF );
 
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query', 'media-library-assistant' ) . '</strong> = ' . var_export( $query_arguments, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug request', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->request, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query_vars', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->query_vars, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug post_count', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->post_count, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query', 'media-library-assistant' ) . '</strong> = ' . var_export( $query_arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug request', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->request, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query_vars', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->query_vars, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug post_count', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->post_count, true ) );
 		}
 
 		MLAQuery::$search_parameters = array( 'debug' => 'none' );
@@ -5622,17 +5771,18 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$old_clause = $join_clause;
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
 		/*
 		 * Set for taxonomy queries unless post_parent=current. If true, we must disable
 		 * the LEFT JOIN clause that get_posts() adds to taxonomy queries.
 		 * We leave the clause in because the WHERE clauses refer to "p2.".
-		 */
+		 * Replaced in MLA v2.94 by "post_type = 'mladisabletaxjoin'"
+		 * /
 		if ( self::$query_parameters['disable_tax_join'] ) {
 			$join_clause = str_replace( " LEFT JOIN {$wpdb->posts} AS p2 ON ({$wpdb->posts}.post_parent = p2.ID) ", " LEFT JOIN {$wpdb->posts} AS p2 ON (p2.ID = p2.ID) ", $join_clause );
-		}
+		} // */
 
 		// These joins support the 'terms' search_field
 		if ( isset( MLAQuery::$search_parameters['tax_terms_count'] ) ) {
@@ -5662,7 +5812,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug && ( $old_clause != $join_clause ) ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug modified JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug modified JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
 		return $join_clause;
@@ -5687,9 +5837,17 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$old_clause = $where_clause;
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
 		}
 
+		// Reverse post_type modification used to avoid redundant LEFT JOIN insertion or RML folder insertion
+		if ( strpos( $where_clause, "post_type = 'mladisabletaxjoin'" ) ) {
+			$where_clause = str_replace( "post_type = 'mladisabletaxjoin'", "post_type = 'attachment'", $where_clause );
+		} elseif ( strpos( $where_clause, "post_type = 'mladisablerml'" ) ) {
+			$where_clause = str_replace( "post_type = 'mladisablerml'", "post_type = 'attachment'", $where_clause );
+		}
+
+		// Add whitespace to prevent Role Scoper plugin clause modification
 		if ( strpos( $where_clause, "post_type = 'attachment'" ) ) {
 			$where_clause = str_replace( "post_type = 'attachment'", "post_type  =  'attachment'", $where_clause );
 		}
@@ -5716,7 +5874,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug && ( $old_clause != $where_clause ) ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug modified WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug modified WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
 		}
 
 		return $where_clause;
@@ -5739,7 +5897,7 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$replacement = isset( self::$query_parameters['orderby'] ) ? var_export( self::$query_parameters['orderby'], true ) : 'none';
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug ORDER BY filter, incoming', 'media-library-assistant' ) . '</strong> = ' . var_export( $orderby_clause, true ) . '<br>' . __( 'Replacement ORDER BY clause', 'media-library-assistant' ) . ' = ' . $replacement );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug ORDER BY filter, incoming', 'media-library-assistant' ) . '</strong> = ' . var_export( $orderby_clause, true ) . '<br>' . __( 'Replacement ORDER BY clause', 'media-library-assistant' ) . ' = ' . $replacement );
 		}
 
 		if ( isset( self::$query_parameters['orderby'] ) ) {
@@ -5747,6 +5905,24 @@ class MLAShortcode_Support {
 		}
 
 		return $orderby_clause;
+	}
+
+	/**
+	 * Reverse mladisabletaxjoin/mladisablerml overide for RML queries
+	 * 
+	 * @since 2.95
+	 *
+	 * @param	array	query clauses before modification
+	 * @param	WP_Query query object
+	 */
+	public static function mla_shortcode_query_posts_clauses_rml_filter( $pieces, $query ) {
+		remove_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9 );
+
+        if ( $query->get( 'post_type' ) === 'mladisabletaxjoin' ) {
+            $query->set( 'post_type', 'attachment' );
+		}
+
+		return $pieces;
 	}
 
 	/**
@@ -5762,7 +5938,7 @@ class MLAShortcode_Support {
 	 * @return	array	query clauses after modification (none)
 	 */
 	public static function mla_shortcode_query_posts_clauses_filter( $pieces ) {
-		MLACore::mla_debug_add( '<strong>' . __( 'mla_debug posts_clauses filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug posts_clauses filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
 
 		return $pieces;
 	}
@@ -5780,7 +5956,7 @@ class MLAShortcode_Support {
 	 * @return	array	query clauses after modification (none)
 	 */
 	public static function mla_shortcode_query_posts_clauses_request_filter( $pieces ) {
-		MLACore::mla_debug_add( '<strong>' . __( 'mla_debug posts_clauses_request filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug posts_clauses_request filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
 
 		return $pieces;
 	}
@@ -5930,7 +6106,7 @@ class MLAShortcode_Support {
 
 		// Support Simple Taxonomy Ordering plugin
 		if ( 'tax_position' === strtolower( $arguments['orderby'] ) ) {
-			if ( class_exists( 'Yikes_Custom_Taxonomy_Order' ) ) {
+			if ( class_exists( 'Yikes_Custom_Taxonomy_Order', false ) ) {
 				$field_array[] = ' term_meta.meta_value AS tax_position';
 			} else {
 				$arguments['orderby'] = 'name';
@@ -5939,7 +6115,7 @@ class MLAShortcode_Support {
 
 		// Support Simple Custom Post Order plugin
 		if ( 'term_order' === strtolower( $arguments['orderby'] ) ) {
-			if ( class_exists( 'SCPO_Engine' ) ) {
+			if ( class_exists( 'SCPO_Engine', false ) ) {
 				$field_array[] = ' t.term_order';
 			} else {
 				$arguments['orderby'] = 'name';
@@ -6095,13 +6271,13 @@ class MLAShortcode_Support {
 
 		// Add sort order
 		if ( 'none' !== strtolower( $arguments['orderby'] ) ) {
-			if ( ( 'tax_position' === strtolower( $arguments['orderby'] ) ) && class_exists( 'Yikes_Custom_Taxonomy_Order' ) ) {
+			if ( ( 'tax_position' === strtolower( $arguments['orderby'] ) ) && class_exists( 'Yikes_Custom_Taxonomy_Order', false ) ) {
 				// Support Simple Taxonomy Ordering plugin
 				$yikes_custom_taxonomy_order = Yikes_Custom_Taxonomy_Order::get_instance();
 				$clauses = $yikes_custom_taxonomy_order->set_tax_order( $clauses, $taxonomies, array() );
 				// Adjust the orderby clause to account for the subquery and the alias in the fields[] clause
 				$clauses['orderby'] = 'ORDER BY CAST( tax_position AS UNSIGNED )';
-			} elseif ( ( 'term_order' === strtolower( $arguments['orderby'] ) ) && class_exists( 'SCPO_Engine' ) ) {
+			} elseif ( ( 'term_order' === strtolower( $arguments['orderby'] ) ) && class_exists( 'SCPO_Engine', false ) ) {
 				// Support Simple Custom Post Order plugin
 				$clauses['orderby'] = 'ORDER BY term_order';
 			} else {
@@ -6203,11 +6379,11 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug last_query', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_query, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug last_error', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_error, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug num_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->num_rows, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug found_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $found_rows, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug last_query', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_query, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug last_error', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_error, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug num_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->num_rows, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug found_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $found_rows, true ) );
 		}
 
 		if ( 'true' == strtolower( trim( $arguments['pad_counts'] ) ) ) {
@@ -6352,7 +6528,7 @@ class MLAShortcode_Support {
 
 			if ( $exclude_tree ) {
 				self::_remove_exclude_tree( $term_tree[ $taxonomy ], $exclude_tree );
-			} // $include_tree
+			}
 
 			$term_count = 0;
 			$root_limit = count( $term_tree[ $taxonomy ] );

@@ -6,9 +6,9 @@
  * The User Interface to the end user.
  *
  * @package   Smart_Media_Categories_Admin
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 ?>

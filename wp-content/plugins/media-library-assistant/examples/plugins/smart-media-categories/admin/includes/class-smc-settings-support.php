@@ -3,9 +3,9 @@
  * Support functions for the SMC Settings page.
  *
  * @package   Smart_Media_Categories_Admin
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 
@@ -16,7 +16,7 @@
  * no need to create a new instance of the class.
  *
  * @package Smart_Media_Categories_Admin
- * @author  David Lingren <dlingren@comcast.net>
+ * @author  David Lingren <david@davidlingren.com>
  */
 class SMC_Settings_Support {
 	/**
@@ -126,6 +126,20 @@ class SMC_Settings_Support {
 					'id' => 'smc_automatic_reattach_item',
 					'title' => __( 'Reattach Item', 'smart-media-categories' ),
 					'description' => __( "When an items new parent is a <strong>Sync Post Type</strong>, it will inherit the parent's terms.", 'smart-media-categories' ),
+				),
+				'exclude_default' => array(
+					'type' => 'checkbox',
+					'default' => '0',
+					'id' => 'smc_automatic_exclude_default',
+					'title' => __( 'Exclude Post Default', 'smart-media-categories' ),
+					'description' => __( "Exclude the Settings/Wriing 'Default Post Category' term from Attachments.", 'smart-media-categories' ),
+				),
+				'postie_sync' => array(
+					'type' => 'checkbox',
+					'default' => '1',
+					'id' => 'smc_automatic_postie_sync',
+					'title' => __( 'Sync Postie Emails', 'smart-media-categories' ),
+					'description' => __( "Apply syncronization options to posts created by Postie email processing.", 'smart-media-categories' ),
 				),
 			),
 			'smc_manual_options' => array(
@@ -370,12 +384,12 @@ class SMC_Settings_Support {
 	 * @return	void
 	 */
 	public static function validate_automatic_options( $input ) {
-	//error_log( __LINE__ ."' SMC_Settings_Support::validate_automatic_options input = " . var_export( $input, true ), 0 );
+	//error_log( __LINE__ ." SMC_Settings_Support::validate_automatic_options input = " . var_export( $input, true ), 0 );
 		$output = array();
 		$updates = 0;
 		
 		foreach( SMC_Settings_Support::$option_definitions['smc_automatic_options'] as $key => $value ) {
-	//error_log( __LINE__ ."' SMC_Settings_Support::validate_automatic_options {$key} = " . var_export( $value, true ), 0 );
+	//error_log( __LINE__ ." SMC_Settings_Support::validate_automatic_options {$key} = " . var_export( $value, true ), 0 );
 	
 			$update = NULL;
 			switch ( $value['type'] ) {
@@ -419,7 +433,7 @@ class SMC_Settings_Support {
 			);
 		}
 		
-	//error_log( __LINE__ ."' SMC_Settings_Support::validate_automatic_options output = " . var_export( $output, true ), 0 );
+	//error_log( __LINE__ ." SMC_Settings_Support::validate_automatic_options output = " . var_export( $output, true ), 0 );
 		update_option( 'smc_automatic_options', $output );
 	}
 	
