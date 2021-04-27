@@ -32,7 +32,8 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#post_mime_type_parameter">Post MIME Type</a></li>
 <li><a href="#post_type_post_status">Post Type, Post Status</a></li>
 <li><a href="#pagination_parameters">Pagination Parameters</a></li>
-<li><a href="#time_parameters">Date and Time Parameters, the "date query"</a></li>
+<li><a href="#date_parameters">Simple Date Parameters</a></li>
+<li><a href="#date_queries">Date and Time Queries, the "date query"</a></li>
 <li><a href="#custom_field_parameters">Simple Custom Field Parameters</a></li>
 <li><a href="#custom_field_queries">Custom Field Queries, the "meta_query"</a></li>
 <li><a href="#search_keywords">Keyword(s) Search</a></li>
@@ -91,6 +92,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 </li>
 <li>
 <a href="#photonic_gallery"><strong>Support for the &#8220;Photonic Gallery&#8221; Plugin</strong></a>
+</li>
+<li>
+<a href="#real_media_library"><strong>Support for the &#8220;Real Media Library&#8221; Plugin</strong></a>
 </li>
 <li>
 <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>
@@ -277,7 +281,7 @@ The <code>[mla_gallery]</code> shortcode has many parameters and some of them ha
 <li>Use the alternative "enclosing shortcode" syntax detailed below.</li>
 </ul>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding parameters such as <code>tax_query</code>, <code>meta_query</code> or <code>date_query;</code> they must be a valid PHP array specification. Splitting your query over multiple lines or using the "Visual" editor will introduce HTML markup and escape sequences that can render your query invalid. MLA can clean up some of the damage, but if your query fails use the "mla_debug=true" parameter to see if your query has been corrupted. Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that could&rsquo;nt be parsed.
+When embedding the shortcode in the body of a post, be very careful when coding parameters such as <code>tax_query</code>, <code>meta_query</code> or <code>date_query;</code> they must be a valid PHP array specification. Splitting your query over multiple lines or using the "Visual" editor will introduce HTML markup and escape sequences that can render your query invalid. MLA can clean up some of the damage, but if your query fails use the "mla_debug=true" parameter to see if your query has been corrupted. Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed.
 </p>
 <p>
 <strong>IMPORTANT:</strong> Beginning with version 4.0, WordPress changed the way it handles shortcode parameters. Using angle brackets, e.g., the <code>=></code> characters in a shortcode will often return "Invalid mla_gallery tax_query" errors. To prevent this: 1) add "&lt;code&gt;&lt;/code&gt;" tags around your shortcode, 2) use an escape sequence like "=&amp;gt;" in your query or 3) use the enclosing shortcode syntax.
@@ -628,7 +632,7 @@ The Size parameter specifies the image size to use for the thumbnail display; "t
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon</td>
-<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files.</td>
+<td>Display an appropriate 60x60 (or 64x64) pixel thumbnail for image items and an appropriate icon for non-image items such as PDF or text files. If, however, a non-image item has a "Featured Image" it will replace the icon.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">icon_feature</td>
@@ -1089,9 +1093,39 @@ Pagination parameters let you divide your <code>[mla_gallery]</code> display int
 </table>
 <p>
 The task of dividing a large <code>[mla_gallery]</code> into two or more pages is supported by MLA's <a href="#mla_output_parameter"><strong>Support for Alternative Gallery Output, e.g., Pagination</strong></a>. For more information and examples, go to that section of the Documentation. 
-<a name="time_parameters"></a>
+<a name="date_parameters"></a>
 </p>
-<h4>Date and Time Parameters, the "date query"</h4>
+<h4>Simple Date Parameters</h4>
+<p>
+The <code>[mla_gallery]</code> shortcode supports five parameters for filtering the gallery display by year, month, week and day. For more complex date and time filters, see the "date query" feature in the next section below.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">year</td>
+<td>the 4-digit year by which to filter the gallery, e.g., <code>year=2021</code>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">monthnum</td>
+<td>the month number (from 1 to 12) by which to filter the gallery.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">w</td>
+<td>the week of the year (from 0 to 53) by which to filter the gallery. Uses the MySQL WEEK command. The mode is dependent on the “start_of_week” option.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">day</td>
+<td>the day of the month (from 1 to 31) by which to filter the gallery.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">m</td>
+<td>the 6-digit year and month by which to filter the gallery, e.g., <code>m=202101</code>.</td>
+</tr>
+</table>
+<p>
+These five parameters always use the "Uploaded on" date, stored in the <code>post_date</code> column of the <code>wp_posts</code> database table. Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+<a name="date_queries"></a>
+</p>
+<h4>Date and Time Queries, the "date query"</h4>
 <p>
 The <code>[mla_gallery]</code> shortcode supports the "<a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">date_query</a>" parameter introduced in WordPress Version 3.7. You can use a date_query to filter your gallery based on the 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt', 'comment_date', or 'comment_date_gmt' database columns (although the column names include "post", the same columns are used for attachments).
 </p>
@@ -1102,7 +1136,8 @@ As the <a href="https://developer.wordpress.org/reference/classes/wp_query/#date
 When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
-Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.<a name="custom_field_parameters"></a>
+Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
+<a name="custom_field_parameters"></a>
 </p>
 <h4>Simple Custom Field Parameters</h4>
 <p>
@@ -1168,7 +1203,7 @@ You can use the <code>mla_search_connector</code> and <code>mla_search_fields</c
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_negative_delimiter</td>
-<td>A single character that encloses the negative (excluded) phrases in the search string. The <strong>default delimiter</strong> is a slash ('/').</td>
+<td>A single character that encloses the negative (excluded) phrases in the search string. The <strong>default delimiter</strong> is a slash ('/'), e.g., 'pillow /sofa/' will return items containing 'pillow' but not 'sofa'.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_terms_taxonomies</td>
@@ -1225,7 +1260,7 @@ The "mla_debug" parameter controls the display of information about the query pa
 If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
 </p>
  <p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that could&rsquo;nt be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
 <a name="mla_gallery_hooks"></a>
 </p>
 <h4>MLA Gallery Filters and Actions (Hooks)</h4>
@@ -1447,7 +1482,7 @@ The Link parameter specifies the target and type of link from the tag cloud term
 </tr>
 <tr>
 <td class="mla-doc-table-label">view</td>
-<td>Link to the term's "archive page"; this is the default value. Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
+<td>Link to the term's "archive page"; <strong>this is the default value</strong>. Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">edit</td>
@@ -1690,7 +1725,7 @@ The "mla_debug" parameter controls the display of information about the query pa
 If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
 </p>
  <p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that could&rsquo;nt be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
 <a name="tag_cloud_substitution"></a>
 </p>
 <h4>Tag Cloud Substitution Parameters</h4>
@@ -2395,7 +2430,7 @@ The following parameters customize item content and markup:
 <table>
 <tr>
 <td class="mla-doc-table-label">separator</td>
-<td>The text/space between tags. <strong>Default '\n'</strong> (whitespace)</td>
+<td>The text/space between terms. <strong>Default '\n'</strong> (whitespace)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">single_text</td>
@@ -2411,7 +2446,7 @@ The following parameters customize item content and markup:
 </tr>
 </table>
 <p>
-The Item parameters are an easy way to customize the content and markup for each list item. For the list formats you can also use the <a href="#term_list_display_content_afl">Term List Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility. The dropdown and checklist formats have corresponding Display COntent parameters.
+The Item parameters are an easy way to customize the content and markup for each list item. For the list formats you can also use the <a href="#term_list_display_content_afl">Term List Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility. The dropdown and checklist formats have corresponding Display Content parameters.
 <a name="term_list_link"></a>
 </p>
 <h4>Term List Item Link Values (Array, Flat and List)</h4>
@@ -2425,7 +2460,7 @@ The Link parameter specifies the target and type of link from the list term/item
 </tr>
 <tr>
 <td class="mla-doc-table-label">view</td>
-<td>Link to the term's "archive page"; this is the default value. Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
+<td>Link to the term's "archive page". Support for archive pages, or "tag archives", is theme-dependent. There is an introduction to tag archives in the WordPress Codex at the bottom of the <a href="http://codex.wordpress.org/Function_Reference/wp_tag_cloud#Creating_a_Tag_Archive" title="Codex Tag Archive Discussion" target="_blank"><code>wp_tag_cloud</code> Function Reference</a>.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">edit</td>
@@ -2650,7 +2685,7 @@ The "mla_debug" parameter controls the display of information about the query pa
 If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
 </p>
 <p>
-Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that could&rsquo;nt be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
 <a name="term_list_data_selection"></a>
 </p>
 <h4>Term List Data Selection Parameters</h4>
@@ -3419,17 +3454,27 @@ This example shows the power of the substitution parameters and in particular th
 </p>
 <h4>Next and previous gallery pages; the <code>next_page</code> and <code>previous_page</code> output types</h4>
 <p>
-WordPress provides functions that generate links to the "<em>next/previous set of posts within the current query</em>." These are not useful because the "current query" is for posts/pages, <strong>not</strong> Media Library items. What's needed is a way to paginate an <code>[mla_gallery]</code> shortcode on a single post or page. If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the gallery in groups of, say, ten items per "gallery page". Here is a very simple example of MLA pagination:
-</p>
-<p>
-<code>[mla_gallery post_parent=all posts_per_page=6]<br />
-[mla_gallery post_parent=all posts_per_page=6 mla_output=paginate_links]</code>
-</p>
-<p>
-The first shortcode displays the gallery. The data selection parameter is post_parent=all, which will select all of the images in your Media Library. The posts_per_page=6 parameter will divide the gallery into pages of six images each. In the second shortcode, mla_output=paginate_links tells the shortcode to display pagination controls instead of the gallery images.
+WordPress provides functions that generate links to the "<em>next/previous set of posts within the current query</em>." These are not useful because the "current query" is for posts/pages, <strong>not</strong> Media Library items. What's needed is a way to paginate an <code>[mla_gallery]</code> shortcode on a single post or page. If, for example, you use an <code>[mla_gallery]</code> shortcode to build a gallery of items with a specific Att. Tag value you can use the <code>next_page</code> and <code>previous_page</code> output types to move through the gallery in groups of, say, ten items per "gallery page".
 </p>
 <p>
 WordPress uses the "paged" parameter to indicate the current "<em>set of posts within the current query</em>." To avoid built-in WordPress logic that uses this parameter, MLA has its own "mla_paginate_current" parameter to indicate the current set of items within the gallery (the current gallery page). MLA will automatically manage this parameter for you, but you can also use it explicitly to handle special cases.
+</p>
+<h4>An example of the <code>next_page</code> and <code>previous_page</code> output types</h4>
+<p>
+Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are <strong>two additional shortcodes</strong> for the previous/next page links:
+</p>
+<code>
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
+<br />&nbsp;<br />
+&lt;div style="clear: both; float: left"&gt;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br />
+&lt;/div&gt;<br />
+&lt;div style="float: right"&gt;<br />
+[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br />
+&lt;/div&gt;
+</code>
+<p>
+This example is simpler that the earlier single-item paging example because the "current page" handling is done by MLA, and the "sample" tag value is hard-coded. You could also develop a generic "Att. Tag" gallery page and pass the tag value in the URI for that page (as in the single-item pagination example earlier in this section).
 </p>
 <h4>Page selection parameters for <code>next_page</code> and <code>previous_page</code> output types</h4>
 <p>
@@ -3574,23 +3619,6 @@ The next or previous link returned can use the following Gallery Display Content
 <td>concatenation of scheme + http_host + request_uri</td>
 </tr>
 </table>
-<h4>An example of the <code>next_page</code> and <code>previous_page</code> output types</h4>
-<p>
-Expanding the "attachment tag gallery" example, you can select images using the MLA Att. Tag taxonomy and divide the  gallery into fixed-size pages. Following the main gallery shortcode are <strong>two additional shortcodes</strong> for the previous/next page links:
-</p>
-<code>
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_caption="{+title+}"]
-<br />&nbsp;<br />
-&lt;div style="clear: both; float: left"&gt;<br />
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="previous_page,first" mla_link_text='&amp;larr; Previous Gallery Page' mla_rollover_text="Previous or first page for this tag"]<br />
-&lt;/div&gt;<br />
-&lt;div style="float: right"&gt;<br />
-[mla_gallery attachment_tag="sample" posts_per_page=10 mla_output="next_page,last" mla_link_text='&amp;larr; Next Gallery Page' mla_rollover_text="Next or last page for this tag"]<br />
-&lt;/div&gt;
-</code>
-<p>
-This example is simpler that the earlier single-item paging example because the "current page" handling is done by MLA, and the "sample" tag value is hard-coded. You could also develop a generic "Att. Tag" gallery page and pass the tag value in the URI for that page (as in the single-item pagination example earlier in this section).
-</p>
 <h4>Generalized paginated link list; the <code>paginate_links</code> output type</h4>
 <p>
 WordPress provides a function that "<em>can be used to create paginated link list for any area</em>." The "paginate_links" output type is modeled on this function and lets you generate a list of links for moving among "gallery pages".
@@ -3724,6 +3752,31 @@ The <a href="http://wordpress.org/extend/plugins/photonic/" title="Photonic Gall
 </p>
 <p>
 You can use the "Photonic" screen of the Insert Media dialog to build the display portion of your shortcode parameters. After you click "Insert into post", change the shortcode name from "gallery" to "mla_gallery" and add the query parameters you need to select the attachments for the gallery. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to Photonic to format the results.
+<a name="real_media_library"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;Real Media Library&#8221; Plugin</h3>
+<p>
+The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real Media Library plugin directory page" target="_blank">WordPress Real Media Library: Media Library Folder & File Manager</a> plugin helps you with media management. Organize thousands of uploaded files into folders, collections and galleries. You can add parameters to the <code>[mla_gallery]</code> shortcode to filter the gallery display by RML folder, collection or gallery ID. There are three <code>[mla_gallery]</code> shortcode parameters for this purpose:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_rml_folder</td>
+<td>the name of the RML folder, collection or gallery from which to source items gor the gallery display. You can find the ID of a folder easily in your media library. Simply select a folder, afterwards click the three-dots icon in the folder toolbar. A dialog opens and in the bottom right corner you can find a number which represents the folder ID.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_rml_include_children</td>
+<td>"false" (the default) to restrict the potential items to the specific folder or gallery named in the <code>mla_rml_folder</code> parameter. Set it to "true" to include items in folders contained in the specific folder or collection named in the shortcode.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_allow_rml</td>
+<td>(optional) "false" (the default) to remove the RML parameters from <code>[mla_gallery]</code> database queries. "true" to preserve the parameters. This parameter is only useful for performance testing purposes. It is automatically set to "true" if the <code>mla_rml_folder</code> parameter is present. You can safely ignore it.</td>
+</tr>
+</table>
+<p>
+You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in an RML gallery.
 <a name="mla_gallery_templates"></a>
 </p>
 <p>
@@ -5593,6 +5646,13 @@ By default, the Att. Categories and Att. Tags taxonomies are included in the ter
 </p>
 <p>
 In the Search Terms popup window you will find a list of all supported taxonomies, with checkboxes reflecting their participation in the search process. You can add or remove taxonomies from the process on a search-by-search basis.
+</p>
+<h4>Debugging output</h4>
+<p>
+If you are having problems with search results or are simply curious you can activate some debug logging by adding a special value to the beginning of the phrases text box. Adding <code>}|{</code> activates the display of information about the query parameters and SQL statements used to retrieve items. You will see a lot of information added to the post or page containing the gallery or to the Media/Assistant admin screen. Of course, this value should ONLY be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you add <code>{|}</code> all of the information will be written to the error log, a more practical choice. You can use the MLA Debug Tab to view and download the information in the error log.
 <a name="select_parent"></a>
 </p>
 <p>
@@ -6116,12 +6176,23 @@ Within WordPress, the Post MIME Types list is returned from <code>/wp-includes/p
 The Table View list adds several enhancements to the Post MIME Type list. In the Specification field you can select several MIME types with a comma-separated list, e.g., "audio,video". Wildcard specifications are also supported. For example, "*/mpeg" to select audio and video mpeg formats or "application/*ms*" to select all Microsoft application formats (Word, Excel, etc.). In the Menu Order field you can enter numeric values to re-arrange the order in which the list entries are displayed in, for example, the Media/Assistant screen.
 </p>
 <p>
-The Table View list also supports custom field queries. You can choose from three forms of the custom field specification:
+The Table View list also supports custom field queries. A custom field query has four parts:
+</p>
+<ol>
+<li>A prefix, "custom:"</li>
+<li>A comma-separated list of one or more custom field names</li>
+<li>An equals sign ("="), to divide the field names from the values</li>
+<li>A comma-separated list of one or more values</li>
+</ol>
+<p>
+To return all items that match one or more values, enter the prefix "custom:" followed by the custom field name(s) and then "=" followed by a list of values. For example, <code>custom:Color=red</code> or <code>custom:Color=red,green,blue</code>. To search multiple fields, enter something like <code>custom:Artist,Patron=smith,jones</code>. To search <strong>all</strong> custom fields, enter an asterisk ("*"), e.g., <code>custom:*=smith,jones</code>. Wildcard specifications are also supported; for example, "*post" to match anything ending in "post" or "th*da*" to match values like "the date" and "this day". As explained below, a value of "*" will match any non-NULL value for a custom field.
+</p>
+<p>
+There are two special forms of the custom field specification used to test for the presence (non-NULL) or absence (NULL) of <strong>any</strong> values:
 </p>
 <ul class="mla_settings">
-<li>To return all items that have a non-NULL value in the field, simply enter the prefix "custom:" followed by the custom field name. For example, <code>custom:My Featured Items</code>. You can also enter the custom field name and then "=*", e.g., <code>custom:My Featured Items=*</code>.</li>
-<li>To return all items that have a NULL value in the field, enter the prefix "custom:" followed by the custom field name and then ",null". For example, <code>custom:My Featured Items,null</code>. You can also enter the custom field name and then "=", e.g., <code>custom:My Featured Items=</code>.</li>
-<li>To return all items that match one or more values, enter the prefix "custom:" followed by the custom field name and then "=" followed by a list of values. For example, <code>custom:Color=red</code> or <code>custom:Color=red,green,blue</code>. Wildcard specifications are also supported; for example, "*post" to match anything ending in "post" or "th*da*" to match values like "the date" and "this day".</li>
+<li>To return all items that have a non-NULL value in the field, enter the custom field name and then "=*", e.g., <code>custom:My Featured Items=*</code>. You can also enter the prefix "custom:" followed by just the custom field name(s). For example, <code>custom:My Featured Items</code>.</li>
+<li>To return all items that have a NULL value in the field, enter the prefix "custom:" followed by the custom field name(s) and then "=", e.g., <code>custom:My Featured Items,My Inserted Items=</code>. You can also enter a single custom field name and then ",null". For example, <code>custom:My Featured Items,null</code>.</li>
 </ul>
 <p>
 If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media Manager/Add Media "media items" drop down list.
@@ -6715,7 +6786,7 @@ The Format element has a "commas" value that can improve the results of sorting 
 If you code the "template:" prefix at the beginning of the EXIF/Template value you have all the power of Content Templates at your disposal. Do <strong>not</strong> add the "[+" and "+]" delimiters; the prefix is all you need.
 </p>
 <p>
-A template can be used to access any XMP metadata your items contain. For example:<br />
+A template can be used to access any IPTC, EXIF or XMP metadata your items contain, as well as any of the <a href="#field_level_data_sources">field-level data sources</a>. For example:<br />
 &nbsp;<br />
 <code>template:([+xmp:Title+])</code><br />
 <code>template:([+xmp:Regions.RegionList.*.*.Name,array+])</code><br />
@@ -6769,6 +6840,23 @@ The first example above sets the date to a fixed value. The second example uses 
 <a href="#backtotop">Go to Top</a>
 </p>
 <h4>IPTC/EXIF Mapping for PDF Documents</h4>
+<p>
+PDF documents contain a Document Information Dictionary (D.I.D.) and many also contain XMP metadata. For the <code>pdf:</code> prefix, you can code any of the nine D.I.D. entries:
+</p>
+<ul class="mla_settings">
+<li><strong>Title</strong> - The document's title</li>
+<li><strong>Author</strong> - The name of the person who created the document</li>
+<li><strong>Subject</strong> - The subject of the document</li>
+<li><strong>Keywords</strong> - Keywords associated with the document</li>
+<li><strong>Creator</strong> - the name of the conforming product that created the original document</li>
+<li><strong>Producer</strong> - the name of the conforming product that converted it to PDF</li>
+<li><strong>CreationDate</strong> - The date and time the document was created</li>
+<li><strong>ModDate</strong> - The date and time the document was most recently modified</li>
+<li><strong>Trapped</strong> - indicates whether the document has been modified to include trapping information</li>
+</ul>
+<p>
+MLA contains logic that attempts to fill in the entries from the dictionary or from any XMP metadata the document contains. This gives you a simple way to access the information regardless of where in the metadata it appears.
+</p>
 <p>
 You can use Content Templates in the EXIF/Template Value text box to extract metadata from your PDF documents and add it to the Standard Fields and Taxonomy Terms of your Media Library items. The templates can be coded to select the appropriate source whether the item is a PDF document or an image. Here are three rules for metadata contained in PDF documents:
 </p>

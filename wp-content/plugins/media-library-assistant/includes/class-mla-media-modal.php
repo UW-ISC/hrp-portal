@@ -270,6 +270,7 @@ class MLAModal {
 		self::$mla_media_modal_settings['allMimeTypes'] = MLAMime::mla_pluck_table_views();
 		self::$mla_media_modal_settings['allMimeTypes']['detached'] = $default_types['detached']['plural'];
 		self::$mla_media_modal_settings['allMimeTypes']['attached'] = $default_types['attached']['plural'];
+		self::$mla_media_modal_settings['allMimeTypes']['mine'] = $default_types['mine']['plural'];
 
 		// Trash items are allowed in the Media/Library Grid view
 		if ( EMPTY_TRASH_DAYS && MEDIA_TRASH ) {

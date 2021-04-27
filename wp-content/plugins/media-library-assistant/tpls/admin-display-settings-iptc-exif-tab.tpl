@@ -336,7 +336,7 @@ href="#mla-new-iptc-exif"> [+Cancel new field+] </a></td>
 							</div>
 							<div class="inline-edit-group">
 								<label class="alignleft"> <span class="title">[+EXIF/Template Value+]</span> <span class="input-text-wrap">
-									<input name="exif_value" class="ptitle" type="text" value="" />
+									<input name="exif_value" class="ptitle" type="text" value=""  size="[+exif_size+]" />
 									</span> </label>
 							</div>
 							<div class="inline-edit-group">

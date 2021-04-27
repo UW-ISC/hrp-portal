@@ -1006,12 +1006,10 @@ class MLAMime {
 			$mla_types = array ();
 		}
 
-		/*
-		 * Filter the list, generate the list
-		 */
+		// Filter the list, generate the list
 		$results = array();
 		foreach ( $mla_types as $value ) {
-			if ( in_array( $value->slug, array( 'all', 'trash', 'detached' ) ) ) {
+			if ( in_array( $value->slug, array( 'all', 'detached', 'attached', 'mine', 'trash' ) ) ) {
 				continue;
 			}
 

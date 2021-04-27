@@ -34,7 +34,7 @@ class MLA_Ajax {
 	public static function initialize() {
 		if ( ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
 			$ajax_only = var_export( self::$ajax_only, true );
-			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), ( MLACore::MLA_DEBUG_CATEGORY_AJAX || MLACore::MLA_DEBUG_CATEGORY_MMMW ) );
+			MLACore::mla_debug_add( __LINE__ . " MLA_Ajax::initialize( {$ajax_only} ) \$_REQUEST = " . var_export( $_REQUEST, true ), ( MLACore::MLA_DEBUG_CATEGORY_AJAX | MLACore::MLA_DEBUG_CATEGORY_MMMW ) );
 		}
 		
 		// If there's no action variable, we have nothing more to do

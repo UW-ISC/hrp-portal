@@ -340,35 +340,36 @@ You can leave the default (checked) setting in place unless you are having a spe
 </p>
 <h3>Debugging and Troubleshooting</h3>
 <p>
-When you are creating a new rule testing it out on one or a few posts/pages and carefully inspecting the results can be a valuable exercise. YOu may have to delete the field values, modify the rule and reapply it a few times to get the expected results.
+When you are creating a new rule testing it out on one or a few posts/pages and carefully inspecting the results can be a valuable exercise. You may have to delete the field values, modify the rule and reapply it a few times to get the expected results.
 </p>
 <p>
-If a problem persists you can activate the debug logging, run a test and insoect the log file for more information about what's going on. To activate  MLA’s debug logging:
+If a problem persists you can activate the debug logging, run a test and inspect the log file for more information about what's going on. To activate  MLA&rsquo;s debug logging:
 </p>
 <ol>
 <li>Navigate to the Settings/Media Library Assistant Debug tab.</li>
-<li>Scroll down to the “MLA Reporting” text box and enter “0x8013”. This will turn on MLA debug logging for the example plugin,  AJAX operations (such as WP/LR Sync) and the IPTC/EXIF metadata mapping rules.</li>
+<li>Scroll down to the &ldquo;MLA Reporting&rdquo; text box and enter &ldquo;0x8013&rdquo;. This will turn on MLA debug logging for the example plugin,  AJAX operations (such as WP/LR Sync) and the IPTC/EXIF metadata mapping rules.</li>
 <li>Click the Save Changes button to record your new setting.</li>
-<li>Optionally, scroll to the bottom of the screen and click “Reset” to clear the error log. You may not want to do this depending on how you manage your error log.</li>
+<li>Optionally, scroll to the bottom of the screen and click &ldquo;Reset&rdquo; to clear the error log. You may not want to do this depending on how you manage your error log.</li>
 </ol>
 <p>
-Once that’s done you can run a test. The debug log will be very detailed, so restricting the test as best you can will be very helpful. To can often update one post and then collect the test results. One way to do that:
+Once that&rsquo;s done you can run a test. The debug log will be very detailed, so restricting the test as best you can will be very helpful. You can often update just one post and then collect the test results. One way to do that:
 </p>
 <ol>
 <li>Manually delete the Repeater Field content for one of your posts.</li>
 <li>Go to the Media/Assistant admin submenu table and find one of the attachments for that post.</li>
-<li>Click on the “(Parent:xxxx)” link in the ID/Parent column to filter the display showing all the attachments for that one post.</li>
+<li>Click on the &ldquo;(Parent:xxxx)&rdquo; link in the ID/Parent column to filter the display showing all the attachments for that one post.</li>
 <li>Click the box next to the ID/Parent column title to select all the attachments.</li>
-<li>Select “Edit” from the Bulk Actions dropdown and click “Apply”.</li>
-<li>Click the “Map IPTC/EXIF metadata” button in the bottom-right corner of the Bulk Edit area.</li>
+<li>Select &ldquo;Edit&rdquo; from the Bulk Actions dropdown and click &ldquo;Apply&rdquo;.</li>
+<li>Click the &ldquo;Map IPTC/EXIF metadata&rdquo; button in the bottom-right corner of the Bulk Edit area.</li>
 </ol>
 <p>
-When you’ve finished testing, go back to the Debug screen and:
+When you&rsquo;ve finished testing, go back to the Debug screen and:
 </p>
 <ol>
-<li>Enter “0” in the MLA Reporting text box to turn debug logic off.</li>
+<li>Enter &ldquo;0&rdquo; in the MLA Reporting text box to turn debug logging off.</li>
 <li>Click the Save Changes button to record your new setting.</li>
-<li>Scroll to the bottom and click “Download” to get the log content in a text file.</li>
+<li>Scroll to the bottom and click &ldquo;Download&rdquo; to get the log content in a text file.</li>
+<li>Optionally, scroll to the bottom of the screen and click &ldquo;Reset&rdquo; to clear the error log.</li>
 </ol>
 <p>
 There should be a lot of messages written to the log, so limit the amount of activity during the logging period. You should see messages in the log like these:

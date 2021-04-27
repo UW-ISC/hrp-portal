@@ -4,6 +4,7 @@ namespace DeliciousBrains\WPMDB\Common;
 
 use DeliciousBrains\WPMDB\Common\Error\ErrorLog;
 use DeliciousBrains\WPMDB\Common\MigrationState\MigrationStateManager;
+use DeliciousBrains\WPMDB\Common\Properties\Properties;
 use DeliciousBrains\WPMDB\Common\Sql\TableHelper;
 use DeliciousBrains\WPMDB\Common\Util\Util;
 
@@ -104,24 +105,35 @@ class Replace {
 	 */
 	protected $json_replace_columns;
 
+	protected $json_merged;
+
+	/**
+	 * @var Properties
+	 */
+	protected $properties;
+
 	function __construct(
 		MigrationStateManager $migration_state_manager,
 		TableHelper $table_helper,
 		ErrorLog $error_log,
-		Util $util
+		Util $util,
+		Properties $properties
 	) {
 		$this->migration_state_manager = $migration_state_manager;
 		$this->table_helper            = $table_helper;
 		$this->error_log               = $error_log;
 		$this->util                    = $util;
+		$this->properties              = $properties;
 	}
 
 	public function get($prop){
 		return $this->$prop;
 	}
+
 	public function set($prop, $value){
 		return $this->$prop = $value;
 	}
+
 	public function register( $args ) {
 		$keys = array(
 			'table',
@@ -155,6 +167,7 @@ class Replace {
 		$this->json_replace         = '';
 		$this->json_replace_tables  = '';
 		$this->json_replace_columns = '';
+		$this->json_merged          = false;
 
 		global $wpdb;
 
@@ -327,6 +340,34 @@ class Replace {
 		return $new;
 	}
 
+
+	public function maybe_merge_json_replaces()
+	{
+		if ( $this->json_merged ) {
+			return false;
+		}
+
+		if ( !in_array( $this->table, $this->json_replace_tables ) ||
+		     !in_array( $this->column, $this->json_replace_columns ) ) {
+			return false;
+		}
+
+		if ( empty( $this->search ) && empty( $this->replace ) ) {
+			return false;
+		}
+
+		if ( !is_array( $this->json_search ) || !is_array( $this->json_replace ) ) {
+			return false;
+		}
+
+		//Only add json replacements once
+		$this->search      = array_merge( $this->search, $this->json_search );
+		$this->replace     = array_merge( $this->replace, $this->json_replace );
+		$this->json_merged = true;
+
+		return true;
+	}
+
 	/**
 	 * Applies find/replace pairs to a given string.
 	 *
@@ -334,13 +375,13 @@ class Replace {
 	 *
 	 * @return string
 	 */
-	function apply_replaces( $subject ) {
-
-		if ( in_array( $this->table, $this->json_replace_tables ) && in_array( $this->column, $this->json_replace_columns ) ) {
-			$this->search  = array_merge( $this->search, $this->json_search );
-			$this->replace = array_merge( $this->replace, $this->json_replace );
+	public function apply_replaces( $subject )
+	{
+		if ( empty( $this->search ) && empty( $this->replace ) ) {
+			return $subject;
 		}
 
+		$this->maybe_merge_json_replaces(); // Maybe merge in json_encoded find/replace values
 		$new = str_ireplace( $this->search, $this->replace, $subject, $count );
 
 		if ( $this->is_subdomain_replaces_on() ) {
@@ -373,9 +414,16 @@ class Replace {
 			return $pre;
 		}
 
+		//If the intent is find_replace we need to prefix the tables with the temp prefix and wp base table prefix.
+		$table_prefix = '';
+		if ( 'find_replace' === $this->get_intent() ) {
+			global $wpdb;
+			$table_prefix = $this->properties->temp_prefix . $wpdb->base_prefix;
+		}
+
 		// Some options contain serialized self-references which leads to memory exhaustion. Skip these.
-		if ( $this->table_is( 'options' ) && 'option_value' === $this->get_column() && is_serialized( $data ) ) {
-			if ( preg_match( '/r\:\d+/i', $data ) ) {
+		if ( $this->table_is( 'options', $table_prefix ) && 'option_value' === $this->get_column() && is_serialized( $data ) ) {
+			if ( preg_match( '/r\:\d+;/i', $data ) ) {
 				return $data;
 			}
 		}
@@ -525,12 +573,15 @@ class Replace {
 	 *
 	 * $is_posts = $this->table_is( 'posts' );
 	 *
+	 * @TODO Cover table prefixing with Unit Tests
+	 *
 	 * @param  string $desired_table Name of the desired table, table prefix omitted.
+	 * @param  string $prefix        The table prefix
 	 *
 	 * @return boolean                Whether or not the desired table is the table currently being processed.
 	 */
-	public function table_is( $desired_table ) {
-		return $this->table_helper->table_is( $desired_table, $this->table );
+	public function table_is( $desired_table, $prefix = '' ) {
+		return $this->table_helper->table_is( $desired_table, $this->table, 'table', $prefix );
 	}
 
 	/**
@@ -549,9 +600,17 @@ class Replace {
 	 */
 	protected function json_replaces( $prefix )
 	{
-		$this->json_replace_tables = apply_filters( 'wpmdb_json_replace_tables', [
+		$default_tables = [
 			"${prefix}posts",
-		] );
+		];
+
+		if ( in_array( $this->intent, ['find_replace', 'import'] ) ) {
+			$default_tables = [
+				"_mig_${prefix}posts",
+			];
+		}
+
+		$this->json_replace_tables = apply_filters( 'wpmdb_json_replace_tables', $default_tables );
 
 		$this->json_replace_columns = apply_filters( 'wpmdb_json_replace_columns', [
 			'post_content',
