@@ -3,9 +3,9 @@
  * Manages synchronization between a parent post and its children.
  *
  * @package   Smart_Media_Categories_Admin
- * @author    David Lingren <dlingren@comcast.net>
+ * @author    David Lingren <david@davidlingren.com>
  * @license   GPL-2.0+
- * @link      @TODO http://example.com
+ * @link      http://davidlingren.com
  * @copyright 2014 David Lingren
  */
 
@@ -17,7 +17,7 @@
  * no need to create a new instance of the class.
  *
  * @package Smart_Media_Categories_Admin
- * @author  David Lingren <dlingren@comcast.net>
+ * @author  David Lingren <david@davidlingren.com>
  */
 class SMC_Sync_Support {
 	/**
@@ -54,26 +54,29 @@ class SMC_Sync_Support {
 	 *
 	 * @since    1.0.2
 	 *
-	 * @param	array	Optional; ('smc_status', 'post_parents', 'fields')
+	 * @param	array	Optional; ('post_type', 'smc_status', 'post_parents', 'fields')
+	 * @param	boolean	Optional; true to flush the cache, e.g., when adding attachments
 	 *
 	 * @return	array	( 'sync' => Synced posts, 'unsync' => Unsynced posts )
 	 */
-	public static function get_posts_per_view( $attr = NULL ) {
+	public static function get_posts_per_view( $attr = NULL, $flush_cache = false ) {
 		global $wpdb;
 		static $save_attr = NULL, $posts_per_view = NULL;
 
-		/*
-		 * Make sure $attr is an array, even if it's empty
-		 */
+		if ( $flush_cache ) {
+			$save_attr = NULL;
+			$posts_per_view = NULL;
+			return array();
+		}
+		
+		// Make sure $attr is an array, even if it's empty
 		if ( empty( $attr ) ) {
 			$attr = array();
 		} elseif ( is_string( $attr ) ) {
 			$attr = shortcode_parse_atts( $attr );
 		}
 
-		/*
-		 * Create the PHP variables we need
-		 */
+		// Create the PHP variables we need
 		extract( shortcode_atts( array(
 			'post_type' => 'post',
 			'smc_status' => NULL, // 'sync', 'unsync'
@@ -281,10 +284,36 @@ class SMC_Sync_Support {
 			return array( 'sync' => 0, 'unsync' => 0 );
 		}
 
+		// Check for Default Post Category exclusion
+		$default_tt_id = 0;
+		if ( (boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
+			// Get the actual TTID, just to be safe
+			$default_term = get_term( (integer) get_option( 'default_category' ), 'category' );
+//error_log( __LINE__ ." SMC_Sync_Support::get_posts_per_view ID term = " . var_export( $default_term, true ), 0 );
+			if ( $default_term instanceof WP_Term ) {
+				$default_tt_id = $default_term->term_taxonomy_id;
+			}
+		} // exclude default
+	
 		// Compute sync status
 		foreach ( $assignments as $parent_id => $assignment ) {
-//error_log( __LINE__ ."' SMC_Sync_Support::get_posts_per_view (parent {$parent_id}) assignment = " . var_export( $assignment, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::get_posts_per_view {$default_tt_id} (parent {$parent_id}) assignment = " . var_export( $assignment, true ), 0 );
 			$parent_terms = $assignment['ttids'];
+
+			// Check for Default Post Category exclusion
+			if ( $default_tt_id ) {
+				$parent = get_post( $parent_id );
+//error_log( __LINE__ ." SMC_Sync_Support::get_posts_per_view {$default_tt_id} parent = " . var_export( $parent, true ), 0 );
+				if ( 'post' === $parent->post_type && 'auto-draft' !== $parent->post_status ) {
+					foreach ( $parent_terms as $index => $ttid ) {
+						if ( $default_tt_id === $ttid ) {
+							unset( $parent_terms[ $index ] );
+						}
+					} // foreach term
+				} // type === post
+			} // exclude category
+//error_log( __LINE__ ." SMC_Sync_Support::get_posts_per_view revised \$parent_terms = " . var_export( $parent_terms, true ), 0 );
+		
 			unset( $assignment['ttids'] );
 			unset( $assignment['terms'] );
 			$assignments[ $parent_id ]['smc_sync'] = true;
@@ -292,8 +321,8 @@ class SMC_Sync_Support {
 				$smc_sync = $parent_terms == $child_terms;
 				$assignments[ $parent_id ][ $child_id ]['smc_sync'] = $smc_sync;
 				$assignments[ $parent_id ]['smc_sync'] &= $smc_sync;
-			}
-		}
+			} // foreach child
+		} // foreach parent assignment
 //error_log( __LINE__ . ' SMC_Sync_Support::get_posts_per_view final $assignments = ' . var_export( $assignments, true ), 0 );
 
 		switch ( $smc_status ) {
@@ -347,7 +376,8 @@ class SMC_Sync_Support {
 	 * @param	integer	ID of the parent post
 	 * @param	array	IDs of children
 	 *
-	 * @return	array	( [object_id] => array( [taxonomy] => array( [term_taxonomy_id] => array( 'id' => term_id, 'slug' => term_slug )... 'smc_sync' => true/false )... 'smc_sync' => true/false )
+	 * @return	array	( [object_id] => array( [taxonomy] =>
+	 *     array( [term_taxonomy_id] => array( 'id' => term_id, 'slug' => term_slug )... 'smc_sync' => true/false )... 'smc_sync' => true/false )
 	 */
 	public static function get_terms( $parent_id, $children ) {
 		global $wpdb;
@@ -386,6 +416,21 @@ class SMC_Sync_Support {
 //error_log( __LINE__ . ' SMC_Sync_Support::get_terms $taxonomies = ' . var_export( $taxonomies, true ), 0 );
 //error_log( __LINE__ . ' SMC_Sync_Support::get_terms $results = ' . var_export( $results, true ), 0 );
 
+		// Check for Default Post Category exclusion
+		if ( ( ( boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) && ( 'category' === $term->taxonomy ) ) {
+			if ( 'post' === $parent->post_type && 'auto-draft' !== $parent->post_status ) {
+				$default_term_id = (integer) get_option( 'default_category' );
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ({$term->taxonomy}) \$default_term_id = " . var_export( $default_term_id, true ), 0 );
+				foreach ( $results[ $parent_id ]['category'] as $index => $term ) {
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ( category, {$index} ) \$term = " . var_export( $term, true ), 0 );
+					if ( $default_term_id === $index ) {
+						unset( $results[ $parent_id ]['category'][ $index ] );
+					}
+				}
+			} // type === post
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ( category ) revised \$results = " . var_export( $results, true ), 0 );
+		} // exclude category
+		
 		// Add synchronization state information
 		foreach ( $taxonomies as $taxonomy ) {
 			if ( isset( $results[ $parent_id ][ $taxonomy ] ) ) {
@@ -393,14 +438,13 @@ class SMC_Sync_Support {
 			} else {
 				$parent_terms = $results[ $parent_id ][ $taxonomy ] = array();
 			}
-//error_log( __LINE__ ."' SMC_Sync_Support::get_terms ({$taxonomy}) \$parent_terms = " . var_export( $parent_terms, true ), 0 );
-			
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ({$taxonomy}) \$parent_terms = " . var_export( $parent_terms, true ), 0 );
 			foreach( $children as $child ) {
 				if ( ! isset( $results[ $child ][ $taxonomy ] ) ) {
 					$results[ $child ][ $taxonomy ] = array();
 				}
 				
-				$results[ $child ][ $taxonomy ]['smc_sync'] = ( $parent_terms == $results[ $child ][ $taxonomy ] );
+				$results[ $child ][ $taxonomy ]['smc_sync'] = ( $parent_terms === $results[ $child ][ $taxonomy ] );
 
 				// All taxonomies must be synched for the overall child to be synched
 				if ( isset( $results[ $child ]['smc_sync'] ) ) {
@@ -408,7 +452,7 @@ class SMC_Sync_Support {
 				} else {
 					$results[ $child ]['smc_sync'] = $results[ $child ][ $taxonomy ]['smc_sync'];
 				}
-//error_log( __LINE__ ."' SMC_Sync_Support::get_terms ({$child}) \$results = " . var_export( $results, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ({$child}) \$results = " . var_export( $results, true ), 0 );
 			}
 		}
 		
@@ -437,8 +481,15 @@ class SMC_Sync_Support {
 			$tax_action[ $tax_name ] = 'sync';
 			$initial_tax_input[ $tax_name ] = array();
 		}
-//error_log( __LINE__ . ' SMC_Sync_Support::sync_all $active_taxonomies = ' . var_export( $active_taxonomies, true ), 0 );
+//error_log( __LINE__ . ' SMC_Sync_Support::sync_all $active_taxonomies = ' . var_export( array_keys( $active_taxonomies ), true ), 0 );
 //error_log( __LINE__ . ' SMC_Sync_Support::sync_all $tax_action = ' . var_export( $tax_action, true ), 0 );
+		
+		// Check for Default Post Category exclusion
+		$default_term_id = 0;
+		if ( (boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) {
+			$default_term_id = (integer) get_option( 'default_category' );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_all \$default_term_id = " . var_export( $default_term_id, true ), 0 );
+		} // exclude category
 		
 		foreach( $assignments as $parent_id => $assignment ) {
 			$taxonomy_terms = $assignment[ 'terms' ];
@@ -446,6 +497,20 @@ class SMC_Sync_Support {
 			unset( 	$assignment['ttids'] );
 			unset( 	$assignment['smc_sync'] );
 			
+			// Check for Default Post Category exclusion
+			if ( $default_term_id ) {
+				$parent = get_post( $parent_id );
+				if ( 'post' === $parent->post_type && 'auto-draft' !== $parent->post_status && isset( $taxonomy_terms['category'] ) ) {
+					foreach ( $taxonomy_terms['category'] as $index => $term ) {
+//error_log( __LINE__ ." SMC_Sync_Support::sync_all ( category, {$index} ) \$term = " . var_export( $term, true ), 0 );
+					if ( $default_term_id === $term['term_id'] ) {
+						unset( $taxonomy_terms['category'][ $index ] );
+					}
+				} // type === post
+			} // exclude category
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms ( category ) revised \$taxonomy_terms = " . var_export( $taxonomy_terms, true ), 0 );
+		} // foreach assignment
+		
 			$tax_input = $initial_tax_input;
 			foreach( $taxonomy_terms as $taxonomy => $terms ) {
 				foreach( $terms as $ttid => $term ) {
@@ -471,7 +536,7 @@ class SMC_Sync_Support {
 //error_log( __LINE__ . ' SMC_Sync_Support::sync_all $tax_action = ' . var_export( $tax_action, true ), 0 );
 
 			$results = SMC_Sync_Support::sync_terms( $parent_id, $children, $tax_input, $tax_action );
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_all {$parent_id} results = " . var_export( $results, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_all {$parent_id} results = " . var_export( $results, true ), 0 );
 			if ( $results['updated'] ) {
 				$parent_count++;
 				$children_count += $results['updated'];
@@ -557,15 +622,17 @@ class SMC_Sync_Support {
 				continue;
 			}
 
-			$taxonomy_obj = get_taxonomy( $taxonomy );
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$taxonomy_obj = " . var_export( $taxonomy_obj, true ), 0 );
-			if ( ! current_user_can( $taxonomy_obj->cap->assign_terms ) ) {
-				continue;
+			// Check if logged-in user can assign terms
+			$current_user = wp_get_current_user();
+			if ( $current_user->ID ) {
+				$taxonomy_obj = get_taxonomy( $taxonomy );
+				if ( ! current_user_can( $taxonomy_obj->cap->assign_terms ) ) {
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms User( {$current_user->ID} can't assign {$taxonomy} terms", 0 );
+					continue;
+				}
 			}
 			
-			/*
-			 * Arrays are term-ids, strings are slugs
-			 */
+			// Arrays are term-ids, strings are slugs
 			$terms = $tax_inputs[ $taxonomy ];
 			if ( is_array( $terms ) ) {
 				$terms = array_filter( array_map( 'absint', $terms ) );
@@ -578,9 +645,7 @@ class SMC_Sync_Support {
 				$terms = array_filter( array_map( 'trim', explode(',', $terms ) ) );
 			}
 
-			/*
-			 * Get the parent terms, compare for changes, update as necessary
-			 */
+			// Get the parent terms, compare for changes, update as necessary
 			$terms_before = array();
 			if ( isset( $term_assignments[ $parent_id ][ $taxonomy ] ) ) {
 				foreach( $term_assignments[ $parent_id ][ $taxonomy ] as $term_taxonomy_id => $term ) {
@@ -591,17 +656,17 @@ class SMC_Sync_Support {
 				sort( $terms_before );
 			}
 			
-			$terms_after = wp_set_post_terms( $parent_id, $terms, $taxonomy );
+			// 1.1.6 - updating the parent's terms conflicts with the requirements
+			// $terms_after = wp_set_post_terms( $parent_id, $terms, $taxonomy );
+			$terms_after = $terms_before;
 			sort( $terms_after );
 			if ( $terms_after != $terms_before ) {
 				$parent_changed = true;
 			}
-			
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$terms[{$taxonomy}] = " . var_export( $terms, true ), 0 );
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$parent_changed = " . var_export( $parent_changed, true ), 0 );
-			/*
-			 * For each child, get the terms, compare for changes, update as necessary
-			 */
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms \$terms[{$taxonomy}] = " . var_export( $terms, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms \$parent_changed = " . var_export( $parent_changed, true ), 0 );
+
+			// For each child, get the terms, compare for changes, update as necessary
 			foreach( $children as $child ) {
 				$terms_before = array();
 				if ( isset( $term_assignments[ $child ][ $taxonomy ] ) ) {
@@ -618,9 +683,9 @@ class SMC_Sync_Support {
 				if ( $terms_after != $terms_before ) {
 					$children_changed[ $child ] = $child;
 				}
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$terms_before[{$child}] = " . var_export( $terms_before, true ), 0 );
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$terms_after = " . var_export( $terms_after, true ), 0 );
-//error_log( __LINE__ ."' SMC_Sync_Support::sync_terms \$children_changed = " . var_export( $children_changed, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms \$terms_before[{$child}] = " . var_export( $terms_before, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms \$terms_after = " . var_export( $terms_after, true ), 0 );
+//error_log( __LINE__ ." SMC_Sync_Support::sync_terms \$children_changed = " . var_export( $children_changed, true ), 0 );
 			}
 		}
 		

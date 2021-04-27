@@ -344,17 +344,23 @@ class MLASettings_IPTCEXIF {
 			$new_rule['iptc_first'] = isset( $_REQUEST['mla_iptc_exif_rule']['iptc_first'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['iptc_first'];
 			$new_rule['keep_existing'] = isset( $_REQUEST['mla_iptc_exif_rule']['keep_existing'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['keep_existing'];
 			$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['format'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['format'] ) : 'native' );
-			$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['option'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['option'] ) : 'text' );
+
+			if ( 'taxonomy' === $new_rule['type'] ) {
+				$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['tax_option'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['tax_option'] ) : 'text' );
+			} else {
+				$new_rule['option'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['option'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['option'] ) : 'text' );
+			}
+
 			$new_rule['no_null'] = isset( $_REQUEST['mla_iptc_exif_rule']['no_null'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['no_null'];
 			$new_rule['delimiters'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['delimiters'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['delimiters'] ) : '' );
 			$new_rule['parent'] = isset( $_REQUEST['mla_iptc_exif_rule']['parent'] ) ? absint( $_REQUEST['mla_iptc_exif_rule']['parent'] ) : 0;
 			$new_rule['active'] = isset( $_REQUEST['mla_iptc_exif_rule']['status'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['status'];
 		} // no error
-		
+
 		if ( empty( $new_rule['key'] ) || empty( $new_rule['rule_name'] ) || empty( $new_rule['name'] ) ) {
 			$error_message =  __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' );
 		}
-		
+
 		if ( empty( $error_message ) ) {
 			if ( false === MLA_IPTC_EXIF_Query::mla_replace_iptc_exif_rule( $new_rule ) ) {
 				$error_message =  __( 'ERROR', 'media-library-assistant' ) . __( ': Rule update failed', 'media-library-assistant' );

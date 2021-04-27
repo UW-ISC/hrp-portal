@@ -69,6 +69,26 @@ class MLAShortcodes {
 	}
 
 	/**
+	 * MLA Gallery shortcode attribute validation.
+	 *
+	 * Compatibility shim for MLAShortcode_Support::mla_validate_attributes
+	 *
+	 * @since 2.95
+	 *
+	 * @param	mixed	$attr Array or string containing shortcode attributes
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	array	clean attributes array
+	 */
+	public static function mla_validate_attributes( $attr, $content = NULL ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+		}
+		
+		return MLAShortcode_Support::mla_validate_attributes( $attr, $content );
+	}
+
+	/**
 	 * The MLA Gallery shortcode.
 	 *
 	 * Compatibility shim for MLAShortcode_Support::mla_gallery_shortcode
