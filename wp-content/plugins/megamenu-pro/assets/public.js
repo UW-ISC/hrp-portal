@@ -16,6 +16,12 @@
 
     $(".max-mega-menu").on("after_mega_menu_init", function() {
         $('li.mega-menu-megamenu').on('open_panel', function() {
+            // reset default
+            var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
+            var default_src = placeholder.attr('data-default-src');
+            placeholder.attr('src', default_src);
+
+            // preload
             $('.mega-sub-menu [data-image-swap-url]', $(this) ).not(['data-preloaded']).each( function() {
                 $('<img/>')[0].src = $(this).attr('data-image-swap-url');
                 $(this).attr('data-preloaded', 'true');
@@ -339,6 +345,8 @@
                 'margin-top' : total_offset + 'px'
             });
 
+            $("body").addClass($menu.attr("id") + "-mega-sticky");
+
             $menu.css({
                 'max-width' : sticky_menu_width_round_up + 'px'
             });
@@ -394,11 +402,13 @@
             doing_resize = doing_resize || false;
             is_stuck = false;
             
-            $wrap.removeClass('mega-sticky').removeClass('mega-hide').removeClass('mega-reveal').css({
+            $wrap.removeClass('mega-sticky').removeClass('mega-hide').css({
                 'margin' : '',
                 'width' : '',
                 'left': ''
             });
+
+            $("body").removeClass($menu.attr("id") + "-mega-sticky");
 
             if ( ! doing_resize ) { // this class is used for the height transition, do not remove it if we are simply resizing the window
                 $wrap.delay(0).queue(function(next){
@@ -455,6 +465,7 @@
                 
                 if ( scroll_top < sticky_hide_until_scroll_up_offset ) {
                     $wrap.removeClass('mega-hide');
+                    $("body").removeClass($menu.attr("id") + "-mega-hide");
                 }
                 
                 saved_scroll_top = last_scroll_top;
@@ -463,11 +474,13 @@
                     // scroll up
                     if (saved_scroll_top - scroll_top > sticky_hide_until_scroll_up_tolerance) {
                         $wrap.removeClass('mega-hide');
+                        $("body").removeClass($menu.attr("id") + "-mega-hide");
                     }
                 } else {
                     // scroll down
-                    if (scroll_top - saved_scroll_top > sticky_hide_until_scroll_up_tolerance) {
+                    if (is_stuck && scroll_top - saved_scroll_top > sticky_hide_until_scroll_up_tolerance) {
                         $wrap.addClass('mega-hide');
+                        $("body").addClass($menu.attr("id") + "-mega-hide");
                     }
                 }
 
@@ -626,25 +639,25 @@
                 if ($('> ul.mega-sub-menu > li.mega-menu-item-has-children.mega-toggle-on', menu_item).length == 0 ) {
                     
 
-                    if ( $('> ul.mega-sub-menu > li.mega-current-menu-item', menu_item).length ) {
-                        $('> ul.mega-sub-menu > li.mega-current-menu-item', menu_item).first().addClass('mega-toggle-on');
-                    } else if ( $('> ul.mega-sub-menu > li.mega-current-menu-ancestor', menu_item).length ) {
-                        $('> ul.mega-sub-menu > li.mega-current-menu-ancestor', menu_item).first().addClass('mega-toggle-on');
+                    if ( $('> ul.mega-sub-menu > li.mega-current-menu-item:visible', menu_item).length ) {
+                        $('> ul.mega-sub-menu > li.mega-current-menu-item:visible', menu_item).first().addClass('mega-toggle-on');
+                    } else if ( $('> ul.mega-sub-menu > li.mega-current-menu-ancestor:visible', menu_item).length ) {
+                        $('> ul.mega-sub-menu > li.mega-current-menu-ancestor:visible', menu_item).first().addClass('mega-toggle-on');
                     }
                     
 
                     if ($('> ul.mega-sub-menu > li.mega-toggle-on', menu_item).length == 0 ) {
-                        $('> ul.mega-sub-menu > li.mega-menu-item-has-children', menu_item).first().addClass('mega-toggle-on');
+                        $('> ul.mega-sub-menu > li.mega-menu-item-has-children:visible', menu_item).first().addClass('mega-toggle-on');
                     }
                 }
 
-                $('li.mega-menu-tabbed').on('close_panel', function() {
-                    $(".mega-toggle-on", menu).removeClass("mega-toggle-on");
+                $('li.mega-menu-tabbed', menu).on('close_panel', function() {
+                    $('li.mega-menu-tabbed .mega-toggle-on', menu).removeClass('mega-toggle-on');
                 });
             }
 
             $('li.mega-menu-tabbed li.mega-collapse-children').on('close_panel', function() {
-                var menu_item = $(this).closest(".mega-menu-tabbed");
+                var menu_item = $(this).closest('.mega-menu-tabbed');
 
                 $("> ul.mega-sub-menu", $(this)).promise().done(function(){ // wait until slide animation has completed
                     calculate_tabbed_sub_menu_heights( menu_item );

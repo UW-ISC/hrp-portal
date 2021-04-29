@@ -90,6 +90,20 @@ jQuery(document).ready(function($) {
                 wp.codeEditor.initialize($('#codemirror'), cm_settings);
             }
         }
+
+        $(".mm_colorpicker").spectrum({
+            preferredFormat: "rgb",
+            showInput: true,
+            showAlpha: true,
+            clickoutFiresChange: true,
+            change: function(color) {
+                if (color.getAlpha() === 0) {
+                    $(this).siblings('div.chosen-color').html('transparent');
+                } else {
+                    $(this).siblings('div.chosen-color').html(color.toRgbString());
+                }
+            }
+        });
     });
 
     // the form is never submitted, so the contents of codemirror never get copied back to the text area.
@@ -131,25 +145,7 @@ jQuery(document).ready(function($) {
         $(".replacements table tr." + selected).show();
     });
 
-    $(document).on('click', '.mm_tab.replacements', function() {
-        $(".mm_colorpicker").spectrum({
-            preferredFormat: "rgb",
-            showInput: true,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            change: function(color) {
-                if (color.getAlpha() === 0) {
-                    $(this).siblings('div.chosen-color').html('transparent');
-                } else {
-                    $(this).siblings('div.chosen-color').html(color.toRgbString());
-                }
-            }
-        });
-
-    });
-
     $(document).on('keyup keypress blur change mousedown', '.mm_logo_width', function() {
-
         var src_height = $(".mm_logo_height").attr('data-src-height');
         var src_width = $(".mm_logo_width").attr('data-src-width');
 
@@ -163,7 +159,6 @@ jQuery(document).ready(function($) {
     });
 
     $(document).on('keyup keypress blur change mousedown', '.mm_logo_height', function() {
-
         var src_height = $(".mm_logo_height").attr('data-src-height');
         var src_width = $(".mm_logo_width").attr('data-src-width');
 
@@ -179,7 +174,6 @@ jQuery(document).ready(function($) {
 
 	/** Roles **/
     $(document).on('change', '#mm_roles select', function() {
-
         var option = $(this);
 
         if (option.val() == 'by_role') {
@@ -219,22 +213,6 @@ jQuery(document).ready(function($) {
         $( ".mega-enabled .mega-value input[type=text]", '#mm_custom_styles').each(function( index ) {
             if ($(this).val().length === 0 ) {
                 $(this).val('0px');
-            }
-        });
-    });
-
-    $(document).on('click', '.mm_tab.styling', function() {
-        $(".mm_colorpicker").spectrum({
-            preferredFormat: "rgb",
-            showInput: true,
-            showAlpha: true,
-            clickoutFiresChange: true,
-            change: function(color) {
-                if (color.getAlpha() === 0) {
-                    $(this).siblings('div.chosen-color').html('transparent');
-                } else {
-                    $(this).siblings('div.chosen-color').html(color.toRgbString());
-                }
             }
         });
     });

@@ -4,6 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit; // disable direct access
 }
 
+use function FortAwesome\fa;
+
 if ( ! class_exists('Mega_Menu_Font_Awesome_5') ) :
 
 /**
@@ -17,12 +19,30 @@ class Mega_Menu_Font_Awesome_5 {
 	 * @since 1.8
 	 */
 	public function __construct() {
+        add_filter( 'megamenu_scss_variables', array( $this, 'add_fa5_scss_vars'), 10, 4 );
 		add_filter( 'megamenu_load_scss_file_contents', array( $this, 'append_fontawesome_scss'), 10 );
 		add_filter( 'megamenu_icon_tabs', array( $this, 'font_awesome_selector'), 99, 5 );
 		add_action( 'megamenu_enqueue_public_scripts', array ( $this, 'enqueue_public_scripts'), 10 );
         add_action( "megamenu_admin_scripts", array( $this, 'enqueue_admin_styles') );
 		add_action( "admin_print_scripts-nav-menus.php", array( $this, 'enqueue_admin_styles' ) );
 	}
+
+	
+	/**
+	 * Returns true when FontAwesome 5 Pro is installed/enabled
+	 */
+	public function use_pro() {
+		if ( defined( "MEGAMENU_PRO_USE_FONTAWESOME5_PRO" ) ) {
+			return MEGAMENU_PRO_USE_FONTAWESOME5_PRO;
+		}
+
+		if ( function_exists( 'FortAwesome\fa' ) && fa()->pro() ) {
+			return true;
+		}
+
+		return false;
+	}
+
 
     /**
      * Enqueue required CSS and JS for Mega Menu
@@ -32,6 +52,27 @@ class Mega_Menu_Font_Awesome_5 {
         wp_enqueue_style( 'megamenu-fontawesome5', plugins_url( 'css/all.css' , __FILE__ ), false, MEGAMENU_PRO_VERSION );
     }
 
+
+    /**
+     * Make the $font_awesome_family scss variable available
+     *
+     * @param array $vars
+     * @param string $location
+     * @param array $theme
+     * @param int $menu_id
+     * @return array
+     */
+    public function add_fa5_scss_vars( $vars, $location, $theme, $menu_id ) {
+    	if ( $this->use_pro() ) {
+        	$vars['font_awesome_family'] = "'Font Awesome 5 Pro'";
+    	} else {
+        	$vars['font_awesome_family'] = "'Font Awesome 5 Free'";
+    	}
+
+        return $vars;
+    }
+
+
 	/**
 	 * Add the CSS required to display fontawesome icons to the main SCSS file
 	 *
@@ -40,13 +81,9 @@ class Mega_Menu_Font_Awesome_5 {
 	 * @return string
 	 */
 	public function append_fontawesome_scss( $scss ) {
-
 		$path = trailingslashit( plugin_dir_path( __FILE__ ) ) . 'scss/fontawesome.scss';
-
 		$contents = file_get_contents( $path );
-
  		return $scss . $contents;
-
 	}
 
 
@@ -78,23 +115,13 @@ class Mega_Menu_Font_Awesome_5 {
 	 * @return array
 	 */
 	public function font_awesome_selector( $tabs, $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) {
+		$is_pro = $this->use_pro() ? "pro" : "";
 		$settings = get_option("megamenu_settings");
-
         $css_version = get_option("megamenu_pro_css_version");
-
         $html = "";
 
-        if ( ! $css_version || version_compare( $css_version, '1.8', '<' ) ) {
-            $link = "<a href='" . esc_attr( admin_url( 'admin.php?page=maxmegamenu_tools' ) ) . "'>" . __("Mega Menu") . " > " . __("Tools") . "</a>";
-
-            $html .= "<div class='notice notice-warning'>";
-            $html .= sprintf( __("Your menu CSS needs to be updated before you can use FontAwesome 5 icons. Please go to %s and Clear the CSS Cache (you will only need to do this once).", "megamenupro") , $link);
-            $html .= "</div>";
-
-        }
-
         if ( is_array( $settings ) && isset( $settings['enqueue_fa_5'] ) && $settings['enqueue_fa_5'] == 'disabled' ) {
-        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings.", "megamenupro") . "</div>";
+        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method.", "megamenupro") . "</div>";
         }
 
         foreach ( $this->icons() as $code => $class ) {
@@ -106,7 +133,7 @@ class Mega_Menu_Font_Awesome_5 {
             $style_bits = explode( " ", $class);
             $style = $style_bits[0];
 
-            $html .= "<div class='{$style}'>";
+            $html .= "<div class='{$style} {$is_pro}'>";
             $html .= "    <input class='radio' id='{$class}' type='radio' rel='{$code}' name='settings[icon]' value='{$class}' " . checked( $menu_item_meta['icon'], $class, false ) . " />";
             $html .= "    <label rel='{$code}' for='{$class}' title='{$class}'></label>";
             $html .= "</div>";
@@ -119,9 +146,15 @@ class Mega_Menu_Font_Awesome_5 {
         	$icon_prefix = substr( $menu_item_meta['icon'], 0, 3 );
         }
 
+        $title = __("Font Awesome 5", "megamenupro");
+
+        if ( $this->use_pro() ) {
+        	$title .= " Pro";
+        }
+
 		$insert['fontawesome5'] = array(
-			'title' => __("Font Awesome 5", "megamenupro"),
-			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far' ) ),
+			'title' => $title,
+			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far', 'fal' ) ),
 			'content' => $html
 		);
 

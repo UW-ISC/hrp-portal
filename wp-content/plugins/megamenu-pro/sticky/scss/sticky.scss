@@ -35,6 +35,9 @@
 
                 #{$menu} > li.mega-menu-item > a.mega-menu-logo > img.mega-menu-logo {
                     max-height: 90%;
+                }
+
+                #{$menu} > li.mega-menu-item > a.mega-menu-logo > img.mega-menu-logo:not(.mega-svg) {
                     width: auto;
                 }
             }
@@ -59,7 +62,6 @@
             }
         }
     }
-
 }
 
 @include mobile {
@@ -75,9 +77,11 @@
 #{$wrap} #{$menu} li.mega-menu-item.mega-show-when-sticky {
     display: none;
 }
+
 #{$wrap}.mega-sticky #{$menu} li.mega-menu-item.mega-hide-when-sticky {
     display: none;
 }
+
 #{$wrap}.mega-sticky #{$menu} li.mega-menu-item.mega-show-when-sticky {
     display: inline-block;
 
