@@ -947,7 +947,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 *
 		 * @since 1.6.1
 		 */
-		private function enqueue_fs_style() {
+		public function enqueue_fs_style() {
 
 			$upload_dir = wp_upload_dir();
 

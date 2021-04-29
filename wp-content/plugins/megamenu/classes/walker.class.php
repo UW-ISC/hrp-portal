@@ -102,6 +102,9 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 
 				$item_output = $item->content;
 
+			//} else if ( 'block' === $item->type ) {
+			//	/** This filter is documented in wp-includes/post-template.php */
+			//	$item_output = apply_filters( 'the_content', $item->content );
 			} else {
 
 				$atts = array();

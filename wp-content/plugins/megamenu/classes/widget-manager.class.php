@@ -76,6 +76,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_edit' );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$widget_id = sanitize_text_field( $_POST['widget_id'] );
 
 			if ( ob_get_contents() ) {
@@ -94,6 +100,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		public function ajax_show_menu_item_form() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$menu_item_id = sanitize_text_field( $_POST['widget_id'] );
 
@@ -167,6 +179,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_save_menu_item_' . $menu_item_id );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$submitted_settings = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
 
 			if ( $menu_item_id > 0 && is_array( $submitted_settings ) ) {
@@ -197,6 +215,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_save_widget_' . $widget_id );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$saved = $this->save_widget( $id_base );
 
 			if ( $saved ) {
@@ -216,6 +240,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		public function ajax_update_widget_columns() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$widget_id = sanitize_text_field( $_POST['id'] );
 			$columns   = absint( $_POST['columns'] );
@@ -240,6 +270,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_edit' );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$id      = absint( $_POST['id'] );
 			$columns = absint( $_POST['columns'] );
 
@@ -262,6 +298,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		public function ajax_add_widget() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$id_base        = sanitize_text_field( $_POST['id_base'] );
 			$menu_item_id   = absint( $_POST['menu_item_id'] );
@@ -288,6 +330,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_edit' );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$widget_id = sanitize_text_field( $_POST['widget_id'] );
 
 			$deleted = $this->delete_widget( $widget_id );
@@ -309,6 +357,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		public function ajax_reorder_items() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$items = isset( $_POST['items'] ) ? $_POST['items'] : false;
 
@@ -334,6 +388,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		public function ajax_save_grid_data() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$grid                = isset( $_POST['grid'] ) ? $_POST['grid'] : false;
 			$parent_menu_item_id = absint( $_POST['parent_menu_item'] );
