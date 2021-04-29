@@ -5,6 +5,20 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.2.2 =
+
+* Fix: Color picker
+
+= 2.2.1 =
+
+* Improvement: Add body classes when menu is stuck
+* Fix: SVG logos disappear when sticky menu height is enabled
+* Fix: When event is set to 'Hover', moving from a tabbed sub menu to a flyout menu prematurely closes the flyout menu
+* Fix: Account for the 'Hide on desktop/mobile' setting when deciding which tab content to show by default
+* Improvement: Restore default image swap image when sub menu is closed and reopened
+* Improvement: Automatically detect and, if enabled, use Font Awesome 5 Pro when the official Font Awesome plugin is installed
+* Improvement: Make it possible to add Font Awesome 5 Pro icons to the picker (using custom code)
+
 = 2.2 =
 
 * New Feature: Image Swap

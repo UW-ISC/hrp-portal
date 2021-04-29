@@ -62,7 +62,7 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 				}
 			}
 
-			echo "<img class='mega-placeholder' src='" . esc_attr( $icon_url ) . "' />";
+			echo "<img class='mega-placeholder' data-default-src='" . esc_attr( $icon_url ) . "' src='" . esc_attr( $icon_url ) . "' />";
 
 			echo $after_widget;
 		}
