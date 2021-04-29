@@ -99,6 +99,12 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_edit' );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$submitted_settings = isset( $_POST['settings'] ) ? $_POST['settings'] : array();
 
 			$menu_item_id = absint( $_POST['menu_item_id'] );
@@ -157,6 +163,12 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 		public function ajax_get_lightbox_html() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$this->init();
 
@@ -350,6 +362,12 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 
 			check_ajax_referer( 'megamenu_edit' );
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			$return = $this->get_grid_column();
 
 			if ( ob_get_contents() ) {
@@ -368,6 +386,12 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 		public function ajax_get_empty_grid_row() {
 
 			check_ajax_referer( 'megamenu_edit' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			$column_html = $this->get_grid_column();
 
