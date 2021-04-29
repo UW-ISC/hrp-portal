@@ -30,7 +30,7 @@ class Mega_Menu_Replacements {
 
 		add_shortcode( 'maxmegamenu_buddypress_avatar', array($this, 'shortcode_buddypress_avatar') );
 		add_shortcode( 'maxmegamenu_buddypress_notifications', array($this, 'shortcode_buddypress_notifications') );
-		
+
 		add_shortcode( 'maxmegamenu_edd_cart_count', array($this, 'shortcode_edd_cart_count') );
 		add_shortcode( 'maxmegamenu_edd_cart_total', array($this, 'shortcode_edd_cart_total') );
 
@@ -595,7 +595,7 @@ class Mega_Menu_Replacements {
 			'alt' => get_post_meta( $id, '_wp_attachment_image_alt', true )
 		);
 
-		$filetype = wp_check_filetype($src);
+		$filetype = wp_check_filetype( $src );
 
 		if ( isset( $filetype['ext'] ) && $filetype['ext'] == 'svg' ) {
 			$attributes['class'] = $attributes['class'] . " mega-svg";

@@ -4,24 +4,31 @@
 }
 
 #{$wrap} #{$menu} li.mega-menu-item > a[class^='far']:before {
-	font-family: 'Font Awesome 5 Free';
+	font-family: $font_awesome_family;
 	font-weight: 400;
 }
 
 #{$wrap} #{$menu} li.mega-menu-item > a[class^='fas']:before {
-	font-family: 'Font Awesome 5 Free';
+	font-family: $font_awesome_family;
 	font-weight: 900;
+}
+
+#{$wrap} #{$menu} li.mega-menu-item > a[class^='fal']:before {
+	font-family: $font_awesome_family;
+	font-weight: 300;
 }
 
 #{$wrap} #{$menu} li.mega-menu-item > a[class^='fas'],
 #{$wrap} #{$menu} li.mega-menu-item > a[class^='fab'],
-#{$wrap} #{$menu} li.mega-menu-item > a[class^='far'] {
+#{$wrap} #{$menu} li.mega-menu-item > a[class^='far'],
+#{$wrap} #{$menu} li.mega-menu-item > a[class^='fal'] {
   -webkit-font-smoothing: inherit;
 }
 
 #{$wrap} #{$menu} li.mega-menu-item.mega-icon-left > a[class^='fas']:before,
 #{$wrap} #{$menu} li.mega-menu-item.mega-icon-left > a[class^='fab']:before,
-#{$wrap} #{$menu} li.mega-menu-item.mega-icon-left > a[class^='far']:before {
+#{$wrap} #{$menu} li.mega-menu-item.mega-icon-left > a[class^='far']:before,
+#{$wrap} #{$menu} li.mega-menu-item.mega-icon-left > a[class^='fal']:before {
 	width: 1.25em;
 	text-align: center;
 }
