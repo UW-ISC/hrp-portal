@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
-Tested up to: 5.6
-Stable tag: 2.9.1
+Tested up to: 5.7
+Stable tag: 2.9.2
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -133,6 +133,10 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 2.9.3 =
+
+* Fix: Update spectrum.js to 1.8.1 (fixes broken colour palette)
 
 = 2.9.2 =
 

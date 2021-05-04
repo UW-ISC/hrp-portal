@@ -16,7 +16,7 @@ Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] 
 Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.94
+Version: 2.95
 Author URI: http://davidlingren.com/
 
 Copyright 2011-2020 David Lingren

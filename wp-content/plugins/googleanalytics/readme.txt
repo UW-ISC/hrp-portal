@@ -1,9 +1,9 @@
-=== Google Analytics ===
+=== ShareThis Dashboard for Google Analytics ===
 Contributors: sharethis, scottstorebloom
 Tags: analytics, google analytics, google analytics plugin, google analytics widget, google analytics dashboard
 Requires at least: 3.8
-Tested up to: 5.6.1
-Stable tag: 2.5.0
+Tested up to: 5.7.1
+Stable tag: 2.5.1
 
 Use Google Analytics on your Wordpress site without touching any code, and view visitor reports right in your Wordpress admin dashboard!
 
@@ -113,6 +113,10 @@ If you’re using Google Analytics on your WordPress website or a plugin like th
 4. Just click to authenticate, then copy the API key and add it to the plugin
 
 == Changelog ==
+
+= 2.5.1 =
+* Revert array syntax for back compat.
+* Update plugin name for trademark infringement.
 
 = 2.5.0 =
 * Fix enable button on disable all features.

@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2020-11-20 16:52-0800\n"
+"POT-Creation-Date: 2021-03-14 20:57-0700\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -909,6 +909,14 @@ msgid "Attached"
 msgstr ""
 
 msgctxt "table_view_singular"
+msgid "Mine"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Mine"
+msgstr ""
+
+msgctxt "table_view_singular"
 msgid "Trash"
 msgstr ""
 
@@ -1015,6 +1023,10 @@ msgid "+ %s"
 msgstr ""
 
 msgid "Search"
+msgstr ""
+
+msgctxt "error_log"
+msgid "mla_extract_office_metadata class ZipArchive is missing."
 msgstr ""
 
 msgctxt "error_log"
@@ -1146,52 +1158,52 @@ msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: %2$s non-array \"%3$s\""
+msgid " %1$s: %2$s non-array \"%3$s\""
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: _execute_list_table_query $wp_filter = \"%2$s\"."
+msgid " %1$s: _execute_list_table_query $wp_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: _execute_list_table_query WP_Query = \"%2$s\"."
+msgid " %1$s: _execute_list_table_query WP_Query = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: _execute_list_table_query SQL_request = \"%2$s\"."
+msgid " %1$s: _execute_list_table_query SQL_request = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_search_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_search_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_where_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_where_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_join_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_join_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_orderby_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_orderby_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_clauses_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_clauses_filter = \"%2$s\"."
 msgstr ""
 
 #, php-format
 msgctxt "error_log"
-msgid "%1$s: mla_query_posts_clauses_request_filter = \"%2$s\"."
+msgid " %1$s: mla_query_posts_clauses_request_filter = \"%2$s\"."
 msgstr ""
 
 msgid "ORPHAN"
@@ -1411,6 +1423,11 @@ msgid "Uploaded on: %s"
 msgstr ""
 
 msgid "Last modified"
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: %2$s non-array \"%3$s\""
 msgstr ""
 
 msgid "+&nbsp;Add&nbsp;New&nbsp;Term"

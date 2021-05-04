@@ -80,7 +80,7 @@ class Ga_SupportLogger {
 			$body = $debug_help_message['message'];
 			$body .= $debug_help_message['let-debug'] ? $let_debug_message : '';
 
-			self::$debug_info = ['message' => $body, 'debug' => $debug_help_message['let-debug']];
+			self::$debug_info = array('message' => $body, 'debug' => $debug_help_message['let-debug']);
 		} else {
 			$body = 'Debug Info:' . PHP_EOL . PHP_EOL;
 			$body .= implode( $this->get_debug_info(), PHP_EOL );
@@ -95,47 +95,47 @@ class Ga_SupportLogger {
 
 		switch ($error) {
 			case 'invalid_grant':
-				return [
+				return array(
 					'message'   => 'Hi! It looks like you submitted the wrong authentication grant. Please try again by re-authenticating.',
 					'let-debug' => true
-				];
+				);
 				break;
 			case 'SSL certificate problem: unable to get local issuer certificate (60)':
-				return [
+				return array(
 					'message'   => 'Hi! Please check your site\'s SSL certificate. A functioning SSL certificate is required',
 					'let-debug' => false
-				];
+				);
 				break;
 			case 'SSL certificate problem: unable to get local issuer certificate':
-				return [
+				return array(
 					'message'   => 'Hi! Please check your site\'s SSL certificate. A functioning SSL certificate is required',
 					'let-debug' => false
-				];
+				);
 				break;
 			case 'User does not have any Google Analytics account.':
-				return [
+				return array(
 					'message'   => 'Hi! Looks like we’re not able to find a Google Analytics account. Please double check to make sure the Google account you used to authenticate with has a working Google Analytics account setup.',
 					'let-debug' => false
-				];
+				);
 				break;
 			case 'SSL certificate problem: certificate has expired (60)':
-				return [
+				return array(
 					'message'   => 'Hi! Please check your site\'s SSL certificate. A functioning SSL certificate is required',
 					'let-debug' => false
-				];
+				);
 				break;
 			case 'SSL certificate problem, verify that the CA cert is OK':
-				return [
+				return array(
 					'message'   => 'Hi! Please check your site\'s SSL certificate. A functioning SSL certificate is required',
 					'let-debug' => false
-				];
+				);
 				break;
 		}
 
-		return [
+		return array(
 			'message' => 'Hi! It appears something went wrong. We apologize for the inconvenience! Please try to re-authenticate your Google account and verify your site has a proper SSL certficiate.',
 			'let-debug' => true
-		];
+		);
 	}
 
 	/**

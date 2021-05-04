@@ -282,7 +282,7 @@ class MLAData {
 				$next_parameter = strpos( $tpl, '[+', $offset ); 
 
 				$next_open = strpos( $tpl, $open_delimiter, $offset ); 
-				// Skip over escaped delimiters
+				// Skip over escaped opening delimiters
 				if ( $next_open ) {
 					while ( $next_open && '\\' === $tpl[ $next_open - 1 ] ) {
 						$next_open = strpos( $tpl, $open_delimiter, $next_open + 1 );
@@ -290,7 +290,7 @@ class MLAData {
 				}
 
 				$next_close = strpos( $tpl, $close_delimiter, $offset ); 
-				// Skip over escaped delimiters
+				// Skip over escaped closing delimiters
 				if ( $next_close ) {
 					while ( $next_close && '\\' === $tpl[ $next_close - 1 ] ) {
 						$next_close = strpos( $tpl, $close_delimiter, $next_close + 1 );
@@ -299,7 +299,7 @@ class MLAData {
 
 				// See if a parameter is next
 				if ( ( false !== $next_parameter ) && ( $next_parameter < $next_open ) && ( $next_parameter < $next_close ) ) {
-					$offset += self::_find_parameter( $tpl, $next_parameter );
+					$offset = $next_parameter + self::_find_parameter( $tpl, $next_parameter );
 					continue;
 				}
 
@@ -1786,23 +1786,23 @@ class MLAData {
 		}
 
 		$post_data = (array) $item;
+		// Save current post; it may be, for example, a parent post/page
+		$save_post = $post;
 		$post = $item;
 		setup_postdata( $item );
 
-		/*
-		 * Add parent data
-		 */
+		// Add parent data
 		$post_data = array_merge( $post_data, MLAQuery::mla_fetch_attachment_parent_data( $post_data['post_parent'] ) );
 
-		/*
-		 * Add meta data
-		 */
+		// Add meta data
 		$post_data = array_merge( $post_data, MLAQuery::mla_fetch_attachment_metadata( $post_id ) );
 
-		/*
-		 * Add references, if requested, or "empty" references array
-		 */
+		// Add references, if requested, or "empty" references array
 		$post_data['mla_references'] = MLAQuery::mla_fetch_attachment_references( $post_id, $post_data['post_parent'], $add_references );
+
+		// Restore current post; it may be, for example, a parent post/page
+		$post = $save_post;
+		setup_postdata( $post );
 
 		$save_id = $post_id;
 		return $post_data;
@@ -4597,9 +4597,12 @@ class MLAData {
 			 * Allow Jordy Meow's Media File Renamer plugin to do its work
 			 * https://wordpress.org/support/topic/media-file-rename-media-library-assistant/
 			 */
-			if ( class_exists( 'Meow_MFRH_Core' ) && isset( $updates['post_title'] ) ) {
+			if ( class_exists( 'Meow_MFRH_Core', false ) && isset( $updates['post_title'] ) ) {
 				global $mfrh_core;
-				$mfrh_core->rename( $post_id );
+
+				if ( is_object( $mrfh_core ) ) {
+					$mfrh_core->rename( $post_id );
+				}
 			}
 
 			do_action( 'mla_updated_single_item', $post_id, $result );
