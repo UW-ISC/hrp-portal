@@ -407,6 +407,13 @@ if ( ! class_exists( 'Mega_Menu_Toggle_Blocks' ) ) :
 		 * @since 2.1
 		 */
 		public function enqueue_scripts() {
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			if ( isset( $_GET['page'] ) && 'maxmegamenu_theme_editor' === $_GET['page'] ) { // @codingStandardsIgnoreLine
 				wp_enqueue_script( 'mega-menu-toggle-bar-designer', MEGAMENU_BASE_URL . 'js/toggledesigner.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable' ), MEGAMENU_VERSION );
 

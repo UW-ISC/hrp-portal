@@ -668,11 +668,17 @@ class MLAModal_Ajax {
 			} elseif ( 'attached' == $query['post_mime_type'] ) {
 				$query['detached'] = '0';
 				unset( $query['post_mime_type'] );
+			} elseif ( 'mine' == $query['post_mime_type'] ) {
+				$query['author'] = get_current_user_id();
+				unset( $query['post_mime_type'] );
 			} elseif ( 'trash' == $query['post_mime_type'] ) {
 				$query['status'] = 'trash';
 				unset( $query['post_mime_type'] );
 			} else {
-				$view = sanitize_text_field( wp_unslash( $query['post_mime_type'] ) );
+				if ( is_array( $query['post_mime_type'] ) ) {
+					$query['post_mime_type'] = implode( ',', $query['post_mime_type'] );
+				}
+				$view = wp_kses( wp_unslash( $query['post_mime_type'] ), 'post' );
 				unset( $query['post_mime_type'] );
 				$query = array_merge( $query, MLACore::mla_prepare_view_query( 'view', $view ) );
 			}

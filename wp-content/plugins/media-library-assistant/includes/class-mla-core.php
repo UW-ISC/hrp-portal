@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.94';
+	const CURRENT_MLA_VERSION = '2.95';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)

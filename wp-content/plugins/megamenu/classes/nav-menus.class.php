@@ -136,6 +136,12 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 		public function register_nav_meta_box() {
 			global $pagenow;
 
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
+
 			if ( 'nav-menus.php' === $pagenow ) {
 				add_meta_box(
 					'mega_menu_meta_box',
@@ -156,6 +162,12 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 		 */
 		public function enqueue_menu_page_scripts( $hook ) {
 			if ( ! in_array( $hook, array( 'nav-menus.php' ) ) ) {
+				return;
+			}
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
 				return;
 			}
 
@@ -255,6 +267,12 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 		 */
 		public function save() {
 			check_ajax_referer( 'megamenu_edit', 'nonce' );
+
+			$capability = apply_filters( 'megamenu_options_capability', 'edit_theme_options' );
+
+			if ( ! current_user_can( $capability ) ) {
+				return;
+			}
 
 			if ( isset( $_POST['menu'] ) && $_POST['menu'] > 0 && is_nav_menu( $_POST['menu'] ) && isset( $_POST['megamenu_meta'] ) ) {
 				$raw_submitted_settings    = $_POST['megamenu_meta'];

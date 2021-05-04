@@ -840,7 +840,7 @@ class MLAQuery {
 		 */
 		if ( ! is_array( $raw_request ) ) {
 			/* translators: 1: ERROR tag 2: function name 3: non-array value */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLAQuery::_prepare_list_table_query', var_export( $raw_request, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLAQuery::_prepare_list_table_query', var_export( $raw_request, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			return NULL;
 		}
 
@@ -896,7 +896,8 @@ class MLAQuery {
 					$clean_request[ $key ] = sanitize_title_for_query( $value );
 					break;
 				case 'orderby':
-					if ( in_array( $value, array( 'none', 'post__in' ) ) ) {
+					// 'rml' is for Real Media Library compatibility
+					if ( in_array( $value, array( 'none', 'post__in', 'rml' ) ) ) {
 						$clean_request[ $key ] = $value;
 					} else {
 						$orderby = NULL;
@@ -983,6 +984,12 @@ class MLAQuery {
 					}
 
 					break;
+				case 'mine':
+					if ( '1' === $value ) {
+						$clean_request['author'] = get_current_user_id();
+					}
+
+					break;
 				case 'status':
 					if ( 'trash' == $value ) {
 						$clean_request['post_status'] = 'trash';
@@ -1018,7 +1025,22 @@ class MLAQuery {
 					if ( ! empty( $value['phrases'] ) && ! empty( $value['taxonomies'] ) ) {
 						$value['phrases'] = stripslashes( trim( $value['phrases'] ) );
 						if ( ! empty( $value['phrases'] ) ) {
-							$clean_request[ $key ] = $value;
+							switch ( substr( $value['phrases'], 0, 3 ) ) {
+								case '}|{':
+									$clean_request['debug'] = 'console';
+									break;
+								case '{|}':
+									$clean_request['debug'] = 'log';
+									break;
+							}
+		
+							if ( isset( $clean_request['debug'] ) ) {
+								$value['phrases'] = substr( $value['phrases'], 3 );
+							}
+
+							if ( ! empty( $value['phrases'] ) ) {
+								$clean_request[ $key ] = $value;
+							}
 						}
 					}
 					break;
@@ -1248,11 +1270,19 @@ class MLAQuery {
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_phrases = " . var_export( $search_phrases, true ), 0 );
 		
 			if ( !empty( $search_phrases['negative'] ) ) {
+				$save_per_page = isset( $clean_request['posts_per_page'] ) ? $clean_request['posts_per_page'] : NULL;
 				self::$search_parameters['s'] = $search_phrases['negative'];
 				$clean_request['fields'] = 'ids';
+				$clean_request['posts_per_page'] = -1;
 				$excluded_items = self::_execute_list_table_query( $clean_request );
-//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query posts = " . var_export( $excluded_items->posts, true ), 0 );
 				unset( $clean_request['fields'] );
+
+				if ( !empty( $save_per_page ) ) {
+					$clean_request['posts_per_page'] = $save_per_page;
+				} else {
+					unset( $clean_request['posts_per_page'] );
+				}
+				
 				self::$search_parameters['s'] = $search_phrases['positive'];
 				self::$search_parameters['exclude'] = implode( ',', $excluded_items->posts);
 			}
@@ -1330,7 +1360,7 @@ class MLAQuery {
 			$debug_array = array( 'posts_search' => MLACore::mla_decode_wp_filter('posts_search'), 'posts_join' => MLACore::mla_decode_wp_filter('posts_join'), 'posts_where' => MLACore::mla_decode_wp_filter('posts_where'), 'posts_orderby' => MLACore::mla_decode_wp_filter('posts_orderby') );
 
 			/* translators: 1: DEBUG tag 2: query filter details */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: _execute_list_table_query $wp_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: _execute_list_table_query $wp_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 
 			add_filter( 'posts_clauses', 'MLAQuery::mla_query_posts_clauses_filter', 0x7FFFFFFF, 1 );
 			add_filter( 'posts_clauses_request', 'MLAQuery::mla_query_posts_clauses_request_filter', 0x7FFFFFFF, 1 );
@@ -1345,9 +1375,9 @@ class MLAQuery {
 			$debug_array = array( 'request' => $request, 'query_parameters' => self::$query_parameters, 'post_count' => $results->post_count, 'found_posts' => $results->found_posts );
 
 			/* translators: 1: DEBUG tag 2: query details */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: _execute_list_table_query WP_Query = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: _execute_list_table_query WP_Query = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 			/* translators: 1: DEBUG tag 2: SQL statement */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: _execute_list_table_query SQL_request = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $results->request, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: _execute_list_table_query SQL_request = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $results->request, true ) ) );
 		} // debug
 
 
@@ -1858,10 +1888,10 @@ class MLAQuery {
 			$debug_array['search_clause'] = $search_clause;
 
 			if ( 'shortcode' == self::$search_parameters['debug'] ) {
-				MLACore::mla_debug_add( '<strong>mla_debug posts_search filter</strong> = ' . var_export( $debug_array, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug posts_search filter</strong> = ' . var_export( $debug_array, true ) );
 			} else {
 				/* translators: 1: DEBUG tag 2: search filter details */
-				MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_search_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+				MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_search_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 			}
 		} // debug
 
@@ -1952,7 +1982,7 @@ class MLAQuery {
 			$debug_array['where_clause'] = $where_clause;
 
 			/* translators: 1: DEBUG tag 2: where filter details */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_where_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_where_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 		} // debug
 
 		return $where_clause;
@@ -2024,7 +2054,7 @@ class MLAQuery {
 			$debug_array['join_clause'] = $join_clause;
 
 			/* translators: 1: DEBUG tag 2: join filter details */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_join_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_join_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 		} // debug
 
 		return $join_clause;
@@ -2080,9 +2110,7 @@ class MLAQuery {
 						$orderby = '';
 						$orderby_clause = '';
 						break;
-					/*
-					 * post__in is passed from Media Manager Modal Window
-					 */
+					// post__in is passed from Media Manager Modal Window
 					case 'post__in':
 						return $orderby_clause;
 					/*
@@ -2121,7 +2149,7 @@ class MLAQuery {
 			$debug_array['orderby_clause'] = $orderby_clause;
 
 			/* translators: 1: DEBUG tag 2: orderby details details */
-			MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_orderby_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
+			MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_orderby_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $debug_array, true ) ) );
 		} // debug
 
 		return $orderby_clause;
@@ -2175,9 +2203,7 @@ class MLAQuery {
 
 		$term = $args['name__like'];
 
-		/*
-		 * Escape any % in the source string
-		 */
+		// Escape any % in the source string
 		if ( self::$wp_4dot0_plus ) {
 			$sql_term = $wpdb->esc_like( $term );
 			$sql_term = $wpdb->prepare( '%s', $sql_term );
@@ -2185,14 +2211,10 @@ class MLAQuery {
 			$sql_term = "'" . esc_sql( like_escape( $term ) ) . "'";
 		}
 
-		/*
-		 * Convert wildcard * to SQL %
-		 */
+		// Convert wildcard * to SQL %
 		$sql_term = str_replace( '*', '%', $sql_term );
 
-		/*
-		 * Replace the LIKE pattern in the WHERE clause
-		 */
+		// Replace the LIKE pattern in the WHERE clause
 		$match_clause = '%' . str_replace( '%', '\\\\%', $term ) . '%';
 		$pieces['where'] = str_replace( "LIKE '{$match_clause}'", "LIKE {$sql_term}", $pieces['where'] );
 
@@ -2213,7 +2235,7 @@ class MLAQuery {
 	 */
 	public static function mla_query_posts_clauses_filter( $pieces ) {
 		/* translators: 1: DEBUG tag 2: SQL clauses */
-		MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_clauses_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $pieces, true ) ) );
+		MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_clauses_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $pieces, true ) ) );
 
 		return $pieces;
 	}
@@ -2232,7 +2254,7 @@ class MLAQuery {
 	 */
 	public static function mla_query_posts_clauses_request_filter( $pieces ) {
 		/* translators: 1: DEBUG tag 2: SQL clauses */
-		MLACore::mla_debug_add( sprintf( _x( '%1$s: mla_query_posts_clauses_request_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $pieces, true ) ) );
+		MLACore::mla_debug_add( __LINE__ . sprintf( _x( ' %1$s: mla_query_posts_clauses_request_filter = "%2$s".', 'error_log', 'media-library-assistant' ), __( 'DEBUG', 'media-library-assistant' ), var_export( $pieces, true ) ) );
 
 		return $pieces;
 	}

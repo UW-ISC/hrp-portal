@@ -58,6 +58,11 @@ $header_height: 75px;
 body[class*='_page_maxmegamenu_'],
 body.toplevel_page_maxmegamenu,
 .nav-menus-php {
+
+	.sp-container {
+		border: 1px solid #7e8993;
+	}
+
 	input.button-primary.is-busy {
 		pointer-events: none;
 		background-size: 100px 100% !important;
@@ -1883,9 +1888,14 @@ body.toplevel_page_maxmegamenu {
 		.sp-replacer {
 			margin: 0;
 			float: left;
-			border-right: 1px solid #7e8993;
+			border: 0;
+			background: transparent;
+			padding: 0;
 		}
 
+		.sp-dd {
+			display: none;
+		}
 		.sp-palette-container {
 		    width: 40px;
 		}

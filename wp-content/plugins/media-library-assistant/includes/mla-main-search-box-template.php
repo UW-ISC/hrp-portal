@@ -42,7 +42,7 @@ if ( empty( $supported_taxonomies ) ) {
 <label class="screen-reader-text" for="mla-media-search-input"><?php esc_html_e( 'Search Media', 'media-library-assistant' ); ?></label>
 <input name="s" id="mla-media-search-input" type="text" size="45" value="<?php echo esc_attr( $search_value ) ?>" />
 <input name="mla-search-submit" class="button" id="search-submit" type="submit" value="<?php esc_attr_e( 'Search Media', 'media-library-assistant' ); ?>" /><br />
-<span <?php echo esc_html( $controls_style ) ?>>
+<span <?php echo wp_kses( $controls_style, 'post' ) ?>>
 <span id="search-title-span">
 <input name="mla_search_fields[]" id="search-title" type="checkbox" <?php echo ( in_array( 'title', $search_fields ) ) ? 'checked="checked"' : ''; ?> value="title" /><?php esc_html_e( 'Title', 'media-library-assistant' )?>&nbsp;</span>
 <span id="search-title-span">
@@ -55,7 +55,7 @@ if ( empty( $supported_taxonomies ) ) {
 <input name="mla_search_fields[]" id="search-content" type="checkbox" <?php echo ( in_array( 'content', $search_fields ) ) ? 'checked="checked"' : ''; ?> value="content" /><?php esc_html_e( 'Description', 'media-library-assistant' )?>&nbsp;</span>
 <span id="search-file-span">
 <input name="mla_search_fields[]" id="search-file" type="checkbox" <?php echo ( in_array( 'file', $search_fields ) ) ? 'checked="checked"' : ''; ?> value="file" /><?php esc_html_e( 'File', 'media-library-assistant' )?>&nbsp;</span>
-<span id="search-terms-span" <?php echo esc_html( $terms_style ) ?>><input name="mla_search_fields[]" id="terms-search" type="checkbox" <?php echo ( in_array( 'terms', $search_fields ) ) ? 'checked="checked"' : ''; ?> value="terms" /><?php esc_html_e( 'Terms', 'media-library-assistant' )?></span>
+<span id="search-terms-span" <?php echo wp_kses( $terms_style, 'post' ) ?>><input name="mla_search_fields[]" id="terms-search" type="checkbox" <?php echo ( in_array( 'terms', $search_fields ) ) ? 'checked="checked"' : ''; ?> value="terms" /><?php esc_html_e( 'Terms', 'media-library-assistant' )?></span>
 <br />
 <input name="mla_search_connector" type="radio" <?php echo ( 'OR' === $search_connector ) ? '' : 'checked="checked"'; ?> value="AND" /><?php esc_html_e( 'and', 'media-library-assistant' ); ?>&nbsp;
 <input name="mla_search_connector" type="radio" <?php echo ( 'OR' === $search_connector ) ? 'checked="checked"' : ''; ?> value="OR" /><?php esc_html_e( 'or', 'media-library-assistant' ); ?>
