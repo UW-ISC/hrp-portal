@@ -166,7 +166,7 @@ class MLACoreOptions {
 	/**
 	 * Provides a "size" attribute value for the EXIF/Template Value field
 	 */
-	const MLA_EXIF_SIZE = 30;
+	const MLA_EXIF_SIZE = 50;
 
 	/**
 	 * Provides a unique name for the Custom Field "new rule" key
@@ -1329,6 +1329,15 @@ class MLACoreOptions {
 							'menu_order' => 0,
 							'description' => _x( 'Built-in view', 'post_mime_types_description', 'media-library-assistant' )
 						),
+						'mine' => array(
+							'singular' => _x( 'Mine', 'table_view_singular', 'media-library-assistant' ),
+							'plural' => _x( 'Mine', 'table_view_plural', 'media-library-assistant' ),
+							'specification' => '',
+							'post_mime_type' => false,
+							'table_view' => true,
+							'menu_order' => 0,
+							'description' => _x( 'Built-in view', 'post_mime_types_description', 'media-library-assistant' )
+						),
 						'trash' => array(
 							'singular' => _x( 'Trash', 'table_view_singular', 'media-library-assistant' ),
 							'plural' => _x( 'Trash', 'table_view_plural', 'media-library-assistant' ),
@@ -1337,7 +1346,7 @@ class MLACoreOptions {
 							'table_view' => true,
 							'menu_order' => 0,
 							'description' => _x( 'Built-in view', 'post_mime_types_description', 'media-library-assistant' )
-						)
+						),
 					)),
 
 			self::MLA_ENABLE_UPLOAD_MIMES =>

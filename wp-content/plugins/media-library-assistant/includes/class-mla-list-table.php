@@ -43,6 +43,15 @@ class MLA_List_Table extends WP_List_Table {
 	private $attached;
 
 	/**
+	 * True if the current view is "Mine"
+	 *
+	 * @since 2.95
+	 *
+	 * @var	int
+	 */
+	private $mine;
+
+	/**
 	 * True if the current view is "Trash"
 	 *
 	 * Declaration added in MLA v2.11 for WP 4.2 compatibility.
@@ -150,8 +159,9 @@ class MLA_List_Table extends WP_List_Table {
 		foreach ( (array) $count as $row ) {
 			$counts[ $row['post_mime_type'] ] = $row['num_posts'];
 		}
+		$counts['mine'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and AND post_author = " . get_current_user_id() );
 		$counts['trash'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'trash' $and $author" );
-		
+
 		// Modify returned attachment counts by mime type.
 		return apply_filters( 'wp_count_attachments', (object) $counts, $mime_type );
 	}
@@ -300,6 +310,11 @@ class MLA_List_Table extends WP_List_Table {
 		$submenu_arguments = array();
 		$has_filters = $include_filters;
 
+		// Real Media Library compatibility
+		if ( isset( $_REQUEST['rml_folder'] ) ) {
+			$submenu_arguments['rml_folder'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['rml_folder'] ) ) );
+		}
+
 		// View arguments
 		if ( isset( $_REQUEST['post_mime_type'] ) ) {
 			$submenu_arguments['post_mime_type'] = urlencode( sanitize_text_field( wp_unslash( $_REQUEST['post_mime_type'] ) ) );
@@ -308,6 +323,12 @@ class MLA_List_Table extends WP_List_Table {
 		if ( isset( $_REQUEST['detached'] ) ) {
 			if ( ( '0' === $_REQUEST['detached'] ) || ( '1' === $_REQUEST['detached'] ) ) {
 				$submenu_arguments['detached'] = ( '1' === $_REQUEST['detached'] ) ? '1' : 0;
+			}
+		}
+
+		if ( isset( $_REQUEST['mine'] ) ) {
+			if ( '1' === $_REQUEST['mine'] ) {
+				$submenu_arguments['mine'] = '1';
 			}
 		}
 
@@ -469,9 +490,9 @@ class MLA_List_Table extends WP_List_Table {
 
 		// For Admin Columns Pro 4.2.3+ export compatibility, because views can alter the query
 		$wp_list_table = $this;
-
-		$this->detached = isset( $_REQUEST['detached'] ) && ( '1' == $_REQUEST['detached'] );
-		$this->attached = isset( $_REQUEST['detached'] ) && ( '0' == $_REQUEST['detached'] );
+		$this->detached = isset( $_REQUEST['detached'] ) && ( '1' === $_REQUEST['detached'] );
+		$this->attached = isset( $_REQUEST['detached'] ) && ( '0' === $_REQUEST['detached'] );
+		$this->mine = isset( $_REQUEST['mine'] ) && ( '1' === $_REQUEST['mine'] );
 		$this->is_trash = isset( $_REQUEST['status'] ) && $_REQUEST['status'] == 'trash';
 
 		// MLA does not use this
@@ -588,10 +609,19 @@ class MLA_List_Table extends WP_List_Table {
 				/*
 				 * For display purposes, convert array values.
 				 * They are not links because no search will match them.
-				 * Use "@" because embedded arrays throw PHP Warnings from implode.
 				 */
 				if ( is_array( $value ) ) {
-					$list[] = 'array( ' . @implode( ', ', $value ) . ' )';
+					$entry = array();
+					foreach ( $value as $element ) {
+						if ( is_scalar( $element ) ) {
+							$entry[] = (string) $element;
+						} else {
+							// Embedded arrays throw PHP errors, so eliminate them
+							$entry[] = var_export( $element, true );
+						}
+					}
+
+					$list[] = 'array( ' . implode( ', ', $entry ) . ' )';
 				} elseif ( $is_meta ) {
 					$list[] = $value;
 				} else {
@@ -1729,9 +1759,7 @@ class MLA_List_Table extends WP_List_Table {
 		global $wpdb;
 		static $mla_types = NULL, $default_types, $posts_per_type, $post_mime_types, $avail_post_mime_types, $matches, $num_posts, $detached_items;
 
-		/*
-		 * Calculate the common values once per page load
-		 */
+		// Calculate the common values once per page load
 		if ( is_null( $mla_types ) ) {
 			$query_types = MLAMime::mla_query_view_items( array( 'orderby' => 'menu_order' ), 0, 0 );
 			if ( ! is_array( $query_types ) ) {
@@ -1761,12 +1789,39 @@ class MLA_List_Table extends WP_List_Table {
 		$class = ( $view_slug == $current_view ) ? ' class="current"' : '';
 		$base_url = 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG;
 
-		/*
-		 * Handle the special cases: all, detached, attached and trash
-		 */
+		// Real Media Library compatibility
+		if ( isset( $_REQUEST['rml_folder'] ) ) {
+			$rml_folder = sanitize_text_field( wp_unslash( $_REQUEST['rml_folder'] ) );
+			$base_url .= '&rml_folder';
+			
+			if ( !empty( $rml_folder ) ) {
+				$base_url .= '=' . urlencode( sanitize_text_field( wp_unslash( $rml_folder ) ) );
+			}
+
+			if ( 0 < (integer) $rml_folder ) {
+				// Preserve RML ordering when view changes
+				if ( isset( $_REQUEST['orderby'] ) ) {
+					$orderby = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
+					if ( 'rml' === $orderby ) {
+						$order = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
+
+						$base_url .= '&orderby=' . $orderby . '&order=' . $order;
+					}
+				} else {
+					if ( function_exists( 'wp_rml_get_object_by_id' ) ) {
+						$folder = wp_rml_get_object_by_id( $rml_folder );
+						if ($folder !== null && $folder->getContentCustomOrder() === 1) {
+							$base_url .= '&orderby=rml&order=asc';
+						}
+					}
+				}
+			} // found rml_folder
+		}
+
+		// Handle the special cases: all, detached, attached and trash
 		switch( $view_slug ) {
 			case 'all':
-				$total_items = array_sum( $posts_per_type ) - $posts_per_type['trash'];
+				$total_items = array_sum( $posts_per_type ) - ( $posts_per_type['trash'] +  $posts_per_type['mine'] );
 				return "<a href='{$base_url}'$class>" . sprintf( _nx( 'All', 'All', $total_items, 'uploaded files', 'media-library-assistant' ) . ' <span class="count">(%1$s)</span></a>', number_format_i18n( $total_items ) );
 			case 'detached':
 				if ( $detached_items ) {
@@ -1786,6 +1841,16 @@ class MLA_List_Table extends WP_List_Table {
 				}
 
 				return false;
+			case 'mine':
+				if ( $posts_per_type['mine'] ) {
+					$value = $default_types['mine'];
+					$singular = sprintf('%s <span class="count">(%%s)</span>', $value['singular'] );
+					$plural = sprintf('%s <span class="count">(%%s)</span>', $value['plural'] );
+					return '<a href="' . add_query_arg( array( 'mine' => '1'
+					), $base_url ) . '"' . $class . '>' . sprintf( _nx( $singular, $plural, $posts_per_type['mine'], 'uploaded files', 'media-library-assistant' ), number_format_i18n( $posts_per_type['mine'] ) ) . '</a>';
+				}
+
+				return false;
 			case 'trash':
 				if ( $posts_per_type['trash'] ) {
 					$value = $default_types['trash'];
@@ -1798,18 +1863,14 @@ class MLA_List_Table extends WP_List_Table {
 				return false;
 		} // switch special cases
 
-		/*
-		 * Make sure the slug is in our list
-		 */
+		// Make sure the slug is in our list
 		if ( array_key_exists( $view_slug, $mla_types ) ) {
 			$mla_type = $mla_types[ $view_slug ];
 		} else {
 			return false;
 		}
 
-		/*
-		 * Handle post_mime_types
-		 */
+		// Handle post_mime_types
 		if ( $mla_type->post_mime_type ) {
 			if ( !empty( $num_posts[ $view_slug ] ) ) {
 				return "<a href='" . add_query_arg( array( 'post_mime_type' => $view_slug
@@ -1819,9 +1880,7 @@ class MLA_List_Table extends WP_List_Table {
 			return false;
 		}
 
-		/*
-		 * Handle extended specification types
-		 */
+		// Handle extended specification types
 		if ( empty( $mla_type->specification ) ) {
 			$query = array ( 'post_mime_type' => $view_slug );
 		} else {
@@ -1861,6 +1920,8 @@ class MLA_List_Table extends WP_List_Table {
 			$current_view = 'detached';
 		} elseif ( $this->attached ) {
 			$current_view = 'attached';
+		} elseif ( $this->mine ) {
+			$current_view = 'mine';
 		} elseif ( $this->is_trash ) {
 			$current_view = 'trash';
 		} elseif ( empty( $_REQUEST['post_mime_type'] ) ) {

@@ -4,27 +4,7 @@
  *
  * @package Media Library Assistant
  * @since 2.82
- * /
-
-$reader = new XMLReader();
-
-$reader->open('zip://' . dirname(__FILE__) . '/test.odt#meta.xml');
-$odt_meta = array();
-while ($reader->read()) {
-    if ($reader->nodeType == XMLREADER::ELEMENT) {
-        $elm = $reader->name;
-    } else {
-        if ($reader->nodeType == XMLREADER::END_ELEMENT && $reader->name == 'office:meta') {
-            break;
-        }
-        if (!trim($reader->value)) {
-            continue;
-        }
-        $odt_meta[$elm] = $reader->value;
-    }
-}
-print_r($odt_meta);
-// */
+ */
 
 /**
  * Class MLA (Media Library Assistant) Office extracts meta data from Microsoft Office files
@@ -49,7 +29,13 @@ class MLAOffice {
 			return array( 'mso' => $metadata );
 		}
 
-		$zip = new ZipArchive();
+		if ( class_exists( 'ZipArchive', false ) ) {
+			$zip = new ZipArchive();
+		} else {
+			MLACore::mla_debug_add( __LINE__ . ' ' . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_extract_office_metadata class ZipArchive is missing.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			return array( 'mso' => $metadata );
+		}
+
 		if ( TRUE !== $zip->open( $file_name ) ) {
 			MLACore::mla_debug_add( __LINE__ . ' ' . __( 'ERROR', 'media-library-assistant' ) . ': ' . _x( 'mla_extract_office_metadata zip open failed.', 'error_log', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			return array( 'mso' => $metadata );

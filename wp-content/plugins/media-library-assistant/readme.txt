@@ -3,9 +3,9 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#two
 Tags: media, media library, gallery, images, categories, tags, attachments, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
 Requires at least: 3.5.0
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.3
-Stable tag: 2.94
+Stable tag: 2.95
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,17 +21,19 @@ The Media Library Assistant provides several enhancements for managing the Media
 
 * The **`[mla_term_list]` shortcode**, used in a post, page, custom post type or widget to display hierarchical (and flat) taxonomy terms in list, dropdown control or checklist formats. **Twenty hooks** are provided for complete list customization from your theme or plugin code.
 
+* Support for **[WPML](https://wpml.org/)** and **Polylang** multi-language CMS plugins. MLA has earned a place on [WPML's List of Recommended Plugins](https://wpml.org/plugin/media-library-assistant/).
+
+* **Integrates with Photonic Gallery, Jetpack and other plugins**, so you can add slideshows, thumbnail strips and special effects to your `[mla_gallery]` galleries.
+
+* Works with **[WordPress Real Media Library: Media Library Folder & File Manager](https://wordpress.org/plugins/real-media-library-lite/)** (Lite and Pro) to organize your files into folders, collections and galleries. This combination enhances both the Media/Assistant admin submenu and the `[mla_gallery]` shortcode.
+
 * Powerful **Content Templates**, which let you compose a value from multiple data sources, mix literal text with data values, test for empty values and choose among two or more alternatives or suppress output entirely.
 
 * **Attachment metadata** such as file size, image dimensions and where-used information can be assigned to WordPress custom fields. You can then use the custom fields in your `[mla_gallery]` display and you can add custom fields as sortable, searchable columns in the Media/Assistant submenu table. You can also **modify the WordPress `_wp_attachment_metadata` contents** to suit your needs.
 
 * **IPTC**, **EXIF (including GPS)**, **XMP** and **PDF** metadata can be assigned to standard WordPress fields, taxonomy terms and custom fields. You can update all existing attachments from the Settings page IPTC/EXIF tab, groups of existing attachments with a Bulk Action or one existing attachment from the Edit Media/Edit Single Item screen. Display **IPTC**, **EXIF**, **XMP** and **PDF** metadata with `[mla_gallery]` custom templates. **Twelve hooks** provided for complete mapping customization from your theme or plugin code.
 
-* Support for **WPML** and **Polylang** multi-language CMS plugins.
-
 * Complete control over **Post MIME Types, File Upload extensions/MIME Types and file type icon images**. Fifty four (54) additional upload types, 112 file type icon images and a searchable list of over 1,500 file extension/MIME type associations.
-
-* **Integrates with Photonic Gallery, Jetpack and other plugins**, so you can add slideshows, thumbnail strips and special effects to your `[mla_gallery]` galleries.
 
 * **Enhanced Search Media box**. Search can be extended to the name/slug, ALT text and caption fields. The connector between search terms can be "and" or "or". Search by attachment ID or Parent ID is supported, and you can search on keywords in the taxonomy terms assigned to Media Library items. Works in the Media Manager Modal Window, too.
 
@@ -39,19 +41,19 @@ The Media Library Assistant provides several enhancements for managing the Media
 
 * **Complete support for ALL taxonomies**, including the standard Categories and Tags, your custom taxonomies and the Assistant's pre-defined Att. Categories and Att. Tags. You can add taxonomy columns to the Assistant listing, filter on any taxonomy, assign terms and list the attachments for a term.
 
-* Taxonomy and custom field support in the ATTACHMENT DETAILS pane of the Media Manager Modal Window.
+* Taxonomy and custom field support in the ATTACHMENT DETAILS pane of the Media Manager Modal Window and Media/Library Grid view.
 
 * An inline **"Bulk Edit"** area; update author, parent and custom fields, add, remove or replace taxonomy terms for several attachments at once. Works on the Media/Add New screen as well.
 
 * An inline **"Quick Edit"** action for many common fields and for custom fields
 
-* Displays more attachment information such as parent information, file URL and image metadata.
+* Displays more attachment information such as parent information, file URL and image metadata. Provides many more listing columns (more than 20) to choose from.
 
 * Allows you to edit the post_parent, the menu_order and to "unattach" items
 
-* Provides additional view filters for MIME types and taxonomies
+* Provides additional view filters for MIME types and taxonomies, and features to cmpose custom views of your own.
 
-* Provides many more listing columns (more than 20) to choose from
+* Works with the popular [Admin Columns](https://wordpress.org/plugins/codepress-admin-columns/) plugins for even more Media/Assistant screen customization.
 
 The Assistant is designed to work like the standard Media Library pages, so the learning curve is short and gentle. Contextual help is provided on every new screen to highlight new features.
 
@@ -180,6 +182,24 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 9. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
 
 == Changelog ==
+
+= 2.95 =
+* New: For the Media/Assistant admin submenu, **support for Real Media Library has been added.** You can filter the submenu table display by selecting an RML folder or Gallery in the sidebar at the left-hand side of the screen. Note that this feature requires an update to the RML plugin, so watch for and install that update to activate these features.
+* New: For the Media/Assistant admin submenu, Media Manager enhancements and Media/Library Grid Mode enhancements the "Mine" filter/view introduced in WP 5.1 has been added to the list.
+* New: For `[mla_gallery]`, **support for Simple Date Parameters has been added.** You can filter the gallery display by year, month, week or day in addition to any other data selection parameters. More information is given in the 'Simple Date Parameters' section of the Settings/Media Library Assistant Documentation tab.
+* New: For `[mla_gallery]`, **support for Real Media Library has been added.** You can filter the gallery display by the RML folder, collection or gallery ID in addition to any other data selection parameters. More information is given in the 'Support for the “Real Media Library” Plugin' section of the Settings/Media Library Assistant Documentation tab.
+* Fix: For the Media/Assistant admin submenu, the option to hide the Search Media controls has been restored by correcting a defect in escaping the HTML for the form.
+* Fix: For keyword and taxonomy term searches, excluded values used in large numbers of items are now handled correctly.
+* Fix: For Microsoft Office metadata extraction, removed PHP Fatal Error when the ZipArchive class does not exist.
+* Fix: For `[mla_gallery]` pagination controls, handling of `mla_link_href` parameters containing HTML "fragments" has been restored. Fragments are placed at the end of the URL, following query arguments.
+* Fix: For the Media/Assistant admin submenu, custom field values containing embedded arrays are now completely decoded for display.
+* Fix: For the "MLA Insert Fixit" example plugin, "scaled" Vs "original" images introduced in WP 5.3 are now handled for tools such as "ALT from item".
+* Fix: For the "MLA Insert Fixit" example plugin, HTTP/HTTPS mismatches between the site URL and inserted item URLs are now handled for tools such as "ALT from item".
+* Fix: For the IPTC/EXIF taxonomy rule full-screen editor, Text/Array Option value changes are now recorded properly.
+* Fix: For Gutenberg Blocks such as "Audio" and "Video", MLA enhancements now respect MIME Type filters when returning items for the display.
+* Fix: Correct a defect (introduced in v2.84) in parsing content templates with embedded substitution parameters in "test" elements.
+* Fix: Correct overwriting of the global $post variable when updating a Media Library item.
+* Fix: Correct false detection of Media File Renamer plugin and subsequent PHP "Uncaught Error" during upload processing.
 
 = 2.94 =
 * New: <strong>The "MLA Custom Field Search Example" plugin has been substantially upgraded.</strong> The new version has many more parameters and a new plugin settings page. A Documentation tab on the settings page contains all the information you need to understand and use the new version.
@@ -335,8 +355,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.94 =
-For [mla_gallery], icon handling, mla_viewer, and performance fixes. New and enhanced example plugins. Three enhancements in all, nine fixes.
+= 2.95 =
+Support for Real Media Library plugin in Media/Assistant and `[mla_gallery]`, MLA Insert Fixit improvements, `[mla_gallery]` simple date parameters, "Mine" filter/view. Four enhancements in all, twelve fixes.
 
 == Other Notes ==
 

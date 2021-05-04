@@ -53,23 +53,23 @@ class MLAShortcode_Support {
 			$mla_debug_category = NULL;
 		}
 
-		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) explicit_path = " . var_export( $explicit_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		MLACore::mla_debug_add( "MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) ghostscript_present = " . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . " MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) explicit_path = " . var_export( $explicit_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . " MLAShortcode_Support::mla_ghostscript_present( {$ghostscript_only} ) ghostscript_present = " . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 
 		if ( ! $ghostscript_only ) {
 			if ( isset( $ghostscript_present ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, ghostscript_present = ' . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, ghostscript_present = ' . var_export( $ghostscript_present, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 				return $ghostscript_present;
 			}
 
 			if ( 'checked' != MLACore::mla_get_option( 'enable_ghostscript_check' ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, disabled', $mla_debug_category );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, disabled', $mla_debug_category );
 				return $ghostscript_present = true;
 			}
 
 			// Imagick must be installed as well
 			if ( ! class_exists( 'Imagick' ) ) {
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, Imagick missing', $mla_debug_category );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, Imagick missing', $mla_debug_category );
 				return $ghostscript_present = false;
 			}
 		} // not ghostscript_only
@@ -77,14 +77,14 @@ class MLAShortcode_Support {
 		// Look for exec() - from http://stackoverflow.com/a/12980534/866618
 		$blacklist = preg_split( '/,\s*/', ini_get('disable_functions') . ',' . ini_get('suhosin.executor.func.blacklist') );
 		if ( in_array('exec', $blacklist) ) {
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec in blacklist', $mla_debug_category );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec in blacklist', $mla_debug_category );
 			return $ghostscript_present = false;
 		}
 
 		if ( 'WIN' === strtoupper( substr( PHP_OS, 0, 3) ) ) {
 			if ( ! empty( $explicit_path ) ) {
 				$return = exec( 'dir /o:n/s/b "' . $explicit_path . '"' );
-				MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN explicit path = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN explicit path = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 				if ( ! empty( $return ) ) {
 					return $ghostscript_present = true;
 				} else {
@@ -93,41 +93,41 @@ class MLAShortcode_Support {
 			}
 
 			$return = getenv('GSC');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, getenv(GSC) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, getenv(GSC) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('where gswin*c.exe');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(where gswin*c.exe) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(where gswin*c.exe) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe"');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files\gs\*gswin*c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
 			$return = exec('dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe"');
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>,  exec(dir /o:n/s/b "C:\Program Files (x86)\gs\*gswin32c.exe") = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			if ( ! empty( $return ) ) {
 				return $ghostscript_present = true;
 			}
 
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN detection failed', $mla_debug_category );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, WIN detection failed', $mla_debug_category );
 			return $ghostscript_present = false;
 		} // Windows platform
 
 		if ( ! empty( $explicit_path ) ) {
 			exec( 'test -e ' . $explicit_path, $dummy, $ghostscript_path );
-			MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, explicit path = ' . var_export( $explicit_path, true ) . ', ghostscript_path = ' . var_export( $ghostscript_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, explicit path = ' . var_export( $explicit_path, true ) . ', ghostscript_path = ' . var_export( $ghostscript_path, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 			return ( $explicit_path === $ghostscript_path );
 		}
 
 		$return = exec('which gs');
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec(which gs) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, exec(which gs) = ' . var_export( $return, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		if ( ! empty( $return ) ) {
 			return $ghostscript_present = true;
 		}
@@ -136,8 +136,8 @@ class MLAShortcode_Support {
 		$output = array();
 		$return_arg = -1;
 		$return = exec( 'test -e ' . $test_path, $output, $return_arg );
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, test_path = ' . var_export( $test_path, true ) . ', return_arg = ' . var_export( $return_arg, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
-		MLACore::mla_debug_add( '<strong>MLAShortcode_Support::mla_ghostscript_present</strong>, return = ' . var_export( $return, true ) . ', output = ' . var_export( $output, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, test_path = ' . var_export( $test_path, true ) . ', return_arg = ' . var_export( $return_arg, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>MLAShortcode_Support::mla_ghostscript_present</strong>, return = ' . var_export( $return, true ) . ', output = ' . var_export( $output, true ), MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL );
 		return $ghostscript_present = ( $test_path === $return_arg );
 	}
 
@@ -440,7 +440,6 @@ class MLAShortcode_Support {
 		 * and repair damage caused by link-breaks in the source text
 		 */
 		$attr = self::mla_validate_attributes( $attr, $content );
-//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		// Filter the attributes before $mla_page_parameter and "request:" prefix processing.
 		$attr = apply_filters( 'mla_gallery_raw_attributes', $attr );
@@ -494,6 +493,8 @@ class MLAShortcode_Support {
 			'mla_target' => '',
 			'mla_debug' => false,
 			'mla_allow_rml' => false,
+			'mla_rml_folder' => NULL,
+			'mla_rml_include_children' => false,
 
 			'mla_named_transfer' => false,
 			'mla_viewer' => false,
@@ -579,12 +580,9 @@ class MLAShortcode_Support {
 			}
 
 			$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
-//error_log( __LINE__ . " mla_gallery_shortcode() attr_value = " . var_export( $attr_value, true ), 0 );
 			$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
-//error_log( __LINE__ . " mla_gallery_shortcode() replacement_values = " . var_export( $replacement_values, true ), 0 );
 			$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
 		}
-//error_log( __LINE__ . " mla_gallery_shortcode() attr = " . var_export( $attr, true ), 0 );
 
 		// Merge gallery arguments with defaults, pass the query arguments on to mla_get_shortcode_attachments.
 		$attr = apply_filters( 'mla_gallery_attributes', $attr );
@@ -595,13 +593,13 @@ class MLAShortcode_Support {
 		// Decide which templates to use
 		if ( ( 'none' !== $arguments['mla_style'] ) && ( 'theme' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'gallery', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_gallery mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_gallery mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = $default_arguments['mla_style'];
 			}
 		}
 
 		if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'gallery', 'markup', '[exists]' ) ) {
-			MLACore::mla_debug_add( '<strong>mla_gallery mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_gallery mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			$arguments['mla_markup'] = $default_arguments['mla_markup'];
 		}
 
@@ -730,7 +728,7 @@ class MLAShortcode_Support {
 
 		if ( ( $is_gallery && empty($attachments) ) || ( $is_pagination && empty( $found_rows ) ) ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
 				$output = MLACore::mla_debug_flush();
 			} else {
 				$output =  '';
@@ -2091,14 +2089,14 @@ class MLAShortcode_Support {
 		// Determine templates and output type
 		if ( $arguments['mla_style'] && ( 'none' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'tag-cloud', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_tag_cloud mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_tag_cloud mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = NULL;
 			}
 		}
 
 		if ( $arguments['mla_markup'] ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'tag-cloud', 'markup', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_tag_cloud mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_tag_cloud mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_markup'] = NULL;
 			}
 		}
@@ -2216,7 +2214,7 @@ class MLAShortcode_Support {
 
 		if ( 0 == $found_rows ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$cloud = MLACore::mla_debug_flush();
 
 				if ( '<p></p>' == $cloud ) {
@@ -3411,14 +3409,14 @@ class MLAShortcode_Support {
 		// Determine templates and output type
 		if ( $arguments['mla_style'] && ( 'none' !== $arguments['mla_style'] ) ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_style'], 'term-list', 'style', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_term_list mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_term_list mla_style</strong> "' . $arguments['mla_style'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_style'] = NULL;
 			}
 		}
 
 		if ( $arguments['mla_markup'] ) {
 			if ( !MLATemplate_Support::mla_fetch_custom_template( $arguments['mla_markup'], 'term-list', 'markup', '[exists]' ) ) {
-				MLACore::mla_debug_add( '<strong>mla_term_list mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>mla_term_list mla_markup</strong> "' . $arguments['mla_markup'] . '" ' . __( 'not found', 'media-library-assistant' ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 				$arguments['mla_markup'] = NULL;
 			}
 		}
@@ -3539,7 +3537,7 @@ class MLAShortcode_Support {
 		$show_empty = false;
 		if ( 0 == $found_rows ) {
 			if ( self::$mla_debug ) {
-				MLACore::mla_debug_add( '<strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$list = MLACore::mla_debug_flush();
 
 				if ( '<p></p>' == $list ) {
@@ -3947,6 +3945,13 @@ class MLAShortcode_Support {
 			$parts['path'] = '';
 		}
 
+		// Fragments must come at the end of the URL and be preceded by a #
+		if ( !empty( $parts['fragment'] ) ) {
+			$parts['fragment'] = '#' . $parts['fragment'];
+		} else {
+			$parts['fragment'] = '';
+		}
+
 		$clean_query = array();
 		if ( empty( $parts['query'] ) ) {
 			// No existing query arguments; create query if requested
@@ -3982,10 +3987,11 @@ class MLAShortcode_Support {
 		$clean_query = urlencode_deep( $clean_query );
 		$clean_query = build_query( $clean_query );
 
+		// Query arguments must come before the fragment, if any
 		if ( !empty( $clean_query ) ) {
-			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' . $clean_query;
+			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . '?' . $clean_query . $parts['fragment'];
 		} else {
-			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'];
+			return $parts['scheme'] . '://' . $parts['host'] . $parts['path'] . $parts['fragment'];
 		}
 	}
 
@@ -4692,6 +4698,11 @@ class MLAShortcode_Support {
 			'mla_paginate_current' => NULL,
 			'mla_paginate_total' => NULL,
 			// Date and Time Queries
+			'year' => '',
+			'monthnum' => '',
+			'w' => '',
+			'day' => '',
+			'm' => '',
 			'date_query' => '',
 			// Custom Field
 			'meta_key' => '',
@@ -4719,7 +4730,9 @@ class MLAShortcode_Support {
 			'cache_results' => NULL,
 			'update_post_meta_cache' => NULL,
 			'update_post_term_cache' => NULL,
-			'mla_allow_rml' => false, // RML Support, for Phil Boyd
+			'mla_allow_rml' => false,
+			'mla_rml_folder' => NULL,
+			'mla_rml_include_children' => false,
 		);
 
 	/**
@@ -4820,8 +4833,13 @@ class MLAShortcode_Support {
 		$mla_page_parameter = $arguments['mla_page_parameter'];
 		unset( $arguments['mla_page_parameter'] );
 
-		// Convert to boolean
+		// Convert to boolean, detect mla_rml_folder
 		$arguments['mla_allow_rml'] = 'true' === ( ( ! empty( $arguments['mla_allow_rml'] ) ) ? trim( strtolower( $arguments['mla_allow_rml'] ) ) : 'false' );
+		$arguments['mla_rml_include_children'] = 'true' === ( ( ! empty( $arguments['mla_rml_include_children'] ) ) ? trim( strtolower( $arguments['mla_rml_include_children'] ) ) : 'false' );
+		if ( ! empty( $arguments['mla_rml_folder'] ) ) {
+			$arguments['mla_rml_folder'] = absint( $arguments['mla_rml_folder'] );
+			$arguments['mla_allow_rml'] = 0 < $arguments['mla_rml_folder'];
+		}
 
 		/*
 		 * $mla_page_parameter, if set, doesn't make it through the shortcode_atts filter,
@@ -5301,6 +5319,49 @@ class MLAShortcode_Support {
 
 				unset( $arguments[ $key ] );
 				break;
+			case 'year': // 4 digit year, e.g., 2021
+				if ( 4 === strlen( $value ) && is_numeric( $value ) ) {
+					$query_arguments[ $key ] = (int) $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'monthnum': // Month number (from 1 to 12)
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 13 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'w': // Week of the year (from 0 to 53). Uses MySQL WEEK command. The mode is dependent on the “start_of_week” option.
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 54 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'day': // Day of the month (from 1 to 31)
+				$value = absint( $value );
+				if ( ( 0 < $value ) && ( 32 > $value ) ) {
+					$query_arguments[ $key ] = $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
+			case 'm': //YearMonth, e.g., 202101
+				if ( 6 === strlen( $value ) && is_numeric( $value ) ) {
+					$query_arguments[ $key ] = (int) $value;
+					$use_children = false;
+				}
+
+				unset( $arguments[ $key ] );
+				break;
 			case 'date_query':
 				if ( ! empty( $value ) ) {
 					if ( is_array( $value ) ) {
@@ -5335,6 +5396,7 @@ class MLAShortcode_Support {
 
 					$use_children = false;
 				}
+
 				unset( $arguments[ $key ] );
 				break;
 			case 'meta_query':
@@ -5371,6 +5433,7 @@ class MLAShortcode_Support {
 
 					$use_children = false;
 				}
+
 				unset( $arguments[ $key ] );
 				break;
 			case 'fields':
@@ -5410,8 +5473,8 @@ class MLAShortcode_Support {
 		 * search results or archive pages.
 		 */
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>mla_debug is_archive()</strong> = ' . var_export( is_archive(), true ) );
-			MLACore::mla_debug_add( '<strong>mla_debug is_search()</strong> = ' . var_export( is_search(), true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_archive()</strong> = ' . var_export( is_archive(), true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug is_search()</strong> = ' . var_export( is_search(), true ) );
 		}
 
 		if ( isset( $query_arguments['posts_per_archive_page'] ) && ( is_archive() || is_search() ) ) {
@@ -5586,8 +5649,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
-			MLACore::mla_debug_add( '<strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_where]</strong> = ' . MLACore::mla_decode_wp_filter('posts_where') );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>mla_debug $wp_filter[posts_orderby]</strong> = ' . MLACore::mla_decode_wp_filter('posts_orderby') );
 		}
 
 		/*
@@ -5614,9 +5677,24 @@ class MLAShortcode_Support {
 			if ( self::$query_parameters['disable_tax_join'] ) {
 				// Suppress WordPress WP_Query LEFT JOIN on post_parent, etc.
 				$query_arguments['post_type'] = 'mladisabletaxjoin';
-			} elseif ( defined('RML_FILE') && ( false === $arguments['mla_allow_rml'] ) ) {
-				// Suppress RML additions to MLA queries
-				$query_arguments['post_type'] = 'mladisablerml';
+			} 
+			
+			if ( defined('RML_FILE') ) {
+				if ( $arguments['mla_allow_rml'] ) {
+					add_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9, 2 );
+
+					if ( ! empty( $arguments['mla_rml_folder'] ) ) {
+						unset( $query_arguments['post_parent'] );
+						$query_arguments['rml_folder'] = $arguments['mla_rml_folder'];
+
+						if ( $arguments['mla_rml_include_children'] ) {
+							$query_arguments['rml_include_children'] = $arguments['mla_rml_include_children'];
+						}
+					}
+				} else {
+					// Suppress RML additions to MLA queries
+					$query_arguments['post_type'] = 'mladisablerml';
+				}
 			}
 		} // post_type is attachment
 
@@ -5666,10 +5744,10 @@ class MLAShortcode_Support {
 			remove_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_filter', 0x7FFFFFFF );
 			remove_filter( 'posts_clauses_request', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_request_filter', 0x7FFFFFFF );
 
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query', 'media-library-assistant' ) . '</strong> = ' . var_export( $query_arguments, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug request', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->request, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query_vars', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->query_vars, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug post_count', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->post_count, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query', 'media-library-assistant' ) . '</strong> = ' . var_export( $query_arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug request', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->request, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query_vars', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->query_vars, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug post_count', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->post_count, true ) );
 		}
 
 		MLAQuery::$search_parameters = array( 'debug' => 'none' );
@@ -5693,7 +5771,7 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$old_clause = $join_clause;
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
 		/*
@@ -5734,7 +5812,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug && ( $old_clause != $join_clause ) ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug modified JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug modified JOIN filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $join_clause, true ) );
 		}
 
 		return $join_clause;
@@ -5759,7 +5837,7 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$old_clause = $where_clause;
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
 		}
 
 		// Reverse post_type modification used to avoid redundant LEFT JOIN insertion or RML folder insertion
@@ -5796,7 +5874,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug && ( $old_clause != $where_clause ) ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug modified WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug modified WHERE filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $where_clause, true ) );
 		}
 
 		return $where_clause;
@@ -5819,7 +5897,7 @@ class MLAShortcode_Support {
 
 		if ( self::$mla_debug ) {
 			$replacement = isset( self::$query_parameters['orderby'] ) ? var_export( self::$query_parameters['orderby'], true ) : 'none';
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug ORDER BY filter, incoming', 'media-library-assistant' ) . '</strong> = ' . var_export( $orderby_clause, true ) . '<br>' . __( 'Replacement ORDER BY clause', 'media-library-assistant' ) . ' = ' . $replacement );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug ORDER BY filter, incoming', 'media-library-assistant' ) . '</strong> = ' . var_export( $orderby_clause, true ) . '<br>' . __( 'Replacement ORDER BY clause', 'media-library-assistant' ) . ' = ' . $replacement );
 		}
 
 		if ( isset( self::$query_parameters['orderby'] ) ) {
@@ -5827,6 +5905,24 @@ class MLAShortcode_Support {
 		}
 
 		return $orderby_clause;
+	}
+
+	/**
+	 * Reverse mladisabletaxjoin/mladisablerml overide for RML queries
+	 * 
+	 * @since 2.95
+	 *
+	 * @param	array	query clauses before modification
+	 * @param	WP_Query query object
+	 */
+	public static function mla_shortcode_query_posts_clauses_rml_filter( $pieces, $query ) {
+		remove_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9 );
+
+        if ( $query->get( 'post_type' ) === 'mladisabletaxjoin' ) {
+            $query->set( 'post_type', 'attachment' );
+		}
+
+		return $pieces;
 	}
 
 	/**
@@ -5842,7 +5938,7 @@ class MLAShortcode_Support {
 	 * @return	array	query clauses after modification (none)
 	 */
 	public static function mla_shortcode_query_posts_clauses_filter( $pieces ) {
-		MLACore::mla_debug_add( '<strong>' . __( 'mla_debug posts_clauses filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug posts_clauses filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
 
 		return $pieces;
 	}
@@ -5860,7 +5956,7 @@ class MLAShortcode_Support {
 	 * @return	array	query clauses after modification (none)
 	 */
 	public static function mla_shortcode_query_posts_clauses_request_filter( $pieces ) {
-		MLACore::mla_debug_add( '<strong>' . __( 'mla_debug posts_clauses_request filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
+		MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug posts_clauses_request filter', 'media-library-assistant' ) . '</strong> = ' . var_export( $pieces, true ) );
 
 		return $pieces;
 	}
@@ -6283,11 +6379,11 @@ class MLAShortcode_Support {
 		}
 
 		if ( self::$mla_debug ) {
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug query arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug last_query', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_query, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug last_error', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_error, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug num_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->num_rows, true ) );
-			MLACore::mla_debug_add( '<strong>' . __( 'mla_debug found_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $found_rows, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug last_query', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_query, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug last_error', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->last_error, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug num_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $wpdb->num_rows, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug found_rows', 'media-library-assistant' ) . '</strong> = ' . var_export( $found_rows, true ) );
 		}
 
 		if ( 'true' == strtolower( trim( $arguments['pad_counts'] ) ) ) {

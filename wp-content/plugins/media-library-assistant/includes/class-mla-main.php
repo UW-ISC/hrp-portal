@@ -1770,6 +1770,11 @@ class MLA {
 				$form_url = 'upload.php?page=' . MLACore::ADMIN_PAGE_SLUG;
 			}
 
+			// Real Media Library compatibility
+			if ( isset( $_REQUEST['rml_folder'] ) ) {
+				$form_url .= '&rml_folder=' . urlencode( sanitize_text_field( wp_unslash( $_REQUEST['rml_folder'] ) ) );
+			}
+	
 			// Forms are NOT created automatically, wrap the table in one to use features like bulk actions
 			echo "\n" . '<form action="' . esc_url_raw( admin_url( $form_url ) ) . '" method="get" id="mla-filter">' . "\n";
 

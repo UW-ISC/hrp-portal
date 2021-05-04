@@ -483,8 +483,9 @@ function relevanssi_index_doc( $index_post, $remove_first = false, $custom_field
 	 * can be a boolean, or a string containing an explanation for the
 	 * exclusion. Default false.
 	 * @param int            The post ID.
+	 * @param WP_Post        The post object.
 	 */
-	$do_not_index = apply_filters( 'relevanssi_do_not_index', false, $post->ID );
+	$do_not_index = apply_filters( 'relevanssi_do_not_index', false, $post->ID, $post );
 	if ( $do_not_index ) {
 		// Filter says no.
 		if ( true === $do_not_index ) {
@@ -541,7 +542,7 @@ function relevanssi_index_doc( $index_post, $remove_first = false, $custom_field
 	}
 
 	if ( 'on' === get_option( 'relevanssi_index_author' ) ) {
-		$n += relevanssi_index_author( $insert_data, $post->post_author, $min_word_length, $debug );
+		$n += relevanssi_index_author( $insert_data, $post->post_author, $min_word_length, $debug, $post );
 	}
 
 	$n += relevanssi_index_custom_fields( $insert_data, $post->ID, $custom_fields, $min_word_length, $debug );
@@ -1178,12 +1179,22 @@ function relevanssi_index_comments( &$insert_data, $post_id, $min_word_length, $
  * @param int     $post_author     The post author id.
  * @param int     $min_word_length The minimum word length.
  * @param boolean $debug           If true, print out debug notices.
+ * @param WP_Post $post            The post object.
  *
  * @return int The number of tokens added to the data.
  */
-function relevanssi_index_author( &$insert_data, $post_author, $min_word_length, $debug ) {
+function relevanssi_index_author( &$insert_data, $post_author, $min_word_length, $debug, $post ) {
 	$n            = 0;
 	$display_name = get_the_author_meta( 'display_name', $post_author );
+
+	/**
+	 * Filters the post author display_name before indexing it.
+	 *
+	 * @param string  $post_author The author display_name.
+	 * @param WP_Post $post        The post object.
+	 */
+	$display_name = apply_filters( 'relevanssi_post_author', $display_name, $post );
+
 	/** This filter is documented in lib/indexing.php */
 	$name_tokens = apply_filters(
 		'relevanssi_indexing_tokens',
