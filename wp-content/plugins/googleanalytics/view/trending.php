@@ -1,7 +1,7 @@
 <div class="wrap ga-wrap">
     <h3 class="ga-trending-h3">Google Analytics</h3>
     <h2 class="ga-trending-h2"><?php _e( 'Trending content' ); ?></h2>
-    <div class="ga_container <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : '' ?>"
+    <div class="ga_container <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : ''; ?>"
          id="exTab2">
 		<?php if ( ! empty( $data['error_message'] ) ) : ?>
 			<?php echo $data['error_message']; ?>
@@ -35,10 +35,10 @@
                             <tr>
                                 <td>
                                     <a class="trending-link"
-                                       href="<?php echo $alert->{"url"} ?>"><?php echo $alert->{"url"} ?></a>
+                                       href="<?php echo $alert->{"url"}; ?>"><?php echo $alert->{"url"}; ?></a>
                                 </td>
-                                <td><?php echo ( property_exists( $alert, "pageviews" ) ) ? $alert->{"pageviews"} : '0' ?></td>
-                                <td><?php echo date( 'F jS, g:ia', strtotime( $alert->{"sent_at"} ) ) ?></td>
+                                <td><?php echo ( property_exists( $alert, "pageviews" ) ) ? $alert->{"pageviews"} : '0'; ?></td>
+                                <td><?php echo date( 'F jS, g:ia', strtotime( $alert->{"sent_at"} ) ); ?></td>
                             </tr>
 						    <?php if ( $key >= 4 ) {
 							    break;
@@ -48,12 +48,12 @@
                 </div>
 		    <?php elseif ( ! empty( $alerts->error ) ) : ?>
                 <div class="ga-alert ga-alert-danger">
-				    <?php _e( $alerts->error ) ?>
+				    <?php _e( $alerts->error ); ?>
                 </div>
 		    <?php else : ?>
                 <div class="ga-alert ga-alert-warning">
-				    <?php _e( 'You will see a history of trending content here once the first article takes off.' ) ?>
-					<a class="ga-alert-link" href="http://tiny.cc/trending/"><?php _e( 'Click here to learn more' ) ?></a>
+				    <?php _e( 'You will see a history of trending content here once the first article takes off.' ); ?>
+					<a class="ga-alert-link" href="http://tiny.cc/trending/"><?php _e( 'Click here to learn more' ); ?></a>
                 </div>
 		    <?php endif; ?>
 	    <?php endif; ?>
@@ -70,7 +70,8 @@
 					</tr>
                     <tr>
                         <td>
-							<?php _e( 'Connect your site to the Social Optimization Platform and receive these alerts via slack or email.' ); ?>
+							<?php _e( 'Interested in receiving alerts via slack or email? Sign into your Social Optimization Platform account and activate it!
+Enter your email and we\'ll send you an invite' ); ?>
                         </td>
                     </tr>
                     <tr>

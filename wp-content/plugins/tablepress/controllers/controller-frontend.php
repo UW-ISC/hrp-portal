@@ -214,7 +214,7 @@ class TablePress_Frontend_Controller extends TablePress_Controller {
 		 * @param string $js_file Path and file name of the DataTables JS library file.
 		 */
 		$js_url = apply_filters( 'tablepress_datatables_js_url', $js_url, $js_file );
-		wp_enqueue_script( 'tablepress-datatables', $js_url, array( 'jquery-core' ), TablePress::version, true );
+		wp_enqueue_script( 'tablepress-datatables', $js_url, array( 'jquery' ), TablePress::version, true );
 	}
 
 	/**
@@ -246,7 +246,7 @@ class TablePress_Frontend_Controller extends TablePress_Controller {
 					$js_options['datatables_paginate'] = false;
 				}
 				// Sanitize, as it may come from a Shortcode attribute.
-				$js_options['datatables_paginate_entries'] = intval( $js_options['datatables_paginate_entries'] );
+				$js_options['datatables_paginate_entries'] = (int) $js_options['datatables_paginate_entries'];
 
 				// DataTables language/translation handling.
 				/**
@@ -400,7 +400,7 @@ class TablePress_Frontend_Controller extends TablePress_Controller {
 		// Echo DataTables strings and JS calls.
 		echo <<<JS
 <script type="text/javascript">
-jQuery(document).ready(function($){
+jQuery(function($){
 {$datatables_strings}{$commands}
 });
 </script>
@@ -740,7 +740,7 @@ JS;
 						$time_diff = $current_timestamp - $modified_timestamp;
 						// Time difference is only shown up to one day.
 						if ( $time_diff >= 0 && $time_diff < DAY_IN_SECONDS ) {
-							$output = sprintf( __( '%s ago', 'default' ), human_time_diff( $modified_timestamp, $current_timestamp ) ); // No `tablepress` text domain as translations are not loaded.
+							$output = sprintf( __( '%s ago', 'default' ), human_time_diff( $modified_timestamp, $current_timestamp ) );
 						} else {
 							$output = TablePress::format_datetime( $table['last_modified'], 'mysql', '<br />' );
 						}

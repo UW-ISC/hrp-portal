@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Tribe__Events__API' ) ) {
 	class Tribe__Events__API {
-		public static $valid_venue_keys = array(
+		public static $valid_venue_keys = [
 			'Venue',
 			'Address',
 			'City',
@@ -20,14 +20,14 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 			'Province',
 			'Zip',
 			'Phone',
-		);
+		];
 
-		public static $valid_organizer_keys = array(
+		public static $valid_organizer_keys = [
 			'Organizer',
 			'Phone',
 			'Email',
 			'Website',
-		);
+		];
 
 		/**
 		 * Create a new event
@@ -37,9 +37,23 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 * @return int|WP_Error The created event ID or a WP_Error object if it fails.
 		 */
 		public static function createEvent( $args ) {
-
 			$args['post_type'] = Tribe__Events__Main::POSTTYPE;
-			$event_id          = wp_insert_post( $args, true );
+
+			$args = self::sanitize_event_post_create_update_args( $args );
+			/**
+			 * Allow filtering of arguments in prior to inserting the event and meta fields.
+			 *
+			 * @param array $args The fields we want saved.
+			 *
+			 * @since 4.9.4
+			 */
+			$args = apply_filters( 'tribe_events_event_insert_args', $args );
+
+			if ( is_wp_error( $args ) ) {
+				return $args;
+			}
+
+			$event_id = wp_insert_post( $args, true );
 
 			if ( ! is_wp_error( $event_id ) ) {
 				self::saveEventMeta( $event_id, $args, get_post( $event_id ) );
@@ -52,22 +66,51 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 * Update an existing event
 		 *
 		 * @param int   $event_id The event ID to update.
-		 * @param array $args    The post args.
+		 * @param array $args     The post args.
 		 *
-		 * @return false|int The event ID.
+		 * @return int|WP_Error The updated event ID or a WP_Error object if it fails.
 		 */
 		public static function updateEvent( $event_id, $args ) {
-			$post = get_post( $event_id );
-			$args['ID'] = $event_id;
+			$event_id          = absint( $event_id );
+			$post              = get_post( $event_id );
+			$args['ID']        = $event_id;
 			$args['post_type'] = Tribe__Events__Main::POSTTYPE;
 
 			// allow for the change of the date and the status in the same update request
 			if (
 				isset( $args['post_date'], $args['post_status'] )
-				&& in_array( $post->post_status, array( 'draft', 'pending', 'auto-draft' ) )
+				&& in_array( $post->post_status, [ 'draft', 'pending', 'auto-draft' ] )
 				&& $args['post_status'] !== $post->post_status
 			) {
 				$args['edit_date'] = true;
+			}
+
+			/**
+			 * Allow hooking prior the update of an event and meta fields.
+			 *
+			 * @param array   $args The fields we want saved.
+			 * @param int     $event_id The event ID we are modifying.
+			 * @param WP_Post $post The event itself.
+			 *
+			 * @since 4.9.4
+			 */
+			$args = apply_filters( 'tribe_events_event_update_args', $args, $event_id, $post );
+
+			$args = self::sanitize_event_post_create_update_args( $args );
+			if ( is_wp_error( $args ) ) {
+				return $args;
+			}
+
+			/**
+			 * Disallow the update for an event via the Tribe API
+			 *
+			 * @param bool $disallow_update Flag to control the update of a post false by default.
+			 * @param int  $event_id The event ID.
+			 *
+			 * @since 4.9.4
+			 */
+			if ( apply_filters( 'tribe_events_event_prevent_update', false, $event_id ) ) {
+				return $event_id;
 			}
 
 			if ( wp_update_post( $args ) ) {
@@ -92,15 +135,35 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		/**
 		 * Used by createEvent and updateEvent - saves all the various event meta
 		 *
-		 * @param int   $event_id The event ID we are modifying meta for.
-		 * @param array $data     The meta fields we want saved.
-		 * @param       WP_Post   The event itself.
+		 * @param int     $event_id The event ID we are modifying meta for.
+		 * @param array   $data     The meta fields we want saved.
+		 * @param WP_Post $event    The event post, itself.
 		 *
+		 * @return bool
 		 */
 		public static function saveEventMeta( $event_id, $data, $event = null ) {
 			$tec = Tribe__Events__Main::instance();
 
+			$raw_data = $data;
+
 			$data = self::prepare_event_date_meta( $event_id, $data );
+
+			if ( is_wp_error( $data ) ) {
+				/**
+				 * Hook fired when saving or updating event meta fields failed due to detection of invalid data.
+				 *
+				 * Example of invalid data is an EventStartMinute of `60`, since it should be 0-59.
+				 *
+				 * @param int     $event_id The event ID we are modifying meta for.
+				 * @param array   $raw_data The meta fields we tried to send.
+				 * @param WP_Post $event    The event itself.
+				 *
+				 * @since 4.6.20
+				 */
+				do_action( 'tribe_events_event_save_failed_invalid_meta', $event_id, $raw_data, $event );
+
+				return false;
+			}
 
 			if ( empty( $data['EventHideFromUpcoming'] ) ) {
 				delete_metadata( 'post', $event_id, '_EventHideFromUpcoming' );
@@ -120,7 +183,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 
 			// Ordinarily there is a single cost value for each event, but addons (ie, ticketing plugins) may need
 			// to record a number of different price points for the same event
-			$event_cost = isset( $data['EventCost'] ) ? (array) $data['EventCost'] : array();
+			$event_cost        = isset( $data['EventCost'] ) ? (array) $data['EventCost'] : [];
 			$data['EventCost'] = (array) apply_filters( 'tribe_events_event_costs', $event_cost, $event_id );
 
 			// If we are saving just one meta, we reset to avoid deleting and re-adding cost every time
@@ -128,8 +191,12 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 				$data['EventCost'] = reset( $data['EventCost'] );
 			}
 
-			if ( isset( $data['FeaturedImage'] ) && ! empty( $data['FeaturedImage'] ) ) {
-				update_metadata( 'post', $event_id, '_thumbnail_id', $data['FeaturedImage'] );
+			if ( isset( $data['FeaturedImage'] ) ) {
+				if ( empty( $data['FeaturedImage'] ) ) {
+					delete_post_meta( $event_id, '_thumbnail_id' );
+				} else {
+					update_metadata( 'post', $event_id, '_thumbnail_id', $data['FeaturedImage'] );
+				}
 				unset( $data['FeaturedImage'] );
 			}
 
@@ -172,16 +239,16 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 			// Set sticky state for calendar view.
 			if ( $event instanceof WP_Post ) {
 				if ( isset( $data['EventShowInCalendar'] ) && $data['EventShowInCalendar'] == 'yes' && $event->menu_order != '-1' ) {
-					$update_event = array(
+					$update_event = [
 						'ID'         => $event_id,
 						'menu_order' => '-1',
-					);
+					];
 					wp_update_post( $update_event );
 				} elseif ( ( ! isset( $data['EventShowInCalendar'] ) || $data['EventShowInCalendar'] != 'yes' ) && $event->menu_order == '-1' ) {
-					$update_event = array(
+					$update_event = [
 						'ID'         => $event_id,
 						'menu_order' => '0',
-					);
+					];
 					wp_update_post( $update_event );
 				}
 			}
@@ -201,6 +268,8 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 			 * @since 4.6
 			 */
 			do_action( 'tribe_events_update_meta', $event_id, $data, $event );
+
+			return true;
 		}
 
 		/**
@@ -281,7 +350,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 *
 		 * @param $data array Associative array of event meta data
 		 *
-		 * @return array
+		 * @return array|WP_Error
 		 */
 		protected static function prepare_event_date_meta( $event_id, $data ) {
 			$date_provided = false;
@@ -292,6 +361,11 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 				} else {
 					$data['EventAllDay'] = 'no';
 				}
+			}
+
+			$data = self::sanitize_event_post_create_update_args( $data );
+			if ( is_wp_error( $data ) ) {
+				return $data;
 			}
 
 			$datepicker_format = Tribe__Date_Utils::datepicker_formats( tribe_get_option( 'datepickerFormat' ) );
@@ -318,7 +392,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 				$has_end_time        = isset( $data['EventEndTime'] );
 				$has_end_hour_minute = isset( $data['EventEndHour'], $data['EventEndMinute'] );
 
-				$date_provided         = ( $has_start_time || $has_start_hour_min ) && ( $has_end_time || $has_end_hour_minute );
+				$date_provided = ( $has_start_time || $has_start_hour_min ) && ( $has_end_time || $has_end_hour_minute );
 
 				delete_post_meta( $event_id, '_EventAllDay' );
 
@@ -410,7 +484,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		public static function update_event_cost( $event_id ) {
 			// Loads current event costs, on construct
 			// Tribe__Events__Tickets__Tickets->get_ticket_prices() adds them to this filter
-			$event_cost = (array) apply_filters( 'tribe_events_event_costs', array(), $event_id );
+			$event_cost = (array) apply_filters( 'tribe_events_event_costs', [], $event_id );
 
 			// Kill the old cost meta data
 			delete_post_meta( $event_id, '_EventCost' );
@@ -431,8 +505,8 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 *
 		 * @return array An associative array of terms in the [ <taxonomy> => [ <term_1>, <term_2>, ...], ...] format.
 		 */
-		public static function get_event_terms( $event_id, array $args = array() ) {
-			$terms = array();
+		public static function get_event_terms( $event_id, array $args = [] ) {
+			$terms = [];
 			foreach ( get_post_taxonomies( $event_id ) as $taxonomy ) {
 				$tax_terms = wp_get_object_terms( $event_id, $taxonomy, $args );
 				$terms[ $taxonomy ] = $tax_terms;
@@ -451,7 +525,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 * @return mixed
 		 */
 		private static function saveEventOrganizer( $data, $post = null, $post_status = 'publish' ) {
-			$organzier_id = ! empty( $data['OrganizerID'] ) ? $data['OrganizerID'] : null;
+			$organizer_id = ! empty( $data['OrganizerID'] ) ? $data['OrganizerID'] : null;
 			return Tribe__Events__Organizer::instance()->save( $organizer_id, $data, Tribe__Events__Organizer::POSTTYPE, $post_status );
 		}
 
@@ -591,7 +665,7 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 		 */
 		public static function get_and_flatten_event_meta( $event_id ) {
 			$temp_post_meta = get_post_meta( $event_id );
-			$post_meta = array();
+			$post_meta      = [];
 			foreach ( (array) $temp_post_meta as $key => $value ) {
 				if ( 1 === count( $value ) ) {
 					$post_meta[ $key ] = maybe_unserialize( reset( $value ) );
@@ -601,6 +675,209 @@ if ( ! class_exists( 'Tribe__Events__API' ) ) {
 			}
 
 			return $post_meta;
+		}
+
+		/**
+		 * Sanitize the arguments array before sending to create/update an event post.
+		 *
+		 * Use this prior to sending arguments to post create/update function.
+		 *
+		 * @since 4.6.20
+		 *
+		 * @see Tribe__Events__API::sanitize_meridian_meta_value
+		 * @see Tribe__Events__API::sanitize_hour_meta_value
+		 * @see Tribe__Events__API::sanitize_minute_meta_value
+		 *
+		 * @param array $args The arguments sent to create/update an event post.
+		 *
+		 * @return array|WP_Error
+		 */
+		public static function sanitize_event_post_create_update_args( $args ) {
+			if (
+				! is_array( $args )
+				|| empty( $args['post_type'] )
+				|| Tribe__Events__Main::POSTTYPE !== $args['post_type']
+			) {
+				return $args;
+			}
+
+			// Sanitize if valid, or fail with WP_Error if invalid.
+			// Could enhance this with more comprehensive checks in the future.
+
+			// Process meridian fields before hour fields to determine if hours are to be in the 12-hour or 24-hour format.
+			if ( ! empty( $args['EventStartMeridian'] ) ) {
+				$args['EventStartMeridian'] = self::sanitize_meridian_meta_value( $args['EventStartMeridian'] );
+			}
+
+			if ( ! empty( $args['EventEndMeridian'] ) ) {
+				$args['EventEndMeridian'] = self::sanitize_meridian_meta_value( $args['EventEndMeridian'] );
+			}
+
+			// If meridian is set but we can pretty easily guess the hour is a valid 24-hour format, discard meridian in attempt to be smarter/flexible, thus setting "14pm" (invalid) to "14" (equivalent to 2pm).
+			// We take this approach instead of just minus `12` from the integer value of the hour because meridian may be set by defaults.
+			// Watch out for sending "12pm" or "12am" as the meridian (12-hour format) will take precedence if it exists.
+			if (
+				! empty( $args['EventStartMeridian'] )
+				&& absint( $args['EventStartHour'] ) > 12
+				&& absint( $args['EventStartHour'] ) < 24
+			) {
+				$args['EventStartMeridian'] = '';
+			}
+
+			if (
+				! empty( $args['EventEndMeridian'] )
+				&& absint( $args['EventEndHour'] ) > 12
+				&& absint( $args['EventEndHour'] ) < 24
+			) {
+				$args['EventEndMeridian'] = '';
+			}
+
+			// Now process all but the meridians
+			foreach ( $args as $key => &$value ) {
+				if ( 'EventStartHour' === $key ) {
+					$twelve_hour = ! empty( $args['EventStartMeridian'] );
+					$value       = self::sanitize_hour_meta_value( $value, $twelve_hour );
+				} elseif ( 'EventEndHour' === $key ) {
+					$twelve_hour = ! empty( $args['EventEndMeridian'] );
+					$value       = self::sanitize_hour_meta_value( $value, $twelve_hour );
+				} elseif (
+					'EventStartMinute' === $key
+					|| 'EventEndMinute' === $key
+				) {
+					$value = self::sanitize_minute_meta_value( $value );
+				}
+
+				if ( is_wp_error( $value ) ) {
+					return $value;
+				}
+			}
+
+			return $args;
+		}
+
+		/**
+		 * Sanitize a string to be used as an event meridian post meta value: am|pm.
+		 *
+		 * Use this prior to sending value to the database.
+		 *
+		 * @since 4.6.20
+		 *
+		 * @param string $value            The post meta value to be checked, such as 'am'.
+		 * @param bool   $empty_if_invalid If true, set an invalid value to an empty string, else generate WP_Error.
+		 *
+		 * @return string|WP_Error
+		 */
+		public static function sanitize_meridian_meta_value( $value, $empty_if_invalid = true ) {
+			// lower-case to match the `a` PHP date format used elsewhere
+			$new_value = strtolower( trim( $value ) );
+
+			$is_valid = 'am' === $new_value || 'pm' === $new_value;
+
+			$invalid_value = '';
+
+			if ( ! $empty_if_invalid ) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` meridian is not valid. Make sure it is either `am` or `pm`, or remove it entirely if using the 24-hour format.', 'the-events-calendar' ),
+					$value
+				);
+
+				$invalid_value = new WP_Error( 'invalid-tribe-events-meridian-meta-value', $error_message );
+			}
+
+			return $is_valid ? $new_value : $invalid_value;
+		}
+
+		/**
+		 * Sanitize a string to be used as an event hour post meta value: 1-12 if `Event{Start|End}Meridian`
+		 * is also passed, else 0-23.
+		 *
+		 * Use this prior to sending value to the database.
+		 *
+		 * @since 4.6.20
+		 *
+		 * @param string $value       The post meta value to be checked, such as '07'.
+		 * @param bool   $twelve_hour If false, allow 0-23. If true, only allow 1-12.
+		 *
+		 * @return string|WP_Error
+		 */
+		public static function sanitize_hour_meta_value( $value, $twelve_hour = false ) {
+			$value = (string) $value;
+
+			if ( ! is_numeric( $value ) ) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` hour (am/pm) is not valid. Make sure it is from 1 to 12.', 'the-events-calendar' ),
+					$value
+				);
+
+				return new WP_Error( 'non-numeric-tribe-events-hour-meta-value', $error_message );
+			}
+
+			$new_value = absint( $value );
+
+			if (
+				$twelve_hour
+				&& (
+					$new_value < 1
+					|| $new_value > 12
+				)
+			) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` hour (12-hour) is not valid. Make sure it is from 1 to 12.', 'the-events-calendar' ),
+					$value
+				);
+
+				return new WP_Error( 'invalid-tribe-events-12-hour-meta-value', $error_message );
+			} elseif ( $new_value > 23 ) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` hour (24-hour) is not valid. Make sure it is from 0 to 23.', 'the-events-calendar' ),
+					$value
+				);
+
+				return new WP_Error( 'invalid-tribe-events-24-hour-meta-value', $error_message );
+			}
+
+			return str_pad( $new_value, 2, '0', STR_PAD_LEFT );
+		}
+
+		/**
+		 * Sanitize a string to be used as an event minute post meta value: 0-59.
+		 *
+		 * Use this prior to sending value to the database.
+		 *
+		 * @since 4.6.20
+		 *
+		 * @param string $value The post meta value to be checked, such as '30'.
+		 *
+		 * @return string|WP_Error
+		 */
+		public static function sanitize_minute_meta_value( $value ) {
+			$value = (string) $value;
+
+			if ( '' === trim( $value ) ) {
+				return '';
+			}
+
+			if ( ! is_numeric( $value ) ) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` minutes is not valid. Make sure it is from 0 to 59.', 'the-events-calendar' ),
+					$value
+				);
+
+				return new WP_Error( 'non-numeric-tribe-events-minutes-meta-value', $error_message );
+			}
+
+			$new_value = absint( $value );
+
+			if ( $new_value > 59 ) {
+				$error_message = sprintf(
+					esc_html__( 'An event having a post meta value of `%s` minutes is not valid. Make sure it is from 0 to 59.', 'the-events-calendar' ),
+					$value
+				);
+
+				return new WP_Error( 'invalid-tribe-events-minutes-meta-value', $error_message );
+			}
+
+			return str_pad( $new_value, 2, '0', STR_PAD_LEFT );
 		}
 	}
 }

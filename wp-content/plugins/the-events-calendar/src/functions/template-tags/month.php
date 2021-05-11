@@ -27,10 +27,10 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	 * @param string $template_path template to use, defaults to the full month view
 	 *
 	 **/
-	function tribe_show_month( $args = array(), $template_path = 'month/content' ) {
+	function tribe_show_month( $args = [], $template_path = 'month/content' ) {
 
 		// temporarily unset the tribe bar params so they don't apply
-		$hold_tribe_bar_args = array();
+		$hold_tribe_bar_args = [];
 		foreach ( $_REQUEST as $key => $value ) {
 			if ( $value && strpos( $key, 'tribe-bar-' ) === 0 ) {
 				$hold_tribe_bar_args[ $key ] = $value;
@@ -149,7 +149,7 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	 * Gets the current day in the month loop
 	 *
 	 * Returned array contains the following elements if the day is in the currently displaying month:
-	 *    'daynum'       => Day of the month (int)
+	 *  'daynum'       => Day of the month (int)
 	 *  'date'         => Complete date (Y-m-d)
 	 *  'events'       => Object containing events on this day (WP_Query)
 	 *  'total_events' => Number of events on this day (int)
@@ -186,13 +186,36 @@ if ( class_exists( 'Tribe__Events__Main' ) ) {
 	}
 
 	/**
-	 * Returns whether there are any events in the month
+	 * Returns whether there are any events in the specific month.
+	 * Independently if there are filters or not.
 	 *
 	 * @return bool
 	 * @see Tribe__Events__Template__Month::get_daily_counts()
+	 * @since 3.1.1
 	 **/
 	function tribe_events_month_has_events() {
 		return apply_filters( 'tribe_events_month_has_events', false );
+	}
+
+	/**
+	 * Returns whether there are any events in the month,
+	 * with the filtered results.
+	 *
+	 * @return bool
+	 *
+	 * @since 4.6.19
+	 * @see Tribe__Events__Template__Month::has_events_filtered()
+	 **/
+	function tribe_events_month_has_events_filtered() {
+		$tribe_month = new Tribe__Events__Template__Month();
+		$has_events  = $tribe_month->has_events_filtered();
+
+		/**
+		 * Filter the result for the check if the month has events after the filters.
+		 *
+		 * @since 4.6.19
+		 */
+		return apply_filters( 'tribe_events_month_has_events_filtered', $has_events );
 	}
 
 

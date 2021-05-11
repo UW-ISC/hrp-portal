@@ -36,6 +36,7 @@ abstract class Ga_Lib_Api_Client {
 	 */
 	public function call( $callback, $args = null ) {
 		try {
+			delete_option('googleanalytics_sherethis_error_log');
 			return $this->call_api_method( $callback, $args );
 		} catch ( Ga_Lib_Api_Client_Exception $e ) {
 			$this->add_error( $e );
