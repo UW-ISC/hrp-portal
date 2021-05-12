@@ -26,7 +26,7 @@ abstract class TablePress {
 	 * @since 1.0.0
 	 * @const string
 	 */
-	const version = '1.9.2';
+	const version = '1.13';
 
 	/**
 	 * TablePress internal plugin version ("options scheme" version).
@@ -36,7 +36,7 @@ abstract class TablePress {
 	 * @since 1.0.0
 	 * @const int
 	 */
-	const db_version = 38;
+	const db_version = 42;
 
 	/**
 	 * TablePress "table scheme" (data format structure) version.
@@ -113,9 +113,9 @@ abstract class TablePress {
 			return;
 		}
 
-		// Check if minimum requirements are fulfilled, currently WordPress 4.9.1.
+		// Check if minimum requirements are fulfilled, currently WordPress 5.6.
 		include( ABSPATH . WPINC . '/version.php' ); // Include an unmodified $wp_version.
-		if ( version_compare( str_replace( '-src', '', $wp_version ), '4.9.1', '<' ) ) {
+		if ( version_compare( str_replace( '-src', '', $wp_version ), '5.6', '<' ) ) {
 			// Show error notice to admins, if WP is not installed in the minimum required version, in which case TablePress will not work.
 			if ( current_user_can( 'update_plugins' ) ) {
 				add_action( 'admin_notices', array( 'TablePress', 'show_minimum_requirements_error_notice' ) );
@@ -147,7 +147,7 @@ abstract class TablePress {
 
 		if ( is_admin() ) {
 			$controller = 'admin';
-			if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			if ( wp_doing_ajax() ) {
 				$controller .= '_ajax';
 			}
 		} else {
@@ -340,6 +340,8 @@ abstract class TablePress {
 	/**
 	 * Get a nice looking date and time string from the mySQL format of datetime strings for output.
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param string $datetime  DateTime string in mySQL format or a Unix timestamp.
 	 * @param string $type      Optional. Type of $datetime, 'mysql' or 'timestamp'.
 	 * @param string $separator Optional. Separator between date and time.
@@ -357,12 +359,33 @@ abstract class TablePress {
 	/**
 	 * Get the name from a WP user ID (used to store information on last editor of a table).
 	 *
+	 * @since 1.0.0
+	 *
 	 * @param int $user_id WP user ID.
 	 * @return string Nickname of the WP user with the $user_id.
 	 */
 	public static function get_user_display_name( $user_id ) {
 		$user = get_userdata( $user_id );
 		return ( $user && isset( $user->display_name ) ) ? $user->display_name : sprintf( '<em>%s</em>', __( 'unknown', 'tablepress' ) );
+	}
+
+	/**
+	 * Sanitizes a CSS class to ensure it only contains valid characters.
+	 *
+	 * Strips the string down to A-Z, a-z, 0-9, :, _, -.
+	 * This is an extension to WP's `sanitize_html_class()`, to also allow `:` which are used in some CSS frameworks.
+	 *
+	 * @since 1.11.0
+	 *
+	 * @param string $class The CSS class name to be sanitized.
+	 * @return string The sanitized CSS class.
+	 */
+	public static function sanitize_css_class( $class ) {
+		// Strip out any %-encoded octets.
+		$sanitized_class = preg_replace( '|%[a-fA-F0-9][a-fA-F0-9]|', '', $class );
+		// Limit to A-Z, a-z, 0-9, ':', '_', and '-'.
+		$sanitized_class = preg_replace( '/[^A-Za-z0-9:_-]/', '', $sanitized_class );
+		return $sanitized_class;
 	}
 
 	/**

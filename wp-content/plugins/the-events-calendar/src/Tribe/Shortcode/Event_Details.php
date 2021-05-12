@@ -28,7 +28,7 @@ class Tribe__Events__Shortcode__Event_Details {
 	 * @return  void
 	 */
 	public function hook() {
-		add_action( 'init', array( $this, 'add_shortcode' ) );
+		add_action( 'init', [ $this, 'add_shortcode' ] );
 	}
 
 	/**
@@ -178,7 +178,7 @@ class Tribe__Events__Shortcode__Event_Details {
 
 		// Ensure the expected CSS is available to style the shortcode output (this will
 		// happen automatically in event views, but not elsewhere)
-		Tribe__Events__Template_Factory::asset_package( 'events-css' );
+		tribe_asset_enqueue_group( 'events-styles' );
 
 		// Start to record the Output
 		ob_start();

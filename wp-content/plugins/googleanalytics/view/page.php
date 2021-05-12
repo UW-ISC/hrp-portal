@@ -1,3 +1,20 @@
+<?php
+$optimize_code = get_option( 'googleanalytics_optimize_code' );
+$universal     = get_option( 'googleanalytics_enable_universal_analytics', true );
+$anonymization = get_option( 'googleanalytics_ip_anonymization', true );
+$gdpr_config   = get_option( 'googleanalytics_gdpr_config');
+$plugin_dir = plugin_dir_path(__FILE__);
+$plugin_uri = trailingslashit(get_home_url()) . 'wp-content/plugins/googleanalytics/';
+?>
+<div id="adblocker-notice" class="notice notice-error is-dismissible">
+	<p>
+		<?php echo esc_html__( 'It appears you have an ad blocker enabled. To avoid affecting this plugin\'s functionality, please disable while using its admin configurations and registrations. Thank you.', 'sharethis-share-buttons' ); ?>
+	</p>
+</div>
+<div id="detectadblock">
+	<div class="adBanner">
+	</div>
+</div>
 <div id="ga_access_code_modal" class="ga-modal" tabindex="-1">
     <div class="ga-modal-dialog">
         <div class="ga-modal-content">
@@ -27,16 +44,16 @@
 <div class="wrap ga-wrap">
     <h2>Google Analytics - <?php _e( 'Settings' ); ?></h2>
     <div class="ga_container">
-	    <?php if ( ! empty( $data['error_message'] ) ) : ?>
-		    <?php echo $data['error_message']; ?>
-	    <?php endif; ?>
+        <?php if ( ! empty( $data['error_message'] ) ) : ?>
+            <?php echo $data['error_message']; ?>
+        <?php endif; ?>
         <form id="ga_form" method="post" action="options.php">
-	        <?php settings_fields( 'googleanalytics' ); ?>
+            <?php settings_fields( 'googleanalytics' ); ?>
             <input id="ga_access_code" type="hidden"
                    name="<?php echo esc_attr( Ga_Admin::GA_OAUTH_AUTH_CODE_OPTION_NAME ); ?>" value=""/>
             <table class="form-table">
                 <tr valign="top">
-	                <?php if ( ! empty( $data['popup_url'] ) ): ?>
+                    <?php if ( ! empty( $data['popup_url'] ) ): ?>
                         <th scope="row">
                             <label <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'class="label-grey ga-tooltip"' : '' ?>><?php echo _e( 'Google Profile' ) ?>
                                 :
@@ -44,48 +61,49 @@
                             </label>
                         </th>
                         <td <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'class="ga-tooltip"' : ''; ?>>
-	                        <?php echo $data[ 'auth_button' ] ?>
+                            <?php echo $data[ 'auth_button' ] ?>
                             <span class="ga-tooltiptext"><?php _e( $tooltip ); ?></span>
-			                <?php if ( ! empty( $data[ Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ] ) ): ?>
+                            <?php if ( ! empty( $data[ Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ] ) ): ?>
                                 <div class="ga_warning">
                                     <strong><?php _e( 'Notice' ) ?></strong>:&nbsp;<?php _e( 'Please uncheck the "Manually enter Tracking ID" option to authenticate and view statistics.' ); ?>
                                 </div>
-			                <?php endif; ?>
+                            <?php endif; ?>
                         </td>
-	                <?php endif; ?>
+                    <?php endif; ?>
 
-	                <?php if ( ! empty( $data['ga_accounts_selector'] ) ): ?>
+                    <?php if ( ! empty( $data['ga_accounts_selector'] ) ): ?>
                         <th scope="row"><?php echo _e( 'Google Analytics Account' ) ?>:</th>
+                    <?php endif; ?>
+                </tr>
+                <?php if ( ! empty( $data['ga_accounts_selector'] ) ): ?>
+                    <tr valign="top">
                         <td>
                             <?php echo $data['ga_accounts_selector']; ?>
                         </td>
-	                <?php endif; ?>
-
-                </tr>
-
+                    </tr>
+                <?php endif; ?>
                 <tr valign="top">
-
                     <th scope="row">
                         <div class="checkbox">
                             <label class="ga_checkbox_label <?php echo Ga_Helper::get_code_manually_label_classes() ?>"
                                    for="ga_enter_code_manually"> <input
-			                        <?php if ( Ga_Helper::are_features_enabled() ) : ?>
+                                    <?php if ( Ga_Helper::are_features_enabled() ) : ?>
                                         onclick="ga_events.click( this, ga_events.codeManuallyCallback( <?php echo Ga_Helper::are_features_enabled() ? 1 : 0; ?> ) )"
-			                        <?php endif; ?>
+                                    <?php endif; ?>
                                         type="checkbox"
-			                        <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'disabled="disabled"' : ''; ?>
+                                    <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'disabled="disabled"' : ''; ?>
                                         name="<?php echo esc_attr( Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ); ?>"
                                         id="ga_enter_code_manually"
                                         value="1"
-			                        <?php echo( ( $data[ Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ] || ! Ga_Helper::are_terms_accepted() ) ? 'checked="checked"' : '' ); ?>/>&nbsp;
-		                        <?php _e( 'Manually enter Tracking ID' ) ?>
+                                    <?php echo( ( $data[ Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ] || ! Ga_Helper::are_terms_accepted() ) ? 'checked="checked"' : '' ); ?>/>&nbsp;
+                                <?php _e( 'Manually enter Tracking ID' ) ?>
                                 <span class="ga-tooltiptext ga-tt-abs"><?php _e( $tooltip ); ?></span>
                             </label>
-	                        <?php if ( ! Ga_Helper::are_features_enabled() ) : ?>
+                            <?php if ( ! Ga_Helper::are_features_enabled() ) : ?>
                                 <input id="ga_enter_code_manually_hidden" type="hidden"
                                        name="<?php echo esc_attr( Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ); ?>"
                                        value="1"/>
-	                        <?php endif; ?>
+                            <?php endif; ?>
                         </div>
                     </th>
                     <td></td>
@@ -94,6 +112,8 @@
                     id="ga_manually_wrapper" <?php echo( ( $data[ Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_OPTION_NAME ] || ! Ga_Helper::are_features_enabled() ) ? '' : 'style="display: none"' ); ?> >
 
                     <th scope="row"><?php _e( 'Tracking ID' ) ?>:</th>
+                </tr>
+                <tr valing="top">
                     <td>
                         <input type="text"
                                name="<?php echo esc_attr( Ga_Admin::GA_WEB_PROPERTY_ID_MANUALLY_VALUE_OPTION_NAME ); ?>"
@@ -102,12 +122,10 @@
                         <div class="ga_warning">
                             <strong><?php _e( 'Warning' ); ?></strong>:&nbsp;<?php _e( 'If you enter your Tracking ID manually, Analytics statistics will not be shown.' ); ?>
                             <br>
-	                        <?php _e( 'We strongly recommend to authenticate with Google using the button above.' ); ?>
+                            <?php _e( 'We strongly recommend to authenticate with Google using the button above.' ); ?>
                         </div>
                     </td>
-
                 </tr>
-
                 <tr valign="top" id="ga_roles_wrapper">
                     <th scope="row">
                         <label <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'class="label-grey ga-tooltip"' : '' ?>><?php _e( 'Exclude Tracking for Roles' ) ?>
@@ -115,55 +133,90 @@
                             <span class="ga-tooltiptext ga-tt-abs"><?php _e( $tooltip ); ?></span>
                         </label>
                     </th>
+                </tr>
+                <tr valign="top">
                     <td>
-
-
-	                    <?php
-	                    if ( ! empty( $data['roles'] ) ) {
-		                    $roles = $data['roles'];
-		                    foreach ( $roles as $role ) {
-			                    ?>
+                        <?php
+                        if ( ! empty( $data['roles'] ) ) {
+                            $roles = $data['roles'];
+                            foreach ( $roles as $role ) {
+                                ?>
                                 <div class="checkbox">
                                     <label class="ga_checkbox_label <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : ''; ?>"
                                            for="checkbox_<?php echo $role['id']; ?>">
                                         <input id="checkbox_<?php echo $role['id']; ?>" type="checkbox"
-	                                        <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'disabled="disabled"' : ''; ?>
+                                            <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'disabled="disabled"' : ''; ?>
                                                name="<?php echo esc_attr( Ga_Admin::GA_EXCLUDE_ROLES_OPTION_NAME . "[" . $role['id'] . "]" ); ?>"
                                                id="<?php echo esc_attr( $role['id'] ); ?>"
-	                                        <?php echo esc_attr( ( $role['checked'] ? 'checked="checked"' : '' ) ); ?> />&nbsp;
-		                                <?php echo esc_html( $role['name'] ); ?>
+                                            <?php echo esc_attr( ( $role['checked'] ? 'checked="checked"' : '' ) ); ?> />&nbsp;
+                                        <?php echo esc_html( $role['name'] ); ?>
                                         <span class="ga-tooltiptext"><?php _e( $tooltip ); ?></span>
                                     </label>
                                 </div>
-			                    <?php
-		                    }
-	                    }
-	                    ?>
-
+                                <?php
+                            }
+                        }
+                        ?>
                     </td>
                 </tr>
                 <tr valign="top">
-                  <td colspan="2">
-                    <p>If you experience an issue with this plugin, we are here to help! You can visit our <a href="https://googleanalytics.zendesk.com/hc/en-us">support portal</a> to find answers to the most frequently asked questions and to submit a support request. We aim to respond to everyone within one business day.</p>
-              			<p>If your issue is difficult to debug, click the button below to automatically send us your error logs and debugging info.</p>
-                    <p>
-                        <button id="ga_debug_button" class="button button-secondary" onclick="ga_debug.open_modal( event )" >Send Debugging Info</button>
-	                    <?php if ( ! empty( $data['ga_accounts_selector'] ) ): ?>
-			                <?php echo $data[ 'auth_button' ] ?>
-	                    <?php endif; ?>
-                    </p>
-                  </td>
+                    <th scope="row"><?php _e( 'Enable IP Anonymization' ) ?>:</th>
+                </tr>
+                <tr valign="top">
+                    <td>
+                        <label class="ga-switch <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : '' ?>">
+	                        <?php if ( Ga_Helper::are_features_enabled() ) : ?>
+                            <input id="ga-anonymization" name="googleanalytics_ip_anonymization"
+                                   type="checkbox" <?php echo checked( $anonymization, 'on' ); ?>>
+
+                            <div id="ga-slider" class="ga-slider round"></div>
+	                        <?php else: ?>
+	                        <input id="ga-anonymization" name="googleanalytics_ip_anonymization"
+	                               type="checkbox" disabled="disabled">
+
+	                        <div id="ga-slider" class="ga-slider round"></div>
+	                        <span class="ga-tooltiptext ga-tt-abs"><?php _e( $tooltip ); ?></span>
+	                        <?php endif; ?>
+                        </label>
+                    </td>
+                </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e( 'If using Google Optimize, enter optimize code here' ) ?>:</th>
+                </tr>
+                <tr valign="top">
+                    <td>
+	                    <label class="ga-text <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : '' ?>">
+		                    <?php if ( Ga_Helper::are_features_enabled() ) : ?>
+			                    <input id="ga-optimize" name="googleanalytics_optimize_code"
+			                           type="text" placeholder="GTM-XXXXXX" value="<?php echo esc_attr( $optimize_code ); ?>">
+		                    <?php else: ?>
+			                    <input id="ga-optimize" name="googleanalytics_optimize_code"
+			                           type="text" placeholder="GTM-XXXXXX" value="<?php echo esc_attr( $optimize_code ); ?>" readonly>
+			                    <span class="ga-tooltiptext ga-tt-abs"><?php _e( $tooltip ); ?></span>
+		                    <?php endif; ?>
+	                    </label>
+                    </td>
                 </tr>
                 <tr valign="top">
                     <th scope="row"><?php _e( 'Disable all features' ) ?>:</th>
+                </tr>
+                <tr valign="top">
                     <td>
-						<label class="ga-switch">
-                            <input id="ga-disable" name="<?php echo Ga_Admin::GA_DISABLE_ALL_FEATURES; ?>"
-                                   type="checkbox">
-							<div id="ga-slider" class="ga-slider round"></div>
-						</label
-					</td>
-				</tr>
+	                    <label class="ga-switch <?php echo ( ! Ga_Helper::are_features_enabled() ) ? 'label-grey ga-tooltip' : '' ?>">
+		                    <?php if ( Ga_Helper::are_features_enabled() ) : ?>
+			                    <input id="ga-disable" name="<?php echo Ga_Admin::GA_DISABLE_ALL_FEATURES; ?>"
+			                           type="checkbox">
+			                    <div id="ga-slider" class="ga-slider-disable ga-slider round"></div>
+		                    <?php else: ?>
+			                    <input id="ga-disable" name="<?php echo Ga_Admin::GA_DISABLE_ALL_FEATURES; ?>"
+			                           type="checkbox" disabled="disabled">
+			                    <div id="ga-slider" class="ga-slider-disable ga-slider round"></div>
+			                    <span class="ga-tooltiptext ga-tt-abs"><?php _e( $tooltip ); ?></span>
+		                    <?php endif; ?>
+                        </label>
+                    </td>
+                </tr>
+                <?php include $plugin_dir . 'templates/gdpr.php'; ?>
             </table>
 
             <p class="submit">
@@ -171,9 +224,38 @@
                        value="<?php _e( 'Save Changes' ) ?>"/>
             </p>
         </form>
+        <?php
+        // If GDPR isn't enabled show ad otherwise show demo ad.
+        if (empty($gdpr_config)) {
+            include $plugin_dir . 'templates/sidebar/gdpr-ad.php';
+        } else {
+            // If Demo is not enabled show ad.
+            if (! get_option('googleanalytics_demographic')) {
+                include $plugin_dir . 'templates/sidebar/demo-ad.php';
+            }
+        }
+        ?>
     </div>
+    <?php if ( $data['debug_info'] ) : ?>
+        <tr valign="top">
+            <td colspan="2">
+                <p>If you are still experiencing an issue, we are here to help! We recommend clickingthe "Send Debugging Info" button below and pasting the information within an email to support@sharethis.com.</p>
+                <p>
+                    <button id="ga_debug_button" class="button button-secondary" onclick="ga_debug.open_modal( event )" >Send Debugging Info</button>
+                    <?php if ( ! empty( $data['ga_accounts_selector'] ) ): ?>
+                        <?php echo $data[ 'auth_button' ] ?>
+                        <br>
+                        <small class="notice">
+                            *If you reset your google password you MUST re-authenticate to continue viewing your analytics dashboard.
+                        </small>
+                    <?php endif; ?>
+                </p>
+            </td>
+        </tr>
+    <?php endif; ?>
+
     <p class="ga-love-text"><?php _e( 'Love this plugin?' ); ?> <a
-                href="https://wordpress.org/support/plugin/googleanalytics/reviews/#new-post"><?php _e( ' Please help spread the word by leaving a 5-star review!' ); ?> </a>
+            href="https://wordpress.org/support/plugin/googleanalytics/reviews/#new-post"><?php _e( ' Please help spread the word by leaving a 5-star review!' ); ?> </a>
     </p>
 </div>
 <script type="text/javascript">
@@ -183,3 +265,4 @@
         ga_switcher.init('<?php echo $data[ Ga_Admin::GA_DISABLE_ALL_FEATURES ]; ?>');
     });
 </script>
+<?php include 'templates/demo-popup.php';

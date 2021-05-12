@@ -138,34 +138,40 @@ class TablePress_CSSTidy_optimise {
 
 		if ( 2 === (int) $this->parser->get_cfg( 'merge_selectors' ) ) {
 			foreach ( $this->css as $medium => $value ) {
-				$this->merge_selectors( $this->css[ $medium ] );
+				if ( is_array( $value ) ) {
+					$this->merge_selectors( $this->css[ $medium ] );
+				}
 			}
 		}
 
 		if ( $this->parser->get_cfg( 'discard_invalid_selectors' ) ) {
 			foreach ( $this->css as $medium => $value ) {
-				$this->discard_invalid_selectors( $this->css[ $medium ] );
+				if ( is_array( $value ) ) {
+					$this->discard_invalid_selectors( $this->css[ $medium ] );
+				}
 			}
 		}
 
 		if ( $this->parser->get_cfg( 'optimise_shorthands' ) > 0 ) {
 			foreach ( $this->css as $medium => $value ) {
-				foreach ( $value as $selector => $value1 ) {
-					$this->css[ $medium ][ $selector ] = $this->merge_4value_shorthands( $this->css[ $medium ][ $selector ] );
+				if ( is_array( $value ) ) {
+					foreach ( $value as $selector => $value1 ) {
+						$this->css[ $medium ][ $selector ] = $this->merge_4value_shorthands( $this->css[ $medium ][ $selector ] );
 
-					if ( $this->parser->get_cfg( 'optimise_shorthands' ) < 2 ) {
-						continue;
-					}
+						if ( $this->parser->get_cfg( 'optimise_shorthands' ) < 2 ) {
+							continue;
+						}
 
-					$this->css[ $medium ][ $selector ] = $this->merge_font( $this->css[ $medium ][ $selector ] );
+						$this->css[ $medium ][ $selector ] = $this->merge_font( $this->css[ $medium ][ $selector ] );
 
-					if ( $this->parser->get_cfg( 'optimise_shorthands' ) < 3 ) {
-						continue;
-					}
+						if ( $this->parser->get_cfg( 'optimise_shorthands' ) < 3 ) {
+							continue;
+						}
 
-					$this->css[ $medium ][ $selector ] = $this->merge_bg( $this->css[ $medium ][ $selector ] );
-					if ( empty( $this->css[ $medium ][ $selector ] ) ) {
-						unset( $this->css[ $medium ][ $selector ] );
+						$this->css[ $medium ][ $selector ] = $this->merge_bg( $this->css[ $medium ][ $selector ] );
+						if ( empty( $this->css[ $medium ][ $selector ] ) ) {
+							unset( $this->css[ $medium ][ $selector ] );
+						}
 					}
 				}
 			}
@@ -515,7 +521,7 @@ class TablePress_CSSTidy_optimise {
 		$units = &$this->parser->data['csstidy']['units'];
 		$return = array( 0, '' );
 
-		$return[0] = floatval( $string );
+		$return[0] = (float) $string;
 		if ( abs( $return[0] ) > 0 && abs( $return[0] ) < 1 ) {
 			if ( $return[0] < 0 ) {
 				$return[0] = '-' . ltrim( substr( $return[0], 1 ), '0' );
@@ -721,8 +727,7 @@ class TablePress_CSSTidy_optimise {
 		$shorthands = &$this->parser->data['csstidy']['shorthands'];
 
 		foreach ( $shorthands as $key => $value ) {
-			if ( isset( $array[ $value[0] ] ) && isset( $array[ $value[1] ] )
-				&& isset( $array[ $value[2] ] ) && isset( $array[ $value[3] ] ) && 0 !== $value ) {
+			if ( 0 !== $value && isset( $array[ $value[0] ], $array[ $value[1] ], $array[ $value[2] ], $array[ $value[3] ] ) ) {
 				$return[ $key ] = '';
 
 				$important = '';

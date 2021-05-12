@@ -12,7 +12,7 @@
 // Ensure the global `tp` object exists.
 window.tp = window.tp || {};
 
-jQuery( document ).ready( function( $ ) {
+jQuery( function( $ ) {
 
 	'use strict';
 
@@ -23,25 +23,6 @@ jQuery( document ).ready( function( $ ) {
 	 * @since 1.0.0
 	 */
 	postboxes.add_postbox_toggles( pagenow );
-
-	/**
-	 * Remove/add title to value on focus/blur of text fields "Table Name" and "Table Description" on "Add new Table" screen
-	 *
-	 * @since 1.0.0
-	 */
-	$( '#tablepress-page' )
-	.on( 'focus', '.placeholder', function() {
-		if ( this.value === this.defaultValue ) {
-			this.value = '';
-			$(this).removeClass( 'placeholder-active' );
-		}
-	} )
-	.on( 'blur', '.placeholder', function() {
-		if ( '' === this.value ) {
-			this.value = this.defaultValue;
-			$(this).addClass( 'placeholder-active' );
-		}
-	} );
 
 	/**
 	 * Check that numerical fields (e.g. column/row number fields) only contain numbers
@@ -75,7 +56,7 @@ jQuery( document ).ready( function( $ ) {
 	 * @since 1.0.0
 	 */
 	$( '#tablepress-page' ).on( 'click', '.table-shortcode', function() {
-		$(this).focus().select();
+		$(this).trigger( 'focus' ).trigger( 'select' );
 	} );
 
 } );

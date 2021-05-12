@@ -2,17 +2,16 @@
 
 class Ga_Helper {
 
-	const ROLE_ID_PREFIX					 = "role-id-";
-	const GA_DEFAULT_WEB_ID				 = "UA-0000000-0";
-	const GA_STATISTICS_PAGE_URL			 = "admin.php?page=googleanalytics";
-	const GA_SETTINGS_PAGE_URL			 = "admin.php?page=googleanalytics/settings";
-	const GA_TRENDING_PAGE_URL			 = 'admin.php?page=googleanalytics/trending';
-	const DASHBOARD_PAGE_NAME				 = "dashboard";
-	const PHP_VERSION_REQUIRED			 = "5.2.17";
-	const GA_WP_MODERN_VERSION			 = "4.1";
-	const GA_TOOLTIP_TERMS_NOT_ACCEPTED	 = 'Please accept the terms to use this feature.';
-	const GA_TOOLTIP_FEATURES_DISABLED	 = 'Click the Enable button at the top to start using this feature.';
-	const GA_DEBUG_MODE					 = false;
+	const ROLE_ID_PREFIX                = 'role-id-';
+	const GA_DEFAULT_WEB_ID             = 'UA-0000000-0';
+	const GA_STATISTICS_PAGE_URL        = 'admin.php?page=googleanalytics';
+	const GA_SETTINGS_PAGE_URL          = 'admin.php?page=googleanalytics/settings';
+	const DASHBOARD_PAGE_NAME           = 'dashboard';
+	const PHP_VERSION_REQUIRED          = '5.2.17';
+	const GA_WP_MODERN_VERSION          = '4.1';
+	const GA_TOOLTIP_TERMS_NOT_ACCEPTED = 'Please accept the terms to use this feature.';
+	const GA_TOOLTIP_FEATURES_DISABLED  = 'Click the Enable button at the top to start using this feature.';
+	const GA_DEBUG_MODE                 = false;
 
 	/**
 	 * Init plugin actions.
@@ -21,33 +20,28 @@ class Ga_Helper {
 	public static function init() {
 
 		// Displays errors related to required PHP version
-		if ( !self::is_php_version_valid() ) {
+		if ( ! self::is_php_version_valid() ) {
 			add_action( 'admin_notices', 'Ga_Admin::admin_notice_googleanalytics_php_version' );
 
 			return false;
 		}
 
 		// Displays errors related to required WP version
-		if ( !self::is_wp_version_valid() ) {
+		if ( ! self::is_wp_version_valid() ) {
 			add_action( 'admin_notices', 'Ga_Admin::admin_notice_googleanalytics_wp_version' );
 
 			return false;
 		}
 
-		if ( !is_admin() ) {
+		if ( ! is_admin() ) {
 			Ga_Frontend::add_actions();
-
-			$frontend_controller = new Ga_Frontend_Controller();
-			$frontend_controller->handle_actions();
 		}
 
 		if ( is_admin() ) {
 			Ga_Admin::add_filters();
 			Ga_Admin::add_actions();
+			Ga_Admin::init_oauth();
 
-			if ( false === self::is_trending_page() ) {
-				Ga_Admin::init_oauth();
-			}
 
 			$admin_controller = new Ga_Admin_Controller();
 			$admin_controller->handle_actions();
@@ -61,7 +55,7 @@ class Ga_Helper {
 	public static function is_plugin_page() {
 		$site = get_current_screen();
 
-		return preg_match( '/' . GA_NAME . '/i', $site->base ) || preg_match( '/' . GA_NAME . '/i', $_SERVER[ 'REQUEST_URI' ] );
+		return preg_match( '/' . GA_NAME . '/i', $site->base ) || preg_match( '/' . GA_NAME . '/i', $_SERVER['REQUEST_URI'] );
 	}
 
 	/**
@@ -75,16 +69,6 @@ class Ga_Helper {
 	}
 
 	/**
-	 * Checks if current page is a trending page.
-	 * @return number
-	 */
-	public static function is_trending_page() {
-		$site_uri = urldecode( basename( $_SERVER[ 'REQUEST_URI' ] ) );
-
-		return preg_match( '/' . preg_quote( self::GA_TRENDING_PAGE_URL, '/' ) . '/', $site_uri, $matches ) == 1;
-	}
-
-	/**
 	 * Check whether the plugin is configured.
 	 *
 	 * @param String $web_id
@@ -92,7 +76,7 @@ class Ga_Helper {
 	 * @return boolean
 	 */
 	public static function is_configured( $web_id ) {
-		return ( $web_id !== self::GA_DEFAULT_WEB_ID ) && !empty( $web_id );
+		return ( self::GA_DEFAULT_WEB_ID !== $web_id ) && ! empty( $web_id );
 	}
 
 	/**
@@ -102,7 +86,7 @@ class Ga_Helper {
 	 */
 	public static function get_user_roles() {
 		global $wp_roles;
-		if ( !isset( $wp_roles ) ) {
+		if ( ! isset( $wp_roles ) ) {
 			$wp_roles = new WP_Roles();
 		}
 
@@ -542,20 +526,12 @@ class Ga_Helper {
 		return ( get_option( Ga_Admin::GA_SHARETHIS_PROPERTY_ID ) && get_option( Ga_Admin::GA_SHARETHIS_PROPERTY_SECRET ) );
 	}
 
-	public static function is_plugin_version_with_trending_content() {
-		return ( version_compare( get_option( Ga_Admin::GA_VERSION_OPTION_NAME ), Ga_Admin::GA_SHARETHIS_TRENDING_CONTENT_PLUGIN_VERSION, '>=' ) );
-	}
-
 	public static function should_create_sharethis_property() {
-		return ( self::is_plugin_version_with_trending_content() && self::are_features_enabled() && !self::are_sharethis_properties_set() );
+		return ( self::are_features_enabled() && !self::are_sharethis_properties_set() );
 	}
 
 	public static function should_verify_sharethis_installation() {
-		return ( self::is_plugin_version_with_trending_content() && self::are_features_enabled() && self::are_sharethis_properties_ready_to_verify() );
-	}
-
-	public static function should_load_trending_alerts() {
-		return ( self::is_plugin_version_with_trending_content() && self::are_features_enabled() && self::are_sharethis_properties_verified() );
+		return ( self::are_features_enabled() && self::are_sharethis_properties_ready_to_verify() );
 	}
 
 	public static function get_tooltip() {
@@ -584,10 +560,10 @@ class Ga_Helper {
 
 		return ! empty( $account_id[0] ) ? $account_id[0] : '';
 	}
-        
-        public static function is_curl_disabled(){
-            return ! function_exists( 'curl_version' );
-        }
+
+		public static function is_curl_disabled(){
+			return ! function_exists( 'curl_version' );
+		}
 
 
 	public static function get_plugin_url_with_correct_protocol() {
@@ -596,9 +572,9 @@ class Ga_Helper {
 	}
 
 	public static function get_code_manually_label_classes() {
-        $classes = '';
-        if ( ! self::are_features_enabled() ){
-        	$classes = 'label-grey ga-tooltip';
+		$classes = '';
+		if ( ! self::are_features_enabled() ){
+			$classes = 'label-grey ga-tooltip';
 		}
 		else if( self::is_account_selected() ) {
 			$classes = 'label-grey';

@@ -83,7 +83,7 @@ class TablePress_Import {
 		}
 		$this->import_formats['json'] = __( 'JSON - JavaScript Object Notation', 'tablepress' );
 		$this->import_formats['xls'] = __( 'XLS - Microsoft Excel 97-2003 (experimental)', 'tablepress' );
-		$this->import_formats['xlsx'] = __( 'XLSX - Microsoft Excel 2007-2013 (experimental)', 'tablepress' );
+		$this->import_formats['xlsx'] = __( 'XLSX - Microsoft Excel 2007-2019 (experimental)', 'tablepress' );
 	}
 
 	/**
@@ -155,7 +155,7 @@ class TablePress_Import {
 
 		// Prepend XML declaration, for better encoding support.
 		$full_html = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' . $this->import_data;
-		if ( function_exists( 'libxml_disable_entity_loader' ) ) {
+		if ( PHP_VERSION_ID < 80000 && function_exists( 'libxml_disable_entity_loader' ) ) {
 			// Don't expand external entities, see https://websec.io/2012/08/27/Preventing-XXE-in-PHP.html.
 			libxml_disable_entity_loader( true );
 		}
@@ -364,7 +364,7 @@ class TablePress_Import {
 	}
 
 	/**
-	 * Import Microsoft Excel 2007-2013 data.
+	 * Import Microsoft Excel 2007-2019 data.
 	 *
 	 * @since 1.1.0
 	 */
@@ -375,7 +375,7 @@ class TablePress_Import {
 		if ( $xlsx_file ) {
 			$this->imported_table = array( 'data' => $xlsx_file->rows() );
 		} else {
-			$output = '<strong>' . __( 'The imported file contains errors:', 'tablepress' ) . '</strong><br /><br />' . SimpleXLSX::parse_error() . '<br />';
+			$output = '<strong>' . __( 'The imported file contains errors:', 'tablepress' ) . '</strong><br /><br />' . SimpleXLSX::parseError() . '<br />';
 			wp_die( $output, 'Import Error', array( 'response' => 200, 'back_link' => true ) );
 		}
 	}

@@ -26,7 +26,7 @@ function red_get_post_types( $full = true ) {
 			continue;
 		}
 
-		if ( $full ) {
+		if ( $full && strlen( $type->label ) > 0 ) {
 			$post_types[ $type->name ] = $type->label;
 		} else {
 			$post_types[] = $type->name;
@@ -36,6 +36,11 @@ function red_get_post_types( $full = true ) {
 	return apply_filters( 'redirection_post_types', $post_types );
 }
 
+/**
+ * Get default options. Contains all valid options
+ *
+ * @return array
+ */
 function red_get_default_options() {
 	$flags = new Red_Source_Flags();
 	$defaults = [
@@ -47,6 +52,9 @@ function red_get_default_options() {
 		'auto_target'         => '',
 		'expire_redirect'     => 7,   // Expire in 7 days
 		'expire_404'          => 7,   // Expire in 7 days
+		'log_external'        => false,
+		'log_header'          => false,
+		'track_hits'          => true,
 		'modules'             => [],
 		'newsletter'          => false,
 		'redirect_cache'      => 1,   // 1 hour
@@ -56,12 +64,25 @@ function red_get_default_options() {
 		'https'               => false,
 		'headers'             => [],
 		'database'            => '',
+		'relocate'            => '',
+		'preferred_domain'    => '',
+		'aliases'             => [],
+		'permalinks'          => [],
+		'cache_key'           => 0,
+		'plugin_update'       => 'prompt',
+		'update_notice'       => 0,
 	];
 	$defaults = array_merge( $defaults, $flags->get_json() );
 
 	return apply_filters( 'red_default_options', $defaults );
 }
 
+/**
+ * Set options
+ *
+ * @param array $settings Partial settings.
+ * @return array
+ */
 function red_set_options( array $settings = array() ) {
 	$options = red_get_options();
 	$monitor_types = array();
@@ -123,24 +144,19 @@ function red_set_options( array $settings = array() ) {
 		}
 	}
 
-	if ( isset( $settings['support'] ) ) {
-		$options['support'] = $settings['support'] ? true : false;
-	}
-
 	if ( isset( $settings['token'] ) ) {
 		$options['token'] = $settings['token'];
-	}
-
-	if ( isset( $settings['https'] ) ) {
-		$options['https'] = $settings['https'] ? true : false;
 	}
 
 	if ( isset( $settings['token'] ) && trim( $options['token'] ) === '' ) {
 		$options['token'] = md5( uniqid() );
 	}
 
-	if ( isset( $settings['newsletter'] ) ) {
-		$options['newsletter'] = $settings['newsletter'] ? true : false;
+	// Boolean settings
+	foreach ( [ 'support', 'https', 'newsletter', 'log_external', 'log_header', 'track_hits' ] as $name ) {
+		if ( isset( $settings[ $name ] ) ) {
+			$options[ $name ] = $settings[ $name ] ? true : false;
+		}
 	}
 
 	if ( isset( $settings['expire_redirect'] ) ) {
@@ -163,7 +179,7 @@ function red_set_options( array $settings = array() ) {
 		}
 	}
 
-	if ( isset( $settings['location'] ) && strlen( $settings['location'] ) > 0 ) {
+	if ( isset( $settings['location'] ) && ( ! isset( $options['location'] ) || $options['location'] !== $settings['location'] ) ) {
 		$module = Red_Module::get( 2 );
 		$options['modules'][2] = $module->update( $settings );
 	}
@@ -172,6 +188,10 @@ function red_set_options( array $settings = array() ) {
 		// If we have a monitor_post set, but no types, then blank everything
 		$options['monitor_post'] = 0;
 		$options['associated_redirect'] = '';
+	}
+
+	if ( isset( $settings['plugin_update'] ) && in_array( $settings['plugin_update'], [ 'prompt', 'admin' ], true ) ) {
+		$options['plugin_update'] = $settings['plugin_update'];
 	}
 
 	$flags = new Red_Source_Flags();
@@ -193,14 +213,95 @@ function red_set_options( array $settings = array() ) {
 		$options['headers'] = $headers->get_json();
 	}
 
+	if ( isset( $settings['aliases'] ) && is_array( $settings['aliases'] ) ) {
+		$options['aliases'] = array_values( array_filter( array_map( 'red_parse_domain_only', $settings['aliases'] ) ) );
+		$options['aliases'] = array_slice( $options['aliases'], 0, 20 ); // Max 20
+	}
+
+	if ( isset( $settings['permalinks'] ) && is_array( $settings['permalinks'] ) ) {
+		$options['permalinks'] = array_values( array_filter( array_map( 'trim', $settings['permalinks'] ) ) );
+		$options['permalinks'] = array_slice( $options['permalinks'], 0, 10 ); // Max 10
+	}
+
+	if ( isset( $settings['preferred_domain'] ) && in_array( $settings['preferred_domain'], [ '', 'www', 'nowww' ], true ) ) {
+		$options['preferred_domain'] = $settings['preferred_domain'];
+	}
+
+	if ( isset( $settings['relocate'] ) ) {
+		$options['relocate'] = red_parse_domain_path( $settings['relocate'] );
+
+		if ( strlen( $options['relocate'] ) > 0 ) {
+			$options['preferred_domain'] = '';
+			$options['aliases'] = [];
+			$options['https'] = false;
+		}
+	}
+
+	if ( isset( $settings['cache_key'] ) ) {
+		$key = intval( $settings['cache_key'], 10 );
+
+		if ( $settings['cache_key'] === true ) {
+			$key = time();
+		} elseif ( $settings['cache_key'] === false ) {
+			$key = 0;
+		}
+
+		$options['cache_key'] = $key;
+	}
+
+	if ( isset( $settings['update_notice'] ) ) {
+		$major_version = explode( '-', REDIRECTION_VERSION )[0];   // Remove any beta suffix
+		$major_version = implode( '.', array_slice( explode( '.', REDIRECTION_VERSION ), 0, 2 ) );
+		$options['update_notice'] = $major_version;
+	}
+
 	update_option( REDIRECTION_OPTION, apply_filters( 'redirection_save_options', $options ) );
 	return $options;
 }
 
+function red_parse_url( $url ) {
+	$domain = filter_var( $url, FILTER_SANITIZE_URL );
+	if ( substr( $domain, 0, 5 ) !== 'http:' && substr( $domain, 0, 6 ) !== 'https:' ) {
+		$domain = ( is_ssl() ? 'https://' : 'http://' ) . $domain;
+	}
+
+	return wp_parse_url( $domain );
+}
+
+function red_parse_domain_only( $domain ) {
+	$parsed = red_parse_url( $domain );
+
+	if ( $parsed && isset( $parsed['host'] ) ) {
+		return $parsed['host'];
+	}
+
+	return '';
+}
+
+function red_parse_domain_path( $domain ) {
+	$parsed = red_parse_url( $domain );
+
+	if ( $parsed && isset( $parsed['host'] ) ) {
+		return $parsed['scheme'] . '://' . $parsed['host'] . ( isset( $parsed['path'] ) ? $parsed['path'] : '' );
+	}
+
+	return '';
+}
+
+/**
+ * Have redirects been disabled?
+ *
+ * @return boolean
+ */
 function red_is_disabled() {
 	return ( defined( 'REDIRECTION_DISABLE' ) && REDIRECTION_DISABLE ) || file_exists( __DIR__ . '/redirection-disable.txt' );
 }
 
+/**
+ * Get Redirection options
+ *
+ * @return array
+ */
 function red_get_options() {
 	$options = get_option( REDIRECTION_OPTION );
 
@@ -241,9 +342,19 @@ function red_get_options() {
 		$options['rest_api'] = REDIRECTION_API_JSON;
 	}
 
+	if ( isset( $options['modules'] ) && isset( $options['modules']['2'] ) && isset( $options['modules']['2']['location'] ) ) {
+		$options['location'] = $options['modules']['2']['location'];
+	}
+
 	return $options;
 }
 
+/**
+ * Get the current REST API
+ *
+ * @param boolean $type Override with a specific API type.
+ * @return string
+ */
 function red_get_rest_api( $type = false ) {
 	if ( $type === false ) {
 		$options = red_get_options();
@@ -253,12 +364,17 @@ function red_get_rest_api( $type = false ) {
 	$url = get_rest_url();  // REDIRECTION_API_JSON
 
 	if ( $type === REDIRECTION_API_JSON_INDEX ) {
-		$url = home_url( '/index.php?rest_route=/' );
+		$url = home_url( '/?rest_route=/' );
 	} elseif ( $type === REDIRECTION_API_JSON_RELATIVE ) {
 		$relative = wp_parse_url( $url, PHP_URL_PATH );
 
 		if ( $relative ) {
 			$url = $relative;
+		}
+
+		if ( $url === '/index.php' ) {
+			// No permalinks. Default to normal REST API
+			$url = home_url( '/?rest_route=/' );
 		}
 	}
 
