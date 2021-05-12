@@ -40,7 +40,7 @@ class TablePress_Edit_View extends TablePress_View {
 		parent::setup( $action, $data );
 
 		if ( isset( $data['table']['is_corrupted'] ) && $data['table']['is_corrupted'] ) {
-			$this->add_text_box( 'table-corrupted', array( $this, 'textbox_corrupted_table' ), 'normal' );
+			$this->add_text_box( 'table-corrupted', array( $this, 'textbox_corrupted_table' ), 'header' );
 			return;
 		};
 
@@ -49,7 +49,6 @@ class TablePress_Edit_View extends TablePress_View {
 			'success_add'                      => __( 'The table was added successfully.', 'tablepress' ),
 			'success_copy'                     => _n( 'The table was copied successfully.', 'The tables were copied successfully.', 1, 'tablepress' ) . ' ' . sprintf( __( 'You are now seeing the copied table, which has the table ID &#8220;%s&#8221;.', 'tablepress' ), esc_html( $data['table']['id'] ) ),
 			'success_import'                   => __( 'The table was imported successfully.', 'tablepress' ),
-			'success_import_wp_table_reloaded' => __( 'The table was imported successfully from WP-Table Reloaded.', 'tablepress' ),
 			'error_save'                       => __( 'Error: The table could not be saved.', 'tablepress' ),
 			'error_delete'                     => __( 'Error: The table could not be deleted.', 'tablepress' ),
 			'success_save_success_id_change'   => __( 'The table was saved successfully, and the table ID was changed.', 'tablepress' ),
@@ -74,7 +73,7 @@ class TablePress_Edit_View extends TablePress_View {
 		wp_enqueue_script( 'wplink' );
 
 		$this->admin_page->enqueue_style( 'edit' );
-		$this->admin_page->enqueue_script( 'edit', array( 'jquery-core', 'jquery-ui-sortable', 'json2' ), array(
+		$this->admin_page->enqueue_script( 'edit', array( 'jquery', 'jquery-ui-sortable' ), array(
 			'options' => array(
 				/**
 				 * Filter whether debug output shall be printed to the page.
@@ -261,7 +260,7 @@ class TablePress_Edit_View extends TablePress_View {
 				}
 			}
 		}
-		// Fetermine row index of the table foot row, by excluding all hidden rows from the end.
+		// Determine row index of the table foot row, by excluding all hidden rows from the end.
 		if ( $options['table_foot'] ) {
 			for ( $row_idx = $rows - 1; $row_idx > -1; $row_idx-- ) {
 				if ( 1 === $visibility['rows'][ $row_idx ] ) {
@@ -564,7 +563,7 @@ class TablePress_Edit_View extends TablePress_View {
 	</tr>
 	<tr class="top-border">
 		<th class="column-1" scope="row"><?php _e( 'Extra CSS Classes', 'tablepress' ); ?>:</th>
-		<td class="column-2"><label for="option-extra-css-classes"><input type="text" id="option-extra-css-classes" class="large-text" name="table[options][extra_css_classes]" value="<?php echo esc_attr( $options['extra_css_classes'] ); ?>" title="<?php esc_attr_e( 'This field can only contain letters, numbers, spaces, hyphens (-), and underscores (_).', 'tablepress' ); ?>" pattern="[A-Za-z0-9- _]*" /><p class="description"><?php echo __( 'Additional CSS classes for styling purposes can be entered here.', 'tablepress' ) . ' ' . sprintf( __( 'This is NOT the place to enter <a href="%s">Custom CSS</a> code!', 'tablepress' ), TablePress::url( array( 'action' => 'options' ) ) ); ?></p></label></td>
+		<td class="column-2"><label for="option-extra-css-classes"><input type="text" id="option-extra-css-classes" class="large-text" name="table[options][extra_css_classes]" value="<?php echo esc_attr( $options['extra_css_classes'] ); ?>" title="<?php esc_attr_e( 'This field can only contain letters, numbers, spaces, hyphens (-), underscores (_), and colons (:).', 'tablepress' ); ?>" pattern="[A-Za-z0-9- _:]*" /><p class="description"><?php echo __( 'Additional CSS classes for styling purposes can be entered here.', 'tablepress' ) . ' ' . sprintf( __( 'This is NOT the place to enter <a href="%s">Custom CSS</a> code!', 'tablepress' ), TablePress::url( array( 'action' => 'options' ) ) ); ?></p></label></td>
 	</tr>
 </tbody>
 </table>
@@ -600,7 +599,7 @@ class TablePress_Edit_View extends TablePress_View {
 	<tr>
 		<th class="column-1" scope="row" style="vertical-align: top;"><?php _e( 'Pagination', 'tablepress' ); ?>:</th>
 		<td class="column-2"><label for="option-datatables-paginate"><input type="checkbox" id="option-datatables-paginate" name="table[options][datatables_paginate]" value="true"<?php checked( $options['datatables_paginate'] ); ?> /> <?php _e( 'Enable pagination of the table (viewing only a certain number of rows at a time) by the visitor.', 'tablepress' ); ?></label><br />
-		<label for="option-datatables-paginate_entries" class="checkbox-left"><?php printf( __( 'Show %s rows per page.', 'tablepress' ), '<input type="number" id="option-datatables-paginate_entries" name="table[options][datatables_paginate_entries]" value="' . intval( $options['datatables_paginate_entries'] ) . '" min="1" max="99999" maxlength="5" required />' ); ?></label></td>
+		<label for="option-datatables-paginate_entries" class="checkbox-left"><?php printf( __( 'Show %s rows per page.', 'tablepress' ), '<input type="number" id="option-datatables-paginate_entries" name="table[options][datatables_paginate_entries]" value="' . (int) $options['datatables_paginate_entries'] . '" min="1" max="99999" maxlength="5" required />' ); ?></label></td>
 	</tr>
 	<tr>
 		<th class="column-1" scope="row"><?php _e( 'Pagination Length Change', 'tablepress' ); ?>:</th>
@@ -636,8 +635,10 @@ class TablePress_Edit_View extends TablePress_View {
 	 */
 	public function textbox_corrupted_table( array $data, array $box ) {
 		?>
-		<div class="error">
-			<p><strong><?php _e( 'Attention: Unfortunately, an error occurred.', 'tablepress' ); ?></strong></p>
+		<div class="notice notice-error notice-large">
+			<h3><em>
+				<?php _e( 'Attention: Unfortunately, an error occurred.', 'tablepress' ); ?>
+			</em></h3>
 			<p>
 				<?php
 					printf( __( 'The internal data of table &#8220;%1$s&#8221; (ID %2$s) is corrupted.', 'tablepress' ), esc_html( $data['table']['name'] ), esc_html( $data['table']['id'] ) );
@@ -672,12 +673,8 @@ class TablePress_Edit_View extends TablePress_View {
 	public function textbox_head( array $data, array $box ) {
 		?>
 	<p>
-		<?php printf( __( 'On this screen, you can edit the content and structure of the table with the ID %s.', 'tablepress' ), esc_html( $data['table']['id'] ) ); ?>
-		<?php _e( 'For example, you can insert things like text, images, or links into the table, or change the used table features. You can also insert, delete, move, hide, and swap columns and rows.', 'tablepress' ); ?>
-	</p>
-	<p>
-		<label class="screen-reader-only" for="table-shortcode-inline"><?php esc_html_e( 'Shortcode text for editor', 'tablepress' ); ?></label>
-		<?php printf( __( 'To insert the table into a page, post, or text widget, copy the Shortcode %s and paste it at the desired place in the editor.', 'tablepress' ), '<input type="text" id="table-shortcode-inline" class="table-shortcode table-shortcode-inline" value="' . esc_attr( '[' . TablePress::$shortcode . " id={$data['table']['id']} /]" ) . '" readonly="readonly" />' ); ?>
+		<?php _e( 'To edit the content or modify the structure of this table, use the input fields and buttons below.', 'tablepress' ); ?>
+		<?php printf( __( 'To insert a table into a post or page, copy its Shortcode %s and paste it into a &#8220;Shortcode&#8221; block at the desired place in the block editor.', 'tablepress' ), '<label class="screen-reader-text" for="table-shortcode-inline">' . esc_html__( 'Shortcode text for editor', 'tablepress' ) . '</label>' . '<input type="text" class="table-shortcode table-shortcode-inline" id="table-shortcode-inline" value="' . esc_attr( '[' . TablePress::$shortcode . " id={$data['table']['id']} /]" ) . '" readonly="readonly" />' ); ?>
 	</p>
 		<?php
 	}
