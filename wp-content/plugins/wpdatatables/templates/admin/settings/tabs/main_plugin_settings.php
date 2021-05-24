@@ -52,6 +52,7 @@
                             <option value="Y-m-d"> 2005-07-15 (Y-m-d)</option>
                             <option value="d.m.y"> 15.07.05 (d.m.y)</option>
                             <option value="m.d.y"> 07.15.05 (m.d.y)</option>
+                            <option value="d.m">15.07 (d.m)</option>
                             <option value="d-m-y"> 15-07-05 (d-m-y)</option>
                             <option value="m-d-y"> 07-15-05 (m-d-y)</option>
                             <option value="d M Y"> 15 July 2005 (d Mon Y)</option>
@@ -108,9 +109,9 @@
                 <div class="fg-line">
                     <div class="select">
                         <select class="selectpicker" name="wdt-base-skin" id="wdt-base-skin">
-                            <option value="skin0"><?php _e('Material', 'wpdatatables'); ?></option>
-                            <option value="skin1"><?php _e('Light', 'wpdatatables'); ?></option>
-                            <option value="skin2"><?php _e('Graphite', 'wpdatatables'); ?></option>
+                            <option value="material"><?php _e('Material', 'wpdatatables'); ?></option>
+                            <option value="light"><?php _e('Light', 'wpdatatables'); ?></option>
+                            <option value="graphite"><?php _e('Graphite', 'wpdatatables'); ?></option>
                             <option value="aqua"><?php _e('Aqua', 'wpdatatables'); ?></option>
                             <option value="purple"><?php _e('Purple', 'wpdatatables'); ?></option>
                             <option value="dark"><?php _e('Dark', 'wpdatatables'); ?></option>

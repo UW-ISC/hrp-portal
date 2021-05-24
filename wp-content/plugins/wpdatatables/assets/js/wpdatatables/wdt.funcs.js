@@ -27,6 +27,9 @@ jQuery(document).ready(function ($) {
 
     if (typeof ($.fn.dataTableExt) !== 'undefined') {
 
+        /* Throw datatables errors in Console*/
+        $.fn.dataTableExt.errMode = 'throw';
+
         /* Clear filters */
         $.fn.dataTableExt.oApi.fnFilterClear = function (oSettings) {
             /* Remove global filter */
@@ -499,5 +502,98 @@ function removeURLParameter (url, parameter) {
         return url
     } else {
         return url
+    }
+}
+
+function createAceEditor(selector){
+    if (jQuery('#' + selector).length) {
+        var aceEditorGlobal;
+        var aceEditorFunc = function (e) {
+            if (aceEditorGlobal.getValue().length > 0) {
+                if (selector == 'wdt-custom-css'){
+                    wpdatatable_plugin_config.setCustomCss(aceEditorGlobal.getValue());
+                } else if (selector == 'wdt-custom-js'){
+                    wpdatatable_plugin_config.setCustomJs(aceEditorGlobal.getValue());
+                } else if (selector == 'wdt-table-custom-css'){
+                    wpdatatable_config.setTableCustomCss(aceEditorGlobal.getValue());
+                } else if (selector == 'wdt-mysql-query'){
+                    wpdatatable_config.setContent(aceEditorGlobal.getValue());
+                }
+
+            } else {
+                if (selector == 'wdt-custom-css'){
+                    wpdatatable_plugin_config.setCustomCss('');
+                } else if (selector == 'wdt-custom-js'){
+                    wpdatatable_plugin_config.setCustomJs('');
+                } else if (selector == 'wdt-table-custom-css'){
+                    wpdatatable_config.setTableCustomCss('');
+                } else if (selector == 'wdt-mysql-query'){
+                    wpdatatable_config.setContent('');
+                }
+            }
+        };
+
+        aceEditorGlobal = ace.edit(selector);
+        aceEditorGlobal.$blockScrolling = Infinity;
+        if (selector == 'wdt-custom-css' || selector == 'wdt-table-custom-css'){
+            aceEditorGlobal.getSession().setMode("ace/mode/css");
+            aceEditorGlobal.setTheme("ace/theme/monokai");
+        } else if (selector == 'wdt-custom-js'){
+            aceEditorGlobal.getSession().setMode("ace/mode/javascript");
+            aceEditorGlobal.setTheme("ace/theme/monokai");
+        } else if (selector == 'wdt-mysql-query'){
+            aceEditorGlobal.getSession().setMode("ace/mode/sql");
+            aceEditorGlobal.setTheme("ace/theme/idle_fingers");
+        }
+
+
+        // Apply CSS changes when user types in the Ace Editor,
+        // but not more often than once in 3 seconds
+        aceEditorGlobal.on(
+            'change',
+            _.throttle(
+                aceEditorFunc,
+                3000
+            )
+        );
+
+        // On blur apply immediately
+        aceEditorGlobal.on('blur', aceEditorFunc);
+    }
+    if (typeof aceEditorGlobal !== 'undefined') {
+
+        setTimeout(aceEditorGlobal.on("input", function () {
+            var stringData;
+            var shouldShow = !aceEditorGlobal.session.getValue().length;
+            var node = aceEditorGlobal.renderer.emptyMessageNode;
+            switch (selector) {
+                case 'wdt-custom-js':
+                    stringData = 'JS';
+                    break;
+                case 'wdt-custom-css':
+                    stringData = 'CSS';
+                    break;
+                case 'wdt-table-custom-css':
+                    stringData = 'table CSS. \n * \n *  You can use selector only for this table like \n * \n *  table.wpDataTable.wpDataTableID-' + wpdatatable_config.id + ' { \n *    //Your custom code  \n *  }';
+                    break;
+                case 'wdt-mysql-query':
+                    stringData = 'SQL query';
+                    break;
+
+            }
+            if (!shouldShow && node) {
+                aceEditorGlobal.renderer.scroller.removeChild(aceEditorGlobal.renderer.emptyMessageNode);
+                aceEditorGlobal.renderer.emptyMessageNode = null;
+            } else if (shouldShow && !node) {
+                node = aceEditorGlobal.renderer.emptyMessageNode = document.createElement("div");
+                node.textContent = "/** \n *  Here you can insert custom " + stringData + " \n */"
+                node.className = "ace_emptyMessage"
+                node.style.padding = "0 9px"
+                node.style.position = "absolute"
+                node.style.zIndex = 9
+                node.style.opacity = 0.5
+                aceEditorGlobal.renderer.scroller.appendChild(node);
+            }
+        }), 100)
     }
 }

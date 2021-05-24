@@ -29,11 +29,11 @@ class WDTBrowseTable extends WP_List_Table
     {
         return array(
             'cb' => '1',
-            'id' => 'ID',
-            'title' => 'Title',
-            'table_type' => 'Type',
-            'connection' => 'Connection',
-            'shortcode' => 'Shortcode',
+            'id' => __('ID', 'wpdatatables'),
+            'title' => __('Title', 'wpdatatables'),
+            'table_type' => __('Type', 'wpdatatables'),
+            'connection' => __('Connection', 'wpdatatables'),
+            'shortcode' => __('Shortcode', 'wpdatatables'),
             'functions' => ''
         );
     }
@@ -197,13 +197,14 @@ class WDTBrowseTable extends WP_List_Table
                                               data-table_name="' . $item['title'] . '"  
                                               data-toggle="tooltip" title="' . __('Edit data', 'wpdatatables') . '" 
                                               href="admin.php?page=wpdatatables-constructor&source&table_id=' . $item['id'] . '&collapsed"><i class="wpdt-icon-pen"></i></a>';
-
-                        $return_string .= '<a type="button" 
+                        if ($item['table_type'] != 'gravity') {
+                            $return_string .= '<a type="button" 
                                               class="wdt-manual-excel-edit" 
                                               data-table_id="' . $item['id'] . '" 
                                               data-table_name="' . $item['title'] . '" 
                                               data-toggle="tooltip" title="' . __('Edit in Excel-like editor', 'wpdatatables') . '" 
                                               href="admin.php?page=wpdatatables-constructor&source&table_view=excel&table_id=' . $item['id'] . '&collapsed"><i class="wpdt-icon-table"></i></a>';
+                        }
                     }
 
                     $return_string .= ' <a type="button" 

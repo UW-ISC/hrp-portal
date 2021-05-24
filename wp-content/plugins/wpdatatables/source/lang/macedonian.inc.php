@@ -9,6 +9,7 @@
     "sInfoFiltered":   "(филтрирано од вкупно _MAX_ записи)",
     "sInfoPostFix":    "",
     "sSearch":         "Барај",
+    "sSearchPlaceholder": "Табела за пребарување",
     "sUrl": "",
     "oPaginate": {
         "sFirst":      "Почетна",

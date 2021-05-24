@@ -52,6 +52,15 @@ class WDTConfigController {
 
                     if (count($wpDataTable->getDataRows()) > 2000) {
                         $tableData->server_side = 1;
+                        $wpdb->update(
+                            $wpdb->prefix .'wpdatatables',
+                            array(
+                                'server_side' => 1,
+                            ),
+                            array(
+                                'id' => $wpDataTable->getWpId()
+                            )
+                        );
                     }
                     if ($tableData->table_type === 'csv' || $tableData->table_type === 'xls') {
                         $tableData->content = WDTTools::pathToUrl($tableData->content);
@@ -155,7 +164,7 @@ class WDTConfigController {
             if (!isset($table)) {
                 return false;
             }
-
+            $globalLanguage = get_option('wdtInterfaceLanguage') != '' ? get_option('wdtInterfaceLanguage') : '';
             $advancedSettings = json_decode($table->advanced_settings);
 
             $table->tabletools_config = unserialize($table->tabletools_config);
@@ -175,6 +184,13 @@ class WDTConfigController {
             $table->cellPadding = (isset($advancedSettings->cellPadding)) ? $advancedSettings->cellPadding : 10;
             $table->verticalScroll = (isset($advancedSettings->verticalScroll)) ? $advancedSettings->verticalScroll : 0;
             $table->verticalScrollHeight = (isset($advancedSettings->verticalScrollHeight)) ? $advancedSettings->verticalScrollHeight : 0;
+            $table->editButtonsDisplayed = (isset($advancedSettings->editButtonsDisplayed)) ? $advancedSettings->editButtonsDisplayed : array('all');
+            $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
+            $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin)  ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
+            $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval)  ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
+            $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader)  ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
+            $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss)  ? $advancedSettings->tableCustomCss : '';
+            $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings)  ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
 
             $table = self::sanitizeTableConfig($table);
 
@@ -269,6 +285,8 @@ class WDTConfigController {
         $wdtVar3 = isset($table->var3) ?
             sanitize_text_field($table->var3) : '';
 
+        $tableSkin = in_array($table->tableSkin, ['material','light','graphite','aqua','purple','dark']) ? $table->tableSkin : get_option('wdtBaseSkin');
+
         // Preparing the config
         $tableConfig = array(
             'title' => $table->title,
@@ -314,7 +332,14 @@ class WDTConfigController {
                     'stripeTable' => $table->stripeTable,
                     'cellPadding' => $table->cellPadding,
                     'verticalScroll' => $table->verticalScroll,
-                    'verticalScrollHeight' => $table->verticalScrollHeight
+                    'verticalScrollHeight' => $table->verticalScrollHeight,
+                    'editButtonsDisplayed' => $table->editButtonsDisplayed,
+                    'language' => $table->language,
+                    'tableSkin' => $tableSkin,
+                    'tableBorderRemoval' => $table->tableBorderRemoval,
+                    'tableBorderRemovalHeader' => $table->tableBorderRemovalHeader,
+                    'tableCustomCss' => $table->tableCustomCss,
+                    'tableFontColorSettings' => $table->tableFontColorSettings,
                 )
             )
         );
@@ -386,9 +411,23 @@ class WDTConfigController {
         $table->clearFilters = (int)$table->clearFilters;
         $table->display_length = (int)$table->display_length;
         $table->showRowsPerPage = (int)$table->showRowsPerPage;
+        $table->language = sanitize_text_field($table->language);
+        $table->tableSkin = sanitize_text_field($table->tableSkin);
+        $table->tableBorderRemoval = (int)$table->tableBorderRemoval;
+        $table->tableBorderRemovalHeader = (int)$table->tableBorderRemovalHeader;
+        $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
         $table->showAllRows = (int)$table->showAllRows;
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
+
+        if(!empty($table->editButtonsDisplayed)){
+            $table->editButtonsDisplayed = (array)$table->editButtonsDisplayed;
+            foreach ($table->editButtonsDisplayed as &$editButtonsDisplayed) {
+                $editButtonsDisplayed = sanitize_text_field($editButtonsDisplayed);
+            }
+        } else {
+            $table->editButtonsDisplayed = array('all');
+        }
 
         if (!empty($table->editor_roles)) {
             $table->editor_roles = (array)$table->editor_roles;
@@ -407,6 +446,15 @@ class WDTConfigController {
             }
         } else {
             $table->tabletools_config = array();
+        }
+
+        if (!empty($table->tableFontColorSettings)) {
+            $table->tableFontColorSettings = (array)$table->tableFontColorSettings;
+            foreach ($table->tableFontColorSettings as &$tableFontColorSetting) {
+                $tableFontColorSetting = sanitize_text_field($tableFontColorSetting);
+            }
+        } else {
+            $table->tableFontColorSettings = array();
         }
 
         $table->columns = WDTConfigController::sanitizeColumnsConfig($table->columns);
@@ -454,6 +502,7 @@ class WDTConfigController {
                     $column->filterDefaultValue = is_array($column->filterDefaultValue) ? array_map('sanitize_text_field', $column->filterDefaultValue) : sanitize_text_field($column->filterDefaultValue);
                 }
                 $column->exactFiltering = (int)$column->exactFiltering;
+                $column->globalSearchColumn = (int)($column->globalSearchColumn);
                 $column->filterLabel = sanitize_text_field($column->filterLabel);
                 $column->formula = sanitize_text_field($column->formula);
                 $column->hide_on_mobiles = (int)$column->hide_on_mobiles;
@@ -462,6 +511,7 @@ class WDTConfigController {
                 $column->id_column = (int)$column->id_column;
                 $column->orig_header = sanitize_text_field($column->orig_header);
                 $column->linkTargetAttribute = sanitize_text_field($column->linkTargetAttribute);
+                $column->linkNoFollowAttribute = (int)($column->linkNoFollowAttribute);
                 $column->linkButtonAttribute = (int)$column->linkButtonAttribute;
                 $column->linkButtonLabel = sanitize_text_field($column->linkButtonLabel);
                 $column->linkButtonClass = sanitize_text_field($column->linkButtonClass);
@@ -521,6 +571,8 @@ class WDTConfigController {
         $tableData->var2 = !empty($wdtVar2) ? $wdtVar2 : '';
         $tableData->var3 = !empty($wdtVar3) ? $wdtVar3 : '';
 
+        $tableData = apply_filters('wpdatatables_filter_init_table_data', $tableData, $connection);
+
         // Trying to generate the table and returning
         // an error message in case of thrown exception
         try {
@@ -579,6 +631,14 @@ class WDTConfigController {
         $dataSourceColumnsHeaders = array_map(function ($column) {
             return $column->getOriginalHeader();
         }, $dataSourceColumns);
+
+        try {
+            foreach ($dataSourceColumnsHeaders as $dataSourceColumnsHeader)
+                if ($dataSourceColumnsHeader == '') throw new WDTException(__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
+        } catch (WDTException $exception) {
+            die($exception);
+        }
+
 
         self::$_resetColumnPosition = count(array_diff($dataSourceColumnsHeaders, array_keys($columnsTypesArray))) > 0 ||
             count(array_diff(array_keys($columnsTypesArray), $dataSourceColumnsHeaders)) > 0;
@@ -815,6 +875,8 @@ class WDTConfigController {
             $feColumn ? $feColumn->sorting : 1;
         $columnConfig['advanced_settings']['exactFiltering'] =
             $feColumn ? $feColumn->exactFiltering : 0;
+        $columnConfig['advanced_settings']['globalSearchColumn'] =
+            $feColumn ? $feColumn->globalSearchColumn : 1;
         $columnConfig['advanced_settings']['filterLabel'] =
             $feColumn ? $feColumn->filterLabel : null;
         $columnConfig['advanced_settings']['checkboxesInModal'] =
@@ -825,6 +887,8 @@ class WDTConfigController {
             $feColumn ? $feColumn->dateInputFormat : '';
         $columnConfig['advanced_settings']['linkTargetAttribute'] =
             $feColumn ? $feColumn->linkTargetAttribute : '';
+        $columnConfig['advanced_settings']['linkNoFollowAttribute'] =
+            $feColumn ? $feColumn->linkNoFollowAttribute : 0;
         $columnConfig['advanced_settings']['linkButtonAttribute'] =
             $feColumn ? $feColumn->linkButtonAttribute : 0;
         $columnConfig['advanced_settings']['linkButtonLabel'] =
@@ -998,8 +1062,12 @@ class WDTConfigController {
             $advancedSettings->dateInputFormat : '';
         $feColumn->linkTargetAttribute = isset($advancedSettings->linkTargetAttribute) ?
             $advancedSettings->linkTargetAttribute : '';
+        $feColumn->linkNoFollowAttribute = isset($advancedSettings->linkNoFollowAttribute) ?
+            $advancedSettings->linkNoFollowAttribute : 0;
         $feColumn->linkButtonAttribute = isset($advancedSettings->linkButtonAttribute) ?
             $advancedSettings->linkButtonAttribute : 0;
+        $feColumn->globalSearchColumn = isset($advancedSettings->globalSearchColumn) ?
+            $advancedSettings->globalSearchColumn : 1;
         $feColumn->linkButtonLabel = isset($advancedSettings->linkButtonLabel) ?
             $advancedSettings->linkButtonLabel : null;
         $feColumn->linkButtonClass = isset($advancedSettings->linkButtonClass) ?
@@ -1063,6 +1131,7 @@ class WDTConfigController {
         $table->popover_tools = 0;
         $table->edit_only_own_rows = 0;
         $table->inline_editing = 0;
+        $table->editButtonsDisplayed = array('all');
         $table->mysql_table_name = '';
         $table->filtering_form = 0;
         $table->clearFilters = 0;

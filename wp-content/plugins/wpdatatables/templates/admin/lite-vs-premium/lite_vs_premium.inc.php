@@ -127,7 +127,7 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php _e('Create a Simple tables', 'wpdatatables'); ?>
-                                    <span style="color: #008CFF;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -140,7 +140,7 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php _e('Merge cells', 'wpdatatables'); ?>
-                                    <span style="color: #008CFF;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
@@ -236,6 +236,19 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td data-title="Features"><?php _e('Table Customization', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td data-title="Features"><?php _e('Create a data table manually', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
@@ -249,6 +262,32 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php _e('Creating data tables from Google Spreadsheet', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php _e('Creating tables via Google Sheet API', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php _e('Creating tables from Private Google Spreadsheet', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
@@ -433,6 +472,7 @@
                             </tbody>
                         </table>
                         <!--  /Live vs Premium Table -->
+                        <p style="padding-left: 28px;padding-top: 10px;font-size: 10px"><?php _e('* Please note that wpDataTables add-ons are not included in premium version of plugin.', 'wpdatatables'); ?></p>
                     </div>
                 </div>
             </div>

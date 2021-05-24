@@ -196,7 +196,7 @@ $tables = \WDTTools::getTablesCount('table');
                                     </div>
                                 <?php } else { ?>
                                     <div class="wdt-tutorial-desc">
-                                        <span><?php _e('You dont have any table created. Please create a table first and then you will be able to create a chart.', 'wpdatatables'); ?></span>
+                                        <span><?php _e('You don\'t have any table created. Please create a table first and then you will be able to create a chart.', 'wpdatatables'); ?></span>
                                     </div>
                                     <div class="wdt-tutorial-button">
                                         <button class="btn btn-primary" id="wdt-tutorial-create-charts" disabled>

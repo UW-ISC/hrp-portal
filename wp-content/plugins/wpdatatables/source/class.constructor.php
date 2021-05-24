@@ -260,8 +260,9 @@ class wpDataTableConstructor
             'exactFiltering' => 0,
             'rangeSlider' => 0,
             'filterLabel' => '',
-            'editingDefaultValue' => $column['type'] === 'multiselect' ? sanitize_text_field(implode('|', $column['default_value'])) : sanitize_text_field($column['default_value']),
+            'editingDefaultValue' => $column['type'] === 'multiselect' ? isset($column['default_value']) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
             'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
+            'globalSearchColumn' => 1,
         );
 
         $columnProperties['create_block'] = $columnProperties['create_block'] . ' ' . $nullable;

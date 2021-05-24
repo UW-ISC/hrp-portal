@@ -175,6 +175,12 @@ var WDTColumn = function (column, parent_table) {
     this.filtering = 0;
 
     /**
+     * Toggle global search column
+     * @type {int}
+     */
+    this.globalSearchColumn = 1;
+
+    /**
      * Filter type for this column
      * @type {string}
      */
@@ -265,6 +271,11 @@ var WDTColumn = function (column, parent_table) {
     this.linkTargetAttribute = '_self';
 
     /**
+     * Open link as a nofollow link
+     */
+    this.linkNoFollowAttribute = 0;
+
+    /**
      *  Open link column as a button
      */
     this.linkButtonAttribute = 0;
@@ -304,6 +315,7 @@ var WDTColumn = function (column, parent_table) {
         this.filter_type = column.filter_type || 'text';
         this.filterDefaultValue = column.filterDefaultValue || null;
         this.filtering = typeof column.filtering !== 'undefined' ? column.filtering : 1;
+        this.globalSearchColumn = column.globalSearchColumn || 0;
         this.filterLabel = column.filterLabel || null;
         this.foreignKeyRule = column.foreignKeyRule || null;
         this.formula = column.formula || '';
@@ -313,6 +325,7 @@ var WDTColumn = function (column, parent_table) {
         this.id = column.id || null;
         this.id_column = column.id_column || 0;
         this.linkTargetAttribute = column.linkTargetAttribute || '_self';
+        this.linkNoFollowAttribute = column.linkNoFollowAttribute || 0;
         this.linkButtonAttribute = column.linkButtonAttribute || 0;
         this.linkButtonLabel = column.linkButtonLabel || null;
         this.linkButtonClass = column.linkButtonClass || null;
@@ -782,6 +795,22 @@ WDTColumn.prototype.getFiltering = function () {
 };
 
 /**
+ * Set global search for column
+ * @param {int} globalSearchColumn
+ */
+WDTColumn.prototype.setGlobalSearchColumm = function (globalSearchColumn) {
+    this.globalSearchColumn = globalSearchColumn;
+};
+
+/**
+ * Get global search for column
+ * @return {int} globalSearchColumn
+ */
+WDTColumn.prototype.getGlobalSearchColumn = function () {
+    return this.globalSearchColumn;
+};
+
+/**
  * Set Filter Type
  * @param {string} filterType
  */
@@ -1003,9 +1032,11 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-column-visible').prop('checked', this.visible);
     jQuery('#wdt-column-width').val(this.width);
     jQuery('#wdt-link-target-attribute').prop('checked', this.linkTargetAttribute === '_self' ? 0 : 1);
+    jQuery('#wdt-link-nofollow-attribute').prop('checked', this.linkNoFollowAttribute).change();
     jQuery('#wdt-link-button-attribute').prop('checked', this.linkButtonAttribute).change();
     jQuery('#wdt-link-button-label').val(this.linkButtonLabel);
     jQuery('#wdt-link-button-class').val(this.linkButtonClass);
+    jQuery('#wdt-column-enable-global-search').prop('checked', this.globalSearchColumn);
 
     jQuery('#wdt-column-decimal-places').val('');
     if (this.type == 'formula') {
@@ -1066,14 +1097,29 @@ WDTColumn.prototype.fillInputs = function () {
 
     jQuery('#wdt-column-allow-sorting').prop('checked', this.sorting).change();
     jQuery('#wdt-column-default-sort').prop('checked', this.defaultSortingColumn).change();
+
     if (this.defaultSortingColumn) {
         jQuery('#wdt-column-default-sorting-direction')
             .selectpicker('val', this.defaultSortingColumn);
     }
 
-    if (!this.parent_table.filtering || this.type == 'formula') {
+    let filteringOptionEnabled = this.parent_table.filtering;
+    let globalOptionEnabled = this.parent_table.global_search;
+    if (!(filteringOptionEnabled || globalOptionEnabled) || this.type == 'formula') {
         jQuery('li.column-filtering-settings-tab').hide();
     } else {
+        if(!globalOptionEnabled){
+            jQuery('.wdt-global-search-block').addClass('hidden');
+            jQuery('.wdt-column-enable-filter-block, .wdt-filtering-enabled-block').removeClass('hidden');
+        } else if(!filteringOptionEnabled) {
+            jQuery('.wdt-column-enable-filter-block, .wdt-filtering-enabled-block').addClass('hidden');
+            jQuery('.wdt-global-search-block').removeClass('hidden');
+        } else {
+            jQuery('.wdt-column-enable-filter-block, .wdt-filtering-enabled-block, .wdt-global-search-block ').removeClass('hidden');
+        }
+
+        jQuery('#wdt-column-enable-global-search').prop('checked', this.globalSearchColumn).change();
+
         jQuery('li.column-filtering-settings-tab').removeClass('active').show();
         jQuery('#wdt-column-exact-filtering').prop('checked', this.exactFiltering).change();
         jQuery('#wdt-column-range-slider').prop('checked',this.rangeSlider).change();
@@ -1144,6 +1190,12 @@ WDTColumn.prototype.fillInputs = function () {
                         this.editingDefaultValue = this.editingDefaultValue.join('|');
                     }
                 }
+            } else if (jQuery.inArray(this.editor_type, ['link']) != -1) {
+                let urlValue = jQuery('#wdt-editing-default-value').val();
+                if (!(/^https?:\/\/.*\..*/.test(urlValue) || urlValue === '')) {
+                    this.editingDefaultValue = "http://" + urlValue;
+                } else this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
+                jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
             } else {
                 jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
             }
@@ -1261,6 +1313,7 @@ WDTColumn.prototype.applyChanges = function () {
     this.hide_on_tablets = jQuery('#wdt-hide-column-on-tablets').is(':checked') ? 1 : 0;
     this.css_class = jQuery('#wdt-column-css-class').val();
     this.linkTargetAttribute = jQuery('#wdt-link-target-attribute').is(':checked') ? '_blank' : '_self';
+    this.linkNoFollowAttribute = jQuery('#wdt-link-nofollow-attribute').is(':checked') ? 1 : 0;
     this.linkButtonAttribute = jQuery('#wdt-link-button-attribute').is(':checked') ? 1 : 0;
     this.linkButtonLabel = jQuery('#wdt-link-button-label').val();
     this.linkButtonClass = jQuery('#wdt-link-button-class').val();
@@ -1278,7 +1331,8 @@ WDTColumn.prototype.applyChanges = function () {
 
     this.color = jQuery('#wdt-column-color').val();
     this.visible = jQuery('#wdt-column-visible').is(':checked') ? 1 : 0;
-    this.width = jQuery('#wdt-column-width').val();
+    let tempColumnWidth = jQuery('#wdt-column-width').val();
+    this.width = tempColumnWidth.indexOf('px') != -1 ? tempColumnWidth.replace('px','') : tempColumnWidth
     this.decimalPlaces = ( ( this.type == 'float' || this.type == 'formula' ) && jQuery('#wdt-column-decimal-places').val() != '' ) ?
         jQuery('#wdt-column-decimal-places').val() : -1;
     if (jQuery.inArray(this.type, ['date', 'datetime']) !== -1) {
@@ -1317,6 +1371,7 @@ WDTColumn.prototype.applyChanges = function () {
         'none';
     this.exactFiltering = jQuery('#wdt-column-exact-filtering').is(':checked') ? 1 : 0;
     this.filterLabel = jQuery('#wdt-column-filter-label').val();
+    this.globalSearchColumn = jQuery('#wdt-column-enable-global-search').is(':checked') ? 1 : 0;
 
     if (jQuery.inArray(this.filter_type, ['text', 'number']) != -1) {
         this.filterDefaultValue = jQuery('#wdt-filter-default-value').val();
@@ -1344,6 +1399,12 @@ WDTColumn.prototype.applyChanges = function () {
         this.editingDefaultValue = jQuery.isArray(jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val')) ?
             jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val').join('|') :
             jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val');
+    } else if(jQuery.inArray(this.editor_type, ['link']) != -1) {
+        let urlValue = jQuery('#wdt-editing-default-value').val();
+        if (!(/^https?:\/\/.*\..*/.test(urlValue) || urlValue === '')) {
+            this.editingDefaultValue = "http://" + urlValue;
+        } else this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
+        jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
     } else {
         this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
     }
@@ -1378,6 +1439,7 @@ WDTColumn.prototype.getJSON = function () {
         filter_type: this.filter_type,
         filterDefaultValue: this.filterDefaultValue,
         filtering: this.filtering,
+        globalSearchColumn: this.globalSearchColumn,
         filterLabel: this.filterLabel,
         foreignKeyRule: this.foreignKeyRule,
         formula: this.formula,
@@ -1387,6 +1449,7 @@ WDTColumn.prototype.getJSON = function () {
         id: this.id,
         id_column: this.id_column,
         linkTargetAttribute: this.linkTargetAttribute,
+        linkNoFollowAttribute: this.linkNoFollowAttribute,
         linkButtonAttribute: this.linkButtonAttribute,
         linkButtonLabel: this.linkButtonLabel,
         linkButtonClass: this.linkButtonClass,
@@ -1492,7 +1555,11 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
         if (column.filter_type == 'none') {
             column.filter_type = 'text';
             jQuery(this)
-                .removeClass('inactive')
+                .removeClass('inactive');
+            if(!column.globalSearchColumn) {
+                column.globalSearchColumn = 1;
+                $columnBlock.find('i.wdt-toggle-global-search').removeClass('inactive');
+            }
         } else {
             column.filter_type = 'none';
             jQuery(this)
@@ -1555,6 +1622,33 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
     }
 
     /**
+     * Enable/disable global search for a column
+     */
+    $columnBlock.find('i.wdt-toggle-global-search').click(function (e) {
+        e.preventDefault();
+        if(column.globalSearchColumn) {
+            column.globalSearchColumn = 0;
+            jQuery(this)
+                .addClass('inactive');
+            $columnBlock.find('i.wdt-toggle-show-filters')
+                .addClass('inactive');
+            column.filter_type = "none";
+        } else {
+            column.globalSearchColumn = 1;
+            jQuery(this)
+                .removeClass('inactive');
+            $columnBlock.find('i.wdt-toggle-show-filters')
+                .removeClass('inactive');
+            column.filter_type = "text";
+        }
+    });
+
+    if(!column.globalSearchColumn) {
+        $columnBlock.find('i.wdt-toggle-global-search')
+            .addClass('inactive');
+    }
+
+    /**
      * Open column settings on wrench click
      */
     $columnBlock.find('i.open-settings').click(function (e) {
@@ -1569,6 +1663,10 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
         $columnBlock.find('div.fg-line input').replaceWith('<span>' + this.display_header + '</span>');
         $columnBlock.attr('data-orig_header', this.orig_header);
         $columnBlock.find('i.column-control').remove();
+    }
+
+    if (this.type == 'formula') {
+        $columnBlock.find('.formula-remove-option').remove();
     }
 
 };

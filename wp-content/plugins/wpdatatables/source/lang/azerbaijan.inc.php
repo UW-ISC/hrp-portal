@@ -9,6 +9,7 @@
     "sLoadingRecords": "Yüklənir...",
     "sProcessing":     "Gözləyin...",
     "sSearch":         "Axtarış:",
+    "sSearchPlaceholder": "Axtarış masası",
     "sZeroRecords":    "Nəticə Tapılmadı.",
     "oPaginate": {
         "sFirst":    "İlk",

@@ -297,8 +297,8 @@ var singleClick = false;
                                             editor.setContent(val);
                                         },
                                         menubar: false,
-                                        plugins: 'link image media lists hr colorpicker fullscreen textcolor',
-                                        toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat'
+                                        plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
+                                        toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat | code'
                                     });
                                 }
                             }
@@ -423,14 +423,15 @@ var singleClick = false;
                                         $(tableDescription.selector + '_edit_dialog .editDialogInput').val('');
                                         $(tableDescription.selector + '_edit_dialog .editDialogInput').selectpicker('val', '');
                                         //Fix for resetting currently selected block in select picker
-                                        $(tableDescription.selector + '_edit_dialog .editDialogInput').trigger('change.abs.preserveSelected');
-                                        $(tableDescription.selector + '_edit_dialog .editDialogInput').selectpicker('refresh');
+                                        $(tableDescription.selector + '_edit_dialog .editDialogInput').trigger('change.abs.preserveSelected').selectpicker('refresh');
                                         $('.fileinput').removeClass('fileinput-exists').addClass('fileinput-new');
                                         $('.fileinput').find('div.fileinput-exists').removeClass('fileinput-exists').addClass('fileinput-new');
                                         $('.fileinput').find('.fileinput-filename').text('');
                                         $('.fileinput').find('.fileinput-preview').html('');
                                         if (tinymce.activeEditor)
                                             tinymce.activeEditor.setContent('');
+
+                                        wpDataTablesFunctions[tableDescription.tableId].setPredefinedEditValues();
                                     }
                                 }, 1000);
                                 if (!returnData.is_new && $(tableDescription.selector + ' > tbody > tr.selected').length) {
@@ -448,6 +449,134 @@ var singleClick = false;
                     });
                     return true;
                 }
+
+                wpDataTablesFunctions[tableDescription.tableId].setPredefinedEditValues = function () {
+                    for (let i in tableDescription.advancedEditingOptions.aoColumns) {
+
+                        let column = tableDescription.advancedEditingOptions.aoColumns[i];
+                        let defaultValuesArr;
+
+                        // Create selectbox based on "Number of possible values to load" option
+                        if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1) {
+                            if (column.possibleValuesAjax !== -1) {
+
+                                var $selectpickerBlock = $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('.fg-line').parent();
+
+                                var mandatory = column.mandatory ? 'mandatory ' : '';
+                                var possibleValuesAjax = column.possibleValuesAjax ? 'wdt-possible-values-ajax ' : '';
+                                var foreignKeyRule = column.foreignKeyRule ? 'wdt-foreign-key-select ' : '';
+
+                                // Recreate the selectbox element
+                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
+                                if (column.editorInputType === 'multi-selectbox')
+                                    $selectpickerBlock.find('select').attr('multiple', 'multiple');
+
+                                // If default value is set, append it to selectbox HTML
+                                if (column.defaultValue) {
+                                    if (column.editorInputType === 'multi-selectbox') {
+                                        var defaultValues = !Array.isArray(column.defaultValue) ? column.defaultValue.split('|') : column.defaultValue;
+
+                                        $.each(defaultValues, function (index, value) {
+                                            if (value) {
+                                                $selectpickerBlock.find('select').append('<option selected value="' + value + '">' + value + '</option>');
+                                            }
+                                        });
+                                    } else {
+                                        if (typeof column.defaultValue === 'object')
+                                            $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue.value + '">' + column.defaultValue.text + '</option>');
+                                        else
+                                            $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue + '">' + column.defaultValue + '</option>');
+                                    }
+                                }
+
+                                // Load possible values on modal open
+                                $('select#' + tableDescription.tableId + '_' + column.origHeader).on('show.bs.select', function (e) {
+                                    jQuery(this).closest('div.editDialogInput').find('.bs-searchbox .form-control').val('').trigger('keyup');
+                                });
+
+                                // Add AJAX to selectbox
+                                $('select#' + tableDescription.tableId + '_' + column.origHeader).selectpicker('refresh').ajaxSelectPicker({
+                                    ajax: {
+                                        url: tableDescription.adminAjaxBaseUrl,
+                                        method: 'POST',
+                                        data: {
+                                            wdtNonce: $('#wdtNonce').val(),
+                                            action: 'wpdatatables_get_column_possible_values',
+                                            tableId: tableDescription.tableWpId,
+                                            originalHeader: column.origHeader
+                                        }
+                                    },
+                                    cache: false,
+                                    preprocessData: function (data) {
+                                        if ($('.editDialogInput.open').find('select').data('input_type') === 'selectbox') {
+                                            data.unshift({value: ''});
+                                        }
+                                        return data
+                                    },
+                                    preserveSelected: true,
+                                    emptyRequest: true,
+                                    preserveSelectedPosition: 'before',
+                                    locale: {
+                                        emptyTitle: wpdatatables_frontend_strings.nothingSelected,
+                                        statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
+                                        currentlySelected: wpdatatables_frontend_strings.currentlySelected,
+                                        errorText: wpdatatables_frontend_strings.errorText,
+                                        searchPlaceholder: wpdatatables_frontend_strings.search,
+                                        statusInitialized: wpdatatables_frontend_strings.statusInitialized,
+                                        statusNoResults: wpdatatables_frontend_strings.statusNoResults,
+                                        statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                                    }
+                                });
+                            }
+                        }
+
+                        if (column.defaultValue) {
+                            let columnDefaultValue = column.defaultValue;
+                            if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1 ) {
+                                if (typeof columnDefaultValue === 'object') {
+                                    defaultValuesArr = columnDefaultValue.value;
+                                } else {
+                                    defaultValuesArr = column.editorInputType === 'multi-selectbox' && !Array.isArray(columnDefaultValue) ? columnDefaultValue.split('|') : column.defaultValue;
+                                }
+                                $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').selectpicker('val', defaultValuesArr).trigger('change.abs.preserveSelected');
+                            } else if($.inArray(column.editorInputType, ['attachment', 'image']) !== -1 && ($('.fileupload-' + tableDescription.tableId).length)) {
+
+                                //Reset attachment editor
+                                var $fileUploadEl = $('.fileupload-' + tableDescription.tableId);
+                                $($fileUploadEl).each(function () {
+                                    if ($(this).data('column_type') == 'icon') {
+                                        $(this).parent().parent().find('.fileinput-preview').html('<img src=' + columnDefaultValue + '>');
+                                        $(this).parent().removeClass('fileinput-new').addClass('fileinput-exists');
+                                        $(this).parent().parent().removeClass('fileinput-new').addClass('fileinput-exists');
+                                    } else {
+                                        $(this).parent().find('.fileinput-filename').val(columnDefaultValue);
+                                        $(this).parent().removeClass('fileinput-new').addClass('fileinput-exists');
+                                        $(this).parent().find('.fileinput-filename').text((columnDefaultValue).substring((columnDefaultValue).lastIndexOf("/") + 1));
+                                    }
+                                });
+                                $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').val(column.defaultValue);
+
+                            } else if(column.editorInputType === 'mce-editor') {
+                                if (tinymce.activeEditor) {
+                                    $inputElement = $('#' + tableDescription.tableId + '_edit_dialog .editDialogInput:not(.bootstrap-select):eq(' + i + ')');
+                                    tinymce.execCommand('mceRemoveEditor', true, $inputElement.attr('id'));
+                                    tinymce.init({
+                                        selector: '#' + $inputElement.attr('id'),
+                                        init_instance_callback: function (editor) {
+                                            editor.setContent(column.defaultValue);
+                                        },
+                                        menubar: false,
+                                        plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
+                                        toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat | code'
+                                    });
+                                }
+                            } else {
+                                $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').val(column.defaultValue);
+                            }
+                        }
+                    }
+                }
+
             }
 
             /**
@@ -534,6 +663,8 @@ var singleClick = false;
                 $('#' +  tableDescription.tableId + '_paginate').hide();
             }
 
+            $(tableDescription.selector + '_wrapper').addClass('wpDataTableID-' + tableDescription.tableWpId)
+
             /**
              * Set pagination alignment classes
              */
@@ -561,6 +692,19 @@ var singleClick = false;
                         break;
                 }
 
+            }
+            if (tableDescription.tableSkin) {
+                $(tableDescription.selector + '_wrapper .dt-buttons .DTTT_button_export').on('click', function () {
+                    $('.dt-button-collection').addClass('wdt-skin-' + tableDescription.tableSkin)
+                });
+            }
+
+            /**
+             * Show "Show X entries" dropdown
+             */
+            if (tableDescription.showRowsPerPage){
+                if ( !(jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.bootstrap-select').length))
+                    jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.wdt-selectpicker').selectpicker();
             }
 
             /**
@@ -1072,11 +1216,14 @@ var singleClick = false;
                  */
                 $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').click(function () {
                     var modal = $('#wdt-frontend-modal');
+                    var newSkins = ['dark', 'aqua','purple'];
 
                     if ($(this).hasClass('disabled'))
                         return false;
 
                     $('.wpDataTablesPopover.editTools').hide();
+
+                    modal.addClass('wdt-skin-' + tableDescription.tableSkin);
 
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.edit_entry);
                     modal.find('.modal-body').html('');
@@ -1098,6 +1245,26 @@ var singleClick = false;
                         modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
                         modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
 
+                        if (newSkins.includes(tableDescription.tableSkin)){
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        } else {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                        }
+
                         $('#wdt-frontend-modal .editDialogInput').each(function (index) {
                             if ($(this).data('input_type') == 'mce-editor') {
                                 if ($(this).siblings().length) {
@@ -1106,8 +1273,8 @@ var singleClick = false;
                                 tinymce.init({
                                     selector: '#' + $(this).attr('id'),
                                     menubar: false,
-                                    plugins: 'link image media lists hr colorpicker fullscreen textcolor',
-                                    toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat'
+                                    plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
+                                    toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat | code'
                                 });
                             }
                         });
@@ -1133,8 +1300,11 @@ var singleClick = false;
                  */
                 $('.new_table_entry[aria-controls="' + tableDescription.tableId + '"]').click(function () {
                     var modal = $('#wdt-frontend-modal');
+                    var newSkins = ['dark', 'aqua','purple'];
 
                     $('.wpDataTablesPopover.editTools').hide();
+
+                    modal.addClass('wdt-skin-' + tableDescription.tableSkin);
 
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.add_new_entry);
                     modal.find('.modal-body').html('');
@@ -1152,6 +1322,26 @@ var singleClick = false;
                         modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
                         modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
 
+                        if (newSkins.includes(tableDescription.tableSkin)){
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        } else {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                        }
+
                         $('#wdt-frontend-modal .editDialogInput').val('').css('border', '');
                         $('#wdt-frontend-modal tr.idRow .editDialogInput').val('0');
 
@@ -1163,8 +1353,8 @@ var singleClick = false;
                                 tinymce.init({
                                     selector: '#' + $(this).attr('id'),
                                     menubar: false,
-                                    plugins: 'link image media lists hr colorpicker fullscreen textcolor',
-                                    toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat'
+                                    plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
+                                    toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat | code'
                                 });
                             }
                         });
@@ -1174,113 +1364,7 @@ var singleClick = false;
                         // Reset selectpickers values
                         $('#wdt-frontend-modal .selectpicker').selectpicker('deselectAll').selectpicker('refresh');
 
-                        for (var i in tableDescription.advancedEditingOptions.aoColumns) {
-                            var column = tableDescription.advancedEditingOptions.aoColumns[i];
-
-                            // Create selectbox based on "Number of possible values to load" option
-                            if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1) {
-                                if (column.possibleValuesAjax !== -1) {
-
-                                    var $selectpickerBlock = $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('.fg-line').parent();
-
-                                    var mandatory = column.mandatory ? 'mandatory ' : '';
-                                    var possibleValuesAjax = column.possibleValuesAjax ? 'wdt-possible-values-ajax ' : '';
-                                    var foreignKeyRule = column.foreignKeyRule ? 'wdt-foreign-key-select ' : '';
-
-                                    // Recreate the selectbox element
-                                    $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
-                                    if (column.editorInputType === 'multi-selectbox')
-                                        $selectpickerBlock.find('select').attr('multiple', 'multiple');
-
-                                    // If default value is set, append it to selectbox HTML
-                                    if (column.defaultValue) {
-                                        if (column.editorInputType === 'multi-selectbox') {
-                                            var defaultValues = !Array.isArray(column.defaultValue) ? column.defaultValue.split('|') : column.defaultValue;
-
-                                            $.each(defaultValues, function (index, value) {
-                                                if (value) {
-                                                    $selectpickerBlock.find('select').append('<option selected value="' + value + '">' + value + '</option>');
-                                                }
-                                            });
-                                        } else {
-                                            if (typeof column.defaultValue === 'object')
-                                                $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue.value + '">' + column.defaultValue.text + '</option>');
-                                            else
-                                                $selectpickerBlock.find('select').append('<option selected value="' + column.defaultValue + '">' + column.defaultValue + '</option>');
-                                        }
-                                    }
-
-                                    // Load possible values on modal open
-                                    $('select#' + tableDescription.tableId + '_' + column.origHeader).on('show.bs.select', function (e) {
-                                        jQuery(this).closest('div.editDialogInput').find('.bs-searchbox .form-control').val('').trigger('keyup');
-                                    });
-
-                                    // Add AJAX to selectbox
-                                    $('select#' + tableDescription.tableId + '_' + column.origHeader).selectpicker('refresh').ajaxSelectPicker({
-                                        ajax: {
-                                            url: tableDescription.adminAjaxBaseUrl,
-                                            method: 'POST',
-                                            data: {
-                                                wdtNonce: $('#wdtNonce').val(),
-                                                action: 'wpdatatables_get_column_possible_values',
-                                                tableId: tableDescription.tableWpId,
-                                                originalHeader: column.origHeader
-                                            }
-                                        },
-                                        cache: false,
-                                        preprocessData: function (data) {
-                                            if ($('.editDialogInput.open').find('select').data('input_type') === 'selectbox') {
-                                                data.unshift({value: ''});
-                                            }
-                                            return data
-                                        },
-                                        preserveSelected: true,
-                                        emptyRequest: true,
-                                        preserveSelectedPosition: 'before',
-                                        locale: {
-                                            emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                                            statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                                            currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                                            errorText: wpdatatables_frontend_strings.errorText,
-                                            searchPlaceholder: wpdatatables_frontend_strings.search,
-                                            statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                                            statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                                            statusTooShort: wpdatatables_frontend_strings.statusTooShort
-                                        }
-                                    });
-                                }
-                            }
-
-                        // Set the default values
-                        if (column.defaultValue) {
-                            if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1 && column.possibleValuesAjax === -1) {
-                                if(typeof column.defaultValue === 'object') {
-                                    column.defaultValue = column.defaultValue.value;
-                                } else {
-                                    column.defaultValue = column.editorInputType === 'multi-selectbox' && !Array.isArray(column.defaultValue) ? column.defaultValue.split('|') : column.defaultValue;
-                                }
-                                $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').selectpicker('val', column.defaultValue);
-                            } else {
-                                $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').val(column.defaultValue);
-                            }
-                        }
-                    }
-
-                        // Reset attachment editor
-                        if ($('.fileupload-' + tableDescription.tableId).length) {
-                            var $fileUploadEl = $('.fileupload-' + tableDescription.tableId);
-                            $($fileUploadEl).each(function () {
-                                $(this).parent().find('input.editDialogInput').val('');
-                                if ($(this).data('column_type') == 'icon') {
-                                    $(this).parent().parent().find('.fileinput-preview').html('');
-                                    $(this).parent().removeClass('fileinput-exists').addClass('fileinput-new');
-                                    $(this).parent().parent().removeClass('fileinput-exists').addClass('fileinput-new');
-                                } else {
-                                    $(this).parent().find('.fileinput-filename').text('');
-                                    $(this).parent().removeClass('fileinput-exists').addClass('fileinput-new');
-                                }
-                            });
-                        }
+                        wpDataTablesFunctions[tableDescription.tableId].setPredefinedEditValues();
 
                         // Show 'No editor inputs selected' alert
                         if (modal.find('.wdt-edit-dialog-fields-block').find('.form-group').length == 0) {
@@ -1302,7 +1386,7 @@ var singleClick = false;
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     if (e.which == 27) {
-                        $('#wdt-frontend-modal').modal('hide');
+                        $('#wdt-frontend-modal').modal('hide').removeClass('wdt-skin-' + tableDescription.tableSkin)
                     }
                 });
 
@@ -1312,6 +1396,7 @@ var singleClick = false;
                 $('#wdt-frontend-modal').on('hidden.bs.modal', function (e) {
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_edit_dialog').hide());
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_edit_dialog_buttons').hide());
+                    $(this).removeClass('wdt-skin-' + tableDescription.tableSkin);
                 });
 
                 /**
@@ -1319,6 +1404,7 @@ var singleClick = false;
                  */
                 $('#wdt-delete-modal').on('hidden.bs.modal', function (e) {
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_delete_dialog_buttons').hide());
+                    $(this).removeClass('wdt-skin-' + tableDescription.tableSkin);
                 });
 
                 /**
@@ -1334,6 +1420,8 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     var modal =  $('#wdt-delete-modal');
+
+                    modal.addClass('wdt-skin-' + tableDescription.tableSkin);
 
                     modal.find('.modal-footer').html('');
                     modal.find('.modal-footer').append($(tableDescription.selector + '_delete_dialog_buttons').show());
@@ -1356,6 +1444,7 @@ var singleClick = false;
                             $.ajax({
                                 url: tableDescription.adminAjaxBaseUrl,
                                 type: 'POST',
+                                dataType: 'json',
                                 data: {
                                     action: 'wdt_delete_table_row',
                                     id_key: tableDescription.idColumnKey,
@@ -1363,10 +1452,17 @@ var singleClick = false;
                                     table_id: tableDescription.tableWpId,
                                     wdtNonce: $('#wdtNonceFrontendEdit_' + tableDescription.tableWpId).val()
                                 },
-                                success: function () {
+                                success: function (data) {
                                     wpDataTables[tableDescription.tableId].fnDraw(false);
-                                    $('#wdt-delete-modal').modal('hide');
-                                    wdtNotify(wpdatatables_edit_strings.success, wpdatatables_edit_strings.rowDeleted, 'success')
+                                    if (data.error == '') {
+                                        $('#wdt-delete-modal').modal('hide');
+                                        wdtNotify(wpdatatables_edit_strings.success, wpdatatables_edit_strings.rowDeleted, 'success');
+                                    } else {
+                                        wdtNotify(wpdatatables_edit_strings.error, data.error, 'danger');
+                                    }
+                                },
+                                error: function () {
+                                    wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.databaseDeleteError, 'danger');
                                 }
                             });
                         }
@@ -1516,7 +1612,11 @@ function wdtApplyCellAction($cell, action, setVal) {
             $cell.attr('style', 'background-color: "" !important');
             break;
         case 'setCellContent':
-            $cell.html(setVal);
+            if ($cell.children().hasClass('responsiveExpander')){
+                $cell.html(setVal).prepend('<span class="responsiveExpander"></span>');
+            } else {
+                $cell.html(setVal);
+            }
             break;
         case 'setCellClass':
             $cell.addClass(setVal);
@@ -1750,5 +1850,5 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
 }
 
 jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";
-jQuery.fn.dataTable.ext.classes.sLengthSelect = 'selectpicker length_menu';
+jQuery.fn.dataTable.ext.classes.sLengthSelect = 'wdt-selectpicker length_menu';
 jQuery.fn.dataTable.ext.classes.sFilterInput = 'form-control';

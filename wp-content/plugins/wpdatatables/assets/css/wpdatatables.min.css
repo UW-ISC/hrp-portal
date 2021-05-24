@@ -152,7 +152,7 @@
     background-color: transparent;
 }
 .wpDataTablesWrapper.wpdt-pagination-center .dataTables_paginate {
-    display: table;
+    display: table !important;
     margin: 0 auto !important;
     background-color: transparent;
 }
@@ -358,7 +358,7 @@ div.wpDataTablesFilter span.filter_column .number-range-filter:first-child {
 }
 
 @-moz-document url-prefix() {
-    .wpdt-c .wpDataTables.wpDataTablesWrapper{
+    .wpdt-c .wpDataTables.wpDataTablesWrapper.wpDataTablesFilter{
         position: initial !important;
     }
 }
@@ -721,6 +721,7 @@ div.wdt-checkbox-modal-wrap div.wdt-checkbox-option label {
 .wpdt-c .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle {
     height: 100%;
     top: 0px;
+    color: #c4c5c6;
 }
 
 .wpdt-c .wpDataTablesWrapper .dataTables_length .bootstrap-select .dropdown-toggle:after {

@@ -15,7 +15,8 @@ ul.mega-font-selector li {
 #cboxContent .menu_icon .fa label:before,
 #cboxContent .menu_icon .fab label:before,
 #cboxContent .menu_icon .far label:before,
-#cboxContent .menu_icon .fas label:before {
+#cboxContent .menu_icon .fas label:before,
+#cboxContent .menu_icon .fal label:before {
 	font-size: 24px;
 	text-align: center;
 }
@@ -24,19 +25,32 @@ ul.mega-font-selector li {
 	font-family: 'FontAwesome';
 }
 
+#cboxContent .menu_icon .fas,
+#cboxContent .menu_icon .far {
+	font-family: 'Font Awesome 5 Free';
+}
+
+#cboxContent .menu_icon .fas.pro,
+#cboxContent .menu_icon .far.pro,
+#cboxContent .menu_icon .fal.pro {
+	font-family: 'Font Awesome 5 Pro';
+}
+
 #cboxContent .menu_icon .fab {
 	font-family: 'Font Awesome 5 Brands';
 	font-weight: 400;
 }
 
 #cboxContent .menu_icon .far {
-	font-family: 'Font Awesome 5 Free';
 	font-weight: 400;
 }
 
 #cboxContent .menu_icon .fas {
-	font-family: 'Font Awesome 5 Free';
 	font-weight: 900;
+}
+
+#cboxContent .menu_icon .fal {
+	font-weight: 300;
 }
 
 /** Genericons **/
@@ -155,10 +169,19 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 
 /** Style Overrides **/
 
-
 #cboxContent .mm-picker-container .sp-replacer {
 	margin: 0;
 	float: left;
+	border: 0;
+	background: transparent;
+	padding: 0;
+}
+
+#cboxContent .mm-picker-container .sp-dd {
+	display: none;
+}
+#cboxContent .mm-picker-container .sp-palette-container {
+    width: 40px;
 }
 
 #cboxContent .mm-picker-container .sp-replacer .sp-preview {
@@ -166,7 +189,9 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 	height: 26px;
 	width: 26px;
 	margin: 0;
+	border-right: 1px solid #8c8f94;
 }
+
 #cboxContent .mm-picker-container input.mm_colorpicker {
 	float: left;
 	border: 0;
@@ -177,25 +202,19 @@ body[class*='_page_maxmegamenu_'] .icon_block .block-title span:before {
 
 #cboxContent .mm-picker-container {
 	border-radius: 3px;
-	box-shadow: 0 1px 0 rgba(0,0,0,.08);
-	border: 1px solid #ccc;
+	border: 1px solid #8c8f94;
 	font-size: 0.9em;
 	margin-right: 20px;
 	float: left;
 }
 
 #cboxContent .mm-picker-container div.chosen-color {
-	background: #f7f7f7;
-	-webkit-border-radius: 0 2px 2px 0;
 	border-radius: 0 2px 2px 0;
-	border-left: 1px solid #ccc;
 	color: #555;
 	font-size: 11px;
 	line-height: 26px;
 	padding: 0 6px;
 	text-align: center;
-	-webkit-box-shadow: inset 0 1px 0 #fff;
-	box-shadow: inset 0 1px 0 #fff;
 	float: left;
 	cursor: default;
 }

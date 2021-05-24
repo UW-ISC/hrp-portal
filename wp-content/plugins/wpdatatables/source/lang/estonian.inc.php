@@ -7,6 +7,7 @@
     "sInfoFiltered": " - filteeritud _MAX_ kirje seast.",
     "sInfoPostFix":  "K&otilde;ik kuvatud kirjed p&otilde;hinevad reaalsetel tulemustel.",
     "sSearch":       "Otsi k&otilde;ikide tulemuste seast:",
+    "sSearchPlaceholder": "Otsingu tabel",
     "oPaginate": {
         "sFirst":      "Algus",
         "sPrevious":   "Eelmine",
