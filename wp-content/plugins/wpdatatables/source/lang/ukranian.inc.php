@@ -7,6 +7,7 @@
     "sInfoFiltered": "(відфільтровано з _MAX_ записів)",
     "sInfoPostFix":  "",
     "sSearch":       "Пошук:",
+    "sSearchPlaceholder": "Arama tablosu",
     "sUrl":          "",
     "oPaginate": {
         "sFirst": "Перша",

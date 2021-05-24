@@ -97,14 +97,17 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
 
     protected function render() {
         $settings = $this->get_settings_for_display();
-        $params = 'wpdatatable id=' . $settings['wpdt-table-id'];
-        $params .= $settings['wpdt-view'] == 'regular' ? ' table_view=regular' : ' table_view=excel';
-        $params .= $settings['wpdt-var1'] != '' ? ' var1=' . $settings['wpdt-var1'] : '';
-        $params .= $settings['wpdt-var2'] != '' ? ' var2=' . $settings['wpdt-var2'] : '';
-        $params .= $settings['wpdt-var3'] != '' ? ' var3=' . $settings['wpdt-var3'] : '';
-        $params .= $settings['wpdt-file-name'] != '' ? ' export_file_name=' . $settings['wpdt-file-name'] : '';
+        $tableShortcodeParams = '[wpdatatable id=' . $settings['wpdt-table-id'];
+        $tableShortcodeParams .= $settings['wpdt-view'] == 'regular' ? ' table_view=regular' : ' table_view=excel';
+        $tableShortcodeParams .= $settings['wpdt-var1'] != '' ? ' var1=' . $settings['wpdt-var1'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var2'] != '' ? ' var2=' . $settings['wpdt-var2'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var3'] != '' ? ' var3=' . $settings['wpdt-var3'] : '';
+        $tableShortcodeParams .= $settings['wpdt-file-name'] != '' ? ' export_file_name=' . $settings['wpdt-file-name'] : '';
+        $tableShortcodeParams .= ']';
 
-        echo $settings['wpdt-table-id'] != '' ? '[' . $params. ']' : self::wdt_create_table_notice();
+        $tableShortcodeParams = apply_filters('wpdatatables_filter_elementor_table_shortcode', $tableShortcodeParams);
+
+        echo $settings['wpdt-table-id'] != '' ?  $tableShortcodeParams  : self::wdt_create_table_notice();
 
     }
 

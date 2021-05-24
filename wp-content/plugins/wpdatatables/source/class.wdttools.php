@@ -447,6 +447,7 @@ class WDTTools
             'copy' => __('Copy', 'wpdatatables'),
             'currentlySelected' => __('Currently selected', 'wpdatatables'),
             'databaseInsertError' => __('There was an error trying to insert a new row!', 'wpdatatables'),
+            'databaseDeleteError' => __('There was an error trying to delete a row!', 'wpdatatables'),
             'dataSaved' => __('Data has been saved!', 'wpdatatables'),
             'delete' => __('Delete', 'wpdatatables'),
             'deleteSelected' => __('Delete selected', 'wpdatatables'),
@@ -1566,7 +1567,7 @@ class WDTTools
     {
         if (null !== $dateFormat && $dateFormat == 'd/m/Y') {
             $returnDate = strtotime(str_replace('/', '-', $dateString));
-        } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y'])) {
+        } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y', 'm-d-y','d.m.y','Y.m.d','d-m-Y'])) {
             $returnDate = strtotime(str_replace(['.', '-'], '/', $dateString));
         } else {
             $returnDate = strtotime($dateString);
@@ -1868,6 +1869,74 @@ class WDTTools
                 break;
         }
 
+    }
+
+    /**
+     * Check if current user can update and delete own rows not others
+     *
+     * @param $tableData
+     * @param $mySqlTableName
+     * @param $columnsData
+     * @param $id
+     * @param $action
+     *
+     */
+    public static function checkCurrentUsersActionsPermissions($tableData, $mySqlTableName, $columnsData, $id, $action)
+    {
+        global $wpdb;
+        $idValCheck = 0;
+        $idColumnName = '';
+        $userIDColumnName = '';
+        foreach ($columnsData as $column) {
+            if ($column->id_column) {
+                $idColumnName = $column->orig_header;
+                $idValCheck = $action == 'delete' ? $id : (int)$id[$idColumnName];
+            } else {
+                // Defining the values for User ID columns and for "none" input types
+                if ($column->id == $tableData->userid_column_id) {
+                    $userIDColumnName = $column->orig_header;
+                }
+            }
+        }
+
+        if (!(Connection::isSeparate($tableData->connection))) {
+            if ($idValCheck != '0'){
+                $res = $wpdb->query($wpdb->prepare( "SELECT {$idColumnName} FROM {$mySqlTableName} WHERE {$idColumnName} = %d AND {$userIDColumnName} = %s", $idValCheck, get_current_user_id() ));
+                if ( !$res){
+                    if ($action == 'delete'){
+                        $returnResult['error'] = __('User do not have permissions to delete this row! ', 'wpdatatables');
+                    } else {
+                        $returnResult['error'] = __('User do not have permission to update data!', 'wpdatatables');
+                    }
+                    echo json_encode($returnResult);
+                    exit();
+                }
+            }
+        } else {
+            // If plugin is using a separate DB
+
+            $vendor = Connection::getVendor($tableData->connection);
+            $isMySql = $vendor === Connection::$MYSQL;
+            $isMSSql = $vendor === Connection::$MSSQL;
+            $isPostgreSql = $vendor === Connection::$POSTGRESQL;
+
+            $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
+            $rightSysIdentifier = Connection::getRightColumnQuote($vendor);
+
+            $sql = Connection::create($tableData->connection);
+            if ($idValCheck != '0') {
+                $query = "SELECT {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} FROM {$mySqlTableName} WHERE {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} = {$idValCheck} AND {$leftSysIdentifier}{$userIDColumnName}{$rightSysIdentifier} =" . get_current_user_id();
+                if (!$sql->getField($query)) {
+                    if ($action == 'delete'){
+                        $returnResult['error'] = __('User do not have permissions to delete this row! ', 'wpdatatables');
+                    } else {
+                        $returnResult['error'] = __('User do not have permission to update data!', 'wpdatatables');
+                    }
+                    echo json_encode($returnResult);
+                    exit();
+                }
+            }
+        }
     }
 }
 

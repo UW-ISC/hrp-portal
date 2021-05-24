@@ -7,6 +7,7 @@
     "sInfoFiltered": "(scagtha ó _MAX_ iontrálacha iomlán)",
     "sInfoPostFix":  "",
     "sSearch":       "Cuardaigh:",
+    "sSearchPlaceholder": "Tábla cuardaigh",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "An Chéad",

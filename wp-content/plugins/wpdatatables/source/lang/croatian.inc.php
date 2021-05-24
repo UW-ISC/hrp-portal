@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtrirano iz _MAX_ ukupnih rezultata)",
     "sInfoPostFix":  "",
     "sSearch":       "Filter",
+    "sSearchPlaceholder": "Tablica za pretraživanje",
     "sUrl": "",
     "oPaginate": {
         "sFirst":    "Prva",

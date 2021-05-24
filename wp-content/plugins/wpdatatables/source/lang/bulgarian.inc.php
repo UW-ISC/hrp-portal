@@ -7,6 +7,7 @@
     "sInfoFiltered": "(филтрирани от общо _MAX_ резултата)",
     "sInfoPostFix":  "",
     "sSearch":       "Търсене във всички колони:",
+    "sSearchPlaceholder": "Таблица за търсене",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "Първа",

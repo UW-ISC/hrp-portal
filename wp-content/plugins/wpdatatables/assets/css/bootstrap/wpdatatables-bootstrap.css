@@ -1915,18 +1915,21 @@
 @media (min-width: 768px) {
     .wpdt-c .container {
         width: 100%;
+        max-width: 100%;
     }
 }
 
 @media (min-width: 992px) {
     .wpdt-c .container {
         width: 100%;
+        max-width: 100%;
     }
 }
 
 @media (min-width: 1200px) {
     .wpdt-c .container {
         width: 100%;
+        max-width: 100%;
     }
 }
 
@@ -3123,7 +3126,7 @@
     color: #000000;
     background-color: transparent;
     background-image: none;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #c4c5c6;
     border-radius: 0;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -7054,6 +7057,9 @@ select.input-group-lg > .input-group-btn > .btn {
     text-align: left;
     background-color: #061938;
     border-radius: 3px;
+}
+.wpdt-c #wdt-tour-actions .tooltip-inner {
+    text-align: center;
 }
 
 .wpdt-c .tooltip-arrow {
@@ -11897,7 +11903,7 @@ input:focus {
 
 .wpdt-c .wpDataTableFilterSection .wdt_checkbox_option input[type=checkbox]{
     position: absolute;
-    top: 6px;
+    top: 9px;
 }
 
 .wpdt-c .wdt-datatables-admin-wrap .check-column input[type=checkbox]:checked::before,
@@ -13623,7 +13629,7 @@ input:focus {
 
 #wdt-frontend-modal .wdt_checkbox_option span.wdt-checkbox-label,
 #wdt-frontend-modal .wdt-search-filters-button-container .wdt_checkbox_option span.wdt-checkbox-label {
-    vertical-align: text-bottom;
+    vertical-align: top;
     margin-bottom: 2px;
 }
 

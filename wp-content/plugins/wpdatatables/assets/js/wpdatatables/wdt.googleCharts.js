@@ -133,81 +133,83 @@ var wpDataTablesGoogleChart = function(){
             this.renderCallback = callback;
         },
         render: function(){
-            this.googleDataTable = new google.visualization.DataTable();
-            for( var i in this.columns ){
-                this.googleDataTable.addColumn( this.columns[i] );
-            }
-            this.detectDates();
+            if( typeof google.visualization !== 'undefined' && typeof google.visualization.DataTable !== 'undefined') {
+                this.googleDataTable = new google.visualization.DataTable();
+                for (var i in this.columns) {
+                    this.googleDataTable.addColumn(this.columns[i]);
+                }
+                this.detectDates();
 
-            this.googleDataTable.addRows( this.rows );
-            switch( this.type ){
-                case 'google_column_chart':
-                    this.chart = new google.visualization.ColumnChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_histogram':
-                    this.chart = new google.visualization.Histogram( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_bar_chart':
-                    this.options.orientation = 'vertical';
-                    this.chart = new google.visualization.BarChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_stacked_bar_chart':
-                    this.options.orientation = 'vertical';
-                    this.options.isStacked = true;
-                    this.chart = new google.visualization.BarChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_area_chart':
-                    this.chart = new google.visualization.AreaChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_stepped_area_chart':
-                    this.options.isStacked = true;
-                    this.chart = new google.visualization.SteppedAreaChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_line_chart':
-                    this.chart = new google.visualization.LineChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_pie_chart':
-                    this.chart = new google.visualization.PieChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_bubble_chart':
-                    this.chart = new google.visualization.BubbleChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_donut_chart':
-                    this.options.pieHole = 0.4;
-                    this.chart = new google.visualization.PieChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_gauge_chart':
-                    this.options.redFrom = 90;
-                    this.options.redTo = 100;
-                    this.options.yellowFrom = 75;
-                    this.options.yellowTo = 90;
-                    this.options.minorTicks = 5;
-                    this.chart = new google.visualization.Gauge( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_scatter_chart':
-                    this.chart = new google.visualization.ScatterChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_candlestick_chart':
-                    this.options.legend = 'none';
-                    this.chart = new google.visualization.CandlestickChart( document.getElementById( this.containerId ) );
-                    break;
-                case 'google_waterfall_chart':
-                    this.options.legend = 'none';
-                    this.options.bar = { groupWidth: '100%' };
-                    this.options.candlestick = {
-                        fallingColor: { strokeWidth: 0, fill: '#a52714' }, // red
-                        risingColor: { strokeWidth: 0, fill: '#0f9d58' }   // green
-                    };
-                    this.chart = new google.visualization.CandlestickChart( document.getElementById( this.containerId ) );
-                    break;
+                this.googleDataTable.addRows(this.rows);
+                switch (this.type) {
+                    case 'google_column_chart':
+                        this.chart = new google.visualization.ColumnChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_histogram':
+                        this.chart = new google.visualization.Histogram(document.getElementById(this.containerId));
+                        break;
+                    case 'google_bar_chart':
+                        this.options.orientation = 'vertical';
+                        this.chart = new google.visualization.BarChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_stacked_bar_chart':
+                        this.options.orientation = 'vertical';
+                        this.options.isStacked = true;
+                        this.chart = new google.visualization.BarChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_area_chart':
+                        this.chart = new google.visualization.AreaChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_stepped_area_chart':
+                        this.options.isStacked = true;
+                        this.chart = new google.visualization.SteppedAreaChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_line_chart':
+                        this.chart = new google.visualization.LineChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_pie_chart':
+                        this.chart = new google.visualization.PieChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_bubble_chart':
+                        this.chart = new google.visualization.BubbleChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_donut_chart':
+                        this.options.pieHole = 0.4;
+                        this.chart = new google.visualization.PieChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_gauge_chart':
+                        this.options.redFrom = 90;
+                        this.options.redTo = 100;
+                        this.options.yellowFrom = 75;
+                        this.options.yellowTo = 90;
+                        this.options.minorTicks = 5;
+                        this.chart = new google.visualization.Gauge(document.getElementById(this.containerId));
+                        break;
+                    case 'google_scatter_chart':
+                        this.chart = new google.visualization.ScatterChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_candlestick_chart':
+                        this.options.legend = 'none';
+                        this.chart = new google.visualization.CandlestickChart(document.getElementById(this.containerId));
+                        break;
+                    case 'google_waterfall_chart':
+                        this.options.legend = 'none';
+                        this.options.bar = {groupWidth: '100%'};
+                        this.options.candlestick = {
+                            fallingColor: {strokeWidth: 0, fill: '#a52714'}, // red
+                            risingColor: {strokeWidth: 0, fill: '#0f9d58'}   // green
+                        };
+                        this.chart = new google.visualization.CandlestickChart(document.getElementById(this.containerId));
+                        break;
+                }
+                if (this.renderCallback !== null) {
+                    this.renderCallback(this);
+                }
+                this.chart.draw(this.googleDataTable, this.options);
             }
-            if( this.renderCallback !== null ){
-                this.renderCallback( this );
-            }
-            this.chart.draw( this.googleDataTable, this.options );
         },
         refresh: function(){
-            if( typeof google.visualization.DataTable !== 'undefined'  && this.chart != null  ){
+            if( typeof google.visualization !== 'undefined' && typeof google.visualization.DataTable !== 'undefined'  && this.chart != null  ){
                 this.googleDataTable = new google.visualization.DataTable();
                 for( var i in this.columns ){
                     this.googleDataTable.addColumn( this.columns[i] );

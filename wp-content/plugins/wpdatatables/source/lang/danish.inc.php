@@ -7,6 +7,7 @@
     "sInfoFiltered": "(filtreret fra _MAX_ linjer)",
     "sInfoPostFix":  "",
     "sSearch":       "S&oslash;g:",
+    "sSearchPlaceholder": "Søg i tabellen",
     "sUrl":          "",
     "oPaginate": {
         "sFirst":    "F&oslash;rste",

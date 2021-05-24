@@ -256,6 +256,13 @@
         });
 
         /**
+         * Set buttons displayed on front-end
+         */
+        $('#wdt-edit-buttons-displayed').change(function (e) {
+           wpdatatable_config.setEditButtonsDisplayed($(this).val());
+        });
+
+        /**
          * Toggle edit only own rows
          */
         $('#wdt-edit-only-own-rows').change(function (e) {
@@ -378,6 +385,85 @@
         $('#wdt-time-placeholder').change(function (e) {
             wpdatatable_config.setPlaceholderCurrentTime($(this).val());
         });
+
+        /**
+         * Change language on select change for table - "Interface language"
+         */
+        $('#wdt-table-interface-language').change(function (e) {
+            wpdatatable_config.setLanguage($(this).val());
+        });
+
+        /**
+         * Change table skin
+         */
+        $('#wdt-table-base-skin').change(function (e) {
+            wpdatatable_config.setTableSkin($(this).val());
+        });
+
+        /**
+         * Change table font
+         */
+        $('#wdt-table-font').change(function (e) {
+            wpdatatable_config.setTableFontColorSettings($(this).data('name'), $(this).val());
+        });
+
+        /**
+         * Change table font size
+         */
+        $('#wdt-table-font-size').change(function (e) {
+            wpdatatable_config.setTableFontColorSettings($(this).data('name'), $(this).val());
+
+        });
+
+        /**
+         * Change table font color
+         */
+        $('.wdt-color-picker').change(function (e) {
+            wpdatatable_config.setTableFontColorSettings($(this).find('.cp-value').data('name'), $(this).find('input').val());
+        });
+
+        /**
+         * Change table inner border size
+         */
+        $('#wdt-table-inner-border-size').change(function (e) {
+            wpdatatable_config.setTableFontColorSettings($(this).data('name'), $(this).val());
+
+        });
+
+        /**
+         * Change table outer border size
+         */
+        $('#wdt-table-outer-border-size').change(function (e) {
+            wpdatatable_config.setTableFontColorSettings($(this).data('name'), $(this).val());
+
+        });
+
+        /**
+         * Remove borders from table
+         */
+        $('#wdt-table-remove-borders').change(function (e) {
+            wpdatatable_config.setTableBorderRemoval($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Remove borders from header
+         */
+        $('#wdt-table-remove-borders-header').change(function (e) {
+            wpdatatable_config.setTableBorderRemovalHeader($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Set Custom CSS - "Custom wpDataTables CSS"
+         */
+        $('#wdt-table-custom-css').change(function (e) {
+            if (aceEditorTableCSS.getValue().length > 0) {
+                wpdatatable_config.setTableCustomCss(aceEditorTableCSS.getValue());
+            } else {
+                wpdatatable_config.setTableCustomCss('');
+            }
+
+        });
+
         /**
          * Remove decimal place if value is negative or 0 for int
          * and if value is negative for formula
@@ -390,34 +476,46 @@
         });
 
         /**
-         * Apply syntax highlighter
+         * Apply syntax highlighter for SQL
          */
-        if ($('#wdt-mysql-query').length) {
+        createAceEditor('wdt-mysql-query');
 
-            var applyQuery = function (e) {
-                if (aceEditor.getValue().length > 5) {
-                    wpdatatable_config.setContent(aceEditor.getValue());
+        /**
+         * Apply syntax highlighter for custom table CSS
+         */
+        createAceEditor('wdt-table-custom-css');
+
+        /**
+         * Show "Reset options" when "Customize settings" tab is active
+         */
+        $('.wdt-main-menu a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            var target = $(e.target).attr("href");
+            if (target == '#customize-table-settings') {
+                $('.wdt-reset-customize-options').show();
+            } else {
+                $('.wdt-reset-customize-options').hide();
+            }
+        });
+
+        /**
+         * Reset customize options
+         */
+        $('.wdt-reset-customize-options').click(function (e) {
+            e.preventDefault();
+            $('#customize-table-settings input.cp-value').val('').change();
+            $('#customize-table-settings .wpcolorpicker-icon i').css('background','#fff');
+            wpdatatable_config.tableFontColorSettings = _.mapObject(
+                wpdatatable_config.tableFontColorSettings,
+                function (color) {
+                    return '';
                 }
-            };
-
-            aceEditor = ace.edit('wdt-mysql-query');
-            aceEditor.$blockScrolling = Infinity;
-            aceEditor.getSession().setMode("ace/mode/sql");
-            aceEditor.setTheme("ace/theme/idle_fingers");
-
-            // Apply query changes when user types in the Ace Editor,
-            // but not more often than once in 3 seconds
-            aceEditor.on(
-                'change',
-                _.throttle(
-                    applyQuery,
-                    3000
-                )
             );
-
-            // On blur apply immediately
-            aceEditor.on('blur', applyQuery);
-        }
+            wpdatatable_config.setTableCustomCss('');
+            wpdatatable_config.setLanguage('');
+            wpdatatable_config.setTableSkin('');
+            $('#wdt-table-remove-borders').prop( 'checked', false ).change();
+            $('#wdt-table-remove-borders-header').prop( 'checked', false ).change();
+        });
 
         /**
          * Close column settings
@@ -606,6 +704,7 @@
                 $('div.wdt-float-column-block').show();
                 $('div.wdt-date-input-format-block').hide();
                 $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
@@ -623,6 +722,7 @@
                     $('div.wdt-skip-thousands-separator-block').show();
                 }
                 $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
@@ -633,6 +733,7 @@
                 $('div.wdt-formula-column-block').hide();
                 $('div.wdt-date-input-format-block').hide();
                 $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
@@ -644,6 +745,7 @@
                 $('div.wdt-numeric-column-block').hide();
                 $('div.wdt-formula-column-block').hide();
                 $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
@@ -654,6 +756,7 @@
                 $('div.wdt-formula-column-block').hide();
                 $('div.wdt-date-input-format-block').hide();
                 $('div.wdt-link-target-attribute-block').show();
+                $('div.wdt-link-nofollow-attribute-block').show();
                 if ($('#wdt-link-button-attribute').is(':checked')) {
                     $('div.wdt-link-button-label-block').show();
                     $('div.wdt-link-button-class-block').show();
@@ -666,6 +769,7 @@
                 $('div.wdt-formula-column-block').hide();
                 $('div.wdt-date-input-format-block').hide();
                 $('div.wdt-link-target-attribute-block').hide();
+                $('div.wdt-link-nofollow-attribute-block').hide();
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
@@ -1017,6 +1121,18 @@
         });
 
         /**
+         * Show/hide all filtering settings and enable/disable filtering on 'global search'  toggle
+         */
+        $('#wdt-column-enable-global-search').change(function (e) {
+            let columnEnableFilter = $('#wdt-column-enable-filter');
+            if (!$(this).is(':checked')) {
+                columnEnableFilter.prop('checked', 0).change().attr('disabled', true);
+            } else {
+                columnEnableFilter.attr('disabled', false).prop('checked', 1).change();
+            }
+        });
+
+        /**
          * Show/hide button label in Url link column
          */
         $('#wdt-link-button-attribute').change(function (e) {
@@ -1048,9 +1164,6 @@
 
             if (wpdatatable_config.table_type == 'gravity' ||
                 wpdatatable_config.table_type == 'formidable' ) return;
-
-            if (wpdatatable_config.table_type == 'gravity' ||
-                wpdatatable_config.table_type == 'formidable') return;
 
             // Validation for valid URL link of Google spreadsheet
             if (wpdatatable_config.table_type == 'google_spreadsheet' && wpdatatable_config.content.indexOf("2PACX") != -1) {
@@ -1142,6 +1255,13 @@
                     $('.wdt-preload-layer').animateFadeOut();
                 }
             });
+        });
+
+        /**
+         * Switch tabs in table and column settings
+         */
+        $('.wdt-datatables-admin-wrap .wdt-table-settings .tab-nav a, .wdt-datatables-admin-wrap .column-settings-panel .tab-nav a').click(function (e) {
+            $(this).tab('show');
         });
 
         /**

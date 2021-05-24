@@ -18,8 +18,7 @@
             </h4>
             <div class="form-group">
                 <div class="fg-line">
-                    <textarea class="form-control" name="wdt-custom-js" id="wdt-custom-js" rows="10"
-                              placeholder="Enter custom JS code here..."></textarea>
+                    <pre name="wdt-custom-js" id="wdt-custom-js"  style="width: 100%; height: 250px"></pre>
                 </div>
             </div>
         </div>
@@ -33,8 +32,7 @@
             </h4>
             <div class="form-group">
                 <div class="fg-line">
-                    <textarea class="form-control" name="wdt-custom-css" id="wdt-custom-css" rows="10"
-                              placeholder="Enter custom CSS code here..."></textarea>
+                    <pre name="wdt-custom-css" id="wdt-custom-css"  style="width: 100%; height: 250px"></pre>
                 </div>
             </div>
         </div>
