@@ -31,7 +31,7 @@ var jQuery,
 					taxonomyParts.shift(); // taxonomy-
 					taxonomy = taxonomyParts.join('-');
 	
-					jQuery.extend( jQuery.expr[":"], {
+					jQuery.extend( jQuery.expr.pseudos || jQuery.expr[":"], {
 						"matchTerms": function( elem, i, match, array ) {
 							return ( elem.textContent || elem.innerText || "" ).toLowerCase().indexOf( ( match[3] || "" ).toLowerCase() ) >= 0;
 						}
@@ -42,7 +42,7 @@ var jQuery,
 
 					jQuery( rowId + ' #search-' + taxonomy ).off();
 
-					jQuery( rowId + ' #search-' + taxonomy ).keydown( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keydown', function( event ){
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
@@ -55,7 +55,7 @@ var jQuery,
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).keypress( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keypress', function( event ){
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
@@ -68,7 +68,7 @@ var jQuery,
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).keyup( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keyup', function( event ){
 						var searchValue, termList, matchingTerms;
 	
 						if( 13 === event.keyCode ) {
@@ -93,7 +93,7 @@ var jQuery,
 	
 					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).off();
 
-					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).click( function() {
+					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).on( 'click', function() {
 						jQuery( rowId + ' #' + taxonomy + '-adder ').addClass( 'wp-hidden-children' );
 						jQuery( rowId + ' #' + taxonomy + '-searcher' ).toggleClass( 'wp-hidden-children' );
 						jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();

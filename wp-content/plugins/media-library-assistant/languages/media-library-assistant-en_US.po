@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2021-03-14 20:58-0700\n"
-"PO-Revision-Date: 2021-03-14 20:58-0700\n"
+"POT-Creation-Date: 2021-07-22 11:54-0700\n"
+"PO-Revision-Date: 2021-07-22 11:54-0700\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -992,6 +992,14 @@ msgid ""
 "the existing MLA_DEBUG_LEVEL value."
 msgstr ""
 
+msgid "Add Tax. Columns"
+msgstr ""
+
+msgid ""
+"Check this option to add Term ID and Term-Taxonomy ID columns to the "
+"taxonomy edit admin submenu tables."
+msgstr ""
+
 #, php-format
 msgctxt "error_log"
 msgid "%1$s: mla_load_template file \"%2$s\" not found."
@@ -1284,6 +1292,18 @@ msgstr ""
 
 msgctxt "error_log"
 msgid "mla_parse_xml_string set option failed."
+msgstr ""
+
+msgid "Auto"
+msgstr ""
+
+msgid "Manual"
+msgstr ""
+
+msgid "Bracket"
+msgstr ""
+
+msgid "Other"
 msgstr ""
 
 msgid "Yes"
@@ -2120,6 +2140,12 @@ msgid "New Att. Tag Name"
 msgstr ""
 
 msgid "Attachments"
+msgstr ""
+
+msgid "Term ID"
+msgstr ""
+
+msgid "Term-Tax ID"
 msgstr ""
 
 #, php-format
@@ -3497,6 +3523,31 @@ msgstr ""
 msgid "Delete General options and restore default settings"
 msgstr ""
 
+msgid "Donations to Support MLA"
+msgstr ""
+
+msgid "Donate to our fund"
+msgstr ""
+
+msgid "Donate"
+msgstr ""
+
+#, php-format
+msgid ""
+"<strong>I do not solicit nor accept personal donations in support of the "
+"plugin.</strong> WordPress and its global community means a lot to me and I "
+"am happy to give something back.\n"
+"<br />&nbsp;<br />\n"
+"If you find the Media Library Assistant plugin useful and would like to "
+"support a great cause, consider a %1$s to our Chateau Seaview Fund at the "
+"Golden West Chapter of the ALS Association. Every dollar of the fund goes to "
+"make the lives of people with ALS, their families and caregivers easier. "
+"Thank you!"
+msgstr ""
+
+msgid "tax-deductible donation"
+msgstr ""
+
 msgid "enhanced version of the WordPress [gallery] shortcode."
 msgstr ""
 
@@ -3622,7 +3673,7 @@ msgid "%1$s: Writing the settings file ( %2$s ) \"%3$s\"."
 msgstr ""
 
 #, php-format
-msgid "Settings exported; %1$s settings recorded."
+msgid "Settings exported; %1$s settings recorded in %2$s."
 msgstr ""
 
 msgid "No settings imported."
@@ -3690,6 +3741,15 @@ msgstr ""
 msgid "mla_debug empty cloud"
 msgstr ""
 
+msgid "mla_debug adding ANY terms"
+msgstr ""
+
+msgid "mla_debug adding NO terms"
+msgstr ""
+
+msgid "mla_debug adding IGNORE terms"
+msgstr ""
+
 msgid "mla_debug empty list"
 msgstr ""
 
@@ -3709,6 +3769,9 @@ msgid "mla_debug query_vars"
 msgstr ""
 
 msgid "mla_debug post_count"
+msgstr ""
+
+msgid "mla_debug found_posts"
 msgstr ""
 
 msgid "mla_debug JOIN filter"
@@ -3733,6 +3796,9 @@ msgid "mla_debug posts_clauses filter"
 msgstr ""
 
 msgid "mla_debug posts_clauses_request filter"
+msgstr ""
+
+msgid "mla_debug results"
 msgstr ""
 
 msgid "Invalid taxonomy"

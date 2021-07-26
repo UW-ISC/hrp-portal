@@ -153,6 +153,11 @@ class MLAObjects {
 			}
 
 			$columns[ 'attachments' ] = __( 'Attachments', 'media-library-assistant' );
+
+			if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_ADD_TAXONOMY_COLUMNS ) ) {
+				$columns[ 'termid' ] = __( 'Term ID', 'media-library-assistant' );
+				$columns[ 'ttid' ] = __( 'Term-Tax ID', 'media-library-assistant' );
+			}
 		}
 
 		return $columns;
@@ -189,6 +194,23 @@ class MLAObjects {
 		if ( ! empty( $filter_content ) ) {
 			return $filter_content;
 		}
+
+			$term = get_term( $term_id, $taxonomy );
+
+		if ( 'termid' === $column_name ) {
+			return (string) $term_id;
+		}
+		
+		if ( 'ttid' === $column_name ) {
+			if ( isset( $terms[ $term_id ] ) ) {
+				$term = $terms[ $term_id ];
+			} else {
+				$term = get_term( $term_id, $taxonomy );
+			}
+			
+			return (string) $term->term_taxonomy_id;
+		}
+		
 
 		if ( 'attachments' !== $column_name ) {
 			return $current_value;

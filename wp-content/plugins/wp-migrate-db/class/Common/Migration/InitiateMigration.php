@@ -245,6 +245,11 @@ class InitiateMigration
                 $return['dump_filename'] = $dump_filename;
                 $return['dump_url']      = $dump_url;
             }
+        } else {
+            // Remote DB version only matters for pushes, otherwise, we just use local db version.
+            if (isset($decoded_response['data'], $decoded_response['data']['db_version'])) {
+                $return['db_version'] = $decoded_response['data']['db_version'];
+            }
         }
 
         return $return;

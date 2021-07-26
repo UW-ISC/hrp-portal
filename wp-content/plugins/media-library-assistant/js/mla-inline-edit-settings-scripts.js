@@ -12,27 +12,27 @@ mlaInlineEditSettings = {
 		t.what = '#' + mla_inline_edit_settings_vars.tab + '-';
 
 		// prepare the edit rows
-		qeRow.keyup(function(e){
+		qeRow.on( 'keyup', function(e){
 			if (e.which == 27)
 				return mlaInlineEditSettings.revert();
 		});
-		bulkRow.keyup(function(e){
+		bulkRow.on( 'keyup', function(e){
 			if (e.which == 27)
 				return mlaInlineEditSettings.revert();
 		});
 
-		$('a.cancel', qeRow).click(function(){
+		$('a.cancel', qeRow).on( 'click', function(){
 			return mlaInlineEditSettings.revert();
 		});
-		$('a.save', qeRow).click(function(){
+		$('a.save', qeRow).on( 'click', function(){
 			return mlaInlineEditSettings.save(this);
 		});
-		$('td', qeRow).keydown(function(e){
+		$('td', qeRow).on( 'keydown', function(e){
 			if ( e.which == 13 )
 				return mlaInlineEditSettings.save(this);
 		});
 
-		$('a.cancel', bulkRow).click(function(){
+		$('a.cancel', bulkRow).on( 'click', function(){
 			return mlaInlineEditSettings.revert();
 		});
 
@@ -42,7 +42,7 @@ mlaInlineEditSettings = {
 			return false;
 		});
 
-		$('#doaction, #doaction2').click(function(e){
+		$('#doaction, #doaction2').on( 'click', function(e){
 			var n = $(this).attr('id').substr(2);
 
 			if ( $('select[name="'+n+'"]').val() == 'edit' ) {
@@ -85,7 +85,7 @@ mlaInlineEditSettings = {
 			return this.revert();
 
 		$('#bulk-titles').html(te);
-		$('#bulk-titles a').click(function(){
+		$('#bulk-titles a').on( 'click', function(){
 			var id = $(this).attr('id').substr(1);
 
 			$('table.widefat input[value="' + id + '"]').prop('checked', false);
@@ -196,7 +196,7 @@ mlaInlineEditSettings = {
 						$(mlaInlineEditSettings.what+id).hide().fadeIn();
 
 						// add event handler to the Execute rollover link
-						$(mlaInlineEditSettings.what+id + ' a.execute' ).click(function( e ){
+						$(mlaInlineEditSettings.what+id + ' a.execute' ).on( 'click', function( e ){
 							e.preventDefault();
 							return mla.inlineMapAttachment.bulkMap( e.target.id, 0 );
 						});

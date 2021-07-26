@@ -364,6 +364,10 @@ div.mla_errors {
  * MLA Settings page
  */
 
+#donate-button-div {
+	margin-top: 5px;
+}
+
 #wpbody-content .optiontable th {
 	padding-right: 10px;
 }

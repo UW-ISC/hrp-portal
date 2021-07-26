@@ -833,7 +833,7 @@ class MLAQuery {
 	 * @return	array	revised arguments suitable for WP_Query
 	 */
 	private static function _prepare_list_table_query( $raw_request, $offset = 0, $count = 0 ) {
-//error_log( __LINE__ . " _prepare_list_table_query( $offset, $count ) raw_request = " . var_export( $raw_request, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query( $offset, $count ) raw_request = " . var_export( $raw_request, true ), 0 );
 		/*
 		 * Go through the $raw_request, take only the arguments that are used in the query and
 		 * sanitize or validate them.
@@ -950,9 +950,10 @@ class MLAQuery {
 				case 'post_parent':
 					$clean_request[ 'post_parent' ] = absint( $value );
 					break;
-				// ['m'] - filter by year and month of post, e.g., 201204
-				case 'author':
-				case 'm':
+				case 'author': // userid of item owner
+				case 'm': // year and month of post, e.g., 201204
+				case 'year': // 4 digit year, e.g., 2021
+				case 'monthnum': // Month number (from 1 to 12)
 					$clean_request[ $key ] = absint( $value );
 					break;
 				// ['mla_filter_term'] - filter by taxonomy term ID (-1 allowed), or by custom field
@@ -1052,6 +1053,7 @@ class MLAQuery {
 				case 'mla-metavalue':
 					$clean_request[ $key ] = stripslashes( html_entity_decode( $value ) );
 					break;
+				case 'tax_query':
 				case 'meta_query':
 					if ( ! empty( $value ) ) {
 						if ( is_array( $value ) ) {
@@ -1204,6 +1206,9 @@ class MLAQuery {
 			$clean_request['posts_per_page'] = $count;
 		}
 
+		// Prepare to combine MLA's tax_query with any existing query
+		$mla_tax_query = NULL;
+		
 		/*
 		 * ['mla_filter_term'] - filter by taxonomy
 		 *
@@ -1218,7 +1223,7 @@ class MLAQuery {
 						'fields' => 'ids',
 						'hide_empty' => false
 					) );
-					$clean_request['tax_query'] = array(
+					$mla_tax_query = array(
 						array(
 							'taxonomy' => $tax_filter,
 							'field' => 'id',
@@ -1227,7 +1232,7 @@ class MLAQuery {
 						) 
 					);
 				} else { // mla_filter_term == -1
-					$clean_request['tax_query'] = array(
+					$mla_tax_query = array(
 						array(
 							'taxonomy' => $tax_filter,
 							'field' => 'id',
@@ -1243,8 +1248,9 @@ class MLAQuery {
 			unset( $clean_request['mla_filter_term'] );
 		} // isset mla_filter_term
 
+		// Filter by a term clicked in a submenu table taxonomy column
 		if ( isset( $clean_request['mla-tax'] ) && isset( $clean_request['mla-term'] )) {
-			$clean_request['tax_query'] = array(
+			$mla_tax_query = array(
 				array(
 					'taxonomy' => $clean_request['mla-tax'],
 					'field' => 'slug',
@@ -1256,6 +1262,25 @@ class MLAQuery {
 			unset( $clean_request['mla-tax'] );
 			unset( $clean_request['mla-term'] );
 		} // isset mla_tax
+
+		// Add our tax_query to the clean request
+		if ( !empty( $mla_tax_query ) ) {
+			if ( !empty( $clean_request['tax_query'] ) ) {
+				foreach( $clean_request['tax_query'] as $key => $value ) {
+					if ( is_integer( $key ) ) {
+					    $mla_tax_query[] = $value;
+					} else {
+					    $mla_tax_query[ $key ] = $value;
+					}
+				}
+
+				if ( empty( $mla_tax_query['relation'] ) ) {
+				    $mla_tax_query['relation'] = 'AND';
+				}
+			} // existing query
+			
+			$clean_request['tax_query'] = $mla_tax_query;
+		} // mla_tax_query
 
 		if ( isset( $clean_request['mla-metakey'] ) && isset( $clean_request['mla-metavalue'] ) ) {
 			$clean_request['meta_key'] = $clean_request['mla-metakey'];
@@ -1366,6 +1391,7 @@ class MLAQuery {
 			add_filter( 'posts_clauses_request', 'MLAQuery::mla_query_posts_clauses_request_filter', 0x7FFFFFFF, 1 );
 		} // debug
 
+//error_log( __LINE__ . ' MLAQuery::_execute_list_table_query() request = ' . var_export( $request, true ), 0 );
 		$results = new WP_Query( $request );
 
 		if ( isset( self::$query_parameters['debug'] ) ) {

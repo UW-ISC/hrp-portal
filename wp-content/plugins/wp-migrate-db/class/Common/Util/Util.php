@@ -433,6 +433,22 @@ class Util
     }
 
     /**
+     * Get the URL to MDB rest api base.
+     *
+     * WPML sometimes adds the language code in a subdirectory, this is to ensure
+     * compatibility with this plugin.
+     *
+     * @return string URL to rest_api_base, e.g. http://example.com/wp-json/mdb-api/vi
+     */
+    public function rest_url() 
+    {
+        if (is_plugin_active( 'sitepress-multilingual-cms/sitepress.php') || defined('ICL_SITEPRESS_VERSION')) {
+            return get_option('home') . '/' . rest_get_url_prefix() . '/' . $this->props->rest_api_base;
+        }
+        return get_rest_url(null, $this->props->rest_api_base);
+    }
+
+    /**
      * Get the URL to wp-admin/admin-ajax.php for the intended WordPress site.
      *
      * The intended WordPress site URL is sent via Ajax, so to get a properly
@@ -815,12 +831,17 @@ class Util
         return $headers;
     }
 
-    static function is_json($string, $strict = false)
+    public static function is_json($string, $strict = false)
     {
-        $json = json_decode($string, true);
-        if ($strict == true && !is_array($json)) {
+        if (!is_string($string)) {
             return false;
         }
+
+        $json = json_decode($string, true);
+        if ($strict === true && !is_array($json)) {
+            return false;
+        }
+
         if ($json === null) {
             return false;
         }
@@ -1195,4 +1216,3 @@ class Util
         ), network_admin_url($page));
     }
 }
-

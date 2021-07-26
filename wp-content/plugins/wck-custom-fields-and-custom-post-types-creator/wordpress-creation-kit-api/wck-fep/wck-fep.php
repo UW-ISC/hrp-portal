@@ -104,7 +104,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		wp_register_script( 'wck-js', plugins_url( '', dirname(__FILE__) ).'/wordpress-creation-kit.js', array('jquery', 'jquery-ui-datepicker'), '1.0', true );
 
 		// wysiwyg
-		wp_register_script( 'wck-ckeditor', plugins_url( '', dirname(__FILE__) ).'/assets/js/ckeditor/ckeditor.js', array(), '1.0', true );
+		wp_register_script( 'wck-ckeditor', plugins_url( '', dirname(__FILE__) ).'/assets/js/ckeditor/ckeditor.js', array(), '4.16.1', true );
 
 		/* media upload wck script */
 		wp_register_script('wck-upload-field', plugins_url('/../fields/upload.js', __FILE__), array('jquery') );
@@ -174,7 +174,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 
 		/* the login form can't get the $_GET['loginerror'] from the url because it is loaded with ajax and we need to send it through post */
 		if( isset( $_GET['loginerror'] ) )
-			$loginerror = ', loginerror:\''. $_GET['loginerror'].'\'' ;
+			$loginerror = ', loginerror:\''. esc_js( $_GET['loginerror'] ).'\'' ;
 		else
 			$loginerror = '';
 
@@ -185,7 +185,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		wp_enqueue_media();
 
 		$output = "<div class='". $form_name ." fep-container";
-		if( isset( $_GET['action'] ) && $_GET['action'] == 'edit' )
+		if( isset( $_GET['action'] ) && $_GET['action'] === 'edit' )
 			$output .=  " fep-edit";
 		$output .= "'><div id='fep-ajax-loading'></div></div>";
 
@@ -202,7 +202,7 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 
         /* edit nonce */
         if( !empty( $_GET['_wpnonce'] ) ){
-            $edit_nonce = $_GET['_wpnonce'];
+            $edit_nonce = esc_js($_GET['_wpnonce']);
         }
         else
             $edit_nonce = '';
@@ -522,10 +522,10 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		$meta = sanitize_text_field( $_POST['meta'] );
 		$post_ID = absint( $_POST['postid'] );
 		if( !empty( $_POST['values'] ) )
-			$values = $_POST['values'];
+			$values = self::wck_sanitize_request( $_POST['values'] );
 		else
 			$values = array();
-		$single_cfcs = (!empty( $_POST['single_cfcs'] )) ? $_POST['single_cfcs'] : array() ;
+		$single_cfcs = (!empty( $_POST['single_cfcs'] )) ?  self::wck_sanitize_request( $_POST['single_cfcs'] ) : array() ;
 		$action_type = sanitize_text_field( $_POST['action_type'] );
 
 		/* check required fields */
@@ -642,8 +642,14 @@ class WCK_FrontEnd_Posting extends Wordpress_Creation_Kit{
 		/* post author */
 		if( $this->args['anonymous_posting'] == 'yes' )
 			$wck_fep_new_post['post_author'] = $this->args['assign_to_user'];
-		else
-			$wck_fep_new_post['post_author'] = get_current_user_id();
+		else {
+			if( !empty( $action_type ) && $action_type === 'edit' ) {
+				$post_obj = get_post( $post_ID );
+				$wck_fep_new_post['post_author'] = $post_obj->post_author;
+			}
+			else
+				$wck_fep_new_post['post_author'] = get_current_user_id();
+		}
 
 
 		if( !empty( $values['featured-image'] ) ){
@@ -956,9 +962,8 @@ function wck_fep_output_lilo_form(){
 
 		$lilo_form .= '<div id="wck-fep-login-messages">';
 		if ( isset( $_GET['loginerror'] ) || isset( $_POST['loginerror'] ) ){
-			$loginerror = isset( $_GET['loginerror'] ) ? $_GET['loginerror'] : $_POST['loginerror'];
 			$lilo_form .= '<span class="wck-fep-error">';
-			$lilo_form .= wp_kses_post( urldecode( base64_decode( $loginerror ) ) );
+			$lilo_form .= wp_kses_post( urldecode( base64_decode( isset( $_GET['loginerror'] ) ? $_GET['loginerror'] : $_POST['loginerror'] ) ) );
 			$lilo_form .= '</span>';
 		}
 
@@ -1173,7 +1178,7 @@ function wck_fep_redirect_to_front_end() {
 
 /* Set up upload field for frontend */
 /* overwrite the two functions for when an upload is made from the frontend so they don't check for a logged in user */
-if( strpos( wp_get_referer(), 'wp-admin' ) === false && isset( $_REQUEST['action'] ) && 'upload-attachment' == $_REQUEST['action'] ){
+if( strpos( wp_get_referer(), 'wp-admin' ) === false && isset( $_REQUEST['action'] ) && 'upload-attachment' === $_REQUEST['action'] ){
 		if( !function_exists( 'check_ajax_referer' ) ){
 			function check_ajax_referer( ) {
 				return true;
@@ -1190,7 +1195,7 @@ if( strpos( wp_get_referer(), 'wp-admin' ) === false && isset( $_REQUEST['action
 /* create a fake user with the "upload_posts" capability and assign him to the global $current_user. this is used to bypass the checks for current_user_can('upload_files') in async-upload.php */
 add_action( 'after_setup_theme', 'wck_create_fake_user_when_uploading_and_not_logged_in' );
 function wck_create_fake_user_when_uploading_and_not_logged_in(){
-	if( strpos( wp_get_referer(), 'wp-admin' ) === false && isset( $_REQUEST['action'] ) && 'upload-attachment' == $_REQUEST['action'] ){
+	if( strpos( wp_get_referer(), 'wp-admin' ) === false && isset( $_REQUEST['action'] ) && 'upload-attachment' === $_REQUEST['action'] ){
         if( !is_user_logged_in() || !current_user_can('upload_files') || !current_user_can( 'edit_posts' ) ){
             global $current_user;
 			$current_user = new WP_User( 0, 'frontend_uploader' );

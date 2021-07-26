@@ -240,7 +240,7 @@ function wck_cptc_create_cpts(){
 /* Flush rewrite rules */
 add_action('init', 'cptc_flush_rules', 20);
 function cptc_flush_rules(){
-    if( isset( $_GET['page'] ) && $_GET['page'] == 'cptc-page' && isset( $_GET['updated'] ) && $_GET['updated'] == 'true' )
+    if( isset( $_GET['page'] ) && $_GET['page'] === 'cptc-page' && isset( $_GET['updated'] ) && $_GET['updated'] === 'true' )
         flush_rewrite_rules( false  );
 }
 

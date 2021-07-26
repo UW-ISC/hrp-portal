@@ -868,21 +868,21 @@ function wck_cfc_make_options_required( $meta_array, $meta, $values, $id ) {
 				}
 			}
 		}
-	}
 
-	foreach( $meta_array as $key => $field ) {
-		if( isset( $field['type'] ) && $field['type'] == 'phone' ) {
-			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
-			$meta_array[$key]['required'] = true;
-			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_phone_field_error', 10, 6 );
-		}
+        foreach( $meta_array as $key => $field ) {
+            if( isset( $field['type'] ) && $field['type'] == 'phone' ) {
+                $meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
+                $meta_array[$key]['required'] = true;
+                add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_phone_field_error', 10, 6 );
+            }
 
-		if( isset( $field['type'] ) && $field['type'] == 'number' ) {
-			$meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
-			$meta_array[$key]['required'] = true;
-			add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_number_field_error', 10, 6 );
-		}
-	}
+            if( isset( $field['type'] ) && $field['type'] == 'number' ) {
+                $meta_array[$key]['required'] ? $meta_array[$key]['was_required'] = true : $meta_array[$key]['was_required'] = false;
+                $meta_array[$key]['required'] = true;
+                add_filter( "wck_required_test_{$meta}_" . Wordpress_Creation_Kit::wck_generate_slug( $field['title'], $field ), 'wck_number_field_error', 10, 6 );
+            }
+        }
+    }
 
 	return $meta_array;
 }
@@ -1079,7 +1079,7 @@ add_action( 'admin_init', 'wck_cfc_process_unserialized_batch' );
  */
 function wck_cfc_process_unserialized_batch() {
 
-	if( empty( $_REQUEST['action'] ) || 'wck_unbatch_process' != $_REQUEST['action'] ) {
+	if( empty( $_REQUEST['action'] ) || 'wck_unbatch_process' !== $_REQUEST['action'] ) {
 		return;
 	}
 

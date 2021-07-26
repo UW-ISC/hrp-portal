@@ -169,16 +169,17 @@ class MLAShortcodes {
 	 *
 	 * @param int Post ID of the parent
 	 * @param array Attributes of the shortcode
-	 * @param boolean true to calculate and return ['found_posts'] as an array element
+	 * @param boolean Optional; true to calculate and return ['found_posts'] as an array element
+	 * @param boolean Optional; true activate debug logging, false to suppress it.
 	 *
 	 * @return array List of attachments returned from WP_Query
 	 */
-	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL ) {
+	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL, $overide_debug = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
 			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
 		}
 
-		return MLAShortcode_Support::mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows );
+		return MLAShortcode_Support::mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows, $overide_debug );
 	}
 
 	/**
