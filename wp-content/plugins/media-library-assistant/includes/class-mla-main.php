@@ -1993,7 +1993,8 @@ class MLA {
 				$_REQUEST['post_date_gmt'] = get_gmt_from_date( $new_date );
 			}
 
-			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $tax_output );
+//			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $tax_output );
+			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $_REQUEST['tax_input'] );
 			MLACore::mla_debug_add( __LINE__ . " MLA::mla_inline_edit_ajax_action( {$post_id} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		}
 

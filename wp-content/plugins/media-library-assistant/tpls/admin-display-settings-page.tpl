@@ -3,7 +3,9 @@
 &nbsp;
 <div class="wrap">
 <div id="icon-options-general" class="icon32"><br/></div>
-<h1>[+Media Library Assistant+] [+version+][+development+] [+Settings+]</h1>
+<div id="donate-button-div" class="alignright clear">
+	<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://webgw.alsa.org/goto/ChateauSeaviewFund" target="_blank">[+Donate+]</a>
+</div><h1>[+Media Library Assistant+] [+version+][+development+] [+Settings+]</h1>
 [+messages+]
 [+tablist+]
 [+tab_content+]
@@ -115,6 +117,15 @@
 <p>
 <a href="#backtotop">[+Go to Top+]</a>
 </p>
+<h2>[+Donations to Support MLA+]</h2>
+<table width="700" border="0" cellpadding="10">
+	<tr>
+		<td valign="top">
+			<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://webgw.alsa.org/goto/ChateauSeaviewFund" target="_blank">[+Donate+]</a>
+		</td>
+		<td>[+Donate Text+]</td>
+	</tr>
+</table>
 
 <!-- template="debug-tab" -->
 <h2>[+Debug Options+]</h2>

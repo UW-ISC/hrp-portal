@@ -31,20 +31,20 @@ class WCK_Add_Notices{
 
     // Display a notice that can be dismissed in case the serial number is inactive
     function add_admin_notice() {
-    global $current_user ;
-    global $pagenow;
+        global $current_user ;
+        global $pagenow;
 
-    $user_id = $current_user->ID;
-    do_action( $this->notificationId.'_before_notification_displayed', $current_user, $pagenow );
+        $user_id = $current_user->ID;
+        do_action( $this->notificationId.'_before_notification_displayed', $current_user, $pagenow );
 
-    if ( current_user_can( 'manage_options' ) ){
-    // Check that the user hasn't already clicked to ignore the message
-    if ( ! get_user_meta($user_id, $this->notificationId.'_dismiss_notification' ) ) {
-    echo $finalMessage = apply_filters($this->notificationId.'_notification_message','<div class="'. $this->notificationClass .'" >'.$this->notificationMessage.'</div>', $this->notificationMessage);
-    }
-    do_action( $this->notificationId.'_notification_displayed', $current_user, $pagenow );
-    }
-    do_action( $this->notificationId.'_after_notification_displayed', $current_user, $pagenow );
+        if ( current_user_can( 'manage_options' ) ){
+            // Check that the user hasn't already clicked to ignore the message
+            if ( ! get_user_meta($user_id, $this->notificationId.'_dismiss_notification' ) ) {
+                echo wp_kses_post( apply_filters($this->notificationId.'_notification_message','<div class="'. esc_attr( $this->notificationClass ) .'" >'. $this->notificationMessage .'</div>', $this->notificationMessage) );
+            }
+            do_action( $this->notificationId.'_notification_displayed', $current_user, $pagenow );
+        }
+        do_action( $this->notificationId.'_after_notification_displayed', $current_user, $pagenow );
     }
 
     function dismiss_notification() {
@@ -55,7 +55,7 @@ class WCK_Add_Notices{
         do_action( $this->notificationId.'_before_notification_dismissed', $current_user );
     
         // If user clicks to ignore the notice, add that to their user meta
-        if ( isset( $_GET[$this->notificationId.'_dismiss_notification']) && '0' == $_GET[$this->notificationId.'_dismiss_notification'] )
+        if ( isset( $_GET[$this->notificationId.'_dismiss_notification']) && '0' === $_GET[$this->notificationId.'_dismiss_notification'] )
         add_user_meta( $user_id, $this->notificationId.'_dismiss_notification', 'true', true );
     
         do_action( $this->notificationId.'_after_notification_dismissed', $current_user );

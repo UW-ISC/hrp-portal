@@ -29,7 +29,7 @@ var jQuery,
 		init : function(){
 			var t = this, templateForm = $( '#mla-edit-template' );
 
-			$( '#mla-template-type, #mla-template-shortcode', templateForm ).change( function( e ){
+			$( '#mla-template-type, #mla-template-shortcode', templateForm ).on( 'change', function( e ){
 				var type = $( '#mla-template-type', templateForm ).val(),
 				    shortcode = $( '#mla-template-shortcode', templateForm ).val();
 

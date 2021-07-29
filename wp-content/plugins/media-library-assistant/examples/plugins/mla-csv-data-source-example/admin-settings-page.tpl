@@ -2,7 +2,7 @@
 <a name="backtotop"></a>
 &nbsp;
 <div class="wrap">
-<h1 class="wp-heading-inline">MLA CSV Data Source Example [+version+] Settings</h1>
+<h1 class="wp-heading-inline">[+plugin_title+] [+version+] Settings</h1>
 [+messages+]
 [+tablist+]
 [+tab_content+]
@@ -20,7 +20,6 @@
 <p>
 [+messages+]
 </p>
-[+dismiss_button+]
 </div>
 
 <!-- template="select-option" -->
@@ -32,7 +31,7 @@
     <strong>Source file</strong>
   </td>
   <td>
-    <select name="mla_csv_data_source_options[source]" id="mla-csv-data-source-source">
+    <select name="[+slug_prefix+]_options[source]" id="mla-csv-data-source-source">
 [+source_options+]
     </select>
     <div class="mla-settings-help">&nbsp;&nbsp;Select the CSV file to use for the data sources.</div>
@@ -43,7 +42,7 @@
     <strong>Match on</strong>
   </td>
   <td>
-    <select name="mla_csv_data_source_options[match]" id="mla-csv-data-source-match">
+    <select name="[+slug_prefix+]_options[match]" id="mla-csv-data-source-match">
 		<option [+id_selected+] value="id">ID (or .ID)</option>
 		<option [+base_file_selected+] value="base_file">Base File</option>
 		<option [+file_name_selected+] value="file_name">File Name (only)</option>
@@ -56,7 +55,7 @@
     <strong>Delimiter</strong>
   </td>
   <td>
-    <input name="mla_csv_data_source_options[delimiter]" id="mla-csv-data-source-delimiter" type="text" size="1" maxlength="1"value="[+delimiter+]" />
+    <input name="[+slug_prefix+]_options[delimiter]" id="mla-csv-data-source-delimiter" type="text" size="1" maxlength="1" value="[+delimiter+]" />
     <div class="mla-settings-help">&nbsp;&nbsp;Enter the (one character) delimiter that separates variables.</div>
   </td>
 </tr>
@@ -65,7 +64,7 @@
     <strong>Enclosure</strong>
   </td>
   <td>
-    <input name="mla_csv_data_source_options[enclosure]" id="mla-csv-data-source-enclosure" type="text" size="1" maxlength="1"value="[+enclosure+]" />
+    <input name="[+slug_prefix+]_options[enclosure]" id="mla-csv-data-source-enclosure" type="text" size="1" maxlength="1" value="[+enclosure+]" />
     <div class="mla-settings-help">&nbsp;&nbsp;Enter the (one) character that encloses a variable.</div>
   </td>
 </tr>
@@ -74,8 +73,17 @@
     <strong>Escape</strong>
   </td>
   <td>
-    <input name="mla_csv_data_source_options[escape]" id="mla-csv-data-source-escape" type="text" size="1" maxlength="1"value="[+escape+]" />
+    <input name="[+slug_prefix+]_options[escape]" id="mla-csv-data-source-escape" type="text" size="1" maxlength="1" value="[+escape+]" />
     <div class="mla-settings-help">&nbsp;&nbsp;Enter the (one) character that escapes special characters within a variable.</div>
+  </td>
+</tr>
+<tr valign="top">
+  <td class="textright">
+    <strong>Exports</strong>
+  </td>
+  <td>
+    <textarea name="[+slug_prefix+]_options[exports]" id="mla-csv-data-source-exports" rows="4" cols="80" >[+exports+]</textarea>
+    <div class="mla-settings-help">&nbsp;&nbsp;Enter data sources, substitution parameters or content templates; one entry per line.<br />&nbsp;&nbsp;See Documentation tab for details.</div>
   </td>
 </tr>
 
@@ -118,12 +126,13 @@ ul.mla_settings li {
 		</tbody>
 		</table>
 		<span class="submit mla-settings-submit">
-		<input name="mla_csv_data_source_options_save" class="button-primary" id="mla-csv-data-source-save" type="submit" value="Save Changes" />
+		<input name="[+slug_prefix+]_options_save" class="button-primary" id="[+slug_prefix+]_options_save" type="submit" value="Save Changes" />
+		<input name="[+slug_prefix+]_options_reset" class="button-primary alignright" id="[+slug_prefix+]_options_reset" type="submit" value="Delete Settings, Restore Defaults" />
 		</span>
-<h3>Export Match Keys</h3>
+<h3>Export Item Values</h3>
 <p>Click the button below to download a CSV file containing the ID, Base File and File Name values for all the items currently in your Media Library.</p>
 		<span class="submit mla-settings-submit">
-		<input name="mla_csv_data_source_options_export" class="button-primary" id="mla-csv-data-source-export" type="submit" value="Export Match Keys" />
+		<input name="[+slug_prefix+]_options_export" class="button-primary" id="mla-csv-data-source-export" type="submit" value="Export Item Values" />
 		</span>
 		[+_wpnonce+]
 	</form>
@@ -195,6 +204,7 @@ ul.mla_settings li {
 <li><a href="#delimiter-enclosure-escape"><strong>Delimiter, Enclosure and Escape</strong></a></li>
 <li><a href="#accessing-csv-values"><strong>Accessing CSV Values</strong></a></li>
 <li><a href="#assigning-hierarchical-terms"><strong>Assigning Hierarchical Terms</strong></a></li>
+<li><a href="#exporting-item-values"><strong>Exporting Item Values</strong></a></li>
 </ul>
 <p>
 &nbsp;
@@ -255,7 +265,7 @@ To match a record containing CSV variables to the correct Media Library item the
 If you select a file that does not contain the match variable you select on the General tab you will see a warning message at the top of the screen. None of the variables in the file will be accessible until you select a match variable that the file contains.
 </p>
 <p>
-You can use the "Export Match Keys" button at the bottom of the General tag to create and download a CSV file containing all three match key values of the items in the destination site. You can use this file to match the File Name or the Base Name to the correct destination site ID values and update your source file with the correct ID values.
+You can use the "Export Item Values" button at the bottom of the General tag to create and download a CSV file containing all three match key values of the items in the destination site. Study the "<a href="#exporting-item-values">Exporting Item Values</a>" section below for more information.
 <a name="delimiter-enclosure-escape"></a>
 </p>
 <p>
@@ -301,5 +311,31 @@ The <a title="Find the Path Mapping Example" href="[+example_url+]&amp;mla-examp
 </p>
 <p>
 The MLA Path Mapping Example plugin includes a Settings/MLA Path Mapping Documentation tab with a detailed discussion of hierarchical term implementation and how to code term path names in your CSV file.
+<a name="exporting-item-values"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Exporting Item Values</h3>
+<p>
+You can use the "Export Item Values" button at the bottom of the General tag to create and download a CSV file containing all three match key values of all Media Library items in the destination site. You can use this file to match the File Name or the Base Name to the correct destination site ID values and update your source file with the correct ID values.
+</p>
+<p>
+At a minimum the file will contain three columns - Base Name, File Name and ID. You can add additional columns to the file by defining them in the "Exports" text area on the General tab. In the text area you can define multiple columns, entering <strong>one definition per line</strong>. Each definition contains an optional column name and a Field-level Substitution Parameter specifying the column content.
+</p>
+<p>
+If you do not add a column name to your definition the column content specification will be used as a default name. For simple specifications this is often a good choice. If your specification is long or complex you will want to give the column a more practical name. To add a name, start the specification with a double-quote ('<strong>"</strong>'), enter the name and end the name with a double-quote followed by a comma. For example, <code>"Title",post_title</code> or <code>"Date Taken",[+exif:DateTimeOriginal+]</code>.
+</p>
+<p>
+The column content specification can use almost all of the features described in the "Field-level Substitution Parameters" section of MLA's Settings/Media Library Assistant Documentation tab. The <code>query:</code> prefix is not available because it only applies to the <code>[mla_gallery]</code> shortcode. For the same reason the substitution parameters described in the "Style and Markup Templates" section are not available. In particular, the "Attachment-specific substitution parameters for the markup template Item part" are not available; use the equivalent "Field-level data sources" instead.
+</p>
+<p>
+For convenience you can omit the enclosing "[+" and "+]" delimiters from the specification. The plugin will use the specification as the default column name and add enclosing delimiters, e.g., <code>post_title</code> becomes <code>"post_title",[+post_title+]</code>. You can add one of the "Field-level option/format values" or use a prefix as well, e.g., <code>exif:DateTimeOriginal,date('j F, Y')</code> becomes <code>"exif:DateTimeOriginal,date('j F, Y')",[+exif:DateTimeOriginal,date('j F, Y')+]</code>. Of course, you can add your own column name if desired.
+</p>
+<p>
+You can use a Content Template for more complex requirements. The conditional and choice elements are the key to templates' power, particularly with custom fields and metadata such as IPTC and EXIF. With the conditional element you can combine literal text with a substitution value and eliminate the text if the value is missing. With the choice element you can specify multiple sources for a value and decide the order in which they are tested. For example:<br />&nbsp;<br />
+<code>"Date Taken",template:([+exif:DateTimeOriginal,date('j F, Y')+])|([+iptc:DateCreated,date('j F, Y')+])|([+xmp:CreateDate,date('j F, Y')+])</code>
+<br />&nbsp;<br />
+The above example uses the value from any of three sources and translates the result into a common format.
 </p>
 </div>

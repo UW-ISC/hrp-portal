@@ -2912,9 +2912,11 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		 * @since 2.1
 		 */
 		private function compare_elems( $elem1, $elem2 ) {
+			if ( $elem1['priority'] > $elem2['priority'] ) {
+				return 1;
+			}
 
-			return $elem1['priority'] > $elem2['priority'];
-
+			return 0;
 		}
 
 

@@ -158,7 +158,10 @@ class MLAData {
 		}
 
 		if ( 1 == count( $final ) ) {
-			$final = $final[0];
+			// Don't flatten a string value key
+			if ( isset( $final[0] ) ) {
+				$final = $final[0];
+			}
 		}
 
 		return $final;
@@ -737,6 +740,7 @@ class MLAData {
 	 * @return	array	individual arguments, e.g. array( 0 => 'd/m/Y H:i:s', 1 => 'arg, " two' )
 	 */
 	private static function _parse_arguments( $argument_string ) {
+//error_log( __LINE__ . ' _parse_arguments argument_string = ' . var_export( $argument_string, true ), 0 );
 		$argument_string = trim( $argument_string, " \n\t\r\0\x0B," );
 		$arguments = array();
 
@@ -807,7 +811,7 @@ class MLAData {
 
 						$index++;
 					} else { // backslash
-						if ( $delimiter == $byte || ( empty( $delimiter ) && ',' == $byte ) ) {
+						if ( $delimiter === $byte || ( empty( $delimiter ) && ',' === $byte ) ) {
 							break;
 						}
 
@@ -816,10 +820,14 @@ class MLAData {
 				} // index < strlen
 			} // non-array
 
+//error_log( __LINE__ . ' _parse_arguments argument = ' . var_export( $argument, true ), 0 );
 			$arguments[] = $argument;
+//error_log( __LINE__ . " _parse_arguments( {$index} ) argument_string = " . var_export( $argument_string, true ), 0 );
+//			$argument_string = trim( substr( $argument_string, $index ), " \n\t\r\0\x0B" );  20210717
 			$argument_string = trim( substr( $argument_string, $index ), " \n\t\r\0\x0B," );
 		} // strlen( $argument_string )
 
+//error_log( __LINE__ . ' _parse_arguments arguments = ' . var_export( $arguments, true ), 0 );
 		return $arguments;
 	}
 
@@ -934,7 +942,11 @@ class MLAData {
 				if ( 1048576 < $number ) {
 					$value = number_format( ( $number/1048576 ), $precision ) . $mb_suffix;
 				} elseif ( $threshold < $number ) {
-					$value = number_format( ( $number/1024 ), $precision ) . $kb_suffix;
+					if ( empty( $kb_suffix ) ) {
+						$value = number_format( ( $number/1048576 ), $precision ) . $mb_suffix;
+					} else {
+						$value = number_format( ( $number/1024 ), $precision ) . $kb_suffix;
+					}
 				} else {
 					$value = number_format( $number );
 				}
@@ -1159,7 +1171,8 @@ class MLAData {
 						$pattern = trim( $args['args'][0] );
 
 						if ( 1 < count( $args['args'] ) ) {
-							$replacement = trim( $args['args'][1] );
+//							$replacement = trim( $args['args'][1] ); 20210717
+							$replacement = $args['args'][1];
 						}
 
 						if ( 2 < count( $args['args'] ) ) {
@@ -1285,7 +1298,11 @@ class MLAData {
 					break;
 				case 'request':
 					if ( isset( $_REQUEST[ $value['value'] ] ) ) {
-						$record = wp_kses( wp_unslash( $_REQUEST[ $value['value'] ] ), 'post' );
+						if ( is_array( $_REQUEST[ $value['value'] ] ) ) {
+							$record = wp_unslash( $_REQUEST[ $value['value'] ] ); // phpcs:ignore
+						} else {
+							$record = wp_kses( wp_unslash( $_REQUEST[ $value['value'] ] ), 'post' );
+						}
 					} else {
 						// Look for compound names, e.g., tax_input.attachment_category
 						$key_array = explode( '.', $value['value'] );
@@ -1302,7 +1319,9 @@ class MLAData {
 					} elseif ( is_scalar( $record ) ) {
 						$text = sanitize_text_field( (string) $record );
 					} elseif ( is_array( $record ) ) {
-						if ( 'export' == $value['option'] ) {
+						if ( 'array' == $value['option'] ) {
+							$text = $record;
+						} elseif ( 'export' == $value['option'] ) {
 							$text = sanitize_text_field( var_export( $record, true ) );
 						} else {
 							$text = '';
@@ -3728,6 +3747,22 @@ class MLAData {
 				$new_data['ExposureBiasValue'] = $value;
 			}
 		} // ExposureBiasValue
+
+		if ( isset( $exif_data['ExposureMode'] ) ) {
+			switch ( absint( $exif_data['ExposureMode'] ) ) {
+				case 0:
+					$new_data['ExposureMode'] = __( 'Auto', 'media-library-assistant' );
+					break;
+				case 1:
+					$new_data['ExposureMode'] = __( 'Manual', 'media-library-assistant' );
+					break;
+				case 2:
+					$new_data['ExposureMode'] = __( 'Bracket', 'media-library-assistant' );
+					break;
+				default:
+					$new_data['ExposureMode'] = __( 'Other', 'media-library-assistant' ) . ': ' . $exif_data['ExposureMode'];
+			}
+		} // ExposureMode
 
 		if ( isset( $exif_data['Flash'] ) ) {
 			$value = ( absint( $exif_data['Flash'] ) );

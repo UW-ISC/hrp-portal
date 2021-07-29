@@ -45,7 +45,7 @@ var jQuery,
 					taxonomyParts.shift(); // taxonomy-
 					taxonomy = taxonomyParts.join('-');
 	
-					jQuery.extend( jQuery.expr[":"], {
+					jQuery.extend( jQuery.expr.pseudos || jQuery.expr[":"], {
 						"matchTerms": function( elem, i, match, array ) {
 							return ( elem.textContent || elem.innerText || "" ).toLowerCase().indexOf( ( match[3] || "" ).toLowerCase() ) >= 0;
 						}
@@ -56,7 +56,7 @@ var jQuery,
 
 					jQuery( rowId + ' #search-' + taxonomy ).off();
 
-					jQuery( rowId + ' #search-' + taxonomy ).keydown( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keydown', function( event ){
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
@@ -69,7 +69,7 @@ var jQuery,
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).keypress( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keypress', function( event ){
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
@@ -82,7 +82,7 @@ var jQuery,
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).keyup( function( event ){
+					jQuery( rowId + ' #search-' + taxonomy ).on( 'keyup', function( event ){
 						var searchValue, termList, matchingTerms;
 	
 						if( 13 === event.keyCode ) {
@@ -107,7 +107,7 @@ var jQuery,
 	
 					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).off();
 
-					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).click( function() {
+					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).on( 'click', function() {
 						jQuery( rowId + ' #' + taxonomy + '-adder ').addClass( 'wp-hidden-children' );
 						jQuery( rowId + ' #' + taxonomy + '-searcher' ).toggleClass( 'wp-hidden-children' );
 						jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
@@ -152,15 +152,15 @@ var jQuery,
 			t.what = '#attachment-';
 
 			// prepare the edit rows
-			qeRow.keyup(function(e){
+			qeRow.on( 'keyup', function(e){
 				if (e.which == 27)
 					return mla.inlineEditAttachment.revert();
 			});
-			bulkRow.keyup(function(e){
+			bulkRow.on( 'keyup', function(e){
 				if (e.which == 27)
 					return mla.inlineEditAttachment.revert();
 			});
-			progressRow.keyup(function(e){
+			progressRow.on( 'keyup', function(e){
 				if (e.which == 27)
 					return mla.inlineEditAttachment.revert();
 			});
@@ -168,13 +168,13 @@ var jQuery,
 			$('#inline-edit-post-set-parent', qeRow).on( 'click', function(){
 				return mla.inlineEditAttachment.inlineParentOpen(this);
 			});
-			$('a.cancel', qeRow).click(function(){
+			$('a.cancel', qeRow).on( 'click', function(){
 				return mla.inlineEditAttachment.revert();
 			});
-			$('a.save', qeRow).click(function(){
+			$('a.save', qeRow).on( 'click', function(){
 				return mla.inlineEditAttachment.quickSave(this);
 			});
-			$('td', qeRow).keydown(function(e){
+			$('td', qeRow).on( 'keydown', function(e){
 				if ( e.which == 13 )
 					return mla.inlineEditAttachment.quickSave(this);
 			});
@@ -187,18 +187,18 @@ var jQuery,
 			$('#bulk-edit-set-parent', bulkRow).on( 'click', function(){
 				return mla.inlineEditAttachment.bulkParentOpen();
 			});
-			$('a.cancel', bulkRow).click(function(){
+			$('a.cancel', bulkRow).on( 'click', function(){
 				return mla.inlineEditAttachment.revert();
 			});
-			$('a.reset', bulkRow).click(function(){
+			$('a.reset', bulkRow).on( 'click', function(){
 				return mla.inlineEditAttachment.doReset();
 			});
-			$('input[type="submit"]', bulkRow).click(function(e){
+			$('input[type="submit"]', bulkRow).on( 'click', function(e){
 				e.preventDefault();
 				return mla.inlineEditAttachment.bulkSave(e);
 			});
 
-			$('a.cancel', progressRow).click(function(){
+			$('a.cancel', progressRow).on( 'click', function(){
 				if ( mla.bulkEdit.inProcess ) {
 					mla.bulkEdit.doCancel = true;
 					return false;
@@ -208,7 +208,7 @@ var jQuery,
 			});
 
 			// Clicking "Refresh" submits the form, refreshing the page
-			$('#bulk_refresh', progressRow).click(function(){
+			$('#bulk_refresh', progressRow).on( 'click', function(){
 				$( '#bulk-progress a' ).prop( 'disabled', true );
 				$( '#bulk-progress' ).css( 'opacity', '0.5' );
 			});
@@ -221,7 +221,7 @@ var jQuery,
 
 			$('select[name="_status"] option[value="future"]', bulkRow).remove();
 
-			$('#doaction, #doaction2').click(function(e){
+			$('#doaction, #doaction2').on( 'click', function(e){
 				var n = $(this).attr('id').substr(2);
 
 				if ( $('select[name="'+n+'"]').val() == 'edit' ) {
@@ -233,7 +233,7 @@ var jQuery,
 			});
 
 			// Filter button (dates, categories) in top nav bar
-			$('#post-query-submit').mousedown(function(){
+			$('#post-query-submit').on( 'mousedown', function(){
 				t.revert();
 				$('select[name^="action"]').val('-1');
 			});
@@ -269,7 +269,7 @@ var jQuery,
 				return this.revert();
 
 			$('#bulk-titles').html(te);
-			$('#bulk-titles a').click(function(){
+			$('#bulk-titles a').on( 'click', function(){
 				var id = $(this).attr('id').substr(1);
 
 				$('table.wp-list-table input[value="' + id + '"]').prop('checked', false);
@@ -357,7 +357,7 @@ var jQuery,
 			$('#bulk-progress-running').html('');
 			$('#bulk-progress-complete').html('');
 			$('#bulk-progress-waiting').html(te);
-			$('#bulk-progress-waiting a').click(function(){
+			$('#bulk-progress-waiting a').on( 'click', function(){
 				var id = $(this).attr('id').substr(1);
 
 				$('table.wp-list-table input[value="' + id + '"]').prop('checked', false);

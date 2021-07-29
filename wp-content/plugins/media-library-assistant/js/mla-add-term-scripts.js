@@ -45,15 +45,14 @@ var jQuery;
 				});
 
 				// On [enter] submit the taxonomy.
-				$( '#new' + taxonomy, context ).keypress( function(event){
+				$( '#new' + taxonomy, context ).on( 'keypress', function(event){
 					if( 13 === event.keyCode ) {
 						event.preventDefault();
-						$( '#' + taxonomy + '-add-submit', context ).click();
-					}
+						$( '#' + taxonomy + '-add-submit', context ).trigger('click');					}
 				});
 
 				// After submitting a new taxonomy, re-focus the input field.
-				$( '#' + taxonomy + '-add-submit', context ).click( function() {
+				$( '#' + taxonomy + '-add-submit', context ).on( 'click', function() {
 					$( '#new' + taxonomy, context ).focus();
 				});
 
@@ -114,7 +113,7 @@ var jQuery;
 				$( '#' + taxonomy + '-add-toggle', context ).off();
 
 				// Add new taxonomy button toggles input form visibility.
-				$( '#' + taxonomy + '-add-toggle', context ).click( function( e ) {
+				$( '#' + taxonomy + '-add-toggle', context ).on( 'click', function( e ) {
 					e.preventDefault();
 					$( '#' + taxonomy + '-adder', context ).toggleClass( 'wp-hidden-children' );
 					$( '#new' + taxonomy, context ).focus();
@@ -314,7 +313,8 @@ var jQuery;
 				target:  list.get( 0 )
 			}, settings || {} );
 
-			if ( $.isFunction( settings.confirm ) ) {
+//			if ( $.isFunction( settings.confirm ) ) {
+			if ( typeof settings.confirm === 'function' ) {
 				$element = $( '#' + settings.element, mla.mlaList.settings.context );
 
 				if ( 'add' !== action ) {
@@ -380,13 +380,14 @@ var jQuery;
 			}, wpAjax.unserialize( data[4] || '' ) ) );
 
 			formValues = $( '#' + settings.element + ' :input', mla.mlaList.settings.context ).not( '[name="_ajax_nonce"], [name="_wpnonce"], [name="action"]' );
-			formData   = $.isFunction( formValues.fieldSerialize ) ? formValues.fieldSerialize() : formValues.serialize();
+			formData   = typeof formValues.fieldSerialize === 'function' ? formValues.fieldSerialize() : formValues.serialize();
 
 			if ( formData ) {
 				settings.data += '&' + formData;
 			}
 
-			if ( $.isFunction( settings.addBefore ) ) {
+//			if ( $.isFunction( settings.addBefore ) ) {
+			if ( typeof settings.addBefore === 'function' ) {
 				settings = settings.addBefore( settings );
 
 				if ( ! settings ) {
@@ -428,7 +429,8 @@ var jQuery;
 
 			// The addAfter function uses the supplemental data to update the "Parent Term" dropdown ontrol
 			settings.complete = function( jqXHR, status ) {
-				if ( $.isFunction( settings.addAfter ) ) {
+//				if ( $.isFunction( settings.addAfter ) ) {
+				if ( typeof settings.addAfter === 'function' ) {
 					settings.addAfter( returnedResponse, $.extend( {
 						xml:    jqXHR,
 						status: status,

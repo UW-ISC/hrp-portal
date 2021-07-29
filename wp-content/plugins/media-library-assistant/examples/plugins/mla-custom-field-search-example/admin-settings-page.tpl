@@ -338,7 +338,7 @@ For a quick look at the plugin's operation on a given search you can add a debug
 </p>
 <ul class="mla-doc-toc-list">
 <li><strong><code>'}|{'</code></strong> - Write debug information to the console, e.g., <code>}|{custom:Kingdom=*</code>. This option writes log entries as PHP Warnings, which might be displayed in the browser window or written to the error log depending on how your site is configured. It's quick and easy but the results are ugly. Also, it will not work for the Media/Library Grid view or the MMMW; information will go to the log for these cases.</li>
-<li><strong><code>'}|{'</code></strong> - Write debug information to the error log, e.g., <code>}|{custom:Artist,Patron</code>. This option avoids cluttering the display with ugly messages but requires you to find a view the error log file to see the results. The MLA Debug tab may be an easy way to find and view the log.</li>
+<li><strong><code>'{|}'</code></strong> - Write debug information to the error log, e.g., <code>{|}custom:Artist,Patron</code>. This option avoids cluttering the display with ugly messages but requires you to find a view the error log file to see the results. The MLA Debug tab may be an easy way to find and view the log.</li>
 </ul>
 <p>
 </p>

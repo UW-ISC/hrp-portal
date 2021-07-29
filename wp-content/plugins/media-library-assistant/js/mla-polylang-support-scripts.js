@@ -41,20 +41,20 @@ var jQuery,
 			t.what = '#attachment-';
 
 			// prepare the quick-translate row
-			qtRow.keyup( function( e ){
+			qtRow.on( 'keyup', function( e ){
 				if ( e.which == 27 )
 					return mlaPolylang.inlineTranslate.revert();
 			});
 
-			$( 'a.cancel', qtRow ).click( function(){
+			$( 'a.cancel', qtRow ).on( 'click', function(){
 				return mlaPolylang.inlineTranslate.revert();
 			});
 
-			$( 'a.save', qtRow ).click( function(){
+			$( 'a.save', qtRow ).on( 'click', function(){
 				return mlaPolylang.inlineTranslate.save( this );
 			});
 
-			$( 'td', qtRow ).keydown( function(e){
+			$( 'td', qtRow ).on( 'keydown', function(e){
 				if ( e.which == 13 )
 					return mlaPolylang.inlineTranslate.save( this );
 			});
@@ -80,16 +80,16 @@ var jQuery,
 			});
 
 			// prepare the bulk-translate row
-			btRow.keyup( function( e ){
+			btRow.on( 'keyup', function( e ){
 				if ( e.which == 27 )
 					return mlaPolylang.inlineTranslate.revert();
 			});
 
-			$( 'a.cancel', btRow ).click( function(){
+			$( 'a.cancel', btRow ).on( 'click', function(){
 				return mlaPolylang.inlineTranslate.revert();
 			});
 
-			$( '#doaction, #doaction2' ).click( function( e ){
+			$( '#doaction, #doaction2' ).on( 'click', function( e ){
 				var n = $( this ).attr( 'id' ).substr( 2 );
 
 				if ( $( 'select[name="'+n+'"]' ).val() == 'pll-translate' ) {
@@ -101,7 +101,7 @@ var jQuery,
 			});
 
 			// Filter button (dates, categories) in top nav bar
-			$( '#post-query-submit' ).mousedown( function(){
+			$( '#post-query-submit' ).on( 'mousedown', function(){
 				t.revert();
 				$( 'select[name^="action"]' ).val( '-1' );
 			});
@@ -142,7 +142,7 @@ var jQuery,
 
 			// Populate the list of selected items
 			$( '#pll-bulk-titles' ).html( te );
-			$( '#pll-bulk-titles a' ).click(function(){
+			$( '#pll-bulk-titles a' ).on( 'click', function(){
 				var id = $( this ).attr( 'id' ).substr( 1 );
 
 				$( 'table.widefat input[value="' + id + '"]' ).prop( 'checked', false );
@@ -152,14 +152,14 @@ var jQuery,
 			// Capture Language links
 			$( '#pll-bulk-translate .pll-media-action-table tr' ).each( function ( idx ){
 				//$( '.pll-media-action-column a', this ).off( 'click' );
-				$( '.pll-media-action-column a', this ).click( function( e ){
+				$( '.pll-media-action-column a', this ).on( 'click', function( e ){
 					var bulkLanguage = $( this ).attr( 'pll_bulk_language' );
 
 					$( ':input[name="pll_bulk_language"]', '#pll-bulk-translate' ).val( bulkLanguage );
 					$( '#pll-bulk-translate .pll-media-action-table a' ).prop( 'disabled', true );
 					$( '#pll-bulk-translate' ).css( 'opacity', '0.5' );
 					$( this ).hide();
-					return $( '#pll-bulk-translate-submit', '#pll-bulk-translate' ).click();
+					return $( '#pll-bulk-translate-submit', '#pll-bulk-translate' ).trigger('click');
 				});
 			});
 
@@ -200,7 +200,7 @@ var jQuery,
 				}
 
 				$( '.pll-media-action-column a', this ).off( 'click' );
-				$( '.pll-media-action-column a', this ).click( function( e ){
+				$( '.pll-media-action-column a', this ).on( 'click', function( e ){
 					var quickLanguage = $( this ).attr( 'pll_quick_language' ), quickId = $( this ).attr( 'pll_quick_id' );
 
 					$( ':input[name="pll_quick_language"]', translateRow ).val( quickLanguage );
@@ -263,7 +263,7 @@ var jQuery,
 				}
 
 				$( '.pll-media-action-column a', this ).off( 'click' );
-				$( '.pll-media-action-column a', this ).click( function( e ){
+				$( '.pll-media-action-column a', this ).on( 'click', function( e ){
 					var quickLanguage = $( this ).attr( 'pll_quick_language' ), quickId = $( this ).attr( 'pll_quick_id' );
 
 					$( ':input[name="pll_quick_language"]', translateRow ).val( quickLanguage );
@@ -345,7 +345,7 @@ var jQuery,
 
 							// Quick Edit a new selected item
 							if ( newId != id ) {
-								$( 'a.editinline', mlaPolylang.inlineTranslate.what + newId ).click();
+								$( 'a.editinline', mlaPolylang.inlineTranslate.what + newId ).trigger('click');
 							}
 						} else {
 							response = response.replace( /<.[^<>]*?>/g, '' );

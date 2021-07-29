@@ -25,6 +25,7 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 				'disable_link'            => 'false',
 				'hide_on_mobile'          => 'false',
 				'hide_on_desktop'         => 'false',
+				'close_after_click'       => 'false',
 				'hide_sub_menu_on_mobile' => 'false',
 				'hide_arrow'              => 'false',
 				'item_align'              => 'left',

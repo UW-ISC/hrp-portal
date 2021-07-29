@@ -31,10 +31,6 @@
         ],
         "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
         "homepage": "https:\/\/github.com\/container-interop\/container-interop",
-        "support": {
-            "issues": "https:\/\/github.com\/container-interop\/container-interop\/issues",
-            "source": "https:\/\/github.com\/container-interop\/container-interop\/tree\/master"
-        },
         "abandoned": "psr\/container"
     },
     {
@@ -107,10 +103,7 @@
         "keywords": [
             "cache",
             "caching"
-        ],
-        "support": {
-            "source": "https:\/\/github.com\/doctrine\/cache\/tree\/master"
-        }
+        ]
     },
     {
         "name": "php-di\/invoker",
@@ -155,11 +148,7 @@
             "injection",
             "invoke",
             "invoker"
-        ],
-        "support": {
-            "issues": "https:\/\/github.com\/PHP-DI\/Invoker\/issues",
-            "source": "https:\/\/github.com\/PHP-DI\/Invoker\/tree\/master"
-        }
+        ]
     },
     {
         "name": "php-di\/php-di",
@@ -221,11 +210,7 @@
             "container",
             "dependency injection",
             "di"
-        ],
-        "support": {
-            "issues": "https:\/\/github.com\/PHP-DI\/PHP-DI\/issues",
-            "source": "https:\/\/github.com\/PHP-DI\/PHP-DI\/tree\/master"
-        }
+        ]
     },
     {
         "name": "php-di\/phpdoc-reader",
@@ -325,20 +310,6 @@
             "option",
             "php",
             "type"
-        ],
-        "support": {
-            "issues": "https:\/\/github.com\/schmittjoh\/php-option\/issues",
-            "source": "https:\/\/github.com\/schmittjoh\/php-option\/tree\/1.7.5"
-        },
-        "funding": [
-            {
-                "url": "https:\/\/github.com\/GrahamCampbell",
-                "type": "github"
-            },
-            {
-                "url": "https:\/\/tidelift.com\/funding\/github\/packagist\/phpoption\/phpoption",
-                "type": "tidelift"
-            }
         ]
     },
     {
@@ -390,11 +361,7 @@
             "container-interface",
             "container-interop",
             "psr"
-        ],
-        "support": {
-            "issues": "https:\/\/github.com\/php-fig\/container\/issues",
-            "source": "https:\/\/github.com\/php-fig\/container\/tree\/master"
-        }
+        ]
     },
     {
         "name": "symfony\/polyfill-ctype",
@@ -461,21 +428,7 @@
         ],
         "support": {
             "source": "https:\/\/github.com\/symfony\/polyfill-ctype\/tree\/v1.19.0"
-        },
-        "funding": [
-            {
-                "url": "https:\/\/symfony.com\/sponsor",
-                "type": "custom"
-            },
-            {
-                "url": "https:\/\/github.com\/fabpot",
-                "type": "github"
-            },
-            {
-                "url": "https:\/\/tidelift.com\/funding\/github\/packagist\/symfony\/symfony",
-                "type": "tidelift"
-            }
-        ]
+        }
     },
     {
         "name": "vlucas\/phpdotenv",
@@ -545,16 +498,6 @@
         "support": {
             "issues": "https:\/\/github.com\/vlucas\/phpdotenv\/issues",
             "source": "https:\/\/github.com\/vlucas\/phpdotenv\/tree\/v4.2.0"
-        },
-        "funding": [
-            {
-                "url": "https:\/\/github.com\/GrahamCampbell",
-                "type": "github"
-            },
-            {
-                "url": "https:\/\/tidelift.com\/funding\/github\/packagist\/vlucas\/phpdotenv",
-                "type": "tidelift"
-            }
-        ]
+        }
     }
 ]

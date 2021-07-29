@@ -393,7 +393,7 @@ class Wordpress_Creation_Kit{
                             $value = null;
                             /* see if we have any posted values */
                             if( !empty( $_GET['postedvalues'] ) ){
-                                $posted_values = json_decode( urldecode( base64_decode( $_GET['postedvalues'] ) ) , true);
+                                $posted_values = json_decode( sanitize_text_field( urldecode( base64_decode( $_GET['postedvalues'] ) ) ) , true);
 								if( !empty( $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
                                 	$value = $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
                             }
@@ -758,7 +758,7 @@ class Wordpress_Creation_Kit{
 		wp_enqueue_style('wordpress-creation-kit-css');
 		
 		// wysiwyg				
-		wp_register_script( 'wck-ckeditor', plugins_url( '/assets/js/ckeditor/ckeditor.js', __FILE__ ), array(), '1.0', true );
+		wp_register_script( 'wck-ckeditor', plugins_url( '/assets/js/ckeditor/ckeditor.js', __FILE__ ), array(), '4.16.1', true );
 		wp_enqueue_script( 'wck-ckeditor' );
 		if(!$wck_printed_scripts )
 		    wp_add_inline_script('wck-ckeditor', 'CKEDITOR.disableAutoInline = true;');//fixes issue with auto-initializing on gutenberg blocks
@@ -886,8 +886,8 @@ class Wordpress_Creation_Kit{
 			$id = absint($_POST['id']);
 		else 
 			$id = '';
-		if( !empty( $_POST['values'] ) )
-			$values = $_POST['values'];
+		if( !empty( $_POST['values'] ) && is_array( $_POST['values'] ) )
+			$values = array_map( array( $this, 'wck_sanitize_value'), $_POST['values']);
 		else
 			$values = array();
 
@@ -986,8 +986,8 @@ class Wordpress_Creation_Kit{
 			$element_id = absint( $_POST['element_id'] );
 		else 
 			$element_id = 0;
-		if( !empty( $_POST['values'] ) )
-			$values = $_POST['values'];
+		if( !empty( $_POST['values'] ) && is_array( $_POST['values']) )
+			$values = array_map( array( $this, 'wck_sanitize_value' ), $_POST['values'] );
 
 
 		// Security checks
@@ -1346,6 +1346,9 @@ class Wordpress_Creation_Kit{
         if( !empty( $_POST ) ){
             /* for single metaboxes we save a hidden input that contains the meta_name attr as a key so we need to search for it */
             foreach( $_POST as $request_key => $request_value ){
+                $request_key = sanitize_text_field($request_key);
+                $request_value = $this->wck_sanitize_value($request_value);
+
                 if( strpos( $request_key, '_wckmetaname_' ) !== false && strpos( $request_key, '#wck' ) !== false ){
                     /* found it so now retrieve the meta_name from the key formatted _wckmetaname_actuaname#wck */
                     $request_key = str_replace( '_wckmetaname_', '', $request_key );
@@ -1361,10 +1364,17 @@ class Wordpress_Creation_Kit{
                                 $single_field_name = $this->args['meta_name'] .'_'. Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
                                 if (isset($_POST[$single_field_name])) {
                                     /* checkbox needs to be stored as string not array */
-                                    if( $meta_field['type'] == 'checkbox' )
-                                        $_POST[$single_field_name] = implode( ', ', $_POST[$single_field_name] );
+                                    if( $meta_field['type'] == 'checkbox' ) {
+                                        if( is_array($_POST[$single_field_name]) )
+                                            $_POST[$single_field_name] = implode(', ', array_map(array($this, 'wck_sanitize_value'), $_POST[$single_field_name]));
+                                        else
+                                            $_POST[$single_field_name] = $this->wck_sanitize_value( $_POST[$single_field_name] );
+                                    }
 
-                                    $meta_values[Wordpress_Creation_Kit::wck_generate_slug($meta_field['title'], $meta_field )] = $_POST[$single_field_name];
+                                    if( is_array($_POST[$single_field_name]) )
+                                        $meta_values[Wordpress_Creation_Kit::wck_generate_slug($meta_field['title'], $meta_field )] = array_map( array($this, 'wck_sanitize_value'),  $_POST[$single_field_name] );
+                                    else
+                                        $meta_values[Wordpress_Creation_Kit::wck_generate_slug($meta_field['title'], $meta_field )] = $this->wck_sanitize_value( $_POST[$single_field_name] );
                                 }
                                 else
                                     $meta_values[Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )] = '';
@@ -1399,7 +1409,12 @@ class Wordpress_Creation_Kit{
 									foreach ($this->args['meta_array'] as $meta_field) {
 										/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
 										$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_id, Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ), $meta_name );
-										update_post_meta($post_id, $name, $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )]);
+										$meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )];
+										if( is_array($meta_val) )
+                                            $meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
+										else
+                                            $meta_val = $this->wck_sanitize_value( $meta_val );
+										update_post_meta($post_id, $name, $meta_val );
 									}
 								}
 							}
@@ -1409,7 +1424,14 @@ class Wordpress_Creation_Kit{
                             if ($this->args['unserialize_fields']) {
                                 if (!empty($this->args['meta_array'])) {
                                     foreach ($this->args['meta_array'] as $meta_field) {
-                                        update_post_meta($post_id, $meta_name . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ) . '_1', $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )]);
+
+                                        $meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )];
+                                        if( is_array($meta_val) )
+                                            $meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
+                                        else
+                                            $meta_val = $this->wck_sanitize_value( $meta_val );
+
+                                        update_post_meta($post_id, $meta_name . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ) . '_1', $meta_val );
                                     }
                                 }
                             }
@@ -1458,7 +1480,7 @@ class Wordpress_Creation_Kit{
         /* mark the fields */
         if( isset( $_GET['wckerrorfields'] ) && !empty( $_GET['wckerrorfields'] ) ){
             echo '<script type="text/javascript">';
-            $field_names = explode( ',', urldecode( base64_decode( $_GET['wckerrorfields'] ) ) );
+            $field_names = explode( ',', sanitize_text_field( urldecode( base64_decode( $_GET['wckerrorfields'] ) ) ) );
             foreach( $field_names as $field_name ){
                 echo "jQuery( '.field-label[for=\"". esc_js( $field_name ) ."\"]' ).addClass('error');";
 
@@ -1693,6 +1715,25 @@ class Wordpress_Creation_Kit{
 		
 		return apply_filters( 'wck_reserved_variable_names', $reserved_vars );
 	}
+
+    /**
+     * Function that strips the script tags from an input
+     * @param $string
+     * @return mixed
+     */
+    function wck_sanitize_value( $string ){
+        return preg_replace( '/<script\b[^>]*>(.*?)<\/script>/is', '', $string );
+    }
+
+    function wck_sanitize_request( $request ){
+        if( is_array( $request ) ){
+            $request = array_map( array( $this, 'wck_sanitize_value' ), $request );
+        }
+        else
+            $request = $this->wck_sanitize_value($request);
+
+        return $request;
+    }
 }
 
 
