@@ -104,12 +104,20 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 		return;
 	}
 
-	if ( ( 'grid' === mlaModal.settings.screen ) && false === mlaModal.settings.enableMediaGrid ) {
-		return;
+	if ( 'grid' === mlaModal.settings.screen ) {
+		if (  false === mlaModal.settings.enableMediaGrid ) {
+			return;
+		}
+		
+	    $('body').addClass('mla-media-grid');
 	}
 
-	if ( ( 'modal' === mlaModal.settings.screen ) && false === mlaModal.settings.enableMediaModal ) {
-		return;
+	if ( 'modal' === mlaModal.settings.screen ) {
+		if ( false === mlaModal.settings.enableMediaModal ) {
+			return;
+		}
+		
+	    $('body').addClass('mla-media-modal');
 	}
 
 	// Toolset Views editor locks uploads to "Uploaded to this post"
@@ -284,7 +292,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
 					this.model.set( filter.props, { silent: true } );
-					$( '#mla-search-submit', toolbar ).click();
+					$( '#mla-search-submit', toolbar ).trigger('click');
 				}
 			}
 		});
@@ -390,7 +398,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
 					this.model.set( filter.props, { silent: true } );
-					$( '#mla-search-submit', toolbar ).click();
+					$( '#mla-search-submit', toolbar ).trigger('click');
 				}
 			}
 		});
@@ -599,14 +607,14 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 						}
 
 						mlaModal.settings.query[mlaModal.settings.state].termsSearch = termsSearch;
-						$( '#mla-search-submit', toolbar ).click();
+						$( '#mla-search-submit', toolbar ).trigger('click');
 						return false;
 					});
 
-					$( '#mla-terms-search-input' ).keypress( function( e ){
+					$( '#mla-terms-search-input' ).on( 'keypress', function( e ){
 						if ( 13 == e.which ) {
 							e.preventDefault();
-							$( '#mla-terms-search-submit' ).click();
+							$( '#mla-terms-search-submit' ).trigger('click');
 						}
 					});
 				}
@@ -811,69 +819,6 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				console.log('toolbarEvent(  ) Event: ', eventName);
 			}, // */
 
-			toolbarContentActivateBrowse: function() {
-				var toolbarHeight, primaryHeight, secondaryHeight;
-
-				if ( ( null !== this.models ) && this.models.length && ( null !== this.models[0].active ) ) {
-					mlaModal.settings.$el = this.models[0].frame.$el;
-
-					// Need to find elements with reliable height
-					secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
-					primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
-
-					if ( primaryHeight > secondaryHeight ) {
-						toolbarHeight = primaryHeight;
-					} else {
-						toolbarHeight = secondaryHeight;
-					}
-				
-					if ( ( null !== toolbarHeight ) ) {
-						$( '.attachments-browser .attachments', mlaModal.settings.$el ).css( 'top', toolbarHeight );
-						mlaModal.settings.oldHeight = toolbarHeight;
-					}
-				}
-			},
-
-			toolbarOpen: function() {
-				var toolbarHeight, primaryHeight, secondaryHeight;
-
-				if ( ( null !== this.models ) && this.models.length && ( null !== this.models[0].active ) ) {
-					mlaModal.settings.$el = this.models[0].frame.$el;
-
-					secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
-					primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
-
-					if ( primaryHeight > secondaryHeight ) {
-						toolbarHeight = primaryHeight;
-					} else {
-						toolbarHeight = secondaryHeight;
-					}
-				
-					if ( ( null !== toolbarHeight ) ) {
-						$( '.attachments-browser .attachments', mlaModal.settings.$el ).css( 'top', toolbarHeight );
-						mlaModal.settings.oldHeight = toolbarHeight;
-					}
-
-					$( window ).resize( function() {
-						var toolbarHeight, primaryHeight, secondaryHeight;
-		
-						secondaryHeight = $( '.attachments-browser .media-toolbar-secondary', mlaModal.settings.$el ).height();
-						primaryHeight = $( '.media-toolbar-primary .mla-search-box', mlaModal.settings.$el ).height();
-		
-						if ( primaryHeight > secondaryHeight ) {
-							toolbarHeight = primaryHeight;
-						} else {
-							toolbarHeight = secondaryHeight;
-						}
-						
-						if ( ( null !== toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
-							$( '.attachments-browser .attachments' ).css( 'top', toolbarHeight );
-							mlaModal.settings.oldHeight = toolbarHeight;
-						}
-					} )
-				}
-			},
-
 			createToolbar: function() {
 				var filters, state = this.controller._state;
 	
@@ -896,14 +841,8 @@ this.controller.on( 'all', this.toolbarEvent );
 console.log( 'listening to controller events' );
 // */
 
-				mlaModal.settings.oldHeight = 0;
-				this.controller.on( 'open', this.toolbarOpen );
-				this.controller.on( 'content:activate:browse', this.toolbarContentActivateBrowse );
-
-				// Enhanced Media Library (eml) plugin has CSS styles that require this patch
-				if ( typeof window.eml !== "undefined" ) {
-					$( '.media-toolbar', this.$el ).css( 'overflow', 'hidden' );
-				}
+				// Suppress the "Filter Media" heading
+				$( '.media-attachments-filter-heading', this.$el ).css( 'display', 'none' );
 				
 				if ( ( 'all' === filters ) && mlaModal.settings.enableMimeTypes ) {
 					this.toolbar.unset( 'filters', { silent: true } );
@@ -958,7 +897,7 @@ console.log( 'listening to controller events' );
 						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
 							controller: this.controller,
 							model:      this.collection.props,
-							priority:   60
+							priority:   -40
 						}).render() );
 					} else {
 						this.toolbar.set( 'MlaSearch', new wp.media.view.MlaSearch({
@@ -1216,7 +1155,7 @@ console.log( 'listening to controller events' );
 						xbutton = $( '<a id="' + id + '-check-num-' + key + '" class="ntdelbutton">X</a>' );
 					}
 					
-					xbutton.click( function(){ mlaModal.tagBox.parseTags( this ); });
+					xbutton.on( 'click', function(){ mlaModal.tagBox.parseTags( this ); });
 					element.prepend( '&nbsp;' ).prepend( xbutton );
 				}
 
@@ -1265,7 +1204,7 @@ console.log( 'listening to controller events' );
 				}
 
 				r = $( '<p id="tagcloud-'+taxonomy+'" class="the-tagcloud">'+r+'</p>' );
-				$( 'a', r ).click( function(){
+				$( 'a', r ).on( 'click', function(){
 					mlaModal.tagBox.flushTags( $( this ).closest( '.mla-taxonomy-field' ).children( '.tagsdiv' ), this );
 					return false;
 				});
@@ -1281,16 +1220,16 @@ console.log( 'listening to controller events' );
 
 			mlaModal.tagBox.quickClicks( tagsDiv );
 
-			$( 'input.tagadd', ajaxTag ).click(function(){
+			$( 'input.tagadd', ajaxTag ).on( 'click', function(){
 				mlaModal.tagBox.flushTags( $(this).closest( '.tagsdiv' ) );
 			});
 
-			$( 'input.newtag', ajaxTag ).keyup( function( e ){
+			$( 'input.newtag', ajaxTag ).on( 'keyup', function( e ){
 				if ( 13 == e.which ) {
 					mlaModal.tagBox.flushTags( tagsDiv );
 					return false;
 				}
-			}).keypress( function( e ){
+			}).on( 'keypress', function( e ){
 				if ( 13 == e.which ) {
 					e.preventDefault();
 					return false;
@@ -1300,9 +1239,9 @@ console.log( 'listening to controller events' );
 			});
 
 			// get the tag cloud on first click, then toggle visibility
-			tagsDiv.siblings( ':first' ).click( function(){
+			tagsDiv.siblings( ':first' ).on( 'click', function(){
 				mlaModal.tagBox.getCloud( $( 'a', this ).attr( 'id' ), taxonomy );
-				$( 'a', this ).unbind().click( function(){
+				$( 'a', this ).unbind().on( 'click', function(){
 					$( this ).siblings( '.the-tagcloud' ).toggle();
 					return false;
 				});
@@ -1485,7 +1424,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 			if ( -1 != mlaModal.settings.enhancedTaxonomies.indexOf( taxonomy ) ) {
 				// Load the taxonomy checklists on first expansion
-				$( '.compat-field-' + taxonomy + ' th', context ).click( { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
 					mlaModal.utility.fillCompatTaxonomies( event.data );
 				});
 
@@ -1516,7 +1455,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 			if ( -1 != mlaModal.settings.enhancedTaxonomies.indexOf( taxonomy ) ) {
 				// Load the taxonomy checklists on first expansion
-				$( '.compat-field-' + taxonomy + ' th', context ).click( { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', { id: attachmentId, currentTaxonomy: taxonomy, el: context }, function( event ) {
 					mlaModal.utility.fillCompatTaxonomies( event.data );
 				});
 
@@ -1543,7 +1482,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 		});
 
 		if ( mlaModal.settings.enableTermsAutofill && null !== clickTaxonomy ) {
-			$( '.compat-field-' + clickTaxonomy + ' th', context ).click();
+			$( '.compat-field-' + clickTaxonomy + ' th', context ).trigger('click');
 		}
 	};
 
@@ -1637,7 +1576,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 				thisJQuery.find( '.category-tabs' ).show();
 
 				// Expand/collapse the meta box contents
-				$( '.compat-field-' + taxonomy + ' th', context ).click( function() {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
 					$(this).siblings( 'td' ).slideToggle();
 				});
 
@@ -1695,7 +1634,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 				 */
 
 				// Switch between "All ..." and "Most Used"
-				thisJQuery.find( taxonomyIdPrefix + '-tabs a' ).click( function(){
+				thisJQuery.find( taxonomyIdPrefix + '-tabs a' ).on( 'click', function(){
 					var t = $(this).attr('href');
 					$(this).parent().addClass('tabs').siblings('li').removeClass('tabs');
 					thisJQuery.find( taxonomyIdPrefix + '-tabs' ).siblings('.tabs-panel').hide();
@@ -1714,14 +1653,14 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 				// Reflect tab selection remembered in cookie
 				if ( getUserSetting( settingName ) ) {
-					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-pop"]' ).click();
+					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-pop"]' ).trigger('click');
 				}
 
 				// Toggle the "Add New ..." sub panel
-				thisJQuery.find( taxonomyIdPrefix + '-add-toggle' ).click( function() {
+				thisJQuery.find( taxonomyIdPrefix + '-add-toggle' ).on( 'click', function() {
 					thisJQuery.find( taxonomyIdPrefix + '-searcher' ).addClass( 'mla-hidden-children' );
 					thisJQuery.find( taxonomyIdPrefix + '-adder' ).toggleClass( 'mla-hidden-children' );
-					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-all"]' ).click();
+					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-all"]' ).trigger('click');
 
 					thisJQuery.find( taxonomyIdPrefix + '-checklist li' ).show();
 					thisJQuery.find( taxonomyIdPrefix + '-checklist-pop li' ).show();
@@ -1734,14 +1673,14 @@ this.listenTo( this, 'all', this.selectionEvent );
 				});
 
 				// Convert "Enter" key to a click
-				thisJQuery.find( taxonomyNewIdSelector ).keypress( function(event){
+				thisJQuery.find( taxonomyNewIdSelector ).on( 'keypress', function(event){
 					if( 13 === event.keyCode ) {
 						event.preventDefault();
-						thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).click();
+						thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).trigger('click');
 					}
 				});
 
-				thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).click( function(){
+				thisJQuery.find( taxonomyIdPrefix + '-add-submit' ).on( 'click', function(){
 					thisJQuery.find( taxonomyNewIdSelector ).focus();
 				});
 
@@ -1788,13 +1727,13 @@ this.listenTo( this, 'all', this.selectionEvent );
 				/*
 				 * Searchable meta box code from mla-edit-media-scripts.js
 				 */
-				$.extend( $.expr[":"], {
+				$.extend( $.expr.pseudos || $.expr[":"], {
 					"matchTerms": function( elem, i, match, array ) {
 						return ( elem.textContent || elem.innerText || "" ).toLowerCase().indexOf( ( match[3] || "" ).toLowerCase() ) >= 0;
 					}
 				});
 
-				thisJQuery.find( taxonomySearchIdSelector ).keypress( function( event ){
+				thisJQuery.find( taxonomySearchIdSelector ).on( 'keypress', function( event ){
 					// Enter key cancels the filter and closes the search field
 					if( 13 === event.keyCode ) {
 						event.preventDefault();
@@ -1808,7 +1747,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 
 				} );
 
-				thisJQuery.find( taxonomySearchIdSelector ).keyup( function( event ){
+				thisJQuery.find( taxonomySearchIdSelector ).on( 'keyup', function( event ){
 					var searchValue, termList, termListPopular, matchingTerms, matchingTermsPopular;
 
 					// keyup happens after keypress; change the focus if the text box has been closed
@@ -1840,10 +1779,10 @@ this.listenTo( this, 'all', this.selectionEvent );
 				} );
 
 				// Toggle the "Search" sub panel
-				thisJQuery.find( taxonomyIdPrefix + '-search-toggle' ).click( function() {
+				thisJQuery.find( taxonomyIdPrefix + '-search-toggle' ).on( 'click', function() {
 					thisJQuery.find( taxonomyIdPrefix + '-adder ').addClass( 'mla-hidden-children' );
 					thisJQuery.find( taxonomyIdPrefix + '-searcher' ).toggleClass( 'mla-hidden-children' );
-					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-all"]' ).click();
+					thisJQuery.find( taxonomyIdPrefix + '-tabs a[href="#mla-' + taxonomy + '-all"]' ).trigger('click');
 
 					thisJQuery.find( taxonomyIdPrefix + '-checklist li' ).show();
 					thisJQuery.find( taxonomyIdPrefix + '-checklist-pop li' ).show();
@@ -1863,7 +1802,7 @@ this.listenTo( this, 'all', this.selectionEvent );
 				var taxonomy = mlaModal.utility.parseTaxonomyId( $(this).attr('id') );
 
 				// Expand/collapse the meta box contents
-				$( '.compat-field-' + taxonomy + ' th', context ).click( function() {
+				$( '.compat-field-' + taxonomy + ' th', context ).on( 'click', function() {
 					$(this).siblings( 'td' ).slideToggle();
 				});
 

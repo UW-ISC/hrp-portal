@@ -17,8 +17,12 @@
  * opened on 8/21/2017 by "lwcorp".
  * https://wordpress.org/support/topic/create-a-feed-out-of-the-media-library/
  *
+ * Enhanced for support topic "MLA custom feed stops working every now and then"
+ * opened on 4/17/2021 by "wijnveen".
+ * https://wordpress.org/support/topic/mla-custom-feed-stops-working-every-now-and-then/
+ *
  * @package MLA Custom Feed Example
- * @version 1.12
+ * @version 1.13
  */
 
 /*
@@ -26,10 +30,10 @@ Plugin Name: MLA Custom Feed Example
 Plugin URI: http://davidlingren.com/
 Description: Configures and processes custom RSS2 feeds for Media Library items
 Author: David Lingren
-Version: 1.12
+Version: 1.13
 Author URI: http://davidlingren.com/
 
-Copyright 2017-2020 David Lingren
+Copyright 2017-2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -60,7 +64,7 @@ class MLACustomFeedExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.12';
+	const CURRENT_VERSION = '1.13';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -79,22 +83,45 @@ class MLACustomFeedExample {
 	 * @return	void
 	 */
 	public static function initialize() {
+		global $wp_rewrite;
 //error_log( __LINE__ . ' MLACustomFeedExample::initialize $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		
-		// Set the appropriate hooks depending on admin or front-end mode
 		if ( is_admin() ) {
 			add_action( 'admin_menu', 'MLACustomFeedExample::admin_menu' );
 			add_filter( 'set-screen-option', 'MLACustomFeedExample::mla_set_screen_option', 10, 3 );
 			add_filter( 'screen_options_show_screen', 'MLACustomFeedExample::mla_screen_options_show_screen', 10, 2 );
-		} else {
-			if ( MLA_Custom_Feed_Query::get_option('add_mlafeeds') ) {
-				$slugs = MLA_Custom_Feed_Query::mla_custom_feed_slugs('active');
-				foreach ( $slugs as $ID => $slug ) {
-//error_log( __LINE__ . ' MLACustomFeedExample::initialize adding feed ' . $slug, 0 );
-					add_feed( $slug, 'MLACustomFeedExample::mla_custom_feed' );
-				}
-			}
 		}
+		
+		if ( MLA_Custom_Feed_Query::get_option('add_mlafeeds') ) {
+			$slugs = MLA_Custom_Feed_Query::mla_custom_feed_slugs('active');
+			foreach ( $slugs as $ID => $slug ) {
+//error_log( __LINE__ . ' MLACustomFeedExample::initialize adding feed ' . $slug, 0 );
+				add_feed( $slug, 'MLACustomFeedExample::mla_custom_feed' );
+			}
+
+			// Make sure our feeds are reflected in the WordPress URL rewrite rules
+			if ( is_callable( array( $wp_rewrite, 'wp_rewrite_rules' ) ) ) {
+				foreach ( $wp_rewrite->wp_rewrite_rules() as $rule => $url ) {
+					// Looking for 'feed/(feed|rdf|rss|rss2|atom|mlafeed|mlafeed-2|mlacat|aaa)/?$' => 'index.php?&feed=$matches[1]',
+					if ( 0 === strpos( $rule, 'feed/(feed' ) ) {
+						$feeds = explode( '|', substr( $rule, 6, ( strlen( $rule ) - ( 6 + 4 ) ) ) );
+//error_log( __LINE__ . ' DEBUG: MLACore::initialize feeds = ' . var_export( $feeds, true ), 0 );
+						foreach ( $slugs as $index => $slug ) {
+							if ( in_array( $slug, $feeds ) ) {
+								unset( $slugs[ $index ] );
+							}
+						}
+//error_log( __LINE__ . ' DEBUG: MLACore::initialize residual slugs = ' . var_export( $slugs, true ), 0 );
+
+						// Any missing feeds?  (Deleted feeds still present are harmless)
+						if ( !empty( $slugs ) ) {
+							$wp_rewrite->flush_rules( false );
+//error_log( __LINE__ . ' DEBUG: MLACore::initialize flush_rules complete', 0 );
+						}
+					} // found feed rule
+				} // foreach rule
+			}
+		} // add_mlafeeds
 	}
 
 	/**
@@ -238,7 +265,9 @@ class MLACustomFeedExample {
 				$dismiss_button = '';
 			} else {
 				$messages_class = 'updated notice is-dismissible';
-				$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
+				//$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
+				$dismiss_button = ''; // /wp-admin/js/common.js function makeNoticesDismissible() since WP 4.4.0
+
 			}
 
 			$page_values['messages'] = MLAData::mla_parse_template( self::$page_template_array['messages'], array(

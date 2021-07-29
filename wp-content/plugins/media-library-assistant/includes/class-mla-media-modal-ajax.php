@@ -646,20 +646,26 @@ class MLAModal_Ajax {
 	 * @return	void	passes array of post arrays to wp_send_json_success() for JSON encoding and transmission
 	 */
 	public static function mla_query_attachments_action() {
+//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		if ( ! current_user_can( 'upload_files' ) ) {
 			wp_send_json_error();
 		}
 
-		// Pick out and clean up the query terms we can process
-		$raw_query = isset( $_REQUEST['query'] ) ? (array) $_REQUEST['query'] : array(); // phpcs:ignore
-		$query = array_intersect_key( $raw_query, array_flip( array(
+		$keys =  array(
 			'order', 'orderby', 'posts_per_page', 'paged', 'post_mime_type',
-			'post_parent', 'post__in', 'post__not_in',
+			'post_parent', 'author', 'post__in', 'post__not_in', 'year', 'monthnum', 
 			'mla_filter_month', 'mla_filter_term', 'mla_terms_search',
 			'mla_search_value', 's', 'mla_search_fields', 'mla_search_connector'
-		) ) );
+		);
+
+		// Pick out and clean up the query terms we can process
+		$raw_query = isset( $_REQUEST['query'] ) ? (array) $_REQUEST['query'] : array(); // phpcs:ignore
+//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() raw_query = ' . var_export( $raw_query, true ), 0 );
+
+		$query = array_intersect_key( $raw_query, array_flip( $keys ) );
 
 		$query = apply_filters( 'mla_media_modal_query_initial_terms', $query, $raw_query );
+//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() query = ' . var_export( $query, true ), 0 );
 
 		if ( isset( $query['post_mime_type'] ) ) {
 			if ( 'detached' == $query['post_mime_type'] ) {
@@ -755,9 +761,29 @@ class MLAModal_Ajax {
 			}
 		}
 
-		$query = MLAQuery::mla_query_media_modal_items( $query, $offset, $count );
-		$posts = array_map( 'wp_prepare_attachment_for_js', $query->posts );
+		// Defined in wp-admin/includes/ajax-actions.php function wp_ajax_query_attachments()
+		$query = apply_filters( 'ajax_query_attachments_args', $query );
+//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() query = ' . var_export( $query, true ), 0 );
+
+		$attachments_query = MLAQuery::mla_query_media_modal_items( $query, $offset, $count );
+		$posts = array_map( 'wp_prepare_attachment_for_js', $attachments_query->posts );
 		$posts = array_filter( $posts );
+		$total_posts = $attachments_query->found_posts;
+	
+		if ( $total_posts < 1 ) {
+			// Out-of-bounds, run the query again without LIMIT for total count.
+			unset( $query['paged'] );
+	
+			$count_query = new WP_Query();
+			$count_query->query( $query );
+			$total_posts = $count_query->found_posts;
+		}
+	
+		$max_pages = ceil( $total_posts / (int) $attachments_query->query['posts_per_page'] );
+//error_log( __LINE__ . " MLAModal_Ajax::mla_query_attachments_action( {$total_posts}, {$max_pages} )", 0 );
+	
+		header( 'X-WP-Total: ' . (int) $total_posts );
+		header( 'X-WP-TotalPages: ' . (int) $max_pages );
 
 		wp_send_json_success( $posts );
 	}

@@ -1065,6 +1065,13 @@ class MLASettings {
 			'_wp_http_referer' => wp_referer_field( false ),
 			'Go to Top' => __( 'Go to Top', 'media-library-assistant' ),
 			'Go to Bottom' => __( 'Go to Bottom', 'media-library-assistant' ),
+			'Donations to Support MLA' => __( 'Donations to Support MLA', 'media-library-assistant' ),
+			'Donate to our fund' => __( 'Donate to our fund', 'media-library-assistant' ),
+			'Donate' => __( 'Donate', 'media-library-assistant' ),
+			/* translators: 1: donation hyperlink */
+			'Donate Text' => sprintf( __( '<strong>I do not solicit nor accept personal donations in support of the plugin.</strong> WordPress and its global community means a lot to me and I am happy to give something back.
+<br />&nbsp;<br />
+If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our Chateau Seaview Fund at the Golden West Chapter of the ALS Association. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!', 'media-library-assistant' ), '<a href="http://webgw.alsa.org/goto/ChateauSeaviewFund" title="' . __( 'Donate to our fund', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
 			'shortcode_list' => '',
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-general&mla_tab=general',
 			'options_list' => '',
@@ -1260,17 +1267,13 @@ class MLASettings {
 
 		$page_values = array();
 
-		/*
-		 * Saving the options can change the log file name, so do it first
-		 */
+		// Saving the options can change the log file name, so do it first
 		if ( !empty( $_REQUEST['mla-debug-options-save'] ) ) {
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			$page_content = self::_save_debug_settings();
 		}
 
-		/*
-		 * Find the appropriate error log file
-		 */
+		// Find the appropriate error log file
 		$error_log_name = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_FILE );
 		if ( empty( $error_log_name ) ) {
 			$error_log_name =  ini_get( 'error_log' );
@@ -1285,9 +1288,7 @@ class MLASettings {
 
 		$error_log_exists = file_exists ( $error_log_name );
 
-		/*
-		 * Check for other page-level actions
-		 */
+		// Check for other page-level actions
 		if ( isset( $_REQUEST['mla_reset_log'] ) && 'true' == $_REQUEST['mla_reset_log'] ) {
 			$file_error = false;
 			$file_handle = @fopen( $error_log_name, 'w' );
@@ -1314,9 +1315,7 @@ class MLASettings {
 			}
 		}
 
-		/*
-		 * Start with any page-level options
-		 */
+		// Start with any page-level options
 		$options_list = '';
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
 			if ( 'debug' == $value['tab'] ) {
@@ -1324,19 +1323,16 @@ class MLASettings {
 			}
 		}
 
-		/*
-		 * Gather Debug Settings
-		 */
+		// Gather Debug Settings
 		$display_limit = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_DISPLAY_LIMIT );
 		$debug_file = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_FILE );
 		$replace_php = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_LOG );
 		$php_reporting = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_PHP_REPORTING );
 		$mla_reporting = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_REPLACE_LEVEL );
+		$taxonomy_columns = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_ADD_TAXONOMY_COLUMNS );
 
 		if ( $error_log_exists ) {
-			/*
-			 * Add debug content
-			 */
+			// Add debug content
 			$display_limit = absint( MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_DISPLAY_LIMIT ) );
 			$error_log_size = filesize( $error_log_name ); 
 
@@ -1458,6 +1454,8 @@ class MLASettings {
 		$current_tab_slug = isset( $_REQUEST['mla_tab'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_tab'] ) ): 'general';
 		$current_tab = self::_get_options_tablist( $current_tab_slug );
 		$page_values = array(
+			'Donate to our fund' => __( 'Donate to our fund', 'media-library-assistant' ),
+			'Donate' => __( 'Donate', 'media-library-assistant' ),
 			'version' => 'v' . MLACore::CURRENT_MLA_VERSION,
 			'development' => $development_version,
 			'messages' => '',
@@ -1813,7 +1811,7 @@ class MLASettings {
 		fclose($file_handle);
 
 		/* translators: 1: number of option settings */
-		$page_content['message'] = sprintf( __( 'Settings exported; %1$s settings recorded.', 'media-library-assistant' ), $stored_count );
+		$page_content['message'] = sprintf( __( 'Settings exported; %1$s settings recorded in %2$s.', 'media-library-assistant' ), $stored_count, $filename );
 
 		/*
 		 * Uncomment this for debugging.

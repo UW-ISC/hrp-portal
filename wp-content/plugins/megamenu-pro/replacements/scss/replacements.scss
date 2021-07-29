@@ -96,6 +96,9 @@
 		$search_custom_icon_url_hover: nth($item, 13);
 		$search_custom_icon_width: nth($item, 14);
 		$search_custom_icon_height: nth($item, 15);
+		$search_custom_icon_size: nth($item, 16);
+		$search_custom_icon_is_fa5: nth($item, 17);
+		$search_custom_icon_fa5_family: nth($item, 18);
 
 	  	@if type-of($id) == number {
 
@@ -232,6 +235,27 @@
                             	background-position: center center;
 							}
 
+							@if $search_custom_icon_is_fa5 == true {
+								&.fab:before {
+									font-family: 'Font Awesome 5 Brands';
+									font-weight: 400;
+								}
+
+								&.far:before {
+									font-family: $search_custom_icon_fa5_family;
+									font-weight: 400;
+								}
+								&.fas:before {
+									font-family: $search_custom_icon_fa5_family;
+									font-weight: 900;
+								}
+
+								&.fal:before {
+									font-family: $search_custom_icon_fa5_family;
+									font-weight: 300;
+								}
+							}
+
 							@include mobile {
 								right: 5px;
 							}
@@ -249,6 +273,10 @@
 								width: $search_height;
 								vertical-align: middle;
 								line-height: $search_height;
+
+								@if $search_custom_icon_size != inherit {
+									font-size: $search_custom_icon_size;
+								}
 
 								@include mobile {
 									color: $search_icon_color_open;

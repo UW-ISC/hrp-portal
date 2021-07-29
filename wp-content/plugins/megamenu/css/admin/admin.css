@@ -1164,15 +1164,16 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled],
         color: #999;
         line-height: 1.5em;
         text-indent: 2px;
-        margin-top: 5px; }
+        margin-top: 5px;
+        display: inline;
+        font-style: italic; }
         .nav-menus-php #cboxContent table td.mega-value .mega-description p {
           font-size: 0.9em; }
     .nav-menus-php #cboxContent table .mega-menu-item-align td.mega-value select {
       float: left; }
     .nav-menus-php #cboxContent table .mega-menu-item-align td.mega-value .mega-description {
       float: left;
-      margin-left: 10px;
-      font-style: italic; }
+      margin-left: 10px; }
     .nav-menus-php #cboxContent table .mega-sub-menu-align td.mega-value select {
       float: left;
       margin-right: 10px; }
@@ -1614,8 +1615,7 @@ body.toplevel_page_maxmegamenu .megamenu_wrap .warning {
 body[class*='_page_maxmegamenu_'] .mm-picker-container,
 body.toplevel_page_maxmegamenu .mm-picker-container {
   border-radius: 3px;
-  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
-  border: 1px solid #7e8993;
+  border: 1px solid #8c8f94;
   font-size: 0.9em;
   float: left; }
   body[class*='_page_maxmegamenu_'] .mm-picker-container .sp-replacer,
@@ -1634,6 +1634,7 @@ body.toplevel_page_maxmegamenu .mm-picker-container {
   body[class*='_page_maxmegamenu_'] .mm-picker-container .sp-replacer .sp-preview,
   body.toplevel_page_maxmegamenu .mm-picker-container .sp-replacer .sp-preview {
     border: 0;
+    border-right: 1px solid #8c8f94;
     height: 26px;
     width: 26px;
     margin: 0; }
@@ -1927,6 +1928,9 @@ body.toplevel_page_maxmegamenu .megamenu_right {
     body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table select {
       font-size: 11px;
       min-height: 28px; }
+    body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings table select,
+    body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table select {
+      max-width: 200px; }
     body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings table textarea,
     body.toplevel_page_maxmegamenu .megamenu_right .menu_settings table textarea {
       width: 100%;
@@ -2432,3 +2436,5 @@ body.toplevel_page_maxmegamenu .mega-delete {
 @keyframes busy-animation {
   0% {
     background-position: 200px 0; } }
+
+/*# sourceMappingURL=admin.css.map */

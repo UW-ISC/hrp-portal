@@ -24,18 +24,18 @@ var jQuery;
 	mla.setParent = {
 		init: function() {
 			// Send setParent selected parent
-			$( '#mla-set-parent-submit' ).click( function( event ) {
+			$( '#mla-set-parent-submit' ).on( 'click', function( event ) {
 				if ( ! $( '#mla-set-parent-response-div input[type="radio"]:checked' ).length )
 					event.preventDefault();
 			});
 
 			// Send setParent parent keywords for filtering
-			$( '#mla-set-parent-search' ).click( function () {
+			$( '#mla-set-parent-search' ).on( 'click', function () {
 				$( '#mla-set-parent-paged' ).val( 1 );
 				mla.setParent.send();
 			});
 
-			$( '#mla-set-parent-search-div :input' ).keypress( function() {
+			$( '#mla-set-parent-search-div :input' ).on( 'keypress', function() {
 				if ( 13 == event.which ) {
 					mla.setParent.send();
 					return false;
@@ -43,13 +43,13 @@ var jQuery;
 			});
 
 			// Send post type(s) for filtering
-			$( '#mla-set-parent-post-type' ).change( function () {
+			$( '#mla-set-parent-post-type' ).on( 'change', function () {
 				$( '#mla-set-parent-paged' ).val( 1 );
 				mla.setParent.send();
 			});
 
 			// Pagination controls
-			$( '#mla-set-parent-previous' ).click( function () {
+			$( '#mla-set-parent-previous' ).on( 'click', function () {
 				var paged = + $( '#mla-set-parent-paged' ).val();
 
 				if ( paged > 1 ) {
@@ -61,7 +61,7 @@ var jQuery;
 				mla.setParent.send();
 			});
 
-			$( '#mla-set-parent-next' ).click( function () {
+			$( '#mla-set-parent-next' ).on( 'click', function () {
 				var count = + $( '#mla-set-parent-count' ).val(),
 					paged = + $( '#mla-set-parent-paged' ).val(),
 					found = + $( '#mla-set-parent-found' ).val();
@@ -76,9 +76,9 @@ var jQuery;
 			});
 
 			// Close the setParent pop-up
-			$( '#mla-set-parent-close-div' ).click( mla.setParent.close );
+			$( '#mla-set-parent-close-div' ).trigger( 'click', mla.setParent.close );
 
-			$( '#mla-set-parent-cancel' ).click( function ( event ) {
+			$( '#mla-set-parent-cancel' ).on( 'click', function ( event ) {
 				event.preventDefault();
 				return mla.setParent.close();
 			});
@@ -116,7 +116,7 @@ var jQuery;
 
 			$( '#mla-set-parent-div' ).show();
 
-			$( '#mla-set-parent-input ' ).focus().keyup( function( event ){
+			$( '#mla-set-parent-input ' ).focus().on( 'keyup', function( event ){
 				if ( event.which == 27 ) {
 					mla.setParent.close();
 				} // close on Escape

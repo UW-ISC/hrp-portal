@@ -13,7 +13,7 @@ if ( typeof ajaxurl === 'undefined' ) {
 		if ( typeof window._wpMediaViewsL10n === 'object' ) {
 			if ( typeof window._wpMediaViewsL10n.mla_strings === 'object' ) {
 				if ( typeof window._wpMediaViewsL10n.mla_strings.ajaxurl === 'string' ) {
-					var ajaxurl = window._wpMediaViewsL10n.mla_strings.ajaxurl;
+					ajaxurl = window._wpMediaViewsL10n.mla_strings.ajaxurl;
 				} else {
 					console.log( 'mla-define-ajaxurl-scripts.js window._wpMediaViewsL10n.mla_strings.ajaxurl failed' );
 				}
