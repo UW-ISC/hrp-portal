@@ -51,7 +51,7 @@
                         <h4 class="c-title-color m-b-2 m-t-0">
                             <?php _e('TMS Store Purchase Code', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('If your brought the plugin directly on our website or in the Lite version, enter TMS Store purchase code to enable auto updates.', 'wpdatatables'); ?>"></i>
+                               title="<?php _e('If you bought the plugin directly on our website or in the Lite version, enter your TMS Store purchase code to enable auto updates.', 'wpdatatables'); ?>"></i>
                         </h4>
                         <!-- /TMS Store Purchase Code Heading -->
 
@@ -60,7 +60,7 @@
                             <div class="row">
 
                                 <!-- TMS Store Purchase Code Input -->
-                                <div class="col-sm-11 p-r-0">
+                                <div class="col-sm-11 p-r-0 wdt-purchase-code-store-wrapper">
                                     <div class="fg-line">
                                         <input type="text" name="wdt-purchase-code-store"
                                                id="wdt-purchase-code-store"
@@ -71,6 +71,20 @@
                                     </div>
                                 </div>
                                 <!-- TMS Store Purchase Code Input -->
+
+                                <!-- TMS Store Security massage -->
+                                <div class="col-sm-11 p-r-0 wdt-security-massage-wrapper hidden">
+                                    <div class="fg-line">
+                                        <div class="alert alert-info" role="alert">
+                                            <i class="wpdt-icon-info-circle-full"></i>
+                                            <span class="wdt-alert-title f-600">
+                                        <?php _e('Your purchase code has been hidden for security reasons. You can find it on your', 'wpdatatables'); ?>
+                                        <a href="https://store.tms-plugins.com/login" target="_blank"><?php _e('store page', 'wpdatatables'); ?></a>.
+                                    </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- TMS Store Security massage -->
 
                                 <!-- TMS Store Purchase Code Activate Button -->
                                 <div class="col-sm-1">

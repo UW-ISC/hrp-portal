@@ -145,7 +145,7 @@
                     <div class="fg-line">
                         <div class="row">
                             <div class="col-sm-12">
-                                <input type="text" name="font-name" id="series-label-{{>orig_header}}" value="{{>label}}" class="form-control input-sm series-label" />
+                                <input type="text" name="font-name" id="series-label-{{:#index}}" value="{{>label}}" class="form-control input-sm series-label" />
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
                     <div class="form-group">
                         <div class="fg-line dropdown">
                             <div id="cp" class="input-group wdt-color-picker"">
-                                <input type="text" id="series-color-{{>orig_header}}" value="" class="form-control cp-value series-color wdt-add-picker" />
+                                <input type="text" id="series-color-{{:#index}}" value="" class="form-control cp-value series-color wdt-add-picker" />
                                 <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                             </div>
                         </div>

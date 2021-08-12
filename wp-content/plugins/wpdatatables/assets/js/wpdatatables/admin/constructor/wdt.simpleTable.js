@@ -17,14 +17,6 @@
          */
         if (container.length) {
 
-            var perfEntries = performance.getEntriesByType("navigation");
-
-            // Reload page with simple table editor if is coming from some
-            // page after back button in browser
-            if (perfEntries[0].type === "back_forward") {
-                location.reload(true);
-            }
-
             var wpdtEditor = new Handsontable(container[0], {
                 startRows: rowNumber,
                 startCols: colNumber,
@@ -55,8 +47,8 @@
                                     {
                                         key: 'alignment:left',
                                         name: 'Left',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[5].click()
                                             }, 0);
                                         }
@@ -64,8 +56,8 @@
                                     {
                                         key: 'alignment:center',
                                         name: 'Center',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[6].click()
                                             }, 0);
                                         }
@@ -73,8 +65,8 @@
                                     {
                                         key: 'alignment:right',
                                         name: 'Right',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[7].click()
                                             }, 0);
                                         }
@@ -82,8 +74,8 @@
                                     {
                                         key: 'alignment:justify',
                                         name: 'Justify',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[8].click()
                                             }, 0);
                                         }
@@ -94,8 +86,8 @@
                                     {
                                         key: 'alignment:top',
                                         name: 'Top',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[10].click()
                                             }, 0);
                                         }
@@ -103,8 +95,8 @@
                                     {
                                         key: 'alignment:middle',
                                         name: 'Middle',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[9].click()
                                             }, 0);
                                         }
@@ -112,8 +104,8 @@
                                     {
                                         key: 'alignment:bottom',
                                         name: 'Bottom',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[11].click()
                                             }, 0);
                                         }
@@ -130,8 +122,8 @@
                                     {
                                         key: 'wrapping:wrap',
                                         name: 'Wrap',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[12].click()
                                             }, 0);
                                         }
@@ -139,8 +131,8 @@
                                     {
                                         key: 'wrapping:overflow',
                                         name: 'Overflow',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[13].click()
                                             }, 0);
                                         }
@@ -148,8 +140,8 @@
                                     {
                                         key: 'wrapping:clip',
                                         name: 'Clip',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 cellActionButtons[14].click()
                                             }, 0);
                                         }
@@ -170,8 +162,8 @@
                                     {
                                         key: 'add:link',
                                         name: 'Link',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 $('#wpdt-link').click()
                                             }, 0);
                                         }
@@ -179,8 +171,8 @@
                                     {
                                         key: 'add:media',
                                         name: 'Media',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 $('#wpdt-media').click()
                                             }, 0);
                                         }
@@ -188,8 +180,8 @@
                                     {
                                         key: 'add:html',
                                         name: 'HTML code',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 $('#wpdt-html').click()
                                             }, 0);
                                         }
@@ -197,8 +189,8 @@
                                     {
                                         key: 'add:shortcode',
                                         name: 'Shortcode',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 $('#wpdt-do-shortcode').click()
                                             }, 0);
                                         }
@@ -206,8 +198,8 @@
                                     {
                                         key: 'add:star',
                                         name: 'Star rating',
-                                        callback: function(key, selection, clickEvent) {
-                                            setTimeout(function() {
+                                        callback: function (key, selection, clickEvent) {
+                                            setTimeout(function () {
                                                 $('#wpdt-star-rating').click()
                                             }, 0);
                                         }
@@ -218,8 +210,8 @@
                         'separator7': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'clear': {
                             name: 'Clear table data',
-                            callback: function(key, selection, clickEvent) {
-                                setTimeout(function() {
+                            callback: function (key, selection, clickEvent) {
+                                setTimeout(function () {
                                     $('#wpdt-clear').click()
                                 }, 0);
                             }
@@ -242,8 +234,8 @@
                     return cellPrp
                 },
                 afterSelection: (row, column, row2, column2, preventScrolling, selectionLayerLevel) => {
-                       disableButtons();
-                       updateActiveButtons()
+                    disableButtons();
+                    updateActiveButtons()
                 }
             });
             wpdtEditor.selectCell(0, 0);
@@ -438,9 +430,9 @@
                         $('#wdt-error-modal').modal('show');
                         $('.wdt-preload-layer').animateFadeOut();
                     } else {
-                        if (data.reload){
+                        if (data.reload) {
                             location.reload()
-                        }else {
+                        } else {
                             $('.wdt-preload-layer').animateFadeOut();
                             var heightHT = jQuery('.ht_master .wtHider');
                             wpdtEditor.updateSettings({
@@ -528,6 +520,8 @@
                 mainValignButtonIcon = $('#wpdt-valign-button i:first-child'),
                 mainWrapButtonIcon = $('#wpdt-wrap-button i:first-child'),
                 textColorButton = $('#wpdt-text-color'),
+                fontSizeSelect = $('#wpdt-font-size'),
+                fontFamilySelect = $('#wpdt-font-family'),
                 linkButton = $('#wpdt-link'),
                 mediaButton = $('#wpdt-media'),
                 htmlButton = $('#wpdt-html'),
@@ -568,6 +562,28 @@
             } else {
                 bgColorButton.removeAttr('style');
                 bgColorButton.css("border-bottom-color", "#FFFFFF");
+            }
+            // Update Font size select
+            if (cellClasses.indexOf('wpdt-fs-') !== -1) {
+                let fontSize = cellClasses.substring(cellClasses.indexOf('wpdt-fs-') + 8, cellClasses.indexOf('wpdt-fs-') + 14);
+                const regex = new RegExp("^0+(?!$)", 'g');
+                // Replaces the matched
+                // value with given string
+                fontSize = fontSize.replaceAll(regex, "");
+                fontSizeSelect.val(fontSize)
+            } else {
+                fontSizeSelect.val(13)
+            }
+            // Update Font family select
+            if (cellClasses.indexOf('wpdt-ff-') !== -1) {
+                let fontFamily = cellClasses.substring(cellClasses.indexOf('wpdt-ff-') + 8, cellClasses.indexOf('wpdt-ff-') + 14);
+                const regex = new RegExp("^0+(?!$)", 'g');
+                // Replaces the matched
+                // value with given string
+                fontFamily = fontFamily.replaceAll(regex, "");
+                fontFamilySelect.val(fontFamily)
+            } else {
+                fontFamilySelect.val(0)
             }
             // Update Horizontal right align button
             if (cellClasses.indexOf('wpdt-align-right') !== -1) {
@@ -736,9 +752,10 @@
         }
 
         /**
-         * Add dynamic color classes for cells
+         * Add dynamic classes for cells
          */
-        function addDynamicStyle(selectedCells, color, partClass) {
+        function addDynamicStyle(selectedCells, value, partClass, fontFamilyArr = []) {
+            let newValue;
             for (var index = 0; index < selectedCells.length; index += 1) {
                 var item = selectedCells[index],
                     startRow = Math.min(item[0], item[2]),
@@ -753,9 +770,18 @@
                         cell.className = typeof cell.className == 'string' ? cell.className : '';
 
                         if (cell.className.indexOf(partClass) !== -1) {
-                            newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), partClass + color);
+                            if (partClass == 'wpdt-ff-' || partClass == 'wpdt-fs-') {
+                                newValue = String(value).padStart(6, '0');
+                            } else {
+                                newValue = value;
+                            }
+                            newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), partClass + newValue);
                         } else {
-                            newClassName = cell.className + ' ' + partClass + color;
+                            if (partClass == 'wpdt-ff-' || partClass == 'wpdt-fs-') {
+                                newClassName = cell.className + ' ' + partClass + String(value).padStart(6, '0');
+                            } else {
+                                newClassName = cell.className + ' ' + partClass + value;
+                            }
                         }
                         wpdtEditor.setCellMeta(rowIndex, columnIndex, 'className', newClassName.trimStart());
                     }
@@ -763,9 +789,14 @@
             }
             wpdtEditor.render();
             if (partClass === 'wpdt-tc-') {
-                addStylesheetRules('.' + partClass + color, 'color:#' + color + ' !important;')
-            } else {
-                addStylesheetRules('.' + partClass + color, 'background-color:#' + color + ' !important;');
+                addStylesheetRules('.' + partClass + value, 'color:#' + value + ' !important;')
+            } else if (partClass === 'wpdt-bc-') {
+                addStylesheetRules('.' + partClass + value, 'background-color:#' + value + ' !important;');
+            } else if (partClass === 'wpdt-fs-') {
+                addStylesheetRules('.' + partClass + String(value).padStart(6, '0'), 'font-size:' + value + 'px !important;');
+            } else if (partClass === 'wpdt-ff-') {
+                let fontFamily = value === '0' ? 'inherit' : fontFamilyArr[value - 1];
+                addStylesheetRules('.' + partClass + String(value).padStart(6, '0'), 'font-family:' + fontFamily + ' !important;');
             }
         }
 
@@ -1213,6 +1244,19 @@
         });
 
         /**
+         * Apply font-size and font-family for text in the cell
+         */
+        $('#wpdt-font-size,#wpdt-font-family').on('change', function (e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            let target = $(this)[0].id,
+                selectValue = $(this).val(),
+                selectedCells = wpdtEditor.getSelected(),
+                fontFamilyArr = $(this).data('wpdt-fonts'),
+                partClass = (target == 'wpdt-font-size') ? 'wpdt-fs-' : 'wpdt-ff-';
+            addDynamicStyle(selectedCells, selectValue, partClass, fontFamilyArr);
+        });
+        /**
          * Insert media in cell
          */
         $('#wpdt-media').click(function (e) {
@@ -1424,7 +1468,7 @@
                         editor.setContent($('#wpdt-tiny-mce').val());
                     }
                 },
-                height : "400",
+                height: "400",
                 menubar: false,
                 forced_root_block: "div",
                 forced_root_block_attrs: {
@@ -1612,22 +1656,22 @@
                     showNumber = $('#wpdt-star-rating-number').is(":checked"),
                     colHeaderArr = wpdtEditor.getColHeader();
 
-                
+
                 starRateElement.css("margin-bottom", "5px");
                 starWrapper = '<div class="rating">';
                 isInt = Number.isInteger(rating);
                 ratingEnd = rating % 1 === 0 ? rating : Math.floor(rating)
                 for (var i = 0; i < maxValue; i++) {
-                    if (i < ratingEnd){
+                    if (i < ratingEnd) {
                         starWrapper += '<span class="full rated"></span>';
-                    }else if (!isInt && i == ratingEnd) {
+                    } else if (!isInt && i == ratingEnd) {
                         starWrapper += '<span class="half half-reflect"></span>';
-                    }else {
+                    } else {
                         starWrapper += '<span class="full"></span>';
                     }
                 }
                 starWrapper += '</div>';
-                if (showNumber){
+                if (showNumber) {
                     starWrapper += '<div class="rateNum">' + rating + '/' + maxValue + '</div>'
                 }
 
@@ -1700,7 +1744,7 @@
                 disableButtons();
                 getWidthData();
                 getHeightData();
-                wpdtEditor.selectCell(0,0)
+                wpdtEditor.selectCell(0, 0)
             });
             wpdtEditor.addHook('afterCreateCol', function (insertColumnIndex, amount, source) {
                 disableButtons();
@@ -1725,7 +1769,7 @@
                     wpdtEditor.allWidths.splice(insertColumnIndex + n, 0, wpdtEditor.allWidths[selectedColumnIndex]);
                 }
                 getHeightData();
-                wpdtEditor.selectCell(0,0)
+                wpdtEditor.selectCell(0, 0)
             });
             wpdtEditor.addHook('beforeRemoveRow', function (from, amount) {
                 var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
@@ -1757,7 +1801,7 @@
                     }
                 }
                 disableButtons();
-                setTimeout(function() {
+                setTimeout(function () {
                     let heightHT = $('.ht_master .wtHider');
                     wpdtEditor.updateSettings({
                         height: setHeightHT(heightHT)
@@ -1863,7 +1907,7 @@
          * Set wpdtEditor height after tabs switching
          */
         $('.wdt-simple-table-settings .edit-table-settings-tab a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-            setTimeout(function() {
+            setTimeout(function () {
                 let heightHT = $('.ht_master .wtHider');
                 wpdtEditor.updateSettings({
                     height: setHeightHT(heightHT)

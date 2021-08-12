@@ -19,6 +19,9 @@
     box-shadow: 0 2px 5px rgba(23, 43, 77, 0.1), 0 0 1px rgba(23, 43, 77, 0.32);
     border-radius: 3px;
 }
+.wpdt-c .wdt-activation-section .panel-body .alert {
+    padding: 9px !important;
+}
 .wpdt-c .wdt-activation-section .wpdt-plugins-desc{
     min-height: 50px;
     padding: 12px;

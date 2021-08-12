@@ -482,6 +482,7 @@ class WDTTools
             'replace' => __('Replace', 'wpdatatables'),
             'removeFileAttachment' => __('Remove', 'wpdatatables'),
             'rowDeleted' => __('Row has been deleted!', 'wpdatatables'),
+            'saveChart' => __('Save chart', 'wpdatatables'),
             'saveFileAttachment' => __('Save', 'wpdatatables'),
             'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
             'selectFileAttachment' => __('Select file', 'wpdatatables'),

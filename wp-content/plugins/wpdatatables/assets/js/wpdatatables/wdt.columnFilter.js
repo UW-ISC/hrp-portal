@@ -825,7 +825,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
     }
 
     // Label of the selectbox if "Filter label" option is set
-    var selectTitle = aoColumn.filterLabel ? aoColumn.filterLabel : '';
+    var selectTitle = aoColumn.filterLabel ? aoColumn.filterLabel : wpdatatables_frontend_strings.nothingSelected;
 
     // Create selectbox HTML with live search
     var select = '<select class="wdt-select-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '">';
@@ -987,7 +987,8 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
     }
 
     // Label of the selectbox if "Filter label" option is set
-    var selectTitle = aoColumn.filterLabel ? aoColumn.filterLabel : '';
+
+    var selectTitle = aoColumn.filterLabel ? aoColumn.filterLabel : wpdatatables_frontend_strings.nothingSelected;;
 
     // Create selectbox HTML with live search
     var select = '<select class="wdt-multiselect-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" multiple data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '">';

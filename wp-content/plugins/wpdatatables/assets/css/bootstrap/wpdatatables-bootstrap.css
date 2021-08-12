@@ -426,7 +426,7 @@
 }
 
 .wpdt-c .glyphicon-trash:before {
-    content: "\e020";
+    content: "\f273";
 }
 
 .wpdt-c .glyphicon-home:before {
@@ -4327,7 +4327,6 @@
     text-decoration: none;
     background-color: transparent;
     background-image: none;
-    filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
     cursor: not-allowed;
 }
 
@@ -8892,10 +8891,7 @@ select.input-group-lg > .input-group-btn > .btn {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
 }
 
-.wpdt-c html {
-    overflow-x: hidden \0/;
-    -ms-overflow-style: none;
-}
+
 
 .wpdt-c html:not(.ie9) body {
     overflow-y: scroll;
@@ -13583,6 +13579,16 @@ input:focus {
 .wpdt-c .wdt-datetimepicker-modal .datepicker {
     width: 100% !important;
 }
+.wpdt-c .wdt-datetimepicker-modal .timepicker .timepicker-picker .table-condensed tr:nth-child(2) td button.btn:hover {
+    background: #FFF !important;
+    color: #2196F3;
+}
+.wpdt-c .wdt-datetimepicker-modal .timepicker .timepicker-picker .table-condensed tr:nth-child(2) {
+    background: #2196F3 !important;
+    color: #FFF;
+    border-radius: unset !important;
+}
+
 .wpdt-c .wdt-datetimepicker-modal > ul li{
     margin: 0;
 }
@@ -13672,4 +13678,48 @@ input:focus {
 .wpdt-c .wpdt-custom-center-flex{
     display: flex;
     justify-content: center;
+}
+
+#datatables_buttons_info {
+    width: 264px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    height: 52px;
+    border: 2px solid #37393d;
+    border-radius: 26px;
+    box-shadow: 0 18px 18px 0 rgba(10, 31, 68, 0.12), 0 0 1px 0 rgba(10, 31, 68, 0.1);
+    background-color: #37393d;
+    margin-top: 0;
+    margin-left: 0;
+    line-height: normal;
+    text-align: center;
+    z-index: 9999;
+}
+
+#datatables_buttons_info:before,
+#datatables_buttons_info:after{
+    display: none;
+}
+
+#datatables_buttons_info h2{
+    font-family: GraphikWeb;
+    font-size: 16px;
+    font-weight: 500;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #ffffff;
+    padding: 0;
+    margin: 2px auto 0;
+    border-bottom: 1px solid #37393d;
+    background-color: transparent;
+}
+
+#datatables_buttons_info > div {
+    display: block;
+    padding: 5px 0 0 0;
+    color: #FFFFFF;
+    font-size: 12px;
 }

@@ -77,6 +77,7 @@ class WPDataTable {
     private $_fixedLayout = false;
     private $_wordWrap = false;
     private $_columnsCSS = '';
+    private $_showTableToolsIncludeHTML = 0;
     private $_tableToolsConfig = array();
     private $_autoRefreshInterval = 0;
     private $_infoBlock = true;
@@ -465,6 +466,16 @@ class WPDataTable {
 
     public function TTEnabled() {
         return $this->_showTT;
+    }
+
+    public function getTableToolsIncludeHTML()
+    {
+        return $this->_showTableToolsIncludeHTML;
+    }
+
+    public function setTableToolsIncludeHTML($showTableToolsIncludeHTML)
+    {
+        $this->_showTableToolsIncludeHTML = $showTableToolsIncludeHTML;
     }
 
     public function hideToolbar() {
@@ -1894,7 +1905,11 @@ class WPDataTable {
                     $columnSearchFromTable = false;
                     $columnSearchFromDefaultValue = false;
 
-                	if (isset($_POST['columns'][$i]['search']) &&
+                    //Apply placeholders when they are set in filter predefined value
+                    if (isset($wdtParameters['filterDefaultValue'][$i]))
+                        $wdtParameters['filterDefaultValue'][$i]=  WDTTools::applyPlaceholders($wdtParameters['filterDefaultValue'][$i]);
+
+                    if (isset($_POST['columns'][$i]['search']) &&
 	                    $_POST['columns'][$i]['search']['value'] != '' &&
 	                    $_POST['columns'][$i]['search']['value'] != '|') {
                 		$columnSearchFromTable = true;
@@ -1905,11 +1920,8 @@ class WPDataTable {
 	                    $wdtParameters['filterDefaultValue'][$i] !== '|' )) {
                 		$columnSearchFromDefaultValue = true;
 	                }
-                    if ( isset($_POST['columns'][$i]) && $_POST['columns'][$i]['searchable'] == true && ($columnSearchFromTable || $columnSearchFromDefaultValue)) {
 
-                        //Apply placeholders when they are set in filter predefined value
-                        if (isset($wdtParameters['filterDefaultValue'][$i]))
-                        $wdtParameters['filterDefaultValue'][$i]=  WDTTools::applyPlaceholders($wdtParameters['filterDefaultValue'][$i]);
+                    if ( isset($_POST['columns'][$i]) && $_POST['columns'][$i]['searchable'] == true && ($columnSearchFromTable || $columnSearchFromDefaultValue)) {
 
                     	$columnSearch = $columnSearchFromTable ? $_POST['columns'][$i]['search']['value'] : $wdtParameters['filterDefaultValue'][$i];
                         if (!empty($search)) {
@@ -2193,6 +2205,7 @@ class WPDataTable {
             // total data length
             if (Connection::isSeparate($this->connection)) {
                 $totalLengthQuery = 'SELECT COUNT(*) FROM ' . $tableName;
+                $totalLengthQuery = apply_filters('wpdatatables_filter_total_length_query', $totalLengthQuery , $this->getWpId());
                 // If "Only own rows" options is defined, do not count other user's rows
                 if (isset($userIdColumnCondition)) {
                     $totalLengthQuery .= ' ' . $userIdColumnCondition;
@@ -2201,6 +2214,7 @@ class WPDataTable {
             } else {
                 // querying using the WP driver otherwise
                 $totalLengthQuery = 'SELECT COUNT(*) as cnt_total FROM ' . $tableName;
+                $totalLengthQuery = apply_filters('wpdatatables_filter_total_length_query', $totalLengthQuery , $this->getWpId());
                 // If "Only own rows" options is defined, do not count other user's rows
                 if (isset($userIdColumnCondition)) {
                     $totalLengthQuery .= ' ' . $userIdColumnCondition;
@@ -2703,7 +2717,7 @@ class WPDataTable {
         }
         $returnData .= "</style>\n";
 
-        $returnData .= wdtRenderScriptStyleBlock($connection);
+        $returnData .= wdtRenderScriptStyleBlock($this->getWpId());
         $returnData .= wdtTableRenderScriptStyleBlock($this);
         return $returnData;
     }
@@ -3182,6 +3196,9 @@ class WPDataTable {
                             $editor_roles = isset($tableData->editor_roles) ? $tableData->editor_roles : '';
                             if (wdtCurrentUserCanEdit($editor_roles, $this->getWpId())) {
                                 $this->enableEditing();
+                                if (!empty($tableData->popover_tools)) {
+                                    $this->enablePopoverTools();
+                                }
                             }
                         }
                     }
@@ -3279,6 +3296,7 @@ class WPDataTable {
             isset($advancedSettings->tableBorderRemoval) ? $this->setTableBorderRemoval($advancedSettings->tableBorderRemoval) : $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             isset($advancedSettings->tableBorderRemovalHeader) ? $this->setTableBorderRemovalHeader($advancedSettings->tableBorderRemovalHeader) : $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
             isset($advancedSettings->tableCustomCss) ? $this->setTableCustomCss($advancedSettings->tableCustomCss) : $this->setTableCustomCss('');
+            isset($advancedSettings->showTableToolsIncludeHTML) ? $this->setTableToolsIncludeHTML($advancedSettings->showTableToolsIncludeHTML) : $this->setTableToolsIncludeHTML(false);
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -3300,6 +3318,7 @@ class WPDataTable {
             $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
             $this->setTableCustomCss('');
+            $this->setTableToolsIncludeHTML(false);
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -3593,6 +3612,7 @@ class WPDataTable {
 
         $currentSkin = $this->getTableSkin();
         $skinsWithNewTableToolsButtons = ['aqua','purple','dark'];
+        $tableToolsIncludeHTML = !$this->getTableToolsIncludeHTML();
 
         if ($this->TTEnabled()) {
             (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
@@ -3611,7 +3631,10 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend' => 'print',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'className' => 'DTTT_button DTTT_button_print',
                             'text' => __('Print', 'wpdatatables'),
                             'title' => $wdtExportFileName
@@ -3622,7 +3645,10 @@ class WPDataTable {
                     $exportButtons[] =
                         array(
                             'extend' => 'excelHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'title' => $wdtExportFileName,
                             'text' => __('Excel', 'wpdatatables')
                         );
@@ -3631,7 +3657,10 @@ class WPDataTable {
                     $exportButtons[] =
                         array(
                             'extend' => 'csvHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'title' => $wdtExportFileName,
                             'text' => __('CSV', 'wpdatatables')
                         );
@@ -3640,7 +3669,10 @@ class WPDataTable {
                     $exportButtons[] =
                         array(
                             'extend' => 'copyHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'title' => $wdtExportFileName,
                             'text' => __('Copy', 'wpdatatables')
                         );
@@ -3680,7 +3712,10 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend' => 'print',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'className' => 'DTTT_button DTTT_button_print',
                             'text' => __('Print', 'wpdatatables'),
                             'title' => $wdtExportFileName
@@ -3691,7 +3726,10 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend' => 'excelHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'className' => 'DTTT_button DTTT_button_xls',
                             'title' => $wdtExportFileName,
                             'text' => __('Excel', 'wpdatatables')
@@ -3701,7 +3739,10 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend' => 'csvHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'className' => 'DTTT_button DTTT_button_csv',
                             'title' => $wdtExportFileName,
                             'text' => __('CSV', 'wpdatatables')
@@ -3711,7 +3752,10 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend' => 'copyHtml5',
-                            'exportOptions' => array('columns' => ':visible'),
+                            'exportOptions' => array(
+                                'columns' => ':visible',
+                                'stripHtml' => $tableToolsIncludeHTML
+                            ),
                             'className' => 'DTTT_button DTTT_button_copy',
                             'title' => $wdtExportFileName,
                             'text' => __('Copy', 'wpdatatables')
