@@ -25,11 +25,50 @@
 
                 </div>
 
-                <p class="wdt-addons-intro"><?php _e('While wpDataTables itself provides quite a large amount of features and unlimited customisation flexibility, you can achieve even more with our premium addons. Each addon brings you some unique extension to the core functionality. There will be more addons developed over time by wpDataTables creators and 3rd party developers, so stay tuned.', 'wpdatatables'); ?></p>
+                <p class="wdt-addons-intro"><?php _e('While wpDataTables itself provides quite a large amount of features and unlimited customisation flexibility, you can achieve even more with our premium addons(except Forminator Forms integrations add-on which is FREE). Each addon brings you some unique extension to the core functionality. There will be more addons developed over time by wpDataTables creators and 3rd party developers, so stay tuned.  Please note that addons requires Premium version of wpDataTables(except Forminator Froms integration which can be use with Lite version as well)', 'wpdatatables'); ?></p>
 
                 <div class="card-body card-padding wpdt-add-ons-card">
 
                     <div class="row">
+
+                        <div class="col-sm-4">
+                            <div class="thumbnail">
+                                <div class="ribbon"><span><?php _e('Free', 'wpdatatables'); ?></span></div>
+                                <div class="wpdt-addons-desc">
+                                    <img class="img-responsive"
+                                         src="<?php echo WDT_ASSETS_PATH; ?>img/addons/forminator-forms-logo.png" alt="">
+                                    <h4><?php _e('Forminator Forms integration for wpDataTables', 'wpdatatables'); ?></h4>
+                                </div>
+                                <div class="caption">
+                                    <p><?php _e('A powerful tool that adds “Forminator Form” as a new table type in wpDataTables and allows you to create responsive, sortable tables & charts based on Forminator Forms submissions.', 'wpdatatables'); ?></p>
+                                </div>
+                                <?php if (!defined('WDT_FRF_ROOT_PATH')) { ?>
+                                    <div class="wdt-addons-links">
+                                        <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip" class="free-download btn btn-primary">
+                                            <?php _e('Download', 'wpdatatables'); ?>
+                                            <i class="wpdt-icon-file-download m-l-5"></i>
+                                        </a>
+                                        <a href="https://wordpress.org/plugins/wpdatatables-forminator/"
+                                           target="_blank"
+                                           class="wdt-addons-find-out-more"
+                                           role="button">
+                                            <?php _e('Learn more', 'wpdatatables'); ?>
+                                        </a>
+                                        <div class="clear"></div>
+
+                                    </div>
+                                <?php } else { ?>
+                                    <div class="wdt-addons-links text-center">
+                                        <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                            <i class="wpdt-icon-check-full m-r-5"></i>
+                                            <?php _e('Installed', 'wpdatatables'); ?>
+                                        </button>
+                                        <div class="clear"></div>
+                                    </div>
+                                <?php } ?>
+
+                            </div>
+                        </div>
 
                         <div class="col-sm-4">
                             <div class="thumbnail">
@@ -40,7 +79,7 @@
                                     <h4><?php _e('Master Detail Tables for wpDataTables', 'wpdatatables'); ?></h4>
                                 </div>
                                 <div class="caption">
-                                    <p><?php _e('A wpDataTables addon which allows showing additional details for a specific row in a popup or a separate page or post. Handy when you would like to keep fewer columns in the table, while allowing user to access full details of particular entries.', 'wpdatatables'); ?></p>
+                                    <p><?php _e('A wpDataTables addon which allows showing additional details for a specific row in a popup or a separate page or post.', 'wpdatatables'); ?></p>
                                 </div>
                                 <div class="wdt-addons-links">
                                     <?php if (!defined('WDT_MD_ROOT_PATH')) { ?>
@@ -134,11 +173,6 @@
                         </div>
                         <!-- /.col-sm-4 -->
 
-                    </div>
-                    <!-- /.row -->
-
-                    <!-- .row -->
-                    <div class="row">
                         <div class="col-sm-4">
                             <div class="thumbnail">
                                 <div class="wpdt-addons-desc">

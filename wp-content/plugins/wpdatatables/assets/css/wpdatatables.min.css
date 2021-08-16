@@ -177,6 +177,10 @@
     overflow-x: scroll;
 }
 
+.wpDataTablesWrapper div.wdtscroll .wpDataTable tfoot td #wdt-number-range-slider {
+    margin-top: 0 !important;
+}
+
 .wpDataTablesWrapper table.scroll  {
     width: auto !important;
 }
@@ -710,6 +714,11 @@ div.wdt-checkbox-modal-wrap div.wdt-checkbox-option label {
 
 .wpdt-c input:focus {
     background: none !important;
+}
+
+#wdt-frontend-modal .editDialogInput.bootstrap-select.open,
+#wdt-frontend-modal .wdt-datetimepicker-modal.bootstrap-datetimepicker-widget{
+    z-index: 200001 !important
 }
 
 .wpdt-c .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu {

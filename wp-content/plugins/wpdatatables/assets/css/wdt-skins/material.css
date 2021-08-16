@@ -357,7 +357,6 @@
 /*  Popover tools  */
 
 .wpdt-c.wdt-skin-material .wpDataTablesPopover.editTools {
-    min-width: 160px;
     padding: 5px 0;
     margin: 2px 0 0;
     list-style: none;

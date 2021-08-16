@@ -47,7 +47,8 @@ var wdtApplyColorPicker = function (selecter) {
     jQuery('.pcr-app').remove();
     var inputElement = '#' + jQuery(selecter)[0].id,
         defoult = jQuery(inputElement).val() == "" ? '#FFFFFF' : jQuery(inputElement).val(),
-        isChart = !jQuery(selecter).hasClass('series-color');
+        isChart = !jQuery(selecter).hasClass('series-color'),
+        isColumnColor = inputElement === '#wdt-column-color';
     const pickr = new Pickr({
         el: inputElement,
         useAsButton: true,
@@ -95,6 +96,13 @@ var wdtApplyColorPicker = function (selecter) {
             var colorRepresentation = pickr.getColorRepresentation();
             colorRepresentationSwitch(colorRepresentation, pickr, inputElement)
         }
+        if (isColumnColor){
+            jQuery('.wpdt-column-settings-card').css('min-height','700px');
+            jQuery(".column-settings-panel").animate({
+                scrollTop: jQuery(
+                    '.column-settings-panel').get(0).scrollHeight
+            }, 1000);
+        }
     }).on('save', color => {
         if (color != null) {
             var colorRepresentation = pickr.getColorRepresentation()
@@ -104,15 +112,25 @@ var wdtApplyColorPicker = function (selecter) {
             jQuery(inputElement).parent().find('.wpcolorpicker-icon i').css("background-color", "none");
         }
         pickr.hide();
+        if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height','auto');
 
     }).on('change', color => {
         var colorRepresentation = pickr.getColorRepresentation()
         colorSwitch(colorRepresentation, color, inputElement)
         jQuery(inputElement).change()
+        if (isColumnColor){
+            jQuery('.wpdt-column-settings-card').css('min-height','700px');
+            jQuery(".column-settings-panel").animate({
+                scrollTop: jQuery(
+                    '.column-settings-panel').get(0).scrollHeight
+            }, 1000);
+        }
     }).on('clear', color => {
         jQuery(inputElement).val('');
         jQuery(inputElement).change();
         jQuery(inputElement).closest('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", 'none');
+    }).on('hide', color => {
+         if (isColumnColor) jQuery('.wpdt-column-settings-card').css('min-height','auto');
     })
 };
 

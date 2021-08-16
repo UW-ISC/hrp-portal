@@ -338,6 +338,8 @@ class WDTColumn {
             }
         }
 
+        $value = apply_filters('wpdt_filter_filtering_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
+
         return $value;
     }
 
@@ -628,6 +630,7 @@ class WDTColumn {
                 }
             }
         }
+        $value = apply_filters('wpdt_filter_editing_default_value', $value , $this->getOriginalHeader(), $this->getParentTable()->getWpId());
 
         return $value;
     }

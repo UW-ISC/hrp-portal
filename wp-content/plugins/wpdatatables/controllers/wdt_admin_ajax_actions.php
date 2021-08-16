@@ -580,7 +580,7 @@ function wdtCreateManualTable()
         exit();
     }
 
-    $tableData = $_POST['tableData'];
+    $tableData = stripslashes_deep($_POST['tableData']);
     $tableData = apply_filters('wpdatatables_before_create_manual_table', $tableData);
 
     // Create a new Constructor object
@@ -847,7 +847,7 @@ function wdtShowChartFromData()
         exit();
     }
 
-    $chartData = $_POST['chart_data'];
+    $chartData = stripslashes_deep($_POST['chart_data']);
     $wpDataChart = WPDataChart::factory($chartData, false);
 
     echo json_encode($wpDataChart->returnData());
@@ -863,7 +863,7 @@ function wdtSaveChart()
         exit();
     }
 
-    $chartData = $_POST['chart_data'];
+    $chartData = stripslashes_deep($_POST['chart_data']);
     $wpDataChart = WPDataChart::factory($chartData, false);
     $wpDataChart->save();
 
@@ -1023,8 +1023,29 @@ function wdtDeactivatePlugin()
     /** @var string $slug */
     $slug = filter_var($_POST['slug'], FILTER_SANITIZE_STRING);
 
-    /** @var string $purchaseCode */
-    $purchaseCode = filter_var($_POST['purchaseCodeStore'], FILTER_SANITIZE_STRING);
+    switch ($slug){
+        case 'wpdatatables':
+            $purchaseCode = get_option('wdtPurchaseCodeStore');
+            break;
+        case 'wdt-master-detail':
+            $purchaseCode = get_option('wdtPurchaseCodeStoreMasterDetail');
+            break;
+        case 'wdt-powerful-filters':
+            $purchaseCode = get_option('wdtPurchaseCodeStorePowerful');
+            break;
+        case 'wdt-gravity-integration':
+            $purchaseCode = get_option('wdtPurchaseCodeStoreGravity');
+            break;
+        case 'wdt-formidable-integration':
+            $purchaseCode = get_option('wdtPurchaseCodeStoreFormidable');
+            break;
+        case 'reportbuilder':
+            $purchaseCode = get_option('wdtPurchaseCodeStoreReport');
+            break;
+        default:
+            $purchaseCode = '';
+            break;
+    }
 
     /** @var string $envatoTokenEmail */
     $envatoTokenEmail = filter_var($_POST['envatoTokenEmail'], FILTER_SANITIZE_STRING);

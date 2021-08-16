@@ -87,6 +87,19 @@
 .wdt-addons .wdt-addons-links {
     padding: 10px 0 0 0;
 }
+.wdt-addons .wdt-addons-links .btn {
+    float: right;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 8px 16px;
+    background: #008CFF;
+    border-radius: 5px;
+    color: #FFFFFF;
+}
+
 
 .wdt-addons .wdt-addons-find-out-more {
     display: inline-block;
@@ -165,10 +178,13 @@
 }
 @media (max-width : 1441px) {
     .wdt-addons .thumbnail .caption {
-        min-height: 110px;
+        min-height: 120px;
     }
 }
 @media (max-width : 1025px) {
+    .wdt-addons .thumbnail {
+        min-height: 338px;
+    }
     .wdt-addons .thumbnail .caption {
         min-height: 170px;
     }
@@ -176,6 +192,10 @@
 @media (max-width : 768px) {
     .wpdt-c  .wdt-addons .col-sm-4 {
         width: 100%;
+    }
+
+    .wdt-addons .thumbnail  {
+        min-height: 238px;
     }
     .wdt-addons .thumbnail .caption {
         min-height: 110px;

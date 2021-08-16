@@ -64,6 +64,7 @@
                     <select id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
                             data-input_type="<?php echo $dataColumn->getInputType(); ?>"
                             data-key="<?php echo $dataColumn_key ?>"
+                            title="<?php echo WDTTools::getTranslationStrings()['nothingSelected'] ?>"
                             class="form-control editDialogInput selectpicker <?php if ($dataColumn->isNotNull()) { ?>mandatory <?php }
                             if ($dataColumn->getForeignKeyRule() != null) { ?>wdt-foreign-key-select <?php };
                             if ($dataColumn->getPossibleValuesAjax() !== -1) { ?>wdt-possible-values-ajax<?php }; ?>"
@@ -146,7 +147,7 @@
 <?php do_action('wpdatatables_after_editor_dialog', $this->getWpId()); ?>
 </div>
 
-<?php $currentSkin = get_option('wdtBaseSkin');
+<?php $currentSkin = $this->getTableSkin();
       $skinsWithNewEditButtons = ['aqua','purple','dark']; ?>
 
 <div id="<?php echo $this->getId() ?>_edit_dialog_buttons" class="wdt-edit-dialog-button-block"

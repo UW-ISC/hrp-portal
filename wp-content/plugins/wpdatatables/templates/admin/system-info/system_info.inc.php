@@ -337,6 +337,7 @@
                                 <?php
                                 if (extension_loaded('libxml')) {
                                 ?>
+                            <?php if (defined('LIBXML_VERSION') && LIBXML_VERSION && LIBXML_VERSION > 20760) { ?>
                             </td>
                             <td class="wpdt-relative">
                                 <span class="wpdt-inline">
@@ -345,6 +346,14 @@
                                             } ?>
                                         </span>
                             </td>
+                            <?php } else { ?>
+                                <i class="wpdt-icon-exclamation-triangle wpdt-error"></i>
+                                </td>
+                                <td class="wpdt-relative">
+                                    <span class="wpdt-inline wpdt-error"><?php esc_html_e('Lower version then required', 'wpdatatables'); ?></span>
+                                    <span class="wpdt-inline"><?php esc_html_e('- Please update PHP LibXML Extension on your server to be higher then version 2.7.6.', 'wpdatatables'); ?></span>
+                                </td>
+                            <?php } ?>
                             <?php } else { ?>
                                 <i class="wpdt-icon-exclamation-triangle wpdt-error"></i>
                                 </td>

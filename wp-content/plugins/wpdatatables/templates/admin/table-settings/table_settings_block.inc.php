@@ -974,7 +974,7 @@
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Users see and edit only own data', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#own-rows-hint"
-                                   data-toggle="html-popover" data-trigger="hover" data-placement="left"></i>
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                             </h4>
 
                             <!-- Hidden popover with image hint -->
@@ -1020,8 +1020,8 @@
 
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Show all rows in back-end', 'wpdatatables'); ?>
-                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#show-all-rows-hint"
-                                   data-toggle="html-popover" data-trigger="hover" data-placement="left"></i>
+                                <i class="wpdt-icon-info-circle-thin" data-popover-content="#show-all-rows-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
                             </h4>
 
                             <!-- Hidden popover with image hint -->
@@ -1128,6 +1128,34 @@
                                     <option value="copy"><?php _e('Copy', 'wpdatatables'); ?></option>
                                     <option value="pdf"><?php _e('PDF', 'wpdatatables'); ?></option>
                                 </select>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16 table-tools-include-html-block hidden">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Include HTML', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#table-tools-html-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="table-tools-html-hint">
+                                <div class="popover-heading">
+                                    <?php _e('Include HTML', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php _e(' If this is enabled, columns that contain HTML (such as link, image, email, attachment, or HTML) will be rendered as HTML in the exported files of the CSV, Excel, Print and Copy options.<br><br>NOTICE: Please note that you should check this functionality on the front-end since if you use this option in the back-end the buttons in headers will be rendered as HTML as well.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-table-tools-include-html" type="checkbox">
+                                <label for="wdt-table-tools-include-html"
+                                       class="ts-label"><?php _e('Enable HTML in export files (CSV, Excel, Print and Copy)', 'wpdatatables'); ?></label>
                             </div>
 
                         </div>

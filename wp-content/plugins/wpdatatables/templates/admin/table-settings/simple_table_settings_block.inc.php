@@ -171,21 +171,22 @@
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-underline"
                                     title="<?php _e('Underline', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-underline"></i>
+                                <i class="wpdt-icon-underline"></i>
                             </button>
                             <span class="btn-separator"></span>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-text-color"
                                     title="<?php _e('Text Color', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-font"></i>
+                                <i class="wpdt-icon-font"></i>
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-background-color"
                                     title="<?php _e('Background Color', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-tint"></i>
+                                <i class="wpdt-icon-tint"></i>
                             </button>
                             <span class="btn-separator"></span>
                             <div id="wpdt-expand-buttons">
                                 <div id="wpdt-expand-align-buttons">
-                                    <button class="btn btn-primary btn-icon-text" data-after="\\f036" id="wpdt-align-button"
+                                    <button class="btn btn-primary btn-icon-text" data-after="\\f036"
+                                            id="wpdt-align-button"
                                             title="<?php _e('Horizontal align', 'wpdatatables'); ?>"
                                             data-toggle="tooltip">
                                         <i class="wpdt-icon-align-left"></i>
@@ -266,21 +267,37 @@
                                 </div>
                             </div>
                             <span class="btn-separator"></span>
+                            <select id="wpdt-font-family" data-toggle="tooltip"
+                                    data-wpdt-fonts='<?php echo htmlspecialchars(json_encode(WDTSettingsController::wdtGetSystemFonts(), JSON_FORCE_OBJECT), ENT_QUOTES, 'UTF-8'); ?>'
+                                    title="<?php _e('Choose font family for the cell ot cells range', 'wpdatatables'); ?>">
+                                <option value="0"><?php _e('Default font', 'wpdatatables'); ?></option>
+                                <?php foreach (WDTSettingsController::wdtGetSystemFonts() as $fontIndex => $fontName) { ?>
+                                    <option value="<?php echo $fontIndex + 1 ?>"><?php echo $fontName ?></option>
+                                <?php } ?>
+                            </select>
+                            <select id="wpdt-font-size" data-toggle="tooltip"
+                                    title="<?php _e('Choose font size for the cell ot cells range', 'wpdatatables'); ?>">
+                                <option value="0"></option>
+                                <?php for ($fontSizeValue = 6; $fontSizeValue < 51; $fontSizeValue++) { ?>
+                                    <option value="<?php echo $fontSizeValue ?>" <?php if ($fontSizeValue == 13) echo 'selected' ?>><?php echo $fontSizeValue ?></option>
+                                <?php } ?>
+                            </select>
+                            <span class="btn-separator"></span>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-link"
                                     title="<?php _e('Link', 'wpdatatables'); ?>" data-toggle="tooltip">
                                 <i class="wpdt-icon-link"></i>
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-media"
                                     title="<?php _e('Insert Media', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-image"></i>
+                                <i class="wpdt-icon-image"></i>
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-html"
                                     title="<?php _e('Insert HTML', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-code"></i>
+                                <i class="wpdt-icon-code"></i>
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-do-shortcode"
                                     title="<?php _e('Insert shortcode', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-brackets1"></i>
+                                <i class="wpdt-icon-brackets1"></i>
                             </button>
                             <button class="btn btn-primary btn-icon-text" id="wpdt-star-rating"
                                     title="<?php _e('Insert star rating', 'wpdatatables'); ?>" data-toggle="tooltip">
@@ -293,7 +310,7 @@
                             <span class="btn-separator"></span>
                             <button class="btn btn-primary btn-icon-text disabled" id="wpdt-merge"
                                     title="<?php _e('Merge cells', 'wpdatatables'); ?>" data-toggle="tooltip">
-                                 <i class="wpdt-icon-expand-arrows-alt"></i>
+                                <i class="wpdt-icon-expand-arrows-alt"></i>
                             </button>
                         </div>
                         <!--/Cell action buttons -->
@@ -581,7 +598,7 @@
                                         <i class="wpdt-icon-minus"></i>
                                     </button>
                                     <input type="text" name="wdt-vertical-scroll-height" min="1" value="600"
-                                            class="form-control input-sm input-number"
+                                           class="form-control input-sm input-number"
                                            id="wdt-vertical-scroll-height">
                                     <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
                                             data-type="plus" data-field="wdt-vertical-scroll-height">

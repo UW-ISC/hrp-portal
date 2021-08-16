@@ -23,12 +23,12 @@ class WDTBrowseChartsTable extends WP_List_Table {
      */
     public function get_columns() {
         return array(
-            'cb' => '<input type="checkbox" />',
-            'id' => 'ID',
-            'title' => 'Title',
-            'engine' => 'Render Engine',
-            'type' => 'Chart Type',
-            'shortcode' => 'Shortcode',
+            'cb'        => '<input type="checkbox" />',
+            'id'        => __('ID', 'wpdatatables'),
+            'title'     => __('Title', 'wpdatatables'),
+            'engine'    => __('Render Engine', 'wpdatatables'),
+            'type'      => __('Chart Type', 'wpdatatables'),
+            'shortcode' => __('Shortcode', 'wpdatatables'),
             'functions' => '',
         );
     }
