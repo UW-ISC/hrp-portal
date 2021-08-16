@@ -53,6 +53,7 @@ var wpdatatable_config = {
     dataTable: null,
     datatable_config: null,
     tabletools_config: { print: 1, copy: 1, excel: 1, csv: 1, pdf: 0 },
+    showTableToolsIncludeHTML: 0,
     columns: [],
     columns_by_headers: {},
     currentOpenColumn: null,
@@ -234,14 +235,26 @@ var wpdatatable_config = {
         wpdatatable_config.tools = show_tabletools;
         if( show_tabletools == 1 ){
             jQuery('.wdt-table-settings .table-tools-settings-block').animateFadeIn();
+            jQuery('.wdt-table-settings .table-tools-include-html-block').animateFadeIn();
             jQuery.isEmptyObject( table_tools ) ?
                 wpdatatable_config.setTableToolsConfig( { print: 1, copy: 1, excel: 1, csv: 1, pdf: 0 } ) :
                 wpdatatable_config.setTableToolsConfig( table_tools );
+            wpdatatable_config.setTableToolsIncludeHTML( 0 );
         }else{
             jQuery('.wdt-table-settings .table-tools-settings-block').addClass('hidden');
+            jQuery('.wdt-table-settings .table-tools-include-html-block').addClass('hidden');
             wpdatatable_config.setTableToolsConfig({})
+            wpdatatable_config.setTableToolsIncludeHTML( 0 );
         }
         jQuery('#wdt-table-tools').prop( 'checked', show_tabletools );
+    },
+    /**
+     * Enable or disable table tools include HTML
+     * @param showTableToolsIncludeHTML 1 or 0
+     */
+    setTableToolsIncludeHTML: function( showTableToolsIncludeHTML ){
+        wpdatatable_config.showTableToolsIncludeHTML = showTableToolsIncludeHTML;
+        jQuery('#wdt-table-tools-include-html').prop( 'checked', showTableToolsIncludeHTML );
     },
     /**
      * Enable or disable responsiveness
@@ -1067,6 +1080,7 @@ var wpdatatable_config = {
         wpdatatable_config.setVerticalScroll( parseInt( tableJSON.verticalScroll ) );
         wpdatatable_config.setSorting( parseInt( tableJSON.sorting ) );
         wpdatatable_config.setShowTableTools( parseInt( tableJSON.tools ), tableJSON.tabletools_config );
+        wpdatatable_config.setTableToolsIncludeHTML( parseInt( tableJSON.showTableToolsIncludeHTML ) );
         wpdatatable_config.setWordWrap( tableJSON.word_wrap );
         wpdatatable_config.setPlaceholderVar1( tableJSON.var1 );
         wpdatatable_config.setPlaceholderVar2( tableJSON.var2 );

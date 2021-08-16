@@ -59,5 +59,23 @@
       });
     })
 
+    $('.wpdt-forminator-news-notice .notice-dismiss').on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+          'action': 'wdt_remove_forminator_notice'
+        },
+        dataType: "json",
+        async: !0,
+        success: function (e) {
+          if (e == "success") {
+            $('.wpdt-forminator-news-notice').slideUp('fast');
+          }
+        }
+      });
+    })
+
   });
 })(jQuery);

@@ -796,6 +796,12 @@
             if (connections !== null) {
                 wdt_current_config.wdtSeparateCon = JSON.stringify(connections);
             }
+            var wdt_temp_config = wdt_current_config,
+                wdtRemovePurchaseCodeProp = ['wdtPurchaseCodeStore',
+                    'wdtPurchaseCodeStorePowerful', 'wdtPurchaseCodeStoreGravity',
+                    'wdtPurchaseCodeStoreFormidable', 'wdtPurchaseCodeStoreMasterDetail',
+                    'wdtPurchaseCodeStoreReport'];
+            wdt_current_config = _.omit(wdt_current_config, wdtRemovePurchaseCodeProp);
 
             $.ajax({
                 url: ajaxurl,
@@ -813,6 +819,7 @@
                         wpdatatables_edit_strings.settings_saved_successful,
                         'success'
                     );
+                    wdt_current_config = wdt_temp_config;
                 },
                 error: function (){
                     $('.wdt-preload-layer').animateFadeOut();
@@ -821,6 +828,7 @@
                         wpdatatablesSettingsStrings.settings_saved_error,
                         'danger'
                     );
+                    wdt_current_config = wdt_temp_config;
                 }
             });
         }
@@ -836,7 +844,7 @@
                 type: 'POST',
                 data: {
                     action: 'wpdatatables_activate_plugin',
-                    purchaseCodeStore: $('#wdt-purchase-code-store').val(),
+                    purchaseCodeStore: $('#wdt-purchase-code-store').val().trim(),
                     wdtNonce: $('#wdtNonce').val(),
                     slug: 'wpdatatables',
                     domain: domain,
@@ -848,9 +856,11 @@
 
                     if (valid === true && domainRegistered === true) {
                         wdt_current_config.wdtActivated = 1;
-                        wdt_current_config.wdtPurchaseCodeStore = $('#wdt-purchase-code-store').val();
+                        wdt_current_config.wdtPurchaseCodeStore = 1;
                         wdtNotify(wpdatatablesSettingsStrings.success, wpdatatablesSettingsStrings.pluginActivated, 'success');
-                        $('#wdt-purchase-code-store').prop('disabled', 'disabled');
+                        $('#wdt-purchase-code-store').val('');
+                        $('.wdt-purchase-code-store-wrapper').hide();
+                        $('.wdt-purchase-code .wdt-security-massage-wrapper').removeClass('hidden');
                         $('#wdt-activate-plugin').removeClass('btn-primary').addClass('btn-danger').html('<i class="wpdt-icon-times-circle-full"></i>Deactivate');
                         $('.wdt-envato-activation-wpdatatables').hide()
                     } else if (valid === false) {
@@ -886,12 +896,10 @@
 
             if (wdt_current_config.wdtPurchaseCodeStore) {
                 params.type = 'code';
-                params.purchaseCodeStore = wdt_current_config.wdtPurchaseCodeStore;
                 params.envatoTokenEmail = '';
             } else if (wdt_current_config.wdtEnvatoTokenEmail) {
                 params.type = 'envato';
                 params.envatoTokenEmail = wdt_current_config.wdtEnvatoTokenEmail;
-                params.purchaseCodeStore = '';
             }
 
             $.ajax({
@@ -901,10 +909,12 @@
                 success: function (response) {
                     var parsedResponse = JSON.parse(response);
                     if (parsedResponse.deactivated === true) {
-                        wdt_current_config.wdtPurchaseCodeStore = '';
                         wdt_current_config.wdtEnvatoTokenEmail = '';
                         wdt_current_config.wdtActivated = 0;
-                        $('#wdt-purchase-code-store').prop('disabled', '').val('');
+                        wdt_current_config.wdtPurchaseCodeStore = 0;
+                        $('#wdt-purchase-code-store').val('');
+                        $('.wdt-purchase-code-store-wrapper').show();
+                        $('.wdt-purchase-code .wdt-security-massage-wrapper').addClass('hidden');
                         $('#wdt-activate-plugin').removeClass('btn-danger').addClass('btn-primary').html('<i class="wpdt-icon-check-circle-full"></i>Activate');
                         $('.wdt-envato-activation-wpdatatables').show()
                         $('.wdt-preload-layer').animateFadeOut();
@@ -1002,6 +1012,16 @@
 
         function handleActivationSettings() {
             var activeTab = searchQueryString('activeTab');
+            var wdtConvertPurchaseCodeInt = ['wdtPurchaseCodeStore',
+                'wdtPurchaseCodeStorePowerful', 'wdtPurchaseCodeStoreGravity',
+                'wdtPurchaseCodeStoreFormidable', 'wdtPurchaseCodeStoreMasterDetail',
+                'wdtPurchaseCodeStoreReport'];
+
+            for (var configName in wdt_current_config) {
+                if (wdtConvertPurchaseCodeInt.includes(configName) && wdt_current_config.hasOwnProperty(configName)) {
+                    wdt_current_config[configName] = parseInt(wdt_current_config[configName])
+                }
+            }
 
             if (activeTab === 'activation') {
                 $('.tab-nav a[href="#wdt-activation"]').tab('show');

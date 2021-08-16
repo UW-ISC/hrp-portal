@@ -4,7 +4,7 @@
     <div class="fg-line">
         <i class="wpdt-icon-search"></i>
         <label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
-        <input type="search" placeholder="Search for items..." id="<?php echo esc_attr($input_id); ?>" name="s"
+        <input type="search" placeholder="<?php _e('Search for items...', 'wpdatatables');?>" id="<?php echo esc_attr($input_id); ?>" name="s"
                value="<?php _admin_search_query(); ?>"/>
     </div>
     <button id="search-submit" class="wpdt-control-buttons" style="display: none">

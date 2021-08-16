@@ -216,6 +216,17 @@ function wdtAdminEnqueue($hook)
 add_action('admin_enqueue_scripts', 'wdtAdminEnqueue');
 
 /**
+ * Fix conflict with Gravity forms tooltips on back-end if our add-on is not used
+ */
+function wdtDeregisterGravityTooltipScript(){
+    if (!defined('WDT_GF_VERSION') && defined('GF_MIN_WP_VERSION') &&
+     isset($_GET['page']) && ((strpos($_GET['page'], 'wpdatatables') !== false) || (strpos($_GET['page'], 'wpdatareports') !== false)))
+        wp_deregister_script('gform_tooltip_init');
+}
+
+add_action('wpdatatables_enqueue_on_admin_pages', 'wdtDeregisterGravityTooltipScript');
+
+/**
  * Enqueue JS and CSS files for the Browse (wpDataTables) Page
  */
 function wdtBrowseTablesEnqueue()
@@ -358,6 +369,7 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-color-pickr-init');
@@ -434,6 +446,7 @@ function wdtWelcomePageEnqueue()
     wp_enqueue_style('wdt-welcome-page-css', WDT_CSS_PATH . 'admin/welcome-page.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-doc-js');
+    wp_enqueue_script('wdt-bootstrap-back', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-welcome-page-js', WDT_ROOT_URL . 'assets/js/dashboard/welcome-page.js', array(), WDT_CURRENT_VERSION, true);
 }
 
