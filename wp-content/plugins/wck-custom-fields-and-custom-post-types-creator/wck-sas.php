@@ -130,7 +130,7 @@ function wck_sas_welcome($hook){
         <?php }
 ?>
 		<div class="wrap about-wrap">
-			<div class="wck-badge <?php echo $plugin_name_class; ?>"><span><?php printf( __( 'Version %s' ), $plugin_version ); ?></span></div>
+			<div class="wck-badge <?php echo esc_attr($plugin_name_class); ?>"><span><?php printf( __( 'Version %s' ), esc_html( $plugin_version ) ); ?></span></div>
 			<h1><?php printf( __( 'Welcome to %s', 'wck' ), $plugin_name ); ?></h1>
 			<div class="about-text"><?php _e( 'WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ', 'wck' ); ?></div>
 		</div>
@@ -332,7 +332,7 @@ class wck_add_serial_notices{
         do_action( $this->pluginPrefix.'_before_notification_dismissed', $current_user );
 
         // If user clicks to ignore the notice, add that to their user meta
-        if ( isset( $_GET[$this->pluginPrefix.'_dismiss_notification']) && '0' == $_GET[$this->pluginPrefix.'_dismiss_notification'] )
+        if ( isset( $_GET[$this->pluginPrefix.'_dismiss_notification']) && '0' === $_GET[$this->pluginPrefix.'_dismiss_notification'] )
             add_user_meta( $user_id, $this->pluginPrefix.'_dismiss_notification', 'true', true );
 
         do_action( $this->pluginPrefix.'_after_notification_dismissed', $current_user );

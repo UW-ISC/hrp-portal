@@ -20,6 +20,7 @@
            data-has-header="<?php echo $this->getTableSettingsData()->simpleHeader ?>">
 
         <?php
+        $isResponsive = $this->getTableSettingsData()->simpleResponsive;
         $isStripe = $this->getTableSettingsData()->stripeTable;
         $toggleClass = $isStripe ? 'even' : '';
         $header = $this->getTableSettingsData()->simpleHeader;
@@ -58,7 +59,12 @@
                     $colspanAttr = 'colspan="' . $colspanValue . '"';
                     $rowspanAttr = 'rowspan="' . $rowspanValue . '"';
                     $hiddenCell = "";
+                    $cellMetaClasses .= " wpdt-merged-cell ";
                 }
+
+                $cellMetaClasses = apply_filters('wpdt_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
+
+                if (($hiddenCell == 'hidden' && $isResponsive) || $hiddenCell != 'hidden'){
                 ?>
                 <<?php echo $tag ?> class="wpdt-cell <?php echo $cellMetaClasses ?>"
                 <?php echo ' ' . $colspanAttr . ' ' . $hiddenCell . ' ' . $rowspanAttr . ' ' ?>
@@ -105,6 +111,7 @@
                 ?>
                 <?php echo $cellData ?>
                 </<?php echo $tag ?>>
+                <?php } ?>
             <?php } ?>
             </tr>
         <?php } ?>

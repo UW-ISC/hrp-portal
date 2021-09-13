@@ -5,6 +5,14 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.2.3 =
+
+* Improvement: Allow tab width to be defined in pixels
+* Improvement: Allow Search Replacement icon size to be defined using Custom Item Styling
+* Fix: Search icon when using Font Awesome 5 icon
+* Fix: Remove float from accordion sub menus
+* Fix: Apply third level menu item margins (as specified in theme editor) to tabbed sub menus
+
 = 2.2.2 =
 
 * Fix: Color picker

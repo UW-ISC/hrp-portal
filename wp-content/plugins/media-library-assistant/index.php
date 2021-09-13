@@ -6,7 +6,7 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 2.94
+ * @version 2.96
  */
 
 /*
@@ -16,10 +16,10 @@ Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] 
 Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 2.95
+Version: 2.96
 Author URI: http://davidlingren.com/
 
-Copyright 2011-2020 David Lingren
+Copyright 2011-2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by

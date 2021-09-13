@@ -3,7 +3,7 @@ Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
 Tested up to: 5.7
-Stable tag: 2.9.2
+Stable tag: 2.9.3
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -133,6 +133,16 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 2.9.4 =
+
+* Improvement: Styling improvements to color picker
+* New feature: Add "Close sub menu after click" option to menu item options
+* New feature: Add "First click will follow the link (the arrow must be used to toggle sub menu visiblity)" to second click options
+* Fix: PHP 8.0 compatibility
+* Fix: Expanded mobile sub menus collapse if page background is clicked, even when "Mobile state" is set to "Expand all"
+* Fix: Only reverse right aligned items on mobile when the menu orientation is Horizontal
+* Fix: Widgets without any content will no longer be output (instead of displaying the widget ID)
 
 = 2.9.3 =
 

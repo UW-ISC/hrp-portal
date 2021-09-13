@@ -18,7 +18,6 @@ if ( ! class_exists( 'Mega_Menu_General' ) ) :
 		 */
 		public function __construct() {
 			add_action( 'admin_post_megamenu_save_settings', array( $this, 'save_settings' ) );
-			add_action( 'admin_post_megamenu_delete_data', array( $this, 'delete_data' ) );
 
 			add_filter( 'megamenu_menu_tabs', array( $this, 'add_general_tab' ), 4 );
 			add_action( 'megamenu_page_general_settings', array( $this, 'general_settings_page' ) );

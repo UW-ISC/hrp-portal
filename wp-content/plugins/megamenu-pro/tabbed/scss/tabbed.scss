@@ -40,7 +40,12 @@
 
     /* Tab Content */
     > ul.mega-sub-menu {
-        width: 100% - $tabbed_link_width;
+        @if unit($tabbed_link_width) == '%' {
+            width: 100% - $tabbed_link_width;
+        }
+        @if unit($tabbed_link_width) == 'px' {
+            width: calc(100% - #{$tabbed_link_width});
+        }
         float: left;
         clear: none;
         position: absolute;
@@ -118,7 +123,7 @@
             text-transform: $panel_third_level_text_transform;
             text-decoration: $panel_third_level_text_decoration;
             font-weight: $panel_third_level_font_weight;
-            margin: 0;
+            margin: $panel_third_level_margin_top $panel_third_level_margin_right $panel_third_level_margin_bottom $panel_third_level_margin_left;
             padding: $panel_third_level_padding_top $panel_third_level_padding_right $panel_third_level_padding_bottom $panel_third_level_padding_left;
             vertical-align: top;
             display: block;

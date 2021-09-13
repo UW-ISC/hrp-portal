@@ -472,12 +472,11 @@ if ( ! class_exists( 'Mega_Menu_Widget_Manager' ) ) :
 		 * @param array $b
 		 */
 		function sort_by_order( $a, $b ) {
-
 			if ( $a['order'] == $b['order'] ) {
 				return 1;
 			}
-			return ( $a['order'] < $b['order'] ) ? -1 : 1;
 
+			return ( $a['order'] < $b['order'] ) ? -1 : 1;
 		}
 
 

@@ -50,8 +50,16 @@
  * opened on 9/25/2012 by "brentwz".
  * https://wordpress.org/support/topic/plugin-media-library-assistant-what-about-a-media-library-exportimport-function/
  *
+ * Enhanced (Export Item Values) for support topic "download url"
+ * opened on 5/18/2021 by "blogdropper".
+ * https://wordpress.org/support/topic/download-url-2/
+ *
+ * Enhanced (Export Item Values) for support topic "Import / Export to CSV for bulk edit"
+ * opened on 5/21/2021 by "cuppacoffee".
+ * https://wordpress.org/support/topic/import-export-to-csv-for-bulk-edit/
+ *
  * @package MLA CSV Data Source Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -59,7 +67,7 @@ Plugin Name: MLA CSV Data Source Example
 Plugin URI: http://davidlingren.com/
 Description: Populates one or more data sources from a CSV file
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
 Copyright 2020 David Lingren
@@ -95,7 +103,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.01';
+	const PLUGIN_VERSION = '1.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -107,6 +115,43 @@ class MLACSVDataSourceExample {
 	const SLUG_PREFIX = 'mlacsvdatasource';
 
 	/**
+	 * Configuration values for the Settings Management object
+	 *
+	 * @since 1.02
+	 *
+	 * @var	array
+	 */
+	private static $settings_arguments = array(
+				'slug_prefix' => self::SLUG_PREFIX,
+				'plugin_title' => 'MLA CSV Data Source Example',
+				'menu_title' => 'MLA CSV Data',
+				'plugin_file_name_only' => 'mla-csv-data-source-example',
+				'plugin_version' => self::PLUGIN_VERSION,
+				'template_file' => '/admin-settings-page.tpl', // Add the path at runtime, in initialize()
+				'options' => array( // 'slug' => array( 'type' => 'text|checkbox', 'default' => 'text|boolean' )
+					'source' => array( 'type' => 'select', 'default' => 0 ),
+					'match' => array( 'type' => 'select', 'default' => 'id' ),
+					'delimiter' => array( 'type' => 'text', 'default' => ',' ),
+					'enclosure' => array( 'type' => 'text', 'default' => '"' ),
+					'escape' => array( 'type' => 'text', 'default' => '\\' ),
+					'exports' => array( 'type' => 'textarea', 'default' => '' ),
+				),
+				'general_tab_values' => array(), // additional page_values for 'page-level-options' template
+				'documentation_tab_values' => array(
+					'plugin_title' => 'MLA CSV Data Source Example',
+				), // page_values for 'documentation-tab' template
+			);
+
+	/**
+	 * Settings Management object
+	 *
+	 * @since 1.02
+	 *
+	 * @var	array
+	 */
+	private static $plugin_settings = NULL;
+
+	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * Installs filters and actions that handle the MLA hooks for uploading and mapping.
@@ -116,10 +161,26 @@ class MLACSVDataSourceExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		if ( !empty( $_REQUEST['mla_csv_data_source_options_export'] ) ) {
+		// This plugin requires MLA
+		if ( ! class_exists( 'MLACore', false ) ) {
+			return;
+		}
+
+		// The plugin settings class is shared with other MLA example plugins
+		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
+		}
+
+		// Add the run-time values to the arguments
+		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
+
+		// Create our own settings object
+		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
+		
+		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_options_export'] ) ) {
 			// Match Keys download will be handled in the admin_init filter
 			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			self::export_match_keys_action( );
+			self::export_item_values_action( ); // Does not return; calls exit()
 			return;
 		}
 		
@@ -127,114 +188,21 @@ class MLACSVDataSourceExample {
 		add_filter( 'mla_expand_custom_prefix', 'MLACSVDataSourceExample::mla_expand_custom_prefix', 10, 8 );
 
 		// The remaining filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
-		if ( ! is_admin() )
+		if ( ! is_admin() ) {
 			return;
-
-		// Add submenu page in the "Settings" section
-		add_action( 'admin_menu', 'MLACSVDataSourceExample::admin_menu' );
-	} // initialize
-
-	/**
-	 * Add submenu page in the "Settings" section
-	 *
-	 * @since 1.00
-	 */
-	public static function admin_menu( ) {
-		/*
-		 * We need a tab-specific page ID to manage the screen options on the General tab.
-		 * Use the URL suffix, if present. If the URL doesn't have a tab suffix, use '-general'.
-		 * This hack is required to pass the WordPress "referer" validation.
-		 */
-		 if ( isset( $_REQUEST['page'] ) && is_string( $_REQUEST['page'] ) && ( self::SLUG_PREFIX . '-settings-' == substr( $_REQUEST['page'], 0, strlen( self::SLUG_PREFIX . '-settings-' ) ) ) ) {
-			$tab = substr( $_REQUEST['page'], strlen( self::SLUG_PREFIX . '-settings-' ) );
-		 } else {
-			$tab = 'general';
-		 }
-
-		$tab = self::_get_options_tablist( $tab ) ? '-' . $tab : '-general';
-		add_submenu_page( 'options-general.php', 'MLA CSV Data Source Example', 'MLA CSV Data', 'manage_options', self::SLUG_PREFIX . '-settings' . $tab, 'MLACSVDataSourceExample::add_submenu_page' );
-		add_filter( 'plugin_action_links', 'MLACSVDataSourceExample::plugin_action_links', 10, 2 );
-	} // admin_menu
-
-	/**
-	 * Add the "Settings" and "Guide" links to the Plugins section entry
-	 *
-	 * @since 1.00
-	 *
-	 * @param	array 	array of links for the Plugin, e.g., "Activate"
-	 * @param	string 	Directory and name of the plugin Index file
-	 *
-	 * @return	array	Updated array of links for the Plugin
-	 */
-	public static function plugin_action_links( $links, $file ) {
-		if ( $file == 'mla-csv-data-source-example/mla-csv-data-source-example.php' ) {
-			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . self::SLUG_PREFIX . '-settings-documentation&mla_tab=documentation' ), 'Guide' );
-			array_unshift( $links, $settings_link );
-			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . self::SLUG_PREFIX . '-settings-general' ), 'Settings' );
-			array_unshift( $links, $settings_link );
 		}
 
-		return $links;
-	} // plugin_action_links
-
-	/**
-	 * Render (echo) the "MLA CSV Data" submenu in the Settings section
-	 *
-	 * @since 1.00
-	 *
-	 * @return	void Echoes HTML markup for the submenu page
-	 */
-	public static function add_submenu_page() {
-//error_log( __LINE__ . " MLACSVDataSourceExample:add_submenu_page _REQUEST = " . var_export( $_REQUEST, true ), 0 );
-
-		if ( !current_user_can( 'manage_options' ) ) {
-			echo "<h2>MLA CSV Data Source Example - Error</h2>\n";
-			wp_die( 'You do not have permission to manage plugin settings.' );
-		}
-
+		// Add the run-time values to the settings
 		// Load template array and initialize page-level values.
-		self::$page_template_array = MLACore::mla_load_template( dirname( __FILE__ ) . '/admin-settings-page.tpl', 'path' );
-		$current_tab_slug = isset( $_REQUEST['mla_tab'] ) ? $_REQUEST['mla_tab']: 'general';
-		$current_tab = self::_get_options_tablist( $current_tab_slug );
-		$page_values = array(
-			'version' => 'v' . self::CURRENT_VERSION,
-			'messages' => '',
-			'tablist' => self::_compose_settings_tabs( $current_tab_slug ),
-			'tab_content' => '',
-		);
+		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
 
-		// Compose tab content
-		if ( $current_tab ) {
-			if ( isset( $current_tab['render'] ) ) {
-				$handler = $current_tab['render'];
-				$page_content = call_user_func( $handler );
-			} else {
-				$page_content = array( 'message' => 'ERROR: Cannot render content tab', 'body' => '' );
-			}
-		} else {
-			$page_content = array( 'message' => 'ERROR: Unknown content tab', 'body' => '' );
-		}
-
-		if ( ! empty( $page_content['message'] ) ) {
-			if ( false !== strpos( $page_content['message'], 'ERROR' ) ) {
-				$messages_class = 'updated error';
-				$dismiss_button = '';
-			} else {
-				$messages_class = 'updated notice is-dismissible';
-				$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
-			}
-
-			$page_values['messages'] = MLAData::mla_parse_template( self::$page_template_array['messages'], array(
-				 'mla_messages_class' => $messages_class ,
-				 'messages' => $page_content['message'],
-				 'dismiss_button' => $dismiss_button,
-				 'dismiss_text' => 'Dismiss this notice',
-			) );
-		}
-
-		$page_values['tab_content'] = $page_content['body'];
-		echo MLAData::mla_parse_template( self::$page_template_array['page'], $page_values );
-	} // add_submenu_page
+		$general_tab_values = self::$plugin_settings->get_plugin_argument('general_tab_values');
+		$general_tab_values['source_options'] = self::_compose_source_file_options( self::$plugin_settings->get_plugin_option('source') );
+		$general_tab_values['id_selected'] = 'id' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
+		$general_tab_values['base_file_selected'] = 'base_file' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
+		$general_tab_values['file_name_selected'] = 'file_name' === self::$plugin_settings->get_plugin_option('match') ? 'selected=selected' : '';
+		self::$plugin_settings->update_plugin_argument('general_tab_values', $general_tab_values );
+	} // initialize
 
 	/**
 	 * Template file for the Settings page(s) and parts
@@ -268,182 +236,42 @@ class MLACSVDataSourceExample {
 		);
 
 	/**
-	 * Retrieve the list of options tabs or a specific tab value
+	 * In-memory representation of the option settings
 	 *
 	 * @since 1.00
 	 *
-	 * @param	string	Tab slug, to retrieve a single entry
-	 *
-	 * @return	array|false	The entire tablist ( $tab = NULL ), a single tab entry or false if not found/not allowed
+	 * @var array $_settings {
+	 *     @type boolean $assign_parents Assign all terms in path, not just the last (leaf) term
+	 *     @type boolean $assign_rule_parent Assign the Rule Parent (if any) in addition to terms in path
+	 *     @type string  $path_delimiter The delimiter that separates path components
+	 *     }
 	 */
-	private static function _get_options_tablist( $tab = NULL ) {
-		if ( is_string( $tab ) ) {
-			if ( isset( self::$mla_tablist[ $tab ] ) ) {
-				$results = self::$mla_tablist[ $tab ];
-			} else {
-				$results = false;
-			}
-		} else {
-			$results = self::$mla_tablist;
-		}
-
-		return $results;
-	} // _get_options_tablist
+	private static $_settings = NULL;
 
 	/**
-	 * Compose the navigation tabs for the Settings subpage
+	 * Default processing options
 	 *
 	 * @since 1.00
-	 * @uses $page_template_array contains tablist and tablist-item templates
- 	 *
-	 * @param	string	Optional data-tab-id value for the active tab, default 'general'
 	 *
-	 * @return	string	HTML markup for the Settings subpage navigation tabs
+	 * @var	array
 	 */
-	private static function _compose_settings_tabs( $active_tab = 'general' ) {
-		$tablist_item = self::$page_template_array['tablist-item'];
-		$tabs = '';
-		foreach ( self::_get_options_tablist() as $key => $item ) {
-			$item_values = array(
-				'data-tab-id' => $key,
-				'nav-tab-active' => ( $active_tab == $key ) ? 'nav-tab-active' : '',
-				'settings-page' => self::SLUG_PREFIX . '-settings-' . $key,
-				'title' => $item['title']
-			);
-
-			$tabs .= MLAData::mla_parse_template( $tablist_item, $item_values );
-		} // foreach $item
-
-		$tablist_values = array( 'tablist' => $tabs );
-		return MLAData::mla_parse_template( self::$page_template_array['tablist'], $tablist_values );
-	} // _compose_settings_tabs
+	private static $_default_settings = array (
+						'source' => 0,
+						'match' => 'id',
+						'delimiter' => ',',
+						'enclosure' => '"',
+						'escape' => '\\',
+						'exports' => '',
+					);
 
 	/**
-	 * Compose HTML markup for the source file options if any text/csv files exist
- 	 *
-	 * @since 1.00
-	 *
-	 * @param	integer	Optional item ID value for the current source file, default 0
-	 *
-	 * @return	string	HTML markup for the Source file <select> list, if any
-	 */
-	private static function _compose_source_file_options( $current_id = 0 ) {
-		// Default option if no files exist or there is no current selection
-		$option_values = array(
-			'value' => '0',
-			'text' => '&mdash; select a source (CSV) file &mdash;',
-			'selected' => ''
-		);
-		$select_options = MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
-
-		// Find all CSV files in the Media Library
-		$args = array(
-			'post_type'  => 'attachment',
-			'post_status'    => 'inherit',
-			'post_mime_type' => 'text/csv',
-			'nopaging' => true,
-		);
-		$query = new WP_Query( $args );
-
-		foreach ( $query->posts as $post ) {
-			$option_values = array(
-				'value' => $post->ID,
-				'text' => esc_attr( $post->post_title ),
-				'selected' => $current_id === $post->ID ? 'selected=selected' : '',
-			);
-
-			$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
-		}
-
-		$option_values = array(
-			'key' => 'mla-import-settings-file',
-			'options' => $select_options
-		);
-
-		return $select_options;
-	} // _compose_source_file_options
-
-	/**
-	 * Compose the General tab content for the Settings subpage
-	 *
-	 * @since 1.00
-	 * @uses $page_template_array contains tab content template(s)
- 	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
-	 */
-	private static function _compose_general_tab( ) {
-		$page_content = array( 'message' => '', 'body' => '' );
-
-		// Initialize page messages and content, check for page-level Save Changes and Export Match Keys
-		if ( !empty( $_REQUEST['mla_csv_data_source_options_save'] ) ) {
-			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			$page_content = self::_save_setting_changes( );
-		}
-
-		if ( !empty( $page_content['body'] ) ) {
-			return $page_content;
-		}
-
-		// Display the General tab
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array(
-			'mla_csv_data_source_options',
-			'_wpnonce',
-			'_wp_http_referer',
-			'mla_csv_data_source_options_save',
-		), $_SERVER['REQUEST_URI'] );
-
-		// Compose page-level options
-		$page_values = array(
-			'source_options' => self::_compose_source_file_options( self::_get_plugin_option('source') ),
-			'id_selected' => 'id' === self::_get_plugin_option('match') ? 'selected=selected' : '',
-			'base_file_selected' => 'base_file' === self::_get_plugin_option('match') ? 'selected=selected' : '',
-			'file_name_selected' => 'file_name' === self::_get_plugin_option('match') ? 'selected=selected' : '',
-			'delimiter' => esc_attr( self::_get_plugin_option('delimiter') ),
-			'enclosure' => esc_attr( self::_get_plugin_option('enclosure') ),
-			'escape' => esc_attr( self::_get_plugin_option('escape') ),
-		);
-		$options_list = MLAData::mla_parse_template( self::$page_template_array['page-level-options'], $page_values );
-
-		$form_arguments = '?page=' . self::SLUG_PREFIX . '-settings-general&mla_tab=general';
-
-		$page_values = array(
-			'form_url' => admin_url( 'options-general.php' ) . $form_arguments,
-			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
-			'options_list' => $options_list,
-		);
-
-		$page_content['body'] .= MLAData::mla_parse_template( self::$page_template_array['general-tab'], $page_values );
-
-		return $page_content;
-	} // _compose_general_tab
-
-	/**
-	 * Compose the General tab content for the Settings subpage
-	 *
-	 * @since 1.00
-	 * @uses $page_template_array contains tab content template(s)
- 	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
-	 */
-	private static function _compose_documentation_tab( ) {
-		$page_content = array( 'message' => '', 'body' => '' );
-		$page_values = array(
-			'example_url' => MLACore::mla_nonce_url( '?page=mla-settings-menu-documentation&mla_tab=documentation&mla-example-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
-			'settingsURL' => admin_url('options-general.php'),
-		);
-
-		$page_content['body'] = MLAData::mla_parse_template( self::$page_template_array['documentation-tab'], $page_values );
-		return $page_content;
-	} // _compose_documentation_tab
-
-	/**
-	 * Export Base Name, File Name and ID to a CSV file
+	 * Export Base Name, File Name, ID and optional columns to a CSV file
 	 *
 	 * @since 1.01
 	 *
 	 * @return	none	terminates execution with exit();
 	 */
-	public static function export_match_keys_action() {//
+	public static function export_item_values_action() {
 		global $wpdb;
 	
 		check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
@@ -457,12 +285,49 @@ class MLACSVDataSourceExample {
 		$upload_dir = $upload_dir['basedir'];
 		$date = date("Ymd_B");
 		$filename = "{$upload_dir}/match_keys_{$date}.csv";
+		$column_names = array( 'Base Name', 'File Name', 'ID' );
+		$export_specifications = array();
+
+		// Prepare optional columns
+		$exports = self::$plugin_settings->get_plugin_option('exports');
+//error_log( __LINE__ . ' export_item_values_action mla_hex_dump( exports ) = ' . var_export( MLAData::mla_hex_dump( $exports ), true ), 0);
+		$exports = explode( "\n", str_replace( "\r", "\n", str_replace( "\r\n", "\n", $exports ) ) );
+//error_log( __LINE__ . ' export_item_values_action exports = ' . var_export( $exports, true ), 0);
+		foreach ( $exports as $export ) {
+			$column_name = $export; // Default value
+			// Look for optional column name
+			if ( 0 === strpos( $export, '"' ) ) {
+				$title_length = strpos( $export, '",' ) + 2;
+				// Filter out invalid or empty titles
+				if ( 3 < $title_length ) {
+					$column_name = substr( $export, 1, $title_length - 3 );
+				}
+				
+				// Separate the specification from the title
+				$export = substr( $export, $title_length );
+			} // found a name
+
+			if ( 0 !== strpos( $export, '[+' ) ) {
+				$export = '[+' . $export . '+]';
+			}
+
+			$column_names[] = $column_name;
+			$export_specifications[] = array(
+				'data_source' => 'template',
+				'meta_name' => str_replace( '{+', '[+', str_replace( '+}', '+]', $export ) ),
+				'option' => 'text',
+				'format' => 'raw',
+			);
+		}
+//error_log( __LINE__ . ' export_item_values_action column_names = ' . var_export( $column_names, true ), 0);
+//error_log( __LINE__ . ' export_item_values_action export_specifications = ' . var_export( $export_specifications, true ), 0);
 
 		$file_handle = @fopen( $filename, 'w' );
 		if ( ! $file_handle ) {
 			$message = sprintf( 'ERROR: The export file ( %1$s ) could not be opened.', $filename );
 		} else {
-			if (false === @fwrite( $file_handle, "Base Name,File Name,ID\r\n")) {
+			$column_names = implode( ',', $column_names );
+			if ( false === @fwrite( $file_handle, $column_names . "\r\n" ) ) {
 				$error_info = error_get_last();
 
 			if ( false !== ( $tail = strpos( $error_info['message'], '</a>]: ' ) ) ) {
@@ -484,6 +349,12 @@ class MLACSVDataSourceExample {
 				$pathinfo = pathinfo( $item->meta_value );
 				$file_name = $pathinfo['basename'];
 				$fields = array( $item->meta_value, $file_name, $item->post_id );
+				
+				// Add optional columns
+				foreach ( $export_specifications as $specification ) {
+					$fields[] = MLAShortcodes::mla_get_data_source( $item->post_id, 'single_attachment_mapping', $specification, NULL );
+				}
+				
 				@fputcsv( $file_handle, $fields );
 			}
 		}
@@ -519,161 +390,58 @@ class MLACSVDataSourceExample {
 
 		@unlink( $filename );
 		exit();
-	} // export_match_keys_action
+	} // export_item_values_action
 
 	/**
-	 * Save settings as a WordPress wp_options entry
-	 *
+	 * Compose HTML markup for the source file options if any text/csv files exist
+ 	 *
 	 * @since 1.00
 	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
+	 * @param	integer	Optional item ID value for the current source file, default 0
+	 *
+	 * @return	string	HTML markup for the Source file <select> list, if any
 	 */
-	private static function _save_setting_changes() {
-		$page_content = array( 'message' => 'Settings unchanged.', 'body' => '' );
+	private static function _compose_source_file_options( $current_id = 0 ) {
+		// Avoid fatal errors, e.g., for some AJAX calls such as "heartbeat"
+		if ( ! class_exists( 'MLAData' ) ) {
+			return '';
+		}
+		
+		// Default option if no files exist or there is no current selection
+		$option_values = array(
+			'value' => '0',
+			'text' => '&mdash; select a source (CSV) file &mdash;',
+			'selected' => ''
+		);
+		$select_options = MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 
-		$changed  = self::_update_plugin_option( 'source', absint( $_REQUEST[ 'mla_csv_data_source_options' ]['source'] ) );
-		$changed |= self::_update_plugin_option( 'match', stripslashes( $_REQUEST[ 'mla_csv_data_source_options' ]['match'] ) );
+		// Find all CSV files in the Media Library
+		$args = array(
+			'post_type'  => 'attachment',
+			'post_status'    => 'inherit',
+			'post_mime_type' => 'text/csv',
+			'nopaging' => true,
+		);
+		$query = new WP_Query( $args );
 
-		if ( empty( $_REQUEST[ 'mla_csv_data_source_options' ]['delimiter'] ) ) {
-			$changed |= self::_update_plugin_option( 'delimiter', self::$_default_settings['delimiter'] );
-		} else {
-			$changed |= self::_update_plugin_option( 'delimiter', stripslashes( $_REQUEST[ 'mla_csv_data_source_options' ]['delimiter'] ) );
+		$current_id = absint( $current_id );
+		foreach ( $query->posts as $post ) {
+			$option_values = array(
+				'value' => $post->ID,
+				'text' => esc_attr( $post->post_title ),
+				'selected' => $current_id === $post->ID ? 'selected=selected' : '',
+			);
+
+			$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 		}
 
-		if ( empty( $_REQUEST[ 'mla_csv_data_source_options' ]['enclosure'] ) ) {
-			$changed |= self::_update_plugin_option( 'enclosure', self::$_default_settings['enclosure'] );
-		} else {
-			$changed |= self::_update_plugin_option( 'enclosure', stripslashes( $_REQUEST[ 'mla_csv_data_source_options' ]['enclosure'] ) );
-		}
+		$option_values = array(
+			'key' => 'mla-import-settings-file',
+			'options' => $select_options
+		);
 
-		if ( empty( $_REQUEST[ 'mla_csv_data_source_options' ]['escape'] ) ) {
-			// An empty escape character is allowed as of PHP 7.4; is disables the escape mechanism.
-			if ( version_compare( phpversion(), '7.4.0', '>=' ) ) {
-				$changed |= self::_update_plugin_option( 'escape', '' );
-			} else {
-				$changed |= self::_update_plugin_option( 'escape', self::$_default_settings['escape'] );
-			}
-		} else {
-			$changed |= self::_update_plugin_option( 'escape', stripslashes( $_REQUEST[ 'mla_csv_data_source_options' ]['escape'] ) );
-		}
-
-		if ( $changed ) {
-			// No reason to save defaults in the database
-			if ( self::$_settings === self::$_default_settings ) {
-				delete_option( self::SLUG_PREFIX . '-settings' ); 
-			} else {
-				$changed = update_option( self::SLUG_PREFIX . '-settings', self::$_settings, false );
-			}
-
-			if ( $changed ) {
-				$page_content['message'] = "Settings have been updated.";
-			} else {
-				$page_content['message'] = "Settings update failed.";
-			}
-		}
-
-		if ( false === self::_validate_match_selection( false ) ) {
-			$page_content['message'] .= "<br />WARNING: Match variable not found in source file.";
-		}
-
-		return $page_content;		
-	} // _save_setting_changes
-
-	/**
-	 * Assemble the in-memory representation of the custom feed settings
-	 *
-	 * @since 1.00
-	 *
-	 * @param boolean $force_refresh Optional. Force a reload of rules. Default false.
-	 * @return boolean Success (true) or failure (false) of the operation
-	 */
-	private static function _get_plugin_option_settings( $force_refresh = false ) {
-		if ( false == $force_refresh && NULL != self::$_settings ) {
-			return true;
-		}
-
-		// Update the plugin options from the wp_options table or set defaults
-		self::$_settings = get_option( self::SLUG_PREFIX . '-settings' );
-		if ( !is_array( self::$_settings ) ) {
-			self::$_settings = self::$_default_settings;
-		}
-
-		return true;
-	} // _get_plugin_option_settings
-
-	/**
-	 * In-memory representation of the option settings
-	 *
-	 * @since 1.00
-	 *
-	 * @var array $_settings {
-	 *     @type boolean $assign_parents Assign all terms in path, not just the last (leaf) term
-	 *     @type boolean $assign_rule_parent Assign the Rule Parent (if any) in addition to terms in path
-	 *     @type string  $path_delimiter The delimiter that separates path components
-	 *     }
-	 */
-	private static $_settings = NULL;
-
-	/**
-	 * Default processing options
-	 *
-	 * @since 1.00
-	 *
-	 * @var	array
-	 */
-	private static $_default_settings = array (
-						'source' => 0,
-						'match' => 'id',
-						'delimiter' => ',',
-						'enclosure' => '"',
-						'escape' => '\\',
-					);
-
-	/**
-	 * Get a custom feed option setting
-	 *
-	 * @since 1.00
-	 *
-	 * @param string	$name Option name
-	 *
-	 * @return	mixed	Option value, if it exists else NULL
-	 */
-	private static function _get_plugin_option( $name ) {
-		if ( !self::_get_plugin_option_settings() ) {
-			return NULL;
-		}
-
-		if ( !isset( self::$_settings[ $name ] ) ) {
-			return NULL;
-		}
-
-		return self::$_settings[ $name ];
-	} // _get_plugin_option
-
-	/**
-	 * Update a custom feed option setting
-	 *
-	 * @since 1.00
-	 *
-	 * @param string $name Option name
-	 * @param mixed	$new_value Option value
-	 *
-	 * @return mixed True if option value changed, false if value unchanged, NULL if failure
-	 */
-	private static function _update_plugin_option( $name, $new_value ) {
-		if ( !self::_get_plugin_option_settings() ) {
-			return NULL;
-		}
-
-		$old_value = isset( self::$_settings[ $name ] ) ? self::$_settings[ $name ] : NULL;
-
-		if ( $new_value === $old_value ) {
-			return false;
-		}
-
-		self::$_settings[ $name ] = $new_value;
-		return true;
-	} // _update_plugin_option
+		return $select_options;
+	} // _compose_source_file_options
 
 	/**
 	 * In-memory representation of the CSV variables,
@@ -730,7 +498,7 @@ class MLACSVDataSourceExample {
 		self::_load_csv_file( $use_existing, true );
 
 		if ( !empty( self::$_csv_variable_names ) ) {
-			$match = self::_get_plugin_option('match');
+			$match = self::$plugin_settings->get_plugin_option('match');
 
 			switch ( $match ) {
 				case 'id':
@@ -776,11 +544,11 @@ class MLACSVDataSourceExample {
 		self::$_csv_match_variable = '';
 		self::$_csv_match_index = false;
 
-		$ID = self::_get_plugin_option('source');
-		$match = self::_get_plugin_option('match');
-		$delimiter = self::_get_plugin_option('delimiter');
-		$enclosure = self::_get_plugin_option('enclosure');
-		$escape = self::_get_plugin_option('escape');
+		$ID = self::$plugin_settings->get_plugin_option('source');
+		$match = self::$plugin_settings->get_plugin_option('match');
+		$delimiter = self::$plugin_settings->get_plugin_option('delimiter');
+		$enclosure = self::$plugin_settings->get_plugin_option('enclosure');
+		$escape = self::$plugin_settings->get_plugin_option('escape');
 
 		// Find the file attached to the selected item
 		$path = get_attached_file( $ID );

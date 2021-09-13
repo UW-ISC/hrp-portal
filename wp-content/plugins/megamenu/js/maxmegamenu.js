@@ -268,7 +268,16 @@
             });
 
             collapse_children_parents.each(function() {
-                $(this).attr('data-has-click-event', 'true');
+                $(this).attr("data-has-click-event", "true");
+            });
+
+            if ( plugin.settings.second_click === "disabled" ) {
+                clickable_parents.off("click.megamenu");
+            }
+
+            $(".mega-close-after-click:not(.mega-menu-item-has-children) > a.mega-menu-link", menu).on("click", function() {
+                plugin.hideAllPanels();
+                plugin.hideMobileMenu();
             });
         };
 
@@ -496,7 +505,7 @@
         };
 
         plugin.reverseRightAlignedItems = function() {
-            if ( ! $("body").hasClass("rtl") ) {
+            if ( ! $("body").hasClass("rtl") && $menu.hasClass("mega-menu-horizontal") ) {
                 $menu.append($menu.children("li.mega-item-align-right").get().reverse());
             }
         };
@@ -611,6 +620,8 @@
             clearTimeout(html_body_class_timeout);
 
             $("body").addClass($menu.attr("id") + "-mobile-open");
+
+            plugin.expandMobileSubMenus();
 
             if ( plugin.settings.effect_mobile === "slide_left" || plugin.settings.effect_mobile === "slide_right" ) {
                 $("html").addClass($menu.attr("id") + "-off-canvas-open");

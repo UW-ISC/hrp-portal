@@ -1,1 +1,0 @@
-<iframe src="<?php echo esc_url_raw($url); ?>" style="width:100%;height:300px;border:solid 1px black;" class="cm-embedded-content"></iframe>

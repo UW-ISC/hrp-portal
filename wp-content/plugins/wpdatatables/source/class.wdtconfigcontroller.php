@@ -170,6 +170,7 @@ class WDTConfigController {
             $table->tabletools_config = unserialize($table->tabletools_config);
             $table->columns = self::getColumnsConfig($tableId);
             $table->info_block = (isset($advancedSettings->info_block)) ? $advancedSettings->info_block : 1;
+            $table->showTableToolsIncludeHTML = (isset($advancedSettings->showTableToolsIncludeHTML)) ? $advancedSettings->showTableToolsIncludeHTML : 0;
             $table->pagination = (isset($advancedSettings->pagination)) ? $advancedSettings->pagination : 1;
             $table->paginationAlign = (isset($advancedSettings->paginationAlign)) ? $advancedSettings->paginationAlign : 'right';
             $table->paginationLayout = (isset($advancedSettings->paginationLayout)) ? $advancedSettings->paginationLayout : 'full_numbers';
@@ -320,6 +321,7 @@ class WDTConfigController {
             'advanced_settings' => json_encode(
                 array(
                     'info_block' => $table->info_block,
+                    'showTableToolsIncludeHTML' => $table->showTableToolsIncludeHTML,
                     'pagination' => $table->pagination,
                     'paginationAlign' => $table->paginationAlign,
                     'paginationLayout' => $table->paginationLayout,
@@ -382,6 +384,7 @@ class WDTConfigController {
         $table->show_title = (int)$table->show_title;
         $table->table_type = sanitize_text_field($table->table_type);
         $table->tools = (int)$table->tools;
+        $table->showTableToolsIncludeHTML = (int)$table->showTableToolsIncludeHTML;
         $table->responsive = (int)$table->responsive;
         $table->hide_before_load = (int)$table->hide_before_load;
         $table->fixed_layout = (int)$table->fixed_layout;
@@ -1107,6 +1110,7 @@ class WDTConfigController {
         $table->show_title = 0;
         $table->table_type = '';
         $table->tools = 1;
+        $table->showTableToolsIncludeHTML = 0;
         $table->responsive = 0;
         $table->hide_before_load = 1;
         $table->fixed_layout = 0;

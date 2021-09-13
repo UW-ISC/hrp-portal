@@ -1242,6 +1242,8 @@ body.toplevel_page_maxmegamenu,
 					line-height: 1.5em;
 					text-indent: 2px;
 					margin-top: 5px;
+					display: inline;
+					font-style: italic;
 
 					p {
 						font-size: 0.9em;
@@ -1257,7 +1259,6 @@ body.toplevel_page_maxmegamenu,
 					.mega-description {
 						float: left;
 						margin-left: 10px;
-						font-style: italic;
 					}
 				}
 			}
@@ -1880,8 +1881,7 @@ body.toplevel_page_maxmegamenu {
 
 	.mm-picker-container {
 		border-radius: 3px;
-		box-shadow: 0 1px 0 rgba(0,0,0,.08);
-		border: 1px solid #7e8993;
+		border: 1px solid #8c8f94;
 		font-size: 0.9em;
 		float: left;
 
@@ -1902,6 +1902,7 @@ body.toplevel_page_maxmegamenu {
 
 		.sp-replacer .sp-preview {
 			border: 0;
+			border-right: 1px solid #8c8f94;
 			height: 26px;
 			width: 26px;
 			margin: 0;
@@ -2271,6 +2272,10 @@ body.toplevel_page_maxmegamenu {
 					min-height: 28px;
 				}
 
+				select {
+					max-width: 200px;
+				}
+				
 				textarea {
 					width: 100%;
 					height: 150px;

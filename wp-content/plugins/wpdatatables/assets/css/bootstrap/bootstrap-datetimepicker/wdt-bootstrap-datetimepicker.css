@@ -5,6 +5,8 @@
   -moz-transition: 0s;
   -webkit-transition: 0s;
   transition: 0s;
+  padding: 0;
+  border: none !important;
 }
 .wpdt-c .wpDataTables.wpDataTablesWrapper {
   position: relative !important;
@@ -17,6 +19,11 @@
   bottom: auto !important;
   top: auto !important;
   min-width: 216px;
+}
+
+.wpdt-c .wpDataTablesWrapper .wpDataTable:not(.scroll) thead th .bootstrap-datetimepicker-widget.wdt-datetimepicker-modal,
+.wpdt-c .wpDataTablesWrapper .wpDataTable:not(.scroll) tfoot td .bootstrap-datetimepicker-widget.wdt-datetimepicker-modal {
+  inset: auto !important;
 }
 
 .wpdt-c .wdt-datetimepicker-modal.bootstrap-datetimepicker-widget:after,
@@ -136,8 +143,9 @@
 
 .wpdt-c .wdt-datetimepicker-modal .datepicker table thead tr th {
   border-radius: 0;
-  color: #fff;
-  border: 0 !important;
+  color: #fff !important;
+  border: none !important;
+  text-shadow: none;
 }
 
 .wpdt-c .wdt-datetimepicker-modal .datepicker table thead tr th .glyphicon {
@@ -250,7 +258,7 @@
 }
 
 .wpdt-c .wdt-datetimepicker-modal .datepicker table td.active {
-  color: #fff;
+  color: #fff !important;
 }
 
 .wpdt-c .wdt-datetimepicker-modal .datepicker table td.active:before {

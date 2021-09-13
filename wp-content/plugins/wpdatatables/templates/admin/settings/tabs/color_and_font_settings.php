@@ -15,7 +15,7 @@
                 <div class="panel-heading active" role="tab" id="heading-one">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-one" aria-expanded="true"
-                           aria-controls="collapse-one">Font</a>
+                           aria-controls="collapse-one"><?php _e('Font', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-one" class="collapse in" role="tabpanel" aria-labelledby="heading-one">
@@ -95,7 +95,7 @@
                 <div class="panel-heading" role="tab" id="heading-two">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-two" aria-expanded="true"
-                           aria-controls="collapse-two">Header</a>
+                           aria-controls="collapse-two"><?php _e('Header', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-two" class="collapse" role="tabpanel" aria-labelledby="heading-two">
@@ -189,7 +189,7 @@
                 <div class="panel-heading" role="tab" id="heading-three">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three" aria-expanded="false"
-                           aria-controls="collapse-three" class="collapsed">Table border</a>
+                           aria-controls="collapse-three" class="collapsed"><?php _e('Table border', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-three" class="collapse" role="tabpanel" aria-labelledby="heading-three">
@@ -360,7 +360,7 @@
                 <div class="panel-heading" role="tab" id="heading-five">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-five" aria-expanded="false"
-                           aria-controls="collapse-five" class="collapsed">Cell color</a>
+                           aria-controls="collapse-five" class="collapsed"><?php _e('Cell color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-five" class="collapse" role="tabpanel" aria-labelledby="heading-five">
@@ -416,7 +416,7 @@
                 <div class="panel-heading" role="tab" id="heading-six">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-six" aria-expanded="false"
-                           aria-controls="collapse-six" class="collapsed">Buttons color in modals</a>
+                           aria-controls="collapse-six" class="collapsed"><?php _e('Buttons color in modals', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-six" class="collapse" role="tabpanel" aria-labelledby="heading-six">
@@ -575,7 +575,7 @@
                 <div class="panel-heading" role="tab" id="heading-seven">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-seven" aria-expanded="false"
-                           aria-controls="collapse-seven" class="collapsed">Modals and overlay color</a>
+                           aria-controls="collapse-seven" class="collapsed"><?php _e('Modals and overlay color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-seven" class="collapse" role="tabpanel" aria-labelledby="heading-seven">
@@ -651,7 +651,7 @@
                 <div class="panel-heading" role="tab" id="heading-eight">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-eight" aria-expanded="true"
-                           aria-controls="collapse-eight">Pagination</a>
+                           aria-controls="collapse-eight"><?php _e('Pagination', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-eight" class="collapse" role="tabpanel" aria-labelledby="heading-eight">

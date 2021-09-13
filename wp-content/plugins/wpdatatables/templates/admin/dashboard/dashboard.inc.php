@@ -263,39 +263,21 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            <?php _e('A minor update with a couple of features, bug fixes and stability improvements:', 'wpdatatables'); ?>
+                            A major update with a couple of new features, bug fixes, and stability improvements:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li> <?php _e('<strong>Feature:</strong> Added code option in TinyMCE editor for editing.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Feature:</strong> Added new date format.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Improvement:</strong> Added auto-save functionality after insert media in Simple tables.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Improvement:</strong> Added translation functions on some strings.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Improvement:</strong> Added new hooks for enqueuing scripts in the admin area, filters for elementor widgets, table init data and disable_limit parameter.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Improvement:</strong> Improved error handlers.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('Added German translation', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with vulnerability for server-side tables.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with vulnerability for tables when is used option "Users can see and edit own data".', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with the font in material skin and background in graphite skin', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with saving NULL values in the database for empty string columns after save/edit.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with class name in Global font color settings', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with charts when it is used option Follow table filtering', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with wpDataCharts callbacks.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with setCellContent in Conditional formatting and Responsive collapse button.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with setCellContent in Conditional formatting and Responsive collapse button.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed notice for Highcharts.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with duplicating server-side tables.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with style of Columns visibility option for all new skins.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with not rendering some date formats for non-server-side tables.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with not showing English translate files in Loco translate.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue when users turn off server-side option when table have a large number of rows.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with Fatal errors if on server is turn off option allow_url_fopen.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue for not loading preview simple table after back button in browser from some page.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with inserting "px" in column width option.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('<strong>Bugfix:</strong> Fixed issue with showing CSS code in one line after save on Custom CSS filed in table settings', 'wpdatatables'); ?></li>
-                                <li> <?php _e('Compatibility with WordPress 5.7 approved.', 'wpdatatables'); ?></li>
-                                <li> <?php _e('Other small bug fixes and stability improvements.', 'wpdatatables'); ?></li>
+                                <li><strong>Feature:</strong> Exporting the chart data to CSV, XLS or HTML table formats in Highcharts.</li>
+                                <li><strong>Feature:</strong> Added Font and Font size options in simple table.</li>
+                                <li><strong>Feature:</strong> Added new option for showing HTML code in exported files like Print, Copy, CSV and Excel.</li>
+                                <li><strong>Improvement:</strong> Removed view of purchase code on Activation page.</li>
+                                <li><strong>Improvement:</strong> Updated moment.js library.</li>
+                                <li><strong>BugFix:</strong> Fixed layout of select-box field in edit modal.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with vertical min value in Chartjs.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with attachment field in edit modal.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with rendering charts for lower versions of jQuery.</li>
+                                <li>Other small bug fixes and stability improvements.</li>
                             </ul>
                         </div>
 
@@ -408,21 +390,37 @@
                             <?php
                             if (extension_loaded('xml') && extension_loaded('dom') && ini_get('allow_url_fopen')) {
                                 $rss = new DOMDocument();
-                                $rss->load('https://wpdatatables.com/feed/');
-                                $feed = array();
-                                foreach ($rss->getElementsByTagName('item') as $node) {
-                                    $item = array(
-                                        'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
-                                        'link' => $node->getElementsByTagName('link')->item(0)->nodeValue
-                                    );
-                                    array_push($feed, $item);
-                                }
-                                $limit = 4;
-                                for ($x = 0; $x < $limit; $x++) {
-                                    $title = str_replace(' & ', ' &amp; ', $feed[$x]['title']);
-                                    $link = $feed[$x]['link'];
-                                    echo ' <li> <a href="' . $link . '" title="' . $title . '" class="card-link" target="_blank">' . $title . '<i class="wpdt-icon-external-link-square-alt"></i></a></li>';
-                                }
+                                @$rss->load('https://wpdatatables.com/feed/');
+                                if($rss){
+                                    $feed = array();
+                                    foreach ($rss->getElementsByTagName('item') as $node) {
+                                        $item = array(
+                                            'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
+                                            'link' => $node->getElementsByTagName('link')->item(0)->nodeValue
+                                        );
+                                        array_push($feed, $item);
+                                    }
+                                    $limit = 4;
+                                    if(!empty($feed)){
+                                        for ($x = 0; $x < $limit; $x++) {
+                                            $title = str_replace(' & ', ' &amp; ', $feed[$x]['title']);
+                                            $link = $feed[$x]['link'];
+                                            echo ' <li> <a href="' . $link . '" title="' . $title . '" class="card-link" target="_blank">' . $title . '<i class="wpdt-icon-external-link-square-alt"></i></a></li>';
+                                        }
+                                    } else { ?>
+                                        <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li> <a href="https://wpdatatables.com/scan-wordpress-database-for-malware/" title="How to Scan The WordPress Database For Malware" class="card-link" target="_blank">How to Scan The WordPress Database For Malware<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                        <li> <a href="https://wpdatatables.com/wordpress-database-cleanup/" title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How to Do a WordPress Database Cleanup<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <?php }
+
+                                } else { ?>
+                                    <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li> <a href="https://wpdatatables.com/scan-wordpress-database-for-malware/" title="How to Scan The WordPress Database For Malware" class="card-link" target="_blank">How to Scan The WordPress Database For Malware<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                    <li> <a href="https://wpdatatables.com/wordpress-database-cleanup/" title="How to Do a WordPress Database Cleanup" class="card-link" target="_blank">How to Do a WordPress Database Cleanup<i class="wpdt-icon-external-link-square-alt"></i></a></li>
+                                <?php }
+
                             } else {  ?>
                                 <li> <a href="https://wpdatatables.com/how-to-create-the-premier-league-table/" title="How to create the Premier League table for your site" class="card-link" target="_blank">How to create the Premier League table for your site<i class="wpdt-icon-external-link-square-alt"></i></a></li>
                                 <li> <a href="https://wpdatatables.com/charts-vs-tables/" title="Charts Vs Tables or When to Use One Over the Other" class="card-link" target="_blank">Charts Vs Tables or When to Use One Over the Other<i class="wpdt-icon-external-link-square-alt"></i></a></li>
@@ -453,12 +451,50 @@
                 <h4 class="wdt-row-title text-center">
                     <?php _e('wpDataTables Addons', 'wpdatatables'); ?></h4>
                 <p class="text-center wdt-row-desc">
-                    <?php _e('While wpDataTables itself provides quite a large amount of features and unlimited customisation, flexibility, you can achieve even more with our premium addons.', 'wpdatatables'); ?>
+                    <?php _e('While wpDataTables itself provides quite a large amount of features and unlimited customisation, flexibility, you can achieve even more with our premium addons. <br>(except Forminator Forms integration which is free and can be used with Lite version as well, all others requires wpDataTables Premium version)', 'wpdatatables'); ?>
                 </p>
             </div>
         </div>
         <div class="row">
-            <div class="col-1-5 col-md-6 col-xs-12 p-l-0">
+            <div class="col-1-4 col-md-6 col-xs-12 p-l-0">
+                <div class="card wdt-addons-card">
+                    <div class="thumbnail">
+                        <div class="ribbon"><span><?php _e('Free', 'wpdatatables'); ?></span></div>
+                        <div class="wpdt-addons-desc text-center">
+                            <img class="img-responsive"
+                                 src="<?php echo WDT_ASSETS_PATH; ?>img/addons/forminator-forms-logo.png"
+                                 alt="">
+                        </div>
+                        <h4 class="text-center">
+                            <?php _e('Forminator Forms integration for wpDataTables', 'wpdatatables'); ?>
+                        </h4>
+                        <div class="caption p-0">
+                            <p class="text-center">
+                                <?php _e('Tool that adds "Forminator Form" as a new table type and allows you to create wpDataTables from Forminator Forms submissions.', 'wpdatatables'); ?>
+                            </p>
+                        </div>
+                        <?php if (!defined('WDT_FRF_ROOT_PATH')) { ?>
+                            <div class="wdt-addons-links text-center">
+                                <button id="wdt-forminator-integration" class="btn btn-icon-text btn-primary">
+                                    <a href="https://downloads.wordpress.org/plugin/wpdatatables-forminator.zip" class="" role="button">
+                                        <i class="wpdt-icon-file-download m-r-5"></i><?php _e('Download', 'wpdatatables'); ?></a>
+                                    </button>
+                                <a href="https://wordpress.org/plugins/wpdatatables-forminator/" target="_blank" class="wdt-addons-find-out-more" role="button"><?php _e('Learn more', 'wpdatatables'); ?></a>
+                                <div class="clear"></div>
+                            </div>
+                        <?php } else { ?>
+                            <div class="wdt-addons-links text-center">
+                                <button class="wdt-plugin-installed btn btn-icon-text btn-primary">
+                                    <i class="wpdt-icon-check-full m-r-5"></i>
+                                    <?php _e('Installed', 'wpdatatables'); ?>
+                                </button>
+                                <div class="clear"></div>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+            <div class="col-1-4 col-md-6 col-xs-12 p-l-0">
                 <div class="card wdt-addons-card">
                     <div class="thumbnail">
                         <div class="wpdt-addons-desc text-center">
@@ -499,7 +535,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-1-5 p-l-0 col-md-6 col-xs-12">
+            <div class="col-1-4 p-l-0 col-md-6 col-xs-12">
                 <div class="card wdt-addons-card">
                     <div class="thumbnail">
                         <div class="wpdt-addons-desc text-center">
@@ -540,7 +576,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-1-5 p-l-0 col-md-6 col-xs-12">
+            <div class="col-1-4 p-l-0 col-md-6 col-xs-12">
                 <div class="card wdt-addons-card">
                     <div class="thumbnail">
                         <div class="wpdt-addons-desc text-center">
@@ -580,7 +616,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-1-5 p-l-0 col-md-6 col-xs-12">
+            <div class="col-1-4 p-l-0 col-md-6 col-xs-12">
                 <div class="card wdt-addons-card">
                     <div class="thumbnail">
                         <div class="wpdt-addons-desc text-center">
@@ -621,7 +657,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-1-5 p-l-0 col-md-6 col-xs-12 p-r-0">
+            <div class="col-1-4 p-l-0 col-md-6 col-xs-12">
                 <div class="card wdt-addons-card">
                     <div class="thumbnail">
                         <div class="wpdt-addons-desc text-center">
@@ -676,7 +712,7 @@
                                 <?php _e('Appointments and Events WordPress Booking Plugin', 'wpdatatables'); ?>
                             </div>
                             <p class="wpdt-text wpdt-font m-b-0">
-                                <?php _e('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! 25,000+ businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage 200,000+ appointments and events worldwide each month.', 'wpdatatables'); ?></p>
+                                <?php _e('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! 30,000+ businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage 300,000+ appointments and events worldwide each month.', 'wpdatatables'); ?></p>
                             <p>
                                 <span class="wdt-stars-container stars-100">★★★★★</span>
                                 <span class="wdt-rating"> <?php _e('Rating: 4.8 - ‎123 reviews') ?></span>

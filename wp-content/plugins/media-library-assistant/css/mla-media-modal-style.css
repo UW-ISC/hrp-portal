@@ -1,5 +1,4 @@
 @charset "utf-8";
-
 /**
  * CSS Document
  *
@@ -8,22 +7,12 @@
  * Adapted from /wp-admin/css/edit.css and given unique names to avoid conflicts.
  */
 
-.attachments-browser .media-toolbar {
-	overflow: visible;
-	height: auto;
-}
-
-.attachments-browser .media-toolbar .media-toolbar-secondary {
-	width: 50%;
-	max-width: 50%;
-}
-
-.attachments-browser .media-toolbar .media-toolbar-primary {
-	width: 50%;
-	max-width: 50%;
-}
-
 /** === Search Options */
+.mla-search-box {
+	display: inline-block;
+	float: right;
+}
+
 .mla-search-options {
 	list-style: none;
 	padding: 0;
@@ -38,27 +27,92 @@
 .mla-search-options > li:last-child { margin-right: 0; }
 
 /**
- * Media Toolbar Controls
-*/
-.media-modal-content #mla-terms-search,
-.media-modal-content #mla-search-submit {
-	height: 26px;
-	line-height:normal;
-	margin-top: 11px;
-	position: static;
-	width:auto
+ * MMMW Popup adapted from EML Media Toolbar Controls
+ */
+body.mla-media-modal .attachments-browser .media-toolbar {
+    height: auto;
 }
 
-.mode-grid.media-frame .media-toolbar .select-mode-toggle-button,
-.mode-grid.media-frame .media-toolbar input#mla-terms-search {
+body.mla-media-modal .attachments-browser .media-toolbar-secondary {
+    max-width: none;
+    width: 100%; /*auto; */
+}
+
+body.mla-media-modal .media-modal-content .media-frame select.attachment-filters {
+    width: auto;
+    max-width: calc(48% - 12px);
+    margin-right: 10px;
+    margin-top: 10px;
+    vertical-align: middle;
+    line-height: 28px;
+    height: 28px;
+}
+
+body.mla-media-modal .attachments-browser .media-toolbar-secondary .media-button {
+    margin: 10px 10px 0 0;
+    vertical-align: middle;
+}
+
+body.mla-media-modal .media-modal-content .attachments-browser .search {
+    margin: 10px 10px 0 0;
+    vertical-align: middle;
+    width: auto;
+    padding: 0px 8px;
+}
+
+@media only screen and (max-width: 900px) {
+
+    body.mla-media-modal .media-modal-content .attachments-browser .search {
+    float: none;
+    }
+}
+
+/**
+ * Media/Library Grid Mode Media Toolbar Controls
+ */
+body.mla-media-grid .mode-grid.media-frame .media-toolbar .select-mode-toggle-button,
+body.mla-media-grid .mode-grid.media-frame .media-toolbar input#mla-terms-search {
 	vertical-align:middle;
 }
 
-.mode-grid.media-frame .media-toolbar input#mla-media-search-input,
-.mode-grid.media-frame .media-toolbar input#mla-search-submit {
-	/* margin-top: 11px; */
+body.mla-media-grid .mode-grid.media-frame .media-toolbar input#mla-media-search-input,
+body.mla-media-grid .mode-grid.media-frame .media-toolbar input#mla-search-submit {
 	position: static;
 	width:auto
+}
+
+/*
+ * Media/Library Grid Mode adapted from EML
+ */
+
+body.mla-media-grid .mode-grid.media-frame .attachments-browser .media-toolbar-secondary {
+    max-width: none;
+	width: 100%;
+}
+
+body.mla-media-grid .mode-grid.media-frame .media-toolbar select {
+    margin: 8px 10px 8px 0;
+}
+
+body.mla-media-grid .mode-grid.media-frame.mode-edit .media-toolbar-secondary .media-button {
+    margin: 8px 10px 8px 0;
+    vertical-align: middle;
+
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: visibility 0.2s linear, opacity 0.2s linear;
+    -moz-transition: visibility 0.2s linear, opacity 0.2s linear;
+    -o-transition: visibility 0.2s linear, opacity 0.2s linear;
+}
+
+body.mla-media-grid .mode-grid.media-frame.mode-edit .media-toolbar-secondary .search {
+    margin: 8px 0 8px 0;
+    padding: 3px 5px;
+    max-width: 100%;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 1.5;
+    vertical-align: middle;
 }
 
 /**

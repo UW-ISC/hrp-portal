@@ -53,6 +53,13 @@
         });
 
         /**
+         * Toggle Table Tools Include HTML option
+         */
+        $('#wdt-table-tools-include-html').change(function (e) {
+            wpdatatable_config.setTableToolsIncludeHTML($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Toggle Responsiveness
          */
         $('#wdt-responsive').change(function (e) {
@@ -855,7 +862,7 @@
                 $renderCheckboxesInModalBlock.hide();
 
                 // Must recreate selectpicker block because Ajax Selectpicker
-                $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected + '"></select></div></div>');
+                $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected + '"></select></div></div>');
                 $filterInputSelectpicker = $('#wdt-filter-default-value-selectpicker');
                 $filterInputSelectpicker.html('');
 
@@ -1012,7 +1019,7 @@
                 $defaultValueSelectpickerBlock.show();
                 $defaultValueInput.val('');
 
-                $defaultValueSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-editing-default-value-selectpicker" data-live-search="true"></select></div></div>');
+                $defaultValueSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-editing-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true"></select></div></div>');
                 $defaultValueSelectpicker = $('#wdt-editing-default-value-selectpicker');
                 $defaultValueSelectpicker.html('');
 

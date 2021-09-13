@@ -247,11 +247,7 @@ class MLAShortcode_Support {
 	public static function mla_validate_attributes( $attr, $content = NULL ) {
 //error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 //error_log( __LINE__ . " mla_validate_attributes() content = " . var_export( $content, true ), 0 );
-/*		if ( empty( $attr ) ) {
-			$attr = array();
-		} elseif ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		} // */
+
 		if ( is_string( $attr ) ) {
 			$attr = shortcode_parse_atts( $attr );
 		}
@@ -279,7 +275,7 @@ class MLAShortcode_Support {
 			foreach ( $attr as $key => $value ) {
 				$value = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
 		 	                            array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $value );
-//error_log( __LINE__ . " mla_validate_attributes() value = " . var_export( $value, true ), 0 );
+//error_log( __LINE__ . " mla_validate_attributes() [{$key}] value = " . var_export( $value, true ), 0 );
 				$break_tag = strpos( $value, '<br' );
 				if ( ( false !== $break_tag ) && ( ($break_tag + 3) == strlen( $value ) ) ) {
 					$value = substr( $value, 0, ( strlen( $value ) - 3) );
@@ -320,11 +316,12 @@ class MLAShortcode_Support {
 			$content = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
 			                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $content );
 			$content_attr = shortcode_parse_atts( $content );
+//error_log( __LINE__ . " mla_validate_attributes() content_attr = " . var_export( $content_attr, true ), 0 );
 			if ( is_array( $content_attr ) ) {
 				// Remove empty values and still-invalid parameters
 				$new_attr = array();
 				foreach ( $content_attr as $key => $value ) {
-					if ( is_numeric( $key ) || empty( $value ) ) {
+					if ( is_numeric( $key ) || ( 0 === strlen( $value ) ) ) { // empty( $value ) ) {
 						self::$attributes_errors['raw'][] = 'content [' . $key . '] => ' . $value;
 						self::$attributes_errors['escaped'][] = 'content [' . $key . '] => ' . esc_html( $value );
 						continue;
@@ -512,6 +509,7 @@ class MLAShortcode_Support {
 			'mla_alt_shortcode' => NULL,
 			'mla_alt_ids_name' => 'ids',
 			'mla_alt_ids_template' => NULL,
+			'mla_alt_parameters' => NULL,
 
 			// paginatation arguments defined in $mla_get_shortcode_attachments_parameters
 			// 'mla_page_parameter' => 'mla_paginate_current', handled in code with $mla_page_parameter
@@ -609,6 +607,7 @@ class MLAShortcode_Support {
 			$arguments['mla_alt_ids_name'] = 'ids';
 			$arguments['mla_alt_ids_value'] = NULL;
 			$arguments['mla_alt_ids_template'] = NULL;
+			$arguments['mla_alt_parameters'] = NULL;
 		}
 
 		self::$mla_debug = ( ! empty( $arguments['mla_debug'] ) ) ? trim( strtolower( $arguments['mla_debug'] ) ) : false;
@@ -783,10 +782,20 @@ class MLAShortcode_Support {
 
 			$blacklist = apply_filters( 'mla_gallery_alt_shortcode_blacklist', $blacklist );
 			$alt_attr = apply_filters( 'mla_gallery_alt_shortcode_attributes', $attr );
+//error_log( __LINE__ . " alt_attr = " . var_export( $alt_attr, true ), 0 );
 
-			$mla_alt_shortcode_args = '';
+			// Allow for overide of blacklist values, e.g., post_mime_type
+			if ( !empty( $alt_attr['mla_alt_parameters'] ) ) {
+				$alt_parameters = self::mla_validate_attributes( $alt_attr['mla_alt_parameters'] );
+//error_log( __LINE__ . " alt_parameters = " . var_export( $alt_parameters, true ), 0 );
+				unset( $alt_attr['mla_alt_parameters'] );
+				$alt_attr = array_merge( $alt_attr, $alt_parameters );
+			}
+//error_log( __LINE__ . " alt_attr = " . var_export( $alt_attr, true ), 0 );
+
+			$mla_alt_shortcode_args = array();
 			foreach ( $alt_attr as $key => $value ) {
-				if ( array_key_exists( $key, $blacklist ) ) {
+				if ( array_key_exists( $key, $blacklist ) && ( !array_key_exists( $key, $alt_parameters ) ) ) {
 					continue;
 				}
 
@@ -795,11 +804,16 @@ class MLAShortcode_Support {
 					$value = '"' . $slashed . '"';
 				}
 
-				$mla_alt_shortcode_args .= empty( $mla_alt_shortcode_args ) ? $key . '=' . $value : ' ' . $key . '=' . $value;
+				$mla_alt_shortcode_args[] = $key . '=' . $value;
 			} // foreach $attr
+//error_log( __LINE__ . " mla_alt_shortcode_args = " . var_export( $mla_alt_shortcode_args, true ), 0 );
+
+
+			$mla_alt_shortcode_args = implode( ' ', $mla_alt_shortcode_args );
 
 			// Restore original delimiters
 			$mla_alt_shortcode_args = str_replace( '[+', '{+', str_replace( '+]', '+}', $mla_alt_shortcode_args ) );
+//error_log( __LINE__ . " mla_alt_shortcode_args = " . var_export( $mla_alt_shortcode_args, true ), 0 );
 
 			/*
 			 * If an alternate value has been specified we must delay alt shortcode execution
@@ -1339,8 +1353,20 @@ class MLAShortcode_Support {
 					remove_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_image_src' );
 				}
 			} else {
-				$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $attachment->post_title );
-				$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $attachment->post_title );
+				$thumbnail_content = $attachment->post_title;
+				
+				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
+					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
+					$thumb = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
+					$thumb = apply_filters( 'mla_gallery_featured_image', $thumb, $attachment, $size, $item_values );
+					
+					if ( ! empty( $thumb ) ) {
+						$thumbnail_content = $thumb;
+					}
+				}
+
+				$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $thumbnail_content );
+				$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $thumbnail_content );
 			}
 
 			if ( in_array( $attachment->post_mime_type, array( 'image/svg+xml' ) ) ) {
@@ -1914,7 +1940,8 @@ class MLAShortcode_Support {
 			'mla_link_text' => '',
 			'mla_nolink_text' => '',
 			'mla_rollover_text' => '',
-			'mla_caption' => ''
+			'mla_caption' => '',
+			'mla_item_value' => '',
 		);
 
 		$defaults = array_merge(
@@ -1922,6 +1949,7 @@ class MLAShortcode_Support {
 			array(
 			'smallest' => 8,
 			'largest' => 22,
+			'default_size' => 12,
 			'unit' => 'pt',
 			'separator' => "\n",
 			'single_text' => '%d item',
@@ -1946,6 +1974,13 @@ class MLAShortcode_Support {
 			'mla_target' => '',
 			'mla_debug' => false,
 
+			'option_all_text' => '',
+			'option_all_value' => NULL,
+			'option_no_terms_text' => '',
+			'option_no_terms_value' => NULL,
+			'option_any_terms_text' => '',
+			'option_any_terms_value' => NULL,
+
 			// Pagination parameters
 			'term_id' => NULL,
 			'mla_end_size'=> 1,
@@ -1953,9 +1988,10 @@ class MLAShortcode_Support {
 			'mla_prev_text' => '&laquo; ' . __( 'Previous', 'media-library-assistant' ),
 			'mla_next_text' => __( 'Next', 'media-library-assistant' ) . ' &raquo;',
 			'mla_page_parameter' => 'mla_cloud_current',
-			'mla_cloud_current' => NULL,
+			'mla_cloud_current' => 1,
 			'mla_paginate_total' => NULL,
 			'mla_paginate_type' => 'plain'),
+
 			$mla_item_specific_arguments
 		);
 
@@ -2048,8 +2084,8 @@ class MLAShortcode_Support {
 		 * $mla_page_parameter, if non-default, doesn't make it through the shortcode_atts
 		 * filter, so we handle it separately
 		 */
-		if ( ! isset( $arguments[ $mla_page_parameter ] ) ) {
-			if ( isset( $attr[ $mla_page_parameter ] ) ) {
+		if ( empty( $arguments[ $mla_page_parameter ] ) ) {
+			if ( !empty( $attr[ $mla_page_parameter ] ) ) {
 				$arguments[ $mla_page_parameter ] = $attr[ $mla_page_parameter ];
 			} else {
 				$arguments[ $mla_page_parameter ] = $defaults['mla_cloud_current'];
@@ -2059,7 +2095,7 @@ class MLAShortcode_Support {
 
 		// Process the pagination parameter, if present
 		if ( isset( $arguments[ $mla_page_parameter ] ) ) {
-			$arguments['offset'] = $arguments['limit'] * ( $arguments[ $mla_page_parameter ] - 1);
+			$arguments['offset'] = absint( $arguments['limit'] ) * ( absint( $arguments[ $mla_page_parameter ] ) - 1);
 		}
 
 		// Clean up the current_item to separate term_id from slug
@@ -2204,6 +2240,12 @@ class MLAShortcode_Support {
 			return;
 		}
 
+		if ( ! ( empty( $arguments['option_any_terms_text'] ) && empty( $arguments['option_no_terms_text'] ) && empty( $arguments['option_all_text'] ) ) ) {
+			$terms_assigned_counts = self::mla_get_all_none_term_counts( $arguments );
+		} else {
+			$terms_assigned_counts = array( 'ignore.terms.assigned' => 0, 'no.terms.assigned' => 0, 'any.terms.assigned' => 0 );
+		}
+
 		// Fill in the item_specific link properties, calculate cloud parameters
 		if ( isset( $tags['found_rows'] ) ) {
 			$found_rows = $tags['found_rows'];
@@ -2212,7 +2254,7 @@ class MLAShortcode_Support {
 			$found_rows = count( $tags );
 		}
 
-		if ( 0 == $found_rows ) {
+		if ( 0 === $found_rows ) {
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty cloud', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$cloud = MLACore::mla_debug_flush();
@@ -2239,7 +2281,7 @@ class MLAShortcode_Support {
 
 			echo $cloud; // phpcs:ignore
 			return;
-		}
+		} // Empty cloud
 
 		if ( self::$mla_debug ) {
 			$cloud = MLACore::mla_debug_flush();
@@ -2299,6 +2341,121 @@ class MLAShortcode_Support {
 				$tags[ $key ]->link = $tags[ $key ]->term_link;
 			}
 		} // foreach tag
+
+		// Add the optional 'all-terms', 'any-terms' and/or 'no-terms' option(s), if requested
+		if ( ! empty( $arguments['option_any_terms_text'] ) ) {
+			$new_term_id = -2;
+			$new_term_slug = 'any.terms.assigned';
+
+			if ( ! empty( $arguments['option_any_terms_value'] ) ) {
+				$new_term_value = self::_process_shortcode_parameter( $arguments['option_any_terms_value'], $page_values );
+				if ( is_numeric( $new_term_value ) ) {
+					$new_term_id = (integer) $new_term_value;
+					$new_term_slug = sanitize_title( $arguments['option_any_terms_text'] );
+				} else {
+					$new_term_slug = sanitize_title( $new_term_value );
+				}
+			}
+
+			$new_term = ( object ) array(
+				'term_id' => $new_term_id,
+				'name' => $arguments['option_any_terms_text'],
+				'slug' => $new_term_slug,
+				'term_group' => '0',
+				'term_taxonomy_id' => $new_term_id,
+				'taxonomy' => $arguments['taxonomy'][0],
+				'description' => '',
+				'parent' => '0',
+				'count' => $terms_assigned_counts['any.terms.assigned'],
+				'level' => 0,
+				'edit_link' => '',
+				'term_link' => '',
+				'link' => '',
+			);
+			$new_term->scaled_count = apply_filters( 'mla_tag_cloud_scale', round( log10( 1 ) * 100 ), $attr, $arguments, $new_term );
+
+			if ( self::$mla_debug ) {
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug adding ANY terms', 'media-library-assistant' ) . '</strong> = ' . var_export( $new_term, true ) );
+			}
+			array_unshift( $tags, $new_term );
+			$found_rows += 1;
+		}
+
+		if ( ! empty( $arguments['option_no_terms_text'] ) ) {
+			$new_term_id = -1;
+			$new_term_slug = 'no.terms.assigned';
+
+			if ( ! empty( $arguments['option_no_terms_value'] ) ) {
+				$new_term_value = self::_process_shortcode_parameter( $arguments['option_no_terms_value'], $page_values );
+				if ( is_numeric( $new_term_value ) ) {
+					$new_term_id = (integer) $new_term_value;
+					$new_term_slug = sanitize_title( $arguments['option_no_terms_text'] );
+				} else {
+					$new_term_slug = sanitize_title( $new_term_value );
+				}
+			}
+
+			$new_term = ( object ) array(
+				'term_id' => $new_term_id,
+				'name' => $arguments['option_no_terms_text'],
+				'slug' => $new_term_slug,
+				'term_group' => '0',
+				'term_taxonomy_id' => $new_term_id,
+				'taxonomy' => $arguments['taxonomy'][0],
+				'description' => '',
+				'parent' => '0',
+				'count' => $terms_assigned_counts['no.terms.assigned'],
+				'level' => 0,
+				'edit_link' => '',
+				'term_link' => '',
+				'link' => '',
+			);
+			$new_term->scaled_count = apply_filters( 'mla_tag_cloud_scale', round( log10( 1 ) * 100 ), $attr, $arguments, $new_term );
+
+			if ( self::$mla_debug ) {
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug adding NO terms', 'media-library-assistant' ) . '</strong> = ' . var_export( $new_term, true ) );
+			}
+			array_unshift( $tags, $new_term );
+			$found_rows += 1;
+		}
+
+		if ( ! empty( $arguments['option_all_text'] ) ) {
+			$new_term_id = -3;
+			$new_term_slug = 'ignore.terms.assigned';
+
+			if ( ! empty( $arguments['option_all_value'] ) ) {
+				$new_term_value = self::_process_shortcode_parameter( $arguments['option_all_value'], $page_values );
+				if ( is_numeric( $new_term_value ) ) {
+					$new_term_id = (integer) $new_term_value;
+					$new_term_slug = sanitize_title( $arguments['option_all_text'] );
+				} else {
+					$new_term_slug = sanitize_title( $new_term_value );
+				}
+			}
+
+			$new_term = ( object ) array(
+				'term_id' => $new_term_id,
+				'name' => $arguments['option_all_text'],
+				'slug' => $new_term_slug,
+				'term_group' => '0',
+				'term_taxonomy_id' => $new_term_id,
+				'taxonomy' => $arguments['taxonomy'][0],
+				'description' => '',
+				'parent' => '0',
+				'count' => $terms_assigned_counts['ignore.terms.assigned'],
+				'level' => 0,
+				'edit_link' => '',
+				'term_link' => '',
+				'link' => '',
+			);
+			$new_term->scaled_count = apply_filters( 'mla_tag_cloud_scale', round( log10( 1 ) * 100 ), $attr, $arguments, $new_term );
+
+			if ( self::$mla_debug ) {
+				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug adding IGNORE terms', 'media-library-assistant' ) . '</strong> = ' . var_export( $new_term, true ) );
+			}
+			array_unshift( $tags, $new_term );
+			$found_rows += 1;
+		}
 
 		/*
 		 * The default MLA style template includes "margin: 1.5%" to put a bit of
@@ -2570,7 +2727,13 @@ class MLAShortcode_Support {
 			$item_values['parent'] = $tag->parent;
 			$item_values['count'] = isset ( $tag->count ) ? $tag->count : 0; 
 			$item_values['scaled_count'] = $tag->scaled_count;
-			$item_values['font_size'] = str_replace( ',', '.', ( $item_values['smallest'] + ( ( $item_values['scaled_count'] - $item_values['min_scaled_count'] ) * $item_values['font_step'] ) ) );
+
+			if ( in_array( $tag->slug, array( 'ignore.terms.assigned', 'no.terms.assigned', 'any.terms.assigned' ) ) ) {
+				$item_values['font_size'] = absint( $arguments['default_size'] );
+			} else {
+				$item_values['font_size'] = str_replace( ',', '.', ( $item_values['smallest'] + ( ( $item_values['scaled_count'] - $item_values['min_scaled_count'] ) * $item_values['font_step'] ) ) );
+			}
+
 			$item_values['link_url'] = $tag->link;
 			$item_values['currentlink_url'] = sprintf( '%1$s%2$scurrent_item=%3$d', $item_values['page_url'], $current_item_delimiter, $item_values['term_id'] );
 			$item_values['editlink_url'] = $tag->edit_link;
@@ -2593,7 +2756,6 @@ class MLAShortcode_Support {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				} else {
-//					if ( $arguments['current_item'] == $tag->slug ) {
 					if ( $tag->slug == sanitize_title_for_query( $arguments['current_item'] ) ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
@@ -2637,7 +2799,11 @@ class MLAShortcode_Support {
 
 			$item_values['link_attributes'] = $link_attributes;
 
-			$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
+			// Ignore option- all,any_terms,no_terms
+			if ( -1 !== $item_values['count'] ) {
+				$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
+			}
+
 			if ( ! empty( $arguments['mla_rollover_text'] ) ) {
 				$item_values['rollover_text'] = esc_attr( self::_process_shortcode_parameter( $arguments['mla_rollover_text'], $item_values ) );
 			}
@@ -2661,8 +2827,14 @@ class MLAShortcode_Support {
 				$item_values['link_text'] = $item_values['name'];
 			}
 
+			if ( empty( $arguments['mla_item_value'] ) ) {
+				$item_values['thevalue'] = $item_values['term_id'];
+			} else {
+				$item_values['thevalue'] = self::_process_shortcode_parameter( $arguments['mla_item_value'], $item_values );
+			}
+
 			// Currentlink, editlink, termlink and thelink
-			$item_values['currentlink'] = sprintf( '<a %1$shref="%2$s%3$scurrent_item=%4$d" title="%5$s" style="%6$s">%7$s</a>', $link_attributes, $item_values['page_url'], $current_item_delimiter, $item_values['term_id'], $item_values['rollover_text'], $item_values['link_style'], $item_values['link_text'] );
+			$item_values['currentlink'] = sprintf( '<a %1$shref="%2$s%3$scurrent_item=%4$d" title="%5$s" style="%6$s">%7$s</a>', $link_attributes, $item_values['page_url'], $current_item_delimiter, $item_values['thevalue'], $item_values['rollover_text'], $item_values['link_style'], $item_values['link_text'] );
 			$item_values['editlink'] = sprintf( '<a %1$shref="%2$s" title="%3$s" style="%4$s">%5$s</a>', $link_attributes, $item_values['editlink_url'], $item_values['rollover_text'], $item_values['link_style'], $item_values['link_text'] );
 			$item_values['termlink'] = sprintf( '<a %1$shref="%2$s" title="%3$s" style="%4$s">%5$s</a>', $link_attributes, $item_values['termlink_url'], $item_values['rollover_text'], $item_values['link_style'], $item_values['link_text'] );
 
@@ -2820,7 +2992,11 @@ class MLAShortcode_Support {
 		$combine_hierarchical = 'combine' === $arguments['hierarchical'];
 
 		// Using the slug is a common practice and affects current_item
-		$current_is_slug = in_array( $arguments['mla_option_value'], array( '{+slug+}', '[+slug+]' ) );
+		if ( $is_dropdown || $is_checklist ) {
+			$current_is_slug = in_array( $arguments['mla_option_value'], array( '{+slug+}', '[+slug+]' ) );
+		} else {
+			$current_is_slug = in_array( $arguments['mla_item_value'], array( '{+slug+}', '[+slug+]' ) );
+		}
 
 		if ( $is_list || $is_dropdown || $is_checklist ) {
 			if ( $term->parent ) {
@@ -2835,16 +3011,16 @@ class MLAShortcode_Support {
 
 			// Fall back to default template if no Open section
 			if ( false === $open_template ) {
-				$markup_values['mla_markup'] = $default_markup;
+				$markup_values['mla_markup'] = $arguments['default_mla_markup'];
 
 				if ( $term->parent ) {
-					$open_template = MLATemplate_support::mla_fetch_custom_template( $default_markup, 'term-list', 'markup', 'child-open' );
+					$open_template = MLATemplate_support::mla_fetch_custom_template( $arguments['mla_markup'], 'term-list', 'markup', 'child-open' );
 				} else {
 					$open_template = false;
 				}
 
 				if ( false === $open_template ) {
-					$open_template = MLATemplate_support::mla_fetch_custom_template( $default_markup, 'term-list', 'markup', 'open' );
+					$open_template = MLATemplate_support::mla_fetch_custom_template( $arguments['mla_markup'], 'term-list', 'markup', 'open' );
 				}
 			}
 
@@ -2895,7 +3071,7 @@ class MLAShortcode_Support {
 
 				$list .=  apply_filters( 'mla_term_list_open_parse', $gallery_open, $open_template, $markup_values );
 			}
-		} // is_list
+		} // $is_list || $is_dropdown || $is_checklist
 
 		// Find delimiter for currentlink, currentlink_url
 		if ( strpos( $markup_values['page_url'], '?' ) ) {
@@ -2954,14 +3130,13 @@ class MLAShortcode_Support {
 					}
 
 					if ( $current_is_slug || !( ctype_digit( $current_item ) || is_int( $current_item ) ) ) {
-//						if ( $current_item == $term->slug ) {
-						if ( $term->slug == sanitize_title_for_query( $current_item ) ) {
+						if ( $term->slug === sanitize_title_for_query( $current_item ) ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
 						}
 					} else {
-						if ( $current_item == $term->term_id ) {
+						if ( $current_item === $term->term_id ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
@@ -3004,9 +3179,12 @@ class MLAShortcode_Support {
 
 			$item_values['link_attributes'] = $link_attributes;
 
-			$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
-			if ( ! empty( $arguments['mla_rollover_text'] ) ) {
-				$item_values['rollover_text'] = esc_attr( self::_process_shortcode_parameter( $arguments['mla_rollover_text'], $item_values ) );
+			// Ignore option- all,any_terms,no_terms
+			if ( -1 !== $item_values['count'] ) {
+				$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
+				if ( ! empty( $arguments['mla_rollover_text'] ) ) {
+					$item_values['rollover_text'] = esc_attr( self::_process_shortcode_parameter( $arguments['mla_rollover_text'], $item_values ) );
+				}
 			}
 
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
@@ -3023,7 +3201,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['show_count'] ) && ( 'true' == strtolower( $arguments['show_count'] ) ) ) {
-				// Ignore option-all
+				// Ignore option- all,any_terms,no_terms
 				if ( -1 !== $item_values['count'] ) {
 					$item_values['link_text'] .= ' (' . $item_values['count'] . ')';
 				}
@@ -3242,8 +3420,14 @@ class MLAShortcode_Support {
 			'mla_nolink_text' => '',
 			'mla_target' => '',
 			'hide_if_empty' => false,
+
 			'option_all_text' => '',
 			'option_all_value' => NULL,
+			'option_no_terms_text' => '',
+			'option_no_terms_value' => NULL,
+			'option_any_terms_text' => '',
+			'option_any_terms_value' => NULL,
+
 			'option_none_text' => '',
 			'option_none_value' => NULL,
 
@@ -3471,10 +3655,12 @@ class MLAShortcode_Support {
 			$arguments['termtag'] = 'li';
 		}
 
+		$arguments['default_mla_style'] = $default_style;
 		if ( NULL == $arguments['mla_style'] ) {
 			$arguments['mla_style'] = $default_style;
 		}
 
+		$arguments['default_mla_markup'] = $default_markup;
 		if ( NULL == $arguments['mla_markup'] ) {
 			$arguments['mla_markup'] = $default_markup;
 		}
@@ -3613,26 +3799,63 @@ class MLAShortcode_Support {
 			$list = '';
 		}
 
-		$add_all_option = ( $is_checklist || $is_dropdown ) && ! empty( $arguments['option_all_text'] ) && !$show_empty;
+		if ( !$show_empty ) {
+			$add_all_option = ! empty( $arguments['option_all_text'] );
+			$add_any_terms_option = ! empty( $arguments['option_any_terms_text'] );
+			$add_no_terms_option = ! empty( $arguments['option_no_terms_text'] );
+		} else {
+			$add_all_option = false;
+			$add_any_terms_option = false;
+			$add_no_terms_option = false;
+		}
 
-		// Using the slug is a common practice and affects option_all_value
+		if ( $add_all_option || $add_any_terms_option || $add_no_terms_option ) {
+			$terms_assigned_counts = self::mla_get_all_none_term_counts( $arguments );
+		} else {
+			$terms_assigned_counts = array( 'ignore.terms.assigned' => 0, 'no.terms.assigned' => 0, 'any.terms.assigned' => 0 );
+		}
+
+		// Using the slug is a common practice and affects option_ all/any_terms/no_terms _value(s)
+		$option_all_id = -3;
+		$option_all_slug = 'ignore.terms.assigned';
 		if ( $add_all_option ) {
 			if ( ! empty( $arguments['option_all_value'] ) ) {
 				$option_all_value = self::_process_shortcode_parameter( $arguments['option_all_value'], $page_values );
 				if ( is_numeric( $option_all_value ) ) {
-					$option_all_id = (int) $option_all_value;
+					$option_all_id = (integer) $option_all_value;
 					$option_all_slug = sanitize_title( $arguments['option_all_text'] );
 				} else {
-					$option_all_id = 0;
 					$option_all_slug = sanitize_title( $option_all_value );
 				}
-			} else {
-				$option_all_id = 0;
-				$option_all_slug = sanitize_title( $arguments['option_all_text'] );
 			}
-		} else {
-			$option_all_id = 0;
-			$option_all_slug = 'all';
+		}
+
+		$option_any_terms_id = -2;
+		$option_any_terms_slug = 'any.terms.assigned';
+		if ( $add_any_terms_option ) {
+			if ( ! empty( $arguments['option_any_terms_value'] ) ) {
+				$option_any_terms_value = self::_process_shortcode_parameter( $arguments['option_any_terms_value'], $page_values );
+				if ( is_numeric( $option_any_terms_value ) ) {
+					$option_any_terms_id = (integer) $option_any_terms_value;
+					$option_any_terms_slug = sanitize_title( $arguments['option_any_terms_text'] );
+				} else {
+					$option_any_terms_slug = sanitize_title( $option_any_terms_value );
+				}
+			}
+		}
+
+		$option_no_terms_id = -1;
+		$option_no_terms_slug = 'no.terms.assigned';
+		if ( $add_no_terms_option ) {
+			if ( ! empty( $arguments['option_no_terms_value'] ) ) {
+				$option_no_terms_value = self::_process_shortcode_parameter( $arguments['option_no_terms_value'], $page_values );
+				if ( is_numeric( $option_no_terms_value ) ) {
+					$option_no_terms_id = (integer) $option_no_terms_value;
+					$option_no_terms_slug = sanitize_title( $arguments['option_no_terms_text'] );
+				} else {
+					$option_no_terms_slug = sanitize_title( $option_no_terms_value );
+				}
+			}
 		}
 
 		if ( $is_hierarchical ) {
@@ -3691,10 +3914,16 @@ class MLAShortcode_Support {
 						$tags[ $key ]->link = $tags[ $key ]->term_link;
 					}
 				} // foreach tag
-			}
-		}
+			} // !show_empty
+		}// !is_hierarchical
 
 		if ( $add_all_option ) {
+			$found_rows += 1;
+		}
+		if ( $add_any_terms_option ) {
+			$found_rows += 1;
+		}
+		if ( $add_no_terms_option ) {
 			$found_rows += 1;
 		}
 
@@ -3753,7 +3982,6 @@ class MLAShortcode_Support {
 		$tag_links = array();
 
 		if ( $is_hierarchical ) {
-
 			if ( $combine_hierarchical ) {
 				$combined_tags = array();
 				foreach( $tags as $taxonomy => $root_terms ) {
@@ -3766,9 +3994,53 @@ class MLAShortcode_Support {
 				$markup_values['taxonomy'] = $taxonomy;
 				$markup_values['thename'] = self::_process_shortcode_parameter( $mla_control_name, $markup_values );
 
-				// Add the optional 'all-terms' option, if requested
+
+				// Add the optional 'all-terms', 'any-terms' and/or 'no-terms' option(s), if requested
+				$add_to_found_rows = 0;
+				if ( $add_any_terms_option ) {
+					$new_term = ( object ) array(
+						'term_id' => $option_any_terms_id,
+						'name' => $arguments['option_any_terms_text'],
+						'slug' => $option_any_terms_slug,
+						'term_group' => '0',
+						'term_taxonomy_id' => $option_any_terms_id,
+						'taxonomy' => $taxonomy,
+						'description' => '',
+						'parent' => '0',
+						'count' => $terms_assigned_counts['any.terms.assigned'],
+						'level' => 0,
+						'edit_link' => '',
+						'term_link' => '',
+						'link' => '',
+					);
+
+					array_unshift( $root_terms, $new_term );
+					$add_to_found_rows += 1;
+				}
+
+				if ( $add_no_terms_option ) {
+					$new_term = ( object ) array(
+						'term_id' => $option_no_terms_id,
+						'name' => $arguments['option_no_terms_text'],
+						'slug' => $option_no_terms_slug,
+						'term_group' => '0',
+						'term_taxonomy_id' => $option_no_terms_id,
+						'taxonomy' => $taxonomy,
+						'description' => '',
+						'parent' => '0',
+						'count' => $terms_assigned_counts['no.terms.assigned'],
+						'level' => 0,
+						'edit_link' => '',
+						'term_link' => '',
+						'link' => '',
+					);
+
+					array_unshift( $root_terms, $new_term );
+					$add_to_found_rows += 1;
+				}
+
 				if ( $add_all_option ) {
-					$option_all = ( object ) array(
+					$new_term = ( object ) array(
 						'term_id' => $option_all_id,
 						'name' => $arguments['option_all_text'],
 						'slug' => $option_all_slug,
@@ -3777,17 +4049,15 @@ class MLAShortcode_Support {
 						'taxonomy' => $taxonomy,
 						'description' => '',
 						'parent' => '0',
-						'count' => -1,
+						'count' => $terms_assigned_counts['ignore.terms.assigned'],
 						'level' => 0,
 						'edit_link' => '',
 						'term_link' => '',
 						'link' => '',
 					);
 
-					array_unshift( $root_terms, $option_all );
-					$add_to_found_rows = 1;
-				} else {
-					$add_to_found_rows = 0;
+					array_unshift( $root_terms, $new_term );
+					$add_to_found_rows += 1;
 				}
 
 				if ( isset( $root_terms['found_rows'] ) ) {
@@ -3804,15 +4074,15 @@ class MLAShortcode_Support {
 		} else {
 			$markup_values['thename'] = self::_process_shortcode_parameter( $mla_control_name, $markup_values );
 
-			// Add the optional 'all-terms' option, if requested
-			if ( $add_all_option ) {
-				$option_all = ( object ) array(
-					'term_id' => $option_all_id,
-					'name' => $arguments['option_all_text'],
-					'slug' => $option_all_slug,
+			// Add the optional 'all-terms', 'any-terms' and/or 'no-terms' option(s), if requested
+			if ( $add_any_terms_option ) {
+				$new_term = ( object ) array(
+					'term_id' => $option_any_terms_id,
+					'name' => $arguments['option_any_terms_text'],
+					'slug' => $option_any_terms_slug,
 					'term_group' => '0',
-					'term_taxonomy_id' => $option_all_id,
-					'taxonomy' => $markup_values['taxonomy'],
+					'term_taxonomy_id' => $option_any_terms_id,
+					'taxonomy' => $taxonomy,
 					'description' => '',
 					'parent' => '0',
 					'count' => -1,
@@ -3822,7 +4092,47 @@ class MLAShortcode_Support {
 					'link' => '',
 				);
 
-				array_unshift( $tags, $option_all );
+				array_unshift( $tags, $new_term );
+			}
+
+			if ( $add_no_terms_option ) {
+				$new_term = ( object ) array(
+					'term_id' => $option_no_terms_id,
+					'name' => $arguments['option_no_terms_text'],
+					'slug' => $option_no_terms_slug,
+					'term_group' => '0',
+					'term_taxonomy_id' => $option_no_terms_id,
+					'taxonomy' => $taxonomy,
+					'description' => '',
+					'parent' => '0',
+					'count' => -1,
+					'level' => 0,
+					'edit_link' => '',
+					'term_link' => '',
+					'link' => '',
+				);
+
+				array_unshift( $tags, $new_term );
+			}
+
+			if ( $add_all_option ) {
+				$new_term = ( object ) array(
+					'term_id' => $option_all_id,
+					'name' => $arguments['option_all_text'],
+					'slug' => $option_all_slug,
+					'term_group' => '0',
+					'term_taxonomy_id' => $option_all_id,
+					'taxonomy' => $taxonomy,
+					'description' => '',
+					'parent' => '0',
+					'count' => -1,
+					'level' => 0,
+					'edit_link' => '',
+					'term_link' => '',
+					'link' => '',
+				);
+
+				array_unshift( $tags, $new_term );
 			}
 
 			if ( count( $tags ) ) {
@@ -3830,7 +4140,7 @@ class MLAShortcode_Support {
 			}
 		}
 
-		if ( 'array' == $arguments['mla_output'] || empty($arguments['echo']) ) {
+		if ( 'array' === $arguments['mla_output'] || empty($arguments['echo']) ) {
 			return $list;
 		}
 
@@ -4472,7 +4782,7 @@ class MLAShortcode_Support {
 			}
 
 			// Look for simple quoted string, integer value or "undefined constant", e.g., in 'terms' =>
-			if ( 1 === preg_match( '/^(([\'\"](.+?)[\'\"])|(\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))(.*)$/', $interior, $matches ) ) {
+			if ( 1 === preg_match( '/^(([\'\"](.+?)[\'\"])|(-{0,1}\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))(.*)$/', $interior, $matches ) ) {
 //error_log( __LINE__ . " _validate_array_specification() simple matches = " . var_export( $matches, true ), 0 );
 
 				$interior = trim( $matches[6], ' ,' );
@@ -4730,6 +5040,7 @@ class MLAShortcode_Support {
 			'cache_results' => NULL,
 			'update_post_meta_cache' => NULL,
 			'update_post_term_cache' => NULL,
+			// WordPress Real Media Library plugin support
 			'mla_allow_rml' => false,
 			'mla_rml_folder' => NULL,
 			'mla_rml_include_children' => false,
@@ -4773,12 +5084,19 @@ class MLAShortcode_Support {
 	 *
 	 * @param int Post ID of the parent
 	 * @param array Attributes of the shortcode
-	 * @param boolean true to calculate and return ['found_rows', 'max_num_pages'] as array elements
+	 * @param boolean Optional; true to calculate and return ['found_rows', 'max_num_pages'] as array elements
+	 * @param boolean Optional; true activate debug logging, false to suppress it.
 	 *
 	 * @return array List of attachments returned from WP_Query
 	 */
-	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL ) {
+	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL, $overide_debug = NULL ) {
 		global $wp_query;
+
+		// Set the local debug mode
+		$old_debug_mode = self::$mla_debug;
+		if ( NULL !== $overide_debug ) {
+			self::$mla_debug = ( true === $overide_debug );
+		}
 
 		// Parameters passed to the join, where and orderby filter functions
 		self::$query_parameters = array( MLAQuery::MLA_ALT_TEXT_SUBQUERY => false, MLAQuery::MLA_FILE_SUBQUERY => false, );
@@ -4870,7 +5188,7 @@ class MLAShortcode_Support {
 		// Extract taxonomy arguments
 		self::$mla_get_shortcode_dynamic_attachments_parameters = array();
 		$query_arguments = array();
-		$no_terms_assigned_query = false;
+		$terms_assigned_query = false;
 		if ( ! empty( $attr ) ) {
 			$all_taxonomies = get_taxonomies( array ( 'show_ui' => true ), 'names' );
 			$simple_tax_queries = array();
@@ -4893,6 +5211,7 @@ class MLAShortcode_Support {
 						} else {
 							// If sanitization fails, return an error message
 							if ( 'false' === $value ) {
+								self::$mla_debug = $old_debug_mode;
 								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' tax_query = ' . self::$array_specification_error . '</p>';
 							}
 						}
@@ -4906,7 +5225,7 @@ class MLAShortcode_Support {
 						}
 
 						if ( is_array( $tax_query ) ) {
-							// Check for no.terms.assigned
+							// Check for ignore.terms.assigned/-3, no.terms.assigned/-1 or any.terms.assigned/-2
 							foreach ( $tax_query as $tax_query_key => $tax_query_element ) {
 								if ( !is_array( $tax_query_element ) ) {
 									continue;
@@ -4918,42 +5237,90 @@ class MLAShortcode_Support {
 									continue;
 								}
 
-								if ( isset( $tax_query_element['terms'] ) && is_array( $tax_query_element['terms'] ) && in_array( 'no.terms.assigned', $tax_query_element['terms'] ) ) {
-									$tax_query[ $tax_query_key ]['terms'] = MLAQuery::mla_wp_get_terms( $tax_query_taxonomy, array(
-										'fields' => 'ids',
-										'hide_empty' => false
-									) );
-								}
-							}
+								if ( isset( $tax_query_element['terms'] ) ) {
+									$terms = $tax_query_element['terms'];
+
+									if ( empty( $terms ) || ( $terms === '-3' ) || ( is_array( $terms ) && in_array( '-3', $terms ) ) ) {
+										$terms = 'ignore.terms.assigned';
+									}
+									
+									if ( ( $terms === 'ignore.terms.assigned' ) || ( is_array( $terms ) && in_array( 'ignore.terms.assigned', $terms ) ) ) {
+										unset( $tax_query[ $tax_query_key ] );
+										continue;
+									}
+
+									if ( ( $terms === '-1' ) || ( is_array( $terms ) && in_array( '-1', $terms ) ) ) {
+										$terms = 'no.terms.assigned';
+									}
+									
+									if ( ( $terms === 'no.terms.assigned' ) || ( is_array( $terms ) && in_array( 'no.terms.assigned', $terms ) ) ) {
+										$tax_query[ $tax_query_key ] = array(
+											'taxonomy' => $tax_query_taxonomy,
+											'operator' => 'NOT EXISTS',
+										);
+									
+										continue;
+									}
+
+									if ( ( $terms === '-2' ) || ( is_array( $terms ) && in_array( '-2', $terms ) ) ) {
+										$terms = 'any.terms.assigned';
+									}
+									
+									if ( ( $terms === 'any.terms.assigned' ) || ( is_array( $terms ) && in_array( 'any.terms.assigned', $terms ) ) ) {
+										$tax_query[ $tax_query_key ] = array(
+											'taxonomy' => $tax_query_taxonomy,
+											'operator' => 'EXISTS',
+										);
+									
+										continue;
+									}
+								} // isset( terms )
+							} // is_array( $tax_query )
 
 							$query_arguments[ $key ] = $tax_query;
 							self::$mla_get_shortcode_dynamic_attachments_parameters[ $key ] = $value;
 							break; // Done - the tax_query overrides all other taxonomy parameters
 						} else {
+							self::$mla_debug = $old_debug_mode;
 							return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' tax_query = ' . var_export( $value, true ) . '</p>';
 						} // generated value is not an array
 					} // $tax_query is a string, not array
 				}  // attr is 'tax_query'
 				elseif ( 'tax_input' == $key ) {
-					$tax_queries = array();
-					$compound_values = array_filter( array_map( 'trim', explode( ',', $value ) ) );
-					foreach ( $compound_values as $compound_value ) {
-						$value = explode( '.', $compound_value );
-						if ( 2 === count( $value ) ) {
-							if ( array_key_exists( $value[0], $all_taxonomies ) ) {
-								$tax_queries[ $value[0] ][] = $value[1];
-							} // valid taxonomy
-						} // valid coumpound value
-					} // foreach compound_value
+					if ( is_array( $value ) ) {
+						$tax_queries = $value;
+					} else {
+						$tax_queries = array();
+						$compound_values = array_filter( array_map( 'trim', explode( ',', $value ) ) );
+						foreach ( $compound_values as $compound_value ) {
+							$value = explode( '.', $compound_value );
+							if ( 2 === count( $value ) ) {
+								if ( array_key_exists( $value[0], $all_taxonomies ) ) {
+									$tax_queries[ $value[0] ][] = $value[1];
+								} // valid taxonomy
+							} // valid coumpound value
+						} // foreach compound_value
+					} // string value
 
 					foreach( $tax_queries as $key => $value ) {
-						$simple_tax_queries[ $key ] = implode(',', $value );
+						if ( is_string( $value ) ) {
+							$value = explode( ',', $value );
+						}
+						
+						$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', $value ) ) );
+						if ( in_array( $simple_tax_queries[ $key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
+							$terms_assigned_query = true;
+						}
 					}
 				} // tax_input
 				elseif ( array_key_exists( $key, $all_taxonomies ) ) {
-					$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', explode( ',', $value ) ) ) );
-					if ( 'no.terms.assigned' === $simple_tax_queries[ $key ] ) {
-						$no_terms_assigned_query = true;
+					if ( is_string( $value ) ) {
+						$value = explode( ',', $value );
+					}
+					
+					$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', $value ) ) );
+					if ( in_array( $simple_tax_queries[ $key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
+						$terms_assigned_query = true;
 					}
 				} // array_key_exists
 			} //foreach $attr
@@ -4968,7 +5335,7 @@ class MLAShortcode_Support {
 			 */
 			if ( isset( $query_arguments['tax_query'] ) || empty( $simple_tax_queries ) ) {
 				// No further action required
-			} elseif ( ( 1 < count( $simple_tax_queries ) ) || isset( $attr['tax_operator'] ) || isset( $attr['tax_include_children'] ) || $no_terms_assigned_query ) {
+			} elseif ( ( 1 < count( $simple_tax_queries ) ) || isset( $attr['tax_operator'] ) || isset( $attr['tax_include_children'] ) || $terms_assigned_query ) {
 				// Build a tax_query
 				if  ( 1 < count( $simple_tax_queries ) ) {
 					$tax_relation = 'AND';
@@ -4999,28 +5366,31 @@ class MLAShortcode_Support {
 				}
 
 				foreach( $simple_tax_queries as $key => $value ) {
-					if ( empty( $value ) ) {
+					// simple queries with these values are ignored
+					if ( empty( $value ) || ( 'ignore.terms.assigned' === $value ) || ( '-3' === $value ) ) {
 						continue;
 					}
 
-					if ( 'no.terms.assigned' === $value ) {
-						$term_list = MLAQuery::mla_wp_get_terms( $key, array(
-							'fields' => 'ids',
-							'hide_empty' => false
-						) );
-
+					if ( ( 'no.terms.assigned' === $value ) || ( '-1' === $value ) ) {
 						$tax_query[] = array(
 							'taxonomy' => $key,
-							'field' => 'id',
-							'terms' => $term_list,
-							'operator' => 'NOT IN' 
+							'operator' => 'NOT EXISTS' 
+						);
+
+						continue;
+					}
+
+					if ( ( 'any.terms.assigned' === $value ) || ( '-2' === $value ) ) {
+						$tax_query[] = array(
+							'taxonomy' => $key,
+							'operator' => 'EXISTS' 
 						);
 
 						continue;
 					}
 
 					$tax_query[] =	array( 'taxonomy' => $key, 'field' => 'slug', 'terms' => explode( ',', $value ), 'operator' => $tax_operator, 'include_children' => $tax_include_children );
-				}
+				} // foreach simple_tax_queries
 
 				$query_arguments['tax_query'] = $tax_query;
 				self::$mla_get_shortcode_dynamic_attachments_parameters['tax_query'] = $tax_query;
@@ -5375,6 +5745,7 @@ class MLAShortcode_Support {
 						} else {
 							// If sanitization fails, return an error message
 							if ( 'false' === $value ) {
+								self::$mla_debug = $old_debug_mode;
 								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' date_query = ' . self::$array_specification_error . '</p>';
 							}
 						}
@@ -5390,6 +5761,7 @@ class MLAShortcode_Support {
 						if ( is_array( $date_query ) ) {
 							$query_arguments[ $key ] = $date_query;
 						} else {
+							self::$mla_debug = $old_debug_mode;
 							return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' date_query = ' . var_export( $value, true ) . '</p>';
 						}
 					} // not array
@@ -5412,6 +5784,7 @@ class MLAShortcode_Support {
 						} else {
 							// If sanitization fails, return an error message
 							if ( 'false' === $value ) {
+								self::$mla_debug = $old_debug_mode;
 								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . self::$array_specification_error . '</p>';
 							}
 						}
@@ -5427,6 +5800,7 @@ class MLAShortcode_Support {
 						if ( is_array( $meta_query ) ) {
 							$query_arguments[ $key ] = $meta_query;
 						} else {
+							self::$mla_debug = $old_debug_mode;
 							return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . var_export( $value, true ) . '</p>';
 						}
 					} // not array
@@ -5748,10 +6122,13 @@ class MLAShortcode_Support {
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug request', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->request, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query_vars', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->query_vars, true ) );
 			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug post_count', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->post_count, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug found_posts', 'media-library-assistant' ) . '</strong> = ' . var_export( MLAShortcodes::$mla_gallery_wp_query_object->found_posts, true ) );
 		}
 
 		MLAQuery::$search_parameters = array( 'debug' => 'none' );
 		MLAShortcodes::$mla_gallery_wp_query_object = NULL;
+
+		self::$mla_debug = $old_debug_mode;
 		return $attachments;
 	}
 
@@ -5962,6 +6339,146 @@ class MLAShortcode_Support {
 	}
 
 	/**
+	 * Data selection parameters for mla_get_all_none_term_counts()
+	 *
+	 * @since 2.96
+	 *
+	 * @var	array
+	 */
+	private static $mla_get_all_none_term_counts = array(
+		'taxonomy' => 'post_tag',
+		'post_mime_type' => 'all',
+		'post_type' => 'attachment',
+		'post_status' => 'inherit',
+	);
+
+	/**
+	 * Retrieve the "ignore.", "no.", and "any." "terms.assigned" counts in one taxonomy
+	 *
+	 * taxonomy - string containing one or more (comma-delimited) taxonomy names
+	 * or an array of taxonomy names. Default 'post_tag'. Only the first value is used.
+	 *
+	 * post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.
+	 *
+	 * post_type - The post type(s) of the items to include in the term-specific counts.
+	 * The default is "attachment". 
+	 *
+	 * post_status - The post status value(s) of the items to include in the term-specific counts.
+	 * The default is "inherit".
+	 *
+	 * @since 2.96
+	 *
+	 * @param	array	taxonomy to search and query parameters
+	 *
+	 * @return	array	( 'ignore.terms.assigned' => count, 'no.terms.assigned' => count, 'any.terms.assigned' => count )
+	 */
+	public static function mla_get_all_none_term_counts( $attr ) {
+		global $wpdb;
+
+		// Make sure $attr is an array, even if it's empty
+		if ( empty( $attr ) ) {
+			$attr = array();
+		} elseif ( is_string( $attr ) ) {
+			$attr = shortcode_parse_atts( $attr );
+		}
+
+		// Merge input arguments with defaults
+		$attr = apply_filters( 'mla_get_terms_query_attributes', $attr );
+		$arguments = shortcode_atts( self::$mla_get_all_none_term_counts, $attr );
+		$arguments = apply_filters( 'mla_get_terms_query_arguments', $arguments );
+
+		if ( self::$mla_debug ) {
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug attributes', 'media-library-assistant' ) . '</strong> = ' . var_export( $attr, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug arguments', 'media-library-assistant' ) . '</strong> = ' . var_export( $arguments, true ) );
+		}
+
+		// Isolate the first taxonomy value
+		if ( is_array( $arguments['taxonomy'] ) ) {
+			$taxonomy = reset( $arguments['taxonomy'] );
+		} else {
+			$taxonomy = reset( explode( ',', $arguments['taxonomy'] ) );
+		}
+
+		$clause = array( 'SELECT' );
+		$clause[] = 'COUNT( p.ID) as `ignore.terms.assigned`, COUNT( sq.object_id ) as `any.terms.assigned`';
+		$clause[] = 'FROM mladev_posts AS p';
+		$clause[] = 'LEFT JOIN ( ';
+		$clause[] = 'SELECT DISTINCT tr.object_id FROM mladev_term_relationships as tr';
+		$clause[] = 'INNER JOIN mladev_term_taxonomy as tt';
+		$clause[] = 'ON tt.term_taxonomy_id = tr.term_taxonomy_id';
+		$clause[] = 'AND tt.taxonomy = \'' . $taxonomy . '\'';
+		$clause[] = ') AS sq';
+		$clause[] = 'ON p.ID = sq.object_id';
+		$clause[] = 'WHERE 1=1';
+
+		// Add type and status constraints
+		if ( is_array( $arguments['post_type'] ) ) {
+			$post_types = $arguments['post_type'];
+		} else {
+			$post_types = array( $arguments['post_type'] );
+		}
+
+		$placeholders = array();
+		$clause_parameters = array();
+		foreach ( $post_types as $post_type ) {
+			$placeholders[] = '%s';
+			$clause_parameters[] = $post_type;
+		}
+
+		$clause[] = $wpdb->prepare( 'AND p.post_type IN ( ' . join( ',', $placeholders ) . ' )', $clause_parameters );
+
+		if ( is_array( $arguments['post_status'] ) ) {
+			$post_stati = $arguments['post_status'];
+		} else {
+			$post_stati = array( $arguments['post_status'] );
+		}
+
+		$placeholders = array();
+		$clause_parameters = array();
+		foreach ( $post_stati as $post_status ) {
+			if ( ( 'private' != $post_status ) || is_user_logged_in() ) {
+				$placeholders[] = '%s';
+				$clause_parameters[] = $post_status;
+			}
+		}
+
+		$clause[] = $wpdb->prepare( 'AND p.post_status IN ( ' . join( ',', $placeholders ) . ' )', $clause_parameters );
+
+		// Add optional post_mime_type constraint
+		if ( 'all' !== strtolower( $arguments['post_mime_type'] ) ) {
+			$post_mimes = wp_post_mime_type_where( $arguments['post_mime_type'], 'p' );
+			$clause[] = str_replace( '%', '%%', $post_mimes );
+		}
+
+		$query =  join(' ', $clause);
+		$results = $wpdb->get_results(	$query );
+		
+		if ( is_wp_error( $results ) ) {
+			$results = array(
+				'ignore.terms.assigned' => 0,
+				'no.terms.assigned' => 0,
+				'any.terms.assigned' => 0,
+				'wp_error_code' => $results->get_error_code(),
+				'wp_error_message' => $results->get_error_message(),
+				'wp_error_data' => $results->get_error_data( $results->get_error_code() ),
+			);
+		} elseif ( isset( $results[0] ) ) {
+			$results = array_map( 'absint', (array) $results[0] );
+			$results['no.terms.assigned'] = $results['ignore.terms.assigned'] - $results['any.terms.assigned'];
+		} else {
+			$results = array( 'ignore.terms.assigned' => 0, 'no.terms.assigned' => 0, 'any.terms.assigned' => 0 );
+			$results['wpdb_last_error'] = $wpdb->last_error;
+		}
+
+		if ( self::$mla_debug ) {
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug query', 'media-library-assistant' ) . '</strong> = ' . var_export( $query, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug results', 'media-library-assistant' ) . '</strong> = ' . var_export( $results, true ) );
+		}
+
+		return $results;
+	} // mla_get_all_none_term_counts
+
+	/**
 	 * Data selection parameters for [mla_tag_cloud], [mla_term_list]
 	 *
 	 * @since 2.20
@@ -5989,7 +6506,6 @@ class MLAShortcode_Support {
 		'limit' => 0,
 		'offset' => 0
 	);
-
 
 	/**
 	 * Retrieve the terms in one or more taxonomies.
@@ -6247,7 +6763,8 @@ class MLAShortcode_Support {
 		}
 
 		if ( 'all' !== strtolower( $arguments['post_mime_type'] ) ) {
-			$where = str_replace( '%', '%%', wp_post_mime_type_where( $arguments['post_mime_type'], 'p' ) );
+			$post_mimes = wp_post_mime_type_where( $arguments['post_mime_type'], 'p' );
+			$where = str_replace( '%', '%%', $post_mimes );
 
 			if ( 0 == absint( $arguments['minimum'] ) ) {
 				$clause[] = ' AND ( p.post_mime_type IS NULL OR ' . substr( $where, 6 );
@@ -6387,12 +6904,11 @@ class MLAShortcode_Support {
 		}
 
 		if ( 'true' == strtolower( trim( $arguments['pad_counts'] ) ) ) {
-			self::_pad_term_counts( $tags, reset( $taxonomies ), $post_types, $post_stati );
+			self::_pad_term_counts( $tags, reset( $taxonomies ), $post_types, $post_stati, $post_mimes );
 		}
 
 		$tags['found_rows'] = $found_rows;
 		$tags = apply_filters( 'mla_get_terms_query_results', $tags );
-
 		return $tags;
 	} // mla_get_terms
 
@@ -6709,9 +7225,10 @@ class MLAShortcode_Support {
 	 * @param	string	Term Context
 	 * @param	array	Qualifying post type value(s)
 	 * @param	array	Qualifying post status value(s)
+	 * @param	string	Qualifying post MIME type clause
 	 * @return	null	Will break from function if conditions are not met.
 	 */
-	private static function _pad_term_counts( &$terms, $taxonomy, $post_types = NULL, $post_stati = NULL ) {
+	private static function _pad_term_counts( &$terms, $taxonomy, $post_types = NULL, $post_stati = NULL, $post_mimes = '' ) {
 		global $wpdb;
 
 		// This function only works for hierarchical taxonomies like post categories.
@@ -6719,18 +7236,19 @@ class MLAShortcode_Support {
 			return;
 		}
 
-		// WordPress "private" function, in /wp-includes/taxonomy.php
+		/*/ WordPress "private" function, in /wp-includes/taxonomy.php array( term_id => array( child_ids ) )
 		$term_hier = _get_term_hierarchy( $taxonomy );
 
 		if ( empty( $term_hier ) ) {
 			return;
-		}
+		} // */
 
 		$terms_by_id = array(); // key term_id, value = reference to term object
 		$term_ids = array(); // key term_taxonomy_id, value = term_id
 		$term_items = array(); // key term_id
 
-		foreach ( (array) $terms as $key => $term ) {
+//		foreach ( (array) $terms as $key => $term ) {
+		foreach ( $terms as $key => $term ) {
 			if ( is_integer( $key ) ) {
 				$terms_by_id[$term->term_id] = & $terms[$key];
 				$term_ids[$term->term_taxonomy_id] = $term->term_id;
@@ -6751,7 +7269,7 @@ class MLAShortcode_Support {
 		}
 
 		// Get the object and term ids and stick them in a lookup table
-		$results = $wpdb->get_results( "SELECT object_id, term_taxonomy_id FROM $wpdb->term_relationships INNER JOIN $wpdb->posts ON object_id = ID WHERE term_taxonomy_id IN (" . implode( ',', array_keys($term_ids) ) . ") AND post_type IN ('" . implode( "', '", $post_types ) . "') AND post_status in ( '" . implode( "', '", $post_stati ) . "' )" );
+		$results = $wpdb->get_results( "SELECT object_id, term_taxonomy_id FROM $wpdb->term_relationships INNER JOIN $wpdb->posts AS p ON object_id = ID WHERE term_taxonomy_id IN (" . implode( ',', array_keys($term_ids) ) . ") AND p.post_type IN ('" . implode( "', '", $post_types ) . "') AND p.post_status in ( '" . implode( "', '", $post_stati ) . "' )" . $post_mimes );
 		foreach ( $results as $row ) {
 			$id = $term_ids[ $row->term_taxonomy_id ];
 			$term_items[ $id ][ $row->object_id ] = isset( $term_items[ $id ][ $row->object_id ] ) ? ++$term_items[ $id ][ $row->object_id ] : 1;

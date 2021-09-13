@@ -31,7 +31,7 @@ var jQuery,
 			var progressDiv = $( '#mla-progress-div' );
 
 			$('#mla-progress-pause', progressDiv).off( 'click' );
-			$('#mla-progress-pause', progressDiv).click( function(){
+			$('#mla-progress-pause', progressDiv).on( 'click', function(){
 				if ( mla.bulkMap.inProcess ) {
 					mla.bulkMap.doCancel = true;
 					return false;
@@ -41,12 +41,12 @@ var jQuery,
 			});
 
 			$('#mla-progress-cancel', progressDiv).off( 'click' );
-			$('#mla-progress-cancel', progressDiv).click( function(){
+			$('#mla-progress-cancel', progressDiv).on( 'click', function(){
 				return mla.inlineMapAttachment.revert();
 			});
 
 			$('#mla-progress-resume', progressDiv).off( 'click' );
-			$('#mla-progress-resume', progressDiv).click( function(){
+			$('#mla-progress-resume', progressDiv).on( 'click', function(){
 				var totalItems = +mla.settings.totalItems, newOffset = + $( '#mla-progress-offset' ).val();
 
 				if ( totalItems < newOffset ) {
@@ -67,12 +67,12 @@ var jQuery,
 
 			// Clicking "Refresh" submits the form, refreshing the page
 			$( '#mla-progress-refresh', progressDiv ).off( 'click' );
-			$( '#mla-progress-refresh', progressDiv ).click( function(){
+			$( '#mla-progress-refresh', progressDiv ).on( 'click', function(){
 				$( '#mla-progress-refresh' ).prop( 'disabled', true ).css( 'opacity', '0.5' );
 			});
 
 			$('#mla-progress-close', progressDiv).off( 'click' );
-			$('#mla-progress-close', progressDiv).click( function( e ){
+			$('#mla-progress-close', progressDiv).on( 'click', function( e ){
 				if ( mla.bulkMap.inProcess ) {
 					return false;
 				}
@@ -81,13 +81,13 @@ var jQuery,
 			});
 
 			// add event handler to the Execute All Rules
-			$( 'input[type="submit"].mla-mapping' ).click(function( e ){
+			$( 'input[type="submit"].mla-mapping' ).on( 'click', function( e ){
 				e.preventDefault();
 				return mla.inlineMapAttachment.bulkMap( e.target.name, 0 );
 			});
 
 			// add event handler to the Bulk Actions Apply (top)
-			$( 'input[type="submit"]#doaction' ).click(function( e ){
+			$( 'input[type="submit"]#doaction' ).on( 'click', function( e ){
 				var action = $( '#bulk-action-selector-top' ).val(), ids;
 //console.log( 'Bulk Actions Apply (top) ', e.target.id, ' ', action );
 				if ( 'execute' !== action ) {
@@ -109,7 +109,7 @@ var jQuery,
 			});
 
 			// add event handler to the Bulk Actions Apply (bottom)
-			$( 'input[type="submit"]#doaction2' ).click(function( e ){
+			$( 'input[type="submit"]#doaction2' ).on( 'click', function( e ){
 				var action = $( '#bulk-action-selector-bottom' ).val(), ids;
 				if ( 'execute' !== action ) {
 					return true;
@@ -129,7 +129,7 @@ var jQuery,
 			});
 
 			// add event handler to the Execute rollover links
-			$( 'a.execute' ).click(function( e ){
+			$( 'a.execute' ).on( 'click', function( e ){
 				e.preventDefault();
 				return mla.inlineMapAttachment.bulkMap( e.target.id, 0 );
 			});
