@@ -1,20 +1,22 @@
 // List out the classes that each component searches for
 UW.elements = {
 
-  alert      : '.uw-thinstrip',
-  accordion  : '.uw-accordion',
-  dropdowns  : '#dawgdrops',
-  images     : 'a > img',
-  mobilemenu : '.uw-mobile-menu-toggle',
-  radio      : ':radio',
-  checkbox   : ':checkbox',
-  search     : '#uwsearcharea',
-  select     : '.uw-select',
-  quicklinks : '.uw-quicklinks',
-  slideshow  : '.uw-slideshow',
-  social     : '.uw-social',
-  vimeo      : '.uw-vimeo',
-  youtube    : '.uw-youtube'
+  alert         : '.uw-thinstrip',
+  accordion     : '.uw-accordion',
+  dropdowns     : '#dawgdrops',
+  images        : 'a > img',
+  mobilemenu    : '#mobile-relative',
+  togglemobile  : '#mobile-sidebar',
+  radio         : ':radio',
+  checkbox      : ':checkbox',
+  search        : '#uwsearcharea',
+  select        : '.uw-select',
+  quicklinks    : '.uw-quicklinks',
+  slideshow     : '.uw-slideshow',
+  social        : '.uw-social',
+  vimeo         : '.uw-vimeo',
+  youtube       : '.uw-youtube',
+//  customlink    : '.uw-custom-link'
 
 }
 
@@ -32,7 +34,7 @@ UW.getBaseUrl = function() {
     url = Backbone.history.location.origin + ( site ? '/' + site : '' ) + '/';
   } else {
     url = Backbone.history.location.origin + '/';
-  } 
+  }
   return url
 }
 
@@ -61,6 +63,9 @@ UW.initialize = function( $ )
   UW.search     = _.map( $( UW.elements.search ),    function( element ) { return new UW.Search( { el : element } ) } )
   UW.images     = _.map( $( UW.elements.images ),    function( element ) { return new UW.Image({ el : element }) } )
 
+  UW.togglemobile = _.map( $( UW.elements.togglemobile ),     function( element ) { return new UW.ToggleSidebarMenu({ el : element }) } )
+  //UW.customlink = _.map( $( UW.elements.customlink ),     function( element ) { return new UW.CustomLink({ el: elemnt }) } )
+
   // UW Modules
   UW.slideshows = _.map( $( UW.elements.slideshow ), function( element ) { return new UW.Slideshow( { el : element }) } )
   UW.social     = _.map( $( UW.elements.social ),    function( element ) { return new UW.Social({ el : element }) } )
@@ -77,7 +82,7 @@ UW.initialize = function( $ )
   UW.alert = new UW.Alert({ after: UW.elements.alert, model: new UW.Alert.Model() });
 
   // todo: add to separate file
-  $('table').addClass('table table-striped')
+  $('table').addClass('table table-striped').attr( "border", 1 )
 
   $('pre').addClass('prettyprint')
 

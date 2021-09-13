@@ -6847,7 +6847,8 @@ vjs.Flash = vjs.MediaTechController.extend({
         'scrolling': 'no',
         'marginWidth': 0,
         'marginHeight': 0,
-        'frameBorder': 0
+       // 'frameBorder': 0
+        'style':'border: 0'
       });
 
       // Update ready function names in flash vars for iframe window
@@ -10951,20 +10952,22 @@ UW.KEYCODES = {
 ;// List out the classes that each component searches for
 UW.elements = {
 
-  alert      : '.uw-thinstrip',
-  accordion  : '.uw-accordion',
-  dropdowns  : '#dawgdrops',
-  images     : 'a > img',
-  mobilemenu : '.uw-mobile-menu-toggle',
-  radio      : ':radio',
-  checkbox   : ':checkbox',
-  search     : '#uwsearcharea',
-  select     : '.uw-select',
-  quicklinks : '.uw-quicklinks',
-  slideshow  : '.uw-slideshow',
-  social     : '.uw-social',
-  vimeo      : '.uw-vimeo',
-  youtube    : '.uw-youtube'
+  alert         : '.uw-thinstrip',
+  accordion     : '.uw-accordion',
+  dropdowns     : '#dawgdrops',
+  images        : 'a > img',
+  mobilemenu    : '#mobile-relative',
+  togglemobile  : '#mobile-sidebar',
+  radio         : ':radio',
+  checkbox      : ':checkbox',
+  search        : '#uwsearcharea',
+  select        : '.uw-select',
+  quicklinks    : '.uw-quicklinks',
+  slideshow     : '.uw-slideshow',
+  social        : '.uw-social',
+  vimeo         : '.uw-vimeo',
+  youtube       : '.uw-youtube',
+//  customlink    : '.uw-custom-link'
 
 }
 
@@ -10982,7 +10985,7 @@ UW.getBaseUrl = function() {
     url = Backbone.history.location.origin + ( site ? '/' + site : '' ) + '/';
   } else {
     url = Backbone.history.location.origin + '/';
-  } 
+  }
   return url
 }
 
@@ -11011,6 +11014,9 @@ UW.initialize = function( $ )
   UW.search     = _.map( $( UW.elements.search ),    function( element ) { return new UW.Search( { el : element } ) } )
   UW.images     = _.map( $( UW.elements.images ),    function( element ) { return new UW.Image({ el : element }) } )
 
+  UW.togglemobile = _.map( $( UW.elements.togglemobile ),     function( element ) { return new UW.ToggleSidebarMenu({ el : element }) } )
+  //UW.customlink = _.map( $( UW.elements.customlink ),     function( element ) { return new UW.CustomLink({ el: elemnt }) } )
+
   // UW Modules
   UW.slideshows = _.map( $( UW.elements.slideshow ), function( element ) { return new UW.Slideshow( { el : element }) } )
   UW.social     = _.map( $( UW.elements.social ),    function( element ) { return new UW.Social({ el : element }) } )
@@ -11027,7 +11033,7 @@ UW.initialize = function( $ )
   UW.alert = new UW.Alert({ after: UW.elements.alert, model: new UW.Alert.Model() });
 
   // todo: add to separate file
-  $('table').addClass('table table-striped')
+  $('table').addClass('table table-striped').attr( "border", 1 )
 
   $('pre').addClass('prettyprint')
 
@@ -11160,31 +11166,43 @@ UW.Search = Backbone.View.extend({
 
   // This is the HTML for the search bar that is preprended to the body tag.
   searchbar :
-               '<div class="container no-height">'+
+               '<div class="container no-height" role="search">'+
                   '<div class="center-block uw-search-wrapper">'+
                     '<form class="uw-search" action="<%= UW.baseUrl %>">'+
-                      '<label class="screen-reader" for="uw-search-bar">Enter search text</label>' +
-                      '<input id="uw-search-bar" type="search" name="s" value="" autocomplete="off" />'+
-                    '</form>'+
+                      '<div class="search-form-wrapper">'+
+                        '<label class="screen-reader" for="uw-search-bar">Search UW</label>' +
+                        '<input id="uw-search-bar" type="search" name="s" value="" autocomplete="off" placeholder="Search" />'+
+                      '</div>'+
 
-                    '<select id="mobile-search-select" class="visible-xs">' +
-                      '<option value="uw" selected>All the UW</option>' +
-                      '<option value="site">Current site</option>' +
-                    '</select>' +
+                      '<select id="mobile-search-select" class="visible-xs" aria-label="Search scope">' +
+                        '<option value="uw" selected>All the UW</option>' +
+                        '<option value="site">Current site</option>' +
+                      '</select>' +
 
-                    '<input type="submit" value="search" class="search" tabindex="0"/>'+
+                      '<input type="submit" value="search" class="search" tabindex="0"/>'+
 
-                    '<div id="search-labels" class="labels hidden-xs">'+
-                      '<label class="radio">'+
-                        '<input class="radiobtn" type="radio" name="search" value="uw" data-toggle="radio" checked />'+
-                        'All the UW'+
-                      '</label>'+
+                        '<fieldset style="margin: 0; padding: 0; border: 1px; solid #ffffff;">'+
 
-                      '<label class="radio">'+
-                        '<input class="radiobtn" type="radio" name="search" value="site" data-toggle="radio" />'+
-                        'Current site'+
-                      '</label>'+
-                    '</div>'+
+                        '<legend id="uw-search-label">Search scope</legend>'+
+
+                        '<div id="search-labels" class="labels hidden-xs">'+
+                           '<label class="radio">'+
+                             '<input class="radiobtn" type="radio" name="search" value="uw" data-toggle="radio" checked />'+
+                             'All the UW'+
+                           '</label>'+
+
+                           '<label class="radio">'+
+                             '<input class="radiobtn" type="radio" name="search" value="site" data-toggle="radio" />'+
+                             'Current site'+
+                           '</label>'+
+
+                         '</form>'+
+                       '</div>'+
+
+                     '</fieldset>'+
+
+
+
                 '</div>'+
               '</div>',
 
@@ -11263,8 +11281,15 @@ UW.Search = Backbone.View.extend({
   // todo: clean up
   toggleSearchFeature : function( event )
   {
-    var value = $( event.currentTarget ).find( 'input' ).val()
-    this.searchFeature = value
+    var value = '';
+		if ( 'none' == (  $( '#mobile-search-select.visible-xs' ) ).css( 'display' ) ) {
+			 value = $( event.currentTarget ).find( 'input' ).val();
+		//	this.searchFeature = value;
+		} else {
+			 value = $( event.currentTarget ).val();
+			//this.searchFeature = value;
+		}
+    this.searchFeature = value;
   },
 
   // Skip the search if it is hidden when tabbing through
@@ -11275,10 +11300,11 @@ UW.Search = Backbone.View.extend({
   // Determine if the client wants to search current site or the entire UW
   submitSearch : function( e )
   {
+    this.$el.find( 'input.radiobtn' ).attr('disabled', 'disabled')
     switch ( this.searchFeature )
     {
       case this.searchFeatures.uw :
-        this.$el.find( 'input' ).attr( 'name', 'q' )
+        this.$el.find( '#uw-search-bar' ).attr( 'name', 'q' )
         this.$el.find( 'form' ).attr( 'action', Backbone.history.location.protocol + '//uw.edu/search/' )
         return true;
 
@@ -11296,9 +11322,7 @@ UW.Search = Backbone.View.extend({
     return false;
   }
 
-})
-
-;// This section builds and populates the quicklinks section (off-canvas right)
+});// This section builds and populates the quicklinks section (off-canvas right)
 
 UW.QuickLinks = Backbone.View.extend({
 
@@ -11309,7 +11333,7 @@ UW.QuickLinks = Backbone.View.extend({
     // todo: the default list and these elements could be put into the php templates
     container: '#uw-container',
 
-    template : '<nav id="quicklinks" role="navigation" aria-label="quick links" aria-hidden="true">' +
+    template : '<nav id="quicklinks" aria-label="quick links" aria-hidden="true">' +
                         '<ul id="big-links">' +
                             '<% _.each( links, function( link ) { %> ' +
                                 '<% if (link.classes) { %>' +
@@ -11362,12 +11386,13 @@ UW.QuickLinks = Backbone.View.extend({
 
     render : function(  )
     {
-        this.quicklinks = $( _.template( this.template )({ links : this.defaultLinks ? this.defaultLinks : this.links.toJSON() }) );
+        this.defaultLinks =  this.links.defaults
+        this.quicklinks = $( _.template( this.template )({ links : this.links.toJSON().length == 0 ? this.defaultLinks : this.links.toJSON() }) );
         this.$container = $(this.container);
-        this.$container.prepend( this.quicklinks )
-        this.$el.attr( 'aria-controls', 'quicklinks' ).attr( 'aria-owns', 'quicklinks' )
-        UW.$body.on( 'keydown', '#quicklinks a:first', this.inner_keydown )
-        UW.$body.on( 'keyup', '#quicklinks a', this.animate )
+        this.$container.prepend( this.quicklinks );
+        this.$el.attr( 'aria-controls', 'quicklinks' ).attr( 'aria-owns', 'quicklinks' );
+        UW.$body.on( 'keydown', '#quicklinks a:first', this.inner_keydown );
+        UW.$body.on( 'keyup', '#quicklinks a', this.animate );
         this.quicklinks.on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.transitionEnd);
     },
 
@@ -11441,55 +11466,56 @@ UW.QuickLinks.Collection = Backbone.Collection.extend({
     initialize: function ( options )
     {
         this.url = options.url;
+        this.url = options.url.replace("www.washington.edu/cms/", "www.washington.edu/");
     },
 
     defaults : [{
        "title": "MyUW",
-       "url": "http:\/\/myuw.washington.edu",
+       "url": "https:\/\/my.uw.edu",
        "classes": ["icon-myuw"]
    }, {
        "title": "Calendar",
-       "url": "http:\/\/uw.edu\/calendar",
+       "url": "https:\/\/uw.edu\/calendar",
        "classes": ["icon-calendar"]
    }, {
        "title": "Directories",
-       "url": "http:\/\/uw.edu\/directory\/",
+       "url": "https:\/\/directory.uw.edu\/",
        "classes": ["icon-directories"]
    }, {
        "title": "Libraries",
-       "url": "http:\/\/www.lib.washington.edu\/",
+       "url": "https:\/\/www.lib.washington.edu\/",
        "classes": ["icon-libraries"]
    }, {
        "title": "UW Medicine",
-       "url": "http:\/\/www.uwmedicine.org",
+       "url": "https:\/\/www.uwmedicine.org",
        "classes": ['icon-medicine']
    }, {
        "title": "Maps",
-       "url": "http:\/\/uw.edu\/maps",
+       "url": "https:\/\/uw.edu\/maps",
        "classes": ["icon-maps"]
    }, {
-       "title": "UW Today",
-       "url": "http:\/\/www.uw.edu\/news",
+       "title": "UW News",
+       "url": "https:\/\/uw.edu\/news",
        "classes": ["icon-uwtoday"]
    }, {
        "title": "Computing\/IT",
-       "url": "http:\/\/www.washington.edu\/itconnect\/forstudents.html",
+       "url": "https:\/\/itconnect.uw.edu",
        "classes": false
    }, {
-       "title": "Employee Self Service",
-       "url": "http:\/\/f2.washington.edu\/fm\/payroll\/payroll\/ESS",
+       "title": "Workday\/ISC",
+       "url": "https:\/\/isc.uw.edu\/",
        "classes": false
    }, {
        "title": "Husky Card",
-       "url": "http:\/\/www.hfs.washington.edu\/huskycard\/",
+       "url": "https:\/\/hfs.uw.edu\/Husky-Card-Services\/",
        "classes": false
    }, {
        "title": "UW Bothell",
-       "url": "http:\/\/www.bothell.washington.edu\/",
+       "url": "https:\/\/www.uwb.edu\/",
        "classes": false
    }, {
        "title": "UW Tacoma",
-       "url": "http:\/\/www.tacoma.uw.edu\/",
+       "url": "https:\/\/www.tacoma.uw.edu\/",
        "classes": false
    }, {
        "title": "UW Facebook",
@@ -11850,7 +11876,7 @@ UW.Slideshow = Backbone.View.extend({
 // This provides the structure and functionality of the UW Youtube player
 // For usage please refer to the [UW Web Youtube Player](http://uw.edu/brand/web/#youtube)
 // It can support a single youtube video or playlist embed
-// options include max results for playlists, modest youtube branding and default resolution 
+// options include max results for playlists, modest youtube branding and default resolution
 // requires a unique id for each div.uw-youtube even if there is just one
 
 //       Single: <div id='some-unique-id' class="uw-youtube" data-uw-youtube='youtube_id_here' data-uw-youtube-type='single'></div>
@@ -11881,6 +11907,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
         this.type = this.$el.data('uw-youtube-type');
         this.modest = this.$el.data('modest');
         this.resolution = this.$el.data('resolution');
+        var youtubeApiKey = apiKey.network ? apiKey.network : apiKey.local;
         if (this.type == 'playlist'){
             this.max_results = 20;
             var max_results_temp = parseInt(this.$el.data('max-results'), 10);
@@ -11888,11 +11915,11 @@ UW.YouTube.Collection = Backbone.Collection.extend({
                 this.max_results = max_results_temp;
             }
             this.model = UW.YouTube.PlaylistItem;
-            this.url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + this.youtube_id + '&key=AIzaSyApmhFr5oa8bmKPcpN7bm-h0mekjkUVypU&maxResults=' + this.max_results;
+            this.url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + this.youtube_id + '&key=' + youtubeApiKey + '&maxResults=' + this.max_results;
         }
         else if (this.type == 'single') {
             this.model = UW.YouTube.Video;
-            this.url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + this.youtube_id + '&key=AIzaSyApmhFr5oa8bmKPcpN7bm-h0mekjkUVypU';
+            this.url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + this.youtube_id + '&key=' + youtubeApiKey;
         }
     },
 
@@ -11906,7 +11933,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
             return item.snippet;
         });
     },
-    
+
     // make the view at the proper time
     make_view: function (type) {
         this.view = new UW.YouTube.CollectionView({collection: this});
@@ -11916,7 +11943,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
 
 // The CollectionView builds the html for the player and the control structure for the vidoes
 UW.YouTube.CollectionView = Backbone.View.extend({
-    
+
     // template that all videos get
     template : "<div class='nc-video-player' role='region' aria-label='video' tabindex=-1><div class='tube-wrapper'></div></div>",
 
@@ -11966,7 +11993,7 @@ UW.YouTube.CollectionView = Backbone.View.extend({
     // if we don't have a copy of the youtube iframe api yet. add it
     add_iFrame_api: function () {
         if (UW.$body.find('script#iFrame').length === 0){
-            UW.$body.append('<script id="iFrame" src="//www.youtube.com/player_api" type="text/javascript"></script>');
+            UW.$body.append('<script id="iFrame" title="YouTube video player" src="//www.youtube.com/player_api" type="text/javascript"></script>');
             this.add_iFrame_function();
         }
     },
@@ -11983,6 +12010,10 @@ UW.YouTube.CollectionView = Backbone.View.extend({
                         'rel'           : 0,
                         'controls'      : 0,
                         'modestbranding': 1,
+                    }
+                } else {
+                    player_vars = {
+                        'rel'           : 0,
                     }
                 }
                 // if (collection.resolution !== 'undefined'){
@@ -12052,14 +12083,14 @@ UW.YouTube.CollectionView = Backbone.View.extend({
     check_all_ready: function() {
         if (this.data_ready && this.player_ready){
             this.play(this.collection.models[0].get('resourceId').videoId);
-        } 
+        }
     },
 
     // when the player changes state, this is run.
     // Currently stuff only happens if this is a playlist
     // TODO: add a publicly visible event on video end for showcase pages
     onStateChange: function (event) {
-        if (this.is_playlist) { 
+        if (this.is_playlist) {
             //event.data is 0 when a video finishes playing.  Find out what video we just finished, then play the next one or loop back to the beginning of the playlist
             if (event.data === 0) {
                 var video = this.$vidContent.find('.vid-active').attr('id');
@@ -12121,7 +12152,7 @@ UW.YouTube.Video = Backbone.Model.extend({
 // Video View is a view for single video. Currently does nothing
 UW.YouTube.VideoView = Backbone.View.extend({
     //template: underscore + html string here,
-    
+
     initialize: function () {
         this.render();
     },
@@ -12191,9 +12222,8 @@ UW.Vimeo = Backbone.View.extend({
   // The second one is the playlist and only shows if a playlist is being called.
   templates : {
     video    : '<iframe id="test" src="https://player.vimeo.com/video/<%= video %>/?<%= $.param( defaults ) %>"' +
-               ' width=<%= width %> height=<%= height %>'+
-               ' frameborder=0 webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
-
+               ' width=<%= width %> height=<%= height %> title="<%= video.title %>"'+
+               ' style=border:0 webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
     playlist : '' +
       '<div class="playlist">'+
         '<% _.each( videos, function( video ) { %>' +
@@ -12425,7 +12455,8 @@ UW.Dropdowns = Backbone.View.extend({
   },
 
   elements : {
-    toplevel : '.dawgdrops-item'
+    toplevel : '.dawgdrops-item',
+    document : document,
   },
 
   keys : {
@@ -12442,18 +12473,23 @@ UW.Dropdowns = Backbone.View.extend({
 
   events : {
     'keydown .dawgdrops-menu a' : 'moveFocusInSubMenu',
-    'keydown .dawgdrops-item > a' : 'toggleSubMenu',
-    'focus .dawgdrops-item' : 'positionSubmenu',
-    'mouseenter .dawgdrops-item' : 'positionSubmenu'
+    // 'keydown .dawgdrops-item > button' : 'toggleSubMenu',
+    'keydown .dawgdrops-item > button' : 'toggleSubMenu',
+    'click .dawgdrops-item > button' : 'clickSubMenu',
+    'focus .dawgdrops-item > button' : 'positionSubmenu',
+    'mouseenter .dawgdrops-item' : 'positionSubmenu',
+    'mouseleave .dawgdrops-item' : 'removeAria',
+    'keydown .dawgdrops-item' : 'currentDawg',
   },
 
 
   initialize : function(options)
   {
-    _.bindAll( this, 'render', 'chunk', 'wrap', 'wrapChildren', 'positionSubmenu', 'toggleSubMenu' )
+    _.bindAll( this, 'render', 'chunk', 'wrap', 'wrapChildren', 'positionSubmenu', 'toggleSubMenu')
     this.settings = _.extend( {}, this.defaults , this.$el.data() , options )
     this.$topLevelNav = this.$el.find( this.elements.toplevel )
     this.render()
+    $(document).bind( 'keydown', this.keyAction );
   },
 
   render : function()
@@ -12468,8 +12504,10 @@ UW.Dropdowns = Backbone.View.extend({
 
   wrapChildren : function( element )
   {
-    if ( $(element).find('li').length > this.chunkSize )
+    // if ( $(element).find('li').length > this.chunkSize )
         _.each( _.groupBy( $( element ).find('li'), this.chunk ), this.wrap )
+    // else
+    //   _.each( _.groupBy( $( element ).find('li'), this.chunk ), this.wrap )
   },
 
   wrap : function( elements )
@@ -12480,33 +12518,57 @@ UW.Dropdowns = Backbone.View.extend({
   // todo: tidy up the math / variables
   positionSubmenu : function( event )
   {
+    $(".dawgdrops-item.current").trigger('mouseleave');
     var $el = $( event.currentTarget )
       , position = $el.position()
       , menublock = $el.find('.menu-block')
       , shift = ( this.menuBlockWidth * ( menublock.length ) ) + position.left
       , left = shift > UW.$window.width() ? $el.outerWidth() + position.left - ( menublock.length * this.menuBlockWidth ) : position.left
+      $el.find('a').siblings('ul').removeAttr('style');
+      // $el.find('a').siblings('ul').css( { top : position.top + 58, left: left });
+      $el.find('button').attr( 'aria-expanded', 'true' );
+      $el.addClass('current');
+  },
 
-    $el.find('ul').css( { top : position.top + 58, left: left })
+  removeAria : function( event ) {
+    var $el = $( event.currentTarget );
+    $el.find('button').attr( 'aria-expanded', 'false' );
+    $el.removeClass('current');
+
+  },
+
+  currentDawg : function( e )
+  {
+    $(e.currentTarget).addClass('current');
+  },
+
+  clickSubMenu : function( e )
+  {
+    this.currentSubMenu = $(e.currentTarget).siblings('ul');
+    this.currentSubMenuAnchors = this.currentSubMenu.find('a');
+    this.currentSubMenu.show();
+    this.currentSubMenuAnchors.eq(0).focus();
+    $(e.currentTarget).attr('aria-expanded', 'true');
+    this.currentSubMenu.css('display', 'flex');
   },
 
   toggleSubMenu : function( e )
   {
     switch ( e.keyCode )
     {
-
+      case this.keys.spacebar:
       case this.keys.enter :
-      case this.keys.down  :
-
-        $(e.currentTarget).attr('aria-expanded', 'true');
-        this.currentSubMenu = $(e.currentTarget).siblings('ul')
-        this.currentSubMenuAnchors = this.currentSubMenu.find('a')
-
+      // case this.keys.down  :
+        $(".dawgdrops-item").trigger('mouseleave');
+        this.currentSubMenu = $(e.currentTarget).siblings('ul');
+        this.currentSubMenuAnchors = this.currentSubMenu.find('a');
         this.currentSubMenu
-            .attr( 'aria-expanded', 'true' )
             .show()
           .find('a')
             .eq(0)
             .focus()
+        $(e.currentTarget).attr('aria-expanded', 'true');
+        this.currentSubMenu.css('display', 'flex');
 
         return false
 
@@ -12519,9 +12581,9 @@ UW.Dropdowns = Backbone.View.extend({
         $(e.currentTarget).parent().next().children('a').first().focus()
         return false
 
-      case this.keys.spacebar:
-        window.location.href = $(e.currentTarget).attr('href')
-        return false;
+      // case this.keys.spacebar:
+      //   window.location.href = $(e.currentTarget).attr('href')
+      //   return false;
 
     }
 
@@ -12529,6 +12591,7 @@ UW.Dropdowns = Backbone.View.extend({
 
   moveFocusInSubMenu : function(e)
   {
+
     switch ( e.keyCode ) {
 
       case this.keys.tab:
@@ -12551,17 +12614,15 @@ UW.Dropdowns = Backbone.View.extend({
         return false
 
       case this.keys.left:
-        this.currentSubMenu.hide().parent().prev().children('a').first().focus()
+        this.currentSubMenu.hide().parent().prev().children('button').first().focus()
         this.index.submenu = 0;
-        this.currentSubMenu.attr( 'aria-expanded', 'false' )
-          .parent().children('a').first().attr('aria-expanded', 'false')
+        this.currentSubMenu.parent().children('button').attr('aria-expanded', 'false')
         return false;
 
       case this.keys.right:
-        this.currentSubMenu.hide().parent().next().children('a').first().focus()
+        this.currentSubMenu.hide().parent().next().children('button').first().focus()
         this.index.submenu = 0;
-        this.currentSubMenu.attr( 'aria-expanded', 'false' )
-          .parent().children('a').first().attr('aria-expanded', 'false')
+        this.currentSubMenu.parent().children('button').attr('aria-expanded', 'false')
         return false;
 
       case this.keys.spacebar:
@@ -12570,8 +12631,9 @@ UW.Dropdowns = Backbone.View.extend({
         return false;
 
       case this.keys.esc:
-        this.currentSubMenu.attr('aria-expanded', 'false' )
-          .hide().parent().children('a').first().attr('aria-expanded', 'false').focus();
+        this.currentSubMenu.hide();
+        this.index.submenu = 0;
+        this.currentSubMenu.parent().children('button').attr('aria-expanded', 'false').focus();
         return false;
 
       default:
@@ -12587,8 +12649,19 @@ UW.Dropdowns = Backbone.View.extend({
 
 
     }
-  }
+  },
 
+  keyAction : function(e) {
+    switch ( e.keyCode ) {
+
+      case 27:
+        this.currentSubMenu = $('.dawgdrops-item.current ul')
+        this.currentButton = $('.dawgdrops-item.current button')
+        this.currentSubMenu.hide();
+        this.currentButton.attr('aria-expanded', 'false').focus();
+        return false;
+    }
+  }
 })
 ;// ### UW Dropdowns
 
@@ -12597,21 +12670,53 @@ UW.Dropdowns = Backbone.View.extend({
 UW.MobileMenu = Backbone.View.extend({
 
   events: {
-    'click' : 'toggle'
+    'click button' : 'toggle',
+    'click a' : 'openmenu'
   },
 
   initialize : function( options )
   {
-    _.bindAll(this, 'toggle','reset_li');
+    _.bindAll(this, 'toggle','reset_li','openmenu','cloneMenuAnchors');
     this.settings = _.extend( {}, this.defaults , this.$el.data() , options )
-    this.$mobilemenu = this.$el.parent('nav');
-    this.$mobilemenu_ul = this.$mobilemenu.find('ul.uw-mobile-menu');
+    this.$mobilemenu_ul = this.$el.find('ul.uw-mobile-menu');
   },
 
-  toggle: function()
+  // Clone the first item in the menu if it has a flyout, as it can't be used as both an anchor and button
+  cloneMenuAnchors : _.once( function(){
+    this.$el.find('.menu-item-has-children > a').each(function(){
+      var $target   = $(this),
+          $targetUl = $target.next('ul')
+
+      $target.next('ul').first().prepend('<li>' + $target[0].outerHTML + '</li>');
+
+      // Initial ARIA tags
+      $target.attr('aria-expanded', false);
+      $targetUl.attr('aria-hidden', true)
+    }) 
+  }),
+
+  openmenu : function(event){    
+    var $target = $(event.target),
+        $targeUl = $target.next();
+
+    if( $targeUl.length > 0 ){
+      event.preventDefault();  
+      // Toggle ARIA tags 
+      $targeUl.attr('aria-hidden', function(index, attr){
+        return attr === 'true' ? 'false' : 'true';
+      });  
+      $target.attr('aria-expanded', function(index, attr){
+        return attr === 'true' ? 'false' : 'true';
+      });
+      $target.parent().toggleClass('active-menu');
+    }     
+  },
+
+  toggle: function(event)
   {
-    this.$mobilemenu.find('li').width(this.$mobilemenu.width());
-    this.$mobilemenu_ul.toggle({'duration': 400, 'easing':'easeInOutQuart', 'done': this.reset_li });
+    this.$mobilemenu_ul.toggle();
+    this.$el.addClass('active_nav');
+    this.cloneMenuAnchors();
   },
 
   reset_li: function()
@@ -12619,7 +12724,68 @@ UW.MobileMenu = Backbone.View.extend({
     this.$mobilemenu.find('li').removeAttr('style');
   }
 
+});/* Sidebar Navigation Toggle Button for Mobile Devices - Hide and Show The Sidebar Content    */
+
+
+UW.ToggleSidebarMenu = Backbone.View.extend({
+
+  events: {
+    'click button': 'toggleContent'
+  },
+
+  initialize : function() {
+    console.log(this.el);
+    this.toggleContent();
+  },
+
+  toggleContent: function(e){
+
+    if (this.showmeState === true) {
+      this.hideLinks();
+    } else {
+      this.showLinks();
+    }
+
+  },
+
+  hideLinks: function() {
+    this.$el.find('#mobile-sidebar-links').removeClass('visible-xs');
+    this.$el.find('#mobile-sidebar-menu').removeClass('open');
+    this.$el.find('#mobile-sidebar-title').html('Open Menu');
+    this.showmeState = false; 
+
+  },
+  showLinks: function() {
+    this.$el.find('#mobile-sidebar-links').addClass('visible-xs');
+    this.$el.find('#mobile-sidebar-menu').addClass('open');
+    this.$el.find('#mobile-sidebar-title').html('Close Menu');
+    this.showmeState = true;
+
+  }
+
+
 })
+
+
+
+/* End Sidebar Navigation Hamburger Button for Mobile Devices */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;// ### UW Accordion
 
 // This creates a UW Accordion
@@ -12740,7 +12906,7 @@ UW.Select = Backbone.View.extend({
   open : function(e)
   {
     if(this.isOpen()){
-      this.close(e);
+      this.closeWithoutAnimating();
       return false;
     }
     this.addOpenClass()
@@ -12951,7 +13117,6 @@ UW.Select = Backbone.View.extend({
                      '<span class="close"> Close</span>' +
                      '<img src="<%= src %>" alt="<%=alt %>" style="width:100%;" />' +
                      '<p><%= caption %></p>' +
-                     '<p><%= credit %></p>' +
                    '</div>' +
                  '</div>',
 
@@ -12959,14 +13124,14 @@ UW.Select = Backbone.View.extend({
                     '<div></div>' +
                     '<div class="wrapper" style="width:<%= width %>px; margin-top:-<%= height/2 %>px; margin-left:-<%= width/2 %>px;">' +
                      '<span class="close"> Close</span>' +
-                     '<iframe width="<%= width %>" height="<%= height %>" src="<%= src %>" frameborder="0" allowfullscreen></iframe>' +
+                     '<iframe width="<%= width %>" height="<%= height %>" src="<%= src %>" style="border:0" allowfullscreen="" title="<%= caption %>"></iframe>' +
                      '<p><%= caption %></p>' +
                      '<p><%= credit %></p>' +
                    '</div>' +
                  '</div>',
 
   events : {
-    'click' : function(e){      
+    'click' : function(e){
       this.attrs = this.getAttributes( e );
       // This just checks to see if the anchor has a source (some slideshows and plugins use blank anchors to do their work)
       if( this.attrs.src ){
@@ -13013,7 +13178,7 @@ UW.Select = Backbone.View.extend({
       aspect_ratio = 560 / 315;
       this.attrs.height = 630;
       this.attrs.width  = 1120;
-    } 
+    }
 
     if ( this.attrs.height > (this.RATIO * UW.$window.height())){
         this.attrs.height = this.RATIO * UW.$window.height();
@@ -13046,7 +13211,9 @@ UW.Select = Backbone.View.extend({
   getAttributes: function( e )
   {
       var target = $(e.currentTarget),
-          caption = target.parent('a').siblings('.wp-caption-text').text();
+           caption = target.parent('a').siblings('.wp-caption-text').html();
+
+
 
       if (!caption){
         var gallery_parent = target.parent('a').parent('.gallery-icon')
@@ -13060,7 +13227,6 @@ UW.Select = Backbone.View.extend({
         alt : target.attr('alt'),
         rel : target.parent('a').attr('rel') ? target.parent('a').attr('rel') : '',
         caption : caption,
-        credit : target.parent('a').siblings('.wp-caption-text').find('.wp-media-credit').text()
       }
 
   }
@@ -13130,4 +13296,10 @@ UW.Social = Backbone.View.extend({
   },
 
 })
+;// ### UW Custom Link
+// This file makes links not clickable.
+
+jQuery(document).ready(function($) {
+  $("a.uw-custom-link").addClass("disable_a_href");
+});
 ;}).call(this)

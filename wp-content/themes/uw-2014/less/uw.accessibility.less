@@ -47,10 +47,11 @@ label.screen-reader {
     a:focus,
     a:hover {
         color: @darkgold;
-        border-bottom: 1px solid #BDBDBD;
+        //border-bottom: 1px solid #BDBDBD;
         // We don't want buttons underlined on hover
         &.uw-btn {
             border-bottom: none;
+            text-decoration: none;
         }
     }
     a.uw-btn:focus {
@@ -100,9 +101,14 @@ label.screen-reader {
     }
     // 
     div.wp-caption > a > img {
-        &:hover,
-        &:focus {
-            outline: 7px solid #C3C3C3;
+        &:hover {
+                outline: 7px solid #C3C3C3;
+        }
+    }
+
+    div.wp-caption > a {
+        &:focus > img {
+                outline: 7px solid #C3C3C3;
         }
     }
 
@@ -116,10 +122,15 @@ label.screen-reader {
     .uw-body-copy, 
     .uw-sidebar {
         a {
-            border-bottom: 1px solid #DFDFDF;
+            //border-bottom: 1px solid #DFDFDF;
+            text-decoration: underline;
             &:hover {
-                border-bottom: 1px solid @darkgold;
-            }
+               // border-bottom: 1px solid @darkgold;
+               text-decoration: none;
+           }
+           &.uw-btn {
+            text-decoration: none;
         }
+    }
     }
 }
