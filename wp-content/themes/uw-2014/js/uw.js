@@ -40,6 +40,7 @@ UW.elements = {
   social     : '.uw-social',
   vimeo      : '.uw-vimeo',
   youtube    : '.uw-youtube'
+  togglemobile  : '#mobile-sidebar',
 
 }
 
@@ -63,6 +64,8 @@ UW.initialize = function( $ )
   UW.quicklinks = _.map( $( UW.elements.quicklinks ),    function( element ) { return new UW.QuickLinks( { el : element, url : UW.sources.quicklinks }) } )
   UW.search     = _.map( $( UW.elements.search ),    function( element ) { return new UW.Search( { el : element, model : new UW.Search.DirectoryModel( {url: UW.sources.search}) }) } )
 
+  UW.togglemobile = _.map( $( UW.elements.togglemobile ),     function( element ) { return new UW.ToggleSidebarMenu({ el : element }) } )
+
   // UW Modules
   UW.slideshows = _.map( $( UW.elements.slideshow ), function( element ) { return new UW.Slideshow( { el : element }) } )
   UW.social     = _.map( $( UW.elements.social ),    function( element ) { return new UW.Social({ el : element }) } )
@@ -76,7 +79,7 @@ UW.initialize = function( $ )
   UW.select     = _.map( $( UW.elements.select ),    function( element ) { return new UW.Select({ el : element }) } )
 
   // todo: add to separate file
-  $('table').addClass('table table-striped')
+  $('table').addClass('table table-striped').attr( "border", 1 )
 
 }
 
@@ -135,7 +138,7 @@ UW.Search = Backbone.View.extend({
                     '</div>'+
 
                 '<div class="uw-results" style="display:none;">' +
-                   '<p class="more-results">Need more results? Try the <a href="http://www.washington.edu/home/peopledir/" title="Full directory">full directory</a></p>' +
+                   '<p class="more-results">Need more results? Try the <a href="https://directory.uw.edu/" title="Full directory">full directory</a></p>' +
                 '</div>' +
 
                 '</div>'+
@@ -413,7 +416,7 @@ UW.QuickLinks = Backbone.View.extend({
     // todo: the default list and these elements could be put into the php templates
     container: 'div#uw-container',
     $little_list_header: $('<h3>Helpful Links</h3>'),
-    $drawer: $("<nav id='quicklinks' role='navigation' aria-label='quick links'></nav>"),
+    $drawer: $("<nav id='quicklinks' aria-label='quick links'></nav>"),
     $big_list: $('<ul id="big_links"></ul>'),
     $little_list: $('<ul id="little_list"></ul>'),
 
@@ -566,7 +569,7 @@ UW.QuickLinks.Collection = Backbone.Collection.extend({
     //     {title: 'Directories', url: 'http://uw.edu/directory', classes: ['icon-directories']},
     //     {title: 'Calendar', url: 'http://uw.edu/calendar', classes: ['icon-calendar']},
     //     {title: 'Libraries', url: 'http://uw.edu/libraries', classes: ['icon-libraries']},
-    //     {title: 'MyUW', url: 'http://myuw.washington.edu', classes: ['icon-myuw']},
+    //     {title: 'MyUW', url: 'http://my.uw.edu', classes: ['icon-myuw']},
     //     {title: 'UW Today', url: 'http://uw.edu/news', classes: ['icon-uwtoday']},
     //    ],
 
@@ -751,7 +754,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
             return item.snippet;
         });
     },
-    
+
     make_view: function (type) {
         this.view = new UW.YouTube.CollectionView({collection: this});
     },
@@ -759,7 +762,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
 });
 
 UW.YouTube.CollectionView = Backbone.View.extend({
-    
+
     template : "<div class='nc-video-player'><div class='tube-wrapper'></div></div>",
     playlist_section : "<div class='vidSmall'><div class='scrollbar'><div class='track'><div class='thumb'><div class='end'></div></div></div></div><div class='viewport'><div class='vidContent overview'><ul></ul></div></div></div>",
 
@@ -786,7 +789,7 @@ UW.YouTube.CollectionView = Backbone.View.extend({
 
     add_iFrame_api: function () {
         if (UW.$body.find('script#iFrame').length === 0){
-            UW.$body.append('<script id="iFrame" src="//www.youtube.com/player_api" type="text/javascript"></script>');
+            UW.$body.append('<script id="iFrame" title="YouTube video player" src="//www.youtube.com/player_api" type="text/javascript"></script>');
             this.add_iFrame_function();
         }
     },
@@ -833,12 +836,12 @@ UW.YouTube.CollectionView = Backbone.View.extend({
     check_all_ready: function() {
         if (this.data_ready && this.player_ready){
             this.play(this.collection.models[0].get('resourceId').videoId);
-        } 
+        }
     },
 
     //when the player changes state, this is run.  Currently stuff only happens if this is a playlist
     onStateChange: function (event) {
-        if (this.is_playlist) { 
+        if (this.is_playlist) {
             //event.data is 0 when a video finishes playing.  Find out what video we just finished, then play the next one or loop back to the beginning of the playlist
             if (event.data === 0) {
                 var video = this.$vidContent.find('.vid-active').attr('id');
@@ -891,7 +894,7 @@ UW.YouTube.Video = Backbone.Model.extend({
 
 UW.YouTube.VideoView = Backbone.View.extend({
     //template: underscore + html string here,
-    
+
     initialize: function () {
         this.render();
     },
@@ -951,9 +954,10 @@ UW.Vimeo = Backbone.View.extend({
   // The first one is the standard Vimeo iFrame which is used for both single and playlist driven embeds.
   // The second one is the playlist and only shows if a playlist is being called.
   templates : {
-    video    : '<iframe id="test" src="http://player.vimeo.com/video/<%= video %>/?<%= $.param( defaults ) %>"' +
+    video    : '<iframe id="test" title="Vimeo video player" src="http://player.vimeo.com/video/<%= video %>/?<%= $.param( defaults ) %>"' +
                ' width=<%= width %> height=<%= height %>'+
-               ' frameborder=0 webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+             //  ' frameborder=0 webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
+               'style="border:0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>',
 
     playlist : '' +
       '<div class="playlist">'+

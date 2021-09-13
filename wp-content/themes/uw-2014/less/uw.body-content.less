@@ -8,7 +8,7 @@ dd {
 	margin-bottom: 24.5px;
 }
 
-// Basic styles 
+// Basic styles
 
 hr {
 	border-top: 1px solid #EBEBEB;
@@ -17,6 +17,15 @@ hr {
 
 iframe {
 	margin: 40px 0 20px;
+	max-width: 100%;
+	&[src*="youtu.be"],
+	&[src*="youtube.com"],
+	&[src*="www.facebook.com/plugins/video"] {
+		max-height: 50vw;
+	}
+	&[src*="subscribe.gifts.washington.edu/SignUp"] {
+		margin-top: 10px !important;
+	}
 }
 
 
@@ -46,7 +55,7 @@ a.more {
   position: relative;
  // display: inline-block;
   &:after {
-    background: url(/wp-content/themes/uw-2014/assets/svg/uw-sprite.svg) no-repeat -206px -492px;
+    background: url(assets/svg/uw-sprite.svg) no-repeat -206px -492px;
     content: "";
     position: absolute;
     right: -24px;
@@ -73,7 +82,7 @@ a.more {
 .uw-body {
 	padding-top: 10px;
 	-webkit-font-smoothing: antialiased;
-	h1, h2 {
+	h1, h2, .widgettitle {
 		color: @purple;
 		display: block;
 	}
@@ -115,7 +124,7 @@ a.more {
     margin: -4.5px 0 20px 0;
     font-weight: @ultra;
   }
-  
+
 }
 
 // Next link in the blog
@@ -144,7 +153,7 @@ span.next-page {
 	  -webkit-border-radius:0;
 	  -moz-border-radius:0;
 	  &:after {
-		background: url(/wp-content/themes/uw-2014/assets/svg/uw-sprite.svg) no-repeat -206px -492px;
+		background: url(assets/svg/uw-sprite.svg) no-repeat -206px -492px;
 		content: "";
 		position: absolute;
 		right: 17px;
@@ -164,6 +173,10 @@ span.next-page {
  // (doesn't include sidebar)
 
 .uw-body-copy {
+	a {
+		text-decoration: underline;
+		// border-bottom: 1px solid #D3D3D3;
+	}
 	h1 a,
 	h2 a,
 	h3 a,
@@ -171,11 +184,10 @@ span.next-page {
 	h5 a {
 		border-bottom: none;
 		color: inherit;
-	}
-	a {
 		text-decoration: none;
-		// border-bottom: 1px solid #D3D3D3;
-
+	}
+	a.uw-btn, .uw-widget-rss a {
+		text-decoration: none;
 	}
 }
 
@@ -219,7 +231,7 @@ span.next-page {
 	a {
 //		position: relative;
 //		&:after {
-//			background: url(/wp-content/themes/uw-2014/assets/svg/uw-sprite.svg) no-repeat -206px -492px;
+//			background: url(assets/svg/uw-sprite.svg) no-repeat -206px -492px;
 //			content: "";
 //			opacity: .4;
 //			position: absolute;
@@ -307,6 +319,13 @@ img.attachment-post-thumbnail.wp-post-image,
 }
 
 
+@media only screen and (max-width : 992px) {
+	.widget {
+	padding: 10px 0 0 0px; }
+}
+
+
+
 // Big Screens
 
 @media only screen and (max-width : 1600px) {
@@ -319,7 +338,7 @@ img.attachment-post-thumbnail.wp-post-image,
 
 	.widget {
 		padding: 0;
-	}	
+	}
 	.info-box {
 		margin-left: 0;
 		width: 100%;
@@ -348,5 +367,12 @@ img.attachment-post-thumbnail.wp-post-image,
 			overflow: hidden;
 		}
 	}
+
+    .container .uw-body {
+    	a {
+    		border-bottom: 1px solid #DFDFDF;
+    	}
+    }
+
 
 }

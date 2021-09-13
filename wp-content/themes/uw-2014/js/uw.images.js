@@ -8,7 +8,6 @@ UW.Image = Backbone.View.extend({
                      '<span class="close"> Close</span>' +
                      '<img src="<%= src %>" alt="<%=alt %>" style="width:100%;" />' +
                      '<p><%= caption %></p>' +
-                     '<p><%= credit %></p>' +
                    '</div>' +
                  '</div>',
 
@@ -16,14 +15,14 @@ UW.Image = Backbone.View.extend({
                     '<div></div>' +
                     '<div class="wrapper" style="width:<%= width %>px; margin-top:-<%= height/2 %>px; margin-left:-<%= width/2 %>px;">' +
                      '<span class="close"> Close</span>' +
-                     '<iframe width="<%= width %>" height="<%= height %>" src="<%= src %>" frameborder="0" allowfullscreen></iframe>' +
+                     '<iframe width="<%= width %>" height="<%= height %>" src="<%= src %>" style="border:0" allowfullscreen="" title="<%= caption %>"></iframe>' +
                      '<p><%= caption %></p>' +
                      '<p><%= credit %></p>' +
                    '</div>' +
                  '</div>',
 
   events : {
-    'click' : function(e){      
+    'click' : function(e){
       this.attrs = this.getAttributes( e );
       // This just checks to see if the anchor has a source (some slideshows and plugins use blank anchors to do their work)
       if( this.attrs.src ){
@@ -70,7 +69,7 @@ UW.Image = Backbone.View.extend({
       aspect_ratio = 560 / 315;
       this.attrs.height = 630;
       this.attrs.width  = 1120;
-    } 
+    }
 
     if ( this.attrs.height > (this.RATIO * UW.$window.height())){
         this.attrs.height = this.RATIO * UW.$window.height();
@@ -103,7 +102,9 @@ UW.Image = Backbone.View.extend({
   getAttributes: function( e )
   {
       var target = $(e.currentTarget),
-          caption = target.parent('a').siblings('.wp-caption-text').text();
+           caption = target.parent('a').siblings('.wp-caption-text').html();
+
+
 
       if (!caption){
         var gallery_parent = target.parent('a').parent('.gallery-icon')
@@ -117,7 +118,6 @@ UW.Image = Backbone.View.extend({
         alt : target.attr('alt'),
         rel : target.parent('a').attr('rel') ? target.parent('a').attr('rel') : '',
         caption : caption,
-        credit : target.parent('a').siblings('.wp-caption-text').find('.wp-media-credit').text()
       }
 
   }
