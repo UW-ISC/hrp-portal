@@ -14,9 +14,11 @@ class UW_Widget_Cards extends WP_Widget
 
   function __construct()
   {
+    global $pagenow;
+
 		parent::__construct( $id = 'uw-widget-cards', $name = 'Image Cards', $options = array( 'description' => 'Choose from several styles of cards', 'classname' => 'cards-widget' ) );
 
-    if ( is_admin() )
+    if ( is_admin() && $pagenow === 'widgets.php' )
       add_action('admin_enqueue_scripts', array( __CLASS__, 'scripts') );
   }
 
@@ -69,21 +71,21 @@ class UW_Widget_Cards extends WP_Widget
     <input id="single-image-link-text-<?php echo $this->id ?>" class="widefat" id="<?php echo $this->get_field_id('link-text'); ?>" name="<?php echo $this->get_field_name('link-text'); ?>" type="text" value="<?php echo $linktext; ?>" />
     </p>
 
- 
-  
+
+
     <div class="card-labels">
     <p>
-    <label for="">Default card (<a id="enchanced-preview" href="#">preview<span><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/widget-card-default.jpg" alt="" width="" height="" />
-</span></a>) 
+    <label for="">Default card (<a id="enchanced-preview" href="#">preview<span><img src="<?php echo get_template_directory_uri(); ?>/assets/images/widget-card-default.jpg" alt="" width="" height="" />
+</span></a>)
      <input id="kjhsdf" type="radio" name="<?php echo $this->get_field_name('radio_card'); ?>" value="default-card"  <?php checked( $radio , "default-card" ); ?> /></label>
-    </p>   
+    </p>
      <p>
-     <label for="">Enhanced card (<a id="enchanced-preview" href="#">preview<span><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/widget-card-enhanced.jpg" alt="" width="" height="" />
-</span></a>) 
+     <label for="">Enhanced card (<a id="enchanced-preview" href="#">preview<span><img src="<?php echo get_template_directory_uri(); ?>/assets/images/widget-card-enhanced.jpg" alt="" width="" height="" />
+</span></a>)
      <input id="kjhsdf" type="radio" name="<?php echo $this->get_field_name('radio_card'); ?>" value="enhanced-card"  <?php checked( $radio , "enhanced-card" ); ?>/></label>
-    </p>    
+    </p>
     <p>
-    <label for="<?php echo $this->get_field_id('boundless'); ?>">Boundless style card (<a id="boundless-preview" href="#">preview<span><img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/widget-card-boundless.jpg" alt="" width="" height="" />
+    <label for="<?php echo $this->get_field_id('boundless'); ?>">Boundless style card (<a id="boundless-preview" href="#">preview<span><img src="<?php echo get_template_directory_uri(); ?>/assets/images/widget-card-boundless.jpg" alt="" width="" height="" />
 </span></a>)
      <input id="kjhsdf" type="radio" name="<?php echo $this->get_field_name('radio_card'); ?>" value="boundless-card"  <?php checked( $radio , "boundless-card" ); ?>/></label>
     </p>
@@ -118,22 +120,22 @@ class UW_Widget_Cards extends WP_Widget
     ?>
 
     <?php  echo $before_widget; ?>
-      
+
       <div class="<?php echo $radio ?>">
-      
-      <div class='card-image' style='background-image:url(<?php 
-        $the_image = $image_attributes = wp_get_attachment_image_src( $image, 'large' ); 
+
+      <div class='card-image' style='background-image:url(<?php
+        $the_image = $image_attributes = wp_get_attachment_image_src( $image, array(750, 750) );
         echo  $the_image[0]; ?>
       )'></div>
 
       <span>
       <h3>
         <?php if ( ! empty( $link) ) : ?>
-        <a href="<?php echo $link; ?>" class="pic-title"><?php endif; ?><?php echo $title; ?><?php if ( ! empty( $link) ) : ?></a>      
+        <a href="<?php echo $link; ?>" class="pic-title"><?php endif; ?><?php echo $title; ?><?php if ( ! empty( $link) ) : ?></a>
         <?php endif; ?>
       </h3>
 
-      <span class="udub-slant"><span></span></span>    
+      <span class="udub-slant"><span></span></span>
 
       <?php echo wpautop($text); ?>
 
@@ -144,7 +146,7 @@ class UW_Widget_Cards extends WP_Widget
       <?php endif; ?>
       </span>
 
-      
+
 
       </div>
 

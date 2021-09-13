@@ -27,15 +27,16 @@
 		top: -22px;
 		left: 0;
 		z-index: 1;
-    &:focus,
-    &:hover{
-      background: url(assets/svg/uw-sprite-focus.svg) no-repeat 0 0 transparent;
-    }
-    &:before {
-      //to preload and cache hover svg
-      content: url(assets/svg/uw-sprite-focus.svg);
-      display: none;
-    }
+		color: #fff;
+		// &:focus,
+		// &:hover{
+		// 	background: url(assets/svg/uw-sprite-focus.svg) no-repeat 0 0 transparent;
+		// }
+		&:before {
+			//to preload and cache hover svg
+			content: url(assets/svg/uw-sprite-focus.svg);
+			display: none;
+		}
 	}
 
 	// Wordmark
@@ -49,6 +50,24 @@
 		width: 330px;
 		height: 24px;
 		background: url(assets/svg/uw-sprite.svg) no-repeat 0 -431px transparent;
+		color: #fff;
+		// &:hover, &:focus{
+		// 	text-decoration: none;
+		// 	outline: none;
+		// 	outline-offset: unset;
+		// }
+	}
+
+	a:hover,
+	a:focus {
+		// .uw-wordmark {
+		// 	text-decoration: none;
+		// 	outline: none;
+		// 	outline-offset: unset;
+		// }
+		.uw-patch {
+			background: url(assets/svg/uw-sprite-focus.svg) no-repeat 0 0 transparent;
+		}
 	}
 
   div.align-right {
@@ -149,11 +168,11 @@
                 margin-left: -15px;
                 margin-right: 0;
                 padding-right: 54px;
-                color: #404040;
+                color: #1c1c1c;
                 background: url(assets/svg/uw-sprite.svg) no-repeat -451px -235px;
                 overflow: hidden;
                 &:hover,
-                &:focus {                	
+                &:focus {
                 	color: #FFF;
 					text-shadow: 0px 0px 4px rgba(0, 0, 0, 0.54);
 					text-decoration: underline;
@@ -186,7 +205,7 @@
 
             }
         }
-    }		
+    }
     // Active state of search button
 
     .search-open .uw-thinstrip button.uw-search {
@@ -250,12 +269,7 @@
 			top: 0;
 			left: 0;
 			background-size: 470px;
-      .transition(all 0s);
-      &:hover,
-      &:focus,
-      {
-        background-size: 470px;
-      }
+			.transition(all 0s);
 		}
 		.uw-wordmark {
 			width: 155px;
@@ -267,6 +281,12 @@
 			left: 78px;
 			top: 4px;
 			background-size: 397px;
+		}
+		a:hover,
+		a:focus {
+			.uw-patch {
+				background-size: 470px;
+			}
 		}
     button {
         &.uw-quicklinks {
@@ -355,6 +375,7 @@
             position:absolute;
             top:0px;
             right:0px;
+            min-width: 233px;
         }
     }
 		ul.uw-thin-links {
