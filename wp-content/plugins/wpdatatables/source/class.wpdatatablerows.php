@@ -32,6 +32,7 @@ class WPDataTableRows
         $this->setReloadCounter($tableData->content->reloadCounter);
         $this->setTableSettingsData($tableData);
     }
+
     /**
      * @return mixed
      */
@@ -47,6 +48,7 @@ class WPDataTableRows
     {
         $this->_tableID = $tableID;
     }
+
     /**
      * @return string
      */
@@ -78,6 +80,7 @@ class WPDataTableRows
     {
         $this->_tableType = $tableType;
     }
+
     /**
      * @return array
      */
@@ -109,6 +112,7 @@ class WPDataTableRows
     {
         $this->_colWidths = $colWidths;
     }
+
     /**
      * @return string
      */
@@ -178,6 +182,7 @@ class WPDataTableRows
     {
         return $rowData[$rowIndex]->cells[$colIndex]->type;
     }
+
     /**
      * @param $rowData
      * @param $colIndex
@@ -188,6 +193,7 @@ class WPDataTableRows
     {
         return $rowData[$rowIndex]->cells[$colIndex]->hidden;
     }
+
     /**
      * @param $rowData
      * @param $colIndex
@@ -196,7 +202,7 @@ class WPDataTableRows
      */
     public function getCellClassesByIndexes($rowData, $rowIndex, $colIndex)
     {
-        if (isset( $rowData[$rowIndex]->cells[$colIndex]->meta))
+        if (isset($rowData[$rowIndex]->cells[$colIndex]->meta))
             return $rowData[$rowIndex]->cells[$colIndex]->meta;
 
         return false;
@@ -259,7 +265,7 @@ class WPDataTableRows
     }
 
     /**
-     * @param string $cellMetaData
+     * @param mixed $cellMetaData
      */
     public function setCellMetaData($cellMetaData)
     {
@@ -321,7 +327,8 @@ class WPDataTableRows
      * @return WPDataTableRows
      * @throws Exception
      */
-    public static function loadWpDataTableRows($tableId){
+    public static function loadWpDataTableRows($tableId)
+    {
         $tableData = WDTConfigController::loadTableFromDB($tableId, false);
         $tableData->content = json_decode($tableData->content);
         $tableData->simpleResponsive = json_decode($tableData->advanced_settings)->simpleResponsive;
@@ -331,7 +338,7 @@ class WPDataTableRows
         $tableData->verticalScroll = json_decode($tableData->advanced_settings)->verticalScroll;
         $tableData->verticalScrollHeight = json_decode($tableData->advanced_settings)->verticalScrollHeight;
 
-        $wpDataTableRows =  new WPDataTableRows($tableData);
+        $wpDataTableRows = new WPDataTableRows($tableData);
         $wpDataTableRows->setTableID($tableId);
 
         $rowsDataPrepared = WDTConfigController::loadRowsDataFromDB($tableId);;
@@ -403,7 +410,6 @@ class WPDataTableRows
     }
 
 
-
     public function renderStyles()
     {
         // Generate the style block
@@ -413,8 +419,8 @@ class WPDataTableRows
         $customCss = get_option('wdtCustomCss');
         $returnData .= $this->getTableSettingsData()->fixed_layout ? "table#wpdtSimpleTable-" . $this->getTableID() . "{ table-layout: fixed !important; }\n" : '';
         $returnData .= $this->getTableSettingsData()->word_wrap ? "table#wpdtSimpleTable-" . $this->getTableID() . " td, table.wpdtSimpleTable" . $this->getTableID() . " th { white-space: normal !important; }\n" : '';
-        $returnData .= $this->getTableSettingsData()->verticalScroll ? ".wpDataTables.wpDataTablesWrapper.wdtVerticalScroll  { overflow-y:auto; height:" . $this->getTableSettingsData()->verticalScrollHeight ."px; }\n" : '';
-        $returnData .= $this->getTableSettingsData()->verticalScroll ? ".wpDataTableContainerSimpleTable .wdt-res-wrapper.active  {overflow: initial; max-height:" . $this->getTableSettingsData()->verticalScrollHeight ."px !important; }\n" : '';
+        $returnData .= $this->getTableSettingsData()->verticalScroll ? ".wpDataTables.wpDataTablesWrapper.wdtVerticalScroll  { overflow-y:auto; height:" . $this->getTableSettingsData()->verticalScrollHeight . "px; }\n" : '';
+        $returnData .= $this->getTableSettingsData()->verticalScroll ? ".wpDataTableContainerSimpleTable .wdt-res-wrapper.active  {overflow: initial; max-height:" . $this->getTableSettingsData()->verticalScrollHeight . "px !important; }\n" : '';
 
         if ($customCss) {
             $returnData .= stripslashes_deep($customCss);
@@ -428,6 +434,7 @@ class WPDataTableRows
         }
         if ($this->getCellMetaData() != []) {
             $cellClasses = array_unique($this->getCellMetaData());
+            $systemFonts = WDTSettingsController::wdtGetSystemFonts();
             foreach ($cellClasses as $cellClass) {
                 if (strpos($cellClass, 'wpdt-tc-') !== false) {
                     $textColor = str_replace('wpdt-tc-', '', $cellClass);
@@ -435,6 +442,14 @@ class WPDataTableRows
                 } else if (strpos($cellClass, 'wpdt-bc-') !== false) {
                     $bgColor = str_replace('wpdt-bc-', '', $cellClass);
                     $returnData .= "." . $cellClass . " { background-color: #" . $bgColor . " !important;}\n";
+                } else if (strpos($cellClass, 'wpdt-ff-') !== false) {
+                    $fontFamilyIndex = strval(intval(str_replace('wpdt-ff-', '', $cellClass)));
+                    $fontFamily = $fontFamilyIndex == "0" ? 'inherit' : $systemFonts[$fontFamilyIndex - 1];
+                    $returnData .= "." . $cellClass . " { font-family: " . $fontFamily . " !important;}\n";
+                } else if (strpos($cellClass, 'wpdt-fs-') !== false) {
+                    $fontSizeIndex = strval(intval(str_replace('wpdt-fs-', '', $cellClass)));
+                    $fontSize = $fontSizeIndex == "0" ? '10' : $fontSizeIndex;
+                    $returnData .= "." . $cellClass . " { font-size: " . $fontSize . "px !important;}\n";
                 }
             }
         }
@@ -446,7 +461,7 @@ class WPDataTableRows
             wp_enqueue_script('wdt-simple-table-responsive-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.init.js', array('jquery'), WDT_CURRENT_VERSION, true);
         }
 
-        $returnData .= wdtRenderScriptStyleBlock('');
+        $returnData .= wdtRenderScriptStyleBlock($this->getTableID());
 
         return $returnData;
     }
@@ -479,13 +494,13 @@ class WPDataTableRows
             for ($i = 0; $i < count($rowData->cells); $i++) {
                 if (isset($rowData->cells[$i]->meta)) {
                     for ($j = 0; $j < count($rowData->cells[$i]->meta); $j++) {
-                       $cellClasses[$k] = $rowData->cells[$i]->meta[$j];
-                       $k++;
+                        $cellClasses[$k] = $rowData->cells[$i]->meta[$j];
+                        $k++;
                     }
                 }
             }
         }
-        if(isset($cellClasses)) $this->setCellMetaData($cellClasses);
+        if (isset($cellClasses)) $this->setCellMetaData($cellClasses);
     }
 
     /**

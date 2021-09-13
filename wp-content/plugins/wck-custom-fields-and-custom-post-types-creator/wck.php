@@ -3,7 +3,7 @@
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
-Version: 2.2.5
+Version: 2.2.9
 Author URI: http://www.cozmoslabs.com
 Text Domain: wck
 Domain Path: /languages
@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 define( 'WCK_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) );
 define( 'WCK_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
-define( 'WCK_PLUGIN_VERSION', '2.6.0' );
+define( 'WCK_PLUGIN_VERSION', '2.6.3' );
 
 /* ready for localization */
 $current_theme = wp_get_theme();
@@ -165,9 +165,8 @@ function wck_maybe_unserialize() {
 }
 
 /* check for updates */
-$wck_premium_update = WCK_PLUGIN_DIR.'/update/';
-if (file_exists ($wck_premium_update . 'update-checker.php')){
-	require_once ($wck_premium_update . 'update-checker.php');
+if (file_exists (WCK_PLUGIN_DIR.'/update/update-checker.php')){
+	require_once ( WCK_PLUGIN_DIR.'/update/update-checker.php');
 	(array)$wck_serial = get_option('wck_serial');
 	if( !empty( $wck_serial[0] ) )
 		$wck_serial = urlencode( $wck_serial[0]['serial-number'] );

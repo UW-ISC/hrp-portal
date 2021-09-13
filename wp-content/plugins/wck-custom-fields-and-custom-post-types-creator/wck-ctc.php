@@ -280,7 +280,7 @@ function wck_ctc_get_reserved_names(){
 /* Flush rewrite rules */
 add_action('init', 'ctc_flush_rules', 20);
 function ctc_flush_rules(){
-    if( isset( $_GET['page'] ) && $_GET['page'] == 'ctc-page' && isset( $_GET['updated'] ) && $_GET['updated'] == 'true' )
+    if( isset( $_GET['page'] ) && $_GET['page'] === 'ctc-page' && isset( $_GET['updated'] ) && $_GET['updated'] === 'true' )
         flush_rewrite_rules( false  );
 }
 

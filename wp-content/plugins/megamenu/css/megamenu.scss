@@ -509,7 +509,6 @@
             @if unit($panel_inner_width) == 'px' {
                 max-width: $panel_inner_width; /** Panel Width (Inner) **/
                 margin: 0 auto;
-                display: flex;
             } @else {
                 width: 100%;
                 float: left;

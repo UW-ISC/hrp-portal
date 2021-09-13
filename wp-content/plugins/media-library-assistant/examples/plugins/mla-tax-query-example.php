@@ -61,8 +61,12 @@
  * opened on 12/15/2019 by "feelee".
  * https://wordpress.org/support/topic/mla-tax-query-example-plugin-syntax/
  *
+ * Enhanced (bug fixes) for support topic "Checklist behaviour, my_custom_sql, muie_terms_search"
+ * opened on 5/18/2021 by "heb51".
+ * https://wordpress.org/support/topic/checklist-behaviour-my_custom_sql-muie_terms_search/
+ *
  * @package MLA tax query Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
@@ -70,10 +74,10 @@ Plugin Name: MLA tax query Example
 Plugin URI: http://davidlingren.com/
 Description: Replaces the WP_Query tax_query with a more efficient, direct SQL query
 Author: David Lingren
-Version: 1.10
+Version: 1.11
 Author URI: http://davidlingren.com/
 
-Copyright 2013 - 2019 David Lingren
+Copyright 2013 - 2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -152,6 +156,7 @@ class MLATaxQueryExample {
 	public static function mla_gallery_attributes( $shortcode_attributes ) {
 		// Save the attributes for use in the later filters
 		self::$shortcode_attributes = $shortcode_attributes;
+//error_log( __LINE__ . ' MLATaxQueryExample::mla_gallery_attributes shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
 
 		// See if we are involved in processing this shortcode
 		if ( isset( self::$shortcode_attributes['my_custom_sql'] ) ) {
@@ -356,6 +361,10 @@ class MLATaxQueryExample {
 					$args = array( 'slug' => substr( $slug, 1 ), 'hide_empty' => false );
 					$excludes = array_merge( $excludes, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 				} else {
+					if ( empty( $slug ) ) {
+						continue;
+					}
+
 					$args = array( 'slug' => $slug, 'hide_empty' => false );
 					$terms = array_merge( $terms, MLAQuery::mla_wp_get_terms( $taxonomy, $args ) );
 				}
@@ -816,7 +825,6 @@ class MLATaxQueryExample {
 //error_log( __LINE__ . " double_query( $tax_operator ) subquery = " . var_export( $subquery, true ), 0 );
 //error_log( __LINE__ . " double_query( $tax_operator ) subquery_parameters = " . var_export( $subquery_parameters, true ), 0 );
 		$query[] = 'WHERE ( ( p.ID IN ( ' . $wpdb->prepare( $subquery, $subquery_parameters ) . ' ) )';
-//error_log( __LINE__ . " double_query( $tax_operator ) query = " . var_export( $query, true ), 0 );
 
 		if ( ! empty( self::$shortcode_attributes['post_mime_type'] ) ) {
 			if ( 'all' != strtolower( self::$shortcode_attributes['post_mime_type'] ) ) {
@@ -852,6 +860,7 @@ class MLATaxQueryExample {
 		if ( ! empty( $orderby ) ) {
 			$query[] = $orderby;
 		}
+//error_log( __LINE__ . " double_query query = " . var_export( $query, true ), 0 );
 		
 		// Tell the final query to respect our orderby
 		$all_query_parameters['orderby'] = 'post__in';
@@ -892,6 +901,7 @@ class MLATaxQueryExample {
 				$paged = 1;
 			}
 
+//error_log( __LINE__ . " double_query all_query_parameters = " . var_export( $all_query_parameters, true ), 0 );
 			$limit = absint( ! empty( $all_query_parameters['posts_per_page'] ) ? $all_query_parameters['posts_per_page'] : $all_query_parameters['numberposts'] );
 			$offset = $limit * ( $paged - 1);
 			if ( 0 < $offset && 0 < $limit ) {
@@ -928,7 +938,7 @@ class MLATaxQueryExample {
 
 		$ids = $wpdb->get_results( $query );
 //error_log( __LINE__ . ' double_query ids = ' . var_export( $ids, true ), 0 );
-		if ( is_array( $ids ) ) {
+		if ( is_array( $ids ) && count( $ids ) ) {
 			$includes = array();
 			foreach ( $ids as $id ) {
 				$includes[] = $id->ID;
@@ -938,6 +948,7 @@ class MLATaxQueryExample {
 			$all_query_parameters['include'] = '1'; // return no items
 		}
 
+//error_log( __LINE__ . " double_query all_query_parameters = " . var_export( $all_query_parameters, true ), 0 );
 		return $all_query_parameters;
 	} // double_query
 } // Class MLATaxQueryExample

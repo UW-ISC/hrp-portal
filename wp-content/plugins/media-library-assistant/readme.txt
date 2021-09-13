@@ -1,11 +1,11 @@
 ﻿=== Media Library Assistant ===
 Contributors: dglingren
-Donate link: http://davidlingren.com/#two
+Donate link: http://davidlingren.com/#donate
 Tags: media, media library, gallery, images, categories, tags, attachments, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
 Requires at least: 3.5.0
-Tested up to: 5.7
+Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 2.95
+Stable tag: 2.96
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -56,6 +56,10 @@ The Media Library Assistant provides several enhancements for managing the Media
 * Works with the popular [Admin Columns](https://wordpress.org/plugins/codepress-admin-columns/) plugins for even more Media/Assistant screen customization.
 
 The Assistant is designed to work like the standard Media Library pages, so the learning curve is short and gentle. Contextual help is provided on every new screen to highlight new features.
+
+**I do not solicit nor accept personal donations in support of the plugin.** WordPress and its global community means a lot to me and I am happy to give something back.
+
+If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a [tax-deductible donation](http://webgw.alsa.org/goto/ChateauSeaviewFund") to our [Chateau Seaview Fund](http://webgw.alsa.org/goto/ChateauSeaviewFund") at the Golden West Chapter of the ALS Association. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!
 
 == Installation ==
 
@@ -183,72 +187,47 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
-= 2.95 =
-* New: For the Media/Assistant admin submenu, **support for Real Media Library has been added.** You can filter the submenu table display by selecting an RML folder or Gallery in the sidebar at the left-hand side of the screen. Note that this feature requires an update to the RML plugin, so watch for and install that update to activate these features.
-* New: For the Media/Assistant admin submenu, Media Manager enhancements and Media/Library Grid Mode enhancements the "Mine" filter/view introduced in WP 5.1 has been added to the list.
-* New: For `[mla_gallery]`, **support for Simple Date Parameters has been added.** You can filter the gallery display by year, month, week or day in addition to any other data selection parameters. More information is given in the 'Simple Date Parameters' section of the Settings/Media Library Assistant Documentation tab.
-* New: For `[mla_gallery]`, **support for Real Media Library has been added.** You can filter the gallery display by the RML folder, collection or gallery ID in addition to any other data selection parameters. More information is given in the 'Support for the “Real Media Library” Plugin' section of the Settings/Media Library Assistant Documentation tab.
-* Fix: For the Media/Assistant admin submenu, the option to hide the Search Media controls has been restored by correcting a defect in escaping the HTML for the form.
-* Fix: For keyword and taxonomy term searches, excluded values used in large numbers of items are now handled correctly.
-* Fix: For Microsoft Office metadata extraction, removed PHP Fatal Error when the ZipArchive class does not exist.
-* Fix: For `[mla_gallery]` pagination controls, handling of `mla_link_href` parameters containing HTML "fragments" has been restored. Fragments are placed at the end of the URL, following query arguments.
-* Fix: For the Media/Assistant admin submenu, custom field values containing embedded arrays are now completely decoded for display.
-* Fix: For the "MLA Insert Fixit" example plugin, "scaled" Vs "original" images introduced in WP 5.3 are now handled for tools such as "ALT from item".
-* Fix: For the "MLA Insert Fixit" example plugin, HTTP/HTTPS mismatches between the site URL and inserted item URLs are now handled for tools such as "ALT from item".
-* Fix: For the IPTC/EXIF taxonomy rule full-screen editor, Text/Array Option value changes are now recorded properly.
-* Fix: For Gutenberg Blocks such as "Audio" and "Video", MLA enhancements now respect MIME Type filters when returning items for the display.
-* Fix: Correct a defect (introduced in v2.84) in parsing content templates with embedded substitution parameters in "test" elements.
-* Fix: Correct overwriting of the global $post variable when updating a Media Library item.
-* Fix: Correct false detection of Media File Renamer plugin and subsequent PHP "Uncaught Error" during upload processing.
+= 2.96 =
+* New: For the "MLA CSV Data Source Example" plugin, the new "Export Item Values" tool lets you export anything you need from Media Library items, e.g., standard values, taxonomy terms, custom fields and embedded image IPTC/EXIF/XMP metadata.
+* New: For the "MLA UI Elements Example" plugin, the `[muie_archive_list]' shortcode adds date-based archive controls and lists.
+* New: For the "MLA UI Elements Example" plugin, the `[muie_text_box]' shortcode adds a "sticky" text box that survives page refresh and pagination.
+* New: An "ExposureMode" data source has been added to the "Field-level enhanced EXIF CAMERA values".
+* New: A new debugging tool adds Term ID and Term-taxonomy ID columns to the Media/taxonomy edit screens, controlled by a checkbox on the Settings/Media Library Assistant Debug tab.
+* New: Enhanced support for the Enhanced Media Library plugin, including filter support in the Media Manager Modal (popup) Window and Media/Assistant Grid mode.
+* New: For `[mla_tag_cloud]` and `[mla_term_list]`, special "ignore.terms.assigned", "no.terms.assigned", and "any.terms.assigned" values let you add links/controls to the cloud or term list to select all items, items with no term assignments and items with one ore more term assginments.
+* New: For `[mla_gallery]`, a special "any.terms.assigned" value lets you use a simple taxonomy query or a `tax_query` to find items that have one or more term assignments in a given taxonomy.
+* New: For the ",kbmb" Field-level option/format value, if the kilobyte suffix option is empty and the megabyte suffix is present all values above the threshold will be displayed in megabytes.
+* New: For the "MLA Insert Fixit" example plugin, the "Attach Referenced in" tool "ids=" analysis can be applied to any shortcode.
+* New: For the "WooCommerce Fixit Tools" example plugin, new tools to populate the Product Image and Product Gallery from items attached to the Product(s) have been added.
+* New: The full path and file name has been added to the "Settings updated" message for the "Export ALL Settings" function of the Settings/Media Library Assistant General tab.
+* New: Donation links and information have been restored, going to our Chateau Seaview Fund at the Golden West Chapter of the ALS Association.
+* Fix: Handle new "Load More" functions in WP 5.8 Media Manager Modal Window.
+* Fix: Correct handling of spaces in substitution parameter format values, e.g., `,str_replace(s,r)` and `,replace(p,r,v)`.
+* Fix: jQuery migrate "deprecated" notices for JS event shorthand instances have been resolved.
+* Fix: For the Media/Assistant admin submenu, the "Attached" view item count has been corrected.
+* Fix: Handling of array variables in the `request:` prefix has been restored.
+* Fix: For `[mla_gallery]`, displaying the Featured Image for a non-image post type, e.g., post or page, has been restored.
+* Fix: For WPML term processing in "All Languages" mode, the Quick Edit action will update assigned terms in the proper language regardless of the language of selected terms. 
+* Fix: For the Media/Assistant admin submenu displayed to members of the "Author" role, Bulk Actions such as "Edit" do not allow the user to select items belionging to other users.
+* Fix: For the "MLA Custom Feed" example plugin, code has been added to ensure that all active feeds are reflected in the WordPress URL rewrite rules and flushed (only) when missing feeds are detected.
+* Fix: For `[mla_tag_cloud]` and `[mla_term_list]`, "pad_counts" values now reflect filtering with the `post_mime_type` data selection parameter..
+* Fix: For `[mla_term_list]`, PHP error messages when using a custom markup template with an empty Open section have been resolved.
+* Fix: Improved toolbar layout and styling for the Media Manager Modal (popup) Window and Media/Assistant Grid mode.
+* Fix: Support for the `ajax_query_attachments_args` filter to support plugins such as Enhanced Media Library and ACF:Image Aspect Ratio Crop Field.
+* Fix: For the Bulk Edit on Upload feature, only one call to the edit processing function is made when all four "Enable ... mapping..." options are disabled.
 
-= 2.94 =
-* New: <strong>The "MLA Custom Field Search Example" plugin has been substantially upgraded.</strong> The new version has many more parameters and a new plugin settings page. A Documentation tab on the settings page contains all the information you need to understand and use the new version.
-* New: <strong>A new example plugin, "MLA Postie Post After Example"</strong>, adds support for running MLA mapping rules after the "Postie" plugin chron job creates posts and attachments from an email.
-* New: The Library Views/Post MIME Type "Table View" custom field queries have been enhanced to allow searching multiple field names or "all fields" for one or more values.
-* Fix: The "Smart Media Categories" example plugin has been enhanced to handle additional WordPress alternatives for term assignments and a new option is provided to exclude the Default Post Category from sync processing.
-* Fix: Wildcard values for Library Views/Post MIME Type "Table View" custom field queries have been restored.
-* Fix: PDF thumbnail streaming for <code>mla_viewer</code> processing has been restored.
-* Fix: For the `[mla_gallery]` shortcode, error reporting for the tax_query, date_query and meta_query parameters has been improved.
-* Fix: For the `[mla_gallery]` shortcode, proper handling of the <code>size=</code> "icon", "icon_only" and "icon_feature" options has been restored.
-* Fix: For the `[mla_gallery]` shortcode, performance is improved by avoiding a redundant LEFT JOIN database query clause (added by WP_Query).
-* Fix: For the `[mla_gallery]` shortcode, performance is improved by avoiding LEFT JOIN and WHERE database query clauses added by Real Media Library.
-* Fix: Unnecessary "term meta cache" queries have been removed from the Media/Assistant submenu table generation.
-* Fix: Handling of disimissible admin messages has been restored.
-
-= 2.93 =
-* New: The "MLA Simple Mapping Hooks Example" plugin has been updated so it will run when attachments are uploaded or updated by the WP/LR Sync plugin.
-* New: For the "Smart Media Categories" example plugin, support has been added for the "Postie" plugin chron job that creates posts and attachments from an email.
-* Fix: <strong>Correct defect in parsing `request:` substitution parameters containing compound names to access array elements, e.g., `tax_input`.</strong>
-* Fix: <strong>For `[mla_gallery]` pagination shortcodes, correct defects in handling substitution parameters containing array values, e.g., `tax_input`.</strong>
-* Fix: For the "Smart Media Categories" example plugin, term synchronization now works when multiple attachments are added to a parent in the same page load.
-
-= 2.92 =
-* Fix: Correct Media/Assistant Quick Edit error that deleted term assignments in the WordPress Categories taxonomy.
-
-= 2.91 =
-* Fix: Correct PHP Fatal "Uncaught ArgumentCountError" in some Media Manager query-attachments operations, e.g., Search Media.
-* Fix: Correct defect that prevented Media Manager operations such as "Edit Gallery" from retaining all current items when opened.
-
-= 2.90 =
-* New: <strong>A new example plugin, "MLA Parent Custom Field Mapping"</strong>, allows IPTC/EXIF and Custom Field mapping rules to update custom fields in the item's parent post/page rather than the items's own fields. Support for Advanced Custom Fields and WP/LR Sync is included.
-* New: <strong>The "MLA Randon Galleries Example" plugin has been greatly enhanced</strong>. The new version has many more parameters and a new plugin options page. A Documentation tab on the settings page contains all the information you need to understand and use the new version.
-* New: Three new field level data sources have been added for use in mapping rules, etc. They are `site_url`, `base_url` and `base_dir`. The last two give the location of the uploads directory.
-* New: For the `[mla_gallery]` shortcode, a new `size=icon_feature` parameter value will display item icons or the "Featured Image" associated with an item. This can be used to suppress the thumbnails and "PDF Thumbnails" that appear when `size=icon` is specified, but retain the explicitly assigned Featured Images.
-* New: For Advanced Custom Fields Pro "Gallery" Fields, restrictions such as minimum/maximum dimensions and sizes are now respected when adding items to the gallery.
-* New: For Custom Field or IPTC/EXIF mapping rules, a new "mla_purge_custom_field_values" filter lets you override the default "Purge Values" processing, and a new "mla_mapping_old_custom_value" filter lets you replace the current target value for "Existing Text" processing.
-* New: Added support for applying mapping rules to attachments created by "Postie" cron jobs.
-* Fix: Systematic review and update of all files for validating, sanitizing and escaping user data to reduce the risk of security exploits.
-* Fix: Allow IPTC and XMP metadata extraction from images that fail the WordPress `getimagesize( $path, $info )` logic.
-* Fix: For the `[mla_gallery]` shortcode, the default style and markup templates have been adjusted for greater compatibility with the styles and markup used in the WordPress `[gallery]` shortcode.
-* Fix: For the Media Manager Modal (popup) Window, changing term assignment(s) for Media Library items no longer changes the corresponding checkbox(s) in the underlying post/page.
-* Fix: For Media/Assistant submenu table filtering by a custom field value, dropdown setting is now retained and pagination controls have been repaired.
-* Fix: Deprecated reference to `postL10n.dateFormat` has been replaced with `wp.i18n.__`.
-* Fix: Handling of `[mla_gallery]` shortcodes with a blank but non-empty parameter string has been corrected.
+= 2.90 - 2.95 =
+* 2.95 - Support for Real Media Library plugin in Media/Assistant and `[mla_gallery]`, MLA Insert Fixit improvements, `[mla_gallery]` simple date parameters, "Mine" filter/view. Four enhancements in all, twelve fixes.
+* 2.94 - For [mla_gallery], icon handling, mla_viewer, and performance fixes. New and enhanced example plugins. Three enhancements in all, nine fixes.
+* 2.93 - Correct defects in handling array values, e.g., tax_input, in request: parameters and pagination controls. Example plugin enhancements. Two enhancements in all, three fixes.
+* 2.92 - Correct Media/Assistant Quick Edit error that deleted term assignments in the WordPress Categories taxonomy.
+* 2.91 - Correct PHP Fatal Error in Media Manager Search Media operations. Correct defect that caused Media Manager "Edit Gallery" operations to lose existing items. Two fixes in all.
+* 2.90 - WP 5.6 support, thorough review and update of all files for validating, sanitizing and escaping user data to reduce the risk of security exploits, two new example plugins. Seven enhancements in all, seven fixes.
 
 = 2.80 - 2.84 =
 * 2.84 - WP 5.5 support, new Always Use MLA MIME Type option, CSV Data Source example plugin, Support for PaidMembershipsPro, Simple Taxonomy Ordering, Simple Custom Post Order, Featured Image from URL plugins. Thirteen enhancements in all, twelve fixes.
 * 2.83 - Avoid "Fatal error:" with Admin Columns Pro version 5.1+. Fix Attachments area positioning in the Media Manager Modal (popup) Window. Two fixes in all.
-* 2.82 - Compatibility updates for WordPress 5.4. Security fixes to prevent three categories of attacks. New tools for "MLA Insert Fixit" and “WooCommerce Fixit Tools" example plugins. Fixes for `[mla_gallery]` and Media Manager Modal Window.  Seven enhancements in all, eleven fixes.
+* 2.82 - Compatibility updates for WordPress 5.4. Security fixes to prevent three categories of attacks. New tools for "MLA Insert Fixit" and "WooCommerce Fixit Tools" example plugins. Fixes for `[mla_gallery]` and Media Manager Modal Window.  Seven enhancements in all, eleven fixes.
 * 2.81 - Compatibility updates for WordPress 5.3. New "mso:" prefix gives access to the Document Properties embedded in Office Open XML file formats (e.g., docx, xlsx, pptx). Three enhancements, eight fixes.
 * 2.80 - A new "MLA Phoenix Media Rename Example" plugin supports the Phoenix Media Rename plugin. MLA Insert Fixit example plugin improvements, improved support for other plugins and themes. One enhancement, twelve fixes. 
 
@@ -355,8 +334,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.95 =
-Support for Real Media Library plugin in Media/Assistant and `[mla_gallery]`, MLA Insert Fixit improvements, `[mla_gallery]` simple date parameters, "Mine" filter/view. Four enhancements in all, twelve fixes.
+= 2.96 =
+WordPress 5.8 support! New [muie_archive_list] shortcode. CSV export item values. Support for Enhanced Media Library plugin. Donation links are back. Thirteen enhancements in all, fourteen fixes.
 
 == Other Notes ==
 

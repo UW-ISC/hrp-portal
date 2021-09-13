@@ -106,7 +106,7 @@ function wdtGetAjaxData() {
                     }
                 }
             }
-            $filterDefaultValue[] = $column->default_value;
+            $filterDefaultValue[] = apply_filters('wpdt_filter_filtering_default_value', $column->default_value , $column->orig_header, $column->table_id);
         }
         if (isset($advancedSettings->rangeSlider) && $advancedSettings->rangeSlider == 1 ) {
             $rangeSlider[] = $column->orig_header;
@@ -528,6 +528,8 @@ function wdtSaveTableCellsFrontend() {
 
     $cellsData = apply_filters('wpdatatables_excel_filter_frontend_formdata', $_POST['cells'], $tableId);
 
+    do_action('wpdatatables_excel_before_frontend_edit_row', $cellsData, $returnResult, $tableId);
+
     $tableData = WDTConfigController::loadTableFromDB($tableId);
     $mySqlTableName = $tableData->mysql_table_name;
 
@@ -588,8 +590,8 @@ function wdtSaveTableCellsFrontend() {
                             $cellData[$columnName],
                             '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><pre><button>'
                         );
-                        $cellData[$columnName] = WDTTools::prepareStringCell($cellData[$columnName], $tableData->connection);
                     }
+                    $cellData[$columnName] = WDTTools::prepareStringCell($cellData[$columnName], $tableData->connection);
                 }
 
                 if (empty($cellIdValue)) {
@@ -624,13 +626,14 @@ function wdtSaveTableCellsFrontend() {
                         $insert_column_names = array_keys($cellData);
                         $qColumnNames = $leftSysIdentifier . implode('`,`', $insert_column_names) . $rightSysIdentifier;
                         $qValues = array_values($cellData);
-                        $qValues = implode("', '", $qValues);
+                        $qValues = implode(",", $qValues);
 
                         $query = "INSERT INTO $mySqlTableName ($qColumnNames) VALUES ($qValues)";
                     } else {
                         $qSet = '';
                         foreach ($cellData as $cell_column_key => $cell_value) {
                             $qSet .= (!empty($qSet)) ? ', ' : '';
+                            $cell_value = $cell_value == "''" ? "NULL" : $cell_value;
                             $qSet .= $leftSysIdentifier
                                 . $cell_column_key
                                 . $rightSysIdentifier

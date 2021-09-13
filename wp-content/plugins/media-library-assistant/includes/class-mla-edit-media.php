@@ -91,7 +91,7 @@ class MLAEdit {
 			/*
 			 * If any of the mapping rule options is enabled, use the MLA filter so this
 			 * filter is called after mapping rules have run. If none are enabled,
-			 * use the WordPress filter directly.
+			 * use the WordPress filters directly.
 			 */
 			if ( ( 'checked' == MLACore::mla_get_option( 'enable_iptc_exif_mapping' ) ) ||
 				( 'checked' == MLACore::mla_get_option( 'enable_custom_field_mapping' ) ) ||
@@ -100,7 +100,7 @@ class MLAEdit {
 				// Fires after MLA mapping in wp_update_attachment_metadata() processing.
 				add_filter( 'mla_update_attachment_metadata_postfilter', 'MLAEdit::mla_update_attachment_metadata_postfilter', 10, 3 );
 			} else {
-				add_filter( 'wp_update_attachment_metadata', 'MLAEdit::mla_update_attachment_metadata_postfilter', 0x7FFFFFFF, 2 );
+				add_action( 'add_attachment', 'MLAEdit::mla_add_attachment_action', 0x7FFFFFFF, 1 );
 			}
 		}
 
@@ -491,9 +491,68 @@ class MLAEdit {
 		$page_values = apply_filters( 'mla_upload_bulk_edit_form_values', $page_values );
 		$page_template = apply_filters( 'mla_upload_bulk_edit_form_template', $page_template_array['page'] );
 		$parse_value = MLAData::mla_parse_template( $page_template, $page_values );
-//		echo wp_kses( apply_filters( 'mla_upload_bulk_edit_form_parse', $parse_value, $page_template, $page_values ), 'post' );
 		echo apply_filters( 'mla_upload_bulk_edit_form_parse', $parse_value, $page_template, $page_values ); // phpcs:ignore
 	}
+
+	/**
+	 * Attachment ID passed from mla_add_attachment_action to mla_update_attachment_metadata_filter
+	 *
+	 * Ensures that IPTC/EXIF and Custom Field mapping is only performed when the attachment is first
+	 * added to the Media Library.
+	 *
+	 * @since 2.96
+	 *
+	 * @var	integer
+	 */
+	private static $add_attachment_id = 0;
+
+	/**
+	 * Set $add_attachment_id to just-inserted attachment
+ 	 *
+	 * All of the actual processing is done later, in mla_update_attachment_metadata_filter.
+	 * This function is called only if Custom FIeld AND IPTC/EXIF mapping on new attachments are disabled
+	 *
+	 * The filter is applied by function wp_insert_post() in /wp-includes/post.php
+	 *
+	 * @since 2.96
+	 *
+	 * @param	integer	ID of just-inserted attachment
+	 *
+	 * @return	void
+	 */
+	public static function mla_add_attachment_action( $post_ID ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAEdit::mla_add_attachment_action( $post_ID )", MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		MLAEdit::$add_attachment_id = $post_ID;
+
+		add_filter( 'wp_generate_attachment_metadata', 'MLAEdit::mla_generate_attachment_metadata_filter', 0x7FFFFFFF, 2 );
+
+		do_action( 'mla_add_attachment', $post_ID );
+ 	} // mla_add_attachment_action
+
+	/**
+	 * This filter tests the MLAEdit::$add_attachment_id variable set by the mla_add_attachment_action
+	 * to ensure that mapping is only performed after the generation of all intermediate sizes is complete.
+	 *
+	 * The filter is applied by function wp_generate_attachment_metadata() in /wp-includes/image.php
+	 * This function is called only if Custom Field AND IPTC/EXIF mapping on new attachments are disabled
+	 *
+	 * @since 2.96
+	 *
+	 * @param	array	Attachment metadata for just-inserted attachment
+	 * @param	integer	ID of just-inserted attachment
+	 *
+	 * @return	array	Updated attachment metadata
+	 */
+	public static function mla_generate_attachment_metadata_filter( $data, $post_id ) {
+		$add_attachment_id = MLAEdit::$add_attachment_id;
+		if ( $add_attachment_id === $post_id ) {
+			add_filter( 'wp_update_attachment_metadata', 'MLAEdit::mla_update_attachment_metadata_postfilter', 0x7FFFFFFF, 2 );
+			remove_filter( 'mla_generate_attachment_metadata_filter', 'MLAEdit::mla_generate_attachment_metadata_filter', 0x7FFFFFFF );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAEdit::mla_generate_attachment_metadata_filter( {$post_id}, {$add_attachment_id} ) \$data = " . var_export( $data, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		return $data;
+ 	} // mla_generate_attachment_metadata_filter
 
 	/**
 	 * Apply Media/Add New bulk edit area updates, if any
@@ -512,6 +571,13 @@ class MLAEdit {
 	 * @return	array	updated attachment metadata
 	 */
 	public static function mla_update_attachment_metadata_postfilter( $data, $post_id, $options = array( 'is_upload' => true ) ) {
+		// If mapping on upload is disabled, reset the alternative trigger
+		if ( MLAEdit::$add_attachment_id === $post_id ) {
+			// Only do this once per attachment
+			MLAEdit::$add_attachment_id = 0;
+			remove_filter( 'mla_update_attachment_metadata_filter', 'MLAEdit::mla_update_attachment_metadata_filter', 0x7FFFFFFF );
+		}
+
 		// Check for active debug setting
 		if ( ( MLACore::$mla_debug_level & 1 ) && ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_THUMBNAIL ) ) {
 			$post = get_post( $post_id );

@@ -295,13 +295,15 @@ var wdtChartColumnsData = {};
                 if ($('div.chosen_columns div.chart-column-block.string,' +
                     'div.chosen_columns div.chart-column-block.date,' +
                     'div.chosen_columns div.chart-column-block.datetime,' +
-                    'div.chosen_columns div.chart-column-block.time').length
+                    'div.chosen_columns div.chart-column-block.time,' +
+                    'div.chosen_columns div.chart-column-block.link').length
                     && (!$('div.chosen_columns div.chart-column-block:eq(0)').hasClass('float')
                         || !$('div.chosen_columns div.chart-column-block:eq(0)').hasClass('int'))) {
                     $('div.chosen_columns div.chart-column-block.string,' +
                         'div.chosen_columns div.chart-column-block.date,' +
                         'div.chosen_columns div.chart-column-block.datetime,' +
-                        'div.chosen_columns div.chart-column-block.time')
+                        'div.chosen_columns div.chart-column-block.time,' +
+                        'div.chosen_columns div.chart-column-block.link')
                         .eq(0)
                         .prependTo('div.wdt-chart-wizard-chosen-columns-container')
                 }
@@ -580,7 +582,7 @@ var wdtChartColumnsData = {};
                                 renderChart(true);
                             });
 
-                        nextStepButton.show().addClass('wdt-save-chart').html('<i class="wpdt-icon-save"></i>Save chart')
+                        nextStepButton.show().addClass('wdt-save-chart').html('<i class="wpdt-icon-save"></i>' + wpdatatablesEditStrings.saveChart)
                         $('.wdt-preload-layer').animateFadeOut();
                     }
                 });

@@ -171,7 +171,7 @@ var singleClick = false;
                                 var foreignKeyRule = $inputElement.hasClass('wdt-foreign-key-select') ? 'wdt-foreign-key-select ' : '';
 
                                 // Recreate the selectbox element
-                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + $inputElement.data('key') + '" data-input_type="' + inputElementType + '" data-key="' + $inputElement.data('key') + '" class="form-control editDialogInput selectpicker ' + mandatory + 'wdt-possible-values-ajax ' + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + $inputElement.data('column_header') + '"></select></div>');
+                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + $inputElement.data('key') + '" title="' + wpdatatables_frontend_strings.nothingSelected + '" data-input_type="' + inputElementType + '" data-key="' + $inputElement.data('key') + '" class="form-control editDialogInput selectpicker ' + mandatory + 'wdt-possible-values-ajax ' + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + $inputElement.data('column_header') + '"></select></div>');
                                 if (inputElementType === 'multi-selectbox')
                                     $selectpickerBlock.find('select').attr('multiple', 'multiple');
 
@@ -442,7 +442,7 @@ var singleClick = false;
                                 wdtNotify(wpdatatables_edit_strings.error, returnData.error, 'danger');
                             }
                         },
-                        error: function () {
+                        error: function (xhr, response) {
                             $(tableDescription.selector + '_edit_dialog').closest('.modal-dialog').find('.wdt-preload-layer').animateFadeOut();
                             wdtNotify(wpdatatables_edit_strings.error, wpdatatables_frontend_strings.databaseInsertError, 'danger');
                         }
@@ -1019,7 +1019,8 @@ var singleClick = false;
             if (tableDescription.advancedFilterEnabled) {
                 $('#' + tableDescription.tableId).dataTable().columnFilter(tableDescription.advancedFilterOptions);
                 for (var i in wpDataTablesHooks.onRenderFilter) {
-                    wpDataTablesHooks.onRenderFilter[i](tableDescription);
+                    if (!isNaN(i))
+                        wpDataTablesHooks.onRenderFilter[i](tableDescription);
                 }
             }
 
@@ -1341,9 +1342,13 @@ var singleClick = false;
                             modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
                             modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
                         }
-
+                        // Reset values in edit modal
                         $('#wdt-frontend-modal .editDialogInput').val('').css('border', '');
                         $('#wdt-frontend-modal tr.idRow .editDialogInput').val('0');
+                        $('#wdt-frontend-modal .fileinput').removeClass('fileinput-exists').addClass('fileinput-new');
+                        $('#wdt-frontend-modal .fileinput').find('div.fileinput-exists').removeClass('fileinput-exists').addClass('fileinput-new');
+                        $('#wdt-frontend-modal .fileinput').find('.fileinput-filename').text('');
+                        $('#wdt-frontend-modal .fileinput').find('.fileinput-preview').html('');
 
                         $('#wdt-frontend-modal .editDialogInput').each(function (index) {
                             if ($(this).data('input_type') == 'mce-editor') {
@@ -1566,6 +1571,7 @@ var singleClick = false;
              */
             if(tableDescription.masterDetail !== undefined && tableDescription.masterDetail){
                 for (var i in wpDataTablesHooks.onRenderDetails) {
+                    if (!isNaN(i))
                     wpDataTablesHooks.onRenderDetails[i](tableDescription);
                 }
             }
@@ -1780,6 +1786,13 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
     } else if (params.columnType == 'time') {
         cellVal = moment(getPurifiedValue(element, responsive), params.momentTimeFormat).toDate();
         ruleVal = moment(conditionalFormattingRules.cellVal, params.momentTimeFormat).toDate();
+    } else if (params.columnType == 'link') {
+        if (responsive) {
+            cellVal = element.children('.columnValue').html();
+        } else {
+            cellVal = element.clone().html();
+        }
+        ruleVal = conditionalFormattingRules.cellVal;
     } else {
         // Process string comparison
         cellVal = getPurifiedValue(element, responsive);

@@ -136,6 +136,7 @@ var wpDataTablesGoogleChart = function(){
             if( typeof google.visualization !== 'undefined' && typeof google.visualization.DataTable !== 'undefined') {
                 this.googleDataTable = new google.visualization.DataTable();
                 for (var i in this.columns) {
+                    if (!isNaN(i))
                     this.googleDataTable.addColumn(this.columns[i]);
                 }
                 this.detectDates();
@@ -212,6 +213,7 @@ var wpDataTablesGoogleChart = function(){
             if( typeof google.visualization !== 'undefined' && typeof google.visualization.DataTable !== 'undefined'  && this.chart != null  ){
                 this.googleDataTable = new google.visualization.DataTable();
                 for( var i in this.columns ){
+                    if (!isNaN(i))
                     this.googleDataTable.addColumn( this.columns[i] );
                 }
                 this.detectDates();

@@ -274,6 +274,9 @@ function wdtActivationCreateTables() {
     if (get_option('wdtRatingDiv') === false) {
         update_option('wdtRatingDiv', 'no' );
     }
+    if (get_option('wdtShowForminatorNotice') === false) {
+        update_option('wdtShowForminatorNotice', 'yes' );
+    }
     if (get_option('wdtMDNewsDiv') === false) {
         update_option('wdtMDNewsDiv', 'no' );
     }
@@ -334,6 +337,7 @@ function wdtUninstallDelete() {
         delete_option('wdtAvgFunctionsLabel');
         delete_option('wdtInstallDate');
         delete_option('wdtRatingDiv');
+        delete_option('wdtShowForminatorNotice');
         delete_option('wdtMDNewsDiv');
         delete_option('wdtTempFutureDate');
         delete_option('wdtSimpleTableAlert');
@@ -450,6 +454,14 @@ function wdtAdminRatingMessages() {
              <p class="wpdt-md-news">NEWS! wpDataTables just launched a new addon - Master-Detail Tables. You can find it in the <a href="'. $urlAddonsPage . '">Addons page</a>, read more about it in our docs on this <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/">link</a>.</p>
          </div>';
     }
+
+    if( is_admin() && strpos($wpdtPage,'wpdatatables') !== false &&
+        get_option( 'wdtShowForminatorNotice' ) == "yes" && defined( 'FORMINATOR_PLUGIN_BASENAME' )
+        && !defined('WDT_FRF_ROOT_PATH')) {
+        echo '<div class="notice notice-info is-dismissible wpdt-forminator-news-notice">
+             <p class="wpdt-forminator-news"><strong style="color: #ff8c00">NEWS!</strong> wpDataTables just launched a new <strong style="color: #ff8c00">FREE</strong> addon - <strong style="color: #ff8c00">wpDataTables integration for Forminator Forms</strong>. You can download it and read more about it on wp.org on this <a class="wdt-forminator-link" href="https://wordpress.org/plugins/wpdatatables-forminator/" style="color: #ff8c00" target="_blank">link</a>.</p>
+         </div>';
+    }
 }
 
 add_action( 'admin_notices', 'wdtAdminRatingMessages' );
@@ -464,6 +476,17 @@ function wdtHideRating() {
 }
 
 add_action( 'wp_ajax_wdtHideRating', 'wdtHideRating' );
+
+/**
+ * Remove Forminator notice message
+ */
+function wdtRemoveForminatorNotice() {
+    update_option( 'wdtShowForminatorNotice', 'no' );
+    echo json_encode( array("success") );
+    exit;
+}
+
+add_action( 'wp_ajax_wdt_remove_forminator_notice', 'wdtRemoveForminatorNotice' );
 
 /**
  * Remove Simple Table alert message
@@ -745,11 +768,11 @@ function wdtFuncsShortcodeHandler($atts, $content = null, $shortcode = null) {
 
 }
 
-function wdtRenderScriptStyleBlock($connection) {
+function wdtRenderScriptStyleBlock($tableID) {
     $customJs = get_option('wdtCustomJs');
     $scriptBlockHtml = '';
     $styleBlockHtml = '';
-    $wpDataTable = new WPDataTable($connection);
+    $wpDataTable = WDTConfigController::loadTableFromDB($tableID,false);
 
     if ($customJs) {
         $scriptBlockHtml .= '<script type="text/javascript">' . stripslashes_deep(html_entity_decode($customJs)) . '</script>';
@@ -764,7 +787,7 @@ function wdtRenderScriptStyleBlock($connection) {
         include WDT_TEMPLATE_PATH . 'frontend/style_block.inc.php';
         $styleBlockHtml = ob_get_contents();
         ob_end_clean();
-        $styleBlockHtml = apply_filters('wpdatatables_filter_style_block', $styleBlockHtml, $wpDataTable->getWpId());
+        $styleBlockHtml = apply_filters('wpdatatables_filter_style_block', $styleBlockHtml, $wpDataTable->id);
     }
 
     $returnHtml .= $styleBlockHtml;
@@ -1084,7 +1107,7 @@ function welcome_page_activation_redirect( $plugin ) {
     $filePathArr = explode('/', $filePath);
     $wdtPluginSlug = $filePathArr[0] . '/wpdatatables.php';
 
-    if( $plugin == plugin_basename( $wdtPluginSlug ) ) {
+    if( $plugin == plugin_basename( $wdtPluginSlug ) && (isset($_GET['action']) && $_GET['action'] == 'activate')) {
         exit( wp_redirect( admin_url( 'admin.php?page=wpdatatables-welcome-page' ) ) );
     }
 }

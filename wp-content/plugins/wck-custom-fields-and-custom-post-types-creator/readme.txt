@@ -3,8 +3,8 @@ Contributors: cozmoslabs, reflectionmedia, madalin.ungureanu, sareiodata, adispi
 Donate link: http://www.cozmoslabs.com/wordpress-creation-kit/
 Tags: custom fields, custom field, wordpress custom fields, custom post type, custom post types, post types, repeater fields, meta box, metabox, custom taxonomy, custom fields creator, post meta
 Requires at least: 3.1
-Tested up to: 5.3.2
-Stable tag: 2.2.5
+Tested up to: 5.7.2
+Stable tag: 2.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -13,11 +13,9 @@ A must have tool for creating custom fields, custom post types and taxonomies, f
 
 == Description ==
 
-**Like this plugin?** Consider leaving a [5 star review](https://wordpress.org/support/view/plugin-reviews/wck-custom-fields-and-custom-post-types-creator?filter=5).
+**[WordPress Creation Kit](http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wp.org&utm_medium=pb-description-page&utm_campaign=WCKFree)** consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 
-**WordPress Creation Kit** consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
-
-**WCK Custom Fields Creator** offers an UI for setting up custom meta boxes with custom fields for your posts, pages or custom post types. Uses standard custom fields to store data.
+**WCK Custom Fields Creator** offers an UI for setting up custom meta boxes with custom fields for your posts, pages or custom post types. Uses standard custom fields to store data. You can [show custom fields](https://www.cozmoslabs.com/25322-show-custom-fields-wordpress/) using code or with the Swift Templates module.
 
 **WCK Custom Post Type Creator** facilitates creating custom post types by providing an UI for most of the arguments of register_post_type() function.
 
@@ -137,6 +135,24 @@ Creating a taxonomy generally automatically creates a special query variable usi
 10. Taxonomy listing
 
 == Changelog ==
+= 2.2.9 =
+* Security fixes and improvements
+
+= 2.2.8 =
+* Security fixes and improvements
+
+= 2.2.7 =
+* Updated CKEditor to version 4.16.1
+
+= 2.2.6 =
+* Small changes 
+
+= 2.2.5 =
+* Fixed an incompatibility with Profile Builder
+* Added an icon on the update page
+* Small css modification
+* Updated icons in plugin
+
 = 2.2.5 =
 * Compatibility with php 7.2
 

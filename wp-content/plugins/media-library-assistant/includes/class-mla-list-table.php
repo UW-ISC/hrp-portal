@@ -662,10 +662,12 @@ class MLA_List_Table extends WP_List_Table {
 	 * @return	string	HTML markup to be placed inside the column
 	 */
 	function column_cb( $item ) {
-		return sprintf( '<input type="checkbox" id="cb-select-%2$s" name="cb_%1$s[]" value="%2$s" />',
-		/*%1$s*/ $this->_args['singular'], //Let's simply repurpose the table's singular label ("attachment")
-		/*%2$s*/ $item->ID //The value of the checkbox should be the object's id
-		);
+		if ( current_user_can( 'edit_post', $item->ID ) ) {
+			return sprintf( '<input type="checkbox" id="cb-select-%2$s" name="cb_%1$s[]" value="%2$s" />',
+			/*%1$s*/ $this->_args['singular'], //Let's simply repurpose the table's singular label ("attachment")
+			/*%2$s*/ $item->ID //The value of the checkbox should be the object's id
+			);
+		}
 	}
 
 	/**
@@ -683,9 +685,7 @@ class MLA_List_Table extends WP_List_Table {
 			return $thumb;
 		}
 
-		/*
-		 * Use the WordPress Edit Media screen
-		 */
+		// Use the WordPress Edit Media screen
 		$view_args = self::mla_submenu_arguments();
 		if ( isset( $view_args['lang'] ) ) {
 			$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit&lang=' . $view_args['lang'];
@@ -810,9 +810,7 @@ class MLA_List_Table extends WP_List_Table {
 					}
 			} else {
 				if ( current_user_can( 'edit_post', $item->ID ) ) {
-					/*
-					 * Use the WordPress Edit Media screen
-					 */
+					// Use the WordPress Edit Media screen
 					if ( isset( $view_args['lang'] ) ) {
 						$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit&lang=' . $view_args['lang'];
 					} else {
@@ -933,7 +931,6 @@ class MLA_List_Table extends WP_List_Table {
 		$inline_data .= '	<div class="post_excerpt">' . esc_attr( $item->post_excerpt ) . "</div>\r\n";
 		$inline_data .= '	<div class="post_content">' . esc_attr( $item->post_content ) . "</div>\r\n";
 
-//		if ( !empty( $item->mla_wp_attachment_metadata ) ) {
 		if ( ( 'image/' === substr( $item->post_mime_type, 0, 6 ) )
 		    || ( 'application/' === substr( $item->post_mime_type, 0, 12 ) ) ) {
 			$inline_data .= '	<div class="image_alt">';
@@ -1833,7 +1830,7 @@ class MLA_List_Table extends WP_List_Table {
 
 				return false;
 			case 'attached':
-				if ( $attached_items = ( array_sum( $posts_per_type ) - $posts_per_type['trash'] ) - $detached_items ) {
+				if ( $attached_items = ( array_sum( $posts_per_type ) - ( $posts_per_type['trash'] + $posts_per_type['mine'] ) ) - $detached_items ) {
 					$value = $default_types['attached'];
 					$singular = sprintf('%s <span class="count">(%%s)</span>', $value['singular'] );
 					$plural = sprintf('%s <span class="count">(%%s)</span>', $value['plural'] );

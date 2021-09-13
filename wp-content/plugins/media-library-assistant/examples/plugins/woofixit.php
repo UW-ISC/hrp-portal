@@ -91,8 +91,12 @@
  * opened on 1/19/2020 by "kuassar".
  * https://wordpress.org/support/topic/image-keywords-tags-into-a-product-tags/
  *
+ * Enhanced for support topic "Adding images to product"
+ * opened on 2/25/2021 by "fireskyresale".
+ * https://wordpress.org/support/topic/adding-images-to-product/
+ *
  * @package WooCommerce Fixit
- * @version 2.09
+ * @version 2.10
  */
 
 /*
@@ -100,10 +104,10 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.09
+Version: 2.10
 Author URI: http://davidlingren.com/
 
-Copyright 2014-2019 David Lingren
+Copyright 2014-2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -133,7 +137,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.09';
+	const CURRENT_VERSION = '2.10';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -201,6 +205,82 @@ class Woo_Fixit {
 	 * @var	string
 	 */
 	private static $check_unique_slug_attr = ' ';
+
+	/**
+	 * Add Product Image to Product Gallery
+	 *
+	 * @since 2.10
+	 *
+	 * @var	boolean
+	 */
+	private static $add_image_to_gallery = false;
+	const ADD_IMAGE_TO_GALLERY = 'add-image-to-gallery';
+
+	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.10
+	 *
+	 * @var	string
+	 */
+	private static $add_image_to_gallery_attr = ' ';
+
+	/**
+	 * Use WordPress unique slug function
+	 *
+	 * @since 2.10
+	 *
+	 * @var	boolean
+	 */
+	private static $delete_no_children = false;
+	const DELETE_NO_CHILDREN = 'delete-no-children';
+
+	/**
+	 * Use WordPress unique slug checkbox attribute
+	 *
+	 * @since 2.10
+	 *
+	 * @var	string
+	 */
+	private static $delete_no_children_attr = ' ';
+
+	/**
+	 * Populate Product Image and Gallery with children from MLA Bulk Edit on Upload
+	 *
+	 * @since 2.10
+	 *
+	 * @var	boolean
+	 */
+	const POPULATE_PI_PG_ON_UPLOAD = 'populate-pi-pg-on-upload';
+	const DEFAULT_POPULATE_PI_PG_ON_UPLOAD = false;
+
+	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.10
+	 *
+	 * @var	string
+	 */
+	private static $populate_pi_pg_on_upload_attr = ' ';
+
+	/**
+	 * Populate Product Image and Gallery with children from WP MMMW
+	 *
+	 * @since 2.10
+	 *
+	 * @var	boolean
+	 */
+	const POPULATE_PI_PG_ON_MMMW = 'populate-pi-pg-on-mmmw';
+	const DEFAULT_POPULATE_PI_PG_ON_MMMW = false;
+
+	/**
+	 * Append Item ID checkbox attribute
+	 *
+	 * @since 2.10
+	 *
+	 * @var	string
+	 */
+	private static $populate_pi_pg_on_mmmw_attr = ' ';
 
 	/**
 	 * Content Template for Product Image/Product Gallery Images
@@ -398,6 +478,8 @@ class Woo_Fixit {
 	 * @var	array
 	 */
 	private static $default_settings = array (
+						self::POPULATE_PI_PG_ON_UPLOAD => self::DEFAULT_POPULATE_PI_PG_ON_UPLOAD,
+						self::POPULATE_PI_PG_ON_MMMW => self::DEFAULT_POPULATE_PI_PG_ON_MMMW,
 						self::NAME_TEMPLATE => self::DEFAULT_NAME_TEMPLATE,
 						self::DESCRIPTION_TEMPLATE => self::DEFAULT_DESCRIPTION_TEMPLATE,
 						self::SHORT_DESCRIPTION_TEMPLATE => self::DEFAULT_SHORT_DESCRIPTION_TEMPLATE,
@@ -417,17 +499,30 @@ class Woo_Fixit {
 		$settings = get_option( self::SLUG_PREFIX . 'settings' );
 		if ( is_array( $settings ) ) {
 			self::$settings = $settings;
-			// Adapt old settings from version 2.08
+			// Adapt settings added in version 2.09
 			if ( !isset( self::$settings[self::TAGS_TEMPLATE] ) ) {
 				self::$settings[self::TAGS_TEMPLATE] = self::$default_settings[self::TAGS_TEMPLATE];
 			}
-			
+
+			// Adapt settings added in version 2.10
+			if ( !isset( self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ) ) {
+				self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] = self::$default_settings[self::POPULATE_PI_PG_ON_UPLOAD];
+			}
+
+			if ( !isset( self::$settings[self::POPULATE_PI_PG_ON_MMMW] ) ) {
+				self::$settings[self::POPULATE_PI_PG_ON_MMMW] = self::$default_settings[self::POPULATE_PI_PG_ON_MMMW];
+			}
+
+			self::$populate_pi_pg_on_upload_attr = self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ? ' checked="checked" ' : ' ';
+			self::$populate_pi_pg_on_mmmw_attr = self::$settings[self::POPULATE_PI_PG_ON_MMMW] ? ' checked="checked" ' : ' ';
 			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
 			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
 
 			return 'Settings loaded from database.';
 		} else {
 			self::$settings = self::$default_settings;
+			self::$populate_pi_pg_on_upload_attr = self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ? ' checked="checked" ' : ' ';
+			self::$populate_pi_pg_on_mmmw_attr = self::$settings[self::POPULATE_PI_PG_ON_MMMW] ? ' checked="checked" ' : ' ';
 			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
 			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
 
@@ -448,6 +543,9 @@ class Woo_Fixit {
 		// Load old settings from the database or defaults
 		self::_load_product_templates();
 
+		$new_settings[self::POPULATE_PI_PG_ON_UPLOAD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_UPLOAD ] ) ? true : false;
+		$new_settings[self::POPULATE_PI_PG_ON_MMMW] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_MMMW ] ) ? true : false;
+
 		$new_settings[self::NAME_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) );
 		$new_settings[self::DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) );
 		$new_settings[self::SHORT_DESCRIPTION_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) );
@@ -456,7 +554,7 @@ class Woo_Fixit {
 		$new_settings[self::SKU_TEMPLATE] = trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) );
 		$new_settings[self::POPULATE_ON_ADD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_ADD ] ) ? true : false;
 		$new_settings[self::POPULATE_ON_UPDATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_UPDATE ] ) ? true : false;
-		
+
 		if ( $new_settings === self::$settings ) {
 			return "Settings unchanged.\n";
 		}
@@ -464,6 +562,8 @@ class Woo_Fixit {
 		$success = update_option( self::SLUG_PREFIX . 'settings', $new_settings, false );
 		if ( $success )  {
 			self::$settings = $new_settings;
+			self::$populate_pi_pg_on_upload_attr = self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ? ' checked="checked" ' : ' ';
+			self::$populate_pi_pg_on_mmmw_attr = self::$settings[self::POPULATE_PI_PG_ON_MMMW] ? ' checked="checked" ' : ' ';
 			self::$populate_on_add_attr = self::$settings[self::POPULATE_ON_ADD] ? ' checked="checked" ' : ' ';
 			self::$populate_on_update_attr = self::$settings[self::POPULATE_ON_UPDATE] ? ' checked="checked" ' : ' ';
 			return "Settings have been updated.\n";
@@ -485,7 +585,7 @@ class Woo_Fixit {
 
 		return "Settings removed from database and reset to default values.\n";
 	} // _delete_settings
-		
+
 	/**
 	 * Initialization function, similar to __construct()
 	 *
@@ -503,8 +603,15 @@ class Woo_Fixit {
 
 		self::_load_product_templates();
 //error_log( __LINE__ . " Woo_Fixit::initialize settings = " . var_export( self::$settings, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::initialize populate_pi_pg_on_upload_attr = " . var_export( self::$populate_pi_pg_on_upload_attr, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::initialize populate_pi_pg_on_mmmw_attr = " . var_export( self::$populate_pi_pg_on_mmmw_attr, true ), 0 );
 //error_log( __LINE__ . " Woo_Fixit::initialize populate_on_add_attr = " . var_export( self::$populate_on_add_attr, true ), 0 );
 //error_log( __LINE__ . " Woo_Fixit::initialize populate_on_update_attr = " . var_export( self::$populate_on_update_attr, true ), 0 );
+
+		if ( self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] || self::$settings[self::POPULATE_PI_PG_ON_MMMW] ) {
+			// Defined in class-mla-options.php
+			add_action( 'add_attachment', 'Woo_Fixit::add_attachment', 10, 1 );
+		}
 
 		if ( self::$settings[self::POPULATE_ON_ADD] ) {
 			// Defined in /wp-includes/meta.php
@@ -724,6 +831,143 @@ class Woo_Fixit {
 	} // mla_expand_custom_prefix
 
 	/**
+	 * Attachment ID passed from add_attachment_action to mla_list_table_end_bulk_action
+	 *
+	 * Ensures that product population is only performed when the attachment is first
+	 * added to the Media Library.
+	 *
+	 * @since 2.10
+	 *
+	 * @var	integer
+	 */
+	private static $add_attachment_id = 0;
+
+	/**
+	 * After a new attachment is added, arm the filters to populate Priduct Image and Gallery.
+	 *
+	 * @since 2.10
+	 *
+	 * @param int    $object_id  Post ID.
+	 */
+	public static function add_attachment( $object_id ) {
+//error_log( __LINE__ . " Woo_Fixit::add_attachment( $object_id )", 0 );
+		self::$add_attachment_id = $object_id;
+
+		// If MLA's Bulk Edit on Upload isn't present, use the WP filters instead
+		if ( empty( $_REQUEST['mlaAddNewBulkEditFormString'] ) ) {
+			if ( self::$settings[self::POPULATE_PI_PG_ON_MMMW] ) {
+				add_filter( 'wp_generate_attachment_metadata', 'Woo_Fixit::generate_attachment_metadata', 0x7FFFFFFF, 2 );
+			}
+		} else {
+			if ( self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ) {
+				add_filter( 'mla_list_table_end_bulk_action', 'Woo_Fixit::mla_list_table_end_bulk_action', 10, 2 );
+			}
+		}
+	}
+
+	/**
+	 * This filter tests the $add_attachment_id variable set by the add_attachment_action
+	 * to ensure that population is only performed once, after the generation of all intermediate sizes is complete.
+	 *
+	 * The filter is applied by function wp_generate_attachment_metadata() in /wp-includes/image.php
+	 * This function is called only Bulk Edit on Upload is not in process.
+	 *
+	 * @since 2.96
+	 *
+	 * @param	array	Attachment metadata for just-inserted attachment
+	 * @param	integer	ID of just-inserted attachment
+	 *
+	 * @return	array	Updated attachment metadata
+	 */
+	public static function generate_attachment_metadata( $data, $post_id ) {
+		$add_attachment_id = self::$add_attachment_id;
+//error_log( __LINE__ . " Woo_Fixit::generate_attachment_metadata( {$post_id}, {$add_attachment_id} ) \$data = " . var_export( $data, true ), 0 );
+		if ( $add_attachment_id === $post_id ) {
+			add_filter( 'wp_update_attachment_metadata', 'Woo_Fixit::update_attachment_metadata', 0x7FFFFFFF, 2 );
+			remove_filter( 'wp_generate_attachment_metadata', 'Woo_Fixit::generate_attachment_metadata', 0x7FFFFFFF );
+		}
+
+//error_log( __LINE__ . " Woo_Fixit::generate_attachment_metadata( {$post_id}, {$add_attachment_id} )", 0 );
+		return $data;
+ 	} // generate_attachment_metadata
+
+	/**
+	 * This filter tests the MLAEdit::$add_attachment_id variable set by the mla_add_attachment_action
+	 * to ensure that mapping is only performed after the generation of all intermediate sizes is complete.
+	 *
+	 * The filter is applied by function wp_generate_attachment_metadata() in /wp-includes/image.php
+	 * This function is called only if Custom Field AND IPTC/EXIF mapping on new attachments are disabled
+	 *
+	 * @since 2.96
+	 *
+	 * @param	array	Attachment metadata for just-inserted attachment
+	 * @param	integer	ID of just-inserted attachment
+	 *
+	 * @return	array	Updated attachment metadata
+	 */
+	public static function update_attachment_metadata( $data, $post_id ) {
+		$add_attachment_id = self::$add_attachment_id;
+//error_log( __LINE__ . " Woo_Fixit::update_attachment_metadata( {$post_id}, {$add_attachment_id} ) \$data = " . var_export( $data, true ), 0 );
+		if ( $add_attachment_id === $post_id ) {
+			// Only do this once per attachment
+			self::mla_list_table_end_bulk_action( NULL, 'edit' );
+
+			self::$add_attachment_id = 0;
+			remove_filter( 'wp_update_attachment_metadata', 'Woo_Fixit::update_attachment_metadata', 0x7FFFFFFF );
+		}
+
+//error_log( __LINE__ . " Woo_Fixit::update_attachment_metadata( {$post_id}, {$add_attachment_id} )", 0 );
+		return $data;
+ 	} // mla_generate_attachment_metadata_filter
+
+	/**
+	 * After a new attachment is added, populate the Product Image and Product Gallery.
+	 *
+	 * @since 2.10
+	 *
+	 * @param string    $content      Default message and page content.
+	 * @param string    $bulk_action  Should be "edit".
+	 */
+	public static function mla_list_table_end_bulk_action( $content, $bulk_action ) {
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action )", 0 );
+
+		if (  0 < self::$add_attachment_id ) {
+			$attachment = get_post( self::$add_attachment_id );
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) attachment = " . var_export( $attachment, true ), 0 );
+			if ( isset( $attachment->post_parent ) && ( 0 < $attachment->post_parent ) ) {
+				if ( 0 === strpos( $attachment->post_mime_type, 'image' ) ) {
+					$parent = get_post( $attachment->post_parent );				}
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) parent = " . var_export( $parent, true ), 0 );
+					if ( isset( $parent->post_type ) && ( 'product' === $parent->post_type ) ) {
+						$product_id = $parent->ID;
+						$thumbnail = get_post_meta( $product_id, '_thumbnail_id', true );
+						$gallery = get_post_meta( $product_id, '_product_image_gallery', true );
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) thumbnail = " . var_export( $thumbnail, true ), 0 );
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) gallery = " . var_export( $gallery, true ), 0 );
+
+					// First new item becomes the thumbnail, if needed
+					if ( empty( $thumbnail ) ) {
+						$result = update_post_meta( $product_id, '_thumbnail_id', self::$add_attachment_id );
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) _thumbnail_id result = " . var_export( $result, true ), 0 );
+						$thumbnail = self::$add_attachment_id;
+					}
+
+					// Add the new item at the end of the gallery
+					if ( ( self::$add_attachment_id !== $thumbnail ) || self::$add_image_to_gallery ) {
+						$gallery .= empty( $gallery ) ? self::$add_attachment_id : ',' . self::$add_attachment_id;
+						$result = update_post_meta( $product_id, '_product_image_gallery', $gallery );
+//error_log( __LINE__ . " Woo_Fixit::mla_list_table_end_bulk_action( $bulk_action ) _product_image_gallery result = " . var_export( $result, true ), 0 );
+					}
+
+					} // parent is product
+			} // attachment is image
+		} // adding an attachment
+		
+		remove_filter( 'mla_list_table_end_bulk_action', 'Woo_Fixit::mla_list_table_end_bulk_action', 10 );
+		return $content;
+	}
+
+	/**
 	 * After adding a post's metadata, check for Product Image add.
 	 *
 	 * @since 2.06
@@ -737,7 +981,7 @@ class Woo_Fixit {
 	 */
 	public static function added_post_meta( $meta_id, $object_id, $meta_key, $meta_value ) {
 		global $post;
-		
+
 //error_log( __LINE__ . " Woo_Fixit::added_post_meta( $meta_id, $object_id, $meta_key ) meta_value = " . var_export( $meta_value, true ), 0 );
 		if ( '_thumbnail_id' === $meta_key ) {
 //error_log( __LINE__ . " Woo_Fixit::added_post_meta( $meta_id, $object_id, $meta_key ) post = " . var_export( $post, true ), 0 );
@@ -763,7 +1007,7 @@ class Woo_Fixit {
 	 */
 	public static function updated_postmeta( $meta_id, $object_id, $meta_key, $meta_value ) {
 		global $post;
-		
+
 //error_log( __LINE__ . " Woo_Fixit::updated_postmeta( $meta_id, $object_id, $meta_key ) meta_value = " . var_export( $meta_value, true ), 0 );
 		if ( '_thumbnail_id' === $meta_key ) {
 //error_log( __LINE__ . " Woo_Fixit::updated_postmeta( $meta_id, $object_id, $meta_key ) post = " . var_export( $post, true ), 0 );
@@ -882,9 +1126,35 @@ class Woo_Fixit {
 				'comment' => 'Restore Product/Featured Image to the Product Gallery.' ),
 			'Reverse Gallery' => array( 'handler' => '_reverse_gallery',
 				'comment' => 'Reverse the image order in the Product Gallery.' ),
+			'c5a' => array( 'handler' => '', 'comment' => '<hr>' ),
+			'c5b' => array( 'handler' => '', 'comment' => 'Options for the &ldquo;... from Children&rdquo; tools:' ),
+			't0401' => array( 'open' => '<table><tr>' ),
+			't0402' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::ADD_IMAGE_TO_GALLERY . '" type="checkbox"' . self::$add_image_to_gallery_attr . 'value="' . self::ADD_IMAGE_TO_GALLERY . '"></td>' ),
+			't0403' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Add Product Image to Gallery</td>' ),
+			't0404' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::DELETE_NO_CHILDREN . '" type="checkbox"' . self::$delete_no_children_attr . 'value="' . self::DELETE_NO_CHILDREN . '"></td>' ),
+			't0405' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Delete P.I. and P.G. if no children</td>' ),
+			't0406' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
+			't0407' => array( 'continue' => '</tr><tr>' ),
+			't0408' => array( 'continue' => '<td>&nbsp;</td><td colspan="5">Check Add Product Image to Gallery to add the Product Image to the Product Gallery.<br>For the Replace tool, check Delete P.I. and P.G. ... to delete the Product Image and Product Gallery<br>if there are no attached children.</td>' ),
+			't0409' => array( 'close' => '</tr></table>&nbsp;<br>' ),
+			'Fill from Children' => array( 'handler' => '_fill_from_children',
+				'comment' => 'Add product\'s children to the Product/Featured Image and Product Gallery.' ),
+			'Replace from Children' => array( 'handler' => '_replace_from_children',
+				'comment' => 'Replace Product/Featured Image and Product Gallery from product\'s children.' ),
+			'c5c' => array( 'handler' => '', 'comment' => '<hr>' ),
+			't0501' => array( 'open' => '<table><tr>' ),
+			't0502' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_UPLOAD . '" type="checkbox"' . self::$populate_pi_pg_on_upload_attr . 'value="' . self::POPULATE_PI_PG_ON_UPLOAD . '"></td>' ),
+			't0503' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Populate P.I. and P.G. with children<br>from MLA&rsquo;s Bulk Edit on Upload</td>' ),
+			't0504' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_MMMW . '" type="checkbox"' . self::$populate_pi_pg_on_mmmw_attr . 'value="' . self::POPULATE_PI_PG_ON_MMMW . '"></td>' ),
+			't0505' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Populate P.I. and P.G. with children<br>from WordPress MMMW Add Files</td>' ),
+			't0506' => array( 'continue' => '  <td colspan=2 style="text-align: right; padding-right: 5px" valign="middle">&nbsp;</td>' ),
+			't0507' => array( 'continue' => '</tr><tr>' ),
+			't0508' => array( 'continue' => '<td colspan="5">Check this options to populate the Product Image and Product Gallery when images are attached to a Product during the Media/Add New Bulk Edit on Upload processing and/or the WordPress "Add Files" popup window tab.</td>' ),
+			't0509' => array( 'close' => '</tr></table>&nbsp;<br>' ),
+			'Save Changes' => array( 'handler' => '_save_upload_children_option', 'comment' => 'Click here to record the new Populate P.I. and P.G. with children option settings.' ),
+			'c5d' => array( 'handler' => '', 'comment' => '<hr>' ),
 			'Where-used' => array( 'handler' => '_where_used',
 				'comment' => 'Replace &quot;where_used&quot; information in custom field &quot;Woo Used In&quot;.' ),
-
 			'c6' => array( 'handler' => '', 'comment' => '<h3>Operations on Products, using the Product Image, Product Tags and Att. Tags</h3>' ),
 			'Clear Product Tags' => array( 'handler' => '_clear_product_tags',
 				'comment' => '<strong>Delete ALL</strong> Product Tags assignments where a Product Image exists.' ),
@@ -1013,7 +1283,7 @@ class Woo_Fixit {
 
 		// Load the Product from Product Image templates from the database or set defaults
 		//self::_load_settings();
-		
+
 		// Extract relevant query arguments
 		self::$first_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_FIRST_PRODUCT ] : '';
 		self::$last_product = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] ) ? $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_PRODUCT ] : '';
@@ -1023,6 +1293,23 @@ class Woo_Fixit {
 		self::$append_item_id_attr = self::$append_item_id ? ' checked="checked" ' : ' ';
 		self::$check_unique_slug = isset( $_REQUEST[ self::SLUG_PREFIX . self::CHECK_UNIQUE_SLUG ] ) ? true : false;
 		self::$check_unique_slug_attr = self::$check_unique_slug ? ' checked="checked" ' : ' ';
+
+		// Operations on the Product Image and Product Gallery
+		self::$add_image_to_gallery = isset( $_REQUEST[ self::SLUG_PREFIX . self::ADD_IMAGE_TO_GALLERY ] ) ? true : false;
+		self::$add_image_to_gallery_attr = self::$add_image_to_gallery ? ' checked="checked" ' : ' ';
+		self::$delete_no_children = isset( $_REQUEST[ self::SLUG_PREFIX . self::DELETE_NO_CHILDREN ] ) ? true : false;
+		self::$delete_no_children_attr = self::$delete_no_children ? ' checked="checked" ' : ' ';
+		self::$delete_no_children = isset( $_REQUEST[ self::SLUG_PREFIX . self::DELETE_NO_CHILDREN ] ) ? true : false;
+		self::$delete_no_children_attr = self::$delete_no_children ? ' checked="checked" ' : ' ';
+
+		// No checkbox settings on initial page load
+		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
+			self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_UPLOAD ] );
+			self::$settings[self::POPULATE_PI_PG_ON_MMMW] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_PI_PG_ON_MMMW ] );
+		}
+
+		self::$populate_pi_pg_on_upload_attr = self::$settings[self::POPULATE_PI_PG_ON_UPLOAD] ? ' checked="checked" ' : ' ';
+		self::$populate_pi_pg_on_mmmw_attr = self::$settings[self::POPULATE_PI_PG_ON_MMMW] ? ' checked="checked" ' : ' ';
 
 		// Apply Template to Product Image/Product Gallery Images
 		self::$content_template = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CONTENT_TEMPLATE ] ) ) : self::$content_template;
@@ -1037,14 +1324,14 @@ class Woo_Fixit {
 		self::$stop_chunk = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_LAST_CHUNK ] ) : self::$stop_chunk;
 		self::$chunk_size = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_CHUNK_SIZE ] ) : self::$chunk_size;
 
-		// Populate Product from Product Imag
+		// Populate Product from Product Image
 		self::$settings[self::NAME_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::NAME_TEMPLATE ] ) ) : self::$settings[self::NAME_TEMPLATE];
 		self::$settings[self::DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::DESCRIPTION_TEMPLATE];
 		self::$settings[self::SHORT_DESCRIPTION_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SHORT_DESCRIPTION_TEMPLATE ] ) ) : self::$settings[self::SHORT_DESCRIPTION_TEMPLATE];
 		self::$settings[self::CATEGORIES_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::CATEGORIES_TEMPLATE ] ) ) : self::$settings[self::CATEGORIES_TEMPLATE];
 		self::$settings[self::TAGS_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::TAGS_TEMPLATE ] ) ) : self::$settings[self::TAGS_TEMPLATE];
 		self::$settings[self::SKU_TEMPLATE] = isset( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ? trim( stripslashes( $_REQUEST[ self::SLUG_PREFIX . self::SKU_TEMPLATE ] ) ) : self::$settings[self::SKU_TEMPLATE];
-		
+
 		// No checkbox settings on initial page load
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
 			self::$settings[self::POPULATE_ON_ADD] = isset( $_REQUEST[ self::SLUG_PREFIX . self::POPULATE_ON_ADD ] );
@@ -1080,7 +1367,8 @@ class Woo_Fixit {
 							echo "  </p>\n";
 
 							if ( !$is_error ) {
-								echo "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">Dismiss this notice.</span></button>\n";
+								// Obsolete as of WP 4.4.0
+								// echo "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">Dismiss this notice.</span></button>\n";
 							}
 
 							echo "  </div>\n";
@@ -1146,7 +1434,7 @@ class Woo_Fixit {
 
 	/**
 	 * Array of Products giving Product Image and Product Gallery attachments:
-	 * product_id => array( 'post_title' => product Title, '_thumbnail_id' => image_id, '_product_image_gallery' => gallery_ids (comma-delimited string)
+	 * product_id => array( 'post_title' => product Title, '_thumbnail_id' => image_id, '_product_image_gallery' => gallery_ids (comma-delimited string), 'children' => array( child IDs ) )
 	 *
 	 * @since 1.00
 	 *
@@ -1170,8 +1458,9 @@ class Woo_Fixit {
 	 * @since 1.00
 	 *
 	 * @param boolean $build_pa Optional. Build the product_attachments array. Default: true.
+	 * @param boolean $add_children Optional. Add product children to the product_attachments array. Default: false.
 	 */
-	private static function _build_product_attachments( $build_pa = true ) {
+	private static function _build_product_attachments( $build_pa = true, $add_children = false ) {
 		global $wpdb;
 
 		if ( ! empty( self::$first_product ) ) {
@@ -1203,9 +1492,9 @@ class Woo_Fixit {
 			}
 		}
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() self::$attachment_products = ' . var_export( self::$attachment_products, true ), 0 );
-		
+
 		unset( $results );
-		
+
 		$query = sprintf( 'SELECT m.*, p.post_title FROM %1$s as m INNER JOIN %2$s as p ON m.post_id = p.ID WHERE ( p.post_type = \'product\' ) AND ( p.ID >= %3$d ) AND ( p.ID <= %4$d) AND ( m.meta_key IN ( \'_product_image_gallery\', \'_thumbnail_id\' ) ) GROUP BY m.post_id, m.meta_id ORDER BY m.post_id', $wpdb->postmeta, $wpdb->posts, $lower_bound, $upper_bound );
 		$results = $wpdb->get_results( $query );
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() $results = ' . var_export( $results, true ), 0 );
@@ -1218,6 +1507,7 @@ class Woo_Fixit {
 
 			if ( '_thumbnail_id' == $result->meta_key ) {
 				$key = (integer) $result->meta_value;
+
 				if ( isset( self::$attachment_products[ $key ] ) ) {
 					self::$attachment_products[ $key ]['_thumbnail_id'][] = (integer) $result->post_id;
 				} else {
@@ -1225,7 +1515,7 @@ class Woo_Fixit {
 				}
 			} else {
 				foreach( explode( ',', $result->meta_value ) as $key ) {
-					$key = (integer) trim( $key);
+					$key = (integer) trim( $key );
 					if ( isset( self::$attachment_products[ $key ] ) ) {
 						self::$attachment_products[ $key ]['_product_image_gallery'][] = (integer) $result->post_id;
 					} else {
@@ -1233,7 +1523,31 @@ class Woo_Fixit {
 					}
 				}
 			}
+		} // foreach attachment_products thumbnail/gallery
+
+		if ( $build_pa && $add_children ) {
+			// Exclude unattached items
+			if ( 0 === $lower_bound ) {
+				$lower_bound = 1;
+			}
+			
+			$query = sprintf( 'SELECT p.ID, p.post_mime_type, p.post_parent FROM %1$s as p INNER JOIN %1$s as parent ON parent.ID = p.post_parent WHERE ( parent.post_type = \'product\' ) AND ( p.post_type = \'attachment\' ) AND ( p.post_status = \'inherit\' ) AND ( p.post_parent >= %2$d ) AND ( p.post_parent <= %3$d ) ORDER BY p.ID', $wpdb->posts, $lower_bound, $upper_bound );
+			$results = $wpdb->get_results( $query );
+//error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() add_children $results = ' . var_export( $results, true ), 0 );
+
+			foreach ( $results as $result ) {
+				if ( 0 === strpos( $result->post_mime_type, 'image' ) ) {
+					$key = (integer) trim( $result->post_parent );
+					$ID = (integer) $result->ID;
+					if ( isset( self::$product_attachments[ $key ] ) ) {
+						self::$product_attachments[ $key ]['children'][ $ID ] = $ID;
+					} else {
+						self::$product_attachments[ $key ]['children'] = array( $ID => $ID );
+					}
+				} // image child
+			} // foreach product child
 		}
+		
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() self::$product_attachments = ' . var_export( self::$product_attachments, true ), 0 );
 //error_log( __LINE__ . ' Woo_Fixit::_build_product_attachments() self::$attachment_products = ' . var_export( self::$attachment_products, true ), 0 );
 	} // _build_product_attachments
@@ -2127,6 +2441,267 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	} // _reverse_gallery
 
 	/**
+	 * Updates the postmeta table one chunk at a time.
+ 	 *
+	 * @since 2.10
+	 *
+	 * @param string $meta_key Meta value name
+	 * @param array  $updates  ( $post_id => $meta_value )
+	 * @param array  $inserts  optional. ( $post_id => $meta_value )
+	 *
+	 * @return	integer	number of rows updated
+	 */
+	private static function _update_postmeta( $meta_key, $updates, $inserts = array() ) {
+		global $wpdb;
+//error_log( __LINE__ . " _update_postmeta( $meta_key ) updates = " . var_export( $updates, true ), 0 );
+//error_log( __LINE__ . " _update_postmeta( $meta_key ) inserts = " . var_export( $inserts, true ), 0 );
+
+		$update_count = 0;
+		$select_bits = '';
+		$where_bits = array();
+		$chunk_count = 0;
+		foreach( $updates as $post_id => $meta_value ) {
+				$select_bits .= " WHEN post_id = {$post_id} THEN '{$meta_value}'";
+				$where_bits[] = $post_id;
+
+				// Run an update when the chunk is full
+				if ( 25 <= ++$chunk_count ) {
+					$where_bits = implode( ',', $where_bits );
+					$query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '{$meta_key}'";
+					$query_result = $wpdb->query( $query );
+					$update_count += $chunk_count;
+					$select_bits = '';
+					$where_bits = array();
+					$chunk_count = 0;
+				}
+		} // foreach product
+
+		// Run a final update if the chunk is partially filled
+		if ( $chunk_count ) {
+			$where_bits = implode( ',', $where_bits );
+			$query = "UPDATE {$wpdb->postmeta} SET meta_value = CASE{$select_bits} ELSE meta_value END WHERE post_id IN ( {$where_bits} ) AND meta_key = '{$meta_key}'";
+			$query_result = $wpdb->query( $query );
+			$update_count += $chunk_count;
+		}
+
+		// Insertsd are done one row at a time
+		foreach( $inserts as $post_id => $meta_value ) {
+			$query = "INSERT INTO {$wpdb->postmeta} ( `post_id`,`meta_key`,`meta_value` )
+	VALUES ( {$post_id},'{$meta_key}','{$meta_value}' )";
+			$query_result = $wpdb->query( $query );
+			$update_count++;
+		} // foreach product
+
+		return $update_count;
+	} // _update_postmeta
+
+	/**
+	 * Add product's children to Product Image and Product Gallery.
+ 	 *
+	 * @since 2.10
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _fill_from_children() {
+		self::_build_product_attachments( true, true );
+
+		$product_count = count( self::$product_attachments );
+		$update_count = 0;
+		$thumbnail_count = 0;
+		$gallery_count = 0;
+
+		$thumbnail_updates = array();
+		$thumbnail_inserts = array();
+		$gallery_updates = array();
+		$gallery_inserts = array();
+
+		foreach ( self::$product_attachments as $ID => $images ) {
+			$thumbnail = isset( $images['_thumbnail_id'] ) ? (integer) $images['_thumbnail_id'] : 0;
+			$gallery = isset( $images['_product_image_gallery'] ) ? array_map( 'absint', explode( ',', $images['_product_image_gallery'] ) ) : array();
+			$children = isset( $images['children'] ) ? $images['children'] : array();
+			$updated = false;
+
+			if ( empty( $children ) ) {
+				continue;
+			}
+
+			// Use the earliest child for a missing product image			
+			if ( 0 === $thumbnail ) {
+				$thumbnail = reset( $children );
+
+				if ( !empty( $images['_thumbnail_id'] ) ) {
+					$thumbnail_updates[ $ID ] = $thumbnail;
+				} else {
+					$thumbnail_inserts[ $ID ] = $thumbnail;
+				}
+				
+				$updated = true;
+			}
+
+			// Make sure all children are in the gallery
+			$gallery_additions = array();
+			$child_thumbnail_in_gallery = false;
+			foreach ( $children as $child ) {
+				if ( in_array( $child, $gallery ) ) {
+					if ( $child === $thumbnail ) {
+						$child_thumbnail_in_gallery = true;
+					}
+					
+					continue;
+				}
+				
+				if ( ( $child !== $thumbnail ) || self::$add_image_to_gallery ) {
+					$gallery_additions[] = $child;
+				}
+			} // foreach child
+
+			// See if we must remove the "thumbnail child" from the gallery
+			if ( $child_thumbnail_in_gallery && !self::$add_image_to_gallery ) {
+				unset( $gallery[ array_search( $thumbnail, $gallery ) ] );
+				$gallery_additions = array_merge( $gallery, $gallery_additions );
+				$gallery = array();
+			}
+
+			if ( !empty( $gallery_additions ) ) {
+				if ( !empty( $images['_product_image_gallery'] ) ) {
+					$gallery_updates[ $ID ] = implode( ',', array_merge( $gallery, $gallery_additions ) );
+				} else {
+					$gallery_inserts[ $ID ] = implode( ',', $gallery_additions );
+				}
+				
+				$updated = true;
+			}
+			
+			if ( $updated ) {
+				$update_count++;
+			}
+		} // foreach product
+
+		// Apply the updates, if any
+		if ( !empty( $thumbnail_updates ) || !empty( $thumbnail_inserts ) ) {
+			$thumbnail_count = self::_update_postmeta( '_thumbnail_id', $thumbnail_updates, $thumbnail_inserts );
+		}
+
+		if ( !empty( $gallery_updates ) || !empty( $gallery_inserts ) ) {
+			$gallery_count = self::_update_postmeta( '_product_image_gallery', $gallery_updates, $gallery_inserts );
+		}
+
+		return "_fill_from_children examined {$product_count} products, updated {$update_count}, filling {$thumbnail_count} product images and {$gallery_count} galleries";
+	} // _fill_from_children
+
+	/**
+	 * Use product's children to replace Product Image and Product Gallery.
+ 	 *
+	 * @since 2.10
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _replace_from_children() {
+		self::_build_product_attachments( true, true );
+
+		$product_count = count( self::$product_attachments );
+		$update_count = 0;
+		$thumbnail_count = 0;
+		$gallery_count = 0;
+
+		$thumbnail_updates = array();
+		$thumbnail_inserts = array();
+		$gallery_updates = array();
+		$gallery_inserts = array();
+
+		foreach ( self::$product_attachments as $ID => $images ) {
+			$thumbnail = isset( $images['_thumbnail_id'] ) ? (integer) $images['_thumbnail_id'] : 0;
+			$gallery = isset( $images['_product_image_gallery'] ) ? array_map( 'absint', explode( ',', $images['_product_image_gallery'] ) ) : array();
+			$children = isset( $images['children'] ) ? $images['children'] : array();
+			$updated = false;
+
+			if ( empty( $children ) ) {
+				if ( self::$delete_no_children ) {
+					if ( delete_post_meta( $ID, '_thumbnail_id' ) ) {
+						$updated = true;
+						$thumbnail_count++;
+					}
+					
+					if ( delete_post_meta( $ID, '_product_image_gallery' ) ) {
+						$updated = true;
+						$gallery_count++;
+					}
+					
+					if ( $updated ) {
+						$update_count++;
+					}
+				}
+
+				continue;
+			}
+
+			// Use the earliest child for the product image
+			$first_child = reset( $children );
+			if ( $first_child !== $thumbnail ) {
+				if ( !empty( $images['_thumbnail_id'] ) ) {
+					$thumbnail_updates[ $ID ] = $first_child;
+				} else {
+					$thumbnail_inserts[ $ID ] = $first_child;
+				}
+				
+				$updated = true;
+			}
+
+			if ( !self::$add_image_to_gallery ) {
+				unset( $children[ $first_child ] );
+			}
+			
+			// See if the galleries match, ignoring the order of the current gallery.
+			$current_gallery = $gallery;
+			$gallery_additions = $children;
+			
+			foreach ( $current_gallery as $index => $image ) {
+				if ( in_array( $image, $gallery_additions ) ) {
+					unset( $current_gallery[ $index ] );
+					unset( $gallery_additions[ $image ] );
+				}
+			} // foreach current gallery image
+
+			// If they match, both arrays will be empty
+			if ( !empty( $current_gallery ) || !empty( $gallery_additions ) ) {
+				if ( !empty( $images['_product_image_gallery'] ) ) {
+					$gallery_updates[ $ID ] = implode( ',', $children );
+				} else {
+					$gallery_inserts[ $ID ] = implode( ',', $children );
+				}
+				
+				$updated = true;
+			}
+			
+			if ( $updated ) {
+				$update_count++;
+			}
+		} // foreach product
+
+		// Apply the updates, if any
+		if ( !empty( $thumbnail_updates ) || !empty( $thumbnail_inserts ) ) {
+			$thumbnail_count = self::_update_postmeta( '_thumbnail_id', $thumbnail_updates, $thumbnail_inserts );
+		}
+
+		if ( !empty( $gallery_updates ) || !empty( $gallery_inserts ) ) {
+			$gallery_count = self::_update_postmeta( '_product_image_gallery', $gallery_updates, $gallery_inserts );
+		}
+
+		return "_replace_from_children examined {$product_count} products, updated {$update_count}, replacing {$thumbnail_count} product images and {$gallery_count} galleries";
+	} // _replace_from_children
+
+	/**
+	 * Save the Populate Product from Product Image templates to the database
+ 	 *
+	 * @since 2.06
+	 *
+	 * @return	string	HTML markup for results/messages
+	 */
+	private static function _save_upload_children_option() {
+		return self::_save_setting_changes();
+	} // _save_upload_children_option
+
+	/**
 	 * Replace "where_used" information in custom field "Woo Used In".
  	 *
 	 * @since 1.24
@@ -2150,7 +2725,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 		$thumbnail_count = 0;
 		$gallery_count = 0;
 		$category_count = 0;
-		
+
 		foreach( self::$attachment_products as $post_id => $result ) {
 			if ( empty( $result['_thumbnail_id'] ) ) {
 				$thumbnails = array();
@@ -2920,9 +3495,9 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 			$value[$result->meta_key] = $result->meta_value;
 			$old_values[ $result->post_id ] = $value;
 		}
-		
+
 		unset( $reaults, $result );
-		
+
 		foreach( $old_values as $product_id => $value ) {
 			// Find existing product_cat terms
 			$terms = get_object_term_cache( $product_id, 'product_cat' );
@@ -3134,7 +3709,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 				}
 //error_log( __LINE__ . " Woo_Fixit::_populate_product_from_product_image( $update_count ) SKU result = " . var_export( $result, true ), 0 );
 			} // SKU_TEMPLATE
-			
+
 			if ( $update_count ) {
 				$updated_count++;
 			}
@@ -3163,7 +3738,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 */
 	private static function _load_product_templates() {
 		$result = self::_load_settings();
-		
+
 		return $result;
 	} // _load_product_templates
 
@@ -3175,8 +3750,11 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	 * @return	string	HTML markup for results/messages
 	 */
 	private static function _restore_product_template_defaults() {
-		self::$populate_on_add_attr = self::DEFAULT_POPULATE_ON_ADD;
-		self::$populate_on_update_attr = self::DEFAULT_POPULATE_ON_UPDATE;
+		self::$populate_pi_pg_on_upload_attr = self::DEFAULT_POPULATE_PI_PG_ON_UPLOAD ? ' checked="checked" ' : ' ';
+		self::$populate_pi_pg_on_mmmw_attr = self::DEFAULT_POPULATE_PI_PG_ON_MMMW ? ' checked="checked" ' : ' ';
+
+		self::$populate_on_add_attr = self::DEFAULT_POPULATE_ON_ADD ? ' checked="checked" ' : ' ';
+		self::$populate_on_update_attr = self::DEFAULT_POPULATE_ON_UPDATE ? ' checked="checked" ' : ' ';
 
 		return self::_delete_settings();
 	} // _restore_product_template_defaults

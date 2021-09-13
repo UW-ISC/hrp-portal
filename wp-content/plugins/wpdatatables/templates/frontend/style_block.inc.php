@@ -1,5 +1,5 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
-
+<?php /** @var WPDataTable $wpDataTable */ ?>
 <style>
 <?php if(!empty($wdtFontColorSettings['wdtTableFontColor'])){ ?>
 /* table font color */
@@ -23,6 +23,12 @@
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtHeaderBorderColor'])){ ?>
 /* th border color */
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr > th{
+    border-bottom-color: <?php echo $wdtFontColorSettings['wdtHeaderBorderColor'] ?> !important;
+    border-right-color: <?php echo $wdtFontColorSettings['wdtHeaderBorderColor'] ?> !important;
+    border-top-color: <?php echo $wdtFontColorSettings['wdtHeaderBorderColor'] ?> !important;
+    border-left-color: <?php echo $wdtFontColorSettings['wdtHeaderBorderColor'] ?> !important;
+}
 .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable thead th.sorting {
@@ -62,10 +68,23 @@
 .wpdt-c .wpDataTablesWrapper table.wpDataTable td {
 	border-color: <?php echo $wdtFontColorSettings['wdtTableInnerBorderColor'] ?> !important;
 }
+    <?php if ($wpDataTable->simpleHeader) {?>
+        <?php if(empty($wdtFontColorSettings['wdtHeaderBorderColor'])){ ?>
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr th {
+                border-bottom-color: <?php echo $wdtFontColorSettings['wdtTableInnerBorderColor'] ?> !important;
+                border-right-color: <?php echo $wdtFontColorSettings['wdtTableInnerBorderColor'] ?> !important;
+            }
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr th:last-child {
+                border-right-color: inherit !important;
+            }
+        <?php } ?>
+    <?php } ?>
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtTableOuterBorderColor'])){ ?>
 /* table outer border color */
 .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr:last-child td,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr:last-child td.wpdt-merged-cell:last-child,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr:last-child td.wpdt-merged-cell,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr:last-child td {
 	border-bottom-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
@@ -74,9 +93,29 @@
 	border-left-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
 .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr td:last-child,
+.wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr td.wpdt-merged-cell:last-child,
 .wpdt-c .wpDataTablesWrapper table.wpDataTable tr td:last-child {
 	border-right-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
 }
+    <?php if (!$wpDataTable->simpleHeader) {?>
+        <?php if(empty($wdtFontColorSettings['wdtHeaderBorderColor'])){ ?>
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable tr:first-child td {
+                border-top-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
+            }
+        <?php } ?>
+    <?php } else { ?>
+        <?php if(empty($wdtFontColorSettings['wdtHeaderBorderColor'])){ ?>
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr th:last-child {
+                border-right-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
+            }
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr th:first-child {
+                border-left-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
+            }
+            .wpdt-c.wpDataTablesWrapper table.wpdtSimpleTable thead tr th {
+                border-top-color: <?php echo $wdtFontColorSettings['wdtTableOuterBorderColor'] ?> !important;
+            }
+        <?php } ?>
+    <?php } ?>
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtOddRowColor'])){ ?>
 /* odd rows background color */
@@ -227,12 +266,9 @@ div.dt-button-collection a.dt-button.active:not(.disabled):hover {
 <?php } ?>
 <?php if(!empty($wdtFontColorSettings['wdtOverlayColor'])){ ?>
 /** overlays background color */
-<?php
-	list($overlayR,$overlayG,$overlayB) = array_map('hexdec',str_split(ltrim($wdtFontColorSettings['wdtOverlayColor'],'#'),2));
-?>
 .modal-backdrop.in,
 .wpdt-c .wpDataTablesWrapper .picker--opened .picker__holder {
-	background-color: rgba(<?php echo (int)$overlayR ?>,<?php echo (int)$overlayG ?>,<?php echo (int)$overlayB ?>,0.8) !important;
+    background-color: <?php echo $wdtFontColorSettings['wdtOverlayColor'] ?> !important;
 }
 <?php } ?>
 <?php if( get_option('wdtRenderFilter') == 'header')  { ?>

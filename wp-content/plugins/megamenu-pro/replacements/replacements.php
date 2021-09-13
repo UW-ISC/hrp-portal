@@ -94,7 +94,9 @@ class Mega_Menu_Replacements {
 
 					if ( isset( $settings['replacements']['type'] ) && in_array($settings['replacements']['type'], array('search')) ) {
 
-						$custom_search_icon_enabled = isset($settings['replacements']['search']['search_icon_type']) && $settings['replacements']['search']['search_icon_type'] == 'custom' && isset($settings['icon']) && ($settings['icon'] == 'custom');
+						$use_menu_item_icon = isset($settings['replacements']['search']['search_icon_type']) && $settings['replacements']['search']['search_icon_type'] == 'custom' && isset($settings['icon']);
+
+						$custom_search_icon_enabled = $use_menu_item_icon && $settings['icon'] == 'custom';
 
 						if ( $custom_search_icon_enabled && isset( $settings['custom_icon']['id']) ) {
 							$custom_search_icon_url = $this->get_resized_image_url( $settings['custom_icon']['id'], $settings['custom_icon']['width'], $settings['custom_icon']['height'] );
@@ -120,6 +122,23 @@ class Mega_Menu_Replacements {
 							$custom_search_icon_height = isset($settings['replacements']['search']['height']) ? $settings['replacements']['search']['height'] : '200px';
 						}
 
+						$custom_search_icon_is_fa5 = 'false';
+						$custom_search_icon_fa5_family = "'Font Awesome 5 Free'";
+
+						if ( $use_menu_item_icon ) {
+							$icon_prefix = substr( $settings['icon'], 0, 3 );
+
+							if ( in_array( $icon_prefix, array( 'fab', 'fas', 'far' ) ) ) {
+								$custom_search_icon_is_fa5 = 'true';
+
+								$fa5 = new Mega_Menu_Font_Awesome_5();
+
+								if ( $fa5->use_pro() ) {
+									$custom_search_icon_fa5_family = "'Font Awesome 5 Pro'";
+								}
+							}
+						}
+
 						$styles = array(
 							'id' => $item->ID,
 							'search_height' => isset($settings['replacements']['search']['height']) ? $settings['replacements']['search']['height'] : '30px',
@@ -136,7 +155,9 @@ class Mega_Menu_Replacements {
 							'search_custom_icon_url_hover' => "'" . $custom_search_icon_url_hover . "'",
 							'search_custom_icon_width' => $custom_search_icon_width,
 							'search_custom_icon_height' => $custom_search_icon_height,
-
+							'custom_menu_item_link_icon_size' => isset($settings['styles']['enabled']['menu_item_icon_size']) ? $settings['styles']['enabled']['menu_item_icon_size'] : 'inherit',
+							'custom_search_icon_is_fa5' => $custom_search_icon_is_fa5,
+							'custom_search_icon_fa5_family' => $custom_search_icon_fa5_family
 						);
 
 						$custom_vars[ $item->ID ] = $styles;

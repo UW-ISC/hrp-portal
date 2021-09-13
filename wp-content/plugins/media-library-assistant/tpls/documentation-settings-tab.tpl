@@ -65,6 +65,7 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#term_list_display_style_ldc">Term List Display Style (List, Dropdown and Checklist)</a></li>
 <li><a href="#term_list_display_style">Term List Display Style (List and Checklist)</a></li>
 <li><a href="#term_list_display_style_d">Term List Display Style (Dropdown)</a></li>
+<li><a href="#term_list_display_content_all">Term List Display Content (all Output Formats)</a></li>
 <li><a href="#term_list_display_content_afl">Term List Display Content (Array, Flat and List)</a></li>
 <li><a href="#term_list_display_content">Term List Display Content (Dropdown and Checklist)</a></li>
 <li><a href="#term_list_other">Term List Other Parameters</a></li>
@@ -839,10 +840,20 @@ Note that you should use the name/slug strings for taxonomy and terms, not the "
 In this example, "attachment_tag" is the WordPress taxonomy name/slug for the taxonomy. If you're using "Att. Category", the slug would be "attachment_category".
 </p>
 <p>
-The default behavior of the simple taxonomy query will match any of the terms in the list. A special value lets you find items that have no assigned terms in the taxonomy. For example, to find items that have no Att. Tags you can code:
+The default behavior of the simple taxonomy query will match any of the terms in the list. Three special values let you find all items, items that have no assigned terms in the taxonomy or any (one or more) assigned terms in the taxonomy. For example, to find items that have no Att. Tags or any Att. Tags you can code:
 </p>
 <ul class="mla_settings">
+<li><code>[mla_gallery attachment_tag=ignore.terms.assigned]</code></li>
 <li><code>[mla_gallery attachment_tag=no.terms.assigned]</code></li>
+<li><code>[mla_gallery attachment_tag=any.terms.assigned]</code></li>
+</ul>
+<p>
+For applications using term id values instead of slugs three numeric synonyms are supported. For example, to find all items, items that have no Att. Tags or any Att. Tags you can code:
+</p>
+<ul class="mla_settings">
+<li><code>[mla_gallery attachment_tag=-3]</code></li>
+<li><code>[mla_gallery attachment_tag=-1]</code></li>
+<li><code>[mla_gallery attachment_tag=-2]</code></li>
 </ul>
 <p>
 If you have two or more simple taxonomy queries, they will be joined by "AND". MLA enhances the simple taxonomy query form by providing three additional parameters:
@@ -930,20 +941,21 @@ The first example is equivalent to the simple query <code>attachment_tag=artisan
 When embedding the shortcode in the body of a post, be very careful when coding the tax_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
-A special "terms" value, "no.terms.assigned" lets you find items that have no assigned terms in the taxonomy. For example, to find items that have no Att. Tags you can code:</p>
+Three special "terms" values, "ignore.terms.assigned", "no.terms.assigned" and "any.terms.assigned",  let you find all items, items that have no assigned terms in the taxonomy or any (one or more) assigned terms. For example, to find items that have no Att. Tags you can code:</p>
 <p><code>[mla_gallery]<br />
 tax_query="array(<br />
 &nbsp;&nbsp;&nbsp;&nbsp;array(<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'taxonomy' =&gt; 'attachment_tag',<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'field' =&gt; 'id',<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'terms' =&gt; 'no.terms.assigned'<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'operator' =&gt; 'NOT IN'<br />
 &nbsp;&nbsp;&nbsp;&nbsp;)<br />
 )"<br />
 [/mla_gallery]
 </code></p>
 <p>
-In addition to <code>'terms' =&gt; 'no.terms.assigned'</code> you must code <code>'field' =&gt; 'id'</code> and <code>'operator' =&gt; 'NOT IN'</code> to get the proper results. The example uses use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
+You can also use three numeric synonyms, '-3' for "ignore.terms.assigned", '-1' for "no.terms.assigned" and '-2' for "any.terms.assigned" in applications using numeric term id values in place of slugs.
+</p>
+<p>
+When you code <code>'terms' =&gt; 'ignore.terms.assigned'</code> the entire tax_query will be ignored. When you code <code>'terms' =&gt; 'no.terms.assigned'</code> or <code>'terms' =&gt; 'any.terms.assigned'</code> the only other element you need is <code>taxonomy =&gt;</code>. There is no need for parameters like <code>'field' =&gt;</code> or <code>'operator' =&gt;</code> to get the proper results. The example uses use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
@@ -1439,6 +1451,10 @@ Each item in the tag cloud comprises a term name of varying size, a hyperlink su
 <td>The text size (default 22) of the tag with the highest count value (units given by the unit parameter).</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">default_size</td>
+<td>The text size (default 12) of the special links (all tags, no tags, any tags) (units given by the unit parameter).</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">unit</td>
 <td>Unit of measure as pertains to the smallest and largest values. This can be any CSS length value, e.g. pt (the default), px, em, %.</td>
 </tr>
@@ -1602,10 +1618,45 @@ Nine parameters provide an easy way to control the contents of tag cloud items w
 <td>replaces the caption text displayed beneath each item. The caption appears for "grid" items and for "list" items when the "captiontag" parameter is present.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">mla_item_value</td>
+<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">mla_target</td>
 <td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_text</td>
+<td>Text to display for showing an 'all terms' link. Default will not show a link to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_text</td>
+<td>Text to display for showing an 'no terms assigned' link. Default will not show a link to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_value</td>
+<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_text</td>
+<td>Text to display for showing an 'any terms assigned' link. Default will not show a link to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_value</td>
+<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
 </table>
+<p>
+The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
+</p>
 <p>
 All but the "mla_target" parameter support the <a href="#tag_cloud_markup_parameters">Markup</a>, <a href="#tag_cloud_item_parameters">Item-specific</a>, <a href="#tag_cloud_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
@@ -1617,6 +1668,9 @@ The "mla_link_attributes" parameter accepts any value and adds it to the "&lt;a&
 </p>
 <p>
 The "mla_target" parameter accepts any value and adds an HTML "target" attribute to the hyperlink with that value. For example, if you code <code>mla_target="_blank"</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame.
+</p>
+<p>
+The six "option_..." parameters provide an easy way to add special links to the cloud generated by the shortcode. You can add links for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these links are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
 <a name="tag_cloud_data_selection"></a>
 </p>
 <h4>Tag Cloud Data Selection Parameters</h4>
@@ -2088,6 +2142,10 @@ Tag cloud <strong>item-specific substitution parameters</strong> for the Markup 
 <td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">thevalue</td>
+<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">thelink</td>
 <td>full hyperlink to the chosen destination as determined by the "link" and "mla_link_href" parameters</td>
 </tr>
@@ -2190,14 +2248,14 @@ The "limit=10" parameter (on <strong>both</strong> shortcodes) limits the term d
 <p>Now we'll make the cloud a convenient way to control a term-specific <code>[mla_gallery]</code>. The next step uses the "mla_link_href" parameter to change the link destination of each cloud term, returning to the current page with the term id of the selected term. We also add the "mla_cloud_current" parameter to each of these new links, so the tag cloud page is retained when a term is selected:
 </p>
 <p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+request:mla_cloud_current+}"]<br />
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
 [mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]</code>
 </p>
 <p>
-The "&amp;amp;" before the "mla_cloud_current" parameter is required to get by the WordPress Visual Editor. The "{+request:mla_cloud_current+}" value copies the current page number from the URL ($_REQUEST array) and adds it to each term's link. Now, let's use the "current_id={+term_id+}" information in the link to compose a term-specific <code>[mla_gallery]</code>: 
+The "&amp;amp;" before the "mla_cloud_current" parameter is required to get by the WordPress Visual Editor. The "{+request:mla_cloud_current+}" value copies the current page number from the URL ($_REQUEST array) and adds it to each term's link. If the current page number is absent (e.g., on the initial page load) the default value is 1. Now, let's use the "current_id={+term_id+}" information in the link to compose a term-specific <code>[mla_gallery]</code>: 
 </p>
 <p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+request:mla_cloud_current+}"]<br />
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
 [mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
 <br />&nbsp;<br />
 [mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 size=icon link=file]</code>
@@ -2209,7 +2267,7 @@ The most complicated part of the new shortcode is the "tax_query" parameter, whi
 We can easily paginate the term-specific gallery by adding a second <code>[mla_gallery]</code> shortcode and a "posts_per_page" parameter to both shortcodes:
 </p>
 <p>
-<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+request:mla_cloud_current+}"]<br />
+<code>[mla_tag_cloud taxonomy=attachment_category number=0 limit=10 mla_link_href="{+page_url+}?current_id={+term_id+}&amp;amp;mla_cloud_current={+template:({+request:mla_cloud_current+})|1+}"]<br />
 [mla_tag_cloud taxonomy=attachment_category number=0 limit=10  mla_output="paginate_links,prev_next"]
 <br />&nbsp;<br />
 [mla_gallery post_mime_type=all tax_query="array ( 0 => array ( 'taxonomy' => 'attachment_category', 'field' => 'id', 'terms' => array( {+request:current_id+} ), 'include_children' => false ) )" mla_caption="{+title+}" columns=5 posts_per_page=5 size=icon link=file]
@@ -2310,7 +2368,7 @@ The example code documents each hook with comments in the filter/action function
 </p>
 <h3>MLA Term List Shortcode</h3>
 <p>
-The <code>[mla_term_list]</code> shortcode function displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories) MLA Term List enhancements for lists and controls include:
+The <code>[mla_term_list]</code> shortcode function displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories). MLA Term List enhancements for lists and controls include:
 </p>
 <ul class="mla_settings">
 <li>Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.</li>
@@ -2539,11 +2597,51 @@ Three parameters provide control over the XHTML tags used to enclose each part o
 </table>
 <p>
 These parameters give you some control over the markup used for the list and its elements. For more complex applications you can use style and markup templates to gain complete control over the list display.
+<a name="term_list_display_content_all"></a>
+</p>
+<h4>Term List Display Content (all Output Formats)</h4>
+<p>
+Six parameters provide an easy way to add special entries to the links or input controls generated by the shortcode.  You can add entries for selecting all items, items that have no term assignments at all and/or items that have one or more assignments to any term(s) in the taxonomy. The default values for these entries are compatible with the simple taxonomy query and tax_query parameters of the <code>[mla_gallery]</code> shortcode.
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">option_all_text</td>
+<td>Text to display for showing an 'all terms' option. Default will not show an option to select 'all terms'. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_all_value</td>
+<td>Control value for 'all terms' option. <strong>Default '-3' or 'ignore.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected all items, including items with no term assignments at all, are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_text</td>
+<td>Text to display for showing an 'no terms assigned' option. Default will not show an option to select 'no terms'. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_no_terms_value</td>
+<td>Control value for 'no terms' option. <strong>Default '-1' or 'no.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with no term assignments at all are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_text</td>
+<td>Text to display for showing an 'any terms assigned' option. Default will not show an option to select 'any terms assigned'. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">option_any_terms_value</td>
+<td>Control value for 'any terms' option. <strong>Default '-2' or 'any.terms.assigned'</strong>. Numeric values are used for the term_id; text values for the slug. When this option is selected only those items with one or more term assignments are included in the results.</td>
+</tr>
+</table>
+<p>
+The "mla_debug" parameter controls the display of information about the query parameters and SQL statements used to retrieve list items. If you code <code>mla_debug=true</code> you will see a lot of information added to the post or page containing the list. Of course, this parameter should <strong><em>ONLY</em></strong> be used in a development/debugging environment; it's quite ugly.
+</p>
+<p>
+If you code <code>mla_debug=log</code> all of the information will be written to the error log. You can use the <a href="#mla_debug_tab">MLA Debug Tab</a> to view and download the information in the error log.
+</p>
+<p>
+Look for the "mla_debug attribute_errors" entry in the debug output; it will often list the parts of the shortcode parameters that couldn&rsquo;t be parsed. If you see "[mla_gallery" in this entry you probably used the enclosing shortcode format in that shortcode but did not add the "[/mla_gallery]" delimiter to an earlier shortcode.
 <a name="term_list_display_content_afl"></a>
 </p>
 <h4>Term List Display Content (Array, Flat and List)</h4>
 <p>
-Eight parameters provide an easy way to control the contents of list items without requiring the use of custom Markup templates.  
+Nine parameters provide an easy way to control the contents of list items without requiring the use of custom Markup templates.  
 </p>
 <table>
 <tr>
@@ -2575,10 +2673,17 @@ Eight parameters provide an easy way to control the contents of list items witho
 <td>replaces the caption text displayed beneath each item. The caption appears for "dlist" items and for "list" items when the "captiontag" parameter is present.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">mla_item_value</td>
+<td>replaces the <strong>term_id (default)</strong> value of the <code>current_item</code> hyperlink query argument.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">mla_target</td>
 <td>adds an HTML "target" attribute to the hyperlink for each gallery item; see below</td>
 </tr>
 </table>
+<p>
+The "mla_item_value" parameter is the most commonly-used. For example, to set the <code>current_item</code> to the term slug instead of the term id you would code <code>mla_item_value="{+slug+}"</code>.
+</p>
 <p>
 All but the "mla_target" parameter support the <a href="#term_list_markup_parameters">Markup</a>, <a href="#term_list_item_parameters">Item-specific</a>, <a href="#term_list_variable_parameters">Field-level</a> and <a href="#mla_template_parameters">Content Template</a> substitution parameters defined for Markup Templates. For example, if you code "<code>mla_rollover_text='{+slug+} : {+rollover_text+}'</code>, the rollover text will contain the term slug, a colon, and the appropriate "single text" or "multiple text". Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
@@ -2618,20 +2723,12 @@ Dropdown and Checklist formats do not generate hyperlinks; they generate HTML in
 <td>replaces the entire control with text/markup; <strong>default empty</strong></td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">option_all_text</td>
-<td>Text to display for showing an 'all terms' option. Default will not show an option to select 'all terms'.</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">option_all_value</td>
-<td>Control value for 'all terms' option. <strong>Default zero</strong>. Numeric values are used for the term_id; text values for the slug.</td>
-</tr>
-<tr>
 <td class="mla-doc-table-label">option_none_text</td>
-<td>Text to display for showing a 'no terms' option. Default will not show an option to select 'no terms'.</td>
+<td>Text to display for showing a 'no terms' option, displayed when there are no terms defined in the taxonomy. Default will not show an option to select 'no terms'.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">option_none_value</td>
-<td>Control value for 'no terms' option. <strong>Default -1</strong>. Numeric values are used for the term_id; text values for the slug.</td>
+<td>Control value for 'no terms' option, displayed when there are no terms defined in the taxonomy. <strong>Default -1</strong>. Numeric values are used for the term_id; text values for the slug.</td>
 </tr>
 </table>
 <p>
@@ -3130,6 +3227,10 @@ Term list <strong>item-specific substitution parameters</strong> for the Markup 
 <tr>
 <td class="mla-doc-table-label">link_text</td>
 <td>the text enclosed by the hyperlink, drawn from the term name or mla_link_text parameter</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">thevalue</td>
+<td>term id (default), slug or other value as determined by the "mla_item_value" parameter</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">thelink</td>
@@ -3675,6 +3776,10 @@ The <code>[mla_gallery]</code> shortcode can be used in combination with other g
 <tr>
 <td class="mla-doc-table-label">mla_alt_shortcode</td>
 <td>the name of the shortcode to be called for gallery format and display. You can code "mla_gallery" (recommended) or "no" to disable the alternate shortcode processing.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_alt_parameters</td>
+<td>(optional, default empty) parameters that would normally be processed by <code>[mla_gallery]</code> and not passed through to the alternate shortcode. For example, if the alternate shortcode is "mla_tag_cloud" or "mla_term_list" you might use this parameter to pass <code>post_mime_type=</code> or <code>mla_debug=</code> on to the alternate shortcode.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_alt_ids_name</td>
@@ -4512,7 +4617,7 @@ Eight "format" values help you reformat fields or encode them for use in HTML at
 </tr>
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,kbmb(t,k,m,p)</td>
-<td>Some data values, e.g., file size, are better expressed in kilobytes and megabytes. The "kbmb" format provides this conversion. There are four optional arguments; "t" (threshold), "k" (kilobyte suffix), "m" (megabyte suffix) and "p" (precision). The threshold argument (default 10240; ten kilobytes) sets the dividing amount between bytes and kilobytes. For example, a value of 1536 bytes would display as "1,536", not "1.50 KB" and 15360 bytes would display as "15.5 KB". The "k" and "m" arguments replace the default " KB" and/or " MB" suffix displayed following the numeric value. The "p" argument is the number of decimal places in the result, e.g., a value of 287,709 with a threshold of 1024 displays as "281", "281.0", "280.97", "280.966", or "280.9658" for precisions 0, 1, 2, 3 and 4.</td>
+<td>Some data values, e.g., file size, are better expressed in kilobytes and megabytes. The "kbmb" format provides this conversion. There are four optional arguments; "t" (threshold), "k" (kilobyte suffix), "m" (megabyte suffix) and "p" (precision). The threshold argument (default 10240; ten kilobytes) sets the dividing amount between bytes and kilobytes. For example, a value of 1536 bytes would display as "1,536", not "1.50 KB" and 15360 bytes would display as "15.5 KB". The "k" and "m" arguments replace the default " KB" and/or " MB" suffix displayed following the numeric value. The "p" argument is the number of decimal places in the result, e.g., a value of 287,709 with a threshold of 1024 displays as "281", "281.0", "280.97", "280.966", or "280.9658" for precisions 0, 1, 2, 3 and 4.<br />&nbsp;<br />If the "k" argument is empty and the "m" argument is present all numbers above the threshold will be displayed in megabytes. For example, the value ",kbmb(10240,,Mb)" or ",kbmb(10240,'',Mb)" would display 15360 bytes "0.015Mb".</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label" style="white-space:nowrap">,fraction(f,s)</td>
@@ -4950,6 +5055,16 @@ The native format of this data is somewhat complicated, so MLA converts the most
 <td class="mla-doc-table-sublabel">Exposure time, given in seconds.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">ExposureBiasValue</td>
+<td class="mla-doc-table-sublabel">-1, +1/3</td>
+<td class="mla-doc-table-sublabel">The exposure bias. The unit is the APEX value, usually in the range of -99.99 to 99.99.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">ExposureMode</td>
+<td class="mla-doc-table-sublabel">Auto, Manual, Bracket</td>
+<td class="mla-doc-table-sublabel">The exposure mode.</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">ShutterSpeed<br />(from&nbsp;ExposureTime)</td>
 <td class="mla-doc-table-sublabel">1.04, 1/250</td>
 <td class="mla-doc-table-sublabel">Derived from ExposureTime and more often converted to the more useful "one over something" format.</td>
@@ -4960,13 +5075,8 @@ The native format of this data is somewhat complicated, so MLA converts the most
 <td class="mla-doc-table-sublabel">The F Number.</td>
 </tr>
 <tr>
-<td class="mla-doc-table-label">ExposureBiasValue</td>
-<td class="mla-doc-table-sublabel">-1, +1/3</td>
-<td class="mla-doc-table-sublabel">The exposure bias. The unit is the APEX value, usually in the range of -99.99 to 99.99.</td>
-</tr>
-<tr>
 <td class="mla-doc-table-label">Flash</td>
-<td class="mla-doc-table-sublabel">no, yes</td>
+<td class="mla-doc-table-sublabel">No, Yes</td>
 <td class="mla-doc-table-sublabel">The "flash fired" portion of the flash status.</td>
 </tr>
 <tr>

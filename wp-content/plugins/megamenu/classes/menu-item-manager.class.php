@@ -114,7 +114,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 				// only check the checkbox values if the general settings form was submitted
 				if ( isset( $_POST['tab'] ) && $_POST['tab'] == 'general_settings' ) {
 
-					$checkboxes = array( 'hide_text', 'disable_link', 'hide_arrow', 'hide_on_mobile', 'hide_on_desktop', 'hide_sub_menu_on_mobile', 'collapse_children' );
+					$checkboxes = array( 'hide_text', 'disable_link', 'hide_arrow', 'hide_on_mobile', 'hide_on_desktop', 'close_after_click', 'hide_sub_menu_on_mobile', 'collapse_children' );
 
 					foreach ( $checkboxes as $checkbox ) {
 						if ( ! isset( $submitted_settings[ $checkbox ] ) ) {
@@ -644,7 +644,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '    <table>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Hide Text', 'megamenu' );
+			$return .= __( 'Hide text', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[hide_text]" value="true" ' . checked( $menu_item_meta['hide_text'], 'true', false ) . ' />';
@@ -652,7 +652,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Hide Arrow', 'megamenu' );
+			$return .= __( 'Hide arrow', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[hide_arrow]" value="true" ' . checked( $menu_item_meta['hide_arrow'], 'true', false ) . ' />';
@@ -660,7 +660,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Disable Link', 'megamenu' );
+			$return .= __( 'Disable link', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[disable_link]" value="true" ' . checked( $menu_item_meta['disable_link'], 'true', false ) . ' />';
@@ -668,7 +668,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Hide Item on Mobile', 'megamenu' );
+			$return .= __( 'Hide item on mobile', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[hide_on_mobile]" value="true" ' . checked( $menu_item_meta['hide_on_mobile'], 'true', false ) . ' />';
@@ -676,15 +676,24 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Hide Item on Desktop', 'megamenu' );
+			$return .= __( 'Hide item on desktop', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[hide_on_desktop]" value="true" ' . checked( $menu_item_meta['hide_on_desktop'], 'true', false ) . ' />';
 			$return .= '            </td>';
 			$return .= '        </tr>';
+			$return .= '            <td class="mega-name">';
+			$return .= __( 'Close sub menu when clicked', 'megamenu' );
+			$return .= '            </td>';
+			$return .= '            <td class="mega-value">';
+			$return .= '                <input type="checkbox" name="settings[close_after_click]" value="true" ' . checked( $menu_item_meta['close_after_click'], 'true', false ) . ' />';
+				$return .= '            <div class="mega-description">';
+				$return .= __( 'Intended for use on anchor links (e.g. #about)', 'megamenu' );
+				$return .= '            </div>';			$return .= '            </td>';
+			$return .= '        </tr>';
 			$return .= '        <tr class="mega-menu-item-align">';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Menu Item Align', 'megamenu' );
+			$return .= __( 'Menu item align', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 
@@ -714,7 +723,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr class="mega-menu-icon-position">';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Icon Position', 'megamenu' );
+			$return .= __( 'Icon position', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '            <select name="settings[icon_position]">';
@@ -735,7 +744,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '    <table>';
 			$return .= '        <tr class="mega-sub-menu-align">';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Sub Menu Align', 'megamenu' );
+			$return .= __( 'Sub menu align', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 
@@ -755,7 +764,7 @@ if ( ! class_exists( 'Mega_Menu_Menu_Item_Manager' ) ) :
 			$return .= '        </tr>';
 			$return .= '        <tr>';
 			$return .= '            <td class="mega-name">';
-			$return .= __( 'Hide Sub Menu on Mobile', 'megamenu' );
+			$return .= __( 'Hide sub menu on mobile', 'megamenu' );
 			$return .= '            </td>';
 			$return .= '            <td class="mega-value">';
 			$return .= '                <input type="checkbox" name="settings[hide_sub_menu_on_mobile]" value="true" ' . checked( $menu_item_meta['hide_sub_menu_on_mobile'], 'true', false ) . ' />';

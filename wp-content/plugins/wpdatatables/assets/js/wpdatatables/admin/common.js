@@ -249,7 +249,7 @@ jQuery.fn.extend({
                 if (fontSizesArr.includes(fieldName)){
                     input.val(parseInt(input.attr('min')));
                 } else {
-                    input.val(1);
+                    input.val(1).change();
                 }
 
             }
