@@ -53,7 +53,7 @@
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
  * @package Insert Fixit
- * @version 1.20
+ * @version 1.21
  */
 
 /*
@@ -61,10 +61,10 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.20
+Version: 1.21
 Author URI: http://davidlingren.com/
 
-Copyright 2015-2020 David Lingren
+Copyright 2015-2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.20';
+	const CURRENT_VERSION = '1.21';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -258,10 +258,7 @@ class Insert_Fixit {
 
 		$setting_actions = array(
 			'help' => array( 'handler' => '', 'comment' => '<strong>Enter first and (optional) last ID values above to restrict tool application range</strong>. To operate on one ID, enter just the "First ID". The default is to perform the operation on <strong>all posts/pages</strong> and <strong>all Media Library items (attachments)</strong>.<br />&nbsp;<br />You can find post/page ID values by hovering over the post/page title in the "Title" column of the All Posts/All Pages submenu tables; look for the number following <code>post=</code>.<br />' ),
-			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
-
-			'c00' => array( 'handler' => '', 'comment' => '<h3>Copy ALT Text between Media Library items and Post/Page inserts</h3>' ),
-			'c01' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> Tools in this section use the post type values below. Single quotes and commas are required.' ),
+			'c01' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The tools in this plugin use the post type values in the text box below. Single quotes and commas are required.' ),
 			't1501' => array( 'open' => '<table><tr>' ),
 			't1502' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Post Type(s)</td>' ),
 			't1503' => array( 'continue' => '  <td style="text-align: left">' ),
@@ -269,6 +266,9 @@ class Insert_Fixit {
 			't1505' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'post_types" type="text" size="30" value="' . $post_types . '">' ),
 			't1506' => array( 'continue' => '  </td>' ),
 			't1507' => array( 'close' => '</tr></table>' ),
+			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
+
+			'c00' => array( 'handler' => '', 'comment' => '<h3>Copy ALT Text between Media Library items and Post/Page inserts</h3>' ),
 			'ALT from Item' => array( 'handler' => '_copy_alt_from_media_library',
 				'comment' => 'Copy ALT Text from Media Library item to Post/Page inserts.' ),
 			'ALT to Item' => array( 'handler' => '_copy_alt_to_media_library',

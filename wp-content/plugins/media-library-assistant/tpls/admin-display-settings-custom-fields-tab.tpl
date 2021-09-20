@@ -58,8 +58,14 @@ return false;"
 href="#mla-new-custom-field">
 [+Cancel Name Change+]
 </a>
-
-					<p class="description">[+Enter Name+]</p></td>
+			  <p class="description">[+Enter Name+]</p></td>
+			</tr>
+			<tr class="form-field custom-field-description-wrap">
+				<th scope="row"> <label for="mla-custom-field-description">[+Description+]</label>
+				</th>
+				<td><textarea name="mla_custom_field[description]" id="mla-custom-field-description" rows="[+description_rows+]">[+description+]</textarea>
+					<p class="description">[+description_help+]</p>
+				</td>
 			</tr>
 			<tr class="form-field custom-field-data-source-wrap">
 				<th scope="row"> <label for="mla-custom-field-data-source">[+Data Source+]</label>

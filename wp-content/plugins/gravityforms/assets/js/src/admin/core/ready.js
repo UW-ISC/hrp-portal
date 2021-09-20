@@ -5,20 +5,8 @@
  */
 
 import common from 'common';
-
-const ready = ( fn ) => {
-	if ( document.readyState !== 'loading' ) {
-		fn();
-	} else if ( document.addEventListener ) {
-		document.addEventListener( 'DOMContentLoaded', fn );
-	} else {
-		document.attachEvent( 'onreadystatechange', () => {
-			if ( document.readyState !== 'loading' ) {
-				fn();
-			}
-		} );
-	}
-};
+import { ready } from '@gravityforms/utils';
+import Flyout from '@gravityforms/components/js/flyout';
 
 /**
  * @function bindEvents
@@ -40,6 +28,17 @@ const init = () => {
 	// initialize common modules
 
 	common();
+
+	const flyout = new Flyout( {
+		content: 'Hello',
+		position: 'absolute',
+		target: '.gflow-inbox.gflow-grid',
+		title: 'Inbox Settings',
+		triggers: '[data-js="inbox-settings"]',
+		wrapperClasses: 'gform-flyout gform-flyout--inbox-settings',
+	} );
+
+	console.log( flyout );
 
 	// initialize admin modules
 

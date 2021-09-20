@@ -93,15 +93,15 @@
  * https://wordpress.org/support/topic/checklist-behaviour-my_custom_sql-muie_terms_search/
  *
  * @package MLA UI Elements Example
- * @version 1.16
+ * @version 2.00
  */
 
 /*
 Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
-Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes
+Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
 Author: David Lingren
-Version: 1.16
+Version: 2.00
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2021 David Lingren
@@ -135,7 +135,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.16';
+	const PLUGIN_VERSION = '2.00';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -440,7 +440,8 @@ class MLAUIElementsExample {
 		}
 
 		if ( $muie_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes raw input = ' . var_export( $shortcode_attributes, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes raw _REQUEST = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes raw shortcode_attributes = ' . var_export( $shortcode_attributes, true ) );
 		}
 
 		// Unpack filter values encoded for pagination links
@@ -459,7 +460,8 @@ class MLAUIElementsExample {
 		}
 
 		if ( $muie_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes filtered input = ' . var_export( $shortcode_attributes, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes filtered _REQUEST = ' . var_export( $_REQUEST, true ) );
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes filtered shortcode_attributes = ' . var_export( $shortcode_attributes, true ) );
 		}
 
 		// Fill these in from $_REQUEST parameters
@@ -564,6 +566,13 @@ class MLAUIElementsExample {
 					$tax_input[ $key ] = explode( ',', $value );
 				}
 			}
+			if ( $muie_debug ) {
+				MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes simple_tax_queries = ' . var_export( $simple_tax_queries, true ) );
+			}
+		}
+
+		if ( $muie_debug ) {
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_gallery_attributes filtered tax_input = ' . var_export( $tax_input, true ) );
 		}
 
 		// Add the [mla_term_list mla_control_name=] parameter(s)
@@ -624,7 +633,7 @@ class MLAUIElementsExample {
 			}
 
 			foreach ( $tax_input as $taxonomy => $terms ) {
-				// simple taxonomy query overrides tax_input
+				// simple filter_taxonomy query already processed; overrides tax_input
 				if ( $taxonomy === $filter_taxonomy ) {
 					continue;
 				}
@@ -724,7 +733,7 @@ class MLAUIElementsExample {
 	 *
 	 * @return	string	HTML markup for the generated form
 	 */
-	public static function muie_terms_search( $attr ) {
+	public static function muie_terms_search( $attr, $content = NULL ) {
 		$default_arguments = array(
 			'mla_terms_phrases' => '',
 			'mla_terms_taxonomies' => '',
@@ -736,14 +745,8 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
-
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+		
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
 
@@ -798,7 +801,7 @@ class MLAUIElementsExample {
 	 *
 	 * @return	string	HTML markup for the generated form
 	 */
-	public static function muie_keyword_search( $attr ) {
+	public static function muie_keyword_search( $attr, $content = NULL ) {
 		$default_arguments = array(
 			's' => '',
 			'mla_search_fields' => '',
@@ -808,13 +811,7 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
@@ -905,20 +902,7 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
-
-		// Look for parameters in an enclosing shortcode
-		if ( !empty( $content ) ) {
-			$content = str_replace( array( '&#8216;', '&#8217;', '&#8221;', '&#8243;', '<br />', '<p>', '</p>', "\r", "\n" ), array( '\'', '\'', '"', '"', ' ', ' ', ' ', ' ', ' ' ), $content );
-			$new_attr = shortcode_parse_atts( $content );
-			$attr = array_merge( $attr, $new_attr );
-		}
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
@@ -1073,20 +1057,7 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
-
-		// Look for parameters in an enclosing shortcode
-		if ( !empty( $content ) ) {
-			$content = str_replace( array( '&#8216;', '&#8217;', '&#8221;', '&#8243;', '<br />', '<p>', '</p>', "\r", "\n" ), array( '\'', '\'', '"', '"', ' ', ' ', ' ', ' ', ' ' ), $content );
-			$new_attr = shortcode_parse_atts( $content );
-			$attr = array_merge( $attr, $new_attr );
-		}
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
@@ -1131,7 +1102,7 @@ class MLAUIElementsExample {
 	 *
 	 * @return	string	HTML markup for the generated form
 	 */
-	public static function muie_assigned_items_count( $attr ) {
+	public static function muie_assigned_items_count( $attr, $content = NULL ) {
 		global $wpdb;
 
 		$default_arguments = array(
@@ -1142,13 +1113,7 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
@@ -1248,7 +1213,7 @@ class MLAUIElementsExample {
 	 *
 	 * @return	string	HTML markup for the generated input control
 	 */
-	public static function muie_text_box( $attr ) {
+	public static function muie_text_box( $attr, $content = NULL ) {
 		$default_arguments = array(
 			'name' => 'muie_text_box',
 			'id' => '',
@@ -1257,13 +1222,7 @@ class MLAUIElementsExample {
 		);
 
 		// Make sure $attr is an array, even if it's empty
-		if ( is_string( $attr ) ) {
-			$attr = shortcode_parse_atts( $attr );
-		}
-
-		if ( empty( $attr ) ) {
-			$attr = array();
-		}
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );

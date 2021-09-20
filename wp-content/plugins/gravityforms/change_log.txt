@@ -1,11 +1,22 @@
-### 2.5.9.2
-- Added license UI and workflow enhancements.
+### 2.5.10 | 2021-09-08
+- Added alt text and title attribute for accessibility to the date field datepicker field icon.
+- Fixed an issue where the form button text doesn't properly update for page conditional logic.
+- Fixed an issue where forms with pricing fields throw PHP notices if fields are removed before the form is rendered.
+- Fixed an issue with our block script loading that breaks the Gutenberg editor in WordPress 5.8.x and up.
+- Fixed an issue that causes some screens in the admin to have JavaScript errors in WordPress versions previous to 5.0.
+- Fixed an issue which causes field calculations with references to the calculated field to infinitely loop.
+- Fixed an issue that causes the Form Switcher to break on certain Admin views.
+- Fixed an issue which causes fields with multiple inputs to have incorrect aria-validate attributes.
 - Fixed an issue for the conditional flyout logic where checkbox and radio field based conditionals are not being respected.
-
-### 2.5.9.1
+- Fixed an issue which causes fields with whitespace to break certain Add-on Feeds.
 - Fixed an issue where the border for the section field type is missing for the frontend form display when legacy markup mode is not enabled.
 - Fixed an issue for the generic map settings field not rendering when editing an existing feed where the setting was previously configured.
 - Fixed an issue that causes gfCalc events to be bound to the same listener multiple times.
+- Updated the reCAPTCHA settings link for the Captcha field "To use the reCAPTCHA field" message in the form editor.
+- Updated the UI of the update button in the form editor.
+- Updated the feed settings to run on admin_init instead of init to ensure they never trigger on the front end.
+- Updated some instances of strings not being translatable for the System Status view.
+- API: Fixed an issue where field map fields don't auto populate with default options.
 
 ### 2.5.9 | 2021-08-10
 - Added security enhancements.

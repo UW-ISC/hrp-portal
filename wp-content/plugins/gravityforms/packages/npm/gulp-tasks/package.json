@@ -1,0 +1,71 @@
+{
+  "name": "@gravityforms/gulp-tasks",
+  "version": "1.0.1",
+  "description": "Configurable Gulp tasks for use in Gravity Forms projects.",
+  "author": "Rocketgenius",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "gravityforms",
+    "gulp"
+  ],
+  "homepage": "https://github.com/gravityforms/gravityforms/tree/HEAD/packages/npm/gulp-tasks/README.md",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gravityforms/gravityforms.git",
+    "directory": "packages/npm/gulp-tasks"
+  },
+  "bugs": {
+    "url": "https://github.com/gravityforms/gravityforms/issues"
+  },
+  "engines": {
+    "node": ">=14.15.0",
+    "npm": ">=6.14.8"
+  },
+  "main": "gulpfile.js",
+  "browserslist": [
+    "last 3 versions",
+    "safari >= 13",
+    "ios >= 13",
+    "android >= 5.1",
+    "not ie <= 10",
+    "not ie_mob <= 11",
+    "not op_mini all",
+    "not bb <= 10",
+    "not samsung 4",
+    "not op_mob <= 12.1"
+  ],
+  "scripts": {
+    "gulp": "gulp"
+  },
+  "dependencies": {
+    "autoprefixer": "^10.2.5",
+    "browser-sync": "^2.26.13",
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-decompress": "^3.0.0",
+    "gulp-footer": "^2.0.2",
+    "gulp-header": "^2.0.9",
+    "gulp-if": "^3.0.0",
+    "gulp-postcss": "^9.0.0",
+    "gulp-rename": "^2.0.0",
+    "gulp-replace": "^1.0.0",
+    "gulp-shell": "^0.8.0",
+    "gulp-sourcemaps": "^2.6.5",
+    "gulp-stylelint": "^13.0.0",
+    "postcss": "^8.1.4",
+    "postcss-custom-media": "^7.0.8",
+    "postcss-custom-properties": "^10.0.0",
+    "postcss-extend": "^1.0.5",
+    "postcss-import": "^13.0.0",
+    "postcss-mixins": "^7.0.2",
+    "postcss-nested": "^5.0.1",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-rem-to-pixel": "^4.1.2",
+    "require-dir": "^1.2.0",
+    "tailwindcss": "^2.0.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
