@@ -2162,6 +2162,10 @@ var GFMergeTag = function() {
 				val = gformToNumber( val );
 				return val === false ? 0 : val;
 				break;
+
+			default:
+				val = val.trim();
+				break;
 		}
 
 		return val;
@@ -2228,7 +2232,6 @@ var GFCalc = function(formId, formulaFields){
     }
 
     this.runCalc = function(formulaField, formId) {
-
         var calcObj      = this,
             field        = jQuery('#field_' + formId + '_' + formulaField.field_id),
             formulaInput = field.hasClass( 'gfield_price' ) ? jQuery( '#ginput_base_price_' + formId + '_' + formulaField.field_id ) : jQuery( '#input_' + formId + '_' + formulaField.field_id ),
@@ -2244,6 +2247,8 @@ var GFCalc = function(formId, formulaFields){
                 result = eval(expr);
 
             } catch( e ) { }
+        } else {
+        	return;
         }
 
         // if result is positive infinity, negative infinity or a NaN, defaults to 0
@@ -2384,6 +2389,10 @@ var GFCalc = function(formId, formulaFields){
 
             var inputId = matches[i][1];
             var fieldId = parseInt(inputId,10);
+
+            if ( fieldId == formulaField.field_id && fieldId == inputId ) {
+            	continue;
+            }
 
             var modifier = 'value';
 			if( matches[i][3] ){

@@ -819,6 +819,35 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				console.log('toolbarEvent(  ) Event: ', eventName);
 			}, // */
 
+			initialize: function() {
+				mlaAttachmentsBrowser.prototype.initialize.apply( this, arguments );
+
+				if ( ( 'object' === typeof this.attachmentsWrapper ) && ( 'undefined' === typeof window.eml ) ) {
+					mlaModal.settings.oldHeight = 0;
+					this.on( 'ready', this.adjustBrowser, this );
+					this.$window = $( window );
+					this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser, this ), 15 ) );
+				}
+			},
+			
+			adjustBrowser: function() {
+				var wrapper = this.attachmentsWrapper, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
+
+				primaryHeight = toolbar.primary.$el.height();
+				secondaryHeight = toolbar.secondary.$el.height();
+
+				if ( primaryHeight > secondaryHeight ) {
+					toolbarHeight = primaryHeight;
+				} else {
+					toolbarHeight = secondaryHeight;
+				}
+
+				if ( ( 0 < toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
+					wrapper.$el.css( 'top', toolbarHeight + 10 + 'px' );
+					mlaModal.settings.oldHeight = toolbarHeight;
+				}
+			},
+			
 			createToolbar: function() {
 				var filters, state = this.controller._state;
 	

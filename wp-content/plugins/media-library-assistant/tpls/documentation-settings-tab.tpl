@@ -822,7 +822,7 @@ Note that the "tag_id" parameter requires exactly one tag ID; multiple IDs are n
 </p>
 <h4>Simple Taxonomy Parameters</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports the simple "{tax} (string)" values (deprecated as of WordPress version 3.1) as well as the more powerful "<a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">tax_query</a>" value. Use these queries for your custom taxonomies (and for the MLA attachment_category and attachment_tag taxonomies); use the above Category and Tag parameters for the WordPress-provided taxonomies. If you do use a tax_query for Categories and Tags, the slug values are "category" and "post_tag". 
+The <code>[mla_gallery]</code> shortcode supports the simple "{taxonomy}=(term(s))" values (deprecated as of WordPress version 3.1) as well as the more powerful "<a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">tax_query</a>" value. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter any simple taxonomy parameters will be ignored.</strong> Use these queries for your custom taxonomies (and for the MLA attachment_category and attachment_tag taxonomies); use the above Category and Tag parameters for the WordPress-provided taxonomies. If you do use a simple taxonomy parameter for Categories and Tags, the slug values are "category" and "post_tag". 
 </p>
 <p>
 For simple queries, enter the custom taxonomy name and the term(s) that must be matched, e.g.:
@@ -890,7 +890,7 @@ Note that the default tax_include_children value is true, matching the default W
 </p>
 <h4>Compound Taxonomy Queries, "tax_input"</h4>
 <p>
-You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <a href="#term_list_display_content"><strong>MLA Term List Display Content (Dropdown and Checklist)</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, "animal.34" or "vegetable.carrot".
+You can combine taxonomies and terms into a single parameter; <code>tax_input</code>. This is most often used to process selections made in the <a href="#term_list_display_content"><strong>MLA Term List Display Content (Dropdown and Checklist)</strong></a> for controls that contain multiple taxonomies. The parameter value can be one or more items consisting of the taxonomy slug and a term_id or slug, separated by a period. For example, <code>tax_input="animal.34,vegetable.carrot,vegetable.radish"</code>. <strong>If your shortcode includes an explicit <code>tax_query</code> parameter the <code>tax_input</code> parameter will be ignored.</strong> 
 </p>
 <p>
 This example has a simple form to pick a term from two taxonomies and display a gallery with the items assigned to the selected term:
@@ -910,7 +910,7 @@ In the example, <code>animal.invalid-slug</code> is a taxonomy.term combination 
 </p>
 <h4>Taxonomy Queries, the "tax_query"</h4>
 <p>
-More complex queries can be specified by using <a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">WP_Query's "tax_query"</a>, e.g.:
+More complex queries can be specified by using <a href="https://developer.wordpress.org/reference/classes/wp_query/#taxonomy-parameters" title="WordPress Codex Documentation for tax_query" target="_blank">WP_Query's "tax_query"</a>. <strong>If you add an explicit <code>tax_query</code> parameter to your shortcode any simple taxonomy parameters and the <code>tax_input</code> parameter will be ignored.</strong> Here are two tax_query examples:
 </p>
 <p><code>[mla_gallery]<br />
 tax_query="array(<br />
@@ -955,7 +955,7 @@ tax_query="array(<br />
 You can also use three numeric synonyms, '-3' for "ignore.terms.assigned", '-1' for "no.terms.assigned" and '-2' for "any.terms.assigned" in applications using numeric term id values in place of slugs.
 </p>
 <p>
-When you code <code>'terms' =&gt; 'ignore.terms.assigned'</code> the entire tax_query will be ignored. When you code <code>'terms' =&gt; 'no.terms.assigned'</code> or <code>'terms' =&gt; 'any.terms.assigned'</code> the only other element you need is <code>taxonomy =&gt;</code>. There is no need for parameters like <code>'field' =&gt;</code> or <code>'operator' =&gt;</code> to get the proper results. The example uses use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
+When you code <code>'terms' =&gt; 'ignore.terms.assigned'</code> the tax_query element for that taxonomy will be ignored. When you code <code>'terms' =&gt; 'no.terms.assigned'</code> or <code>'terms' =&gt; 'any.terms.assigned'</code> the only other element you need is <code>taxonomy =&gt;</code>. There is no need for parameters like <code>'field' =&gt;</code> or <code>'operator' =&gt;</code> to get the proper results. The example uses use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
@@ -1485,6 +1485,9 @@ Each item in the tag cloud comprises a term name of varying size, a hyperlink su
 </table>
 <p>
 The Item parameters are an easy way to customize the content and markup for each cloud item. For the list and grid formats you can also use the <a href="#tag_cloud_display_content">Tag Cloud Display Content parameters</a> and/or Style and Markup Templates for even greater flexibility.
+</p>
+<p>
+The <code>current_item</code> parameter is managed for you in most ways. It is automatically added to the links behind each cloud element, and copied back into the shortcode parameters if it is not explicitly coded as a parameter. For the cloud element that matches the current item the <code>current_item_class</code> value is automatically added to the hyperlink class attribute for that item.
 <a name="tag_cloud_link"></a>
 </p>
 <h4>Tag Cloud Item Link</h4>
@@ -3775,11 +3778,11 @@ The <code>[mla_gallery]</code> shortcode can be used in combination with other g
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_alt_shortcode</td>
-<td>the name of the shortcode to be called for gallery format and display. You can code "mla_gallery" (recommended) or "no" to disable the alternate shortcode processing.</td>
+<td>the name of the shortcode to be called for gallery format and display. You can code "no" (recommended) or "mla_gallery" (used by the Justified Image Grid plugin) to disable the alternate shortcode processing. To use <code>[mla_gallery]</code> as the alternate shortcode code "yes".</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_alt_parameters</td>
-<td>(optional, default empty) parameters that would normally be processed by <code>[mla_gallery]</code> and not passed through to the alternate shortcode. For example, if the alternate shortcode is "mla_tag_cloud" or "mla_term_list" you might use this parameter to pass <code>post_mime_type=</code> or <code>mla_debug=</code> on to the alternate shortcode.</td>
+<td>(optional, default empty) parameters that would normally be processed by <code>[mla_gallery]</code> and not passed through to the alternate shortcode. For example, if the alternate shortcode is "mla_tag_cloud", "mla_term_list" or "mla_gallery" you might use this parameter to, for example, pass <code>post_mime_type=</code> or <code>mla_debug=</code> on to the alternate shortcode.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_alt_ids_name</td>

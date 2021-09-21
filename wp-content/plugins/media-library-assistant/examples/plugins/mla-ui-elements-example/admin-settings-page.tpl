@@ -189,9 +189,9 @@ p.submit.mla-settings-submit {
 <li><a href="#archive_list_data_selection">Archive List Data Selection Parameters</a></li>
 <li><a href="#archive_list_substitution">Archive List Substitution Parameters</a></li>
 </ul></li>
-<li><a href="#filters_examples"><strong>use_filters/add_filters_to Examples</strong></a></li>
-<li><a href="#sticky_examples"><strong>Sticky shortcodes Examples</strong></a></li>
-<li><a href="#muie_archive_list_examples"><strong>Archive List shortcode Examples</strong></a></li>
+<li><a href="#filters_examples"><strong>use_filters/add_filters_to Example</strong></a></li>
+<li><a href="#sticky_examples"><strong>Sticky Shortcodes Example</strong></a></li>
+<li><a href="#muie_archive_list_examples"><strong>Archive List Shortcode Examples</strong></a></li>
 <li><a href="#debugging"><strong>Debugging and Troubleshooting</strong></a></li>
 </ul>
 <p>
@@ -280,10 +280,10 @@ If you are not getting the results you expect carefully inspecting the results o
 </p>
 <h3>add_filters_to, for [mla_gallery]</h3>
 <p>
-If you add "add_filters_to=any" to an [mla_gallery] shortcode this plugin will retain settings for terms search, keyword search, taxonomy queries and posts_per_page when the page is refreshed or pagination moves to a new page.
+If you add "add_filters_to=any" to an [mla_gallery] shortcode this plugin will retain settings for all of the <code>[muie_...]</code> shortcodes, simple taxonomy queries and tax_input when the page is refreshed or pagination moves to a new page. All simple taxonomy queries and tax_input are combined into a single <code>tax_query</code> parameter for this purpose. You can add <code>tax_relation</code> (default AND), <code>tax_operator</code> (default IN) and <code>tax_include_children</code> (default true) parameters to tailor the query to your needs. You can specify taxonomy-specific settings by appending '_operator" or "_children" to the taxonomy slug, e.g., <code>attachment_tag_operator=AND</code> or <code>attachment_tag_children=false</code>.
 </p>
 <p>
-If you add "add_filters_to=<taxonomy_slug>" to an [mla_gallery] shortcode this plugin will do the actions in 2. and will also match the taxonomy_slug to a simple taxonomy query (if present) and add that query to the taxonomy queries. If the simple query is "muie-no-terms", it will be ignored.
+If you add "add_filters_to={taxonomy_slug}" to an [mla_gallery] shortcode this plugin will do the actions described above and will also match the taxonomy_slug to a simple taxonomy query (if present) and look for a special "muie-no-terms" value. If the simple taxonomy value is "muie-no-terms", the taxonomy will be ignored, i.e., not added to the <code>tax_query</code> parameter.
 </p>
 <p>
 &nbsp;
@@ -321,7 +321,7 @@ The shortcode is meant to be placed in an HTML form that lets the user enter cri
 </p>
 <h3>The [muie_keyword_search] shortcode</h3>
 <p>
-The <code>[muie_terms_search]</code> shortcode generates a text box for passing the "s" parameter to an <code>[mla_gallery]</code> shortcode. You can add parameters to this shortcode to pass the other keyword search parameters as well:
+The <code>[muie_keyword_search]</code> shortcode generates a text box for passing the "s" parameter to an <code>[mla_gallery]</code> shortcode. You can add parameters to this shortcode to pass the other keyword search parameters as well:
 </p>
 <ul class="mla-doc-toc-list">
 <li>mla_search_fields</li>
@@ -348,6 +348,9 @@ The <code>[muie_orderby]</code> shortcode generates a dropdown control for passi
 <li>meta_value</li>
 </ul>
 <p>
+The <code>shortcode</code> parameter simply validates the list of sort fields allowed for each shortcode. For <code>[mla_gallery]</code>, the <code>[muie_orderby]</code> value is automatically translated to the <code>orderby</code> parameter. For <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> you must add something like <code>orderby="{+template:{+request:muie_orderby+}|name+}+}"</code> to the shortcode parameters.
+</p>
+<p>
 The <code>[muie_order]</code> shortcode generates a radio button control for passing the "order" parameter to an <code>[mla_gallery]</code>, <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> shortcode. You can add parameters to this shortcode to change the default value:
 </p>
 <ul class="mla-doc-toc-list">
@@ -355,6 +358,9 @@ The <code>[muie_order]</code> shortcode generates a radio button control for pas
 <li>asc_label</li>
 <li>desc_label</li>
 </ul>
+<p>
+For <code>[mla_gallery]</code>, the <code>[muie_order]</code> value is automatically translated to the <code>order</code> parameter. For <code>[mla_tag_cloud]</code>, or <code>[mla_term_list]</code> you must add something like <code>order="{+template:{+request:muie_order+}|ASC+}+}"</code> to the shortcode parameters.
+</p>
 <p>
 The shortcodes are meant to be placed in an HTML form that lets the user enter criteria to filter a gallery display.
 <a name="muie_per_page"></a>
@@ -388,7 +394,7 @@ The <code>[muie_assigned_items_count]</code> shortcode returns the number of ite
 <li>post_mime_type</li>
 </ul>
 <p>
-&nbsp;
+The shortcode is meant to be used anywhere you want to display the calculated number of items.
 <a name="muie_text_box"></a>
 </p>
 <p>
@@ -1095,23 +1101,90 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>use_filters/add_filters_to Examples</h3>
+<h3>use_filters/add_filters_to Example</h3>
 <p>
-&nbsp;
+Here is a simple example with a term selection search form and a paginated gallery display:
+</p>
+<code>
+&lt;form id="mla-search-form" action="." method="post"&gt;
+<br />&lt;h3&gt;Att. Categories&lt;/h3&gt;
+<br />[mla_term_list mla_output=dropdown taxonomy=attachment_category minimum=1 post_mime_type=image mla_option_value="{+slug+}" <strong>use_filters=true</strong>]
+<br />&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;
+<br />&lt;/form&gt;
+<br />&nbsp;
+<br />&lt;h3&gt;Gallery&lt;/h3&gt;
+<br />[mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|muie-no-terms)+}" <strong>add_filters_to=attachment_category</strong> posts_per_page=4 mla_output="paginate_links,prev_next"]
+<br />&nbsp;
+<br />[mla_gallery attachment_category="{+template:({+request:tax_input.attachment_category+}|muie-no-terms)+}" <strong>add_filters_to=attachment_category</strong> posts_per_page=4 mla_nolink_text="Select a term to display the gallery."]
+</code>
+<p>
+The <code>[mla_term_list]</code> shortcode generates a dropdown control containing all terms in the Att. Categories taxonomy that have at least one Media Library "image" item assigned to them. The first <code>[mla_gallery]</code> shortcode generates pagination controls when there are more than four items assigned to the selected term. The second <code>[mla_gallery]</code> shortcode generates the gallery display, up to four items at a time.
+</p>
+<p>
+The <code>use_filters=true</code> parameter in the <code>[mla_term_list]</code> shortcode activates the logic to preserve term selections across page refreshes and pagination operations. The <code>add_filters_to=attachment_category</code> parameter in both <code>[mla_gallery]</code> shortcodes does two things. First, it activates the logic to add term selections to the pagination links. Second, it looks for the special <code>attachment_category=muie-no-terms</code> value and drops the taxonomy query from the shortcode when it is found. This causes the initial gallery display, i.e., before a term is selected, to include all images in the Media Library.
+</p>
+<p>
+The <code>attachment_category="{+template:({+request:tax_input.attachment_category+}|muie-no-terms)+}"</code> parameter matches the term selection value in the search form when the "Filter" button is clicked. Before the "Filter" button is clicked there is no <code>tax_input</code> array value in the request parameters so the template selects the <code>muie-no-terms</code> value instead.
+</p>
+<p>
+If you change <code>add_filters_to=attachment_category</code> to <code>add_filters_to=any</code>, the <code>muie-no-terms</code> match logic is disabled. The <code>muie-no-terms</code> value is treated like a term slug and, since it does not match any term in the taxonomy the initial gallery display will be empty.
+</p>
+<p>
+As always, the data selection parameters (including <code>add_filters_to</code>) in both of the <code>[mla_gallery]</code> shortcodes <strong>must be identical</strong>. This is necessary for the pagination controls to select the same items as the gallery display.
 <a name="sticky_examples"></a>
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>Sticky shortcodes Examples</h3>
+<h3>Sticky Shortcodes Example</h3>
 <p>
-&nbsp;
+Here is a simple example with a search form containing some sticky shortcodes and a paginated gallery display:
+</p>
+<code>
+&lt;form id="mla-search-form" action="." method="post"&gt;<br />
+Att. Tags: [muie_terms_search]<br />
+mla_terms_taxonomies=attachment_tag<br />
+mla_term_delimiter=' '<br />
+mla_phrase_connector='OR'<br />
+[/muie_terms_search]<br />
+<br />
+Keyword(s): [muie_keyword_search]<br />
+mla_search_fields='title,excerpt,content'<br />
+mla_search_connector='OR'<br />
+[/muie_keyword_search]<br />
+<br />
+Items per page: [muie_per_page numberposts=4]<br />
+<br />
+&lt;input id="search-form-submit" name="search_form_submit" type="submit" value="Filter"&gt;<br />
+&lt;/form&gt;<br />
+&lt;h3&gt;Gallery&lt;/h3&gt;<br />
+[mla_gallery add_filters_to=any default_empty_gallery=true post_parent=all posts_per_page=4 mla_output="paginate_links,prev_next"]<br />
+<br />
+[mla_gallery add_filters_to=any default_empty_gallery=true post_parent=all posts_per_page=4 mla_caption="{+title+} : {+description+}" mla_nolink_text="Enter tag(s) and/or keyword(s) to display the gallery."]
+</code>
+<p>
+The first two shortcodes in the example use the alternative "enclosing shortcode" syntax so parameters can be entered on multiple lines for readability.
+</p>
+<p>
+The <code>[muie_terms_search]</code> shortcode generates a text box that accepts one or more phrases to be matched to part or all of a term name in the Att. Tags taxonomy. Phrases are separated by spaces and if two or more phrases are entered any one of them will yield a match. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>mla_terms_phrases</code>. The <code>mla_terms_taxonomies</code>, <code>mla_term_delimiter</code> and <code>mla_phrase_connector</code> parameters are passed to <code>[mla_gallery]</code> as well.
+</p>
+<p>
+The <code>[muie_keyword_search]</code> shortcode generates a text box that accepts one or more keywords to be matched to part or all of the Title, Caption (excerpt) or Description (content) fields. If two or more keywords are entered any one of them will yield a match. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>s</code>. The <code>mla_search_fields</code> and <code>mla_search_connector</code> parameters are passed to <code>[mla_gallery]</code> as well.
+</p>
+<p>
+The <code>[muie_per_page]</code> shortcode generates a text box that accepts the number of posts per page to be displayed in the gallery. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>muie_per_page</code> and it will be converted to <code>posts_per_page</code>. The initial gallery display will not be limited unless you also add an explicit <code>posts_per_page</code> parameter to <code>[mla_gallery]</code>; as the above example shows, its value should match the default value entered in <code>[muie_per_page]</code>.
+</p>
+<p>
+The two <code>[mla_gallery]</code> shortcodes include <code>add_filters_to=any</code> to activate the sticky shortcode processing. The <code>default_empty_gallery=true</code> parameter ensures that no items are displayed until a term or keyword search is performed. If you omit this parameter, the <code>post_parent=all</code> parameter displays all Media Library image items; without it only the items attached to the post/page are displayed by default. The <code>posts_per_page=4</code> parameter limits the initial gallery display to four items.
+</p>
+<p>
+As always, the data selection parameters (including <code>add_filters_to</code>) in both of the <code>[mla_gallery]</code> shortcodes <strong>must be identical</strong>. This is necessary for the pagination controls to select the same items as the gallery display.
 <a name="muie_archive_list_examples"></a>
 </p>
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>Archive List shortcode Examples</h3>
+<h3>Archive List Shortcode Examples</h3>
 <p>
 The MUIE Archive List shortcode is very flexible and has many parameters and features. However, you can accomplish many application goals with simple shortcodes and just a few parameters. For example, here is a shortcode that will generate a dropdown control with an option to select Media Library items uploaded in a given year:
 <br />&nbsp;<br />
