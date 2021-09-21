@@ -29,6 +29,8 @@ function wdtGetAjaxData() {
     $decimalPlaces = array();
     $exactFiltering = array();
     $globalSearchColumn = array();
+    $searchInSelectBox = array();
+    $searchInSelectBoxEditing = array();
     $foreignKeyRule = array();
     $idColumn = '';
     $linkTargetAttribute = array();
@@ -115,6 +117,8 @@ function wdtGetAjaxData() {
         $decimalPlaces[$column->orig_header] = isset($advancedSettings->decimalPlaces) ? $advancedSettings->decimalPlaces : null;
         $exactFiltering[$column->orig_header] = isset($advancedSettings->exactFiltering) ? $advancedSettings->exactFiltering : null;
         $globalSearchColumn[$column->orig_header] = isset($advancedSettings->globalSearchColumn) ? $advancedSettings->globalSearchColumn : null;
+        $searchInSelectBox[$column->orig_header] = isset($advancedSettings->searchInSelectBox) ? $advancedSettings->searchInSelectBox : null;
+        $searchInSelectBoxEditing[$column->orig_header] = isset($advancedSettings->searchInSelectBoxEditing) ? $advancedSettings->searchInSelectBoxEditing : null;
         $linkTargetAttribute[$column->orig_header] = isset($advancedSettings->linkTargetAttribute) ? $advancedSettings->linkTargetAttribute : null;
         $linkNoFollowAttribute[$column->orig_header] = isset($advancedSettings->linkNoFollowAttribute) ? $advancedSettings->linkNoFollowAttribute : null;
         $linkButtonAttribute[$column->orig_header] = isset($advancedSettings->linkButtonAttribute) ? $advancedSettings->linkButtonAttribute : null;
@@ -191,6 +195,8 @@ function wdtGetAjaxData() {
         'decimalPlaces'       => $decimalPlaces,
         'exactFiltering'      => $exactFiltering,
         'globalSearchColumn'  => $globalSearchColumn,
+        'searchInSelectBox'   => $searchInSelectBox,
+        'searchInSelectBoxEditing' => $searchInSelectBoxEditing,
         'filterTypes'         => $columnFilterTypes,
         'foreignKeyRule'      => $foreignKeyRule,
         'idColumn'            => $idColumn,

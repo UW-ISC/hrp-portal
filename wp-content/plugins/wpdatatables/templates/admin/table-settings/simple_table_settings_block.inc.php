@@ -439,6 +439,63 @@
                             </div>
 
                         </div>
+
+                        <div class="col-sm-4 remove-borders-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Remove borders', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Remove the table borders', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-remove-borders" type="checkbox">
+                                <label for="wdt-remove-borders"
+                                       class="ts-label"><?php _e('Remove borders', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 border-collapse-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Border collapse', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Whether table borders should collapse into a single border or be separated as in standard HTML.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <label for="wdt-border-collapse"></label><select class="selectpicker" id="wdt-border-collapse">
+                                            <option value="collapse" selected><?php _e('Collapse', 'wpdatatables'); ?></option>
+                                            <option value="separate"><?php _e('Separate', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-4 border-spacing-block">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Border spacing (in px)', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Here you can provide the number of pixels for the table border spacing.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line wdt-custom-number-input">
+                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus"
+                                            data-type="minus" data-field="wdt-border-spacing">
+                                        <i class="wpdt-icon-minus"></i>
+                                    </button>
+                                    <input type="text" name="wdt-border-spacing" min="0" value="0"
+                                           class="form-control input-sm input-number" id="wdt-border-spacing">
+                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus"
+                                            data-type="plus" data-field="wdt-border-spacing">
+                                        <i class="wpdt-icon-plus-full"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <!-- /Table display settings -->

@@ -11,19 +11,25 @@
         id="wpdatatable-simple-preview-container-<?php echo $this->getTableID() ?>"
     <?php } ?>
 >
+    <?php
+    $isResponsive = $this->getTableSettingsData()->simpleResponsive;
+    $isRemoveBorders = $this->getTableSettingsData()->removeBorders;
+    $isBorderSeparate = $this->getTableSettingsData()->borderCollapse == 'separate';
+    $isStripe = $this->getTableSettingsData()->stripeTable;
+    $header = $this->getTableSettingsData()->simpleHeader;
+    ?>
     <table id="wpdtSimpleTable-<?php echo $this->getTableID() ?>"
+           style="border-collapse:<?php echo $this->getTableSettingsData()->borderCollapse; ?>;
+                   border-spacing:<?php echo $this->getTableSettingsData()->borderSpacing; ?>px;"
            class="wpdtSimpleTable wpDataTable"
            data-column="<?php echo $this->getColNumber() ?>"
            data-rows="<?php echo $this->getRowNumber() ?>"
            data-wpID="<?php echo $this->getTableID() ?>"
-           data-responsive="<?php echo $this->getTableSettingsData()->simpleResponsive ?>"
-           data-has-header="<?php echo $this->getTableSettingsData()->simpleHeader ?>">
+           data-responsive="<?php echo $isResponsive ?>"
+           data-has-header="<?php echo $header ?>">
 
         <?php
-        $isResponsive = $this->getTableSettingsData()->simpleResponsive;
-        $isStripe = $this->getTableSettingsData()->stripeTable;
         $toggleClass = $isStripe ? 'even' : '';
-        $header = $this->getTableSettingsData()->simpleHeader;
         $tag = 'td';
         for ($i = 0; $i < $this->getRowNumber(); $i++) {
             if ($isStripe) {
@@ -42,7 +48,7 @@
                 echo '<tbody>';
             }
             ?>
-        <tr class="wpdt-cell-row <?php echo $toggleClass ?>" <?php if (isset($this->getRowsData()[$i]->height)) echo 'style="height:' . $this->getRowsData()[$i]->height . 'px;"'; ?>>
+        <tr class="wpdt-cell-row <?php echo $toggleClass ?><?php if ($isRemoveBorders) echo ' remove-borders ' ?>" <?php if (isset($this->getRowsData()[$i]->height)) echo 'style="height:' . $this->getRowsData()[$i]->height . 'px;"'; ?>>
             <?php for ($j = 0; $j < $this->getColNumber(); $j++) {
                 $cellMetaClasses = $this->getCellClassesByIndexes($this->getRowsData(), $i, $j) ? implode(" ", $this->getCellClassesByIndexes($this->getRowsData(), $i, $j)) : "";
                 $cellMetaClasses .= $this->getCellDataByIndexes($this->getRowsData(), $i, $j) == "" ? " wpdt-empty-cell" : "";
@@ -61,7 +67,8 @@
                     $hiddenCell = "";
                     $cellMetaClasses .= " wpdt-merged-cell ";
                 }
-
+                $cellMetaClasses .=  $isRemoveBorders ? ' remove-borders ' : '';
+                $cellMetaClasses .=  $isBorderSeparate ? ' border-separate ' : '';
                 $cellMetaClasses = apply_filters('wpdt_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
 
                 if (($hiddenCell == 'hidden' && $isResponsive) || $hiddenCell != 'hidden'){
@@ -99,7 +106,8 @@
                         }
                     }
                 } ?>
-                padding:<?php echo $this->getTableSettingsData()->cellPadding; ?>px;"
+                padding:<?php echo $this->getTableSettingsData()->cellPadding; ?>px;
+                <?php if ($isResponsive && $isBorderSeparate) echo 'margin-bottom: ' .  $this->getTableSettingsData()->borderSpacing .'px;' ?>"
                 >
                 <?php
                 $cellData = $this->getCellDataByIndexes($this->getRowsData(), $i, $j);

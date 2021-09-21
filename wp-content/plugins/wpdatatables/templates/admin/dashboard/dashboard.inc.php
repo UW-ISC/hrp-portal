@@ -268,15 +268,14 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Exporting the chart data to CSV, XLS or HTML table formats in Highcharts.</li>
-                                <li><strong>Feature:</strong> Added Font and Font size options in simple table.</li>
-                                <li><strong>Feature:</strong> Added new option for showing HTML code in exported files like Print, Copy, CSV and Excel.</li>
-                                <li><strong>Improvement:</strong> Removed view of purchase code on Activation page.</li>
-                                <li><strong>Improvement:</strong> Updated moment.js library.</li>
-                                <li><strong>BugFix:</strong> Fixed layout of select-box field in edit modal.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with vertical min value in Chartjs.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with attachment field in edit modal.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with rendering charts for lower versions of jQuery.</li>
+                                <li><strong>Feature:</strong> Added new option to show/hide search field in select-box/multiselect-box filters.</li>
+                                <li><strong>Feature:</strong> Added new option to show/hide search field in Single-value select-box/Multi-value select-box in edit modal.</li>
+                                <li><strong>Feature:</strong> Added new options for simple table: "Remove borders", "Border collapse" and "Border spacing".</li>
+                                <li><strong>Feature:</strong> Added new option "Page Orientation" for PDF export reports.</li>
+                                <li><strong>Feature:</strong> Added new option "Paper Size" for PDF export reports.</li>
+                                <li><strong>Improvement:</strong> Improved checking for existing PHP extension - zlib on the server.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with double loading for multiselect filter.</li>
+                                <li>Compatibility with WordPress 5.8.1 approved.</li>
                                 <li>Other small bug fixes and stability improvements.</li>
                             </ul>
                         </div>
@@ -349,7 +348,7 @@
                                 <span>
                                    <?php esc_html_e('Zip extension ', 'wpdatatables'); ?>
                                 </span>
-                                <?php if (extension_loaded('zlib')) { ?>
+                                <?php if (class_exists('ZipArchive')) { ?>
                                     <i class="wpdt-icon-check-circle-full"></i>
                                 <?php } else { ?>
                                     <i class="wpdt-icon-times-circle-full"></i>
