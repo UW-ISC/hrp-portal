@@ -329,29 +329,32 @@ class Generic_Map extends Base {
 			$default_value_choices = array_map( 'strtolower', $default_value_choices );
 
 			// If choice has specific value choices after evaluating required and excluded types, get them.
-			if( rgar( $choice, 'choices' ) && is_array( $choice['choices'] ) ) {
-				$value_choices =  $choice['choices'];
+			if ( rgar( $choice, 'choices' ) && is_array( $choice['choices'] ) ) {
+				$value_choices = $choice['choices'];
 			} else {
 				$value_choices = $this->value_field['choices'];
 			}
 
-			foreach ( $value_choices as $group ) {
+			// Each key field potentially has it's own array of potential choices based on required and excluded types, so we need to loop through those.
+			foreach ( $value_choices as $key_field_choices ) {
 
-				if( ! rgar( $group, 'choices' ) || ! is_array( $group['choices'] ) )
-					continue;
-
-				foreach ( $group['choices']  as $value_choice ) {
-
-					if( empty( $value_choice['value'] ) ) {
+				// Loop through each group for each key field and see if there are choices available.
+				foreach ( $key_field_choices as $group ) {
+					if ( ! rgar( $group, 'choices' ) || ! is_array( $group['choices'] ) ) {
 						continue;
 					}
 
-					// If lowercase field label matches a default value choice, set it to the default value.
-					if ( in_array( strtolower( $value_choice['label'] ), $default_value_choices ) ) {
-						$choice['default_value'] = $value_choice['value'];
-						break 2 ;
-					}
+					foreach ( $group['choices']  as $value_choice ) {
+						if ( empty( $value_choice['value'] ) ) {
+							continue;
+						}
 
+						// If lowercase field label matches a default value choice, set it to the default value.
+						if ( in_array( strtolower( $value_choice['label'] ), $default_value_choices ) ) {
+							$choice['default_value'] = $value_choice['value'];
+							break 3;
+						}
+					}
 				}
 			}
 		}

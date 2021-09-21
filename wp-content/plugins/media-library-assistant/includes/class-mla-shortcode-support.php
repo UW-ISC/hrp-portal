@@ -577,6 +577,11 @@ class MLAShortcode_Support {
 				continue;
 			}
 
+			// Don't expand anything passed along to the alternate shortcode
+			if ( 'mla_alt_parameters' === $attr_key ) {
+				continue;
+			}
+
 			$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
 			$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
 			$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
@@ -601,13 +606,19 @@ class MLAShortcode_Support {
 			$arguments['mla_markup'] = $default_arguments['mla_markup'];
 		}
 
-		// Look for "no effect" alternate gallery shortcode to support plugins such as Justified Image Grid
-		if ( is_string( $arguments['mla_alt_shortcode'] ) && ( in_array( $arguments['mla_alt_shortcode'], array( 'mla_gallery', 'no' ) ) ) ) {
-			$arguments['mla_alt_shortcode'] = NULL;
-			$arguments['mla_alt_ids_name'] = 'ids';
-			$arguments['mla_alt_ids_value'] = NULL;
-			$arguments['mla_alt_ids_template'] = NULL;
-			$arguments['mla_alt_parameters'] = NULL;
+		// Look for alternate gallery shortcode special cases
+		if ( is_string( $arguments['mla_alt_shortcode'] ) ) {
+			// Special value to avoid Justified Image Grid conflict
+			if ( 'yes' === $arguments['mla_alt_shortcode'] ) {
+				$arguments['mla_alt_shortcode'] = 'mla_gallery';
+			} elseif ( in_array( $arguments['mla_alt_shortcode'], array( 'mla_gallery', 'no' ) ) ) {
+				// Handle "no effect" alternate gallery shortcode to support plugins such as Justified Image Grid
+				$arguments['mla_alt_shortcode'] = NULL;
+				$arguments['mla_alt_ids_name'] = 'ids';
+				$arguments['mla_alt_ids_value'] = NULL;
+				$arguments['mla_alt_ids_template'] = NULL;
+				$arguments['mla_alt_parameters'] = NULL;
+			}
 		}
 
 		self::$mla_debug = ( ! empty( $arguments['mla_debug'] ) ) ? trim( strtolower( $arguments['mla_debug'] ) ) : false;
@@ -780,11 +791,24 @@ class MLAShortcode_Support {
 				$blacklist = array_merge( $mla_arguments, $blacklist );
 			}
 
+			// Suppress mla_alt... shortcode arguments in second mla_gallery
+			if ( 'mla_gallery' === $arguments['mla_alt_shortcode'] ) {
+				$blacklist = array_merge( $blacklist, array( 
+					'mla_alt_shortcode' => NULL,
+					'mla_alt_ids_name' => 'ids',
+					'mla_alt_ids_value' => NULL,
+					'mla_alt_ids_template' => NULL,
+					'mla_alt_parameters' => NULL,
+					) 
+ 				);
+			}
+
 			$blacklist = apply_filters( 'mla_gallery_alt_shortcode_blacklist', $blacklist );
 			$alt_attr = apply_filters( 'mla_gallery_alt_shortcode_attributes', $attr );
 //error_log( __LINE__ . " alt_attr = " . var_export( $alt_attr, true ), 0 );
 
 			// Allow for overide of blacklist values, e.g., post_mime_type
+			$alt_parameters = array();
 			if ( !empty( $alt_attr['mla_alt_parameters'] ) ) {
 				$alt_parameters = self::mla_validate_attributes( $alt_attr['mla_alt_parameters'] );
 //error_log( __LINE__ . " alt_parameters = " . var_export( $alt_parameters, true ), 0 );
@@ -2020,6 +2044,13 @@ class MLAShortcode_Support {
 			}
 		}
 		 
+		// Special handling of current_item; look for this parameter in $_REQUEST if it's not present in the shortcode itself.
+		if ( ! isset( $attr['current_item'] ) ) {
+			if ( isset( $_REQUEST['current_item'] ) ) {
+				$attr['current_item'] = sanitize_text_field( wp_unslash( $_REQUEST['current_item'] ) );
+			}
+		}
+		 
 		// Determine markup template to get default arguments
 		$arguments = shortcode_atts( $defaults, $attr );
 		if ( $arguments['mla_markup'] ) {
@@ -2099,8 +2130,8 @@ class MLAShortcode_Support {
 		}
 
 		// Clean up the current_item to separate term_id from slug
-		if ( ! empty( $arguments['current_item'] ) && ctype_digit( $arguments['current_item'] ) ) {
-			$arguments['current_item'] = absint( $arguments['current_item'] );
+		if ( ! empty( $arguments['current_item'] ) && is_numeric( $arguments['current_item'] ) ) {
+			$arguments['current_item'] = (integer) $arguments['current_item'];
 		}
 
 		$arguments = apply_filters( 'mla_tag_cloud_arguments', $arguments );
@@ -2752,11 +2783,11 @@ class MLAShortcode_Support {
 
 			if ( ! empty( $arguments['current_item'] ) ) {
 				if ( is_integer( $arguments['current_item'] ) ) {
-					if ( $arguments['current_item'] == $tag->term_id ) {
+					if ( intval( $tag->term_id ) === $arguments['current_item'] ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				} else {
-					if ( $tag->slug == sanitize_title_for_query( $arguments['current_item'] ) ) {
+					if ( sanitize_title_for_query( $tag->slug ) === sanitize_title_for_query( $arguments['current_item'] ) ) {
 						$item_values['current_item_class'] = $arguments['current_item_class'];
 					}
 				}
@@ -2790,11 +2821,18 @@ class MLAShortcode_Support {
 				$link_attributes .= self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) . ' ';
 			}
 
+			if ( ! empty( $item_values['current_item_class'] ) ) {
+				$class_attributes = $item_values['current_item_class'];
+			} else {
+				$class_attributes = '';
+			}
+
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$class_attributes = self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values );
-				if ( ! empty( $class_attributes ) ) {
-					$link_attributes .= 'class="' . $class_attributes . '" ';
-				}
+				$class_attributes .= ' ' . self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values );
+			}
+
+			if ( ! empty( $class_attributes ) ) {
+				$link_attributes .= ' class="' . trim( $class_attributes ) . '" ';
 			}
 
 			$item_values['link_attributes'] = $link_attributes;
@@ -2934,7 +2972,7 @@ class MLAShortcode_Support {
 	public static function mla_tag_cloud_shortcode( $attr, $content = NULL ) {
 		/*
 		 * Make sure $attr is an array, even if it's empty,
-		 * and repair damage caused by link-breaks in the source text
+		 * and repair damage caused by line breaks in the source text
 		 */
 		$attr = self::mla_validate_attributes( $attr, $content );
 
@@ -3129,14 +3167,15 @@ class MLAShortcode_Support {
 						$current_item = $value[1];
 					}
 
-					if ( $current_is_slug || !( ctype_digit( $current_item ) || is_int( $current_item ) ) ) {
-						if ( $term->slug === sanitize_title_for_query( $current_item ) ) {
+					// Must work for special values, e.g., any.terms.assigned or -2
+					if ( $current_is_slug || !is_numeric( $current_item ) ) {
+						if ( sanitize_title_for_query( $term->slug ) === sanitize_title_for_query( $current_item ) ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
 						}
 					} else {
-						if ( $current_item === $term->term_id ) {
+						if ( $term->term_id === (integer) $current_item ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
@@ -3557,7 +3596,6 @@ class MLAShortcode_Support {
 			if ( is_string( $arguments[ $mla_item_parameter ] ) ) {
 				$arguments[ $mla_item_parameter ] = explode( ',', $arguments[ $mla_item_parameter ] );
 			}
-
 			foreach( $arguments[ $mla_item_parameter ] as $index => $value ) {
 				if ( ctype_digit( $value ) ) {
 					$arguments[ $mla_item_parameter ][ $index ] = absint( $value );
@@ -5400,8 +5438,9 @@ class MLAShortcode_Support {
 					$arguments['category_name'] = $simple_tax_queries['category'];
 				} else {
 					$query_arguments = $simple_tax_queries;
-					self::$mla_get_shortcode_dynamic_attachments_parameters = $simple_tax_queries;
 				}
+
+				self::$mla_get_shortcode_dynamic_attachments_parameters = $simple_tax_queries;
 			}
 		} // ! empty
 

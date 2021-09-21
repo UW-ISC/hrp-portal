@@ -232,6 +232,7 @@ class MLASettings_IPTCEXIF {
 			'key' => '',
 			'rule_name' => '',
 			'name' => '',
+			'description' => '',
 			'hierarchical' => false,
 			'iptc_value' => '',
 			'exif_value' => '',
@@ -264,6 +265,7 @@ class MLASettings_IPTCEXIF {
 		$new_rule['key'] = $new_name;
 		$new_rule['rule_name'] = $new_name;
 		$new_rule['name'] = $new_name;
+		$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['description'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['description'] ) : '' );
 		$new_rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) : 'none' );
 		$new_rule['exif_value'] = wp_kses( isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : '', 'post' );
 		$new_rule['iptc_first'] = isset( $_REQUEST['mla_iptc_exif_rule']['iptc_first'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['iptc_first'];
@@ -298,6 +300,7 @@ class MLASettings_IPTCEXIF {
 			'key' => '',
 			'rule_name' => '',
 			'name' => '',
+			'description' => '',
 			'hierarchical' => false,
 			'iptc_value' => '',
 			'exif_value' => '',
@@ -338,6 +341,7 @@ class MLASettings_IPTCEXIF {
 			$new_rule['key'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['key'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['key'] ) : '' );
 			$new_rule['rule_name'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['rule_name'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['rule_name'] ) : '' );
 			$new_rule['name'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['name'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['name'] ) : '' );
+			$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['description'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['description'] ) : '' );
 			$new_rule['hierarchical'] = isset( $_REQUEST['mla_iptc_exif_rule']['hierarchical'] ) && '1' === $_REQUEST['mla_iptc_exif_rule']['hierarchical'];
 			$new_rule['iptc_value'] = sanitize_text_field( isset( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['iptc_value'] ) : 'none' );
 			$new_rule['exif_value'] = wp_kses( isset( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) ? wp_unslash( $_REQUEST['mla_iptc_exif_rule']['exif_value'] ) : '', 'post' );
@@ -494,6 +498,10 @@ class MLASettings_IPTCEXIF {
 			'Cancel Name Change' => __( 'Cancel Name Change', 'media-library-assistant' ),
 			'Enter new field' => __( 'Enter new field', 'media-library-assistant' ),
 			'Cancel new field' => __( 'Cancel new field', 'media-library-assistant' ),
+			'Description' => __( 'Description', 'media-library-assistant' ),
+			'description' => $item['description'],
+			'description_rows' => 3,
+			'description_help' => __( 'Notes for the IPTC/EXIF tab submenu table.', 'media-library-assistant' ),
 			'IPTC Value' => __( 'IPTC Value', 'media-library-assistant' ),
 			'iptc_field_options' => MLAOptions::mla_compose_iptc_option_list( $item['iptc_value'] ),
 			'EXIF/Template Value' => __( 'EXIF/Template Value', 'media-library-assistant' ),
@@ -1178,7 +1186,8 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 		'parent',
 		'delete_null',
 		'format',
-		'option'
+		'option',
+		'description',
 	);
 
 	/**
@@ -1214,6 +1223,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 		'delete_null' => array('delete_null',false),
 		'format' => array('format',false),
 		'option' => array('option',false),
+		'description' => array('description',false),
 		);
 
 	/**
@@ -1352,6 +1362,7 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 				'delete_null'  => _x( 'Delete NULL', 'list_table_column', 'media-library-assistant' ),
 				'format'  => _x( 'Format', 'list_table_column', 'media-library-assistant' ),
 				'option'  => _x( 'Option', 'list_table_column', 'media-library-assistant' ),
+				'description' => _x( 'Description', 'list_table_column', 'media-library-assistant' ),
 			);
 		}
 	}
@@ -1714,6 +1725,18 @@ class MLA_IPTC_EXIF_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Populate the Description column
+	 *
+	 * @since 2.97
+	 * 
+	 * @param object	An MLA custom_field_rule object
+	 * @return	string	HTML markup to be placed inside the column
+	 */
+	function column_description( $item ) {
+		return esc_html( $item->description );
+	}
+
+	/**
 	 * Display the pagination, adding view, search and filter arguments
 	 *
 	 * @since 2.60
@@ -2028,6 +2051,7 @@ class MLA_IPTC_EXIF_Query {
 	 *             @type string $key Field or taxonomy slug, custom field name the rule applies to.
 	 *             @type string $rule_name Rule name, to accomodate an old custom fields bug.
 	 *             @type string $name Field or taxonomy name the rule applies to.
+	 *             @type string $description Notes for the IPTC/EXIF tab submenu table.
 	 *             @type boolean $hierarchical True if taxonomy is hierarchical.
 	 *             @type string $iptc_value IPTC tag, e.g., ‘2#025’ or 'none'.
 	 *             @type string $exif_value EXIF field name or Content Template begining "template:".
@@ -2091,6 +2115,8 @@ class MLA_IPTC_EXIF_Query {
 				'key' => $key,
 				'rule_name' => $current_value['name'],
 				'name' => $current_value['name'],
+				// description added in v2.97
+				'description' => isset( $current_value['description'] ) ? $current_value['description'] : '',
 				'hierarchical' => false,
 				'iptc_value' => $current_value['iptc_value'],
 				'exif_value' => $current_value['exif_value'],
@@ -2135,6 +2161,8 @@ class MLA_IPTC_EXIF_Query {
 				unset( $current_values['taxonomy'][ $key ] );
 
 				$current_value = array_merge( $current_value, array(
+					// description added in v2.97
+					'description' => isset( $existing_values['description'] ) ? $existing_values['description'] : '',
 					'iptc_value' => $existing_values['iptc_value'],
 					'exif_value' => $existing_values['exif_value'],
 					'iptc_first' => $existing_values['iptc_first'],
@@ -2146,6 +2174,7 @@ class MLA_IPTC_EXIF_Query {
 				) );
 			} else {
 				$current_value = array_merge( $current_value, array(
+					'description' => '',
 					'iptc_value' => 'none',
 					'exif_value' => '',
 					'iptc_first' => true,
@@ -2172,6 +2201,11 @@ class MLA_IPTC_EXIF_Query {
 			$value['read_only'] = false;
 			$value['changed'] = false;
 			$value['deleted'] = false;
+
+			// description added in v2.97
+			if ( !isset( $value['description'] ) ) {
+				$value['description']= '';
+			}
 
 			if ( isset( $value['active'] ) && $value['active'] ) {
 				$value['active'] = false;
@@ -2211,6 +2245,8 @@ class MLA_IPTC_EXIF_Query {
 						'key' => $rule_name,
 						'rule_name' => $rule_name,
 						'name' => $current_value['name'],
+						// description added in v2.97
+						'description' => isset( $current_value['description'] ) ? $current_value['description'] : '',
 						'hierarchical' => false,
 						'iptc_value' => $current_value['iptc_value'],
 						'exif_value' => $current_value['exif_value'],
@@ -2263,6 +2299,7 @@ class MLA_IPTC_EXIF_Query {
 
 			$new_value = array(
 				'name' => $current_value['name'],
+				'description' => $current_value['description'],
 				'iptc_value' => $current_value['iptc_value'],
 				'exif_value' => $current_value['exif_value'],
 				'iptc_first' => $current_value['iptc_first'],
@@ -2400,6 +2437,7 @@ class MLA_IPTC_EXIF_Query {
 				foreach ( $keywords as $keyword ) {
 					$found |= false !== stripos( $value['rule_name'], $keyword );
 					$found |= false !== stripos( $value['name'], $keyword );
+					$found |= false !== stripos( $value['description'], $keyword );
 					$found |= false !== stripos( $iptc_text, $keyword );
 					$found |= false !== stripos( $value['iptc_value'], $keyword );
 					$found |= false !== stripos( $value['exif_value'], $keyword );
@@ -2489,6 +2527,9 @@ class MLA_IPTC_EXIF_Query {
 					break;
 				case 'option':
 					$sortable_items[ ( empty( $value['option'] ) ? chr(1) : $value['option'] ) . $ID ] = (object) $value;
+					break;
+				case 'description':
+					$sortable_items[ ( empty( $value['description'] ) ? chr(1) : $value['description'] ) . $ID ] = (object) $value;
 					break;
 				default:
 					$sortable_items[ absint( $ID ) ] = (object) $value;

@@ -52,8 +52,17 @@ jQuery( '#mla-new-iptc-exif-name' ).val('none');
 jQuery( '#mla-new-iptc-exif' ).val('');
 jQuery( '#mla-iptc-exif-display-name, #mla-change-name-link' ).show();
 return false;" 
-href="#mla-new-iptc-exif"> [+Cancel Name Change+] </a>
+href="#mla-new-iptc-exif">
+[+Cancel Name Change+]
+</a>
 					<p class="description [+custom_class+]">[+Enter Name+]</p></td>
+			</tr>
+			<tr class="form-field iptc-exif-description-wrap">
+				<th scope="row"> <label for="mla-iptc-exif-description">[+Description+]</label>
+				</th>
+				<td><textarea name="mla_iptc_exif_rule[description]" id="mla-iptc-exif-description" rows="[+description_rows+]">[+description+]</textarea>
+					<p class="description">[+description_help+]</p>
+				</td>
 			</tr>
 			<tr class="form-field iptc-exif-iptc-value-wrap">
 				<th scope="row"> <label for="mla-iptc-exif-iptc-value">[+IPTC Value+]</label>
