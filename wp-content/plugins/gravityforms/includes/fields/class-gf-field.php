@@ -172,12 +172,80 @@ class GF_Field extends stdClass implements ArrayAccess {
 		unset( $this->$key );
 	}
 
+	/**
+	 * Set a context property for this field.
+	 *
+	 * @since 2.3
+	 * @since 2.5.10 - Property key can be an array in order to set a nested value.
+	 *
+	 *
+	 * @param array|string $property_key
+	 * @param mixed $value
+	 *
+	 * @return void
+	 */
 	public function set_context_property( $property_key, $value ) {
+		if ( is_array( $property_key ) ) {
+			$temp = &$this->_context_properties;
+			foreach ( $property_key as $key ) {
+				if ( ! isset( $temp[ $key ] ) ) {
+					$temp[ $key ] = array();
+				}
+
+				$temp = &$temp[ $key ];
+			}
+
+			$temp = $value;
+
+			unset( $temp );
+
+			return;
+		}
+
 		$this->_context_properties[ $property_key ] = $value;
 	}
 
 	public function get_context_property( $property_key ) {
 		return isset( $this->_context_properties[ $property_key ] ) ? $this->_context_properties[ $property_key ] : null;
+	}
+
+	/**
+	 * Set the validation state for a single input within this field.
+	 *
+	 * @since 2.5.10
+	 *
+	 * @param string $input_id
+	 * @param bool   $is_valid
+	 *
+	 * @return void
+	 */
+	public function set_input_validation_state( $input_id, $is_valid ) {
+		$input_id = explode( '.', $input_id );
+		$input_id = end( $input_id );
+
+		$this->set_context_property( array( 'input_validation_states', $input_id ), $is_valid );
+	}
+
+	/**
+	 * Determine whether a single input has been marked as invalid via context properties.
+	 *
+	 * @since 2.5.10
+	 *
+	 * @param $input_id
+	 *
+	 * @return bool
+	 */
+	protected function is_input_valid( $input_id ) {
+		if ( empty( $this->get_entry_inputs() ) ) {
+			return true;
+		}
+
+		$input_id = explode( '.', $input_id );
+		$input_id = end( $input_id );
+
+		$validations = $this->get_context_property( 'input_validation_states' );
+
+		return isset( $validations[ $input_id ] ) ? $validations[ $input_id ] : true;
 	}
 
 
@@ -1122,6 +1190,14 @@ class GF_Field extends stdClass implements ArrayAccess {
 		$type = $this->get_input_type();
 
 		if ( $type == 'number' ) {
+			if ( $this->calculationFormula ) {
+				$ids = GFCommon::get_field_ids_from_formula_tag( $this->calculationFormula );
+
+				if ( in_array( $this->id, $ids ) ) {
+					return false;
+				}
+			}
+
 			return $this->enableCalculation && $this->calculationFormula;
 		}
 
@@ -1704,9 +1780,11 @@ class GF_Field extends stdClass implements ArrayAccess {
 		}
 
 		foreach ( $this->inputs as $input ) {
-			$input_id = str_replace( $this->id . '.', '', $input['id'] );
-			$input_value =  GFForms::get( $input['id'], $values );
-			if ( in_array( $input_id, $required_inputs_ids ) && empty( $input_value ) ) {
+			$input_id    = str_replace( $this->id . '.', '', $input['id'] );
+			$input_value = GFForms::get( $input['id'], $values );
+			$is_valid    = $this->is_input_valid( $input['id'] );
+
+			if ( ! $is_valid || ( in_array( $input_id, $required_inputs_ids ) && empty( $input_value ) ) ) {
 				$invalid_attributes[ $input_id ] = "aria-invalid='true'";
 			} else {
 				$invalid_attributes[ $input_id ] = "aria-invalid='false'";

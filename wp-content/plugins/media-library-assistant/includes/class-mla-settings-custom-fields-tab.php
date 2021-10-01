@@ -227,6 +227,7 @@ class MLASettings_CustomFields {
 			'post_ID' => 0,
 			'rule_name' => '',
 			'name' => '',
+			'description' => '',
 			'data_source' => '',
 			'meta_name' => '',
 			'format' => '',
@@ -257,6 +258,7 @@ class MLASettings_CustomFields {
 
 		$new_rule['rule_name'] = $new_name;
 		$new_rule['name'] = $new_name;
+		$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['description'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['description'] ) : '' );
 		$new_rule['data_source'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['data_source'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['data_source'] ) : 'none' );
 		$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
 		$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
@@ -291,6 +293,7 @@ class MLASettings_CustomFields {
 			'post_ID' => 0,
 			'rule_name' => '',
 			'name' => '',
+			'description' => '',
 			'data_source' => '',
 			'meta_name' => '',
 			'format' => '',
@@ -328,6 +331,7 @@ class MLASettings_CustomFields {
 			$new_rule['post_ID'] = isset( $_REQUEST['mla_custom_field']['post_ID'] ) ? absint( $_REQUEST['mla_custom_field']['post_ID'] ) : 0;
 			$new_rule['rule_name'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_custom_field']['rule_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['rule_name'] ) : '' );
 			$new_rule['name'] = $new_name ? $new_name : sanitize_text_field( isset( $_REQUEST['mla_custom_field']['name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['name'] ) : '' );
+			$new_rule['description'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['description'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['description'] ) : '' );
 			$new_rule['data_source'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['data_source'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['data_source'] ) : 'none' );
 			$new_rule['meta_name'] = wp_kses( isset( $_REQUEST['mla_custom_field']['meta_name'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['meta_name'] ) : '', 'post' );
 			$new_rule['format'] = sanitize_text_field( isset( $_REQUEST['mla_custom_field']['format'] ) ? wp_unslash( $_REQUEST['mla_custom_field']['format'] ) : 'native' );
@@ -473,6 +477,10 @@ class MLASettings_CustomFields {
 			'Cancel Name Change' => __( 'Cancel Name Change', 'media-library-assistant' ),
 			'Enter new field' => __( 'Enter new field', 'media-library-assistant' ),
 			'Cancel new field' => __( 'Cancel new field', 'media-library-assistant' ),
+			'Description' => __( 'Description', 'media-library-assistant' ),
+			'description' => $item['description'],
+			'description_rows' => 3,
+			'description_help' => __( 'Notes for the Custom Fields tab submenu table.', 'media-library-assistant' ),
 			'Data Source' => __( 'Data Source', 'media-library-assistant' ),
 			'data_sources' => MLAOptions::mla_compose_data_source_option_list( $item['data_source'] ),
 			'Meta/Template' => __( 'Meta/Template', 'media-library-assistant' ),
@@ -1077,7 +1085,8 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 		'existing_text',
 		'delete_null',
 		'format',
-		'option'
+		'option',
+		'description',
 	);
 
 	/**
@@ -1111,6 +1120,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 		'delete_null' => array('delete_null',false),
 		'format' => array('format',false),
 		'option' => array('option',false),
+		'description' => array('description',false),
 		);
 
 	/**
@@ -1247,6 +1257,7 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 				'delete_null'  => _x( 'Delete NULL', 'list_table_column', 'media-library-assistant' ),
 				'format'  => _x( 'Format', 'list_table_column', 'media-library-assistant' ),
 				'option'  => _x( 'Option', 'list_table_column', 'media-library-assistant' ),
+				'description' => _x( 'Description', 'list_table_column', 'media-library-assistant' ),
 			);
 		}
 	}
@@ -1580,6 +1591,18 @@ class MLA_Custom_Fields_List_Table extends WP_List_Table {
 	}
 
 	/**
+	 * Populate the Description column
+	 *
+	 * @since 2.97
+	 * 
+	 * @param object	An MLA custom_field_rule object
+	 * @return	string	HTML markup to be placed inside the column
+	 */
+	function column_description( $item ) {
+		return esc_html( $item->description );
+	}
+
+	/**
 	 * Display the pagination, adding view, search and filter arguments
 	 *
 	 * @since 2.50
@@ -1892,6 +1915,7 @@ class MLA_Custom_Field_Query {
 	 *             @type integer $post_ID Rule ID; equal to $$ID.
 	 *             @type string $rule_name Rule name, to accomodate an old bug.
 	 *             @type string $name Custom field name the rule applies to.
+	 *             @type string $description Notes for the Custom Fields tab submenu table.
 	 *             @type string $data_source Data source name, 'none', 'meta' or 'template'.
 	 *             @type string $meta_name if ( $data_source = 'meta' ) attachment metadata element name,
 	 *                                     if ( $data_source = 'template ) template value w/o "template:"
@@ -1965,6 +1989,8 @@ class MLA_Custom_Field_Query {
 					'post_ID' => self::$_custom_field_rule_highest_ID,
 					'rule_name' => $rule_name,
 					'name' => $current_value['name'],
+					// description added in v2.97
+					'description' => isset( $current_value['description'] ) ? $current_value['description'] : '',
 					'data_source' =>  $current_value['data_source'],
 					'meta_name' => $current_value['meta_name'],
 					'format' => $current_value['format'],
@@ -2010,6 +2036,7 @@ class MLA_Custom_Field_Query {
 
 			$custom_field_rules[ $current_value['rule_name'] ] = array(
 				'name' => $current_value['name'],
+				'description' => $current_value['description'],
 				'data_source' =>  $current_value['data_source'],
 				'meta_name' => $current_value['meta_name'],
 				'format' => $current_value['format'],
@@ -2133,6 +2160,7 @@ class MLA_Custom_Field_Query {
 				foreach ( $keywords as $keyword ) {
 					$found |= false !== stripos( $value['rule_name'], $keyword );
 					$found |= false !== stripos( $value['name'], $keyword );
+					$found |= false !== stripos( $value['description'], $keyword );
 					$found |= false !== stripos( $value['data_source'], $keyword );
 					$found |= false !== stripos( $value['meta_name'], $keyword );
 				}
@@ -2202,6 +2230,9 @@ class MLA_Custom_Field_Query {
 					break;
 				case 'option':
 					$sortable_items[ ( empty( $value['option'] ) ? chr(1) : $value['option'] ) . $ID ] = (object) $value;
+					break;
+				case 'description':
+					$sortable_items[ ( empty( $value['description'] ) ? chr(1) : $value['description'] ) . $ID ] = (object) $value;
 					break;
 				default:
 					$sortable_items[ absint( $ID ) ] = (object) $value;

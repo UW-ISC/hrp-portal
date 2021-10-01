@@ -301,10 +301,6 @@ a .gform-icon {
 		color: #a16938;
 	}
 
-.gform-admin .gform-c-error-text {
-		color: #dd301d;
-	}
-
 .gform-admin .gform-c-red {
 		color: #dd301d;
 	}
@@ -856,14 +852,31 @@ html[dir="rtl"] .gform-alert__dismiss {
 
 #gf_toolbar_buttons_container .update-form {
 		margin: 0 0.75rem 0 0.1875rem;
+		padding: 0.4065rem 1.125rem;
 	}
+
+#gf_toolbar_buttons_container .update-form .gform-button__icon {
+			font-size: 1.5rem;
+			line-height: 0;
+			top: unset;
+			width: 24px;
+		}
 
 #gf_toolbar_buttons_container .preview-form {
 		margin: 0 0.1875rem 0 0.75rem;
 	}
 
+.gforms_edit_form #gf_toolbar_buttons_container .preview-form {
+	padding: 0.4065rem 1.125rem;
+}
+
 html[dir="rtl"] #gf_toolbar_buttons_container .update-form {
 		margin: 0 0.1875rem 0 0.75rem;
+	}
+
+html[dir="rtl"] #gf_toolbar_buttons_container .update-form.gform-button--icon-leading .gform-button__icon {
+		margin-left: 0.5rem;
+		margin-right: unset;
 	}
 
 html[dir="rtl"] #gf_toolbar_buttons_container .preview-form {
@@ -3201,11 +3214,6 @@ div.push-alert-red {
 			position: relative;
 		}
 
-.gform-status-indicator.gform-status--no-icon {
-		padding-left: 0.65rem;
-		padding-right: 0.65rem;
-	}
-
 .gform-status-indicator:focus, .gform-status-indicator:hover, .gform-status-indicator:active {
 		border-color: #3e7da6;
 		box-shadow: 0 0 0 1px #bed8ed;
@@ -3217,18 +3225,14 @@ div.push-alert-red {
 }
 
 html[dir="rtl"] .gform-status-indicator {
-	padding-left: 0.5rem;
+
+	padding-left: 0.75rem;
 	padding-right: 1.5rem;
 }
 
 html[dir="rtl"] .gform-status-indicator svg {
 		left: auto;
 		right: 0.25rem;
-	}
-
-html[dir="rtl"] .gform-status-indicator.gform-status--no-icon {
-		padding-left: 0.65rem;
-		padding-right: 0.65rem;
 	}
 
 /*

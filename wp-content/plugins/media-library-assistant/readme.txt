@@ -5,7 +5,7 @@ Tags: media, media library, gallery, images, categories, tags, attachments, IPTC
 Requires at least: 3.5.0
 Tested up to: 5.8
 Requires PHP: 5.3
-Stable tag: 2.96
+Stable tag: 2.97
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,16 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 2.97 =
+* New: A "Description" element has been added to the "Custom Fields" and "IPTC/EXIF" mapping rule definitions.
+* New: For `[mla_tag_cloud]`, the `current_item` and `current_item_class` are managed more or less automatically.
+* New: For `[mla_gallery]`, a special `mla_alt_shortcode=yes` parameter lets you use `[mla_gallery]` as both the primary and alternate shortcodes. You can use the new `mla_alt_parameters` parameter to pass parameters directly on to the alternate shortcode.
+* New: For the "MLA UI Elements Example" plugin, most sticky shortcodes now support the enclosing shortcode syntax, and the Documentation tab has been completed.
+* Fix: **For `[mla_gallery]`, PHP "Warning: array_key_exists()..." messages have been eliminated.**
+* Fix: For the Media Manager Modal (popup) Window in WP 5.8, cropping of top row image thubmnails has been corrected.
+* Fix: For the "MLA Insert Fixit" example plugin, placement and description of the "Post Type(s)" text box has been updated to clarify its use by all plugin tools.
+* Fix: For `[mla_term_list]` and `[mla_tag_cloud]`, special values such as `no.terms.assigned` () are retained after page refresh.
+
 = 2.96 =
 * New: For the "MLA CSV Data Source Example" plugin, the new "Export Item Values" tool lets you export anything you need from Media Library items, e.g., standard values, taxonomy terms, custom fields and embedded image IPTC/EXIF/XMP metadata.
 * New: For the "MLA UI Elements Example" plugin, the `[muie_archive_list]' shortcode adds date-based archive controls and lists.
@@ -334,8 +344,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.96 =
-WordPress 5.8 support! New [muie_archive_list] shortcode. CSV export item values. Support for Enhanced Media Library plugin. Donation links are back. Thirteen enhancements in all, fourteen fixes.
+= 2.97 =
+IMPORTANT: [mla_gallery] PHP "Warning: array_key_exists()..." messages have been eliminated. WP 5.8, cropping of MMMW top row image thubmnails fixed. Description element added to mapping rules. Four enhancements in all, four fixes.
 
 == Other Notes ==
 
