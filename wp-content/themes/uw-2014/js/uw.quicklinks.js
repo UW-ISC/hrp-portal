@@ -9,7 +9,7 @@ UW.QuickLinks = Backbone.View.extend({
     // todo: the default list and these elements could be put into the php templates
     container: '#uw-container',
 
-    template : '<nav id="quicklinks" role="navigation" aria-label="quick links" aria-hidden="true">' +
+    template : '<nav id="quicklinks" aria-label="quick links" aria-hidden="true">' +
                         '<ul id="big-links">' +
                             '<% _.each( links, function( link ) { %> ' +
                                 '<% if (link.classes) { %>' +
@@ -62,12 +62,13 @@ UW.QuickLinks = Backbone.View.extend({
 
     render : function(  )
     {
-        this.quicklinks = $( _.template( this.template )({ links : this.defaultLinks ? this.defaultLinks : this.links.toJSON() }) );
+        this.defaultLinks =  this.links.defaults
+        this.quicklinks = $( _.template( this.template )({ links : this.links.toJSON().length == 0 ? this.defaultLinks : this.links.toJSON() }) );
         this.$container = $(this.container);
-        this.$container.prepend( this.quicklinks )
-        this.$el.attr( 'aria-controls', 'quicklinks' ).attr( 'aria-owns', 'quicklinks' )
-        UW.$body.on( 'keydown', '#quicklinks a:first', this.inner_keydown )
-        UW.$body.on( 'keyup', '#quicklinks a', this.animate )
+        this.$container.prepend( this.quicklinks );
+        this.$el.attr( 'aria-controls', 'quicklinks' ).attr( 'aria-owns', 'quicklinks' );
+        UW.$body.on( 'keydown', '#quicklinks a:first', this.inner_keydown );
+        UW.$body.on( 'keyup', '#quicklinks a', this.animate );
         this.quicklinks.on('webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend', this.transitionEnd);
     },
 
@@ -141,55 +142,56 @@ UW.QuickLinks.Collection = Backbone.Collection.extend({
     initialize: function ( options )
     {
         this.url = options.url;
+        this.url = options.url.replace("www.washington.edu/cms/", "www.washington.edu/");
     },
 
     defaults : [{
        "title": "MyUW",
-       "url": "http:\/\/myuw.washington.edu",
+       "url": "https:\/\/my.uw.edu",
        "classes": ["icon-myuw"]
    }, {
        "title": "Calendar",
-       "url": "http:\/\/uw.edu\/calendar",
+       "url": "https:\/\/uw.edu\/calendar",
        "classes": ["icon-calendar"]
    }, {
        "title": "Directories",
-       "url": "http:\/\/uw.edu\/directory\/",
+       "url": "https:\/\/directory.uw.edu\/",
        "classes": ["icon-directories"]
    }, {
        "title": "Libraries",
-       "url": "http:\/\/www.lib.washington.edu\/",
+       "url": "https:\/\/www.lib.washington.edu\/",
        "classes": ["icon-libraries"]
    }, {
        "title": "UW Medicine",
-       "url": "http:\/\/www.uwmedicine.org",
+       "url": "https:\/\/www.uwmedicine.org",
        "classes": ['icon-medicine']
    }, {
        "title": "Maps",
-       "url": "http:\/\/uw.edu\/maps",
+       "url": "https:\/\/uw.edu\/maps",
        "classes": ["icon-maps"]
    }, {
-       "title": "UW Today",
-       "url": "http:\/\/www.uw.edu\/news",
+       "title": "UW News",
+       "url": "https:\/\/uw.edu\/news",
        "classes": ["icon-uwtoday"]
    }, {
        "title": "Computing\/IT",
-       "url": "http:\/\/www.washington.edu\/itconnect\/forstudents.html",
+       "url": "https:\/\/itconnect.uw.edu",
        "classes": false
    }, {
-       "title": "Employee Self Service",
-       "url": "http:\/\/f2.washington.edu\/fm\/payroll\/payroll\/ESS",
+       "title": "Workday\/ISC",
+       "url": "https:\/\/isc.uw.edu\/",
        "classes": false
    }, {
        "title": "Husky Card",
-       "url": "http:\/\/www.hfs.washington.edu\/huskycard\/",
+       "url": "https:\/\/hfs.uw.edu\/Husky-Card-Services\/",
        "classes": false
    }, {
        "title": "UW Bothell",
-       "url": "http:\/\/www.bothell.washington.edu\/",
+       "url": "https:\/\/www.uwb.edu\/",
        "classes": false
    }, {
        "title": "UW Tacoma",
-       "url": "http:\/\/www.tacoma.uw.edu\/",
+       "url": "https:\/\/www.tacoma.uw.edu\/",
        "classes": false
    }, {
        "title": "UW Facebook",

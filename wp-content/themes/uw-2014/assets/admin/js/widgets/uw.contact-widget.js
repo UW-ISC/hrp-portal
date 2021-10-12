@@ -2,26 +2,24 @@ jQuery(document).ready(function( $ ) {
 
 
 
-  $('body').on('click', '#sidebar #person-button', function(event) {
+  $('body').on('click', '#person-button', function(event) {
+    event.preventDefault();
+    var $id = $(this).closest('.widget').attr('id');
+    var $number = $id.split("_contact-list-").pop();
 
-    var $list = $('#sidebar #the-people > p > input')
-      , $last = $list.length 
-    $('#sidebar #contact-group').append(
-      _.template( $('#sidebar #redirect-template').html(), { count : $last + 1 || 0, to:null, the_class:'person_name' })
-    )
+    $(this).parent().find('#the-people').append(
+      _.template( $('#redirect-template').html() ) ( { number : $number } )
+    );
 
 
 
   })
 
-
-  $('body').on('click', '#sidebar .remove', function(event) {
-
-	var $this = $(this)
-        $this.closest('.peep').remove()
- 	})
-
+  // removes a contact and automatically saves the change
+  $('body').on('click', '.uw-contact-card-remove', function(event) {
+        this.closest('.peep').remove();
+        $("#widget-contact-list-2-savewidget").trigger('click');
+  })
 
 })
-
 

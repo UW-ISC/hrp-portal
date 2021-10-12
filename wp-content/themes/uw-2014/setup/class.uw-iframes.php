@@ -31,25 +31,24 @@ class UW_Iframes
         return '';
 
       $iframeSrc = html_entity_decode($params['src']);
-      $iframeQueryString = parse_url($iframeSrc, PHP_URL_QUERY);	  
-      $parentQueryString = http_build_query($_GET);      
-    	 
+      $iframeQueryString = parse_url($iframeSrc, PHP_URL_QUERY);
+      $parentQueryString = http_build_query($_GET);
+
       if($iframeQueryString != '' && $parentQueryString != '')
       {
         $iframeQuery = parse_str($iframeQueryString, $iframeQueryParams);
         $parentQuery = parse_str($parentQueryString, $parentQueryParams);
         $query_merged = array_merge($iframeQueryParams, $parentQueryParams);
         $iframeSrc = str_replace($iframeQueryString, http_build_query($query_merged), $iframeSrc);
-      } 
+      }
       else if ($parentQueryString != '')
       {
         $iframeSrc .= "?" . $parentQueryString;
       }
-    
+
       $iframeSrc = esc_url($iframeSrc, array('http', 'https'));
 
-      return "<iframe src=\"$iframeSrc\" width=\"{$params['width']}\" height=\"{$params['height']}\" frameborder=\"0\"></iframe>";
-
+      return "<iframe src=\"$iframeSrc\" width=\"{$params['width']}\" height=\"{$params['height']}\" style=\"border:0\"></iframe>";
   }
 
   function get_iframe_domains()
@@ -62,6 +61,7 @@ class UW_Iframes
       'www.uwtv.org',
       'google.com',
       'docs.google.com',
+      'drive.google.com',
       'youtube.com',
       'excition.com',
       'uwregents.wufoo.com',
@@ -87,7 +87,45 @@ class UW_Iframes
       'embed.pac-12.com',
       'storify.com',
       'w.soundcloud.com',
-      'api.soundcloud.com'
+      'api.soundcloud.com',
+      'flickr.com',
+      'vimeo.com',
+      'player.vimeo.com',
+      'www.facebook.com',
+      'form.jotform.com',
+      'oga-dev.s.uw.edu', //testing
+      'bitools.uw.edu', //testing
+      'tableau.washington.edu',
+      'www.iqmediacorp.com',
+      'fusiontables.google.com',
+      'myuwgiving.gifts.washington.edu',
+      'cdn.knightlab.com',
+      'uploads.knightlab.com',
+      'yeatmanlab.github.io',
+      'livestream.com',
+      'uwphotos.smugmug.com',
+      'www.smugmug.com',
+      'smugmug.com',
+      'universityphotography.smugmug.com',
+      'modelo.io',
+      'app.modelo.io',
+      'webcasts.weforum.org',
+      'weforum.org',
+      'storymaps.arcgis.com',
+      'h5p.org',
+      'app.powerbi.com',
+      'powerbi.com',
+      'www.powerbi.com',
+      'acuityscheduling.com',
+      'app.acuityscheduling.com',
+      'video.ibm.com',
+      'ibm.com',
+      'www.ustream.tv',
+      'ustream.tv',
+      'display-prod2.sprinklr.com',
+      'sprinklr.com',
+      'datawrapper.dwcdn.net',
+      'dwcdn.net',
     );
   }
 

@@ -3,7 +3,7 @@
 // This provides the structure and functionality of the UW Youtube player
 // For usage please refer to the [UW Web Youtube Player](http://uw.edu/brand/web/#youtube)
 // It can support a single youtube video or playlist embed
-// options include max results for playlists, modest youtube branding and default resolution 
+// options include max results for playlists, modest youtube branding and default resolution
 // requires a unique id for each div.uw-youtube even if there is just one
 
 //       Single: <div id='some-unique-id' class="uw-youtube" data-uw-youtube='youtube_id_here' data-uw-youtube-type='single'></div>
@@ -34,6 +34,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
         this.type = this.$el.data('uw-youtube-type');
         this.modest = this.$el.data('modest');
         this.resolution = this.$el.data('resolution');
+        var youtubeApiKey = apiKey.network ? apiKey.network : apiKey.local;
         if (this.type == 'playlist'){
             this.max_results = 20;
             var max_results_temp = parseInt(this.$el.data('max-results'), 10);
@@ -41,11 +42,11 @@ UW.YouTube.Collection = Backbone.Collection.extend({
                 this.max_results = max_results_temp;
             }
             this.model = UW.YouTube.PlaylistItem;
-            this.url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + this.youtube_id + '&key=AIzaSyApmhFr5oa8bmKPcpN7bm-h0mekjkUVypU&maxResults=' + this.max_results;
+            this.url = 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=' + this.youtube_id + '&key=' + youtubeApiKey + '&maxResults=' + this.max_results;
         }
         else if (this.type == 'single') {
             this.model = UW.YouTube.Video;
-            this.url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + this.youtube_id + '&key=AIzaSyApmhFr5oa8bmKPcpN7bm-h0mekjkUVypU';
+            this.url = 'https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' + this.youtube_id + '&key=' + youtubeApiKey;
         }
     },
 
@@ -59,7 +60,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
             return item.snippet;
         });
     },
-    
+
     // make the view at the proper time
     make_view: function (type) {
         this.view = new UW.YouTube.CollectionView({collection: this});
@@ -69,7 +70,7 @@ UW.YouTube.Collection = Backbone.Collection.extend({
 
 // The CollectionView builds the html for the player and the control structure for the vidoes
 UW.YouTube.CollectionView = Backbone.View.extend({
-    
+
     // template that all videos get
     template : "<div class='nc-video-player' role='region' aria-label='video' tabindex=-1><div class='tube-wrapper'></div></div>",
 
@@ -119,7 +120,7 @@ UW.YouTube.CollectionView = Backbone.View.extend({
     // if we don't have a copy of the youtube iframe api yet. add it
     add_iFrame_api: function () {
         if (UW.$body.find('script#iFrame').length === 0){
-            UW.$body.append('<script id="iFrame" src="//www.youtube.com/player_api" type="text/javascript"></script>');
+            UW.$body.append('<script id="iFrame" title="YouTube video player" src="//www.youtube.com/player_api" type="text/javascript"></script>');
             this.add_iFrame_function();
         }
     },
@@ -136,6 +137,10 @@ UW.YouTube.CollectionView = Backbone.View.extend({
                         'rel'           : 0,
                         'controls'      : 0,
                         'modestbranding': 1,
+                    }
+                } else {
+                    player_vars = {
+                        'rel'           : 0,
                     }
                 }
                 // if (collection.resolution !== 'undefined'){
@@ -205,14 +210,14 @@ UW.YouTube.CollectionView = Backbone.View.extend({
     check_all_ready: function() {
         if (this.data_ready && this.player_ready){
             this.play(this.collection.models[0].get('resourceId').videoId);
-        } 
+        }
     },
 
     // when the player changes state, this is run.
     // Currently stuff only happens if this is a playlist
     // TODO: add a publicly visible event on video end for showcase pages
     onStateChange: function (event) {
-        if (this.is_playlist) { 
+        if (this.is_playlist) {
             //event.data is 0 when a video finishes playing.  Find out what video we just finished, then play the next one or loop back to the beginning of the playlist
             if (event.data === 0) {
                 var video = this.$vidContent.find('.vid-active').attr('id');
@@ -274,7 +279,7 @@ UW.YouTube.Video = Backbone.Model.extend({
 // Video View is a view for single video. Currently does nothing
 UW.YouTube.VideoView = Backbone.View.extend({
     //template: underscore + html string here,
-    
+
     initialize: function () {
         this.render();
     },
