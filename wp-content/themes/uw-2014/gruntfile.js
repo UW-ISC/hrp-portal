@@ -28,11 +28,13 @@ module.exports = function(grunt) {
           "js/uw.radio-checkbox.js",
           "js/uw.dropdowns.js",
           "js/uw.mobile-menu.js",
+          "js/uw.mobile-sidebar-menu.js",
           "js/uw.accordion.js",
           "js/uw.select.js",
           "js/uw.images.js",
           "js/uw.player.js",
           "js/uw.social.js",
+          "js/uw.custom-link.js"
         ],
         components : [
           // todo: put just external components here for the uw.js we will give out
@@ -71,7 +73,7 @@ module.exports = function(grunt) {
     notify: {
       watch: {
         options: {
-          title: 'Dun\' Grunted',
+          title: 'Task complete.',
           message: 'All is good'
         }
       }
@@ -79,11 +81,13 @@ module.exports = function(grunt) {
     less: {
         production: {
 	        options: {
-		        cleancss: true
+            cleancss: true,
+            compress: true,
+
 			},
 			files: {
-				'style.css': 'less/style.less',
-                        'uw.css': 'less/style.less'
+				'style.css' : 'less/style.less',
+        'uw.css'    : 'less/style.less'
 			}
 		},
 		development: {

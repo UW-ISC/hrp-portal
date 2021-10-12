@@ -12,7 +12,7 @@
 class UW_Replace_Media
 {
 
-  function UW_Replace_Media()
+  function __construct()
   {
     add_filter( 'attachment_fields_to_edit', array( $this, 'uw_edit_attachment_slug'), 10, 2 );
     add_filter( 'attachment_fields_to_save', array( $this, 'uw_save_attachment_slug'), 10, 2 );
@@ -50,7 +50,7 @@ class UW_Replace_Media
               // Uploading files
               var file_frame;
 
-                jQuery(".replace_media").live("click", function( event ){
+                jQuery(".replace_media").on("click", function( event ){
 
                   event.preventDefault();
 
