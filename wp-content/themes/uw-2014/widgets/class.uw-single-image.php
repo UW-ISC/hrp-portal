@@ -12,11 +12,13 @@ class UW_Widget_Single_Image extends WP_Widget
 
   const DEFAULT_LINK_TEXT = 'More';
 
-  function UW_Widget_Single_Image()
+  function __construct()
   {
+    global $pagenow;
+
 		parent::__construct( $id = 'pic-text', $name = 'Single Image', $options = array( 'description' => 'Display an image with some featured text.', 'classname' => 'pic-text-widget' ) );
 
-    if ( is_admin() )
+    if ( is_admin() && $pagenow === 'widgets.php' )
       add_action('admin_enqueue_scripts', array( __CLASS__, 'scripts') );
   }
 

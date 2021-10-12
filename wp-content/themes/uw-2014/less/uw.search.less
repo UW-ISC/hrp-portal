@@ -64,7 +64,7 @@ body.search-open #uwsearcharea {
     margin-top: 30px;
   }
 
-  form
+  div.search-form-wrapper
   {
 
     float:left;
@@ -104,6 +104,7 @@ body.search-open #uwsearcharea {
   div#search-labels.labels.hidden-xs.focused {
     zoom: 1.2;
     margin-top: -15px;
+    margin-left: 30px;
   }
 
   input.search
@@ -266,6 +267,9 @@ body {
   .uw-search-bar-container {
    // margin-top: -176px;
     padding: 0px;
+    div.search-form-wrapper {
+      width: 100%;
+    }
     .container.no-height{
         padding:0px 10px;
     }
@@ -307,11 +311,12 @@ body {
   }
     body.search-open {
         #uw-container {
-            -webkit-transform: matrix(1,0,0,1,0,136);
-               -moz-transform: matrix(1,0,0,1,0,136);
-                -ms-transform: matrix(1,0,0,1,0,136);
-                 -o-transform: matrix(1,0,0,1,0,136);
-                    transform: matrix(1,0,0,1,0,136);
+            -webkit-transform: matrix(1,0,0,1,0,100);
+               -moz-transform: matrix(1,0,0,1,0,100);
+                -ms-transform: matrix(1,0,0,1,0,100);
+                 -o-transform: matrix(1,0,0,1,0,100);
+                    transform: matrix(1,0,0,1,0,100);
         }
     }
 }
+#uw-search-label{display:none;}

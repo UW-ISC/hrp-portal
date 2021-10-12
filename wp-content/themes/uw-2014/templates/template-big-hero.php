@@ -4,15 +4,15 @@
   */
 ?>
 
-<?php get_header(); 
+<?php get_header();
       $url = wp_get_attachment_url( get_post_thumbnail_id($post->ID) );
       if(!$url){
         $url = get_site_url() . "/wp-content/themes/uw-2014/assets/headers/suzzallo.jpg";
       }
-      $mobileimage = get_post_meta($post->ID, "mobileimage");
+      $mobileimagesrc = get_post_meta($post->ID, "mobileimage");
       $hasmobileimage = '';
-      if( !empty($mobileimage) && $mobileimage[0] !== "") {
-        $mobileimage = $mobileimage[0];
+      if( !empty($mobileimagesrc) && $mobileimagesrc[0] !== "") {
+        $mobileimage = $mobileimagesrc[0];
         $hasmobileimage = 'hero-mobile-image';
       }
       $sidebar = get_post_meta($post->ID, "sidebar");
@@ -22,8 +22,8 @@
 
 
 <div class="uw-hero-image hero-height <?php echo $hasmobileimage ?>" style="background-image: url(<?php echo $url ?>);">
-    <?php if( !empty($mobileimage) ) { ?>
-    <div class="mobile-image" style="background-image: url(<?php echo $mobileimage ?>);"></div>
+    <?php if( isset($mobileimage)) { ?>
+      <div class="mobile-image" style="background-image: url(<?php echo $mobileimage ?>);"></div>
     <?php } ?>
     <div id="hero-bg">
       <div id="hero-container" class="container">
@@ -38,8 +38,9 @@
       </div>
     </div>
 </div>
+
 <div class="container uw-body">
-  
+
   <div class="row">
 
     <div class="hero-content col-md-<?php echo (($sidebar[0]!="on") ? "8" : "12" ) ?> uw-content" role='main'>
@@ -50,9 +51,12 @@
 
       <div id='main_content' class="uw-body-copy" tabindex="-1">
 
+
         <?php
+
           // Start the Loop.
-          while ( have_posts() ) : the_post(); 
+          while ( have_posts() ) : the_post();
+
 
             /*
              * Include the post format-specific template for the content. If you want to
@@ -60,7 +64,9 @@
              * (where ___ is the post format) and that will be used instead.
              */
 
-              the_content();
+           //the_content();
+            get_template_part( 'content', 'page-noheader' );
+
 
             // If comments are open or we have at least one comment, load up the comment template.
             if ( comments_open() || get_comments_number() ) {
@@ -68,22 +74,31 @@
             }
 
           endwhile;
-          
+
         ?>
+
+
+
 
       </div>
 
     </div>
 
-    <?php 
+
+
+
+    <?php
     if($sidebar[0]!="on"){ ?>
       <div id="sidebar">
       <?php get_sidebar(); ?>
-      </div> <?php 
-    } ?> 
+      </div> <?php
+    } ?>
 
   </div>
 
 </div>
+
+
+
 
 <?php get_footer(); ?>

@@ -87,7 +87,8 @@
 		//Caret
 		&.dropdown-toggle {
 			padding-right: 30px;
-			&:hover:before {
+			&:hover:before,
+			&:focus:before {
 				background: url(assets/svg/uw-sprite.svg) no-repeat -203px -490px;
 				.rotate(90deg);
 				height: 25px;
@@ -211,7 +212,8 @@
 // Special MyUW button
 
 @media only screen and (min-width : 768px) {
-	nav#dawgdrops .btn-myuw a {
+	nav#dawgdrops .btn-myuw a,
+	nav#dawgdrops .btn-givenow a {
   		font-size: 18px;
   		text-transform: none;
   		color: #FFF;
@@ -249,5 +251,121 @@
 	        z-index: -1;
 	        box-shadow: 0px 1px 3px rgba(0,0,0,.4);
 	    }
+	}
+	nav#dawgdrops .btn-givenow a {
+		&:after {
+			background: url(assets/svg/heart.svg) no-repeat 0 0;
+			width: 40px;
+			top: 20px;
+		}
+	}
+}
+
+//new accessibility updates
+.dawgdrops-item {
+	position: relative;
+	&:hover .dawgdrops-menu {
+		.flex-display();
+	}
+	&.btn-myuw, &.menu-give-now, &.menu-myuw-giving, &.btn-givenow {
+		position: inherit !important;
+	}
+	&:hover button {
+		display: none;
+	}
+	button {
+		content: "";
+		position: absolute;
+		height: 10px;
+		width: 10px;
+		// right: -7px;
+		// top: 16px;
+		right: 5px;
+		border: none;
+		top: 14px;
+		padding: 5px;
+		background: none;
+		&:focus {
+			background: url(assets/svg/uw-sprite.svg) no-repeat -354px 0px;
+			background-color: white;
+			border: 3px solid #94BFF9 !important;
+			border-radius: 3px;
+			box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 3px rgba(102, 175, 233, 0.6);
+			outline: 0 none;
+		}
+	}
+	.dawgdrops-menu {
+		top: 50px;
+	}
+
+}
+
+@media only screen and (min-width : 768px) {
+
+
+	#dawgdrops {
+		.menu-myuw-giving a,
+		.menu-give-now a {
+			font-size: 18px;
+			text-transform: none;
+			color: @darkgray;
+			font-weight: 600;
+			position: absolute;
+			top: 65px;
+			padding: 13px 20px 8px 50px;
+			z-index: 0;
+			&:after,
+			&:before {
+				content: "";
+				display: block;
+				position: absolute;
+				top: 17px;
+			}
+			&:before {
+				z-index: -1;
+				box-shadow: 0px 1px 3px rgba(0,0,0,.4);
+			}
+			&:hover {
+				color: #fff;
+			}
+		}
+		.menu-myuw-giving a {
+			right: 150px;
+			&:before {
+				width: 194px;
+				height: 60px;
+				left: -19px;
+				top: -1px;
+				background-color: white;
+				.skew(-15deg,0);
+			}
+			&:after {
+				width: 40px;
+				height: 33px;
+				left: 15px;
+				background: url(assets/svg/person_dark.svg) no-repeat 0 0;
+			}
+			&:hover {
+				color: @darkgold;
+			}
+		}
+		.menu-give-now a {
+			right: 5px;
+			color: #fff;
+			&:before {
+				width: 170px;
+				height: 60px;
+				left: -27px;
+				top: -1px;
+				background-color: @darkgold;
+			}
+			&:after {
+				width: 40px;
+				height: 23px;
+				left: 15px;
+				background: url(assets/svg/heart.svg) no-repeat 0 0;
+			}
+		}
+
 	}
 }
