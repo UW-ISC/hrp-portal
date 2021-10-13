@@ -57,7 +57,11 @@ function relevanssi_searching_tab() {
 		$orfallback_visibility = '';
 	}
 
-	$docs_count = $wpdb->get_var( 'SELECT COUNT(DISTINCT doc) FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc != -1' );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+	if ( ! $throttle ) {
+		$docs_count = $wpdb->get_var( 'SELECT COUNT(DISTINCT doc) FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc != -1' );  // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+	} else {
+		$docs_count = null;
+	}
 	?>
 
 	<table class="form-table" role="presentation">
@@ -322,7 +326,7 @@ function relevanssi_searching_tab() {
 				<?php esc_html_e( 'Throttle searches.', 'relevanssi' ); ?>
 			</label>
 		</fieldset>
-		<?php if ( $docs_count < 1000 ) { ?>
+		<?php if ( $docs_count && $docs_count < 1000 ) { ?>
 			<p class="description important"><?php esc_html_e( "Your database is so small that you don't need to enable this.", 'relevanssi' ); ?></p>
 		<?php } ?>
 		<p class="description"><?php esc_html_e( 'If this option is checked, Relevanssi will limit search results to at most 500 results per term. This will improve performance, but may cause some relevant documents to go unfound. See Help for more details.', 'relevanssi' ); ?></p>
@@ -393,10 +397,10 @@ function relevanssi_searching_tab() {
 	</tr>
 	<tr>
 		<th scope="row">
-			<label for='relevanssi_expst'><?php esc_html_e( 'Post exclusion', 'relevanssi' ); ?>
+			<label for='relevanssi_exclude_posts'><?php esc_html_e( 'Post exclusion', 'relevanssi' ); ?>
 		</th>
 		<td>
-			<input type='text' name='relevanssi_expst' id='relevanssi_expst' size='60' value='<?php echo esc_attr( $exclude_posts ); ?>' />
+			<input type='text' name='relevanssi_exclude_posts' id='relevanssi_exclude_posts' size='60' value='<?php echo esc_attr( $exclude_posts ); ?>' />
 			<p class="description"><?php esc_html_e( "Enter a comma-separated list of post or page ID's to exclude those pages from the search results.", 'relevanssi' ); ?></p>
 			<?php if ( RELEVANSSI_PREMIUM ) { ?>
 				<p class="description"><?php esc_html_e( "With Relevanssi Premium, it's better to use the check box on post edit pages. That will remove the posts completely from the index, and will work with multisite searches unlike this setting.", 'relevanssi' ); ?></p>

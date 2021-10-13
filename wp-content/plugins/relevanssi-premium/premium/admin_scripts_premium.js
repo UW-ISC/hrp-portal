@@ -125,6 +125,13 @@ jQuery(document).ready(function ($) {
 		hitsNumber.html("0")
 	})
 
+	$("#attachments_tab :input").change(function (e) {
+		$("#index").attr("disabled", "disabled")
+		var relevanssi_note = $("#relevanssi-note")
+		relevanssi_note.show()
+		relevanssi_note.html('<p class="description important">' + relevanssi.options_changed + '</p>')
+	})
+
 	$("#build_index").click(function () {
 		$("#relevanssi-progress").show()
 		$("#results").show()

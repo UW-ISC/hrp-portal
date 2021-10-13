@@ -46,6 +46,7 @@ function relevanssi_attachments_tab() {
 	}
 
 	?>
+	<div id="attachments_tab">
 	<table class="form-table" role="presentation">
 	<tr>
 		<td>
@@ -56,6 +57,7 @@ function relevanssi_attachments_tab() {
 				<?php /* translators: the placeholder has the name of the custom field for PDF content */ ?>
 				<?php printf( esc_html__( 'Clicking the button will read the contents of all the unread attachments files and store the contents to the %s custom field for future indexing. Attachments with errors will be skipped, except for the files with timeout and connection related errors: those will be attempted again.', 'relevanssi' ), '<code>_relevanssi_pdf_content</code>' ); ?>
 			</p>
+			<div id='relevanssi-note' style='display: none'></div>
 			<div id='relevanssi-progress' class='rpi-progress'><div></div></div>
 			<div id='relevanssi-timer'><?php esc_html_e( 'Time elapsed', 'relevanssi' ); ?>: <span id="relevanssi_elapsed">0:00:00</span> | <?php esc_html_e( 'Time remaining', 'relevanssi' ); ?>: <span id="relevanssi_estimated"><?php esc_html_e( 'some time', 'relevanssi' ); ?></span></div>
 			<label for="relevanssi_results" class="screen-reader-text"><?php esc_html_e( 'Results', 'relevanssi' ); ?></label>
@@ -166,7 +168,6 @@ function relevanssi_attachments_tab() {
 			<?php /* translators: placeholder has the name of the post type */ ?>
 			<p><?php printf( esc_html__( 'There are two ways to index the attachment content. If you choose to index the %s post type, Relevanssi will show the attachment posts in the results.', 'relevanssi' ), '<code>attachment</code>' ); ?></p>
 			<p><?php esc_html_e( "You can also choose to index the attachment content for the parent post, in which case Relevanssi will show the parent post in the results (this setting can be found on the indexing settings). Obviously this does not find the content in attachments that are not attached to another post – if you just upload a file to the WordPress Media Library, it is not attached and won't be found unless you index the attachment posts.", 'relevanssi' ); ?></p>
-			<p><?php esc_html_e( 'In any case, in order to see attachments in the results, you must read the attachment content here first, then build the index on the Indexing tab.', 'relevanssi' ); ?></p>
 			<p><?php esc_html_e( "If you need to reread a file, you can do read individual files from Media Library. Choose an attachment and click 'Edit more details' to read the content.", 'relevanssi' ); ?></p>
 		</td>
 	</tr>
@@ -174,7 +175,7 @@ function relevanssi_attachments_tab() {
 		<th scope="row"><?php esc_html_e( 'Key not valid?', 'relevanssi' ); ?></th>
 		<td>
 			<p><?php esc_html_e( "Are you a new Relevanssi customer and seeing 'Key xxxxxx is not valid' error messages? New API keys are delivered to the server once per hour, so if try again an hour later, the key should work.", 'relevanssi' ); ?></p>
-			<p><?php esc_html_e( "A 'Key 0 is not valid' error message means you're on a multisite, but have only entered the API key In the subsite settings. Set the API key in the network settings to fix that.", 'relevanssi' ); ?></p>
+			<p><?php esc_html_e( "A 'Key 0 is not valid' error message means you're on a multisite, but have only entered the API key in the subsite settings. Set the API key in the network settings to fix that.", 'relevanssi' ); ?></p>
 		</td>
 	</tr>
 	<tr>
@@ -184,5 +185,6 @@ function relevanssi_attachments_tab() {
 		</td>
 	</tr>
 	</table>
+	</div>
 	<?php
 }

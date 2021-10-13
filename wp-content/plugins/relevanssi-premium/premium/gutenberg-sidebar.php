@@ -11,7 +11,6 @@
  */
 
 add_action( 'init', 'relevanssi_register_gutenberg_meta' );
-add_action( 'init', 'relevanssi_register_gutenberg_script' );
 add_action( 'enqueue_block_editor_assets', 'relevanssi_block_editor_assets' );
 add_action( 'rest_api_init', 'relevanssi_register_gutenberg_rest_routes' );
 
@@ -67,7 +66,7 @@ function relevanssi_register_gutenberg_meta() {
 		),
 		array(
 			'meta_key'    => '_relevanssi_noindex_reason',
-			'description' => 'Related posts for this post',
+			'description' => 'Reason this post is not indexed',
 		),
 	);
 
@@ -102,6 +101,26 @@ function relevanssi_register_gutenberg_script() {
 		return;
 	}
 
+	global $post;
+	if ( ! $post ) {
+		return;
+	}
+	if ( $post && ! post_type_supports( $post->post_type, 'custom-fields' ) ) {
+		return;
+	}
+
+	if ( ! current_user_can(
+		/**
+		 * Filters the capability required to access the Relevanssi sidebar.
+		 *
+		 * @param string The capability required, default 'edit_others_posts'.
+		 */
+		apply_filters( 'relevanssi_sidebar_capability', 'edit_others_posts' )
+	)
+	) {
+		return;
+	}
+
 	$file_location = 'premium/gutenberg-sidebar/';
 	if ( RELEVANSSI_DEVELOP ) {
 		$file_location = 'build/';
@@ -122,6 +141,7 @@ function relevanssi_register_gutenberg_script() {
  * @since 2.5.0
  */
 function relevanssi_block_editor_assets() {
+	relevanssi_register_gutenberg_script();
 	wp_enqueue_script( 'relevanssi-sidebar' );
 }
 
@@ -131,91 +151,17 @@ function relevanssi_block_editor_assets() {
  * Takes in a post ID and returns the "How Relevanssi sees this post" data for
  * that post.
  *
- * @global $wpdb                 The WordPress database interface
- * @global $relevanssi_variables The global Relevanssi variables.
- *
  * @param array $data The post ID in $data['id'].
  *
  * @return array The indexed terms for various parts of the post in an
  * associative array.
  *
+ * @uses relevanssi_fetch_sees_data()
+ *
  * @since 2.5.0
  */
 function relevanssi_sees_post_endpoint( $data ) {
-	global $wpdb, $relevanssi_variables;
-
-	$terms_list = $wpdb->get_results(
-		$wpdb->prepare(
-			'SELECT * FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE doc = %d', // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-			$data['id']
-		),
-		OBJECT
-	);
-
-	$terms['content']     = array();
-	$terms['title']       = array();
-	$terms['comment']     = array();
-	$terms['tag']         = array();
-	$terms['link']        = array();
-	$terms['author']      = array();
-	$terms['category']    = array();
-	$terms['excerpt']     = array();
-	$terms['taxonomy']    = array();
-	$terms['customfield'] = array();
-	$terms['mysql']       = array();
-
-	foreach ( $terms_list as $row ) {
-		if ( $row->content > 0 ) {
-			$terms['content'][] = $row->term;
-		}
-		if ( $row->title > 0 ) {
-			$terms['title'][] = $row->term;
-		}
-		if ( $row->comment > 0 ) {
-			$terms['comment'][] = $row->term;
-		}
-		if ( $row->tag > 0 ) {
-			$terms['tag'][] = $row->term;
-		}
-		if ( $row->link > 0 ) {
-			$terms['link'][] = $row->term;
-		}
-		if ( $row->author > 0 ) {
-			$terms['author'][] = $row->term;
-		}
-		if ( $row->category > 0 ) {
-			$terms['category'][] = $row->term;
-		}
-		if ( $row->excerpt > 0 ) {
-			$terms['excerpt'][] = $row->term;
-		}
-		if ( $row->taxonomy > 0 ) {
-			$terms['taxonomy'][] = $row->term;
-		}
-		if ( $row->customfield > 0 ) {
-			$terms['customfield'][] = $row->term;
-		}
-		if ( $row->mysqlcolumn > 0 ) {
-			$terms['mysql'][] = $row->term;
-		}
-	}
-
-	$reason = get_post_meta( $data['id'], '_relevanssi_noindex_reason', '' );
-
-	return array(
-		'content'     => implode( ' ', $terms['content'] ),
-		'title'       => implode( ' ', $terms['title'] ),
-		'comment'     => implode( ' ', $terms['comment'] ),
-		'tag'         => implode( ' ', $terms['tag'] ),
-		'link'        => implode( ' ', $terms['link'] ),
-		'author'      => implode( ' ', $terms['author'] ),
-		'category'    => implode( ' ', $terms['category'] ),
-		'excerpt'     => implode( ' ', $terms['excerpt'] ),
-		'taxonomy'    => implode( ' ', $terms['taxonomy'] ),
-		'customfield' => implode( ' ', $terms['customfield'] ),
-		'mysql'       => implode( ' ', $terms['mysql'] ),
-		'reason'      => $reason,
-	);
+	return relevanssi_fetch_sees_data( $data['id'] );
 }
 
 /**
@@ -300,6 +246,32 @@ function relevanssi_regenerate_related_endpoint( $data ) {
 }
 
 /**
+ * Adds a REST API endpoint for listing common search terms.
+ *
+ * @param array $data The post ID in $data['id'].
+ *
+ * @return array The common terms in an array format (id, query, and count).
+ *
+ * @since 2.5.0
+ */
+function relevanssi_list_insights_common_terms( $data ) {
+	return relevanssi_generate_tracking_insights_most_common( $data['id'], 'ARRAY' );
+}
+
+/**
+ * Adds a REST API endpoint for listing low-ranking search terms.
+ *
+ * @param array $data The post ID in $data['id'].
+ *
+ * @return array The terms in an array format (id, query, rank).
+ *
+ * @since 2.5.0
+ */
+function relevanssi_list_insights_low_ranking_terms( $data ) {
+	return relevanssi_generate_tracking_insights_low_ranking( $data['id'], 'ARRAY' );
+}
+
+/**
  * Registers the REST API endpoints.
  *
  * @see register_rest_route()
@@ -354,6 +326,20 @@ function relevanssi_register_gutenberg_rest_routes() {
 				'meta_value' => 'urldecode',
 			),
 		),
+		array(
+			'path'     => '/listinsightscommon/(?P<id>\d+)',
+			'callback' => 'relevanssi_list_insights_common_terms',
+			'args'     => array(
+				'id' => 'numeric',
+			),
+		),
+		array(
+			'path'     => '/listinsightslowranking/(?P<id>\d+)',
+			'callback' => 'relevanssi_list_insights_low_ranking_terms',
+			'args'     => array(
+				'id' => 'numeric',
+			),
+		),
 	);
 
 	foreach ( $routes as $route ) {
@@ -392,8 +378,8 @@ function relevanssi_register_gutenberg_rest_routes() {
 				'callback'            => $route['callback'],
 				'args'                => $args,
 				'permission_callback' => function () {
-					// Filter documented in /premium/common.php.
-					return current_user_can( apply_filters( 'relevanssi_options_capability', 'manage_options' ) );
+					// Filter documented in /premium/gutenberg-sidebar.php.
+					return current_user_can( apply_filters( 'relevanssi_sidebar_capability', 'edit_others_posts' ) );
 				},
 			)
 		);

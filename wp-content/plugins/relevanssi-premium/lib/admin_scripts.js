@@ -8,7 +8,12 @@ jQuery(document).ready(function ($) {
 
 	$("#removeallstopwords").click(function () {
 		var c = confirm(relevanssi.confirm_stopwords)
-		return c //you can just return c because it will be true or false
+		return c
+	})
+
+	$("#delete_query").click(function () {
+		var c = confirm(relevanssi.confirm_delete_query)
+		return c
 	})
 })
 
@@ -89,7 +94,7 @@ jQuery(document).ready(function ($) {
 		$("#build_index").attr("disabled", "disabled")
 		var relevanssi_note = $("#relevanssi-note")
 		relevanssi_note.show()
-		relevanssi_note.html(relevanssi.options_changed)
+		relevanssi_note.html('<p class="description important">' + relevanssi.options_changed + '</p>')
 	})
 
 	$("#relevanssi_default_orderby").change(function (e) {
@@ -126,8 +131,10 @@ jQuery(document).ready(function ($) {
 			!this.checked
 		)
 		$("#tr_excerpt_length").toggleClass("relevanssi_disabled", !this.checked)
+		$("#tr_max_excerpts").toggleClass("relevanssi_disabled", !this.checked)
 		$("#relevanssi_excerpt_length").attr("disabled", !this.checked)
 		$("#relevanssi_excerpt_type").attr("disabled", !this.checked)
+		$("#relevanssi_max_excerpts").attr("disabled", !this.checked)
 		$("#relevanssi_excerpt_allowable_tags").attr("disabled", !this.checked)
 		$("#relevanssi_excerpt_custom_fields").attr("disabled", !this.checked)
 		$("#relevanssi_highlight").attr("disabled", !this.checked)
@@ -138,13 +145,23 @@ jQuery(document).ready(function ($) {
 		$("#relevanssi_hilite_title").attr("disabled", !this.checked)
 		$("#relevanssi_highlight_docs").attr("disabled", !this.checked)
 		$("#relevanssi_highlight_comments").attr("disabled", !this.checked)
-		$("#relevanssi_word_boundaries").attr("disabled", !this.checked)
 		$("#relevanssi_show_matches").attr("disabled", !this.checked)
 		$("#relevanssi_show_matches_text").attr("disabled", !this.checked)
+		$("#relevanssi_expand_highlights").attr("disabled", !this.checked)
 	})
 
 	$("#relevanssi_searchblogs_all").click(function () {
 		$("#relevanssi_searchblogs").attr("disabled", this.checked)
+	})
+
+	var min_word_length = $("#relevanssi_min_word_length")
+	min_word_length.change(function(e) {
+		if ( min_word_length.val() < 1 ) {
+			min_word_length.val(1)
+		}
+		if ( min_word_length.val() > 9 ) {
+			min_word_length.val(9)
+		}
 	})
 })
 

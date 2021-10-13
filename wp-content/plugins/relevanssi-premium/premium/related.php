@@ -151,7 +151,7 @@ function relevanssi_get_related_post_objects( $post_id ) {
 		relevanssi_related_default_settings()
 	);
 
-	$transient_name = 'relevanssi_related_posts_' . $post_id . '_jo';
+	$transient_name = apply_filters( 'relevanssi_related_posts_cache_id', 'relevanssi_related_posts_' . $post_id . '_jo' );
 	$use_cache      = relevanssi_related_cache_available( $post_id, $settings );
 
 	if ( $use_cache ) {
@@ -181,7 +181,7 @@ function relevanssi_get_related_post_objects( $post_id ) {
 	 *
 	 * @param WP_Post[] Array of related post objects.
 	 */
-	return apply_filters( 'relevanssi_related_output_objects', $related );
+	return apply_filters( 'relevanssi_related_output_objects', $related_post_objects );
 }
 
 /**
@@ -370,6 +370,9 @@ function relevanssi_get_related_post_ids( $post_id, $use_cache = true ) {
 			$related_posts = array();
 		}
 		$count = count( $related_posts );
+
+		$exclude_ids = array_merge( $exclude_ids, $related_posts );
+		$exclude_ids = array_keys( array_flip( $exclude_ids ) );
 
 		$args = array(
 			'posts_per_page' => $settings['number'] - $count,
@@ -722,8 +725,6 @@ function relevanssi_flush_related_cache( $clean_id = null ) {
  * @param object $post       The post object.
  */
 function relevanssi_flush_caches_on_transition( $new_status, $old_status, $post ) {
-	global $wpdb;
-
 	// Safety check, for WordPress Editorial Calendar incompatibility.
 	if ( ! isset( $post ) || ! isset( $post->ID ) ) {
 		return;

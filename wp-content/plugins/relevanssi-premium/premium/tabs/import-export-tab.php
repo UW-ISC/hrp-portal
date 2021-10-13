@@ -95,6 +95,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_excerpt_type']             = get_option( 'relevanssi_excerpt_type' );
 	$serialize_options['relevanssi_excerpts']                 = get_option( 'relevanssi_excerpts' );
 	$serialize_options['relevanssi_exclude_posts']            = get_option( 'relevanssi_exclude_posts' );
+	$serialize_options['relevanssi_expand_highlights']        = get_option( 'relevanssi_expand_highlights' );
 	$serialize_options['relevanssi_expand_shortcodes']        = get_option( 'relevanssi_expand_shortcodes' );
 	$serialize_options['relevanssi_extag']                    = get_option( 'relevanssi_extag' );
 	$serialize_options['relevanssi_fuzzy']                    = get_option( 'relevanssi_fuzzy' );
@@ -126,6 +127,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_link_pdf_files']           = get_option( 'relevanssi_link_pdf_files' );
 	$serialize_options['relevanssi_log_queries']              = get_option( 'relevanssi_log_queries' );
 	$serialize_options['relevanssi_log_queries_with_ip']      = get_option( 'relevanssi_log_queries_with_ip' );
+	$serialize_options['relevanssi_max_excerpts']             = get_option( 'relevanssi_max_excerpts' );
 	$serialize_options['relevanssi_min_word_length']          = get_option( 'relevanssi_min_word_length' );
 	$serialize_options['relevanssi_mysql_columns']            = get_option( 'relevanssi_mysql_columns' );
 	$serialize_options['relevanssi_omit_from_logs']           = get_option( 'relevanssi_omit_from_logs' );
@@ -142,10 +144,13 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_searchblogs']              = get_option( 'relevanssi_searchblogs' );
 	$serialize_options['relevanssi_searchblogs_all']          = get_option( 'relevanssi_searchblogs_all' );
 	$serialize_options['relevanssi_send_pdf_files']           = get_option( 'relevanssi_send_pdf_files' );
+	$serialize_options['relevanssi_seo_noindex']              = get_option( 'relevanssi_seo_noindex' );
 	$serialize_options['relevanssi_server_location']          = get_option( 'relevanssi_server_location' );
 	$serialize_options['relevanssi_show_matches']             = get_option( 'relevanssi_show_matches' );
 	$serialize_options['relevanssi_show_matches_text']        = get_option( 'relevanssi_show_matches_text' );
 	$serialize_options['relevanssi_show_post_controls']       = get_option( 'relevanssi_show_post_controls' );
+	$serialize_options['relevanssi_spamblock']                = get_option( 'relevanssi_spamblock' );
+	$serialize_options['relevanssi_stopwords']                = get_option( 'relevanssi_stopwords' );
 	$serialize_options['relevanssi_synonyms']                 = get_option( 'relevanssi_synonyms' );
 	$serialize_options['relevanssi_thousand_separator']       = get_option( 'relevanssi_thousand_separator' );
 	$serialize_options['relevanssi_throttle']                 = get_option( 'relevanssi_throttle' );
@@ -153,7 +158,6 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_title_boost']              = get_option( 'relevanssi_title_boost' );
 	$serialize_options['relevanssi_trim_logs']                = get_option( 'relevanssi_trim_logs' );
 	$serialize_options['relevanssi_txt_col']                  = $txt_col;
-	$serialize_options['relevanssi_word_boundaries']          = get_option( 'relevanssi_word_boundaries' );
 	$serialize_options['relevanssi_wpml_only_current']        = get_option( 'relevanssi_wpml_only_current' );
 
 	$serialized_options = wp_json_encode( $serialize_options );

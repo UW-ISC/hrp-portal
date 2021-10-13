@@ -19,44 +19,63 @@ add_action( 'template_redirect', 'relevanssi_redirects' );
  * redirect if there's a match.
  */
 function relevanssi_redirects() {
+	global $wp_query;
+
 	$url       = false;
 	$redirects = get_option( 'relevanssi_redirects', array() );
 	if ( empty( $redirects ) || ! is_array( $redirects ) ) {
 		return;
 	}
 	$query = relevanssi_strtolower( get_search_query( false ) );
+
 	foreach ( $redirects as $redirect ) {
-		if ( ! $redirect ) {
+		if ( ! $redirect || is_string( $redirect ) ) {
 			continue;
 		}
 
-		if ( is_string( $redirect ) ) {
-			// Empty search results redirection.
-			global $wp_query;
-			if ( $wp_query->is_search && 0 === $wp_query->found_posts ) {
-				$url = $redirect;
-				break;
-			}
-			continue;
-		}
 		if ( $redirect['partial'] ) {
+			$match = false;
 			if ( stristr( $query, $redirect['query'] ) ) {
+				$match = true;
+			}
+			$pattern = '/^' . str_replace( '/', '\/', $redirect['query'] ) . '$/';
+			if ( preg_match( $pattern, $query ) ) {
+				$match = true;
+			}
+			if ( $match ) {
 				$url = $redirect['url'];
 
-				$redirect['hits'] = isset( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
+				$redirect['hits'] = ! empty( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
 				relevanssi_update_redirect( $redirect );
 				break;
 			}
 		} else {
+			$match = false;
 			if ( $query === $redirect['query'] ) {
+				$match = true;
+			}
+			$pattern = '/^' . str_replace( '/', '\/', $redirect['query'] ) . '$/';
+			if ( preg_match( $pattern, $query ) ) {
+				$match = true;
+			}
+			if ( $match ) {
 				$url = $redirect['url'];
 
-				$redirect['hits'] = isset( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
+				$redirect['hits'] = ! empty( $redirect['hits'] ) ? $redirect['hits'] + 1 : 1;
 				relevanssi_update_redirect( $redirect );
 				break;
 			}
 		}
 	}
+
+	if ( $wp_query->is_search && ! $url ) {
+		if ( empty( $query ) && isset( $redirects['no_terms'] ) ) {
+			$url = $redirects['no_terms'];
+		} elseif ( 0 === $wp_query->found_posts && isset( $redirects['empty'] ) ) {
+			$url = $redirects['empty'];
+		}
+	}
+
 	if ( $url ) {
 		if ( wp_redirect( $url ) ) { // phpcs:ignore WordPress.Security.SafeRedirect
 			exit();
@@ -87,6 +106,30 @@ function relevanssi_update_redirect( $redirect ) {
 }
 
 /**
+ * Makes relatives URLs absolute and validates all URLs.
+ *
+ * Uses site_url() to make relative URLs absolute and then passes all URLs
+ * through wp_http_validate_url().
+ *
+ * @see wp_http_validate_url()
+ *
+ * @param string $value A relative or absolute URL to validate.
+ *
+ * @return string|false The URL, converted to absolute if necessary, and
+ * validated. Returns false on failure.
+ */
+function relevanssi_validate_url( $value ) {
+	if ( 'http' !== substr( $value, 0, 4 ) ) {
+		// Relative URL, make absolute.
+		if ( '/' !== substr( $value, 0, 1 ) ) {
+			$value = '/' . $value;
+		}
+		$value = site_url() . $value;
+	}
+	return wp_http_validate_url( $value );
+}
+
+/**
  * Reads the redirects from the request array and validates the URLs.
  *
  * All relative URLs are converted to absolute URLs for validation and redirects
@@ -102,16 +145,15 @@ function relevanssi_process_redirects( $request ) {
 	$redirects = array();
 	foreach ( $request as $key => $value ) {
 		if ( 'redirect_empty_searches' === $key && ! empty( $value ) ) {
-			if ( 'http' !== substr( $value, 0, 4 ) ) {
-				// Relative URL, make absolute.
-				if ( '/' !== substr( $value, 0, 1 ) ) {
-					$value = '/' . $value;
-				}
-				$value = site_url() . $value;
-			}
-			$url = wp_http_validate_url( $value );
+			$url = relevanssi_validate_url( $value );
 			if ( ! empty( $url ) ) {
 				$redirects['empty'] = $url;
+			}
+		}
+		if ( 'redirect_no_terms' === $key && ! empty( $value ) ) {
+			$url = relevanssi_validate_url( $value );
+			if ( ! empty( $url ) ) {
+				$redirects['no_terms'] = $url;
 			}
 		}
 		if ( 'query' !== substr( $key, 0, 5 ) ) {
@@ -125,15 +167,7 @@ function relevanssi_process_redirects( $request ) {
 		}
 		$url = null;
 		if ( isset( $request[ 'url' . $suffix ] ) ) {
-			$url = $request[ 'url' . $suffix ];
-			if ( 'http' !== substr( $url, 0, 4 ) ) {
-				// Relative URL, make absolute.
-				if ( '/' !== substr( $url, 0, 1 ) ) {
-					$url = '/' . $url;
-				}
-				$url = site_url() . $url;
-			}
-			$url = wp_http_validate_url( $url );
+			$url = relevanssi_validate_url( $request[ 'url' . $suffix ] );
 		}
 		$hits = $request[ 'hits' . $suffix ] ?? 0;
 		if ( ! empty( $url ) && ! empty( $query ) ) {

@@ -10,7 +10,7 @@ table.form-table table.widefat th {
     width: 3em;
 }
 
-#relevanssi_trim_logs {
+#relevanssi_trim_logs, #relevanssi_trim_click_logs {
     width: 4em;
 }
 
@@ -107,4 +107,11 @@ table.form-table table.widefat th {
 
 #redirect_table td {
 	vertical-align: top;
+}
+
+#relevanssi_sees_container {
+    width: 80%;
+    background: white;
+    padding: 5px 20px;
+    border: thin solid black;
 }

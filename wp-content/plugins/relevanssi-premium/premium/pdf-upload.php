@@ -8,9 +8,10 @@
  * @see     https://www.relevanssi.com/
  */
 
-add_action( 'add_meta_boxes_attachment', 'relevanssi_add_pdf_metaboxes' );
-add_filter( 'relevanssi_index_custom_fields', 'relevanssi_add_pdf_customfield' );
 add_action( 'add_attachment', 'relevanssi_read_attachment', 10 );
+add_action( 'add_meta_boxes_attachment', 'relevanssi_add_pdf_metaboxes' );
+add_filter( 'relevanssi_hits_to_show', 'relevanssi_prime_pdf_content', 10, 2 );
+add_filter( 'relevanssi_index_custom_fields', 'relevanssi_add_pdf_customfield' );
 add_filter( 'relevanssi_pre_excerpt_content', 'relevanssi_add_pdf_content_to_excerpt', 10, 2 );
 
 define( 'RELEVANSSI_ERROR_01', 'R_ERR01: ' . __( 'Post excluded from the index by the user.', 'relevanssi' ) );
@@ -18,6 +19,7 @@ define( 'RELEVANSSI_ERROR_02', 'R_ERR02: ' . __( 'Relevanssi is in privacy mode 
 define( 'RELEVANSSI_ERROR_03', 'R_ERR03: ' . __( 'Attachment MIME type blocked.', 'relevanssi' ) );
 define( 'RELEVANSSI_ERROR_04', 'R_ERR04: ' . __( 'Attachment file size is too large.', 'relevanssi' ) );
 define( 'RELEVANSSI_ERROR_05', 'R_ERR05: ' . __( 'Attachment reading in process, please try again later.', 'relevanssi' ) );
+define( 'RELEVANSSI_ERROR_06', 'R_ERR06: ' . __( 'Server did not respond.', 'relevanssi' ) );
 
 /**
  * Reads the attachment content when an attachment is saved.
@@ -105,12 +107,39 @@ function relevanssi_add_pdf_customfield( $custom_fields ) {
 }
 
 /**
+ * Reads in all _relevanssi_pdf_content for found posts to avoid database calls.
+ *
+ * @global array An array of the PDF content.
+ *
+ * @param array    $hits  An array of posts found.
+ * @param WP_Query $query The WP_Query object.
+ *
+ * @return array The posts found, untouched.
+ */
+function relevanssi_prime_pdf_content( $hits, $query ) {
+	global $relevanssi_pdf_content;
+
+	if ( ! isset( $query->query_vars['fields'] ) || empty( $query->query_vars['fields'] ) ) {
+		$relevanssi_pdf_content = relevanssi_get_post_meta_for_all_posts(
+			wp_list_pluck( $hits, 'ID' ),
+			'_relevanssi_pdf_content'
+		);
+	}
+
+	return $hits;
+}
+
+
+/**
  * Includes the PDF content custom field for excerpt-building.
  *
- * This function works on 'relevanssi_pre_excerpt_content' filter and makes sure the
- * '_relevanssi_pdf_content' custom field content is included when excerpts are built.
+ * This function works on 'relevanssi_pre_excerpt_content' filter and makes sure
+ * the '_relevanssi_pdf_content' custom field content is included when excerpts
+ * are built.
  *
  * @since 2.0.0
+ *
+ * @see relevanssi_prime_pdf_content
  *
  * @param string $content The post content.
  * @param object $post    The post object.
@@ -118,7 +147,8 @@ function relevanssi_add_pdf_customfield( $custom_fields ) {
  * @return string $content The post content.
  */
 function relevanssi_add_pdf_content_to_excerpt( $content, $post ) {
-	$pdf_content = get_post_meta( $post->ID, '_relevanssi_pdf_content', true );
+	global $relevanssi_pdf_content;
+	$pdf_content = $relevanssi_pdf_content[ $post->ID ] ?? '';
 	$content    .= ' ' . $pdf_content;
 	return $content;
 }
@@ -449,16 +479,31 @@ function relevanssi_process_server_response( $response, $post_id ) {
 			$content = $response['body'];
 			$content = json_decode( $content );
 
+			$content_error = '';
+
 			if ( 413 === $response['response']['code'] ) {
-				$content->error = RELEVANSSI_ERROR_04;
+				$content_error = RELEVANSSI_ERROR_04;
 			}
 
 			if ( isset( $content->error ) ) {
+				$content_error = $content->error;
+				$content       = $content->error;
+			}
+
+			if ( stristr( $content, 'java.lang.OutOfMemoryError' ) ) {
+				$content_error = RELEVANSSI_ERROR_04;
+			}
+
+			if ( empty( $content ) ) {
+				$content_error = RELEVANSSI_ERROR_06;
+			}
+
+			if ( ! empty( $content_error ) ) {
 				delete_post_meta( $post_id, '_relevanssi_pdf_content' );
 				delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
-				update_post_meta( $post_id, '_relevanssi_pdf_error', $content->error );
+				update_post_meta( $post_id, '_relevanssi_pdf_error', $content_error );
 
-				$response_error .= $content->error;
+				$response_error .= $content_error;
 				$success         = false;
 			} else {
 				delete_post_meta( $post_id, '_relevanssi_pdf_error' );
@@ -471,9 +516,21 @@ function relevanssi_process_server_response( $response, $post_id ) {
 				 */
 				$success = update_post_meta( $post_id, '_relevanssi_pdf_content', apply_filters( 'relevanssi_file_content', $content, $post_id ) );
 				relevanssi_index_doc( $post_id, false, relevanssi_get_custom_fields(), true );
+				if ( 'on' === get_option( 'relevanssi_index_pdf_parent' ) ) {
+					if ( function_exists( 'get_post_parent' ) ) {
+						$parent = get_post_parent( $post_id );
+					} else {
+						// For WP < 5.7 compatibility, remove eventually.
+						$_post  = get_post( $post_id );
+						$parent = ! empty( $_post->post_parent ) ? get_post( $_post->post_parent ) : null;
+					}
+					if ( $parent ) {
+						relevanssi_index_doc( $parent->ID, true, relevanssi_get_custom_fields(), true );
+					}
+				}
 
 				if ( ! $success ) {
-					$response_error = __( 'Could not save the file content to the custom field.', 'relevanssi' ) . "\n";
+					$response_error = __( 'Could not save the file content to the custom field.', 'relevanssi' );
 				}
 			}
 		}
@@ -492,10 +549,10 @@ function relevanssi_process_server_response( $response, $post_id ) {
  *
  * Finds the posts with non-image attachments that don't have read content or
  * errors. The posts that have timeout or connection errors (cURL error 7 and
- * 28) and those that haven't been read for privacy mode issues (R_ERR02) will
- * be included for indexing, but the posts with other errors (R_ERR01: post
- * excluded by user, R_ERR03: blocked MIME type and R_ERR04: file too large)
- * will not be indexed.
+ * 28, R_ERR06) and those that haven't been read for privacy mode issues
+ * (R_ERR02) will be included for indexing, but the posts with other errors
+ * (R_ERR01: post excluded by user, R_ERR03: blocked MIME type and R_ERR04: file
+ * too large) will not be indexed.
  *
  * @since 2.0.0
  *
@@ -526,12 +583,22 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 			array(
 				'key'     => '_relevanssi_pdf_error',
 				'compare' => 'LIKE',
+				'value'   => 'R_ERR06:',
+			),
+			array(
+				'key'     => '_relevanssi_pdf_error',
+				'compare' => 'LIKE',
 				'value'   => 'cURL error 7:',
 			),
 			array(
 				'key'     => '_relevanssi_pdf_error',
 				'compare' => 'LIKE',
 				'value'   => 'cURL error 28:',
+			),
+			array(
+				'key'     => '_relevanssi_pdf_error',
+				'compare' => 'LIKE',
+				'value'   => 'is not valid.',
 			),
 		),
 	);
@@ -583,7 +650,6 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 		);
 	}
 	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-
 	$posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
 	return $posts;
