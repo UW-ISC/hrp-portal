@@ -932,10 +932,22 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             // Workaround for AJAX selectbox to be able to have predefined values
             select.trigger('change').data('AjaxBootstrapSelect').list.cache = {};
         }
+        // Hide/Show search box in filter
+        if (aoColumn.searchInSelectBox !== 1){
+            jQuery(th).find('.bs-searchbox').hide();
+        } else {
+            jQuery(th).find('.bs-searchbox').show();
+        }
+
     } else {
         select.selectpicker('refresh');
-        // Hide search in selectbox if possibleValuesAjax is All
-        jQuery(th).find('.bs-searchbox').hide();
+        // Hide/Show search box in filter
+        if (aoColumn.searchInSelectBox !== 1){
+            // Hide search in selectbox if possibleValuesAjax is All
+            jQuery(th).find('.bs-searchbox').hide();
+        } else {
+            jQuery(th).find('.bs-searchbox').show();
+        }
 
         // Filter the table if default value is set
         if (aoColumn.defaultValue && !serverSide) {
@@ -1040,7 +1052,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
     th.wrapInner('<span class="filter_column filter_select" data-filter_type="multiselectbox" data-index="' + columnIndex + '" />');
 
     // Add event to perform search on selectbox change
-    select.change(function (e) {
+    select.on('change.selectChange', function (e) {
         multiSelectboxSearch.call(jQuery(this));
     });
 
@@ -1088,11 +1100,21 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             // Workaround for AJAX selectbox to be able to have predefined values
             select.trigger('change').data('AjaxBootstrapSelect').list.cache = {};
         }
+        // Hide/Show search box in filter
+        if (aoColumn.searchInSelectBox !== 1){
+            jQuery(th).find('.bs-searchbox').hide();
+        } else {
+            jQuery(th).find('.bs-searchbox').show();
+        }
 
     } else {
         select.selectpicker('refresh');
-        // Hide search in multi-selectbox if possibleValuesAjax is All
-        jQuery(th).find('.bs-searchbox').hide();
+        if (aoColumn.searchInSelectBox !== 1) {
+            // Hide search in multi-selectbox if possibleValuesAjax is All
+            jQuery(th).find('.bs-searchbox').hide();
+        } else {
+            jQuery(th).find('.bs-searchbox').show();
+        }
 
         // Filter the table if default value is set
         if (aoColumn.defaultValue[0] && !serverSide) {

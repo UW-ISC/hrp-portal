@@ -1163,6 +1163,49 @@
                     </div>
                     <!-- /.row -->
 
+                    <!-- .row -->
+                    <div class="row pdf-export-options hidden">
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('PDF Paper Size', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title=" <?php _e('Choose between different paper sizes for the created PDF.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-pdf-paper-size">
+                                    <option value="A3"><?php _e('A3', 'wpdatatables'); ?></option>
+                                    <option value="A4" selected><?php _e('A4', 'wpdatatables'); ?></option>
+                                    <option value="A5"><?php _e('A5', 'wpdatatables'); ?></option>
+                                    <option value="LEGAL"><?php _e('Legal', 'wpdatatables'); ?></option>
+                                    <option value="LETTER"><?php _e('Letter', 'wpdatatables'); ?></option>
+                                    <option value="TABLOID"><?php _e('Tabloid', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Page orientation', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title=" <?php _e('Choose a paper orientation for the created PDF.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-pdf-page-orientation">
+                                    <option value="portrait" selected><?php _e('Portrait', 'wpdatatables'); ?></option>
+                                    <option value="landscape"><?php _e('Landscape', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+
                 </div>
                 <!-- /Table tools settings -->
 

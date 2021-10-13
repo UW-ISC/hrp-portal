@@ -186,6 +186,27 @@
         });
 
         /**
+         * Toggle remove borders for simple table
+         */
+        $('#wdt-remove-borders').change(function (e) {
+            wpdatatable_config.setRemoveBorders($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Set border collapse for simple table
+         */
+        $('#wdt-border-collapse').change(function (e) {
+            wpdatatable_config.setBorderCollapse($(this).val());
+        });
+
+        /**
+         * Set border spacing for simple table
+         */
+        $('#wdt-border-spacing').change(function (e) {
+            wpdatatable_config.setBorderSpacing($(this).val());
+        });
+
+        /**
          * Toggle Advanced filter
          */
         $('#wdt-advanced-filter').change(function (e) {
@@ -299,11 +320,38 @@
             for (var i in tableToolsSelection) {
                 tableToolsConfig[tableToolsSelection[i]] = 1;
             }
+
+            // Show/hide PDF export options
+            if (tableToolsSelection.includes('pdf')) {
+                if( !$('div.pdf-export-options').is(":visible")){
+                    $('div.pdf-export-options').animateFadeIn();
+                }
+            } else {
+                $('div.pdf-export-options').animateFadeOut();
+                wpdatatable_config.setPdfPaperSize('A4');
+                wpdatatable_config.setPdfPageOrientation('portrait');
+            }
+
             if ($(this).val() == null) {
                 wpdatatable_config.setShowTableTools(0, []);
             }
             wpdatatable_config.setTableToolsConfig(tableToolsConfig);
         });
+
+        /**
+         * Set PDF export paper size
+         */
+        $('#wdt-pdf-paper-size').change(function (e) {
+            wpdatatable_config.setPdfPaperSize($(this).val());
+        });
+
+        /**
+         * Set PDF export page orientation
+         */
+        $('#wdt-pdf-page-orientation').change(function (e) {
+            wpdatatable_config.setPdfPageOrientation($(this).val());
+        });
+
 
         /**
          * Set Placeholder VAR 1
@@ -797,7 +845,9 @@
             var $filterInputSelectpicker = $('#wdt-filter-default-value-selectpicker');
             var $filterInputSelectpickerBlock = $('.wdt-filter-default-value-selectpicker-block');
             var $renderCheckboxesInModal = $('.wdt-checkboxes-in-modal-block #wdt-checkboxes-in-modal');
+            var $renderSearchInSelectBox = $('.wdt-search-in-selectbox-block #wdt-search-in-selectbox');
             var $renderCheckboxesInModalBlock = $('.wdt-checkboxes-in-modal-block');
+            var $renderSearchInSelectBoxBlock = $('.wdt-search-in-selectbox-block');
             var typeAttr = 'text';
 
             $renderCheckboxesInModal.prop('checked', 0);
@@ -815,6 +865,7 @@
                 $filterInputTo.val('');
                 $filterInputSelectpicker.selectpicker('deselectAll');
                 $renderCheckboxesInModalBlock.hide();
+                $renderSearchInSelectBoxBlock.hide();
             } else if ($.inArray(filterType, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
                 $('div.wdt-exact-filtering-block').hide();
                 $('div.wdt-number-range-slider').hide();
@@ -826,6 +877,7 @@
                 $filterInputTo.val('');
                 $filterInputSelectpicker.selectpicker('deselectAll');
                 $renderCheckboxesInModalBlock.hide();
+                $renderSearchInSelectBoxBlock.hide();
 
                 if ($filterInputFrom.data('DateTimePicker') != undefined)
                     $filterInputFrom.data('DateTimePicker').destroy();
@@ -860,6 +912,7 @@
                 $filterInputToBlock.hide();
                 $filterInputSelectpickerBlock.show();
                 $renderCheckboxesInModalBlock.hide();
+                $renderSearchInSelectBoxBlock.hide();
 
                 // Must recreate selectpicker block because Ajax Selectpicker
                 $filterInputSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-filter-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true" title="' + wpdatatables_frontend_strings.nothingSelected + '"></select></div></div>');
@@ -875,6 +928,14 @@
 
                 if (filterType === 'checkbox' && wpdatatable_config.filtering_form) {
                     $renderCheckboxesInModalBlock.show();
+                }
+                if (filterType === 'multiselect' || filterType === 'select') {
+                    $renderSearchInSelectBoxBlock.show();
+                    if (wpdatatable_config.currentOpenColumn.possibleValuesAjax === -1) {
+                        $renderSearchInSelectBox.prop('checked', 0);
+                    } else {
+                        $renderSearchInSelectBox.prop('checked', 1);
+                    }
                 }
 
                 if (wpdatatable_config.currentOpenColumn.possibleValuesType === 'foreignkey') {
@@ -990,10 +1051,13 @@
             var $defaultValueInputBlock = $('.wdt-editing-default-value-block');
             var $defaultValueSelectpicker = $('#wdt-editing-default-value-selectpicker');
             var $defaultValueSelectpickerBlock = $('.wdt-editing-default-value-selectpicker-block');
+            var $searchInSelectBoxEditingBlock = $('.wdt-search-in-selectbox-editing-block');
+            var $searchInSelectBoxEditing = $('#wdt-search-in-selectbox-editing');
 
             if ($.inArray(editorInputType, ['text', 'textarea', 'mce-editor', 'link', 'email', 'attachment']) != -1) {
                 $defaultValueInputBlock.show();
                 $defaultValueSelectpickerBlock.hide();
+                $searchInSelectBoxEditingBlock.hide();
 
                 if ($defaultValueInput.data('DateTimePicker') != undefined)
                     $defaultValueInput.data('DateTimePicker').destroy();
@@ -1004,6 +1068,7 @@
             } else if ($.inArray(editorInputType, ['date', 'datetime', 'time']) != -1) {
                 $defaultValueInputBlock.show();
                 $defaultValueSelectpickerBlock.hide();
+                $searchInSelectBoxEditingBlock.hide();
 
                 if ($defaultValueInput.data('DateTimePicker') != undefined)
                     $defaultValueInput.data('DateTimePicker').destroy();
@@ -1017,6 +1082,12 @@
             } else if ($.inArray(editorInputType, ['selectbox', 'multi-selectbox']) != -1) {
                 $defaultValueInputBlock.hide();
                 $defaultValueSelectpickerBlock.show();
+                $searchInSelectBoxEditingBlock.show();
+                if (wpdatatable_config.currentOpenColumn.possibleValuesAjax === -1) {
+                    $searchInSelectBoxEditing.prop('checked', 0);
+                } else {
+                    $searchInSelectBoxEditing.prop('checked', 1);
+                }
                 $defaultValueInput.val('');
 
                 $defaultValueSelectpickerBlock.html('<div class="fg-line"><div class="select"><select class="selectpicker" id="wdt-editing-default-value-selectpicker" data-none-selected-text="' + wpdatatables_frontend_strings.nothingSelected + '" data-live-search="true"></select></div></div>');

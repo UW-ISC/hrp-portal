@@ -66,10 +66,11 @@
                             data-key="<?php echo $dataColumn_key ?>"
                             title="<?php echo WDTTools::getTranslationStrings()['nothingSelected'] ?>"
                             class="form-control editDialogInput selectpicker <?php if ($dataColumn->isNotNull()) { ?>mandatory <?php }
-                            if ($dataColumn->getForeignKeyRule() != null) { ?>wdt-foreign-key-select <?php };
-                            if ($dataColumn->getPossibleValuesAjax() !== -1) { ?>wdt-possible-values-ajax<?php }; ?>"
+                            if ($dataColumn->getForeignKeyRule() != null) { ?> wdt-foreign-key-select <?php };
+                            if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?> wdt-search-in-select <?php };
+                            if ($dataColumn->getPossibleValuesAjax() !== -1) { ?> wdt-possible-values-ajax <?php }; ?>"
                             <?php if ($dataColumn->getInputType() === 'multi-selectbox') { ?>multiple="multiple"<?php } ?>
-                            <?php if ($dataColumn->getPossibleValuesAjax() !== -1) { ?>data-live-search="true" data-live-search-placeholder="Search..."<?php } ?>
+                            <?php if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?>data-live-search="true" data-live-search-placeholder="Search..."<?php } ?>
                             data-column_header="<?php echo $dataColumn->getTitle(); ?>">
                         <?php
                         if ($dataColumn->getPossibleValuesAjax() === -1) {

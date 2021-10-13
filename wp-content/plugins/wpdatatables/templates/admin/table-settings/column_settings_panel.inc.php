@@ -1007,6 +1007,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6 wdt-filtering-enabled-block wdt-search-in-selectbox-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Search in selectbox/multiselectbox', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('Enable search in selectbox/multiselectbox', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-search-in-selectbox" type="checkbox">
+                                        <label for="wdt-search-in-selectbox"
+                                               class="ts-label"><?php _e('Enable search in selectbox/multiselectbox', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!--/ .row -->
 
@@ -1091,6 +1105,20 @@
                                     </div>
                                 </div>
 
+                            </div>
+                            <div class="form-group col-sm-6 wdt-editing-enabled-block wdt-search-in-selectbox-editing-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Search in select-box for editing', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('Enable search in select-box for entry editing when number of possible values to load is All.', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-search-in-selectbox-editing" type="checkbox">
+                                        <label for="wdt-search-in-selectbox-editing"
+                                               class="ts-label"><?php _e('Enable search in select-box for entry editing', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
                             </div>
 
                         </div>
