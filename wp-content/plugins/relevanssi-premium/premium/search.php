@@ -125,6 +125,7 @@ function relevanssi_premium_query_vars( $qv ) {
 	$qv[] = 'customfield_value';
 	$qv[] = 'operator';
 	$qv[] = 'include_attachments';
+	$qv[] = 'coordinates';
 	return $qv;
 }
 

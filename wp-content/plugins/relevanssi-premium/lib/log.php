@@ -31,7 +31,6 @@ function relevanssi_update_log( $query, $hits ) {
 	$user_agent = '';
 	if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
 		$user_agent = $_SERVER['HTTP_USER_AGENT'];
-		$bots       = array( 'Google' => 'Mediapartners-Google' );
 
 		/**
 		 * Filters the bots Relevanssi should block from logs.
@@ -40,7 +39,7 @@ function relevanssi_update_log( $query, $hits ) {
 		 *
 		 * @param array $bots An array of bot user agents.
 		 */
-		$bots = apply_filters( 'relevanssi_bots_to_not_log', $bots );
+		$bots = apply_filters( 'relevanssi_bots_to_not_log', relevanssi_bot_block_list() );
 		foreach ( array_values( $bots ) as $lookfor ) {
 			if ( false !== stristr( $user_agent, $lookfor ) ) {
 				return false;
@@ -54,7 +53,7 @@ function relevanssi_update_log( $query, $hits ) {
 	 * The current user is checked before logging a query to omit particular users.
 	 * You can use this filter to filter out the user.
 	 *
-	 * @param object The current user object.
+	 * @param WP_User The current user object.
 	 */
 	$user = apply_filters( 'relevanssi_log_get_user', wp_get_current_user() );
 	if ( 0 !== $user->ID && get_option( 'relevanssi_omit_from_logs' ) ) {
@@ -284,6 +283,10 @@ function relevanssi_export_log() {
 	$data = $wpdb->get_results( 'SELECT * FROM ' . $relevanssi_variables['log_table'], ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	ob_start();
 	$df = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions
+	if ( empty( $data ) ) {
+		fputcsv( $df, array( __( 'No search keywords logged.', 'relevanssi' ) ) );
+		die();
+	}
 	fputcsv( $df, array_keys( reset( $data ) ) );
 	foreach ( $data as $row ) {
 		fputcsv( $df, $row );

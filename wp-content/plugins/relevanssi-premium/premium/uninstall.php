@@ -22,6 +22,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_body_stopwords' );
 	delete_option( 'relevanssi_cat' );
 	delete_option( 'relevanssi_class' );
+	delete_option( 'relevanssi_click_tracking' );
 	delete_option( 'relevanssi_comment_boost' );
 	delete_option( 'relevanssi_content_boost' );
 	delete_option( 'relevanssi_css' );
@@ -39,6 +40,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_excerpt_type' );
 	delete_option( 'relevanssi_excerpts' );
 	delete_option( 'relevanssi_exclude_posts' );
+	delete_option( 'relevanssi_expand_highlights' );
 	delete_option( 'relevanssi_expand_shortcodes' );
 	delete_option( 'relevanssi_extag' );
 	delete_option( 'relevanssi_fuzzy' );
@@ -71,6 +73,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_link_pdf_files' );
 	delete_option( 'relevanssi_log_queries' );
 	delete_option( 'relevanssi_log_queries_with_ip' );
+	delete_option( 'relevanssi_max_excerpts' );
 	delete_option( 'relevanssi_min_word_length' );
 	delete_option( 'relevanssi_mysql_columns' );
 	delete_option( 'relevanssi_omit_from_logs' );
@@ -91,6 +94,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_show_matches' );
 	delete_option( 'relevanssi_show_matches_text' );
 	delete_option( 'relevanssi_show_post_controls' );
+	delete_option( 'relevanssi_spamblock' );
 	delete_option( 'relevanssi_synonyms' );
 	delete_option( 'relevanssi_taxterm_count' );
 	delete_option( 'relevanssi_terms_count' );
@@ -98,10 +102,10 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_throttle' );
 	delete_option( 'relevanssi_throttle_limit' );
 	delete_option( 'relevanssi_title_boost' );
+	delete_option( 'relevanssi_trim_click_logs' );
 	delete_option( 'relevanssi_trim_logs' );
 	delete_option( 'relevanssi_txt_col' );
 	delete_option( 'relevanssi_user_count' );
-	delete_option( 'relevanssi_word_boundaries' );
 	delete_option( 'relevanssi_words' );
 	delete_option( 'relevanssi_wpml_only_current' );
 
@@ -137,6 +141,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_custom_taxonomies' );
 	delete_option( 'relevanssi_taxonomies_to_index' );
 	delete_option( 'relevanssi_highlight_docs_external' );
+	delete_option( 'relevanssi_word_boundaries' );
 
 	if ( ! defined( 'UNINSTALLING_RELEVANSSI_PREMIUM' ) ) {
 		// The if clause is required to avoid nagging from testing.

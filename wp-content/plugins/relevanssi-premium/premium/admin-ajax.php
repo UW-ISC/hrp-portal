@@ -666,52 +666,18 @@ function relevanssi_unpin_post() {
 /**
  * Fetches database words to the relevanssi_words option.
  *
- * @global $wpdb The WordPress database interface.
- * @global $relevanssi_variables The global Relevanssi variables, used for the
- * database table names.
+ * An AJAX wrapper for relevanssi_update_words_option().
+ *
+ * @see relevanssi_update_words_option()
  *
  * @since 2.5.0
  */
 function relevanssi_ajax_get_words() {
-	global $wpdb, $relevanssi_variables;
-
 	if ( ! wp_verify_nonce( $_REQUEST['_nonce'], 'relevanssi_get_words' ) ) {
 		wp_die();
 	}
 
-	/**
-	 * The minimum limit of occurrances to include a word.
-	 *
-	 * To save resources, only words with more than this many occurrances are
-	 * fed to the spelling corrector. If there are problems with the spelling
-	 * corrector, increasing this value may fix those problems.
-	 *
-	 * @param int $number The number of occurrances must be more than this
-	 * value, default 2.
-	 */
-	$count = apply_filters( 'relevanssi_get_words_having', 2 );
-	if ( ! is_numeric( $count ) ) {
-		$count = 2;
-	}
-	$q = 'SELECT term,
-		SUM(title + content + comment + tag + link + author + category + excerpt + taxonomy + customfield)
-		AS c FROM ' . $relevanssi_variables['relevanssi_table'] .
-		" GROUP BY term HAVING c > $count"; // Safe: $count is numeric.
-
-	$results = $wpdb->get_results( $q ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-
-	$words = array();
-	foreach ( $results as $result ) {
-		$words[ $result->term ] = $result->c;
-	}
-
-	$expire = time() + MONTH_IN_SECONDS;
-	$data   = array(
-		'expire' => $expire,
-		'words'  => $words,
-	);
-
-	update_option( 'relevanssi_words', $data, false );
+	relevanssi_update_words_option();
 
 	wp_die();
 }

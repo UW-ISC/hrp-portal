@@ -15,11 +15,14 @@
  */
 function relevanssi_profile_update( $user ) {
 	if ( 'on' === get_option( 'relevanssi_index_users' ) ) {
+		if ( is_integer( $user ) ) {
+			$user = get_user_by( 'id', $user );
+		}
 		/**
 		 * Checks if the user can be indexed.
 		 *
-		 * @param boolean    $index Should the user be indexed, default true.
-		 * @param object|int $user  The user object or user ID.
+		 * @param boolean $index Should the user be indexed, default true.
+		 * @param object  $user  The user object.
 		 *
 		 * @return boolean $index If false, do not index the user.
 		 */
@@ -182,7 +185,7 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 		if ( is_array( $custom_column_data ) ) {
 			foreach ( $custom_column_data as $data ) {
 				/** This filter is documented in common/indexing.php */
-				$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length ), 'mysql-content' );
+				$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length, 'indexing' ), 'mysql-content' );
 				if ( count( $data ) > 0 ) {
 					foreach ( $data as $term => $count ) {
 						if ( isset( $insert_data[ $term ]['mysqlcolumn'] ) ) {
@@ -226,7 +229,7 @@ function relevanssi_process_internal_links( $contents, $post_id ) {
 				$link_id = url_to_postid( $link );
 				if ( ! empty( $link_id ) ) {
 					/** This filter is documented in common/indexing.php */
-					$link_words = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $text, true, $min_word_length ), 'internal-links' );
+					$link_words = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $text, true, $min_word_length, 'indexing' ), 'internal-links' );
 					if ( count( $link_words ) > 0 ) {
 						foreach ( $link_words as $word => $count ) {
 							$wpdb->query(
@@ -419,13 +422,18 @@ function relevanssi_simple_english_stemmer( $term ) {
 function relevanssi_create_synonym_replacement_array() {
 	global $relevanssi_variables;
 
-	$synonym_data = get_option( 'relevanssi_synonyms' );
-	$synonyms     = array();
-	if ( $synonym_data ) {
-		$synonym_data = relevanssi_strtolower( $synonym_data );
+	$synonym_data     = get_option( 'relevanssi_synonyms' );
+	$current_language = relevanssi_get_current_language();
+	$synonyms         = array();
+
+	if ( isset( $synonym_data[ $current_language ] ) ) {
+		$synonym_data = relevanssi_strtolower( $synonym_data[ $current_language ] );
 		$pairs        = explode( ';', $synonym_data );
 
 		foreach ( $pairs as $pair ) {
+			if ( empty( $pair ) ) {
+				continue;
+			}
 			$parts = explode( '=', $pair );
 			$key   = strval( trim( $parts[0] ) );
 			$value = trim( $parts[1] );
@@ -525,30 +533,31 @@ function relevanssi_prepare_indexing_content( $content ) {
  * @param int   $post_id       The post ID of the current post.
  */
 function relevanssi_add_repeater_fields( &$custom_fields, $post_id ) {
+	global $wpdb;
+
+	/**
+	 * Filters the list of custom fields to index before the repeater fields
+	 * are expanded. If you want to add repeater fields using the
+	 * field_%_subfield notation from code, you can use this filter hook.
+	 *
+	 * @param array $custom_fields The list of custom fields. This array
+	 * includes all custom fields that are to be indexed, so make sure you add
+	 * new fields here and don't remove anything you want included in the index.
+	 */
+	$custom_fields   = apply_filters( 'relevanssi_custom_fields_before_repeaters', $custom_fields );
 	$repeater_fields = array();
 	foreach ( $custom_fields as $field ) {
-		if ( 1 === substr_count( $field, '%' ) ) { // Only one level of repeaters supported.
-			$field = str_replace( '/', '\/', $field );
-			preg_match( '/([a-z0-9\_\-]+)_\%_([a-z0-9\_\-]+)/i', $field, $matches );
-			$field_name    = '';
-			$subfield_name = '';
-			if ( count( $matches ) > 1 ) {
-				$field_name    = $matches[1];
-				$subfield_name = $matches[2];
-			}
-			if ( $field_name ) {
-				$num_fields = get_post_meta( $post_id, $field_name, true );
-				if ( is_array( $num_fields ) ) {
-					$num_fields = count( $num_fields );
-				}
-				for ( $i = 0; $i < $num_fields; $i++ ) {
-					$repeater_fields[] = $field_name . '_' . $i . '_' . $subfield_name;
-				}
-			}
+		$number_of_levels = substr_count( $field, '%' );
+		if ( $number_of_levels > 0 ) {
+			$field  = str_replace( '\%', '%', $wpdb->esc_like( $field ) );
+			$fields = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM $wpdb->postmeta WHERE meta_key LIKE %s AND post_id = %d", $field, $post_id ) );
+
+			$repeater_fields = array_merge( $repeater_fields, $fields );
 		} else {
 			continue;
 		}
 	}
+
 	$custom_fields = array_merge( $custom_fields, $repeater_fields );
 }
 
@@ -586,7 +595,7 @@ function relevanssi_index_pdf_for_parent( $insert_data, $post_id ) {
 	if ( is_array( $pdf_content ) ) {
 		foreach ( $pdf_content as $row ) {
 			/** This filter is documented in common/indexing.php */
-			$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $row, true, get_option( 'relevanssi_min_word_length', 3 ) ), 'pdf-content' );
+			$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $row, true, get_option( 'relevanssi_min_word_length', 3 ), 'indexing' ), 'pdf-content' );
 			if ( count( $data ) > 0 ) {
 				foreach ( $data as $term => $count ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
@@ -790,7 +799,7 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 			$values = get_user_meta( $user->ID, $key, false );
 			foreach ( $values as $value ) {
 				/** This filter is documented in common/indexing.php */
-				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $value, $remove_stopwords, $min_length ), 'user-meta' );
+				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $value, $remove_stopwords, $min_length, 'indexing' ), 'user-meta' );
 				foreach ( $tokens as $term => $tf ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
 						$insert_data[ $term ]['customfield'] += $tf;
@@ -821,7 +830,7 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 					$to_tokenize = get_user_meta( $user->ID, $field, true );
 				}
 				/** This filter is documented in common/indexing.php */
-				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length ), 'user-fields' );
+				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length, 'indexing' ), 'user-fields' );
 				foreach ( $tokens as $term => $tf ) {
 					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
 						$insert_data[ $term ]['customfield'] += $tf;
@@ -836,7 +845,7 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 
 	if ( isset( $user->description ) && '' !== $user->description ) {
 		/** This filter is documented in common/indexing.php */
-		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $user->description, $remove_stopwords, $min_length ), 'user-description' );
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $user->description, $remove_stopwords, $min_length, 'indexing' ), 'user-description' );
 		foreach ( $tokens as $term => $tf ) {
 			if ( isset( $insert_data[ $term ]['content'] ) ) {
 				$insert_data[ $term ]['content'] += $tf;
@@ -1075,7 +1084,9 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 
 	$terms = $wpdb->get_col(
 		$wpdb->prepare(
-			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt
+			WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s
+			LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 			$taxonomy,
 			intval( $limit ),
 			intval( $offset )
@@ -1226,7 +1237,7 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 	 * If this filter returns true, this term should not be indexed.
 	 *
 	 * @param boolean $block    If true, do not index this post. Default false.
-	 * @param object  $term     The term object.
+	 * @param WP_Term $term     The term object.
 	 * @param string  $taxonomy The term taxonomy.
 	 */
 	if ( true === apply_filters( 'relevanssi_do_not_index_term', false, $term, $taxonomy ) ) {
@@ -1268,7 +1279,7 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 	$description = apply_filters( 'relevanssi_tax_term_additional_content', $term->description, $term );
 	if ( ! empty( $description ) ) {
 		/** This filter is documented in common/indexing.php */
-		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $description, $remove_stopwords, $min_length ), 'term-description' );
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $description, $remove_stopwords, $min_length, 'indexing' ), 'term-description' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['content'] ) ) {
 				$insert_data[ $t_term ]['content'] = 0;
@@ -1279,7 +1290,7 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 
 	if ( isset( $term->name ) && ! empty( $term->name ) ) {
 		/** This filter is documented in common/indexing.php */
-		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $term->name, $remove_stopwords, $min_length ), 'term-name' );
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $term->name, $remove_stopwords, $min_length, 'indexing' ), 'term-name' );
 		foreach ( $tokens as $t_term => $tf ) {
 			if ( ! isset( $insert_data[ $t_term ]['title'] ) ) {
 				$insert_data[ $t_term ]['title'] = 0;
@@ -1366,8 +1377,6 @@ function relevanssi_premium_remove_doc( $post_id, $keep_internal_linking ) {
 	if ( ! $keep_internal_linking ) {
 		$wpdb->query( $wpdb->prepare( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE link > 0 AND doc=%s', $post_id ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 	}
-
-	relevanssi_update_doc_count();
 }
 
 /**
@@ -1666,10 +1675,10 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 		$post_type_object
 	);
 	if ( ! empty( $description ) ) {
-		/** This filter is documented in common/indexing.php */
+		/** This filter is documented in lib/indexing.php */
 		$tokens = apply_filters(
-			'relevanssi_indexing_terms',
-			relevanssi_tokenize( $description, $remove_stopwords, $min_length ),
+			'relevanssi_indexing_tokens',
+			relevanssi_tokenize( $description, $remove_stopwords, $min_length, 'indexing' ),
 			'posttype-description'
 		);
 		foreach ( $tokens as $t_term => $tf ) {
@@ -1681,10 +1690,10 @@ function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) 
 	}
 
 	if ( isset( $post_type_object->name ) && ! empty( $post_type_object->name ) ) {
-		/** This filter is documented in common/indexing.php */
+		/** This filter is documented in lib/indexing.php */
 		$tokens = apply_filters(
-			'relevanssi_indexing_terms',
-			relevanssi_tokenize( $post_type_object->label, $remove_stopwords, $min_length ),
+			'relevanssi_indexing_tokens',
+			relevanssi_tokenize( $post_type_object->label, $remove_stopwords, $min_length, 'indexing' ),
 			'posttype-name'
 		);
 		foreach ( $tokens as $t_term => $tf ) {

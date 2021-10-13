@@ -138,6 +138,44 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	}
 
 	/**
+	 * Refreshes the Relevanssi index.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *    wp relevanssi refresh
+	 *
+	 * @param array $args       Command arguments (not used).
+	 * @param array $assoc_args Command arguments as associative array.
+	 */
+	public function refresh( $args, $assoc_args ) {
+		$index_post_types  = get_option( 'relevanssi_index_post_types', '' );
+		$index_statuses    = apply_filters(
+			'relevanssi_valid_status',
+			array( 'publish', 'private', 'draft', 'pending', 'future' )
+		);
+		$all_indexed_posts = get_posts(
+			array(
+				'post_type'   => $index_post_types,
+				'fields'      => 'ids',
+				'numberposts' => -1,
+				'post_status' => $index_statuses,
+			)
+		);
+
+		$found_posts = count( $all_indexed_posts );
+		$progress    = relevanssi_generate_progress_bar( 'Indexing posts', $found_posts );
+
+		WP_CLI::log( 'Found ' . $found_posts . ' posts to refresh.' );
+		foreach ( $all_indexed_posts as $post_id ) {
+			relevanssi_index_doc( $post_id, true, relevanssi_get_custom_fields(), true, false );
+			$progress->tick();
+		}
+		$progress->finish();
+
+		WP_CLI::success( 'Index refresh done!' );
+	}
+
+	/**
 	 * Empties the Relevanssi index.
 	 *
 	 * ## EXAMPLES
@@ -272,21 +310,20 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 	}
 
 	/**
-	 * Wipes clean the PDF content from posts and rereads the PDF content.
+	 * Reads the attachment content for all attachments that haven't been read
+	 * yet.
 	 *
 	 * ## EXAMPLES
 	 *
-	 *      wp relevanssi index_pdfs
+	 *      wp relevanssi read_attachments
 	 *
 	 * @param array $args       Command arguments (not used).
 	 * @param array $assoc_args Command arguments as associative array.
 	 */
-	public function index_pdfs( $args, $assoc_args ) {
-		delete_post_meta_by_key( '_relevanssi_pdf_content' );
-		delete_post_meta_by_key( '_relevanssi_pdf_error' );
-
-		$pdf_attachments = relevanssi_get_posts_with_attachments();
-		foreach ( $pdf_attachments as $post_id ) {
+	public function read_attachments( $args, $assoc_args ) {
+		$attachment_posts = relevanssi_get_posts_with_attachments( 0 );
+		WP_CLI::log( 'Found ' . count( $attachment_posts ) . ' attachments to read.' );
+		foreach ( $attachment_posts as $post_id ) {
 			$exit_and_die = false;
 			$response     = relevanssi_index_pdf( $post_id, $exit_and_die );
 			if ( $response['success'] ) {
@@ -295,6 +332,42 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 				WP_CLI::log( "Couldn't read the post $post_id: " . $response['error'] );
 			}
 		}
+	}
+
+	/**
+	 * Removes all attachment content for all posts. Use with care! Does not
+	 * reindex the posts or remove them from the index.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *      wp relevanssi remove_attachment_content
+	 *
+	 * @param array $args       Command arguments (not used).
+	 * @param array $assoc_args Command arguments as associative array (not
+	 * used).
+	 */
+	public function remove_attachment_content( $args, $assoc_args ) {
+		delete_post_meta_by_key( '_relevanssi_pdf_content' );
+		delete_post_meta_by_key( '_relevanssi_pdf_error' );
+
+		WP_CLI::log( 'Removed all attachment content.' );
+	}
+
+	/**
+	 * Removes all attachment errors for all posts.
+	 *
+	 * ## EXAMPLES
+	 *
+	 *      wp relevanssi remove_attachment_errors
+	 *
+	 * @param array $args       Command arguments (not used).
+	 * @param array $assoc_args Command arguments as associative array (not
+	 * used).
+	 */
+	public function remove_attachment_errors( $args, $assoc_args ) {
+		delete_post_meta_by_key( '_relevanssi_pdf_error' );
+
+		WP_CLI::log( 'Removed all attachment errors.' );
 	}
 
 	/**
@@ -348,12 +421,12 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 			$post_types = get_post_types( $pt_args, 'names' );
 		}
 
-		if ( $assoc_args['post_type'] ) {
+		if ( isset( $assoc_args['post_type'] ) ) {
 			$post_types = explode( ',', $assoc_args['post_type'] );
 		}
 
 		$post_objects = false;
-		if ( $assoc_args['post_objects'] ) {
+		if ( isset( $assoc_args['post_objects'] ) ) {
 			if ( filter_var( $assoc_args['post_objects'], FILTER_VALIDATE_BOOLEAN ) ) {
 				$post_objects = true;
 			}
