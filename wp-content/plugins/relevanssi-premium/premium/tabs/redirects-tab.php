@@ -19,7 +19,9 @@ function relevanssi_redirects_tab() {
 	if ( ! isset( $redirects['empty'] ) ) {
 		$redirects['empty'] = '';
 	}
-
+	if ( ! isset( $redirects['no_terms'] ) ) {
+		$redirects['no_terms'] = '';
+	}
 	?>
 <h2 id="options"><?php esc_html_e( 'Redirects', 'relevanssi' ); ?></h2>
 
@@ -36,6 +38,11 @@ function relevanssi_redirects_tab() {
 			<td><input type="text" id="redirect_empty_searches" name="redirect_empty_searches" size="60" value="<?php echo esc_attr( str_replace( $site_url, '', $redirects['empty'] ) ); ?>" />
 			<p class="description"><?php esc_html_e( 'Enter an URL here to redirect all searches that find nothing to this URL.', 'relevanssi' ); ?></p></td>
 		</tr>
+		<tr>
+			<th scope="row"><label for="redirect_no_terms"><?php esc_html_e( 'Redirect searches without terms', 'relevanssi' ); ?></label></th>
+			<td><input type="text" id="redirect_no_terms" name="redirect_no_terms" size="60" value="<?php echo esc_attr( str_replace( $site_url, '', $redirects['no_terms'] ) ); ?>" />
+			<p class="description"><?php esc_html_e( 'Enter an URL here to redirect all searches without any search terms.', 'relevanssi' ); ?></p></td>
+		</tr>
 	</tbody>
 </table>
 
@@ -50,7 +57,7 @@ function relevanssi_redirects_tab() {
 	</thead>
 	<tbody>
 	<?php
-	if ( 1 === count( $redirects ) ) {
+	if ( ! isset( $redirects[0] ) ) {
 		?>
 	<tr class="redirect_table_row" id="row_0">
 	<td><input type="text" name="query_0" size="60" />

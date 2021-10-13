@@ -13,7 +13,7 @@
  * Plugin Name: Relevanssi Premium
  * Plugin URI: https://www.relevanssi.com/
  * Description: This premium plugin replaces WordPress search with a relevance-sorting search.
- * Version: 2.10.3
+ * Version: 2.16.2
  * Author: Mikko Saari
  * Author URI: http://www.mikkosaari.fi/
  * Text Domain: relevanssi
@@ -22,7 +22,7 @@
  */
 
 /*
-	Copyright 2020 Mikko Saari  (email: mikko@mikkosaari.fi)
+	Copyright 2021 Mikko Saari  (email: mikko@mikkosaari.fi)
 
 	This file is part of Relevanssi Premium, a search plugin for WordPress.
 
@@ -52,6 +52,7 @@ add_action( 'delete_term', 'relevanssi_delete_taxonomy_term', 9999, 3 );
 add_action( 'save_post', 'relevanssi_save_postdata', 10 );
 add_action( 'edit_attachment', 'relevanssi_save_postdata' );
 add_action( 'edit_attachment', 'relevanssi_save_pdf_postdata' );
+add_action( 'plugins_loaded', 'relevanssi_spamblock' );
 add_filter( 'wpmu_drop_tables', 'relevanssi_wpmu_drop' );
 add_action( 'network_admin_menu', 'relevanssi_network_menu' );
 add_filter( 'attachment_link', 'relevanssi_post_link_replace', 10, 2 );
@@ -59,6 +60,7 @@ add_action( 'admin_enqueue_scripts', 'relevanssi_premium_add_admin_scripts', 11 
 add_filter( 'relevanssi_premium_tokenizer', 'relevanssi_enable_stemmer' );
 add_filter( 'query_vars', 'relevanssi_premium_query_vars' );
 add_filter( 'relevanssi_tabs', 'relevanssi_premium_add_tabs', 10 );
+add_filter( 'relevanssi_phrase_queries', 'relevanssi_premium_phrase_queries', 10, 3 );
 
 global $wp_version;
 if ( version_compare( $wp_version, '5.1', '>=' ) ) {
@@ -73,14 +75,15 @@ global $relevanssi_variables;
 $relevanssi_variables['relevanssi_table']                      = $wpdb->prefix . 'relevanssi';
 $relevanssi_variables['stopword_table']                        = $wpdb->prefix . 'relevanssi_stopwords';
 $relevanssi_variables['log_table']                             = $wpdb->prefix . 'relevanssi_log';
+$relevanssi_variables['tracking_table']                        = $wpdb->prefix . 'relevanssi_tracking';
 $relevanssi_variables['post_type_weight_defaults']['post_tag'] = 0.5;
 $relevanssi_variables['post_type_weight_defaults']['category'] = 0.5;
 $relevanssi_variables['content_boost_default']                 = 5;
 $relevanssi_variables['title_boost_default']                   = 5;
 $relevanssi_variables['link_boost_default']                    = 0.75;
 $relevanssi_variables['comment_boost_default']                 = 0.75;
-$relevanssi_variables['database_version']                      = 19;
-$relevanssi_variables['plugin_version']                        = '2.10.3';
+$relevanssi_variables['database_version']                      = 21;
+$relevanssi_variables['plugin_version']                        = '2.16.2';
 $relevanssi_variables['plugin_dir']                            = plugin_dir_path( __FILE__ );
 $relevanssi_variables['plugin_basename']                       = plugin_basename( __FILE__ );
 $relevanssi_variables['file']                                  = __FILE__;
@@ -92,13 +95,17 @@ if ( ! defined( 'RELEVANSSI_DEVELOP' ) ) {
 	define( 'RELEVANSSI_DEVELOP', false );
 }
 
+require_once 'lib/admin-ajax.php';
 require_once 'lib/common.php';
+require_once 'lib/didyoumean.php';
 require_once 'lib/excerpts-highlights.php';
 require_once 'lib/indexing.php';
 require_once 'lib/init.php';
 require_once 'lib/install.php';
 require_once 'lib/interface.php';
 require_once 'lib/log.php';
+require_once 'lib/options.php';
+require_once 'lib/phrases.php';
 require_once 'lib/privacy.php';
 require_once 'lib/search.php';
 require_once 'lib/search-tax-query.php';
@@ -106,22 +113,28 @@ require_once 'lib/search-query-restrictions.php';
 require_once 'lib/shortcodes.php';
 require_once 'lib/stopwords.php';
 require_once 'lib/sorting.php';
+require_once 'lib/user-searches.php';
+require_once 'lib/utils.php';
 
 require_once 'premium/admin-ajax.php';
 require_once 'premium/body-stopwords.php';
 require_once 'premium/class-relevanssi-wp-auto-update.php';
 require_once 'premium/class-relevanssi-spellcorrector.php';
+require_once 'premium/click-tracking.php';
 require_once 'premium/common.php';
+require_once 'premium/excerpts-highlights.php';
 require_once 'premium/indexing.php';
 require_once 'premium/interface.php';
 require_once 'premium/network-options.php';
 require_once 'premium/pdf-upload.php';
 require_once 'premium/pinning.php';
 require_once 'premium/post-metabox.php';
+require_once 'premium/proximity.php';
 require_once 'premium/redirects.php';
 require_once 'premium/related.php';
 require_once 'premium/search.php';
 require_once 'premium/search-multi.php';
+require_once 'premium/spamblock.php';
 
 if ( version_compare( $wp_version, '5.0', '>=' ) ) {
 	require_once 'premium/gutenberg-sidebar.php';

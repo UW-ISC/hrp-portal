@@ -11,6 +11,7 @@
  */
 
 add_filter( 'relevanssi_content_to_index', 'relevanssi_add_pinned_words_to_post_content', 10, 2 );
+add_filter( 'relevanssi_post_title_before_tokenize', 'relevanssi_pinning_backup', 10, 2 );
 add_filter( 'relevanssi_hits_filter', 'relevanssi_pinning' );
 
 /**
@@ -43,7 +44,7 @@ function relevanssi_pinning( $hits ) {
 		$wp_filter['relevanssi_stemmer']->callbacks = null;
 	}
 
-	$terms = relevanssi_tokenize( $hits[1], false );
+	$terms = relevanssi_tokenize( $hits[1], false, -1, 'search_query' );
 
 	// Re-enable the removed filters.
 	if ( isset( $wp_filter['relevanssi_stemmer'] ) ) {
@@ -92,12 +93,10 @@ function relevanssi_pinning( $hits ) {
 		$pinned_posts = array();
 		$other_posts  = array();
 		foreach ( $hits[0] as $hit ) {
-			$return_id = false;
-			if ( is_int( $hit ) ) {
-				// Search is using fields=>ids.
-				$hit       = relevanssi_get_post( $hit );
-				$return_id = true;
-			}
+			$object_array = relevanssi_get_an_object( $hit );
+			$hit          = $object_array['object'];
+			$return_value = $object_array['format'];
+
 			$blog_id = 0;
 			if ( isset( $hit->blog_id ) ) {
 				// Multisite, so switch_to_blog() to correct blog and process
@@ -119,35 +118,19 @@ function relevanssi_pinning( $hits ) {
 				}
 			}
 			$hit_id = strval( $hit->ID ); // The IDs from the database are strings, the one from the post is an integer in some contexts.
-			if ( is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit_id, $positive_ids[ $blog_id ], true ) ) {
+			if ( $hit_id && is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit_id, $positive_ids[ $blog_id ], true ) ) {
 				$hit->relevanssi_pinned = 1;
-				if ( $return_id ) {
-					$pinned_posts[] = $hit->ID;
-				} else {
-					$pinned_posts[] = $hit;
-				}
+				$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
 			} else {
-				if ( isset( $posts_pinned_for_all[ $hit->ID ] ) ) {
+				if ( isset( $hit->ID ) && isset( $posts_pinned_for_all[ $hit->ID ] ) ) {
 					$hit->relevanssi_pinned = 1;
-					if ( $return_id ) {
-						$pinned_posts[] = $hit->ID;
-					} else {
-						$pinned_posts[] = $hit;
-					}
+					$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
 				} elseif ( is_array( $negative_ids[ $blog_id ] ) && count( $negative_ids[ $blog_id ] ) > 0 ) {
 					if ( ! in_array( $hit_id, $negative_ids[ $blog_id ], true ) ) {
-						if ( $return_id ) {
-							$other_posts[] = $hit->ID;
-						} else {
-							$other_posts[] = $hit;
-						}
+						$other_posts[] = relevanssi_return_value( $hit, $return_value );
 					}
 				} else {
-					if ( $return_id ) {
-						$other_posts[] = $hit->ID;
-					} else {
-						$other_posts[] = $hit;
-					}
+					$other_posts[] = relevanssi_return_value( $hit, $return_value );
 				}
 			}
 		}
@@ -170,6 +153,23 @@ function relevanssi_add_pinned_words_to_post_content( $content, $post ) {
 	$pin_words = get_post_meta( $post->ID, '_relevanssi_pin', false );
 	foreach ( $pin_words as $word ) {
 		$content .= " $word";
+	}
+	return $content;
+}
+
+/**
+ * Adds pinned words to post title.
+ *
+ * If the `relevanssi_index_content` filter hook returns `false`, ie. post
+ * content is not indexed, this function will add the pinned words to the post
+ * title instead to guarantee they are found in the search.
+ *
+ * @param string $content Titlecontent.
+ * @param object $post    The post object.
+ */
+function relevanssi_pinning_backup( $content, $post ) {
+	if ( false === apply_filters( 'relevanssi_index_content', true ) ) {
+		$content = relevanssi_add_pinned_words_to_post_content( $content, $post );
 	}
 	return $content;
 }
@@ -198,7 +198,7 @@ function relevanssi_admin_search_pinning( $post, $query ) {
 		return array( '', $pinned );
 	}
 
-	$tokens = relevanssi_tokenize( $query );
+	$tokens = relevanssi_tokenize( $query, true, -1, 'search_query' );
 	foreach ( array_keys( $tokens ) as $token ) {
 		if ( ! in_array( $token, $pinned_words, true ) ) {
 			/* Translators: %s is the search term. */
