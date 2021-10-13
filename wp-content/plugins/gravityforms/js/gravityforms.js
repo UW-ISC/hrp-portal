@@ -2004,6 +2004,15 @@ var GFMergeTag = function() {
 		modifier = modifier.replace(":", "");
 
 		var fieldId = parseInt(inputId,10);
+
+		// Check address field's copy value checkbox and reset fieldID to source field if checked
+		var isCopyPreviousAddressChecked = jQuery( '#input_' + formId + '_' + fieldId + '_copy_values_activated:checked' ).length > 0;
+		if ( isCopyPreviousAddressChecked ) {
+			var sourceFieldId = jQuery( '#input_' + formId + '_' + fieldId + '_copy_values_activated' ).data('source_field_id');
+			inputId = inputId == fieldId ? sourceFieldId : inputId.toString().replace( fieldId + '.', sourceFieldId + '.' );
+			fieldId = sourceFieldId;
+		}
+
 		var field = jQuery('#field_' + formId + '_' + fieldId);
 
 		var inputSelector = fieldId == inputId ? 'input[name^="input_' + fieldId + '"]' : 'input[name="input_' + inputId + '"]';
@@ -2043,6 +2052,8 @@ var GFMergeTag = function() {
 				break;
 
 		}
+
+
 
 		// Filter out unselected checkboxes and radio buttons
 		if ( input.prop('type') === 'checkbox' || input.prop('type') === 'radio' ) {
