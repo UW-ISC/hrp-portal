@@ -1,6 +1,6 @@
 {
   "name": "@gravityforms/stylelint-config",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Stylelint config for use in Gravity Forms projects.",
   "author": "Rocketgenius",
   "license": "GPL-2.0-or-later",

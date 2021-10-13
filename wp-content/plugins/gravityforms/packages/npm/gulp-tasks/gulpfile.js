@@ -1,9 +1,9 @@
-const fs = require('fs');
+const fs = require( 'fs' );
 const gulp = require( 'gulp' );
 const requireDir = require( 'require-dir' );
 const findConfig = require( 'find-config' );
 const config = require( './config' );
-const tasks = requireDir( './src' );
+const tasks = requireDir( './src/tasks' );
 const browserSync = require( 'browser-sync' ).create( config.browserSync.serverName );
 const localConfig = findConfig.require( 'local-config.json' );
 const bsConfig = localConfig || {
@@ -38,6 +38,7 @@ const gulpTasks = [
 	'clean:adminIconsEnd', // delete admin icon zip
 	'clean:themeIconsStart', // delete all files related to theme icons in pcss, in prep for reinjection
 	'clean:themeIconsEnd', // delete theme icon zip
+	'clean:js', // clean chunks javascript
 
 	/* Decompress tasks */
 
@@ -77,6 +78,15 @@ const gulpTasks = [
 	'replace:themeIconsStyle', // runs regex to replace and convert scss to pcss compatible with our systems in the icons task
 	'replace:themeIconsVariables', // runs regex to replace and convert scss to pcss compatible with our systems in the icons task
 
+	/* Shell tasks */
+
+	'shell:eslint', // runs eslint
+	'shell:test', // runs jests tests
+	'shell:scriptsThemeDev', // runs webpack for the theme dev build
+	'shell:scriptsThemeProd', // runs webpack for the theme prod build
+	'shell:scriptsAdminDev', // runs webpack for the admin dev build
+	'shell:scriptsAdminProd', // runs webpack for the admin prod build
+
 	/* Stylelint tasks */
 
 	'stylelint:admin', // lints and fixes the admin pcss
@@ -85,6 +95,8 @@ const gulpTasks = [
 	/* Watch Tasks (THESE MUST BE LAST) */
 
 	'watch:main', // watch all fe assets and run appropriate routines
+	'watch:watchAdminJS', // watch admin js and run appropriate webpack tasks
+	'watch:watchThemeJS', // watch theme js and run appropriate webpack tasks
 ];
 
 /**
@@ -114,9 +126,7 @@ if ( config.tasks && config.tasksDir && fs.existsSync( config.tasksDir ) ) {
 	registerTasks( config.tasks, externalTaskModules );
 }
 
-const watchTasks = [
-	'watch:main',
-];
+const watchTasks = [ 'watch:main', 'watch:watchAdminJS', 'watch:watchThemeJS' ];
 
 gulp.task( 'watch', gulp.parallel( watchTasks ) );
 
@@ -128,6 +138,7 @@ gulp.task(
 	'lint',
 	gulp.series(
 		gulp.parallel(
+			'shell:eslint',
 			'stylelint:admin',
 		)
 	)
@@ -217,9 +228,10 @@ gulp.task( 'dev', gulp.parallel( watchTasks, async function() {
 gulp.task( 'dist',
 	gulp.series(
 		gulp.parallel( 'lint' ),
-		gulp.parallel( 'postcss:adminCss', 'postcss:editorCss', 'postcss:settingsCss' ),
+		gulp.parallel( 'clean:js', 'postcss:adminCss', 'postcss:editorCss', 'postcss:settingsCss' ),
 		gulp.parallel( 'postcss:adminThemeCss', 'postcss:adminIconCss', 'postcss:adminFontAwesomeCss', 'postcss:adminIE11Css' ),
-		gulp.parallel( 'postcss:baseCss', 'postcss:themeCss', 'postcss:themeIE11Css' )
+		gulp.parallel( 'postcss:baseCss', 'postcss:themeCss', 'postcss:themeIE11Css' ),
+		gulp.parallel( 'shell:scriptsThemeDev', 'shell:scriptsAdminDev' )
 	)
 );
 

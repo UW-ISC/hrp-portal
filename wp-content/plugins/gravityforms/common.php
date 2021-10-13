@@ -12,6 +12,9 @@ use \Gravity_Forms\Gravity_Forms\Messages\Dismissable_Messages;
  */
 class GFCommon {
 
+	private static $plugins;
+	private static $license_info;
+
 	// deprecated; set to GFForms::$version in GFForms::init() for backwards compat
 	public static $version = null;
 
@@ -2916,12 +2919,48 @@ Content-Type: text/html;
 	 * Get the license and plugins information.
 	 *
 	 * @since unknown
+	 * @since 2.5     Deprecated the gform_version_info option. Get the license and plugins data from their own methods.
 	 *
 	 * @param bool $cache If we should use the cached data.
 	 *
 	 * @return array|null
 	 */
 	public static function get_version_info( $cache = true ) {
+		/**
+		 * @var \Gravity_Forms\Gravity_Forms\License\GF_License_API_Connector $license_connector
+		 */
+		$license_connector = GFForms::get_service_container()->get( \Gravity_Forms\Gravity_Forms\License\GF_License_Service_Provider::LICENSE_API_CONNECTOR );
+
+		if ( ! is_null( self::$plugins ) && $cache ) {
+			$plugins      = self::$plugins;
+			$license_info = self::$license_info;
+		} else {
+			$plugins            = $license_connector->get_plugins( $cache );
+			$license_info       = self::get_key() ? $license_connector->check_license( false, $cache ) : new WP_Error( \Gravity_Forms\Gravity_Forms\License\GF_License_Statuses::NO_DATA );
+			self::$plugins      = $plugins;
+			self::$license_info = $license_info;
+		}
+
+		return array(
+			'is_valid_key' => ! is_wp_error( $license_info ) && $license_info->can_be_used(),
+			'reason'       => $license_info->get_error_message(),
+			'version'      => rgars( $plugins, 'gravityforms/version' ),
+			'url'          => rgars( $plugins, 'gravityforms/url' ),
+			'is_error'     => is_wp_error( $license_info ) || $license_info->has_errors(),
+			'offerings'    => $plugins,
+		);
+	}
+
+	/**
+	 * The legacy version of the get_version_info() method.
+	 *
+	 * @since 2.5
+	 *
+	 * @param bool $cache True if use the cache.
+	 *
+	 * @return array|false|mixed|string[]|void
+	 */
+	public static function legacy_get_version_info( $cache = true ) {
 
 		$version_info = get_option( 'gform_version_info' );
 		if ( ! $cache ) {
@@ -6973,33 +7012,33 @@ Content-Type: text/html;
 
 		if ( empty( $new_key ) ) {
 
-			//Unlinking key to site
+			// Unlinking key to site.
 			$result = gapi()->update_current_site( '' );
 
 		} else {
 
-			//License Key has changed, update site record appropriately.
+			// License Key has changed, update site record appropriately.
 
-			//Get new license key information
+			// Get new license key information.
 			$version_info = GFCommon::get_version_info( false );
 
-			//Has site been already registered?
-			$is_site_registered = gapi()->is_site_registered();
-			$is_valid_new 			= $version_info['is_valid_key'] && ! $is_site_registered;
-			$is_valid_registered 	= $version_info['is_valid_key'] && $is_site_registered;
+			// Has site been already registered?
+			$is_site_registered  = gapi()->is_site_registered();
+			$is_valid_new        = $version_info['is_valid_key'] && ! $is_site_registered;
+			$is_valid_registered = $version_info['is_valid_key'] && $is_site_registered;
 
 			if ( $is_valid_new ) {
-				//Site is new (not registered) and license key is valid
-				//Register new site
+				// Site is new (not registered) and license key is valid.
+				// Register new site.
 				$result = gapi()->register_current_site( $new_key, $is_md5 );
 			} elseif ( $is_valid_registered ) {
 
-				//Site is already registered and new license key is valid
-				//Update site with new license key
+				// Site is already registered and new license key is valid.
+				// Update site with new license key.
 				$result = gapi()->update_current_site( $new_key );
 			} else {
 
-				//Invalid key, do not change site registration.
+				// Invalid key, do not change site registration.
 				$result = new WP_Error( 'invalid_license', 'Invalid license. Site cannot be registered' );
 				GFCommon::log_error( 'Invalid license. Site cannot be registered' );
 			}
@@ -7486,6 +7525,37 @@ class GFCache {
 		}
 
 		return $data;
+	}
+
+}
+
+/**
+ *
+ * Notes:
+ * 1. The WordPress Transients API does not support boolean
+ * values so boolean values should be converted to integers
+ * or arrays before setting the values as persistent.
+ *
+ * 2. The transients API only deletes the transient from the database
+ * when the transient is accessed after it has expired. WordPress doesn't
+ * do any garbage collection of transients.
+ *
+ */
+class GF_Cache {
+	public function get( $key, &$found = null, $is_persistent = true ) {
+		return GFCache::get( $key, $found, $is_persisent );
+	}
+
+	public function set( $key, $data, $is_persistent = false, $expiration_seconds = 0 ) {
+		return GFCache::set( $key, $data, $is_persistent, $expiration_seconds );
+	}
+
+	public function delete( $key ) {
+		return GFCache::delete( $key );
+	}
+
+	public function flush( $flush_persistent = false ) {
+		return GFCache::flush( $flus_persistent );
 	}
 
 }

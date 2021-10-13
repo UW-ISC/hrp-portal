@@ -29,12 +29,32 @@ module.exports = {
 			legacy_css: resolve( __dirname, 'legacy/css' ),
 			npm: resolve( __dirname, 'node_modules' ),
 			postcss_assets_base_url: resolve( __dirname, '../' ),
+			reports: resolve( __dirname, 'reports/webpack-%s.html' ),
 			root: resolve( __dirname, '' ),
 			settings_css_dist: resolve( __dirname, 'includes/settings/css' ),
 		},
 		tasks: [],
 		tasksDir: resolve( __dirname, 'gulp-tasks' ),
-
+		webpack: {
+			alias: {
+				common: resolve( __dirname, 'assets/js/src/common' ),
+			},
+			overrides: {
+				externals: {
+					admin: {
+						'gform-admin-config': 'gform_admin_config',
+						'gform-admin-i18n': 'gform_admin_i18n',
+					},
+					theme: {
+						'gform-theme-config': 'gform_theme_config',
+						'gform-theme-i18n': 'gform_theme_i18n',
+					},
+				},
+				output: {
+					uniqueName: 'gravityforms',
+				},
+			},
+		}
 	},
 	requestConfig: {
 		site_url : '',

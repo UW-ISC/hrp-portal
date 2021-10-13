@@ -44,6 +44,15 @@ class GF_Field extends stdClass implements ArrayAccess {
 	 */
 	private $_merge_tag_modifiers = array();
 
+	/**
+	 * Indicates if this field supports state validation.
+	 *
+	 * @since 2.5.11
+	 *
+	 * @var bool
+	 */
+	protected $_supports_state_validation = false;
+
 	public function __construct( $data = array() ) {
 		if ( empty( $data ) ) {
 			return;
@@ -1008,6 +1017,69 @@ class GF_Field extends stdClass implements ArrayAccess {
 		);
 	}
 
+	/**
+	 * Prepares the selected choice from the entry for output.
+	 *
+	 * @since 2.5.11
+	 *
+	 * @param string $value    The choice value from the entry.
+	 * @param string $currency The entry currency code.
+	 * @param bool   $use_text Indicates if the choice text should be returned instead of the choice value.
+	 *
+	 * @return string
+	 */
+	public function get_selected_choice_output( $value, $currency = '', $use_text = false ) {
+		if ( is_array( $value ) ) {
+			return '';
+		}
+
+		$price = '';
+
+		if ( $this->enablePrice ) {
+			$parts = explode( '|', $value );
+			$value = $parts[0];
+
+			if ( ! empty( $parts[1] ) ) {
+				$price = GFCommon::to_money( $parts[1], $currency );
+			}
+		}
+
+		$choice = $this->get_selected_choice( $value );
+
+		if ( $use_text && ! empty( $choice['text'] ) ) {
+			$value = $choice['text'];
+		}
+
+		if ( ! empty( $price ) ) {
+			$value .= ' (' . $price . ')';
+		}
+
+		return empty( $choice ) ? wp_strip_all_tags( $value ) : wp_kses_post( $value );
+	}
+
+	/**
+	 * Returns the choice array for the entry value.
+	 *
+	 * @since 2.5.11
+	 *
+	 * @param string $value The choice value from the entry.
+	 *
+	 * @return array
+	 */
+	public function get_selected_choice( $value ) {
+		if ( empty( $value ) || is_array( $value ) || empty( $this->choices ) ) {
+			return array();
+		}
+
+		foreach ( $this->choices as $choice ) {
+			if ( GFFormsModel::choice_value_match( $this, $choice, $value ) ) {
+				return $choice;
+			}
+		}
+
+		return array();
+	}
+
 
 	// # INPUT ATTRIBUTE HELPERS ----------------------------------------------------------------------------------------
 
@@ -1684,6 +1756,16 @@ class GF_Field extends stdClass implements ArrayAccess {
 		return true;
 	}
 
+	/**
+	 * Determines if this field will be processed by the state validation.
+	 *
+	 * @since 2.5.11
+	 *
+	 * @return bool
+	 */
+	public function is_state_validation_supported() {
+		return $this->_supports_state_validation && $this->validateState && ! $this->allowsPrepopulate;
+	}
 
 	/**
 	 * Generates an array that contains aria-describedby attribute for each input.
@@ -2016,6 +2098,10 @@ class GF_Field extends stdClass implements ArrayAccess {
 
 		$this->isRequired = (bool) $this->isRequired;
 
+		if ( isset( $this->validateState ) ) {
+			$this->validateState = (bool) $this->validateState;
+		}
+
 		$this->allowsPrepopulate = (bool) $this->allowsPrepopulate;
 
 		$this->inputMask      = (bool) $this->inputMask;
@@ -2293,19 +2379,20 @@ class GF_Field extends stdClass implements ArrayAccess {
 	/**
 	 * Actions to be performed after the field has been converted to an object.
 	 *
-	 * @since  2.1.2.7
-	 * @access public
-	 *
-	 * @uses    GF_Field::failed_validation()
-	 * @uses    GF_Field::validation_message()
-	 * @used-by GFFormsModel::convert_field_objects()
-	 *
-	 * @return void
+	 * @since 2.1.3  Clear any field validation errors that have been saved to the form in the database.
+	 * @since 2.5.11 Set validateState property for back-compat.
 	 */
 	public function post_convert_field() {
-		// Fix an issue where fields can show up as invalid in the form editor if the form was updated using the form object returned after a validation failure.
 		unset( $this->failed_validation );
 		unset( $this->validation_message );
+
+		if (
+			! isset( $this->validateState )
+			&& $this->_supports_state_validation
+			&& ( in_array( $this->type, array( 'consent', 'donation' ) ) || GFCommon::is_product_field( $this->type ) )
+		) {
+			$this->validateState = true;
+		}
 	}
 
 	/**

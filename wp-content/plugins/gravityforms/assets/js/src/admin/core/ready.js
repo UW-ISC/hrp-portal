@@ -6,7 +6,6 @@
 
 import common from 'common';
 import { ready } from '@gravityforms/utils';
-import Flyout from '@gravityforms/components/js/flyout';
 
 /**
  * @function bindEvents
@@ -29,16 +28,13 @@ const init = () => {
 
 	common();
 
-	const flyout = new Flyout( {
-		content: 'Hello',
-		position: 'absolute',
-		target: '.gflow-inbox.gflow-grid',
-		title: 'Inbox Settings',
-		triggers: '[data-js="inbox-settings"]',
-		wrapperClasses: 'gform-flyout gform-flyout--inbox-settings',
-	} );
-
-	console.log( flyout );
+	// if ( document.getElementById( 'gf_toolbar_buttons_container' ) ) {
+	// 	import( '../react' /* webpackChunkName:"admin-example" */ ).then(
+	// 		( module ) => {
+	// 			module.default( document.getElementById( 'gf_toolbar_buttons_container' ) );
+	// 		}
+	// 	);
+	// }
 
 	// initialize admin modules
 
