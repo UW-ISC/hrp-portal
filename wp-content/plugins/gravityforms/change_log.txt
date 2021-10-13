@@ -1,3 +1,17 @@
+### 2.5.12 | 2021-10-01
+- Fixed an issue with the address field merge tag when selecting the option to use the values from a previous address field
+- Fixed an issue for the list field where multi-column headers are misaligned when max rows are set to 1.
+- Fixed an issue which causes calls to the License API to occur more often than necessary.
+
+### 2.5.11 | 2021-09-29
+- Added security enhancements.
+- Added a new UI for License Settings which shows more-thorough details about your License Key.
+- Updated logo to reflect new branding.
+- Fixed an issue which causes compatibility errors when third-party code extends the Gravity API class.
+- Fixed a PHP fatal error that occurs during translation installation when the hosting environment is configured to block external requests.
+- Fixed an issue for thickbox where RTL is not being respected, but only within the context of Gravity Forms admin pages.
+- API: Updated the logic that determines when to show custom form settings fields.
+
 ### 2.5.10 | 2021-09-08
 - Added alt text and title attribute for accessibility to the date field datepicker field icon.
 - Fixed an issue where the form button text doesn't properly update for page conditional logic.
@@ -17,6 +31,7 @@
 - Updated the feed settings to run on admin_init instead of init to ensure they never trigger on the front end.
 - Updated some instances of strings not being translatable for the System Status view.
 - API: Fixed an issue where field map fields don't auto populate with default options.
+- AF: Added the ability to overwrite the uninstall message.
 
 ### 2.5.9 | 2021-08-10
 - Added security enhancements.

@@ -57,7 +57,26 @@ module.export = {
 		},
 		tasks: [],
 		tasksDir: resolve( __dirname, 'gulp-tasks' ),
-
+		webpack: {
+			alias: {
+				common: resolve( __dirname, 'assets/js/src/common' ),
+			},
+			overrides: {
+				externals: {
+					admin: {
+						'gform-admin-config': 'gform_admin_config',
+						'gform-admin-i18n': 'gform_admin_i18n',
+					},
+					theme: {
+						'gform-theme-config': 'gform_theme_config',
+						'gform-theme-i18n': 'gform_theme_i18n',
+					},
+				},
+				output: {
+					uniqueName: 'gravityforms',
+				},
+			},
+		}
 	}
 }
 ```

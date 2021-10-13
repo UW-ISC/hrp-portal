@@ -1,6 +1,6 @@
 {
   "name": "@gravityforms/request",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Utility to make WordPress REST API requests. It's a wrapper around window.fetch.",
   "author": "Rocketgenius",
   "license": "GPL-2.0-or-later",
