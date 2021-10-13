@@ -480,6 +480,9 @@ function generateSimpleTableID($wpDataTableRows)
                 'simpleHeader' => 0,
                 'stripeTable' => 0,
                 'cellPadding' => 10,
+                'removeBorders' => 0,
+                'borderCollapse' => 'collapse',
+                'borderSpacing' => 0,
                 'verticalScroll' => 0,
                 'verticalScrollHeight' => 600
                 )
@@ -536,6 +539,9 @@ function wdtSaveDataSimpleTable()
                     'simpleHeader' => $turnOffSimpleHeader ? 0 : $tableSettings->simpleHeader,
                     'stripeTable' => $tableSettings->stripeTable,
                     'cellPadding' => $tableSettings->cellPadding,
+                    'removeBorders' => $tableSettings->removeBorders,
+                    'borderCollapse' => $tableSettings->borderCollapse,
+                    'borderSpacing' => $tableSettings->borderSpacing,
                     'verticalScroll' => $tableSettings->verticalScroll,
                     'verticalScrollHeight' => $tableSettings->verticalScrollHeight,
                 )

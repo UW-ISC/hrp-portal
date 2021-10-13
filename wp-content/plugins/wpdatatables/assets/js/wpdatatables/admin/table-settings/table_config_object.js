@@ -31,6 +31,9 @@ var wpdatatable_config = {
     simpleHeader: 0,
     stripeTable: 0,
     cellPadding: 10,
+    removeBorders: 0,
+    borderCollapse: 'collapse',
+    borderSpacing: 0,
     verticalScrollHeight: 600,
     filtering: 1,
     global_search: 1,
@@ -53,6 +56,8 @@ var wpdatatable_config = {
     dataTable: null,
     datatable_config: null,
     tabletools_config: { print: 1, copy: 1, excel: 1, csv: 1, pdf: 0 },
+    pdfPaperSize: 'A4',
+    pdfPageOrientation: 'portrait',
     showTableToolsIncludeHTML: 0,
     columns: [],
     columns_by_headers: {},
@@ -240,11 +245,20 @@ var wpdatatable_config = {
                 wpdatatable_config.setTableToolsConfig( { print: 1, copy: 1, excel: 1, csv: 1, pdf: 0 } ) :
                 wpdatatable_config.setTableToolsConfig( table_tools );
             wpdatatable_config.setTableToolsIncludeHTML( 0 );
+            // Show/hide PDF export options
+            if (typeof wpdatatable_config.tabletools_config.pdf !== "undefined" && wpdatatable_config.tabletools_config.pdf == 1) {
+                jQuery('div.pdf-export-options').animateFadeIn();
+            } else {
+                jQuery('div.pdf-export-options').animateFadeOut();
+            }
         }else{
             jQuery('.wdt-table-settings .table-tools-settings-block').addClass('hidden');
             jQuery('.wdt-table-settings .table-tools-include-html-block').addClass('hidden');
+            jQuery('div.pdf-export-options').animateFadeOut();
             wpdatatable_config.setTableToolsConfig({})
             wpdatatable_config.setTableToolsIncludeHTML( 0 );
+            wpdatatable_config.setPdfPaperSize('A4')
+            wpdatatable_config.setPdfPageOrientation('portrait')
         }
         jQuery('#wdt-table-tools').prop( 'checked', show_tabletools );
     },
@@ -444,6 +458,32 @@ var wpdatatable_config = {
         wpdatatable_config.cellPadding = cellPadding;
         if( jQuery('#wdt-cell-padding').val() != wpdatatable_config.cellPadding ){
             jQuery('#wdt-cell-padding').val( wpdatatable_config.cellPadding );
+        }
+    },
+    /**
+     * Enable or disable borders
+     * @param removeBorders 1 or 0
+     */
+    setRemoveBorders: function( removeBorders ){
+        wpdatatable_config.removeBorders = removeBorders;
+        jQuery('#wdt-remove-borders').prop( 'checked', removeBorders );
+    },
+    /**
+     * Set the collapsing borders
+     * @param borderCollapse
+     */
+    setBorderCollapse: function( borderCollapse ){
+        wpdatatable_config.borderCollapse = borderCollapse;
+        jQuery('#wdt-border-collapse').val( borderCollapse ).selectpicker( 'refresh' );
+    },
+    /**
+     * Set border spacing value
+     * @param borderSpacing
+     */
+    setBorderSpacing: function( borderSpacing ){
+        wpdatatable_config.borderSpacing = borderSpacing;
+        if( jQuery('#wdt-border-spacing').val() !== wpdatatable_config.borderSpacing ){
+            jQuery('#wdt-border-spacing').val( wpdatatable_config.borderSpacing );
         }
     },
     /**
@@ -714,6 +754,18 @@ var wpdatatable_config = {
         if( jQuery('#wdt-table-tools-config').val() != tabletoolsConfigVal ){
             jQuery('#wdt-table-tools-config').val( tabletoolsConfigVal ).selectpicker('refresh');
         }
+    },
+    setPdfPaperSize: function ( pdfPaperSize ) {
+      wpdatatable_config.pdfPaperSize = pdfPaperSize;
+      jQuery( '#wdt-pdf-paper-size' )
+            .val( pdfPaperSize )
+            .selectpicker( 'refresh' );
+    },
+    setPdfPageOrientation: function ( pdfPageOrientation ) {
+        wpdatatable_config.pdfPageOrientation = pdfPageOrientation;
+        jQuery( '#wdt-pdf-page-orientation' )
+            .val( pdfPageOrientation )
+            .selectpicker( 'refresh' );
     },
     /**
      * Set the VAR 1 placeholder value
@@ -1073,6 +1125,9 @@ var wpdatatable_config = {
         wpdatatable_config.setSimpleHeader( parseInt( tableJSON.simpleHeader ) );
         wpdatatable_config.setStripeTable( parseInt( tableJSON.stripeTable ) );
         wpdatatable_config.setCellPadding( parseInt( tableJSON.cellPadding ) );
+        wpdatatable_config.setRemoveBorders( parseInt( tableJSON.removeBorders ) );
+        wpdatatable_config.setBorderCollapse( tableJSON.borderCollapse );
+        wpdatatable_config.setBorderSpacing( parseInt( tableJSON.borderSpacing) );
         wpdatatable_config.setVerticalScrollHeight( parseInt( tableJSON.verticalScrollHeight ) );
         wpdatatable_config.setResponsive( parseInt( tableJSON.responsive ) );
         wpdatatable_config.setScrollable( parseInt( tableJSON.scrollable ) );
@@ -1081,6 +1136,8 @@ var wpdatatable_config = {
         wpdatatable_config.setSorting( parseInt( tableJSON.sorting ) );
         wpdatatable_config.setShowTableTools( parseInt( tableJSON.tools ), tableJSON.tabletools_config );
         wpdatatable_config.setTableToolsIncludeHTML( parseInt( tableJSON.showTableToolsIncludeHTML ) );
+        wpdatatable_config.setPdfPaperSize( tableJSON.pdfPaperSize);
+        wpdatatable_config.setPdfPageOrientation( tableJSON.pdfPageOrientation);
         wpdatatable_config.setWordWrap( tableJSON.word_wrap );
         wpdatatable_config.setPlaceholderVar1( tableJSON.var1 );
         wpdatatable_config.setPlaceholderVar2( tableJSON.var2 );

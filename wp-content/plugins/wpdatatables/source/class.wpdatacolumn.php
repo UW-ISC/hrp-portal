@@ -29,6 +29,8 @@ class WDTColumn {
     protected $_decimalPlaces = -1;
     protected $_exactFiltering;
     protected $_globalSearchColumn = 1;
+    protected $_searchInSelectBox = 1;
+    protected $_searchInSelectBoxEditing = 1;
     protected $_filterLabel;
     protected $_checkboxesInModal = false;
     protected $_possibleValuesType;
@@ -56,6 +58,8 @@ class WDTColumn {
         $this->_orig_header = WDTTools::defineDefaultValue($properties, 'orig_header', '');
         $this->_exactFiltering = WDTTools::defineDefaultValue($properties, 'exactFiltering', '');
         $this->setGlobalSearchColumn(WDTTools::defineDefaultValue($properties,'globalSearchColumn', 1));
+        $this->setSearchInSelectBox(WDTTools::defineDefaultValue($properties, 'searchInSelectBox', 1));
+        $this->setSearchInSelectBoxEditing(WDTTools::defineDefaultValue($properties, 'searchInSelectBoxEditing', 1));
         $this->_searchable = WDTTools::defineDefaultValue($properties, 'searchable', true);
         $this->setFilterDefaultValue(WDTTools::defineDefaultValue($properties, 'filterDefaultValue', null));
         $this->setFilterLabel(WDTTools::defineDefaultValue($properties, 'filterLabel', null));
@@ -484,6 +488,38 @@ class WDTColumn {
     }
 
     /**
+     * @return int
+     */
+    public function getSearchInSelectBox()
+    {
+        return $this->_searchInSelectBox;
+    }
+
+    /**
+     * @param int $searchInSelectBox
+     */
+    public function setSearchInSelectBox($searchInSelectBox)
+    {
+        $this->_searchInSelectBox = $searchInSelectBox;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSearchInSelectBoxEditing()
+    {
+        return $this->_searchInSelectBoxEditing;
+    }
+
+    /**
+     * @param int $searchInSelectBoxEditing
+     */
+    public function setSearchInSelectBoxEditing($searchInSelectBoxEditing)
+    {
+        $this->_searchInSelectBoxEditing = $searchInSelectBoxEditing;
+    }
+
+    /**
      * @return string
      */
     public function getRangeSlider() {
@@ -886,6 +922,8 @@ class WDTColumn {
         $jsFilterDef->defaultValue = $this->getFilterDefaultValue();
         $jsFilterDef->exactFiltering = $this->getExactFiltering();
         $jsFilterDef->filterLabel = $this->getFilterLabel();
+        $jsFilterDef->searchInSelectBox = $this->getSearchInSelectBox();
+        $jsFilterDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
         $jsFilterDef->checkboxesInModal = $this->isCheckboxesInModal();
         $jsFilterDef->linkButtonLabel = $this->getLinkButtonLabel();
         $jsFilterDef->rangeSlider = $this->getRangeSlider();
@@ -957,6 +995,7 @@ class WDTColumn {
         $jsEditingDef->mandatory = $this->isNotNull();
         $jsEditingDef->displayHeader = $this->getTitle();
         $jsEditingDef->foreignKeyRule = $this->getForeignKeyRule();
+        $jsEditingDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
 
         return $jsEditingDef;
     }

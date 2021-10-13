@@ -183,6 +183,9 @@ class WDTConfigController {
             $table->simpleResponsive = (isset($advancedSettings->simpleResponsive)) ? $advancedSettings->simpleResponsive : 0;
             $table->stripeTable = (isset($advancedSettings->stripeTable)) ? $advancedSettings->stripeTable : 0;
             $table->cellPadding = (isset($advancedSettings->cellPadding)) ? $advancedSettings->cellPadding : 10;
+            $table->removeBorders = (isset($advancedSettings->removeBorders)) ? $advancedSettings->removeBorders : 0;
+            $table->borderCollapse = (isset($advancedSettings->borderCollapse)) ? $advancedSettings->borderCollapse : 'collapse';
+            $table->borderSpacing = (isset($advancedSettings->borderSpacing)) ? $advancedSettings->borderSpacing : 0;
             $table->verticalScroll = (isset($advancedSettings->verticalScroll)) ? $advancedSettings->verticalScroll : 0;
             $table->verticalScrollHeight = (isset($advancedSettings->verticalScrollHeight)) ? $advancedSettings->verticalScrollHeight : 0;
             $table->editButtonsDisplayed = (isset($advancedSettings->editButtonsDisplayed)) ? $advancedSettings->editButtonsDisplayed : array('all');
@@ -192,6 +195,8 @@ class WDTConfigController {
             $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader)  ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
             $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss)  ? $advancedSettings->tableCustomCss : '';
             $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings)  ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
+            $table->pdfPaperSize = isset($advancedSettings->pdfPaperSize) ? $advancedSettings->pdfPaperSize : 'A4';
+            $table->pdfPageOrientation = isset($advancedSettings->pdfPageOrientation) ? $advancedSettings->pdfPageOrientation : 'portrait';
 
             $table = self::sanitizeTableConfig($table);
 
@@ -333,6 +338,9 @@ class WDTConfigController {
                     'simpleHeader' => $table->simpleHeader,
                     'stripeTable' => $table->stripeTable,
                     'cellPadding' => $table->cellPadding,
+                    'removeBorders' => $table->removeBorders,
+                    'borderCollapse' => $table->borderCollapse,
+                    'borderSpacing' => $table->borderSpacing,
                     'verticalScroll' => $table->verticalScroll,
                     'verticalScrollHeight' => $table->verticalScrollHeight,
                     'editButtonsDisplayed' => $table->editButtonsDisplayed,
@@ -342,6 +350,8 @@ class WDTConfigController {
                     'tableBorderRemovalHeader' => $table->tableBorderRemovalHeader,
                     'tableCustomCss' => $table->tableCustomCss,
                     'tableFontColorSettings' => $table->tableFontColorSettings,
+                    'pdfPaperSize' => $table->pdfPaperSize,
+                    'pdfPageOrientation' => $table->pdfPageOrientation,
                 )
             )
         );
@@ -402,6 +412,9 @@ class WDTConfigController {
         $table->simpleHeader = (int)$table->simpleHeader;
         $table->stripeTable = (int)$table->stripeTable;
         $table->cellPadding = (int)$table->cellPadding;
+        $table->removeBorders = (int)$table->removeBorders;
+        $table->borderCollapse = sanitize_text_field($table->borderCollapse);
+        $table->borderSpacing = (int)$table->borderSpacing;
         $table->verticalScrollHeight = (int)$table->verticalScrollHeight;
         $table->filtering = (int)$table->filtering;
         $table->global_search = (int)$table->global_search;
@@ -420,6 +433,8 @@ class WDTConfigController {
         $table->tableBorderRemovalHeader = (int)$table->tableBorderRemovalHeader;
         $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
         $table->showAllRows = (int)$table->showAllRows;
+        $table->pdfPaperSize = sanitize_text_field($table->pdfPaperSize);
+        $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -507,6 +522,8 @@ class WDTConfigController {
                 $column->exactFiltering = (int)$column->exactFiltering;
                 $column->globalSearchColumn = (int)($column->globalSearchColumn);
                 $column->filterLabel = sanitize_text_field($column->filterLabel);
+                $column->searchInSelectBox = (int)$column->searchInSelectBox;
+                $column->searchInSelectBoxEditing = (int)$column->searchInSelectBoxEditing;
                 $column->formula = sanitize_text_field($column->formula);
                 $column->hide_on_mobiles = (int)$column->hide_on_mobiles;
                 $column->hide_on_tablets = (int)$column->hide_on_tablets;
@@ -882,6 +899,10 @@ class WDTConfigController {
             $feColumn ? $feColumn->globalSearchColumn : 1;
         $columnConfig['advanced_settings']['filterLabel'] =
             $feColumn ? $feColumn->filterLabel : null;
+        $columnConfig['advanced_settings']['searchInSelectBox'] =
+            $feColumn ? $feColumn->searchInSelectBox : 1;
+        $columnConfig['advanced_settings']['searchInSelectBoxEditing'] =
+            $feColumn ? $feColumn->searchInSelectBoxEditing : 1;
         $columnConfig['advanced_settings']['checkboxesInModal'] =
             $feColumn ? $feColumn->checkboxesInModal : null;
         $columnConfig['advanced_settings']['editingDefaultValue'] =
@@ -1055,6 +1076,10 @@ class WDTConfigController {
             $advancedSettings->exactFiltering : 0;
         $feColumn->filterLabel = isset($advancedSettings->filterLabel) ?
             $advancedSettings->filterLabel : null;
+        $feColumn->searchInSelectBox = isset($advancedSettings->searchInSelectBox) ?
+            $advancedSettings->searchInSelectBox : 1;
+        $feColumn->searchInSelectBoxEditing = isset($advancedSettings->searchInSelectBoxEditing) ?
+            $advancedSettings->searchInSelectBoxEditing : 1;
         $feColumn->checkboxesInModal = isset($advancedSettings->checkboxesInModal) ?
             $advancedSettings->checkboxesInModal : 0;
         $feColumn->possibleValuesType = isset($advancedSettings->possibleValuesType) ?
@@ -1128,6 +1153,9 @@ class WDTConfigController {
         $table->simpleHeader = 0;
         $table->stripeTable = 0;
         $table->cellPadding = 10;
+        $table->removeBorders = 0;
+        $table->borderCollapse = 'collapse';
+        $table->borderSpacing = 0;
         $table->verticalScrollHeight = 600;
         $table->filtering = 1;
         $table->global_search = 1;
@@ -1153,6 +1181,8 @@ class WDTConfigController {
         );
         $table->columns = array();
         $table->content = '';
+        $table->pdfPaperSize = 'A4';
+        $table->pdfPageOrientation = 'portrait';
 
         return $table;
     }

@@ -262,6 +262,8 @@ class wpDataTableConstructor
             'filterLabel' => '',
             'editingDefaultValue' => $column['type'] === 'multiselect' ? isset($column['default_value']) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
             'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
+            'searchInSelectBox' => 1,
+            'searchInSelectBoxEditing' => 1,
             'globalSearchColumn' => 1,
         );
 

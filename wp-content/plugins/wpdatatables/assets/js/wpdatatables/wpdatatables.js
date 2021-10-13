@@ -169,9 +169,10 @@ var singleClick = false;
 
                                 var mandatory = $inputElement.hasClass('mandatory') ? 'mandatory ' : '';
                                 var foreignKeyRule = $inputElement.hasClass('wdt-foreign-key-select') ? 'wdt-foreign-key-select ' : '';
+                                var searchInSelect = $inputElement.hasClass('wdt-search-in-select') ? ' wdt-search-in-select ' : '';
 
                                 // Recreate the selectbox element
-                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + $inputElement.data('key') + '" title="' + wpdatatables_frontend_strings.nothingSelected + '" data-input_type="' + inputElementType + '" data-key="' + $inputElement.data('key') + '" class="form-control editDialogInput selectpicker ' + mandatory + 'wdt-possible-values-ajax ' + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + $inputElement.data('column_header') + '"></select></div>');
+                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + $inputElement.data('key') + '" title="' + wpdatatables_frontend_strings.nothingSelected + '" data-input_type="' + inputElementType + '" data-key="' + $inputElement.data('key') + '" class="form-control editDialogInput selectpicker ' + mandatory + 'wdt-possible-values-ajax ' + foreignKeyRule + searchInSelect + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + $inputElement.data('column_header') + '"></select></div>');
                                 if (inputElementType === 'multi-selectbox')
                                     $selectpickerBlock.find('select').attr('multiple', 'multiple');
 
@@ -247,6 +248,13 @@ var singleClick = false;
                                 }
                                 $inputElement.selectpicker('val', val);
                                 $inputElement.selectpicker('refresh');
+                            }
+
+                            // Hide/Show search box in select/multiselect edit input
+                            if (searchInSelect === ''){
+                                $inputElement.closest('div.editDialogInput').find('.bs-searchbox').hide();
+                            } else {
+                                $inputElement.closest('div.editDialogInput').find('.bs-searchbox').show();
                             }
                         } else {
                             if (inputElementType == 'attachment' || $.inArray(columnType, ['icon']) !== -1) {
@@ -463,11 +471,12 @@ var singleClick = false;
                                 var $selectpickerBlock = $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('.fg-line').parent();
 
                                 var mandatory = column.mandatory ? 'mandatory ' : '';
-                                var possibleValuesAjax = column.possibleValuesAjax ? 'wdt-possible-values-ajax ' : '';
+                                var possibleValuesAjax = (column.possibleValuesAjax) ? 'wdt-possible-values-ajax ' : '';
                                 var foreignKeyRule = column.foreignKeyRule ? 'wdt-foreign-key-select ' : '';
+                                var searchInSelect = column.searchInSelectBoxEditing ? ' wdt-search-in-select ' : '';
 
                                 // Recreate the selectbox element
-                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
+                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + searchInSelect +'" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
                                 if (column.editorInputType === 'multi-selectbox')
                                     $selectpickerBlock.find('select').attr('multiple', 'multiple');
 
@@ -527,6 +536,12 @@ var singleClick = false;
                                         statusTooShort: wpdatatables_frontend_strings.statusTooShort
                                     }
                                 });
+                            }
+                            // Hide/Show search box in select/multiselect edit input
+                            if (column.searchInSelectBoxEditing !== 1){
+                                $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('div.editDialogInput').find('.bs-searchbox').hide();
+                            } else {
+                                $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('div.editDialogInput').find('.bs-searchbox').show();
                             }
                         }
 
