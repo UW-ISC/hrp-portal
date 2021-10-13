@@ -211,6 +211,12 @@ var WDTColumn = function (column, parent_table) {
     this.filterDefaultValue = null;
 
     /**
+     * Toggle the search in select-box/ multiselect-box filters
+     * @type {int}
+     */
+    this.searchInSelectBox = 1;
+
+    /**
      * Editor input type for editable tables
      * @type {null}
      */
@@ -227,6 +233,12 @@ var WDTColumn = function (column, parent_table) {
      * @type {string}
      */
     this.editingDefaultValue = null;
+
+    /**
+     * Toggle the search in select-box entry editing for this column
+     * @type {int}
+     */
+    this.searchInSelectBoxEditing = 1;
 
     /**
      * Conditional formatting rules
@@ -310,10 +322,12 @@ var WDTColumn = function (column, parent_table) {
         this.display_header = column.display_header || null;
         this.editingDefaultValue = column.editingDefaultValue || null;
         this.editingNonEmpty = column.input_mandatory || 0;
+        this.searchInSelectBoxEditing = column.searchInSelectBoxEditing || 0;
         this.editor_type = column.editor_type || 'none';
         this.exactFiltering = column.exactFiltering || 0;
         this.filter_type = column.filter_type || 'text';
         this.filterDefaultValue = column.filterDefaultValue || null;
+        this.searchInSelectBox = column.searchInSelectBox || 0;
         this.filtering = typeof column.filtering !== 'undefined' ? column.filtering : 1;
         this.globalSearchColumn = column.globalSearchColumn || 0;
         this.filterLabel = column.filterLabel || null;
@@ -859,6 +873,22 @@ WDTColumn.prototype.getNonEmpty = function () {
 };
 
 /**
+ * Set search in select-box for editing
+ * @param {int} searchInSelectBoxEdit
+ */
+WDTColumn.prototype.setSearchInSelectBoxEditing = function (searchInSelectBoxEdit) {
+    this.searchInSelectBoxEditing = searchInSelectBoxEdit;
+};
+
+/**
+ * Get search in select-box for editing
+ * @return {int}
+ */
+WDTColumn.prototype.getSearchInSelectBoxEditing = function () {
+    return this.searchInSelectBoxEditing;
+};
+
+/**
  * Set Conditional Formatting rules
  * @param {array} conditionalFormatting
  */
@@ -1124,6 +1154,7 @@ WDTColumn.prototype.fillInputs = function () {
         jQuery('#wdt-column-exact-filtering').prop('checked', this.exactFiltering).change();
         jQuery('#wdt-column-range-slider').prop('checked',this.rangeSlider).change();
         jQuery('#wdt-column-filter-label').val(this.filterLabel);
+        jQuery('#wdt-search-in-selectbox').prop('checked', this.searchInSelectBox).change();
 
         if (this.filter_type != 'none') {
             jQuery('#wdt-column-filter-type').selectpicker('val', this.filter_type);
@@ -1131,6 +1162,10 @@ WDTColumn.prototype.fillInputs = function () {
 
             if (this.filter_type === 'checkbox' && this.parent_table.filtering_form === 1) {
                 jQuery('#wdt-checkboxes-in-modal').prop('checked', this.checkboxesInModal).change();
+            }
+
+            if (jQuery.inArray(this.filter_type, ['select', 'multiselect']) !== -1) {
+                jQuery('#wdt-search-in-selectbox').prop('checked', this.searchInSelectBox).change();
             }
 
             if (this.filterDefaultValue) {
@@ -1174,6 +1209,7 @@ WDTColumn.prototype.fillInputs = function () {
         jQuery('li.column-editing-settings-tab').show();
         jQuery('#wdt-column-editor-input-type').selectpicker('val', this.editor_type).change();
         jQuery('#wdt-column-not-null').prop('checked', this.editingNonEmpty);
+        jQuery('#wdt-search-in-selectbox-editing').prop('checked', this.searchInSelectBoxEditing).change();
         if (this.editingDefaultValue) {
             if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
                 if(typeof this.editingDefaultValue === 'object') {
@@ -1372,6 +1408,7 @@ WDTColumn.prototype.applyChanges = function () {
     this.exactFiltering = jQuery('#wdt-column-exact-filtering').is(':checked') ? 1 : 0;
     this.filterLabel = jQuery('#wdt-column-filter-label').val();
     this.globalSearchColumn = jQuery('#wdt-column-enable-global-search').is(':checked') ? 1 : 0;
+    this.searchInSelectBox = jQuery('#wdt-search-in-selectbox').is(':checked') ? 1 : 0;
 
     if (jQuery.inArray(this.filter_type, ['text', 'number']) != -1) {
         this.filterDefaultValue = jQuery('#wdt-filter-default-value').val();
@@ -1389,6 +1426,7 @@ WDTColumn.prototype.applyChanges = function () {
 
     this.editor_type = this.type === 'formula' ? 'none' : jQuery('#wdt-column-editor-input-type').val();
     this.editingNonEmpty = jQuery('#wdt-column-not-null').is(':checked') ? 1 : 0;
+    this.searchInSelectBoxEditing = jQuery('#wdt-search-in-selectbox-editing').is(':checked') ? 1 : 0;
     this.rangeSlider = jQuery('#wdt-column-range-slider').is(':checked') ? 1 : 0;
 
     if ( typeof callbackApplyUIChangesForNewColumnOption !== 'undefined' ) {
@@ -1434,10 +1472,12 @@ WDTColumn.prototype.getJSON = function () {
         display_header: this.display_header,
         editingDefaultValue: this.editingDefaultValue,
         editingNonEmpty: this.editingNonEmpty,
+        searchInSelectBoxEditing: this.searchInSelectBoxEditing,
         editor_type: this.editor_type,
         exactFiltering: this.exactFiltering,
         filter_type: this.filter_type,
         filterDefaultValue: this.filterDefaultValue,
+        searchInSelectBox: this.searchInSelectBox,
         filtering: this.filtering,
         globalSearchColumn: this.globalSearchColumn,
         filterLabel: this.filterLabel,

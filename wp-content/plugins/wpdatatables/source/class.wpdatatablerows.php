@@ -330,13 +330,17 @@ class WPDataTableRows
     public static function loadWpDataTableRows($tableId)
     {
         $tableData = WDTConfigController::loadTableFromDB($tableId, false);
+        $advancedSettings =  json_decode($tableData->advanced_settings);
         $tableData->content = json_decode($tableData->content);
-        $tableData->simpleResponsive = json_decode($tableData->advanced_settings)->simpleResponsive;
-        $tableData->simpleHeader = json_decode($tableData->advanced_settings)->simpleHeader;
-        $tableData->stripeTable = json_decode($tableData->advanced_settings)->stripeTable;
-        $tableData->cellPadding = json_decode($tableData->advanced_settings)->cellPadding;
-        $tableData->verticalScroll = json_decode($tableData->advanced_settings)->verticalScroll;
-        $tableData->verticalScrollHeight = json_decode($tableData->advanced_settings)->verticalScrollHeight;
+        $tableData->simpleResponsive = $advancedSettings->simpleResponsive;
+        $tableData->simpleHeader = $advancedSettings->simpleHeader;
+        $tableData->stripeTable = $advancedSettings->stripeTable;
+        $tableData->cellPadding = $advancedSettings->cellPadding;
+        $tableData->verticalScroll = $advancedSettings->verticalScroll;
+        $tableData->verticalScrollHeight = $advancedSettings->verticalScrollHeight;
+        $tableData->removeBorders = isset($advancedSettings->removeBorders) ? $advancedSettings->removeBorders : 0;
+        $tableData->borderCollapse = isset($advancedSettings->borderCollapse) ? $advancedSettings->borderCollapse : 'collapse';
+        $tableData->borderSpacing = isset($advancedSettings->borderSpacing) ? $advancedSettings->borderSpacing : 0;
 
         $wpDataTableRows = new WPDataTableRows($tableData);
         $wpDataTableRows->setTableID($tableId);

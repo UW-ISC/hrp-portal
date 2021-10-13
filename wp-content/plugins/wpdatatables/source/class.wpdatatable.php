@@ -89,6 +89,9 @@ class WPDataTable {
     private $_simpleHeader = false;
     private $_stripeTable= false;
     private $_cellPadding= 10;
+    private $_removeBorders = false;
+    private $_borderCollapse = 'collapse';
+    private $_borderSpacing = 0;
     private $_verticalScrollHeight= 600;
     private $_globalSearch = true;
     private $_showRowsPerPage = true;
@@ -99,6 +102,8 @@ class WPDataTable {
     public $connection;
     public static $allowedTableTypes = array('xls', 'csv', 'manual', 'mysql', 'json', 'google_spreadsheet', 'xml', 'serialized', 'simple');
     private $_editButtonsDisplayed = array('all');
+    private $_pdfPaperSize = 'A4';
+    private $_pdfPageOrientation = 'portrait';
 
     /**
      * @return bool
@@ -667,6 +672,53 @@ class WPDataTable {
     /**
      * @return boolean
      */
+    public function isRemoveBorders()
+    {
+        return $this->_removeBorders;
+    }
+
+    /**
+     * @param boolean $removeBorders
+     */
+    public function setRemoveBorders($removeBorders)
+    {
+        $this->_removeBorders = (bool)$removeBorders;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBorderCollapse()
+    {
+        return $this->_borderCollapse;
+    }
+
+    /**
+     * @param string $borderCollapse
+     */
+    public function setBorderCollapse($borderCollapse)
+    {
+        $this->_borderCollapse = $borderCollapse;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBorderSpacing()
+    {
+        return $this->_borderSpacing;
+    }
+
+    /**
+     * @param int $borderSpacing
+     */
+    public function setBorderSpacing($borderSpacing)
+    {
+        $this->_borderSpacing = (int)$borderSpacing;
+    }
+    /**
+     * @return boolean
+     */
     public function getVerticalScrollHeight() {
         return $this->_verticalScrollHeight;
     }
@@ -792,6 +844,40 @@ class WPDataTable {
     {
         return $this->_tableCustomCss;
     }
+
+
+    /**
+     * @return string
+     */
+    public function getPdfPaperSize()
+    {
+        return $this->_pdfPaperSize;
+    }
+
+    /**
+     * @param string $pdfPaperSize
+     */
+    public function setPdfPaperSize($pdfPaperSize)
+    {
+        $this->_pdfPaperSize = $pdfPaperSize;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPdfPageOrientation()
+    {
+        return $this->_pdfPageOrientation;
+    }
+
+    /**
+     * @param string $pdfPageOrientation
+     */
+    public function setPdfPageOrientation($pdfPageOrientation)
+    {
+        $this->_pdfPageOrientation = $pdfPageOrientation;
+    }
+
 
     /**
      * @param string $tableCustomCss
@@ -1077,6 +1163,8 @@ class WPDataTable {
             $dataColumnProperties['orig_header'] =              $key;
             $dataColumnProperties['exactFiltering'] =           !empty($wdtParameters['exactFiltering'][$key]) ? $wdtParameters['exactFiltering'][$key] : false;
             $dataColumnProperties['filterLabel'] =              isset($wdtParameters['filterLabel'][$key]) ? $wdtParameters['filterLabel'][$key] : null;
+            $dataColumnProperties['searchInSelectBox'] =        !empty($wdtParameters['searchInSelectBox'][$key]) ? $wdtParameters['searchInSelectBox'][$key] : false;
+            $dataColumnProperties['searchInSelectBoxEditing'] = !empty($wdtParameters['searchInSelectBoxEditing'][$key]) ? $wdtParameters['searchInSelectBoxEditing'][$key] : false;
             $dataColumnProperties['checkboxesInModal'] =        isset($wdtParameters['checkboxesInModal'][$key]) ? $wdtParameters['checkboxesInModal'][$key] : null;
             $dataColumnProperties['filterDefaultValue'] =       isset($wdtParameters['filterDefaultValue'][$key]) ? $wdtParameters['filterDefaultValue'][$key] : null;
             $dataColumnProperties['possibleValuesType'] =       !empty($wdtParameters['possibleValuesType'][$key]) ? $wdtParameters['possibleValuesType'][$key] : 'read';
@@ -2870,6 +2958,8 @@ class WPDataTable {
             'exactFiltering' => array(),
             'filterDefaultValue' => array(),
             'filterLabel' => array(),
+            'searchInSelectBox' => array(),
+            'searchInSelectBoxEditing' => array(),
             'checkboxesInModal' => array(),
             'filterTypes' => array(),
             'foreignKeyRule' => array(),
@@ -2917,6 +3007,8 @@ class WPDataTable {
                 $returnArray['editingDefaultValue'][$column->orig_header] = isset($column->editingDefaultValue) ? $column->editingDefaultValue : null;
                 $returnArray['exactFiltering'][$column->orig_header] = isset($column->exactFiltering) ? $column->exactFiltering : null;
                 $returnArray['filterLabel'][$column->orig_header] = isset($column->filterLabel) ? $column->filterLabel : null;
+                $returnArray['searchInSelectBox'][$column->orig_header] = isset($column->searchInSelectBox) ? $column->searchInSelectBox : null;
+                $returnArray['searchInSelectBoxEditing'][$column->orig_header] = isset($column->searchInSelectBoxEditing) ? $column->searchInSelectBoxEditing : null;
                 $returnArray['checkboxesInModal'][$column->orig_header] = isset($column->checkboxesInModal) ? $column->checkboxesInModal : null;
                 $returnArray['foreignKeyRule'][$column->orig_header] = isset($column->foreignKeyRule) ? $column->foreignKeyRule : null;
                 $returnArray['possibleValues'][$column->orig_header] = isset($column->valuesList) ? $column->valuesList : null;
@@ -3043,6 +3135,12 @@ class WPDataTable {
         }
         if (isset($columnData['globalSearchColumn'])) {
             $params['globalSearchColumn'] = $columnData['globalSearchColumn'];
+        }
+        if (isset($columnData['searchInSelectBox'])) {
+            $params['searchInSelectBox'] = $columnData['searchInSelectBox'];
+        }
+        if (isset($columnData['searchInSelectBoxEditing'])) {
+            $params['searchInSelectBoxEditing'] = $columnData['searchInSelectBoxEditing'];
         }
         if (isset($columnData['rangeSlider'])) {
             $params['rangeSlider'] = $columnData['rangeSlider'];
@@ -3284,6 +3382,9 @@ class WPDataTable {
             isset($advancedSettings->simpleHeader) ? $this->setSimpleHeader($advancedSettings->simpleHeader) : $this->setSimpleHeader(false);
             isset($advancedSettings->stripeTable) ? $this->setStripeTable($advancedSettings->stripeTable) : $this->setStripeTable(false);
             isset($advancedSettings->cellPadding) ? $this->setCellPadding($advancedSettings->cellPadding) : $this->setCellPadding(10);
+            isset($advancedSettings->removeBorders) ? $this->setRemoveBorders($advancedSettings->removeBorders) : $this->setRemoveBorders(false);
+            isset($advancedSettings->borderCollapse) ? $this->setBorderCollapse($advancedSettings->borderCollapse) : $this->setBorderCollapse('collapse');
+            isset($advancedSettings->borderSpacing) ? $this->setBorderSpacing($advancedSettings->borderSpacing) : $this->setBorderSpacing(0);
             isset($advancedSettings->verticalScroll) ? $this->setVerticalScroll($advancedSettings->verticalScroll) : $this->setVerticalScroll(false);
             isset($advancedSettings->verticalScrollHeight) ? $this->setVerticalScrollHeight($advancedSettings->verticalScrollHeight) : $this->setVerticalScrollHeight(600);
             isset($advancedSettings->pagination) ? $this->setPagination($advancedSettings->pagination) : $this->setPagination(true);
@@ -3296,6 +3397,8 @@ class WPDataTable {
             isset($advancedSettings->tableBorderRemoval) ? $this->setTableBorderRemoval($advancedSettings->tableBorderRemoval) : $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             isset($advancedSettings->tableBorderRemovalHeader) ? $this->setTableBorderRemovalHeader($advancedSettings->tableBorderRemovalHeader) : $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
             isset($advancedSettings->tableCustomCss) ? $this->setTableCustomCss($advancedSettings->tableCustomCss) : $this->setTableCustomCss('');
+            isset($advancedSettings->pdfPaperSize) ? $this->setPdfPaperSize($advancedSettings->pdfPaperSize) : $this->setPdfPaperSize('A4');
+            isset($advancedSettings->pdfPageOrientation) ? $this->setPdfPageOrientation($advancedSettings->pdfPageOrientation) : $this->setPdfPageOrientation('portrait');
             isset($advancedSettings->showTableToolsIncludeHTML) ? $this->setTableToolsIncludeHTML($advancedSettings->showTableToolsIncludeHTML) : $this->setTableToolsIncludeHTML(false);
         } else {
             $this->setInfoBlock(true);
@@ -3306,6 +3409,9 @@ class WPDataTable {
             $this->setSimpleResponsive(false);
             $this->setStripeTable(false);
             $this->setCellPadding(10);
+            $this->setRemoveBorders(false);
+            $this->setBorderCollapse('collapse');
+            $this->setBorderSpacing(0);
             $this->setVerticalScroll(false);
             $this->setVerticalScrollHeight(600);
             $this->setPagination(true);
@@ -3318,6 +3424,8 @@ class WPDataTable {
             $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
             $this->setTableCustomCss('');
+            $this->setPdfPaperSize('A4');
+            $this->setPdfPageOrientation('portrait');
             $this->setTableToolsIncludeHTML(false);
         }
 
@@ -3614,6 +3722,9 @@ class WPDataTable {
         $skinsWithNewTableToolsButtons = ['aqua','purple','dark'];
         $tableToolsIncludeHTML = !$this->getTableToolsIncludeHTML();
 
+        $pdfPaperSize = $this->getPdfPaperSize();
+        $pdfPageOrientation = $this->getPdfPageOrientation();
+
         if ($this->TTEnabled()) {
             (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
             if (in_array($currentSkin, $skinsWithNewTableToolsButtons)){
@@ -3682,7 +3793,9 @@ class WPDataTable {
                         array(
                             'extend' => 'pdfHtml5',
                             'exportOptions' => array('columns' => ':visible'),
-                            'orientation' => 'portrait',
+                            'className' => 'DTTT_button DTTT_button_pdf',
+                            'orientation' => $pdfPageOrientation,
+                            'pageSize' => $pdfPaperSize,
                             'title' => $wdtExportFileName,
                             'text' => __('PDF', 'wpdatatables')
                         );
@@ -3767,7 +3880,8 @@ class WPDataTable {
                             'extend' => 'pdfHtml5',
                             'exportOptions' => array('columns' => ':visible'),
                             'className' => 'DTTT_button DTTT_button_pdf',
-                            'orientation' => 'portrait',
+                            'orientation' => $pdfPageOrientation,
+                            'pageSize' => $pdfPaperSize,
                             'title' => $wdtExportFileName,
                             'text' => __('PDF', 'wpdatatables')
                         );

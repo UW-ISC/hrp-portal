@@ -392,7 +392,7 @@
                         </tr>
                         <tr>
                             <td data-export-label="Zip extension"><?php esc_attr_e('Zip extension:', 'wpdatatables'); ?>
-                                <?php if (extension_loaded('zlib')) { ?>
+                                <?php if (class_exists('ZipArchive')) { ?>
                             </td>
                             <td class="wpdt-relative">
                                 <span class="wpdt-inline"><?php esc_html_e('Installed', 'wpdatatables'); ?></span>

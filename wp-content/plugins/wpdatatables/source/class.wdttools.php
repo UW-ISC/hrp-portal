@@ -195,7 +195,7 @@ class WDTTools
     public static function curlGetData($url)
     {
         $ch = curl_init();
-        $timeout = 5;
+        $timeout = 25;
         $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -485,6 +485,7 @@ class WDTTools
             'saveChart' => __('Save chart', 'wpdatatables'),
             'saveFileAttachment' => __('Save', 'wpdatatables'),
             'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
+            'select_pdf_logo_file' => __('Select a file to use as the PDF logo', 'wpdatatables'),
             'selectFileAttachment' => __('Select file', 'wpdatatables'),
             'selectExcelCsv' => __('Select an Excel or CSV file', 'wpdatatables'),
             'sEmptyTable' => __('No data available in table', 'wpdatatables'),
