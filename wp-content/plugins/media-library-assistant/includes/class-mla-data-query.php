@@ -1180,15 +1180,8 @@ class MLAQuery {
 				case '_wp_attachment_image_alt':
 					self::$query_parameters[self::MLA_ORDERBY_SUBQUERY] = true;
 					self::$query_parameters['orderby_key'] = '_wp_attachment_image_alt';
-
-					if ( isset($clean_request['orderby']) ) {
-						unset($clean_request['orderby']);
-					}
-
-					if ( isset($clean_request['order']) ) {
-						unset($clean_request['order']);
-					}
-
+					unset($clean_request['orderby']);
+					unset($clean_request['order']);
 					break;
 				case '_wp_attached_file':
 					$clean_request['meta_key'] = '_wp_attached_file';
@@ -2128,7 +2121,7 @@ class MLAQuery {
 		}
 
 		if ( isset( self::$query_parameters['orderby'] ) ) {
-			if ( 'c_' == substr( self::$query_parameters['orderby'], 0, 2 ) ) {
+			if ( 'c_' === substr( self::$query_parameters['orderby'], 0, 2 ) ) {
 				$orderby = self::MLA_ORDERBY_SUBQUERY . '.meta_value';
 			} /* custom field sort */ else { 
 				switch ( self::$query_parameters['orderby'] ) {
@@ -2156,7 +2149,7 @@ class MLAQuery {
 						break;
 					/*
 					 * The _wp_attachment_image_alt value is only present for images, so we have to
-					 * use the view we prepared to get attachments with no meta data value
+					 * use the subquery to get attachments with no meta data value
 					 */
 					case '_wp_attachment_image_alt':
 						$orderby = self::MLA_ORDERBY_SUBQUERY . '.meta_value';

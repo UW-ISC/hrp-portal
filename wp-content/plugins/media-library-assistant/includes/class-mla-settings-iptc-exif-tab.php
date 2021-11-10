@@ -49,6 +49,29 @@ class MLASettings_IPTCEXIF {
 		$use_spinner_class = version_compare( get_bloginfo( 'version' ), '4.2', '>=' );
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
+		// Compute totalItems that will match the mapping query
+		$query = array (
+			'orderby' => 'none',
+			'post_parent' => 'all',
+			'post_mime_type' => 'image,application/*pdf*',
+			'cache_results' => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			'post_type' => 'attachment',
+			'post_status' => 'inherit',
+			'posts_per_page' => 1,
+			'fields' =>  'ids',
+		);
+
+		$posts = MLAShortcodes::mla_get_shortcode_attachments( 0, $query, true );
+		MLACore::mla_debug_add( __LINE__ . " MLASettings_IPTCEXIF::mla_admin_enqueue_scripts \$posts = " . var_export( $posts, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
+		if ( isset( $posts['found_rows'] ) ) {
+			$total_items = $posts['found_rows'];
+		} else {
+			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment' AND `post_status` = 'inherit' AND ( `post_mime_type` LIKE 'image/%' OR `post_mime_type` LIKE 'application/%pdf%' )" );
+		}
+
 		// Initialize variables for mapping scripts
 		$script_variables = array(
 			'error' => __( 'Error while making the changes.', 'media-library-assistant' ),
@@ -72,8 +95,9 @@ class MLASettings_IPTCEXIF {
 			'screen' => 'settings_page_mla-settings-menu-iptc_exif',
 			'ajax_action' => MLASettings::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG,
 			'fieldsId' => '#mla-display-settings-iptc-exif-tab',
-			'totalItems' => $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment' AND ( `post_mime_type` LIKE 'image/%' OR `post_mime_type` LIKE 'application/%pdf%' )" )
+			'totalItems' => $total_items,
 		);
+		MLACore::mla_debug_add( __LINE__ . " MLASettings_IPTCEXIF::mla_admin_enqueue_scripts \$script_variables = " . var_export( $script_variables, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG,
 			MLA_PLUGIN_URL . "js/mla-inline-mapping-scripts{$suffix}.js", 
@@ -176,13 +200,21 @@ class MLASettings_IPTCEXIF {
 			);
 		}
 
-		$query = array( 'orderby' => 'none', 'post_parent' => 'all', 'post_mime_type' => 'image,application/*pdf*' );
+		$query = array(
+			'orderby' => 'none',
+			'post_parent' => 'all',
+			'post_mime_type' => 'image,application/*pdf*',
+			'cache_results' => false,
+			'update_post_meta_cache' => false,
+			'update_post_term_cache' => false,
+			);
 
 		if ( $length > 0 ) {
 			$query['numberposts'] = $length;
 			$query['offset'] = $offset;
 		}
 
+		MLACore::mla_debug_add( __LINE__ . " MLASettings_IPTCEXIF::_process_iptc_exif_mapping \$query = " . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 		do_action( 'mla_begin_mapping', $source, NULL );
 		$posts = MLAShortcodes::mla_get_shortcode_attachments( 0, $query );
 
@@ -974,7 +1006,7 @@ class MLASettings_IPTCEXIF {
 	 * @return	void	echo json response object, then die()
 	 */
 	public static function mla_inline_mapping_iptc_exif_action() {
-		MLACore::mla_debug_add( 'MLASettings_IPTCEXIF::mla_inline_mapping_custom_action $_REQUEST = ' . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		// MLACore::mla_debug_add( __LINE__ . ' MLASettings_IPTCEXIF::mla_inline_mapping_custom_action $_REQUEST = ' . var_export( $_REQUEST, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		if ( isset( $_REQUEST['screen'] ) ) {
 			set_current_screen( sanitize_text_field( wp_unslash( $_REQUEST['screen'] ) ) );
 		}
@@ -1038,7 +1070,7 @@ class MLASettings_IPTCEXIF {
 			'refresh' => isset( $page_content['refresh'] ) && true == $page_content['refresh'],
 		);
 
-		MLACore::mla_debug_add( 'MLASettings::mla_inline_mapping_custom_action $chunk_results = ' . var_export( $chunk_results, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		MLACore::mla_debug_add( __LINE__ . ' MLASettings::mla_inline_mapping_custom_action $chunk_results = ' . var_export( $chunk_results, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		wp_send_json_success( $chunk_results );
 	} // mla_inline_mapping_iptc_exif_action
 

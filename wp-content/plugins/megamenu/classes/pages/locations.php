@@ -262,12 +262,12 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 
 				<?php $this->print_messages(); ?>
 
-				<h3 class='first'><?php esc_html_e( 'Menu Locations', 'megamenu' ); ?></h3>
+				<h3 class='first'><span class='dashicons dashicons-location'></span><?php esc_html_e( 'Menu Locations', 'megamenu' ); ?></h3>
 
 				<table>
 					<tr>
 						<td class='mega-name'>
-							<?php esc_html_e( 'Registered Menu Locations', 'megamenu' ); ?>
+							<?php esc_html_e( 'Menu Location Settings', 'megamenu' ); ?>
 							<div class='mega-description'>
 								<p><?php esc_html_e( 'This is an overview of the menu locations supported by your theme.', 'megamenu' ); ?></p>
 								<p><?php esc_html_e( 'Use these options to enable Max Mega Menu and define the behaviour of each menu location.', 'megamenu' ); ?></p>
@@ -360,7 +360,6 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 
 			<div class='mega-location <?php echo esc_attr( $is_enabled_class ); ?><?php echo esc_attr( $has_active_location_class ); ?>'>
 				<div class='mega-accordion-title<?php echo esc_attr( $open_class ); ?>'>
-					<span class='dashicons dashicons-location'></span>
 					<h4><?php echo esc_html( $description ); ?></h4>
 					<?php
 

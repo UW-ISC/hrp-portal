@@ -20,6 +20,7 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <li><a href="#size">Size</a></li>
 <li><a href="#link">Link</a></li>
 <li><a href="#named_transfer">Transfer by Item Name</a></li>
+<li><a href="#mla_minimum">Minimum Gallery Size</a></li>
 <li><a href="#include_exclude">Include, Exclude</a></li>
 <li><a href="#post_id_ids_post_parent">Post ID, "ids", Post Parent</a></li>
 <li><a href="#author_author_name">Author, Author Name</a></li>
@@ -721,6 +722,11 @@ Where the query arguments are:
 </table>
 <p>
 This alternate approach provides a small measure of security by obscuring the directory structure used to locate the file. It also makes it possible to generate SEO-friendly "pretty links" and use the <a href="https://codex.wordpress.org/Rewrite_API" title="Codex article: Rewrite API" target="_blank">WordPress Rewrite API</a> to translate the pretty links to the Transfer by Item Name syntax. The <a title="Find the Pretty Links Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Item+Transfer+Pretty+Links%22" class="mla-doc-bold-link">MLA Item Transfer Pretty Links</a> example plugin shows how this can be done.
+<a name="mla_minimum"></a>
+</p>
+<h4>Minimum Gallery Size</h4>
+<p>
+You can add <code>mla_minimum=(count)</code> to display an empty gallery if the number of items available for display is less than the number specified. For example, to display an empty gallery when just one item is available, code <code>mla_minimum=2</code>.
 <a name="include_exclude"></a>
 </p>
 <h4>Include, Exclude</h4>
@@ -1170,7 +1176,7 @@ The <code>[mla_gallery]</code> shortcode supports the simple custom field parame
 </tr>
 <tr>
 <td class="mla-doc-table-label">meta_compare&nbsp;(string)</td>
-<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
+<td>Operator to test the 'meta_value'. Possible values are '=', '!=', '>', '>=', '&lt;', '&lt;=', 'LIKE', 'NOT LIKE', 'IN', 'NOT IN', 'BETWEEN', 'NOT BETWEEN', 'EXISTS', 'NOT EXISTS', 'REGEXP', 'NOT REGEXP' or 'RLIKE'. Default value is '='. </td>
 </tr>
 </table>
 <p>
@@ -2095,7 +2101,11 @@ Tag cloud <strong>item-specific substitution parameters</strong> for the Markup 
 </tr>
 <tr>
 <td class="mla-doc-table-label">count</td>
-<td>the number of attachments associated with the term</td>
+<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_count</td>
+<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">scaled_count</td>
@@ -3182,7 +3192,11 @@ Term list <strong>item-specific substitution parameters</strong> for the Markup 
 </tr>
 <tr>
 <td class="mla-doc-table-label">count</td>
-<td>the number of attachments associated with the term</td>
+<td>the number of attachments associated with the term. This will include attachments assigned to child terms if the <code>pad_counts=true</code> parameter is present.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">term_count</td>
+<td>the number of attachments explicitly associated with the term; not its children. This is only defined when the <code>pad_counts=true</code> parameter is present.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">link_url</td>
@@ -6242,6 +6256,10 @@ The example code documents each hook with comments in the filter function that i
 <tr>
 <td class="mla-doc-hook-label">mla_image_metadata_meta_box<br />mla_image_metadata_meta_box_html</td>
 <td class="mla-doc-hook-definition">modify the rows, columns and content of the "Attachment Metadata" meta box.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_file_metadata_meta_box<br />mla_file_metadata_meta_box_html</td>
+<td class="mla-doc-hook-definition">modify the rows, columns and content of the "Attachment File Metadata" meta box.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_featured_in_meta_box<br />mla_featured_in_meta_box_html</td>

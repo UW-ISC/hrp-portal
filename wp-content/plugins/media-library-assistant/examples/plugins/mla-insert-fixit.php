@@ -53,7 +53,7 @@
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
  * @package Insert Fixit
- * @version 1.21
+ * @version 1.22
  */
 
 /*
@@ -61,7 +61,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.21
+Version: 1.22
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2021 David Lingren
@@ -94,7 +94,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.21';
+	const CURRENT_VERSION = '1.22';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -887,7 +887,7 @@ class Insert_Fixit {
 	 *
 	 * @return	string	Cache or rebuild results
 	 */
-	private static function _build_featured_objects_cache( $use_cache = false, $unattached_only = false, $reverse_sort ) {
+	private static function _build_featured_objects_cache( $use_cache = false, $unattached_only = false, $reverse_sort = false ) {
 		global $wpdb;
 
 		if ( $use_cache ) {

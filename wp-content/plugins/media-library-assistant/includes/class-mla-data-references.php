@@ -823,9 +823,9 @@ class MLAReferences {
 //error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $count ) attachments = " . var_export( $attachments, true ), 0 );
 
 						if ( is_string( $attachments ) ) {
-//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $index ) query = " . var_export( $galleries_array[ $result_id ]['galleries'][ $instance ]['query'] . ' cache_results=false update_post_meta_cache=false update_post_term_cache=false where_used_query=this-is-a-where-used-query', true ), 0 );
+//error_log( __LINE__ . " MLAReferences::_build_mla_galleries( $result_id, $index ) attr = " . var_export( $attr, true ), 0 );
 							/* translators: 1: post_type, 2: post_title, 3: post ID, 4: query string, 5: error message */
-							trigger_error( esc_html( sprintf( __( '(%1$s) %2$s (ID %3$d) query "%4$s" failed, returning "%5$s"', 'media-library-assistant' ), $result->post_type, $result->post_title, $result->ID, $galleries_array[ $result_id ]['galleries'][ $instance ]['query'], $attachments) ), E_USER_WARNING );
+							MLACore::mla_debug_add( __LINE__ . ' MLAReferences::_build_mla_galleries ' . sprintf( __( '(%1$s) %2$s (ID %3$d) query "%4$s" failed, returning "%5$s"', 'media-library-assistant' ), $result->post_type, $result->post_title, $result->ID, var_export( $galleries_array[ $result_id ]['galleries'][ $instance ]['query'], true ), $attachments), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
 						} elseif ( ! empty( $attachments ) ) {
 							foreach ( $attachments as $attachment ) {
 								$galleries_array[ $result_id ]['results'][ $attachment->ID ] = $attachment->ID;

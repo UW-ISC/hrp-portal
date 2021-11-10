@@ -879,6 +879,84 @@ class MLAData {
 	}
 
 	/**
+	 * Parse a field-level substitution parameter (not a template) into its component parts
+	 *
+	 * @since 2.98
+	 *
+	 * @param	string	Field-level parameter, with or without enclosing '[+' and '+]'
+	 * @param	string	Default format/option value
+	 *
+	 * @return	array	Parameter components: prefix, value, qualifier, option, format, args
+	 */
+	public static function mla_parse_substitution_parameter( $parameter, $default_option = 'text' ) {
+			// Strip optional enclosing delimiters
+			if ( 0 === strpos( $parameter, '[+' ) ) {
+				$parameter = substr( $parameter, 2, (strlen( $parameter ) - 4 ) );
+			}
+			
+			$result = array( 'prefix' => '', 'value' => '', 'qualifier' => '', 'option' => $default_option, 'format' => 'native', 'args' => '' );
+			$match_count = preg_match( '/([^,:]+):(.+)/', $parameter, $matches );
+			if ( 1 == $match_count ) {
+				$result['prefix'] = $matches[1];
+				$tail = $matches[2];
+			} else {
+				$tail = $parameter;
+			}
+
+			if ( false !== strpos( $tail, ',' ) ) {
+				$match_count = preg_match( '/([^,]+)(,(text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr|str_replace|match|extract|replace))(\((.*)\)$)*/', $tail, $matches );
+				if ( 1 == $match_count ) {
+					$result['value'] = $matches[1];
+					if ( ! empty( $matches[5] ) ) {
+						$args = self::_parse_arguments( $matches[5] );
+
+						if ( 1 == count( $args ) ) {
+							$args = $args[0];
+						}
+					} else {
+						$args = '';
+					}
+
+					if ( in_array( $matches[3], array( 'commas', 'raw', 'attr', 'url', 'kbmb', 'timestamp', 'date', 'fraction', 'substr', 'str_replace', 'match', 'extract', 'replace' ) ) ) {
+						$result['option'] = 'text';
+						$result['format'] = $matches[3];
+						$result['args'] = $args;
+					} else {
+						$result['option'] = $matches[3];
+					}
+				} else {
+					$match_count = preg_match( '/([^,]+),([^(]+)(\(([^)]+)\))*/', $tail, $matches );
+					if ( 1 == $match_count ) {
+						$result['value'] = $matches[1];
+						$result['format'] = $matches[2];
+
+						if ( ! empty( $matches[4] ) ) {
+							$args = self::_parse_arguments( $matches[4] );
+
+							if ( 1 == count( $args ) ) {
+								$args = $args[0];
+							}
+							$result['args'] = $args;
+						}
+					} else {
+						$result['value'] = $tail;
+					}
+				}
+			} else {
+				$result['value'] = $tail;
+			}
+
+		// Look for field/value qualifier
+		$match_count = preg_match( '/^(.+)\((.+)\)/', $result['value'], $matches );
+		if ( $match_count ) {
+			$result['value'] = $matches[1];
+			$result['qualifier'] = $matches[2];
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Apply field-level format options to field-level content
 	 *
 	 * @since 2.10
@@ -909,11 +987,11 @@ class MLAData {
 				}
 				break;
 			case 'kbmb':
+				$number = '';
 				if ( is_numeric( $value ) ) {
 					$number = (string) $value;
-				} else {
+				} elseif ( is_string( $value ) ) {
 					$index = 0;
-					$number = '';
 					while ( $index < strlen( $value ) ) {
 						if ( ctype_digit( $value[ $index ] ) || ( '.' == $value[ $index ] ) ) {
 							$number .= $value[ $index ];
@@ -1628,60 +1706,8 @@ class MLAData {
 
 		foreach ( $matches[0] as $match ) {
 			$key = substr( $match, 2, (strlen( $match ) - 4 ) );
-			$result = array( 'prefix' => '', 'value' => '', 'option' => $default_option, 'format' => 'native' );
-			$match_count = preg_match( '/\[\+([^,:]+):(.+)\+\]/', $match, $matches );
-			if ( 1 == $match_count ) {
-				$result['prefix'] = $matches[1];
-				$tail = $matches[2];
-			} else {
-				$tail = $key;
-			}
-
-			if ( false !== strpos( $tail, ',' ) ) {
-				$match_count = preg_match( '/([^,]+)(,(text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr|str_replace|match|extract|replace))(\((.*)\)$)*/', $tail, $matches );
-				if ( 1 == $match_count ) {
-					$result['value'] = $matches[1];
-					if ( ! empty( $matches[5] ) ) {
-						$args = self::_parse_arguments( $matches[5] );
-
-						if ( 1 == count( $args ) ) {
-							$args = $args[0];
-						}
-					} else {
-						$args = '';
-					}
-
-					if ( in_array( $matches[3], array( 'commas', 'raw', 'attr', 'url', 'kbmb', 'timestamp', 'date', 'fraction', 'substr', 'str_replace', 'match', 'extract', 'replace' ) ) ) {
-						$result['option'] = 'text';
-						$result['format'] = $matches[3];
-						$result['args'] = $args;
-					} else {
-						$result['option'] = $matches[3];
-					}
-				} else {
-					$match_count = preg_match( '/([^,]+),([^(]+)(\(([^)]+)\))*/', $tail, $matches );
-					if ( 1 == $match_count ) {
-						$result['value'] = $matches[1];
-						$result['format'] = $matches[2];
-
-						if ( ! empty( $matches[4] ) ) {
-							$args = self::_parse_arguments( $matches[4] );
-
-							if ( 1 == count( $args ) ) {
-								$args = $args[0];
-							}
-							$result['args'] = $args;
-						}
-					} else {
-						$result['value'] = $tail;
-					}
-				}
-			} else {
-				$result['value'] = $tail;
-			}
-
-		$results[ $key ] = $result;
-		} // foreach
+			$results[ $key ] = self::mla_parse_substitution_parameter( $key, $default_option );
+		}
 
 		return $results;
 	}
@@ -2277,35 +2303,37 @@ class MLAData {
 		$namespace_arrays = array();
 		$metadata_source = '';
 		if ( isset( $levels[1] ) && isset( $levels[1]['values'] ) ) {
-			if ( isset( $levels[1]['values']['rdf:RDF'] ) && isset( $levels[1]['values']['rdf:RDF']['rdf:Description'] ) ) {
-				/*
-				 * XMP parsing
-				 * NOTE: The string "XAP" or "xap" appears in some namespaces, keywords,
-				 * and related names in stored XMP data. It reflects an early internal
-				 * code name for XMP; the names have been preserved for compatibility purposes.
-				 */
-				$metadata_source = 'xmp';
-				foreach ( $levels[1]['values']['rdf:RDF']['rdf:Description'] as $key => $value ) {
-					if ( is_string( $value ) ) {
-						$value = self::_parse_iso8601_date( self::mla_parse_pdf_date( $value ) );
-					} elseif ( is_array( $value ) ) {
-						$value = self::_parse_xmp_array( $value );
-					}
-
-					if ( false !== ($colon = strpos( $key, ':' ) ) ) {
-						$array_name = substr( $key, 0, $colon );
-						$array_index = substr( $key, $colon + 1 );
-						$namespace_arrays[ $array_name ][ $array_index ] = $value;
-
-						if ( ! isset( $results[ $array_index ] ) && in_array( $array_name, array( 'xmp', 'xmpMM', 'xmpRights', 'xap', 'xapMM', 'dc', 'pdf', 'pdfx', 'mwg-rs' ) ) ) {
-							if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
-								$results[ $array_index ] = $value[0];
-							} else {
-								$results[ $array_index ] = $value;
-							}
+			if ( isset( $levels[1]['values']['rdf:RDF'] ) && !empty( $levels[1]['values']['rdf:RDF']['rdf:Description'] ) ) {
+				if ( is_array( $levels[1]['values']['rdf:RDF']['rdf:Description'] ) ) {
+					/*
+					 * XMP parsing
+					 * NOTE: The string "XAP" or "xap" appears in some namespaces, keywords,
+					 * and related names in stored XMP data. It reflects an early internal
+					 * code name for XMP; the names have been preserved for compatibility purposes.
+					 */
+					$metadata_source = 'xmp';
+					foreach ( $levels[1]['values']['rdf:RDF']['rdf:Description'] as $key => $value ) {
+						if ( is_string( $value ) ) {
+							$value = self::_parse_iso8601_date( self::mla_parse_pdf_date( $value ) );
+						} elseif ( is_array( $value ) ) {
+							$value = self::_parse_xmp_array( $value );
 						}
-					} // found namespace
-				} // foreach Description
+	
+						if ( false !== ($colon = strpos( $key, ':' ) ) ) {
+							$array_name = substr( $key, 0, $colon );
+							$array_index = substr( $key, $colon + 1 );
+							$namespace_arrays[ $array_name ][ $array_index ] = $value;
+	
+							if ( ! isset( $results[ $array_index ] ) && in_array( $array_name, array( 'xmp', 'xmpMM', 'xmpRights', 'xap', 'xapMM', 'dc', 'pdf', 'pdfx', 'mwg-rs' ) ) ) {
+								if ( is_array( $value ) && 1 == count( $value ) && isset( $value[0] ) ) {
+									$results[ $array_index ] = $value[0];
+								} else {
+									$results[ $array_index ] = $value;
+								}
+							}
+						} // found namespace
+					} // foreach Description
+				} // is_array
 			} else {
 				/*
 				 * Microsoft Office parsing
@@ -3404,7 +3432,7 @@ class MLAData {
 		static $id3 = NULL;
 
 		if ( 0 != $post_id ) {
-			$path = get_attached_file($post_id);
+			$path = get_attached_file( $post_id );
 		}
 
 		if ( ! empty( $path ) ) {
@@ -3485,14 +3513,77 @@ class MLAData {
 	}
 
 	/**
-	 * Fetch and filter IPTC and EXIF, XMP or PDF metadata for an image attachment
+	 * Format and return IPTC and EXIF, XMP or PDF metadata,
+	 * in substitution parameter syntax with prefixes.
+	 * 
+	 * @since 2.98
+	 *
+	 * @param	array	$value Array of metadata elements
+	 * @param	string	$prefix Element ancestor(s) 
+	 * @param	string	$separator Optional. Delimiter between prefix and element name
+	 *
+	 * @return	string	Metadata text representation in "var_export" format
+	 */
+	private static function _compose_metadata_array( $value, $prefix, $separator = '.' ) {
+		$text = '';
+		foreach ( $value as $key => $element ) {
+			if ( is_array( $element ) && ( 1 === count( $element ) ) && isset( $element[0] ) ) {
+				$element = $element[0];
+			}
+
+			if ( is_scalar( $element ) ) {
+				$text .= $prefix . $separator . $key . ' => ' . (string) $element . "\r\n";
+			} elseif ( is_array( $element ) ) {
+				$text .= self::_compose_metadata_array( $element, $prefix . $separator . $key );
+			}
+		}
+		
+		return $text;
+	}
+
+	/**
+	 * Format and return IPTC and EXIF, XMP or PDF metadata,
+	 * in substitution parameter syntax with prefixes.
+	 * 
+	 * @since 2.98
+	 *
+	 * @param	int		post ID of attachment
+	 * @param	string	optional; if $post_id is zero, path to the image file.
+	 *
+	 * @return	string	Text representation of the IPTC, EXIF, XMP, PDF and/or MSO metadata
+	 */
+	public static function mla_compose_attachment_metadata( $post_id, $path = '' ) {
+		$metadata = self::mla_fetch_attachment_image_metadata( $post_id, $path );
+
+		$text = '';
+		foreach ( $metadata as $key => $value ) {
+			$match_count = preg_match( '/mla_(.+)_metadata/', $key, $matches );
+			if ( $match_count ) {
+				$text .= self::_compose_metadata_array( $value, $matches[1], ':' );
+			} elseif ( is_scalar( $value ) ) {
+				$text .= $key . ' => ' . (string) $value . "\r\n";
+			} elseif ( is_array( $value ) ) {
+				$text .= self::_compose_metadata_array( $value, $key );
+			}
+		}
+
+		$id3_metadata = self::mla_fetch_attachment_id3_metadata( $post_id );
+		if ( !empty( $id3_metadata ) && !isset( $id3_metadata['error'] ) ) {
+			$text .= self::_compose_metadata_array( $id3_metadata, 'id3', ':' );
+		}
+
+		return $text; // var_export( $metadata, true );
+	}
+
+	/**
+	 * Fetch and filter IPTC, EXIF, XMP, PDF and/or MSO metadata for an attachment
 	 * 
 	 * @since 0.90
 	 *
 	 * @param	int		post ID of attachment
 	 * @param	string	optional; if $post_id is zero, path to the image file.
 	 *
-	 * @return	array	Meta data variables, IPTC and EXIF or PDF
+	 * @return	array	Meta data variables, IPTC, EXIF, XMP, PDF and/or MSO
 	 */
 	public static function mla_fetch_attachment_image_metadata( $post_id, $path = '' ) {
 		$results = array(
@@ -3531,7 +3622,7 @@ class MLAData {
 				$pdf_metadata = MLAPDF::mla_extract_pdf_metadata( $path );
 				$results['mla_xmp_metadata'] = $pdf_metadata['xmp'];
 				$results['mla_pdf_metadata'] = $pdf_metadata['pdf'];
-				MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+				MLACore::mla_debug_add( __LINE__ . " MLAData::mla_fetch_attachment_image_metadata( {$post_id}, {$path} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 				return $results;
 			}
 
@@ -3543,18 +3634,13 @@ class MLAData {
 
 				$mso_metadata = MLAOffice::mla_extract_office_metadata( $path );
 				$results['mla_mso_metadata'] = $mso_metadata['mso'];
-				MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+				MLACore::mla_debug_add( __LINE__ . " MLAData::mla_fetch_attachment_image_metadata( {$post_id}, {$path} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 				return $results;
 			}
 
 			$size = getimagesize( $path, $info );
-			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize returns ' . var_export( $size, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
-			MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata getimagesize info keys =  ' . var_export( array_keys( $info ), true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
-
-			/*/ SVG and some other types don't have metadata: removed v2.90
-			if ( false === $size ) {
-				return $results;
-			} // */
+			MLACore::mla_debug_add( __LINE__ . ' MLAData::mla_fetch_attachment_image_metadata getimagesize returns ' . var_export( $size, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+			MLACore::mla_debug_add( __LINE__ . ' MLAData::mla_fetch_attachment_image_metadata getimagesize info keys =  ' . var_export( array_keys( $info ), true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
 			if ( is_callable( 'iptcparse' ) ) {
 				if ( ! empty( $info['APP13'] ) ) {
@@ -3571,7 +3657,7 @@ class MLAData {
 					}
 					restore_error_handler();
 
-					MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata iptc_values = ' . var_export( $iptc_values, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+					// MLACore::mla_debug_add( __LINE__ . ' MLAData::mla_fetch_attachment_image_metadata iptc_values = ' . var_export( $iptc_values, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
 					if ( ! empty( $exception ) ) {
 						MLAData::$mla_IPTC_EXIF_errors[] = sprintf( '(%1$s) %2$s', $exception->getCode(), $exception->getMessage() );
@@ -3615,7 +3701,7 @@ class MLAData {
 				}
 				restore_error_handler();
 
-				MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata (PHP ' . phpversion() . ') exif_data = ' . var_export( $exif_data, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+				// MLACore::mla_debug_add( __LINE__ . ' MLAData::mla_fetch_attachment_image_metadata (PHP ' . phpversion() . ') exif_data = ' . var_export( $exif_data, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
 
 				if ( ! empty( $exception ) ) {
 					MLAData::$mla_IPTC_EXIF_errors[] = sprintf( '(%1$s) %2$s', $exception->getCode(), $exception->getMessage() );
@@ -3973,7 +4059,8 @@ class MLAData {
 			$results['mla_exif_metadata']['GPS'] = $new_data;
 		}
 
-		MLACore::mla_debug_add( __LINE__ . ' mla_fetch_attachment_image_metadata results = ' . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		MLACore::mla_debug_add( __LINE__ . ' MLAData::mla_fetch_attachment_image_metadata( PHP ' . phpversion() . ", {$post_id}, {$path} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+
 		return $results;
 	}
 

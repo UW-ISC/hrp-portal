@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.97';
+	const CURRENT_MLA_VERSION = '2.98';
 
 	/**
 	 * Slug for registering and enqueueing plugin style sheets (moved from class-mla-main.php)
@@ -1181,6 +1181,10 @@ class MLACore {
 		$index = 0;
 
 		foreach ( $option_values as $key => $value ) {
+			if ( false === $value['active'] ) {
+				continue;
+			}
+			
 			$slug = 'c_' . $index++; // sanitize_title( $key ); Didn't handle HTML in name, e.g., "R><B"
 //error_log( __LINE__ . " mla_custom_field_support( {$key}, {$slug} ) value = " . var_export( $value, true ), 0 );
 
