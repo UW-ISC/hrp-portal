@@ -28,7 +28,7 @@
  * https://wordpress.org/support/topic/search-media-by-custom-field/
  *
  * @package MLA Custom Field Search Example
- * @version 1.06
+ * @version 1.07
  */
 
 /*
@@ -36,7 +36,7 @@ Plugin Name: MLA Custom Field Search Example
 Plugin URI: http://davidlingren.com/
 Description: Extends the Media/Assistant "Search Media" box to custom field values
 Author: David Lingren
-Version: 1.06
+Version: 1.07
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2020 David Lingren
@@ -70,7 +70,7 @@ class MLACustomFieldSearchExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.06';
+	const PLUGIN_VERSION = '1.07';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -146,15 +146,15 @@ class MLACustomFieldSearchExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
 		}
 
 		// Add the run-time values to the arguments
 		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
 
 		if ( self::$plugin_settings->get_plugin_option( 'media_assistant_support' ) ) {
 			// Defined in /media-library-assistant/includes/class-mla-main.php

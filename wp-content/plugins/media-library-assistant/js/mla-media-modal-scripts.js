@@ -822,15 +822,30 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			initialize: function() {
 				mlaAttachmentsBrowser.prototype.initialize.apply( this, arguments );
 
-				if ( ( 'object' === typeof this.attachmentsWrapper ) && ( 'undefined' === typeof window.eml ) ) {
+				if ( 'undefined' === typeof window.eml ) {
+					// Accomodate Disable Gutenberg plugin
+					if ( 'grid' === mlaModal.settings.screen ) {
+						$('body').addClass('mla-media-grid');
+					} else {
+						$('body').addClass('mla-media-modal');
+					}
+
 					mlaModal.settings.oldHeight = 0;
-					this.on( 'ready', this.adjustBrowser, this );
 					this.$window = $( window );
-					this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser, this ), 15 ) );
+
+					if ( 'object' === typeof this.attachmentsWrapper ) {
+						this.on( 'ready', this.adjustBrowser58, this );
+						this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser58, this ), 15 ) );
+					} else {
+						if ( 'object' === typeof this.attachments ) {
+							this.on( 'ready', this.adjustBrowser57, this );
+							this.$window.on( 'resize', _.debounce( _.bind( this.adjustBrowser57, this ), 15 ) );
+						}
+					}
 				}
 			},
 			
-			adjustBrowser: function() {
+			adjustBrowser58: function() {
 				var wrapper = this.attachmentsWrapper, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
 
 				primaryHeight = toolbar.primary.$el.height();
@@ -844,6 +859,24 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 
 				if ( ( 0 < toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
 					wrapper.$el.css( 'top', toolbarHeight + 10 + 'px' );
+					mlaModal.settings.oldHeight = toolbarHeight;
+				}
+			},
+			
+			adjustBrowser57: function() {
+				var attachments = this.attachments, toolbar = this.toolbar, toolbarHeight, primaryHeight, secondaryHeight;
+
+				primaryHeight = toolbar.primary.$el.height();
+				secondaryHeight = toolbar.secondary.$el.height();
+
+				if ( primaryHeight > secondaryHeight ) {
+					toolbarHeight = primaryHeight;
+				} else {
+					toolbarHeight = secondaryHeight;
+				}
+
+				if ( ( 0 < toolbarHeight ) && ( toolbarHeight !== mlaModal.settings.oldHeight ) ) {
+					attachments.$el.css( 'top', toolbarHeight + 10 + 'px' );
 					mlaModal.settings.oldHeight = toolbarHeight;
 				}
 			},

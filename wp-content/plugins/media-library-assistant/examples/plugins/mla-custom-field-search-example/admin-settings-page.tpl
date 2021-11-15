@@ -239,7 +239,7 @@ A custom field query has four parts:
 </p>
 <ol>
 <li>A prefix, "custom:" by default, or whatever you set on the General tab.</li>
-<li>A comma-separated list of one or more custom field names.</li>
+<li>A comma-separated list of one or more custom field names. If you omit this the "Default Field(s): set on the General tab will be substituted.</li>
 <li>An equals sign ("="), to divide the field names from the values</li>
 <li>A comma-separated list of one or more values</li>
 </ol>
@@ -248,6 +248,12 @@ So, for example, if you have a custom field named "Kingdom" with values of "Anim
 </p>
 <ul class="mla-doc-toc-list">
 <li><code>custom:Kingdom=Animal</code></li>
+</ul>
+<p>
+If you have set "Kingdom" as the Default Field you can compose a search like:
+</p>
+<ul class="mla-doc-toc-list">
+<li><code>custom:=Animal</code></li>
 </ul>
 <p>
 It is important to note that custom field values are somewhat different from the keywords and phrases used in the standard Search Media searches. There is no "and/or" option or matching on one of the words you enter. If you enter "this example", the search will not match "this" or "example".
@@ -273,13 +279,13 @@ If you want to search for more than one value, simply separate each value you wa
 </p>
 <h3>Searching Partial Values; Wildcards</h3>
 <p>Wildcard specifications are also supported; for example:
+</p>
 <ul class="mla-doc-toc-list">
 <li><code>custom:Kingdom=*al</code> to match anything ending in "al", e.g., "Animal" and "Mineral"</li>
 <li><code>custom:Kingdom=*get*</code> to match "Vegetable".</li>
 <li><code>custom:Headline=*this*,*example*</code> will match values containing "this" or "example".</li>
 <li>As explained below, a value of <code>custom:Kingdom=*</code> will match any non-NULL value for a custom field.</li>
 </ul>
-</p>
 <p>
 &nbsp;
 <a name="multiple_fields"></a>
@@ -288,11 +294,19 @@ If you want to search for more than one value, simply separate each value you wa
 <a href="#backtotop">Go to Top</a>
 </p>
 <h3>Searching in Multiple Fields or All Fields</h3>
+<p>
 If you want to search for the same value(s) in more than one custom field, simply separate each field name you want to search in by a comma, such as:
 </p>
 <ul class="mla-doc-toc-list">
 <li><code>custom:Artist,Patron=smith</code></li>
 <li><code>custom:Artist,Patron=smith,jones</code></li>
+</ul>
+<p>
+If you want to search for the same value(s) in all of your custom field, check the "Enable All Fields name substitution" box and enter your "All Fields Name" (default "*"), such as:
+</p>
+<ul class="mla-doc-toc-list">
+<li><code>custom:*=smith</code></li>
+<li><code>custom:*=smith,jones</code></li>
 </ul>
 <p>
 &nbsp;

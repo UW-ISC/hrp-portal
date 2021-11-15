@@ -1419,6 +1419,8 @@ class MLAOptions {
 	 * @return	array	Updates suitable for MLAData::mla_update_single_item, if any
 	 */
 	public static function mla_evaluate_iptc_exif_mapping( $post, $category, $settings = NULL, $attachment_metadata = NULL, $is_upload = false ) {
+		static $log_settings = true;
+
 		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_IPTC_EXIF_MAPPING ) ) {
 			return array();
 		}
@@ -1444,7 +1446,10 @@ class MLAOptions {
 
 		$settings = apply_filters( 'mla_mapping_settings', $settings, $post->ID, $category, $attachment_metadata );
 
-		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_evaluate_iptc_exif_mapping( {$post->ID}, {$category}, {$data_source_category} ) \$settings = " . var_export( $settings, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+		if ( $log_settings ) {
+			MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_evaluate_iptc_exif_mapping( {$post->ID}, {$category}, {$data_source_category} ) \$settings = " . var_export( $settings, true ), MLACore::MLA_DEBUG_CATEGORY_METADATA );
+			$log_settings = false; // once per page load
+		}
 
 		if ( $update_all || ( 'iptc_exif_standard_mapping' == $category ) ) {
 			foreach ( $settings['standard'] as $setting_key => $setting_value ) {

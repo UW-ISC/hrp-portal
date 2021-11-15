@@ -225,8 +225,6 @@ jQuery(function ($) {
         var title = $(this);
         var content = title.next('.mega-accordion-content');
 
-        $(".mega-accordion-content:visible").slideUp('fast');
-
         if ( content.is(':hidden') ) {
             content.slideDown('fast', function() {
                 title.addClass('mega-accordion-open');

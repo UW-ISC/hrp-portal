@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2021-08-10 17:48-0700\n"
-"PO-Revision-Date: 2021-08-10 17:49-0700\n"
+"POT-Creation-Date: 2021-10-17 15:54-0700\n"
+"PO-Revision-Date: 2021-10-17 15:55-0700\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -424,10 +424,19 @@ msgstr ""
 
 msgid ""
 "Check this option to add \"Parent Info\", \"Menu Order\", \"Attachment "
-"Metadata\" and four \"where-used\" meta boxes to the Edit Media screen."
+"Metadata\", \"Attachment File Metadata\" and four \"where-used\" meta boxes "
+"to the Edit Media screen."
 msgstr ""
 
 msgid "You can also use Filters to customize the meta boxes."
+msgstr ""
+
+msgid "Enable File Attachment Metadata meta box"
+msgstr ""
+
+msgid ""
+"Check this option to enable the \"Attachment File Metadata\"  meta box on "
+"the Edit Media screen."
 msgstr ""
 
 msgid "Media/Add New Enhancements"
@@ -996,7 +1005,7 @@ msgid "Add Tax. Columns"
 msgstr ""
 
 msgid ""
-"Check this option to add Term ID and Term-Taxonomy ID columns to the "
+"Check this option to add Parent, Term ID and Term-Taxonomy ID columns to the "
 "taxonomy edit admin submenu tables."
 msgstr ""
 
@@ -1559,6 +1568,9 @@ msgid "Parent Info"
 msgstr ""
 
 msgid "Attachment Metadata"
+msgstr ""
+
+msgid "Attachment File Metadata"
 msgstr ""
 
 #, php-format

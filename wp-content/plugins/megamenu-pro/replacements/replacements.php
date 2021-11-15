@@ -1094,6 +1094,12 @@ class Mega_Menu_Replacements {
 
 		$full_url = wp_get_attachment_url( $attachment_id );
 
+		$filetype = wp_check_filetype( $full_url );
+
+		if ( isset( $filetype['ext'] ) && $filetype['ext'] == 'svg' ) {
+			return $full_url; // do not attempt to resize svgs
+		}
+
 		if ( ! isset( $meta['width'], $meta['height'] ) ) {
 			return $full_url; // image is not valid
 		}

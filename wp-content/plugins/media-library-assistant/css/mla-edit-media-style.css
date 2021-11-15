@@ -9,7 +9,8 @@
 #mla_inserted_in,
 #mla_gallery_in,
 #mla_mla_gallery_in,
-#mla_image_metadata {
+#mla_image_metadata,
+#mla_file_metadata {
 	width: 100%;
 }
 

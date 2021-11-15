@@ -8,6 +8,7 @@ use DeliciousBrains\WPMDB\Common\Http\WPMDBRestAPIServer;
 use DeliciousBrains\WPMDB\Common\Migration\MigrationHelper;
 use DeliciousBrains\WPMDB\Common\Plugin\Assets;
 use DeliciousBrains\WPMDB\Common\Plugin\PluginManagerBase;
+use DeliciousBrains\WPMDB\Common\Profile\ProfileManager;
 use DeliciousBrains\WPMDB\Common\Properties\Properties;
 use DeliciousBrains\WPMDB\Common\Filesystem\Filesystem;
 use DeliciousBrains\WPMDB\Common\Http\Http;
@@ -35,7 +36,8 @@ class PluginManager extends PluginManagerBase
         WPMDBRestAPIServer $rest_API_server,
         Helper $http_helper,
         TemplateBase $template_base,
-        Notice $notice
+        Notice $notice,
+        ProfileManager $profile_manager
     ) {
         parent::__construct(
             $settings,
@@ -50,7 +52,8 @@ class PluginManager extends PluginManagerBase
             $rest_API_server,
             $http_helper,
             $template_base,
-            $notice
+            $notice,
+            $profile_manager
         );
     }
 
@@ -74,13 +77,13 @@ class PluginManager extends PluginManagerBase
     public function plugin_action_links($links)
     {
         $start_links = array(
-            'profiles'   => sprintf('<a href="%s">%s</a>', network_admin_url($this->props->plugin_base) , __('Migrate', 'wp-migrate-db')), 
-            'settings'   => sprintf('<a href="%s">%s</a>', network_admin_url($this->props->plugin_base) . '#settings', _x('Settings', 'Plugin configuration and preferences', 'wp-migrate-db')) 
+            'profiles'   => sprintf('<a href="%s">%s</a>', network_admin_url($this->props->plugin_base) , __('Migrate', 'wp-migrate-db')),
+            'settings'   => sprintf('<a href="%s">%s</a>', network_admin_url($this->props->plugin_base) . '#settings', _x('Settings', 'Plugin configuration and preferences', 'wp-migrate-db'))
         );
         $end_links   = array(
             'upgradepro' => sprintf('<a href="%s" style="font-weight:700">%s</a>', 'https://deliciousbrains.com/wp-migrate-db-pro/?utm_source=MDB%2BFree&utm_medium=plugins%2Blist&utm_campaign=WP%2BMigrate%2BDB%2BPro%2BUpgrade', __('Upgrade to Pro', 'wp-migrate-db'))
         );
 
-        return $start_links + $links + $end_links; 
+        return $start_links + $links + $end_links;
     }
 }

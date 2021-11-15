@@ -189,6 +189,11 @@ class MLACoreOptions {
 	const MLA_EDIT_MEDIA_META_BOXES = 'edit_media_meta_boxes';
 
 	/**
+	 * Provides a unique name for the Edit Media Attachment File Metadata meta box option
+	 */
+	const MLA_FILE_METADATA_META_BOX = 'edit_media_file_metadata_meta_box';
+
+	/**
 	 * Provides a unique name for the Media/Add New bulk edit option
 	 */
 	const MLA_ADD_NEW_BULK_EDIT = 'add_new_bulk_edit';
@@ -750,8 +755,17 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'autoload' => true,
 					'std' => 'checked',
-					'help' => __( 'Check this option to add "Parent Info", "Menu Order", "Attachment Metadata" and four "where-used" meta boxes to the Edit Media screen.', 'media-library-assistant' ) . '<br>&nbsp;&nbsp;' .
+					'help' => __( 'Check this option to add "Parent Info", "Menu Order", "Attachment Metadata", "Attachment File Metadata" and four "where-used" meta boxes to the Edit Media screen.', 'media-library-assistant' ) . '<br>&nbsp;&nbsp;' .
 						__( 'You can also use Filters to customize the meta boxes.', 'media-library-assistant' ) . 
+						sprintf( ' %1$s <a href="%2$s">%3$s</a>.',  __( 'For complete documentation', 'media-library-assistant' ), admin_url( 'options-general.php?page=' . self::MLA_SETTINGS_SLUG . '-documentation&amp;mla_tab=documentation#mla_edit_meta_boxes' ), __( 'click here', 'media-library-assistant' )  ) ),
+
+			self::MLA_FILE_METADATA_META_BOX =>
+				array('tab' => 'general',
+					'name' => __( 'Enable File Attachment Metadata meta box', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'autoload' => true,
+					'std' => 'checked',
+					'help' => __( 'Check this option to enable the "Attachment File Metadata"  meta box on the Edit Media screen.', 'media-library-assistant' ) . '<br>&nbsp;&nbsp;' .
 						sprintf( ' %1$s <a href="%2$s">%3$s</a>.',  __( 'For complete documentation', 'media-library-assistant' ), admin_url( 'options-general.php?page=' . self::MLA_SETTINGS_SLUG . '-documentation&amp;mla_tab=documentation#mla_edit_meta_boxes' ), __( 'click here', 'media-library-assistant' )  ) ),
 
 			'media_add_new_header' =>
@@ -1429,7 +1443,7 @@ class MLACoreOptions {
 					'name' => __( 'Add Tax. Columns', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => '',
-					'help' => __( 'Check this option to add Term ID and Term-Taxonomy ID columns to the taxonomy edit admin submenu tables.', 'media-library-assistant' )),
+					'help' => __( 'Check this option to add Parent, Term ID and Term-Taxonomy ID columns to the taxonomy edit admin submenu tables.', 'media-library-assistant' )),
 
 			/* Here are examples of the other option types
 			'textarea' =>

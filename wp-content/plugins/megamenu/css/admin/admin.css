@@ -1709,6 +1709,21 @@ body.toplevel_page_maxmegamenu .megamenu_right {
     body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_general_settings .mega-inner-table td {
       padding-top: 3px;
       padding-bottom: 3px; }
+  body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings.menu_settings_menu_locations .mega-accordion-title h4:before,
+  body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_menu_locations .mega-accordion-title h4:before {
+    font: 400 14px/1 dashicons;
+    content: "\f347";
+    speak: none;
+    padding: 0;
+    margin-right: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: all 0.4s ease; }
+  body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings.menu_settings_menu_locations .mega-accordion-title.mega-accordion-open h4:before,
+  body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_menu_locations .mega-accordion-title.mega-accordion-open h4:before {
+    transform: rotateZ(-180deg); }
   body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings.menu_settings_menu_locations .mega-add-location,
   body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_menu_locations .mega-add-location {
     margin-top: 20px; }

@@ -20,7 +20,7 @@ if ( !function_exists( 'post_categories_meta_box' ) ) {
  */
 class MLA {
 	/**
-	 * Current date for Development Version, empty for production versions
+	 * Current date for Development Versions, empty for production versions
 	 *
 	 * @since 2.10
 	 *
@@ -1898,7 +1898,11 @@ class MLA {
 		$custom_fields = array();
 		foreach ( MLACore::mla_custom_field_support( 'quick_edit' ) as $slug => $details ) {
 			if ( isset( $_REQUEST[ $slug ] ) ) {
-				$value = trim( wp_kses( wp_unslash( $_REQUEST[ $slug ] ), 'post' ) );
+				if ( current_user_can( 'unfiltered_html' ) ) {
+					$value = trim( wp_unslash( $_REQUEST[ $slug ] ) ); // phpcs:ignore
+				} else {
+					$value = trim( wp_kses( wp_unslash( $_REQUEST[ $slug ] ), 'post' ) );
+				}
 				unset ( $_REQUEST[ $slug ] );
 
 				// '(Array)' indicates an existing array value in the field, which we preserve

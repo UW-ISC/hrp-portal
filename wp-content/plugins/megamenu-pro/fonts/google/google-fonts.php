@@ -224,6 +224,7 @@ class Mega_Menu_Google_Fonts {
 			"Baloo Thambi",
 			"Balthazar",
 			"Bangers",
+			"Barlow",
 			"Barrio",
 			"Basic",
 			"Battambang",

@@ -2000,6 +2000,25 @@ body.toplevel_page_maxmegamenu {
 
 			&.menu_settings_menu_locations {
 
+				.mega-accordion-title {
+					h4:before {
+						font: 400 14px/1 dashicons;
+						content: "\f347";
+						speak: none;
+						padding: 0;
+						margin-right: 10px;
+						display: inline-block;
+						vertical-align: middle;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+						transition: all 0.4s ease;
+					}
+
+					&.mega-accordion-open h4:before {
+						transform: rotateZ(-180deg);
+					}
+				}
+
 				.mega-add-location {
 					margin-top: 20px;
 				}

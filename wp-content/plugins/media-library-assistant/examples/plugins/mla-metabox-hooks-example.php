@@ -6,7 +6,7 @@
  * All of the action takes place in the "mla_inserted_in_meta_box" filter.
  *
  * @package MLA Meta Box Hooks Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -14,10 +14,10 @@ Plugin Name: MLA Meta Box Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of the filters provided by the "Edit Media additional meta boxes" feature
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
-Copyright 2014 David Lingren
+Copyright 2014-2021 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -76,6 +76,9 @@ class MLAMetaboxHooksExample {
 
 		add_filter( 'mla_image_metadata_meta_box', 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_filter', 10, 3 );
 		add_filter( 'mla_image_metadata_meta_box_html', 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_html_filter', 10, 4 );
+
+		add_filter( 'mla_file_metadata_meta_box', 'MLAMetaboxHooksExample::mla_file_metadata_meta_box_filter', 10, 2 );
+		add_filter( 'mla_file_metadata_meta_box_html', 'MLAMetaboxHooksExample::mla_file_metadata_meta_box_html_filter', 10, 3 );
 
 		add_filter( 'mla_featured_in_meta_box', 'MLAMetaboxHooksExample::mla_featured_in_meta_box_filter', 10, 3 );
 		add_filter( 'mla_featured_in_meta_box_html', 'MLAMetaboxHooksExample::mla_featured_in_meta_box_html_filter', 10, 4 );
@@ -207,7 +210,7 @@ class MLAMetaboxHooksExample {
 	 * 					$metadata['mla_wp_attachment_metadata']
 	 * @param	object	the current post
 	 *
-	 * @return	array	updated parent information
+	 * @return	array	updated metadata information
 	 */
 	public static function mla_image_metadata_meta_box_filter( $value, $metadata, $post ) {
 		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_filter $value = ' . var_export( $value, true ), 0 );
@@ -240,6 +243,46 @@ class MLAMetaboxHooksExample {
 
 		return $html;
 	} // mla_image_metadata_meta_box_html_filter
+
+	/**
+	 * MLA Attachment File Metadata Meta Box Filter
+	 *
+	 * This filter gives you an opportunity to modify the "Attachment File Metadata" meta box.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	array	( [value] => default text, [rows] => textbox rows, [cols] => textbox columns )
+	 * @param	object	the current post
+	 *
+	 * @return	array	updated metadata information
+	 */
+	public static function mla_file_metadata_meta_box_filter( $value, $post ) {
+		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_filter $value = ' . var_export( $value, true ), 0 );
+		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_filter $post = ' . var_export( $post, true ), 0 );
+
+		return $value;
+	} // mla_file_metadata_meta_box_filter
+
+	/**
+	 * MLA Attachment File Metadata Meta Box HTML Filter
+	 *
+	 * This filter gives you an opportunity to modify the "Attachment File Metadata" meta box HTML content.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	string	Meta box contents markup
+	 * @param	array	( [value] => default text, [rows] => textbox rows, [cols] => textbox columns )
+	 * @param	object	the current post
+	 *
+	 * @return	array	updated meta box contents markup
+	 */
+	public static function mla_file_metadata_meta_box_html_filter( $html, $value, $post ) {
+		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_html_filter $html = ' . var_export( $html, true ), 0 );
+		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_html_filter $value = ' . var_export( $value, true ), 0 );
+		//error_log( 'MLAMetaboxHooksExample::mla_image_metadata_meta_box_html_filter $post = ' . var_export( $post, true ), 0 );
+
+		return $html;
+	} // mla_file_metadata_meta_box_html_filter
 
 	/**
 	 * MLA Featured in Meta Box Filter

@@ -212,11 +212,11 @@ class MLAShortcode_Support {
 			if ( $src = wp_mime_type_icon( $attachment_id ) ) {
 				/** This filter is documented in wp-includes/post.php */
 				$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/media' );
-	
+
 				$src_file = $icon_dir . '/' . wp_basename( $src );
 				@list( $width, $height ) = getimagesize( $src_file );
 			}
-	
+
 			if ( $src && $width && $height ) {
 				$image = array( $src, $width, $height );
 			}
@@ -251,7 +251,7 @@ class MLAShortcode_Support {
 		if ( is_string( $attr ) ) {
 			$attr = shortcode_parse_atts( $attr );
 		}
-		
+
 		if ( empty( $attr ) ) {
 			$attr = array();
 		}
@@ -481,6 +481,7 @@ class MLAShortcode_Support {
 
 		// These arguments must not be passed on to alternate gallery shortcodes
 		$mla_arguments = array_merge( array(
+			'mla_minimum' => '0',
 			'mla_output' => 'gallery',
 			'mla_style' => MLACore::mla_get_option('default_style'),
 			'mla_markup' => MLACore::mla_get_option('default_markup'),
@@ -736,6 +737,17 @@ class MLAShortcode_Support {
 			$found_rows = $current_rows;
 		}
 
+		$mla_minimum = absint( $arguments['mla_minimum'] );
+		if ( 0 < $mla_minimum ) {
+			if ( $is_gallery && ( empty($attachments) || count($attachments) < $mla_minimum ) ) {
+				$attachments = array();
+			}
+			
+			if ( $is_pagination && empty( $found_rows ) || $found_rows < $mla_minimum ) {
+				$found_rows = 0;
+			}
+		}
+		
 		if ( ( $is_gallery && empty($attachments) ) || ( $is_pagination && empty( $found_rows ) ) ) {
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty gallery', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $attr, true ) );
@@ -1378,12 +1390,12 @@ class MLAShortcode_Support {
 				}
 			} else {
 				$thumbnail_content = $attachment->post_title;
-				
+
 				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
 					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
 					$thumb = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
 					$thumb = apply_filters( 'mla_gallery_featured_image', $thumb, $attachment, $size, $item_values );
-					
+
 					if ( ! empty( $thumb ) ) {
 						$thumbnail_content = $thumb;
 					}
@@ -1665,7 +1677,7 @@ class MLAShortcode_Support {
 				$item_values['thumbnail_width'] = '';
 				$item_values['thumbnail_height'] = '';
 				$item_values['thumbnail_url'] = '';
-				
+
 				/* Replaced by logic in _get_attachment_image_src v2.90
 				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
 					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
@@ -1976,8 +1988,8 @@ class MLAShortcode_Support {
 			'default_size' => 12,
 			'unit' => 'pt',
 			'separator' => "\n",
-			'single_text' => '%d item',
-			'multiple_text' => '%d items',
+			'single_text' => '%s item',
+			'multiple_text' => '%s items',
 
 			'echo' => false,
 			'link' => 'view',
@@ -2756,7 +2768,8 @@ class MLAShortcode_Support {
 			$item_values['taxonomy'] = $tag->taxonomy;
 			$item_values['description'] = wptexturize( $tag->description );
 			$item_values['parent'] = $tag->parent;
-			$item_values['count'] = isset ( $tag->count ) ? $tag->count : 0; 
+			$item_values['count'] = isset ( $tag->count ) ? (integer) $tag->count : 0; 
+			$item_values['term_count'] = isset ( $tag->term_count ) ? (integer) $tag->term_count : 0; 
 			$item_values['scaled_count'] = $tag->scaled_count;
 
 			if ( in_array( $tag->slug, array( 'ignore.terms.assigned', 'no.terms.assigned', 'any.terms.assigned' ) ) ) {
@@ -3133,7 +3146,8 @@ class MLAShortcode_Support {
 			$item_values['taxonomy'] = $term->taxonomy;
 			$item_values['description'] = wptexturize( $term->description );
 			$item_values['parent'] = $term->parent;
-			$item_values['count'] = isset ( $term->count ) ? 0 + $term->count : 0; 
+			$item_values['count'] = isset ( $term->count ) ? (integer) $term->count : 0; 
+			$item_values['term_count'] = isset ( $term->term_count ) ? (integer) $term->term_count : 0; 
 			$item_values['link_url'] = $term->link;
 			$item_values['currentlink_url'] = sprintf( '%1$s%2$scurrent_item=%3$d', $item_values['page_url'], $current_item_delimiter, $item_values['term_id'] );
 			$item_values['editlink_url'] = $term->edit_link;
@@ -3221,9 +3235,11 @@ class MLAShortcode_Support {
 			// Ignore option- all,any_terms,no_terms
 			if ( -1 !== $item_values['count'] ) {
 				$item_values['rollover_text'] = sprintf( _n( $item_values['single_text'], $item_values['multiple_text'], $item_values['count'], 'media-library-assistant' ), number_format_i18n( $item_values['count'] ) );
-				if ( ! empty( $arguments['mla_rollover_text'] ) ) {
-					$item_values['rollover_text'] = esc_attr( self::_process_shortcode_parameter( $arguments['mla_rollover_text'], $item_values ) );
-				}
+
+			}
+
+			if ( ! empty( $arguments['mla_rollover_text'] ) ) {
+				$item_values['rollover_text'] = esc_attr( self::_process_shortcode_parameter( $arguments['mla_rollover_text'], $item_values ) );
 			}
 
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
@@ -3440,8 +3456,8 @@ class MLAShortcode_Support {
 			'hierarchical' => 'true',
 
 			'separator' => "\n",
-			'single_text' => '%d item',
-			'multiple_text' => '%d items',
+			'single_text' => '%s item',
+			'multiple_text' => '%s items',
 			'link' => 'current',
 			'current_item' => '',
 			'active_item_class' => 'mla_active_item',
@@ -4624,7 +4640,7 @@ class MLAShortcode_Support {
 		// Validate the query arguments to prevent cross-site scripting (reflection) attacks
 		$test_query = array();
 		parse_str( strval( $uri_query ), $test_query );
-		
+
 		$clean_query = array();
 		foreach ( $test_query as $test_key => $test_value ) {
 			// Query argument names cannot have URL special characters
@@ -5281,7 +5297,7 @@ class MLAShortcode_Support {
 									if ( empty( $terms ) || ( $terms === '-3' ) || ( is_array( $terms ) && in_array( '-3', $terms ) ) ) {
 										$terms = 'ignore.terms.assigned';
 									}
-									
+
 									if ( ( $terms === 'ignore.terms.assigned' ) || ( is_array( $terms ) && in_array( 'ignore.terms.assigned', $terms ) ) ) {
 										unset( $tax_query[ $tax_query_key ] );
 										continue;
@@ -5290,26 +5306,26 @@ class MLAShortcode_Support {
 									if ( ( $terms === '-1' ) || ( is_array( $terms ) && in_array( '-1', $terms ) ) ) {
 										$terms = 'no.terms.assigned';
 									}
-									
+
 									if ( ( $terms === 'no.terms.assigned' ) || ( is_array( $terms ) && in_array( 'no.terms.assigned', $terms ) ) ) {
 										$tax_query[ $tax_query_key ] = array(
 											'taxonomy' => $tax_query_taxonomy,
 											'operator' => 'NOT EXISTS',
 										);
-									
+
 										continue;
 									}
 
 									if ( ( $terms === '-2' ) || ( is_array( $terms ) && in_array( '-2', $terms ) ) ) {
 										$terms = 'any.terms.assigned';
 									}
-									
+
 									if ( ( $terms === 'any.terms.assigned' ) || ( is_array( $terms ) && in_array( 'any.terms.assigned', $terms ) ) ) {
 										$tax_query[ $tax_query_key ] = array(
 											'taxonomy' => $tax_query_taxonomy,
 											'operator' => 'EXISTS',
 										);
-									
+
 										continue;
 									}
 								} // isset( terms )
@@ -5344,7 +5360,7 @@ class MLAShortcode_Support {
 						if ( is_string( $value ) ) {
 							$value = explode( ',', $value );
 						}
-						
+
 						$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', $value ) ) );
 						if ( in_array( $simple_tax_queries[ $key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
 							$terms_assigned_query = true;
@@ -5355,7 +5371,7 @@ class MLAShortcode_Support {
 					if ( is_string( $value ) ) {
 						$value = explode( ',', $value );
 					}
-					
+
 					$simple_tax_queries[ $key ] = implode(',', array_filter( array_map( 'trim', $value ) ) );
 					if ( in_array( $simple_tax_queries[ $key ], array( 'ignore.terms.assigned', '-3', 'no.terms.assigned', '-1', 'any.terms.assigned', '-2' ) ) ) {
 						$terms_assigned_query = true;
@@ -6091,7 +6107,7 @@ class MLAShortcode_Support {
 				// Suppress WordPress WP_Query LEFT JOIN on post_parent, etc.
 				$query_arguments['post_type'] = 'mladisabletaxjoin';
 			} 
-			
+
 			if ( defined('RML_FILE') ) {
 				if ( $arguments['mla_allow_rml'] ) {
 					add_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_rml_filter', 9, 2 );
@@ -6484,14 +6500,16 @@ class MLAShortcode_Support {
 		$clause[] = $wpdb->prepare( 'AND p.post_status IN ( ' . join( ',', $placeholders ) . ' )', $clause_parameters );
 
 		// Add optional post_mime_type constraint
-		if ( 'all' !== strtolower( $arguments['post_mime_type'] ) ) {
+		if ( 'all' === strtolower( $arguments['post_mime_type'] ) ) {
+			$post_mimes = '';
+		} else {
 			$post_mimes = wp_post_mime_type_where( $arguments['post_mime_type'], 'p' );
 			$clause[] = str_replace( '%', '%%', $post_mimes );
 		}
 
 		$query =  join(' ', $clause);
 		$results = $wpdb->get_results(	$query );
-		
+
 		if ( is_wp_error( $results ) ) {
 			$results = array(
 				'ignore.terms.assigned' => 0,
@@ -6801,7 +6819,9 @@ class MLAShortcode_Support {
 			$clause[] = "AND tt.parent = '{$parent}'";
 		}
 
-		if ( 'all' !== strtolower( $arguments['post_mime_type'] ) ) {
+		if ( 'all' === strtolower( $arguments['post_mime_type'] ) ) {
+			$post_mimes = '';
+		} else {
 			$post_mimes = wp_post_mime_type_where( $arguments['post_mime_type'], 'p' );
 			$where = str_replace( '%', '%%', $post_mimes );
 
@@ -7275,22 +7295,14 @@ class MLAShortcode_Support {
 			return;
 		}
 
-		/*/ WordPress "private" function, in /wp-includes/taxonomy.php array( term_id => array( child_ids ) )
-		$term_hier = _get_term_hierarchy( $taxonomy );
-
-		if ( empty( $term_hier ) ) {
-			return;
-		} // */
-
 		$terms_by_id = array(); // key term_id, value = reference to term object
 		$term_ids = array(); // key term_taxonomy_id, value = term_id
-		$term_items = array(); // key term_id
+		$term_items = array(); // key term_id, value = array( object_id => reference_count )
 
-//		foreach ( (array) $terms as $key => $term ) {
 		foreach ( $terms as $key => $term ) {
 			if ( is_integer( $key ) ) {
-				$terms_by_id[$term->term_id] = & $terms[$key];
-				$term_ids[$term->term_taxonomy_id] = $term->term_id;
+				$terms_by_id[ $term->term_id ] = & $terms[ $key ];
+				$term_ids[ $term->term_taxonomy_id ] = $term->term_id;
 			}
 		}
 
@@ -7328,9 +7340,10 @@ class MLAShortcode_Support {
 			}
 		}
 
-		// Transfer the touched cells
+		// Transfer the touched cells, updating $terms by reference
 		foreach ( (array) $term_items as $id => $items ) {
 			if ( isset( $terms_by_id[ $id ] ) ) {
+				$terms_by_id[ $id ]->term_count = (integer) $terms_by_id[ $id ]->count;
 				$terms_by_id[ $id ]->count = count( $items );
 			}
 		}
