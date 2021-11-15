@@ -5,6 +5,10 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.2.4 =
+
+* Fix: Do not attempt to resize SVG files when used as search icon or as a logo
+
 = 2.2.3 =
 
 * Improvement: Allow tab width to be defined in pixels

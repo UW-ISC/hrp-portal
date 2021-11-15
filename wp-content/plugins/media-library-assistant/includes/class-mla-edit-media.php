@@ -879,7 +879,7 @@ class MLAEdit {
 
 		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_EDIT_MEDIA_META_BOXES ) ) {
 			$active_boxes = apply_filters( 'mla_edit_media_meta_boxes', array( 
-			'mla-parent-info' => 'mla-parent-info', 'mla-menu-order' => 'mla-menu-order', 'mla-image-metadata' => 'mla-image-metadata', 'mla-featured-in' => 'mla-featured-in', 'mla-inserted-in' => 'mla-inserted-in', 'mla-gallery-in' => 'mla-gallery-in', 'mla-mla-gallery-in' => 'mla-mla-gallery-in' ) );
+			'mla-parent-info' => 'mla-parent-info', 'mla-menu-order' => 'mla-menu-order', 'mla-image-metadata' => 'mla-image-metadata', 'mla-file-metadata' => 'mla-file-metadata', 'mla-featured-in' => 'mla-featured-in', 'mla-inserted-in' => 'mla-inserted-in', 'mla-gallery-in' => 'mla-gallery-in', 'mla-mla-gallery-in' => 'mla-mla-gallery-in' ) );
 
 			if ( isset( $active_boxes['mla-parent-info'] ) ) {
 				add_meta_box( 'mla-parent-info', __( 'Parent Info', 'media-library-assistant' ), 'MLAEdit::mla_parent_info_handler', 'attachment', 'normal', 'core' );
@@ -893,6 +893,12 @@ class MLAEdit {
 				$image_metadata = get_metadata( 'post', $post->ID, '_wp_attachment_metadata', true );
 				if ( !empty( $image_metadata ) ) {
 					add_meta_box( 'mla-image-metadata', __( 'Attachment Metadata', 'media-library-assistant' ), 'MLAEdit::mla_image_metadata_handler', 'attachment', 'normal', 'core' );
+				}
+			}
+
+			if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_FILE_METADATA_META_BOX ) ) {
+				if ( isset( $active_boxes['mla-file-metadata'] ) ) {
+					add_meta_box( 'mla-file-metadata', __( 'Attachment File Metadata', 'media-library-assistant' ), 'MLAEdit::mla_file_metadata_handler', 'attachment', 'normal', 'core' );
 				}
 			}
 
@@ -1117,6 +1123,25 @@ class MLAEdit {
 
 		$html =  '<label class="screen-reader-text" for="mla_image_metadata">' . __( 'Attachment Metadata', 'media-library-assistant' ) . '</label><textarea class="readonly" id="mla_image_metadata" rows="' . absint( $value['rows'] ) . '" cols="' . absint( $value['cols'] ) . '" readonly="readonly" name="mla_image_metadata" >' . esc_textarea( $value['value'] ) . "</textarea>\n";
 		echo apply_filters( 'mla_image_metadata_meta_box_html', $html, $value, $metadata, $post ); // phpcs:ignore
+	}
+
+	/**
+	 * Renders the IPTC, EXIF, XMP, PDF and/or MSO Metadata meta box on the Edit Media page.
+	 * Declared public because it is a callback function.
+	 *
+	 * @since 0.80
+	 *
+	 * @param	object	current post
+	 *
+	 * @return	void	echoes the HTML markup for the meta box content
+	 */
+	public static function mla_file_metadata_handler( $post ) {
+		$value = MLAData::mla_compose_attachment_metadata( $post->ID );
+
+		$value = apply_filters( 'mla_file_metadata_meta_box', array( 'value' => $value, 'rows' => 5, 'cols' => 80 ), $post );
+
+		$html =  '<label class="screen-reader-text" for="mla_file_metadata">' . __( 'Attachment File Metadata', 'media-library-assistant' ) . '</label><textarea class="readonly" id="mla_file_metadata" rows="' . absint( $value['rows'] ) . '" cols="' . absint( $value['cols'] ) . '" readonly="readonly" name="mla_file_metadata" >' . esc_textarea( $value['value'] ) . "</textarea>\n";
+		echo apply_filters( 'mla_file_metadata_meta_box_html', $html, $value, $post ); // phpcs:ignore
 	}
 
 	/**

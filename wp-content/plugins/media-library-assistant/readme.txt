@@ -3,9 +3,9 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: media, media library, gallery, images, categories, tags, attachments, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
 Requires at least: 3.5.0
-Tested up to: 5.8
+Tested up to: 5.8.1
 Requires PHP: 5.3
-Stable tag: 2.97
+Stable tag: 2.98
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,25 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 2.98 =
+
+* New: A new **"Attachment File Metadata" meta box on the Media/Edit Media screen** displays IPTC, EXIF, XMP, ID3, PDF and/or MSO metadata embedded in the item's file. More information in the pull-down Help menu on that screen.
+* New: For `[mla_gallery]`, a special `mla_minimum` parameter lets you display an empty gallery unless a minimum number of items is selected.
+* New: The "MLA Advanced Custom Fields Example" plugin now supports ACF "Select" fields, mapping between the field label and field value on the Media/Assistant submenu table and the Bulk and Quick Areas.
+* New: The new "MLA Filename Issues Example" plugin creates a custom data source to help identify items with duplicate file names for cleanup consideration.
+* New: The term Parent column has been added to the Settings/Media Library Assistant Debug tab "Add Tax. Columns" results.
+* Fix: Custom Field Rules with an "Inactive" status are now excluded from Media/Assistant submenu table columns and the Quick and Bulk Edit areas.
+* Fix: An inconsistency in counting attachments that caused the Settings/Media Library Assistant IPTC/EXIF tab "Execute" and "Execute All Rules" actions to fail has been corrected.
+* Fix: An XMP metadata parsing error for empty "rdf:Description" values has been corrected.
+* Fix: The "MLA Custom Field Search Example" plugin has been updated to use the latest plugin settings class file, so the class can be shared with other example plugins.
+* Fix: The old "MLA ACF Checkbox Example" plugin has been flagged as obsolete, replaced by the more useful "MLA Advanced Custom Fields Example" plugin.
+* Fix: For the Media/Assistant Quick Edit Area, users with the 'unfilitered_html' permission can add any HTML tag to a custom field value.
+* Fix: Incorrect display of counts for `[mla_tag_cloud]` and `[mla_term_list]` terms with more than 1,000 assigned items has been corrected.
+* Fix: Toolbar cropping in the "Add media" popup window for WordPress versions before 5.8 has been corrected.
+* Fix: Toolbar cropping in the "Add media" popup window when the Disable Gutenberg (by Jeff Starr) plugin is active has been corrected.
+* Fix: For the "gallery in" and "MLA Gallery in" reporting, PHP "trigger_error" Warning messages have been converted to MLA debug logging messages.
+* Fix: For the "MLA Insert Fixit" example plugin, a PHP 8.0+ Deprecation Error has been resolved.
+
 = 2.97 =
 * New: A "Description" element has been added to the "Custom Fields" and "IPTC/EXIF" mapping rule definitions.
 * New: For `[mla_tag_cloud]`, the `current_item` and `current_item_class` are managed more or less automatically.
@@ -344,8 +363,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.97 =
-IMPORTANT: [mla_gallery] PHP "Warning: array_key_exists()..." messages have been eliminated. WP 5.8, cropping of MMMW top row image thubmnails fixed. Description element added to mapping rules. Four enhancements in all, four fixes.
+= 2.98 =
+New "Attachment File Metadata" meta box on the Media/Edit Media screen. Enhanced "MLA Advanced Custom Fields Example" and new "MLA Filename Issues Example" plugins.  Five enhancements in all, eleven fixes.
 
 == Other Notes ==
 

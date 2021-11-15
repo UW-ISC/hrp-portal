@@ -516,6 +516,16 @@ class MLAExamplePluginSettings101 {
 			return $this->current_settings[ $name ];
 		}
 
+		// Special names for debug logging
+		switch ( $name ) {
+			case 'request_settings':
+				return $this->request_settings;
+			case 'current_settings':
+				return $this->current_settings;
+			case 'default_settings':
+				return $this->default_settings;
+		}
+		
 		return NULL;
 	}
 

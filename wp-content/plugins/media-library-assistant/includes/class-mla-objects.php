@@ -155,6 +155,7 @@ class MLAObjects {
 			$columns[ 'attachments' ] = __( 'Attachments', 'media-library-assistant' );
 
 			if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_ADD_TAXONOMY_COLUMNS ) ) {
+				$columns[ 'parent' ] = __( 'Parent', 'media-library-assistant' );
 				$columns[ 'termid' ] = __( 'Term ID', 'media-library-assistant' );
 				$columns[ 'ttid' ] = __( 'Term-Tax ID', 'media-library-assistant' );
 			}
@@ -195,28 +196,26 @@ class MLAObjects {
 			return $filter_content;
 		}
 
-			$term = get_term( $term_id, $taxonomy );
-
-		if ( 'termid' === $column_name ) {
-			return (string) $term_id;
-		}
-		
-		if ( 'ttid' === $column_name ) {
-			if ( isset( $terms[ $term_id ] ) ) {
-				$term = $terms[ $term_id ];
-			} else {
-				$term = get_term( $term_id, $taxonomy );
-			}
-			
-			return (string) $term->term_taxonomy_id;
-		}
-		
-
-		if ( 'attachments' !== $column_name ) {
+		if ( !in_array( $column_name, array( 'attachments', 'parent', 'termid', 'ttid' ) ) ) {
 			return $current_value;
 		}
 
-		// Do setup tasks once per page load
+		if ( isset( $terms[ $term_id ] ) ) {
+			$term = $terms[ $term_id ];
+		} else {
+			$term = $terms[ $term_id ] = get_term( $term_id, $taxonomy );
+		}
+
+		switch ( $column_name ) {
+			case 'parent':
+				return (string) $term->parent;
+			case 'termid':
+				return (string) $term_id;
+			case 'ttid':
+				return (string) $term->term_taxonomy_id;
+		}
+		
+		// Do "attachments" setup tasks once per page load
 		if ( NULL == $tax_object ) {
 			// Adding or inline-editing a tag is done with AJAX, and there's no current screen object
 			if ( defined('DOING_AJAX') && DOING_AJAX ) {
@@ -240,7 +239,7 @@ class MLAObjects {
 		
 					$cloud = MLAShortcodes::mla_get_terms( array(
 						'taxonomy' => $taxonomy,
-						'fields' => 't.term_id, tt.term_taxonomy_id, t.name, t.slug, COUNT(p.ID) AS `count`',
+						'fields' => 't.term_id, tt.term_taxonomy_id, t.name, t.slug, tt.parent, COUNT(p.ID) AS `count`',
 						'number' => 0,
 						'no_orderby' => true
 					) );

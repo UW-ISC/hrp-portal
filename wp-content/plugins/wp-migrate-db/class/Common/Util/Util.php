@@ -748,7 +748,7 @@ class Util
         $site_details = array(
             'is_multisite'         => esc_html(is_multisite() ? 'true' : 'false'),
             'site_url'             => esc_html(addslashes(site_url())),
-            'home_url'             => esc_html(addslashes(home_url())),
+            'home_url'             => esc_html(addslashes(Util::home_url())),
             'prefix'               => esc_html($table_prefix),
             'uploads_baseurl'      => esc_html(addslashes(trailingslashit($uploads['baseurl']))),
             'uploads'              => $this->uploads_info(),
@@ -1216,5 +1216,62 @@ class Util
 
     public static function is_regex_pattern_valid($pattern) {
         return @preg_match($pattern, null) !== false;
+    }
+
+    /**
+     * Returns an array of table names with a new prefix.
+     *
+     * @param array  $tables
+     * 
+     * @param string $old_prefix
+     * 
+     * @param string $new_prefix
+     *
+     * @return array
+     */
+    public static function change_tables_prefix($tables, $old_prefix, $new_prefix)
+    {
+        $new_tables = [];
+        foreach($tables as $table) {
+            $new_tables[] = self::prefix_updater($table, $old_prefix, $new_prefix);
+        }
+        return $new_tables;
+    }
+
+    /**
+     * Modifies of table name to have a new prefix.
+     *
+     * @param string $table
+     * 
+     * @param string $old_prefix
+     * 
+     * @param string $new_prefix
+     *
+     * @return array
+     */
+    public static function prefix_updater($prefixed, $old_prefix, $new_prefix)
+    {
+        if (substr($prefixed, 0, strlen($old_prefix)) == $old_prefix) {
+            $str = substr($prefixed, strlen($old_prefix));
+            return $new_prefix . $str;
+        } 
+        return $prefixed;
+    }
+
+    /**
+     * Removes WPML home_url_filters if present.
+     *
+     * @return string
+     */
+    public static function home_url() {
+        global $wpml_url_filters;
+        if($wpml_url_filters) {
+            remove_filter('home_url', array($wpml_url_filters, 'home_url_filter'), -10, 4);
+        }
+        $home_url = home_url();
+        if($wpml_url_filters) {
+            add_filter('home_url', array($wpml_url_filters, 'home_url_filter'), -10, 4);
+        }
+        return $home_url;
     }
 }
