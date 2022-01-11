@@ -2008,7 +2008,7 @@ class wpDataTableConstructor
         }
 
         // Fill in with default value if requested
-        $column_data['default_value'] = $column_data['type'] === 'multiselect' ? sanitize_text_field(implode(", ", $column_data['default_value'])) : sanitize_text_field($column_data['default_value']);
+        $column_data['default_value'] = sanitize_text_field($column_data['default_value']);
         if ($column_data['fill_default'] == 1 && $column_data['default_value']) {
 
             $valueQuoute = "'";

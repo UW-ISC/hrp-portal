@@ -208,13 +208,10 @@ div.mce-widget button i.mce-i-wpdatachart{
     text-align: justify;
 }
 
-.wpdt-c #wdt-range-picker checkbox {
-    display: inline-block;
-}
-
 .wpdt-c #wdt-range-picker .checkbox {
     margin-bottom: 25px;
     margin-top: 15px;
+    display: inline-block;
 }
 
 .wpdt-c #wdt-range-picker .pick-row .checkbox {

@@ -532,6 +532,8 @@ class WDTConfigController {
                 $column->orig_header = sanitize_text_field($column->orig_header);
                 $column->linkTargetAttribute = sanitize_text_field($column->linkTargetAttribute);
                 $column->linkNoFollowAttribute = (int)($column->linkNoFollowAttribute);
+                $column->linkNoreferrerAttribute = (int)($column->linkNoreferrerAttribute);
+                $column->linkSponsoredAttribute = (int)($column->linkSponsoredAttribute);
                 $column->linkButtonAttribute = (int)$column->linkButtonAttribute;
                 $column->linkButtonLabel = sanitize_text_field($column->linkButtonLabel);
                 $column->linkButtonClass = sanitize_text_field($column->linkButtonClass);
@@ -913,6 +915,10 @@ class WDTConfigController {
             $feColumn ? $feColumn->linkTargetAttribute : '';
         $columnConfig['advanced_settings']['linkNoFollowAttribute'] =
             $feColumn ? $feColumn->linkNoFollowAttribute : 0;
+        $columnConfig['advanced_settings']['linkNoreferrerAttribute'] =
+            $feColumn ? $feColumn->linkNoreferrerAttribute : 0;
+        $columnConfig['advanced_settings']['linkSponsoredAttribute'] =
+            $feColumn ? $feColumn->linkSponsoredAttribute : 0;
         $columnConfig['advanced_settings']['linkButtonAttribute'] =
             $feColumn ? $feColumn->linkButtonAttribute : 0;
         $columnConfig['advanced_settings']['linkButtonLabel'] =
@@ -1092,6 +1098,10 @@ class WDTConfigController {
             $advancedSettings->linkTargetAttribute : '';
         $feColumn->linkNoFollowAttribute = isset($advancedSettings->linkNoFollowAttribute) ?
             $advancedSettings->linkNoFollowAttribute : 0;
+        $feColumn->linkNoreferrerAttribute = isset($advancedSettings->linkNoreferrerAttribute) ?
+            $advancedSettings->linkNoreferrerAttribute : 0;
+        $feColumn->linkSponsoredAttribute = isset($advancedSettings->linkSponsoredAttribute) ?
+            $advancedSettings->linkSponsoredAttribute : 0;
         $feColumn->linkButtonAttribute = isset($advancedSettings->linkButtonAttribute) ?
             $advancedSettings->linkButtonAttribute : 0;
         $feColumn->globalSearchColumn = isset($advancedSettings->globalSearchColumn) ?

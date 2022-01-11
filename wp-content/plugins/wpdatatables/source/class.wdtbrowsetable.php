@@ -72,9 +72,9 @@ class WDTBrowseTable extends WP_List_Table
         $query = "SELECT COUNT(*) FROM {$wpdb->prefix}wpdatatables";
         if (isset($_REQUEST['s'])) {
             if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_POST['s']) . "'";
+                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_POST['s']) . "%'";
+                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
             }
         }
         $count = $wpdb->get_var($query);
@@ -97,9 +97,9 @@ class WDTBrowseTable extends WP_List_Table
 
         if (isset($_REQUEST['s'])) {
             if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_POST['s']) . "'";
+                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_POST['s']) . "%'";
+                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
             }
         }
 
@@ -462,6 +462,11 @@ class WDTBrowseTable extends WP_List_Table
         $removable_query_args = wp_removable_query_args();
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg($removable_query_args, $current_url);
+        $search_term = '';
+        if( isset($_REQUEST['s'] ) ){
+            $search_term = sanitize_text_field($_REQUEST['s']);
+            $current_url = add_query_arg( 's', $search_term, $current_url );
+        }
 
         /**    Add current page to the array */
         if ($paged >= 1)
@@ -495,7 +500,7 @@ class WDTBrowseTable extends WP_List_Table
             $disable_last = true;
         }
 
-        require_once(WDT_ROOT_PATH . '/templates/admin/browse/pagination.inc.php');
+        require(WDT_ROOT_PATH . '/templates/admin/browse/pagination.inc.php');
     }
 
     /**

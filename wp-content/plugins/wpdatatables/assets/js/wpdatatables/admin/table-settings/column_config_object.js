@@ -288,6 +288,16 @@ var WDTColumn = function (column, parent_table) {
     this.linkNoFollowAttribute = 0;
 
     /**
+     * Set NOREFERRER link
+     */
+    this.linkNoreferrerAttribute = 0;
+
+    /**
+     * Set SPONSORED link
+     */
+    this.linkSponsoredAttribute = 0;
+
+    /**
      *  Open link column as a button
      */
     this.linkButtonAttribute = 0;
@@ -340,6 +350,8 @@ var WDTColumn = function (column, parent_table) {
         this.id_column = column.id_column || 0;
         this.linkTargetAttribute = column.linkTargetAttribute || '_self';
         this.linkNoFollowAttribute = column.linkNoFollowAttribute || 0;
+        this.linkNoreferrerAttribute = column.linkNoreferrerAttribute || 0;
+        this.linkSponsoredAttribute = column.linkSponsoredAttribute || 0;
         this.linkButtonAttribute = column.linkButtonAttribute || 0;
         this.linkButtonLabel = column.linkButtonLabel || null;
         this.linkButtonClass = column.linkButtonClass || null;
@@ -1063,6 +1075,8 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-column-width').val(this.width);
     jQuery('#wdt-link-target-attribute').prop('checked', this.linkTargetAttribute === '_self' ? 0 : 1);
     jQuery('#wdt-link-nofollow-attribute').prop('checked', this.linkNoFollowAttribute).change();
+    jQuery('#wdt-link-noreferrer-attribute').prop('checked', this.linkNoreferrerAttribute).change();
+    jQuery('#wdt-link-sponsored-attribute').prop('checked', this.linkSponsoredAttribute).change();
     jQuery('#wdt-link-button-attribute').prop('checked', this.linkButtonAttribute).change();
     jQuery('#wdt-link-button-label').val(this.linkButtonLabel);
     jQuery('#wdt-link-button-class').val(this.linkButtonClass);
@@ -1350,6 +1364,8 @@ WDTColumn.prototype.applyChanges = function () {
     this.css_class = jQuery('#wdt-column-css-class').val();
     this.linkTargetAttribute = jQuery('#wdt-link-target-attribute').is(':checked') ? '_blank' : '_self';
     this.linkNoFollowAttribute = jQuery('#wdt-link-nofollow-attribute').is(':checked') ? 1 : 0;
+    this.linkNoreferrerAttribute = jQuery('#wdt-link-noreferrer-attribute').is(':checked') ? 1 : 0;
+    this.linkSponsoredAttribute = jQuery('#wdt-link-sponsored-attribute').is(':checked') ? 1 : 0;
     this.linkButtonAttribute = jQuery('#wdt-link-button-attribute').is(':checked') ? 1 : 0;
     this.linkButtonLabel = jQuery('#wdt-link-button-label').val();
     this.linkButtonClass = jQuery('#wdt-link-button-class').val();
@@ -1490,6 +1506,8 @@ WDTColumn.prototype.getJSON = function () {
         id_column: this.id_column,
         linkTargetAttribute: this.linkTargetAttribute,
         linkNoFollowAttribute: this.linkNoFollowAttribute,
+        linkNoreferrerAttribute: this.linkNoreferrerAttribute,
+        linkSponsoredAttribute: this.linkSponsoredAttribute,
         linkButtonAttribute: this.linkButtonAttribute,
         linkButtonLabel: this.linkButtonLabel,
         linkButtonClass: this.linkButtonClass,

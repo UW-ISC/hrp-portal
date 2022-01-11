@@ -35,6 +35,8 @@ function wdtGetAjaxData() {
     $idColumn = '';
     $linkTargetAttribute = array();
     $linkNoFollowAttribute = array();
+    $linkNoreferrerAttribute = array();
+    $linkSponsoredAttribute = array();
     $linkButtonAttribute = array();
     $linkButtonLabel = array();
     $linkButtonClass = array();
@@ -121,6 +123,8 @@ function wdtGetAjaxData() {
         $searchInSelectBoxEditing[$column->orig_header] = isset($advancedSettings->searchInSelectBoxEditing) ? $advancedSettings->searchInSelectBoxEditing : null;
         $linkTargetAttribute[$column->orig_header] = isset($advancedSettings->linkTargetAttribute) ? $advancedSettings->linkTargetAttribute : null;
         $linkNoFollowAttribute[$column->orig_header] = isset($advancedSettings->linkNoFollowAttribute) ? $advancedSettings->linkNoFollowAttribute : null;
+        $linkNoreferrerAttribute[$column->orig_header] = isset($advancedSettings->linkNoreferrerAttribute) ? $advancedSettings->linkNoreferrerAttribute : null;
+        $linkSponsoredAttribute[$column->orig_header] = isset($advancedSettings->linkSponsoredAttribute) ? $advancedSettings->linkSponsoredAttribute : null;
         $linkButtonAttribute[$column->orig_header] = isset($advancedSettings->linkButtonAttribute) ? $advancedSettings->linkButtonAttribute : null;
         $linkButtonLabel[$column->orig_header] = isset($advancedSettings->linkButtonLabel) ? $advancedSettings->linkButtonLabel : null;
         $linkButtonClass[$column->orig_header] = isset($advancedSettings->linkButtonClass) ? $advancedSettings->linkButtonClass : null;
@@ -203,6 +207,8 @@ function wdtGetAjaxData() {
         'input_types'         => $columnEditorTypes,
         'linkTargetAttribute' => $linkTargetAttribute,
         'linkNoFollowAttribute' => $linkNoFollowAttribute,
+        'linkNoreferrerAttribute' => $linkNoreferrerAttribute,
+        'linkSponsoredAttribute' => $linkSponsoredAttribute,
         'linkButtonAttribute' => $linkButtonAttribute,
         'linkButtonLabel'     => $linkButtonLabel,
         'linkButtonClass'     => $linkButtonClass,

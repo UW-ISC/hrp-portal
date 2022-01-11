@@ -488,7 +488,7 @@
                                 <h4 class="c-title-color m-b-2">
                                     <?php _e('Values list', 'wpdatatables'); ?>
                                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                       title="<?php _e('Enter the possible values for this column in this list, separate by pressing ENTER or comma. Click "Read from table" to fetch the list from existing column values. Values will be used in selectbox and checkbox filters and editors for the column.', 'wpdatatables'); ?>"></i>
+                                       title="<?php _e('Enter the possible values for this column in this list, separate by pressing ENTER or comma. Click Read from table to fetch the list from existing column values. Values will be used in selectbox and checkbox filters and editors for the column.', 'wpdatatables'); ?>"></i>
                                     <button class="btn btn-danger btn-xs pull-right"
                                             id="wdt-column-values-reset"><i class="wpdt-icon-exclamation-triangle"></i><?php _e('Reset', 'wpdatatables'); ?></button>
                                     <button class="btn btn-xs pull-right"
@@ -700,6 +700,38 @@
                                         <input id="wdt-link-nofollow-attribute" type="checkbox">
                                         <label for="wdt-link-nofollow-attribute"
                                                class="ts-label"><?php _e('Make the link a nofollow link', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6 wdt-link-noreferrer-attribute-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Make NOREFERRER link', 'wpdatatables'); ?>
+                                    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('Set the link to a noreferrer link', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-link-noreferrer-attribute" type="checkbox">
+                                        <label for="wdt-link-noreferrer-attribute"
+                                               class="ts-label"><?php _e('Make the link a noreferrer link', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-sm-6 wdt-link-sponsored-attribute-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php _e('Make SPONSORED link', 'wpdatatables'); ?>
+                                    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php _e('Set the link to a sponsored link', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-link-sponsored-attribute" type="checkbox">
+                                        <label for="wdt-link-sponsored-attribute"
+                                               class="ts-label"><?php _e('Make the link a sponsored link', 'wpdatatables'); ?></label>
                                     </div>
                                 </div>
 

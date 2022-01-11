@@ -22,7 +22,7 @@ var duplicate_table_id = '';
         /**
          * Search tables and charts in backend
          */
-        $("input#search_id-search-input").on("keyup", _.debounce(function() {
+        $("input#search_id-search-input").on("keyup input", _.debounce(function() {
                 $("button#search-submit").click();
             }, 800)
         );

@@ -13583,10 +13583,12 @@ input:focus {
     background: #FFF !important;
     color: #2196F3;
 }
-.wpdt-c .wdt-datetimepicker-modal .timepicker .timepicker-picker .table-condensed tr:nth-child(2) {
+.wpdt-c .wdt-datetimepicker-modal .timepicker .timepicker-picker .table-condensed tr:nth-child(2) td {
     background: #2196F3 !important;
-    color: #FFF;
-    border-radius: unset !important;
+    color: #FFF !important;
+}
+.wpdt-c .handsontableInputHolder .bootstrap-datetimepicker-widget table td span {
+    width: 18px !important;
 }
 
 .wpdt-c .wdt-datetimepicker-modal > ul li{

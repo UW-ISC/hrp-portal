@@ -775,12 +775,20 @@
                             } else {
                                 newValue = value;
                             }
-                            newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), partClass + newValue);
+                            if (newValue != ''){
+                                newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), partClass + newValue);
+                            } else {
+                                newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), '');
+                            }
                         } else {
                             if (partClass == 'wpdt-ff-' || partClass == 'wpdt-fs-') {
                                 newClassName = cell.className + ' ' + partClass + String(value).padStart(6, '0');
                             } else {
-                                newClassName = cell.className + ' ' + partClass + value;
+                                if (value != ''){
+                                    newClassName = cell.className + ' ' + partClass + value;
+                                } else {
+                                    newClassName = cell.className + ' ';
+                                }
                             }
                         }
                         wpdtEditor.setCellMeta(rowIndex, columnIndex, 'className', newClassName.trimStart());
@@ -1038,7 +1046,7 @@
                         hsla: false,
                         hsva: false,
                         cmyk: false,
-                        clear: false,
+                        clear: true ,
                         input: true,
                         save: true
                     }
@@ -1061,6 +1069,9 @@
                 jQuery(element).css("border-bottom-color", color.toHEXA().toString(0));
                 selectedColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
                 addDynamicStyle(selectedCells, selectedColor, partClass);
+            }).on('clear', color => {
+                jQuery(element).css("border-bottom-color", "");
+                addDynamicStyle(selectedCells, '', partClass);
             })
         }
 
@@ -1352,6 +1363,8 @@
                 $('#wpdt-link-text').val(linkData.data('link-text'));
                 $("#wpdt-link-target-attribute").prop("checked", linkData.data('link-target') === true);
                 $("#wpdt-link-nofollow-attribute").prop("checked", linkData.data('link-nofollow') === true);
+                $("#wpdt-link-noreferrer-attribute").prop("checked", linkData.data('link-noreferrer') === true);
+                $("#wpdt-link-sponsored-attribute").prop("checked", linkData.data('link-sponsored') === true);
                 $("#wpdt-link-button-attribute").prop("checked", linkData.data('link-btn-status') === true);
                 if (linkData.data('link-btn-status') === true) {
                     $('div.wpdt-link-button-class-block').show();
@@ -1365,6 +1378,8 @@
                 $('#wpdt-link-text').val('');
                 $("#wpdt-link-target-attribute").prop("checked", false);
                 $("#wpdt-link-nofollow-attribute").prop("checked", false);
+                $("#wpdt-link-noreferrer-attribute").prop("checked", false);
+                $("#wpdt-link-sponsored-attribute").prop("checked", false);
                 $("#wpdt-link-button-attribute").prop("checked", false);
                 $('div.wpdt-link-button-text-block').hide();
                 $('div.wpdt-link-button-class-block').hide();
@@ -1374,7 +1389,7 @@
             $('#wdt-backend-insert-link-button').on('click', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                let targetAttr, formdata, dataAttr, selectedRange = wpdtEditor.getSelectedRange()[0],
+                let targetAttr, rel, nofollowAttr, noreferrerAttr, sponsoredAttr,  formdata, dataAttr, selectedRange = wpdtEditor.getSelectedRange()[0],
                     highlightRow = selectedRange.highlight.row,
                     highlightCol = selectedRange.highlight.col,
                     linkUrl = $('#wpdt-link-url'),
@@ -1382,13 +1397,18 @@
                     linkText = $('#wpdt-link-text'),
                     linkTextValue = linkText.val(),
                     linkTarget = $("#wpdt-link-target-attribute").is(":checked") || 0,
-                    linkNoFollow = $("#wpdt-link-nofollow-attribute").is(":checked") || 0,
+                    linkNofollow = $("#wpdt-link-nofollow-attribute").is(":checked") || 0,
+                    linkNoreferrer = $("#wpdt-link-noreferrer-attribute").is(":checked") || 0,
+                    linkSponsored = $("#wpdt-link-sponsored-attribute").is(":checked") || 0,
                     linkButtonStatus = $("#wpdt-link-button-attribute").is(":checked") || 0,
                     buttonClass = $("#wpdt-button-class").val(),
                     pattern = new RegExp('^(https?)://');
 
                 targetAttr = linkTarget ? "_blank" : "_self";
-                noFollowAttr = linkNoFollow ? 'rel="nofollow"' : '';
+                nofollowAttr = linkNofollow ? ' nofollow ' : '';
+                noreferrerAttr = linkNoreferrer ? ' noreferrer ' : '';
+                sponsoredAttr = linkSponsored ? ' sponsored ' : '';
+                rel = nofollowAttr + noreferrerAttr + sponsoredAttr;
 
                 if (linkUrlValue == '') {
                     linkUrl.closest('.col-sm-12').siblings('.error-msg').show();
@@ -1409,15 +1429,17 @@
                 dataAttr += ' data-link-url="' + linkUrl + '"';
                 dataAttr += ' data-link-text="' + linkTextValue + '"';
                 dataAttr += ' data-link-target="' + linkTarget + '"';
-                dataAttr += ' data-link-nofollow="' + linkNoFollow + '"';
+                dataAttr += ' data-link-nofollow="' + linkNofollow + '"';
+                dataAttr += ' data-link-noreferrer="' + linkNoreferrer + '"';
+                dataAttr += ' data-link-sponsored="' + linkSponsored + '"';
                 dataAttr += ' data-link-btn-status="' + linkButtonStatus + '"';
                 dataAttr += ' data-link-btn-class="' + buttonClass + '"';
                 dataAttr += ' data-link-content="wpdt-link-content"';
 
                 if (!linkButtonStatus) {
-                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + noFollowAttr + ' target="' + targetAttr + '"' + dataAttr + '>' + linkTextValue + '</a>';
+                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + ' rel="' + rel + '"' + ' target="' + targetAttr + '"' + dataAttr + '>' + linkTextValue + '</a>';
                 } else {
-                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + noFollowAttr + ' target="' + targetAttr + '" ' + dataAttr + '><button class="' + buttonClass + '">' + linkTextValue + '</button></a>';
+                    formdata = '<a class="wpdt-link-content" href="' + linkUrl + '" ' + ' rel="' + rel + '"' + ' target="' + targetAttr + '" ' + dataAttr + '><button class="' + buttonClass + '">' + linkTextValue + '</button></a>';
                 }
 
                 wpdtEditor.setDataAtCell(highlightRow, highlightCol, formdata);
