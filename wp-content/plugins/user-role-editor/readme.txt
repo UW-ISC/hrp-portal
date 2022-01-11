@@ -2,10 +2,10 @@
 Contributors: shinephp
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=vladimir%40shinephp%2ecom&lc=RU&item_name=ShinePHP%2ecom&item_number=User%20Role%20Editor%20WordPress%20plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: user, role, editor, security, access, permission, capability
-Requires at least: 4.0
-Tested up to: 5.8.1
-Stable tag: 4.60.2
-Requires PHP: 5.6
+Requires at least: 4.4
+Tested up to: 5.8.2
+Stable tag: 4.61
+Requires PHP: 7.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,6 +81,13 @@ https://translate.wordpress.org/projects/wp-plugins/user-role-editor/
 
 == Changelog =
 
+= [4.61] 28.12.2021 =
+* Update: WordPress 4.4 is marked as required.
+* Update: PHP 7.4 is marked as required.
+* Update: "Settings->User Role Editor->Tools->Reset" button is additionally protected from the unintended/accidental usage by text input field. Manual input of "Permanently delete all custom user roles and capabilities" text is required to enable the "Reset" button.
+* Update: Partial code review and refactoring according with WordPress & PHP coding standards.
+* Fix: "Users->selected user->Capabilities" page: 'select all' checkbox did not work.
+
 = [4.60.2] 20.09.2021 =
 * Update: Marked as compatible with WordPress 5.8.1
 * Fix: Multisite: URE_Editor::is_full_network_sync() returned FALSE, instead TRUE for the AJAX call, while call was made from the Network Admin (wp-admin/network/).
@@ -104,7 +111,10 @@ I am ready to answer on your questions about plugin usage. Use [plugin page comm
 
 == Upgrade Notice ==
 
-= [4.60.2] 20.09.2021 =
-* Update: Marked as compatible with WordPress 5.8.1
-* Fix: Multisite: URE_Editor::is_full_network_sync() returned FALSE, instead TRUE for the AJAX call, while call was made from the Network Admin (wp-admin/network/).
+= [4.61] 28.12.2021 =
+* Update: WordPress 4.4 is marked as required.
+* Update: PHP 7.4 is marked as required.
+* Update: "Settings->User Role Editor->Tools->Reset" button is additionally protected from the unintended/accidental usage by text input field. Manual input of "Permanently delete all custom user roles and capabilities" text is required to enable the "Reset" button.
+* Update: Partial code review and refactoring according with WordPress & PHP coding standards.
+* Fix: "Users->selected user->Capabilities" page: 'select all' checkbox did not work.
 
