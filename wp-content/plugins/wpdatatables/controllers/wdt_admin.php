@@ -142,28 +142,29 @@ function wdtAdminEnqueue($hook)
         'wpdatatables_page_wpdatatables-add-ons'))) {
 
         add_filter('admin_body_class', 'wdtAddBodyClass');
+
+        wp_enqueue_style('wdt-color-pickr-classic', WDT_CSS_PATH . 'color-pickr/classic-theme.min.css', array(), WDT_CURRENT_VERSION);
+
+        wp_enqueue_script('media-upload');
+        wp_enqueue_media();
     }
 
     wp_register_style('wdt-dragula', WDT_CSS_PATH . 'dragula/dragula.min.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-browse-css', WDT_CSS_PATH . 'admin/browse.css', array(), WDT_CURRENT_VERSION);
     wp_register_style('wdt-wpdatatables', WDT_CSS_PATH . 'wpdatatables.min.css', array(), WDT_CURRENT_VERSION);
 
+    wp_enqueue_style('wdt-admin', WDT_CSS_PATH . 'admin/admin.css', array(), WDT_CURRENT_VERSION);
+
     wp_register_script('wdt-jsrender', WDT_JS_PATH . 'jsrender/jsrender.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-dragula', WDT_JS_PATH . 'dragula/dragula.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-ace', WDT_JS_PATH . 'ace/ace.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-color-pickr', WDT_JS_PATH . 'color-pickr/pickr.min.js', array(), WDT_CURRENT_VERSION, true);
+    wp_register_script('wdt-color-pickr', WDT_JS_PATH . 'color-pickr/pickr.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-color-pickr-init', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/wdt.color-picker-init.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-doc-js', WDT_JS_PATH . 'wpdatatables/admin/doc.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
 
-    wp_enqueue_style('wdt-admin', WDT_CSS_PATH . 'admin/admin.css', array(), WDT_CURRENT_VERSION);
-    wp_enqueue_style('wdt-color-pickr-classic', WDT_CSS_PATH . 'color-pickr/classic-theme.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_script('wdt-rating', WDT_JS_PATH . 'wpdatatables/admin/wdtRating.js', array('jquery'), WDT_CURRENT_VERSION, true);
-
-    wp_enqueue_script('media-upload');
-
-    wp_enqueue_media();
 
     wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
     wp_localize_script('wdt-common', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
@@ -279,6 +280,7 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-responsive', WDT_JS_PATH . 'responsive/datatables.responsive.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-column-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/column_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-table-config', WDT_JS_PATH . 'wpdatatables/admin/table-settings/table_config_object.js', array(), WDT_CURRENT_VERSION, true);
@@ -326,6 +328,7 @@ function wdtConstructorEnqueue()
     wp_enqueue_script('wdt-jsrender');
     wp_enqueue_script('wdt-dragula');
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-funcs-js');
     wp_enqueue_script('wdt-constructor-main-js', WDT_JS_PATH . 'wpdatatables/admin/constructor/wdt.constructor.js', array(), WDT_CURRENT_VERSION, true);
@@ -372,6 +375,7 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wpdatatables/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wpdatatables/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
@@ -393,6 +397,7 @@ function wdtSettingsEnqueue()
     wp_enqueue_style('wdt-settings-css', WDT_CSS_PATH . 'admin/settings.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-common');
+    wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-plugin-config', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/plugin-settings/plugin_config_object.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-settings-main-js', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/plugin-settings/main.js', array(), WDT_CURRENT_VERSION, true);

@@ -48,6 +48,7 @@ class FormulaWDTColumn extends WDTColumn
      */
     public function prepareCellOutput($content)
     {
+        $content = apply_filters('wpdatatables_filter_formula_cell_before_formatting', $content, $this->getParentTable()->getWpId());
 
         $number_format = get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1;
         $decimal_places = $this->getDecimalPlaces() != -1 ? $this->getDecimalPlaces() : get_option('wdtDecimalPlaces');
@@ -68,8 +69,7 @@ class FormulaWDTColumn extends WDTColumn
             );
         }
 
-        $formattedValue = apply_filters('wpdatatables_filter_formula_cell', $formattedValue, $this->getParentTable()->getWpId());
-        return $formattedValue;
+        return apply_filters('wpdatatables_filter_formula_cell', $formattedValue, $this->getParentTable()->getWpId());
     }
 
     /**

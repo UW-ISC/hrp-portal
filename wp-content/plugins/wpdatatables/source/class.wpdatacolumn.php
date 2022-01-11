@@ -915,6 +915,10 @@ class WDTColumn {
             );
         }
 
+        $jsFilterDef->values = apply_filters(
+            'wpdatatables_filter_js_filtering_definition_values',
+            $jsFilterDef->values, $this->getInputType(), $this->getOriginalHeader(), $this->getParentTable()->getWpId(), $this);
+
         $jsFilterDef->origHeader = $this->getOriginalHeader();
         $jsFilterDef->displayHeader = $this->getTitle();
         $jsFilterDef->possibleValuesAddEmpty = $this->getPossibleValuesAddEmpty();
@@ -928,7 +932,9 @@ class WDTColumn {
         $jsFilterDef->linkButtonLabel = $this->getLinkButtonLabel();
         $jsFilterDef->rangeSlider = $this->getRangeSlider();
 
-        return $jsFilterDef;
+        return apply_filters(
+            'wpdatatables_filter_js_filtering_definition',
+            $jsFilterDef, $this->getInputType(), $this->getOriginalHeader(), $this->getParentTable()->getWpId(), $this);
     }
 
     /**
@@ -987,6 +993,10 @@ class WDTColumn {
             }
         }
 
+        $jsEditingDef->values = apply_filters(
+            'wpdatatables_filter_js_editing_definition_values',
+            $jsEditingDef->values, $this->getInputType(), $this->getOriginalHeader(), $this->getParentTable()->getWpId(), $this);
+
         $jsEditingDef->origHeader = $this->getOriginalHeader();
         $jsEditingDef->editorInputType = $this->getInputType();
         $jsEditingDef->defaultValue = $this->getEditingDefaultValue();
@@ -997,7 +1007,9 @@ class WDTColumn {
         $jsEditingDef->foreignKeyRule = $this->getForeignKeyRule();
         $jsEditingDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
 
-        return $jsEditingDef;
+        return apply_filters(
+            'wpdatatables_filter_js_editing_definition',
+            $jsEditingDef, $this->getInputType(), $this->getOriginalHeader(), $this->getParentTable()->getWpId(), $this);
     }
 
     /**

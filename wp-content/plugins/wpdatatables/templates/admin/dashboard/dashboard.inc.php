@@ -263,20 +263,12 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            A major update with a couple of new features, bug fixes, and stability improvements:
+                            A minor update with bug fix:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added new option to show/hide search field in select-box/multiselect-box filters.</li>
-                                <li><strong>Feature:</strong> Added new option to show/hide search field in Single-value select-box/Multi-value select-box in edit modal.</li>
-                                <li><strong>Feature:</strong> Added new options for simple table: "Remove borders", "Border collapse" and "Border spacing".</li>
-                                <li><strong>Feature:</strong> Added new option "Page Orientation" for PDF export reports.</li>
-                                <li><strong>Feature:</strong> Added new option "Paper Size" for PDF export reports.</li>
-                                <li><strong>Improvement:</strong> Improved checking for existing PHP extension - zlib on the server.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with double loading for multiselect filter.</li>
-                                <li>Compatibility with WordPress 5.8.1 approved.</li>
-                                <li>Other small bug fixes and stability improvements.</li>
+                                <li><strong>Bugfix:</strong> Fixed issue with showing tables from Google sheet</li>
                             </ul>
                         </div>
 

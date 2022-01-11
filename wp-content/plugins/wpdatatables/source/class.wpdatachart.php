@@ -1631,23 +1631,31 @@ class WPDataChart {
                                 break;
                             case 'int':
                                 if (has_filter('wpdatatables_filter_int_cell_data_in_charts')) {
-                                    $row[$columnKey] = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $row[$columnKey], $columnKey, $this->_wpdatatable->getWpId());
-                                    $return_data_row[] = $row[$columnKey];
+                                    $row[$columnKey] = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $row[$columnKey], $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($row[$columnKey])) {
+                                        $return_data_row[] = (float)$row[$columnKey];
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
                                 } else {
                                     $return_data_row[] = (float)$row[$columnKey];
                                 }
                                 break;
                             case 'float':
                                 if (has_filter('wpdatatables_filter_float_cell_data_in_charts')) {
-                                    $row[$columnKey] = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $row[$columnKey], $columnKey, $this->_wpdatatable->getWpId());
-                                    if ($decimalPlaces != -1){
-                                        $return_data_row[] = number_format(
-                                            ($row[$columnKey]),
-                                            $decimalPlaces,
-                                            '.',
-                                            $thousandsSeparator ? '' : '.');
-                                    }else {
-                                        $return_data_row[] = $row[$columnKey];
+                                    $row[$columnKey] = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $row[$columnKey], $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($row[$columnKey])) {
+                                        if ($decimalPlaces != -1) {
+                                            $return_data_row[] = (float)number_format(
+                                                (float)($row[$columnKey]),
+                                                $decimalPlaces,
+                                                '.',
+                                                $thousandsSeparator ? '' : '.');
+                                        } else {
+                                            $return_data_row[] = (float)$row[$columnKey];
+                                        }
+                                    } else {
+                                        $return_data_row[] = null;
                                     }
                                 } else {
                                     if ($decimalPlaces != -1){
@@ -1721,22 +1729,30 @@ class WPDataChart {
                                 );
                                 break;
                             case 'int':
-                                 if (has_filter('wpdatatables_filter_int_cell_data_in_charts')) {
-                                     $cellData = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey, $this->_wpdatatable->getWpId());
-                                     $return_data_row[] = $cellData;
-                                 }else {
-                                     $return_data_row[] = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);
-                                 }
+                                if (has_filter('wpdatatables_filter_int_cell_data_in_charts')) {
+                                    $cellData = apply_filters('wpdatatables_filter_int_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($cellData)) {
+                                        $return_data_row[] = (float)$cellData;
+                                    } else {
+                                        $return_data_row[] = null;
+                                    }
+                                }else {
+                                    $return_data_row[] = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                }
                                 break;
                             case 'float':
                                 if (has_filter('wpdatatables_filter_float_cell_data_in_charts')) {
-                                    $floatNumber = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex),$columnKey , $this->_wpdatatable->getWpId());
-                                    if ($decimalPlaces != -1){
-                                        $return_data_row[] = number_format ($floatNumber, $decimalPlaces);
-                                    }else {
-                                        $return_data_row[] = $floatNumber;
+                                    $floatNumber = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey , $this->getId(), $this->_wpdatatable->getWpId());
+                                    if (!is_null($floatNumber)) {
+                                        if ($decimalPlaces != -1) {
+                                            $return_data_row[] = (float)number_format($floatNumber, $decimalPlaces);
+                                        } else {
+                                            $return_data_row[] = $floatNumber;
+                                        }
+                                    } else {
+                                        $return_data_row[] = null;
                                     }
-                                }else {
+                                } else {
                                     $floatNumber= (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);;
                                     if ($decimalPlaces != -1){
                                         $return_data_row[] = (float)number_format ($floatNumber, $decimalPlaces);
@@ -2257,7 +2273,8 @@ class WPDataChart {
                                 $this->_render_data['options']['series'][$i - 1]['color'] : $colors[($i - 1) % 10],
                             'borderWidth' => 1,
                             'data' => array(),
-                            'lineTension' => ($this->getCurveType()) ? 0.4 : 0
+                            'lineTension' => ($this->getCurveType()) ? 0.4 : 0,
+                            'fill' => $this->_type != 'chartjs_line_chart'
                         );
                     }
                     foreach ($this->_render_data['rows'] as $row) {

@@ -1174,6 +1174,8 @@ class WPDataTable {
             $dataColumnProperties['editingDefaultValue'] =      isset($wdtParameters['editingDefaultValue'][$key]) ? $wdtParameters['editingDefaultValue'][$key] : '';
             $dataColumnProperties['linkTargetAttribute'] =      isset($wdtParameters['linkTargetAttribute'][$key]) ? $wdtParameters['linkTargetAttribute'][$key] : '';
             $dataColumnProperties['linkNoFollowAttribute'] =    isset($wdtParameters['linkNoFollowAttribute'][$key]) ? $wdtParameters['linkNoFollowAttribute'][$key] : false;
+            $dataColumnProperties['linkNoreferrerAttribute'] = isset($wdtParameters['linkNoreferrerAttribute'][$key]) ? $wdtParameters['linkNoreferrerAttribute'][$key] : false;
+            $dataColumnProperties['linkSponsoredAttribute'] = isset($wdtParameters['linkSponsoredAttribute'][$key]) ? $wdtParameters['linkSponsoredAttribute'][$key] : false;
             $dataColumnProperties['linkButtonAttribute'] =      isset($wdtParameters['linkButtonAttribute'][$key]) ? $wdtParameters['linkButtonAttribute'][$key] : false;
             $dataColumnProperties['linkButtonLabel'] =          isset($wdtParameters['linkButtonLabel'][$key]) ? $wdtParameters['linkButtonLabel'][$key] : '';
             $dataColumnProperties['linkButtonClass'] =          isset($wdtParameters['linkButtonClass'][$key]) ? $wdtParameters['linkButtonClass'][$key] : '';
@@ -2573,6 +2575,8 @@ class WPDataTable {
                 'decimalPlaces' => $wdtParameters['decimalPlaces'][$dataColumn_key],
                 'linkTargetAttribute' => $wdtParameters['linkTargetAttribute'][$dataColumn_key],
                 'linkNoFollowAttribute' => $wdtParameters['linkNoFollowAttribute'][$dataColumn_key],
+                'linkNoreferrerAttribute' => $wdtParameters['linkNoreferrerAttribute'][$dataColumn_key],
+                'linkSponsoredAttribute' => $wdtParameters['linkSponsoredAttribute'][$dataColumn_key],
                 'linkButtonAttribute' => $wdtParameters['linkButtonAttribute'][$dataColumn_key],
                 'linkButtonLabel' => $wdtParameters['linkButtonLabel'][$dataColumn_key],
                 'linkButtonClass' => $wdtParameters['linkButtonClass'][$dataColumn_key],
@@ -2971,6 +2975,8 @@ class WPDataTable {
             'userIdColumnHeader' => NULL,
             'linkTargetAttribute' => array(),
             'linkNoFollowAttribute' => array(),
+            'linkNoreferrerAttribute' => array(),
+            'linkSponsoredAttribute' => array(),
             'linkButtonAttribute' => array(),
             'linkButtonLabel' => array(),
             'linkButtonClass' => array(),
@@ -3018,6 +3024,8 @@ class WPDataTable {
                 $returnArray['sorting'][$column->orig_header] = isset($column->sorting) ? $column->sorting : null;
                 $returnArray['linkTargetAttribute'][$column->orig_header]= isset($column->linkTargetAttribute) ? $column->linkTargetAttribute : null;
                 $returnArray['linkNoFollowAttribute'][$column->orig_header] = isset($column->linkNoFollowAttribute) ? $column->linkNoFollowAttribute : null;
+                $returnArray['linkNoreferrerAttribute'][$column->orig_header] = isset($column->linkNoreferrerAttribute) ? $column->linkNoreferrerAttribute : null;
+                $returnArray['linkSponsoredAttribute'][$column->orig_header] = isset($column->linkSponsoredAttribute) ? $column->linkSponsoredAttribute : null;
                 $returnArray['linkButtonAttribute'][$column->orig_header]= isset($column->linkButtonAttribute) ? $column->linkButtonAttribute : null;
                 $returnArray['linkButtonLabel'][$column->orig_header]= isset($column->linkButtonLabel) ? $column->linkButtonLabel : null;
                 $returnArray['linkButtonClass'][$column->orig_header]= isset($column->linkButtonClass) ? $column->linkButtonClass : null;
@@ -3177,6 +3185,12 @@ class WPDataTable {
         }
         if (isset($columnData['linkNoFollowAttribute'])) {
             $params['linkNoFollowAttribute'] = $columnData['linkNoFollowAttribute'];
+        }
+        if (isset($columnData['linkNoreferrerAttribute'])) {
+            $params['linkNoreferrerAttribute'] = $columnData['linkNoreferrerAttribute'];
+        }
+        if (isset($columnData['linkSponsoredAttribute'])) {
+            $params['linkSponsoredAttribute'] = $columnData['linkSponsoredAttribute'];
         }
         if (isset($columnData['linkButtonAttribute'])){
             $params['linkButtonAttribute'] = $columnData['linkButtonAttribute'];

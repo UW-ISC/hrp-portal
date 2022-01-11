@@ -23,6 +23,11 @@ add_filter( 'relevanssi_hits_to_show', 'relevanssi_current_page_hits', PHP_INT_M
  */
 function relevanssi_log_click() {
 	global $post, $relevanssi_variables, $wpdb;
+
+	if ( ! relevanssi_is_ok_to_log() ) {
+		return;
+	}
+
 	isset( $_REQUEST['_rt_nonce'] ) &&
 		wp_verify_nonce(
 			$_REQUEST['_rt_nonce'],
@@ -95,6 +100,9 @@ function relevanssi_add_tracking( string $permalink, $link_post = null ) : strin
 		return $permalink;
 	}
 	if ( empty( get_search_query() ) ) {
+		return $permalink;
+	}
+	if ( ! relevanssi_is_ok_to_log() ) {
 		return $permalink;
 	}
 	if ( ! $link_post ) {
@@ -874,7 +882,7 @@ function relevanssi_remove_clicktracking() {
 	<script type="text/javascript">
 	var relevanssi_rt_regex = /(&|\?)_(rt|rt_nonce)=(\w+)/g
 	var newUrl = window.location.search.replace(relevanssi_rt_regex, '')
-	history.replaceState(null, null, window.location.pathname + newUrl)
+	history.replaceState(null, null, window.location.pathname + newUrl + window.location.hash)
 	</script>
 	<?php
 }
@@ -890,6 +898,6 @@ function relevanssi_remove_clicktracking() {
 function relevanssi_insights_link( $query ) : string {
 	global $relevanssi_variables;
 	$insights_url = admin_url( 'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) ) . '&insights=' . rawurlencode( $query->query );
-	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), $query->query );
+	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), esc_html( $query->query ) );
 	return $insights;
 }
