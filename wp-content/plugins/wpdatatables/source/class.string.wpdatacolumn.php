@@ -17,11 +17,12 @@ class StringWDTColumn extends WDTColumn
 
     public function prepareCellOutput($content)
     {
+        $content = apply_filters('wpdatatables_filter_string_cell_before_formatting', $content, $this->getParentTable()->getWpId());
+
         if (get_option('wdtParseShortcodes')) {
             $content = do_shortcode($content);
         }
-        $content = apply_filters('wpdatatables_filter_string_cell', $content, $this->getParentTable()->getWpId());
-        return $content;
+        return apply_filters('wpdatatables_filter_string_cell', $content, $this->getParentTable()->getWpId());
     }
 
 }

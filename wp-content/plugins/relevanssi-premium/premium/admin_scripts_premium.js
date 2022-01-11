@@ -129,7 +129,9 @@ jQuery(document).ready(function ($) {
 		$("#index").attr("disabled", "disabled")
 		var relevanssi_note = $("#relevanssi-note")
 		relevanssi_note.show()
-		relevanssi_note.html('<p class="description important">' + relevanssi.options_changed + '</p>')
+		relevanssi_note.html(
+			'<p class="description important">' + relevanssi.options_changed + "</p>"
+		)
 	})
 
 	$("#build_index").click(function () {
@@ -144,6 +146,7 @@ jQuery(document).ready(function ($) {
 
 		var data = {
 			action: "relevanssi_truncate_index",
+			security: nonce.indexing_nonce,
 		}
 
 		intervalID = window.setInterval(relevanssiUpdateClock, 1000)
@@ -354,9 +357,8 @@ function process_user_step(args) {
 					)
 				)
 
-				document.getElementById(
-					"relevanssi_estimated"
-				).innerHTML = estimated_time
+				document.getElementById("relevanssi_estimated").innerHTML =
+					estimated_time
 
 				if (time_seconds < 2) {
 					args.limit = args.limit * 2
@@ -473,9 +475,8 @@ function process_taxonomy_step(args) {
 						)
 					)
 
-					document.getElementById(
-						"relevanssi_estimated"
-					).innerHTML = estimated_time
+					document.getElementById("relevanssi_estimated").innerHTML =
+						estimated_time
 
 					if (time_seconds < 2) {
 						args.limit = args.limit * 2

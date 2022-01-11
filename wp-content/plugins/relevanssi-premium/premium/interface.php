@@ -37,13 +37,17 @@ function relevanssi_premium_plugin_page_actions( $plugin_page ) {
  * Prints out the form fields for entering the API key.
  *
  * Prints out table rows and form fields for entering the API key, or if API key
- * is set, controls to remove it.
+ * is set, controls to remove it. If the API key is defined in the
+ * RELEVANSSI_API_KEY constant, nothing is printed out.
  *
  * @param string $context The context for the form. Default null.
  *
  * @since 2.0.0
  */
 function relevanssi_form_api_key( $context = null ) {
+	if ( defined( 'RELEVANSSI_API_KEY' ) ) {
+		return;
+	}
 	$api_key = get_option( 'relevanssi_api_key' );
 	if ( 'network' === $context ) {
 		$api_key = get_network_option( null, 'relevanssi_api_key' );

@@ -22,6 +22,7 @@
 }
 
 .wpdt-c .wpDataTablesWrapper .wpDataTable:not(.scroll) thead th .bootstrap-datetimepicker-widget.wdt-datetimepicker-modal,
+.wpdt-c .wpDataTablesWrapper .wpDataTable:not(.scroll) tbody .bootstrap-datetimepicker-widget.wdt-datetimepicker-modal,
 .wpdt-c .wpDataTablesWrapper .wpDataTable:not(.scroll) tfoot td .bootstrap-datetimepicker-widget.wdt-datetimepicker-modal {
   inset: auto !important;
 }

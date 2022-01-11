@@ -137,31 +137,3 @@ function relevanssi_string_contains_emoji( string $text ) : bool {
 
 	return false;
 }
-
-/**
- * Returns true if $_SERVER['HTTP_USER_AGENT'] is on the bot block list.
- *
- * Looks for bot user agents in the $_SERVER['HTTP_USER_AGENT'] and returns true
- * if a match is found.
- *
- * @return bool True if $_SERVER['HTTP_USER_AGENT'] is a bot.
- */
-function relevanssi_user_agent_is_bot() : bool {
-	if ( isset( $_SERVER['HTTP_USER_AGENT'] ) ) {
-		/**
-		 * Filters the bots Relevanssi should block from search queries.
-		 *
-		 * Lets you filter the bots that are blocked from Relevanssi search
-		 * queries.
-		 *
-		 * @param array $bots An array of bot user agents.
-		 */
-		$bots = apply_filters( 'relevanssi_bots_to_block', relevanssi_bot_block_list() );
-		foreach ( array_values( $bots ) as $lookfor ) {
-			if ( false !== stristr( $_SERVER['HTTP_USER_AGENT'], $lookfor ) ) {
-				return true;
-			}
-		}
-	}
-	return false;
-}

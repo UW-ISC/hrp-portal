@@ -267,15 +267,18 @@ class PDTSql {
         	mysqli_next_result($this->link);
             mysqli_store_result($this->link);
         }
-
-        if (@mysqli_num_rows($result)) {
-            $row = mysqli_fetch_assoc($result);
-            if (isset($row['error'])) {
-                $this->error = $row['error'];
-                return false;
+        if(is_a($result, 'mysqli_result')) {
+            if (@mysqli_num_rows($result)) {
+                $row = mysqli_fetch_assoc($result);
+                if (isset($row['error'])) {
+                    $this->error = $row['error'];
+                    return false;
+                } else {
+                    mysqli_data_seek($result, 0);
+                    return $result;
+                }
             } else {
-                mysqli_data_seek($result, 0);
-                return $result;
+                return false;
             }
         } else {
             return false;

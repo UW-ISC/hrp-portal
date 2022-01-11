@@ -17,7 +17,7 @@
  * types that are indexed by Relevanssi.
  */
 function relevanssi_add_metaboxes() {
-	global $post;
+	global $post, $relevanssi_variables;
 	if ( null === $post ) {
 		return;
 	}
@@ -28,7 +28,7 @@ function relevanssi_add_metaboxes() {
 		 *
 		 * @param string The capability required, default 'edit_others_posts'.
 		 */
-		apply_filters( 'relevanssi_sidebar_capability', 'edit_others_posts' )
+		apply_filters( 'relevanssi_sidebar_capability', $relevanssi_variables['sidebar_capability'] )
 	)
 	) {
 		return;

@@ -115,7 +115,7 @@ function relevanssi_register_gutenberg_script() {
 		 *
 		 * @param string The capability required, default 'edit_others_posts'.
 		 */
-		apply_filters( 'relevanssi_sidebar_capability', 'edit_others_posts' )
+		apply_filters( 'relevanssi_sidebar_capability', $relevanssi_variables['sidebar_capability'] )
 	)
 	) {
 		return;
@@ -378,8 +378,9 @@ function relevanssi_register_gutenberg_rest_routes() {
 				'callback'            => $route['callback'],
 				'args'                => $args,
 				'permission_callback' => function () {
+					global $relevanssi_variables;
 					// Filter documented in /premium/gutenberg-sidebar.php.
-					return current_user_can( apply_filters( 'relevanssi_sidebar_capability', 'edit_others_posts' ) );
+					return current_user_can( apply_filters( 'relevanssi_sidebar_capability', $relevanssi_variables['sidebar_capability'] ) );
 				},
 			)
 		);

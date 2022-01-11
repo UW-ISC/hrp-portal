@@ -82,8 +82,8 @@ function relevanssi_related_tab() {
 		$disabled = 'disabled="disabled"';
 	}
 
-	$style = get_option( 'relevanssi_related_style', relevanssi_related_default_styles() );
-
+	$style        = get_option( 'relevanssi_related_style', array() );
+	$style        = array_merge( relevanssi_related_default_styles(), $style );
 	$width        = $style['width'];
 	$titles       = relevanssi_check( $style['titles'] );
 	$excerpts     = relevanssi_check( $style['excerpts'] );
@@ -454,15 +454,8 @@ function relevanssi_related_tab() {
  * @author Mike Jolly
  */
 function relevanssi_media_selector_print_scripts() {
-	$style = get_option(
-		'relevanssi_related_style',
-		array(
-			'width'             => 250,
-			'excerpts'          => 'off',
-			'thumbnails'        => 'on',
-			'default_thumbnail' => '',
-		)
-	);
+	$style = get_option( 'relevanssi_related_style', array() );
+	$style = array_merge( relevanssi_related_default_styles(), $style );
 
 	$thumbnail_id = $style['default_thumbnail'];
 	if ( empty( $thumbnail_id ) ) {

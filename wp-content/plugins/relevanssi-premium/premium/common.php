@@ -174,7 +174,7 @@ function relevanssi_premium_get_post( $id, int $blog_id = -1 ) {
 			 * After a post object is created from a post type, it is passed
 			 * through this filter so it can be modified.
 			 *
-			 * @param Object $post The post object.
+			 * @param stdClass $post The post object.
 			 */
 			$post = apply_filters( 'relevanssi_post_type_to_post', $post );
 			break;
@@ -496,6 +496,28 @@ function relevanssi_premium_init() {
 	add_filter( 'relevanssi_term_where', 'relevanssi_query_wildcards' );
 
 	add_filter( 'relevanssi_indexing_restriction', 'relevanssi_hide_post_restriction' );
+
+	if ( defined( 'RELEVANSSI_API_KEY' ) ) {
+		add_filter(
+			'pre_option_relevanssi_api_key',
+			function() {
+				return RELEVANSSI_API_KEY;
+			}
+		);
+		add_filter(
+			'pre_site_option_relevanssi_api_key',
+			function() {
+				return RELEVANSSI_API_KEY;
+			}
+		);
+	}
+
+	$t15s_updater = new Relevanssi_Language_Packs(
+		'plugin',
+		'relevanssi-premium',
+		'https://packages.translationspress.com/relevanssi/relevanssi/packages.json'
+	);
+	$t15s_updater->add_project();
 
 	// Add the related posts filters if necessary.
 	relevanssi_related_init();

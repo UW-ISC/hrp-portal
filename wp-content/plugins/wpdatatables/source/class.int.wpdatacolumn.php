@@ -27,6 +27,7 @@ class IntWDTColumn extends WDTColumn
      */
     public function prepareCellOutput($content)
     {
+        $content = apply_filters('wpdatatables_filter_int_cell_before_formatting', $content, $this->getParentTable()->getWpId());
 
         if ($content === '' || $content === null) {
             $content = '';
@@ -49,8 +50,7 @@ class IntWDTColumn extends WDTColumn
                 $this->isShowThousandsSeparator() ? ',' : ''
             );
         }
-        $content = apply_filters('wpdatatables_filter_int_cell', $content, $this->getParentTable()->getWpId());
-        return $content;
+        return apply_filters('wpdatatables_filter_int_cell', $content, $this->getParentTable()->getWpId());
     }
 
     /**

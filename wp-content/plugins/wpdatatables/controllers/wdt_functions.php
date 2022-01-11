@@ -892,7 +892,7 @@ function wdtSanitizeQuery($query) {
 function initGutenbergBlocks (){
     WpDataTablesGutenbergBlock::init();
     WpDataChartsGutenbergBlock::init();
-    add_filter( 'block_categories', 'addWpDataTablesBlockCategory', 10, 2);
+    add_filter( 'block_categories_all', 'addWpDataTablesBlockCategory', 10, 2);
 }
 add_action('plugins_loaded', 'initGutenbergBlocks');
 

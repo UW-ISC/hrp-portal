@@ -263,23 +263,23 @@ var wpDataTablesChartJS = function(){
                                     if( obj.numberFormat == 1 ){
                                         seriesDataEntry = {
                                             label: labels[j],
-                                            backgroundColor :colors[j],
-                                            hoverBackgroundColor: colors[j],
+                                            backgroundColor :colors[j % 10],
+                                            hoverBackgroundColor: colors[j % 10],
                                             data:[{
                                                 x: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1]], '.', ',', true)),
-                                                y: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1] + 1], '.', ',', true)),
-                                                r: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1] + 2], '.', ',', true))
+                                                y: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[2]], '.', ',', true)),
+                                                r: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[3]], '.', ',', true))
                                             }]
                                         };
                                     }else{
                                         seriesDataEntry = {
                                             label: labels[j],
-                                            backgroundColor :colors[j],
-                                            hoverBackgroundColor: colors[j],
+                                            backgroundColor :colors[j % 10],
+                                            hoverBackgroundColor: colors[j % 10],
                                             data:[{
                                                 x: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1]], ',', '.', true)),
-                                                y: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1] + 1], ',', '.', true)),
-                                                r: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[1] + 2], ',', '.', true))
+                                                y: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[2]], ',', '.', true)),
+                                                r: parseFloat(wdtUnformatNumber(filteredData[j][obj.columnIndexes[3]], ',', '.', true))
                                             }]
                                         };
                                     }

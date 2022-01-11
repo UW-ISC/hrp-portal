@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Relevanssi Premium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-09-27 11:12+0300\n"
+"POT-Creation-Date: 2021-11-26 04:55+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Mikko Saari <mikko@mikkosaari.fi>\n"
 "Language-Team: \n"
@@ -72,15 +72,15 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: lib/common.php:142
+#: lib/common.php:143
 msgid "Missing"
 msgstr ""
 
-#: lib/common.php:1093
+#: lib/common.php:1099
 msgid "25 most common words in the index"
 msgstr ""
 
-#: lib/common.php:1094
+#: lib/common.php:1100
 msgid ""
 "These words are excellent stopword material. A word that appears in most of "
 "the posts in the database is quite pointless when searching. This is also an "
@@ -90,68 +90,68 @@ msgid ""
 "necessary."
 msgstr ""
 
-#: lib/common.php:1100
+#: lib/common.php:1106
 msgid "Stopword Candidates"
 msgstr ""
 
-#: lib/common.php:1105
+#: lib/common.php:1111
 msgid "Add to stopwords"
 msgstr ""
 
-#: lib/common.php:1108
+#: lib/common.php:1114
 msgid "Add to content stopwords"
 msgstr ""
 
-#: lib/common.php:1452
+#: lib/common.php:1462
 #, php-format
 msgid "Nothing found for ID %d."
 msgstr ""
 
-#: lib/common.php:1459
+#: lib/common.php:1469
 msgid "Possible reasons this post is not indexed"
 msgstr ""
 
-#: lib/common.php:1463
+#: lib/common.php:1473
 msgid "The title"
 msgstr ""
 
-#: lib/common.php:1467
+#: lib/common.php:1477
 msgid "The content"
 msgstr ""
 
-#: lib/common.php:1471 lib/tabs/indexing-tab.php:320
+#: lib/common.php:1481 lib/tabs/indexing-tab.php:320
 msgid "Comments"
 msgstr ""
 
-#: lib/common.php:1475
+#: lib/common.php:1485
 msgid "Tags"
 msgstr ""
 
-#: lib/common.php:1479
+#: lib/common.php:1489
 msgid "Categories"
 msgstr ""
 
-#: lib/common.php:1483
+#: lib/common.php:1493
 msgid "Other taxonomies"
 msgstr ""
 
-#: lib/common.php:1487
+#: lib/common.php:1497
 msgid "Links"
 msgstr ""
 
-#: lib/common.php:1491
+#: lib/common.php:1501
 msgid "Authors"
 msgstr ""
 
-#: lib/common.php:1495
+#: lib/common.php:1505
 msgid "Excerpt"
 msgstr ""
 
-#: lib/common.php:1499 lib/tabs/indexing-tab.php:334
+#: lib/common.php:1509 lib/tabs/indexing-tab.php:334
 msgid "Custom fields"
 msgstr ""
 
-#: lib/common.php:1503
+#: lib/common.php:1513
 msgid "MySQL content"
 msgstr ""
 
@@ -512,11 +512,15 @@ msgstr ""
 msgid "WordPress.org forum"
 msgstr ""
 
-#: lib/indexing.php:463 premium/common.php:517
+#: lib/indexing.php:31
+msgid "Relevanssi image attachment filter"
+msgstr ""
+
+#: lib/indexing.php:479 premium/common.php:517
 msgid "Relevanssi index exclude"
 msgstr ""
 
-#: lib/indexing.php:492
+#: lib/indexing.php:508
 msgid "Blocked by a filter function"
 msgstr ""
 
@@ -533,20 +537,20 @@ msgid ""
 "extension."
 msgstr ""
 
-#: lib/init.php:208 lib/init.php:209 lib/tabs/logging-tab.php:47
+#: lib/init.php:210 lib/init.php:211 lib/tabs/logging-tab.php:47
 #: lib/user-searches.php:18
 msgid "User searches"
 msgstr ""
 
-#: lib/init.php:220 lib/init.php:221 lib/tabs/searching-tab.php:252
+#: lib/init.php:222 lib/init.php:223 lib/tabs/searching-tab.php:252
 msgid "Admin search"
 msgstr ""
 
-#: lib/init.php:444
+#: lib/init.php:449
 msgid "Settings"
 msgstr ""
 
-#: lib/init.php:447
+#: lib/init.php:452
 msgid "Go Premium!"
 msgstr ""
 
@@ -758,28 +762,28 @@ msgstr ""
 msgid "Category weight"
 msgstr ""
 
-#: lib/log.php:177
+#: lib/log.php:151
 msgid "Logged searches"
 msgstr ""
 
-#: lib/log.php:180
+#: lib/log.php:154
 msgid "Time"
 msgstr ""
 
-#: lib/log.php:184 lib/user-searches.php:306 lib/user-searches.php:320
-#: premium/click-tracking.php:601 premium/tabs/redirects-tab.php:52
+#: lib/log.php:158 lib/user-searches.php:304 lib/user-searches.php:318
+#: premium/click-tracking.php:609 premium/tabs/redirects-tab.php:52
 msgid "Query"
 msgstr ""
 
-#: lib/log.php:188
+#: lib/log.php:162
 msgid "Hits found"
 msgstr ""
 
-#: lib/log.php:192
+#: lib/log.php:166
 msgid "IP address"
 msgstr ""
 
-#: lib/log.php:287
+#: lib/log.php:261
 msgid "No search keywords logged."
 msgstr ""
 
@@ -920,7 +924,7 @@ msgstr ""
 msgid "The ID"
 msgstr ""
 
-#: lib/tabs/debugging-tab.php:73 premium/click-tracking.php:461
+#: lib/tabs/debugging-tab.php:73 premium/click-tracking.php:469
 msgid "Post"
 msgstr ""
 
@@ -1639,7 +1643,7 @@ msgid ""
 "be logged."
 msgstr ""
 
-#: lib/tabs/logging-tab.php:85 premium/click-tracking.php:695
+#: lib/tabs/logging-tab.php:85 premium/click-tracking.php:703
 msgid "Trim logs"
 msgstr ""
 
@@ -1670,7 +1674,7 @@ msgstr ""
 msgid "Push the button to export the search log as a CSV file."
 msgstr ""
 
-#: lib/tabs/logging-tab.php:122 premium/click-tracking.php:669
+#: lib/tabs/logging-tab.php:122 premium/click-tracking.php:677
 msgid "Click tracking"
 msgstr ""
 
@@ -1810,76 +1814,66 @@ msgid ""
 "help others discover Relevanssi. %1$sYou can add your review here%2$s."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:95
-msgid "Relevanssi on Facebook"
-msgstr ""
-
-#: lib/tabs/overview-tab.php:98
-msgid ""
-"Check out the Relevanssi page on Facebook for news and updates about "
-"Relevanssi."
-msgstr ""
-
-#: lib/tabs/overview-tab.php:104
+#: lib/tabs/overview-tab.php:96
 msgid "Buy Relevanssi Premium"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:107
+#: lib/tabs/overview-tab.php:99
 msgid "Buy Relevanssi Premium now"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:109
+#: lib/tabs/overview-tab.php:101
 #, php-format
 msgid ""
 "use coupon code %1$s for 20%% discount (valid at least until the end of %2$s)"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:110
+#: lib/tabs/overview-tab.php:102
 msgid "Here are some improvements Relevanssi Premium offers:"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:112
+#: lib/tabs/overview-tab.php:104
 msgid "PDF content indexing"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:113
+#: lib/tabs/overview-tab.php:105
 msgid "A Related posts feature"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:114
+#: lib/tabs/overview-tab.php:106
 msgid "Index and search user profile pages"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:115
+#: lib/tabs/overview-tab.php:107
 msgid "Index and search taxonomy term pages"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:116
+#: lib/tabs/overview-tab.php:108
 msgid "Multisite searches across many subsites"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:117
+#: lib/tabs/overview-tab.php:109
 msgid "WP CLI commands"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:118
+#: lib/tabs/overview-tab.php:110
 msgid "Adjust weights separately for each post type and taxonomy"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:119
+#: lib/tabs/overview-tab.php:111
 msgid "Internal link anchors can be search terms for the target posts"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:120
+#: lib/tabs/overview-tab.php:112
 msgid "Index and search any columns in the wp_posts database"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:121
+#: lib/tabs/overview-tab.php:113
 msgid ""
 "Hide Relevanssi branding from the User Searches page on a client installation"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:122
+#: lib/tabs/overview-tab.php:114
 msgid "Redirect search queries to custom URLs"
 msgstr ""
 
@@ -2382,7 +2376,7 @@ msgstr ""
 msgid "All history"
 msgstr ""
 
-#: lib/user-searches.php:112 premium/click-tracking.php:449
+#: lib/user-searches.php:112 premium/click-tracking.php:457
 msgid "# of Searches"
 msgstr ""
 
@@ -2406,39 +2400,39 @@ msgstr ""
 msgid "In order to see the clicks, you need Relevanssi Premium."
 msgstr ""
 
-#: lib/user-searches.php:147
+#: lib/user-searches.php:146
 msgid ""
 "In order to see the clicks, you need to enable click tracking. Click "
 "tracking is not currently enabled, and you're not collecting new clicks."
 msgstr ""
 
-#: lib/user-searches.php:154
+#: lib/user-searches.php:153
 msgid "Unsuccessful searches"
 msgstr ""
 
-#: lib/user-searches.php:155
+#: lib/user-searches.php:154
 msgid "These queries have found no results."
 msgstr ""
 
-#: lib/user-searches.php:164
+#: lib/user-searches.php:163
 msgid "Reset Logs"
 msgstr ""
 
-#: lib/user-searches.php:173
+#: lib/user-searches.php:172
 msgid ""
 "To reset the logs, type \"reset\" into the box here and click the Reset "
 "button"
 msgstr ""
 
-#: lib/user-searches.php:176
+#: lib/user-searches.php:175
 msgid "Reset"
 msgstr ""
 
-#: lib/user-searches.php:307 premium/tabs/redirects-tab.php:55
+#: lib/user-searches.php:305 premium/tabs/redirects-tab.php:55
 msgid "Hits"
 msgstr ""
 
-#: lib/user-searches.php:308
+#: lib/user-searches.php:306
 msgid "Clicks"
 msgstr ""
 
@@ -2556,66 +2550,66 @@ msgid ""
 "the list, copy it to a different blog or otherwise need the list."
 msgstr ""
 
-#: premium/click-tracking.php:65
+#: premium/click-tracking.php:70
 msgid "Invalid click tracking value format."
 msgstr ""
 
-#: premium/click-tracking.php:353
+#: premium/click-tracking.php:361
 #, php-format
 msgid "The query '%s' deleted from the click tracking log."
 msgstr ""
 
-#: premium/click-tracking.php:365
+#: premium/click-tracking.php:373
 #, php-format
 msgid "Couldn't remove the query '%s' from the click tracking log."
 msgstr ""
 
-#: premium/click-tracking.php:387 premium/click-tracking.php:536
+#: premium/click-tracking.php:395 premium/click-tracking.php:544
 msgid "Back to the User Searches page"
 msgstr ""
 
-#: premium/click-tracking.php:393 premium/click-tracking.php:542
+#: premium/click-tracking.php:401 premium/click-tracking.php:550
 #, php-format
 msgid "Search insights for %s"
 msgstr ""
 
-#: premium/click-tracking.php:450 premium/click-tracking.php:590
+#: premium/click-tracking.php:458 premium/click-tracking.php:598
 msgid "# of Clicks"
 msgstr ""
 
-#: premium/click-tracking.php:456
+#: premium/click-tracking.php:464
 msgid "Posts found with this search term"
 msgstr ""
 
-#: premium/click-tracking.php:462 premium/click-tracking.php:602
+#: premium/click-tracking.php:470 premium/click-tracking.php:610
 msgid "Times clicked"
 msgstr ""
 
-#: premium/click-tracking.php:463 premium/click-tracking.php:603
+#: premium/click-tracking.php:471 premium/click-tracking.php:611
 msgid "Avg rank"
 msgstr ""
 
-#: premium/click-tracking.php:464 premium/click-tracking.php:604
+#: premium/click-tracking.php:472 premium/click-tracking.php:612
 msgid "Avg page"
 msgstr ""
 
-#: premium/click-tracking.php:478 premium/click-tracking.php:550
+#: premium/click-tracking.php:486 premium/click-tracking.php:558
 msgid "View post"
 msgstr ""
 
-#: premium/click-tracking.php:479 premium/click-tracking.php:551
+#: premium/click-tracking.php:487 premium/click-tracking.php:559
 msgid "Edit post"
 msgstr ""
 
-#: premium/click-tracking.php:490
+#: premium/click-tracking.php:498
 msgid "Remove this query from the click log"
 msgstr ""
 
-#: premium/click-tracking.php:596
+#: premium/click-tracking.php:604
 msgid "Search queries for this post"
 msgstr ""
 
-#: premium/click-tracking.php:671
+#: premium/click-tracking.php:679
 msgid ""
 "Enabling this option will add click tracking information to the post URLs on "
 "Relevanssi search results pages, allowing to you see stats on which posts "
@@ -2624,61 +2618,61 @@ msgid ""
 "searches page by clicking the search term."
 msgstr ""
 
-#: premium/click-tracking.php:673
+#: premium/click-tracking.php:681
 msgid ""
 "Click tracking stores post ID, the search query and ranking information for "
 "the post. No personal information about the user doing the search are stored."
 msgstr ""
 
-#: premium/click-tracking.php:678
+#: premium/click-tracking.php:686
 msgid "Enable click tracking"
 msgstr ""
 
-#: premium/click-tracking.php:688
+#: premium/click-tracking.php:696
 msgid "Enable click tracking on Relevanssi search results pages."
 msgstr ""
 
-#: premium/click-tracking.php:699
+#: premium/click-tracking.php:707
 msgid "How many days of click tracking logs to keep in the database."
 msgstr ""
 
-#: premium/click-tracking.php:703
+#: premium/click-tracking.php:711
 #, php-format
 msgid ""
 "Set to %d for no trimming. The click tracking logs will be smaller than the "
 "search logs, so this value can be bigger than the value for regular logs."
 msgstr ""
 
-#: premium/click-tracking.php:744
+#: premium/click-tracking.php:752
 msgid "Total clicks"
 msgstr ""
 
-#: premium/click-tracking.php:751
+#: premium/click-tracking.php:759
 #, php-format
 msgid "%s %% of all queries"
 msgstr ""
 
-#: premium/click-tracking.php:756
+#: premium/click-tracking.php:764
 msgid "Click tracking insights"
 msgstr ""
 
-#: premium/click-tracking.php:787
+#: premium/click-tracking.php:795
 msgid "These posts got the most clicks. This is content users like!"
 msgstr ""
 
-#: premium/click-tracking.php:816
+#: premium/click-tracking.php:824
 msgid ""
 "These posts were got clicks from a low ranking. Should they be boosted "
 "higher?"
 msgstr ""
 
-#: premium/click-tracking.php:850
+#: premium/click-tracking.php:858
 msgid ""
 "You have search queries that generate clicks to many posts. Perhaps more "
 "focus would be good?"
 msgstr ""
 
-#: premium/click-tracking.php:858
+#: premium/click-tracking.php:866
 msgid "Sorry, no clicks recorded for this period!"
 msgstr ""
 

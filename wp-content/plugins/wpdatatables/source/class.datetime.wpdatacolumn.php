@@ -10,7 +10,8 @@ defined('ABSPATH') or die('Access denied.');
  *
  * @since May 2012
  */
-class DateTimeWDTColumn extends WDTColumn {
+class DateTimeWDTColumn extends WDTColumn
+{
 
     protected $_jsDataType = 'date-custom';
     protected $_dataType = 'datetime';
@@ -19,7 +20,8 @@ class DateTimeWDTColumn extends WDTColumn {
      * DateTimeWDTColumn constructor.
      * @param array $properties
      */
-    public function __construct($properties = array()) {
+    public function __construct($properties = array())
+    {
         parent::__construct($properties);
         $this->_dataType = 'datetime';
     }
@@ -28,7 +30,11 @@ class DateTimeWDTColumn extends WDTColumn {
      * @param $content
      * @return false|mixed|string
      */
-    public function prepareCellOutput($content) {
+    public function prepareCellOutput($content)
+    {
+
+        $content = apply_filters('wpdatatables_filter_datetime_cell_before_formatting', $content, $this->getParentTable()->getWpId());
+
         if (!is_array($content)) {
             if (!empty($content) && ($content != '0000-00-00')) {
                 $timestamp = is_numeric($content) ? $content : strtotime(str_replace('/', '-', $content));
@@ -40,14 +46,14 @@ class DateTimeWDTColumn extends WDTColumn {
             $content['value'] = str_replace('/', '-', $content['value']);
             $formattedValue = date(get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'), strtotime($content['value']));
         }
-        $formattedValue = apply_filters('wpdatatables_filter_datetime_cell', $formattedValue, $this->getParentTable()->getWpId());
-        return $formattedValue;
+        return apply_filters('wpdatatables_filter_datetime_cell', $formattedValue, $this->getParentTable()->getWpId());
     }
 
     /**
      * @return string
      */
-    public function getGoogleChartColumnType() {
+    public function getGoogleChartColumnType()
+    {
         return 'datetime';
     }
 

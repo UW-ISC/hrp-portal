@@ -82,6 +82,28 @@
                     <div class="col-sm-12">
                         <div class="form-group">
                             <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wpdt-link-noreferrer-attribute" type="checkbox">
+                                <label for="wpdt-link-noreferrer-attribute"
+                                       class="ts-label"><?php _e('Make NOREFERRER link', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wpdt-link-sponsored-attribute" type="checkbox">
+                                <label for="wpdt-link-sponsored-attribute"
+                                       class="ts-label"><?php _e('Make SPONSORED link', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <div class="toggle-switch" data-ts-color="blue">
                                 <input id="wpdt-link-button-attribute" type="checkbox">
                                 <label for="wpdt-link-button-attribute"
                                        class="ts-label"><?php _e('Set the link to appear as a button', 'wpdatatables'); ?></label>
