@@ -13,7 +13,7 @@
  * Plugin Name: Relevanssi Premium
  * Plugin URI: https://www.relevanssi.com/
  * Description: This premium plugin replaces WordPress search with a relevance-sorting search.
- * Version: 2.16.2
+ * Version: 2.16.5
  * Author: Mikko Saari
  * Author URI: http://www.mikkosaari.fi/
  * Text Domain: relevanssi
@@ -83,10 +83,11 @@ $relevanssi_variables['title_boost_default']                   = 5;
 $relevanssi_variables['link_boost_default']                    = 0.75;
 $relevanssi_variables['comment_boost_default']                 = 0.75;
 $relevanssi_variables['database_version']                      = 21;
-$relevanssi_variables['plugin_version']                        = '2.16.2';
+$relevanssi_variables['plugin_version']                        = '2.16.5';
 $relevanssi_variables['plugin_dir']                            = plugin_dir_path( __FILE__ );
 $relevanssi_variables['plugin_basename']                       = plugin_basename( __FILE__ );
 $relevanssi_variables['file']                                  = __FILE__;
+$relevanssi_variables['sidebar_capability']                    = 'edit_others_posts';
 
 define( 'RELEVANSSI_PREMIUM', true );
 define( 'RELEVANSSI_EU_SERVICES_URL', 'https://eu.relevanssiservices.com/' );
@@ -118,8 +119,9 @@ require_once 'lib/utils.php';
 
 require_once 'premium/admin-ajax.php';
 require_once 'premium/body-stopwords.php';
-require_once 'premium/class-relevanssi-wp-auto-update.php';
+require_once 'premium/class-relevanssi-language-packs.php';
 require_once 'premium/class-relevanssi-spellcorrector.php';
+require_once 'premium/class-relevanssi-wp-auto-update.php';
 require_once 'premium/click-tracking.php';
 require_once 'premium/common.php';
 require_once 'premium/excerpts-highlights.php';

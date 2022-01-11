@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 5.8.1
-Stable tag: 2.16.2
+Tested up to: 5.8.2
+Stable tag: 2.16.5
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -262,9 +262,33 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.16.5 =
+* Security fix: Extra hardening for AJAX requests. Some AJAX actions in Relevanssi could leak information to site subscribers who knew what to look for.
+
+= 2.16.4 =
+* Security fix: Any registered user could empty the Relevanssi index by triggering the index truncate AJAX action. That is no longer possible.
+* New feature: The [searchform] shortcode has a new parameter, 'checklist', which you can use to create taxonomy checklists.
+* New feature: New filter hook `relevanssi_post_type_archive_ok` allows controlling whether individual post type archives are indexed or not.
+* New feature: You can now set the API key with the constant RELEVANSSI_API_KEY. If the constant is set, the API key settings disappear on the Relevanssi settings page.
+* Changed behaviour: The `relevanssi_related_output_objects` filter hook has been removed. It was unnecessary: it simply isn't useful to filter a function return value, because you can modify it without a filter hook.
+* Changed behaviour: The `relevanssi_search_form` filter hook has an additional parameter which has the shortcode attributes.
+* Changed behaviour: The `relevanssi_search_again` parameter array has more parameters the filter can modify.
+* Changed behaviour: The `relevanssi_show_matches` filter hook gets the post object as the second parameter.
+* Changed behaviour: The `relevanssi_term_add_data` filter hook now runs also when individual terms are modified. Previously it only run when all terms were indexed.
+* Translations: Relevanssi Premium is now professionally translated to German and Spanish.
+
+= 2.16.3 =
+* Security fix: User searches page had a XSS vulnerability.
+* Changed behaviour: Click tracking is no longer added to links if the user is on the logging block list or a bot.
+* Minor fix: `relevanssi_orderby` did not always accept an array-format orderby parameter.
+* Minor fix: Removes a highlighting problem stemming from uppercase search terms.
+* Minor fix: When image attachment indexing was disabled, saving image attachments would still index the images. Image attachment blocking is now a `relevanssi_indexing_restriction` filter function, which means it's always active.
+* Minor fix: Enabling click tracking doesn't break anchor links anymore.
+* Minor fix: Relevanssi removes highlights better from inside multiline HTML tags.
+
 = 2.16.2 =
-* Fix: Remove unnecessary database calls from admin pages.
-* Fix: Improved Oxygen compatibility.
+* Minor fix: Remove unnecessary database calls from admin pages.
+* Minor fix: Improved Oxygen compatibility.
 
 = 2.16.1 =
 * Fixes an error on the post query insights screen.
@@ -430,6 +454,15 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: The search results log export did not do anything useful when no data was found. Now the export provides a message "No search keywords logged". Thanks to Jan Willem Oostendorp.
 
 == Upgrade notice ==
+= 2.16.5 =
+* Security fix, extra security for AJAX actions.
+
+= 2.16.4 =
+* Security fix.
+
+= 2.16.3 =
+* No click tracking for blocked users and bots, bug fixes.
+
 = 2.16.2 =
 * Removes unnecessary database calls on admin pages.
 

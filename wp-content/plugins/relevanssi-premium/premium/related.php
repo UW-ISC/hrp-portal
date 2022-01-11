@@ -157,12 +157,7 @@ function relevanssi_get_related_post_objects( $post_id ) {
 	if ( $use_cache ) {
 		$related = get_transient( $transient_name );
 		if ( $related ) {
-			/**
-			 * Filters the related posts object output.
-			 *
-			 * @param WP_Post[] Array of related post objects.
-			 */
-			return apply_filters( 'relevanssi_related_output_objects', $related );
+			return $related;
 		} else {
 			$use_cache = false;
 		}
@@ -176,12 +171,7 @@ function relevanssi_get_related_post_objects( $post_id ) {
 	}
 	set_transient( $transient_name, $related_post_objects, WEEK_IN_SECONDS * 2 );
 
-	/**
-	 * Filters the related posts object output.
-	 *
-	 * @param WP_Post[] Array of related post objects.
-	 */
-	return apply_filters( 'relevanssi_related_output_objects', $related_post_objects );
+	return $related_post_objects;
 }
 
 /**
@@ -320,8 +310,8 @@ function relevanssi_get_related_post_ids( $post_id, $use_cache = true ) {
 				 * add extra criteria.
 				 *
 				 * @param array  The related posts arguments.
-				 * @param string Which query is run. Values include or",
-				 * "random fill", random".
+				 * @param string Which query is run. Values include "or",
+				 * "random fill", "random".
 				 */
 				apply_filters(
 					'relevanssi_related_args',

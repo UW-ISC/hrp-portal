@@ -31,7 +31,7 @@ function relevanssi_profile_update( $user ) {
 			$update = true;
 			relevanssi_index_user( $user, $update );
 		} else {
-			relevanssi_delete_user( $user );
+			relevanssi_delete_user( $user->ID );
 		}
 	}
 }
@@ -86,7 +86,7 @@ function relevanssi_do_term_indexing( $term, $taxonomy, $update ) {
  *
  * @param int $user User ID to delete.
  */
-function relevanssi_delete_user( $user ) {
+function relevanssi_delete_user( int $user ) {
 	global $wpdb, $relevanssi_variables;
 	$user = intval( $user );
 	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $user AND type = 'user'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
@@ -779,9 +779,9 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	/**
 	 * Allows manipulating the user object before indexing.
 	 *
-	 * This filter can be used to manipulate the user object before it is processed for indexing.
-	 * It's possible to add extra data (for example to user description field) or to change the
-	 * existing data.
+	 * This filter can be used to manipulate the user object before it is
+	 * processed for indexing. It's possible to add extra data (for example to
+	 * user description field) or to change the existing data.
 	 *
 	 * @param object $user The user object.
 	 */
@@ -1085,8 +1085,8 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 	$terms = $wpdb->get_col(
 		$wpdb->prepare(
 			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt
-			WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s
-			LIMIT %d OFFSET %d", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			'LIMIT %d OFFSET %d',
 			$taxonomy,
 			intval( $limit ),
 			intval( $offset )
@@ -1100,15 +1100,6 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 	foreach ( $terms as $term_id ) {
 		$update = false;
 		$term   = get_term( $term_id, $taxonomy );
-		/**
-		 * Allows the term object to be handled before indexing.
-		 *
-		 * This filter can be used to add data to term objects before indexing, or to manipulate the object somehow.
-		 *
-		 * @param object $term     The term object.
-		 * @param string $taxonomy The taxonomy.
-		 */
-		$term = apply_filters( 'relevanssi_term_add_data', $term, $taxonomy );
 		relevanssi_index_taxonomy_term( $term, $taxonomy, $update );
 		$indexed_terms++;
 	}
@@ -1161,15 +1152,6 @@ function relevanssi_index_taxonomies( $is_ajax = false ) {
 
 		$update = false;
 		foreach ( $terms as $term ) {
-			/**
-			 * Allows the term object to be handled before indexing.
-			 *
-			 * This filter can be used to add data to term objects before indexing, or to manipulate the object somehow.
-			 *
-			 * @param object $term     The term object.
-			 * @param string $taxonomy The taxonomy.
-			 */
-			$term = apply_filters( 'relevanssi_term_add_data', $term, $taxonomy );
 			relevanssi_index_taxonomy_term( $term, $taxonomy, $update );
 			$indexed_terms++;
 			if ( defined( 'WP_CLI' ) && WP_CLI ) {
@@ -1209,6 +1191,16 @@ function relevanssi_index_taxonomy_term( $term, $taxonomy, $remove_first = false
 		// Not an object, so let's get the object.
 		$term = get_term( $term, $taxonomy );
 	}
+
+	/**
+	 * Allows the term object to be handled before indexing.
+	 *
+	 * This filter can be used to add data to term objects before indexing, or to manipulate the object somehow.
+	 *
+	 * @param object $term     The term object.
+	 * @param string $taxonomy The taxonomy.
+	 */
+	$term = apply_filters( 'relevanssi_term_add_data', $term, $taxonomy );
 
 	$temp_post               = new stdClass();
 	$temp_post->post_content = $term->description;
@@ -1624,6 +1616,20 @@ function relevanssi_get_post_type_by_id( $id ) {
 function relevanssi_index_post_type_archive( $post_type, $remove_first = true ) {
 	$post_type_object = get_post_type_object( $post_type );
 	global $wpdb, $relevanssi_variables;
+
+	/**
+	 * Allows excluding post type archives from the index.
+	 *
+	 * If this filter hook returns false, the post type archive won't be
+	 * indexed and if it's already indexed, it will be removed from the index.
+	 *
+	 * @param boolean If true, index the archive. Default true.
+	 * @param object  The post type object.
+	 */
+	if ( ! apply_filters( 'relevanssi_post_type_archive_ok', true, $post_type ) ) {
+		relevanssi_delete_post_type_object( $post_type );
+		return;
+	}
 
 	$temp_post               = new stdClass();
 	$temp_post->post_content = $post_type_object->description;

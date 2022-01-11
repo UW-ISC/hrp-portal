@@ -325,7 +325,8 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 		WP_CLI::log( 'Found ' . count( $attachment_posts ) . ' attachments to read.' );
 		foreach ( $attachment_posts as $post_id ) {
 			$exit_and_die = false;
-			$response     = relevanssi_index_pdf( $post_id, $exit_and_die );
+			WP_CLI::log( 'Reading attachment ' . $post_id . '...' );
+			$response = relevanssi_index_pdf( $post_id, $exit_and_die );
 			if ( $response['success'] ) {
 				WP_CLI::log( "Successfully read the content for post $post_id." );
 			} else {
