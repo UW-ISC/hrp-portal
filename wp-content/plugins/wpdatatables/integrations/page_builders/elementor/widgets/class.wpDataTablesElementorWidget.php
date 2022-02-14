@@ -2,7 +2,11 @@
 
 namespace Elementor;
 
+use WDTConfigController;
+
 class WPDataTables_Elementor_Widget extends Widget_Base {
+
+    private $_allTables;
 
     public function get_name() {
         return 'wpdatatables';
@@ -20,6 +24,22 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         return [ 'wpdatatables-elementor' ];
     }
 
+    /**
+     * @return mixed
+     */
+    public function getAllTables()
+    {
+        return $this->_allTables;
+    }
+
+    /**
+     * @param mixed $allTables
+     */
+    public function setAllTables($allTables)
+    {
+        $this->_allTables = $allTables;
+    }
+
     protected function _register_controls() {
 
         $this->start_controls_section(
@@ -33,9 +53,9 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
             'wpdt-table-id',
             [
                 'label' => __( 'Select wpDataTable:', 'wpdatatables' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
-                'options' => self::wdt_get_all_tables(),
-                'default' => self::wdt_return_first_table(),
+                'type' => Controls_Manager::SELECT,
+                'options' => WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'tables'),
+                'default' => 0
             ]
         );
 
@@ -43,7 +63,7 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
             'wpdt-view',
             [
                 'label' => __( 'Choose table view:', 'wpdatatables' ),
-                'type' => \Elementor\Controls_Manager::SELECT,
+                'type' => Controls_Manager::SELECT,
                 'options' => [
                     'regular' => __( 'Regular wpDataTable', 'wpdatatables' ),
                     'excel-like' => __( 'Excel-like wpDataTable', 'wpdatatables' ),
@@ -96,6 +116,7 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
     }
 
     protected function render() {
+        self::setAllTables(WDTConfigController::getAllTablesAndChartsForPageBuilders('elementor', 'tables'));
         $settings = $this->get_settings_for_display();
         $tableShortcodeParams = '[wpdatatable id=' . $settings['wpdt-table-id'];
         $tableShortcodeParams .= $settings['wpdt-view'] == 'regular' ? ' table_view=regular' : ' table_view=excel';
@@ -107,51 +128,20 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
 
         $tableShortcodeParams = apply_filters('wpdatatables_filter_elementor_table_shortcode', $tableShortcodeParams);
 
-        echo $settings['wpdt-table-id'] != '' ?  $tableShortcodeParams  : self::wdt_create_table_notice();
+        if (count(self::getAllTables()) == 1) {
+            $result = WDTConfigController::wdt_create_table_notice();
+        } elseif (!(int)$settings['wpdt-table-id']) {
+            $result = WDTConfigController::wdt_select_table_notice();
+        } else {
+            $result = $tableShortcodeParams;
+        }
+        echo __($result);
 
     }
 
     protected function _content_template() {
 
     }
-
-    public static function wdt_get_all_tables() {
-
-        global $wpdb;
-        $returnTables = [];
-
-        $query = "SELECT id, title FROM {$wpdb->prefix}wpdatatables ORDER BY id ";
-
-        $allTables = $wpdb->get_results($query, ARRAY_A);
-
-        if ($allTables != null ) {
-            foreach ($allTables as $table) {
-                $returnTables[$table['id']] = $table['title'] . ' (id: ' . $table['id'] . ')';
-            }
-        } else {
-            $returnTables = [];
-        }
-
-        return $returnTables;
-    }
-
-    public static function wdt_return_first_table() {
-
-        $allTables = self::wdt_get_all_tables();
-        if ($allTables != [] ) {
-            reset($allTables);
-            return key($allTables);
-        } else {
-            return '';
-        }
-
-    }
-
-    public static function wdt_create_table_notice() {
-
-        return 'Please create wpDataTable first. You can find detail instructions in our docs on this <a target="_blank" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
-    }
-
 
 }
 

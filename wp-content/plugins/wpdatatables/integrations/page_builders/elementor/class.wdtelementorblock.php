@@ -28,19 +28,19 @@ class WPDataTables_Elementor_Widgets
 
     public function includes()
     {
-        require_once(WDT_ROOT_PATH . 'widgets/class.wpDataTablesElementorWidget.php');
-        require_once(WDT_ROOT_PATH . 'widgets/class.wpDataChartsElementorWidget.php');
+        require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/widgets/class.wpDataTablesElementorWidget.php');
+        require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/widgets/class.wpDataChartsElementorWidget.php');
     }
 
     public function register_widgets()
     {
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Elementor\WPDataTables_Elementor_Widget());
-        \Elementor\Plugin::instance()->widgets_manager->register_widget_type(new \Elementor\WPDataCharts_Elementor_Widget());
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor\WPDataTables_Elementor_Widget());
+        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor\WPDataCharts_Elementor_Widget());
     }
 
     public function widget_styles()
     {
-        wp_register_style('wpdt-elementor-widget-font', WDT_CSS_PATH . 'elementor/style.css', array(), WDT_CURRENT_VERSION);
+        wp_register_style('wpdt-elementor-widget-font', WDT_ROOT_URL . 'integrations/page_builders/elementor/css/style.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wpdt-elementor-widget-font');
     }
 

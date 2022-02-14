@@ -1,5 +1,4 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
-
 <div class="row" id="wdt-chart-settings-and-preview">
 
     <div class="col-sm-5 col-md-5 col-lg-5 m-b-20">
@@ -25,6 +24,8 @@
                     </li>
                     <li class="chart-container highcharts"><a href="#chart-container-tabs-8" data-toggle="tab"
                                                               class=""><?php _e('Credits', 'wpdatatables'); ?></a></li>
+                    <li class="chart-container apex-toolbar-container"><a href="#chart-container-tabs-9" data-toggle="tab"
+                                                              class=""><?php _e('Toolbar', 'wpdatatables'); ?></a></li>
                 </ul>
             </div>
 
@@ -125,8 +126,63 @@
                                title="<?php _e('If you tick this checkbox, the values of the rows with same label will be summed up and rendered as a single series. If you leave it unticked all rows will be rendered as separate series.', 'wpdatatables'); ?>"></i>
                         </h4>
                         <div class="toggle-switch p-b-16" data-ts-color="blue">
-                            <input id="group-chart" type="checkbox">
+                            <input id="group-chart" type="checkbox" class="doNotTriggerChange">
                             <label for="group-chart"><?php _e('Enable grouping', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+                    <div id="enable-animation-container" class="apexcharts">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Enable animation', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('If you tick this checkbox, the chart will animate when loading. For charts with a lot of data, this could slow down the page', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="toggle-switch p-b-16" data-ts-color="blue">
+                            <input id="enable-animation" type="checkbox">
+                            <label for="enable-animation"><?php _e('Enable animation', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+                    <div class="row apexcharts">
+                        <div class="start-angle-container apexcharts-radialbar col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Start angle', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set the starting angle of the radial bar.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="start-angle">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="start-angle" min="-360" value="0"  class="form-control input-sm input-number"
+                                               id="start-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="start-angle">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="end-angle-container apexcharts-radialbar col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('End angle', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set the ending angle of the radial bar.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="end-angle">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="end-angle" min="-360" value="360"  class="form-control input-sm input-number"
+                                               id="end-angle">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="end-angle">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="background-color-container" id="background-color-container">
@@ -148,7 +204,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border-width">
+                    <div class="chart-text-color col-sm apexcharts" id="chart-text-color-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Text color', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('Choose the color of the text color for the chart.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="cp-container">
+                            <div class="form-group">
+                                <div class="fg-line dropdown">
+                                    <div id="cp"
+                                         class="input-group wdt-color-picker">
+                                        <input type="text" id="chart-text-color" value="#373d3f"
+                                               class="form-control cp-value wdt-add-picker"/>
+                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border-width border-settings">
                         <h4 class="c-title-color m-b-2">
                             <?php _e('Border width', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -173,7 +248,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border-color-container" id="border-color-container">
+                    <div class="border-color-container border-settings" id="border-color-container">
                         <h4 class="c-title-color m-b-2">
                             <?php _e('Border color', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -193,7 +268,7 @@
                         </div>
                     </div>
 
-                    <div class="border-radius">
+                    <div class="border-radius border-settings">
                         <h4 class="c-title-color m-b-2">
                             <?php _e('Border radius', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -218,20 +293,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="highcharts" id="zoom-type-row">
+                    <div class="highcharts apexcharts" id="zoom-type-row">
                         <h4 class="c-title-color m-b-2">
                             <?php _e('Zoom type', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Decides in what dimensions the user can zoom by dragging the mouse', 'wpdatatables'); ?>"></i>
+                               title="<?php _e('Decides in what dimensions the user can zoom by dragging the mouse', 'wpdatatables'); ?><?php _e('. For Apexcharts you have to have zoom enabled in the toolbar.' , 'wpdatatables'); ?>"></i>
                         </h4>
                         <div class="form-group">
                             <div class="fg-line">
                                 <div class="select">
-                                    <select class="selectpicker" name="zoom-type" id="zoom-type">
+                                    <label for="zoom-type"></label><select class="selectpicker" name="zoom-type" id="zoom-type">
                                         <option selected="selected" value="none">None</option>
                                         <option value="x">X</option>
-                                        <option value="y">Y</option>
-                                        <option value="xy">XY</option>
                                     </select>
                                 </div>
                             </div>
@@ -284,7 +357,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="highcharts">
+                    <div class="highcharts apexcharts" id="plot-background-image-container">
                         <h4 class="c-title-color m-b-2">
                             <?php _e('Plot background image', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -293,9 +366,263 @@
                         <div class="form-group">
                             <div class="fg-line">
                                 <div class="row">
-                                    <div class="col-sm-12">
+                                    <div class="col-sm-12" style="display: flex">
                                         <input type="text" name="plot-background-image" id="plot-background-image"
-                                               class="form-control input-sm" value=""/>
+                                               class="form-control input-sm doNotTriggerChange" value=""/>
+
+                                        <button class="btn bgm-blue" id="wdt-plot-image-clear-button">
+                                            <span class="wpdt-icon-image"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apexcharts" id="line-background-image-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Chart area/line image', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('The URL for an image to use as the background image of the chart area or line. If you have multiple series, this image is applied to all of them. If you want each series to have a different image property, leave this blank.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="form-group">
+                            <div class="fg-line">
+                                <div class="row">
+                                    <div class="col-sm-12" style="display: flex">
+                                        <input type="text" name="line-background-image" id="line-background-image"
+                                               class="form-control input-sm doNotTriggerChange" value=""/>
+
+                                            <button class="btn bgm-blue" id="wdt-line-image-clear-button">
+                                                <span class="wpdt-icon-image"></span>
+                                            </button>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="apexcharts-pie apexcharts" id="enable-monochrome">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Monochrome', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('A single color will be used as a base and shades for the chart will be generated from that color', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="toggle-switch p-b-16" data-ts-color="blue">
+                            <input id="monochrome" type="checkbox">
+                            <label for="monochrome"><?php _e('Enable monochrome color palette', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+                    <div class="monochrome-color col-sm-20" style="display: none" id="monochrome-color-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Monochrome color to use', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('Choose the color to use for generating a monochromatic design.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="cp-container">
+                            <div class="form-group">
+                                <div class="fg-line dropdown">
+                                    <div id="cp"
+                                         class="input-group wdt-color-picker">
+                                        <input type="text" id="monochrome-color" value="#255aee"
+                                               class="form-control cp-value wdt-add-picker"/>
+                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="apexcharts-pie apexcharts" id="color-palette-row">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Color palette', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('When enabled, you can pick a predefined color palette for your chart. Leave this unchecked if you want to use the monochrome design.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="toggle-switch p-b-16" data-ts-color="blue">
+                            <input id="enable-color-palette" type="checkbox">
+                            <label for="enable-color-palette"><?php _e('Use a color palette', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+
+                    <div id="color-palette-container" style="display: none">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Palette', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('Choose between 10 predefined color palettes.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="select">
+                            <select class="form-control selectpicker"
+                                    id="color-palette">
+                                <option value="palette1" selected="selected"><?php _e('Palette 1', 'wpdatatables'); ?></option>
+                                <option value="palette2" ><?php _e('Palette 2', 'wpdatatables'); ?></option>
+                                <option value="palette3" ><?php _e('Palette 3', 'wpdatatables'); ?></option>
+                                <option value="palette4"><?php _e('Palette 4', 'wpdatatables'); ?></option>
+                                <option value="palette5"><?php _e('Palette 5', 'wpdatatables'); ?></option>
+                                <option value="palette6"><?php _e('Palette 6', 'wpdatatables'); ?></option>
+                                <option value="palette7" ><?php _e('Palette 7', 'wpdatatables'); ?></option>
+                                <option value="palette8" ><?php _e('Palette 8', 'wpdatatables'); ?></option>
+                                <option value="palette9" ><?php _e('Palette 9', 'wpdatatables'); ?></option>
+                                <option value="palette10" ><?php _e('Palette 10', 'wpdatatables'); ?></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="marker-size-row" class="apexcharts">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Marker size', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('Sets the size of the marker point. For larger amounts of data points, it is recommended to set this to 0 to optimize performance.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="form-group">
+                            <div class="fg-line">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="fg-line ">
+                                            <div class="wdt-custom-number-input">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="marker-size">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="marker-size" min="0" value="0" class="form-control input-sm input-number"
+                                                       id="marker-size">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="marker-size">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="apexcharts" id="data-labels-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Data labels', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('If you leave this checked, data labels will be shown on the chart. For larger amounts of data, it is recommended to keep this option turned off for optimal perfermance.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="toggle-switch p-b-16" data-ts-color="blue">
+                            <input id="data-labels" type="checkbox">
+                            <label for="data-labels"><?php _e('Show data labels', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+
+                    <div class="apexcharts">
+                        <h4 class="c-title-color m-b-2">
+                            <?php _e('Drop shadow', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php _e('Enable a dropshadow.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="toggle-switch p-b-16" data-ts-color="blue">
+                            <input id="enable-dropshadow" type="checkbox">
+                            <label for="enable-dropshadow"><?php _e('Enable dropshadow', 'wpdatatables'); ?></label>
+                        </div>
+                    </div>
+
+                    <div class="row apexcharts">
+                        <div class="dropshadow dropshadow-blur col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Dropshadow blur', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set the blur distance for the shadow. You can set any value starting with 1.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-blur">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="dropshadow-blur" min="1" value="3"  class="form-control input-sm input-number"
+                                               id="dropshadow-blur">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-blur">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropshadow dropshadow-opacity col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Dropshadow opacity', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set the opacity of the shadow ranging between 1 and 100.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-opacity">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="dropshadow-opacity" min="1" value="35"  class="form-control input-sm input-number"
+                                               id="dropshadow-opacity">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-opacity">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row apexcharts">
+                        <div class="dropshadow col-sm-12" style="display: none" id="dropshadow-color-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Dropshadow color', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Choose the color of the dropshadow.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="cp-container">
+                                <div class="form-group">
+                                    <div class="fg-line dropdown">
+                                        <div id="cp"
+                                             class="input-group wdt-color-picker">
+                                            <input type="text" id="dropshadow-color" value="#000000"
+                                                   class="form-control cp-value wdt-add-picker"/>
+                                            <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row apexcharts">
+                        <div class="dropshadow dropshadow-top col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Top', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set top offset for the dropshadow.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-top">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="dropshadow-top" value="5" min="-100" class="form-control input-sm input-number"
+                                               id="dropshadow-top">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-top">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dropshadow dropshadow-left col-sm-6" style="display: none">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Left', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Set left offset for the dropshadow.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="wdt-custom-number-input">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="dropshadow-left">
+                                            <i class="wpdt-icon-minus"></i>
+                                        </button>
+                                        <input type="number" name="dropshadow-left" value="5" min="-100" class="form-control input-sm input-number"
+                                               id="dropshadow-left">
+                                        <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="dropshadow-left">
+                                            <i class="wpdt-icon-plus-full"></i>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -450,6 +777,81 @@
                                 <label for="show-grid"><?php _e('Do you want to show grid on the chart?', 'wpdatatables'); ?></label>
                             </div>
                         </div>
+                        <div class="apexcharts grid-style" id="grid-color-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Grid line color', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Color of grid borders / lines', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="cp-container">
+                                <div class="form-group">
+                                    <div class="fg-line dropdown">
+                                        <div id="cp"
+                                             class="input-group wdt-color-picker">
+                                            <input type="text" id="grid-color" value=""
+                                                   class="form-control cp-value wdt-add-picker"/>
+                                            <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid-stroke grid-style apexcharts">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Grid stroke dash', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Creates dashes in the grid. Higher number creates more space between dashes in the border.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="wdt-custom-number-input">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="grid-stroke">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="grid-stroke" min="0" value="1" class="form-control input-sm input-number"
+                                                       id="grid-stroke">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="grid-stroke">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="apexcharts grid-style">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Grid position', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Whether to place grid behind chart paths of in front.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" name="title-align" id="grid-position">
+                                            <option selected="selected" value="back">Back</option>
+                                            <option value="front">Front</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="apexcharts grid-style yaxisOnly">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Axes lines to show', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Choose which axes lines to show', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="select">
+                                <select class="form-control selectpicker" multiple="multiple"
+                                        id="grid-axes">
+                                    <option value="xaxis">x-axis</option>
+                                    <option value="yaxis" selected="selected">y-axis</option>
+                                </select>
+                            </div>
+                        </div>
                         <div class="highcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Grid line style', 'wpdatatables'); ?>
@@ -477,7 +879,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="horizontal-axis-label-row">
+                        <div id="horizontal-axis-label-row" class="highcharts google chartjs apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Horizontal axis label', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -494,7 +896,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="google highcharts" id="horizontal-axis-crosshair-row">
+                        <div class="google highcharts apexcharts" id="horizontal-axis-crosshair-row">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Horizontal crosshair', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -523,7 +925,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="vertical-axis-label-row">
+                        <div id="vertical-axis-label-row" class="highcharts google chartjs apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Vertical axis label', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -540,7 +942,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="google highcharts" id="vertical-axis-crosshair-row">
+                        <div class="google highcharts apexcharts" id="vertical-axis-crosshair-row">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Vertical crosshair', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -569,7 +971,34 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="vertical-axis-min-row">
+                        <div id="stroke-width-row" class="apexcharts">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Stroke width', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Sets the width of border for svg path. Smaller values correspond to smaller line thickness.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="fg-line ">
+                                                <div class="wdt-custom-number-input">
+                                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="stroke-width">
+                                                        <i class="wpdt-icon-minus"></i>
+                                                    </button>
+                                                    <input type="number" name="stroke-width" min="1" value="2" class="form-control input-sm input-number"
+                                                           id="stroke-width">
+                                                    <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="stroke-width">
+                                                        <i class="wpdt-icon-plus-full"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="vertical-axis-min-row" class="yaxisOnly">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Vertical axis min value', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -596,7 +1025,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="vertical-axis-max-row">
+                        <div id="vertical-axis-max-row" class="yaxisOnly">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Vertical axis max value', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -621,6 +1050,31 @@
                                 </div>
                             </div>
                         </div>
+                        <div id="tick-amount-row" class="apexcharts yaxisOnly">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Tick amount', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Number of tick intervals to show on the y-axis.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <div class="wdt-custom-number-input">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="tick-amount">
+                                                    <i class="wpdt-icon-minus"></i>
+                                                </button>
+                                                <input type="number" name="tick-amount" min="0" value="0" class="form-control input-sm input-number"
+                                                       id="tick-amount">
+                                                <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="tick-amount">
+                                                    <i class="wpdt-icon-plus-full"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="google highcharts" id="inverted-row">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Invert', 'wpdatatables'); ?>
@@ -630,6 +1084,17 @@
                             <div class="toggle-switch p-b-16" data-ts-color="blue">
                                 <input id="inverted" type="checkbox">
                                 <label for="inverted"><?php _e('Invert chart axes', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+                        <div class="apexcharts yaxisOnly" id="reversed-axis">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Reverse y-axis', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Flip the chart upside down making it inversed and draw y-axis from bigger to smaller numbers.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch p-b-16" data-ts-color="blue">
+                                <input id="reversed" type="checkbox">
+                                <label for="reversed"><?php _e('Reverse y-axis', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                     </div>
@@ -648,7 +1113,7 @@
                                 <label for="show-chart-title"><?php _e('Show title', 'wpdatatables'); ?></label>
                             </div>
                         </div>
-                        <div class="google highcharts" id="title-floating-row">
+                        <div class="google highcharts apexcharts" id="title-floating-row">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Title floating', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -659,7 +1124,7 @@
                                 <label for="title-floating"><?php _e('Enable floating', 'wpdatatables'); ?></label>
                             </div>
                         </div>
-                        <div class="highcharts">
+                        <div class="highcharts apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Title align', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -751,7 +1216,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="highcharts">
+                        <div class="highcharts apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Subtitle', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -768,7 +1233,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="highcharts">
+                        <div class="highcharts apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Subtitle align', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -791,7 +1256,7 @@
                 <div id="chart-container-tabs-5"
                      class="col-sm-9 col-md-9 col-lg-8 chart-container chart-options-container tab-pane">
                     <div class="inside">
-                        <div id="tooltip-enabled-row">
+                        <div id="tooltip-enabled-row" class="highcharts chartjs google apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Tooltip', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -935,19 +1400,41 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="apexcharts follow-cursor-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Follow cursor', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Follow the cursor position instead of putting tooltip on actual data points', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch p-b-16" data-ts-color="blue">
+                                <input id="follow-cursor" type="checkbox">
+                                <label for="follow-cursor"><?php _e('Enable follow cursor', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+                        <div class="apexcharts fill-series-color-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Fill with series color', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('If you leave this checked, the tooltip background will be filled with the corresponding series color', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch p-b-16" data-ts-color="blue">
+                                <input id="fill-series-color" type="checkbox">
+                                <label for="fill-series-color"><?php _e('Fill with series color', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="chart-container-tabs-6"
                      class="col-sm-9 col-md-9 col-lg-8 chart-container chart-options-container tab-pane">
                     <div class="inside">
-                        <div class="highcharts chartjs">
+                        <div class="highcharts chartjs apexcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Legend', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                    title="<?php _e('Enable or disable the legend', 'wpdatatables'); ?>"></i>
                             </h4>
                             <div class="toggle-switch p-b-16" data-ts-color="blue">
-                                <input id="show-legend" type="checkbox" checked>
+                                <input id="show-legend" type="checkbox" checked="checked">
                                 <label for="show-legend"><?php _e('Show legend', 'wpdatatables'); ?></label>
                             </div>
                         </div>
@@ -971,7 +1458,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="highcharts" id="legend_background_color">
+                        <div class="highcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -1086,7 +1573,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="highcharts" id="legend_border_color">
+                        <div class="highcharts">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Border color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -1130,7 +1617,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="chartjs" id="legend_position_row">
+                        <div class="chartjs apexcharts" id="legend_position_row">
                             <h4 class="c-title-color m-b-2">
                                 <?php _e('Legend position', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -1141,7 +1628,8 @@
                                     <div class="select">
                                         <select class="selectpicker" name="legend-position-cjs"
                                                 id="legend-position-cjs">
-                                            <option selected="selected" value="top">Top</option>
+                                            <option selected="selected" value="">Nothing selected</option>
+                                            <option value="top">Top</option>
                                             <option value="left">Left</option>
                                             <option value="bottom">Bottom</option>
                                             <option value="right">Right</option>
@@ -1343,10 +1831,62 @@
                                 </div>
                             </div>
                         </div>
+
+                    </div>
+                </div>
+                <div id="chart-container-tabs-9"
+                     class="col-sm-9 col-md-9 col-lg-8 chart-container chart-options-container tab-pane">
+                    <div class="inside">
+                        <div>
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Toolbar', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Whether to show the toolbar', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch p-b-16" data-ts-color="blue">
+                                <input id="show-toolbar" type="checkbox">
+                                <label for="show-toolbar"><?php _e('Show toolbar', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+
+                        <div id="toolbar-buttons-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('Buttons in the toolbar', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('Choose which buttons to show in the toolbar', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="select">
+                                <select class="form-control selectpicker" multiple="multiple"
+                                        id="toolbar-buttons">
+                                    <option value="download" selected="selected"><?php _e('Download', 'wpdatatables'); ?></option>
+                                    <option value="selection" selected="selected"><?php _e('Selection', 'wpdatatables'); ?></option>
+                                    <option value="zoom" selected="selected"><?php _e('Zoom', 'wpdatatables'); ?></option>
+                                    <option value="zoomin" selected="selected"><?php _e('Zoom in', 'wpdatatables'); ?></option>
+                                    <option value="zoomout" selected="selected"><?php _e('Zoom out', 'wpdatatables'); ?></option>
+                                    <option value="pan" selected="selected"><?php _e('Panning', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="apex-file-name-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php _e('File name', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php _e('The filename, without extension, to use for the exported chart', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="row">
+                                        <div class="col-sm-12">
+                                            <input type="text" name="exporting-file-name" id="apex-exporting-file-name"
+                                                   value="" class="form-control input-sm"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -1356,6 +1896,7 @@
             <div id="chart-js-container">
                 <canvas id="chart-js-canvas"></canvas>
             </div>
+            <div id="apex-chart-container"></div>
         </div>
     </div>
 

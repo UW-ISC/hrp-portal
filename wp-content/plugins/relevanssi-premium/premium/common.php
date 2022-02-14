@@ -144,7 +144,7 @@ function relevanssi_premium_get_post( $id, int $blog_id = -1 ) {
 			 * After a post object is created from the user profile, it is
 			 * passed through this filter so it can be modified.
 			 *
-			 * @param Object $post The post object.
+			 * @param object $post The post object.
 			 */
 			$post = apply_filters( 'relevanssi_user_profile_to_post', $post );
 			break;
@@ -514,7 +514,7 @@ function relevanssi_premium_init() {
 
 	$t15s_updater = new Relevanssi_Language_Packs(
 		'plugin',
-		'relevanssi-premium',
+		'relevanssi',
 		'https://packages.translationspress.com/relevanssi/relevanssi/packages.json'
 	);
 	$t15s_updater->add_project();

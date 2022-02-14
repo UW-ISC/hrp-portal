@@ -244,15 +244,17 @@ var wpDataTablesHighchart = function(){
                 case 'highcharts_pie_with_gradient_chart':
                     this.options.chart.type = 'pie';
                     // Radialize the colors
-                    Highcharts.getOptions().colors = Highcharts.getOptions().colors.map( function (color) {
-                        return {
-                            radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
-                            stops: [
-                                [0, color],
-                                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-                            ]
-                        };
-                    });
+                    if (typeof Highcharts.getOptions().colors[0].radialGradient ==='undefined') {
+                        Highcharts.getOptions().colors = Highcharts.getOptions().colors.map(function (color) {
+                            return {
+                                radialGradient: {cx: 0.5, cy: 0.3, r: 0.7},
+                                stops: [
+                                    [0, color],
+                                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                                ]
+                            };
+                        });
+                    }
                     this.options.plotOptions = {
                         pie: {
                             allowPointSelect: true,

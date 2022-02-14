@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Relevanssi Premium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-26 04:55+0200\n"
+"POT-Creation-Date: 2022-01-28 08:26+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Mikko Saari <mikko@mikkosaari.fi>\n"
 "Language-Team: \n"
@@ -14,7 +14,7 @@ msgstr ""
 "esc_html_x;esc_attr_x;_x;__ngettext;__ngettext_noop;_n_noop;_nx;_nx_noop;_ex;"
 "_c;_nc\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 3.0\n"
+"X-Generator: Poedit 3.0.1\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPath-1: premium\n"
 "X-Poedit-SearchPath-2: lib\n"
@@ -25,50 +25,54 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-4: coverage\n"
 "X-Poedit-SearchPathExcluded-5: vendor\n"
 
-#: lib/admin-ajax.php:91
+#: lib/admin-ajax.php:35 lib/admin-ajax.php:189
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: lib/admin-ajax.php:114
 #, php-format
 msgid "Indexed %1$d post (total %2$d), processed %3$d / %4$d."
 msgstr ""
 
-#: lib/admin-ajax.php:214 lib/tabs/indexing-tab.php:130
+#: lib/admin-ajax.php:251 lib/tabs/indexing-tab.php:130
 #: premium/tabs/attachments-tab.php:63
 msgid "Results"
 msgstr ""
 
-#: lib/admin-ajax.php:218
+#: lib/admin-ajax.php:255
 #, php-format
 msgid "Found a total of %1$d posts, showing posts %2$d–%3$s."
 msgstr ""
 
-#: lib/admin-ajax.php:220
+#: lib/admin-ajax.php:257
 msgid "Previous page"
 msgstr ""
 
-#: lib/admin-ajax.php:223
+#: lib/admin-ajax.php:260
 msgid "Next page"
 msgstr ""
 
-#: lib/admin-ajax.php:227
+#: lib/admin-ajax.php:264
 msgid "Score:"
 msgstr ""
 
-#: lib/admin-ajax.php:252
+#: lib/admin-ajax.php:289
 msgid "Edit"
 msgstr ""
 
-#: lib/admin-ajax.php:300
+#: lib/admin-ajax.php:337
 msgid "Query variables"
 msgstr ""
 
-#: lib/admin-ajax.php:369
+#: lib/admin-ajax.php:406
 msgid "Filters"
 msgstr ""
 
-#: lib/admin-ajax.php:370
+#: lib/admin-ajax.php:407
 msgid "show"
 msgstr ""
 
-#: lib/admin-ajax.php:371
+#: lib/admin-ajax.php:408
 msgid "hide"
 msgstr ""
 
@@ -516,11 +520,11 @@ msgstr ""
 msgid "Relevanssi image attachment filter"
 msgstr ""
 
-#: lib/indexing.php:479 premium/common.php:517
+#: lib/indexing.php:480 premium/common.php:539
 msgid "Relevanssi index exclude"
 msgstr ""
 
-#: lib/indexing.php:508
+#: lib/indexing.php:509
 msgid "Blocked by a filter function"
 msgstr ""
 
@@ -582,7 +586,7 @@ msgstr ""
 msgid "Indexing"
 msgstr ""
 
-#: lib/interface.php:187 premium/interface.php:1152
+#: lib/interface.php:187 premium/interface.php:1156
 msgid "Attachments"
 msgstr ""
 
@@ -594,8 +598,8 @@ msgstr ""
 msgid "Excerpts and highlights"
 msgstr ""
 
-#: lib/interface.php:215 lib/tabs/synonyms-tab.php:31
-#: lib/tabs/synonyms-tab.php:36 lib/tabs/synonyms-tab.php:72
+#: lib/interface.php:215 lib/tabs/synonyms-tab.php:41
+#: lib/tabs/synonyms-tab.php:67 lib/tabs/synonyms-tab.php:98
 msgid "Synonyms"
 msgstr ""
 
@@ -605,7 +609,7 @@ msgid "Stopwords"
 msgstr ""
 
 #: lib/interface.php:229 lib/tabs/redirects-tab.php:18
-#: premium/interface.php:1144 premium/tabs/redirects-tab.php:26
+#: premium/interface.php:1148 premium/tabs/redirects-tab.php:26
 msgid "Redirects"
 msgstr ""
 
@@ -828,7 +832,7 @@ msgstr ""
 msgid "Relevanssi Search Logs"
 msgstr ""
 
-#: lib/shortcodes.php:163
+#: lib/shortcodes.php:166
 msgid "None"
 msgstr ""
 
@@ -1276,7 +1280,7 @@ msgid "Type"
 msgstr ""
 
 #: lib/tabs/indexing-tab.php:175 lib/tabs/indexing-tab.php:267
-#: premium/interface.php:684
+#: premium/interface.php:688
 msgid "Index"
 msgstr ""
 
@@ -1290,7 +1294,7 @@ msgid "Index post type %s"
 msgstr ""
 
 #: lib/tabs/indexing-tab.php:195 lib/tabs/indexing-tab.php:289
-#: premium/interface.php:701 premium/interface.php:712
+#: premium/interface.php:705 premium/interface.php:716
 msgid "yes"
 msgstr ""
 
@@ -1300,7 +1304,7 @@ msgid "Post type %s is excluded from search"
 msgstr ""
 
 #: lib/tabs/indexing-tab.php:199 lib/tabs/indexing-tab.php:285
-#: premium/interface.php:703 premium/interface.php:708
+#: premium/interface.php:707 premium/interface.php:712
 msgid "no"
 msgstr ""
 
@@ -1337,15 +1341,15 @@ msgid ""
 "%1$sControlling attachment types in the Knowledge base%2$s."
 msgstr ""
 
-#: lib/tabs/indexing-tab.php:259 premium/interface.php:677
+#: lib/tabs/indexing-tab.php:259 premium/interface.php:681
 msgid "Taxonomies"
 msgstr ""
 
-#: lib/tabs/indexing-tab.php:266 premium/interface.php:683
+#: lib/tabs/indexing-tab.php:266 premium/interface.php:687
 msgid "Taxonomy"
 msgstr ""
 
-#: lib/tabs/indexing-tab.php:268 premium/interface.php:685
+#: lib/tabs/indexing-tab.php:268 premium/interface.php:689
 msgid "Public?"
 msgstr ""
 
@@ -1354,12 +1358,12 @@ msgstr ""
 msgid "Index taxonomy %s"
 msgstr ""
 
-#: lib/tabs/indexing-tab.php:287 premium/interface.php:710
+#: lib/tabs/indexing-tab.php:287 premium/interface.php:714
 #, php-format
 msgid "Taxonomy %s is not public"
 msgstr ""
 
-#: lib/tabs/indexing-tab.php:291 premium/interface.php:714
+#: lib/tabs/indexing-tab.php:291 premium/interface.php:718
 #, php-format
 msgid "Taxonomy %s is public"
 msgstr ""
@@ -1768,10 +1772,22 @@ msgid ""
 msgstr ""
 
 #: lib/tabs/overview-tab.php:71
-msgid "Privacy and GDPR compliance"
+msgid "Relevanssi Live Ajax Search"
 msgstr ""
 
 #: lib/tabs/overview-tab.php:74
+#, php-format
+msgid ""
+"If you want a live search results, you can use the Relevanssi Live Ajax "
+"Search plugin. %1$sYou can find it in the plugin repository%2$s. It will "
+"make your search forms show instant results, powered by Relevanssi."
+msgstr ""
+
+#: lib/tabs/overview-tab.php:78
+msgid "Privacy and GDPR compliance"
+msgstr ""
+
+#: lib/tabs/overview-tab.php:81
 #, php-format
 msgid ""
 "%1$sGDPR Compliance at Relevanssi knowledge base%2$s explains how using "
@@ -1780,100 +1796,100 @@ msgid ""
 "WordPress user data export and erase tools."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:78
+#: lib/tabs/overview-tab.php:85
 msgid "For more information"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:80
+#: lib/tabs/overview-tab.php:87
 msgid ""
 "Relevanssi uses the WordPress contextual help. Click 'Help' on the top right "
 "corner for more information on many Relevanssi topics."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:82
+#: lib/tabs/overview-tab.php:89
 #, php-format
 msgid ""
 "%1$sRelevanssi knowledge base%2$s has lots of information about advanced "
 "Relevanssi use, including plenty of code samples."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:86
+#: lib/tabs/overview-tab.php:93
 msgid "Do you like Relevanssi?"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:88
+#: lib/tabs/overview-tab.php:95
 msgid ""
 "If you do, the best way to show your appreciation is to spread the word and "
 "perhaps give us a good review on WordPress.org."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:90
+#: lib/tabs/overview-tab.php:97
 #, php-format
 msgid ""
 "If you like Relevanssi, leaving a five-star review on WordPress.org will "
 "help others discover Relevanssi. %1$sYou can add your review here%2$s."
 msgstr ""
 
-#: lib/tabs/overview-tab.php:96
+#: lib/tabs/overview-tab.php:103
 msgid "Buy Relevanssi Premium"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:99
+#: lib/tabs/overview-tab.php:106
 msgid "Buy Relevanssi Premium now"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:101
+#: lib/tabs/overview-tab.php:108
 #, php-format
 msgid ""
 "use coupon code %1$s for 20%% discount (valid at least until the end of %2$s)"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:102
+#: lib/tabs/overview-tab.php:109
 msgid "Here are some improvements Relevanssi Premium offers:"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:104
+#: lib/tabs/overview-tab.php:111
 msgid "PDF content indexing"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:105
+#: lib/tabs/overview-tab.php:112
 msgid "A Related posts feature"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:106
+#: lib/tabs/overview-tab.php:113
 msgid "Index and search user profile pages"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:107
+#: lib/tabs/overview-tab.php:114
 msgid "Index and search taxonomy term pages"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:108
+#: lib/tabs/overview-tab.php:115
 msgid "Multisite searches across many subsites"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:109
+#: lib/tabs/overview-tab.php:116
 msgid "WP CLI commands"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:110
+#: lib/tabs/overview-tab.php:117
 msgid "Adjust weights separately for each post type and taxonomy"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:111
+#: lib/tabs/overview-tab.php:118
 msgid "Internal link anchors can be search terms for the target posts"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:112
+#: lib/tabs/overview-tab.php:119
 msgid "Index and search any columns in the wp_posts database"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:113
+#: lib/tabs/overview-tab.php:120
 msgid ""
 "Hide Relevanssi branding from the User Searches page on a client installation"
 msgstr ""
 
-#: lib/tabs/overview-tab.php:114
+#: lib/tabs/overview-tab.php:121
 msgid "Redirect search queries to custom URLs"
 msgstr ""
 
@@ -2270,21 +2286,44 @@ msgid ""
 "a language before adjusting the stopword settings."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:39
+#: lib/tabs/synonyms-tab.php:54
+msgid "No synonyms!"
+msgstr ""
+
+#: lib/tabs/synonyms-tab.php:57
+msgid ""
+"Synonyms are disabled because the searching operator is set to AND. Enable "
+"OR searching to use the synonyms."
+msgstr ""
+
+#: lib/tabs/synonyms-tab.php:59
+msgid ""
+"If you want to use synonyms in AND searches, enable synonym indexing on the "
+"Indexing tab. Also, any changes to the synonyms won't take effect until you "
+"rebuild the index."
+msgstr ""
+
+#: lib/tabs/synonyms-tab.php:61
+msgid ""
+"Relevanssi Premium has a feature that allows you to include the synonyms in "
+"the indexing. This makes it possible to use synonyms in AND searches."
+msgstr ""
+
+#: lib/tabs/synonyms-tab.php:70
 msgid ""
 "Add synonyms here to make the searches find better results. If you notice "
 "your users frequently misspelling a product name, or for other reasons use "
 "many names for one thing, adding synonyms will make the results better."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:41
+#: lib/tabs/synonyms-tab.php:72
 msgid ""
 "Do not go overboard, though, as too many synonyms can make the search "
 "confusing: users understand if a search query doesn't match everything, but "
 "they get confused if the searches match to unexpected things."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:45
+#: lib/tabs/synonyms-tab.php:82
 msgid ""
 "The format here is <code>key = value</code>. If you add <code>dog = hound</"
 "code> to the list of synonyms, searches for <code>dog</code> automatically "
@@ -2295,30 +2334,19 @@ msgid ""
 "and <code>hound</code>."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:47
+#: lib/tabs/synonyms-tab.php:84
 msgid ""
 "The synonyms are one direction only. If you want both directions, add the "
 "synonym again, reversed: <code>hound = dog</code>."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:49
+#: lib/tabs/synonyms-tab.php:86
 msgid ""
 "It's possible to use phrases for the value, but not for the key. <code>dog = "
 "\"great dane\"</code> works, but <code>\"great dane\" = dog</code> doesn't."
 msgstr ""
 
-#: lib/tabs/synonyms-tab.php:56
-msgid "Synonyms in AND searches"
-msgstr ""
-
-#: lib/tabs/synonyms-tab.php:59
-msgid ""
-"If you want to use synonyms in AND searches, enable synonym indexing on the "
-"Indexing tab. Also, any changes to the synonyms won't take effect until you "
-"rebuild the index."
-msgstr ""
-
-#: lib/tabs/synonyms-tab.php:74
+#: lib/tabs/synonyms-tab.php:100
 msgid ""
 "You are using Polylang and are in \"Show all languages\" mode. Please select "
 "a language before adjusting the synonym settings."
@@ -2436,43 +2464,43 @@ msgstr ""
 msgid "Clicks"
 msgstr ""
 
-#: lib/utils.php:1230
+#: lib/utils.php:1231
 msgid "There is no excerpt because this is a protected post."
 msgstr ""
 
-#: premium/admin-ajax.php:154
+#: premium/admin-ajax.php:158
 msgid "Indexing complete!"
 msgstr ""
 
-#: premium/admin-ajax.php:170
+#: premium/admin-ajax.php:174
 #, php-format
 msgid "Successfully indexed attachment id %d."
 msgstr ""
 
-#: premium/admin-ajax.php:173
+#: premium/admin-ajax.php:177
 #, php-format
 msgid "Failed to index attachment id %1$d: %2$s"
 msgstr ""
 
-#: premium/admin-ajax.php:248
+#: premium/admin-ajax.php:262
 msgid "Attachment ID"
 msgstr ""
 
-#: premium/admin-ajax.php:305 premium/admin-ajax.php:309
+#: premium/admin-ajax.php:322 premium/admin-ajax.php:326
 #, php-format
 msgid "%1$d taxonomy term, total %2$d / %3$d."
 msgstr ""
 
-#: premium/admin-ajax.php:343
+#: premium/admin-ajax.php:361
 msgid "disabled."
 msgstr ""
 
-#: premium/admin-ajax.php:351
+#: premium/admin-ajax.php:369
 #, php-format
 msgid "%1$d post type archive indexed."
 msgstr ""
 
-#: premium/admin-ajax.php:407
+#: premium/admin-ajax.php:426
 #, php-format
 msgid "Indexed %1$d user (total %2$d), processed %3$d / %4$d."
 msgstr ""
@@ -2666,13 +2694,18 @@ msgid ""
 "higher?"
 msgstr ""
 
-#: premium/click-tracking.php:858
+#: premium/click-tracking.php:855
+#, php-format
+msgid "%1$s posts"
+msgstr ""
+
+#: premium/click-tracking.php:860
 msgid ""
 "You have search queries that generate clicks to many posts. Perhaps more "
 "focus would be good?"
 msgstr ""
 
-#: premium/click-tracking.php:866
+#: premium/click-tracking.php:868
 msgid "Sorry, no clicks recorded for this period!"
 msgstr ""
 
@@ -2684,7 +2717,7 @@ msgid ""
 "'relevanssi_multisite_public_status' filter hook."
 msgstr ""
 
-#: premium/common.php:1015
+#: premium/common.php:1037
 msgid "Must have"
 msgstr ""
 
@@ -2754,8 +2787,8 @@ msgstr ""
 msgid "User profiles"
 msgstr ""
 
-#: premium/contextual-help.php:58 premium/interface.php:120
-#: premium/interface.php:195
+#: premium/contextual-help.php:58 premium/interface.php:124
+#: premium/interface.php:199
 msgid "Internal links"
 msgstr ""
 
@@ -2824,47 +2857,47 @@ msgstr ""
 msgid "Plugin support page"
 msgstr ""
 
-#: premium/indexing.php:1187
+#: premium/indexing.php:1131
 #, php-format
 msgid "Indexed %d taxonomy terms."
 msgstr ""
 
-#: premium/indexing.php:1189
+#: premium/indexing.php:1133
 msgid "No taxonomies to index."
 msgstr ""
 
-#: premium/interface.php:55 premium/interface.php:68
+#: premium/interface.php:59 premium/interface.php:72
 msgid "API key"
 msgstr ""
 
-#: premium/interface.php:58
+#: premium/interface.php:62
 msgid "API key is set"
 msgstr ""
 
-#: premium/interface.php:59
+#: premium/interface.php:63
 msgid "Remove the API key."
 msgstr ""
 
-#: premium/interface.php:60 premium/interface.php:73
+#: premium/interface.php:64 premium/interface.php:77
 msgid ""
 "A valid API key is required to use the automatic update feature and the PDF "
 "indexing. Otherwise the plugin will work just fine without an API key. Get "
 "your API key from Relevanssi.com."
 msgstr ""
 
-#: premium/interface.php:71
+#: premium/interface.php:75
 msgid "Set the API key:"
 msgstr ""
 
-#: premium/interface.php:91
+#: premium/interface.php:95
 msgid "Disable outside connections"
 msgstr ""
 
-#: premium/interface.php:96
+#: premium/interface.php:100
 msgid "Disable update version checking and attachment indexing"
 msgstr ""
 
-#: premium/interface.php:98
+#: premium/interface.php:102
 msgid ""
 "If you check this box, Relevanssi will stop all outside connections. This "
 "means the plugin won't check for updates from Relevanssi.com and won't read "
@@ -2873,49 +2906,49 @@ msgid ""
 "know what you're doing, because this will disable Relevanssi updates."
 msgstr ""
 
-#: premium/interface.php:124
+#: premium/interface.php:128
 msgid "No special processing for internal links"
 msgstr ""
 
-#: premium/interface.php:125
+#: premium/interface.php:129
 msgid "Index internal links for target documents only"
 msgstr ""
 
-#: premium/interface.php:126
+#: premium/interface.php:130
 msgid "Index internal links for both target and source"
 msgstr ""
 
-#: premium/interface.php:128
+#: premium/interface.php:132
 msgid ""
 "Internal link anchor tags can be indexed for target document, both target "
 "and source or source only. See Help for more details."
 msgstr ""
 
-#: premium/interface.php:156
+#: premium/interface.php:160
 msgid "Hide Relevanssi"
 msgstr ""
 
-#: premium/interface.php:161
+#: premium/interface.php:165
 msgid "Hide Relevanssi on edit pages"
 msgstr ""
 
-#: premium/interface.php:163
+#: premium/interface.php:167
 msgid "Enabling this option hides Relevanssi on all post edit pages."
 msgstr ""
 
-#: premium/interface.php:168
+#: premium/interface.php:172
 msgid "Show Relevanssi for admins"
 msgstr ""
 
-#: premium/interface.php:172
+#: premium/interface.php:176
 msgid "Show Relevanssi for admins on edit pages"
 msgstr ""
 
-#: premium/interface.php:175
+#: premium/interface.php:179
 msgid "Show Relevanssi on edit pages for admins"
 msgstr ""
 
-#: premium/interface.php:179
+#: premium/interface.php:183
 #, php-format
 msgid ""
 "If Relevanssi is hidden on post edit pages, enabling this option will show "
@@ -2924,171 +2957,171 @@ msgid ""
 "use the %2$s filter to modify that."
 msgstr ""
 
-#: premium/interface.php:226
+#: premium/interface.php:230
 #, php-format
 msgid "Post type '%s':"
 msgstr ""
 
-#: premium/interface.php:265
+#: premium/interface.php:269
 #, php-format
 msgid "Posts tagged with taxonomy '%s':"
 msgstr ""
 
-#: premium/interface.php:295
+#: premium/interface.php:299
 #, php-format
 msgid "Terms in the taxonomy '%s':"
 msgstr ""
 
-#: premium/interface.php:321
+#: premium/interface.php:325
 msgid "Recent posts bonus weight:"
 msgstr ""
 
-#: premium/interface.php:341
+#: premium/interface.php:345
 msgid "Recent posts bonus cutoff"
 msgstr ""
 
-#: premium/interface.php:344
+#: premium/interface.php:348
 msgid "days"
 msgstr ""
 
-#: premium/interface.php:345
+#: premium/interface.php:349
 msgid ""
 "Posts newer than the day cutoff specified here will have their weight "
 "multiplied with the bonus above."
 msgstr ""
 
-#: premium/interface.php:363
+#: premium/interface.php:367
 msgid "Hide Relevanssi branding"
 msgstr ""
 
-#: premium/interface.php:368 premium/interface.php:372
+#: premium/interface.php:372 premium/interface.php:376
 #, php-format
 msgid "Don't show Relevanssi branding on the '%s' screen."
 msgstr ""
 
-#: premium/interface.php:368 premium/interface.php:372
+#: premium/interface.php:372 premium/interface.php:376
 msgid "User Searches"
 msgstr ""
 
-#: premium/interface.php:390
+#: premium/interface.php:394
 msgid "Thousands separator"
 msgstr ""
 
-#: premium/interface.php:394
+#: premium/interface.php:398
 msgid ""
 "If Relevanssi sees this character between numbers, it'll stick the numbers "
 "together no matter how the character would otherwise be handled. Especially "
 "useful if a space is used as a thousands separator."
 msgstr ""
 
-#: premium/interface.php:410
+#: premium/interface.php:414
 msgid "Disable these shortcodes"
 msgstr ""
 
-#: premium/interface.php:414
+#: premium/interface.php:418
 msgid ""
 "Enter a comma-separated list of shortcodes. These shortcodes will not be "
 "expanded if expand shortcodes above is enabled. This is useful if a "
 "particular shortcode is causing problems in indexing."
 msgstr ""
 
-#: premium/interface.php:444
+#: premium/interface.php:448
 msgid "MySQL columns"
 msgstr ""
 
-#: premium/interface.php:451
+#: premium/interface.php:455
 #, php-format
 msgid ""
 "A comma-separated list of %s MySQL table columns to include in the index. "
 "Following columns are available: "
 msgstr ""
 
-#: premium/interface.php:474 premium/interface.php:481
+#: premium/interface.php:478 premium/interface.php:485
 msgid "Search all subsites"
 msgstr ""
 
-#: premium/interface.php:478
+#: premium/interface.php:482
 msgid "Search all subsites."
 msgstr ""
 
-#: premium/interface.php:483
+#: premium/interface.php:487
 msgid ""
 "If this option is checked, multisite searches will include all subsites. "
 "Warning: if you have dozens of sites in your network, the searches may "
 "become too slow. This can be overridden from the search form."
 msgstr ""
 
-#: premium/interface.php:489
+#: premium/interface.php:493
 msgid "Search some subsites"
 msgstr ""
 
-#: premium/interface.php:499
+#: premium/interface.php:503
 msgid ""
 "Add a comma-separated list of blog ID values to have all search forms on "
 "this site search these multisite subsites. This can be overridden from the "
 "search form."
 msgstr ""
 
-#: premium/interface.php:523
+#: premium/interface.php:527
 msgid "Indexing user profiles"
 msgstr ""
 
-#: premium/interface.php:528
+#: premium/interface.php:532
 msgid "Index user profiles"
 msgstr ""
 
-#: premium/interface.php:532 premium/interface.php:535
+#: premium/interface.php:536 premium/interface.php:539
 msgid "Index user profiles."
 msgstr ""
 
-#: premium/interface.php:537
+#: premium/interface.php:541
 msgid ""
 "Relevanssi will index user profiles. This includes first name, last name, "
 "display name and user description."
 msgstr ""
 
-#: premium/interface.php:538
+#: premium/interface.php:542
 msgid ""
 "This may require changes to search results template, see the contextual help."
 msgstr ""
 
-#: premium/interface.php:544
+#: premium/interface.php:548
 msgid "Index subscribers"
 msgstr ""
 
-#: premium/interface.php:548 premium/interface.php:551
+#: premium/interface.php:552 premium/interface.php:555
 msgid "Index also subscriber profiles."
 msgstr ""
 
-#: premium/interface.php:553
+#: premium/interface.php:557
 msgid ""
 "By default, Relevanssi indexes authors, editors, contributors and admins, "
 "but not subscribers. You can change that with this option."
 msgstr ""
 
-#: premium/interface.php:560
+#: premium/interface.php:564
 msgid "Extra fields"
 msgstr ""
 
-#: premium/interface.php:564
+#: premium/interface.php:568
 msgid ""
 "A comma-separated list of extra user fields to include in the index. These "
 "can be user fields or user meta."
 msgstr ""
 
-#: premium/interface.php:580
+#: premium/interface.php:584
 msgid "Indexing synonyms"
 msgstr ""
 
-#: premium/interface.php:584
+#: premium/interface.php:588
 msgid "Index synonyms"
 msgstr ""
 
-#: premium/interface.php:588 premium/interface.php:591
+#: premium/interface.php:592 premium/interface.php:595
 msgid "Index synonyms for AND searches."
 msgstr ""
 
-#: premium/interface.php:596
+#: premium/interface.php:600
 msgid ""
 "If checked, Relevanssi will use the synonyms in indexing. If you add "
 "<code>dog = hound</code> to the synonym list and enable this feature, every "
@@ -3100,19 +3133,19 @@ msgid ""
 "work."
 msgstr ""
 
-#: premium/interface.php:616
+#: premium/interface.php:620
 msgid "Indexing PDF content"
 msgstr ""
 
-#: premium/interface.php:621
+#: premium/interface.php:625
 msgid "Index for parent"
 msgstr ""
 
-#: premium/interface.php:626
+#: premium/interface.php:630
 msgid "Index PDF contents for parent post"
 msgstr ""
 
-#: premium/interface.php:629
+#: premium/interface.php:633
 #, php-format
 msgid ""
 "If checked, Relevanssi indexes the PDF content both for the attachment post "
@@ -3120,52 +3153,52 @@ msgid ""
 "indexing or not indexing the post type %s."
 msgstr ""
 
-#: premium/interface.php:632
+#: premium/interface.php:636
 #, php-format
 msgid ""
 "You have not chosen to index the post type %s. You won't see any PDF content "
 "in the search results, unless you check this option."
 msgstr ""
 
-#: premium/interface.php:636
+#: premium/interface.php:640
 msgid ""
 "Searching for PDF contents will now return both the attachment itself and "
 "the parent post. Are you sure you want both in the results?"
 msgstr ""
 
-#: premium/interface.php:660
+#: premium/interface.php:664
 msgid "Indexing taxonomy terms"
 msgstr ""
 
-#: premium/interface.php:665
+#: premium/interface.php:669
 msgid "Index taxonomy terms"
 msgstr ""
 
-#: premium/interface.php:670
+#: premium/interface.php:674
 msgid "Index taxonomy terms."
 msgstr ""
 
-#: premium/interface.php:672
+#: premium/interface.php:676
 msgid ""
 "Relevanssi will index taxonomy terms (categories, tags and custom "
 "taxonomies). Searching for taxonomy term name will return the taxonomy term "
 "page."
 msgstr ""
 
-#: premium/interface.php:707
+#: premium/interface.php:711
 #, php-format
 msgid "Index terms for taxonomy %s"
 msgstr ""
 
-#: premium/interface.php:759
+#: premium/interface.php:763
 msgid "Index post type archives"
 msgstr ""
 
-#: premium/interface.php:763 premium/interface.php:766
+#: premium/interface.php:767 premium/interface.php:770
 msgid "Index post type archives."
 msgstr ""
 
-#: premium/interface.php:769
+#: premium/interface.php:773
 #, php-format
 msgid ""
 "Relevanssi will index post type archive pages. By default Relevanssi indexes "
@@ -3174,59 +3207,59 @@ msgid ""
 "filter hook to adjust the content."
 msgstr ""
 
-#: premium/interface.php:775
+#: premium/interface.php:779
 msgid "Post types indexed"
 msgstr ""
 
-#: premium/interface.php:783
+#: premium/interface.php:787
 #, php-format
 msgid ""
 "This list includes all post types that are not built in and have %1$s set to "
 "true. If you want to adjust the list, you can use the %2$s filter hook."
 msgstr ""
 
-#: premium/interface.php:800
+#: premium/interface.php:804
 msgid "Number of excerpt snippets"
 msgstr ""
 
-#: premium/interface.php:812
+#: premium/interface.php:816
 msgid ""
 "The maximum number of excerpt snippets Relevanssi will create for each post."
 msgstr ""
 
-#: premium/interface.php:929
+#: premium/interface.php:933
 msgid "Options updated!"
 msgstr ""
 
-#: premium/interface.php:1161
+#: premium/interface.php:1165
 msgid "Import / Export options"
 msgstr ""
 
-#: premium/interface.php:1169
+#: premium/interface.php:1173
 msgid "Related"
 msgstr ""
 
-#: premium/interface.php:1177
+#: premium/interface.php:1181
 msgid "Spam Block"
 msgstr ""
 
-#: premium/interface.php:1191
+#: premium/interface.php:1195
 msgid "Reset the option"
 msgstr ""
 
-#: premium/interface.php:1205
+#: premium/interface.php:1209
 msgid "Option successfully reset!"
 msgstr ""
 
-#: premium/interface.php:1207
+#: premium/interface.php:1211
 msgid "Couldn't reset the option, reload the page to try again."
 msgstr ""
 
-#: premium/interface.php:1212
+#: premium/interface.php:1216
 msgid "Reset the relevanssi_words option"
 msgstr ""
 
-#: premium/interface.php:1219
+#: premium/interface.php:1223
 #, php-format
 msgid ""
 "If you are having problems with the Did you mean? feature, you can reset the "

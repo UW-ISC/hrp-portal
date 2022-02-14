@@ -22,7 +22,7 @@ function wdtActivationCreateTables() {
 
     $tablesTableName = $wpdb->prefix . 'wpdatatables';
     $tablesSql = "CREATE TABLE {$tablesTableName} (
-						id INT( 11 ) NOT NULL AUTO_INCREMENT,
+						id bigint(20) NOT NULL AUTO_INCREMENT,
 						title varchar(255) NOT NULL,
                         show_title tinyint(1) NOT NULL default '1',
 						table_type varchar(55) NOT NULL,
@@ -58,8 +58,8 @@ function wdtActivationCreateTables() {
 
     $columnsTableName = $wpdb->prefix . 'wpdatatables_columns';
     $columnsSql = "CREATE TABLE {$columnsTableName} (
-						id INT( 11 ) NOT NULL AUTO_INCREMENT,
-						table_id int(11) NOT NULL,
+						id bigint(20) NOT NULL AUTO_INCREMENT,
+						table_id bigint(20) NOT NULL,
 						orig_header varchar(255) NOT NULL,
 						display_header varchar(255) NOT NULL,
 						filter_type enum('none','null_str','text','number','number-range','date-range','datetime-range','time-range','select','multiselect','checkbox') NOT NULL,
@@ -76,7 +76,7 @@ function wdtActivationCreateTables() {
 						skip_thousands_separator tinyint(1) NOT NULL default '0',
 						width VARCHAR( 4 ) NOT NULL default '',
 						possible_values TEXT NOT NULL default '',
-						default_value VARCHAR(100) NOT NULL default '',
+						default_value TEXT NOT NULL default '',
 						css_class VARCHAR(255) NOT NULL default '',
 						text_before VARCHAR(255) NOT NULL default '',
 						text_after VARCHAR(255) NOT NULL default '',
@@ -89,18 +89,18 @@ function wdtActivationCreateTables() {
 						) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     $chartsTableName = $wpdb->prefix . 'wpdatacharts';
     $chartsSql = "CREATE TABLE {$chartsTableName} (
-                                  id int(11) NOT NULL AUTO_INCREMENT,
-                                  wpdatatable_id int(11) NOT NULL,
+                                  id bigint(20) NOT NULL AUTO_INCREMENT,
+                                  wpdatatable_id bigint(20) NOT NULL,
                                   title varchar(255) NOT NULL,
-                                  engine enum('google','highcharts','chartjs') NOT NULL,
+                                  engine enum('google','highcharts','chartjs','apexcharts') NOT NULL,
                                   type varchar(255) NOT NULL,
                                   json_render_data text NOT NULL,
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     $rowsTableName = $wpdb->prefix . 'wpdatatables_rows';
     $rowsSql = "CREATE TABLE {$rowsTableName} (
-                                  id int(11) NOT NULL AUTO_INCREMENT,
-                                  table_id int(11) NOT NULL,
+                                  id bigint(20) NOT NULL AUTO_INCREMENT,
+                                  table_id bigint(20) NOT NULL,
                                   data TEXT NOT NULL default '',
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
@@ -584,6 +584,12 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null) {
         'id' => '0'
     ), $atts));
 
+    if (is_admin() && defined( 'AVADA_VERSION' ) && is_plugin_active('fusion-builder/fusion-builder.php') &&
+        class_exists('Fusion_Element') && class_exists('WPDataTables_Fusion_Elements') &&
+        isset($_POST['action']) && $_POST['action'] === 'get_shortcode_render')
+    {
+        return WPDataTables_Fusion_Elements::get_content_for_avada_live_builder($atts, 'chart');
+    }
 
     /** @var mixed $id */
     if (!$id) {
@@ -621,6 +627,13 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
         'export_file_name' => '%%no_val%%',
         'table_view' => 'regular'
     ), $atts));
+
+    if (is_admin() && defined( 'AVADA_VERSION' ) && is_plugin_active('fusion-builder/fusion-builder.php') &&
+        class_exists('Fusion_Element') && class_exists('WPDataTables_Fusion_Elements') &&
+        isset($_POST['action']) && $_POST['action'] === 'get_shortcode_render')
+    {
+        return WPDataTables_Fusion_Elements::get_content_for_avada_live_builder($atts, 'table');
+    }
 
     /**
      * Protection
@@ -1175,127 +1188,3 @@ function wpdt_plugin_row_meta( $links, $file, $plugin_data ) {
 }
 
 add_filter( 'plugin_row_meta', 'wpdt_plugin_row_meta' , 10, 3 );
-
-/**
- * Optional Visual Composer integration
- */
-if (function_exists('vc_map')) {
-
-    /**
-     * Get all tables non-paged for the Visual Composer integration
-     */
-    function wdtGetAllTablesVC() {
-        global $wpdb;
-        $query = "SELECT id, title FROM {$wpdb->prefix}wpdatatables ORDER BY id";
-
-        $allTables = $wpdb->get_results($query, ARRAY_A);
-
-        $returnTables = array(__('Choose a table', 'wpdatatables') => '');
-        foreach ($allTables as $table) {
-            $returnTables[$table['title']] = $table['id'];
-        }
-
-        return $returnTables;
-    }
-
-    /**
-     * Get all charts non-paged for the Visual Composer integration
-     */
-    function wdtGetAllChartsVC() {
-        global $wpdb;
-        $query = "SELECT id, title FROM {$wpdb->prefix}wpdatacharts ORDER BY id";
-
-        $all_charts = $wpdb->get_results($query, ARRAY_A);
-
-        $returnTables = array();
-        foreach ($all_charts as $chart) {
-            $returnTables[$chart['title']] = $chart['id'];
-        }
-
-        return $returnTables;
-    }
-
-    /**
-     * Insert wpDataTable button
-     */
-    vc_map(
-        array(
-            'name' => 'wpDataTable',
-            'base' => 'wpdatatable',
-            'description' => __('Interactive Responsive Table', 'wpdatatable'),
-            'category' => __('Content'),
-            'icon' => plugin_dir_url(dirname(__FILE__)) . 'assets/img/vc-icon.png',
-            'params' => array(
-                array(
-                    'type' => 'dropdown',
-                    'class' => '',
-                    'heading' => __('wpDataTable', 'wpdatatables'),
-                    'admin_label' => true,
-                    'param_name' => 'id',
-                    'value' => wdtGetAllTablesVC(),
-                    'description' => __('Choose the wpDataTable from a dropdown', 'wpdatatables')
-                ),
-                array(
-                    'type' => 'dropdown',
-                    'class' => '',
-                    'heading' => __('Table view', 'wpdatatables'),
-                    'admin_label' => true,
-                    'param_name' => 'table_view',
-                    'value' => array(
-                        __('Regular wpDataTable', 'wpdatatables') => 'regular',
-                        __('Excel-like table', 'wpdatatables') => 'excel'
-                    )
-                ),
-                array(
-                    'type' => 'textfield',
-                    'heading' => __('Variable placeholder #1', 'wpdatatables'),
-                    'param_name' => 'var1',
-                    'value' => '',
-                    'group' => __('Variables', 'wpdatatables'),
-                    'description' => __('If you used the VAR1 placeholder you can assign a value to it here', 'wpdatatables')
-                ),
-                array(
-                    'type' => 'textfield',
-                    'heading' => __('Variable placeholder #2', 'wpdatatables'),
-                    'param_name' => 'var2',
-                    'value' => '',
-                    'group' => __('Variables', 'wpdatatables'),
-                    'description' => __('If you used the VAR2 placeholder you can assign a value to it here', 'wpdatatables')
-                ),
-                array(
-                    'type' => 'textfield',
-                    'heading' => __('Variable placeholder #3', 'wpdatatables'),
-                    'param_name' => 'var3',
-                    'value' => '',
-                    'group' => __('Variables', 'wpdatatables'),
-                    'description' => __('If you used the VAR3 placeholder you can assign a value to it here', 'wpdatatables')
-                )
-            )
-        )
-    );
-
-    /**
-     * Insert wpDataChart button
-     */
-    vc_map(
-        array(
-            'name' => 'wpDataChart',
-            'base' => 'wpdatachart',
-            'description' => __('Google or Highcharts chart based on a wpDataTable', 'wpdatatable'),
-            'category' => __('Content'),
-            'icon' => plugin_dir_url(dirname(__FILE__)) . 'assets/img/vc-charts-icon.png',
-            "params" => array(
-                array(
-                    "type" => "dropdown",
-                    "class" => "",
-                    "heading" => __('wpDataChart', 'wpdatatables'),
-                    "param_name" => "id",
-                    'admin_label' => true,
-                    "value" => wdtGetAllChartsVC(),
-                    "description" => __("Choose one of wpDataCharts from the list", 'wpdatatables')
-                )
-            )
-        )
-    );
-
-}

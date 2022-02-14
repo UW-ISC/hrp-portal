@@ -48,6 +48,7 @@
 .wpdt-c #chart-container-tabs-6,
 .wpdt-c #chart-container-tabs-7,
 .wpdt-c #chart-container-tabs-8,
+.wpdt-c #chart-container-tabs-9,
 .wpdt-c .chart-preview-container,
 .wpdt-c #chart-container-tabs .tab-nav.settings,
 .wpdt-c .wdt-chart-column-picker-container,
@@ -56,6 +57,21 @@
 }
 .wpdt-c .wdt-chart-wizard-chart-selecter-block {
     margin-top: 10px;
+}
+
+@media screen and (min-width: 1158px) and (max-width: 1346px) {
+    .wpdt-c .wdt-chart-wizard-chart-selecter-block {
+        width: 16%;
+    }
+    .wpdt-c .f-14 {
+        font-size: 12px !important;
+    }
+
+    @media screen and (max-width: 1251px){
+        .wpdt-c .f-14 {
+            font-size: 11px !important;
+        }
+    }
 }
 .wpdt-c .wdt-chart-wizard .render-engine .form-group{
    padding: 0;
@@ -183,7 +199,7 @@
     overflow: hidden;
 }
 
-.wpdt-c .wpDataTables #series-settings-container div.chart-series-block .chart-series-label {
+.wpdt-c .wpDataTables #series-settings-container div.chart-series-block .chart-series-label .chart-series-image{
     margin: 3px;
     float: left;
 }
@@ -383,12 +399,15 @@
 
 .wpdt-c .wdt-chart-wizard .charts-type.google-charts-type,
 .wpdt-c .wdt-chart-wizard .charts-type.highcharts-charts-type,
-.wpdt-c .wdt-chart-wizard .charts-type.chartjs-charts-type {
+.wpdt-c .wdt-chart-wizard .charts-type.chartjs-charts-type,
+.wpdt-c .wdt-chart-wizard .charts-type.apexcharts-charts-type {
     display: none;
 }
 .wpdt-c .wdt-chart-wizard .charts-type.google-charts-type.disabled,
 .wpdt-c .wdt-chart-wizard .charts-type.highcharts-charts-type.disabled,
-.wpdt-c .wdt-chart-wizard .charts-type.chartjs-charts-type.disabled {
+.wpdt-c .wdt-chart-wizard .charts-type.chartjs-charts-type.disabled,
+.wpdt-c .wdt-chart-wizard .charts-type.highcharts-charts-type.disabled,
+.wpdt-c .wdt-chart-wizard .charts-type.apexcharts-charts-type.disabled{
     opacity: .5;
     pointer-events: none;
 }
@@ -533,4 +552,29 @@
     color: #8796AF;
     background: #F8F8FA;
     border-radius: 0 2px 2px 0;
+}
+
+.wpdt-c input[type="number"].input-sm {
+    -moz-appearance: textfield;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.wdt-series-image-button {
+    width: 15%;
+    background-color: #2196F3;
+    border: none;
+    border-radius: 0 5px 5px 0;
+    color: white !important;
+}
+
+.wpdt-icon-image:before {
+    color: white;
+}
+
+#wdt-line-image-clear-button, #wdt-plot-image-clear-button {
+    border-radius: 0 5px 5px 0;
 }

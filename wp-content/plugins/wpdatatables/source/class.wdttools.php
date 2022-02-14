@@ -1232,6 +1232,7 @@ class WDTTools
      */
     public static function getRemoteInformation($slug, $purchaseCode, $envatoTokenEmail)
     {
+        $serverName =  ( defined( 'WP_CLI' ) && WP_CLI ) ? php_uname('n') : $_SERVER['SERVER_NAME'];
         $request = wp_remote_post(
             WDT_STORE_API_URL . 'autoupdate/info',
             [
@@ -1240,10 +1241,10 @@ class WDTTools
                     'purchaseCode' => $purchaseCode,
                     'envatoTokenEmail' => $envatoTokenEmail,
                     'domain' => self::getDomain(
-                        $_SERVER['SERVER_NAME']
+                        $serverName
                     ),
                     'subdomain' => self::getSubDomain(
-                        $_SERVER['SERVER_NAME']
+                        $serverName
                     )
                 ]
             ]
@@ -1418,6 +1419,18 @@ class WDTTools
         return $output;
     }
 
+
+    /**
+     * Helper function that checks if given string is a valid color (hex, rgba, rgb, hsla)
+     * @param $color
+     * @return bool
+     */
+    public static function isStringAColor($color) {
+
+        $regex = '/^(\#[\da-f]{3}|\#[\da-f]{6}|rgba\(((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*,\s*){2}((\d{1,2}|1\d\d|2([0-4]\d|5[0-5]))\s*)(,\s*(0\.\d+|1))\)|hsla\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)(,\s*(0\.\d+|1))\)|rgb\((?:\s*\d+\s*,){2}\s*[\d]+\)|hsl\(\s*((\d{1,2}|[1-2]\d{2}|3([0-5]\d|60)))\s*,\s*((\d{1,2}|100)\s*%)\s*,\s*((\d{1,2}|100)\s*%)\))$/i';
+
+        return preg_match($regex, $color);
+    }
     /**
      * Sanitizes the cell string and wraps it with quotes
      * @param $string
@@ -1494,7 +1507,7 @@ class WDTTools
      */
     public static function wdtUIKitEnqueue()
     {
-        wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.css', array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-select', WDT_CSS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-tagsinput', WDT_CSS_PATH . 'bootstrap/bootstrap-tagsinput/bootstrap-tagsinput.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-datetimepicker', WDT_CSS_PATH . 'bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', array(), WDT_CURRENT_VERSION);
