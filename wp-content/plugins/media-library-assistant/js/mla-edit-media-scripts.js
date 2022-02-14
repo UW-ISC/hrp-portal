@@ -64,7 +64,7 @@ var jQuery,
 
 					if( 13 === event.keyCode ) {
 						event.preventDefault();
-						$( '#' + taxonomy + '-search-toggle' ).focus();
+						$( '#' + taxonomy + '-search-toggle' ).trigger('focus');
 						return;
 					}
 
@@ -81,11 +81,11 @@ var jQuery,
 					}
 
 					matchingTerms = $( '#' + taxonomy + "checklist label:matchTerms('" + searchValue + "')");
-					matchingTerms.closest( 'li' ).find( 'li' ).andSelf().show();
+					matchingTerms.closest( 'li' ).find( 'li' ).addBack().show();
 					matchingTerms.parents( '#' + taxonomy + 'checklist li' ).show();
 
 					matchingTermsPopular = $( '#' + taxonomy + "checklist-pop label:matchTerms('" + searchValue + "')");
-					matchingTermsPopular.closest( 'li' ).find( 'li' ).andSelf().show();
+					matchingTermsPopular.closest( 'li' ).find( 'li' ).addBack().show();
 					matchingTermsPopular.parents( '#' + taxonomy + 'checklist li' ).show();
 				} );
 
@@ -98,7 +98,7 @@ var jQuery,
 
 					if ( false === $( '#' + taxonomy + '-searcher' ).hasClass( 'wp-hidden-children' ) ) {
 						$( '#search-'  + taxonomy ).val( '' ).removeClass( 'form-input-tip' );
-						$( '#search-' + taxonomy ).focus();
+						$( '#search-' + taxonomy ).trigger('focus');
 					}
 
 					return false;
@@ -122,7 +122,7 @@ var jQuery,
 				mla.mlaEditAttachment.$uploaddiv.siblings('a.edit-timestamp').on( 'click', function( event ) {
 					if ( mla.mlaEditAttachment.$uploaddiv.is( ':hidden' ) ) {
 						mla.mlaEditAttachment.$uploaddiv.slideDown( 'fast', function() {
-							$( 'input, select', mla.mlaEditAttachment.$uploaddiv.find( '.timestamp-wrap' ) ).first().focus();
+							$( 'input, select', mla.mlaEditAttachment.$uploaddiv.find( '.timestamp-wrap' ) ).first().trigger('focus');
 						} );
 						$(this).hide();
 					}
@@ -131,7 +131,7 @@ var jQuery,
 		
 				// Cancel editing the Uploaded on time and hide the settings.
 				mla.mlaEditAttachment.$uploaddiv.find('.cancel-timestamp').on( 'click', function( event ) {
-					mla.mlaEditAttachment.$uploaddiv.slideUp('fast').siblings('a.edit-timestamp').show().focus();
+					mla.mlaEditAttachment.$uploaddiv.slideUp('fast').siblings('a.edit-timestamp').show().trigger('focus');
 					$( '#mm', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_mm', mla.mlaEditAttachment.$uploaddiv ).val());
 					$( '#jj', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_jj', mla.mlaEditAttachment.$uploaddiv ).val());
 					$( '#aa', mla.mlaEditAttachment.$uploaddiv ).val($( '#hidden_aa', mla.mlaEditAttachment.$uploaddiv ).val());
@@ -145,7 +145,7 @@ var jQuery,
 				mla.mlaEditAttachment.$uploaddiv.find('.save-timestamp').on( 'click', function( event ) { // crazyhorse - multiple ok cancels
 					if ( mla.mlaEditAttachment.updateText( mla.mlaEditAttachment.$uploaddiv, mla.mlaEditAttachment.uploadtimestamp, '#upload-timestamp' ) ) {
 						mla.mlaEditAttachment.$uploaddiv.slideUp('fast');
-						mla.mlaEditAttachment.$uploaddiv.siblings('a.edit-timestamp').show().focus();
+						mla.mlaEditAttachment.$uploaddiv.siblings('a.edit-timestamp').show().trigger('focus');
 					}
 					event.preventDefault();
 				});

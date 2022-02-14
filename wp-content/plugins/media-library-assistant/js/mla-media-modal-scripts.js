@@ -1373,6 +1373,7 @@ console.log( 'listening to controller events' );
 	 */
 	if ( mlaModal.settings.enableDetailsCategory || mlaModal.settings.enableDetailsTag ) {
 		wp.media.view.AttachmentCompat = wp.media.view.AttachmentCompat.extend({
+			/* Removed in MLA 2.99 to resolve "how to fix some att. categories bugs with ACF field" * /
 			initialize: function() {
 				// Call the base method in the super class
 				//wp.media.view.AttachmentCompat.__super__.initialize.apply( this, arguments );
@@ -1382,6 +1383,15 @@ console.log( 'listening to controller events' );
 				this.on( 'ready', function() {
 					mlaModal.utility.hookCompatTaxonomies( this.model.get('id'), this.el );
 				});
+			}, // */
+			
+			render: function() {
+				// Call the base method in the super class
+				//wp.media.view.AttachmentCompat.__super__.initialize.apply( this, arguments );
+				mlaAttachmentCompat.prototype.render.apply( this, arguments );
+
+				mlaModal.utility.hookCompatTaxonomies( this.model.get('id'), this.el );
+				return this;
 			}
 		});
 	}

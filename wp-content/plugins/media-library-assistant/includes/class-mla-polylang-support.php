@@ -87,6 +87,10 @@ class MLA_Polylang {
 		add_filter( 'mla_list_table_inline_values', 'MLA_Polylang::mla_list_table_inline_values', 10, 1 );
 		add_filter( 'mla_list_table_inline_parse', 'MLA_Polylang::mla_list_table_inline_parse', 10, 3 );
 
+		add_filter( 'mla_list_table_inline_initial_values', 'MLA_Polylang::mla_list_table_bulk_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_blank_values', 'MLA_Polylang::mla_list_table_bulk_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_preset_values', 'MLA_Polylang::mla_list_table_bulk_values', 10, 1 );
+
 		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_get_columns', 'MLA_Polylang::mla_list_table_get_columns', 10, 1 );
 		add_filter( 'mla_list_table_get_bulk_actions', 'MLA_Polylang::mla_list_table_get_bulk_actions', 10, 1 );
@@ -359,11 +363,11 @@ class MLA_Polylang {
 			return;
 		}
 
-		wp_register_style( 'mla-polylang-support', MLA_PLUGIN_URL . 'css/mla-polylang-support.css', false, MLACore::CURRENT_MLA_VERSION );
+		wp_register_style( 'mla-polylang-support', MLA_PLUGIN_URL . 'css/mla-polylang-support.css', false, MLACore::mla_script_version() );
 		wp_enqueue_style( 'mla-polylang-support' );
 
 		wp_enqueue_script( 'mla-polylang-support-scripts', MLA_PLUGIN_URL . "js/mla-polylang-support-scripts{$suffix}.js", 
-			array( 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'jquery' ), MLACore::mla_script_version(), false );
 
 		// For Quick and Bulk Translate
 		$fields = array( 'old_lang', 'inline_lang_choice', 'inline_translations' );
@@ -1948,11 +1952,49 @@ class MLA_Polylang {
 	} // mla_list_table_get_bulk_actions
 
 	/**
+	 * MLA_List_Table bulk edit item values
+	 *
+	 * Builds the Language dropdown and edit translation links for the
+	 * Bulk Edit form, adding them to the 'custom_fields' substitution parameter.
+	 *
+	 * @since 2.99
+	 *
+	 * @param	array	$item_values parameter_name => parameter_value pairs
+	 *
+	 * @return	array	updated substitution parameter name => value pairs
+	 */
+	public static function mla_list_table_bulk_values( $item_values ) {
+		global $polylang;
+
+		// Find the first "language" column slug
+		$all_languages = false === $polylang->curlang;
+		$language_column = '';
+		foreach ( $polylang->filters_columns->model->get_languages_list() as $language) {
+			if ( $all_languages || $language->slug != $polylang->curlang->slug) {
+				$language_column = 'language_'.$language->slug;
+				break;
+			}
+		}
+
+		ob_start();
+		do_action( 'bulk_edit_custom_box', $language_column, 'attachment' );
+		$value = ob_get_clean();
+
+		if ( !empty( $value ) ) {
+			// Strip off <fieldset> and <div> tags around the <input> and <label> tags
+			preg_match('/\<input|\<label/', $value, $match_start, PREG_OFFSET_CAPTURE );
+			preg_match('/\<\/label[^\>]*\>/', $value, $match_end, PREG_OFFSET_CAPTURE );
+			$item_values['custom_fields'] .= substr( $value, $match_start[0][1], ( $match_end[0][1] + strlen( $match_end[0][0] ) ) - $match_start[0][1] );
+		}
+
+		return $item_values;
+	} // mla_list_table_bulk_values
+
+	/**
 	 * MLA_List_Table inline edit item values
 	 *
 	 * Builds the Language dropdown and edit translation links for the
-	 * Quick and Bulk Edit forms, adding them to the 'custom_fields'
-	 * and 'bulk_custom_fields' substitution parameters.
+	 * Quick form, adding them to the 'custom_fields' substitution parameter.
 	 *
 	 * @since 2.11
 	 *
@@ -2008,17 +2050,6 @@ class MLA_Polylang {
 			$actions .= "</table>\n</label>\n";
 			$actions .= "<div class=\"pll-quick-translate-save\"><span class=\"spinner\" style=\"float: left;\"></span></div>\n";
 			$item_values['custom_fields'] .= $actions;
-		}
-
-		ob_start();
-		do_action( 'bulk_edit_custom_box', $language_column, 'attachment' );
-		$value = ob_get_clean();
-
-		if ( !empty( $value ) ) {
-			// Strip off <fieldset> and <div> tags around the <input> and <label> tags
-			preg_match('/\<input|\<label/', $value, $match_start, PREG_OFFSET_CAPTURE );
-			preg_match('/\<\/label[^\>]*\>/', $value, $match_end, PREG_OFFSET_CAPTURE );
-			$item_values['bulk_custom_fields'] .= substr( $value, $match_start[0][1], ( $match_end[0][1] + strlen( $match_end[0][0] ) ) - $match_start[0][1] );
 		}
 
 		return $item_values;
@@ -2133,7 +2164,7 @@ class MLA_Polylang {
 			MLA_Polylang::$language_columns = array();
 
 			if ( isset( $_REQUEST['quick_current_language'] ) ) {
-				$current_language = sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) );
+				$current_language = (object) array( 'slug' => sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) ) );
 			} else {
 				$current_language =  $polylang->curlang;
 			}
@@ -2145,6 +2176,11 @@ class MLA_Polylang {
 			if ( $show_translations ) {
 				$flags_column = $polylang->filters_columns->add_post_column( array() );
 				if ( is_array($flags_column ) ) {
+					// Don't add the flag for the current language
+					if ( !empty( $current_language ) ) {
+						unset( $flags_column[ 'language_' . $current_language->slug] );
+					}
+					
 					$flags_column = implode( '', $flags_column );
 					MLA_Polylang::$language_columns['pll_translations'] = $flags_column;
 				}
@@ -2207,7 +2243,7 @@ class MLA_Polylang {
 		} elseif ('pll_translations' == $column_name ) {
 			if ( is_null( $languages ) ) {
 				if ( isset( $_REQUEST['quick_current_language'] ) ) {
-					$current_language = sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) );
+					$current_language = (object) array( 'slug' => sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) ) );
 				} else {
 					$current_language =  $polylang->curlang;
 				}
@@ -2218,7 +2254,7 @@ class MLA_Polylang {
 			$content = '';
 			foreach ($polylang->model->get_languages_list() as $language) {
 				// don't add the column for the filtered language
-				if ( empty($current_language) || $language->slug != $current_language->slug ) {
+				if ( empty( $current_language ) || $language->slug != $current_language->slug ) {
 					// Polylang post_column() function applies this test for 'inline-save' before updating "language"
 					$save_action = isset( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : '';
 					$inline = defined('DOING_AJAX') && isset($_POST['inline_lang_choice']) && in_array( $save_action, array( MLA_Polylang::MLA_PLL_QUICK_TRANSLATE, MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ) );

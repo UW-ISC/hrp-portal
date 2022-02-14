@@ -889,26 +889,41 @@ class MLAData {
 	 * @return	array	Parameter components: prefix, value, qualifier, option, format, args
 	 */
 	public static function mla_parse_substitution_parameter( $parameter, $default_option = 'text' ) {
+//error_log( __LINE__ . ' mla_parse_substitution_parameter parameter = ' . var_export( $parameter, true ), 0 );
+
 			// Strip optional enclosing delimiters
 			if ( 0 === strpos( $parameter, '[+' ) ) {
 				$parameter = substr( $parameter, 2, (strlen( $parameter ) - 4 ) );
 			}
 			
 			$result = array( 'prefix' => '', 'value' => '', 'qualifier' => '', 'option' => $default_option, 'format' => 'native', 'args' => '' );
-			$match_count = preg_match( '/([^,:]+):(.+)/', $parameter, $matches );
+
+			// Split the prefix, name and qualifier from the format/option code
+			$match_count = preg_match( '/([^,]+),(.+)/', $parameter, $matches );
+//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
 			if ( 1 == $match_count ) {
-				$result['prefix'] = $matches[1];
+				$name = $matches[1];
 				$tail = $matches[2];
 			} else {
-				$tail = $parameter;
+				$name = $parameter;
+				$tail = '';
 			}
 
-			if ( false !== strpos( $tail, ',' ) ) {
-				$match_count = preg_match( '/([^,]+)(,(text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr|str_replace|match|extract|replace))(\((.*)\)$)*/', $tail, $matches );
+			$match_count = preg_match( '/([^:]+):(.+)/', $name, $matches );
+//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
+			if ( 1 == $match_count ) {
+				$result['prefix'] = $matches[1];
+				$result['value'] = $matches[2];
+			} else {
+				$result['value'] = $name;
+			}
+
+			if ( !empty( $tail ) ) {
+				$match_count = preg_match( '/((text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr|str_replace|match|extract|replace))(\((.*)\)$)*/', $tail, $matches );
+//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
 				if ( 1 == $match_count ) {
-					$result['value'] = $matches[1];
-					if ( ! empty( $matches[5] ) ) {
-						$args = self::_parse_arguments( $matches[5] );
+					if ( ! empty( $matches[4] ) ) {
+						$args = self::_parse_arguments( $matches[4] );
 
 						if ( 1 == count( $args ) ) {
 							$args = $args[0];
@@ -917,33 +932,28 @@ class MLAData {
 						$args = '';
 					}
 
-					if ( in_array( $matches[3], array( 'commas', 'raw', 'attr', 'url', 'kbmb', 'timestamp', 'date', 'fraction', 'substr', 'str_replace', 'match', 'extract', 'replace' ) ) ) {
+					if ( in_array( $matches[2], array( 'commas', 'raw', 'attr', 'url', 'kbmb', 'timestamp', 'date', 'fraction', 'substr', 'str_replace', 'match', 'extract', 'replace' ) ) ) {
 						$result['option'] = 'text';
-						$result['format'] = $matches[3];
+						$result['format'] = $matches[2];
 						$result['args'] = $args;
 					} else {
-						$result['option'] = $matches[3];
+						$result['option'] = $matches[2];
 					}
 				} else {
-					$match_count = preg_match( '/([^,]+),([^(]+)(\(([^)]+)\))*/', $tail, $matches );
+					$match_count = preg_match( '/([^(]+)(\(([^)]+)\))*/', $tail, $matches );
 					if ( 1 == $match_count ) {
-						$result['value'] = $matches[1];
-						$result['format'] = $matches[2];
+						$result['format'] = $matches[1];
 
-						if ( ! empty( $matches[4] ) ) {
-							$args = self::_parse_arguments( $matches[4] );
+						if ( ! empty( $matches[3] ) ) {
+							$args = self::_parse_arguments( $matches[3] );
 
 							if ( 1 == count( $args ) ) {
 								$args = $args[0];
 							}
 							$result['args'] = $args;
 						}
-					} else {
-						$result['value'] = $tail;
 					}
 				}
-			} else {
-				$result['value'] = $tail;
 			}
 
 		// Look for field/value qualifier
@@ -953,6 +963,7 @@ class MLAData {
 			$result['qualifier'] = $matches[2];
 		}
 
+//error_log( __LINE__ . ' mla_parse_substitution_parameter result = ' . var_export( $result, true ), 0 );
 		return $result;
 	}
 
@@ -1413,15 +1424,8 @@ class MLAData {
 					$markup_values[ $key ] = $text;
 					break;
 				case 'terms':
-					// Look for field specification
-					$match_count = preg_match( '/^(.+)\((.+)\)/', $value['value'], $matches );
-					if ( $match_count ) {
-						$taxonomy = $matches[1];
-						$field = $matches[2];
-					} else {
-						$taxonomy = $value['value'];
-						$field = 'name';
-					}
+					$taxonomy = $value['value'];
+					$field = !empty( $value['qualifier'] ) ? $value['qualifier'] : 'name';
 
 					// Look for compound taxonomy.slug notation
 					$matches = explode( '.', $taxonomy );
@@ -1613,6 +1617,7 @@ class MLAData {
 					if ( MLAShortcodes::mla_is_data_source( $candidate ) ) {
 						$data_value = array(
 							'data_source' => $candidate,
+							'qualifier' => $value['qualifier'],
 							'keep_existing' => false,
 							'format' => 'raw',
 							'option' => $value['option'] ); // single, export, text for array values, e.g., alt_text

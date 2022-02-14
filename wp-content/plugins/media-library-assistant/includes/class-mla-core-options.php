@@ -363,6 +363,26 @@ class MLACoreOptions {
 	const MLA_DEBUG_REPLACE_LEVEL = 'debug_replace_level';
 
 	/**
+	 * Provides a unique name for the Media/Add New Bulk Edit Area presets
+	 */
+	const MLA_UPLOAD_BULK_EDIT_PRESETS = 'mla_upload_bulk_edit_presets';
+
+	/**
+	 * Provides a unique name for the Media/Add New Bulk Edit Area presets "per user" option
+	 */
+	const MLA_UPLOAD_BULK_EDIT_PRESETS_PER_USER = 'mla_upload_bulk_edit_presets_per_user';
+
+	/**
+	 * Provides a unique name for the Media/Assistant Bulk Edit Area presets
+	 */
+	const MLA_BULK_EDIT_PRESETS = 'mla_bulk_edit_presets';
+
+	/**
+	 * Provides a unique name for the Media/Assistant Bulk Edit Area presets "per user" option
+	 */
+	const MLA_BULK_EDIT_PRESETS_PER_USER = 'mla_bulk_edit_presets_per_user';
+
+	/**
 	 * $mla_option_definitions defines the database options and admin page areas for setting/updating them
 	 *
 	 * The array must be populated at runtime in MLACoreOptions::mla_localize_option_definitions_array();
@@ -406,9 +426,7 @@ class MLACoreOptions {
 	 */
 	public static function mla_localize_option_definitions_array() {
 		self::$mla_option_definitions = array (
-			/*
-			 * This option records the highest MLA version so-far installed
-			 */
+			// This option records the highest MLA version so-far installed
 			self::MLA_VERSION_OPTION =>
 				array('tab' => '',
 					'type' => 'hidden', 
@@ -687,6 +705,13 @@ class MLACoreOptions {
 					'size' => 5,
 					'help' => __( 'Enter the size of the Bulk Edit and Map All processing chunks', 'media-library-assistant' )),
 
+			self::MLA_BULK_EDIT_PRESETS_PER_USER =>
+				array('tab' => 'general',
+					'name' => __( 'Store presets per-user', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check this option to store separate Bulk Edit presets for each user.', 'media-library-assistant' )),
+
 			'taxonomy_filter_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Taxonomy Filter parameters', 'media-library-assistant' ),
@@ -795,6 +820,13 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to automatically open the "Bulk Edit area" when the Media/Add New screen is displayed.', 'media-library-assistant' )),
+
+			self::MLA_UPLOAD_BULK_EDIT_PRESETS_PER_USER =>
+				array('tab' => 'general',
+					'name' => __( 'Store presets per-user', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check this option to store separate Bulk Edit presets for each user.', 'media-library-assistant' )),
 
 			'media_modal_header' =>
 				array('tab' => 'general',
@@ -1444,6 +1476,44 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to add Parent, Term ID and Term-Taxonomy ID columns to the taxonomy edit admin submenu tables.', 'media-library-assistant' )),
+
+			self::MLA_UPLOAD_BULK_EDIT_PRESETS =>
+				array('tab' => '',
+					'type' => 'hidden',
+					'autoload' => false,
+					'std' => array (
+						'tax_input' => array(),
+						'tax_action' => array(),
+						'post_title' => '',
+						'post_excerpt' => '',
+						'post_content' => '',
+						'image_alt' => '',
+						'post_date' => '',
+						'post_parent' => '',
+						'post_author' => '-1',
+						'comment_status' => '-1',
+						'ping_status' => '-1',
+						'custom_fields' => array(),
+					)),
+
+			self::MLA_BULK_EDIT_PRESETS =>
+				array('tab' => '',
+					'type' => 'hidden',
+					'autoload' => false,
+					'std' => array (
+						'tax_input' => array(),
+						'tax_action' => array(),
+						'post_title' => '',
+						'post_excerpt' => '',
+						'post_content' => '',
+						'image_alt' => '',
+						'post_date' => '',
+						'post_parent' => '',
+						'post_author' => '-1',
+						'comment_status' => '-1',
+						'ping_status' => '-1',
+						'custom_fields' => array(),
+					)),
 
 			/* Here are examples of the other option types
 			'textarea' =>

@@ -1184,9 +1184,7 @@ class MLAMime {
 		$messages = '';
 		$errors = '';
 
-		/*
-		 * Sanitize slug value
-		 */
+		// Sanitize slug value
 		$slug = sanitize_mime_type( $request['slug'] );
 		if ( $request['post_mime_type'] ) {
 
@@ -1201,21 +1199,22 @@ class MLAMime {
 			$messages .= sprintf( __( '<br>' . 'Changing %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 		}
 
-		/*
-		 * Make sure new slug is unique
-		 */
+		// Make sure new slug is unique
 		if ( isset( self::$mla_post_mime_templates[ $slug ] ) ) {
 				/* translators: 1: ERROR tag 2: slug */
 			$errors .= '<br>' . sprintf( __( '%1$s: Could not add Slug "%2$s"; value already exists', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $slug );
 		}
 
-		/*
-		 * Validate specification, if present
-		 */
+		// Validate specification, if present
 		if ( !empty( $request['specification'] ) ) {
-			$specification = MLACore::mla_parse_view_specification( $request['specification'] );
-			if ( isset( $specification['error'] ) ) {
-				$errors .= $specification['error'];
+			$result = MLACore::mla_parse_view_specification( $request['specification'] );
+
+			if ( isset( $result['mime']['error'] ) ) {
+				$errors .= $result['mime']['error'];
+			}
+
+			if ( isset( $result['custom']['error'] ) ) {
+				$errors .= $result['custom']['error'];
 			}
 		}
 
@@ -1280,18 +1279,14 @@ class MLAMime {
 			);
 		}
 
-		/*
-		 * Validate changed slug value
-		 */
+		// Validate changed slug value
 		if ( $slug != $original_slug ) {
 			if ( $slug != $request['slug'] ) {
 				/* translators: 1: element name 2: bad_value 3: good_value */
 				$messages .= sprintf( __( '<br>' . 'Changing new %1$s "%2$s" to valid value "%3$s"', 'media-library-assistant' ), __( 'Slug', 'media-library-assistant' ), $request['slug'], $slug );
 			}
 
-			/*
-			 * Make sure new slug is unique
-			 */
+			// Make sure new slug is unique
 			if ( isset( self::$mla_post_mime_templates[ $slug ] ) ) {
 				/* translators: 1: ERROR tag 2: slug */
 				$errors .= '<br>' . sprintf( __( '%1$s: Could not add Slug "%2$s"; value already exists', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $slug );
@@ -1301,9 +1296,7 @@ class MLAMime {
 			}
 		}
 
-		/*
-		 * Validate specification, if present and allowed
-		 */
+		// Validate specification, if present and allowed
 		$specification = trim( isset( $request['specification'] ) ? $request['specification'] : $original_type['specification'] );
 		$post_mime_type = isset( $request['post_mime_type'] ) ? $request['post_mime_type'] : $original_type['post_mime_type'];
 		if ( $post_mime_type ) {
@@ -1315,8 +1308,13 @@ class MLAMime {
 
 		if ( !empty( $specification ) ) {
 			$result = MLACore::mla_parse_view_specification( $specification );
-			if ( isset( $result['error'] ) ) {
-				$errors .= $result['error'];
+
+			if ( isset( $result['mime']['error'] ) ) {
+				$errors .= $result['mime']['error'];
+			}
+
+			if ( isset( $result['custom']['error'] ) ) {
+				$errors .= $result['custom']['error'];
 			}
 		}
 

@@ -9,6 +9,8 @@
 <p>You can set a post or page as the parent for uploaded items; use the "Select" button to pop up a list of the posts and pages you can select from.</p>
 <p>If you have defined Custom Field mapping rules and checked the "Bulk Edit" box for one or more fields, they will appear in the Bulk Edit Area and you can assign values to them.</p>
 <p>Once you have filled in the values you want to assign you can click the "Close Bulk Edit Area" button to free up screen area for the list of uploaded files. Even though the Area is closed, your entries will persist until you have left the Upload New Media screen.</p>
+<p>To clear out any settings you no longer want you can click the "Reset" button to remove term assignments and other values, leaving an empty/blank Bulk Edit Area.</p>
+<p>You can save any values you enter here for future use. Click the "Export" button to save the current values for term assignments and other fields to the database. Click "Import" to recall saved values and re-populate the current values with them.</p>
 <!-- template="sidebar" -->
 <p><strong>For more information:</strong></p><p><a href="https://codex.wordpress.org/Media_Add_New_Screen" target="_blank">Documentation on Uploading Media Files</a></p><p><a href="https://wordpress.org/support/" target="_blank">Support Forums</a></p>
 <p><a href="http://wordpress.org/support/plugin/media-library-assistant" target="_blank">MLA Support Forum</a></p>

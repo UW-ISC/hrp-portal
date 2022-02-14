@@ -39,9 +39,9 @@ class MLASettings_CustomFields {
 		}
 
 		if ( $wp_locale->is_rtl() ) {
-			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style-rtl.css', false, MLACore::mla_script_version() );
 		} else {
-			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style.css', false, MLACore::mla_script_version() );
 		}
 
 		wp_enqueue_style( MLACore::STYLESHEET_SLUG );
@@ -77,7 +77,7 @@ class MLASettings_CustomFields {
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG,
 			MLA_PLUGIN_URL . "js/mla-inline-mapping-scripts{$suffix}.js", 
-			array( 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'jquery' ), MLACore::mla_script_version(), false );
 
 		wp_localize_script( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG,
 			MLASettings::JAVASCRIPT_INLINE_MAPPING_OBJECT, $script_variables );
@@ -98,7 +98,7 @@ class MLASettings_CustomFields {
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG,
 			MLA_PLUGIN_URL . "js/mla-inline-edit-settings-scripts{$suffix}.js", 
-			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::mla_script_version(), false );
 
 		wp_localize_script( MLASettings::JAVASCRIPT_INLINE_EDIT_CUSTOM_SLUG,
 			self::JAVASCRIPT_INLINE_EDIT_CUSTOM_OBJECT, $script_variables );

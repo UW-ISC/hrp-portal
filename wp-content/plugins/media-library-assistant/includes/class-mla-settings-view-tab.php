@@ -60,7 +60,7 @@ class MLASettings_View {
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG,
 			MLA_PLUGIN_URL . "js/mla-inline-edit-settings-scripts{$suffix}.js", 
-			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::mla_script_version(), false );
 
 		wp_localize_script( MLASettings::JAVASCRIPT_INLINE_EDIT_VIEW_SLUG,
 			self::JAVASCRIPT_INLINE_EDIT_VIEW_OBJECT, $script_variables );
@@ -290,10 +290,10 @@ class MLASettings_View {
 							$page_content = self::_compose_edit_view_tab( $mla_view_item, $page_template_array['single-item-edit'] );
 							$page_content['message'] = $message;
 						}
-			} else {
+					} else {
 						$page_content = array(
 							/* translators: 1: view name/slug */
-							'message' => sprintf( __( 'Edit view "%1$s" cancelled.', 'media-library-assistant' ), $mla_view_item['mla_view_item']['original_slug'] ),
+							'message' => sprintf( __( 'Edit view "%1$s" cancelled.', 'media-library-assistant' ), $mla_view_item['original_slug'] ),
 							'body' => '' 
 						);
 					}

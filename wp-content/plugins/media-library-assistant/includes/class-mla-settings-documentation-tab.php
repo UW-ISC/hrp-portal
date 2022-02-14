@@ -53,7 +53,7 @@ class MLASettings_Documentation {
 
 		wp_enqueue_script( self::JAVASCRIPT_DOCUMENTATION_TAB_SLUG,
 			MLA_PLUGIN_URL . "js/mla-settings-shortcodes-tab-scripts{$suffix}.js", 
-			array( 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'jquery' ), MLACore::mla_script_version(), false );
 
 		wp_localize_script( self::JAVASCRIPT_DOCUMENTATION_TAB_SLUG,
 			self::JAVASCRIPT_DOCUMENTATION_TAB_OBJECT, $script_variables );

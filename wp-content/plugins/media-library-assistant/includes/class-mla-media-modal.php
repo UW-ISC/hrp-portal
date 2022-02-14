@@ -433,21 +433,21 @@ class MLAModal {
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		if ( $wp_locale->is_rtl() ) {
-			wp_register_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES, MLA_PLUGIN_URL . 'css/mla-media-modal-style-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES, MLA_PLUGIN_URL . 'css/mla-media-modal-style-rtl.css', false, MLACore::mla_script_version() );
 		} else {
-			wp_register_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES, MLA_PLUGIN_URL . 'css/mla-media-modal-style.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES, MLA_PLUGIN_URL . 'css/mla-media-modal-style.css', false, MLACore::mla_script_version() );
 		}
 
 		wp_enqueue_style( self::JAVASCRIPT_MEDIA_MODAL_STYLES );
 
 		// Make sure ajaxurl is defined before loading wp-lists and suggest
-		wp_enqueue_script( self::JAVASCRIPT_DEFINE_AJAXURL_SLUG, MLA_PLUGIN_URL . "js/mla-define-ajaxurl-scripts{$suffix}.js", array(), MLACore::CURRENT_MLA_VERSION, false );
+		wp_enqueue_script( self::JAVASCRIPT_DEFINE_AJAXURL_SLUG, MLA_PLUGIN_URL . "js/mla-define-ajaxurl-scripts{$suffix}.js", array(), MLACore::mla_script_version(), false );
 
 		// Gutenberg Block Editor won't tolerate loading 'wp-lists' in the header section; load in footer section
 		if ( ! function_exists( 'use_block_editor_for_post_type' ) || isset( $_GET['classic-editor'] ) ) {
-			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::CURRENT_MLA_VERSION, false );
+			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::mla_script_version(), false );
 		} else {
-			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::CURRENT_MLA_VERSION, true );
+			wp_enqueue_script( self::JAVASCRIPT_MEDIA_MODAL_SLUG, MLA_PLUGIN_URL . "js/mla-media-modal-scripts{$suffix}.js", array( 'media-views', 'wp-lists', 'suggest' ), MLACore::mla_script_version(), true );
 		}
 		
 		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) {
@@ -542,15 +542,15 @@ class MLAModal {
 
 		if ( $add_the_scripts ) {
 			if ( $wp_locale->is_rtl() ) {
-				wp_register_style( MLACore::STYLESHEET_SLUG . '-terms-search', MLA_PLUGIN_URL . 'css/mla-style-terms-search-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
+				wp_register_style( MLACore::STYLESHEET_SLUG . '-terms-search', MLA_PLUGIN_URL . 'css/mla-style-terms-search-rtl.css', false, MLACore::mla_script_version() );
 			} else {
-				wp_register_style( MLACore::STYLESHEET_SLUG . '-terms-search', MLA_PLUGIN_URL . 'css/mla-style-terms-search.css', false, MLACore::CURRENT_MLA_VERSION );
+				wp_register_style( MLACore::STYLESHEET_SLUG . '-terms-search', MLA_PLUGIN_URL . 'css/mla-style-terms-search.css', false, MLACore::mla_script_version() );
 			}
 
 			wp_enqueue_style( MLACore::STYLESHEET_SLUG . '-terms-search' );
 
 			wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-terms-search', MLA_PLUGIN_URL . "js/mla-terms-search-scripts{$suffix}.js", 
-				array( 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+				array( 'jquery' ), MLACore::mla_script_version(), false );
 
 			$script_variables = array(
 				'useDashicons' => false,

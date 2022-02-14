@@ -8,11 +8,13 @@
 
 /* Layout */
 
-#bulk-edit-reset {
+#bulk-edit-reset,
+#bulk-edit-import,
+#bulk-edit-export {
 	margin: 0px 5px
 }
 
-#mla-add-new-bulk-edit-div .mla_taxonomy_options {
+#mla-add-new-bulk-edit-div .mla_bulk_taxonomy_options {
 	margin-top: 8px;
 	margin-bottom: 8px
 }
