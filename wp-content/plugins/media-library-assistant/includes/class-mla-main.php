@@ -20,15 +20,6 @@ if ( !function_exists( 'post_categories_meta_box' ) ) {
  */
 class MLA {
 	/**
-	 * Current date for Development Versions, empty for production versions
-	 *
-	 * @since 2.10
-	 *
-	 * @var	string
-	 */
-	const MLA_DEVELOPMENT_VERSION = '';
-
-	/**
 	 * Object name for localizing JavaScript - MLA List Table
 	 *
 	 * @since 0.20
@@ -214,7 +205,7 @@ class MLA {
 		// Process row-level actions from the Edit Media screen
 		if ( !empty( $_REQUEST['mla_admin_action'] ) ) {
 			if ( isset( $_REQUEST['mla-set-parent-ajax-nonce'] ) ) {
-				check_admin_referer( 'mla_find_posts', 'mla-set-parent-ajax-nonce' );
+				check_admin_referer( MLACore::JAVASCRIPT_FIND_POSTS_SLUG, 'mla-set-parent-ajax-nonce' );
 			} else {
 				check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			}
@@ -402,12 +393,12 @@ class MLA {
 		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
 		if ( 'checked' != MLACore::mla_get_option( MLACoreOptions::MLA_SCREEN_DISPLAY_LIBRARY ) ) {
-			wp_register_style( MLACore::STYLESHEET_SLUG . '-nolibrary', MLA_PLUGIN_URL . 'css/mla-nolibrary.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG . '-nolibrary', MLA_PLUGIN_URL . 'css/mla-nolibrary.css', false, MLACore::mla_script_version() );
 			wp_enqueue_style( MLACore::STYLESHEET_SLUG . '-nolibrary' );
 		}
 
 		if ( 'edit-tags.php' == $page_hook ) {
-			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-edit-tags-style.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-edit-tags-style.css', false, MLACore::mla_script_version() );
 			wp_enqueue_style( MLACore::STYLESHEET_SLUG );
 			return;
 		}
@@ -420,26 +411,26 @@ class MLA {
 		add_action( 'admin_print_styles', 'MLA::mla_admin_print_styles_action' );
 
 		if ( $wp_locale->is_rtl() ) {
-			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style-rtl.css', false, MLACore::mla_script_version() );
 		} else {
-			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( MLACore::STYLESHEET_SLUG, MLA_PLUGIN_URL . 'css/mla-style.css', false, MLACore::mla_script_version() );
 		}
 
 		wp_enqueue_style( MLACore::STYLESHEET_SLUG );
 
-		wp_register_style( MLACore::STYLESHEET_SLUG . '-set-parent', MLA_PLUGIN_URL . 'css/mla-style-set-parent.css', false, MLACore::CURRENT_MLA_VERSION );
+		wp_register_style( MLACore::STYLESHEET_SLUG . '-set-parent', MLA_PLUGIN_URL . 'css/mla-style-set-parent.css', false, MLACore::mla_script_version() );
 		wp_enqueue_style( MLACore::STYLESHEET_SLUG . '-set-parent' );
 
 		wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, MLA_PLUGIN_URL . "js/mla-inline-edit-scripts{$suffix}.js", 
-			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::mla_script_version(), false );
 
 		if ( MLACore::mla_supported_taxonomies( 'checklist-add-term' ) ) {
 			wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-add-term', MLA_PLUGIN_URL . "js/mla-add-term-scripts{$suffix}.js", 
-				array( 'wp-ajax-response', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::CURRENT_MLA_VERSION, false );
+				array( 'wp-ajax-response', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::mla_script_version(), false );
 		}
 		
 		wp_enqueue_script( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-set-parent', MLA_PLUGIN_URL . "js/mla-set-parent-scripts{$suffix}.js", 
-			array( 'wp-lists', 'suggest', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'wp-lists', 'suggest', 'jquery', MLACore::JAVASCRIPT_INLINE_EDIT_SLUG ), MLACore::mla_script_version(), false );
 
 		MLAModal::mla_add_terms_search_scripts();
 
@@ -454,8 +445,6 @@ class MLA {
 
 		$script_variables = array(
 			'fields' => $fields,
-			'ajaxFailError' => __( 'An ajax.fail error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
-			'ajaxDoneError' => __( 'An ajax.done error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
 			'error' => __( 'Error while saving the changes.', 'media-library-assistant' ),
 			'ntdelTitle' => __( 'Remove From Bulk Edit', 'media-library-assistant' ),
 			'noTitle' => __( '(no title)', 'media-library-assistant' ),
@@ -471,6 +460,11 @@ class MLA {
 			'useSpinnerClass' => false,
 			'ajax_action' => MLACore::JAVASCRIPT_INLINE_EDIT_SLUG,
 			'ajax_nonce' => wp_create_nonce( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
+			'ajaxFailError' => __( 'An ajax.fail error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
+			'ajaxDoneError' => __( 'An ajax.done error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
+			'setParentAction' => MLACore::JAVASCRIPT_FIND_POSTS_SLUG,
+			'exportPresetsAction' => MLACore::JAVASCRIPT_EXPORT_PRESETS_SLUG,
+			'exportPresetsOption' => MLACoreOptions::MLA_BULK_EDIT_PRESETS,
 			'deleteAcpBulkEdit' => false,
 		);
 
@@ -2087,7 +2081,7 @@ class MLA {
 			'Date' => __( 'Date', 'media-library-assistant' ),
 			'Status' => __( 'Status', 'media-library-assistant' ),
 			'Unattached' => __( 'Unattached', 'media-library-assistant' ),
-			'mla_find_posts_nonce' => wp_nonce_field( 'mla_find_posts', 'mla-set-parent-ajax-nonce', false, false ),
+			'mla_find_posts_nonce' => wp_nonce_field( MLACore::JAVASCRIPT_FIND_POSTS_SLUG, 'mla-set-parent-ajax-nonce', false, false ),
 		);
 
 		ob_start();
@@ -2211,6 +2205,13 @@ class MLA {
 			return '';
 		}
 
+		$fieldset_template_array = MLACore::mla_load_template( 'mla-bulk-edit-fieldsets.tpl' );
+		if ( ! is_array( $fieldset_template_array ) ) {
+			/* translators: 1: ERROR tag 2: function name 3: non-array value */
+			MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s non-array "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'MLA::_build_inline_edit_form', var_export( $fieldset_template_array, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			return '';
+		}
+
 		if ( $authors = self::mla_authors_dropdown() ) {
 			$authors_dropdown  = '              <label class="inline-edit-author">' . "\n";
 			$authors_dropdown .= '                <span class="title">' . __( 'Author', 'media-library-assistant' ) . '</span>' . "\n";
@@ -2225,17 +2226,16 @@ class MLA {
 			  $page_values = array(
 				  'slug' => $slug,
 				  'label' => esc_attr( $details['name'] ),
+				  'value' => '',
 			  );
-			  $custom_fields .= MLAData::mla_parse_template( $page_template_array['custom_field'], $page_values );
+			  $custom_fields .= MLAData::mla_parse_template( $fieldset_template_array['custom_field'], $page_values );
 		}
 
 		// The middle column contains the hierarchical taxonomies, e.g., Att. Category
 		$quick_middle_column = '';
-		$bulk_middle_column = '';
 
 		if ( count( $hierarchical_taxonomies ) ) {
 			$quick_category_blocks = '';
-			$bulk_category_blocks = '';
 
 			foreach ( $hierarchical_taxonomies as $tax_name => $tax_object ) {
 				if ( current_user_can( $tax_object->cap->assign_terms ) ) {
@@ -2253,11 +2253,11 @@ class MLA {
 							'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
 							'tax_parents' => wp_dropdown_categories( array( 'taxonomy' => $tax_name, 'hide_empty' => 0, 'name' => "new{$tax_name}_parent", 'orderby' => 'name', 'hierarchical' => 1, 'show_option_none' => '&mdash; ' . $tax_object->labels->parent_item . ' &mdash;', 'echo' => 0, 'update_term_meta_cache' => false ) ),
 							'Add Button' => esc_html( $tax_object->labels->add_new_item ),
-							'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+							'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false, false ),
 						);
 					
-						$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
-						$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+						$category_add_link = MLAData::mla_parse_template( $fieldset_template_array['category_add_link'], $page_values );
+						$category_adder = MLAData::mla_parse_template( $fieldset_template_array['category_adder'], $page_values );
 					} else {
 						$category_add_link = '';
 						$category_adder = '';
@@ -2271,36 +2271,32 @@ class MLA {
 						'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
 						'category_adder' => $category_adder,
 						'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
+						'tax_add_checked' => 'checked="checked"',
+						'tax_remove_checked' => '',
+						'tax_replace_checked' => '',
 						'Add' => __( 'Add', 'media-library-assistant' ),
 						'Remove' => __( 'Remove', 'media-library-assistant' ),
 						'Replace' => __( 'Replace', 'media-library-assistant' ),
 					);
-					$category_block = MLAData::mla_parse_template( $page_template_array['category_block'], $page_values );
-					$taxonomy_options = MLAData::mla_parse_template( $page_template_array['taxonomy_options'], $page_values );
+					$category_block = MLAData::mla_parse_template( $fieldset_template_array['category_block'], $page_values );
+					$taxonomy_options = MLAData::mla_parse_template( $fieldset_template_array['taxonomy_options'], $page_values );
 					
 					$quick_category_blocks .= $category_block;
-					$bulk_category_blocks .= $category_block . $taxonomy_options;
 				} // current_user_can
 			} // foreach $hierarchical_taxonomies
 
 			$page_values = array(
+				'category_fieldset_column' => 'center',
 				'category_blocks' => $quick_category_blocks
 			);
-			$quick_middle_column = MLAData::mla_parse_template( $page_template_array['category_fieldset'], $page_values );
-
-			$page_values = array(
-				'category_blocks' => $bulk_category_blocks
-			);
-			$bulk_middle_column = MLAData::mla_parse_template( $page_template_array['category_fieldset'], $page_values );
+			$quick_middle_column = MLAData::mla_parse_template( $fieldset_template_array['category_fieldset'], $page_values );
 		} // count( $hierarchical_taxonomies )
 
 		// The right-hand column contains the flat taxonomies, e.g., Att. Tag
 		$quick_right_column = '';
-		$bulk_right_column = '';
 
 		if ( count( $flat_taxonomies ) ) {
 			$quick_tag_blocks = '';
-			$bulk_tag_blocks = '';
 
 			foreach ( $flat_taxonomies as $tax_name => $tax_object ) {
 				if ( current_user_can( $tax_object->cap->assign_terms ) ) {
@@ -2319,11 +2315,11 @@ class MLA {
 								'Add Reader' => __( 'Add New', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->singular_name ),
 								'tax_parents' => "<input type='hidden' name='new{$tax_name}_parent' id='new{$tax_name}_parent' value='-1' />",
 								'Add Button' => esc_html( $tax_object->labels->add_new_item ),
-								'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false ),
+								'ajax_nonce_field' => wp_nonce_field( 'add-'.$tax_name, '_ajax_nonce-add-'.$tax_name, false, false ),
 							);
 						
-							$category_add_link = MLAData::mla_parse_template( $page_template_array['category_add_link'], $page_values );
-							$category_adder = MLAData::mla_parse_template( $page_template_array['category_adder'], $page_values );
+							$category_add_link = MLAData::mla_parse_template( $fieldset_template_array['category_add_link'], $page_values );
+							$category_adder = MLAData::mla_parse_template( $fieldset_template_array['category_adder'], $page_values );
 						} else {
 							$category_add_link = '';
 							$category_adder = '';
@@ -2337,57 +2333,59 @@ class MLA {
 							'Search' => __( '?&nbsp;Search', 'media-library-assistant' ),
 							'category_adder' => $category_adder,
 							'Search Reader' => __( 'Search', 'media-library-assistant' ) . ' ' . esc_html( $tax_object->labels->name ),
+							'tax_add_checked' => 'checked="checked"',
+							'tax_remove_checked' => '',
+							'tax_replace_checked' => '',
 							'Add' => __( 'Add', 'media-library-assistant' ),
 							'Remove' => __( 'Remove', 'media-library-assistant' ),
 							'Replace' => __( 'Replace', 'media-library-assistant' ),
 						);
-						$tag_block = MLAData::mla_parse_template( $page_template_array['category_block'], $page_values );
+						$tag_block = MLAData::mla_parse_template( $fieldset_template_array['category_block'], $page_values );
 					} else {
 						$page_values = array(
 							'tax_html' => esc_html( $tax_object->labels->name ),
 							'tax_attr' => esc_attr( $tax_name ),
+							'tax_value' => '',
+							'tax_add_checked' => 'checked="checked"',
+							'tax_remove_checked' => '',
+							'tax_replace_checked' => '',
 							'Add' => __( 'Add', 'media-library-assistant' ),
 							'Remove' => __( 'Remove', 'media-library-assistant' ),
 							'Replace' => __( 'Replace', 'media-library-assistant' ),
 						);
-						$tag_block = MLAData::mla_parse_template( $page_template_array['tag_block'], $page_values );
+						$tag_block = MLAData::mla_parse_template( $fieldset_template_array['tag_block'], $page_values );
 					}
 
-					$taxonomy_options = MLAData::mla_parse_template( $page_template_array['taxonomy_options'], $page_values );
+					$taxonomy_options = MLAData::mla_parse_template( $fieldset_template_array['taxonomy_options'], $page_values );
 
 				$quick_tag_blocks .= $tag_block;
-				$bulk_tag_blocks .= $tag_block . $taxonomy_options;
 				} // current_user_can
 			} // foreach $flat_taxonomies
 
 			$page_values = array(
+				'tag_fieldset_column' => 'right',
 				'tag_blocks' => $quick_tag_blocks
 			);
-			$quick_right_column = MLAData::mla_parse_template( $page_template_array['tag_fieldset'], $page_values );
-
-			$page_values = array(
-				'tag_blocks' => $bulk_tag_blocks
-			);
-			$bulk_right_column = MLAData::mla_parse_template( $page_template_array['tag_fieldset'], $page_values );
+			$quick_right_column = MLAData::mla_parse_template( $fieldset_template_array['tag_fieldset'], $page_values );
 		} // count( $flat_taxonomies )
 
-		if ( $authors = self::mla_authors_dropdown( -1 ) ) {
-			$bulk_authors_dropdown  = '              <label class="inline-edit-author alignright">' . "\n";
-			$bulk_authors_dropdown .= '                <span class="title">' . __( 'Author', 'media-library-assistant' ) . '</span>' . "\n";
-			$bulk_authors_dropdown .= $authors . "\n";
-			$bulk_authors_dropdown .= '              </label>' . "\n";
-		} else {
-			$bulk_authors_dropdown = '';
-		}
+		// Get a "blank" presets array for the blank and initial fieldsets
+		$fieldset_values = MLAEdit::mla_get_bulk_edit_form_presets( MLACoreOptions::MLA_BULK_EDIT_PRESETS, true );
 
-		$bulk_custom_fields = '';
-		foreach ( MLACore::mla_custom_field_support( 'bulk_edit' ) as $slug => $details ) {
-			  $page_values = array(
-				  'slug' => $slug,
-				  'label' => esc_attr( $details['name'] ),
-			  );
-			  $bulk_custom_fields .= MLAData::mla_parse_template( $page_template_array['custom_field'], $page_values );
-		}
+		// Format and filter the blank/reset fieldset values
+		$blank_div_content = MLAEdit::mla_generate_bulk_edit_form_fieldsets( $fieldset_values, 'mla_list_table_inline_blank' );
+
+		// Format and filter the initial fieldset values
+		$initial_div_content = MLAEdit::mla_generate_bulk_edit_form_fieldsets( $fieldset_values, 'mla_list_table_inline_initial' );
+//error_log( __LINE__ . ' MLA::_build_inline_edit_form initial_div_content = ' . var_export( $initial_div_content, true ), 0 );
+
+		// Populate the import/export saved fieldset values, if any
+		$fieldset_values = MLAEdit::mla_get_bulk_edit_form_presets( MLACoreOptions::MLA_BULK_EDIT_PRESETS );
+//$fieldset_values['post_title'] = 'Preset Title';
+//error_log( __LINE__ . ' MLA::_build_inline_edit_form preset_values = ' . var_export( $fieldset_values, true ), 0 );
+
+		$preset_div_content = MLAEdit::mla_generate_bulk_edit_form_fieldsets( $fieldset_values, 'mla_list_table_inline_preset' );
+//error_log( __LINE__ . ' MLA::_build_inline_edit_form preset_div_content = ' . var_export( $preset_div_content, true ), 0 );
 
 		$set_parent_form = MLA::mla_set_parent_form();
 
@@ -2402,6 +2400,7 @@ class MLA {
 		}
 
 		$page_values = array(
+			'filter_root' => 'mla_list_table_inline',
 			'colspan' => $MLAListTable->get_column_count(),
 			'Quick Edit' => __( 'Quick Edit', 'media-library-assistant' ),
 			'Title' => __( 'Title', 'media-library-assistant' ),
@@ -2416,22 +2415,18 @@ class MLA {
 			'Select' => __( 'Select', 'media-library-assistant' ),
 			'Menu Order' => __( 'Menu Order', 'media-library-assistant' ),
 			'authors' => $authors_dropdown,
-			'custom_fields' => $custom_fields,
 			'quick_middle_column' => $quick_middle_column,
 			'quick_right_column' => $quick_right_column,
+			'custom_fields' => $custom_fields,
 			'Cancel' => __( 'Cancel', 'media-library-assistant' ),
-			'Reset' => __( 'Reset', 'media-library-assistant' ),
 			'Update' => __( 'Update', 'media-library-assistant' ),
+			'preset_div_content' => $preset_div_content,
+			'blank_div_content' => $blank_div_content,
+			'initial_div_content' => $initial_div_content,
 			'Bulk Edit' => __( 'Bulk Edit', 'media-library-assistant' ),
-			'bulk_middle_column' => $bulk_middle_column,
-			'bulk_right_column' => $bulk_right_column,
-			'bulk_authors' => $bulk_authors_dropdown,
-			'Comments' => __( 'Comments', 'media-library-assistant' ),
-			'Pings' => __( 'Pings', 'media-library-assistant' ),
-			'No Change' => __( 'No Change', 'media-library-assistant' ),
-			'Allow' => __( 'Allow', 'media-library-assistant' ),
-			'Do not allow' => __( 'Do not allow', 'media-library-assistant' ),
-			'bulk_custom_fields' => $bulk_custom_fields,
+			'Reset' => __( 'Reset', 'media-library-assistant' ),
+			'Import' => __( 'Import', 'media-library-assistant' ),
+			'Export' => __( 'Export', 'media-library-assistant' ),
 			'bulk_map_style' => '',
 			'Map IPTC/EXIF metadata' =>  __( 'Map IPTC/EXIF metadata', 'media-library-assistant' ),
 			'bulk_custom_field_map_style' => '',
@@ -2473,12 +2468,18 @@ class MLA {
 		if ( is_super_admin() || current_user_can( $post_type_object->cap->edit_others_posts ) ) {
 			$users_opt = array(
 				'hide_if_only_one_author' => false,
-				'who' => 'authors',
 				'name' => $name,
 				'class'=> $class,
 				'multi' => 1,
 				'echo' => 0
 			);
+
+			// 'who' => 'authors', deprecated in WP 5.9
+			if ( version_compare( get_bloginfo('version'), '5.8.99', '>' ) ) {
+				$users_opt['capability'] = array( $post_type_object->cap->edit_posts );
+			} else {
+				$users_opt['who'] = 'authors';
+			}
 
 			if ( $author > 0 ) {
 				$users_opt['selected'] = $author;

@@ -1892,7 +1892,9 @@ class MLA_List_Table extends WP_List_Table {
 
 			if ( isset( $query['post_mime_type'] ) ) {
 				$query['post_mime_type'] = urlencode( $query['post_mime_type'] );
-			} else {
+			}
+
+			if ( isset( $query['meta_query'] ) ) {
 				$query['meta_slug'] = $view_slug;
 				$query['meta_query'] = urlencode( json_encode( $query['meta_query'] ) );
 			}

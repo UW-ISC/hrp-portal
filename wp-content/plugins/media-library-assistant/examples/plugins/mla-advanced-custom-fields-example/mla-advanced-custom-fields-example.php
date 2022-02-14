@@ -48,7 +48,7 @@
  * https://wordpress.org/support/topic/bulk-edit-acf-custom-field/
  *
  * @package MLA Advanced Custom Fields Example
- * @version 1.07
+ * @version 1.09
  */
 
 /*
@@ -56,7 +56,7 @@ Plugin Name: MLA Advanced Custom Fields Example
 Plugin URI: http://davidlingren.com/
 Description: Supports an ACF checkbox, "where-used" in an ACF repeater, one or more ACF "image" fields and one or more ACF "select" fields.
 Author: David Lingren
-Version: 1.07
+Version: 1.09
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2021 David Lingren
@@ -92,7 +92,7 @@ class MLAACFExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '1.07';
+	const PLUGIN_VERSION = '1.09';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -202,6 +202,10 @@ class MLAACFExample {
 		add_filter( 'mla_list_table_bulk_action_initial_request', 'MLAACFExample::mla_list_table_bulk_action_initial_request', 10, 3 );
 		add_filter( 'mla_list_table_bulk_action', 'MLAACFExample::mla_list_table_bulk_action', 10, 3 );
 		add_filter( 'mla_list_table_inline_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 );
+
+		add_filter( 'mla_list_table_inline_initial_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_blank_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_preset_values', 'MLAACFExample::mla_list_table_inline_values', 10, 1 );
 
 		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_get_columns', 'MLAACFExample::mla_list_table_get_columns', 10, 1 );
@@ -419,6 +423,7 @@ class MLAACFExample {
 	public static function mla_list_table_bulk_action( $item_content, $bulk_action, $post_id ) {
 		// Accumulate multiple messages
 		$messages = '';
+		MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_list_table_bulk_action( {$bulk_action}, {$post_id} )", self::MLA_DEBUG_CATEGORY );
 
 		if ( self::$plugin_settings->get_plugin_option( 'acf_checkbox_enabled' ) ) {
 			/*
@@ -453,7 +458,7 @@ class MLAACFExample {
 				}
 			}
 
-			self::$field_objects['MLAACFExample_bulk_edit_values'] = array();
+			// unset( self::$field_objects['MLAACFExample_bulk_edit_values'] );
 		} // acf_select_enabled
 
 		MLACore::mla_debug_add( __LINE__ . ' MLAACFExample::mla_list_table_bulk_action message = ' . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
@@ -477,23 +482,28 @@ class MLAACFExample {
 	 * @return	array	updated substitution parameter name => value pairs
 	 */
 	public static function mla_list_table_inline_values( $item_values ) {
+		//MLACore::mla_debug_add( __LINE__ . ' MLAACFExample::mla_list_table_inline_values item_values = ' . var_export( $item_values, true ), self::MLA_DEBUG_CATEGORY );
 		if ( self::$plugin_settings->get_plugin_option( 'acf_checkbox_enabled' ) ) {
+			$field = self::$plugin_settings->get_plugin_option( 'acf_checkbox_fields' );
 			$title = self::$plugin_settings->get_plugin_option( 'acf_checkbox_titles' );
 			// Replace the ACF Field Name with a more friendly Field Label
-			$item_values['custom_fields'] = str_replace( '>acf_checkbox<', '>' . $title . '<', $item_values['custom_fields'] );
-			$item_values['bulk_custom_fields'] = str_replace( '>acf_checkbox<', '>' . $title . '<', $item_values['bulk_custom_fields'] );
+			$item_values['custom_fields'] = str_replace( '>' . $field . '<', '>' . $title . '<', $item_values['custom_fields'] );
+			// $item_values['bulk_custom_fields'] = str_replace( '>acf_checkbox<', '>' . $title . '<', $item_values['bulk_custom_fields'] );
 		} // acf_checkbox_enabled
 
 		if ( self::$plugin_settings->get_plugin_option( 'acf_select_enabled' ) ) {
 			// Append the ACF Select Field(s) to the Quick and Bulk lists
 			foreach( self::$field_objects as $field_name => $field_object ) {
-				$custom_fields_item  = '              <label class="inline-edit-acf_' . $field_name . '" style="clear:both"> ';
-				$custom_fields_item .= '<span class="title">' . $field_object['mla_field_label'] . '</span> ';
-				$custom_fields_item .= '<span class="input-text-wrap">' . "\n";
-				$custom_fields_item .= '                <input type="text" name="acf_' . $field_name . '" value="" />' . "\n";
-				$custom_fields_item .= '                </span> </label>' . "\n";
-				$item_values['custom_fields'] .= $custom_fields_item;
-				$item_values['bulk_custom_fields'] .= $custom_fields_item;
+				MLACore::mla_debug_add( __LINE__ . " MLAACFExample::mla_list_table_inline_values( {$field_name} ) field_object = " . var_export( $field_object, true ), self::MLA_DEBUG_CATEGORY );
+				if ( isset( $field_object['mla_field_label'] ) ) {
+					$custom_fields_item  = '              <label class="inline-edit-acf_' . $field_name . '" style="clear:both"> ';
+					$custom_fields_item .= '<span class="title">' . $field_object['mla_field_label'] . '</span> ';
+					$custom_fields_item .= '<span class="input-text-wrap">' . "\n";
+					$custom_fields_item .= '                <input type="text" name="acf_' . $field_name . '" value="" />' . "\n";
+					$custom_fields_item .= '                </span> </label>' . "\n";
+					$item_values['custom_fields'] .= $custom_fields_item;
+					// $item_values['bulk_custom_fields'] .= $custom_fields_item;
+				}
 			}
 		} // acf_select_enabled
 

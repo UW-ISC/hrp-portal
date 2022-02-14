@@ -3,7 +3,7 @@
  * Provides an example of hooking the filters provided by the MLA_List_Table class
  *
  * @package MLA List Table Hooks Example
- * @version 1.10
+ * @version 1.11
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: MLA List Table Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking the filters provided by the MLA_List_Table class
 Author: David Lingren
-Version: 1.10
+Version: 1.11
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2017 David Lingren
@@ -48,9 +48,7 @@ class MLAListTableHooksExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful for the admin section; exit in the front-end posts/pages
-		 */
+		// The filters are only useful for the admin section; exit in the front-end posts/pages
 		if ( ! is_admin() )
 			return;
 
@@ -62,25 +60,19 @@ class MLAListTableHooksExample {
 		 * $accepted_args - number of arguments your function accepts
 		 */
 		 
-		 /*
-		  * Defined in /wp-admin/includes/class-wp-list-table.php
-		  */
+		// Defined in /wp-admin/includes/class-wp-list-table.php
 		add_filter( 'views_media_page_mla-menu', 'MLAListTableHooksExample::views_media_page_mla_menu', 10, 1 );
 		add_filter( 'bulk_actions-media_page_mla-menu', 'MLAListTableHooksExample::bulk_actions_media_page_mla_menu', 10, 1 );
 		add_filter( 'months_dropdown_results', 'MLAListTableHooksExample::months_dropdown_results', 10, 2 );
 		add_filter( 'mla_entries_per_page', 'MLAListTableHooksExample::mla_entries_per_page', 10, 1 );
 		add_filter( 'manage_media_page_mla-menu_sortable_columns', 'MLAListTableHooksExample::manage_media_page_mla_menu_sortable_columns', 10, 1 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-objects.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-objects.php
 		add_filter( 'mla_taxonomy_get_columns', 'MLAListTableHooksExample::mla_taxonomy_get_columns', 10, 3 );
 		add_filter( 'mla_taxonomy_column', 'MLAListTableHooksExample::mla_taxonomy_column', 10, 5 );
 		add_filter( 'mla_taxonomy_column_final', 'MLAListTableHooksExample::mla_taxonomy_column_final', 10, 5 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-data.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-data.php
 		add_filter( 'mla_list_table_query_final_terms', 'MLAListTableHooksExample::mla_list_table_query_final_terms', 10, 1 );
 		add_filter( 'mla_list_table_query_custom_items', 'MLAListTableHooksExample::mla_list_table_query_custom_items', 10, 2 );
 		add_filter( 'mla_list_table_search_filter_fields', 'MLAListTableHooksExample::mla_list_table_search_filter_fields', 10, 2 );
@@ -89,9 +81,7 @@ class MLAListTableHooksExample {
 		add_filter( 'mla_update_single_item', 'MLAListTableHooksExample::mla_update_single_item', 10, 3 );
 		add_action( 'mla_updated_single_item', 'MLAListTableHooksExample::mla_updated_single_item', 10, 2 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-main.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-main.php
 		add_filter( 'mla_list_table_help_template', 'MLAListTableHooksExample::mla_list_table_help_template', 10, 3 );
 		add_filter( 'mla_list_table_admin_action', 'MLAListTableHooksExample::mla_list_table_admin_action', 10, 3 );
 		add_action( 'mla_list_table_custom_admin_action', 'MLAListTableHooksExample::mla_list_table_custom_admin_action', 10, 2 );
@@ -114,9 +104,15 @@ class MLAListTableHooksExample {
 		add_filter( 'mla_list_table_inline_template', 'MLAListTableHooksExample::mla_list_table_inline_template', 10, 1 );
 		add_filter( 'mla_list_table_inline_parse', 'MLAListTableHooksExample::mla_list_table_inline_parse', 10, 3 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-list-table.php
-		  */
+		add_filter( 'mla_list_table_inline_blank_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_initial_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+		add_filter( 'mla_list_table_inline_preset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+
+		add_filter( 'mla_list_table_inline_blank_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_list_table_inline_initial_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_list_table_inline_preset_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+
+		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_get_columns', 'MLAListTableHooksExample::mla_list_table_get_columns', 10, 1 );
 		add_filter( 'mla_list_table_get_hidden_columns', 'MLAListTableHooksExample::mla_list_table_get_hidden_columns', 10, 1 );
 		add_filter( 'mla_list_table_get_sortable_columns', 'MLAListTableHooksExample::mla_list_table_get_sortable_columns', 10, 1 );
@@ -138,12 +134,18 @@ class MLAListTableHooksExample {
 		// 'views_upload' is only applied when WPML is active
 		add_filter( 'views_upload', 'MLAListTableHooksExample::views_upload', 10, 1 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-edit-media.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-edit-media.php
 		add_filter( 'mla_upload_bulk_edit_form_values', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_values', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_template', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_template', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_parse', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_parse', 10, 3 );
+
+		add_filter( 'mla_upload_bulk_edit_form_blank_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
+
+		add_filter( 'mla_upload_bulk_edit_form_blank_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
 	}
 
 	/**
@@ -737,6 +739,30 @@ class MLAListTableHooksExample {
 	} // mla_list_table_inline_values
 
 	/**
+	 * MLA_List_Table item bulk edit fieldset values
+	 *
+	 * This filter gives you a chance to modify and extend the substitution values
+	 * for the three Bulk Edit form fieldsets.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
+	 */
+	public static function mla_list_table_bulk_values( $item_values ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
+
+		/*
+		 * You can use the 'filter_root' element to distinguish among :
+		 *     mla_list_table_inline_blank_values,
+		 *     mla_list_table_inline_initial_values,
+		 *     mla_list_table_inline_preset_values
+		 */
+		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
+
+		return $item_values;
+	} // mla_list_table_bulk_values
+
+	/**
 	 * MLA_List_Table inline edit template
 	 *
 	 * This filter gives you a chance to modify and extend the template used
@@ -745,11 +771,43 @@ class MLAListTableHooksExample {
 	 * @since 1.00
 	 *
 	 * @param	string	$item_template Template used to generate the HTML markup
+	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
 	 */
-	public static function mla_list_table_inline_template( $item_template ) {
+	public static function mla_list_table_inline_template( $item_template, $item_values ) {
 		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_template $item_template = ' . var_export( $item_template, true ), 0 );
+
+		/*
+		 * You can use the 'filter_root' element to distinguish among :
+		 *     mla_list_table_inline_blank_template,
+		 *     mla_list_table_inline_initial_template,
+		 *     mla_list_table_inline_preset_template
+		 */
+		//error_log( "MLAListTableHooksExample::mla_list_table_inline_template filter_root = {$item_values['filter_root']}", 0 );
+
 		return $item_template;
 	} // mla_list_table_inline_template
+
+	/**
+	 * MLA_List_Table item bulk edit fieldset template
+	 *
+	 * This filter gives you a chance to modify and extend the template used
+	 * for the three Bulk Edit form fieldsets.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	array	$item_template Template used to generate the HTML markup
+	 */
+	public static function mla_list_table_bulk_template( $item_template ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_template = ' . var_export( $item_template, true ), 0 );
+
+		/*
+		 * You can use the 'filter_root' element to distinguish among :
+		 *     mla_list_table_inline_blank_values
+		 */
+		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
+
+		return $item_values;
+	} // mla_list_table_bulk_values
 
 	/**
 	 * MLA_List_Table inline edit parse

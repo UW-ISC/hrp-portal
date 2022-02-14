@@ -38,61 +38,64 @@ var jQuery,
 			},
 
 			attachSearch : function( rowId ) {
-				jQuery( rowId + ' .categorydiv').each( function(){
-					var this_id = jQuery(this).attr('id'), taxonomyParts, taxonomy;
+				var editDiv = jQuery( rowId );
+				
+				jQuery( '.categorydiv', editDiv ).each( function(){
+					var this_id = jQuery(this).attr('id'), taxonomy, taxonomyPrefix;
 	
-					taxonomyParts = this_id.split('-');
-					taxonomyParts.shift(); // taxonomy-
-					taxonomy = taxonomyParts.join('-');
-	
+					taxonomy = this_id.split('-');
+					taxonomy.shift(); // taxonomy-
+					taxonomy = taxonomy.join('-');
+					taxonomyPrefix = '#' + taxonomy;
+					
 					jQuery.extend( jQuery.expr.pseudos || jQuery.expr[":"], {
 						"matchTerms": function( elem, i, match, array ) {
 							return ( elem.textContent || elem.innerText || "" ).toLowerCase().indexOf( ( match[3] || "" ).toLowerCase() ) >= 0;
 						}
 					});
 	
-					jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
-					jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+					jQuery( taxonomyPrefix + '-searcher', editDiv ).addClass( 'wp-hidden-children' );
+					jQuery( taxonomyPrefix + 'checklist li', editDiv ).show();
 
-					jQuery( rowId + ' #search-' + taxonomy ).off();
+					jQuery( '#search-' + taxonomy, editDiv ).off();
 
-					jQuery( rowId + ' #search-' + taxonomy ).on( 'keydown', function( event ){
-	
+					jQuery( '#search-' + taxonomy, editDiv ).on( 'keydown', function( event ){
+
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
-							jQuery( rowId + ' #search-'  + taxonomy ).val( '' );
-							jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
+							jQuery( '#search-'  + taxonomy, editDiv ).val( '' );
+							jQuery( taxonomyPrefix + '-searcher', editDiv ).addClass( 'wp-hidden-children' );
 	
-							jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+							jQuery( taxonomyPrefix + 'checklist li', editDiv ).show();
 							return false;
 						}
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).on( 'keypress', function( event ){
+					jQuery( '#search-' + taxonomy, editDiv ).on( 'keypress', function( event ){
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
-							jQuery( rowId + ' #search-'  + taxonomy ).val( '' );
-							jQuery( rowId + ' #' + taxonomy + '-searcher' ).addClass( 'wp-hidden-children' );
+							jQuery( '#search-'  + taxonomy, editDiv ).val( '' );
+							jQuery( taxonomyPrefix + '-searcher', editDiv ).addClass( 'wp-hidden-children' );
 	
-							jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+							jQuery( taxonomyPrefix + 'checklist li', editDiv ).show();
 							return;
 						}
 	
 					} );
 	
-					jQuery( rowId + ' #search-' + taxonomy ).on( 'keyup', function( event ){
+					jQuery( '#search-' + taxonomy, editDiv ).on( 'keyup', function( event ){
 						var searchValue, termList, matchingTerms;
 	
 						if( 13 === event.keyCode ) {
 							event.preventDefault();
-							jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).focus();
+							jQuery( taxonomyPrefix + '-search-toggle', editDiv ).trigger('focus');
 							return;
 						}
 	
-						searchValue = jQuery( rowId + ' #search-' + taxonomy ).val();
-						termList = jQuery( rowId + ' #' + taxonomy + 'checklist li' );
+						searchValue = jQuery( '#search-' + taxonomy, editDiv ).val();
+						termList = jQuery( taxonomyPrefix + 'checklist li', editDiv );
 	
 						if ( 0 < searchValue.length ) {
 							termList.hide();
@@ -100,21 +103,21 @@ var jQuery,
 							termList.show();
 						}
 	
-						matchingTerms = jQuery( rowId + ' #' + taxonomy + "checklist label:matchTerms('" + searchValue + "')");
-						matchingTerms.closest( 'li' ).find( 'li' ).andSelf().show();
-						matchingTerms.parents( rowId + ' #' + taxonomy + 'checklist li' ).show();
+						matchingTerms = jQuery( taxonomyPrefix + "checklist label:matchTerms('" + searchValue + "')", editDiv );
+						matchingTerms.closest( 'li' ).find( 'li' ).addBack().show();
+						matchingTerms.parents( taxonomyPrefix + 'checklist li', editDiv ).show();
 					} );
 	
-					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).off();
+					jQuery( taxonomyPrefix + '-search-toggle', editDiv ).off();
 
-					jQuery( rowId + ' #' + taxonomy + '-search-toggle' ).on( 'click', function() {
-						jQuery( rowId + ' #' + taxonomy + '-adder ').addClass( 'wp-hidden-children' );
-						jQuery( rowId + ' #' + taxonomy + '-searcher' ).toggleClass( 'wp-hidden-children' );
-						jQuery( rowId + ' #' + taxonomy + 'checklist li' ).show();
+					jQuery( taxonomyPrefix + '-search-toggle', editDiv ).on( 'click', function() {
+						jQuery( taxonomyPrefix + '-adder ', editDiv ).addClass( 'wp-hidden-children' );
+						jQuery( taxonomyPrefix + '-searcher', editDiv ).toggleClass( 'wp-hidden-children' );
+						jQuery( taxonomyPrefix + 'checklist li', editDiv ).show();
 	
-						if ( false === jQuery( rowId + ' #' + taxonomy + '-searcher' ).hasClass( 'wp-hidden-children' ) ) {
-							jQuery( rowId + ' #search-'  + taxonomy ).val( '' ).removeClass( 'form-input-tip' );
-							jQuery( rowId + ' #search-' + taxonomy ).focus();
+						if ( false === jQuery( taxonomyPrefix + '-searcher', editDiv ).hasClass( 'wp-hidden-children' ) ) {
+							jQuery( '#search-'  + taxonomy, editDiv ).val( '' ).removeClass( 'form-input-tip' );
+							jQuery( '#search-' + taxonomy, editDiv ).trigger('focus');
 						}
 	
 						return false;
@@ -193,6 +196,12 @@ var jQuery,
 			$('a.reset', bulkRow).on( 'click', function(){
 				return mla.inlineEditAttachment.doReset();
 			});
+			$('a.import', bulkRow).on( 'click', function(){
+				return mla.inlineEditAttachment.doImport();
+			});
+			$('a.export', bulkRow).on( 'click', function(){
+				return mla.inlineEditAttachment.doExport();
+			});
 			$('input[type="submit"]', bulkRow).on( 'click', function(e){
 				e.preventDefault();
 				return mla.inlineEditAttachment.bulkSave(e);
@@ -255,6 +264,10 @@ var jQuery,
 			}
 
 			$('#bulk-edit').addClass('inline-editor').show();
+
+			// Activate the add term ajax response tag
+			$('#ajax-response').attr( 'id', 'default-ajax-response' );
+			$( '#bulk-edit #bulkrow-ajax-response' ).attr( 'id', 'ajax-response' );
 
 			$('tbody th.check-column input[type="checkbox"]').each(function(){
 				if ( $(this).prop('checked') ) {
@@ -493,6 +506,10 @@ var jQuery,
 
 					$( '#bulk_refresh' ).prop( 'disabled', false ).css( 'opacity', '1.0' );
 					mla.bulkEdit.inProcess = false;
+
+				// Restore the default ajax response tag
+				$( '#bulk-edit #ajax-response' ).attr( 'id', 'bulkrow-ajax-response' ).empty();
+				$('#default-ajax-response').attr( 'id', 'ajax-response' );
 			}).fail( function( jqXHR, status ) {
 				if ( 200 == jqXHR.status ) {
 					results.text( '(' + status + ') ' + jqXHR.responseText );
@@ -516,7 +533,11 @@ var jQuery,
 			 * in WP 4.2+ to maintain zebra striping
 			 */
 			editRow = $('#inline-edit').clone(true);
-			$('td', editRow).attr('colspan', $( 'th:visible, td:visible', '.widefat:first thead' ).length);
+			$( 'td', editRow ).attr('colspan', $( 'th:visible, td:visible', '.widefat:first thead' ).length);
+
+			// Activate the add term ajax response tag
+			$('#ajax-response').attr( 'id', 'default-ajax-response' );
+			$( '#qerow-ajax-response', editRow ).attr( 'id', 'ajax-response' );
 
 			if ( mla.settings.useSpinnerClass ) {
 				$(t.what+id).hide().after(editRow).after('<tr class="hidden"></tr>');
@@ -597,7 +618,7 @@ var jQuery,
 			});
 
 			rowData = $(editRow).attr('id', 'edit-'+id).addClass('inline-editor').show().position().top;
-			$('.ptitle', editRow).focus();
+			$('.ptitle', editRow).trigger('focus');
 			$( 'html, body' ).animate( { scrollTop: rowData }, 'fast' );
 
 			// Make the edit-fields-div id unique again
@@ -651,8 +672,12 @@ var jQuery,
 								$( mla.inlineEditAttachment.what + id ).remove();
 							}
 
+
 							$( '#edit-' + id ).before( response ).remove();
 							$( mla.inlineEditAttachment.what + id ).hide().fadeIn();
+
+							// Restore the default ajax response tag
+							$('#default-ajax-response').attr( 'id', 'ajax-response' );
 						} else {
 							response = response.replace( /<.[^<>]*?>/g, '' );
 							$( '#edit-' + id + ' .inline-edit-save .error' ).html( response ).show();
@@ -788,6 +813,102 @@ var jQuery,
 			mla.setParent.close();
 		},
 
+		doExport : function(){
+//console.log( 'TODO: doExport' );
+//return false;
+
+			var post = {
+					action: mla.settings.exportPresetsAction,
+					mla_preset_values: $( '#bulk-edit :input' ).serialize(),
+					mla_preset_option: mla.settings.exportPresetsOption,
+					mla_admin_nonce: $('#mla-export-presets-ajax-nonce').val()
+				},
+				spinner = $( 'table.wp-list-table #bulk-edit-fields-div .spinner' );
+
+			if ( mla.settings.useSpinnerClass ) {
+				spinner.addClass("is-active");
+			} else {
+				spinner.show();
+			}
+
+			$.ajax( ajaxurl, {
+				type: 'POST',
+				data: post,
+				dataType: 'json'
+			}).always( function( response ) {
+				if ( mla.settings.useSpinnerClass ) {
+					spinner.removeClass("is-active");
+				} else {
+					spinner.hide();
+				}
+			}).done( function( response ) {
+				var responseData = 'no response.data';
+
+				if ( ! response.success ) {
+					if ( response.data ) {
+						responseData = response.data;
+					}
+
+					$( '#ajax-response' ).html( '<strong>' + mla.settings.ajaxDoneError + ' (' + responseData + ')</strong>' );
+				} else {
+					// replace the old presets with the current values
+					$( '#preset-bulk-edit-fields-div' ).html( response.data );
+				}
+			}).fail( function( jqXHR, status ) {
+				if ( 200 == jqXHR.status ) {
+					$( '#ajax-response' ).text( '(' + status + ') ' + jqXHR.responseText );
+				} else {
+					$( '#ajax-response' ).text( mla.settings.ajaxFailError + ' (' + status + '), jqXHR( ' + jqXHR.status + ', ' + jqXHR.statusText + ', ' + jqXHR.responseText + ')' );
+				}
+			});
+
+			return false;
+		},
+
+		doImport : function(){
+			var id = $('table.wp-list-table tr.inline-editor').attr('id'),
+				bulkRow = $('table.wp-list-table #bulk-edit'),
+				presetRow = $('#inlineedit #preset-bulk-edit'),
+				presetCategories = $('.inline-edit-categories', presetRow ).html(),
+				presetTags = $('.inline-edit-tags', presetRow ).html(),
+				presetFields = $('.inline-edit-fields', presetRow ).html();
+
+			if ( id ) {
+				if ( mla.settings.useSpinnerClass ) {
+					$('table.wp-list-table .inline-edit-save .spinner').removeClass("is-active");
+				} else {
+					$('table.wp-list-table .inline-edit-save .spinner').hide();
+				}
+
+				if ( 'bulk-edit' == id ) {
+					$('.inline-edit-categories', bulkRow ).html( presetCategories ),
+					$('.inline-edit-tags', bulkRow ).html( presetTags ),
+					$('.inline-edit-fields', bulkRow ).html( presetFields );
+
+					if ( ( typeof quicktags !== 'undefined' ) && ( typeof  mla.settings.quickTagsInit !== 'undefined' ) ) {
+						for ( id in mla.settings.quickTagsInit ) {
+							quicktags( mla.settings.quickTagsInit[id] );
+		
+							if ( mla.settings.quickTagsInit[id]['active'] ) {
+								window.wpActiveEditor = id;
+							}
+						}
+					}
+
+					if ( typeof mla.addTerm !== 'undefined' ) {
+						mla.addTerm.init( '#bulk-edit-fields-div' );
+					}
+					mla.utility.attachSearch( '#bulk-edit-fields-div' );
+
+					$('#bulk-edit-set-parent', bulkRow).on( 'click', function(){
+						return mla.inlineEditAttachment.bulkParentOpen();
+					});
+				}
+			}
+
+			return false;
+		},
+
 		doReset : function(){
 			var id = $('table.wp-list-table tr.inline-editor').attr('id'),
 				bulkRow = $('table.wp-list-table #bulk-edit'),
@@ -869,6 +990,10 @@ var jQuery,
 				}
 			}
 
+
+			// Restore the default ajax response tag
+			$( '#bulk-edit #ajax-response' ).attr( 'id', 'bulkrow-ajax-response' ).empty();
+			$('#default-ajax-response').attr( 'id', 'ajax-response' );
 			return false;
 		}
 	}; // mla.inlineEditAttachment

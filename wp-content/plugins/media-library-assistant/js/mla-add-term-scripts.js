@@ -104,8 +104,7 @@ var jQuery;
 				$( '#' + taxonomy + 'checklist', context ).mlaList({
 					alt: '',
 					context: context,
-					// response: taxonomy + '-ajax-response',
-					response: 'add-term-ajax-response',
+					response: 'ajax-response',
 					addBefore: catAddBefore,
 					addAfter: catAddAfter
 				});
@@ -313,7 +312,6 @@ var jQuery;
 				target:  list.get( 0 )
 			}, settings || {} );
 
-//			if ( $.isFunction( settings.confirm ) ) {
 			if ( typeof settings.confirm === 'function' ) {
 				$element = $( '#' + settings.element, mla.mlaList.settings.context );
 
@@ -386,7 +384,6 @@ var jQuery;
 				settings.data += '&' + formData;
 			}
 
-//			if ( $.isFunction( settings.addBefore ) ) {
 			if ( typeof settings.addBefore === 'function' ) {
 				settings = settings.addBefore( settings );
 
@@ -400,9 +397,7 @@ var jQuery;
 			}
 
 			settings.success = function( response ) {
-				var contextId = mla.mlaList.settings.context.selector.substring(1);
-
-				parsedResponse   = wpAjax.parseAjaxResponse( response, contextId + ' #' + settings.response, settings.element );
+				parsedResponse   = wpAjax.parseAjaxResponse( response, settings.response, settings.element );
 				returnedResponse = response;
 
 				if ( ! parsedResponse || parsedResponse.errors ) {
@@ -429,7 +424,6 @@ var jQuery;
 
 			// The addAfter function uses the supplemental data to update the "Parent Term" dropdown ontrol
 			settings.complete = function( jqXHR, status ) {
-//				if ( $.isFunction( settings.addAfter ) ) {
 				if ( typeof settings.addAfter === 'function' ) {
 					settings.addAfter( returnedResponse, $.extend( {
 						xml:    jqXHR,
@@ -465,7 +459,7 @@ var jQuery;
 			$( '.edit-fields-div' ).each( function() {
 				var $thisDiv = $( this ),
 					thisId = $thisDiv.attr( 'id' ),
-					targetId = settings.context.selector.substring(1),
+					targetId = settings.element,
 					$checklist, $element, old, position, reference;
 
 				if ( targetId !== thisId ) {

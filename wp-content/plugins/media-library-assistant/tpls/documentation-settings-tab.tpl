@@ -4769,6 +4769,65 @@ Each Media Library attachment item has a row in the "posts" database table that 
 <td style="padding-bottom: 2em;">absolute (full) path to the upload directory, without trailing slash.</td>
 </tr>
 <tr>
+<td class="mla-doc-table-label">current_timestamp</td>
+<td style="vertical-align: top">an integer Unix timestamp of the current local time. In other words, the value of the PHP <code>time()</code> function, adjusted to the time zone of the site. You can use the <code>,timestamp(f,m)</code> format value described above to re-format the value in a variety of ways. You can get the GMT value by adding a <code>(gmt)</code> qualifier to the name, i.e., <code>current_timestamp(gmt)</code>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_datetime</td>
+<td>a string representation of the current local (adjusted to the time zone of the site) date and time with a format of "YYYY:MM:DD HH:MM:SS". You can use the <code>,date(f,m)</code> format value described above to re-format the value in a variety of ways. You can get the GMT value by adding a <code>(gmt)</code> qualifier to the name, i.e., <code>current_datetime(gmt)</code>.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">current_getdate</td>
+<td style="padding-bottom: 2em;">an associative array containing the date and time elements of the current local (adjusted to the time zone of the site) time. You can use name qualifiers to access individual elements within the array, e.g., `current_getdate(month)` or `current_getdate(wday)`. You can get the GMT value by adding a <code>(gmt)</code> qualifier to the name, i.e., <code>current_getdate(gmt)</code>.<br />&nbsp;<br />Individual array elements are in the site&rsquo;s local time. You can get the GMT value by prepending "gmt" to the name as shown in the list below. The array elements are:<br />&nbsp;<br />
+<table>
+	<tr>
+		<td class="mla-doc-table-label">seconds,<br />gmtseconds</td>
+		<td style="vertical-align: top">Numeric representation of seconds, 0 to 59.</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">minutes,<br />gmtminutes</td>
+		<td style="vertical-align: top">Numeric representation of minutes, 0 to 59</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">hours,<br />gmthours</td>
+		<td style="vertical-align: top">Numeric representation of hours, 0 to 23</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">mday,<br />gmtmday</td>
+		<td style="vertical-align: top">Numeric representation of the day of the month, 1 to 31</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">wday,<br />gmtwday</td>
+		<td style="vertical-align: top">Numeric representation of the day of the week, 0 (for Sunday) through 6 (for Saturday)</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">mon,<br />gmtmon</td>
+		<td style="vertical-align: top">Numeric representation of a month, 1 through 12</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">year,<br />gmtyear</td>
+		<td style="vertical-align: top">A full numeric representation of a year, 4 digits.  Examples: 1999 or 2003</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">yday,<br />gmtgmtyday</td>
+		<td style="vertical-align: top">Numeric representation of the day of the year, 0 through 365</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">weekday,<br />gmtweekday</td>
+		<td style="vertical-align: top">A full textual representation of the day of the week, Sunday through Saturday</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">month,<br />gmtmonth</td>
+		<td style="vertical-align: top">A full textual representation of a month, January through December</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">0,<br />gmt0</td>
+		<td style="vertical-align: top">Seconds since the Unix Epoch (timestamp), similar to the values returned by time() and used by date().</td>
+	</tr>
+</table>
+</td>
+</tr>
+<tr>
 <td class="mla-doc-table-label">absolute_path</td>
 <td>complete path portion of the attachment file, e.g., C:/site/wordpress/wp-content/uploads/2012/11/</td>
 </tr>
@@ -6033,15 +6092,34 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_inline_values</td>
-<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the substitution values for the Quick and Bulk Edit forms.</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the substitution values for the Quick and Bulk Edit forms. See the additional filters for the Bulk Edit form below.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_inline_template</td>
-<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the template used for the Quick and Bulk Edit forms.</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the template used for the Quick and Bulk Edit forms. See the additional filters for the Bulk Edit form below.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_list_table_inline_parse</td>
 <td class="mla-doc-hook-definition">Gives you a final chance to modify and extend the HTML markup used for the Quick and Bulk Edit forms.</td>
+</tr>
+</table>
+<p>
+The Media/Assistant Bulk Edit area has three copies of field-level values. The "initial" values are displayed when the Area opens. The "blank" values are used when the "Reset" button is clicked. The "preset" values are used when the "Import" button is clicked. There are filters that give you a chance to modify the values and templates used to populate each of these three copies separately. The following hooks are defined in <code>/media-library-assistant/includes/class-mla-edit-media.php</code>, function <code>mla_generate_bulk_edit_form_fieldsets()</code>, which is called from <code>/media-library-assistant/includes/class-mla-main.php</code>:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_list_table_inline_blank_values,<br />
+mla_list_table_inline_initial_values,<br />
+mla_list_table_inline_preset_values
+</td>
+<td class="mla-doc-hook-definition">Give you a chance to modify and extend the substitution values for the Bulk Edit forms.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_list_table_inline_blank_template,<br />
+mla_list_table_inline_initial_template,<br />
+mla_list_table_inline_preset_template
+</td>
+<td class="mla-doc-hook-definition">Give you a chance to modify and extend the template for the Bulk Edit forms.</td>
 </tr>
 </table>
 <p>
@@ -6115,15 +6193,34 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 <table>
 <tr>
 <td class="mla-doc-hook-label">mla_upload_bulk_edit_form_values</td>
-<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the substitution values for the Bulk Edit on Upload form.</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the substitution values for the Bulk Edit on Upload form. See the additional filters for the Bulk Edit form below.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_upload_bulk_edit_form_template</td>
-<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the template used for the Bulk Edit on Upload form.</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify and extend the template used for the Bulk Edit on Upload form. See the additional filters for the Bulk Edit form below.</td>
 </tr>
 <tr>
 <td class="mla-doc-hook-label">mla_upload_bulk_edit_form_parse</td>
 <td class="mla-doc-hook-definition">Gives you a final chance to modify and extend the HTML markup used for the Bulk Edit on Upload form.</td>
+</tr>
+</table>
+<p>
+The Media/Add New (Upload New Media) Bulk Edit area has three copies of field-level values. The "initial" values are displayed when the Area opens. The "blank" values are used when the "Reset" button is clicked. The "preset" values are used when the "Import" button is clicked. There are filters that give you a chance to modify the values and templates used to populate each of these three copies separately. The following hooks are defined in <code>/media-library-assistant/includes/class-mla-edit-media.php</code>, function <code>mla_generate_bulk_edit_form_fieldsets()</code>:
+</p>
+<table>
+<tr>
+<td class="mla-doc-hook-label">mla_upload_bulk_edit_form_blank_values,<br />
+mla_upload_bulk_edit_form_initial_values,<br />
+mla_upload_bulk_edit_form_preset_values
+</td>
+<td class="mla-doc-hook-definition">Give you a chance to modify and extend the substitution values for the Bulk Edit form.</td>
+</tr>
+<tr>
+<td class="mla-doc-hook-label">mla_list_table_inline_blank_template,<br />
+mla_upload_bulk_edit_form_initial_template,<br />
+mla_upload_bulk_edit_form_preset_template
+</td>
+<td class="mla-doc-hook-definition">Give you a chance to modify and extend the template for the Bulk Edit form.</td>
 </tr>
 </table>
 <a name="mla_media_modal_filters"></a>&nbsp;
@@ -6325,6 +6422,9 @@ There are two special forms of the custom field specification used to test for t
 <li>To return all items that have a non-NULL value in the field, enter the custom field name and then "=*", e.g., <code>custom:My Featured Items=*</code>. You can also enter the prefix "custom:" followed by just the custom field name(s). For example, <code>custom:My Featured Items</code>.</li>
 <li>To return all items that have a NULL value in the field, enter the prefix "custom:" followed by the custom field name(s) and then "=", e.g., <code>custom:My Featured Items,My Inserted Items=</code>. You can also enter a single custom field name and then ",null". For example, <code>custom:My Featured Items,null</code>.</li>
 </ul>
+<p>
+You can add one or more MIME filters to a custom field query. For example, to limit the view to image items you can code something like <code>image,custom:Color=red</code>. Because the comma is used as a delimiter for multiple MIME types as well as within some forms of the custom field query, <strong>the custom field query must be the last (or only) element of the specification</strong>. For example, <code>audio,video,custom:Artist,Patron=smith,jones</code>.
+</p>
 <p>
 If you have enabled the <em><strong>Media Manager Enhanced MIME Type filter</strong></em>, the Table View list will also be available in the Media Manager/Add Media "media items" drop down list.
 <a name="mla_uploads"></a>

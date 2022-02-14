@@ -81,15 +81,15 @@ class MLA_Thumbnail {
 		}
 
 		if ( $wp_locale->is_rtl() ) {
-			wp_register_style( 'mla-thumbnail-generation', MLA_PLUGIN_URL . 'css/mla-thumbnail-generation-rtl.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( 'mla-thumbnail-generation', MLA_PLUGIN_URL . 'css/mla-thumbnail-generation-rtl.css', false, MLACore::mla_script_version() );
 		} else {
-			wp_register_style( 'mla-thumbnail-generation', MLA_PLUGIN_URL . 'css/mla-thumbnail-generation.css', false, MLACore::CURRENT_MLA_VERSION );
+			wp_register_style( 'mla-thumbnail-generation', MLA_PLUGIN_URL . 'css/mla-thumbnail-generation.css', false, MLACore::mla_script_version() );
 		}
 
 		wp_enqueue_style( 'mla-thumbnail-generation' );
 
 		wp_enqueue_script( 'mla-thumbnail-generation-scripts', MLA_PLUGIN_URL . "js/mla-thumbnail-generation-scripts{$suffix}.js", 
-			array( 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'jquery' ), MLACore::mla_script_version(), false );
 
 		$script_variables = array(
 			'error' => __( 'Error while saving the thumbnails.', 'media-library-assistant' ),

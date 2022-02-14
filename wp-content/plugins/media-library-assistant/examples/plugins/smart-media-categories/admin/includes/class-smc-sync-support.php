@@ -390,7 +390,7 @@ class SMC_Sync_Support {
 			$current_type = $parent->post_type;
 			$active_taxonomies = SMC_Sync_Support::get_active_taxonomies( $current_type );
 		}
-//error_log( __LINE__ . ' SMC_Sync_Support::get_terms $active_taxonomies( {$current_type} ) = ' . var_export( $active_taxonomies, true ), 0 );
+//error_log( __LINE__ . ' SMC_Sync_Support::get_terms array_keys( $active_taxonomies( {$current_type} ) ) = ' . var_export( array_keys( $active_taxonomies ), true ), 0 );
 
 		$posts = implode( ',', array_merge( array( $parent_id ), $children ) );
 //error_log( __LINE__ . ' SMC_Sync_Support::get_terms $posts = ' . var_export( $posts, true ), 0 );
@@ -417,16 +417,18 @@ class SMC_Sync_Support {
 //error_log( __LINE__ . ' SMC_Sync_Support::get_terms $results = ' . var_export( $results, true ), 0 );
 
 		// Check for Default Post Category exclusion
-		if ( ( ( boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) && ( 'category' === $term->taxonomy ) ) {
+		if ( ( ( boolean) SMC_Settings_Support::get_option( 'exclude_default' ) ) && in_array( 'category', $taxonomies ) ) {
 			if ( 'post' === $parent->post_type && 'auto-draft' !== $parent->post_status ) {
 				$default_term_id = (integer) get_option( 'default_category' );
-//error_log( __LINE__ ." SMC_Sync_Support::get_terms ({$term->taxonomy}) \$default_term_id = " . var_export( $default_term_id, true ), 0 );
-				foreach ( $results[ $parent_id ]['category'] as $index => $term ) {
+//error_log( __LINE__ ." SMC_Sync_Support::get_terms \$default_term_id = " . var_export( $default_term_id, true ), 0 );
+				if ( !empty( $results[ $parent_id ]['category'] ) ) {
+					foreach ( $results[ $parent_id ]['category'] as $index => $term ) {
 //error_log( __LINE__ ." SMC_Sync_Support::get_terms ( category, {$index} ) \$term = " . var_export( $term, true ), 0 );
-					if ( $default_term_id === $index ) {
-						unset( $results[ $parent_id ]['category'][ $index ] );
+						if ( $default_term_id === $index ) {
+							unset( $results[ $parent_id ]['category'][ $index ] );
+						}
 					}
-				}
+				} // !empty
 			} // type === post
 //error_log( __LINE__ ." SMC_Sync_Support::get_terms ( category ) revised \$results = " . var_export( $results, true ), 0 );
 		} // exclude category

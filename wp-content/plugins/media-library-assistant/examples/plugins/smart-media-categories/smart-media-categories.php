@@ -14,7 +14,7 @@
  * Plugin Name: Smart Media Categories
  * Plugin URI:  http://davidlingren.com/
  * Description: Assigns taxonomy terms to Media Library items based on the terms of their parent post/page.
- * Version:     1.1.6
+ * Version:     1.1.7
  * Author:      David Lingren
  * Author URI:  http://davidlingren.com/
  * Text Domain: smart-media-categories
@@ -84,6 +84,15 @@ if ( is_admin() /* && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) */ ) {
 	add_action( 'plugins_loaded', array( 'Smart_Media_Categories_Admin', 'get_instance' ) );
 //error_log( __LINE__ . ' smart-media-categories.php is_admin() Support _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 }
+
+// WP REST API calls need everything loaded to process uploads
+if ( isset( $_SERVER['REQUEST_URI'] ) && 0 === strpos( $_SERVER['REQUEST_URI'], '/wp-json/' ) ) { // phpcs:ignore
+	require_once( plugin_dir_path( __FILE__ ) . 'admin/class-smart-media-categories-admin.php' );
+	add_action( 'plugins_loaded', array( 'Smart_Media_Categories_Admin', 'get_instance' ) );
+//error_log( __LINE__ . ' smart-media-categories.php /wp-json/ Support _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+}
+
+
 
 // Look for Postie chron job
 if ( isset( $_REQUEST['doing_wp_cron'] ) && class_exists( 'Postie', false ) ) {

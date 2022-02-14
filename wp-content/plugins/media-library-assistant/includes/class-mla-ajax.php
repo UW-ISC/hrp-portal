@@ -172,7 +172,8 @@ class MLA_Ajax {
 			}
 		}
 
-		add_action( 'wp_ajax_' . 'mla_find_posts', 'MLA_Ajax::mla_find_posts_ajax_action' );
+		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_EXPORT_PRESETS_SLUG, 'MLA_Ajax::mla_bulk_edit_form_presets_action' );
+		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_FIND_POSTS_SLUG, 'MLA_Ajax::mla_find_posts_ajax_action' );
 		add_action( 'wp_ajax_' . MLACore::JAVASCRIPT_INLINE_EDIT_SLUG . '-set-parent', 'MLA_Ajax::mla_set_parent_ajax_action' );
 	}
 
@@ -298,10 +299,116 @@ class MLA_Ajax {
 	 *
 	 * @return	void	passes results to wp_send_json_success() for JSON encoding and transmission
 	 */
+	public static function mla_bulk_edit_form_presets_action() {
+//error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action _REQUEST = ' . var_export( $_REQUEST, true ), 0 );
+		check_ajax_referer( MLACore::JAVASCRIPT_EXPORT_PRESETS_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
+
+		if ( empty( $_REQUEST['mla_preset_values'] ) ) {
+			wp_send_json_error( 'ERROR: MLA Preset Values String is empty' );
+		}
+
+		if ( empty( $_REQUEST['mla_preset_option'] ) ) {
+			wp_send_json_error( 'ERROR: MLA Preset Option Name is empty' );
+		}
+
+		/*
+		 * Clean up the inputs, which have everything from the enclosing <form>.
+		 * wp_parse_args converts plus signs to spaces, which we must avoid.
+		 */
+		if ( current_user_can( 'unfiltered_html' ) ) {
+			$args = trim( wp_unslash( $_REQUEST['mla_preset_values'] ) ); // phpcs:ignore
+		} else {
+			$args = trim( wp_kses( wp_unslash( $_REQUEST['mla_preset_values'] ), 'post' ) );
+		}
+
+		$args = wp_parse_args( str_replace( array( '%2B', '&amp;' ), array( 'urlencodedmlaplussign', '&' ), $args ) );
+		foreach ( $args as $key => $arg ) {
+			if ( is_string( $arg ) ) {
+				$args[ $key ] = str_replace( 'urlencodedmlaplussign', '+', $arg );
+			}
+		}
+
+		/*
+		 * The category taxonomy (edit screens) is a special case because 
+		 * post_categories_meta_box() changes the input name
+		 */
+		if ( !isset( $args['tax_input'] ) ) {
+			$args['tax_input'] = array();
+		}
+
+		if ( isset( $args['post_category'] ) ) {
+			$args['tax_input']['category'] = $args['post_category'];
+			unset ( $args['post_category'] );
+		}
+
+		foreach( $args['tax_input'] as $taxonomy => $terms ) {
+			if ( is_array( $terms ) ) {
+				$clean_terms = array();
+				
+				foreach( $terms as $term ) {
+					if ( (integer) $term ) {
+						$clean_terms[] = (integer) $term;
+					}
+				}
+
+				if ( !empty( $clean_terms ) ) {
+					$args['tax_input'][ $taxonomy ] = $clean_terms;
+				} else {
+					unset( $args['tax_input'][ $taxonomy ] );
+				}
+			} else {
+				$clean_terms = trim( $terms, ', ' );
+
+				if ( !empty( $clean_terms ) ) {
+					$args['tax_input'][ $taxonomy ] = $clean_terms;
+				} else {
+					unset( $args['tax_input'][ $taxonomy ] );
+				}
+			}
+		}
+
+		$args['custom_fields'] = array();
+		foreach (MLACore::mla_custom_field_support( 'bulk_edit' ) as $slug => $details ) {
+//error_log( __LINE__ . " MLA_Ajax::mla_bulk_edit_form_presets_action {$slug} = " . var_export( $details, true ), 0 );
+			if ( !empty( $args[ $slug ] ) ) {
+				$args['custom_fields'][ esc_attr( $details['name'] ) ] = $args[ $slug ];
+			}
+		}
+//error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action args = ' . var_export( $args, true ), 0 );
+
+		// Get a "blank" presets array we can fill in with current settings
+		$presets = MLAEdit::mla_get_bulk_edit_form_presets( $_REQUEST['mla_preset_option'], true );
+
+		foreach ( $presets as $key => $value ) {
+			if ( !empty( $args[ $key ] ) ) {
+				$presets[ $key ] = $args[ $key ];
+			}
+		}
+//error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action presets = ' . var_export( $presets, true ), 0 );
+
+		if ( false === MLAEdit::mla_update_bulk_edit_form_presets( $_REQUEST['mla_preset_option'], $presets ) ) {
+			// false may simply mean that the value didn't change, so ignore it
+			// wp_send_json_error( 'ERROR: Presets update failed' );
+		}
+	
+		$html = MLAEdit::mla_generate_bulk_edit_form_fieldsets( $presets, 'mla_upload_bulk_edit_form_preset' );
+		wp_send_json_success( $html );
+  	} // mla_bulk_edit_form_presets_action
+
+	/**
+	 * Ajax handler to fetch candidates for the "Set Parent" popup window
+	 *
+	 * Adapted from wp_ajax_find_posts in /wp-admin/includes/ajax-actions.php.
+	 * Adds filters for post type and pagination.
+	 *
+	 * @since 1.90
+	 *
+	 * @return	void	passes results to wp_send_json_success() for JSON encoding and transmission
+	 */
 	public static function mla_find_posts_ajax_action() {
 		global $wpdb;
 
-		check_ajax_referer( 'mla_find_posts', MLACore::MLA_ADMIN_NONCE_NAME );
+		check_ajax_referer( MLACore::JAVASCRIPT_FIND_POSTS_SLUG, MLACore::MLA_ADMIN_NONCE_NAME );
 
 		$post_types = get_post_types( array( 'public' => true ), 'objects' );
 		unset( $post_types['attachment'] );
@@ -377,7 +484,7 @@ class MLA_Ajax {
 		$html .= "</tbody></table>\n";
 
 		wp_send_json_success( $html );
-	}
+	} // mla_find_posts_ajax_action
 
 	/**
 	 * Ajax handler to set post_parent for a single attachment
@@ -440,12 +547,10 @@ class MLA_Ajax {
 
 		$MLAListTable->single_row( $new_item );
 		die(); // this is required to return a proper result
-	}
+	} // mla_set_parent_ajax_action
 } // Class MLA_Ajax
 
-/*
- * Check for Media Manager Enhancements
- */
+// Check for Media Manager Enhancements
 if ( ( ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TOOLBAR ) ) || ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_GRID_TOOLBAR ) ) ) ) {
 	require_once( MLA_PLUGIN_PATH . 'includes/class-mla-media-modal-ajax.php' );
 	add_action( 'init', 'MLAModal_Ajax::initialize', 0x7FFFFFFF );
