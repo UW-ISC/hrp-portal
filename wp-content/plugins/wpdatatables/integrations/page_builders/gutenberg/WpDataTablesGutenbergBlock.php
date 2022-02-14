@@ -17,7 +17,7 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
 
         wp_enqueue_script(
             'wpdatatables-gutenberg-block',
-            WDT_ROOT_URL . 'assets/js/gutenberg/wpdatatables-gutenberg-block.js',
+            WDT_ROOT_URL . 'integrations/page_builders/gutenberg/js/wpdatatables-gutenberg-block.js',
             array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
@@ -27,7 +27,7 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
             array(
                 'title' => 'wpDataTables',
                 'description' => __('Choose the table that you’ve just created in the dropdown below, and the shortcode will be inserted automatically. You are able to provide values for placeholders and also for Export file name.','wpdatatables'),
-                'data' => self::wdtGetAllTablesForGutenberg()
+                'data' => WDTConfigController::getAllTablesAndChartsForPageBuilders('gutenberg', 'tables')
             )
         );
 
@@ -38,23 +38,4 @@ class WpDataTablesGutenbergBlock extends GutenbergBlock
 
     }
 
-    public static function wdtGetAllTablesForGutenberg() {
-
-        global $wpdb;
-        $returnTables = [];
-
-        $query = "SELECT id, title FROM {$wpdb->prefix}wpdatatables ORDER BY id";
-
-        $allTables = $wpdb->get_results($query, ARRAY_A);
-
-        foreach ($allTables as $table) {
-            $returnTables[] = [
-                'name' => $table['title'],
-                'id' => $table['id'],
-            ];
-
-        }
-
-        return $returnTables;
-    }
 }

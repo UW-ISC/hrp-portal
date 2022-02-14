@@ -481,7 +481,7 @@ class wpDataTableConstructor
         $this->_prepareMySQLJoinedQueryStructure($columnQuoteStart, $columnQuoteEnd);
 
         // Prepare the query itself
-        $this->_query = $this->_buildMySQLQuery($columnQuoteStart, $columnQuoteEnd);
+        $this->_query = wdtSanitizeQuery($this->_buildMySQLQuery($columnQuoteStart, $columnQuoteEnd));
     }
 
 

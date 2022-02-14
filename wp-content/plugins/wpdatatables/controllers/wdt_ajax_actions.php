@@ -974,9 +974,15 @@ function wdtGetColumnPossibleValues() {
 
     if (!empty($_POST['q'])) {
         if ($wpDataColumn->getForeignKeyRule()) {
-            $values = array_filter($values, function ($value) {
-                return stripos(addslashes($value['text']), $_POST['q']) !== false;
-            });
+            if ($wpDataColumn->getParentTable()->serverSide()){
+                $values = array_filter($values, function ($value) {
+                    return stripos(addslashes($value['text']), $_POST['q']) !== false;
+                });
+            } else {
+                $values = array_filter($values, function ($value) {
+                    return stripos(addslashes($value), $_POST['q']) !== false;
+                });
+            }
         } else {
             $values = array_filter($values, function ($value) {
                 return stripos(addslashes($value), $_POST['q']) !== false;

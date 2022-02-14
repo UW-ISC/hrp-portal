@@ -340,6 +340,63 @@ class WDTBrowseChartsTable extends WP_List_Table {
             case 'chartjs_bubble_chart':
                 return '<span class="wdt-chart-type">' . __('Bubble Chart', 'wpdatatables') . '</span>';
                 break;
+            case 'apexcharts_straight_line_chart':
+                return '<span class="wdt-chart-type">' . __('Line Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_spline_chart':
+                return '<span class="wdt-chart-type">' . __('Spline Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_stepline_chart':
+                return '<span class="wdt-chart-type">' . __('Step Line Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_column_chart':
+                return '<span class="wdt-chart-type">' . __('Basic Column Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_stacked_bar_chart':
+                return '<span class="wdt-chart-type">' . __('Stacked Bar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_grouped_bar_chart':
+                return '<span class="wdt-chart-type">' . __('Basic Bar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_100_stacked_bar_chart':
+                return '<span class="wdt-chart-type">' . __('100% Stacked Bar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_stacked_column_chart':
+                return '<span class="wdt-chart-type">' . __('Stacked Column Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_100_stacked_column_chart':
+                return '<span class="wdt-chart-type">' . __('100% Stacked Column Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_spline_area_chart':
+                return '<span class="wdt-chart-type">' . __('Spline Area Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_basic_area_chart':
+                return '<span class="wdt-chart-type">' . __('Basic Area Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_stepline_area_chart':
+                return '<span class="wdt-chart-type">' . __('Stepline Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_pie_chart':
+                return '<span class="wdt-chart-type">' . __('Pie Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_pie_with_gradient_chart':
+                return '<span class="wdt-chart-type">' . __('Pie Chart With Gradient', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_donut_chart':
+                return '<span class="wdt-chart-type">' . __('Donut Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_donut_with_gradient_chart':
+                return '<span class="wdt-chart-type">' . __('Donut Chart With Gradient', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_radar_chart':
+                return '<span class="wdt-chart-type">' . __('Radar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_radialbar_chart':
+                return '<span class="wdt-chart-type">' . __('Radialbar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts_radialbar_gauge_chart':
+                return '<span class="wdt-chart-type">' . __('Radialbar Chart With Gauge', 'wpdatatables') . '</span>';
+                break;
             default:
                 return $item;
                 break;
@@ -357,6 +414,9 @@ class WDTBrowseChartsTable extends WP_List_Table {
                 break;
             case 'chartjs':
                 return '<span class="wdt-render-engine">' . __('Chart.js', 'wpdatatables') . '</span>';
+                break;
+            case 'apexcharts':
+                return '<span class="wdt-render-engine">' . __('Apexcharts', 'wpdatatables') . '</span>';
                 break;
             default:
                 return $item;

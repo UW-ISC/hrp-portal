@@ -21,6 +21,10 @@ class WPDataChart {
     private $_responsiveWidth = false;
     private $_height = 400;
     private $_group_chart = false;
+    private $_enable_animation = false;
+    private $_show_data_labels = false;
+    private $_start_angle = 0;
+    private $_end_angle = 360;
     private $_background_color = '#FFFFFF';
     private $_border_width = 0;
     private $_border_color = '#4572A7';
@@ -30,6 +34,7 @@ class WPDataChart {
     private $_pan_key = 'shift';
     private $_plot_background_color = 'undefined';
     private $_plot_background_image = 'undefined';
+    private $_line_background_image = array();
     private $_plot_border_width = 0;
     private $_plot_border_color = '#C0C0C0';
     private $_font_size = NULL;
@@ -37,19 +42,37 @@ class WPDataChart {
     private $_font_style = 'normal';
     private $_font_color = '#666';
     private $_three_d = false;
+    private $_monochrome = false;
+    private $_monochrome_color = '#255aee';
+    private $_enable_color_palette = false;
+    private $_color_palette = 'palette1';
+    private $_enable_dropshadow = false;
+    private $_dropshadow_blur = 3;
+    private $_dropshadow_opacity = 35;
+    private $_dropshadow_color = '#000000';
+    private $_dropshadow_top = 5;
+    private $_dropshadow_left = 5;
+    private $_text_color = '#373d3f';
     // Series
     private $_series = array();
     private $_curve_type = 'none';
     private $_series_type = '';
     // Axes
     private $_show_grid = true;
+    private $_grid_color = '#000000';
+    private $_grid_stroke = 1;
+    private $_grid_position = 'back';
+    private $_grid_axes = array();
     private $_highcharts_line_dash_style = 'Solid';
     private $_horizontal_axis_crosshair = false;
     private $_horizontal_axis_direction = 1;
     private $_vertical_axis_crosshair = false;
     private $_vertical_axis_direction = 1;
+    private $_marker_size = 0;
+    private $_stroke_width = 2;
     private $_vertical_axis_min;
     private $_vertical_axis_max;
+    private $_tick_amount;
     private $_axes = array(
         'major' => array(
             'label' => ''
@@ -59,6 +82,7 @@ class WPDataChart {
         )
     );
     private $_inverted = false;
+    private $_reversed = false;
     // Title
     private $_title = '';
     private $_show_title = true;
@@ -79,6 +103,8 @@ class WPDataChart {
     private $_tooltip_shared = false;
     private $_tooltip_value_prefix = 'undefined';
     private $_tooltip_value_suffix = 'undefined';
+    private $_follow_cursor = false;
+    private $_fill_series_color = false;
     // Legend
     private $_show_legend = true;
     private $_legend_position = 'right';
@@ -109,6 +135,11 @@ class WPDataChart {
     private $_render_data = NULL;
     private $_highcharts_render_data = NULL;
     private $_chartjs_render_data = NULL;
+    private $_apexcharts_render_data = NULL;
+    //Toolbar
+    private $_show_toolbar = false;
+    private $_toolbar_buttons = array();
+    private $_apex_exporting_file_name = 'Chart';
 
     private $_type_counters;
 
@@ -168,6 +199,54 @@ class WPDataChart {
      */
     public function isGroupChart() {
         return $this->_group_chart;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnableAnimation()
+    {
+        return $this->_enable_animation;
+    }
+
+    /**
+     * @param bool $enable_animation
+     */
+    public function setEnableAnimation($enable_animation)
+    {
+        $this->_enable_animation = (bool)$enable_animation;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStartAngle()
+    {
+        return $this->_start_angle;
+    }
+
+    /**
+     * @param int $start_angle
+     */
+    public function setStartAngle($start_angle)
+    {
+        $this->_start_angle = $start_angle;
+    }
+
+    /**
+     * @return int
+     */
+    public function getEndAngle()
+    {
+        return $this->_end_angle;
+    }
+
+    /**
+     * @param int $end_angle
+     */
+    public function setEndAngle($end_angle)
+    {
+        $this->_end_angle = $end_angle;
     }
 
     /**
@@ -298,6 +377,20 @@ class WPDataChart {
     }
 
     /**
+     * @param $line_background_image
+     */
+    public function setLineBackgroundImage($line_background_image) {
+        $this->_line_background_image = $line_background_image;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLineBackgroundImage() {
+        return $this->_line_background_image;
+    }
+
+    /**
      * @param $plot_border_width
      */
     public function setPlotBorderWidth($plot_border_width) {
@@ -409,6 +502,193 @@ class WPDataChart {
         return $this->_three_d;
     }
 
+    /**
+     * @return bool
+     */
+    public function isMonochrome()
+    {
+        return $this->_monochrome;
+    }
+
+    /**
+     * @param $monochrome
+     */
+    public function setMonochrome($monochrome)
+    {
+        $this->_monochrome = (bool)$monochrome;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMonochromeColor()
+    {
+        return $this->_monochrome_color;
+    }
+
+    /**
+     * @param string $monochrome_color
+     */
+    public function setMonochromeColor($monochrome_color)
+    {
+        $this->_monochrome_color = $monochrome_color;
+    }
+
+    /**
+     * @param  $enable_color_palette
+     */
+    public function setEnableColorPalette($enable_color_palette) {
+        $this->_enable_color_palette = (bool)$enable_color_palette;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnableColorPalette() {
+        return $this->_enable_color_palette;
+    }
+
+    /**
+     * @return string
+     */
+    public function getColorPalette()
+    {
+        return $this->_color_palette;
+    }
+
+    /**
+     * @param string $color_palette
+     */
+    public function setColorPalette($color_palette)
+    {
+        $this->_color_palette = $color_palette;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isShowDataLabels()
+    {
+        return $this->_show_data_labels;
+    }
+
+    /**
+     * @param bool $show_data_labels
+     */
+    public function setShowDataLabels($show_data_labels)
+    {
+        $this->_show_data_labels = (bool)$show_data_labels;
+    }
+
+    /**
+     * @param  $enable_dropshadow
+     */
+    public function setEnableDropshadow($enable_dropshadow) {
+        $this->_enable_dropshadow = (bool)$enable_dropshadow;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEnableDropshadow() {
+        return $this->_enable_dropshadow;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDropshadowBlur()
+    {
+        return $this->_dropshadow_blur;
+    }
+
+    /**
+     * @param int $dropshadow_blur
+     */
+    public function setDropshadowBlur($dropshadow_blur)
+    {
+        $this->_dropshadow_blur = $dropshadow_blur;
+    }
+
+    /**
+     * @return float
+     */
+    public function getDropshadowOpacity()
+    {
+        return $this->_dropshadow_opacity;
+    }
+
+    /**
+     * @param float $dropshadow_opacity
+     */
+    public function setDropshadowOpacity($dropshadow_opacity)
+    {
+        $this->_dropshadow_opacity = $dropshadow_opacity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDropshadowColor()
+    {
+        return $this->_dropshadow_color;
+    }
+
+    /**
+     * @param string $dropshadow_color
+     */
+    public function setDropshadowColor($dropshadow_color)
+    {
+        $this->_dropshadow_color = $dropshadow_color;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDropshadowTop()
+    {
+        return $this->_dropshadow_top;
+    }
+
+    /**
+     * @param int $dropshadow_top
+     */
+    public function setDropshadowTop($dropshadow_top)
+    {
+        $this->_dropshadow_top = $dropshadow_top;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDropshadowLeft()
+    {
+        return $this->_dropshadow_left;
+    }
+
+    /**
+     * @param int $dropshadow_left
+     */
+    public function setDropshadowLeft($dropshadow_left)
+    {
+        $this->_dropshadow_left = $dropshadow_left;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTextColor()
+    {
+        return $this->_text_color;
+    }
+
+    /**
+     * @param string $text_color
+     */
+    public function setTextColor($text_color)
+    {
+        $this->_text_color = $text_color;
+    }
     // Series
 
     /**
@@ -452,6 +732,71 @@ class WPDataChart {
      */
     public function getShowGrid() {
         return $this->_show_grid;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getGridColor()
+    {
+        return $this->_grid_color;
+    }
+
+    /**
+     * @param string $grid_color
+     */
+    public function setGridColor($grid_color)
+    {
+        $this->_grid_color = $grid_color;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGridStroke()
+    {
+        return $this->_grid_stroke;
+    }
+
+    /**
+     * @param int $grid_stroke
+     */
+    public function setGridStroke($grid_stroke)
+    {
+        $this->_grid_stroke = $grid_stroke;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGridPosition()
+    {
+        return $this->_grid_position;
+    }
+
+    /**
+     * @param string $grid_position
+     */
+    public function setGridPosition($grid_position)
+    {
+        $this->_grid_position = $grid_position;
+    }
+
+    /**
+     * @return array
+     */
+    public function getGridAxes()
+    {
+        return $this->_grid_axes;
+    }
+
+    /**
+     * @param array $grid_axes
+     */
+    public function setGridAxes($grid_axes)
+    {
+        $this->_grid_axes = $grid_axes;
     }
 
     /**
@@ -552,6 +897,37 @@ class WPDataChart {
         return $this->_vertical_axis_direction;
     }
 
+    /**
+     * @return int
+     */
+    public function getMarkerSize()
+    {
+        return $this->_marker_size;
+    }
+
+    /**
+     * @param $marker_size
+     */
+    public function setMarkerSize($marker_size)
+    {
+        $this->_marker_size = (int)$marker_size;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStrokeWidth()
+    {
+        return $this->_stroke_width;
+    }
+
+    /**
+     * @param int $stroke_width
+     */
+    public function setStrokeWidth($stroke_width)
+    {
+        $this->_stroke_width = (int)$stroke_width;
+    }
 
     /**
      * @param mixed $vertical_axis_min
@@ -582,6 +958,20 @@ class WPDataChart {
     }
 
     /**
+     * @param int $tick_amount
+     */
+    public function setTickAmount($tick_amount) {
+        $this->_tick_amount = (int)$tick_amount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTickAmount() {
+        return $this->_tick_amount;
+    }
+
+    /**
      * @param $inverted
      */
     public function setInverted($inverted) {
@@ -593,6 +983,23 @@ class WPDataChart {
      */
     public function isInverted() {
         return $this->_inverted;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isReversed()
+    {
+        return $this->_reversed;
+    }
+
+    /**
+     * @param $reversed
+     */
+    public function setReversed($reversed)
+    {
+        $this->_reversed = (bool)$reversed;
     }
 
     // Title
@@ -850,6 +1257,41 @@ class WPDataChart {
     public function getTooltipValueSuffix() {
         return $this->_tooltip_value_suffix;
     }
+
+
+    /**
+     * @return bool
+     */
+    public function isFollowCursor()
+    {
+        return $this->_follow_cursor;
+    }
+
+    /**
+     * @param $follow_cursor
+     */
+    public function setFollowCursor($follow_cursor)
+    {
+        $this->_follow_cursor = (bool)$follow_cursor;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFillSeriesColor()
+    {
+        return $this->_fill_series_color;
+    }
+
+    /**
+     * @param $fill_series_color
+     */
+    public function setFillSeriesColor($fill_series_color)
+    {
+        $this->_fill_series_color = (bool)$fill_series_color;
+    }
+
+
 
     // Legend
 
@@ -1163,6 +1605,48 @@ class WPDataChart {
         return $this->_range_type;
     }
 
+    //Toolbar
+
+    /**
+     * @return bool
+     */
+    public function isShowToolbar()
+    {
+        return $this->_show_toolbar;
+    }
+
+    /**
+     * @param $show_toolbar
+     */
+    public function setShowToolbar($show_toolbar)
+    {
+        $this->_show_toolbar = (bool)$show_toolbar;
+    }
+
+    /**
+     * @return array
+     */
+    public function getToolbarButtons()
+    {
+        return $this->_toolbar_buttons;
+    }
+
+    /**
+     * @param array $toolbar_buttons
+     */
+    public function setToolbarButtons($toolbar_buttons)
+    {
+        $this->_toolbar_buttons = $toolbar_buttons;
+    }
+
+    public function setApexExportingFileName($apex_exporting_file_name) {
+        $this->_apex_exporting_file_name = $apex_exporting_file_name;
+    }
+
+    public function getApexExportingFileName() {
+        return $this->_apex_exporting_file_name;
+    }
+
     /**
      * @param $constructedChartData
      * @param bool $loadFromDB
@@ -1201,6 +1685,9 @@ class WPDataChart {
         $chartObj->setResponsiveWidth((bool)WDTTools::defineDefaultValue($constructedChartData, 'responsive_width', 0));
         $chartObj->setHeight(WDTTools::defineDefaultValue($constructedChartData, 'height', 400));
         $chartObj->setGroupChart(WDTTools::defineDefaultValue($constructedChartData, 'group_chart', false));
+        $chartObj->setEnableAnimation(WDTTools::defineDefaultValue($constructedChartData, 'enable_animation', false));
+        $chartObj->setStartAngle(WDTTools::defineDefaultValue($constructedChartData, 'start_angle', 0));
+        $chartObj->setEndAngle(WDTTools::defineDefaultValue($constructedChartData, 'end_angle', 360));
         $chartObj->setBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'background_color', '#FFFFFF'));
         $chartObj->setBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'border_width', 0));
         $chartObj->setBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'border_color', '#FFFFFF'));
@@ -1210,6 +1697,7 @@ class WPDataChart {
         $chartObj->setPanKey(WDTTools::defineDefaultValue($constructedChartData, 'pan_key', 'shift'));
         $chartObj->setPlotBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_color', '#FFFFFF'));
         $chartObj->setPlotBackgroundImage(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_image', null));
+        $chartObj->setLineBackgroundImage(WDTTools::defineDefaultValue($constructedChartData, 'line_background_image', null));
         $chartObj->setPlotBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'plot_border_width', 0));
         $chartObj->setPlotBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'plot_border_color', '#C0C0C0'));
         $chartObj->setFontSize(WDTTools::defineDefaultValue($constructedChartData, 'font_size', null));
@@ -1217,6 +1705,18 @@ class WPDataChart {
         $chartObj->setFontStyle(WDTTools::defineDefaultValue($constructedChartData, 'font_style', 'normal'));
         $chartObj->setFontColor(WDTTools::defineDefaultValue($constructedChartData, 'font_color', '#666'));
         $chartObj->setThreeD(WDTTools::defineDefaultValue($constructedChartData, 'three_d', false));
+        $chartObj->setMonochrome(WDTTools::defineDefaultValue($constructedChartData,'monochrome', false));
+        $chartObj->setMonochromeColor(WDTTools::defineDefaultValue($constructedChartData,'monochrome_color','#255aee' ));
+        $chartObj->setEnableColorPalette(WDTTools::defineDefaultValue($constructedChartData,'enable_color_palette', false));
+        $chartObj->setColorPalette(WDTTools::defineDefaultValue($constructedChartData, 'color_palette', 'palette1'));
+        $chartObj->setShowDataLabels(WDTTools::defineDefaultValue($constructedChartData, 'show_data_labels', false));
+        $chartObj->setEnableDropshadow(WDTTools::defineDefaultValue($constructedChartData,'enable_dropshadow', false));
+        $chartObj->setDropshadowBlur(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_blur', 3));
+        $chartObj->setDropshadowOpacity(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
+        $chartObj->setDropshadowColor(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_color', '#000000'));
+        $chartObj->setDropshadowTop(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_top', 5));
+        $chartObj->setDropshadowLeft(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_left', 5));
+        $chartObj->setTextColor(WDTTools::defineDefaultValue($constructedChartData, 'text_color', '#373d3f'));
 
         // Series
         if (!empty($constructedChartData['series_data'])) {
@@ -1233,6 +1733,10 @@ class WPDataChart {
 
         // Axes
         $chartObj->setShowGrid(WDTTools::defineDefaultValue($constructedChartData, 'show_grid', true));
+        $chartObj->setGridColor(WDTTools::defineDefaultValue($constructedChartData, 'grid_color', '#000000'));
+        $chartObj->setGridStroke(WDTTools::defineDefaultValue($constructedChartData, 'grid_stroke', 1));
+        $chartObj->setGridPosition(WDTTools::defineDefaultValue($constructedChartData, 'grid_position', 'back'));
+        $chartObj->setGridAxes((array)WDTTools::defineDefaultValue($constructedChartData, 'grid_axes', []));
         $chartObj->setHighchartsLineDashStyle(WDTTools::defineDefaultValue($constructedChartData, 'highcharts_line_dash_style', 'Solid'));
         $chartObj->setMajorAxisLabel(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_label', ''));
         $chartObj->setHorizontalAxisCrosshair(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_crosshair', false));
@@ -1240,9 +1744,13 @@ class WPDataChart {
         $chartObj->setMinorAxisLabel(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_label', ''));
         $chartObj->setVerticalAxisCrosshair(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_crosshair', false));
         $chartObj->setVerticalAxisDirection(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_direction', 1));
+        $chartObj->setMarkerSize(WDTTools::defineDefaultValue($constructedChartData,'marker_size',0));
+        $chartObj->setStrokeWidth(WDTTools::defineDefaultValue($constructedChartData,'stroke_width',2));
         $chartObj->setVerticalAxisMin(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min', ''));
         $chartObj->setVerticalAxisMax(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max', ''));
+        $chartObj->setTickAmount(WDTTools::defineDefaultValue($constructedChartData, 'tick_amount', 0));
         $chartObj->setInverted(WDTTools::defineDefaultValue($constructedChartData, 'inverted', false));
+        $chartObj->setReversed(WDTTools::defineDefaultValue($constructedChartData, 'reversed', false));
 
         // Title
         $chartObj->setShowTitle(WDTTools::defineDefaultValue($constructedChartData, 'show_title', true));
@@ -1264,6 +1772,8 @@ class WPDataChart {
         $chartObj->setTooltipShared(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_shared', false));
         $chartObj->setTooltipValuePrefix(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_prefix', false));
         $chartObj->setTooltipValueSuffix(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_suffix', false));
+        $chartObj->setFollowCursor(WDTTools::defineDefaultValue($constructedChartData, 'follow_cursor', false));
+        $chartObj->setFillSeriesColor(WDTTools::defineDefaultValue($constructedChartData, 'fill_series_color', false));
 
         // Legend
         $chartObj->setShowLegend(WDTTools::defineDefaultValue($constructedChartData, 'show_legend', true));
@@ -1292,6 +1802,13 @@ class WPDataChart {
         $chartObj->setCredits(WDTTools::defineDefaultValue($constructedChartData, 'credits', true));
         $chartObj->setCreditsHref(WDTTools::defineDefaultValue($constructedChartData, 'credits_href', 'http://www.highcharts.com'));
         $chartObj->setCreditsText(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com'));
+
+        //Toolbar
+        $chartObj->setShowToolbar(WDTTools::defineDefaultValue($constructedChartData,'show_toolbar', false));
+        if (isset($constructedChartData['toolbar_buttons'])) {
+            $chartObj->setToolbarButtons(array_map('sanitize_text_field', $constructedChartData['toolbar_buttons']));
+        }
+        $chartObj->setApexExportingFileName(WDTTools::defineDefaultValue($constructedChartData, 'apex_exporting_file_name', 'Chart'));
 
         $chartObj->loadChildWPDataTable();
 
@@ -1444,7 +1961,40 @@ class WPDataChart {
                     $seriesIndex++;
                 }
             }
-        }else{
+        } else if (in_array($this->_type, [ 'apexcharts_straight_line_chart',
+                        'apexcharts_spline_chart','apexcharts_stepline_chart', 'apexcharts_spline_area_chart',
+                        'apexcharts_stepline_area_chart', 'apexcharts_basic_area_chart', 'apexcharts_column_chart'])
+                        && !empty($this->_user_defined_series_data)) {
+            $seriesIndex = 0;
+            $i = 1;
+            foreach ($this->_user_defined_series_data as $series_data) {
+                $this->_render_data['options']['series'][$seriesIndex] = array(
+                    'color' => $series_data['color'],
+                    'type' => $series_data['type'],
+                    'yAxis' => $series_data['yAxis'] == 1 ? $i : 0,
+                    'chart_image' => $series_data['chart_image'],
+                );
+                if ($series_data['yAxis']) {
+                    $i++;
+                }
+                $seriesIndex++;
+            }
+        } else if (in_array($this->_type, ['apexcharts_radar_chart','apexcharts_grouped_bar_chart',
+                        'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart',
+                        'apexcharts_stacked_column_chart', 'apexcharts_100_stacked_column_chart'])) {
+            $seriesIndex = 0;
+            $i = 1;
+            foreach ($this->_user_defined_series_data as $series_data) {
+                $this->_render_data['options']['series'][$seriesIndex] = array(
+                    'color' => $series_data['color'],
+                    'chart_image' => $series_data['chart_image'],
+                );
+                if ($series_data['yAxis']) {
+                    $i++;
+                }
+                $seriesIndex++;
+            }
+        } else {
             if (!empty($this->_user_defined_series_data)) {
                 $seriesIndex = 0;
                 foreach ($this->_user_defined_series_data as $series_data) {
@@ -1495,6 +2045,10 @@ class WPDataChart {
 
         if (empty($this->_highcharts_render_data)) {
             $this->_highcharts_render_data = array();
+        }
+
+        if (empty($this->_apexcharts_render_data)) {
+            $this->_apexcharts_render_data = array();
         }
 
         if ($this->_engine == 'google') {
@@ -1670,7 +2224,7 @@ class WPDataChart {
                                 }
                                 break;
                             case 'link':
-                                if (!in_array($this->getEngine(),['google','chartjs'])) {
+                                if (!in_array($this->getEngine(),['google','chartjs','apexcharts'])) {
                                     if (strpos($row[$columnKey], '||') !== false) {
                                         list($link, $row[$columnKey]) = explode('||', $row[$columnKey]);
                                         $return_data_row[] = '<a href="' . $link . '">' . $row[$columnKey] . '</a>';
@@ -1683,7 +2237,11 @@ class WPDataChart {
                                 break;
                                 case 'string':
                             default:
-                                $return_data_row[] = $row[$columnKey];
+                                if ($this->getEngine() == 'apexcharts') {
+                                    $return_data_row[] = $row[$columnKey] === null ? '' : $row[$columnKey];
+                                } else {
+                                    $return_data_row[] = $row[$columnKey];
+                                }
                                 break;
                         }
                     }
@@ -1776,7 +2334,11 @@ class WPDataChart {
                                 break;
                             case 'string':
                             default:
-                                $return_data_row[] = $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                if ($this->getEngine() == 'apexcharts') {
+                                    $return_data_row[] = $this->_wpdatatable->getCell($columnKey, $rowIndex) === null ? '' : $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                } else {
+                                    $return_data_row[] = $this->_wpdatatable->getCell($columnKey, $rowIndex);
+                                }
                                 break;
                         }
 
@@ -2058,7 +2620,7 @@ class WPDataChart {
                 unset($highchartsRender['xAxis']);
             }
         }
-        $this->_highcharts_render_data['wdtNumberFormat'] = get_option('wdtNumberFormat');;
+        $this->_highcharts_render_data['wdtNumberFormat'] = get_option('wdtNumberFormat');
         $this->_highcharts_render_data['options'] = $highchartsRender;
         $this->_highcharts_render_data['type'] = $this->getType();
         if ($this->_follow_filtering) {
@@ -2420,6 +2982,310 @@ class WPDataChart {
 
     }
 
+    /**
+     * Prepare Apex Charts Data and Options
+     */
+    public function prepareApexchartsRender()
+    {
+        $apexchartsRender = array(
+            'series' => array(),
+            'labels' => array(),
+            'title' => array(
+                'text' => $this->_show_title ? $this->getTitle() : '',
+                'align' => 'center',
+            ),
+            'xaxis' => array(
+              'type' => 'category',
+            ),
+            'colors' => array(),
+            'fill' => array(
+              'image' => array(
+                  'src' => array(),
+              ),
+            ),
+            'orig_header' => array(),
+        );
+
+        $this->_apexcharts_render_data['wdtNumberFormat'] = get_option('wdtNumberFormat');
+        $this->_apexcharts_render_data['wdtDecimalPlaces'] = get_option('wdtDecimalPlaces');
+        $this->_apexcharts_render_data['type'] = $this->getType();
+        if ($this->_follow_filtering) {
+            if (isset($this->_render_data['column_indexes'])) {
+                $this->_apexcharts_render_data['column_indexes'] = $this->_render_data['column_indexes'];
+            }
+        }
+
+        //default Apexcharts color palette
+        $colors = ['#775DD0', '#008FFB', '#00E396', '#FEB019', '#FF4560', '#B6D05D', '#FB6C00', '#E3004D', '#45FFE4'];
+        $colorsNum = count($colors);
+        //Data
+        if (!in_array(
+            $this->_type,
+            array(
+                'apexcharts_pie_chart',
+                'apexcharts_pie_with_gradient_chart',
+                'apexcharts_donut_chart',
+                'apexcharts_donut_with_gradient_chart',
+                'apexcharts_radialbar_chart',
+                'apexcharts_radialbar_gauge_chart',
+                'apexcharts_radar_chart',
+            )
+        )
+        ) {
+            $apexchartsRender['fill']['type'] = array();
+            for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
+                if($i == 0) {
+                    $apexchartsRender['xaxis']['categories'] = array();
+                    foreach ($this->_render_data['rows'] as $row) {
+                        array_push($apexchartsRender['xaxis']['categories'], $row[0]);
+                    }
+                } else {
+                    $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    $seriesImage = (isset($this->_render_data['options']['series'][$i - 1]['chart_image']) && $this->_render_data['options']['series'][$i - 1]['chart_image'] !== '') ? $this->_render_data['options']['series'][$i - 1]['chart_image'] : '';
+                    $fillType = $seriesImage == '' ? 'solid' : 'image';
+                    $seriesEntry = array(
+                        'orig_header' => $this->_render_data['series'][$i - 1]['orig_header'],
+                        'name' => $this->_render_data['series'][$i - 1]['label'],
+                        'data' => array(),
+                        'color' => $seriesColor,
+                        'chart_image' => $seriesImage,
+                        'label' => $this->_render_data['series'][$i - 1]['label'],
+                    );
+
+                    if (!in_array(
+                        $this->_type,
+                        array('apexcharts_grouped_bar_chart', 'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart'))
+                    )
+                        $seriesEntry['type'] = isset($this->_render_data['options']['series'][$i - 1]['type']) ?
+                        $this->_render_data['options']['series'][$i - 1]['type'] : $this->getApexChartType($this->getType());
+
+                    if(isset($this->_render_data['series'][$i - 1]['opposite'])) $seriesEntry['opposite'] = $this->_render_data['series'][$i - 1]['opposite'];
+
+                    foreach ($this->_render_data['rows'] as $row) {
+                        $seriesEntry['data'][] = $row[$i];
+                    }
+                    array_push($apexchartsRender['fill']['type'], $fillType);
+                    array_push($apexchartsRender['fill']['image']['src'], $seriesImage);
+                    array_push($apexchartsRender['colors'], $seriesColor);
+                }
+                if ($i != 0) {
+                    $apexchartsRender['series'][] = $seriesEntry;
+                }
+            }
+        } else if ($this->_type == 'apexcharts_radar_chart') {
+            $apexchartsRender['options']['grid']['show'] = false;
+            $apexchartsRender['fill']['type'] = array();
+            for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
+                if($i == 0) {
+                    $apexchartsRender['xaxis']['categories'] = array();
+                    foreach ($this->_render_data['rows'] as $row) {
+                        array_push($apexchartsRender['xaxis']['categories'], $row[0]);
+                    }
+                } else {
+                    $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    $seriesImage = (isset($this->_render_data['options']['series'][$i - 1]['chart_image']) && $this->_render_data['options']['series'][$i - 1]['chart_image'] !== '') ? $this->_render_data['options']['series'][$i - 1]['chart_image'] : '';
+                    $fillType = $seriesImage == '' ? 'solid' : 'image';
+                    $seriesEntry = array(
+                        'orig_header' => $this->_render_data['series'][$i - 1]['orig_header'],
+                        'name' => $this->_render_data['series'][$i - 1]['label'],
+                        'data' => array(),
+                        'color' => $seriesColor,
+                        'chart_image' => $seriesImage,
+                        'label' => $this->_render_data['series'][$i - 1]['label'],
+                    );
+
+                    if (isset($this->_render_data['options']['series'][$i - 1]['type'])) $seriesEntry['type'] = $this->_render_data['options']['series'][$i - 1]['type'];
+
+                    foreach ($this->_render_data['rows'] as $row) {
+                        $seriesEntry['data'][] = $row[$i];
+                    }
+                    array_push($apexchartsRender['fill']['type'], $fillType);
+                    array_push($apexchartsRender['fill']['image']['src'], $seriesImage);
+                    array_push($apexchartsRender['colors'], $seriesColor);
+                }
+                if ($i != 0) {
+                    $apexchartsRender['series'][] = $seriesEntry;
+                }
+            }
+        } else {
+            $isRadialType = $this->_type == 'apexcharts_radialbar_chart' || $this->_type == 'apexcharts_radialbar_gauge_chart';
+            unset($apexchartsRender['xaxis']);
+            for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
+                $seriesEntry = array(
+                    'orig_header' => $this->_render_data['columns'][$i]['orig_header'],
+                    'data' => array(),
+                );
+                $j = 0;
+                foreach ($this->_render_data['rows'] as $row) {
+                    if ($i == 0) {
+                        $apexchartsRender['labels'][] = $row[$i];
+                    } else {
+                        $seriesEntry['data'][] = $row[$i];
+                    }
+                    if ($isRadialType) {
+                        $apexchartsRender['colors'][$j] =  $colors[($j + 1) % $colorsNum];
+                        $j++;
+                    }
+                }
+
+                if ($i != 0) {
+                    $apexchartsRender['series'] = $seriesEntry['data'];
+                    array_push($apexchartsRender['orig_header'], $seriesEntry['orig_header']);
+                    $seriesColor =  $this->_render_data['series'][$i - 1]['color'] != '' ? $this->_render_data['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    if(!$isRadialType) {
+                        array_push($apexchartsRender['colors'], $seriesColor);
+                    }
+                }
+            }
+        }
+
+        $this->_apexcharts_render_data['options'] = $apexchartsRender;
+
+        // Chart
+        if (!$this->_responsiveWidth) {
+            $this->_apexcharts_render_data['options']['chart']['width'] = $this->getWidth();
+        }
+        $this->_apexcharts_render_data['options']['chart']['height'] = $this->getHeight();
+        $this->_apexcharts_render_data['options']['chart']['animations']['enabled'] = $this->isEnableAnimation();
+        $this->_apexcharts_render_data['options']['chart']['background'] = ($this->getPlotBackgroundImage() != 'undefined' && $this->getPlotBackgroundImage() != '') ? $this->getPlotBackgroundImage() : $this->getBackgroundColor();
+        if (in_array( $this->_type, array( 'apexcharts_pie_chart', 'apexcharts_pie_with_gradient_chart',
+                'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart'))) {
+            $this->_apexcharts_render_data['options']['theme']['monochrome'] = array();
+            $this->_apexcharts_render_data['options']['theme']['monochrome']['enabled'] = $this->isMonochrome();
+            $this->_apexcharts_render_data['options']['theme']['monochrome']['color'] = $this->getMonochromeColor();
+            if($this->_enable_color_palette) {
+                $this->_apexcharts_render_data['options']['theme']['monochrome']['enabled'] = false;
+                $this->_apexcharts_render_data['options']['theme']['palette'] = $this->getColorPalette();
+            }
+        }
+        $this->_apexcharts_render_data['options']['plotOptions']['bar'] = array();
+        $this->_apexcharts_render_data['options']['plotOptions']['bar']['horizontal'] = false;
+        $this->_apexcharts_render_data['options']['plotOptions']['radialBar'] = array();
+        $this->_apexcharts_render_data['options']['plotOptions']['radialBar']['startAngle'] = $this->getStartAngle();
+        $this->_apexcharts_render_data['options']['plotOptions']['radialBar']['endAngle'] = $this->getEndAngle();
+        $this->_apexcharts_render_data['options']['chart']['foreColor'] = $this->getTextColor();
+        $this->_apexcharts_render_data['options']['chart']['zoom']['type'] = $this->getZoomType();
+        if ($this->getLineBackgroundImage() != '') {
+            $this->_apexcharts_render_data['options']['fill']['image']['src'] = $this->getLineBackgroundImage();
+            $this->_apexcharts_render_data['options']['fill']['type'] = 'image';
+        }
+        if ($this->isShowDataLabels()) {
+            $this->_apexcharts_render_data['options']['dataLabels']['enabled'] = $this->_apexcharts_render_data['options']['plotOptions']['radialBar']['dataLabels']['show'] = true;
+            $this->_apexcharts_render_data['options']['plotOptions']['pie'] = array();
+            $this->_apexcharts_render_data['options']['plotOptions']['pie']['dataLabels'] = array();
+            $this->_apexcharts_render_data['options']['plotOptions']['pie']['dataLabels']['minAngleToShowLabel'] = 0;
+        } else {
+            $this->_apexcharts_render_data['options']['dataLabels']['enabled'] = $this->_apexcharts_render_data['options']['plotOptions']['radialBar']['dataLabels']['show'] = false;
+        }
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['enabled'] = $this->isEnableDropshadow();
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['blur'] = $this->getDropshadowBlur();
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['opacity'] = $this->getDropshadowOpacity();
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['color'] = $this->getDropshadowColor();
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['top'] = $this->getDropshadowTop();
+        $this->_apexcharts_render_data['options']['chart']['dropShadow']['left'] = $this->getDropshadowLeft();
+
+        // Axes
+        $this->_apexcharts_render_data['options']['grid']['show'] = !!$this->_show_grid;
+        $this->_apexcharts_render_data['options']['grid']['borderColor'] = $this->getGridColor() == '' ? '#000000' : $this->getGridColor();
+        $this->_apexcharts_render_data['options']['grid']['strokeDashArray'] = $this->getGridStroke();
+        $this->_apexcharts_render_data['options']['grid']['position'] = $this->getGridPosition();
+        $this->_apexcharts_render_data['options']['grid']['xaxis'] = $this->_apexcharts_render_data['options']['grid']['yaxis'] = array();
+        $gridAxis = $this->getGridAxes();
+        $this->_apexcharts_render_data['options']['grid']['xaxis']['lines']['show'] = in_array('xaxis', $gridAxis);
+        $this->_apexcharts_render_data['options']['grid']['yaxis']['lines']['show'] = in_array('yaxis', $gridAxis);
+        $this->_apexcharts_render_data['options']['xaxis']['crosshairs'] = array();
+        $this->_apexcharts_render_data['options']['xaxis']['title'] = array();
+        $this->_apexcharts_render_data['options']['xaxis']['crosshairs']['show'] = $this->isHorizontalAxisCrosshair();
+        $this->_apexcharts_render_data['options']['xaxis']['title']['text'] = $this->getMajorAxisLabel();
+        $i = 0;
+        if (!in_array( $this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
+                'apexcharts_stacked_bar_chart', 'apexcharts_radar_chart', 'apexcharts_pie_chart',
+                'apexcharts_pie_with_gradient_chart', 'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart',
+                'apexcharts_radialbar_chart', 'apexcharts_radialbar_gauge_chart'))) {
+            foreach ($apexchartsRender['series'] as $series ) {
+                $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $apexchartsRender['series'][0]['name'];
+                $this->_apexcharts_render_data['options']['yaxis'][$i]['title']['text'] = $series['label'];
+                if ($this->getMinorAxisLabel()) $this->_apexcharts_render_data['options']['yaxis'][0]['title']['text'] = $this->getMinorAxisLabel();
+                if($i != 0) $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = false;
+                $this->_apexcharts_render_data['options']['yaxis'][$i]['crosshairs']['show'] = $this->_apexcharts_render_data['options']['yaxis'][$i]['tooltip']['enabled'] = $this->isVerticalAxisCrosshair();
+                $this->_apexcharts_render_data['options']['yaxis'][$i]['reversed'] = $this->isReversed();
+                if ($this->getVerticalAxisMin() !== '') {
+                    $this->_apexcharts_render_data['options']['yaxis'][$i]['min'] = (int)$this->getVerticalAxisMin();
+                }
+                if ($this->getVerticalAxisMax() !== '') {
+                    $this->_apexcharts_render_data['options']['yaxis'][$i]['max'] = (int)$this->getVerticalAxisMax();
+                }
+                if ($i != 0 && isset($this->_render_data['options']['series'][$i]['yAxis'])) {
+                    $showOppositeAxis = (bool)$this->_render_data['options']['series'][$i]['yAxis'];
+                    $this->_apexcharts_render_data['options']['yaxis'][$i]['opposite'] = $showOppositeAxis;
+                    $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = $showOppositeAxis;
+                    if ($showOppositeAxis && isset($this->_apexcharts_render_data['options']['yaxis'][$i]['orig_header'])) {
+                        $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $this->_apexcharts_render_data['options']['yaxis'][$i]['orig_header'];
+                    } else if(isset($this->_apexcharts_render_data['options']['yaxis'][0]['seriesName'])) {
+                        $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $this->_apexcharts_render_data['options']['yaxis'][0]['seriesName'];
+                    }
+                }
+                $this->_apexcharts_render_data['options']['yaxis'][$i]['tickAmount'] = $this->getTickAmount() ?: 0;
+                $i++;
+            }
+        } else if (in_array( $this->_type, array('apexcharts_grouped_bar_chart','apexcharts_100_stacked_bar_chart',
+                'apexcharts_stacked_bar_chart','apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
+            $this->_apexcharts_render_data['options']['yaxis']['seriesName'] = $apexchartsRender['series'][0]['name'];
+            $this->_apexcharts_render_data['options']['yaxis']['title']['text'] = $this->getMinorAxisLabel() ?: $this->_render_data["series"][0]['label'];
+            if ($this->getVerticalAxisMin() !== '') {
+                $this->_apexcharts_render_data['options']['yaxis']['min'] = (int)$this->getVerticalAxisMin();
+            }
+            if ($this->getVerticalAxisMax() !== '') {
+                $this->_apexcharts_render_data['options']['yaxis']['max'] = (int)$this->getVerticalAxisMax();
+            }
+            $this->_apexcharts_render_data['options']['yaxis']['reversed'] = $this->isReversed();
+            if($this->_type != 'apexcharts_100_stacked_column_chart')
+                $this->_apexcharts_render_data['options']['yaxis']['tickAmount'] = $this->getTickAmount() ?: 0;
+        }
+        $this->_apexcharts_render_data['options']['markers']['size'] = $this->getMarkerSize();
+        $this->_apexcharts_render_data['options']['markers']['hover']['sizeOffset'] = 1;
+        $this->_apexcharts_render_data['options']['stroke']['width'] = $this->getStrokeWidth();
+        // Title
+        if ($this->_show_title) {
+            $this->_apexcharts_render_data['options']['title']['text'] = $this->getTitle();
+        } else {
+            $this->_apexcharts_render_data['options']['title']['text'] = '';
+        }
+        $this->_apexcharts_render_data['options']['title']['floating'] = $this->isTitleFloating();
+        $this->_apexcharts_render_data['options']['title']['align'] = $this->getTitleAlign();
+        $this->_apexcharts_render_data['options']['title']['style']['fontWeight'] = $this->getTitleFontStyle();
+        $this->_apexcharts_render_data['options']['subtitle']['text'] = $this->getSubtitle();
+        $this->_apexcharts_render_data['options']['subtitle']['align'] = $this->getSubtitleAlign();
+
+        // Tooltip
+        $this->_apexcharts_render_data['options']['tooltip']['enabled'] = $this->isTooltipEnabled();
+        $this->_apexcharts_render_data['options']['tooltip']['shared'] = $this->isTooltipEnabled() && $this->getType() !== 'apexcharts_radar_chart';
+        $this->_apexcharts_render_data['options']['tooltip']['followCursor'] = $this->isFollowCursor();
+        $this->_apexcharts_render_data['options']['tooltip']['fillSeriesColor'] = $this->isFillSeriesColor();
+        $this->_apexcharts_render_data['options']['tooltip']['intersect'] = $this->getType() == 'apexcharts_radar_chart';
+
+        //Toolbar
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['show'] = $this->isShowToolbar();
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['tools'] = array();
+        $this->_apexcharts_render_data['options']['chart']['selection'] = array();
+        $this->_apexcharts_render_data['options']['chart']['selection']['enabled'] = true;
+        $allToolbarButtons = ['download', 'selection', 'zoom', 'zoomin', 'zoomout', 'pan'];
+        $notShownToolbarButtons = array_diff( array_values($allToolbarButtons), $this->getToolbarButtons() );
+        foreach ($allToolbarButtons as $button) {
+            $this->_apexcharts_render_data['options']['chart']['toolbar']['tools'][$button] = !in_array($button, $notShownToolbarButtons);
+        }
+
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['tools']['customIcons'] = array();
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['export']['csv']['filename'] =
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['export']['svg']['filename'] =
+        $this->_apexcharts_render_data['options']['chart']['toolbar']['export']['png']['filename'] = $this->getApexExportingFileName();
+
+        // Legend
+        $this->_apexcharts_render_data['options']['legend']['showForSingleSeries'] = true;
+        $this->_apexcharts_render_data['options']['legend']['show'] = $this->getShowLegend();
+        $this->_apexcharts_render_data['options']['legend']['position'] = $this->getLegendPositionCjs() != '' ? $this->getLegendPositionCjs() : 'bottom';
+    }
+
     public function returnGoogleChartData() {
         $this->prepareData();
         $this->groupData();
@@ -2443,6 +3309,14 @@ class WPDataChart {
         return $this->_chartjs_render_data;
     }
 
+    public function returnApexChartsData() {
+        $this->prepareData();
+        $this->groupData();
+        $this->shiftStringColumnUp();
+        $this->prepareApexchartsRender();
+        return $this->_apexcharts_render_data;
+    }
+
     public function returnData() {
         if ($this->getEngine() == 'google') {
             return $this->returnGoogleChartData();
@@ -2450,6 +3324,8 @@ class WPDataChart {
             return $this->returnHighChartsData();
         } else if ($this->getEngine() == 'chartjs') {
             return $this->returnChartJSData();
+        } else if ($this->getEngine() == 'apexcharts') {
+            return $this->returnApexChartsData();
         }
     }
 
@@ -2472,6 +3348,10 @@ class WPDataChart {
             $this->prepareChartJSRender();
         }
 
+        if ($this->_engine == 'apexcharts') {
+            $this->prepareApexchartsRender();
+        }
+
         $render_data = array(
             'selected_columns' => $this->getSelectedColumns(),
             'range_type' => $this->getRangeType(),
@@ -2480,6 +3360,7 @@ class WPDataChart {
             'render_data' => $this->_render_data,
             'highcharts_render_data' => $this->_highcharts_render_data,
             'chartjs_render_data' => $this->_chartjs_render_data,
+            'apexcharts_render_data' => $this->_apexcharts_render_data,
             'show_grid' => $this->_show_grid,
             'show_title' => $this->_show_title,
             'series_type' => $this->getSeriesType()
@@ -2529,6 +3410,62 @@ class WPDataChart {
     }
 
     /**
+     * Returns series type based on selected chart type
+     * @return string
+     */
+    public function getApexChartType($type) {
+        switch ($type) {
+            case 'apexcharts_spline_area_chart':
+            case 'apexcharts_stepline_area_chart':
+            case 'apexcharts_basic_area_chart':
+                $seriesType = 'area';
+                break;
+            case 'apexcharts_column_chart':
+            case 'apexcharts_grouped_bar_chart':
+            case 'apexcharts_stacked_bar_chart':
+            case 'apexcharts_100_stacked_bar_chart':
+            case 'apexcharts_stacked_column_chart':
+            case 'apexcharts_100_stacked_column_chart':
+                $seriesType = 'bar';
+                break;
+            case 'apexcharts_pie_with_gradient_chart':
+            case 'apexcharts_pie_chart':
+                $seriesType = 'pie';
+                break;
+            case 'apexcharts_donut_with_gradient_chart':
+            case 'apexcharts_donut_chart':
+                $seriesType = 'donut';
+                break;
+            case 'apexcharts_radar_chart':
+                $seriesType = 'radar';
+                break;
+            case 'apexcharts_radialbar_gauge_chart':
+            case 'apexcharts_radialbar_chart':
+                $seriesType = 'radialBar';
+                break;
+            case 'apexcharts_polar_area_chart':
+                $seriesType = 'polarArea';
+                break;
+            case 'apexcharts_straight_line_chart':
+            case 'apexcharts_spline_chart':
+            case 'apexcharts_stepline_chart':
+            default:
+                $seriesType = 'line';
+                break;
+        }
+
+        return $seriesType;
+    }
+
+    /**
+     * Determine if array consist only of null/empty values
+     */
+    function containsOnlyNull($array)
+    {
+        return empty(array_filter($array, function ($a) { return $a !== null && $a !== '';}));
+    }
+
+    /**
      * Return the shortcode
      */
     public function getShortCode() {
@@ -2574,6 +3511,12 @@ class WPDataChart {
         if ($chartData->engine == 'chartjs') {
             if (!empty($renderData['chartjs_render_data'])) {
                 $this->_chartjs_render_data = $renderData['chartjs_render_data'];
+            }
+        }
+
+        if ($chartData->engine == 'apexcharts') {
+            if (!empty($renderData['apexcharts_render_data'])) {
+                $this->_apexcharts_render_data = $renderData['apexcharts_render_data'];
             }
         }
 
@@ -2757,6 +3700,89 @@ class WPDataChart {
             $this->setShowLegend($renderData['chartjs_render_data']['options']['options']['legend']['display']);
             $this->setLegendPositionCjs($renderData['chartjs_render_data']['options']['options']['legend']['position']);
 
+        } else if ($chartData->engine == 'apexcharts') {
+            // Chart
+            $isBackgroundAColor = WDTTools::isStringAColor($renderData['apexcharts_render_data']['options']['chart']['background']);
+            $this->setBackgroundColor((isset($renderData['apexcharts_render_data']['options']['chart']['background']) && $isBackgroundAColor) ? $renderData['apexcharts_render_data']['options']['chart']['background'] : '');
+            $this->setEnableAnimation(isset($renderData['apexcharts_render_data']['options']['chart']['animations']['enabled']) ? $renderData['apexcharts_render_data']['options']['chart']['animations']['enabled'] : false);
+            $this->setMonochrome(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['enabled']) ? $renderData['apexcharts_render_data']['options']['theme']['monochrome']['enabled'] : false);
+            $this->setMonochromeColor(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) ? $renderData['apexcharts_render_data']['options']['theme']['monochrome']['color'] : '#255aee');
+            $this->setEnableColorPalette(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) && WDTTools::isStringAColor($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) && !$this->isMonochrome());
+            $this->setColorPalette(isset($renderData['apexcharts_render_data']['options']['theme']['palette'] ) ? $renderData['apexcharts_render_data']['options']['theme']['palette']  : 'palette1');
+            $this->setStartAngle(isset($renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['startAngle']) ? $renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['startAngle'] : 0);
+            $this->setEndAngle(isset($renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['endAngle']) ? $renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['endAngle'] : 360);
+            $this->setTextColor(isset($renderData['apexcharts_render_data']['options']['chart']['foreColor']) ? $renderData['apexcharts_render_data']['options']['chart']['foreColor'] : '#373d3f');
+            $this->setZoomType(isset($renderData['apexcharts_render_data']['options']['chart']['zoom']['type']) ? $renderData['apexcharts_render_data']['options']['chart']['zoom']['type'] : 'None');
+            $this->setPlotBackgroundImage((isset($renderData['apexcharts_render_data']['options']['chart']['background']) && !$isBackgroundAColor && $renderData['apexcharts_render_data']['options']['chart']['background'] !== '') ? "url(" . $renderData['apexcharts_render_data']['options']['chart']['background'] . ") no-repeat center/cover" : '');
+            $this->setLineBackgroundImage((isset($renderData['apexcharts_render_data']['options']['fill']['image']['src']) && !is_array($renderData['apexcharts_render_data']['options']['fill']['image']['src']) ) ? $renderData['apexcharts_render_data']['options']['fill']['image']['src'] : '');
+            $this->setShowDataLabels(isset($renderData['apexcharts_render_data']['options']['dataLabels']['enabled']) ? $renderData['apexcharts_render_data']['options']['dataLabels']['enabled'] : false);
+            $this->setEnableDropshadow(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['enabled']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['enabled'] : false);
+            $this->setDropshadowBlur(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['blur']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['blur'] : 3);
+            $this->setDropshadowOpacity(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['opacity']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['opacity'] : 35);
+            $this->setDropshadowColor(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['color']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['color'] : '#000');
+            $this->setDropshadowTop(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['top']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['top'] : 5);
+            $this->setDropshadowLeft(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['left']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['left'] : 5);
+
+            // Axes
+            $this->setShowGrid(isset($renderData['apexcharts_render_data']['options']['grid']['show']) ? $renderData['apexcharts_render_data']['options']['grid']['show'] : true);
+            $this->setGridColor(isset($renderData['apexcharts_render_data']['options']['grid']['borderColor']) ? $renderData['apexcharts_render_data']['options']['grid']['borderColor'] : '#000000');
+            $this->setGridStroke(isset($renderData['apexcharts_render_data']['options']['grid']['strokeDashArray']) ? $renderData['apexcharts_render_data']['options']['grid']['strokeDashArray'] : 1);
+            $this->setGridPosition(isset($renderData['apexcharts_render_data']['options']['grid']['position']) ? $renderData['apexcharts_render_data']['options']['grid']['position'] : 'back');
+            $gridAxes = array();
+            if (isset($renderData['apexcharts_render_data']['options']['grid'])) {
+                if ($renderData['apexcharts_render_data']['options']['grid']['xaxis']['lines']['show']) array_push($gridAxes, 'xaxis');
+                if ($renderData['apexcharts_render_data']['options']['grid']['yaxis']['lines']['show']) array_push($gridAxes, 'yaxis');
+            }
+            $this->setGridAxes($gridAxes);
+            $this->setMajorAxisLabel(isset($renderData['apexcharts_render_data']['options']['xaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['xaxis']['title']['text'] : '');
+            if (strpos($renderData['apexcharts_render_data']['type'], 'bar')) {
+                $this->setMinorAxisLabel(isset($renderData['apexcharts_render_data']['options']['yaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['yaxis']['title']['text'] : '');
+                $this->setVerticalAxisMin(isset($renderData['apexcharts_render_data']['options']['yaxis']['min']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['min'] : '');
+                $this->setVerticalAxisMax(isset($renderData['apexcharts_render_data']['options']['yaxis']['max']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['max'] : '');
+                $this->setTickAmount((isset($renderData['apexcharts_render_data']['options']['yaxis']['tickAmount']) && $renderData['apexcharts_render_data']['options']['yaxis']['tickAmount'] != 0) ? (int)$renderData['apexcharts_render_data']['options']['yaxis']['tickAmount'] : 0);
+                $this->setReversed(isset($renderData['apexcharts_render_data']['options']['yaxis']['reversed']) ? $renderData['apexcharts_render_data']['options']['yaxis']['reversed'] : false);
+            } else {
+                $this->setMinorAxisLabel(isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['title']['text']) ? $renderData['apexcharts_render_data']['options']['yaxis'][0]['title']['text'] : '');
+                $this->setVerticalAxisMin(isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['min']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis'][0]['min'] : '');
+                $this->setVerticalAxisMax(isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['max']) ? (int)$renderData['apexcharts_render_data']['options']['yaxis'][0]['max'] : '');
+                $this->setTickAmount((isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['tickAmount']) && $renderData['apexcharts_render_data']['options']['yaxis'][0]['tickAmount'] != 0) ? (int)$renderData['apexcharts_render_data']['options']['yaxis'][0]['tickAmount'] : 0);
+                $this->setReversed(isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['reversed']) ? $renderData['apexcharts_render_data']['options']['yaxis'][0]['reversed'] : false);
+
+            }
+            $this->setMarkerSize(isset($renderData['apexcharts_render_data']['options']['markers']['size']) ? $renderData['apexcharts_render_data']['options']['markers']['size'] : 0);
+            $this->setStrokeWidth(isset($renderData['apexcharts_render_data']['options']['stroke']['width']) ? $renderData['apexcharts_render_data']['options']['stroke']['width'] : 2);
+            $this->setVerticalAxisCrosshair(isset($renderData['apexcharts_render_data']['options']['yaxis'][0]['crosshairs']['show']) ? $renderData['apexcharts_render_data']['options']['yaxis'][0]['crosshairs']['show'] : false);
+            $this->setHorizontalAxisCrosshair(isset($renderData['apexcharts_render_data']['options']['xaxis']['crosshairs']['show']) ? $renderData['apexcharts_render_data']['options']['xaxis']['crosshairs']['show'] : false);
+
+            // Title
+            $this->setTitleFloating(isset($renderData['apexcharts_render_data']['options']['title']['floating']) ? $renderData['apexcharts_render_data']['options']['title']['floating'] : false);
+            $this->setTitleAlign(isset($renderData['apexcharts_render_data']['options']['title']['align']) ? $renderData['apexcharts_render_data']['options']['title']['align'] : 'center');
+            $this->setFontStyle(isset($renderData['apexcharts_render_data']['options']['title']['style']['fontWeight']) ? $renderData['apexcharts_render_data']['options']['title']['style']['fontWeight'] : 'bold');
+            $this->setSubtitle(isset($renderData['apexcharts_render_data']['options']['subtitle']['text']) ? $renderData['apexcharts_render_data']['options']['subtitle']['text'] : '');
+            $this->setSubtitleAlign(isset($renderData['apexcharts_render_data']['options']['subtitle']['align']) ? $renderData['apexcharts_render_data']['options']['subtitle']['align'] : 'center');
+
+            // Tooltip
+            $this->setTooltipEnabled(isset($renderData['apexcharts_render_data']['options']['tooltip']['enabled']) ? $renderData['apexcharts_render_data']['options']['tooltip']['enabled'] : false);
+            $this->setFollowCursor(isset($renderData['apexcharts_render_data']['options']['tooltip']['followCursor']) && (bool)$renderData['apexcharts_render_data']['options']['tooltip']['followCursor']);
+            $this->setFillSeriesColor(isset($renderData['apexcharts_render_data']['options']['tooltip']['fillSeriesColor']) && $renderData['apexcharts_render_data']['options']['tooltip']['fillSeriesColor']);
+
+            // Legend
+            $this->setShowLegend(isset($renderData['apexcharts_render_data']['options']['legend']['show']) ? $renderData['apexcharts_render_data']['options']['legend']['show'] : true );
+            $this->setLegendPositionCjs(isset($renderData['apexcharts_render_data']['options']['legend']['position']) ? $renderData['apexcharts_render_data']['options']['legend']['position'] : 'bottom');
+
+            //Toolbar
+            $this->setShowToolbar(isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['show']) ? $renderData['apexcharts_render_data']['options']['chart']['toolbar']['show'] : false);
+
+            if(isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'])) {
+                $toolbarButtons = array();
+                foreach ($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'] as $toolbarTool => $show) {
+                    if ($toolbarTool != 'customIcons' && $show == true) {
+                        array_push($toolbarButtons, $toolbarTool);
+                    }
+                }
+                $this->setToolbarButtons($toolbarButtons);
+            } else $this->setToolbarButtons(['download', 'selection', 'zoomin', 'zoomout', 'zoom' , 'pan']);
+            $this->setApexExportingFileName((isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename']) && $renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename'] != '') ? $renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename'] : 'Chart');
         }
 
         $this->loadChildWPDataTable();
@@ -2829,11 +3855,15 @@ class WPDataChart {
             $json_chart_render_data = json_encode($this->_highcharts_render_data);
         } else if ($this->_engine == 'chartjs') {
             $this->prepareChartJSRender();
-            // ChartJS
             wp_enqueue_script('wdt-chartjs', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION);
             // ChartJS wpDataTable JS library
             wp_enqueue_script('wpdatatables-chartjs', WDT_JS_PATH . 'wpdatatables/wdt.chartJS' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
             $json_chart_render_data = json_encode($this->_chartjs_render_data);
+        } else if ($this->_engine = 'apexcharts') {
+            $this->prepareApexchartsRender();
+            wp_enqueue_script('wdt-apexcharts', 'https://cdn.jsdelivr.net/npm/apexcharts', array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wpdatatables-apexcharts', WDT_JS_PATH . 'wpdatatables/wdt.apexcharts' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+            $json_chart_render_data = json_encode($this->_apexcharts_render_data);
         }
 
         do_action('wdt-enqueue-scripts-after-chart-render');
@@ -2871,6 +3901,14 @@ class WPDataChart {
     }
 
     /**
+     * Return Apexcharts render data
+     * @return null
+     */
+    public function getApexchartsRenderData() {
+        return $this->_apexcharts_render_data;
+    }
+
+    /**
      * Delete chart by ID
      * @param $chartId
      * @return bool
@@ -2878,7 +3916,8 @@ class WPDataChart {
     public static function deleteChart($chartId) {
         global $wpdb;
 
-        if (!isset($_REQUEST['wdtNonce']) || empty($chartId) || !current_user_can('manage_options') || !wp_verify_nonce($_REQUEST['wdtNonce'], 'wdtDeleteChartNonce')) {
+        if (!isset($_REQUEST['wdtNonce']) || empty($chartId) || !current_user_can('manage_options')
+            || !wp_verify_nonce($_REQUEST['wdtNonce'], 'wdtDeleteChartNonce')) {
             return false;
         }
 

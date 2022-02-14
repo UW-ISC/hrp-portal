@@ -47,6 +47,10 @@
                                 <?php if (!empty($chartId) && ($chartObj->getEngine() == 'chartjs')){ ?>selected="selected"<?php } ?> >
                             Chart.js
                         </option>
+                        <option value="apexcharts"
+                                <?php if (!empty($chartId) && ($chartObj->getEngine() == 'apexcharts')){ ?>selected="selected"<?php } ?> >
+                            ApexCharts
+                        </option>
                     </select>
                 </div>
             </div>
@@ -83,6 +87,14 @@
 
     </div>
     <!-- /div.chartjs-charts-type -->
+
+    <!-- div.apexcharts-charts-type -->
+    <div class="charts-type apexcharts-charts-type col-sm-12 col-md-12">
+
+        <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/steps/charts_pick/apexcharts.inc.php'; ?>
+
+    </div>
+    <!-- /div.apexcharts-charts-type -->
 
 </div>
 <!--/.row -->

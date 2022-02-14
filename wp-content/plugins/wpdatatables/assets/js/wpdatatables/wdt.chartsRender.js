@@ -57,6 +57,25 @@
                         if (wpDataCharts[chart_id].follow_filtering != 1) {
                             wdtChart.render();
                         }
+                    } else if ( wpDataCharts[chart_id].engine == 'apexcharts' ) {
+                        var wdtChart = new wpDataTablesApexChart();
+                        wdtChart.setOptions( wpDataCharts[chart_id].render_data.options );
+                        wdtChart.setType( wpDataCharts[chart_id].render_data.type );
+                        wdtChart.setSingleSeriesType( wpDataCharts[chart_id].render_data.options );
+                        wdtChart.setStartEndAngles( wpDataCharts[chart_id].render_data.options );
+                        wdtChart.setContainer( '#'+wpDataCharts[chart_id].container);
+                        wdtChart.setCustomOptions( wpDataCharts[chart_id].render_data.options );
+                        wdtChart.setColumnIndexes(wpDataCharts[chart_id].render_data.column_indexes);
+                        wdtChart.setNumberFormat(wpDataCharts[chart_id].render_data.wdtNumberFormat);
+                        wdtChart.setDecimalPlaces(wpDataCharts[chart_id].render_data.wdtDecimalPlaces);
+                        wdtChart.setGrouping(wpDataCharts[chart_id].group_chart);
+                        if( typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[chart_id] !== 'undefined' ){
+                            wdtChart.setRenderCallback( wpDataChartsCallbacks[chart_id] );
+                        }
+
+                        if( wpDataCharts[chart_id].follow_filtering != 1 ) {
+                            wdtChart.render();
+                        }
                     }
 
                     if (wpDataCharts[chart_id].follow_filtering == 1) {

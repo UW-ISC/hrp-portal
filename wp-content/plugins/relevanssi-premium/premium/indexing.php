@@ -633,26 +633,7 @@ function relevanssi_index_users() {
 	// Delete all users from the Relevanssi index first.
 	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE type = 'user'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
-	$args = array();
-
-	$index_subscribers = get_option( 'relevanssi_index_subscribers' );
-	if ( 'on' !== $index_subscribers ) {
-		$args['role__not_in'] = array( 'subscriber' );
-	}
-
-	/**
-	 * Filters the user fetching arguments.
-	 *
-	 * Useful to control the user role, for example: just set 'role__in' to whatever
-	 * you need.
-	 *
-	 * @param array User fetching arguments.
-	 */
-	$users_list = get_users( apply_filters( 'relevanssi_user_indexing_args', $args ) );
-	$users      = array();
-	foreach ( $users_list as $user ) {
-		$users[] = get_userdata( $user->ID );
-	}
+	$users = relevanssi_get_users( array() );
 
 	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		$progress = WP_CLI\Utils\make_progress_bar( 'Indexing users', count( $users ) );
@@ -702,27 +683,7 @@ function relevanssi_index_users_ajax( $limit, $offset ) {
 		'offset' => intval( $offset ),
 	);
 
-	$index_subscribers = get_option( 'relevanssi_index_subscribers' );
-	if ( 'on' !== $index_subscribers ) {
-		$args['role__not_in'] = array( 'subscriber' );
-	}
-
-	/**
-	 * Documented in /premium/indexing.php.
-	 */
-	$users_list = get_users( apply_filters( 'relevanssi_user_indexing_args', $args ) );
-
-	if ( empty( $users_list ) ) {
-		$response = array(
-			'indexed' => 0,
-		);
-		return $response;
-	}
-
-	$users = array();
-	foreach ( $users_list as $user ) {
-		$users[] = get_userdata( $user->ID );
-	}
+	$users = relevanssi_get_users( $args );
 
 	$indexed_users = 0;
 	$update        = false;
@@ -747,6 +708,36 @@ function relevanssi_index_users_ajax( $limit, $offset ) {
 	);
 
 	return $response;
+}
+
+/**
+ * Gets the list of users.
+ *
+ * @param array $args The user indexing arguments.
+ *
+ * @return array An array of user profiles.
+ */
+function relevanssi_get_users( array $args ) {
+	$index_subscribers = get_option( 'relevanssi_index_subscribers' );
+	if ( 'on' !== $index_subscribers ) {
+		$args['role__not_in'] = array( 'subscriber' );
+	}
+
+	/**
+	 * Filters the user fetching arguments.
+	 *
+	 * Useful to control the user role, for example: just set 'role__in' to whatever
+	 * you need.
+	 *
+	 * @param array User fetching arguments.
+	 */
+	$users_list = get_users( apply_filters( 'relevanssi_user_indexing_args', $args ) );
+	$users      = array();
+	foreach ( $users_list as $user ) {
+		$users[] = get_userdata( $user->ID );
+	}
+
+	return $users;
 }
 
 /**
@@ -1071,27 +1062,7 @@ function relevanssi_index_taxonomies_ajax( $taxonomy, $limit, $offset ) {
 	$indexed_terms = 0;
 	$end_reached   = false;
 
-	/**
-	 * Determines whether empty terms are indexed or not.
-	 *
-	 * @param boolean $hide_empty_terms If true, empty terms are not indexed. Default true.
-	 */
-	$hide_empty = apply_filters( 'relevanssi_hide_empty_terms', true );
-	$count      = '';
-	if ( $hide_empty ) {
-		$count = 'AND tt.count > 0';
-	}
-
-	$terms = $wpdb->get_col(
-		$wpdb->prepare(
-			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt
-			WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s " . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-			'LIMIT %d OFFSET %d',
-			$taxonomy,
-			intval( $limit ),
-			intval( $offset )
-		)
-	);
+	$terms = relevanssi_get_terms( $taxonomy, intval( $limit ), intval( $offset ) );
 
 	if ( count( $terms ) < $limit ) {
 		$end_reached = true;
@@ -1135,16 +1106,7 @@ function relevanssi_index_taxonomies( $is_ajax = false ) {
 	$taxonomies    = get_option( 'relevanssi_index_terms' );
 	$indexed_terms = 0;
 	foreach ( $taxonomies as $taxonomy ) {
-		/**
-		 * Adjusts the get_terms() arguments for taxonomy indexing.
-		 *
-		 * Get_terms() is used to get the terms for indexing. By default, no parameters are passed.
-		 * This filter can be used to change that.
-		 *
-		 * @param array $args Arguments to pass to get_terms(). Default just the 'taxonomy' parameter.
-		 */
-		$args  = apply_filters( 'relevanssi_index_taxonomies_args', array( 'taxonomy' => $taxonomy ) );
-		$terms = get_terms( $args );
+		$terms = relevanssi_get_terms( $taxonomy, 0, 0 );
 
 		if ( defined( 'WP_CLI' ) && WP_CLI ) {
 			$progress = WP_CLI\Utils\make_progress_bar( "Indexing $taxonomy", count( $terms ) );
@@ -1171,6 +1133,45 @@ function relevanssi_index_taxonomies( $is_ajax = false ) {
 			return __( 'No taxonomies to index.', 'relevanssi' );
 		}
 	}
+}
+
+/**
+ * Gets a list of taxonomy terms.
+ *
+ * @param string $taxonomy The taxonomy to index.
+ * @param int    $limit    Number of users to index on one go.
+ * @param int    $offset   Indexing offset.
+ *
+ * @return array A list of taxonomy terms.
+ */
+function relevanssi_get_terms( string $taxonomy, int $limit = 0, int $offset = 0 ) : array {
+	global $wpdb;
+
+	/**
+	 * Determines whether empty terms are indexed or not.
+	 *
+	 * @param boolean $hide_empty_terms If true, empty terms are not indexed. Default true.
+	 */
+	$hide_empty = apply_filters( 'relevanssi_hide_empty_terms', true );
+	$count      = '';
+	if ( $hide_empty ) {
+		$count = 'AND tt.count > 0';
+	}
+
+	$limit_sql = '';
+	if ( $limit && $offset ) {
+		$limit_sql = $wpdb->prepare( 'LIMIT %d OFFSET %d', $limit, $offset );
+	}
+
+	$terms = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT t.term_id FROM $wpdb->terms AS t, $wpdb->term_taxonomy AS tt
+			WHERE t.term_id = tt.term_id $count AND tt.taxonomy = %s $limit_sql ", // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$taxonomy
+		)
+	);
+
+	return $terms;
 }
 
 /**

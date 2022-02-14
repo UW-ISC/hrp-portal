@@ -374,12 +374,14 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-apexcharts', '//cdn.jsdelivr.net/npm/apexcharts', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
     wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wpdatatables/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wpdatatables/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-highcharts', WDT_JS_PATH . 'wpdatatables/wdt.highcharts.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wp-apexcharts', WDT_JS_PATH . 'wpdatatables/wdt.apexcharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-wp-chart-js', WDT_JS_PATH . 'wpdatatables/wdt.chartJS.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 

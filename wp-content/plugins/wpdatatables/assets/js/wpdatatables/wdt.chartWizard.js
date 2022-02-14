@@ -43,12 +43,15 @@ var wdtChartColumnsData = {};
                 if ($('#chart-render-engine').val() == 'google') {
 
                     $("#chart-js-container").hide();
+                    $("#apexcharts-chart-container").hide();
                     $("#google-chart-container").show();
 
                     $(".highcharts").hide();
                     $(".chartjs").hide();
+                    $(".apexcharts").hide();
                     $(".google").show();
 
+                    $('.apex-toolbar-container').hide();
                     $('#curve-type-row').hide();
                     $('#three-d-row').hide();
                     $('#background_color_row').show();
@@ -152,16 +155,21 @@ var wdtChartColumnsData = {};
                 } else if ($('#chart-render-engine').val() == 'highcharts') {
 
                     $("#chart-js-container").hide();
+                    $("#apexcharts-chart-container").hide();
                     $("#google-chart-container").show();
 
                     $(".google").hide();
                     $(".chartjs").hide();
+                    $(".apexcharts").hide();
                     $(".highcharts").show();
 
+                    $('.apex-toolbar-container').hide();
                     $('#border_width_row').show();
                     $('#border_color_row').show();
                     $('#border_radius_row').show();
                     $('#zoom-type-row').show();
+                    $("#zoom-type").append('<option value="y">Y</option>');
+                    $("#zoom-type").append('<option value="xy">XY</option>');
                     $('#panning-row').show();
                     $('#pan-key-row').show();
                     $('#plot-border-width-row').show();
@@ -203,17 +211,22 @@ var wdtChartColumnsData = {};
                         $('#plot-border-width-row').hide();
                         $('#plot_border_color_row').hide();
                     }
-                } else {
+                } else if ($('#chart-render-engine').val() == 'chartjs') {
 
                     $("#google-chart-container").hide();
+                    $("#apexcharts-chart-container").hide();
                     $("#chart-js-container").show();
 
                     $(".google").hide();
                     $(".highcharts").hide();
+                    $(".apexcharts").hide();
                     $(".chartjs").show();
 
+                    $('.apex-toolbar-container').hide();
                     $('.series').show();
                     $('#curve-type-row').hide();
+                    var legendPositionCjsVal = $('#legend-position-cjs').val() ? $('#legend-position-cjs').val() : 'top';
+                    $('#legend-position-cjs').val(legendPositionCjsVal).change();
 
                     switch (constructedChartData.chart_type) {
                         case 'chartjs_line_chart':
@@ -237,6 +250,84 @@ var wdtChartColumnsData = {};
                         case 'chartjs_doughnut_chart':
                             $('.series').hide();
                             break;
+                    }
+                } else if ($('#chart-render-engine').val() == 'apexcharts') {
+                    $('#chart-js-container').hide();
+                    $('#google-chart-container').hide();
+                    $('#apexcharts-chart-container').show();
+
+                    $('.google').hide();
+                    $('.highcharts').hide();
+                    $('.chartjs').hide();
+                    $('.apexcharts').show();
+
+                    $('.border-settings').hide();
+
+                    $('#zoom-type-row').show();
+
+                    $('.series').show();
+                    $('.axes').show();
+                    $('.legend').show();
+                    var legendPositionVal = $('#legend-position-cjs').val() ? $('#legend-position-cjs').val() : 'bottom';
+                    $('#legend-position-cjs').val(legendPositionVal).change();
+
+                    if (constructedChartData.chart_type == 'apexcharts_pie_chart' ||
+                        constructedChartData.chart_type == 'apexcharts_pie_with_gradient_chart' ||
+                        constructedChartData.chart_type == 'apexcharts_donut_chart' ||
+                        constructedChartData.chart_type == 'apexcharts_donut_with_gradient_chart'
+                    ) {
+                        $('.axes').hide();
+                        $('.series').hide();
+                        $('#zoom-type-row').hide();
+                        $('#stroke-width-row').hide();
+                        $('#marker-size-row').hide();
+                        $('#toolbar-buttons-container').hide();
+                    } else if ( constructedChartData.chart_type == 'apexcharts_radialbar_chart' ||
+                        constructedChartData.chart_type == 'apexcharts_radialbar_gauge_chart' ) {
+                        $('.apexcharts-radialbar').show();
+                        $('.apexcharts-pie').hide();
+                        $('#zoom-type-row').hide();
+                        $('.series').hide();
+                        $('.axes').hide();
+                        $('#stroke-width-row').hide();
+                        $('#marker-size-row').hide();
+                        $('#toolbar-buttons-container').hide();
+                    } else if ( constructedChartData.chart_type == 'apexcharts_radar_chart' ) {
+                        $('#zoom-type-row').hide();
+                        $('.axes').hide();
+                        $('.apexcharts-pie').hide();
+                        $('.chart-series-image').show();
+                        $('#stroke-width-row').hide();
+                        $('.follow-cursor-container').hide();
+                        $('#toolbar-buttons-container').hide();
+                        $('.chart-show-yaxis').hide();
+                    } else if ( constructedChartData.chart_type == 'apexcharts_column_chart'  ||
+                                constructedChartData.chart_type == 'apexcharts_stacked_bar_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_grouped_bar_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_stacked_column_chart'  ||
+                                constructedChartData.chart_type == 'apexcharts_100_stacked_column_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_100_stacked_bar_chart') {
+                        $('#marker-size-row').hide();
+                        $('.apexcharts-pie').hide();
+                        $('#toolbar-buttons-container').hide();
+                        $('.follow-cursor-container').hide();
+                        $('#horizontal-axis-crosshair-row').hide();
+                        $('#vertical-axis-crosshair-row').hide();
+                        $('#zoom-type-row').hide();
+                        $('.chart-show-yaxis').hide();
+                        if ( constructedChartData.chart_type === 'apexcharts_stacked_bar_chart'  ||
+                            constructedChartData.chart_type === 'apexcharts_grouped_bar_chart' ||
+                            constructedChartData.chart_type === 'apexcharts_100_stacked_bar_chart') {
+                            $('#vertical-axis-max-row').hide();
+                            $('#vertical-axis-min-row').hide();
+                            $('#tick-amount-row').hide();
+                            $('#reversed-axis').hide();
+                        } else if (constructedChartData.chart_type == 'apexcharts_100_stacked_column_chart') {
+                            $('#vertical-axis-max-row').hide();
+                            $('#vertical-axis-min-row').hide();
+                        }
+                    } else {
+                        $('.apexcharts-pie').hide();
                     }
                 }
 
@@ -393,6 +484,18 @@ var wdtChartColumnsData = {};
                                 }
                             }
                             seriesBlockTemplateHtml = seriesBlockTemplate.render({series: data.options.data.datasets});
+                        } else if (constructedChartData.engine == 'apexcharts') {
+                            if (typeof editing_chart_data != 'undefined' && editing_chart_data.apexcharts_render_data != null) {
+                                for (i = 0; i < data.options.series.length; i++) {
+                                    for (j = 0; j < editing_chart_data.apexcharts_render_data.options.series.length; j++) {
+                                        if (data.options.series[i].orig_header === editing_chart_data.apexcharts_render_data.options.series[j].orig_header) {
+                                            data.options.series[i].label = editing_chart_data.apexcharts_render_data.options.series[j].label;
+                                        }
+                                    }
+                                }
+                            }
+                            seriesBlockTemplateHtml = seriesBlockTemplate.render({series: data.options.series});
+
                         }
 
                         $('#series-settings-container').html(seriesBlockTemplateHtml);
@@ -464,9 +567,85 @@ var wdtChartColumnsData = {};
                                     $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(data.options.data.datasets[i].borderColor);
                                 }
                             }
-                        }
+                        } else if (constructedChartData.engine == 'apexcharts') {
+                            $.each (data.options.series, function(key, val) {
+                                $('#series-image-' + key).change( function () {
+                                    switchClearButton($('#series-image-' + key).val(), $('#wdt-upload-chart-image-' + key));
+                                    toggleBackgroundImageContainer();
+                                    renderChart(false);
+                                });
+                                $('#wdt-upload-chart-image-' + key).on('click', function (e) {
+                                    handleMediaUploader(e, jQuery(this).attr("id"), data);
+                                    renderChart(false);
+                                });
 
-                        $(".chart-series-color .wdt-add-picker").each(function (i) {
+                                $('#apex-series-type-' + key).change(function (e) {
+                                    if($(this).val() === 'bar' || $(this).val() === 'area') {
+                                        $('#series-image-' + key +'-container').show();
+                                    } else {
+                                        $('#series-image-' + key).val('');
+                                        $('#series-image-' + key +'-container').hide();
+                                    }
+                                });
+                            });
+                            if (typeof editing_chart_data != 'undefined' && editing_chart_data.apexcharts_render_data != null) {
+                                for (i in data.options.series) {
+                                    for (j in editing_chart_data.apexcharts_render_data.options.series) {
+                                        if (data.options.series[i].orig_header === editing_chart_data.apexcharts_render_data.options.series[j].orig_header) {
+                                            if (constructedChartData.chart_type == 'apexcharts_spline_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_straight_line_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_stepline_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_column_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_basic_area_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_stepline_area_chart' ||
+                                                constructedChartData.chart_type == 'apexcharts_spline_area_chart' ) {
+                                                if(editing_chart_data.apexcharts_render_data.options.series[j].type === 'bar' || editing_chart_data.apexcharts_render_data.options.series[j].type === 'area') {
+                                                    $('#series-image-' + i + '-container').show();
+                                                } else {
+                                                    $('#series-image-' + i + '-container').hide();
+                                                }
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.apexcharts_render_data.options.colors[j]);
+                                                data.options.series[i].color = editing_chart_data.apexcharts_render_data.options.colors[j];
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.apex-series-type-container select').val(editing_chart_data.apexcharts_render_data.options.series[j].type);
+                                                data.options.series[i].type = editing_chart_data.apexcharts_render_data.options.series[j].type;
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-show-yaxis input').prop('checked', editing_chart_data.apexcharts_render_data.options.yaxis[j].opposite);
+                                                data.options.series[i].yAxis = editing_chart_data.apexcharts_render_data.options.yaxis[j].opposite;
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-image input').val(editing_chart_data.apexcharts_render_data.options.series[j].chart_image);
+                                                data.options.series[i].chart_image = editing_chart_data.apexcharts_render_data.options.series[j].chart_image;
+                                                switchClearButton(editing_chart_data.apexcharts_render_data.options.series[j].chart_image,
+                                                    $('#wdt-upload-chart-image-' + i));
+                                                toggleBackgroundImageContainer();
+                                            }  else if( constructedChartData.chart_type == 'apexcharts_stacked_bar_chart' ||
+                                                        constructedChartData.chart_type == 'apexcharts_100_stacked_bar_chart' ||
+                                                        constructedChartData.chart_type == 'apexcharts_grouped_bar_chart' ||
+                                                        constructedChartData.chart_type == 'apexcharts_stacked_column_chart' ||
+                                                        constructedChartData.chart_type == 'apexcharts_100_stacked_column_chart') {
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.apexcharts_render_data.options.colors[j]);
+                                                data.options.series[i].color = editing_chart_data.apexcharts_render_data.options.colors[j];
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-image input').val(editing_chart_data.apexcharts_render_data.options.series[j].chart_image);
+                                                data.options.series[i].chart_image = editing_chart_data.apexcharts_render_data.options.series[j].chart_image;
+                                                switchClearButton(editing_chart_data.apexcharts_render_data.options.series[j].chart_image,
+                                                    $('#wdt-upload-chart-image-' + i));
+                                                toggleBackgroundImageContainer();
+                                            } else if ( constructedChartData.chart_type == 'apexcharts_radar_chart' ) {
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.apexcharts_render_data.options.series[j].color);
+                                                data.options.series[i].color = editing_chart_data.apexcharts_render_data.options.series[j].color;
+                                            } else {
+                                                $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.apexcharts_render_data.options.series[j].color);
+                                                data.options.series[i].color = editing_chart_data.apexcharts_render_data.options.series[j].color;
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                for (i in data.options.series) {
+                                    $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(data.options.series[i].color);
+                                    $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-type select').val(data.options.series[i].type);
+                                    $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-show-yaxis input').val(data.options.series[i].yAxis);
+                                }
+                            }
+                        }
+                        $(".wdt-chart-wizard .wdt-add-picker").each(function (i) {
                             jQuery(this).addClass('pickr');
                             jQuery(this)
                                 .closest('.wdt-color-picker')
@@ -507,12 +686,27 @@ var wdtChartColumnsData = {};
                             wdtChart.setContainer(container);
                             wdtChart.setCanvas(canvas);
                             wdtChart.setContainerOptions(data.configurations);
+                        } else if (constructedChartData.engine == 'apexcharts') {
+                            wdtChart = new wpDataTablesApexChart();
+                            wdtChart.setOptions(data.options);
+                            wdtChart.setType(data.type);
+                            wdtChart.setWidth(data.options.chart.width);
+                            wdtChart.setHeight(data.options.chart.height);
+                            wdtChart.setContainer('#apex-chart-container');
+                            wdtChart.setNumberFormat(data.wdtNumberFormat);
+                            wdtChart.setDecimalPlaces(data.wdtDecimalPlaces);
+                            wdtChart.setCustomOptions(data.options);
+                            wdtChart.setStartEndAngles(data.options);
+                            wdtChart.setColumnIndexes(data.column_indexes);
                         }
                         wdtChart.render();
                         if (constructedChartData.chart_type == 'google_bubble_chart') {
                             $('.chart-series-color').hide();
                         }
                         $('.selectpicker').selectpicker('refresh');
+
+                        $('div.apex-series-type-container').hide();
+                        $('div.chart-series-image').hide();
 
                         if (constructedChartData.engine == 'google' || constructedChartData.engine == 'chartjs'
                             || constructedChartData.chart_type == 'highcharts_stacked_area_chart'
@@ -521,6 +715,7 @@ var wdtChartColumnsData = {};
                             || constructedChartData.chart_type == 'highcharts_3d_column_chart'
                             || constructedChartData.chart_type == 'highcharts_stacked_column_chart'
                             || constructedChartData.chart_type == 'highcharts_gauge_chart'
+                            || constructedChartData.chart_type == 'apexcharts_radar_chart'
                         ) {
                             $('div.chart-series-type').hide();
                             $('div.chart-show-yaxis').hide();
@@ -529,6 +724,33 @@ var wdtChartColumnsData = {};
                             $('div.chart-series-label').hide();
                             $('div.chart-show-yaxis').hide();
 
+                        } else if(constructedChartData.engine == 'apexcharts') {
+                            $('div.chart-series-type').hide();
+                            if (constructedChartData.chart_type == 'apexcharts_basic_area_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_spline_area_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_stepline_area_chart' ||
+                                constructedChartData.chart_type == 'apexcharts_column_chart') {
+                                $('div.apex-series-type-container').show();
+                                if($('#line-background-image').val() == '') $('div.chart-series-image').show();
+                            } else if ( constructedChartData.chart_type == 'apexcharts_grouped_bar_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_stacked_bar_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_100_stacked_bar_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_stacked_column_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_100_stacked_column_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_column_chart') {
+                                if($('#line-background-image').val() == '') $('div.chart-series-image').show();
+                                if (constructedChartData.chart_type !== 'apexcharts_column_chart') $('div.chart-show-yaxis').hide();
+                            } else if ( constructedChartData.chart_type == 'apexcharts_straight_line_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_spline_chart' ||
+                                        constructedChartData.chart_type == 'apexcharts_stepline_chart') {
+                                $('div.apex-series-type-container').show();
+                                for (var i in data.options.series) {
+                                    if ((data.options.series[i].type === 'bar' || data.options.series[i].type === 'area') &&
+                                        $('#line-background-image').val() == ''){
+                                        $('#series-image-' + i +'-container').show();
+                                    }
+                                }
+                            }
                         } else {
                             for (var i in data.options.series) {
                                 if (data.options.series[i].yAxis) {
@@ -537,8 +759,7 @@ var wdtChartColumnsData = {};
                                     $('#show-yaxis-' + i).prop('checked', '');
                                 }
                             }
-                            wdtChart.render();
-
+                            if (constructedChartData.engine !== 'apexcharts') wdtChart.render();
                         }
 
                         var eTop = $('.chart-preview-container').offset().top;
@@ -568,11 +789,17 @@ var wdtChartColumnsData = {};
                         ).on('change', function (e, ui) {
                             e.stopImmediatePropagation()
                             e.preventDefault()
+
+                            if ($('input.background-color').val() != '' && constructedChartData.engine === 'apexcharts') {
+                                $('#plot-background-image-container').hide();
+                            } else if (constructedChartData.engine === 'apexcharts') {
+                                $('#plot-background-image-container').show();
+                            }
                             renderChart(false);
                         });
 
                         // Render chart on changing chart options
-                        $('div.step4 input:not(#group-chart), div.step4 select')
+                        $('div.step4 input:not(.doNotTriggerChange), div.step4 select')
                             .on('change', function () {
                                 renderChart(false);
                             });
@@ -581,6 +808,89 @@ var wdtChartColumnsData = {};
                             .on('change', function () {
                                 renderChart(true);
                             });
+
+                        $('input#enable-dropshadow')
+                            .on('change', function () {
+                                if($('#enable-dropshadow').is(':checked')) {
+                                    $('div.dropshadow').show();
+                                } else {
+                                    $('div.dropshadow').hide();
+                                }
+                            });
+
+                        $('input#monochrome')
+                            .on('change', function () {
+                                if($('#monochrome').is(':checked')) {
+                                    $('div#monochrome-color-container').show();
+                                    $('#enable-color-palette').prop('checked', '');
+                                    $('div#color-palette-row').hide();
+                                    $('div#color-palette-container').hide();
+                                    $('div#enable-color-palette').attr('disabled', true);
+                                } else {
+                                    $('div#monochrome-color-container').hide();
+                                    $('div#color-palette-row').show();
+                                    $('div#enable-color-palette').removeAttr('disabled');
+                                }
+                            });
+
+                        $('input#enable-color-palette')
+                            .on('change', function () {
+                                if($('#enable-color-palette').is(':checked')) {
+                                    $('div#enable-monochrome').hide();
+                                    $('#monochrome-color-container').prop('checked','');
+                                    $('div#monochrome-color-container').hide();
+                                    $('div#color-palette-container').show();
+                                    $('div#enable-monochrome').attr('disabled', true);
+                                } else {
+                                    $('div#enable-monochrome').show();
+                                    $('div#color-palette-container').hide();
+                                    $('div#enable-monochrome').removeAttr('disabled');
+                                }
+                            });
+
+                        $('input#show-grid')
+                            .on('change', function () {
+                                if($('#show-grid').is(':checked')) {
+                                    $('div.grid-style').show();
+                                } else {
+                                    $('div.grid-style').hide();
+                                }
+                            });
+
+                        var backgroundImageInput = $('#line-background-image');
+                        backgroundImageInput.change( function () {
+                            if (backgroundImageInput.val() == '') {
+                                $('#wdt-line-image-clear-button').html('<span class="wpdt-icon-image"></span>');
+                                $('.chart-series-image').show();
+                            } else {
+                                $('#wdt-line-image-clear-button').html("Clear");
+                                $('.chart-series-image').hide();
+                            }
+                            renderChart(false);
+                        });
+                        $('#wdt-line-image-clear-button').on('click', function (e) {
+                            handleMediaUploader(e, jQuery(this).attr("id"), data);
+                            renderChart(false);
+                        });
+
+                        var plotImageInput =  $('#plot-background-image');
+                        var isApexEngine = constructedChartData.engine === 'apexcharts';
+                        plotImageInput.on('change', function () {
+                            if (plotImageInput.val() == '') {
+                                $('#wdt-plot-image-clear-button').html('<span class="wpdt-icon-image"></span>');
+                                if (isApexEngine)
+                                    $('#background-color-container').show();
+                            } else {
+                                $('#wdt-plot-image-clear-button').html("Clear");
+                                if (isApexEngine)
+                                    $('#background-color-container').hide();
+                            }
+                            renderChart(false);
+                        });
+                        $('#wdt-plot-image-clear-button').on('click', function (e) {
+                            handleMediaUploader(e, jQuery(this).attr("id"), data);
+                            renderChart(false);
+                        });
 
                         nextStepButton.show().addClass('wdt-save-chart').html('<i class="wpdt-icon-save"></i>' + wpdatatablesEditStrings.saveChart)
                         $('.wdt-preload-layer').animateFadeOut();
@@ -662,8 +972,20 @@ var wdtChartColumnsData = {};
                         wdtChart.setContainer(container);
                         wdtChart.setCanvas(canvas);
                         wdtChart.setContainerOptions(data.configurations);
+                    } else if (constructedChartData.engine == 'apexcharts') {
+                        wdtChart = new wpDataTablesApexChart();
+                        wdtChart.setOptions(data.options);
+                        wdtChart.setMultipleYaxis(data);
+                        wdtChart.setType(data.type);
+                        wdtChart.setWidth(data.width);
+                        wdtChart.setHeight(data.height);
+                        wdtChart.setStartEndAngles(data.options);
+                        wdtChart.setBackground(data.options.chart.background);
+                        wdtChart.setColumnIndexes(data.column_indexes);
+                        wdtChart.setContainer('#apex-chart-container');
                     }
                     wdtChart.render();
+
                     $('.wdt-preload-layer').animateFadeOut();
 
                 }
@@ -673,7 +995,11 @@ var wdtChartColumnsData = {};
                 wdtChart.chart.destroy();
             }
             wdtChart.setChartConfig(constructedChartData);
-            wdtChart.render();
+            if (constructedChartData.engine == 'apexcharts') {
+                wdtChart.render(true);
+            } else {
+                wdtChart.render();
+            }
         }
 
     }
@@ -685,6 +1011,10 @@ var wdtChartColumnsData = {};
         constructedChartData.responsive_width = $('#chart-responsive-width').is(':checked') ? 1 : 0;
         constructedChartData.height = parseInt($('#chart-height').val());
         constructedChartData.group_chart = $('#group-chart').is(':checked') ? 1 : 0;
+        constructedChartData.enable_animation = $('#enable-animation').is(':checked') ? 1 : 0;
+        constructedChartData.show_data_labels = $('#data-labels').is(':checked') ? 1 : 0;
+        constructedChartData.start_angle =parseInt($('#start-angle').val());
+        constructedChartData.end_angle =parseInt($('#end-angle').val());
         constructedChartData.background_color = $('input.background-color').val();
         constructedChartData.border_width = parseInt($('#border-width').val() ? $('#border-width').val() : 0);
         constructedChartData.border_color = $('input.border_color').val();
@@ -694,6 +1024,7 @@ var wdtChartColumnsData = {};
         constructedChartData.pan_key = $('#pan-key').val();
         constructedChartData.plot_background_color = $('input.plot-background-color').val();
         constructedChartData.plot_background_image = $('#plot-background-image').val();
+        constructedChartData.line_background_image = $('#line-background-image').val();
         constructedChartData.plot_border_width = $('#plot-border-width').val();
         constructedChartData.plot_border_color = $('input.plot-border-color').val();
         constructedChartData.font_size = $('#font-size').val();
@@ -701,6 +1032,17 @@ var wdtChartColumnsData = {};
         constructedChartData.font_style = $('#font-style').val();
         constructedChartData.font_color = $('input.font-color').val();
         constructedChartData.three_d = $('#three-d').is(':checked') ? 1 : 0;
+        constructedChartData.monochrome = $('#monochrome').is(':checked') ? 1 : 0;
+        constructedChartData.monochrome_color = $('input#monochrome-color').val();
+        constructedChartData.enable_color_palette = $('#enable-color-palette').is(':checked') ? 1 : 0;
+        constructedChartData.color_palette = $('#color-palette').val();
+        constructedChartData.enable_dropshadow = $('#enable-dropshadow').is(':checked') ? 1 : 0;
+        constructedChartData.dropshadow_blur = parseInt($('#dropshadow-blur').val());
+        constructedChartData.dropshadow_opacity = parseInt($('#dropshadow-opacity').val()) / 100;
+        constructedChartData.dropshadow_color = $('input#dropshadow-color').val();
+        constructedChartData.dropshadow_top = parseInt($('#dropshadow-top').val());
+        constructedChartData.dropshadow_left = parseInt($('#dropshadow-left').val());
+        constructedChartData.text_color = $('input#chart-text-color').val();
         // Series
         if (typeof constructedChartData.series_data == 'undefined') {
             constructedChartData.series_data = {};
@@ -719,6 +1061,34 @@ var wdtChartColumnsData = {};
                     color: $(this).find('input.series-color').val()
                 }
             });
+        } else if (constructedChartData.engine === 'apexcharts') {
+            $('div.chart-series-block').each(function (e) {
+
+                if (constructedChartData.chart_type == 'apexcharts_spline_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_straight_line_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_stepline_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_basic_line_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_basic_area_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_spline_area_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_stepline_area_chart' ||
+                    constructedChartData.chart_type == 'apexcharts_column_chart') {
+                    constructedChartData.series_data[$(this).data('orig_header')] = {
+                        label: $(this).find('input.series-label').val(),
+                        color: $(this).find('input.series-color').val(),
+                        type: $(this).find('select.apex-series-type').val() ? $(this).find('select.apex-series-type').val() : getApexChartType(constructedChartData.chart_type),
+                        chart_image: $(this).find('input.series-image').val(),
+                        yAxis: $('input#show-yaxis-' + e).is(':checked') ? 1 : 0
+                    }
+
+                } else {
+                    constructedChartData.series_data[$(this).data('orig_header')] = {
+                        label: $(this).find('input.series-label').val(),
+                        color: $(this).find('input.series-color').val(),
+                        chart_image: $(this).find('input.series-image').val(),
+                        yAxis: $('input#show-yaxis-' + e).is(':checked') ? 1 : 0
+                    }
+                }
+            });
         } else {
             $('div.chart-series-block').each(function (e) {
                 constructedChartData.series_data[$(this).data('orig_header')] = {
@@ -733,6 +1103,10 @@ var wdtChartColumnsData = {};
         constructedChartData.curve_type = $('#curve-type').is(':checked') ? 1 : 0;
         // Axes
         constructedChartData.show_grid = $('#show-grid').is(':checked') ? 1 : 0;
+        constructedChartData.grid_color = $('input#grid-color').val();
+        constructedChartData.grid_stroke = $('#grid-stroke').val();
+        constructedChartData.grid_position = $('#grid-position').val();
+        constructedChartData.grid_axes = $('#grid-axes').val();
         constructedChartData.highcharts_line_dash_style = $('#highcharts-line-dash-style').val();
         constructedChartData.horizontal_axis_label = $('#horizontal-axis-label').val();
         constructedChartData.horizontal_axis_crosshair = $('#horizontal-axis-crosshair').is(':checked') ? 1 : 0;
@@ -740,9 +1114,13 @@ var wdtChartColumnsData = {};
         constructedChartData.vertical_axis_label = $('#vertical-axis-label').val();
         constructedChartData.vertical_axis_crosshair = $('#vertical-axis-crosshair').is(':checked') ? 1 : 0;
         constructedChartData.vertical_axis_direction = $('#vertical-axis-direction').val();
+        constructedChartData.marker_size = $('#marker-size').val();
+        constructedChartData.stroke_width = $('#stroke-width').val();
         constructedChartData.vertical_axis_min = $('#vertical-axis-min').val();
         constructedChartData.vertical_axis_max = $('#vertical-axis-max').val();
+        constructedChartData.tick_amount = $('#tick-amount').val();
         constructedChartData.inverted = $('#inverted').is(':checked') ? 1 : 0;
+        constructedChartData.reversed = $('#reversed').is(':checked') ? 1 : 0;
         // Title
         constructedChartData.show_title = $('#show-chart-title').is(':checked') ? 1 : 0;
         constructedChartData.title_floating = $('#title-floating').is(':checked') ? 1 : 0;
@@ -763,6 +1141,8 @@ var wdtChartColumnsData = {};
         constructedChartData.tooltip_shared = $('#tooltip-shared').is(':checked') ? 1 : 0;
         constructedChartData.tooltip_value_prefix = $('#tooltip-value-prefix').val();
         constructedChartData.tooltip_value_suffix = $('#tooltip-value-suffix').val();
+        constructedChartData.follow_cursor = $('#follow-cursor').is(':checked') ? 1 : 0;
+        constructedChartData.fill_series_color = $('#fill-series-color').is(':checked') ? 1 : 0;
         // Legend
         constructedChartData.show_legend = $('#show-legend').is(':checked') ? 1 : 0;
         constructedChartData.legend_position = $('#legend_position').val();
@@ -789,6 +1169,11 @@ var wdtChartColumnsData = {};
         constructedChartData.credits = $('#credits').is(':checked') ? 1 : 0;
         constructedChartData.credits_href = $('#credits-href').val();
         constructedChartData.credits_text = $('#credits-text').val();
+
+        //Toolbar
+        constructedChartData.show_toolbar = $('#show-toolbar').is(':checked') ? 1 : 0;
+        constructedChartData.toolbar_buttons = $('#toolbar-buttons').val();
+        constructedChartData.apex_exporting_file_name = $('#apex-exporting-file-name').val();
     }
 
     /**
@@ -864,6 +1249,8 @@ var wdtChartColumnsData = {};
                 $('div.highcharts-charts-type').show();
             } else if ($(this).val() == 'chartjs') {
                 $('div.chartjs-charts-type').show();
+            } else if ($(this).val() == 'apexcharts') {
+                $('div.apexcharts-charts-type').show();
             }
         }
     });
@@ -1288,6 +1675,9 @@ var wdtChartColumnsData = {};
             if (typeof editing_chart_data.render_data.options.width !== 'undefined') {
                 $('#chart-width').val(editing_chart_data.render_data.options.width);
                 $('#chart-responsive-width').prop('checked', '');
+                $('#btn-plus-chart-width').prop('disabled', false);
+                $('#btn-minus-chart-width').prop('disabled', false);
+                $('#chart-width').prop('readonly', '');
             } else {
                 $('#chart-responsive-width').prop('checked', 'checked');
                 $('#chart-width').val(0);
@@ -1532,6 +1922,8 @@ var wdtChartColumnsData = {};
                         $('input.border_color').colorpicker('setValue', editing_chart_data.highcharts_render_data.options.chart.borderColor);
                     }
                     $('#border-radius').val(editing_chart_data.highcharts_render_data.options.chart.borderRadius);
+                    $("#zoom-type").append('<option value="y">Y</option>');
+                    $("#zoom-type").append('<option value="xy">XY</option>');
                     $('#zoom-type').val(editing_chart_data.highcharts_render_data.options.chart.zoomType);
                     if (editing_chart_data.highcharts_render_data.options.chart.panning) {
                         $('#panning').prop('checked', 'checked');
@@ -1543,6 +1935,12 @@ var wdtChartColumnsData = {};
                         $('#plot-background-color-container').colorpicker('setValue', editing_chart_data.highcharts_render_data.options.chart.plotBackgroundColor);
                     }
                     $('#plot-background-image').val(editing_chart_data.highcharts_render_data.options.chart.plotBackgroundImage);
+                    if (editing_chart_data.highcharts_render_data.options.chart.plotBackgroundImage) {
+                        $('#wdt-plot-image-clear-button').html("Clear");
+                    } else {
+                        $('#wdt-line-image-clear-button').html('<span class="wpdt-icon-image"></span>');
+                    }
+
                     $('#plot-border-width').val(editing_chart_data.highcharts_render_data.options.chart.plotBorderWidth);
                     if (editing_chart_data.highcharts_render_data.options.chart.plotBorderColor) {
                         $('#plot-border-color-container').colorpicker('setValue', editing_chart_data.highcharts_render_data.options.chart.plotBorderColor);
@@ -1728,6 +2126,231 @@ var wdtChartColumnsData = {};
                 }
                 $('#legend-position-cjs').val(editing_chart_data.chartjs_render_data.options.options.legend.position);
 
+            } else if (editing_chart_data.engine == 'apexcharts') {
+                if (editing_chart_data.apexcharts_render_data == null) {
+                    // Chart
+                    $('#enable-animation').prop('checked', '');
+                    $('#data-labels').prop('checked', '');
+                    $('input.background-color').val('');
+                    $('#zoom-type').val('none');
+                    $('input.plot-background-color').val('');
+                    $('#plot-background-image').val('');
+                    $('input#chart-text-color-container').val('');
+                    $('#line-background-image').val('');
+
+                    // Axes
+                    $('#horizontal-axis-crosshair').prop('checked', '');
+                    $('#vertical-axis-crosshair').prop('checked', '');
+                    $('#vertical-axis-min').val('');
+                    $('#vertical-axis-max').val('');
+                    $('#tick-amount').val('');
+                    $('#inverted').prop('checked', '');
+
+                    // Title
+                    $('#title-floating').prop('checked', '');
+                    $('#title-align').val('center');
+                    $('#subtitle').val('');
+                    $('#subtitle-align').val('center');
+
+                    // Tooltip
+                    $('#tooltip-enabled').prop('checked', 'checked');
+                    $('#follow-cursor').prop('checked', '');
+                    $('#fill-series-color').prop('checked', '');
+
+                    // Legend
+                    $('#show-legend').prop('checked', 'checked');
+                    $('input.legend_background_color').val('');
+                    $('#legend_title').val('');
+                    $('#legend_layout').val('horizontal');
+                    $('#legend_align').val('center');
+                    $('#legend_vertical_align').val('bottom');
+                    $('#legend_border_width').val(0);
+                    $('input.legend_border_color').val('');
+                    $('#legend_border_radius').val(0);
+
+                    //Toolbar
+                    $('#show-toolbar').prop('checked', '');
+
+                    $('#apex-exporting-file-name').val('');
+
+                } else {
+                    // Chart
+                    if (editing_chart_data.apexcharts_render_data.options.chart.animations.enabled) {
+                        $('#enable-animation').prop('checked', 'checked');
+                    } else {
+                        $('#enable-animation').prop('checked', '');
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.dataLabels.enabled) {
+                        $('#data-labels').prop('checked', 'checked');
+                    } else {
+                        $('#data-labels').prop('checked', '');
+                    }
+                    $('#zoom-type').val(editing_chart_data.apexcharts_render_data.options.chart.zoom.type);
+                    $('#start-angle').val(editing_chart_data.apexcharts_render_data.options.plotOptions.radialBar.startAngle);
+                    $('#end-angle').val(editing_chart_data.apexcharts_render_data.options.plotOptions.radialBar.endAngle);
+                    if (['apexcharts_pie_with_gradient_chart', 'apexcharts_pie_chart', 'apexcharts_donut_with_gradient_chart', 'apexcharts_donut_chart'].includes(editing_chart_data.apexcharts_render_data.type)) {
+                        if (editing_chart_data.apexcharts_render_data.options.theme.monochrome.enabled) {
+                            $('#monochrome').prop('checked', 'checked');
+                            $('#monochrome-color-container').show();
+                            $('#enable-monochrome').show();
+                            $('#monochrome-color').colorpicker('setValue', editing_chart_data.apexcharts_render_data.options.theme.monochrome.color);
+                            $('#color-palette-row').removeClass('apexcharts-pie apexcharts');
+                            $('#color-palette-row').hide();
+                        } else {
+                            $('#monochrome').prop('checked', '');
+                        }
+                        if (!editing_chart_data.apexcharts_render_data.options.theme.monochrome.enabled && editing_chart_data.apexcharts_render_data.options.theme.palette) {
+                            $('#enable-color-palette').prop('checked', 'checked');
+                            $('#color-palette-row').show();
+                            $('#color-palette-container').show();
+                            $('#color-palette').val(editing_chart_data.apexcharts_render_data.options.theme.palette).change();
+                            $('#enable-monochrome').removeClass('apexcharts-pie apexcharts');
+                            $('#enable-monochrome').hide();
+                        } else {
+                            $('#enable-color-palette').prop('checked', '');
+                        }
+                    } else if (!['apexcharts_radialbar_chart', 'apexcharts_radialbar_gauge_chart', 'apexcharts_radar_chart'].includes(editing_chart_data.apexcharts_render_data.type)) {
+                        //Axes
+                        if (editing_chart_data.apexcharts_render_data.options.grid.borderColor) {
+                            $('#grid-color-container').colorpicker('setValue', editing_chart_data.apexcharts_render_data.options.grid.borderColor);
+                        }
+                        $('#grid-stroke').val(editing_chart_data.apexcharts_render_data.options.grid.strokeDashArray);
+                        $('#grid-position').val(editing_chart_data.apexcharts_render_data.options.grid.position);
+                        if (editing_chart_data.apexcharts_render_data.options.grid.xaxis.lines.show) {
+                            $("#grid-axes  option[value='xaxis']").attr('selected', 'selected');
+                        } else {
+                            $("#grid-axes  option[value='xaxis']").removeAttr('selected');
+                        }
+                        if (editing_chart_data.apexcharts_render_data.options.grid.yaxis.lines.show) {
+                            $("#grid-axes  option[value='yaxis']").attr('selected', 'selected');
+                        } else {
+                            $("#grid-axes  option[value='yaxis']").removeAttr('selected');
+                        }
+                        if (editing_chart_data.apexcharts_render_data.options.xaxis.crosshairs.show) {
+                            $('#horizontal-axis-crosshair').prop('checked', 'checked');
+                        } else {
+                            $('#horizontal-axis-crosshair').prop('checked', '');
+                        }
+                        $('#marker-size').val(editing_chart_data.apexcharts_render_data.options.markers.size);
+                        $('#stroke-width').val(editing_chart_data.apexcharts_render_data.options.stroke.width);
+                        if (!Array.isArray(editing_chart_data.apexcharts_render_data.options.yaxis)) {
+                            $('#vertical-axis-min').val(editing_chart_data.apexcharts_render_data.options.yaxis.min);
+                            $('#vertical-axis-max').val(editing_chart_data.apexcharts_render_data.options.yaxis.max);
+                            $('#tick-amount').val(editing_chart_data.apexcharts_render_data.options.yaxis.tickAmount);
+                            if (editing_chart_data.apexcharts_render_data.options.yaxis.reversed) {
+                                $('#reversed').prop('checked', 'checked');
+                            } else {
+                                $('#reversed').prop('checked', '');
+                            }
+                        } else if (editing_chart_data.apexcharts_render_data.options.yaxis[0]) {
+                            if (editing_chart_data.apexcharts_render_data.options.yaxis[0].crosshairs.show) {
+                                $('#vertical-axis-crosshair').prop('checked', 'checked');
+                            } else {
+                                $('#vertical-axis-crosshair').prop('checked', '');
+                            }
+                            $('#vertical-axis-min').val(editing_chart_data.apexcharts_render_data.options.yaxis[0].min);
+                            $('#vertical-axis-max').val(editing_chart_data.apexcharts_render_data.options.yaxis[0].max);
+                            $('#tick-amount').val(editing_chart_data.apexcharts_render_data.options.yaxis[0].tickAmount);
+                            if (editing_chart_data.apexcharts_render_data.options.yaxis[0].reversed) {
+                                $('#reversed').prop('checked', 'checked');
+                            } else {
+                                $('#reversed').prop('checked', '');
+                            }
+                        }
+                    } else if (editing_chart_data.apexcharts_render_data.type === 'apexcharts_radar_chart') {
+                        $('#marker-size').val(editing_chart_data.apexcharts_render_data.options.markers.size);
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.chart.background && isColorValid(editing_chart_data.apexcharts_render_data.options.chart.background)) {
+                        $('#background-color-container').colorpicker('setValue', editing_chart_data.apexcharts_render_data.options.chart.background);
+                        $('#plot-background-image-container').removeClass('apexcharts');
+                    } else if (editing_chart_data.apexcharts_render_data.options.chart.background) {
+                        $('#plot-background-image').val(editing_chart_data.apexcharts_render_data.options.chart.background);
+                        $('#wdt-plot-image-clear-button').html("Clear");
+                        $('#background-color-container').hide();
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.chart.foreColor) {
+                        $('#chart-text-color-container').colorpicker('setValue', editing_chart_data.apexcharts_render_data.options.chart.foreColor);
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.fill.type === 'image' && typeof editing_chart_data.apexcharts_render_data.options.fill.image.src === 'string') {
+                        $('#line-background-image').val(editing_chart_data.apexcharts_render_data.options.fill.image.src);
+                        $('#wdt-line-image-clear-button').html("Clear");
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.chart.dropShadow.enabled) {
+                        $('#enable-dropshadow').prop('checked', 'checked');
+                        $('div.dropshadow').show();
+                        $('#dropshadow-blur').val(editing_chart_data.apexcharts_render_data.options.chart.dropShadow.blur);
+                        $('#dropshadow-opacity').val(editing_chart_data.apexcharts_render_data.options.chart.dropShadow.opacity * 100);
+                        $('#dropshadow-color-container').colorpicker('setValue', editing_chart_data.apexcharts_render_data.options.chart.dropShadow.color);
+                        $('#dropshadow-top').val(editing_chart_data.apexcharts_render_data.options.chart.dropShadow.top);
+                        $('#dropshadow-left').val(editing_chart_data.apexcharts_render_data.options.chart.dropShadow.left);
+                    } else {
+                        $('#enable-dropshadow').prop('checked', '');
+                    }
+
+                    //Series
+                    for (const i in editing_chart_data.apexcharts_render_data.options.series) {
+                        if(editing_chart_data.apexcharts_render_data.options.series[i].type === 'bar' || editing_chart_data.apexcharts_render_data.options.series[i].type === 'area') {
+                            $('#series-image-' + i + '-container').show();
+
+                        } else {
+                            $('#series-image-' + i + '-container').hide();
+                        }
+                    }
+
+                    // Title
+                    if (editing_chart_data.apexcharts_render_data.options.title.floating) {
+                        $('#title-floating').prop('checked', 'checked');
+                    } else {
+                        $('#title-floating').prop('checked', '');
+                    }
+                    $('#title-align').val(editing_chart_data.apexcharts_render_data.options.title.align);
+                    $('#subtitle').val(editing_chart_data.apexcharts_render_data.options.subtitle.text);
+                    $('#subtitle-align').val(editing_chart_data.apexcharts_render_data.options.subtitle.align);
+
+                    // Tooltip
+                    if (editing_chart_data.apexcharts_render_data.options.tooltip.enabled) {
+                        $('#tooltip-enabled').prop('checked', 'checked');
+                    } else {
+                        $('#tooltip-enabled').prop('checked', '');
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.tooltip.followCursor) {
+                        $('#follow-cursor').prop('checked', 'checked');
+                    } else {
+                        $('#follow-cursor').prop('checked', '');
+                    }
+                    if (editing_chart_data.apexcharts_render_data.options.tooltip.fillSeriesColor) {
+                        $('#fill-series-color').prop('checked', 'checked');
+                    } else {
+                        $('#fill-series-color').prop('checked', '');
+                    }
+
+                    // Legend
+                    if (editing_chart_data.apexcharts_render_data.options.legend.show) {
+                        $('#show-legend').prop('checked', 'checked');
+                    } else {
+                        $('#show-legend').prop('checked', '');
+                    }
+                    $('select[name=legend-position-cjs]').val(editing_chart_data.apexcharts_render_data.options.legend.position);
+                    $('.selectpicker').selectpicker('refresh');
+
+                    // Toolbar
+                    if (editing_chart_data.apexcharts_render_data.options.chart.toolbar.show) {
+                        $('#show-toolbar').prop('checked', 'checked');
+                    } else {
+                        $('#show-toolbar').prop('checked', '');
+                    }
+                    for (const tool in editing_chart_data.apexcharts_render_data.options.chart.toolbar.tools) {
+                        if (tool !== 'customIcons') {
+                            if (editing_chart_data.apexcharts_render_data.options.chart.toolbar.tools[tool]) {
+                                $("#toolbar-buttons  option[value='" + tool + "']").attr('selected','selected');
+                            } else {
+                                $("#toolbar-buttons  option[value='" + tool + "']").removeAttr('selected');
+                            }
+                        }
+                    }
+                    $('#apex-exporting-file-name').val(editing_chart_data.apexcharts_render_data.options.chart.toolbar.export.png.filename);
+                }
+
             }
 
         }
@@ -1770,4 +2393,129 @@ function hexToRgb(hex) {
         g: parseInt(result[2], 16),
         b: parseInt(result[3], 16)
     } : null;
+}
+
+function isColorValid(color) {
+    var e = document.getElementById('divValidColor');
+    if (!e) {
+        e = document.createElement('div');
+        e.id = 'divValidColor';
+    }
+    e.style.borderColor = '';
+    e.style.borderColor = color;
+    var tmpcolor = e.style.borderColor;
+    return tmpcolor.length != 0;
+}
+
+function getApexChartType(chart_type) {
+    var apexChartType = '';
+    switch (chart_type) {
+        case 'apexcharts_spline_area_chart':
+        case 'apexcharts_stepline_area_chart':
+        case 'apexcharts_basic_area_chart':
+            apexChartType = 'area';
+            break;
+        case 'apexcharts_column_chart':
+        case 'apexcharts_grouped_bar_chart':
+        case 'apexcharts_stacked_bar_chart':
+        case 'apexcharts_100_stacked_bar_chart':
+        case 'apexcharts_stacked_column_chart':
+        case 'apexcharts_100_stacked_column_chart':
+            apexChartType = 'bar';
+            break;
+        case 'apexcharts_straight_line_chart':
+        case 'apexcharts_spline_chart':
+        case 'apexcharts_stepline_chart':
+        default:
+            apexChartType = 'line';
+            break;
+    }
+    return apexChartType;
+}
+
+function handleMediaUploader(e, id, data) {
+    jQuery(function($) {
+        var imageInput = '';
+        var key = id;
+        var clearButton = '';
+        var toggledContainer = '';
+
+        switch (id.replace(/\d+/g, '')) {
+            case 'wdt-plot-image-clear-button':
+                imageInput = $('#plot-background-image');
+                clearButton = $('#wdt-plot-image-clear-button');
+                toggledContainer = $('#background-color-container');
+                break;
+            case 'wdt-line-image-clear-button':
+                imageInput = $('#line-background-image');
+                clearButton = $('#wdt-line-image-clear-button');
+                break;
+            case 'wdt-upload-chart-image-':
+                key = parseInt(key.replace(/[^0-9]/g,''));
+                imageInput = $('#series-image-' + key);
+                clearButton = $('#wdt-upload-chart-image-' + key);
+                break;
+
+        }
+
+        if (imageInput.val() == '') {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            e.preventDefault();
+
+            var image = wp.media.frames.items = (wp.media({
+                title: 'Choose image',
+                button: {
+                    text: 'Select'
+                },
+                multiple: false,
+                library: {
+                    type: 'image'
+                }
+            })).open()
+                .on('select', function(e){
+                    var uploaded_image = image.state().get('selection').first();
+                    var image_url = uploaded_image.toJSON().url;
+                    imageInput.val(image_url).change();
+                });
+        } else {
+            imageInput.val('').change();
+            clearButton.html('<span class="wpdt-icon-image"></span>');
+            if (id.replace(/\d+/g, '') === 'wdt-upload-chart-image-') {
+                toggleBackgroundImageContainer();
+            } else if (id === 'wdt-line-image-clear-button') {
+                for (var i in data.options.series) {
+                    if (data.options.series[i].type === 'bar' || data.options.series[i].type === 'area'){
+                        $('#series-image-' + i +'-container').show();
+                    }
+                }
+            } else {
+                toggledContainer.show();
+            }
+        }
+    });
+}
+
+function toggleBackgroundImageContainer() {
+    jQuery(function($) {
+        var seriesImageLen = $('.chart-series-image :input').filter(function() {
+            return this.value !== ""
+        });
+
+        if (seriesImageLen.length > 0) {
+            $('#line-background-image-container').hide();
+        } else {
+            $('#line-background-image-container').show();
+        }
+    });
+}
+
+function switchClearButton (image, button) {
+    jQuery(function($) {
+        if (image == '') {
+            button.html('<span class="wpdt-icon-image"></span>');
+        } else {
+            button.html("Clear");
+        }
+    });
 }
