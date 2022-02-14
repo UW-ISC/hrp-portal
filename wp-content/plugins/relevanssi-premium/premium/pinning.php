@@ -53,7 +53,7 @@ function relevanssi_pinning( $hits ) {
 
 	$escaped_terms = array();
 	foreach ( array_keys( $terms ) as $term ) {
-		$escaped_terms[] = esc_sql( $term );
+		$escaped_terms[] = esc_sql( trim( $term ) );
 	}
 
 	$term_list           = array();

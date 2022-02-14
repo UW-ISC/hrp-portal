@@ -116,7 +116,7 @@
     </div>
 
     <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
-        <div class="card" data-type="google_donut_chart" data-min_columns="2" data-max_columns="0">
+        <div class="card" data-type="google_donut_chart" data-min_columns="2" data-max_columns="2">
             <div class="card-header">
                 <div class="wdt-chart-wizard-overlay"></div>
                 <img class="img-responsive" src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google_donut_chart.jpg">

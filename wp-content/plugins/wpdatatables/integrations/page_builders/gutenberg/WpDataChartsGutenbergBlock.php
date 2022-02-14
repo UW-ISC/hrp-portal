@@ -16,7 +16,7 @@ class WpDataChartsGutenbergBlock extends GutenbergBlock
 
         wp_enqueue_script(
             'wpdatacharts-gutenberg-block',
-            WDT_ROOT_URL . 'assets/js/gutenberg/wpdatacharts-gutenberg-block.js',
+            WDT_ROOT_URL . 'integrations/page_builders/gutenberg/js/wpdatacharts-gutenberg-block.js',
             array( 'wp-blocks', 'wp-components', 'wp-element', 'wp-editor')
         );
 
@@ -26,7 +26,7 @@ class WpDataChartsGutenbergBlock extends GutenbergBlock
             array(
                 'title' => 'wpDataCharts',
                 'description' => __('Choose the chart that you’ve just created in the dropdown below, and the shortcode will be inserted automatically.','wpdatatables'),
-                'data' => self::wdtGetAllChartsForGutenberg()
+                'data' => WDTConfigController::getAllTablesAndChartsForPageBuilders('gutenberg', 'charts')
             )
         );
 
@@ -35,26 +35,5 @@ class WpDataChartsGutenbergBlock extends GutenbergBlock
             array('editor_script' => 'wpdatacharts-gutenberg-block')
         );
     }
-
-    public static function wdtGetAllChartsForGutenberg() {
-
-        global $wpdb;
-        $returnCharts = [];
-
-        $query = "SELECT id, title FROM {$wpdb->prefix}wpdatacharts ORDER BY id";
-
-        $allCharts = $wpdb->get_results($query, ARRAY_A);
-
-        foreach ($allCharts as $chart) {
-            $returnCharts[] = [
-                'name' => $chart['title'],
-                'id' => $chart['id'],
-            ];
-
-        }
-
-        return $returnCharts;
-    }
-
 
 }

@@ -851,7 +851,9 @@ function relevanssi_user_searches_clicks( string $from, string $to, int $total )
 
 		$list[] = '<li><a href="' . esc_url( $insights_url ) . '">'
 			. esc_html( $result->query ) . '</a> ('
-			. intval( $result->posts ) . ' posts)</li>';
+			// Translators: %1$s is the number of posts.
+			. sprintf( __( '%1$s posts', 'relevanssi' ), intval( $result->posts ) )
+			. ')</li>';
 	}
 	if ( count( $list ) > 0 ) {
 		?>

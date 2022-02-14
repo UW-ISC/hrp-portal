@@ -218,7 +218,6 @@
     border-spacing: 0;
 }
 
-/*! Source: https://github.com/h5bp/html5-boilerplate/blob/master/src/css/main.css */
 
 @media print {
     *,
@@ -3209,10 +3208,6 @@
     .wpdt-c .input-group-lg input[type="month"] {
         line-height: 40px;
     }
-}
-
-.wpdt-c .form-group {
-    margin-bottom: 15px;
 }
 
 .wpdt-c .radio, .wpdt-c .checkbox {
@@ -7559,24 +7554,12 @@ select.input-group-lg > .input-group-btn > .btn {
     visibility: hidden;
 }
 
-.wpdt-c .text-hide {
-    font: 0/0 a;
-    color: transparent;
-    text-shadow: none;
-    background-color: transparent;
-    border: 0;
-}
-
 .wpdt-c .hidden {
     display: none !important;
 }
 
 .wpdt-c .affix {
     position: fixed;
-}
-
-@-ms-viewport {
-    width: device-width;
 }
 
 .wpdt-c .visible-xs, .wpdt-c .visible-sm, .wpdt-c .visible-md, .wpdt-c .visible-lg {
@@ -9149,10 +9132,6 @@ select.input-group-lg > .input-group-btn > .btn {
 }
 
 :-ms-fullscreen [data-ma-action="fullscreen"] {
-    display: none;
-}
-
-:full-screen [data-ma-action="fullscreen"] {
     display: none;
 }
 
@@ -13564,7 +13543,10 @@ input:focus {
 #series-settings-container div.chart-series-block .chart-series-label,
 #series-settings-container div.chart-series-block .chart-series-color,
 #series-settings-container div.chart-series-block .chart-series-type,
-#series-settings-container div.chart-series-block .chart-show-yaxis {
+#series-settings-container div.chart-series-block .apexchart-series-type,
+#series-settings-container div.chart-series-block .apex-series-type-container,
+#series-settings-container div.chart-series-block .chart-show-yaxis,
+#series-settings-container div.chart-series-block .chart-series-image {
     padding: 0 20px !important;
 }
 
@@ -13724,4 +13706,13 @@ input:focus {
     padding: 5px 0 0 0;
     color: #FFFFFF;
     font-size: 12px;
+}
+
+.media-frame-router,
+.media-frame-content {
+    margin-top: 20px;
+}
+
+#media-attachment-date-filters {
+    margin-left: 180px;
 }

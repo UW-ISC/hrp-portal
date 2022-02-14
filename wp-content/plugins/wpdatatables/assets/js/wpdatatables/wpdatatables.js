@@ -742,22 +742,22 @@ var singleClick = false;
                 }
             });
 
-          /**
-           * Enable auto-refresh if defined
-           */
-               if (tableDescription.serverSide) {
-                   if (parseInt(tableDescription.autoRefreshInterval) > 0) {
-                        autoRefresh = setInterval(function () {
-                        wpDataTables[tableDescription.tableId].fnDraw(false)
-                    },
-                parseInt(tableDescription.autoRefreshInterval) * 1000
+            /**
+             * Enable auto-refresh if defined
+             */
+            if (tableDescription.serverSide) {
+                if (parseInt(tableDescription.autoRefreshInterval) > 0) {
+                    autoRefresh = setInterval(function () {
+                            wpDataTables[tableDescription.tableId].fnDraw(false)
+                        },
+                        parseInt(tableDescription.autoRefreshInterval) * 1000
                     );
-                    } else {
-                        if (typeof autoRefresh !== "undefined") {
+                } else {
+                    if (typeof autoRefresh !== "undefined") {
                         clearInterval(autoRefresh);
-                        }
                     }
-                 }
+                }
+            }
             //[<--/ Full version -->]//
 
             /**
@@ -1587,7 +1587,7 @@ var singleClick = false;
             if(tableDescription.masterDetail !== undefined && tableDescription.masterDetail){
                 for (var i in wpDataTablesHooks.onRenderDetails) {
                     if (!isNaN(i))
-                    wpDataTablesHooks.onRenderDetails[i](tableDescription);
+                        wpDataTablesHooks.onRenderDetails[i](tableDescription);
                 }
             }
 
@@ -1625,6 +1625,8 @@ var singleClick = false;
  * @param setVal
  */
 function wdtApplyCellAction($cell, action, setVal) {
+    let index = $cell.index() + 1;
+    let classArr = $cell.attr("class").split(/\s+/);
     switch (action) {
         case 'setCellColor':
             $cell.attr('style', 'background-color: ' + setVal + ' !important');
@@ -1655,17 +1657,27 @@ function wdtApplyCellAction($cell, action, setVal) {
             $cell.closest('tr').addClass(setVal);
             break;
         case 'addColumnClass':
-            var index = $cell.index() + 1;
             $cell
                 .closest('table.wpDataTable')
+                .find('thead th:nth-child(' + index + ')')
+                .addClass(setVal)
+                .closest('table.wpDataTable')
                 .find('tbody td:nth-child(' + index + ')')
+                .addClass(setVal)
+                .closest('table.wpDataTable')
+                .find('tfoot td:nth-child(' + index + ')')
                 .addClass(setVal);
             break;
         case 'setColumnColor':
-            var index = $cell.index() + 1;
             $cell
                 .closest('table.wpDataTable')
+                .find('thead th:nth-child(' + index + ')')
+                .attr('style', 'background-color: ' + setVal + ' !important')
+                .closest('table.wpDataTable')
                 .find('tbody td:nth-child(' + index + ')')
+                .attr('style', 'background-color: ' + setVal + ' !important')
+                .closest('table.wpDataTable')
+                .find('tfoot td:nth-child(' + index + ')')
                 .attr('style', 'background-color: ' + setVal + ' !important');
             break;
     }
@@ -1720,7 +1732,8 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
     var ruleMatched = false;
     if ((params.columnType == 'int') || (params.columnType == 'float')) {
         // Process numeric comparison
-        cellVal = parseFloat(wdtUnformatNumber(getPurifiedValue(element, responsive), params.thousandsSeparator, params.decimalSeparator, true))
+        let cleanValue = wdtUnformatNumber(getPurifiedValue(element, responsive), params.thousandsSeparator, params.decimalSeparator, true)
+        cellVal = cleanValue == '' ? null : parseFloat(cleanValue)
         ruleVal = conditionalFormattingRules.cellVal;
     } else if (params.columnType == 'date') {
         cellVal = moment(getPurifiedValue(element, responsive), params.momentDateFormat).toDate();

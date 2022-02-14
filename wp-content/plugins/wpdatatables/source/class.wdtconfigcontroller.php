@@ -1259,4 +1259,73 @@ class WDTConfigController {
         do_action('wpdatatables_after_save_row');
     }
 
+    /**
+     * Helper function for getting all tables and charts from the database for page builders
+     *
+     * @param $builder
+     * @param $type
+     * @return array
+     */
+    public static function getAllTablesAndChartsForPageBuilders($builder, $type)
+    {
+        $selectedType = substr($type, 0, -1);
+
+        global $wpdb;
+        $returnData = [];
+
+        $query = "SELECT id, title FROM {$wpdb->prefix}wpdata{$type} ORDER BY id";
+
+        $allItems = $wpdb->get_results($query, ARRAY_A);
+
+        if ($builder === 'avada' || $builder === 'elementor' || $builder === 'divi') {
+            $returnData[0] = esc_attr__( 'Select a ' . $selectedType, 'wpdatatables' );
+        } else if ($builder === 'bakery') {
+            $returnData[__( 'Select a ' . $selectedType, 'wpdatatables' )] = '';
+        }
+
+        if ($allItems != null){
+            foreach ($allItems as $item) {
+                switch ($builder) {
+                    case 'gutenberg':
+                        $returnData[] = [
+                            'name' => $item['title'],
+                            'id' => $item['id'],
+                        ];
+                        break;
+                    case 'avada':
+                    case 'elementor':
+                    case 'divi':
+                        $returnData[$item['id']] = $item['title']  . ' (id: ' . $item['id'] . ')';
+                        break;
+                    case 'bakery':
+                        $returnData[$item['title']] = $item['id'];
+                        break;
+                }
+            }
+        }
+        return $returnData;
+    }
+
+    public static function wdt_create_chart_notice() {
+
+        return 'Please create a wpDataChart first. You can check out how on this <a target="_blank" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.';
+
+    }
+
+    public static function wdt_select_chart_notice() {
+
+        return 'Please select a wpDataChart.';
+
+    }
+
+    public static function wdt_create_table_notice() {
+
+        return 'Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
+    }
+
+    public static function wdt_select_table_notice() {
+
+        return 'Please select a wpDataTable.';
+    }
+
 }

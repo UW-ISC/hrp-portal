@@ -249,7 +249,7 @@
                 )
             ]
         },
-
+        example: () => {},
         save: function (props) {
             return (
                 el('div', {},

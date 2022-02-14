@@ -5,6 +5,7 @@
             render_data: <?php echo json_encode($chartObj->getRenderData()); ?>,
             highcharts_render_data: <?php echo json_encode($chartObj->getHighchartsRenderData()); ?>,
             chartjs_render_data: <?php echo json_encode($chartObj->getChartJSRenderData()); ?>,
+            apexcharts_render_data: <?php echo json_encode($chartObj->getApexchartsRenderData()); ?>,
             engine: "<?php echo $chartObj->getEngine();?>",
             type: "<?php echo $chartObj->getType(); ?>",
             selected_columns: <?php echo json_encode($chartObj->getSelectedColumns()) ?>,
@@ -166,7 +167,7 @@
                     </div>
                 </div>
             </div>
-            <div class="chart-series-type" id="chart-series-type">
+            <div class="chart-series-type google highcharts chartjs" id="chart-series-type">
                  <h4 class="c-title-color m-b-4">
                     <?php _e('Type', 'wpdatatables'); ?>
                 </h4>
@@ -184,6 +185,40 @@
                                   </select>
                               </div>
                          </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
+                <h4 class="c-title-color m-b-4">
+                    <?php _e('Type', 'wpdatatables'); ?>
+                </h4>
+                <div class="cp-container">
+                    <div class="form-group">
+                         <div class="fg-line">
+                              <div class="select">
+                                  <select class="selectpicker apex-series-type" name="apex-series-type" id="apex-series-type-{{:#index}}">
+                                      <option selected="selected" value=""></option>
+                                      <option value="line">Line</option>
+                                      <option value="bar">Column</option>
+                                      <option value="area">Area</option>
+                                  </select>
+                              </div>
+                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="apexcharts chart-series-image doNotTriggerChange" id="series-image-{{:#index}}-container">
+                <h4 class="c-title-color m-b-4">
+                    <?php _e('Chart line/area image', 'wpdatatables'); ?>
+                </h4>
+                <div class="form-group">
+                    <div class="fg-line">
+                        <div class="row">
+                            <div class="col-sm-12" style="display: flex">
+                                <input type="text" name="font-name" id="series-image-{{:#index}}" value="" class="form-control input-sm series-image" placeHolder="Upload an image or paste URL" />
+                                <button id="wdt-upload-chart-image-{{:#index}}" class="wdt-series-image-button"><span class="wpdt-icon-image"></span></button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 5.8.2
-Stable tag: 2.16.5
+Tested up to: 5.9
+Stable tag: 2.16.8
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -49,14 +49,8 @@ Relevanssi replaces the standard WordPress search with a better search engine, w
 
 Relevanssi is available in two versions, regular and Premium. Regular Relevanssi is and will remain free to download and use. Relevanssi Premium comes with a cost, but will get all the new features. Standard Relevanssi will be updated to fix bugs, but new features will mostly appear in Premium. Also, support for standard Relevanssi depends very much on my mood and available time. Premium pricing includes support.
 
-= Relevanssi in Facebook =
-You can find [Relevanssi in Facebook](https://www.facebook.com/relevanssi). Become a fan to follow the development of the plugin, I'll post updates on bugs, new features and new versions to the Facebook page.
-
 = Other search plugins =
 Relevanssi owes a lot to [wpSearch](https://wordpress.org/extend/plugins/wpsearch/) by Kenny Katzgrau. Relevanssi was built to replace wpSearch, when it started to fail.
-
-Search Unleashed is a popular search plugin, but it hasn't been updated since 2010. Relevanssi is in active development and does what Search Unleashed does.
-
 
 
 == Installation ==
@@ -262,6 +256,17 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.16.8 =
+* One trailing comma caused Relevanssi to not work with PHP 7.2 or earlier. That is fixed, and Relevanssi is now again compatible with PHP 7.
+
+= 2.16.7 =
+* Minor fix: The `relevanssi_index_taxonomies_args` filter hook should've been removed from use long time ago, but it was still in use in some cases, and thus `relevanssi_hide_empty_terms` didn't always work, depending on how the terms were indexed. Now the filter use is consistent and `relevanssi_hide_empty_terms` is always used.
+* User interface: The synonym settings page now alerts if the synonyms aren't active because of the AND search.
+
+= 2.16.6 =
+* Minor fix: The translations would show up as requiring update, even after the update. This is now fixed.
+* Minor fix: Pinning didn't work with numeric keywords.
+
 = 2.16.5 =
 * Security fix: Extra hardening for AJAX requests. Some AJAX actions in Relevanssi could leak information to site subscribers who knew what to look for.
 
@@ -454,6 +459,15 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: The search results log export did not do anything useful when no data was found. Now the export provides a message "No search keywords logged". Thanks to Jan Willem Oostendorp.
 
 == Upgrade notice ==
+= 2.16.8 =
+* Restores PHP 7 compatibility.
+
+= 2.16.7 =
+* Small user interface fixes.
+
+= 2.16.6 =
+* Remove translation update loop bug, fix pinning for numbers.
+
 = 2.16.5 =
 * Security fix, extra security for AJAX actions.
 
@@ -471,42 +485,3 @@ Each document database is full of useless words. All the little words that appea
 
 = 2.16.0 =
 * Click tracking, proximity sorting, improved user searches page and bug fixes.
-
-= 2.15.3.1 =
-* Fixes the Bricks compatibility.
-
-= 2.15.3 =
-* Bug fixes, small improvements here and there.
-
-= 2.15.2 =
-* Bug fixes, updates to the spam blocking.
-
-= 2.15.1 =
-* Fixes broken block editor post controls.
-
-= 2.15.0 =
-* New features, big improvements to the multisite searching.
-
-= 2.14.5 =
-* Minor bug fixes, stops admin ajax flooding issues.
-
-= 2.14.4 =
-* Fixes minor bugs, speeds up post updates a lot in some cases.
-
-= 2.14.3 =
-* Fixes post type weights and WPML indexing problems.
-
-= 2.14.2 =
-* Stops Relevanssi from crashing when saving posts with ACF fields, major performance boost.
-
-= 2.14.1 =
-* Stops Relevanssi from crashing when saving posts.
-
-= 2.14.0 =
-* Bug fixes and new features.
-
-= 2.13.1 =
-* Fixes broken user and taxonomy term search.
-
-= 2.13.0 =
-* Bug fixes and new filter hooks.
