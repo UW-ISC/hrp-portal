@@ -60,7 +60,7 @@ class MLASettings_Upload {
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG,
 			MLA_PLUGIN_URL . "js/mla-inline-edit-settings-scripts{$suffix}.js", 
-			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::CURRENT_MLA_VERSION, false );
+			array( 'wp-lists', 'suggest', 'jquery' ), MLACore::mla_script_version(), false );
 
 		wp_localize_script( MLASettings::JAVASCRIPT_INLINE_EDIT_UPLOAD_SLUG,
 			self::JAVASCRIPT_INLINE_EDIT_UPLOAD_OBJECT, $script_variables );

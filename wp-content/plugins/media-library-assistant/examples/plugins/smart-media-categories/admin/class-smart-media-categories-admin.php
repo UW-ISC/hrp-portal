@@ -643,7 +643,7 @@ if ( 'heartbeat' != $_REQUEST['action'] ) {
 
 		$args = array( 'post_parent' => $post_id, 'post_type' => 'attachment', 'post_status' => 'inherit' );
 		$children = get_children( $args );
-//error_log( __LINE__ . ' Smart_Media_Categories_Admin::action_manage_posts_custom_column array_keys( $children ) = ' . var_export( array_keys( $children ), true ), 0 );
+//error_log( __LINE__ . " Smart_Media_Categories_Admin::action_manage_posts_custom_column( {$post_id} ) array_keys( children ) = " . var_export( array_keys( $children ), true ), 0 );
 		$term_assignments = SMC_Sync_Support::get_terms( $post_id, array_keys( $children ) );
 //error_log( __LINE__ . ' Smart_Media_Categories_Admin::action_manage_posts_custom_column term_assignments = ' . var_export( $term_assignments, true ), 0 );
 		if ( $children ) {

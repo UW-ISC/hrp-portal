@@ -49,6 +49,10 @@ class MLAData_Source {
 		'base_url',
 		'base_dir',
 
+		'current_timestamp',
+		'current_datetime',
+		'current_getdate',
+
 		'absolute_path',
 		'absolute_file_name',
 		'base_file',
@@ -164,6 +168,7 @@ class MLAData_Source {
 
 		$default_arguments = array(
 			'data_source' => 'none',
+			'qualifier' => '',
 			'keep_existing' => true,
 			'format' => 'native',
 			'meta_name' => '',
@@ -387,6 +392,7 @@ class MLAData_Source {
 		}
 
 		$data_source = $data_value['data_source'];
+		$qualifier = isset( $data_value['qualifier'] ) && ( 0 < strlen( $data_value['qualifier'] ) ) ? $data_value['qualifier'] : '';
 
 		// Do this once per page load; cache attachment metadata if mapping all attachments
 		if ( NULL == $intermediate_sizes ) {
@@ -468,6 +474,7 @@ class MLAData_Source {
 					if ( empty( $placeholder['prefix'] ) ) {
 						$field_value = $data_value;
 						$field_value['data_source'] = $placeholder['value'];
+						$field_value['qualifier'] = $placeholder['qualifier'];
 						$field_value['meta_name'] = '';
 						$field_value['option'] = $placeholder['option'];
 						$field_value['format'] = $placeholder['format'];
@@ -549,6 +556,48 @@ class MLAData_Source {
 				break;
 			case 'base_dir': 
 				$result = wptexturize( str_replace( '\\', '/', $upload_dir_array['basedir'] ) );
+				break;
+			case 'current_timestamp':
+				switch ( strtolower( $qualifier ) ) {
+					case 'gmt':
+						$result = time();
+						break;
+					default:
+						$result = current_time( 'timestamp' );
+				}
+				
+				break;
+			case 'current_datetime': 
+				switch ( strtolower( $qualifier ) ) {
+					case 'gmt':
+						$result = time();
+						break;
+					default:
+						$result = current_time( 'timestamp' );
+				}
+				
+				$result = date( 'Y:m:d H:i:s', $result );
+				break;
+			case 'current_getdate': 
+				$qualifier = strtolower( $qualifier );
+				if ( 0 === strpos( $qualifier, 'gmt' ) ) {
+					$result = time();
+					$qualifier = substr( $qualifier, 3 );
+				} else {
+					$result = current_time( 'timestamp' );
+				}
+					
+				$result = getdate( $result );
+
+				if ( '0' === $qualifier ) {
+					$result = $result[ 0 ];
+				} elseif ( empty( $qualifier ) ) {
+					$result = MLAData_Source::_evaluate_array_result( $result, $data_value['option'], $data_value['keep_existing'] );
+				} elseif ( isset( $result[ $qualifier ] ) ) {
+					$result = $result[ $qualifier ];
+				} else {
+					$result = '';
+				}
 				break;
 			case 'absolute_path':
 			case 'absolute_file_name':

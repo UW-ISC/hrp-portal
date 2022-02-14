@@ -503,14 +503,17 @@ class SMC_Automatic_Support {
 		//error_log( __LINE__ . ' SMC_Automatic_Support::rule_upload_item $post_id = ' . var_export( $post_id, true), 0 );
 
 		$child = get_post( $post_id );
+		//error_log( __LINE__ . ' SMC_Automatic_Support::rule_upload_item $child = ' . var_export( $child, true), 0 );
 
 		// Is it a child?
 		if ( ( 'attachment' == $child->post_type ) && ( 0 < $child->post_parent ) ) {
 			$parent = get_post( $child->post_parent );
+			//error_log( __LINE__ . ' SMC_Automatic_Support::rule_upload_item $parent = ' . var_export( $parent, true), 0 );
 
 			// Is it a child of a supported Post Type?
 			if ( SMC_Settings_Support::is_smc_post_type( $parent->post_type ) ) {
 				$results = SMC_Sync_Support::sync_children_to_parent( $child->post_parent, $post_id );
+				//error_log( __LINE__ . ' SMC_Automatic_Support::rule_upload_item $results = ' . var_export( $results, true), 0 );
 			} // Post child
 		} // attached item
  	} // rule_upload_item
@@ -761,7 +764,7 @@ class SMC_Automatic_Support {
 		
 		if ( is_null( $active_taxonomies ) ) {
 			$active_taxonomies = SMC_Sync_Support::get_active_taxonomies( $update_type );
-//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $active_taxonomies = ' . var_export( $active_taxonomies, true), 0 );
+//error_log( __LINE__ . ' SMC_Automatic_Support::rule_update_post_terms $active_taxonomies keys = ' . var_export( array_keys( $active_taxonomies ), true), 0 );
 		}
 		
 		if ( !SMC_Settings_Support::is_smc_post_type( $update_type ) ) {

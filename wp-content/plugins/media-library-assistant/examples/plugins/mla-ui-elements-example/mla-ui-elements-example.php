@@ -93,7 +93,7 @@
  * https://wordpress.org/support/topic/checklist-behaviour-my_custom_sql-muie_terms_search/
  *
  * @package MLA UI Elements Example
- * @version 2.00
+ * @version 2.01
  */
 
 /*
@@ -101,7 +101,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
 Author: David Lingren
-Version: 2.00
+Version: 2.01
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2021 David Lingren
@@ -135,7 +135,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.00';
+	const PLUGIN_VERSION = '2.01';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -2323,7 +2323,8 @@ class MLAUIElementsExample {
 	 */
 	public static function muie_archive_posts_clauses_request( $pieces, $wp_query ) {
 		global $wpdb;
-//error_log( __LINE__ . " muie_archive_posts_clauses_request() pieces = " . var_export( $pieces, true ), 0 );
+
+		MLACore::mla_debug_add( __LINE__ . " muie_archive_posts_clauses_request() pieces = " . var_export( $pieces, true ), self::$muie_debug_category );
 
 		$where    = isset( $pieces['where'] ) ? $pieces['where'] : '';
 		$join     = isset( $pieces['join'] ) ? $pieces['join'] : '';
@@ -2393,7 +2394,7 @@ class MLAUIElementsExample {
 //error_log( __LINE__ . " muie_archive_posts_clauses_request() archive_list_items = " . var_export( self::$archive_list_items, true ), 0 );
 
 		$query   = "SELECT {$main_select}, count(sq.ID) as items FROM ( SELECT {$sq_select}, ID FROM $wpdb->posts {$join} WHERE 1=1 {$where} GROUP BY {$sq_group_by}, ID ORDER BY {$sq_order_by}) as sq GROUP BY {$main_group_by} ORDER BY {$main_order_by} {$limit}";
-//error_log( __LINE__ . " muie_archive_posts_clauses_request() query = " . var_export( $query, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " muie_archive_posts_clauses_request() query = " . var_export( $query, true ), self::$muie_debug_category );
 
 //		$key     = md5( $query );
 //		$key     = "wp_get_archives:$key:$last_changed";
@@ -2412,7 +2413,7 @@ class MLAUIElementsExample {
 					self::$archive_list_items[ $index ]->week_end = date_i18n( get_option( 'date_format' ), $arc_week['end'] );
 				}
 			}
-//error_log( __LINE__ . " muie_archive_posts_clauses_request() archive_list_items = " . var_export( self::$archive_list_items, true ), 0 );
+		MLACore::mla_debug_add( __LINE__ . " muie_archive_posts_clauses_request() archive_list_items = " . var_export( self::$archive_list_items, true ), self::$muie_debug_category );
 //		}
 
 		return $pieces;

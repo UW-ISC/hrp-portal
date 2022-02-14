@@ -1078,6 +1078,7 @@ class MLAQuery {
 					// ignore anything else in $_REQUEST
 			} // switch $key
 		} // foreach $raw_request
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query( $offset, $count ) clean_request = " . var_export( $clean_request, true ), 0 );
 
 		// Pass query and search parameters to the filters for _execute_list_table_query
 		self::$query_parameters = array( self::MLA_ALT_TEXT_SUBQUERY => false, self::MLA_FILE_SUBQUERY => false, self::MLA_TABLE_VIEW_SUBQUERY => false, self::MLA_ORDERBY_SUBQUERY => false, 'orderby' => $clean_request['orderby'], 'order' => $clean_request['order'] );
@@ -1090,7 +1091,7 @@ class MLAQuery {
 		 */
 		if ( isset( $clean_request['meta_query']['key'] ) ) {
 			self::$query_parameters[self::MLA_TABLE_VIEW_SUBQUERY] = true;
-			self::$query_parameters['postmeta_key'] = $clean_request['meta_query']['key'];
+			self::$query_parameters['postmeta_key'] = implode( ',', (array) $clean_request['meta_query']['key'] );
 			self::$query_parameters['postmeta_value'] = NULL;
 			unset( $clean_request['meta_query'] );
 		} elseif ( isset( $clean_request['meta_query']['patterns'] ) ) {
@@ -1328,6 +1329,7 @@ class MLAQuery {
 		}
 		
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query clean_request = " . var_export( $clean_request, true ), 0 );
+//error_log( __LINE__ . " MLAQuery::_prepare_list_table_query query_parameters = " . var_export( self::$query_parameters, true ), 0 );
 //error_log( __LINE__ . " MLAQuery::_prepare_list_table_query search_parameters = " . var_export( self::$search_parameters, true ), 0 );
 		return $clean_request;
 	}

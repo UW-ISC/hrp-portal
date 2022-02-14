@@ -260,11 +260,15 @@ class MLAShortcode_Support {
 		// Numeric keys indicate parse errors
 		$not_valid = false;
 		foreach ( $attr as $key => $value ) {
+			// Clean up damage caused by the Visual Editor 
+			$attr[ $key ] = wp_specialchars_decode( $value );
+
 			if ( is_numeric( $key ) ) {
 				$not_valid = true;
 				break;
 			}
 		}
+//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
 		if ( $not_valid ) {
 			/*
@@ -3189,7 +3193,7 @@ class MLAShortcode_Support {
 							break;
 						}
 					} else {
-						if ( $term->term_id === (integer) $current_item ) {
+						if ( (integer) $term->term_id === (integer) $current_item ) {
 							$is_active = true;
 							$item_values['current_item_class'] = $arguments['current_item_class'];
 							break;
@@ -3355,6 +3359,17 @@ class MLAShortcode_Support {
 				}
 			} 
 		} // foreach tag
+
+		// If the current item isn't in the term list, remove it to prevent "stale" [mla_gallery] content
+		if ( ( 0 == $current_level ) && ( false === $has_active ) ) {
+			$mla_control_name = $markup_values['thename'];
+
+			// Does not handle default 'tax_input[[+taxonomy+]][]' values
+			if ( false === strpos( $mla_control_name, '[]' ) ) {
+				unset( $_REQUEST[ $mla_item_parameter ] );
+				unset( $_REQUEST[ $mla_control_name ] );
+			}
+		}
 
 		if ( $is_list || $is_dropdown || $is_checklist ) {
 			if ( $is_list || ( ( 0 == $current_level ) && $is_dropdown ) || $is_checklist ) {
@@ -3776,6 +3791,15 @@ class MLAShortcode_Support {
 
 		$show_empty = false;
 		if ( 0 == $found_rows ) {
+			if ( !empty( $arguments['mla_control_name'] ) ) {
+				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
+				$mla_control_name = self::_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
+	
+				// Does not handle default 'tax_input[[+taxonomy+]][]' values
+				unset( $_REQUEST[ $mla_item_parameter ] );
+				unset( $_REQUEST[ $mla_control_name ] );
+			}
+	
 			if ( self::$mla_debug ) {
 				MLACore::mla_debug_add( __LINE__ . ' <strong>' . __( 'mla_debug empty list', 'media-library-assistant' ) . '</strong>, query = ' . var_export( $arguments, true ) );
 				$list = MLACore::mla_debug_flush();
@@ -3935,6 +3959,15 @@ class MLAShortcode_Support {
 				unset( $tags['found_rows'] );
 			} else {
 				$found_rows = count( $tags );
+			}
+
+			if ( ( 0 === $found_rows ) && !empty( $arguments['mla_control_name'] ) ) {
+				// Remove the current item from the parameters to prevent "stale" [mla_gallery] content
+				$mla_control_name = self::_process_shortcode_parameter( $arguments['mla_control_name'], $page_values );
+	
+				// Does not handle default 'tax_input[[+taxonomy+]][]' values
+				unset( $_REQUEST[ $mla_item_parameter ] );
+				unset( $_REQUEST[ $mla_control_name ] );
 			}
 		} else {
 			if ( !$show_empty ) {
@@ -4365,16 +4398,20 @@ class MLAShortcode_Support {
 	 * @since 2.20
 	 *
 	 * @param array	value(s) for mla_output_type parameter
-	 * @param string template substitution values, e.g., ('instance' => '1', ...  )
-	 * @param string merged default and passed shortcode parameter values
+	 * @param array template substitution values, e.g., ('instance' => '1', ...  )
+	 * @param array merged default and passed shortcode parameter values
 	 * @param integer number of attachments in the gallery, without pagination
 	 * @param string output text so far, may include debug values
 	 *
-	 * @return mixed	false or string with HTML for pagination output types
+	 * @return string empty string, mla_nolink_text or string with HTML for pagination output types
 	 */
 	private static function _paginate_links( $output_parameters, $markup_values, $arguments, $found_rows, $output = '' ) {
 		if ( 2 > $markup_values['last_page'] ) {
-			return '';
+			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
+				return self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values );
+			} else {
+				return '';
+			}
 		}
 
 		$show_all = $prev_next = false;
@@ -4529,7 +4566,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( 0 < $posts_per_page ) {
-			$max_page = floor( $found_rows / $posts_per_page );
+			$max_page = (integer) floor( $found_rows / $posts_per_page );
 			if ( $max_page < ( $found_rows / $posts_per_page ) ) {
 				$max_page++;
 			}
@@ -4764,12 +4801,14 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.82
 	 *
-	 * @param string query specification; PHP nested arrays
+	 * @param string $specification query specification; PHP nested arrays
+	 * @param array $interor_arrays Optional. Values for nested arrays, by reference.
 	 *
 	 * @return boolean true if specification is a valid PHP array else false
 	 */
-	private static function _validate_array_specification( $specification ) {
+	private static function _validate_array_specification( $specification, &$interor_arrays = array() ) {
 //error_log( __LINE__ . " _validate_array_specification() specification = " . var_export( $specification, true ), 0 );
+//error_log( __LINE__ . " _validate_array_specification() interor_arrays = " . var_export( $interor_arrays, true ), 0 );
 		self::$array_specification_error = '';
 
 		// Check for outer array specification(s) and reject anything else.
@@ -4779,66 +4818,131 @@ class MLAShortcode_Support {
 			return false;
 		}
 
+		$converted_array = array();
+		
 		$interior = trim( $matches[1], ', ' );
 		while ( strlen( $interior ) ) {
+//error_log( __LINE__ . " _validate_array_specification() converted_array = " . var_export( $converted_array, true ), 0 );
 //error_log( __LINE__ . " _validate_array_specification() interior = " . var_export( $interior, true ), 0 );
+			$interior_array = array();
+			
 			// Recursive matching required for nested and multiple arrays
 			while ( preg_match_all( '/(?x)array\s*\( ( (?>[^()]+) | (?R) )* \)/', $interior, $matches ) ) {
 //error_log( __LINE__ . " _validate_array_specification() recursion matches = " . var_export( $matches, true ), 0 );
 				foreach ( $matches[0] as $search ) {
 					// Replace valid arrays with a harmless literal value
-					if ( false === self::_validate_array_specification( $search ) ) {
+					$interior_array = self::_validate_array_specification( $search, $interor_arrays );
+					if ( false === $interior_array ) {
 						self::$array_specification_error = " FAILED nested array = " . var_export( $search, true );
 //error_log( __LINE__ . " _validate_array_specification() search = " . var_export( $search, true ), 0 );
 						return false;
 					}
 
-					$interior = str_replace( $search, 'ARRAY', $interior );
+					$interor_arrays[] = $interior_array;
+					$interior = str_replace( $search, sprintf( 'ARRAY%1$03d', ( count( $interor_arrays ) - 1 ) ), $interior );
 				}
 //error_log( __LINE__ . " _validate_array_specification() recursion interior = " . var_export( $interior, true ), 0 );
-			}
-
-			// Look for an already-validated array match
-			if ( 0 === strpos( $interior, 'ARRAY' ) ) {
-				$interior = trim( substr( $interior, 5 ), ' ,' );
-				continue;
+//error_log( __LINE__ . " _validate_array_specification() recursion interor_arrays = " . var_export( $interor_arrays, true ), 0 );
 			}
 
 			// Look for a nested array
 			if ( 1 === preg_match( '/^(array\s*\(.*\))(.*)$/', $interior, $matches ) ) {
-//error_log( __LINE__ . " _validate_array_specification() matches = " . var_export( $matches, true ), 0 );
-				if ( false === self::_validate_array_specification( $matches[1] ) ) {
+//error_log( __LINE__ . " _validate_array_specification() nested matches = " . var_export( $matches, true ), 0 );
+				$interior_array = self::_validate_array_specification( $matches[1], $interor_arrays );
+				if ( false === $interior_array ) {
 					return false;
 				}
 
+				$converted_array[] = $interior_array;
 				$interior = trim( $matches[2], ' ,' );
 				continue;
 			}
 
 			// PHP "undefined constant" pattern: [a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*
-
-			// Look for 'key' => value
-			if ( 1 === preg_match( '/^((([\'\"](.+?)[\'\"])|(\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))\s*\=\>\s*)(([\'\"](.*?)[\'\"])|(\d+)|(\w{4,5}))(.*)$/', $interior, $matches /*, PREG_OFFSET_CAPTURE */ ) ) {
+			/* Look for 'key' => value
+			 *  0 Entire interior
+			 *  1 key and assignment literal, e.g., '\'key\' => '
+			 *  2 quoted string | integer | undefined constant
+			 *  3 string key with enclosing quotes
+			 *  4 string key without quotes
+			 *  5 integer key
+			 *  6 undefined constant key
+			 *  7 quoted string | integer | ARRAY999 placeholder | 4- or 5-letter word 
+			 *  8 string value with quotes
+			 *  9 string value without quotes
+			 * 10 integer value
+			 * 11 ARRAY999 placeholder
+			 * 12 tail portion following ARRAY999 placeholder
+			 * 13 4 or 5 letter word, e.g. true or false
+			 * 14 tail portion following string, integer or word/boolean value
+			 */
+			if ( 1 === preg_match( '/^((([\'\"](.+?)[\'\"])|(\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))\s*\=\>\s*)(([\'\"](.*?)[\'\"])|(\d+)|(ARRAY...)(.*)|(\w{4,5}))(.*)$/', $interior, $matches /*, PREG_OFFSET_CAPTURE */ ) ) {
 //error_log( __LINE__ . " _validate_array_specification() key => value matches = " . var_export( $matches, true ), 0 );
 
-				// Validate boolean and array() values
-				if ( ! empty( $matches[11] ) ) {
+				// Validate boolean values
+				if ( ! empty( $matches[13] ) ) {
 //error_log( __LINE__ . " _validate_array_specification() boolean and array() matches = " . var_export( $matches[10], true ), 0 );
-					if ( false === in_array( strtolower( $matches[11] ), array( 'false', 'true', 'array' ) ) ) {
+//error_log( __LINE__ . " _validate_array_specification() boolean and array() interior_array = " . var_export( $interior_array, true ), 0 );
+					if ( false === in_array( strtolower( $matches[13] ), array( 'false', 'true' ) ) ) {
 //error_log( __LINE__ . " _validate_array_specification() FAILED boolean matches = " . var_export( $matches[7], true ), 0 );
 						self::$array_specification_error = " FAILED boolean matches = " . var_export( $matches[7], true );
 						return false;
 					}
 				}
 
-				$interior = trim( $matches[12], ' ,' );
+				if ( ! empty( $matches[5] ) ) {
+					$key = (integer) $matches[5];
+				} else {
+					$key = trim( $matches[2], '"\'' );
+				}
+
+				if ( 8 === strlen( $matches[11] ) ) {
+					$simple_index = substr( $matches[11], 5, 3 );
+					if ( 'XXX' !== $simple_index ) {
+						$converted_array[ $key ] = $interor_arrays[ (integer) $simple_index ];
+					}
+
+					$interior = trim( $matches[12], ' ,' );
+				} else {
+					if ( ! empty( $matches[10] ) ) {
+						$converted_array[ $key ] = (integer) $matches[10];
+					} elseif ( ! empty( $matches[13] ) ) {
+						$converted_array[ $key ] = ( 'true' === strtolower( $matches[13] ) );
+					} else {
+						$converted_array[ $key ] = trim( $matches[7], '"\'' );
+					}
+					
+					$interior = trim( $matches[14], ' ,' );
+				}
+				
 				continue;
 			}
 
-			// Look for simple quoted string, integer value or "undefined constant", e.g., in 'terms' =>
+			/*
+			 * Look for already-validated array match, simple quoted string, integer value or "undefined constant", e.g., in 'terms' =>
+			 *     0 Entire interior
+			 *     1 string | integer | constant
+			 *     2 string with quotes
+			 *     3 string trimmed of quotes
+			 *     4 integer
+			 *     5 undefined constant or ARRAY999 placeholder
+			 *     6 tail portion of interior
+			 */
 			if ( 1 === preg_match( '/^(([\'\"](.+?)[\'\"])|(-{0,1}\d+)|([a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*))(.*)$/', $interior, $matches ) ) {
 //error_log( __LINE__ . " _validate_array_specification() simple matches = " . var_export( $matches, true ), 0 );
-
+				if ( 0 === strpos( $interior, 'ARRAY' ) ) {
+					$simple_index = substr( $interior, 5, 3 );
+					if ( 'XXX' !== $simple_index ) {
+						$converted_array[] = $interor_arrays[ (integer) $simple_index ];
+					}
+				} else {
+					if ( !empty( $matches[4] ) ) {
+						$converted_array[] = (integer) $matches[4];
+					} else {
+						$converted_array[] = trim( $matches[1], '"\'' );
+					}
+				}
+				
 				$interior = trim( $matches[6], ' ,' );
 				continue;
 			}
@@ -4847,9 +4951,10 @@ class MLAShortcode_Support {
 			self::$array_specification_error = " FAILED interior = " . var_export( $interior, true );
 			return false;
 		}
-
 //error_log( __LINE__ . " _validate_array_specification() GOOD interior = " . var_export( $interior, true ), 0 );
-		return true;
+
+//error_log( __LINE__ . " _validate_array_specification() GOOD converted_array = " . var_export( $converted_array, true ), 0 );
+		return $converted_array;
 	}
 
 	/**
@@ -5128,7 +5233,83 @@ class MLAShortcode_Support {
 	public static function mla_pmp_hide_attachments_filter( $post_types ) {
 		$post_types[] = 'attachment';
 		return $post_types;
+	}
 
+	/**
+	 * Convert a taxonomy, date or meta query parameter to an array
+	 *
+	 * @since 2.99
+	 *
+	 * @param string $query_type 'tax_query', 'date_query' or 'meta_query'.
+	 * @param mixed $query_string Array specification in text or array format, e.g., array of arrays.
+	 * @param array $where_used_alternative Harmless substitute for invalid "where-used" queries.
+	 *
+	 * @return mixed An array on success, error message string on failure
+	 */
+	private static function _convert_query_parameter( $query_type, $query_string, $where_used_alternative ) {
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) query_string = " . var_export( $query_string, true ), 0 );
+		if ( is_array( $query_string ) ) {
+			return $query_string;
+		}
+
+		// Clean up damage caused by the Visual Editor 
+		$candidate = wp_specialchars_decode( $query_string );
+
+		$candidate = str_replace( array( '&#038;', '&#8216;', '&#8217;', '&#8220;', '&#8221;', '&#8242;', '&#8243;', '&amp;', '<br />', '<br>', '<p>', '</p>', "\r", "\n", "\t" ),
+		                          array( '&',      '\'',      '\'',      '"',       '"',       '\'',      '"',       '&',     ' ',      ' ',    ' ',   ' ',    ' ',  ' ',  ' ' ), $candidate );
+
+		$candidate = trim( $candidate, ' ,"\`' );
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) candidate = " . var_export( $candidate, true ), 0 );
+
+		// Unexpanded substitution parameters are not allowed
+		if ( false !== strpos( $candidate, '{+' ) ) {
+			$converted_result = false;
+			self::$array_specification_error = 'FAILED substitution parameter in ' . $candidate;
+		} else {
+			// Check for nested array specification(s) and reject anything else.
+			$converted_result = self::_validate_array_specification( $candidate );
+		}
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) converted_result = " . var_export( $converted_result, true ), 0 );
+
+		if ( false === $converted_result ) {
+			// Replace invalid queries from "where-used" callers with a harmless equivalent
+			if ( !empty( $where_used_alternative ) ) {
+				return $where_used_alternative;
+			}
+
+			return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . " {$query_type} = " . self::$array_specification_error . '</p>';
+		}
+		
+/* * /
+		try {
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) candidate = " . var_export( $candidate, true ), 0 );
+			$result = @eval( 'return ' . $candidate . ';' );
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) result = " . var_export( $result, true ), 0 );
+		} catch ( Throwable $e ) { // PHP 7+
+			$result = NULL;
+		} catch ( Exception $e ) { // PHP 5
+			$result = NULL;
+		} // */
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) result = " . var_export( $result, true ), 0 );
+
+//		if ( is_array( $result ) ) {
+		if ( is_array( $converted_result ) ) {
+/* * /
+			if ( $converted_result != $result ) {
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) loose failure converted_result = " . var_export( $converted_result, true ), 0 );
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) loose failure eval result = " . var_export( $result, true ), 0 );
+			}
+
+			if ( $converted_result !== $result ) {
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) strict failure converted_result = " . var_export( $converted_result, true ), 0 );
+//error_log( __LINE__ . " _convert_query_parameter( {$query_type} ) strict failure eval result = " . var_export( $result, true ), 0 );
+			} // */
+
+//			return $result;
+			return $converted_result;
+		}
+		
+		return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . " {$query_type} = " . var_export( $candidate, true ) . '</p>';
 	}
 
 	/**
@@ -5257,26 +5438,7 @@ class MLAShortcode_Support {
 						$query_arguments[ $key ] = $value;
 						self::$mla_get_shortcode_dynamic_attachments_parameters[ $key ] = $value;
 					} else {
-						$value = self::_sanitize_query_specification( $value );
-
-						// Replace invalid queries from "where-used" callers with a harmless equivalent
-						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
-							$value = "array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) )";
-						} else {
-							// If sanitization fails, return an error message
-							if ( 'false' === $value ) {
-								self::$mla_debug = $old_debug_mode;
-								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' tax_query = ' . self::$array_specification_error . '</p>';
-							}
-						}
-
-						try {
-							$tax_query = @eval( 'return ' . $value . ';' );
-						} catch ( Throwable $e ) { // PHP 7+
-							$tax_query = NULL;
-						} catch ( Exception $e ) { // PHP 5
-							$tax_query = NULL;
-						}
+						$tax_query = self::_convert_query_parameter( 'tax_query', $value, array( array( 'taxonomy' => 'none', 'field' => 'slug', 'terms' => 'none' ) ) );
 
 						if ( is_array( $tax_query ) ) {
 							// Check for ignore.terms.assigned/-3, no.terms.assigned/-1 or any.terms.assigned/-2
@@ -5792,32 +5954,13 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$value = self::_sanitize_query_specification( $value );
-
-						// Replace invalid queries from "where-used" callers with a harmless equivalent
-						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
-							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
-						} else {
-							// If sanitization fails, return an error message
-							if ( 'false' === $value ) {
-								self::$mla_debug = $old_debug_mode;
-								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' date_query = ' . self::$array_specification_error . '</p>';
-							}
-						}
-
-						try {
-							$date_query = @eval( 'return ' . $value . ';' );
-						} catch ( Throwable $e ) { // PHP 7+
-							$date_query = NULL;
-						} catch ( Exception $e ) { // PHP 5
-							$date_query = NULL;
-						}
-
+						$date_query = self::_convert_query_parameter( 'date_query', $value, ( $where_used_query ? array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) ) : '' ) );
+ 
 						if ( is_array( $date_query ) ) {
 							$query_arguments[ $key ] = $date_query;
 						} else {
 							self::$mla_debug = $old_debug_mode;
-							return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' date_query = ' . var_export( $value, true ) . '</p>';
+							return $date_query;
 						}
 					} // not array
 
@@ -5831,32 +5974,13 @@ class MLAShortcode_Support {
 					if ( is_array( $value ) ) {
 						$query_arguments[ $key ] = $value;
 					} else {
-						$value = self::_sanitize_query_specification( $value );
-
-						// Replace invalid queries from "where-used" callers with a harmless equivalent
-						if ( $where_used_query && ( ( 'false' === $value ) || ( false !== strpos( $value, '{+' ) ) ) ) {
-							$value = "array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) )";
-						} else {
-							// If sanitization fails, return an error message
-							if ( 'false' === $value ) {
-								self::$mla_debug = $old_debug_mode;
-								return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . self::$array_specification_error . '</p>';
-							}
-						}
-
-						try {
-							$meta_query = @eval( 'return ' . $value . ';' );
-						} catch ( Throwable $e ) { // PHP 7+
-							$meta_query = NULL;
-						} catch ( Exception $e ) { // PHP 5
-							$meta_query = NULL;
-						}
+						$meta_query = self::_convert_query_parameter( 'meta_query', $value, ( $where_used_query ? array( array( 'key' => 'unlikely', 'value' => 'none or otherwise unlikely' ) ) : '' ) );
 
 						if ( is_array( $meta_query ) ) {
 							$query_arguments[ $key ] = $meta_query;
 						} else {
 							self::$mla_debug = $old_debug_mode;
-							return '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . var_export( $value, true ) . '</p>';
+							return $meta_query; // '<p>' . __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Invalid mla_gallery', 'media-library-assistant' ) . ' meta_query = ' . var_export( $value, true ) . '</p>';
 						}
 					} // not array
 
@@ -5958,9 +6082,12 @@ class MLAShortcode_Support {
 			unset( self::$query_parameters['orderby'] );
 		}
 
-		unset( $query_arguments['orderby'] );
-		unset( $query_arguments['order'] );
-
+		// RML Pro overrides orderby if it's not present in the query arguments
+		if ( false === defined('RML_FILE') ) {
+			unset( $query_arguments['orderby'] );
+			unset( $query_arguments['order'] );
+		}
+		
 		if ( self::$mla_debug ) {
 			add_filter( 'posts_clauses', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_filter', 0x7FFFFFFF, 1 );
 			add_filter( 'posts_clauses_request', 'MLAShortcode_Support::mla_shortcode_query_posts_clauses_request_filter', 0x7FFFFFFF, 1 );
@@ -7081,16 +7208,6 @@ class MLAShortcode_Support {
 		// Calculate and potentially trim parent/child tree
 		$all_terms_count = 0;
 		foreach ( array_keys( $term_tree ) as $taxonomy ) {
-			if ( $child_of ) {
-				$result = self::_find_child_of( $term_tree[ $taxonomy ], $child_of );
-				if ( false !== $result ) {
-					$term_tree[ $taxonomy ] = $result->children;
-				} else {
-					$term_tree[ $taxonomy ] = array();
-					continue;
-				}
-			} // $child_of
-
 			if ( $include_tree ) {
 				$result = self::_find_include_tree( $term_tree[ $taxonomy ], $include_tree );
 				if ( false !== $result ) {
@@ -7104,6 +7221,17 @@ class MLAShortcode_Support {
 			if ( $exclude_tree ) {
 				self::_remove_exclude_tree( $term_tree[ $taxonomy ], $exclude_tree );
 			}
+
+			if ( $child_of ) {
+				$result = self::_find_child_of( $term_tree[ $taxonomy ], $child_of );
+
+				if ( false !== $result ) {
+					$term_tree[ $taxonomy ] = $result->children;
+				} else {
+					$term_tree[ $taxonomy ] = array();
+					continue;
+				}
+			} // $child_of
 
 			$term_count = 0;
 			$root_limit = count( $term_tree[ $taxonomy ] );

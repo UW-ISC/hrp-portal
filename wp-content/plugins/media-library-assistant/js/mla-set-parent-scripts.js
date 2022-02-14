@@ -10,6 +10,7 @@ var jQuery;
  *     mla.settings.useSpinnerClass
  *     mla.settings.ajaxDoneError
  *     mla.settings.ajaxFailError
+ *     mla.settings.setParentAction
  *
  * components:
  *     mla.setParent
@@ -76,7 +77,7 @@ var jQuery;
 			});
 
 			// Close the setParent pop-up
-			$( '#mla-set-parent-close-div' ).trigger( 'click', mla.setParent.close );
+			$( '#mla-set-parent-close-div' ).on( 'click', mla.setParent.close );
 
 			$( '#mla-set-parent-cancel' ).on( 'click', function ( event ) {
 				event.preventDefault();
@@ -148,7 +149,7 @@ var jQuery;
 					mla_set_parent_post_type: $( '#mla-set-parent-post-type' ).val(),
 					mla_set_parent_count: $( '#mla-set-parent-count' ).val(),
 					mla_set_parent_paged: $( '#mla-set-parent-paged' ).val(),
-					action: 'mla_find_posts',
+					action: mla.settings.setParentAction,
 					mla_admin_nonce: $('#mla-set-parent-ajax-nonce').val()
 				},
 				spinner = $( '#mla-set-parent-search-div .spinner' );
