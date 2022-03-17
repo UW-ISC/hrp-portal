@@ -43,7 +43,7 @@ function eau_generate_html()
     }
 
     $file_path = wp_upload_dir();
-    $file_name = 'export-all-urls-' . rand(111111, 999999);
+    $file_name = 'export-all-urls-' . rand(111111, 999999);    
 
     ?>
 
@@ -221,17 +221,15 @@ function eau_generate_html()
 
                             <tr class="advance-options" style="display: none">
 
-                                <th>CSV File Path:</th>
+                                <th>CSV File Name: </th>
 
                                 <td>
 
-                                    <label><span
-                                                style="cursor: not-allowed; -moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;"
-                                                unselectable="on" onselectstart="return false;"
-                                                onmousedown="return false;"><?php echo get_home_path(); ?>wp-content/uploads</span><input
+                                    <label><input
                                                 type="text" name="csv-file-name" placeholder="An Error Occured"
-                                                value="<?php echo $file_path['subdir'] . "/" . $file_name; ?>"
+                                                value="<?php echo $file_name; ?>"
                                                 size="30%"/></label><br/>
+                                                <code><?php echo $file_path['path']; ?></code>
 
 
                                 </td>
@@ -407,9 +405,7 @@ function eau_generate_html()
             $remove_woo_attributes = isset($_POST['remove-woo-attributes']) ? $_POST['remove-woo-attributes'] : null;
             $exclude_domain = isset($_POST['exclude-domain']) ? $_POST['exclude-domain'] : null;
             $number_of_posts = $_POST['number-of-posts'];
-            $csv_name = $_POST['csv-file-name'];
-
-            $csv_path = $file_path['basedir'];
+            $csv_name = sanitize_file_name( $_POST['csv-file-name'] );
 
             if ($number_of_posts == "range") {
                 $offset = $_POST['starting-point'];
@@ -429,8 +425,8 @@ function eau_generate_html()
             }
 
             if ($export_type == 'text') {
-                if (empty($csv_name) || empty($csv_path)) {
-                    echo "Invalid/Missing CSV File Path!";
+                if (empty($csv_name)) {
+                    echo "Invalid/Missing CSV File Name!";
                     exit;
                 }
             }
@@ -453,7 +449,7 @@ function eau_generate_html()
 
             $selected_post_type = eau_get_selected_post_type($post_type, $custom_posts_names);
 
-            eau_generate_output($selected_post_type, $post_status, $post_author, $remove_woo_attributes, $exclude_domain, $post_per_page, $offset, $export_type, $additional_data, $csv_path, $csv_name, $posts_from, $posts_upto);
+            eau_generate_output($selected_post_type, $post_status, $post_author, $remove_woo_attributes, $exclude_domain, $post_per_page, $offset, $export_type, $additional_data, $csv_name, $posts_from, $posts_upto);
 
         }else{
             echo "<div class='notice notice-error' style='width: 93%'>Sorry, you missed something, Please recheck above options, especially <strong>Export Fields</strong> and try again! :)</div>";
