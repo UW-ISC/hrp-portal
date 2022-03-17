@@ -70,12 +70,11 @@ function eau_is_checked($name, $value)
  * @param $offset
  * @param $export_type
  * @param $additional_data
- * @param $csv_path
  * @param $csv_name
  * @param $posts_from
  * @param $posts_upto
  */
-function eau_generate_output($selected_post_type, $post_status, $post_author, $remove_woo_attributes, $exclude_domain, $post_per_page, $offset, $export_type, $additional_data, $csv_path, $csv_name, $posts_from, $posts_upto)
+function eau_generate_output($selected_post_type, $post_status, $post_author, $remove_woo_attributes, $exclude_domain, $post_per_page, $offset, $export_type, $additional_data, $csv_name, $posts_from, $posts_upto)
 {
 
     $html = array();
@@ -168,7 +167,7 @@ function eau_generate_output($selected_post_type, $post_status, $post_author, $r
             $html['url'][$counter] = (isset($html['url'][$counter]) ? "" : null);
 
             $posts_query->the_post();
-            $html['url'][$counter] .= $exclude_domain == 'yes' ? eau_extract_relative_url(get_permalink()) : get_permalink() . $line_break;
+            $html['url'][$counter] .= esc_url( $exclude_domain == 'yes' ? eau_extract_relative_url(get_permalink()) : get_permalink() ) . $line_break;
             $counter++;
 
         endwhile;
@@ -184,7 +183,7 @@ function eau_generate_output($selected_post_type, $post_status, $post_author, $r
             $html['title'][$counter] = (isset($html['title'][$counter]) ? "" : null);
 
             $posts_query->the_post();
-            $html['title'][$counter] .= get_the_title() . $line_break;
+            $html['title'][$counter] .= esc_html( get_the_title() ) . $line_break;
             $counter++;
 
         endwhile;
@@ -238,12 +237,12 @@ function eau_generate_output($selected_post_type, $post_status, $post_author, $r
         $counter = 0;
 
     }
-    eau_export_data($html, $export_type, $csv_path, $csv_name);
+    eau_export_data($html, $export_type, $csv_name);
 
     wp_reset_postdata();
 }
 
-function eau_export_data($urls, $export_type, $csv_path, $csv_name)
+function eau_export_data($urls, $export_type, $csv_name)
 {
 
     $file_path = wp_upload_dir();
@@ -261,8 +260,8 @@ function eau_export_data($urls, $export_type, $csv_path, $csv_name)
             $data = '';
             $headers = array();
 
-            $file = $csv_path . $csv_name . '.CSV';
-            $myfile = @fopen($file, "w") or die("Unable to create a file on your server!");
+            $file = $file_path['path'] . "/" . $csv_name . '.CSV';
+            $myfile = @fopen($file, "w") or die("<div class='error' style='width: 95.3%; margin-left: 2px;'>Unable to create a file on your server! (either invalid name supplied or permission issue)</div>");
             fprintf($myfile, "\xEF\xBB\xBF");
 
             $headers[] = 'Post ID';
@@ -275,7 +274,7 @@ function eau_export_data($urls, $export_type, $csv_path, $csv_name)
             for ($i = 0; $i < $count; $i++) {
                 $data = array(
                     isset($urls['post_id']) ? $urls['post_id'][$i] : "",
-                    isset($urls['title']) ? $urls['title'][$i] : "",
+                    isset($urls['title']) ? htmlspecialchars_decode($urls['title'][$i]) : "",
                     isset($urls['url']) ? $urls['url'][$i] : "",
                     isset($urls['category']) ? !empty($urls['category'][$i]) || !empty($urls['taxonomy'][$i]) ? $urls['category'][$i] . $urls['taxonomy'][$i] : "" : ""
                 );
@@ -285,7 +284,7 @@ function eau_export_data($urls, $export_type, $csv_path, $csv_name)
 
             fclose($myfile);
 
-            echo "<div class='updated' style='width: 97%'>Data exported successfully! <a href='" . $file_path['baseurl'] . "/" . $csv_name . ".CSV' target='_blank'><strong>Click here</strong></a> to Download.</div>";
+            echo "<div class='updated' style='width: 97%'>Data exported successfully! <a href='" . $file_path['url'] . "/" . $csv_name . ".CSV' target='_blank'><strong>Click here</strong></a> to Download.</div>";
             echo "<div class='notice notice-warning' style='width: 97%'>Once you have downloaded the file, it is recommended to delete file from the server, for security reasons. <a href='".wp_nonce_url(admin_url('tools.php?page=extract-all-urls-settings&del=y&f=').base64_encode($file))."' ><strong>Click Here</strong></a> to delete the file. And don't worry, you can always regenerate anytime. :)</div>";
             echo "<div class='notice notice-info' style='width: 97%'><strong>Total</strong> number of links: <strong>".$count."</strong>.</div>";
 

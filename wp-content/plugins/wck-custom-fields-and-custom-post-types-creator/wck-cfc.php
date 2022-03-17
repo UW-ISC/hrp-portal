@@ -278,6 +278,7 @@ function wck_cfc_create_boxes_args(){
 					if( !empty( $wck_cfc_field['options'] ) ){
 						$fields_inner_array['options'] = array_map( 'trim', explode( ',', $wck_cfc_field['options'] ) );
 
+						$labels = array(); // reset the $labels variable so it doesn't contain information from other fields.
                         if( !empty( $wck_cfc_field['labels'] ) ){
                             $labels = array_map( 'trim', explode( ',', $wck_cfc_field['labels'] ) );
                         }
