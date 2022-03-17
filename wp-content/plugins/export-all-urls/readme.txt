@@ -3,8 +3,8 @@ Contributors: Atlas_Gondal
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWT3BFURG6SGS&source=url
 Tags: extract urls, export urls, links, get links, get urls, custom post type urls, see links, extract title, export title, export post title, export title and url, export category, utilities, export, csv
 Requires at least: 3.1
-Tested up to: 5.6.1
-Stable tag: 5.6.1
+Tested up to: 5.9.1
+Stable tag: 5.9.1
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -114,7 +114,7 @@ This plugin has been tested and works with PHP versions 5.4 and greater. WordPre
 
 = Are there any known incompatibilities? =
 
-Nope, there were some issues in past, but they are fixed in version 4.0.
+Nope, there were some issues in past, but they were fixed in version 4.0.
 
 = Are there any server requirements? =
 
@@ -130,132 +130,78 @@ Yes. The plugin requires a PHP version 5.4 or higher and Wordpress version 3.1.0
 
 == Changelog ==
 
+= 4.2 =
+* Fixed - patched a security vulnerability
+* Removed - file path customization option
+* Compatibility - tested with wordpress 5.9.1 & PHP 8.1
+
 = 4.1 =
-* added option to remove woo commerce extra attributes from categories
-* bit of formatting adjustments
-* added some default settings
-* tested with wordpress 5.4.2
+* Added - option to remove woo commerce extra attributes from categories
+* Tweak - bit of formatting adjustments
+* Added - some default settings
+* Compatibility - tested with wordpress 5.4.2
 
 = 4.0 =
-* export post IDs
-* exclude domain URL
-* complete support of custom post type categories
-* small dashboard design improvements
-* enables user to delete the file once downloaded
-* compatible with wordpress 5.4 and php 7.3
-* migrated under tools options, instead of settings
-* displays total number of links
-* new easy ways to report problem or bug
-* resolved conflict with "Security Header" & "Elementor" plugin
-* fixed typo on settings page
-* added extra verification checks
+* Added - export post IDs
+* Added - exclude domain URL
+* Added - complete support of custom post type categories
+* Tweak - small dashboard design improvements
+* Added - enables user to delete the file once downloaded
+* Compatibility - wordpress 5.4 and php 7.3
+* Tweak - migrated under tools options, instead of settings
+* Added - displays total number of links
+* Added - new easy ways to report problem or bug
+* Fixed - conflict with "Security Header" & "Elementor" plugin
+* Fixed - typo on settings page
+* Added - extra verification checks
 
 = 3.6 =
-* filter data by date range
-* some general activation improvements
-* tested with 5.1.1
+* Added - filter data by date range
+* Tweak - some general activation improvements
+* Compatibility - tested with 5.1.1
 
 = 3.5 =
-* allow users to customize file path and file name
-* fixed grammatical mistake
-* tested with 4.9.7
+* Added - allow users to customize file path and file name
+* Fixed - grammatical mistake
+* Compatibility - tested with 4.9.7
 
 = 3.0 =
-* filter data by author
-* specify post range for extraction
-* generates random file name
-* tested with 4.9.2
+* Added - filter data by author
+* Added - specify post range for extraction
+* Added - generates random file name
+* Compatibility - tested with 4.9.2
 
 = 2.6 =
-* fixed variable initialization errors
-* tested with 4.9
+* Fixed - variable initialization errors
+* Compatibility - tested with 4.9
 
 = 2.5 =
-* added support for selecting post status
-* tested with 4.7.5
+* Added - support for selecting post status
+* Compatibility - tested with 4.7.5
 
 = 2.4 =
-* fatal error bug fixed
-* tested with 4.7.2
+* Fixed - fatal error bug fixed
+* Compatibility - tested with wordpress 4.7.2
 
 = 2.3 =
-* fixed categories export, (only first category was exporting)
-* tested with wordpress 4.7
+* Fixed - categories export, (only first category was exporting)
+* Compatibility - tested with wordpress 4.7
 
 = 2.2 =
-* added support for wordpress 4.6.1
+* Added - support for wordpress 4.6.1
 
 = 2.1 =
-* fixed special character exporting for Polish Language
+* Fixed - special character exporting for Polish Language
 
 = 2.0 =
-* support for exporting title and categories.
+* Added - support for exporting title and categories
 
 = 1.0 =
 * initial release
 
 == Upgrade Notice ==
 
-= 4.1 =
-* added option to remove woo commerce extra attributes from categories
-* bit of formatting adjustments
-* added some default settings
-* tested with wordpress 5.4.1
+= 4.2 = 
+* Fixed - Security Vulnerability Patched
+* Compatibility - Tested with Wordpress 5.9.1
 
-= 4.0 =
-* export post IDs
-* exclude domain URL
-* complete support of custom post type categories
-* small dashboard design improvements
-* enables user to delete the file once downloaded
-* compatible with wordpress 5.4 and php 7.3
-* migrated under tools options, instead of settings
-* displays total number of links
-* new easy ways to report problem or bug
-* resolved conflict with "Security Header" & "Elementor" plugin
-* fixed typo on settings page
-* added extra verification checks
-
-= 3.6 =
-* filter data by date range
-* some general activation improvements
-* tested with 5.1.1
-
-= 3.5 =
-* allow users to customize file path and file name
-* fixed grammatical mistake
-* tested with 4.9.7
-
-= 3.0 =
-* filter data by author
-* specify post range for extraction
-* generates random file name
-* tested with 4.9.2
-
-= 2.6 =
-* fixed variable initialization errors
-* tested with 4.9
-
-= 2.5 =
-* added support for selecting post status
-* tested with 4.7.5
-
-= 2.4 =
-* fatal error bug fixed
-* tested with 4.7.2
-
-= 2.3 =
-* fixed categories export, (only first category was exporting)
-* tested with wordpress 4.7
-
-= 2.2 =
-* added support for wordpress 4.6.1
-
-= 2.1 =
-* fixed special character exporting for Polish Language
-
-= 2.0 =
-* support for exporting title and categories.
-
-= 1.0 =
-* initial release

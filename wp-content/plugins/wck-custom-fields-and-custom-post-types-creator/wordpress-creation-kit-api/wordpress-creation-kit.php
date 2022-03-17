@@ -774,7 +774,7 @@ class Wordpress_Creation_Kit{
 			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_style( 'wck-colorpicker-style', plugins_url( '/assets/colorpicker/colorpicker.css', __FILE__ ), false, '1.0' );
 			wp_enqueue_script( 'iris', admin_url( 'js/iris.min.js' ), array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ), false, 1 );
-			wp_enqueue_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), array( 'iris' ), false, 1 );
+			wp_enqueue_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), array( 'iris', 'wp-i18n' ), false, 1 );
 		}
 
 		//phone
