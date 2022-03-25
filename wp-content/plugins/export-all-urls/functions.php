@@ -264,6 +264,8 @@ function eau_export_data($urls, $export_type, $csv_name)
             $myfile = @fopen($file, "w") or die("<div class='error' style='width: 95.3%; margin-left: 2px;'>Unable to create a file on your server! (either invalid name supplied or permission issue)</div>");
             fprintf($myfile, "\xEF\xBB\xBF");
 
+            $csv_url = esc_url($file_path['url'] . "/" . $csv_name . ".CSV");
+
             $headers[] = 'Post ID';
             $headers[] = 'Title';
             $headers[] = 'URLs';
@@ -284,16 +286,16 @@ function eau_export_data($urls, $export_type, $csv_name)
 
             fclose($myfile);
 
-            echo "<div class='updated' style='width: 97%'>Data exported successfully! <a href='" . $file_path['url'] . "/" . $csv_name . ".CSV' target='_blank'><strong>Click here</strong></a> to Download.</div>";
+            echo "<div class='updated' style='width: 97%'>Data exported successfully! <a href='" . $csv_url . "' target='_blank'><strong>Click here</strong></a> to Download.</div>";
             echo "<div class='notice notice-warning' style='width: 97%'>Once you have downloaded the file, it is recommended to delete file from the server, for security reasons. <a href='".wp_nonce_url(admin_url('tools.php?page=extract-all-urls-settings&del=y&f=').base64_encode($file))."' ><strong>Click Here</strong></a> to delete the file. And don't worry, you can always regenerate anytime. :)</div>";
-            echo "<div class='notice notice-info' style='width: 97%'><strong>Total</strong> number of links: <strong>".$count."</strong>.</div>";
+            echo "<div class='notice notice-info' style='width: 97%'><strong>Total</strong> number of links: <strong>".esc_html($count)."</strong>.</div>";
 
             break;
 
         case "here":
 
             echo "<h1 align='center' style='padding: 10px 0;'><strong>Below is a list of Exported Data:</strong></h1>";
-            echo "<h2 align='center' style='font-weight: normal;'>Total number of links: <strong>".$count."</strong>.</h2>";
+            echo "<h2 align='center' style='font-weight: normal;'>Total number of links: <strong>".esc_html($count)."</strong>.</h2>";
             echo "<table class='form-table' id='outputData'>";
             echo "<tr><th>#</th>";
             echo isset($urls['post_id']) ? "<th id='postID'>Post ID</th>" : null;
