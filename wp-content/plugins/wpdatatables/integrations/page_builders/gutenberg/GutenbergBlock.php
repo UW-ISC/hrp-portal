@@ -55,8 +55,10 @@ class GutenbergBlock
         }
 
         // Fix for conflict with Avada - Fusion builder and gutenberg blocks
+        // Fix for Gutenberg blocks when Avada's post/page types are disabled
         if ( class_exists( 'FusionBuilder' ) && !(isset( $_GET['gutenberg-editor']))){
-            return false;
+            $postTypes = FusionBuilder::allowed_post_types();
+            return count(array_intersect(['page', 'post'], $postTypes)) < 2;
         }
 
         // Fix for conflict with WooCommerce product page

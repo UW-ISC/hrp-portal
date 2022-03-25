@@ -252,6 +252,7 @@ add_action('wp_ajax_nopriv_get_wdtable', 'wdtGetAjaxData');
 function wdtSaveTableFrontend() {
     global $wpdb, $wp_version;
     $formData = $_POST['formdata'];
+    $isDuplicate = $_POST['isDuplicate'];
 
     if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendEditTableNonce' . (int)$formData['table_id'])) {
         exit();
@@ -293,7 +294,7 @@ function wdtSaveTableFrontend() {
         $advancedSettings = json_decode($column->advanced_settings);
         if ($column->id_column) {
             $idKey = $column->orig_header;
-            $idVal = (int)$formData[$idKey];
+            $idVal = $isDuplicate == 'true' ? 0 : (int)$formData[$idKey];
             unset($formData[$idKey]);
         } else {
             // Defining the values for User ID columns and for "none" input types

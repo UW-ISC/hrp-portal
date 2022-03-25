@@ -1057,6 +1057,12 @@
                                 <select class="form-control selectpicker" multiple="multiple"
                                         title="<?php _e('All', 'wpdatatables'); ?>" id="wdt-edit-buttons-displayed">
                                    <?php $wdtEditButtonsDisplayed = array('New Entry', 'Edit', 'Delete');
+                                   if (isset($tableData)) {
+                                       if ($tableData->table->enableDuplicateButton &&
+                                           !in_array('duplicate', $tableData->table->editButtonsDisplayed)) {
+                                           $wdtEditButtonsDisplayed[] = 'Duplicate';
+                                       }
+                                   }
                                    foreach ($wdtEditButtonsDisplayed as $wdtEditButtonDisplayed) {
                                         /** @noinspection $wdtEditButtonsDisplayed */ ?>
                                     <option value="<?php echo (str_replace(' ','_',strtolower($wdtEditButtonDisplayed))) ?>"><?php echo $wdtEditButtonDisplayed ?></option>
@@ -1065,6 +1071,25 @@
                             </div>
 
                         </div>
+
+                        <?php if (isset($tableData)) {
+                            if (!($tableData->table->table_type === 'gravity') ||
+                                version_compare(WDT_GF_VERSION, "1.6.3", '>=')) {?>
+                                <div class="col-sm-4 m-b-16 editing-settings-block">
+                                    <h4 class="c-title-color m-b-4">
+                                        <?php _e('Show duplicate button', 'wpdatatables'); ?>
+                                        <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                           title="<?php _e('Enable the duplicate button in Editing buttons', 'wpdatatables'); ?>"></i>
+                                    </h4>
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-enable-duplicate-button" type="checkbox">
+                                        <label for="wdt-enable-duplicate-button"
+                                               class="ts-label"><?php _e('Enable duplicate button', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+                            <?php }} ?>
+
+
                         <!-- /.row -->
 
                     </div>

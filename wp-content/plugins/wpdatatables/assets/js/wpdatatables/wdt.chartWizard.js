@@ -774,6 +774,8 @@ var wdtChartColumnsData = {};
                             }
                         });
 
+                        var isApexEngine = constructedChartData.engine === 'apexcharts';
+
                         $('#chart-series-color,' +
                             '#background-color-container,' +
                             '#border-color-container,' +
@@ -850,7 +852,7 @@ var wdtChartColumnsData = {};
 
                         $('input#show-grid')
                             .on('change', function () {
-                                if($('#show-grid').is(':checked')) {
+                                if($('#show-grid').is(':checked') && isApexEngine) {
                                     $('div.grid-style').show();
                                 } else {
                                     $('div.grid-style').hide();
@@ -874,7 +876,6 @@ var wdtChartColumnsData = {};
                         });
 
                         var plotImageInput =  $('#plot-background-image');
-                        var isApexEngine = constructedChartData.engine === 'apexcharts';
                         plotImageInput.on('change', function () {
                             if (plotImageInput.val() == '') {
                                 $('#wdt-plot-image-clear-button').html('<span class="wpdt-icon-image"></span>');

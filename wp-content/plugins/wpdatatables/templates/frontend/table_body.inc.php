@@ -5,7 +5,7 @@
 ?>
 <tbody>
 <?php do_action('wpdatatables_before_first_row', $this->getWpId()); ?>
-<?php if(!$this->serverSide() || ($this->serverSide() && count($this->getDataRows()) < 2000)) {?>
+<?php if(!$this->serverSide() || ($this->serverSide() && ($this->getDisplayLength() !== -1 || count($this->getDataRows()) < 2000))) {?>
 <?php foreach ($this->getDataRows() as $wdtRowIndex => $wdtRowDataArr) { ?>
     <?php do_action('wpdatatables_before_row', $this->getWpId(), $wdtRowIndex); ?>
         <tr id="table_<?php echo $this->getWpId() ?>_row_<?php echo $wdtRowIndex; ?>">

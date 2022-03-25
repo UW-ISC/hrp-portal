@@ -430,6 +430,7 @@ class WDTTools
     {
         return array(
             'add_new_entry' => __('Add new entry', 'wpdatatables'),
+            'duplicate_entry' => __('Duplicate entry', 'wpdatatables'),
             'back_to_date' => __('Back to date', 'wpdatatables'),
             'browse_file' => __('Browse', 'wpdatatables'),
             'cancel' => __('Cancel', 'wpdatatables'),

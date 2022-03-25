@@ -274,6 +274,7 @@
 
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper .DTTT_button.DTTT_button_md {

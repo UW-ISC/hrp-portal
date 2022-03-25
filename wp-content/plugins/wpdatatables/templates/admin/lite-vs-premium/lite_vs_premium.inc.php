@@ -236,6 +236,19 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td data-title="Features"><?php _e('Creating charts with Chart.js', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW in Lite!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td data-title="Features"><?php _e('Table Customization', 'wpdatatables'); ?>
                                     <span style="color: #ef8137;font-weight: bold;float: right;"><?php _e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
@@ -384,18 +397,6 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php _e('Creating charts with Highcharts', 'wpdatatables'); ?>
-                                    <hr>
-                                </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
-                                    <hr>
-                                </td>
-                                <td data-title="Premium" class="text-center bg-blue"><i
-                                            class="wpdt-icon-check-full"></i>
-                                    <hr>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td data-title="Features"><?php _e('Creating charts with Chart.js', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
