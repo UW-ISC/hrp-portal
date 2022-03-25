@@ -165,10 +165,19 @@
         <?php _e('Next', 'wpdatatables'); ?>
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-chevron-right'; } else { echo 'wpdt-icon-step-forward'; }?>"></i>
     </button>
+    <?php if ( !empty(array_intersect(['all', 'new_entry'], $this->getEditButtonsDisplayed()))) { ?>
     <button id="<?php echo $this->getId() ?>_apply_edit_dialog" class="btn btn-success btn-icon-text wdt-apply-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle-full'; } else { echo 'wpdt-icon-check';  }?>"></i>
         <?php _e('Apply and add new', 'wpdatatables'); ?>
     </button>
+    <?php } ?>
+    <?php if ( $this->isEnableDuplicateButton() &&
+        !empty(array_intersect(['all', 'duplicate'], $this->getEditButtonsDisplayed()))) { ?>
+    <button id="<?php echo $this->getId() ?>_apply_duplicate_dialog" class="btn btn-success btn-icon-text wdt-apply-duplicate-button hidden">
+        <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle-full'; } else { echo 'wpdt-icon-check';  }?>"></i>
+        <?php _e('Apply and duplicate', 'wpdatatables'); ?>
+    </button>
+    <?php } ?>
     <button id="<?php echo $this->getId() ?>_ok_edit_dialog" class="btn btn-success btn-icon-text wdt-ok-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle'; } else { echo 'wpdt-icon-check-double-reg'; }?>"></i>
         <?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { _e('Submit', 'wpdatatables');} else {_e('OK', 'wpdatatables');} ?>

@@ -252,6 +252,7 @@
 
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 
@@ -276,6 +277,10 @@
 }
 
 .wpdt-c.wdt-skin-material .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before {
+    content: "";
+}
+
+.wpdt-c.wdt-skin-material .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before {
     content: "";
 }
 

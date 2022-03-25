@@ -263,12 +263,22 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            Minor update with bug fix:
+                            New update with new feature, improvements, and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Bugfix:</strong> Fixed issue with fatal error when is used Elementor.</li>
+                                <li><strong>Feature:</strong> Added duplicate edit button</li>
+                                <li><strong>Improvement:</strong> Removed "Apply and add new" button in the edit modal when "New entry" button is disabled.</li>
+                                <li><strong>Improvement:</strong> Added new filters for each chart engine render data: wpdatatables_filter_apexcharts_render_data, wpdatatables_filter_google_charts_render_data, wpdatatables_filter_highcharts_render_data and wpdatatables_filter_chartjs_render_data.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with grid options in Apexcharts.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Jet plugins in Elementor widgets.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Gutenberg blocks when Avada's post/page types are disabled.</li>
+                                <li><strong>BugFix:</strong> Fixed conflict with Amelia widgets in Divi Builder.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with number of rows in HTML source for server-side tables.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with conditional formatting for int/float columns when is used "Set cell content".</li>
+                                <li>Compatibility with WordPress 5.9.2 approved.</li>
+                                <li>Other small bug fixes</li>
                             </ul>
                         </div>
 

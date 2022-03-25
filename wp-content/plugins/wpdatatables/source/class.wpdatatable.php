@@ -102,6 +102,7 @@ class WPDataTable {
     public $connection;
     public static $allowedTableTypes = array('xls', 'csv', 'manual', 'mysql', 'json', 'google_spreadsheet', 'xml', 'serialized', 'simple');
     private $_editButtonsDisplayed = array('all');
+    private $_enableDuplicateButton = false;
     private $_pdfPaperSize = 'A4';
     private $_pdfPageOrientation = 'portrait';
 
@@ -770,6 +771,16 @@ class WPDataTable {
      */
     public function setEditButtonsDisplayed(array $editButtonsDisplayed) {
         $this->_editButtonsDisplayed = $editButtonsDisplayed;
+    }
+
+    public function isEnableDuplicateButton()
+    {
+        return $this->_enableDuplicateButton;
+    }
+
+    public function setEnableDuplicateButton($enableDuplicateButton)
+    {
+        $this->_enableDuplicateButton = $enableDuplicateButton;
     }
 
     /**
@@ -3204,6 +3215,11 @@ class WPDataTable {
 
         $params = apply_filters('wpdt_filter_column_params', $params, $columnData);
 
+        if (isset($tableData->display_length) && $tableData->display_length != 0) {
+            $this->setDisplayLength($tableData->display_length);
+        } else {
+            $this->disablePagination();
+        }
         switch ($tableData->table_type) {
             //[<-- Full version -->]//
             case 'mysql' :
@@ -3374,11 +3390,6 @@ class WPDataTable {
                 );
             }
         }
-        if (isset($tableData->display_length) && $tableData->display_length != 0) {
-            $this->setDisplayLength($tableData->display_length);
-        } else {
-            $this->disablePagination();
-        }
         if (get_option('wdtInterfaceLanguage') != '') {
             $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage'));
         }
@@ -3405,6 +3416,7 @@ class WPDataTable {
             isset($advancedSettings->paginationAlign) ? $this->setPaginationAlign($advancedSettings->paginationAlign) : $this->setPaginationAlign('right');
             isset($advancedSettings->paginationLayout) ? $this->setPaginationLayout($advancedSettings->paginationLayout) : $this->setPaginationLayout('full_numbers');
             isset($advancedSettings->editButtonsDisplayed) ? $this->setEditButtonsDisplayed($advancedSettings->editButtonsDisplayed) : $this->setEditButtonsDisplayed(array('all'));
+            isset($advancedSettings->enableDuplicateButton) ? $this->setEnableDuplicateButton($advancedSettings->enableDuplicateButton) : $this->setEnableDuplicateButton(false);
             (isset($advancedSettings->language) && $advancedSettings->language != '' ? $this->setInterfaceLanguage($advancedSettings->language) : get_option('wdtInterfaceLanguage') != '') ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             isset($advancedSettings->tableSkin) ? $this->setTableSkin($advancedSettings->tableSkin) : $this->setTableSkin(get_option('wdtBaseSkin'));
             isset($advancedSettings->tableFontColorSettings) ? $this->setTableFontColorSettings($advancedSettings->tableFontColorSettings) : $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
@@ -3432,6 +3444,7 @@ class WPDataTable {
             $this->setPaginationAlign('right');
             $this->setPaginationLayout('full_numbers');
             $this->setEditButtonsDisplayed(array('all'));
+            $this->setEnableDuplicateButton(false);
             $this->setTableSkin(get_option('wdtBaseSkin'));
             get_option('wdtInterfaceLanguage') != '' ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
@@ -3929,18 +3942,40 @@ class WPDataTable {
 
             if($obj->dataTableParams->editButtonsDisplayed === ['all']) {
                 foreach ($editButtons as $editButton){
-                    array_push(
-                        $obj->dataTableParams->buttons,
-                        $editButton);
+                    $obj->dataTableParams->buttons[] = $editButton;
                 }
             } else {
                 foreach ($obj->dataTableParams->editButtonsDisplayed as $editButtonDisplayed) {
-                    array_push(
-                        $obj->dataTableParams->buttons,
-                        $editButtons[$editButtonDisplayed]
-                    );
+                    if (isset($editButtons[$editButtonDisplayed]))
+                        $obj->dataTableParams->buttons[] = $editButtons[$editButtonDisplayed];
                 }
             }
+
+            if ($this->isEnableDuplicateButton() &&
+                !empty(array_intersect(['all', 'duplicate'], $obj->dataTableParams->editButtonsDisplayed))) {
+                $obj->dataTableParams->buttons[] = [
+                    'text' => __('Duplicate', 'wpdatatables'),
+                    'className' => 'duplicate_table_entry DTTT_button DTTT_button_duplicate',
+                    'enabled' => false,
+                ];
+            }
+
+            //Define the order for the edit buttons
+            $order    = 'text';
+            $ordering = ['New Entry', 'Edit', 'Duplicate', 'Delete'];
+            $compare  = function($a, $b) use ($order, $ordering) {
+                $hasA = array_search($a[$order], $ordering);
+                $hasB = array_search($b[$order], $ordering);
+                if ($hasA === $hasB && $hasA === false) {
+                    return 0;
+                }
+                if ($hasA !== false && $hasB !== false) {
+                    return $hasA - $hasB;
+                }
+                return $hasA === false ? -1 : 1;
+            };
+
+            usort($obj->dataTableParams->buttons, $compare);
 
             $obj->advancedEditingOptions = array();
             $obj->advancedEditingOptions['aoColumns'] = json_decode('[' . $this->getColumnEditingDefinitions() . ']');

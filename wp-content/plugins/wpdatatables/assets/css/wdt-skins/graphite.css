@@ -324,6 +324,7 @@
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .wdt-checkbox-filter.btn:hover:before,
@@ -392,6 +393,7 @@
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper a.DTTT_button,
