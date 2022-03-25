@@ -139,10 +139,6 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
 
     }
 
-    protected function _content_template() {
-
-    }
-
 }
 
 

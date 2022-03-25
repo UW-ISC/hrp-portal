@@ -26,17 +26,17 @@ along with Divi WPDT. If not, see https://www.gnu.org/licenses/gpl-2.0.html.
 */
 
 
-if ( ! function_exists( 'divi_initialize_extension' ) ):
+if ( ! function_exists( 'divi_wpdatatables_initialize_extension' ) ):
 /**
  * Creates the extension's main class instance.
  *
  * @since 1.0.0
  */
-function divi_initialize_extension() {
+function divi_wpdatatables_initialize_extension() {
 	require_once plugin_dir_path( __FILE__ ) . 'includes/DiviWpdt.php';
 
     wp_register_style('wpdt-divi', plugins_url('styles/divi-wpdt.css', __FILE__), [], WDT_CURRENT_VERSION);
     wp_enqueue_style('wpdt-divi');
 }
-add_action( 'divi_extensions_init', 'divi_initialize_extension' );
+add_action( 'divi_extensions_init', 'divi_wpdatatables_initialize_extension' );
 endif;

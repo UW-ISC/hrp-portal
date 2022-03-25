@@ -43,6 +43,7 @@ var wpdatatable_config = {
     connection: '',
     edit_only_own_rows: 0,
     editButtonsDisplayed: ["all"],
+    enableDuplicateButton: false,
     userid_column_id: null,
     showAllRows: false,
     inline_editing: 0,
@@ -698,6 +699,14 @@ var wpdatatable_config = {
             .selectpicker( 'refresh' );
     },
     /**
+     * Set option enable duplicate button
+     * @param enableDuplicateButton 1 or 0
+     */
+    setEnableDuplicateButton: function (enableDuplicateButton) {
+        wpdatatable_config.enableDuplicateButton = enableDuplicateButton;
+        jQuery('#wdt-enable-duplicate-button').prop( 'checked', enableDuplicateButton );
+    },
+    /**
      * Set option Show all rows
      * @param showAllRows 1 or 0
      */
@@ -1100,6 +1109,7 @@ var wpdatatable_config = {
         wpdatatable_config.setEditable( parseInt( tableJSON.editable ) );
         if (wpdatatable_config.editable || wpdatatable_config.table_type == 'manual') {
             wpdatatable_config.setMySQLTableName( tableJSON.mysql_table_name );
+            wpdatatable_config.setEnableDuplicateButton( tableJSON.enableDuplicateButton );
         }
         if( wpdatatable_config.editable ){
             wpdatatable_config.setUserIdColumn( tableJSON.userid_column_id );

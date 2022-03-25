@@ -498,6 +498,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wdt-checkbox-filter.btn:hover:before,
@@ -1343,13 +1344,17 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
 }
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-apply-duplicate-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button:hover,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button:hover,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-apply-duplicate-button:hover,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button:hover,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button:hover,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button:hover,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button:hover {
     border-radius: 4px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
@@ -1364,16 +1369,19 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
     height: 40px;
 }
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button i,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-apply-duplicate-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button i,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button i,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button i {
     margin-top: 2px;
     vertical-align: text-top;
     float: none;
 }
 
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button {
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button {
     width: 168px;
     border: 1px solid #606fc7;
     background-color: #ffffff;
@@ -1472,6 +1480,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.disabled {
     opacity: 0.4;
+    pointer-events: none;
 }
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper div.dt-buttons {
@@ -1484,6 +1493,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
     margin-bottom: 0;
 }
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button{
+    display: flex;
+    align-items: center;
     height: 40px;
     border-radius: 4px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
@@ -1512,24 +1523,28 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-purple .w
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_print:active,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_new:active,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_edit:active,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_duplicate:active,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_delete:active,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:active,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_export:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_print:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_new:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_edit:active:hover,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_duplicate:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_delete:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:active:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_export:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_print:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_new:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_edit:visited,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_duplicate:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_delete:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:visited,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_export:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_print:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_new:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_edit:hover,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_duplicate:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_delete:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:hover{
     background-color: #ffffff ;
@@ -1551,6 +1566,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_md:before{
@@ -1566,6 +1582,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before{
     margin-left: 7px;
@@ -1657,9 +1674,20 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf:before{
 
 }
 
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate{
+    width: 120px;
+    order: 7;
+}
+
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before{
+    content: '\f24d';
+    vertical-align: middle;
+
+}
+
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete{
     width: 100px;
-    order: 7;
+    order: 8;
 }
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
@@ -1704,6 +1732,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf span {
 }
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before:hover,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before:hover,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before:hover{
     color: #ffffff;
 }
@@ -1719,6 +1748,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf span {
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_new span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_edit span,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_md span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wdt-clear-filters-button span,
 #wdt-filter-widget .wdt-skin-purple .wdt-clear-filters-button span,
@@ -1755,6 +1785,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf span {
 }
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit span,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete span,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md span {
     color: #ffffff;
@@ -1771,9 +1802,11 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf span {
 
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit:before,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete:before {
     color: #ffffff !important;
 }
@@ -1781,11 +1814,13 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-pdf span {
 /*edit modal popover*/
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete {
     width: inherit !important;
 }
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_new:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_edit:before,
+.wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_delete:before,
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .wpDataTablesPopover .DTTT_button.DTTT_button_md:before{
     color: #ffffff !important;
@@ -2027,6 +2062,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-columnVisibility:be
     .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before,
     .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before,
     .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_edit:before,
+    .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before,
     .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
     .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_colvis:before{
         margin-left:0;
@@ -2117,8 +2153,13 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-columnVisibility:be
         margin-bottom: 12px;
     }
 
-    .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete {
+    .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate {
         order: 7;
+        margin-bottom: 12px;
+    }
+
+    .wpdt-c.wdt-skin-purple .wpDataTablesWrapper .DTTT_button.DTTT_button_delete {
+        order: 8;
         margin-bottom: 12px;
     }
 
@@ -2131,6 +2172,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-columnVisibility:be
 
     .wpdt-c.wdt-skin-purple .wpDataTablesPopover .DTTT_button.DTTT_button_delete,
     .wpdt-c.wdt-skin-purple .wpDataTablesPopover .DTTT_button.DTTT_button_edit,
+    .wpdt-c.wdt-skin-purple .wpDataTablesPopover .DTTT_button.DTTT_button_duplicate,
     .wpdt-c.wdt-skin-purple .wpDataTablesPopover .DTTT_button.DTTT_button_new {
         margin-bottom: 0;
     }
@@ -2180,6 +2222,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-columnVisibility:be
 
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button,
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button,
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button {
         width: auto !important;
         margin-left: 0;
@@ -2187,6 +2230,7 @@ div.dt-button-collection.wdt-skin-purple a.dt-button.buttons-columnVisibility:be
 
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button i,
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button i,
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button i,
     .wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button i {
         font-size: 12px;
     }

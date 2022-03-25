@@ -189,6 +189,7 @@ class WDTConfigController {
             $table->verticalScroll = (isset($advancedSettings->verticalScroll)) ? $advancedSettings->verticalScroll : 0;
             $table->verticalScrollHeight = (isset($advancedSettings->verticalScrollHeight)) ? $advancedSettings->verticalScrollHeight : 0;
             $table->editButtonsDisplayed = (isset($advancedSettings->editButtonsDisplayed)) ? $advancedSettings->editButtonsDisplayed : array('all');
+            $table->enableDuplicateButton = (isset($advancedSettings->enableDuplicateButton)) ? $advancedSettings->enableDuplicateButton : false;
             $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
             $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin)  ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
             $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval)  ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
@@ -344,6 +345,7 @@ class WDTConfigController {
                     'verticalScroll' => $table->verticalScroll,
                     'verticalScrollHeight' => $table->verticalScrollHeight,
                     'editButtonsDisplayed' => $table->editButtonsDisplayed,
+                    'enableDuplicateButton' => $table->enableDuplicateButton,
                     'language' => $table->language,
                     'tableSkin' => $tableSkin,
                     'tableBorderRemoval' => $table->tableBorderRemoval,
@@ -446,6 +448,7 @@ class WDTConfigController {
         } else {
             $table->editButtonsDisplayed = array('all');
         }
+        $table->enableDuplicateButton = (int)$table->enableDuplicateButton;
 
         if (!empty($table->editor_roles)) {
             $table->editor_roles = (array)$table->editor_roles;
@@ -1174,6 +1177,7 @@ class WDTConfigController {
         $table->edit_only_own_rows = 0;
         $table->inline_editing = 0;
         $table->editButtonsDisplayed = array('all');
+        $table->enableDuplicateButton = false;
         $table->mysql_table_name = '';
         $table->filtering_form = 0;
         $table->clearFilters = 0;

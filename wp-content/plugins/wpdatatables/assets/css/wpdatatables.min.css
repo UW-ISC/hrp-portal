@@ -277,6 +277,10 @@
     content: "\e00c";
 }
 
+.wpDataTablesWrapper .DTTT_button.DTTT_button_duplicate:before {
+    content: "\f24d";
+}
+
 .wpDataTablesWrapper .ico-search:before {
     content: "\e00d";
 }

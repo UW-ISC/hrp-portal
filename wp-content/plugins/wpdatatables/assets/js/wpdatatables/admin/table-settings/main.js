@@ -291,6 +291,14 @@
         });
 
         /**
+         * Toggle duplicate button
+         */
+        $('#wdt-enable-duplicate-button').on('change', function(e) {
+            wpdatatable_config.setEnableDuplicateButton($(this).is(':checked') ? 1 : 0);
+            updateEditButtons($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Toggle edit only own rows
          */
         $('#wdt-edit-only-own-rows').change(function (e) {
@@ -1573,5 +1581,20 @@
             delimiterRegex: '|',
             tagClass: 'label label-primary'
         });
+
+        function updateEditButtons(enableDuplicateButton) {
+            var editButtonsSelect = $('#wdt-edit-buttons-displayed');
+            if (!enableDuplicateButton) {
+                $('select#wdt-edit-buttons-displayed option[value="duplicate"]').remove();
+            } else if (enableDuplicateButton && $("#wdt-edit-buttons-displayed option[value='duplicate']").length <= 0) {
+                editButtonsSelect.append('<option value="duplicate">Duplicate</option>');
+                $('select#wdt-edit-buttons-displayed option[value="duplicate"]')
+                    .prop('selected', $('#wdt-edit-buttons-displayed option:selected').val() !== undefined);
+            }
+            editButtonsSelect.selectpicker('refresh');
+            editButtonsSelect.trigger('change');
+        }
+
     });
+
 })(jQuery);

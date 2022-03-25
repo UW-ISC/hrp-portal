@@ -2051,84 +2051,6 @@ class WPDataChart {
             $this->_apexcharts_render_data = array();
         }
 
-        if ($this->_engine == 'google') {
-            // Chart
-            if (!$this->_responsiveWidth) {
-                $this->_render_data['width'] = $this->getWidth();
-            }
-            $this->_render_data['options']['backgroundColor']['fill'] = $this->getBackgroundColor();
-            $this->_render_data['options']['backgroundColor']['strokeWidth'] = $this->getBorderWidth();
-            $this->_render_data['options']['backgroundColor']['stroke'] = $this->getBorderColor();
-            $this->_render_data['options']['backgroundColor']['rx'] = $this->getBorderRadius();
-            $this->_render_data['options']['chartArea']['backgroundColor']['fill'] = $this->getPlotBackgroundColor();
-            $this->_render_data['options']['chartArea']['backgroundColor']['strokeWidth'] = $this->getPlotBorderWidth();
-            $this->_render_data['options']['chartArea']['backgroundColor']['stroke'] = $this->getPlotBorderColor();
-            $this->_render_data['options']['fontSize'] = $this->getFontSize();
-            $this->_render_data['options']['fontName'] = $this->getFontName();
-            if ($this->_type == 'google_pie_chart') {
-                $this->_render_data['options']['is3D'] = $this->isThreeD();
-            }
-
-            // Series
-            if ($this->_type == 'google_line_chart') {
-                if ($this->getCurveType()) {
-                    $this->_render_data['options']['curveType'] = 'function';
-                } else {
-                    $this->_render_data['options']['curveType'] = 'none';
-                }
-            }
-
-            // Axes
-            if ($this->isHorizontalAxisCrosshair() && !$this->isVerticalAxisCrosshair()) {
-                $this->_render_data['options']['crosshair']['trigger'] = 'both';
-                $this->_render_data['options']['crosshair']['orientation'] = 'horizontal';
-            } elseif (!$this->isHorizontalAxisCrosshair() && $this->isVerticalAxisCrosshair()) {
-                $this->_render_data['options']['crosshair']['trigger'] = 'both';
-                $this->_render_data['options']['crosshair']['orientation'] = 'vertical';
-            } elseif ($this->isHorizontalAxisCrosshair() && $this->isVerticalAxisCrosshair()) {
-                $this->_render_data['options']['crosshair']['trigger'] = 'both';
-                $this->_render_data['options']['crosshair']['orientation'] = 'both';
-            } else {
-                $this->_render_data['options']['crosshair']['trigger'] = '';
-                $this->_render_data['options']['crosshair']['orientation'] = '';
-            }
-            $this->_render_data['options']['hAxis']['direction'] = $this->getHorizontalAxisDirection();
-            $this->_render_data['options']['vAxis']['direction'] = $this->getVerticalAxisDirection();
-            $this->_render_data['options']['vAxis']['viewWindow']['min'] = $this->getVerticalAxisMin();
-            $this->_render_data['options']['vAxis']['viewWindow']['max'] = $this->getVerticalAxisMax();
-            if ($this->isInverted()) {
-                $this->_render_data['options']['orientation'] = 'vertical';
-            } else {
-                $this->_render_data['options']['orientation'] = 'horizontal';
-            }
-
-            // Title
-            if ($this->isTitleFloating()) {
-                $this->_render_data['options']['titlePosition'] = 'in';
-            } else {
-                $this->_render_data['options']['titlePosition'] = 'out';
-            }
-
-            // Tooltip
-            if ($this->isTooltipEnabled()) {
-                $this->_render_data['options']['tooltip']['trigger'] = 'focus';
-            } else {
-                $this->_render_data['options']['tooltip']['trigger'] = 'none';
-            }
-
-            // Legend
-            $this->_render_data['options']['legend']['position'] = $this->getLegendPosition();
-            if ($this->getLegendVerticalAlign() == 'bottom') {
-                $this->_render_data['options']['legend']['alignment'] = 'end';
-            } elseif ($this->getLegendVerticalAlign() == 'middle') {
-                $this->_render_data['options']['legend']['alignment'] = 'center';
-            } else {
-                $this->_render_data['options']['legend']['alignment'] = 'start';
-            }
-
-        }
-
-
     }
 
 
@@ -2389,12 +2311,83 @@ class WPDataChart {
 
     }
 
-    public function getAxesAndSeries() {
-        if (empty($this->_render_data['columns'])) {
-            $this->prepareSeriesData();
-            $this->shiftStringColumnUp();
+    public function prepareGoogleChartsRender() {
+        // Chart
+        if (!$this->_responsiveWidth) {
+            $this->_render_data['width'] = $this->getWidth();
         }
-        return $this->_render_data;
+        $this->_render_data['options']['backgroundColor']['fill'] = $this->getBackgroundColor();
+        $this->_render_data['options']['backgroundColor']['strokeWidth'] = $this->getBorderWidth();
+        $this->_render_data['options']['backgroundColor']['stroke'] = $this->getBorderColor();
+        $this->_render_data['options']['backgroundColor']['rx'] = $this->getBorderRadius();
+        $this->_render_data['options']['chartArea']['backgroundColor']['fill'] = $this->getPlotBackgroundColor();
+        $this->_render_data['options']['chartArea']['backgroundColor']['strokeWidth'] = $this->getPlotBorderWidth();
+        $this->_render_data['options']['chartArea']['backgroundColor']['stroke'] = $this->getPlotBorderColor();
+        $this->_render_data['options']['fontSize'] = $this->getFontSize();
+        $this->_render_data['options']['fontName'] = $this->getFontName();
+        if ($this->_type == 'google_pie_chart') {
+            $this->_render_data['options']['is3D'] = $this->isThreeD();
+        }
+
+        // Series
+        if ($this->_type == 'google_line_chart') {
+            if ($this->getCurveType()) {
+                $this->_render_data['options']['curveType'] = 'function';
+            } else {
+                $this->_render_data['options']['curveType'] = 'none';
+            }
+        }
+
+        // Axes
+        if ($this->isHorizontalAxisCrosshair() && !$this->isVerticalAxisCrosshair()) {
+            $this->_render_data['options']['crosshair']['trigger'] = 'both';
+            $this->_render_data['options']['crosshair']['orientation'] = 'horizontal';
+        } elseif (!$this->isHorizontalAxisCrosshair() && $this->isVerticalAxisCrosshair()) {
+            $this->_render_data['options']['crosshair']['trigger'] = 'both';
+            $this->_render_data['options']['crosshair']['orientation'] = 'vertical';
+        } elseif ($this->isHorizontalAxisCrosshair() && $this->isVerticalAxisCrosshair()) {
+            $this->_render_data['options']['crosshair']['trigger'] = 'both';
+            $this->_render_data['options']['crosshair']['orientation'] = 'both';
+        } else {
+            $this->_render_data['options']['crosshair']['trigger'] = '';
+            $this->_render_data['options']['crosshair']['orientation'] = '';
+        }
+        $this->_render_data['options']['hAxis']['direction'] = $this->getHorizontalAxisDirection();
+        $this->_render_data['options']['vAxis']['direction'] = $this->getVerticalAxisDirection();
+        $this->_render_data['options']['vAxis']['viewWindow']['min'] = $this->getVerticalAxisMin();
+        $this->_render_data['options']['vAxis']['viewWindow']['max'] = $this->getVerticalAxisMax();
+        if ($this->isInverted()) {
+            $this->_render_data['options']['orientation'] = 'vertical';
+        } else {
+            $this->_render_data['options']['orientation'] = 'horizontal';
+        }
+
+        // Title
+        if ($this->isTitleFloating()) {
+            $this->_render_data['options']['titlePosition'] = 'in';
+        } else {
+            $this->_render_data['options']['titlePosition'] = 'out';
+        }
+
+        // Tooltip
+        if ($this->isTooltipEnabled()) {
+            $this->_render_data['options']['tooltip']['trigger'] = 'focus';
+        } else {
+            $this->_render_data['options']['tooltip']['trigger'] = 'none';
+        }
+
+        // Legend
+        $this->_render_data['options']['legend']['position'] = $this->getLegendPosition();
+        if ($this->getLegendVerticalAlign() == 'bottom') {
+            $this->_render_data['options']['legend']['alignment'] = 'end';
+        } elseif ($this->getLegendVerticalAlign() == 'middle') {
+            $this->_render_data['options']['legend']['alignment'] = 'center';
+        } else {
+            $this->_render_data['options']['legend']['alignment'] = 'start';
+        }
+
+        $this->_render_data = apply_filters('wpdatatables_filter_google_charts_render_data', $this->_render_data, $this->getId(), $this);
+
     }
 
     public function prepareHighchartsRender() {
@@ -2772,6 +2765,8 @@ class WPDataChart {
         $this->_highcharts_render_data['options']['credits']['href'] = $this->getCreditsHref();
         $this->_highcharts_render_data['options']['credits']['text'] = $this->getCreditsText();
 
+        $this->_highcharts_render_data = apply_filters('wpdatatables_filter_highcharts_render_data', $this->_highcharts_render_data, $this->getId(), $this);
+
     }
 
     /**
@@ -2979,6 +2974,8 @@ class WPDataChart {
         // Legend
         $this->_chartjs_render_data['options']['options']['legend']['display'] = $this->getShowLegend();
         $this->_chartjs_render_data['options']['options']['legend']['position'] = $this->getLegendPositionCjs();
+
+        $this->_chartjs_render_data = apply_filters('wpdatatables_filter_chartjs_render_data', $this->_chartjs_render_data, $this->getId(), $this);
 
     }
 
@@ -3284,12 +3281,15 @@ class WPDataChart {
         $this->_apexcharts_render_data['options']['legend']['showForSingleSeries'] = true;
         $this->_apexcharts_render_data['options']['legend']['show'] = $this->getShowLegend();
         $this->_apexcharts_render_data['options']['legend']['position'] = $this->getLegendPositionCjs() != '' ? $this->getLegendPositionCjs() : 'bottom';
+
+        $this->_apexcharts_render_data = apply_filters('wpdatatables_filter_apexcharts_render_data', $this->_apexcharts_render_data, $this->getId(), $this);
     }
 
     public function returnGoogleChartData() {
         $this->prepareData();
         $this->groupData();
         $this->shiftStringColumnUp();
+        $this->prepareGoogleChartsRender();
         return $this->_render_data;
     }
 
@@ -3339,6 +3339,10 @@ class WPDataChart {
 
         $this->prepareSeriesData();
         $this->shiftStringColumnUp();
+
+        if ($this->_engine == 'google') {
+            $this->prepareGoogleChartsRender();
+        }
 
         if ($this->_engine == 'highcharts') {
             $this->prepareHighchartsRender();

@@ -118,6 +118,7 @@ var singleClick = false;
                     }
 
                     $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
+                    $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                     $('.delete_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
 
                     if (wpDataTablesSelRows[tableDescription.tableId] == -2) {
@@ -141,11 +142,19 @@ var singleClick = false;
                 /**
                  * Data apply function for editable tables
                  * @param data
+                 * @param isDuplicate
+                 * @param applyDuplicate
                  */
-                wpDataTablesFunctions[tableDescription.tableId].applyData = function (data) {
+                wpDataTablesFunctions[tableDescription.tableId].applyData = function (data, isDuplicate = false, applyDuplicate = false) {
                     $(data).each(function (index, el) {
+                        var $inputElement = $('#' + tableDescription.tableId + '_edit_dialog .editDialogInput:not(.bootstrap-select):eq(' + index + ')');
+
                         if (el) {
-                            var val = el.toString();
+                            if($inputElement.data("key").toLowerCase() === 'wdt_id' && isDuplicate) {
+                                val = "0"
+                            } else {
+                                var val = el.toString();
+                            }
                         } else {
                             var val = '';
                         }
@@ -156,8 +165,6 @@ var singleClick = false;
                             val = val.replace(/<br\s*[\/]?>/g, "\n");
                         }
 
-
-                        var $inputElement = $('#' + tableDescription.tableId + '_edit_dialog .editDialogInput:not(.bootstrap-select):eq(' + index + ')');
                         var inputElementType = $inputElement.data('input_type');
                         var columnType = $inputElement.data('column_type');
 
@@ -258,7 +265,10 @@ var singleClick = false;
                             }
                         } else {
                             if (inputElementType == 'attachment' || $.inArray(columnType, ['icon']) !== -1) {
-                                columnType = $inputElement.parent().data('column_type');
+                                columnType = $inputElement.parent().data('column_type') === undefined ? 'link' : $inputElement.parent().data('column_type');
+                                if (isDuplicate && applyDuplicate) {
+                                    val = wpDataTablesFunctions[tableDescription.tableId].transformDataForDuplicate(val, columnType);
+                                }
                                 if (val != '') {
                                     if ($(val).children('img').first().attr('src') != undefined) {
                                         val = $(val).children('img').first().attr('src') + '||' + $(val).attr('href');
@@ -286,10 +296,15 @@ var singleClick = false;
                                     $inputElement.closest('.fileinput').find('.fileinput-preview').html('');
                                 }
                             } else {
+                                if (isDuplicate && applyDuplicate && $.inArray(columnType, ['link', 'int']) !== -1) {
+                                    val = wpDataTablesFunctions[tableDescription.tableId].transformDataForDuplicate(val, columnType);
+                                }
                                 if (val.indexOf('<a ') != -1) {
                                     if ($.inArray(columnType, ['link', 'email', 'icon']) !== -1) {
                                         $link = $(val);
-                                        if ($link.attr('href').indexOf($link.html()) === -1) {
+                                        if (applyDuplicate) {
+                                            val = $link.attr('href');
+                                        } else if ($link.attr('href').indexOf($link.html()) === -1) {
                                             val = $link.attr('href').replace('mailto:', '') + '||' + $link.html();
                                         } else {
                                             val = $link.html();
@@ -315,6 +330,26 @@ var singleClick = false;
                     });
                 };
 
+                wpDataTablesFunctions[tableDescription.tableId].transformDataForDuplicate = function (val, columnType) {
+                    var transformedVal = val;
+
+                    if (val) {
+                        if (columnType === 'int') {
+                            var thousandsSeparator = tableDescription.number_format == 1 ? '.' : ',';
+                            var decimalSeparator = tableDescription.number_format == 1 ? ',' : '.';
+
+                            transformedVal = wdtFormatNumber(val, 0, decimalSeparator, thousandsSeparator);
+                        } else if (columnType === 'icon') {
+                            val = val.substring(val.lastIndexOf('|') + 1);
+                            transformedVal = "<a href='" + val + "' target='_blank' rel='lightbox[-1]'><img src='" + val + "' /></a>";
+                        } else if (columnType === 'link') {
+                            transformedVal = "<a href='" + val + "' rel='' target='_self'>att</a>";
+                        }
+                    }
+
+                    return transformedVal;
+                }
+
                 /**
                  * Saving of the table data for frontend
                  *
@@ -322,7 +357,7 @@ var singleClick = false;
                  * @param closeDialog
                  * @returns {boolean}
                  */
-                wpDataTablesFunctions[tableDescription.tableId].saveTableData = function (forceRedraw, closeDialog) {
+                wpDataTablesFunctions[tableDescription.tableId].saveTableData = function (forceRedraw, closeDialog, duplicateEntry) {
                     $(tableDescription.selector + '_edit_dialog').closest('.modal-dialog').find('.wdt-preload-layer').animateFadeIn();
                     wpDataTablesUpdatingFlags[tableDescription.tableId] = true;
                     var formdata = {
@@ -403,6 +438,7 @@ var singleClick = false;
                         data: {
                             action: 'wdt_save_table_frontend',
                             wdtNonce: $('#wdtNonceFrontendEdit_' + tableDescription.tableWpId).val(),
+                            isDuplicate: duplicateEntry,
                             formdata: formdata
                         },
                         success: function (returnData) {
@@ -417,10 +453,12 @@ var singleClick = false;
                                     if (forceRedraw) {
                                         wpDataTables[tableDescription.tableId].fnDraw(false);
                                         $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
+                                        $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                                     }
                                 } else {
                                     wpDataTables[tableDescription.tableId].fnDraw(false);
                                     $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
+                                    $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                                 }
 
                                 wdtNotify(wpdatatables_edit_strings.success, wpdatatables_edit_strings.dataSaved, 'success');
@@ -439,7 +477,11 @@ var singleClick = false;
                                         if (tinymce.activeEditor)
                                             tinymce.activeEditor.setContent('');
 
-                                        wpDataTablesFunctions[tableDescription.tableId].setPredefinedEditValues();
+                                        if (duplicateEntry === true) {
+                                            wpDataTablesFunctions[tableDescription.tableId].applyData(aoData, true, true);
+                                        } else {
+                                            wpDataTablesFunctions[tableDescription.tableId].setPredefinedEditValues();
+                                        }
                                     }
                                 }, 1000);
                                 if (!returnData.is_new && $(tableDescription.selector + ' > tbody > tr.selected').length) {
@@ -1101,7 +1143,17 @@ var singleClick = false;
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     e.preventDefault();
-                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, false);
+                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, false, false);
+                });
+
+                /**
+                 * Duplicate button in edit dialog
+                 */
+                $(document).on('click', tableDescription.selector + '_apply_duplicate_dialog', function (e) {
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, false, true);
                 });
 
                 /**
@@ -1111,7 +1163,7 @@ var singleClick = false;
                     e.preventDefault();
                     e.stopImmediatePropagation();
                     e.preventDefault();
-                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true);
+                    wpDataTablesFunctions[tableDescription.tableId].saveTableData(true, true, false);
                 });
 
                 /**
@@ -1251,7 +1303,7 @@ var singleClick = false;
                         if(typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function'){
                             if (singleClick === false){
                                 singleClick = true;
-                                wpDataTablesEditors[tableDescription.tableType]['edit'](tableDescription);
+                                wpDataTablesEditors[tableDescription.tableType]['edit'](tableDescription, false);
                             }
                         }
                     } else {
@@ -1295,6 +1347,8 @@ var singleClick = false;
                             }
                         });
                         modal.modal('show');
+                        $('.wdt-apply-edit-button').removeClass('hidden');
+                        $('.wdt-apply-duplicate-button').addClass('hidden');
                     }
 
 
@@ -1392,11 +1446,93 @@ var singleClick = false;
                         }
 
                         modal.modal('show');
+                        $('.wdt-apply-edit-button').removeClass('hidden');
+                        $('.wdt-apply-duplicate-button').addClass('hidden');
 
                     }
 
 
 
+                });
+
+                /**
+                 * Duplicate entry
+                 */
+                $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').click(function () {
+                    var modal = $('#wdt-frontend-modal');
+                    var newSkins = ['dark', 'aqua','purple'];
+
+                    var row = $(tableDescription.selector + ' tr.selected').get(0);
+
+                    $('.wpDataTablesPopover.editTools').hide();
+
+                    modal.addClass('wdt-skin-' + tableDescription.tableSkin);
+
+                    modal.find('.modal-title').html(wpdatatables_frontend_strings.duplicate_entry);
+                    modal.find('.modal-body').html('');
+                    modal.find('.modal-footer').html('');
+
+
+                    if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
+                        if(typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function'){
+                            if (singleClick === false) {
+                                singleClick = true;
+                                wpDataTablesEditors[tableDescription.tableType]['edit'](tableDescription, true);
+                            }
+                        }
+                    } else {
+                        var data = wpDataTables[tableDescription.tableId].fnGetData(row);
+                        wpDataTablesFunctions[tableDescription.tableId].applyData(data, true, false);
+                        wpDataTables[tableDescription.tableId].checkSelectedLimits();
+                        modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
+                        modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
+
+                        if (newSkins.includes(tableDescription.tableSkin)){
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        } else {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                        }
+
+                        $('#wdt-frontend-modal .editDialogInput').each(function (index) {
+                            if ($(this).data('input_type') == 'mce-editor') {
+                                if (tinymce.activeEditor)
+                                    tinymce.activeEditor.setContent('');
+                                tinymce.execCommand('mceRemoveEditor', true, $(this).attr('id'));
+                                tinymce.init({
+                                    selector: '#' + $(this).attr('id'),
+                                    menubar: false,
+                                    plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
+                                    toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor removeformat | code'
+                                });
+                            }
+                        });
+
+                        wpDataTables[tableDescription.tableId].checkSelectedLimits();
+
+                        // Show 'No editor inputs selected' alert
+                        if (modal.find('.wdt-edit-dialog-fields-block').find('.form-group').length == 0) {
+                            $('#wdt-frontend-modal div.wdt-no-editor-inputs-selected-alert').show();
+                        }
+
+                        modal.modal('show');
+                        $('.wdt-apply-edit-button').addClass('hidden');
+                        $('.wdt-apply-duplicate-button').removeClass('hidden');
+
+                    }
                 });
 
                 /**
@@ -1497,6 +1633,7 @@ var singleClick = false;
                     $('<div class="wpDataTablesPopover editTools ' + tableDescription.tableId + '"></div>').prependTo(tableDescription.selector + '_wrapper').hide();
                     $('.new_table_entry[aria-controls="' + tableDescription.tableId + '"]').prependTo(tableDescription.selector + '_wrapper .wpDataTablesPopover.editTools').css('float', 'right');
                     $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').prependTo(tableDescription.selector + '_wrapper .wpDataTablesPopover.editTools').css('float', 'right');
+                    $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').prependTo(tableDescription.selector + '_wrapper .wpDataTablesPopover.editTools').css('float', 'right');
                     $('.delete_table_entry[aria-controls="' + tableDescription.tableId + '"]').prependTo(tableDescription.selector + '_wrapper .wpDataTablesPopover.editTools').css('float', 'right');
                 }
 
@@ -1532,6 +1669,7 @@ var singleClick = false;
                     }
                     if ($(tableDescription.selector + ' tbody tr.selected').length > 0) {
                         $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').removeClass('disabled');
+                        $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').removeClass('disabled');
                         $('.delete_table_entry[aria-controls="' + tableDescription.tableId + '"]').removeClass('disabled');
                         $('.master_detail[aria-controls="' + tableDescription.tableId + '"]').removeClass('disabled');
                         if (!editedRow) {
@@ -1541,6 +1679,7 @@ var singleClick = false;
                         }
                     } else {
                         $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
+                        $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                         $('.delete_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                         $('.master_detail[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                         $('.wpDataTablesPopover.editTools.' + tableDescription.tableId + '').hide();
@@ -1732,8 +1871,14 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
     var ruleMatched = false;
     if ((params.columnType == 'int') || (params.columnType == 'float')) {
         // Process numeric comparison
-        let cleanValue = wdtUnformatNumber(getPurifiedValue(element, responsive), params.thousandsSeparator, params.decimalSeparator, true)
-        cellVal = cleanValue == '' ? null : parseFloat(cleanValue)
+        if (responsive) {
+            cellVal = element.children('.columnValue').html();
+        } else {
+            cellVal = element.clone().html();
+        }
+        if (!isNaN(cellVal)) {
+            cellVal = cellVal === '' ? null : parseFloat(wdtUnformatNumber(cellVal, params.thousandsSeparator, params.decimalSeparator, true))
+        }
         ruleVal = conditionalFormattingRules.cellVal;
     } else if (params.columnType == 'date') {
         cellVal = moment(getPurifiedValue(element, responsive), params.momentDateFormat).toDate();

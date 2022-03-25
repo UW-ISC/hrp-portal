@@ -2,28 +2,45 @@
 
 defined('ABSPATH') or die('Access denied.');
 
-class WPDataTables_Elementor_Widgets
-{
+use Elementor\WPDataTables_Elementor_Widget;
+use Elementor\WPDataCharts_Elementor_Widget;
+use Elementor\Plugin;
 
-    protected static $instance = null;
+final class WPDataTables_Elementor_Widgets {
 
-    public static function get_instance()
-    {
-        if (!isset(static::$instance)) {
-            static::$instance = new static;
+    private static $_instance = null;
+
+    public static function instance() {
+        if ( is_null( self::$_instance ) ) {
+            self::$_instance = new self();
         }
+        return self::$_instance;
+    }
 
-        return static::$instance;
+    public function init() {
+        if ($this->check_version()) {
+            add_action('elementor/widgets/widgets_registered', [$this, 'register_widgets']);
+        } else {
+            add_action('elementor/widgets/register', [$this, 'register_widgets']);
+        }
+        add_action('elementor/editor/before_enqueue_scripts', [$this, 'widget_styles']);
+        add_action('elementor/frontend/after_enqueue_styles', [$this, 'widget_styles']);
+        add_action('elementor/elements/categories_registered', [$this, 'register_widget_categories']);
+    }
+
+    public function is_compatible() {
+        return defined('ELEMENTOR_VERSION');
+    }
+
+    public function check_version() {
+        return version_compare(ELEMENTOR_VERSION, '3.5.0', '<');
     }
 
     protected function __construct()
     {
-        $this->includes();
-        add_action('elementor/editor/before_enqueue_scripts', [$this, 'widget_styles']);
-        add_action('elementor/widgets/widgets_registered', [$this, 'register_widgets']);
-        add_action('elementor/frontend/after_enqueue_styles', [$this, 'widget_styles']);
-        add_action('elementor/elements/categories_registered', [$this, 'register_widget_categories']);
-
+        if ( $this->is_compatible() ) {
+            add_action( 'elementor/init', [ $this, 'init' ] );
+        }
     }
 
     public function includes()
@@ -32,10 +49,16 @@ class WPDataTables_Elementor_Widgets
         require_once(WDT_ROOT_PATH . 'integrations/page_builders/elementor/widgets/class.wpDataChartsElementorWidget.php');
     }
 
-    public function register_widgets()
+    public function register_widgets($widgets_manager)
     {
-        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor\WPDataTables_Elementor_Widget());
-        \Elementor\Plugin::instance()->widgets_manager->register(new \Elementor\WPDataCharts_Elementor_Widget());
+        $this->includes();
+        if ($this->check_version()){
+            Plugin::instance()->widgets_manager->register_widget_type(new WPDataTables_Elementor_Widget());
+            Plugin::instance()->widgets_manager->register_widget_type(new WPDataCharts_Elementor_Widget());
+        } else {
+            $widgets_manager->register(new WPDataTables_Elementor_Widget());
+            $widgets_manager->register(new WPDataCharts_Elementor_Widget());
+        }
     }
 
     public function widget_styles()
@@ -56,13 +79,7 @@ class WPDataTables_Elementor_Widgets
 
 }
 
-add_action('init', 'wpdatatables_elementor_widgets_init');
-function wpdatatables_elementor_widgets_init()
-{
-    if (defined('ELEMENTOR_VERSION')) {
-        WPDataTables_Elementor_Widgets::get_instance();
-    }
-}
+\WPDataTables_Elementor_Widgets::instance();
 
 
 
