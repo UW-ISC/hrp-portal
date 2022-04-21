@@ -12,7 +12,7 @@
                     <div class="col-sm-10">
                         <div class="fg-line">
                             <input type="text" class="form-control input-sm wdt-constructor-column-name"
-                                   value="<?php echo $header ?>">
+                                   value="<?php echo esc_attr($header) ?>">
                             <i class="wpdt-icon-pen"></i>
                         </div>
                     </div>
@@ -31,15 +31,15 @@
 
                     <div class="col-sm-12 p-t-5 p-0">
                         <h5 class="c-black m-b-10">
-                            <?php _e('Type', 'wpdatatables'); ?>
+                            <?php esc_html_e('Type', 'wpdatatables'); ?>
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
                                 <div class="select">
                                     <select class="selectpicker wdt-constructor-column-type">
                                         <?php foreach ($possibleColumnTypes as $columnTypeKey => $columnTypeName) { ?>
-                                            <option value="<?php echo $columnTypeKey ?>"
-                                                    <?php if ($columnTypeKey == $columnTypeArray[$header]) { ?>selected="selected"<?php } ?> ><?php echo $columnTypeName ?></option>
+                                            <option value="<?php echo esc_attr($columnTypeKey) ?>"
+                                                    <?php if ($columnTypeKey == $columnTypeArray[$header]) { ?>selected="selected"<?php } ?> ><?php echo esc_html($columnTypeName) ?></option>
                                         <?php } ?>
                                     </select>
                                 </div>
@@ -49,7 +49,7 @@
 
                     <div class="col-sm-12 wdt-constructor-date-input-format-block p-0" style="display: none;">
                         <h5 class="c-title-color m-b-2">
-                            <?php _e('Date input format', 'wpdatatables'); ?>
+                            <?php esc_html_e('Date input format', 'wpdatatables'); ?>
                         </h5>
 
                         <div class="form-group">
@@ -85,7 +85,7 @@
 
                     <div class="col-sm-12 wdt-constructor-possible-values-block p-0" style="display: none;">
                         <h5 class="c-black m-b-10">
-                            <?php _e('Possible values', 'wpdatatables'); ?>
+                            <?php esc_html_e('Possible values', 'wpdatatables'); ?>
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
@@ -96,7 +96,7 @@
 
                     <div class="col-sm-12  p-0">
                         <h5 class="c-black m-b-10">
-                            <?php _e('Editor predefined value', 'wpdatatables'); ?>
+                            <?php esc_html_e('Editor predefined value', 'wpdatatables'); ?>
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
@@ -107,7 +107,7 @@
 
                     <div class="col-sm-12 wdt-constructor-data-preview  p-0">
                         <h5 class="c-black m-b-10">
-                            <?php _e('Data preview', 'wpdatatables'); ?>
+                            <?php esc_html_e('Data preview', 'wpdatatables'); ?>
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
@@ -115,7 +115,7 @@
                                     <tbody>
                                     <?php foreach ($namedDataArray as $row) { ?>
                                         <tr>
-                                            <td><?php echo $row[$header] ?></td>
+                                            <td><?php echo esc_html($row[$header]) ?></td>
                                         </tr>
                                     <?php } ?>
                                     </tbody>

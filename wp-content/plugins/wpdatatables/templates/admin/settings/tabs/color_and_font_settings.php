@@ -15,16 +15,16 @@
                 <div class="panel-heading active" role="tab" id="heading-one">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-one" aria-expanded="true"
-                           aria-controls="collapse-one"><?php _e('Font', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-one"><?php esc_html_e('Font', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-one" class="collapse in" role="tabpanel" aria-labelledby="heading-one">
                     <div class="panel-body">
                         <div class="col-sm-4">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Font', 'wpdatatables'); ?>
+                                <?php esc_html_e('Font', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This font will be used in rendered tables. Leave blank not to override default theme settings', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This font will be used in rendered tables. Leave blank not to override default theme settings', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="form-group">
                                 <div class="fg-line">
@@ -42,9 +42,9 @@
                         </div>
                         <div class="col-sm-4">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Font size', 'wpdatatables'); ?>
+                                <?php esc_html_e('Font size', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('Define the font size', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('Define the font size', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="form-group">
                                 <div class="fg-line">
@@ -54,7 +54,7 @@
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="text" name="wdt-font-size" min="8" value="" class="form-control input-sm input-number" data-name="wdtFontSize"
+                                                <input type="number" name="wdt-font-size" min="8" value="" class="form-control input-sm input-number" data-name="wdtFontSize"
                                                        id="wdt-font-size">
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-font-size">
                                                     <i class="wpdt-icon-plus-full"></i>
@@ -67,9 +67,9 @@
                         </div>
                         <div class="col-sm-4">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Font color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Font color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the main font in table cells.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the main font in table cells.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -95,16 +95,16 @@
                 <div class="panel-heading" role="tab" id="heading-two">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-two" aria-expanded="true"
-                           aria-controls="collapse-two"><?php _e('Header', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-two"><?php esc_html_e('Header', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-two" class="collapse" role="tabpanel" aria-labelledby="heading-two">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Background color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('The color is used for background of the table header.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('The color is used for background of the table header.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -121,9 +121,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Border color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Border color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the border in the table header.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the border in the table header.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -141,9 +141,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Font color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Font color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the font in the table header.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the font in the table header.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -160,9 +160,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Active and hover color	', 'wpdatatables'); ?>
+                                <?php esc_html_e('Active and hover color	', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used when you hover the mouse above the table header, or when you choose a column.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used when you hover the mouse above the table header, or when you choose a column.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -189,16 +189,16 @@
                 <div class="panel-heading" role="tab" id="heading-three">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-three" aria-expanded="false"
-                           aria-controls="collapse-three" class="collapsed"><?php _e('Table border', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-three" class="collapsed"><?php esc_html_e('Table border', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-three" class="collapse" role="tabpanel" aria-labelledby="heading-three">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Inner border', 'wpdatatables'); ?>
+                                <?php esc_html_e('Inner border', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the inner border in the table between cells.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the inner border in the table between cells.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -216,9 +216,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Outer border', 'wpdatatables'); ?>
+                                <?php esc_html_e('Outer border', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the outer border of the whole table body.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the outer border of the whole table body.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -236,24 +236,24 @@
                         </div>
                         <div class="col-sm-3 wdt-remove-borders">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Table borders', 'wpdatatables'); ?>
+                                <?php esc_html_e('Table borders', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('When this is checked, borders in table will be removed ', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('When this is checked, borders in table will be removed ', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input type="checkbox" name="wdt-remove-borders" id="wdt-remove-borders"/>
-                                <label for="wdt-remove-borders" class="ts-label"><?php _e('Remove borders in table', 'wpdatatables'); ?></label>
+                                <label for="wdt-remove-borders" class="ts-label"><?php esc_html_e('Remove borders in table', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                         <div class="col-sm-3 wdt-remove-borders-header">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Header border', 'wpdatatables'); ?>
+                                <?php esc_html_e('Header border', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('When this is checked,borders in header will be removed  ', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('When this is checked,borders in header will be removed  ', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="toggle-switch" data-ts-color="blue">
                                 <input type="checkbox" name="wdt-remove-borders-header" id="wdt-remove-borders-header"/>
-                                <label for="wdt-remove-borders-header" class="ts-label"><?php _e('Remove borders in header', 'wpdatatables'); ?></label>
+                                <label for="wdt-remove-borders-header" class="ts-label"><?php esc_html_e('Remove borders in header', 'wpdatatables'); ?></label>
                             </div>
                         </div>
                     </div>
@@ -267,16 +267,16 @@
                 <div class="panel-heading" role="tab" id="heading-four">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-four" aria-expanded="false"
-                           aria-controls="collapse-four" class="collapsed"> <?php _e('Row color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-four" class="collapsed"> <?php esc_html_e('Row color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-four" class="collapse" role="tabpanel" aria-labelledby="heading-four">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Even row background', 'wpdatatables'); ?>
+                                <?php esc_html_e('Even row background', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for for background in even rows.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for for background in even rows.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -293,9 +293,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Odd row background', 'wpdatatables'); ?>
+                                <?php esc_html_e('Odd row background', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for for background in odd rows.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for for background in odd rows.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -312,9 +312,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Hover row', 'wpdatatables'); ?>
+                                <?php esc_html_e('Hover row', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for to highlight the row when you hover your mouse above it.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for to highlight the row when you hover your mouse above it.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -331,9 +331,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Background for selected rows', 'wpdatatables'); ?>
+                                <?php esc_html_e('Background for selected rows', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for background in selected rows.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for background in selected rows.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -360,16 +360,16 @@
                 <div class="panel-heading" role="tab" id="heading-five">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-five" aria-expanded="false"
-                           aria-controls="collapse-five" class="collapsed"><?php _e('Cell color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-five" class="collapsed"><?php esc_html_e('Cell color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-five" class="collapse" role="tabpanel" aria-labelledby="heading-five">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Sorted columns, even rows', 'wpdatatables'); ?>
+                                <?php esc_html_e('Sorted columns, even rows', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for background in cells which are in the active columns (columns used for sorting) in even rows.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for background in cells which are in the active columns (columns used for sorting) in even rows.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -387,9 +387,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Sorted columns, odd rows', 'wpdatatables'); ?>
+                                <?php esc_html_e('Sorted columns, odd rows', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for background in cells which are in the active columns (columns used for sorting) in odd rows.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for background in cells which are in the active columns (columns used for sorting) in odd rows.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -416,16 +416,16 @@
                 <div class="panel-heading" role="tab" id="heading-six">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-six" aria-expanded="false"
-                           aria-controls="collapse-six" class="collapsed"><?php _e('Buttons color in modals', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-six" class="collapsed"><?php esc_html_e('Buttons color in modals', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-six" class="collapse" role="tabpanel" aria-labelledby="heading-six">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Background color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for background in buttons.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for background in buttons.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -442,9 +442,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Border color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Border color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for border in buttons.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for border in buttons.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -462,9 +462,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Font color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Font color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for font in buttons.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for font in buttons.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -481,9 +481,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Background hover color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Background hover color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for button backgrounds when you hover above them.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for button backgrounds when you hover above them.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -501,9 +501,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Hover font color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Hover font color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for buttons font when you hover above them.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for buttons font when you hover above them.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -521,9 +521,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Buttons hover border color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Buttons hover border color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for button borders when you hover above them.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for button borders when you hover above them.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -541,9 +541,9 @@
                         </div>
                         <div class="col-sm-3 buttons-input-border-radius">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Buttons and inputs border radius (in px)', 'wpdatatables'); ?>
+                                <?php esc_html_e('Buttons and inputs border radius (in px)', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This is a border radius for inputs in buttons. Default is 3px.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This is a border radius for inputs in buttons. Default is 3px.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="form-group">
                                 <div class="fg-line">
@@ -553,7 +553,7 @@
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-border-input-radius">
                                                     <i class="wpdt-icon-minus"></i>
                                                 </button>
-                                                <input type="text" name="wdt-border-input-radius" min="1" value="" class="form-control input-sm input-number" data-name="wdtBorderRadius"
+                                                <input type="number" name="wdt-border-input-radius" min="1" value="" class="form-control input-sm input-number" data-name="wdtBorderRadius"
                                                        id="wdt-border-input-radius">
                                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-border-input-radius">
                                                     <i class="wpdt-icon-plus-full"></i>
@@ -575,16 +575,16 @@
                 <div class="panel-heading" role="tab" id="heading-seven">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-seven" aria-expanded="false"
-                           aria-controls="collapse-seven" class="collapsed"><?php _e('Modals and overlay color', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-seven" class="collapsed"><?php esc_html_e('Modals and overlay color', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-seven" class="collapse" role="tabpanel" aria-labelledby="heading-seven">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Modals font color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Modals font color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for wpDataTable popup (filter, datepicker) fonts.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for wpDataTable popup (filter, datepicker) fonts.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -602,9 +602,9 @@
 
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Modals background', 'wpdatatables'); ?>
+                                <?php esc_html_e('Modals background', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for wpDataTable popup (filter, datepicker) background.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for wpDataTable popup (filter, datepicker) background.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -623,9 +623,9 @@
 
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Overlay background', 'wpdatatables'); ?>
+                                <?php esc_html_e('Overlay background', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color will be used for overlay which appears below the plugin popups.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color will be used for overlay which appears below the plugin popups.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -651,16 +651,16 @@
                 <div class="panel-heading" role="tab" id="heading-eight">
                     <h4 class="panel-title">
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse-eight" aria-expanded="true"
-                           aria-controls="collapse-eight"><?php _e('Pagination', 'wpdatatables'); ?></a>
+                           aria-controls="collapse-eight"><?php esc_html_e('Pagination', 'wpdatatables'); ?></a>
                     </h4>
                 </div>
                 <div id="collapse-eight" class="collapse" role="tabpanel" aria-labelledby="heading-eight">
                     <div class="panel-body">
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Background color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the background of the pagination', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the background of the pagination', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -678,9 +678,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the color of the links in the pagination.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the color of the links in the pagination.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -698,9 +698,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Current page background color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Current page background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('The color is used for background of the current page', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('The color is used for background of the current page', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -717,9 +717,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Current page color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Current page color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used for the color of the current page.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used for the color of the current page.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -737,9 +737,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Other pages hover background color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Other pages hover background color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This background color is used when you hover the mouse above the other pages', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This background color is used when you hover the mouse above the other pages', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">
@@ -756,9 +756,9 @@
                         </div>
                         <div class="col-sm-3">
                             <h5 class="c-title-color m-b-2">
-                                <?php _e('Other pages hover color', 'wpdatatables'); ?>
+                                <?php esc_html_e('Other pages hover color', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php _e('This color is used when you hover the mouse above the other pages.', 'wpdatatables'); ?>"></i>
+                                   title="<?php esc_attr_e('This color is used when you hover the mouse above the other pages.', 'wpdatatables'); ?>"></i>
                             </h5>
                             <div class="cp-container">
                                 <div class="form-group">

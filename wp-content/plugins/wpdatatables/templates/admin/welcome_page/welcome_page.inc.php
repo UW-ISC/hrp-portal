@@ -23,7 +23,7 @@
                         <li class="m-0 p-0">
                             <button class="wdt-go-dashboard"><a
                                         href="<?php echo admin_url('admin.php?page=wpdatatables-dashboard'); ?>">
-                                    <?php _e('Go to Dashboard', 'wpdatatables'); ?><i class="wpdt-icon-arrow-right"></i>
+                                    <?php esc_html_e('Go to Dashboard', 'wpdatatables'); ?><i class="wpdt-icon-arrow-right"></i>
                                 </a>
                             </button>
                         </li>
@@ -45,20 +45,20 @@
                                 <h1 class="m-t-0 p-t-0 p-b-0">
                                     <img class="wdt-wave" src="<?php echo WDT_ASSETS_PATH; ?>img/wave.png"
                                          style="width: 32px;height: 32px;">
-                                    <?php _e('Welcome to wpDataTables!', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Welcome to wpDataTables!', 'wpdatatables'); ?>
                                 </h1>
                                 <h2>
-                                    <?php _e('The Best Tables & Charts WordPress Plugin', 'wpdatatables'); ?>
+                                    <?php esc_html_e('The Best Tables & Charts WordPress Plugin', 'wpdatatables'); ?>
                                 </h2>
                                 <p>
-                                    <?php _e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 60,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
+                                    <?php esc_html_e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 60,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
                                 </p>
                                 <div class="wdt-changelog-button">
                                     <div class="wdt-changelog-button-background">
-                                        <span>  <?php _e('Version ', 'wpdatatables'); ?></span>
+                                        <span>  <?php esc_html_e('Version ', 'wpdatatables'); ?></span>
                                         <span class="font-weight-bold">  <?php echo WDT_CURRENT_VERSION . " - "; ?></span>
                                         <a href="https://wpdatatables.com/help/whats-new-changelog/" target="_blank">
-                                            <?php _e('View changelog', 'wpdatatables'); ?>
+                                            <?php esc_html_e('View changelog', 'wpdatatables'); ?>
                                         </a>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/create-simple-table.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('NEW! Create Simple tables', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('NEW! Create Simple tables', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -91,7 +91,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/add-from-data-source.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a data table linked to an existing data source', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Create a data table linked to an existing data source', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -101,7 +101,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/manual.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a data table manually', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Create a data table manually', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -117,7 +117,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/import-data-from-data-source.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create a data table by importing data from a data source', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Create a data table by importing data from a data source', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -127,7 +127,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-wordpress-database.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Generate a query to the WordPress database', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Generate a query to the WordPress database', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -137,7 +137,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/generate-query-to-mysql-database.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Generate a query to the MySQL database', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Generate a query to the MySQL database', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -151,7 +151,7 @@
                                          src="<?php echo WDT_ASSETS_PATH ?>img/constructor/charts.png">
                                 </div>
                                 <div class="wdt-wizard-options-desc pull-left">
-                                    <span class="text-left"><?php _e('Create charts with Google Charts, HighCharts and Charts.js', 'wpdatatables'); ?>.</span>
+                                    <span class="text-left"><?php esc_html_e('Create charts with Google Charts, HighCharts and Charts.js', 'wpdatatables'); ?>.</span>
                                 </div>
                                 <div class="clear"></div>
                             </div>
@@ -163,10 +163,10 @@
                         <div class="row m-0 wdt-getting-started">
                             <div class="col-sm-12 p-l-0 p-r-0 wdt-getting-started-desc">
                                 <h2>
-                                    <?php _e('Getting started with your first table and chart', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Getting started with your first table and chart', 'wpdatatables'); ?>
                                 </h2>
                                 <p>
-                                    <?php _e('By following the step-by-step instructions in the walkthrough, you can easily publish your first table or chart on your website.', 'wpdatatables'); ?>
+                                    <?php esc_html_e('By following the step-by-step instructions in the walkthrough, you can easily publish your first table or chart on your website.', 'wpdatatables'); ?>
                                 </p>
                             </div>
                         </div>
@@ -177,45 +177,45 @@
                             <div class="col-sm-4 wdt-getting-started-section">
                                 <h4>
                                     <i class="wpdt-icon-magic-stick"></i>
-                                    <?php _e('Table and chart wizard', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Table and chart wizard', 'wpdatatables'); ?>
                                 </h4>
                                 <p>
-                                    <?php _e('Through several different tutorials we will show you how to create your first table and chart.', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Through several different tutorials we will show you how to create your first table and chart.', 'wpdatatables'); ?>
                                 </p>
                                 <button class="wdt-start-creating"><a
                                             href="<?php echo admin_url('admin.php?page=wpdatatables-getting-started'); ?>">
-                                        <?php _e('Start creating', 'wpdatatables'); ?>
+                                        <?php esc_html_e('Start creating', 'wpdatatables'); ?>
                                     </a>
                                 </button>
                             </div>
                             <div class="col-sm-4 wdt-getting-started-section">
                                 <h4>
                                     <i class="wpdt-icon-question-square"></i>
-                                    <?php _e('FAQ', 'wpdatatables'); ?>
+                                    <?php esc_html_e('FAQ', 'wpdatatables'); ?>
                                 </h4>
                                 <p>
-                                    <?php _e('Check out our FAQ section to find the answers to the popular questions about plugin functionality and many more. ', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Check out our FAQ section to find the answers to the popular questions about plugin functionality and many more. ', 'wpdatatables'); ?>
 
                                 </p>
                                 <button class="wdt-start-creating"><a
                                             href="https://wpdatatables.com/help/faq/" target="_blank">
-                                        <?php _e('View FAQ', 'wpdatatables'); ?>
+                                        <?php esc_html_e('View FAQ', 'wpdatatables'); ?>
                                     </a>
                                 </button>
                             </div>
                             <div class="col-sm-4 wdt-getting-started-section">
                                 <h4>
                                     <i class="wpdt-icon-book path1 path2"></i>
-                                    <?php _e('Documentation', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Documentation', 'wpdatatables'); ?>
                                 </h4>
                                 <p>
-                                    <?php _e('If you need a detailed video and text explanation about every feature in our plugin, check out our Documentation.', 'wpdatatables'); ?>
+                                    <?php esc_html_e('If you need a detailed video and text explanation about every feature in our plugin, check out our Documentation.', 'wpdatatables'); ?>
 
                                 </p>
                                 <button class="wdt-start-creating"><a
                                             href="https://wpdatatables.com/documentation/general/features-overview/"
                                             target="_blank">
-                                        <?php _e('View Documentation', 'wpdatatables'); ?>
+                                        <?php esc_html_e('View Documentation', 'wpdatatables'); ?>
                                     </a>
                                 </button>
                             </div>
@@ -226,16 +226,16 @@
                         <div class="row m-l-0 m-r-0 wdt-showcase">
                             <div class="col-sm-6 p-0 wdt-showcase-desc">
                                 <div class="wdt-abs-top-center">
-                                    <h2> <?php _e('Check wpDataTables showcase', 'wpdatatables'); ?></h2>
+                                    <h2> <?php esc_html_e('Check wpDataTables showcase', 'wpdatatables'); ?></h2>
                                     <p class="wpdt-bold m-0">
-                                        <?php _e('A proper solution for every industry', 'wpdatatables'); ?>
+                                        <?php esc_html_e('A proper solution for every industry', 'wpdatatables'); ?>
                                     </p>
                                     <p class="w-80">
-                                        <?php _e('See how our clients use wpDataTables in completely different spheres like business, science, education and non-profit organization.', 'wpdatatables'); ?>
+                                        <?php esc_html_e('See how our clients use wpDataTables in completely different spheres like business, science, education and non-profit organization.', 'wpdatatables'); ?>
                                     </p>
                                     <button class="wdt-showcase-link"><a
                                                 href="https://wpdatatables.com/showcase/" target="_blank">
-                                            <?php _e('View all at wpdatatables.com', 'wpdatatables'); ?><i
+                                            <?php esc_html_e('View all at wpdatatables.com', 'wpdatatables'); ?><i
                                                     class="wpdt-icon-external-link-square"></i>
                                         </a>
                                     </button>
@@ -251,8 +251,8 @@
                                                  src="<?php echo WDT_ROOT_URL; ?>assets/img/welcome-page/slider/showcase-statistics.png"
                                                  alt="">
                                             <div class="wdt-slider-img-desc text-center">
-                                                <h3><?php _e('Statistics Table With Charts', 'wpdatatables'); ?></h3>
-                                                <p><?php _e('Statistics market', 'wpdatatables'); ?></p>
+                                                <h3><?php esc_html_e('Statistics Table With Charts', 'wpdatatables'); ?></h3>
+                                                <p><?php esc_html_e('Statistics market', 'wpdatatables'); ?></p>
                                             </div>
                                         </div>
 
@@ -261,8 +261,8 @@
                                                  src="<?php echo WDT_ROOT_URL; ?>assets/img/welcome-page/slider/showcase-crypto.png"
                                                  alt="">
                                             <div class="wdt-slider-img-desc text-center">
-                                                <h3><?php _e('Cryptocurrencies Rank Table', 'wpdatatables'); ?></h3>
-                                                <p><?php _e('Cryptocurrency market', 'wpdatatables'); ?></p>
+                                                <h3><?php esc_html_e('Cryptocurrencies Rank Table', 'wpdatatables'); ?></h3>
+                                                <p><?php esc_html_e('Cryptocurrency market', 'wpdatatables'); ?></p>
                                             </div>
                                         </div>
 
@@ -271,8 +271,8 @@
                                                  src="<?php echo WDT_ROOT_URL; ?>assets/img/welcome-page/slider/showcase-product.png"
                                                  alt="">
                                             <div class="wdt-slider-img-desc text-center">
-                                                <h3><?php _e('Laptop Online Catalog', 'wpdatatables'); ?></h3>
-                                                <p><?php _e('Computer sales', 'wpdatatables'); ?></p>
+                                                <h3><?php esc_html_e('Laptop Online Catalog', 'wpdatatables'); ?></h3>
+                                                <p><?php esc_html_e('Computer sales', 'wpdatatables'); ?></p>
                                             </div>
                                         </div>
 
@@ -281,8 +281,8 @@
                                                  src="<?php echo WDT_ROOT_URL; ?>assets/img/welcome-page/slider/showcase-temperature-summer.png"
                                                  alt="">
                                             <div class="wdt-slider-img-desc text-center">
-                                                <h3><?php _e('Temperature Report - Maximums', 'wpdatatables'); ?></h3>
-                                                <p><?php _e('Hydrometeorological Institute', 'wpdatatables'); ?></p>
+                                                <h3><?php esc_html_e('Temperature Report - Maximums', 'wpdatatables'); ?></h3>
+                                                <p><?php esc_html_e('Hydrometeorological Institute', 'wpdatatables'); ?></p>
                                             </div>
                                         </div>
 
@@ -313,14 +313,14 @@
                             <div class="col-sm-12 text-center">
                                 <h2>
                                     <i class="wpdt-icon-heart"></i>
-                                    <?php _e('Thank you for choosing wpDataTables!', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Thank you for choosing wpDataTables!', 'wpdatatables'); ?>
                                 </h2>
                                 <p>
-                                    <?php _e('We hope that you will enjoy using our plugin for managing data on your website.', 'wpdatatables'); ?>
+                                    <?php esc_html_e('We hope that you will enjoy using our plugin for managing data on your website.', 'wpdatatables'); ?>
                                 </p>
                                 <button class="wdt-go-dashboard"><a
                                             href="<?php echo admin_url('admin.php?page=wpdatatables-dashboard'); ?>">
-                                        <?php _e('Go to Dashboard', 'wpdatatables'); ?><i
+                                        <?php esc_html_e('Go to Dashboard', 'wpdatatables'); ?><i
                                                 class="wpdt-icon-arrow-right"></i>
                                     </a>
                                 </button>
@@ -345,7 +345,7 @@
     <!-- /.welcome-page-container -->
     <div class="row">
         <h6 class="text-center wdt-footer-title">
-            <?php _e('Made by', 'wpdatatables'); ?>
+            <?php esc_html_e('Made by', 'wpdatatables'); ?>
             <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                 <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
             </a>
@@ -353,11 +353,11 @@
         <ul class="wpdt-footer-links text-center">
             <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
             <li>|</li>
-            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
+            <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
             </li>
             <li>|</li>
             <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">
-                    <?php _e('Support Center', 'wpdatatables'); ?></a></li>
+                    <?php esc_html_e('Support Center', 'wpdatatables'); ?></a></li>
         </ul>
     </div>
 

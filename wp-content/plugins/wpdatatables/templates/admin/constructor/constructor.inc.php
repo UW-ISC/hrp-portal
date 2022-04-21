@@ -20,13 +20,13 @@
                     <img id="wpdt-inline-logo"
                          src="<?php echo WDT_ROOT_URL; ?>assets/img/logo.svg"/>
                     <h2>
-                    <span style="display: none"><?php _e('Create a Table', 'wpdatatables'); ?></span>
-                        <?php _e('Create a Table', 'wpdatatables'); ?>
+                    <span style="display: none"><?php esc_html_e('Create a Table', 'wpdatatables'); ?></span>
+                        <?php esc_html_e('Create a Table', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions p-t-5">
                         <li>
                             <button class="btn wdt-backend-close">
-                                <?php _e('Cancel', 'wpdatatables'); ?>
+                                <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>
@@ -65,20 +65,20 @@
                             </button>
                             <ul class="dropdown-menu" role="menu">
                                 <li id="wdt-constructor-create-table">
-                                    <a><?php _e('Open in standard editor', 'wpdatatables'); ?></a></li>
+                                    <a><?php esc_html_e('Open in standard editor', 'wpdatatables'); ?></a></li>
                                 <li id="wdt-constructor-create-table-excel">
-                                    <a><?php _e('Open in Excel-like editor', 'wpdatatables'); ?></a></li>
+                                    <a><?php esc_html_e('Open in Excel-like editor', 'wpdatatables'); ?></a></li>
                             </ul>
                         </div>
                         <button class="btn btn-primary pull-right m-l-5"
                                 disabled="disabled"
-                                id="wdt-constructor-next-step"><?php _e('Next ', 'wpdatatables'); ?></button>
+                                id="wdt-constructor-next-step"><?php esc_html_e('Next ', 'wpdatatables'); ?></button>
                         <button class="btn pull-right hidden" id="wdt-constructor-previous-step"
-                                disabled="disabled"><?php _e(' Previous', 'wpdatatables'); ?></button>
+                                disabled="disabled"><?php esc_html_e(' Previous', 'wpdatatables'); ?></button>
                     </div>
                     <a class="btn btn-default btn-icon-text wdt-documentation"
                        data-doc-page="constructor">
-                        <i class="wpdt-icon-file-thin"></i> <?php _e('View Documentation', 'wpdatatables'); ?>
+                        <i class="wpdt-icon-file-thin"></i> <?php esc_html_e('View Documentation', 'wpdatatables'); ?>
                     </a>
                 </div>
 

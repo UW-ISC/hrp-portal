@@ -1,13 +1,13 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <?php /** @var WPDataTable $this */ ?>
-<div id="<?php echo $this->getId() ?>_edit_dialog" style="display: none">
+<div id="<?php echo esc_attr($this->getId()) ?>_edit_dialog" style="display: none">
     <?php do_action('wpdatatables_before_editor_dialog', $this->getWpId()); ?>
 
     <!-- .wdt-edit-dialog-alert-block -->
     <div class="wdt-edit-dialog-alert-block">
         <div class="wdt-no-editor-inputs-selected-alert alert alert-danger" style="display: none">
-            <?php _e('Please choose input type for columns that you want to edit', 'wpdatatables'); ?>
+            <?php esc_html_e('Please choose input type for columns that you want to edit', 'wpdatatables'); ?>
         </div>
     </div>
     <!--/ .wdt-edit-dialog-alert-block -->
@@ -33,8 +33,8 @@
         <?php } ?>>
 
         <!-- .control-label -->
-        <label for="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>" class="col-sm-3 control-label">
-            <?php echo $dataColumn->getTitle(); ?>:<?php if ($dataColumn->isNotNull()) { ?> * <?php } ?>
+        <label for="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>" class="col-sm-3 control-label">
+            <?php echo esc_html($dataColumn->getTitle()); ?>:<?php if ($dataColumn->isNotNull()) { ?> * <?php } ?>
         </label>
         <!--/ .control-label -->
 
@@ -52,34 +52,34 @@
                 if ($dataColumn->getInputType() === 'textarea' ||
                     $dataColumn->getInputType() === 'mce-editor'
                 ) { ?>
-                    <textarea data-input_type="<?php echo $dataColumn->getInputType(); ?>"
+                    <textarea data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
                               class="form-control editDialogInput <?php if ($dataColumn->isNotNull()) { ?>mandatory<?php } ?> <?php if ($dataColumn->getInputType() == 'mce-editor') { ?>wpdt-tiny-mce<?php } ?>"
-                              id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
-                              data-key="<?php echo $dataColumn_key ?>" rows="5"
-                              data-column_header="<?php echo $dataColumn->getTitle(); ?>"></textarea>
+                              id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                              data-key="<?php echo esc_attr($dataColumn_key) ?>" rows="5"
+                              data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"></textarea>
                     <?php
                 } elseif (($dataColumn->getInputType() === 'selectbox') ||
                     ($dataColumn->getInputType() === 'multi-selectbox')
                 ) { ?>
-                    <select id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
-                            data-input_type="<?php echo $dataColumn->getInputType(); ?>"
-                            data-key="<?php echo $dataColumn_key ?>"
-                            title="<?php echo WDTTools::getTranslationStrings()['nothingSelected'] ?>"
+                    <select id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                            data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
+                            data-key="<?php echo esc_attr($dataColumn_key) ?>"
+                            title="<?php echo esc_attr(WDTTools::getTranslationStrings()['nothingSelected']) ?>"
                             class="form-control editDialogInput selectpicker <?php if ($dataColumn->isNotNull()) { ?>mandatory <?php }
                             if ($dataColumn->getForeignKeyRule() != null) { ?> wdt-foreign-key-select <?php };
                             if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?> wdt-search-in-select <?php };
                             if ($dataColumn->getPossibleValuesAjax() !== -1) { ?> wdt-possible-values-ajax <?php }; ?>"
                             <?php if ($dataColumn->getInputType() === 'multi-selectbox') { ?>multiple="multiple"<?php } ?>
                             <?php if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?>data-live-search="true" data-live-search-placeholder="Search..."<?php } ?>
-                            data-column_header="<?php echo $dataColumn->getTitle(); ?>">
+                            data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>">
                         <?php
                         if ($dataColumn->getPossibleValuesAjax() === -1) {
                             if ($dataColumn->getInputType() === 'selectbox') { ?>
                                 <option value=""></option><?php } ?>
                             <?php foreach ($possibleValues as $possibleValue) {
                                 if ($possibleValue['value'] !== 'possibleValuesAddEmpty') { ?>
-                                    <option value="<?php echo $possibleValue['value'] ?>"
-                                            data-label="<?php echo $possibleValue['label'] ?>"><?php echo $possibleValue['label'] ?></option>
+                                    <option value="<?php echo esc_attr($possibleValue['value']) ?>"
+                                            data-label="<?php echo esc_attr($possibleValue['label']) ?>"><?php echo esc_html($possibleValue['label']) ?></option>
 
                                 <?php } ?>
                             <?php } ?>
@@ -93,19 +93,19 @@
                              style="line-height: 150px;"></div>
                         <div>
                             <?php } ?>
-                            <span class="btn bgm-gray m-r-10 fileupload-<?php echo $this->getId() ?>"
-                                  id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>_button"
-                                  data-column_type="<?php echo $dataColumn->getDataType(); ?>"
-                                  data-input_type="<?php echo $dataColumn->getInputType(); ?>"
-                                  data-rel_input="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
+                            <span class="btn bgm-gray m-r-10 fileupload-<?php echo esc_attr($this->getId()) ?>"
+                                  id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>_button"
+                                  data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
+                                  data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
+                                  data-rel_input="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
                             >
-                                <span class="fileinput-new"><?php _e('Select file', 'wpdatatables'); ?></span>
-                                <span class="fileinput-exists"><?php _e('Change', 'wpdatatables'); ?></span>
+                                <span class="fileinput-new"><?php esc_html_e('Select file', 'wpdatatables'); ?></span>
+                                <span class="fileinput-exists"><?php esc_html_e('Change', 'wpdatatables'); ?></span>
                                 <input type="hidden"
-                                       id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
-                                       data-key="<?php echo $dataColumn_key ?>"
-                                       data-input_type="<?php echo $dataColumn->getInputType(); ?>"
-                                       data-column_header="<?php echo $dataColumn->getTitle(); ?>"
+                                       id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                                       data-key="<?php echo esc_attr($dataColumn_key) ?>"
+                                       data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
+                                       data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
                                        class="editDialogInput <?php if ($dataColumn->isNotNull()) { ?>mandatory<?php } ?>"
                                 />
                             </span>
@@ -123,11 +123,11 @@
                 } else { ?>
                     <input type="text"
                            value=""
-                           id="<?php echo $this->getId() ?>_<?php echo $dataColumn_key ?>"
-                           data-key="<?php echo $dataColumn_key ?>"
-                           data-column_type="<?php echo $dataColumn->getDataType(); ?>"
-                           data-column_header="<?php echo $dataColumn->getTitle(); ?>"
-                           data-input_type="<?php echo $dataColumn->getInputType(); ?>"
+                           id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                           data-key="<?php echo esc_attr($dataColumn_key) ?>"
+                           data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
+                           data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
+                           data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
                            class="form-control input-sm editDialogInput
                                         <?php if ($dataColumn->isNotNull()) { ?>mandatory<?php } ?>
                                         <?php if ($dataColumn->getDataType() == 'float' || $dataColumn->getDataType() == 'int') { ?>wdt-maskmoney<?php } ?>
@@ -151,44 +151,44 @@
 <?php $currentSkin = $this->getTableSkin();
       $skinsWithNewEditButtons = ['aqua','purple','dark']; ?>
 
-<div id="<?php echo $this->getId() ?>_edit_dialog_buttons" class="wdt-edit-dialog-button-block"
+<div id="<?php echo esc_attr($this->getId()) ?>_edit_dialog_buttons" class="wdt-edit-dialog-button-block"
      style="display: none">
     <button class="btn btn-danger btn-icon-text wdt-cancel-edit-button" data-dismiss="modal">
         <i class="wpdt-icon-times-full"></i>
-        <?php _e('Cancel', 'wpdatatables'); ?>
+        <?php esc_html_e('Cancel', 'wpdatatables'); ?>
     </button>
     <button id="<?php echo $this->getId() ?>_prev_edit_dialog" class="btn bgm-gray btn-icon-text wdt-prev-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons )) { echo 'wpdt-icon-chevron-left'; } else { echo 'wpdt-icon-step-backward'; }?>"></i>
-        <?php _e('Prev', 'wpdatatables'); ?>
+        <?php esc_html_e('Prev', 'wpdatatables'); ?>
     </button>
     <button id="<?php echo $this->getId() ?>_next_edit_dialog" class="btn bgm-gray btn-icon-text wdt-next-edit-button">
-        <?php _e('Next', 'wpdatatables'); ?>
+        <?php esc_html_e('Next', 'wpdatatables'); ?>
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-chevron-right'; } else { echo 'wpdt-icon-step-forward'; }?>"></i>
     </button>
     <?php if ( !empty(array_intersect(['all', 'new_entry'], $this->getEditButtonsDisplayed()))) { ?>
     <button id="<?php echo $this->getId() ?>_apply_edit_dialog" class="btn btn-success btn-icon-text wdt-apply-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle-full'; } else { echo 'wpdt-icon-check';  }?>"></i>
-        <?php _e('Apply and add new', 'wpdatatables'); ?>
+        <?php esc_html_e('Apply and add new', 'wpdatatables'); ?>
     </button>
     <?php } ?>
     <?php if ( $this->isEnableDuplicateButton() &&
         !empty(array_intersect(['all', 'duplicate'], $this->getEditButtonsDisplayed()))) { ?>
     <button id="<?php echo $this->getId() ?>_apply_duplicate_dialog" class="btn btn-success btn-icon-text wdt-apply-duplicate-button hidden">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle-full'; } else { echo 'wpdt-icon-check';  }?>"></i>
-        <?php _e('Apply and duplicate', 'wpdatatables'); ?>
+        <?php esc_html_e('Apply and duplicate', 'wpdatatables'); ?>
     </button>
     <?php } ?>
     <button id="<?php echo $this->getId() ?>_ok_edit_dialog" class="btn btn-success btn-icon-text wdt-ok-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-check-circle'; } else { echo 'wpdt-icon-check-double-reg'; }?>"></i>
-        <?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { _e('Submit', 'wpdatatables');} else {_e('OK', 'wpdatatables');} ?>
+        <?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { esc_html_e('Submit', 'wpdatatables');} else {esc_html_e('OK', 'wpdatatables');} ?>
     </button>
 </div>
 <div id="<?php echo $this->getId() ?>_delete_dialog_buttons" style="display: none">
     <button type="button" class="btn bgm-gray btn-icon-text wdt-cancel-delete-button" data-dismiss="modal"><i
-            class="wpdt-icon-times-full"></i> <?php _e('Cancel', 'wpdatatables'); ?></button>
+            class="wpdt-icon-times-full"></i> <?php esc_html_e('Cancel', 'wpdatatables'); ?></button>
     <button type="button" class="btn btn-danger btn-icon-text wdt-browse-delete-button"
-            id="<?php echo $this->getId() ?>_wdt-browse-delete-button"> <i class="wpdt-icon-trash"></i>
-        <?php _e('Delete', 'wpdatatables'); ?></button>
+            id="<?php echo esc_attr($this->getId()) ?>_wdt-browse-delete-button"> <i class="wpdt-icon-trash"></i>
+        <?php esc_html_e('Delete', 'wpdatatables'); ?></button>
 </div>
 <script type='text/javascript' src='<?php echo site_url(); ?>/wp-includes/js/tinymce/tinymce.min.js'></script>
 <script type="text/javascript" > if(typeof tinymce !== 'undefined') tinymce.PluginManager.load('code', <?php echo "'" . WDT_JS_PATH . 'editor-plugins/code/plugin.min.js' . "'"; ?>)</script>

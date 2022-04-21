@@ -5,16 +5,16 @@
     <!-- .col-sm-4 -->
     <div class="col-sm-6 col-md-6 chart-name">
         <h4 class="c-title-color m-b-2">
-            <?php _e('Chart name', 'wpdatatables'); ?>
+            <?php esc_html_e('Chart name', 'wpdatatables'); ?>
             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-               title="<?php _e('Please define the title of the chart that you will use to identify it', 'wpdatatables'); ?>"></i>
+               title="<?php esc_attr_e('Please define the title of the chart that you will use to identify it', 'wpdatatables'); ?>"></i>
         </h4>
         <div class="form-group">
             <div class="fg-line">
                 <div class="row">
                     <div class="col-sm-12">
                         <input type="text" name="chart-name" id="chart-name" class="form-control input-sm"
-                               value="<?php echo empty($chartId) ? __('New wpDataTable Chart', 'wpdatatables') : $chartObj->getTitle(); ?>"/>
+                               value="<?php echo empty($chartId) ? esc_attr__('New wpDataTable Chart', 'wpdatatables') : esc_attr($chartObj->getTitle()); ?>"/>
                     </div>
                 </div>
             </div>
@@ -25,16 +25,16 @@
     <!-- .col-sm-4 -->
     <div class="col-sm-6 col-md-6 render-engine">
         <h4 class="c-title-color m-b-2">
-            <?php _e('Chart render engine', 'wpdatatables'); ?>
+            <?php esc_html_e('Chart render engine', 'wpdatatables'); ?>
 
             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-               title="<?php _e('Please choose the render engine.', 'wpdatatables'); ?> <?php _e(' Please note that HighCharts license from verion 3.0.4 IS included with wpDataTables and you DON\'T NEED to purchase the license separately on', 'wpdatatables'); ?> http://highcharts.com"></i>
+               title="<?php esc_attr_e('Please choose the render engine.', 'wpdatatables'); ?> <?php esc_attr_e(' Please note that HighCharts license from verion 3.0.4 IS included with wpDataTables and you DON\'T NEED to purchase the license separately on', 'wpdatatables'); ?> https://highcharts.com"></i>
         </h4>
         <div class="form-group col-sm-6 col-md-6">
             <div class="fg-line">
                 <div class="select">
                     <select class="selectpicker" name="chart-render-engine" id="chart-render-engine">
-                        <option value="" <?php echo empty($chartId) ? 'selected="selected"' : ''; ?> ><?php _e('Pick the render engine', 'wpdatatables'); ?></option>
+                        <option value="" <?php echo empty($chartId) ? 'selected="selected"' : ''; ?> ><?php esc_html_e('Pick the render engine', 'wpdatatables'); ?></option>
                         <option value="google"
                                 <?php if (!empty($chartId) && ($chartObj->getEngine() == 'google')){ ?>selected="selected"<?php } ?> >
                             Google Charts

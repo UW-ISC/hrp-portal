@@ -21,14 +21,14 @@ $dataRows = $this->getDataRows();
             <th
                 <?php if (!$expandShown && $dataColumn->isVisibleOnMobiles()){ ?>data-class="expand"<?php $expandShown = true;
             } ?>
-                <?php if ($dataColumn->getHiddenAttr()) { ?>data-hide="<?php echo $dataColumn->getHiddenAttr() ?>"<?php } ?>
+                <?php if ($dataColumn->getHiddenAttr()) { ?>data-hide="<?php echo esc_attr($dataColumn->getHiddenAttr()) ?>"<?php } ?>
                 class="<?php
                 if ($dataColumn->getHiddenAttr()) {
-                    echo $dataColumn->getHiddenAttr();
+                    echo esc_attr($dataColumn->getHiddenAttr());
                 }
                 if ($dataColumn->getSorting()) { ?>sort <?php }
-                echo $dataColumn->getCSSClasses(); ?>"
-                style="<?php echo $dataColumn->getCSSStyle(); ?>"><?php echo ($dataColumn->getFilterType() != 'null') ? $dataColumn->getTitle() : '' ?>
+                echo esc_attr($dataColumn->getCSSClasses()); ?>"
+                style="<?php echo esc_attr($dataColumn->getCSSStyle()); ?>"><?php echo ($dataColumn->getFilterType() != 'null') ? esc_attr($dataColumn->getTitle()) : '' ?>
             </th>
         <?php } ?>
         <?php do_action('wpdatatables_after_header', $this->getWpId()); ?>
@@ -41,11 +41,11 @@ $dataRows = $this->getDataRows();
         <th
         <?php if (!$expandShown && $dataColumn->isVisibleOnMobiles()){ ?>data-class="expand"<?php $expandShown = true;
     } ?>
-        <?php if ($dataColumn->getHiddenAttr()) { ?>data-hide="<?php echo $dataColumn->getHiddenAttr() ?>"<?php } ?>
+        <?php if ($dataColumn->getHiddenAttr()) { ?>data-hide="<?php echo esc_attr($dataColumn->getHiddenAttr()) ?>"<?php } ?>
         class="<?php if ($dataColumn->getHiddenAttr()) {
-            echo $dataColumn->getHiddenAttr();
-        } ?> wdtheader <?php if ($dataColumn->getSorting()) { ?>sort <?php } ?><?php echo $dataColumn->getCSSClasses(); ?>"
-        style="<?php echo $dataColumn->getCSSStyle(); ?>"><?php echo $dataColumn->getTitle() ?></th><?php } ?>
+            echo esc_attr($dataColumn->getHiddenAttr());
+        } ?> wdtheader <?php if ($dataColumn->getSorting()) { ?>sort <?php } ?><?php echo esc_attr($dataColumn->getCSSClasses()); ?>"
+        style="<?php echo esc_attr($dataColumn->getCSSStyle()); ?>"><?php echo esc_attr($dataColumn->getTitle()) ?></th><?php } ?>
     <?php do_action('wpdatatables_after_header', $this->getWpId()); ?>
 </tr>
 </thead>

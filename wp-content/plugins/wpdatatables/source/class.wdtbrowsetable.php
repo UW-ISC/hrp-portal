@@ -178,7 +178,7 @@ class WDTBrowseTable extends WP_List_Table
     {
         switch ($column_name) {
             case 'shortcode':
-                return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatatable id=' . $item['id'] . ']" data-placement="top"  title="' . __('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatatable id=' . $item['id'] . ']</span>';
+                return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatatable id=' . esc_attr($item['id']) . ']" data-placement="top"  title="' . esc_attr__('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatatable id=' . (int)$item['id'] . ']</span>';
                 break;
             case 'functions':
                 $return_string = '';
@@ -186,40 +186,40 @@ class WDTBrowseTable extends WP_List_Table
                 if (in_array($item['table_type'], WPDataTable::$allowedTableTypes)) {
                     $return_string = '<div class="wdt-function-flex"><a type="button" 
                                          class="wdt-duplicate-table" 
-                                         data-table_id="' . $item['id'] . '" 
-                                         data-table_name="' . $item['title'] . '" 
-                                         data-table_type="' . $item['table_type'] . '" 
-                                         data-toggle="tooltip" title="' . __('Duplicate', 'wpdatatables') . '" href="#"><i class="wpdt-icon-clone"></i></a>';
+                                         data-table_id="' . esc_attr($item['id']) . '" 
+                                         data-table_name="' . esc_attr($item['title']) . '" 
+                                         data-table_type="' . esc_attr($item['table_type']) . '" 
+                                         data-toggle="tooltip" title="' . esc_attr__('Duplicate', 'wpdatatables') . '" href="#"><i class="wpdt-icon-clone"></i></a>';
                     if ($item['editable'] == 1) {
                         $return_string .= '<a type="button" 
                                               class="wdt-manual-edit" 
-                                              data-table_id="' . $item['id'] . '" 
-                                              data-table_name="' . $item['title'] . '"  
-                                              data-toggle="tooltip" title="' . __('Edit data', 'wpdatatables') . '" 
-                                              href="admin.php?page=wpdatatables-constructor&source&table_id=' . $item['id'] . '&collapsed"><i class="wpdt-icon-pen"></i></a>';
+                                              data-table_id="' . esc_attr($item['id']) . '" 
+                                              data-table_name="' . esc_attr($item['title']) . '"  
+                                              data-toggle="tooltip" title="' . esc_attr__('Edit data', 'wpdatatables') . '" 
+                                              href="admin.php?page=wpdatatables-constructor&source&table_id=' . (int)$item['id'] . '&collapsed"><i class="wpdt-icon-pen"></i></a>';
                         if ($item['table_type'] != 'gravity') {
                             $return_string .= '<a type="button" 
                                               class="wdt-manual-excel-edit" 
-                                              data-table_id="' . $item['id'] . '" 
-                                              data-table_name="' . $item['title'] . '" 
-                                              data-toggle="tooltip" title="' . __('Edit in Excel-like editor', 'wpdatatables') . '" 
-                                              href="admin.php?page=wpdatatables-constructor&source&table_view=excel&table_id=' . $item['id'] . '&collapsed"><i class="wpdt-icon-table"></i></a>';
+                                              data-table_id="' . esc_attr($item['id']) . '" 
+                                              data-table_name="' . esc_attr($item['title']) . '" 
+                                              data-toggle="tooltip" title="' . esc_attr__('Edit in Excel-like editor', 'wpdatatables') . '" 
+                                              href="admin.php?page=wpdatatables-constructor&source&table_view=excel&table_id=' . (int)$item['id'] . '&collapsed"><i class="wpdt-icon-table"></i></a>';
                         }
                     }
 
                     $return_string .= ' <a type="button" 
                                             class="wdt-configure" 
-                                            data-table_id="' . $item['id'] . '" 
-                                            data-table_name="' . $item['title'] . '" 
-                                            data-toggle="tooltip" title="' . __('Configure', 'wpdatatables') . '" 
-                                            href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . $item['id'] . '" ><i class="wpdt-icon-cog"></i></a>';
+                                            data-table_id="' . esc_attr($item['id']) . '" 
+                                            data-table_name="' . esc_attr($item['title']) . '" 
+                                            data-toggle="tooltip" title="' . esc_attr__('Configure', 'wpdatatables') . '" 
+                                            href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . (int)$item['id'] . '" ><i class="wpdt-icon-cog"></i></a>';
                 }
                 $return_string .= ' <a type="button" 
                                        class="wdt-submit-delete" 
-                                       data-table_id="' . $item['id'] . '" 
-                                       data-table_name="' . $item['title'] . '" 
-                                       data-toggle="tooltip" title="' . __('Delete', 'wpdatatables') . '" 
-                                       href="' . wp_nonce_url('admin.php?page=wpdatatables-administration&action=delete&table_id=' . $item['id'] . '', 'wdtDeleteTableNonce', 'wdtNonce') . '" rel="' . $item['id'] . '"><i class="wpdt-icon-trash"></i></a></div>';
+                                       data-table_id="' . esc_attr($item['id']) . '" 
+                                       data-table_name="' . esc_attr($item['title']) . '" 
+                                       data-toggle="tooltip" title="' . esc_attr__('Delete', 'wpdatatables') . '" 
+                                       href="' . wp_nonce_url('admin.php?page=wpdatatables-administration&action=delete&table_id=' . (int)$item['id'] . '', 'wdtDeleteTableNonce', 'wdtNonce') . '" rel="' . esc_attr($item['id']) . '"><i class="wpdt-icon-trash"></i></a></div>';
                 return $return_string;
                 break;
             case 'id':
@@ -244,9 +244,9 @@ class WDTBrowseTable extends WP_List_Table
 //                'trash' => '<a class="wdt-submit-delete" title="' . __('Delete', 'wpdatatables') . '" href="' . wp_nonce_url('admin.php?page=wpdatatables-administration&action=delete&table_id=' . $item['id'] . '', 'wdtDeleteTableNonce', 'wdtNonce') . '" rel="' . $item['id'] . '">' . __('Delete', 'wpdatatables') . '</a>'
 //            );
 
-            return '<a href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . $item['id'] . '">' . $item['title'] . '</a> ';
+            return '<a href="admin.php?page=wpdatatables-constructor&source' . $simpleTableType . '&table_id=' . (int)$item['id'] . '">' . esc_html($item['title']) . '</a> ';
         } else {
-            return $item['title'];
+            return esc_html($item['title']);
         }
     }
 
@@ -259,44 +259,44 @@ class WDTBrowseTable extends WP_List_Table
     {
         switch ($item['table_type']) {
             case 'mysql':
-                return '<span class="wpdt-type-column">' . __('SQL', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
                 break;
             case 'mssql':
-                return '<span class="wpdt-type-column">' . __('SQL', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
                 break;
             case 'postgresql':
-                return '<span class="wpdt-type-column">' . __('SQL', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('SQL', 'wpdatatables') . '</span>';
                 break;
             case 'manual':
-                return '<span class="wpdt-type-column">' . __('Manual', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('Manual', 'wpdatatables') . '</span>';
                 break;
             case 'xls':
-                return '<span class="wpdt-type-column">' . __('Excel', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('Excel', 'wpdatatables') . '</span>';
                 break;
             case 'csv':
-                return '<span class="wpdt-type-column">' . __('CSV', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('CSV', 'wpdatatables') . '</span>';
                 break;
             case 'xml':
-                return '<span class="wpdt-type-column">' . __('XML', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('XML', 'wpdatatables') . '</span>';
                 break;
             case 'json':
-                return '<span class="wpdt-type-column">' . __('JSON', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('JSON', 'wpdatatables') . '</span>';
                 break;
             case 'serialized':
-                return '<span class="wpdt-type-column">' . __('Serialized PHP array', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('Serialized PHP array', 'wpdatatables') . '</span>';
                 break;
             case 'google_spreadsheet':
-                return '<span class="wpdt-type-column">' . __('Google spreadsheet', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('Google spreadsheet', 'wpdatatables') . '</span>';
                 break;
             case 'simple':
-                return '<span class="wpdt-type-column">' . __('Simple', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_html__('Simple', 'wpdatatables') . '</span>';
                 break;
             default:
                 if (in_array($item['table_type'], WPDataTable::$allowedTableTypes)) {
                     return '<span class="wpdt-type-column">' . ucfirst($item['table_type']) . '</span>';
                 }
 
-                return '<span class="wpdt-type-column">' . __('Unknown', 'wpdatatables') . '</span>';
+                return '<span class="wpdt-type-column">' . esc_attr__('Unknown', 'wpdatatables') . '</span>';
                 break;
         }
     }
@@ -343,7 +343,7 @@ class WDTBrowseTable extends WP_List_Table
 
         if (!empty($columns['cb'])) {
             static $cb_counter = 1;
-            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __('Select All') . '</label>'
+            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . esc_html__('Select All') . '</label>'
                 . '<div class="checkbox"><input id="cb-select-all-' . $cb_counter . '" type="checkbox" /></div>';
             $cb_counter++;
         }

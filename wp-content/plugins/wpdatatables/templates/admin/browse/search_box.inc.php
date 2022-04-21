@@ -3,7 +3,7 @@
 <div class="wpdt-search-box search-box">
     <div class="fg-line">
         <i class="wpdt-icon-search"></i>
-        <label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo $text; ?>:</label>
+        <label class="screen-reader-text" for="<?php echo esc_attr($input_id); ?>"><?php echo esc_html($text); ?>:</label>
         <input type="search" placeholder="<?php _e('Search for items...', 'wpdatatables');?>" id="<?php echo esc_attr($input_id); ?>" name="s"
                value="<?php _admin_search_query(); ?>"/>
     </div>

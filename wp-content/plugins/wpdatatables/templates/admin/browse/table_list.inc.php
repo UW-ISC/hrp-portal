@@ -47,7 +47,7 @@
         </div>
         <div class="col-sm-6 pull-left">
             <a class="btn btn-default btn-icon-text wdt-documentation" data-doc-page="browse_page">
-                <i class="wpdt-icon-file-thin"></i> <?php _e(' View Documentation', 'wpdatatables'); ?>
+                <i class="wpdt-icon-file-thin"></i> <?php esc_html_e(' View Documentation', 'wpdatatables'); ?>
             </a>
         </div>
     </div>

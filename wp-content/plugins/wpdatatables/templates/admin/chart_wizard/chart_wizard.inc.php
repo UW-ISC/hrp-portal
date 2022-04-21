@@ -6,14 +6,14 @@
             highcharts_render_data: <?php echo json_encode($chartObj->getHighchartsRenderData()); ?>,
             chartjs_render_data: <?php echo json_encode($chartObj->getChartJSRenderData()); ?>,
             apexcharts_render_data: <?php echo json_encode($chartObj->getApexchartsRenderData()); ?>,
-            engine: "<?php echo $chartObj->getEngine();?>",
-            type: "<?php echo $chartObj->getType(); ?>",
+            engine: "<?php echo esc_html($chartObj->getEngine());?>",
+            type: "<?php echo esc_html($chartObj->getType()); ?>",
             selected_columns: <?php echo json_encode($chartObj->getSelectedColumns()) ?>,
-            range_type: "<?php echo $chartObj->getRangeType() ?>"<?php if( $chartObj->getRangeType() == 'picked_range' ){ ?>,
+            range_type: "<?php echo esc_html(($chartObj->getRangeType())) ?>"<?php if( $chartObj->getRangeType() == 'picked_range' ){ ?>,
             row_range: <?php echo json_encode($chartObj->getRowRange()); } ?>,
-            title: "<?php echo $chartObj->getTitle(); ?>",
+            title: "<?php echo esc_html($chartObj->getTitle()); ?>",
             follow_filtering: <?php echo (int)$chartObj->getFollowFiltering(); ?>,
-            wpdatatable_id: <?php echo $chartObj->getwpDataTableId(); ?>  };</script>
+            wpdatatable_id: <?php echo (int)$chartObj->getwpDataTableId(); ?>  };</script>
 <?php } ?>
 
 <div class="wrap wdt-datatables-admin-wrap">
@@ -34,13 +34,13 @@
                     <img id="wpdt-inline-logo"
                          src="<?php echo WDT_ROOT_URL; ?>assets/img/logo.svg"/>
                     <h2>
-                        <span style="display: none"><?php _e('Create a Chart', 'wpdatatables'); ?></span>
-                        <?php _e('Create a Chart', 'wpdatatables'); ?>
+                        <span style="display: none"><?php esc_html_e('Create a Chart', 'wpdatatables'); ?></span>
+                        <?php esc_html_e('Create a Chart', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions p-t-5">
                         <li>
                             <button class="btn wdt-backend-chart-close">
-                                <?php _e('Cancel', 'wpdatatables'); ?>
+                                <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>
@@ -48,21 +48,21 @@
 
                 <div class="card-body card-padding" id="wdt-chart-wizard-body">
                     <?php wp_nonce_field('wdtChartWizardNonce', 'wdtNonce'); ?>
-                    <input type="hidden" id="wp-data-chart-id" value="<?php echo $chartId ?>"/>
+                    <input type="hidden" id="wp-data-chart-id" value="<?php if(isset($chartId)) echo esc_attr($chartId) ?>"/>
                     <input type="hidden" id="wdt-browse-charts-url"
                            value="<?php echo admin_url('admin.php?page=wpdatatables-charts'); ?>"/>
 
                     <ol class="breadcrumb chart-wizard-breadcrumb">
                         <li class="chart_wizard_breadcrumbs_block  step1 active"
-                            id="step1"><?php _e('Chart title & type', 'wpdatatables'); ?></li>
+                            id="step1"><?php esc_html_e('Chart title & type', 'wpdatatables'); ?></li>
                         <li class="chart_wizard_breadcrumbs_block  step2"
-                            id="step2"><?php _e('Data source', 'wpdatatables'); ?></li>
+                            id="step2"><?php esc_html_e('Data source', 'wpdatatables'); ?></li>
                         <li class="chart_wizard_breadcrumbs_block  step3"
-                            id="step3"><?php _e('Data range', 'wpdatatables'); ?></li>
+                            id="step3"><?php esc_html_e('Data range', 'wpdatatables'); ?></li>
                         <li class="chart_wizard_breadcrumbs_block  step4"
-                            id="step4"><?php _e('Formatting and preview', 'wpdatatables'); ?></li>
+                            id="step4"><?php esc_html_e('Formatting and preview', 'wpdatatables'); ?></li>
                         <li class="chart_wizard_breadcrumbs_block  step5"
-                            id="step5"><?php _e('Save and get shortcode', 'wpdatatables'); ?></li>
+                            id="step5"><?php esc_html_e('Save and get shortcode', 'wpdatatables'); ?></li>
                     </ol>
 
                     <div class="steps m-t-20">
@@ -103,16 +103,16 @@
                 <div class="row m-t-15 m-b-5 p-l-15 p-r-15">
                     <button class="btn btn-primary btn-icon-text pull-right m-l-5"
                             style="display:none;" id="finishButton">
-                        <?php _e('Browse charts', 'wpdatatables'); ?>
+                        <?php esc_html_e('Browse charts', 'wpdatatables'); ?>
                     </button>
                     <button class="btn btn-primary btn-icon-text pull-right m-l-5"
                             disabled="disabled"
-                            id="wdt-chart-wizard-next-step"><?php _e('Next ', 'wpdatatables'); ?></button>
+                            id="wdt-chart-wizard-next-step"><?php esc_html_e('Next ', 'wpdatatables'); ?></button>
                     <button class="btn btn-icon-text pull-right hidden" disabled="disabled"
-                            id="wdt-chart-wizard-previous-step"><?php _e(' Previous', 'wpdatatables'); ?></button>
+                            id="wdt-chart-wizard-previous-step"><?php esc_html_e(' Previous', 'wpdatatables'); ?></button>
                     <a class="btn btn-default btn-icon-text wdt-documentation"
                        data-doc-page="chart_wizard">
-                        <i class="wpdt-icon-file-thin"></i> <?php _e(' View Documentation', 'wpdatatables'); ?>
+                        <i class="wpdt-icon-file-thin"></i> <?php esc_html_e(' View Documentation', 'wpdatatables'); ?>
                     </a></div>
 
             </div>
@@ -136,11 +136,11 @@
     {{for series}}
         <div class="chart-series-block" data-orig_header="{{>orig_header}}">
             <h4 class="c-title-color m-b-4 title">
-                    <?php _e('Serie', 'wpdatatables'); ?>: {{>label}}
+                    <?php esc_html_e('Serie', 'wpdatatables'); ?>: {{>label}}
             </h4>
             <div class="chart-series-label">
                 <h4 class="c-title-color m-b-4">
-                    <?php _e('Label', 'wpdatatables'); ?>
+                    <?php esc_html_e('Label', 'wpdatatables'); ?>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line">
@@ -154,7 +154,7 @@
             </div>
             <div class="chart-series-color" id="chart-series-color">
                  <h4 class="c-title-color m-b-4">
-                    <?php _e('Color', 'wpdatatables'); ?>
+                    <?php esc_html_e('Color', 'wpdatatables'); ?>
                 </h4>
                 <div class="cp-container">
                     <div class="form-group">
@@ -169,7 +169,7 @@
             </div>
             <div class="chart-series-type google highcharts chartjs" id="chart-series-type">
                  <h4 class="c-title-color m-b-4">
-                    <?php _e('Type', 'wpdatatables'); ?>
+                    <?php esc_html_e('Type', 'wpdatatables'); ?>
                 </h4>
                 <div class="cp-container">
                     <div class="form-group">
@@ -190,7 +190,7 @@
             </div>
             <div class="apexcharts apex-series-type-container" id="apexchart-series-type">
                 <h4 class="c-title-color m-b-4">
-                    <?php _e('Type', 'wpdatatables'); ?>
+                    <?php esc_html_e('Type', 'wpdatatables'); ?>
                 </h4>
                 <div class="cp-container">
                     <div class="form-group">
@@ -209,7 +209,7 @@
             </div>
             <div class="apexcharts chart-series-image doNotTriggerChange" id="series-image-{{:#index}}-container">
                 <h4 class="c-title-color m-b-4">
-                    <?php _e('Chart line/area image', 'wpdatatables'); ?>
+                    <?php esc_html_e('Chart line/area image', 'wpdatatables'); ?>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line">
@@ -224,11 +224,11 @@
             </div>
             <div class="chart-show-yaxis">
                  <h4 class="c-title-color m-b-4">
-                    <?php _e('Vertical axis', 'wpdatatables'); ?>
+                    <?php esc_html_e('Vertical axis', 'wpdatatables'); ?>
                  </h4>
                   <div class="toggle-switch p-b-16" data-ts-color="blue">
                       <input class="show-yaxis" id="show-yaxis-{{:#index}}" type="checkbox">
-                      <label for="show-yaxis-{{:#index}}"><?php _e('Show vertical axis', 'wpdatatables'); ?></label>
+                      <label for="show-yaxis-{{:#index}}"><?php esc_html_e('Show vertical axis', 'wpdatatables'); ?></label>
                   </div>
             </div>
         </div>

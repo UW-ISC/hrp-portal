@@ -6,9 +6,9 @@
 
             <div class="col-sm-6">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Table name', 'wpdatatables'); ?>
+                    <?php esc_html_e('Table name', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
+                       title="<?php esc_attr_e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line">
@@ -22,9 +22,9 @@
 
             <div class="col-sm-3">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Number of columns', 'wpdatatables'); ?>
+                    <?php esc_html_e('Number of columns', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('What is the number columns that you need?', 'wpdatatables'); ?>?"></i>
+                       title="<?php esc_attr_e('What is the number columns that you need?', 'wpdatatables'); ?>?"></i>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line wdt-custom-number-input">
@@ -32,7 +32,7 @@
                                 data-field="wdt-simple-table-number-of-columns">
                             <i class="wpdt-icon-minus"></i>
                         </button>
-                        <input type="text" name="wdt-simple-table-number-of-columns" min="1" value="5"
+                        <input type="number" name="wdt-simple-table-number-of-columns" min="1" value="5"
                                class="form-control input-sm input-number" id="wdt-simple-table-number-of-columns">
                         <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus"
                                 data-field="wdt-simple-table-number-of-columns">
@@ -44,9 +44,9 @@
 
             <div class="col-sm-3">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Number of rows', 'wpdatatables'); ?>
+                    <?php esc_html_e('Number of rows', 'wpdatatables'); ?>
                     <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('How many columns table will it have? You can also modify it below with + and x buttons', 'wpdatatables'); ?>."></i>
+                       title="<?php esc_attr_e('How many columns table will it have? You can also modify it below with + and x buttons', 'wpdatatables'); ?>."></i>
                 </h4>
                 <div class="form-group">
                     <div class="fg-line wdt-custom-number-input">
@@ -54,7 +54,7 @@
                                 data-field="wdt-simple-table-number-of-rows">
                             <i class="wpdt-icon-minus"></i>
                         </button>
-                        <input type="text" name="wdt-simple-table-number-of-rows" min="1" value="5"
+                        <input type="number" name="wdt-simple-table-number-of-rows" min="1" value="5"
                                class="form-control input-sm input-number" id="wdt-simple-table-number-of-rows">
                         <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus"
                                 data-field="wdt-simple-table-number-of-rows">
@@ -68,7 +68,7 @@
         <div class="row m-t-15 m-b-5 p-l-15 p-r-15">
             <div class="wpdt-custom-center-flex">
                 <button class=" btn btn-primary" id="wdt-simple-table-constructor">
-                    <?php _e('Generate table', 'wpdatatables'); ?>
+                    <?php esc_html_e('Generate table', 'wpdatatables'); ?>
                 </button>
             </div>
         </div>
