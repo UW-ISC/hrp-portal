@@ -453,7 +453,6 @@
                 text-transform: $menu_item_link_text_transform;
                 text-decoration: $menu_item_link_text_decoration;
                 text-align: $menu_item_link_text_align;
-                text-decoration: none;
                 @include background($menu_item_background_from, $menu_item_background_to);
                 @include border($menu_item_border_top, $menu_item_border_left, $menu_item_border_right, $menu_item_border_bottom, $menu_item_border_color);
                 @include border-radius($menu_item_link_border_radius_top_left, $menu_item_link_border_radius_top_right, $menu_item_link_border_radius_bottom_right, $menu_item_link_border_radius_bottom_left);
