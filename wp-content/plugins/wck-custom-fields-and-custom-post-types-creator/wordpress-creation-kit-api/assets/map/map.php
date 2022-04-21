@@ -37,7 +37,7 @@ function wck_map_field_add_meta( $meta, $id, $values, $element_id = '' ) {
             continue;
 
         // calculate element id
-        $element_id = ( $element_id != '' ? ( (int)$element_id + 1 ) : ( $args[0]['repeater'] == 'false' ? 1 : count( $meta_values ) + 1 ) );
+        $element_id = ( $element_id != '' ? ( (int)$element_id + 1 ) : ( $args[0]['repeater'] == 'false' ? 1 : count( (array)$meta_values ) + 1 ) );
 
         $fields = get_post_meta( $field_set->ID, 'wck_' . ( !empty( $id ) ? 'cfc' : 'opc' ) . '_fields', true );
 
@@ -51,8 +51,8 @@ function wck_map_field_add_meta( $meta, $id, $values, $element_id = '' ) {
 
             if( !empty( $values[ Wordpress_Creation_Kit::wck_generate_slug( $field['field-title'], $field ) ] ) ) {
 
-                wck_map_field_delete_metadata( $id, $meta, $field, $element_id );
-                wck_map_field_update_metadata( $id, $meta, $field, $element_id, $values[ Wordpress_Creation_Kit::wck_generate_slug( $field['field-title'], $field ) ] );
+                wck_map_field_delete_metadata($meta, $field, $element_id, $id);
+                wck_map_field_update_metadata($meta, $field, $element_id, $values[Wordpress_Creation_Kit::wck_generate_slug($field['field-title'], $field)], $id);
 
             }
 
@@ -69,7 +69,7 @@ add_action( 'wck_before_update_meta', 'wck_map_field_add_meta', 10, 4 );
  * Add all markers for a map field as individual post_meta or options
  *
  */
-function wck_map_field_update_metadata( $id = '', $meta, $field, $element_id, $map_markers = array() ) {
+function wck_map_field_update_metadata($meta, $field, $element_id, $map_markers = array(), $id = '') {
 
     if( !empty( $map_markers ) ) {
         foreach( $map_markers as $key => $map_marker ) {
@@ -90,7 +90,7 @@ function wck_map_field_update_metadata( $id = '', $meta, $field, $element_id, $m
  * Removes all markers for a map field from the post_meta or options
  *
  */
-function wck_map_field_delete_metadata( $id = '', $meta, $field, $element_id ) {
+function wck_map_field_delete_metadata($meta, $field, $element_id, $id = '') {
 
     global $wpdb;
 
