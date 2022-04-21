@@ -14,7 +14,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"><?php _e('Pick Range', 'wpdatatable'); ?></h4>
+                <h4 class="modal-title"><?php esc_html_e('Pick Range', 'wpdatatable'); ?></h4>
             </div>
             <!--/ .modal-header -->
 
@@ -29,11 +29,11 @@
                 <hr>
                 <button class="btn btn-icon-text" data-toggle="modal"
                         data-target="#wdt-range-picker" id="wdt-cancel-range">
-                    <?php _e('Cancel', 'wpdatatables'); ?>
+                    <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                 </button>
                 <button class="btn btn-primary btn-icon-text" id="submit-pick-range">
                     <i class="wpdt-icon-check-full"></i>
-                    <?php _e('Confirm', 'wpdatatables'); ?>
+                    <?php esc_html_e('Confirm', 'wpdatatables'); ?>
                 </button>
             </div>
             <!--/ .modal-footer -->

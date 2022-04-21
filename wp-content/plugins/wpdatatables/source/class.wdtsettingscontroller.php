@@ -19,7 +19,11 @@ class WDTSettingsController
                     $childSetting = sanitize_text_field($childSetting);
                 }
             } elseif (function_exists('sanitize_textarea_field') && ($key === "wdtCustomJs" || $key === "wdtCustomCss")) {
-                $setting = sanitize_textarea_field($setting);
+                if ($key === "wdtCustomJs" && ! current_user_can( 'unfiltered_html' ) ) {
+                    $setting = '';
+                } else {
+                    $setting = sanitize_textarea_field($setting);
+                }
             } else {
                 $setting = sanitize_text_field($setting);
             }

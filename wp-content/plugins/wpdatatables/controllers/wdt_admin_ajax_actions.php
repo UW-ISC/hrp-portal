@@ -409,6 +409,8 @@ function wdtCreateSimpleTable()
         )
     );
 
+    $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
+
     $wpDataTableRows = new WPDataTableRows($tableData);
 
     // Generate new id and save settings in wpdatatables table in DB
@@ -505,14 +507,11 @@ function wdtSaveDataSimpleTable()
         exit();
     }
     $turnOffSimpleHeader = 0;
-    $rowsData = json_decode(stripslashes_deep($_POST['rowsData']));
     $tableSettings = json_decode(stripslashes_deep($_POST['tableSettings']));
+    $tableSettings = WDTConfigController::sanitizeTableConfig($tableSettings);
     $tableID = intval($tableSettings->id);
-    $scrollable = intval($tableSettings->scrollable);
-    $fixedLayout = intval($tableSettings->fixed_layout);
-    $wordWrap = intval($tableSettings->word_wrap);
-    $showTitle = intval($tableSettings->show_title);
-    $title = sanitize_text_field($tableSettings->title);
+    $rowsData = json_decode(stripslashes_deep($_POST['rowsData']));
+    $rowsData = WDTConfigController::sanitizeRowDataSimpleTable($rowsData);
     $result = new stdClass();
 
     if ($tableSettings->content->mergedCells){
@@ -528,11 +527,11 @@ function wdtSaveDataSimpleTable()
         $wpdb->prefix . "wpdatatables",
         array(
             'content' => json_encode($tableSettings->content),
-            'scrollable' => $scrollable,
-            'fixed_layout' => $fixedLayout,
-            'word_wrap' => $wordWrap,
-            'show_title' => $showTitle,
-            'title' => $title,
+            'scrollable' => $tableSettings->scrollable,
+            'fixed_layout' => $tableSettings->fixed_layout,
+            'word_wrap' => $tableSettings->word_wrap,
+            'show_title' => $tableSettings->show_title,
+            'title' => $tableSettings->title,
             'advanced_settings' => json_encode(
                 array(
                     'simpleResponsive' => $tableSettings->simpleResponsive,
@@ -612,7 +611,7 @@ function wdtGenerateWPBasedQuery()
         exit();
     }
 
-    $tableData = $_POST['tableData'];
+    $tableData = WDTConfigController::sanitizeGeneratedSQLTableData($_POST['tableData']);
     $tableData = apply_filters('wpdatatables_before_generate_wp_based_query', $tableData);
 
     $constructor = new wpDataTableConstructor();
@@ -700,7 +699,7 @@ function wdtGenerateMySqlBasedQuery()
         exit();
     }
 
-    $tableData = $_POST['tableData'];
+    $tableData = WDTConfigController::sanitizeGeneratedSQLTableData($_POST['tableData']);
     $tableData = apply_filters('wpdatatables_before_generate_mysql_based_query', $tableData);
 
     $constructor = new wpDataTableConstructor($tableData['connection']);
@@ -726,6 +725,13 @@ function wdtConstructorPreviewFileTable()
     }
 
     $tableData = $_POST['tableData'];
+    // Sanitize table data
+    $tableData['name'] = sanitize_text_field($tableData['name']);
+    $tableData['method'] = sanitize_text_field($tableData['method']);
+    $tableData['columnCount'] = sanitize_text_field($tableData['columnCount']);
+    $tableData['connection'] = sanitize_text_field($tableData['connection']);
+    $tableData['file'] = sanitize_text_field($tableData['file']);
+
     $tableData = apply_filters('wpdatatables_before_preview_file_table', $tableData);
 
     $constructor = new wpDataTableConstructor($tableData['connection']);
@@ -748,6 +754,17 @@ function wdtConstructorReadFileData()
 
     $result = array();
     $tableData = $_POST['tableData'];
+    $tableData['name'] = sanitize_text_field($tableData['name']);
+    $tableData['method'] = sanitize_text_field($tableData['method']);
+    $tableData['columnCount'] = sanitize_text_field($tableData['columnCount']);
+    $tableData['connection'] = sanitize_text_field($tableData['connection']);
+    $tableData['file'] = sanitize_text_field($tableData['file']);
+
+    if(isset($tableData['columns'])){
+        foreach ($tableData['columns'] as $columnKey => $column){
+            $tableData['columns'][$columnKey] = array_map('sanitize_text_field', $column);
+        }
+    }
     $tableData = apply_filters('wpdatatables_before_read_file_data', $tableData);
 
     $constructor = new wpDataTableConstructor($tableData['connection']);

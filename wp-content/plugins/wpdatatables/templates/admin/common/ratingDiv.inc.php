@@ -18,18 +18,18 @@ if( isset($allTables) && $allTables > 100 ) {
     </div>
     <div class="wdt-float-left">
         <p class="wdt-rating-massage"><?php echo $messageTables; ?></p>
-        <h1 class="wdt-rating-heading"><?php _e("Would you consider leaving us a review on WordPress.org?", "wpdatatables") ?></h1>
+        <h1 class="wdt-rating-heading"><?php esc_html_e("Would you consider leaving us a review on WordPress.org?", "wpdatatables") ?></h1>
         <a href="https://wordpress.org/support/plugin/wpdatatables/reviews/?rate=5&filter=5#new-post"
                class="wdt-rating-button wdt-first-btn btn-primary" target="_new"
-            ><i class="wpdt-icon-heart"></i><?php _e("Sure! I Like wpDataTables", "wpdatatables") ?></a>
+            ><i class="wpdt-icon-heart"></i><?php esc_html_e("Sure! I Like wpDataTables", "wpdatatables") ?></a>
     </div>
 
     <div class="wdt-dismiss"><i class="wpdt-icon-times-full"></i></div>
 
     <ul class="wdt-rating-buttons">
-        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-hide-rating wdt-other-btn"><?php _e("I've already left a review", "wpdatatables") ?></a></li>
-        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-other-btn wdt-dismiss"><?php _e("Maybe Later", "wpdatatables") ?></a></li>
-        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-hide-rating wdt-other-btn"><?php _e("Never show again", "wpdatatables") ?></a></li>
+        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-hide-rating wdt-other-btn"><?php esc_html_e("I've already left a review", "wpdatatables") ?></a></li>
+        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-other-btn wdt-dismiss"><?php esc_html_e("Maybe Later", "wpdatatables") ?></a></li>
+        <li><a href="javascript:void(0);" class="wdt-rating-button wdt-hide-rating wdt-other-btn"><?php esc_html_e("Never show again", "wpdatatables") ?></a></li>
     </ul>
     <div class="clear"></div>
 </div>

@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true"><i class="wpdt-icon-times-full"></i></span></button>
-                <h4 class="modal-title"><i class="wpdt-icon-exclamation-triangle"></i><?php _e('Error', 'wpdatatables'); ?></h4>
+                <h4 class="modal-title"><i class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Error', 'wpdatatables'); ?></h4>
             </div>
             <div class="modal-body">
 
@@ -23,7 +23,7 @@
             <div class="modal-footer">
                 <hr>
                 <button type="button" class="btn btn-link"
-                        data-dismiss="modal"><?php _e('Close', 'wpdatatables'); ?></button>
+                        data-dismiss="modal"><?php esc_html_e('Close', 'wpdatatables'); ?></button>
             </div>
         </div>
     </div>

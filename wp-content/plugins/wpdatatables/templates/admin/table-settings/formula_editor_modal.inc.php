@@ -19,35 +19,35 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"><?php _e('Formula Editor', 'wpdatatables'); ?></h4>
+                <h4 class="modal-title"><?php esc_html_e('Formula Editor', 'wpdatatables'); ?></h4>
             </div>
             <div class="modal-body">
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <i class=" wpdt-icon-info-circle-full"></i>
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                                 aria-hidden="true"><i class="wpdt-icon-times-full"></i></span></button>
-                    <span class="wdt-alert-title"><?php _e('Use this dialog to construct formulas and see a preview of the result.', 'wpdatatables'); ?>
+                    <span class="wdt-alert-title"><?php esc_html_e('Use this dialog to construct formulas and see a preview of the result.', 'wpdatatables'); ?>
                         <br></span>
-                    <span class="wdt-alert-subtitle"><?php _e('You can use columns (values for each cell will be inserted), or number values. Only numeric columns allowed (non-numeric will be parsed as 0). Basic math operations and brackets are supported. Example: col1*((col2+2)-col3*sin(col4-3)).', 'wpdatatables'); ?></span>
+                    <span class="wdt-alert-subtitle"><?php esc_html_e('You can use columns (values for each cell will be inserted), or number values. Only numeric columns allowed (non-numeric will be parsed as 0). Basic math operations and brackets are supported. Example: col1*((col2+2)-col3*sin(col4-3)).', 'wpdatatables'); ?></span>
                 </div>
                 <div class="row">
                     <div class="col-md-12 formula_col">
-                        <p class="title"><?php _e('Formula', 'wpdatatables'); ?></p>
+                        <p class="title"><?php esc_html_e('Formula', 'wpdatatables'); ?></p>
                         <div class="form-group">
                             <div class="fg-line">
                                 <textarea class="form-control" rows="5"
-                                          placeholder="<?php _e('Type your formula here...', 'wpdatatables'); ?>"></textarea>
+                                          placeholder="<?php esc_attr_e('Type your formula here...', 'wpdatatables'); ?>"></textarea>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-7 formula-columns">
-                        <p class="title"><?php _e('Columns to use', 'wpdatatables'); ?></p>
+                        <p class="title"><?php esc_html_e('Columns to use', 'wpdatatables'); ?></p>
                         <div class="formula-columns-container">
                             <!-- Columns will be added here -->
                         </div>
                     </div>
                     <div class="col-md-5 formula-operators">
-                     <p class="title"><?php _e('Math operators', 'wpdatatables'); ?></p>
+                     <p class="title"><?php esc_html_e('Math operators', 'wpdatatables'); ?></p>
                     <div class="wdt-formula-operators">
                         <button class="btn formula_plus">+</button>
                         <button class="btn formula_minus">-</button>
@@ -76,14 +76,14 @@
                 <hr>
                 <button type="button" class="btn pull-left wdt-preview-formula">
                     <i class="wpdt-icon-eye-full"></i>
-                    <?php _e('Preview', 'wpdatatables'); ?>
+                    <?php esc_html_e('Preview', 'wpdatatables'); ?>
                 </button>
                 <button type="button" class="btn btn-danger btn-icon-text" data-dismiss="modal">
-                    <?php _e('Cancel', 'wpdatatables'); ?>
+                    <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                 </button>
                 <button type="button" class="btn btn-primary btn-icon-text wdt-save-formula">
                     <i class="wpdt-icon-save"></i>
-                    <?php _e('Save', 'wpdatatables'); ?>
+                    <?php esc_html_e('Save', 'wpdatatables'); ?>
                 </button>
                 <div class="clear"></div>
             </div>

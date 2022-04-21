@@ -5,17 +5,17 @@ $showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">×</span>
         </button>
-        <p><?php _e('When working with this table type please note that at the moment:', 'wpdatatables'); ?></p>
+        <p><?php esc_html_e('When working with this table type please note that at the moment:', 'wpdatatables'); ?></p>
         <ul style="list-style-type: disc;padding-inline-start: 40px;margin-top: 5px;">
-            <li> <?php _e('There is no data functionality like front-end editing, sorting, filtering, search, export or pagination in this table type.', 'wpdatatables'); ?></li>
-            <li> <?php _e('Creating charts from this table type is not yet possible.', 'wpdatatables'); ?></li>
-            <li> <?php _e('You can’t use foreign keys, placeholders or conditional formatting, but each cell can be formatted separately.', 'wpdatatables'); ?></li>
-            <li> <?php _e('Add-ons can’t be used with Simple tables.', 'wpdatatables'); ?></li>
-            <li> <?php _e('If you need those features, please consider creating tables with any other options from table wizard.', 'wpdatatables'); ?>
-            <li> <?php _e('To remove this notice, please click on X in top right corner.', 'wpdatatables'); ?>
+            <li> <?php esc_html_e('There is no data functionality like front-end editing, sorting, filtering, search, export or pagination in this table type.', 'wpdatatables'); ?></li>
+            <li> <?php esc_html_e('Creating charts from this table type is not yet possible.', 'wpdatatables'); ?></li>
+            <li> <?php esc_html_e('You can’t use foreign keys, placeholders or conditional formatting, but each cell can be formatted separately.', 'wpdatatables'); ?></li>
+            <li> <?php esc_html_e('Add-ons can’t be used with Simple tables.', 'wpdatatables'); ?></li>
+            <li> <?php esc_html_e('If you need those features, please consider creating tables with any other options from table wizard.', 'wpdatatables'); ?>
+            <li> <?php esc_html_e('To remove this notice, please click on X in top right corner.', 'wpdatatables'); ?>
             </li>
         </ul>
-        <?php _e('Depends of users requests, we will add it in our road map and implement it based on priority. Thank you for understanding.', 'wpdatatables'); ?>
+        <?php esc_html_e('Depends of users requests, we will add it in our road map and implement it based on priority. Thank you for understanding.', 'wpdatatables'); ?>
     </div>
 <?php } ?>
 
@@ -27,7 +27,7 @@ $showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
 
     <div class="card-header wdt-admin-card-header ch-alt">
         <div class="col-sm-8 p-l-0 p-t-5">
-            <h2><?php _e('Table preview', 'wpdatatables'); ?></h2>
+            <h2><?php esc_html_e('Table preview', 'wpdatatables'); ?></h2>
         </div>
 
         <div class="clear"></div>
@@ -37,13 +37,13 @@ $showAlertMessage = get_option('wdtSimpleTableAlert');if ($showAlertMessage){
         <div id="wpdt-views">
             <ul class="nav nav-pills">
                 <li class="nav-item active" data-view="desktop">
-                    <a class="nav-link" ><?php _e('Desktop', 'wpdatatables'); ?></a>
+                    <a class="nav-link" ><?php esc_html_e('Desktop', 'wpdatatables'); ?></a>
                 </li>
                 <li class="nav-item" data-view="tablet">
-                    <a class="nav-link"><?php _e('Tablet', 'wpdatatables'); ?></a>
+                    <a class="nav-link"><?php esc_html_e('Tablet', 'wpdatatables'); ?></a>
                 </li>
                 <li class="nav-item" data-view="mobile">
-                    <a class="nav-link"><?php _e('Mobile', 'wpdatatables'); ?></a>
+                    <a class="nav-link"><?php esc_html_e('Mobile', 'wpdatatables'); ?></a>
                 </li>
             </ul>
         </div>

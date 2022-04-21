@@ -144,28 +144,28 @@ class WDTBrowseChartsTable extends WP_List_Table {
     function column_default($item, $column_name) {
         switch ($column_name) {
             case 'shortcode':
-                return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatachart id=' . $item['id'] . ']" data-placement="top"  title="' . __('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatachart id=' . $item['id'] . ']</span>';
+                return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatachart id=' . (int)$item['id'] . ']" data-placement="top"  title="' . esc_attr__('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatachart id=' . (int)$item['id'] . ']</span>';
                 break;
             case 'functions':
             case 'table_type':
                 $return_string =    '<div class="wdt-function-flex"><a type="button" 
 	                                     class="wdt-duplicate-chart" 
-	                                     data-chart_id="' . $item['id'] . '" 
-	                                     data-chart_name="' . $item['title'] . '"
-	                                     data-toggle="tooltip" title="' . __('Duplicate', 'wpdatatables') . '" 
+	                                     data-chart_id="' . esc_attr($item['id']) . '" 
+	                                     data-chart_name="' . esc_attr($item['title']) . '"
+	                                     data-toggle="tooltip" title="' . esc_attr__('Duplicate', 'wpdatatables') . '" 
 	                                     href="#"><i class="wpdt-icon-clone"></i></a>';
                 $return_string .=   ' <a type="button" 
                                          class="wdt-configure" 
-                                         data-table_id="' . $item['id'] . '" 
-                                         data-table_name="' . $item['title'] . '" 
-                                         data-toggle="tooltip" title="' . __('Configure', 'wpdatatables') . '" 
-                                         href="admin.php?page=wpdatatables-chart-wizard&chart_id=' . $item['id'] . '"><i class="wpdt-icon-cog"></i></a>';
+                                         data-table_id="' . esc_attr($item['id']) . '" 
+                                         data-table_name="' . esc_attr($item['title']) . '" 
+                                         data-toggle="tooltip" title="' . esc_attr__('Configure', 'wpdatatables') . '" 
+                                         href="admin.php?page=wpdatatables-chart-wizard&chart_id=' . (int)$item['id'] . '"><i class="wpdt-icon-cog"></i></a>';
                 $return_string .=   ' <a type="button" 
                                          class="wdt-submit-delete" 
-                                         data-table_id="' . $item['id'] . '" 
-                                         data-table_name="' . $item['title'] . '" 
-                                         data-toggle="tooltip" title="' . __('Delete', 'wpdatatables') . '" 
-                                         href="'. wp_nonce_url('admin.php?page=wpdatatables-charts&action=delete&chart_id=' . $item['id'] . '', 'wdtDeleteChartNonce', 'wdtNonce' ) .'"><i class="wpdt-icon-trash"></i></a></div>';
+                                         data-table_id="' . esc_attr($item['id']) . '" 
+                                         data-table_name="' . esc_attr($item['title']) . '" 
+                                         data-toggle="tooltip" title="' . esc_attr__('Delete', 'wpdatatables') . '" 
+                                         href="'. wp_nonce_url('admin.php?page=wpdatatables-charts&action=delete&chart_id=' . (int)$item['id'] . '', 'wdtDeleteChartNonce', 'wdtNonce' ) .'"><i class="wpdt-icon-trash"></i></a></div>';
                 return $return_string;
                 break;
             case 'id':
@@ -182,7 +182,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
 //            'trash' => '<a class="wdt-submit-delete" title="' . __('Delete', 'wpdatatables') . '" href="'. wp_nonce_url('admin.php?page=wpdatatables-charts&action=delete&chart_id=' . $item['id'] . '', 'wdtDeleteChartNonce', 'wdtNonce' ) .'" rel="' . $item['id'] . '">' . __('Delete', 'wpdatatables') . '</a>'
 //        );
 
-        return '<a href="admin.php?page=wpdatatables-chart-wizard&chart_id=' . $item['id'] . '">' . $item['title'] . '</a> ';
+        return '<a href="admin.php?page=wpdatatables-chart-wizard&chart_id=' . (int)$item['id'] . '">' . esc_html($item['title']) . '</a> ';
     }
 
     /**
@@ -215,187 +215,187 @@ class WDTBrowseChartsTable extends WP_List_Table {
     function column_type($item) {
         switch ($item['type']) {
             case 'google_column_chart':
-                return '<span class="wdt-chart-type">' . __('Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_histogram':
-                return '<span class="wdt-chart-type">' . __('Histogram', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Histogram', 'wpdatatables') . '</span>';
                 break;
             case 'google_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_stacked_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_area_chart':
-                return '<span class="wdt-chart-type">' . __('Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_stepped_area_chart':
-                return '<span class="wdt-chart-type">' . __('Stepped Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stepped Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_line_chart':
-                return '<span class="wdt-chart-type">' . __('Line Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Line Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_pie_chart':
-                return '<span class="wdt-chart-type">' . __('Pie Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_bubble_chart':
-                return '<span class="wdt-chart-type">' . __('Bubble Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Bubble Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_donut_chart':
-                return '<span class="wdt-chart-type">' . __('Donut Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Donut Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_gauge_chart':
-                return '<span class="wdt-chart-type">' . __('Gauge Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Gauge Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_scatter_chart':
-                return '<span class="wdt-chart-type">' . __('Scatter Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Scatter Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_candlestick_chart':
-                return '<span class="wdt-chart-type">' . __('Candlestick Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Candlestick Chart', 'wpdatatables') . '</span>';
                 break;
             case 'google_waterfall_chart':
-                return '<span class="wdt-chart-type">' . __('Waterfall Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Waterfall Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_line_chart':
-                return '<span class="wdt-chart-type">' . __('Line Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Line Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_polar_chart':
-                return '<span class="wdt-chart-type">' . __('Polar chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Polar chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_spiderweb_chart':
-                return '<span class="wdt-chart-type">' . __('Spiderweb chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Spiderweb chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_spline_chart':
-                return '<span class="wdt-chart-type">' . __('Spline Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Spline Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_basic_area_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_stacked_area_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_basic_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_stacked_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_basic_column_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_stacked_column_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_pie_chart':
-                return '<span class="wdt-chart-type">' . __('Pie Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_pie_with_gradient_chart':
-                return '<span class="wdt-chart-type">' . __('Pie With Gradient Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie With Gradient Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_donut_chart':
-                return '<span class="wdt-chart-type">' . __('Donut Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Donut Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_scatter_plot':
-                return '<span class="wdt-chart-type">' . __('Scatter Plot', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Scatter Plot', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_3d_column_chart':
-                return '<span class="wdt-chart-type">' . __('3D Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('3D Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_3d_pie_chart':
-                return '<span class="wdt-chart-type">' . __('3D Pie Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('3D Pie Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_3d_donut_chart':
-                return '<span class="wdt-chart-type">' . __('3D Donut Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('3D Donut Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_treemap_chart':
-                return '<span class="wdt-chart-type">' . __('Treemap Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Treemap Chart', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts_treemap_level_chart':
-                return '<span class="wdt-chart-type">' . __('Treemap level Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Treemap level Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_line_chart':
-                return '<span class="wdt-chart-type">' . __('Line Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Line Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_area_chart':
-                return '<span class="wdt-chart-type">' . __('Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_stacked_area_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_column_chart':
-                return '<span class="wdt-chart-type">' . __('Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_radar_chart':
-                return '<span class="wdt-chart-type">' . __('Radar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Radar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_polar_area_chart':
-                return '<span class="wdt-chart-type">' . __('Polar Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Polar Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_pie_chart':
-                return '<span class="wdt-chart-type">' . __('Pie Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_doughnut_chart':
-                return '<span class="wdt-chart-type">' . __('Doughnut Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Doughnut Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_bubble_chart':
-                return '<span class="wdt-chart-type">' . __('Bubble Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Bubble Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_straight_line_chart':
-                return '<span class="wdt-chart-type">' . __('Line Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Line Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_spline_chart':
-                return '<span class="wdt-chart-type">' . __('Spline Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Spline Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_stepline_chart':
-                return '<span class="wdt-chart-type">' . __('Step Line Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Step Line Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_column_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_stacked_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_grouped_bar_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_100_stacked_bar_chart':
-                return '<span class="wdt-chart-type">' . __('100% Stacked Bar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('100% Stacked Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_stacked_column_chart':
-                return '<span class="wdt-chart-type">' . __('Stacked Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_100_stacked_column_chart':
-                return '<span class="wdt-chart-type">' . __('100% Stacked Column Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('100% Stacked Column Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_spline_area_chart':
-                return '<span class="wdt-chart-type">' . __('Spline Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Spline Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_basic_area_chart':
-                return '<span class="wdt-chart-type">' . __('Basic Area Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Basic Area Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_stepline_area_chart':
-                return '<span class="wdt-chart-type">' . __('Stepline Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Stepline Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_pie_chart':
-                return '<span class="wdt-chart-type">' . __('Pie Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_pie_with_gradient_chart':
-                return '<span class="wdt-chart-type">' . __('Pie Chart With Gradient', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Pie Chart With Gradient', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_donut_chart':
-                return '<span class="wdt-chart-type">' . __('Donut Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Donut Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_donut_with_gradient_chart':
-                return '<span class="wdt-chart-type">' . __('Donut Chart With Gradient', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Donut Chart With Gradient', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_radar_chart':
-                return '<span class="wdt-chart-type">' . __('Radar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Radar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_radialbar_chart':
-                return '<span class="wdt-chart-type">' . __('Radialbar Chart', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Radialbar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts_radialbar_gauge_chart':
-                return '<span class="wdt-chart-type">' . __('Radialbar Chart With Gauge', 'wpdatatables') . '</span>';
+                return '<span class="wdt-chart-type">' . esc_html__('Radialbar Chart With Gauge', 'wpdatatables') . '</span>';
                 break;
             default:
                 return $item;
@@ -407,16 +407,16 @@ class WDTBrowseChartsTable extends WP_List_Table {
     function column_engine($item) {
         switch ($item['engine']) {
             case 'google':
-                return '<span class="wdt-render-engine">' . __('Google', 'wpdatatables') . '</span>';
+                return '<span class="wdt-render-engine">' . esc_html__('Google', 'wpdatatables') . '</span>';
                 break;
             case 'highcharts':
-                return '<span class="wdt-render-engine">' . __('Highcharts', 'wpdatatables') . '</span>';
+                return '<span class="wdt-render-engine">' . esc_html__('Highcharts', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs':
-                return '<span class="wdt-render-engine">' . __('Chart.js', 'wpdatatables') . '</span>';
+                return '<span class="wdt-render-engine">' . esc_html__('Chart.js', 'wpdatatables') . '</span>';
                 break;
             case 'apexcharts':
-                return '<span class="wdt-render-engine">' . __('Apexcharts', 'wpdatatables') . '</span>';
+                return '<span class="wdt-render-engine">' . esc_html__('Apexcharts', 'wpdatatables') . '</span>';
                 break;
             default:
                 return $item;
@@ -481,7 +481,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
 
         if (!empty($columns['cb'])) {
             static $cb_counter = 1;
-            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . __('Select All') . '</label>'
+            $columns['cb'] = '<label class="screen-reader-text" for="cb-select-all-' . $cb_counter . '">' . esc_html__('Select All') . '</label>'
                 . '<div class="checkbox"><input id="cb-select-all-' . $cb_counter . '" type="checkbox" /></div>';
             $cb_counter++;
         }

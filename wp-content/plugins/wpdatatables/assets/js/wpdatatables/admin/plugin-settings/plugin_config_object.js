@@ -247,13 +247,15 @@ var wpdatatable_plugin_config = {
         if( wdt_current_config.wdtCustomJs != customJs ){
             wdt_current_config.wdtCustomJs = customJs;
         }
-        var aceEditorGlobalJS = ace.edit('wdt-custom-js');
-        aceEditorGlobalJS.$blockScrolling = Infinity;
-        if( aceEditorGlobalJS.getValue() != customJs ){
-            aceEditorGlobalJS.setValue( customJs );
-        }
-        if( jQuery('#wdt-custom-js').val() != customJs ){
-            jQuery('#wdt-custom-js').val( customJs );
+        if(jQuery('#wdt-custom-js').length){
+            var aceEditorGlobalJS = ace.edit('wdt-custom-js');
+            aceEditorGlobalJS.$blockScrolling = Infinity;
+            if( aceEditorGlobalJS.getValue() != customJs ){
+                aceEditorGlobalJS.setValue( customJs );
+            }
+            if( jQuery('#wdt-custom-js').val() != customJs ){
+                jQuery('#wdt-custom-js').val( customJs );
+            }
         }
     },
 

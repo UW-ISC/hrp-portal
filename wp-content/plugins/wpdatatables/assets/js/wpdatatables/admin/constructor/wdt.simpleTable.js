@@ -217,7 +217,13 @@
                             }
                         },
                         'separator8': Handsontable.plugins.ContextMenu.SEPARATOR,
-                        'mergeCells': {}
+                        'mergeCells': {
+                            callback: function (key, selection, clickEvent) {
+                                setTimeout(function () {
+                                    $('#wpdt-merge').click()
+                                }, 0);
+                            }
+                        }
                     }
                 },
                 fixedRowsTop: 0,
@@ -936,7 +942,7 @@
             }
             switch (type) {
                 case 'image':
-                    content = '<img  ' + dataTypeContent + '  src="' + url + '" class="' + classes + '" ' + attrs + '" />';
+                    content = '<img  ' + dataTypeContent + '  src="' + url + '" class="' + classes + '" ' + attrs + ' />';
                     if (link) {
                         content = '<a href="' + link + '">' + content + '</a>';
                     }
@@ -1046,7 +1052,7 @@
                         hsla: false,
                         hsva: false,
                         cmyk: false,
-                        clear: true ,
+                        clear: true,
                         input: true,
                         save: true
                     }
@@ -1389,7 +1395,8 @@
             $('#wdt-backend-insert-link-button').on('click', function (e) {
                 e.preventDefault();
                 e.stopImmediatePropagation();
-                let targetAttr, rel, nofollowAttr, noreferrerAttr, sponsoredAttr,  formdata, dataAttr, selectedRange = wpdtEditor.getSelectedRange()[0],
+                let targetAttr, rel, nofollowAttr, noreferrerAttr, sponsoredAttr, formdata, dataAttr,
+                    selectedRange = wpdtEditor.getSelectedRange()[0],
                     highlightRow = selectedRange.highlight.row,
                     highlightCol = selectedRange.highlight.col,
                     linkUrl = $('#wpdt-link-url'),
@@ -1425,6 +1432,9 @@
                 } else {
                     linkUrl = linkUrlValue;
                 }
+                linkUrl = _.escape(linkUrl);
+                linkTextValue = _.escape(linkTextValue);
+                buttonClass = _.escape(buttonClass);
                 dataAttr = ' data-cell-id="' + highlightRow + highlightCol + '"';
                 dataAttr += ' data-link-url="' + linkUrl + '"';
                 dataAttr += ' data-link-text="' + linkTextValue + '"';
@@ -1551,18 +1561,18 @@
                     selectedRange = wpdtEditor.getSelectedRange()[0],
                     highlightRow = selectedRange.highlight.row,
                     highlightCol = selectedRange.highlight.col,
-                    shortcodeData = $('#wpdt-shortcode-data'),
-                    shortcodeDataValue = shortcodeData.val();
+                    shortcodeData = $('#wpdt-shortcode-data').val(),
+                    shortcodeDataValue = _.escape(shortcodeData.trim());
 
-                if (shortcodeData.val() == '') {
+                if (shortcodeData == '') {
                     shortcodeData.closest('.col-sm-12').siblings('.error-msg').show();
                     shortcodeData.addClass('error-border');
                     return;
                 }
                 formatData = '<span data-content="wpdt-do-shortcode" ';
                 formatData += 'data-cell-id="' + highlightRow + highlightCol + '" ';
-                formatData += 'data-shortcode="' + shortcodeDataValue.trim() + '">';
-                formatData += shortcodeDataValue.trim()
+                formatData += 'data-shortcode="' + shortcodeDataValue + '">';
+                formatData += shortcodeDataValue
                 formatData += '</span>';
 
                 wpdtEditor.setDataAtCell(highlightRow, highlightCol, formatData);
@@ -1643,18 +1653,28 @@
             }
             starRateNumber.css("font-size", "20px");
 
-            $('#wpdt-star-number').on('change', function () {
-                let starNum;
-                if ($(this).val() > 9) {
+            $('#wpdt-star-number').on('change input focus', function () {
+                let starNum,
+                    starNumEl = $(this),
+                    starNumValue = $(this).val(),
+                    starRatingNumber = starRateElement.rateYo("rating");
+
+                if (starNumValue == '' || isNaN(starNumValue)) {
+                    starNumEl.val(1)
+                    return;
+                }
+                if (starNumValue > 9) {
                     starNum = 10;
                     $('.wdt-button-plus[data-field="wpdt-star-number"]').attr("disabled", true);
-                    $(this).val('10')
+                    starNumEl.val('10')
                 } else {
-                    starNum = $(this).val()
+                    starNum = starNumValue
                     $('.wdt-button-plus[data-field="wpdt-star-number"]').attr("disabled", false);
                 }
                 starRateElement.rateYo("option", "numStars", starNum);
                 starRateElement.rateYo("option", "maxValue", starNum);
+                starRatingNumber = starRatingNumber > starNum ? starNum : starRatingNumber;
+                starRateNumber.html(starRatingNumber + '/' + starNum);
             })
 
             starRateElement.rateYo("option", "onSet", function () {
@@ -1673,7 +1693,7 @@
                     highlightRow = selectedRange.highlight.row,
                     highlightCol = selectedRange.highlight.col,
                     starRateElement = $("#wdt-backend-star-modal .rateYo");
-                var maxValue = starRateElement.rateYo("option", "maxValue"),
+                var maxValue = parseInt(starRateElement.rateYo("option", "maxValue")),
                     rating = starRateElement.rateYo("option", "rating"),
                     showNumber = $('#wpdt-star-rating-number').is(":checked"),
                     colHeaderArr = wpdtEditor.getColHeader();

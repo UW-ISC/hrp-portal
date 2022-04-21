@@ -6,16 +6,16 @@
         <i class="wpdt-icon-info-circle-full"></i>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <span class="wdt-alert-title f-600"><?php _e('Please choose the SQL data which will be used to create a table.', 'wpdatatables'); ?></span><br>
-        <span class="wdt-alert-subtitle"><?php _e('This constructor type will create a query to any SQL database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your SQL database.', 'wpdatatables'); ?></span>
+        <span class="wdt-alert-title f-600"><?php esc_html_e('Please choose the SQL data which will be used to create a table.', 'wpdatatables'); ?></span><br>
+        <span class="wdt-alert-subtitle"><?php esc_html_e('This constructor type will create a query to any SQL database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your SQL database.', 'wpdatatables'); ?></span>
     </div>
 
     <div class="row">
         <div class="col-sm-6 wdt-constructor-mysql-query-table-name-block">
             <h4 class="c-title-color m-b-2">
-                <?php _e('Table name', 'wpdatatables'); ?>
+                <?php esc_html_e('Table name', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                   title="<?php _e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
+                   title="<?php esc_attr_e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
             </h4>
             <div class="form-group">
                 <div class="fg-line">
@@ -33,9 +33,9 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('All SQL tables', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('All SQL tables', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add or drag MySQL tables.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add or drag MySQL tables.', 'wpdatatables'); ?>"></i>
                         </h2>
                     </div>
                 </div>
@@ -78,7 +78,7 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('Selected SQL tables', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('Selected SQL tables', 'wpdatatables'); ?></span>
                         </h2>
                     </div>
                 </div>
@@ -97,9 +97,9 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('All SQL columns', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('All SQL columns', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add or drag MySQL columns.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add or drag MySQL columns.', 'wpdatatables'); ?>"></i>
                         </h2>
                     </div>
                 </div>
@@ -127,7 +127,7 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('Selected SQL columns', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('Selected SQL columns', 'wpdatatables'); ?></span>
                         </h2>
                     </div>
                 </div>
@@ -147,9 +147,9 @@
         <div class="col-sm-8 wdt-constructor-mysql-tables-define-relations-block hidden">
             <div class="col-sm-12 p-0">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Define SQL tables relations', 'wpdatatables'); ?>
+                    <?php esc_html_e('Define SQL tables relations', 'wpdatatables'); ?>
                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('Check to have an inner join, uncheck to have left join.', 'wpdatatables'); ?>"></i>
+                       title="<?php esc_attr_e('Check to have an inner join, uncheck to have left join.', 'wpdatatables'); ?>"></i>
                 </h4>
             </div>
             <div class="form-group m-b-0" id="wdt-constructor-mysql-tables-relations">
@@ -165,9 +165,9 @@
 
                     <div class="col-sm-12 p-0">
                         <h4 class="c-title-color m-b-6">
-                            <?php _e('Add conditions', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add conditions', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add conditions that you would like to have in the table.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add conditions that you would like to have in the table.', 'wpdatatables'); ?>"></i>
                         </h4>
                     </div>
                 <div class="form-group" id="wdt-constructor-mysql-conditions">
@@ -176,7 +176,7 @@
                     <div class="col-sm-12 p-0">
                         <button class="btn pull-left" id="wdt-constructor-add-mysql-condition">
                             <i class="wpdt-icon-plus"></i>
-                            <?php _e('Add condition', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add condition', 'wpdatatables'); ?>
                         </button>
                     </div>
 
@@ -193,9 +193,9 @@
 
                     <div class="col-sm-12 p-0">
                         <h4 class="c-title-color m-b-6">
-                            <?php _e('Add grouping rules', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add grouping rules', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add grouping rules that you would like to have in the table.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add grouping rules that you would like to have in the table.', 'wpdatatables'); ?>"></i>
                         </h4>
                     </div>
                 <div class="form-group" id="wdt-constructor-mysql-grouping-rules">
@@ -205,7 +205,7 @@
                         <button class="btn pull-left"
                                 id="wdt-constructor-mysql-add-grouping-rule">
                             <i class="wpdt-icon-plus"></i>
-                            <?php _e('Add grouping', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add grouping', 'wpdatatables'); ?>
                         </button>
                     </div>
 
@@ -311,7 +311,7 @@
 <script id="wdt-constructor-mysql-grouping-rule-template" type="text/x-jsrender">
     <div class="row m-b-15 m-l-0 m-r-0 wdt-constructor-mysql-grouping-rule-block">
         <div class="col-sm-2 wdt-constructor-group-by-label">
-            <span><?php _e('Group by ', 'wpdatatables'); ?></span>
+            <span><?php esc_html_e('Group by ', 'wpdatatables'); ?></span>
         </div>
         <div class="col-sm-5 p-r-0 p-l-0">
             <select class="wdt-constructor-grouping-rule-column">

@@ -6,16 +6,16 @@
         <i class="wpdt-icon-info-circle-full"></i>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <span class="wdt-alert-title f-600"><?php _e('Please choose the WP data which will be used to create a table.', 'wpdatatables'); ?></span><br>
-        <span class="wdt-alert-subtitle"><?php _e('This constructor type will create a query to WordPress database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your WordPress database.', 'wpdatatables'); ?></span>
+        <span class="wdt-alert-title f-600"><?php esc_html_e('Please choose the WP data which will be used to create a table.', 'wpdatatables'); ?></span><br>
+        <span class="wdt-alert-subtitle"><?php esc_html_e('This constructor type will create a query to WordPress database and create a wpDataTable based on this query. This table content cannot be edited manually afterwards, but will always contain actual data from your WordPress database.', 'wpdatatables'); ?></span>
     </div>
 
     <div class="row">
         <div class="col-sm-6 wdt-constructor-wp-query-table-name-block">
             <h4 class="c-title-color m-b-2">
-                <?php _e('Table name', 'wpdatatables'); ?>
+                <?php esc_html_e('Table name', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                   title="<?php _e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
+                   title="<?php esc_attr_e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
             </h4>
             <div class="form-group">
                 <div class="fg-line">
@@ -33,9 +33,9 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('All post types', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('All post types', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add or drag post types.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add or drag post types.', 'wpdatatables'); ?>"></i>
                         </h2>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                     <table class="table table-inner table-vmiddle">
                         <tbody id="wdt-constructor-post-types-all-table">
                         <tr>
-                            <td><?php _e('all', 'wpdatatables'); ?></td>
+                            <td><?php esc_html_e('all', 'wpdatatables'); ?></td>
                         </tr>
                         <?php foreach (get_post_types() as $post_type) { ?>
                             <tr>
@@ -70,7 +70,7 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('Selected post types', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('Selected post types', 'wpdatatables'); ?></span>
                         </h2>
                     </div>
                 </div>
@@ -89,9 +89,9 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('All post properties', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('All post properties', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add or drag post properties.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add or drag post properties.', 'wpdatatables'); ?>"></i>
                         </h2>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                 <div class="card-header col-sm-12 ch-alt p-t-15 p-b-10 p-r-0 p-l-0">
                     <div class="col-sm-12">
                         <h2>
-                            <span><?php _e('Selected post properties', 'wpdatatables'); ?></span>
+                            <span><?php esc_html_e('Selected post properties', 'wpdatatables'); ?></span>
                         </h2>
                     </div>
                 </div>
@@ -140,16 +140,16 @@
         <div class="col-sm-12 wdt-constructor-post-types-relationship-block hidden p-0">
             <div class="col-sm-4">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Post types relationship', 'wpdatatables'); ?>
+                    <?php esc_html_e('Post types relationship', 'wpdatatables'); ?>
                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('When it is enabled, relations will be defined (joining rules) between post types, otherwise relations between post types will not be defined (do a full outer join).', 'wpdatatables'); ?>"></i>
+                       title="<?php esc_attr_e('When it is enabled, relations will be defined (joining rules) between post types, otherwise relations between post types will not be defined (do a full outer join).', 'wpdatatables'); ?>"></i>
                 </h4>
                 <div class="form-group">
                     <div class="toggle-switch" data-ts-color="blue">
                         <div class="col-sm-12 p-0">
                             <input id="wdt-constructor-post-types-relationship" checked="checked" type="checkbox">
                             <label for="wdt-constructor-post-types-relationship"
-                                   class="ts-label"><?php _e('Define relations (joining rules) between post types', 'wpdatatables'); ?></label>
+                                   class="ts-label"><?php esc_html_e('Define relations (joining rules) between post types', 'wpdatatables'); ?></label>
                         </div>
                     </div>
                 </div>
@@ -162,9 +162,9 @@
         <div class="col-sm-8 wdt-constructor-post-types-define-relations-block hidden">
             <div class="col-sm-12 p-0">
                 <h4 class="c-title-color m-b-2">
-                    <?php _e('Define post types relations', 'wpdatatables'); ?>
+                    <?php esc_html_e('Define post types relations', 'wpdatatables'); ?>
                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                       title="<?php _e('Check to have an inner join, uncheck to have left join.', 'wpdatatables'); ?>"></i>
+                       title="<?php esc_attr_e('Check to have an inner join, uncheck to have left join.', 'wpdatatables'); ?>"></i>
                 </h4>
             </div>
             <div class="form-group m-b-0" id="wdt-constructor-post-types-relations">
@@ -180,9 +180,9 @@
 
                     <div class="col-sm-12 p-0">
                         <h4 class="c-title-color m-b-6">
-                            <?php _e('Add conditions', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add conditions', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add conditions that you would like to have in the table.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add conditions that you would like to have in the table.', 'wpdatatables'); ?>"></i>
                         </h4>
                     </div>
 
@@ -192,7 +192,7 @@
                 <div class="col-sm-12 p-0">
                     <button class="btn pull-left" id="wdt-constructor-add-post-condition">
                         <i class="wpdt-icon-plus"></i>
-                        <?php _e('Add condition', 'wpdatatables'); ?>
+                        <?php esc_html_e('Add condition', 'wpdatatables'); ?>
                     </button>
                 </div>
             </div>
@@ -209,9 +209,9 @@
 
                     <div class="col-sm-12 p-0">
                         <h4 class="c-title-color m-b-6">
-                            <?php _e('Add grouping rules', 'wpdatatables'); ?>
+                            <?php esc_html_e('Add grouping rules', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php _e('Add grouping rules that you would like to have in the table.', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('Add grouping rules that you would like to have in the table.', 'wpdatatables'); ?>"></i>
                         </h4>
                     </div>
 
@@ -224,7 +224,7 @@
                     <button class="btn pull-left"
                             id="wdt-constructor-post-add-grouping-rule">
                         <i class="wpdt-icon-plus"></i>
-                        <?php _e('Add grouping', 'wpdatatables'); ?>
+                        <?php esc_html_e('Add grouping', 'wpdatatables'); ?>
                     </button>
                 </div>
             </div>
@@ -335,7 +335,7 @@
 <script id="wdt-constructor-post-grouping-rule-template" type="text/x-jsrender">
     <div class="row m-b-15 m-l-0 m-r-0 wdt-constructor-post-grouping-rule-block">
         <div class="col-sm-2 wdt-constructor-group-by-label">
-            <span><?php _e('Group by ', 'wpdatatables'); ?></span>
+            <span><?php esc_html_e('Group by ', 'wpdatatables'); ?></span>
         </div>
         <div class="col-sm-5 p-r-0 p-l-0">
             <select class="wdt-constructor-grouping-rule-column">

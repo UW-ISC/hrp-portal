@@ -28,25 +28,25 @@
 
                 <div class="col-sm-12 p-t-5 p-0">
                     <h5 class="c-black m-b-10">
-                        <?php _e('Type', 'wpdatatables'); ?>
+                        <?php esc_html_e('Type', 'wpdatatables'); ?>
                     </h5>
                     <div class="form-group">
                         <div class="fg-line">
                             <div class="select">
                                 <select class="selectpicker wdt-constructor-column-type">
-                                    <option value="input"><?php _e('One line string', 'wpdatatables'); ?></option>
-                                    <option value="memo"><?php _e('Multi-line string', 'wpdatatables'); ?></option>
-                                    <option value="select"><?php _e('One-line selectbox', 'wpdatatables'); ?></option>
-                                    <option value="multiselect"><?php _e('Multi-line selectbox', 'wpdatatables'); ?></option>
-                                    <option value="int"><?php _e('Integer', 'wpdatatables'); ?></option>
-                                    <option value="float"><?php _e('Float', 'wpdatatables'); ?></option>
-                                    <option value="date"><?php _e('Date', 'wpdatatables'); ?></option>
-                                    <option value="datetime"><?php _e('Datetime', 'wpdatatables'); ?></option>
-                                    <option value="time"><?php _e('Time', 'wpdatatables'); ?></option>
-                                    <option value="link"><?php _e('URL Link', 'wpdatatables'); ?></option>
-                                    <option value="email"><?php _e('E-mail', 'wpdatatables'); ?></option>
-                                    <option value="image"><?php _e('Image', 'wpdatatables'); ?></option>
-                                    <option value="file"><?php _e('Attachment', 'wpdatatables'); ?></option>
+                                    <option value="input"><?php esc_html_e('One line string', 'wpdatatables'); ?></option>
+                                    <option value="memo"><?php esc_html_e('Multi-line string', 'wpdatatables'); ?></option>
+                                    <option value="select"><?php esc_html_e('One-line selectbox', 'wpdatatables'); ?></option>
+                                    <option value="multiselect"><?php esc_html_e('Multi-line selectbox', 'wpdatatables'); ?></option>
+                                    <option value="int"><?php esc_html_e('Integer', 'wpdatatables'); ?></option>
+                                    <option value="float"><?php esc_html_e('Float', 'wpdatatables'); ?></option>
+                                    <option value="date"><?php esc_html_e('Date', 'wpdatatables'); ?></option>
+                                    <option value="datetime"><?php esc_html_e('Datetime', 'wpdatatables'); ?></option>
+                                    <option value="time"><?php esc_html_e('Time', 'wpdatatables'); ?></option>
+                                    <option value="link"><?php esc_html_e('URL Link', 'wpdatatables'); ?></option>
+                                    <option value="email"><?php esc_html_e('E-mail', 'wpdatatables'); ?></option>
+                                    <option value="image"><?php esc_html_e('Image', 'wpdatatables'); ?></option>
+                                    <option value="file"><?php esc_html_e('Attachment', 'wpdatatables'); ?></option>
                                 </select>
                             </div>
                         </div>
@@ -55,7 +55,7 @@
 
                 <div class="col-sm-12 wdt-constructor-possible-values-block p-0" style="display: none;">
                     <h5 class="c-black m-b-10">
-                        <?php _e('Possible values', 'wpdatatables'); ?>
+                        <?php esc_html_e('Possible values', 'wpdatatables'); ?>
                     </h5>
                     <div class="form-group">
                         <div class="fg-line">
@@ -66,7 +66,7 @@
 
                 <div class="col-sm-12  p-0">
                     <h5 class="c-black m-b-10">
-                        <?php _e('Editor predefined value', 'wpdatatables'); ?>
+                        <?php esc_html_e('Editor predefined value', 'wpdatatables'); ?>
                     </h5>
                     <div class="form-group">
                         <div class="fg-line">

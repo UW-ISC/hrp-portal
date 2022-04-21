@@ -289,6 +289,7 @@ function wdtEditEnqueue()
         wp_enqueue_style('wdt-star-rating-css', WDT_CSS_PATH . 'admin/starRating.min.css', array(), WDT_CURRENT_VERSION);
         wp_register_script('handsontable-6.2.2', WDT_JS_PATH . 'handsontable/handsontable.full.6.2.2' . $jsExt, array('jquery'), WDT_CURRENT_VERSION);
         wp_enqueue_script('handsontable-6.2.2');
+        wp_enqueue_script('underscore');
         wp_enqueue_script('wdt-star-rating-js', WDT_JS_PATH . 'wpdatatables/admin/starRating.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-simple-table-js', WDT_JS_PATH . 'wpdatatables/admin/constructor/wdt.simpleTable.js', array('jquery'), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-simple-table-responsive-min-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.min.js', array('jquery'), WDT_CURRENT_VERSION, true);

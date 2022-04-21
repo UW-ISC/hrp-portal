@@ -10,7 +10,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_line_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Line chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Line chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -23,7 +23,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_spline_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Spline chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Spline chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -36,7 +36,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_basic_area_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Basic area chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Basic area chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -49,7 +49,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_stacked_area_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Stacked area chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Stacked area chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -62,7 +62,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_basic_bar_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Basic bar chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Basic bar chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_stacked_bar_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Stacked bar chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Stacked bar chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -92,7 +92,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_basic_column_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Basic column chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Basic column chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -105,7 +105,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_stacked_column_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Stacked column chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Stacked column chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -118,7 +118,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_pie_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Pie chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Pie chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -131,7 +131,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_pie_with_gradient_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Pie with gradient chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Pie with gradient chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -144,7 +144,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_donut_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Donut chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Donut chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -157,7 +157,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_scatter_plot.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Scatter plot', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Scatter plot', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -174,7 +174,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_3d_column_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('3D column chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('3D column chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -187,7 +187,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_3d_pie_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('3D pie chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('3D pie chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -200,7 +200,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_3d_donut_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('3D donut chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('3D donut chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -213,7 +213,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_treemap_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Treemap chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Treemap chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -225,7 +225,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_treemap_level_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Treemap level chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Treemap level chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -237,7 +237,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_polar_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Polar chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Polar chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
@@ -254,7 +254,7 @@
                      src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_spiderweb_chart.jpg">
             </div>
             <div class="card-body">
-                <h4 class="f-14"><?php _e('Spiderweb chart', 'wpdatatables'); ?></h4>
+                <h4 class="f-14"><?php esc_html_e('Spiderweb chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>

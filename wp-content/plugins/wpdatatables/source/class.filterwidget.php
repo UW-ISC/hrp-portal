@@ -18,11 +18,11 @@ defined('ABSPATH') or die('Access denied.');
  	
 	function widget( $args, $instance ) {
 		// Widget output
-		if( !isset($instance['title']) ) {
-			$title = __( 'Filter', 'wpdatatables' );
-		}else{
-                    $title = $instance['title'];
-                }
+		if ( !isset($instance['title']) ) {
+			$title = esc_html__( 'Filter', 'wpdatatables' );
+		} else {
+            $title = $instance['title'];
+        }
 		$title = apply_filters( 'widget_title', $title );
 
 		echo $args['before_widget'];
@@ -43,9 +43,8 @@ defined('ABSPATH') or die('Access denied.');
 		// Output admin widget options form
 		if ( isset( $instance[ 'title' ] ) ) {
 			$title = $instance[ 'title' ];
-		}
-		else {
-			$title = __( 'New title', 'text_domain' );
+		} else {
+			$title = esc_html__( 'New title', 'text_domain' );
 		}
 		?>
 		<p>

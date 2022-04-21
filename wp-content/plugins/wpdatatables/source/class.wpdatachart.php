@@ -1681,42 +1681,42 @@ class WPDataChart {
 
         // Render data (step 4 or chart constructor)
         // Chart
-        $chartObj->setWidth(WDTTools::defineDefaultValue($constructedChartData, 'width', 0));
+        $chartObj->setWidth((int)WDTTools::defineDefaultValue($constructedChartData, 'width', 0));
         $chartObj->setResponsiveWidth((bool)WDTTools::defineDefaultValue($constructedChartData, 'responsive_width', 0));
-        $chartObj->setHeight(WDTTools::defineDefaultValue($constructedChartData, 'height', 400));
-        $chartObj->setGroupChart(WDTTools::defineDefaultValue($constructedChartData, 'group_chart', false));
-        $chartObj->setEnableAnimation(WDTTools::defineDefaultValue($constructedChartData, 'enable_animation', false));
-        $chartObj->setStartAngle(WDTTools::defineDefaultValue($constructedChartData, 'start_angle', 0));
-        $chartObj->setEndAngle(WDTTools::defineDefaultValue($constructedChartData, 'end_angle', 360));
-        $chartObj->setBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'background_color', '#FFFFFF'));
-        $chartObj->setBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'border_width', 0));
-        $chartObj->setBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'border_color', '#FFFFFF'));
-        $chartObj->setBorderRadius(WDTTools::defineDefaultValue($constructedChartData, 'border_radius', 0));
-        $chartObj->setZoomType(WDTTools::defineDefaultValue($constructedChartData, 'zoom_type', 'undefined'));
-        $chartObj->setPanning(WDTTools::defineDefaultValue($constructedChartData, 'panning', false));
-        $chartObj->setPanKey(WDTTools::defineDefaultValue($constructedChartData, 'pan_key', 'shift'));
-        $chartObj->setPlotBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_color', '#FFFFFF'));
-        $chartObj->setPlotBackgroundImage(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_image', null));
-        $chartObj->setLineBackgroundImage(WDTTools::defineDefaultValue($constructedChartData, 'line_background_image', null));
-        $chartObj->setPlotBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'plot_border_width', 0));
-        $chartObj->setPlotBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'plot_border_color', '#C0C0C0'));
-        $chartObj->setFontSize(WDTTools::defineDefaultValue($constructedChartData, 'font_size', null));
-        $chartObj->setFontName(WDTTools::defineDefaultValue($constructedChartData, 'font_name', 'Arial'));
-        $chartObj->setFontStyle(WDTTools::defineDefaultValue($constructedChartData, 'font_style', 'normal'));
-        $chartObj->setFontColor(WDTTools::defineDefaultValue($constructedChartData, 'font_color', '#666'));
-        $chartObj->setThreeD(WDTTools::defineDefaultValue($constructedChartData, 'three_d', false));
-        $chartObj->setMonochrome(WDTTools::defineDefaultValue($constructedChartData,'monochrome', false));
-        $chartObj->setMonochromeColor(WDTTools::defineDefaultValue($constructedChartData,'monochrome_color','#255aee' ));
-        $chartObj->setEnableColorPalette(WDTTools::defineDefaultValue($constructedChartData,'enable_color_palette', false));
-        $chartObj->setColorPalette(WDTTools::defineDefaultValue($constructedChartData, 'color_palette', 'palette1'));
-        $chartObj->setShowDataLabels(WDTTools::defineDefaultValue($constructedChartData, 'show_data_labels', false));
-        $chartObj->setEnableDropshadow(WDTTools::defineDefaultValue($constructedChartData,'enable_dropshadow', false));
-        $chartObj->setDropshadowBlur(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_blur', 3));
-        $chartObj->setDropshadowOpacity(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
-        $chartObj->setDropshadowColor(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_color', '#000000'));
-        $chartObj->setDropshadowTop(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_top', 5));
-        $chartObj->setDropshadowLeft(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_left', 5));
-        $chartObj->setTextColor(WDTTools::defineDefaultValue($constructedChartData, 'text_color', '#373d3f'));
+        $chartObj->setHeight((int)WDTTools::defineDefaultValue($constructedChartData, 'height', 400));
+        $chartObj->setGroupChart(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'group_chart', false)));
+        $chartObj->setEnableAnimation(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'enable_animation', false)));
+        $chartObj->setStartAngle((int)WDTTools::defineDefaultValue($constructedChartData, 'start_angle', 0));
+        $chartObj->setEndAngle((int)WDTTools::defineDefaultValue($constructedChartData, 'end_angle', 360));
+        $chartObj->setBackgroundColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'background_color', '#FFFFFF')));
+        $chartObj->setBorderWidth((int)WDTTools::defineDefaultValue($constructedChartData, 'border_width', 0));
+        $chartObj->setBorderColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'border_color', '#FFFFFF')));
+        $chartObj->setBorderRadius((int)WDTTools::defineDefaultValue($constructedChartData, 'border_radius', 0));
+        $chartObj->setZoomType(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'zoom_type', 'undefined')));
+        $chartObj->setPanning(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'panning', false)));
+        $chartObj->setPanKey(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'pan_key', 'shift')));
+        $chartObj->setPlotBackgroundColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_color', '#FFFFFF')));
+        $chartObj->setPlotBackgroundImage(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'plot_background_image', null)));
+        $chartObj->setLineBackgroundImage(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'line_background_image', null)));
+        $chartObj->setPlotBorderWidth((int)WDTTools::defineDefaultValue($constructedChartData, 'plot_border_width', 0));
+        $chartObj->setPlotBorderColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'plot_border_color', '#C0C0C0')));
+        $chartObj->setFontSize(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_size', null)));
+        $chartObj->setFontName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_name', 'Arial')));
+        $chartObj->setFontStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_style', 'normal')));
+        $chartObj->setFontColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_color', '#666')));
+        $chartObj->setThreeD(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'three_d', false)));
+        $chartObj->setMonochrome(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'monochrome', false)));
+        $chartObj->setMonochromeColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'monochrome_color','#255aee' )));
+        $chartObj->setEnableColorPalette(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'enable_color_palette', false)));
+        $chartObj->setColorPalette(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'color_palette', 'palette1')));
+        $chartObj->setShowDataLabels(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_data_labels', false)));
+        $chartObj->setEnableDropshadow(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'enable_dropshadow', false)));
+        $chartObj->setDropshadowBlur((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_blur', 3));
+        $chartObj->setDropshadowOpacity((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
+        $chartObj->setDropshadowColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_color', '#000000')));
+        $chartObj->setDropshadowTop((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_top', 5));
+        $chartObj->setDropshadowLeft((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_left', 5));
+        $chartObj->setTextColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'text_color', '#373d3f')));
 
         // Series
         if (!empty($constructedChartData['series_data'])) {
@@ -1729,86 +1729,86 @@ class WPDataChart {
             $chartObj->setUserDefinedSeriesData($constructedChartData['series_data']);
         }
 
-        $chartObj->setCurveType(WDTTools::defineDefaultValue($constructedChartData, 'curve_type', 'none'));
+        $chartObj->setCurveType(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'curve_type', 'none')));
 
         // Axes
-        $chartObj->setShowGrid(WDTTools::defineDefaultValue($constructedChartData, 'show_grid', true));
-        $chartObj->setGridColor(WDTTools::defineDefaultValue($constructedChartData, 'grid_color', '#000000'));
-        $chartObj->setGridStroke(WDTTools::defineDefaultValue($constructedChartData, 'grid_stroke', 1));
-        $chartObj->setGridPosition(WDTTools::defineDefaultValue($constructedChartData, 'grid_position', 'back'));
+        $chartObj->setShowGrid(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_grid', true)));
+        $chartObj->setGridColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'grid_color', '#000000')));
+        $chartObj->setGridStroke(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'grid_stroke', 1)));
+        $chartObj->setGridPosition(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'grid_position', 'back')));
         $chartObj->setGridAxes((array)WDTTools::defineDefaultValue($constructedChartData, 'grid_axes', []));
-        $chartObj->setHighchartsLineDashStyle(WDTTools::defineDefaultValue($constructedChartData, 'highcharts_line_dash_style', 'Solid'));
-        $chartObj->setMajorAxisLabel(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_label', ''));
-        $chartObj->setHorizontalAxisCrosshair(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_crosshair', false));
-        $chartObj->setHorizontalAxisDirection(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_direction', 1));
-        $chartObj->setMinorAxisLabel(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_label', ''));
-        $chartObj->setVerticalAxisCrosshair(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_crosshair', false));
-        $chartObj->setVerticalAxisDirection(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_direction', 1));
-        $chartObj->setMarkerSize(WDTTools::defineDefaultValue($constructedChartData,'marker_size',0));
-        $chartObj->setStrokeWidth(WDTTools::defineDefaultValue($constructedChartData,'stroke_width',2));
-        $chartObj->setVerticalAxisMin(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min', ''));
-        $chartObj->setVerticalAxisMax(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max', ''));
-        $chartObj->setTickAmount(WDTTools::defineDefaultValue($constructedChartData, 'tick_amount', 0));
-        $chartObj->setInverted(WDTTools::defineDefaultValue($constructedChartData, 'inverted', false));
-        $chartObj->setReversed(WDTTools::defineDefaultValue($constructedChartData, 'reversed', false));
+        $chartObj->setHighchartsLineDashStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'highcharts_line_dash_style', 'Solid')));
+        $chartObj->setMajorAxisLabel(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_label', '')));
+        $chartObj->setHorizontalAxisCrosshair(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_crosshair', false)));
+        $chartObj->setHorizontalAxisDirection(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'horizontal_axis_direction', 1)));
+        $chartObj->setMinorAxisLabel(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_label', '')));
+        $chartObj->setVerticalAxisCrosshair(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_crosshair', false)));
+        $chartObj->setVerticalAxisDirection(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_direction', 1)));
+        $chartObj->setMarkerSize(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'marker_size',0)));
+        $chartObj->setStrokeWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'stroke_width',2)));
+        $chartObj->setVerticalAxisMin(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min', '')));
+        $chartObj->setVerticalAxisMax(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max', '')));
+        $chartObj->setTickAmount(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tick_amount', 0)));
+        $chartObj->setInverted(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'inverted', false)));
+        $chartObj->setReversed(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'reversed', false)));
 
         // Title
-        $chartObj->setShowTitle(WDTTools::defineDefaultValue($constructedChartData, 'show_title', true));
-        $chartObj->setTitleFloating(WDTTools::defineDefaultValue($constructedChartData, 'title_floating', false));
-        $chartObj->setTitleAlign(WDTTools::defineDefaultValue($constructedChartData, 'title_align', 'center'));
-        $chartObj->setTitlePosition(WDTTools::defineDefaultValue($constructedChartData, 'title_position', 'top'));
-        $chartObj->setTitleFontName(WDTTools::defineDefaultValue($constructedChartData, 'title_font_name', 'Arial'));
-        $chartObj->setTitleFontStyle(WDTTools::defineDefaultValue($constructedChartData, 'title_font_style', 'bold'));
-        $chartObj->setTitleFontColor(WDTTools::defineDefaultValue($constructedChartData, 'title_font_color', '#666'));
-        $chartObj->setSubtitle(WDTTools::defineDefaultValue($constructedChartData, 'subtitle', false));
-        $chartObj->setSubtitleAlign(WDTTools::defineDefaultValue($constructedChartData, 'subtitle_align', 'center'));
+        $chartObj->setShowTitle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_title', true)));
+        $chartObj->setTitleFloating(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_floating', false)));
+        $chartObj->setTitleAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_align', 'center')));
+        $chartObj->setTitlePosition(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_position', 'top')));
+        $chartObj->setTitleFontName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_name', 'Arial')));
+        $chartObj->setTitleFontStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_style', 'bold')));
+        $chartObj->setTitleFontColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_color', '#666')));
+        $chartObj->setSubtitle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'subtitle', false)));
+        $chartObj->setSubtitleAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'subtitle_align', 'center')));
 
         // Tooltip
-        $chartObj->setTooltipEnabled(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_enabled', true));
-        $chartObj->setTooltipBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_background_color', 'rgba(255, 255, 255, 0.85)'));
-        $chartObj->setTooltipBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_width', 1));
-        $chartObj->setTooltipBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_color', null));
-        $chartObj->setTooltipBorderRadius(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_radius', 3));
-        $chartObj->setTooltipShared(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_shared', false));
-        $chartObj->setTooltipValuePrefix(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_prefix', false));
-        $chartObj->setTooltipValueSuffix(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_suffix', false));
-        $chartObj->setFollowCursor(WDTTools::defineDefaultValue($constructedChartData, 'follow_cursor', false));
-        $chartObj->setFillSeriesColor(WDTTools::defineDefaultValue($constructedChartData, 'fill_series_color', false));
+        $chartObj->setTooltipEnabled(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_enabled', true)));
+        $chartObj->setTooltipBackgroundColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_background_color', 'rgba(255, 255, 255, 0.85)')));
+        $chartObj->setTooltipBorderWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_width', 1)));
+        $chartObj->setTooltipBorderColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_color', null)));
+        $chartObj->setTooltipBorderRadius(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_border_radius', 3)));
+        $chartObj->setTooltipShared(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_shared', false)));
+        $chartObj->setTooltipValuePrefix(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_prefix', false)));
+        $chartObj->setTooltipValueSuffix(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tooltip_value_suffix', false)));
+        $chartObj->setFollowCursor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'follow_cursor', false)));
+        $chartObj->setFillSeriesColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'fill_series_color', false)));
 
         // Legend
-        $chartObj->setShowLegend(WDTTools::defineDefaultValue($constructedChartData, 'show_legend', true));
-        $chartObj->setLegendPosition(WDTTools::defineDefaultValue($constructedChartData, 'legend_position', 'right'));
-        $chartObj->setLegendBackgroundColor(WDTTools::defineDefaultValue($constructedChartData, 'legend_background_color', '#FFFFFF'));
-        $chartObj->setLegendTitle(WDTTools::defineDefaultValue($constructedChartData, 'legend_title', ''));
-        $chartObj->setLegendLayout(WDTTools::defineDefaultValue($constructedChartData, 'legend_layout', 'horizontal'));
-        $chartObj->setLegendAlign(WDTTools::defineDefaultValue($constructedChartData, 'legend_align', 'center'));
-        $chartObj->setLegendVerticalAlign(WDTTools::defineDefaultValue($constructedChartData, 'legend_vertical_align', 'bottom'));
-        $chartObj->setLegendBorderWidth(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_width', 0));
-        $chartObj->setLegendBorderColor(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_color', '#909090'));
-        $chartObj->setLegendBorderRadius(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_radius', 0));
-        $chartObj->setLegendPositionCjs(WDTTools::defineDefaultValue($constructedChartData, 'legend_position_cjs', 'top'));
+        $chartObj->setShowLegend(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_legend', true)));
+        $chartObj->setLegendPosition(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_position', 'right')));
+        $chartObj->setLegendBackgroundColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_background_color', '#FFFFFF')));
+        $chartObj->setLegendTitle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_title', '')));
+        $chartObj->setLegendLayout(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_layout', 'horizontal')));
+        $chartObj->setLegendAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_align', 'center')));
+        $chartObj->setLegendVerticalAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_vertical_align', 'bottom')));
+        $chartObj->setLegendBorderWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_width', 0)));
+        $chartObj->setLegendBorderColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_color', '#909090')));
+        $chartObj->setLegendBorderRadius(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_border_radius', 0)));
+        $chartObj->setLegendPositionCjs(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_position_cjs', 'top')));
 
         // Exporting
-        $chartObj->setExporting(WDTTools::defineDefaultValue($constructedChartData, 'exporting', true));
-        $chartObj->setExportingDataLabels(WDTTools::defineDefaultValue($constructedChartData, 'exporting_data_labels', false));
-        $chartObj->setExportingFileName(WDTTools::defineDefaultValue($constructedChartData, 'exporting_file_name', 'Chart'));
-        $chartObj->setExportingWidth(WDTTools::defineDefaultValue($constructedChartData, 'exporting_width', 'undefined'));
-        $chartObj->setExportingButtonAlign(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_align', 'right'));
-        $chartObj->setExportingButtonVerticalAlign(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_vertical_align', 'top'));
-        $chartObj->setExportingButtonColor(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_color', '#666'));
-        $chartObj->setExportingButtonText(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_text', null));
+        $chartObj->setExporting(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting', true)));
+        $chartObj->setExportingDataLabels(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_data_labels', false)));
+        $chartObj->setExportingFileName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_file_name', 'Chart')));
+        $chartObj->setExportingWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_width', 'undefined')));
+        $chartObj->setExportingButtonAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_align', 'right')));
+        $chartObj->setExportingButtonVerticalAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_vertical_align', 'top')));
+        $chartObj->setExportingButtonColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_color', '#666')));
+        $chartObj->setExportingButtonText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'exporting_button_text', null)));
 
         // Credits
-        $chartObj->setCredits(WDTTools::defineDefaultValue($constructedChartData, 'credits', true));
-        $chartObj->setCreditsHref(WDTTools::defineDefaultValue($constructedChartData, 'credits_href', 'http://www.highcharts.com'));
-        $chartObj->setCreditsText(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com'));
+        $chartObj->setCredits(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits', true)));
+        $chartObj->setCreditsHref(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_href', 'http://www.highcharts.com')));
+        $chartObj->setCreditsText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com')));
 
         //Toolbar
-        $chartObj->setShowToolbar(WDTTools::defineDefaultValue($constructedChartData,'show_toolbar', false));
+        $chartObj->setShowToolbar(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'show_toolbar', false)));
         if (isset($constructedChartData['toolbar_buttons'])) {
             $chartObj->setToolbarButtons(array_map('sanitize_text_field', $constructedChartData['toolbar_buttons']));
         }
-        $chartObj->setApexExportingFileName(WDTTools::defineDefaultValue($constructedChartData, 'apex_exporting_file_name', 'Chart'));
+        $chartObj->setApexExportingFileName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'apex_exporting_file_name', 'Chart')));
 
         $chartObj->loadChildWPDataTable();
 

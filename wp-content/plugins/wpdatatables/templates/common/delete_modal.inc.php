@@ -16,7 +16,7 @@
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true"> <i class="wpdt-icon-times-full"></i></span></button>
-                    <h4 class="modal-title"><?php _e('Are you sure?', 'wpdatatables') ?></h4>
+                    <h4 class="modal-title"><?php esc_html_e('Are you sure?', 'wpdatatables') ?></h4>
                 </div>
                 <!--/ .modal-header -->
 
@@ -25,7 +25,7 @@
                     <!-- .row -->
                     <div class="row">
                         <div class="col-sm-12">
-                            <small><?php _e('Please confirm deletion. There is no undo!', 'wpdatatables'); ?></small>
+                            <small><?php esc_html_e('Please confirm deletion. There is no undo!', 'wpdatatables'); ?></small>
                         </div>
                     </div>
                     <!--/ .row -->
@@ -36,10 +36,10 @@
                 <div class="modal-footer">
                     <hr>
                     <button type="button" class="btn btn-icon-text wdt-cancel-delete-button" data-dismiss="modal">
-                        <?php _e('Cancel', 'wpdatatables'); ?></button>
+                        <?php esc_html_e('Cancel', 'wpdatatables'); ?></button>
                     <button type="button" class="btn btn-danger btn-icon-text wdt-browse-delete-button"
                             id="wdt-browse-delete-button"><i
-                                class="wpdt-icon-trash"></i> <?php _e('Delete', 'wpdatatables'); ?></button>
+                                class="wpdt-icon-trash"></i> <?php esc_html_e('Delete', 'wpdatatables'); ?></button>
                 </div>
                 <!--/ .modal-footer -->
             </div>

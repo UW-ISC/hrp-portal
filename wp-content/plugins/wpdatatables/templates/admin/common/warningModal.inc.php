@@ -16,7 +16,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
                             class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"><?php _e('Are you sure?', 'wpdatatables'); ?></h4>
+                <h4 class="modal-title"><?php esc_html_e('Are you sure?', 'wpdatatables'); ?></h4>
             </div>
             <!--/ .modal-header -->
 
@@ -24,7 +24,7 @@
             <div class="modal-body">
                 <div class="row">
                     <p class="col-sm-12 m-b-0" style="font-size: 16px;">
-                        <?php _e('You are about to delete all table data.', 'wpdatatables') ?>
+                        <?php esc_html_e('You are about to delete all table data.', 'wpdatatables') ?>
                     </p>
                 </div>
                 <!-- .row -->
@@ -37,12 +37,12 @@
 
                 <button type="button" class="btn btn-icon-text" id="wdt-backend-warning-continue-button"
                         data-dismiss="modal">
-                    <?php _e('No, Continue', 'wpdatatables'); ?>
+                    <?php esc_html_e('No, Continue', 'wpdatatables'); ?>
                 </button>
                 <button type="button" class="btn btn-danger btn-icon-text"
                         id="wdt-backend-clear-table-data-button">
                     <i class="wpdt-icon-times-full"></i>
-                    <?php _e('Yes, Delete', 'wpdatatables'); ?>
+                    <?php esc_html_e('Yes, Delete', 'wpdatatables'); ?>
                 </button>
             </div>
             <!--/ .modal-footer -->

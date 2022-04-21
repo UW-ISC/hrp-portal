@@ -14,7 +14,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"><?php _e('Are you sure?', 'wpdatatables') ?></h4>
+                <h4 class="modal-title"><?php esc_html_e('Are you sure?', 'wpdatatables') ?></h4>
             </div>
             <!--/ .modal-header -->
 
@@ -23,7 +23,7 @@
                 <!-- .row -->
                 <div class="row">
                     <div class="col-sm-12">
-                        <small><?php _e('You are about to cancel creating wizard, there is no undo! You will be redirect to Browse page.', 'wpdatatables'); ?></small>
+                        <small><?php esc_html_e('You are about to cancel creating wizard, there is no undo! You will be redirect to Browse page.', 'wpdatatables'); ?></small>
                     </div>
                 </div>
                 <!--/ .row -->
@@ -34,9 +34,9 @@
             <div class="modal-footer">
                 <hr>
                 <button type="button" class="btn btn-icon-text" data-dismiss="modal"
-                        id="wdt-backend-continue-button"><?php _e('No, Continue', 'wpdatatables'); ?></button>
+                        id="wdt-backend-continue-button"><?php esc_html_e('No, Continue', 'wpdatatables'); ?></button>
                 <button type="button" class="btn btn-danger btn-icon-text"
-                        id="wdt-backend-close-button"><i class="wpdt-icon-times-full"></i><?php _e('Yes, Cancel', 'wpdatatables'); ?></button>
+                        id="wdt-backend-close-button"><i class="wpdt-icon-times-full"></i><?php esc_html_e('Yes, Cancel', 'wpdatatables'); ?></button>
             </div>
             <!--/ .modal-footer -->
         </div>
