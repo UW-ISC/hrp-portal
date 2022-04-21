@@ -22,14 +22,14 @@
                          src="<?php echo WDT_ROOT_URL; ?>assets/img/logo.svg"/>
                     <h2>
                         <span style="display: none">wpDataTables</span>
-                        <?php _e('Browse Tables', 'wpdatatables'); ?>
+                        <?php esc_html_e('Browse Tables', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions">
                         <li>
                             <button onclick="location.href='admin.php?page=wpdatatables-constructor'"
                                     class="btn btn-primary wdt-add-new">
                                 <i class="wpdt-icon-plus"></i>
-                                <?php _e('Add New', 'wpdatatables'); ?>
+                                <?php esc_html_e('Add New', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>

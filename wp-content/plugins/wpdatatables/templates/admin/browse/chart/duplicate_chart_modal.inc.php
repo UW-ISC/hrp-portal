@@ -15,7 +15,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"><?php _e('Duplicate chart', 'wpdatatables') ?></h4>
+                <h4 class="modal-title"><?php esc_html_e('Duplicate chart', 'wpdatatables') ?></h4>
             </div>
             <!--/ .modal-header -->
 
@@ -24,7 +24,7 @@
                 <!-- .row -->
                 <div class="row">
                     <div class="col-sm-12">
-                        <label class="c-title-color duplicate-chart-label m-b-4 f-500"><?php _e('New chart title', 'wpdatatables'); ?></label>
+                        <label class="c-title-color duplicate-chart-label m-b-4 f-500"><?php esc_html_e('New chart title', 'wpdatatables'); ?></label>
                     </div>
                     <div class="col-sm-12">
                         <input type="text" value="" class="wdt-duplicate-chart-name form-control input-sm" title=""/>
@@ -40,11 +40,11 @@
                 <button type="button"
                         class="btn btn-danger btn-icon-text"
                         data-dismiss="modal">
-                    <?php _e('Cancel', 'wpdatatables'); ?></button>
+                    <?php esc_html_e('Cancel', 'wpdatatables'); ?></button>
                 <button type="button"
                         class="btn btn-primary btn-icon-text wdt-apply duplicate-chart-button">
                     <i class="wpdt-icon-clone"></i>
-                    <?php _e('Duplicate', 'wpdatatables'); ?>
+                    <?php esc_html_e('Duplicate', 'wpdatatables'); ?>
                 </button>
             </div>
             <!--/ .modal-footer -->

@@ -1120,16 +1120,16 @@ WDTColumn.prototype.fillInputs = function () {
 
     jQuery('#wdt-column-calc-total').prop('checked', this.calculateTotal);
     jQuery('div.wdt-column-calc-total-block #wdt-column-calc-total-shortcode span')
-        .html('[wpdatatable_sum table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ']');
+        .html('[wpdatatable_sum table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ' value_only=0]');
     jQuery('#wdt-column-calc-avg').prop('checked', this.calculateAvg);
     jQuery('div.wdt-column-calc-avg-block #wdt-column-calc-avg-shortcode span')
-        .html('[wpdatatable_avg table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ']');
+        .html('[wpdatatable_avg table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ' value_only=0]');
     jQuery('#wdt-column-calc-min').prop('checked', this.calculateMin);
     jQuery('div.wdt-column-calc-min-block #wdt-column-calc-min-shortcode span')
-        .html('[wpdatatable_min table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ']');
+        .html('[wpdatatable_min table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ' value_only=0]');
     jQuery('#wdt-column-calc-max').prop('checked', this.calculateMax);
     jQuery('div.wdt-column-calc-max-block #wdt-column-calc-max-shortcode span')
-        .html('[wpdatatable_max table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ']');
+        .html('[wpdatatable_max table_id=' + wpdatatable_config.id + ' col_id=' + wpdatatable_config.currentOpenColumn.id + ' value_only=0]');
 
     if (jQuery.inArray(this.type, ['int', 'float', 'formula']) !== -1) {
         this.type == 'int' ?

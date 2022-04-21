@@ -1852,7 +1852,17 @@ class WPDataTable {
         $postgreSqlParsedSearch = '';
         $parsedOnlyOwnRows = '';
 
-        $tableName = $parsedQuery['FROM'][0]['table'];
+        $tableName = isset($parsedQuery['FROM']) ? $parsedQuery['FROM'][0]['table'] : '';
+
+        if (isset($parsedQuery['DROP']) ||
+            isset($parsedQuery['INSERT']) ||
+            isset($parsedQuery['UPDATE']) ||
+            isset($parsedQuery['DELETE']) ||
+            isset($parsedQuery['EXPLAIN']) ||
+            isset($parsedQuery['DESCRIBE']) ||
+            isset($parsedQuery['CREATE INDEX']) ||
+            isset($parsedQuery['CREATE TABLE']))
+            throw new Exception('SQL is not valid. Commands not allowed!');
 
         // Adding limits if necessary
         if (!empty($wdtParameters['limit']) &&
@@ -1877,16 +1887,19 @@ class WPDataTable {
 
             if (!isset($_POST['draw'])) {
                 if (empty($wdtParameters['disable_limit'])) {
-                    if ($isMySql) {
-                        $parsedLimit = $parser->parse(' LIMIT ' . $this->getDisplayLength(), true);
-                    }
+                    $lengthValue = $this->getDisplayLength();
+                    if ($lengthValue != -1){
+                        if ($isMySql) {
+                            $parsedLimit = $parser->parse(' LIMIT ' . $this->getDisplayLength(), true);
+                        }
 
-                    if ($isPostgreSql) {
-                        $postgreSqlParsedLimit = " LIMIT {$this->getDisplayLength()}";
-                    }
+                        if ($isPostgreSql) {
+                            $postgreSqlParsedLimit = " LIMIT {$this->getDisplayLength()}";
+                        }
 
-                    if ($isMSSql) {
-                        $msSqlParsedLimit = " OFFSET 0 ROWS FETCH NEXT {$this->getDisplayLength()} ROWS ONLY";
+                        if ($isMSSql) {
+                            $msSqlParsedLimit = " OFFSET 0 ROWS FETCH NEXT {$this->getDisplayLength()} ROWS ONLY";
+                        }
                     }
                 }
             } else {
@@ -1945,6 +1958,7 @@ class WPDataTable {
                                 $orderBy .= 'FIELD (' . $columnName . ', ' . $sortedForeignRows . ') ' . $orderDirection . ', ';
                             }
                         } else {
+                            if(isset($aColumns[$_POST['order'][$i]['column']]))
                             $orderBy .= $leftSysIdentifier . $aColumns[$_POST['order'][$i]['column']] . "{$rightSysIdentifier} " . $orderDirection . ", ";
                         }
                     }

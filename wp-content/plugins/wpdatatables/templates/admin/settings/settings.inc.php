@@ -18,17 +18,17 @@
                          src="<?php echo WDT_ROOT_URL; ?>assets/img/logo.svg"/>
                     <h2>
                         <span style="display: none">wpDataTables Settings</span>
-                        <?php _e('Settings', 'wpdatatables'); ?>
+                        <?php esc_html_e('Settings', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions p-t-5">
                         <li>
                             <button class="btn wdt-backend-close">
-                                <?php _e('Cancel', 'wpdatatables'); ?>
+                                <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                             </button>
                         </li>
                         <li>
                             <button class="btn btn-primary btn-lg wdt-apply">
-                                <i class="wpdt-icon-save"></i><?php _e('Save Changes', 'wpdatatables'); ?>
+                                <i class="wpdt-icon-save"></i><?php esc_html_e('Save Changes', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>
@@ -39,29 +39,29 @@
                         <ul class="tab-nav" role="tablist">
                             <li class="active main-plugin-settings-tab">
                                 <a href="#main-plugin-settings" aria-controls="main-plugin-settings" role="tab"
-                                   data-toggle="tab"><?php _e('Main settings', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Main settings', 'wpdatatables'); ?></a>
                             </li>
                             <li class="separate-connection-tab">
                                 <a href="#separate-connection" aria-controls="separate-connection"
                                    role="tab"
-                                   data-toggle="tab"><?php _e('Separate DB connection', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Separate DB connection', 'wpdatatables'); ?></a>
                             </li>
                             <li class="color-and-font-settings-tab">
                                 <a href="#color-and-font-settings" aria-controls="color-and-font-settings"
                                    role="tab"
-                                   data-toggle="tab"><?php _e('Color and font settings', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Color and font settings', 'wpdatatables'); ?></a>
                             </li>
                             <li class="custom-js-and-css-tab">
                                 <a href="#custom-js-and-css" aria-controls="custom-js-and-css" role="tab"
-                                   data-toggle="tab"><?php _e('Custom JS and CSS', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Custom JS and CSS', 'wpdatatables'); ?></a>
                             </li>
                             <li class="google_sheet_settings-tab">
                                 <a href="#google-sheet-api-settings" aria-controls="google_sheet_settings" role="tab"
-                                   data-toggle="tab"><?php _e('Google Spreadsheet API settings', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Google Spreadsheet API settings', 'wpdatatables'); ?></a>
                             </li>
                             <li class="wdt-activation-tab">
                                 <a href="#wdt-activation" aria-controls="wdt-activation" role="tab"
-                                   data-toggle="tab"><?php _e('Activation', 'wpdatatables'); ?></a>
+                                   data-toggle="tab"><?php esc_html_e('Activation', 'wpdatatables'); ?></a>
                             </li>
                         </ul>
 
@@ -97,15 +97,15 @@
                     <div class="pull-right">
                         <button class="btn btn-primary reset-color-settings" id="reset-color-settings"
                                 style="display: none;">
-                            <?php _e('Reset colors and fonts to default', 'wpdatatables'); ?>
+                            <?php esc_html_e('Reset colors and fonts to default', 'wpdatatables'); ?>
                         </button>
                         <button class="btn btn-primary btn-icon-text wdt-apply">
-                            <i class="wpdt-icon-save"></i><?php _e('Save Changes', 'wpdatatables'); ?>
+                            <i class="wpdt-icon-save"></i><?php esc_html_e('Save Changes', 'wpdatatables'); ?>
                         </button>
                     </div>
                     <a class="btn btn-default btn-icon-text wdt-documentation"
                        data-doc-page="settings_page">
-                        <i class="wpdt-icon-file-thin"></i> <?php _e(' View Documentation', 'wpdatatables'); ?>
+                        <i class="wpdt-icon-file-thin"></i> <?php esc_html_e(' View Documentation', 'wpdatatables'); ?>
                     </a>
                 </div>
             </div>

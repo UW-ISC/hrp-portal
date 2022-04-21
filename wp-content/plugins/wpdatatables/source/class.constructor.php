@@ -1314,6 +1314,37 @@ class wpDataTableConstructor
 
     public function getQueryPreview($connection = null)
     {
+        $lowerSQLQuery = strtolower($this->_query);
+        if (strpos($lowerSQLQuery, 'delete ') !== false ||
+            strpos($lowerSQLQuery, 'delete/*') !== false ||
+            strpos($lowerSQLQuery, 'delete--') !== false ||
+            strpos($lowerSQLQuery, 'delete#') !== false ||
+            strpos($lowerSQLQuery, 'update ') !== false ||
+            strpos($lowerSQLQuery, 'update/*') !== false ||
+            strpos($lowerSQLQuery, 'update--') !== false ||
+            strpos($lowerSQLQuery, 'update#') !== false ||
+            strpos($lowerSQLQuery, 'insert ') !== false ||
+            strpos($lowerSQLQuery, 'insert#') !== false ||
+            strpos($lowerSQLQuery, 'insert/*') !== false ||
+            strpos($lowerSQLQuery, 'insert--') !== false ||
+            strpos($lowerSQLQuery, 'insert#') !== false ||
+            strpos($lowerSQLQuery, 'drop ') !== false ||
+            strpos($lowerSQLQuery, 'drop/*') !== false ||
+            strpos($lowerSQLQuery, 'drop--') !== false ||
+            strpos($lowerSQLQuery, 'drop#') !== false ||
+            strpos($lowerSQLQuery, 'truncate ') !== false ||
+            strpos($lowerSQLQuery, 'truncate/*') !== false ||
+            strpos($lowerSQLQuery, 'truncate--') !== false ||
+            strpos($lowerSQLQuery, 'truncate#') !== false ||
+            strpos($lowerSQLQuery, 'create ') !== false ||
+            strpos($lowerSQLQuery, 'create/*') !== false ||
+            strpos($lowerSQLQuery, 'create--') !== false ||
+            strpos($lowerSQLQuery, 'create#') !== false ||
+            strpos($lowerSQLQuery, 'alter ') !== false ||
+            strpos($lowerSQLQuery, 'alter--') !== false ||
+            strpos($lowerSQLQuery, 'alter#') !== false ||
+            strpos($lowerSQLQuery, 'alter/*') !== false)
+            return __('<div class="alert alert-danger"><i class="wpdt-icon-exclamation-triangle"></i>No results found. Please check if this query is correct and DOES NOT contain SQL reserved words! Table Constructor needs a query that returns data to build a wpDataTable.', 'wpdatatables');
 
         if (Connection::isSeparate($connection)) {
             $sql = Connection::create($connection);
@@ -1632,6 +1663,15 @@ class wpDataTableConstructor
 
         $ret_val = '';
 
+        if ( ! current_user_can( 'unfiltered_html' ) ) {
+            foreach ($namedDataArray as $key => &$nameData){
+                foreach ($headingsArray as &$heading){
+                    $heading = wp_kses_post($heading);
+                    $nameData[$heading] = wp_kses_post($nameData[$heading]);
+                }
+            }
+        }
+
         if (!empty($namedDataArray)) {
             ob_start();
             include(WDT_TEMPLATE_PATH . 'admin/constructor/constructor_file_preview.inc.php');
@@ -1851,6 +1891,12 @@ class wpDataTableConstructor
                         }
 
                     }
+                }
+            }
+
+            if ( ! current_user_can( 'unfiltered_html' ) ) {
+                foreach ($this->_column_headers as $columnHeader){
+                    $insertArray[$columnHeader] = wp_kses_post($insertArray[$columnHeader]);
                 }
             }
 

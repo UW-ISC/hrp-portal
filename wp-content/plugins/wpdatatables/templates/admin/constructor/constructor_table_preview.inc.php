@@ -5,7 +5,7 @@
     <thead>
     <tr>
         <?php foreach (array_keys($result[0]) as $header) { ?>
-            <th><?php echo $header ?></th>
+            <th><?php echo esc_html($header) ?></th>
         <?php } ?>
     </tr>
     </thead>
@@ -14,7 +14,7 @@
     <?php foreach ($result as $row) { ?>
         <tr>
             <?php foreach ($row as $cell) { ?>
-                <td><?php echo $cell ?></td>
+                <td><?php echo esc_html($cell) ?></td>
             <?php } ?>
         </tr>
     <?php } ?>

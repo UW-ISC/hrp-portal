@@ -15,7 +15,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true"><i
                                 class="wpdt-icon-times-full"></i></span>
                 </button>
-                <h4 class="modal-title"> <?php _e('HTML Editor', 'wpdatatables') ?></h4>
+                <h4 class="modal-title"> <?php esc_html_e('HTML Editor', 'wpdatatables') ?></h4>
             </div>
             <!--/ .modal-header -->
 
@@ -40,12 +40,12 @@
 
                 <button type="button" class="btn btn-danger btn-icon-text wdt-backend-close-modal-button " data-dismiss="modal">
                     <i class="wpdt-icon-times-full"></i>
-                    <?php _e('Cancel', 'wpdatatables'); ?>
+                    <?php esc_html_e('Cancel', 'wpdatatables'); ?>
                 </button>
                 <button type="button" class="btn btn-icon-text"
                         id="wdt-backend-insert-html-button">
                     <i class="wpdt-icon-plus-full"></i>
-                    <?php _e('Insert HTML', 'wpdatatables'); ?>
+                    <?php esc_html_e('Insert HTML', 'wpdatatables'); ?>
                 </button>
             </div>
             <!--/ .modal-footer -->

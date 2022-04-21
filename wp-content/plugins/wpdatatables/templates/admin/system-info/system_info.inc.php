@@ -19,19 +19,19 @@
                             <i class="wpdt-icon-chevron-left"></i>
                         </a>
                         <span style="display: none">wpDataTables System Info</span>
-                        <?php _e('System Info', 'wpdatatables'); ?>
+                        <?php esc_html_e('System Info', 'wpdatatables'); ?>
                     </h2>
                     <ul class="actions">
                         <li>
                             <button class="btn btn-default btn-icon-text wdt-documentation"
                                     data-doc-page="system_info_page">
                                 <i class="wpdt-icon-file-thin"></i>
-                                <?php _e('View Documentation', 'wpdatatables'); ?>
+                                <?php esc_html_e('View Documentation', 'wpdatatables'); ?>
                             </button>
                             <button class="btn btn-primary m-l-5"
                                id="wdt-copy-table">
                                 <i class="wpdt-icon-copy m-r-5"></i>
-                                <?php esc_attr_e('Copy System Info data', 'wpdatatables'); ?>
+                                <?php esc_html_e('Copy System Info data', 'wpdatatables'); ?>
                             </button>
                         </li>
                     </ul>
@@ -50,50 +50,50 @@
                         <thead>
                         <tr>
                             <th colspan="3"
-                                data-export-label="WordPress Environment"><?php esc_attr_e('WordPress Environment', 'wpdatatables'); ?></th>
+                                data-export-label="WordPress Environment"><?php esc_html_e('WordPress Environment', 'wpdatatables'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td data-export-label="Home URL"><?php esc_attr_e('Home URL:', 'wpdatatables'); ?></td>
+                            <td data-export-label="Home URL"><?php esc_html_e('Home URL:', 'wpdatatables'); ?></td>
                             <td data-export-data><?php echo esc_url_raw(home_url()); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The URL of your site\'s homepage.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The URL of your site\'s homepage.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="Site URL"><?php esc_attr_e('Site URL:', 'wpdatatables'); ?></td>
+                            <td data-export-label="Site URL"><?php esc_html_e('Site URL:', 'wpdatatables'); ?></td>
                             <td data-export-data><?php echo esc_url_raw(site_url()); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The root URL of your site.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The root URL of your site.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="WP Content Path"><?php esc_attr_e('WP Content Path:', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Content Path"><?php esc_html_e('WP Content Path:', 'wpdatatables'); ?></td>
                             <td><?php echo defined('WP_CONTENT_DIR') ? esc_html(WP_CONTENT_DIR) : esc_html__('N/A', 'wpdatatables'); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('System path of your wp-content directory.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('System path of your wp-content directory.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="WP Path"><?php esc_attr_e('WP Path:', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Path"><?php esc_html_e('WP Path:', 'wpdatatables'); ?></td>
                             <td><?php echo defined('ABSPATH') ? esc_html(ABSPATH) : esc_html__('N/A', 'wpdatatables'); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('System path of your WP root directory.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('System path of your WP root directory.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="WP Version"><?php esc_attr_e('WP Version:', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Version"><?php esc_html_e('WP Version:', 'wpdatatables'); ?></td>
                             <td><?php bloginfo('version'); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The version of WordPress installed on your site.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The version of WordPress installed on your site.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="WP Multisite"><?php esc_attr_e('WP Multisite:', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Multisite"><?php esc_html_e('WP Multisite:', 'wpdatatables'); ?></td>
                             <td class="wpdt-relative"><?php echo (is_multisite()) ? 'Yes' : 'No'; ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Displays whether or not you have WordPress Multisite enabled.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Displays whether or not you have WordPress Multisite enabled.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <?php
@@ -109,7 +109,7 @@
                         }
                         ?>
                         <tr <?php if ($memory < 128000000) echo "class='wpdt-warning-bg'" ?>>
-                            <td data-export-label="PHP Memory Limit"><?php esc_attr_e('PHP Memory Limit:', 'wpdatatables'); ?>
+                            <td data-export-label="PHP Memory Limit"><?php esc_html_e('PHP Memory Limit:', 'wpdatatables'); ?>
 
                                 <?php if ($memory < 128000000) : ?>
                                 <i class="wpdt-icon-info-circle wpdt-warning"></i>
@@ -122,32 +122,32 @@
                                 <?php else : ?>
                             <td>
                                 <span class="wpdt-blue-color">
-                                        <?php echo esc_attr(size_format($memory)); ?>
+                                        <?php echo esc_html(size_format($memory)); ?>
                                     </span>
                                 <?php endif; ?>
                             </td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The maximum amount of memory (RAM) that your site can use at one time.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The maximum amount of memory (RAM) that your site can use at one time.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="WP Debug Mode"><?php esc_attr_e('WP Debug Mode:', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Debug Mode"><?php esc_html_e('WP Debug Mode:', 'wpdatatables'); ?></td>
                             <td class="wpdt-relative">
                                 <?php if (defined('WP_DEBUG') && WP_DEBUG) : ?>
-                                    <?php esc_attr_e('Active', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Active', 'wpdatatables'); ?>
                                 <?php else : ?>
-                                    <span class="no"><?php esc_attr_e('Inactive', 'wpdatatables'); ?></span>
+                                    <span class="no"><?php esc_html_e('Inactive', 'wpdatatables'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Displays whether or not WordPress is in Debug Mode.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Displays whether or not WordPress is in Debug Mode.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="Language"><?php esc_attr_e('Language:', 'wpdatatables'); ?></td>
+                            <td data-export-label="Language"><?php esc_html_e('Language:', 'wpdatatables'); ?></td>
                             <td><?php echo esc_attr(get_locale()); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The current language used by WordPress. Default = English', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The current language used by WordPress. Default = English', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         </tbody>
@@ -159,23 +159,23 @@
                         <thead>
                         <tr>
                             <th colspan="3"
-                                data-export-label="Server Environment"><?php esc_attr_e('Server Environment', 'wpdatatables'); ?></th>
+                                data-export-label="Server Environment"><?php esc_html_e('Server Environment', 'wpdatatables'); ?></th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
-                            <td data-export-label="WP Path"><?php esc_attr_e('Operating System: ', 'wpdatatables'); ?></td>
+                            <td data-export-label="WP Path"><?php esc_html_e('Operating System: ', 'wpdatatables'); ?></td>
                             <td><?php echo defined('PHP_OS') ? esc_html(PHP_OS) : esc_html__('N/A', 'wpdatatables'); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Information about your operating system.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Information about your operating system.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
                             <td data-export-label="Server Info">
-                                <?php esc_attr_e('Server Info:', 'wpdatatables'); ?></td>
-                            <td><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? esc_attr(sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE']))) : esc_attr__('Unknown', 'wpdatatables'); ?></td>
+                                <?php esc_html_e('Server Info:', 'wpdatatables'); ?></td>
+                            <td><?php echo isset($_SERVER['SERVER_SOFTWARE']) ? esc_html(sanitize_text_field(wp_unslash($_SERVER['SERVER_SOFTWARE']))) : esc_html__('Unknown', 'wpdatatables'); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Information about the web server that is currently hosting your site.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Information about the web server that is currently hosting your site.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <?php
@@ -197,7 +197,7 @@
                                     '5.6',
                                     $php_version,
                                     '7.3',
-                                    '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_attr__('WordPress Requirements', 'wpdatatables') . '</a>'
+                                    '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__('WordPress Requirements', 'wpdatatables') . '</a>'
                                 );
                             }
                         }
@@ -217,7 +217,7 @@
                                 </td>
                             <?php endif; ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The version of PHP installed on your hosting server.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The version of PHP installed on your hosting server.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <?php if (function_exists('ini_get')) : ?>
@@ -225,27 +225,27 @@
                                 <td data-export-label="PHP Post Max Size">
                                     <?php esc_attr_e('PHP Post Max Size:', 'wpdatatables'); ?>
                                 </td>
-                                <td><?php echo esc_attr(size_format(wp_convert_hr_to_bytes(ini_get('post_max_size')))); ?></td>
+                                <td><?php echo esc_html(size_format(wp_convert_hr_to_bytes(ini_get('post_max_size')))); ?></td>
                                 <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
                                                     data-placement="left"
-                                                    title="<?php _e('The largest file size that can be contained in one post.', 'wpdatatables'); ?>"></i>
+                                                    title="<?php esc_attr_e('The largest file size that can be contained in one post.', 'wpdatatables'); ?>"></i>
                                 </td>
                             </tr>
                             <?php $time_limit = ini_get('max_execution_time'); ?>
                             <tr <?php if (180 > $time_limit && 0 != $time_limit) echo 'class="wpdt-warning-bg"'; ?>>
-                                <td data-export-label="PHP Time Limit"><?php esc_attr_e('PHP Time Limit:', 'wpdatatables'); ?>
+                                <td data-export-label="PHP Time Limit"><?php esc_html_e('PHP Time Limit:', 'wpdatatables'); ?>
                                     <?php
                                     if (180 > $time_limit && 0 != $time_limit) {
                                         /* translators: %1$s: Current value. %2$s: URL. */
                                         echo '<i class="wpdt-icon-info-circle wpdt-warning"></i></td><td><span class="wpdt-warning">' . sprintf(__('%1$s </span> - We recommend setting max execution time to at least 180.<br />See: <a href="%2$s" target="_blank" rel="noopener noreferrer">Increasing max execution to PHP</a>', 'wpdatatables'), $time_limit, 'https://wordpress.org/support/article/common-wordpress-errors/#php-errors'); // WPCS: XSS ok.
                                     } else {
-                                        echo '</td><td><span class="wpdt-blue-color">' . esc_attr($time_limit) . '</span>';
+                                        echo '</td><td><span class="wpdt-blue-color">' . esc_html($time_limit) . '</span>';
                                     }
                                     ?>
                                 </td>
                                 <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip"
                                                     data-placement="left"
-                                                    title="<?php _e('The amount of time (in seconds) that your site will spend on a single operation before timing out (to avoid server lockups)', 'wpdatatables'); ?>"></i>
+                                                    title="<?php esc_attr_e('The amount of time (in seconds) that your site will spend on a single operation before timing out (to avoid server lockups)', 'wpdatatables'); ?>"></i>
                                 </td>
                             </tr>
 
@@ -257,23 +257,23 @@
                             </td>
                             <td>
                                 <?php global $wpdb; ?>
-                                <?php echo esc_attr($wpdb->db_version()); ?>
+                                <?php echo esc_html($wpdb->db_version()); ?>
                             </td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The version of MySQL installed on your hosting server.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The version of MySQL installed on your hosting server.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="Max Upload Size"><?php esc_attr_e('Max Upload Size:', 'wpdatatables'); ?></td>
+                            <td data-export-label="Max Upload Size"><?php esc_html_e('Max Upload Size:', 'wpdatatables'); ?></td>
                             <td><?php echo esc_attr(size_format(wp_max_upload_size())); ?>
                             </td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The largest file size that can be uploaded to your WordPress installation.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The largest file size that can be uploaded to your WordPress installation.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
                             <td data-export-label="Multibyte String">
-                                <?php esc_attr_e('Multibyte String:', 'wpdatatables'); ?>
+                                <?php esc_html_e('Multibyte String:', 'wpdatatables'); ?>
 
                                 <?php if (extension_loaded('mbstring')) { ?>
                             </td>
@@ -291,11 +291,11 @@
 
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Multibyte String (mbstring) is used to convert character encoding.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Multibyte String (mbstring) is used to convert character encoding.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="XML extension"><?php esc_attr_e('XML extension:', 'wpdatatables'); ?>
+                            <td data-export-label="XML extension"><?php esc_html_e('XML extension:', 'wpdatatables'); ?>
                                 <?php if (extension_loaded('xml')) { ?>
                             </td>
                             <td class="wpdt-relative">
@@ -309,11 +309,11 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('XML support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('XML support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="DOM extension"><?php esc_attr_e('DOM extension:', 'wpdatatables'); ?>
+                            <td data-export-label="DOM extension"><?php esc_html_e('DOM extension:', 'wpdatatables'); ?>
                                 <?php if (extension_loaded('dom')) { ?>
                             </td>
                             <td class="wpdt-relative">
@@ -327,7 +327,7 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('DOM support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('DOM support is something that needs to be installed on the server for proper wpDataTables functionality.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
@@ -363,7 +363,7 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('Multibyte String (mbstring) require libxml to be installed. ', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('Multibyte String (mbstring) require libxml to be installed. ', 'wpdatatables'); ?>"></i>
                             </td>
 
                         </tr>
@@ -376,7 +376,7 @@
                                 <?php $pdoDriversArray = pdo_drivers();
                                 $pdoDrivers = implode(", ", pdo_drivers());
                                 ?>
-                                <span><?php echo " - PDO Drivers: " . $pdoDrivers; ?></span>
+                                <span><?php echo " - PDO Drivers: " . esc_html($pdoDrivers); ?></span>
                             </td>
                             <?php } else { ?>
                                 <i class="wpdt-icon-exclamation-triangle wpdt-error"></i>
@@ -387,11 +387,11 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('PDO is used to connect to separate database connection like MS SQL and PostgreSQL.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('PDO is used to connect to separate database connection like MS SQL and PostgreSQL.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
-                            <td data-export-label="Zip extension"><?php esc_attr_e('Zip extension:', 'wpdatatables'); ?>
+                            <td data-export-label="Zip extension"><?php esc_html_e('Zip extension:', 'wpdatatables'); ?>
                                 <?php if (class_exists('ZipArchive')) { ?>
                             </td>
                             <td class="wpdt-relative">
@@ -406,7 +406,7 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('ZIP support is something that needs to be installed on the server, as a package for the Linux operating system, or rather to the PHP software on the server.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('ZIP support is something that needs to be installed on the server, as a package for the Linux operating system, or rather to the PHP software on the server.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
@@ -427,7 +427,7 @@
                                 </td>
                             <?php } ?>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('wpDataTables use cURL for getting data from other servers.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('wpDataTables use cURL for getting data from other servers.', 'wpdatatables'); ?>"></i>
                             </td>
 
                         </tr>
@@ -450,7 +450,7 @@
                             <td data-export-label="Name"><?php esc_html_e('Name', 'wpdatatables'); ?>:</td>
                             <td><?php echo esc_html($themeObject->get('Name')); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The name of the current active theme.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The name of the current active theme.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
@@ -461,20 +461,20 @@
                                 ?>
                             </td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The installed version of the current active theme.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The installed version of the current active theme.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         <tr>
                             <td data-export-label="Author URL"><?php esc_html_e('Author', 'wpdatatables'); ?>:</td>
                             <td><?php echo esc_html($themeObject->get('Author')); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The theme developers.', 'wpdatatables'); ?>"></i></td>
+                                                title="<?php esc_attr_e('The theme developers.', 'wpdatatables'); ?>"></i></td>
                         </tr>
                         <tr>
                             <td data-export-label="Author URL"><?php esc_html_e('Author URL', 'wpdatatables'); ?>:</td>
                             <td><?php echo esc_html($themeObject->get('AuthorURI')); ?></td>
                             <td class="help"><i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="left"
-                                                title="<?php _e('The theme developers URL.', 'wpdatatables'); ?>"></i>
+                                                title="<?php esc_attr_e('The theme developers URL.', 'wpdatatables'); ?>"></i>
                             </td>
                         </tr>
                         </tbody>
@@ -492,8 +492,8 @@
                         <thead>
                         <tr>
                             <th colspan="3"
-                                data-export-label="Active Plugins (<?php echo count($active_plugins); ?>)"><?php esc_attr_e('Active Plugins', 'wpdatatables'); ?>
-                                (<?php echo count($active_plugins); ?>)
+                                data-export-label="Active Plugins (<?php echo esc_attr(count($active_plugins)); ?>)"><?php esc_html_e('Active Plugins', 'wpdatatables'); ?>
+                                (<?php echo esc_html(count($active_plugins)); ?>)
                             </th>
                         </tr>
                         </thead>
@@ -511,7 +511,7 @@
 
                                 // Link the plugin name to the plugin url if available.
                                 if (!empty($plugin_data['PluginURI'])) {
-                                    $plugin_name = '<a href="' . esc_url($plugin_data['PluginURI']) . '" title="' . __('Visit plugin homepage', 'wpdatatables') . '" target="_blank">' . esc_html($plugin_data['Name']) . '</a>';
+                                    $plugin_name = '<a href="' . esc_url($plugin_data['PluginURI']) . '" title="' . esc_attr__('Visit plugin homepage', 'wpdatatables') . '" target="_blank">' . esc_html($plugin_data['Name']) . '</a>';
                                 } else {
                                     $plugin_name = esc_html($plugin_data['Name']);
                                 }
@@ -542,7 +542,7 @@
 
         <div class="row">
             <h6 class="text-center wdt-footer-title">
-                <?php _e('Made by', 'wpdatatables'); ?>
+                <?php esc_html_e('Made by', 'wpdatatables'); ?>
                 <a href="https://tms-outsource.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">
                     <img src="<?php echo WDT_ASSETS_PATH; ?>img/TMS-Black.svg" alt="" style="width: 66px">
                 </a>
@@ -550,11 +550,11 @@
             <ul class="wpdt-footer-links text-center">
                 <li><a href="https://wpdatatables.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank">wpDataTables.com</a></li>
                 <li>|</li>
-                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php _e('Documentation', 'wpdatatables'); ?></a>
+                <li><a href="https://wpdatatables.com/documentation/general/features-overview/" target="_blank"> <?php esc_html_e('Documentation', 'wpdatatables'); ?></a>
                 </li>
                 <li>|</li>
                 <li><a href="<?php echo admin_url('admin.php?page=wpdatatables-support'); ?>">
-                        <?php _e('Support Center', 'wpdatatables'); ?></a></li>
+                        <?php esc_html_e('Support Center', 'wpdatatables'); ?></a></li>
             </ul>
         </div>
     </div>

@@ -477,8 +477,11 @@ class WDTConfigController {
         } else {
             $table->tableFontColorSettings = array();
         }
-
-        $table->columns = WDTConfigController::sanitizeColumnsConfig($table->columns);
+        if ($table->table_type != 'simple') {
+            $table->columns = WDTConfigController::sanitizeColumnsConfig($table->columns);
+        } else {
+            $table = self::sanitizeTableSettingsSimpleTable($table);
+        }
 
         if (isset($table->cascadeFiltering) && $table->cascadeFiltering === 1) {
             foreach ($table->columns as &$column) {
@@ -492,6 +495,150 @@ class WDTConfigController {
 
         return $table;
 
+    }
+
+    /**
+     * Helper method for sanitizing the user input in the table settings of Simple table
+     * @param stdClass $table object with table config
+     * @return stdClass object with sanitized table config
+     */
+    public static function sanitizeTableSettingsSimpleTable($table) {
+        $table->method = 'simple';
+        $table->connection = '';
+        $table->columnCount = 0;
+        $table->columns = array();
+
+        if (isset($table->name)){
+            $table->name = sanitize_text_field($table->name);
+        } else {
+            $table->name = '';
+        }
+
+        if (isset($table->content)){
+            $isContentObj = false;
+            if (!is_object($table->content)){
+                $isContentObj = true;
+                $table->content = json_decode($table->content);
+            }
+            if (isset($table->content->colNumber)){
+                $table->content->colNumber = (int)$table->content->colNumber;
+            } else {
+                $table->content->colNumber = 5;
+            }
+
+            if (isset($table->content->rowNumber)){
+                $table->content->rowNumber = (int)$table->content->rowNumber;
+            } else {
+                $table->content->rowNumber = 5;
+            }
+
+            if (isset($table->content->reloadCounter)){
+                $table->content->reloadCounter = (int)$table->content->reloadCounter;
+            } else {
+                $table->content->reloadCounter = 0;
+            }
+
+            if (isset($table->content->mergedCells)){
+                if (!empty($table->content->mergedCells)){
+                    foreach ($table->content->mergedCells as $key => $mergedCell){
+                        $table->content->mergedCells[$key]->row = (int)$mergedCell->row;
+                        $table->content->mergedCells[$key]->col = (int)$mergedCell->col;
+                        $table->content->mergedCells[$key]->rowspan = (int)$mergedCell->rowspan;
+                        $table->content->mergedCells[$key]->colspan = (int)$mergedCell->colspan;
+                        $table->content->mergedCells[$key]->removed = (bool)$mergedCell->removed;
+                    }
+                } else {
+                    $table->content->mergedCells = array();
+                }
+            }
+            if (isset($table->content->colHeaders)){
+                if (!empty($table->content->colHeaders)){
+                    foreach ($table->content->colHeaders as $keyColHeader => $colHeader){
+                        $table->content->colHeaders[$keyColHeader] = sanitize_text_field($colHeader);
+                    }
+                } else {
+                    $table->content->colHeaders = array();
+                }
+            }
+            if (isset($table->content->colWidths)){
+                foreach ($table->content->colWidths as $keyColWidth => $colWidth){
+                    $table->content->colWidths[$keyColWidth] = (int)$colWidth;
+                }
+            }
+            if ($isContentObj){
+                $table->content = json_encode($table->content);
+            }
+        }
+        return $table;
+    }
+
+    /**
+     * Helper method for sanitizing the user input for generated SQL based tables data
+     * @param array $tableData Array with the tableData coming from SQL based constructor
+     * @return array $sanitizedTableData Array with sanitized table data
+     */
+    public static function sanitizeGeneratedSQLTableData($tableData) {
+        $sanitizedTableData = [];
+
+        $sanitizedTableData['name'] = sanitize_text_field($tableData['name']);
+        $sanitizedTableData['method'] = sanitize_text_field($tableData['method']);
+        $sanitizedTableData['columnCount'] = sanitize_text_field($tableData['columnCount']);
+        $sanitizedTableData['connection'] = sanitize_text_field($tableData['connection']);
+
+        if(isset($tableData['handlePostTypes']))
+            $sanitizedTableData['handlePostTypes'] = sanitize_text_field($tableData['handlePostTypes']);
+
+        if(isset($tableData['allMySqlColumns']))
+            $sanitizedTableData['allMySqlColumns'] = array_map('sanitize_text_field', $tableData['allMySqlColumns']);
+
+        if(isset($tableData['mySqlColumns']))
+            $sanitizedTableData['mySqlColumns'] = array_map('sanitize_text_field', $tableData['mySqlColumns']);
+
+        if(isset($tableData['postTypes']))
+            $sanitizedTableData['postTypes'] = array_map('sanitize_text_field', $tableData['postTypes']);
+
+        if(isset($tableData['postColumns']))
+            $sanitizedTableData['postColumns'] = array_map('sanitize_text_field', $tableData['postColumns']);
+
+        if(isset($tableData['joinRules'])){
+            foreach ($tableData['joinRules'] as $ruleKey => $joinRule){
+                $sanitizedTableData['joinRules'][$ruleKey] = array_map('sanitize_text_field', $joinRule);
+            }
+        }
+
+        if(isset($tableData['whereConditions'])){
+            foreach ($tableData['whereConditions'] as $whereKey => $whereCondition){
+                $sanitizedTableData['whereConditions'][$whereKey] = array_map('sanitize_text_field', $whereCondition);
+            }
+        }
+
+        if(isset($tableData['groupingRules']))
+            $sanitizedTableData['groupingRules'] = array_map('sanitize_text_field', $tableData['groupingRules']);
+
+        return $sanitizedTableData;
+    }
+
+    /**
+     * Helper method for sanitizing the user input in the row data of Simple table
+     */
+    public static function sanitizeRowDataSimpleTable($rowsData) {
+        $rowsDataSanitized = [];
+        foreach ($rowsData as $rowKey => $rowData){
+            $rowsDataSanitized[$rowKey] = $rowData;
+            foreach ($rowsDataSanitized[$rowKey]->cells as $cellKey => $cell){
+                if ($cell->data != '' ){
+                    if ( ! current_user_can( 'unfiltered_html' ) ) {
+                        $rowsDataSanitized[$rowKey]->cells[$cellKey]->data = wp_kses_post($cell->data);
+                    } else {
+                        $rowsDataSanitized[$rowKey]->cells[$cellKey]->data = $cell->data;
+                    }
+                } else {
+                    $rowsDataSanitized[$rowKey]->cells[$cellKey]->data = '';
+                }
+            }
+        }
+
+        return $rowsDataSanitized;
     }
 
     /**
@@ -511,20 +658,20 @@ class WDTConfigController {
                 $column->dateInputFormat = sanitize_text_field($column->dateInputFormat);
                 $column->decimalPlaces = isset($column->decimalPlaces) ? (int)$column->decimalPlaces : get_option('wdtDecimalPlaces');
                 $column->defaultSortingColumn = (int)$column->defaultSortingColumn;
-                $column->display_header = sanitize_text_field($column->display_header);
+                $column->display_header = wp_kses_post($column->display_header);
                 if (is_object($column->editingDefaultValue)) {
                     $column->editingDefaultValue = sanitize_text_field($column->editingDefaultValue->value);
                 } else {
                     $column->editingDefaultValue = sanitize_text_field($column->editingDefaultValue);
                 }
                 if (is_object($column->filterDefaultValue)) {
-                    $column->filterDefaultValue = sanitize_text_field($column->filterDefaultValue->value);
+                    $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue->value);
                 } else {
-                    $column->filterDefaultValue = is_array($column->filterDefaultValue) ? array_map('sanitize_text_field', $column->filterDefaultValue) : sanitize_text_field($column->filterDefaultValue);
+                    $column->filterDefaultValue = is_array($column->filterDefaultValue) ? array_map('wp_kses_post', $column->filterDefaultValue) : wp_kses_post($column->filterDefaultValue);
                 }
                 $column->exactFiltering = (int)$column->exactFiltering;
                 $column->globalSearchColumn = (int)($column->globalSearchColumn);
-                $column->filterLabel = sanitize_text_field($column->filterLabel);
+                $column->filterLabel = wp_kses_post($column->filterLabel);
                 $column->searchInSelectBox = (int)$column->searchInSelectBox;
                 $column->searchInSelectBoxEditing = (int)$column->searchInSelectBoxEditing;
                 $column->formula = sanitize_text_field($column->formula);
@@ -547,11 +694,27 @@ class WDTConfigController {
                 $column->rangeSlider = (int)$column->rangeSlider;
                 $column->skip_thousands_separator = (int)$column->skip_thousands_separator;
                 $column->sorting = (int)$column->sorting;
-                $column->text_after = (string)$column->text_after;
-                $column->text_before = (string)$column->text_before;
+                if ( ! current_user_can( 'unfiltered_html' ) ) {
+                    $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
+                    $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
+                } else {
+                    $column->text_after = wp_kses_post($column->text_after);
+                    $column->text_before = wp_kses_post($column->text_before);
+                }
+                $column->css_class = sanitize_text_field($column->css_class);
                 $column->type = sanitize_text_field($column->type);
                 $column->visible = (int)$column->visible;
                 $column->width = sanitize_text_field($column->width);
+                if (!empty($column->conditional_formatting)){
+                    foreach ($column->conditional_formatting as &$cond){
+                        $cond->ifClause = sanitize_text_field($cond->ifClause);
+                        $cond->action = sanitize_text_field($cond->action);
+                        if ( ! current_user_can( 'unfiltered_html' ) ) {
+                            $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
+                            $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
+                        }
+                    }
+                }
 
                 if (isset($column->foreignKeyRule->tableId) && $column->foreignKeyRule->tableId != 0) {
                     $column->foreignKeyRule->tableId = (int)$column->foreignKeyRule->tableId;

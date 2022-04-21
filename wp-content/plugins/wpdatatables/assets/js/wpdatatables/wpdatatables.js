@@ -1875,9 +1875,12 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
             cellVal = element.children('.columnValue').html();
         } else {
             cellVal = element.clone().html();
+            if (cellVal.indexOf('<span class="responsiveExpander"></span>') !== -1)
+                cellVal = cellVal.replace('<span class="responsiveExpander"></span>', '');
         }
+        cellVal = wdtUnformatNumber(cellVal, params.thousandsSeparator, params.decimalSeparator, true);
         if (!isNaN(cellVal)) {
-            cellVal = cellVal === '' ? null : parseFloat(wdtUnformatNumber(cellVal, params.thousandsSeparator, params.decimalSeparator, true))
+            cellVal = cellVal === '' ? null : parseFloat(cellVal)
         }
         ruleVal = conditionalFormattingRules.cellVal;
     } else if (params.columnType == 'date') {

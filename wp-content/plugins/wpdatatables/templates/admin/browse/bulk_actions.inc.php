@@ -11,5 +11,5 @@
 </select>
 
 <button id="doaction<?php echo $two ?>" class="wpdt-control-buttons bulk-action-button disabled">
-    <i class="wpdt-icon-trash-reg"></i><?php echo __('Delete', 'wpdatatables') ?>
+    <i class="wpdt-icon-trash-reg"></i><?php esc_html_e('Delete', 'wpdatatables') ?>
 </button>

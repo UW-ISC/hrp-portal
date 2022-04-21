@@ -965,7 +965,7 @@ add_action('wp_ajax_nopriv_wdt_delete_table_rows', 'wdtDeleteTableRows');
 function wdtGetColumnPossibleValues() {
     $result = [];
     $tableId = (int)$_POST['tableId'];
-    $originalHeader = $_POST['originalHeader'];
+    $originalHeader = sanitize_text_field($_POST['originalHeader']);
 
     $wpDataTable = WPDataTable::loadWpDataTable($tableId);
     /** @var WDTColumn $wpDataColumn */

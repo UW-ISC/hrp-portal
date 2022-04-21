@@ -34,7 +34,11 @@ var wdtInputToColorpicker = function (selecter) {
     jQuery(selecter).replaceWith($newEl);
     $newEl.find('input').val(val).addClass(classes);
     jQuery('.wdt-conditional-formatting-rules-container .wdt-add-picker').each(function (i, obj) {
-        jQuery(this).attr('id', 'condition' + i)
+        jQuery(this)
+            .attr('id', 'condition' + i)
+            .closest('.wdt-color-picker')
+            .find('.wpcolorpicker-icon i')
+            .css("background", this.value);
     });
     wdtApplyColorPicker($newEl.find('.wdt-add-picker'));
 };

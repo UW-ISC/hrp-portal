@@ -714,13 +714,15 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
  * @param null $content
  * @param null $shortcode
  * @return string
+ * @throws WDTException
  */
 function wdtFuncsShortcodeHandler($atts, $content = null, $shortcode = null) {
 
     $attributes = shortcode_atts(array(
         'table_id' => 0,
         'col_id' => 0,
-        'label' => null
+        'label' => null,
+        'value_only' => 0
     ), $atts);
 
     if (!$attributes['table_id']) {
@@ -769,7 +771,6 @@ function wdtFuncsShortcodeHandler($atts, $content = null, $shortcode = null) {
         }
     }
 
-    /** @noinspection PhpUnusedLocalVariableInspection */
     $funcResult = $wpDataTable->calcColumnFunction($column['orig_header'], $function);
 
     ob_start();
@@ -890,8 +891,33 @@ function wdtCurrentUserCanEdit($tableEditorRoles, $id) {
  */
 function wdtSanitizeQuery($query) {
     $query = str_replace('DELETE', '', $query);
+    $query = str_replace('DELETE ', '', $query);
+    $query = str_replace(' DELETE ', '', $query);
+    $query = str_replace(' delete ', '', $query);
     $query = str_replace('DROP', '', $query);
+    $query = str_replace('DROP ', '', $query);
+    $query = str_replace(' DROP ', '', $query);
+    $query = str_replace(' drop ', '', $query);
     $query = str_replace('INSERT', '', $query);
+    $query = str_replace('INSERT ', '', $query);
+    $query = str_replace(' INSERT ', '', $query);
+    $query = str_replace(' insert ', '', $query);
+    $query = str_replace('UPDATE', '', $query);
+    $query = str_replace('UPDATE ', '', $query);
+    $query = str_replace(' UPDATE ', '', $query);
+    $query = str_replace(' update ', '', $query);
+    $query = str_replace('TRUNCATE', '', $query);
+    $query = str_replace('TRUNCATE ', '', $query);
+    $query = str_replace(' TRUNCATE ', '', $query);
+    $query = str_replace(' truncate ', '', $query);
+    $query = str_replace('CREATE', '', $query);
+    $query = str_replace('CREATE ', '', $query);
+    $query = str_replace(' CREATE ', '', $query);
+    $query = str_replace(' create ', '', $query);
+    $query = str_replace('ALTER', '', $query);
+    $query = str_replace('ALTER ', '', $query);
+    $query = str_replace(' ALTER ', '', $query);
+    $query = str_replace(' alter ', '', $query);
     $query = stripslashes($query);
 
     $query = apply_filters('wpdt_sanitize_query',$query);
