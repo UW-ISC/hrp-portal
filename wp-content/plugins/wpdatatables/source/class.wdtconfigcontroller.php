@@ -21,16 +21,28 @@ class WDTConfigController {
      * @param StdClass $tableData
      */
     public static function saveTableConfig($tableData) {
-        global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
         $tableData = self::sanitizeTableConfig($tableData);
 
-        // Fetching the 3 placeholders
+        // Fetching the 9 placeholders
         $wdtVar1 = isset($tableData->var1) ?
             sanitize_text_field($tableData->var1) : '';
         $wdtVar2 = isset($tableData->var2) ?
             sanitize_text_field($tableData->var2) : '';
         $wdtVar3 = isset($tableData->var3) ?
             sanitize_text_field($tableData->var3) : '';
+        $wdtVar4 = isset($tableData->var4) ?
+            sanitize_text_field($tableData->var4) : '';
+        $wdtVar5 = isset($tableData->var5) ?
+            sanitize_text_field($tableData->var5) : '';
+        $wdtVar6 = isset($tableData->var6) ?
+            sanitize_text_field($tableData->var6) : '';
+        $wdtVar7 = isset($tableData->var7) ?
+            sanitize_text_field($tableData->var7) : '';
+        $wdtVar8 = isset($tableData->var8) ?
+            sanitize_text_field($tableData->var8) : '';
+        $wdtVar9 = isset($tableData->var9) ?
+            sanitize_text_field($tableData->var9) : '';
 
         // trying to generate/validate the WPDataTable config
         $res = self::tryCreateTable($tableData->table_type, $tableData->content, $tableData->connection);
@@ -282,15 +294,27 @@ class WDTConfigController {
      * @param $table - stdObj with table dada
      */
     public static function saveTableToDB($table) {
-        global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
-        // Fetching the 3 placeholders
+        // Fetching the 9 placeholders
         $wdtVar1 = isset($table->var1) ?
             sanitize_text_field($table->var1) : '';
         $wdtVar2 = isset($table->var2) ?
             sanitize_text_field($table->var2) : '';
         $wdtVar3 = isset($table->var3) ?
             sanitize_text_field($table->var3) : '';
+        $wdtVar4 = isset($table->var4) ?
+            sanitize_text_field($table->var4) : '';
+        $wdtVar5 = isset($table->var5) ?
+            sanitize_text_field($table->var5) : '';
+        $wdtVar6 = isset($table->var6) ?
+            sanitize_text_field($table->var6) : '';
+        $wdtVar7 = isset($table->var7) ?
+            sanitize_text_field($table->var7) : '';
+        $wdtVar8 = isset($table->var8) ?
+            sanitize_text_field($table->var8) : '';
+        $wdtVar9 = isset($table->var9) ?
+            sanitize_text_field($table->var9) : '';
 
         $tableSkin = in_array($table->tableSkin, ['material','light','graphite','aqua','purple','dark']) ? $table->tableSkin : get_option('wdtBaseSkin');
 
@@ -324,6 +348,12 @@ class WDTConfigController {
             'var1' => $wdtVar1,
             'var2' => $wdtVar2,
             'var3' => $wdtVar3,
+            'var4' => $wdtVar4,
+            'var5' => $wdtVar5,
+            'var6' => $wdtVar6,
+            'var7' => $wdtVar7,
+            'var8' => $wdtVar8,
+            'var9' => $wdtVar9,
             'advanced_settings' => json_encode(
                 array(
                     'info_block' => $table->info_block,
@@ -709,7 +739,7 @@ class WDTConfigController {
                     foreach ($column->conditional_formatting as &$cond){
                         $cond->ifClause = sanitize_text_field($cond->ifClause);
                         $cond->action = sanitize_text_field($cond->action);
-                        if ( ! current_user_can( 'unfiltered_html' ) ) {
+                        if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
                             $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
                             $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
                         }
@@ -741,7 +771,7 @@ class WDTConfigController {
      */
     public static function tryCreateTable($type, $content, $connection = null) {
 
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         $tbl = new WPDataTable($connection);
         WPDataTable::$wdt_internal_idcount = 0;
@@ -758,6 +788,12 @@ class WDTConfigController {
         $tableData->var1 = !empty($wdtVar1) ? $wdtVar1 : '';
         $tableData->var2 = !empty($wdtVar2) ? $wdtVar2 : '';
         $tableData->var3 = !empty($wdtVar3) ? $wdtVar3 : '';
+        $tableData->var4 = !empty($wdtVar4) ? $wdtVar4 : '';
+        $tableData->var5 = !empty($wdtVar5) ? $wdtVar5 : '';
+        $tableData->var6 = !empty($wdtVar6) ? $wdtVar6 : '';
+        $tableData->var7 = !empty($wdtVar7) ? $wdtVar7 : '';
+        $tableData->var8 = !empty($wdtVar8) ? $wdtVar8 : '';
+        $tableData->var9 = !empty($wdtVar9) ? $wdtVar9 : '';
 
         $tableData = apply_filters('wpdatatables_filter_init_table_data', $tableData, $connection);
 

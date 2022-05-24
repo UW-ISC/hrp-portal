@@ -458,6 +458,7 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php esc_html_e('Placeholders', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>

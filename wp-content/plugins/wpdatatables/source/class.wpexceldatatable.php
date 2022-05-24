@@ -81,7 +81,7 @@ class WPExcelDataTable extends WPDataTable {
      * Returns JSON object for table description
      */
     public function getJsonDescription() {
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         $obj = new stdClass();
         $obj->tableId = $this->getId();
@@ -150,6 +150,24 @@ class WPExcelDataTable extends WPDataTable {
             }
             if (!empty($wdtVar3)) {
                 $obj->dataTableParams->ajax['url'] .= '&wdt_var3=' . urlencode($wdtVar3);
+            }
+            if (!empty($wdtVar4)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var4=' . urlencode($wdtVar4);
+            }
+            if (!empty($wdtVar5)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var5=' . urlencode($wdtVar5);
+            }
+            if (!empty($wdtVar6)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var6=' . urlencode($wdtVar6);
+            }
+            if (!empty($wdtVar7)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var7=' . urlencode($wdtVar7);
+            }
+            if (!empty($wdtVar8)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var8=' . urlencode($wdtVar8);
+            }
+            if (!empty($wdtVar9)) {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var9=' . urlencode($wdtVar9);
             }
 
         } else {

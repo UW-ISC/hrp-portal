@@ -80,6 +80,36 @@ class DIVI_wpDataTable extends ET_Builder_Module
                 'type' => 'text',
                 'default_on_front' => ''
             ),
+            'var4' => array(
+                'label' => __('Insert the %VAR4% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
+            'var5' => array(
+                'label' => __('Insert the %VAR5% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
+            'var6' => array(
+                'label' => __('Insert the %VAR6% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
+            'var7' => array(
+                'label' => __('Insert the %VAR7% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
+            'var8' => array(
+                'label' => __('Insert the %VAR8% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
+            'var9' => array(
+                'label' => __('Insert the %VAR9% placeholder', 'wpdatatables'),
+                'type' => 'text',
+                'default_on_front' => ''
+            ),
             'export_file_name' => array(
                 'label' => __( 'Set the name for the export file', 'wpdatatables' ),
                 'type' => 'text',
@@ -103,6 +133,12 @@ class DIVI_wpDataTable extends ET_Builder_Module
         $var1 = $this->props['var1'];
         $var2 = $this->props['var2'];
         $var3 = $this->props['var3'];
+        $var4 = $this->props['var4'];
+        $var5 = $this->props['var5'];
+        $var6 = $this->props['var6'];
+        $var7 = $this->props['var7'];
+        $var8 = $this->props['var8'];
+        $var9 = $this->props['var9'];
         $export_file_name = $this->props['export_file_name'];
 
         if (count($this->getAllTables()) == 1) {
@@ -123,6 +159,24 @@ class DIVI_wpDataTable extends ET_Builder_Module
         }
         if($var3) {
             $shortcode .= ' var3 =' . $var3;
+        }
+        if($var4) {
+            $shortcode .= ' var4 =' . $var4;
+        }
+        if($var5) {
+            $shortcode .= ' var5 =' . $var5;
+        }
+        if($var6) {
+            $shortcode .= ' var6 =' . $var6;
+        }
+        if($var7) {
+            $shortcode .= ' var7 =' . $var7;
+        }
+        if($var8) {
+            $shortcode .= ' var8 =' . $var8;
+        }
+        if($var9) {
+            $shortcode .= ' var9 =' . $var9;
         }
         if($export_file_name) {
             $shortcode .= ' export_file_name=' . $export_file_name;

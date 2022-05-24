@@ -564,7 +564,7 @@
                                 <h4 class="c-title-color m-b-2">
                                     <?php esc_html_e('Number of possible values to load', 'wpdatatables'); ?>
                                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                       title="<?php esc_attr_e('Define here how many possible values per page will be loaded in selectbox filters and editor inputs. It is recommended not to be set to All if you have more than 50 possible values for this column. This option is not working when Cascade Filtering option from Powerful Filters add-on is enabled.', 'wpdatatables'); ?>"></i>
+                                       title="<?php esc_attr_e('Define here how many possible values per page will be loaded in selectbox filters and editor inputs. It is recommended not to be set to All if you have more than 50 possible values for this column. This option doesn\'t work when Cascade Filtering option from Powerful Filters add-on is enabled.', 'wpdatatables'); ?>"></i>
                                 </h4>
 
                                 <div class="form-group">
@@ -1043,7 +1043,7 @@
                                 <h4 class="c-title-color m-b-2">
                                     <?php esc_html_e('Search in selectbox/multiselectbox', 'wpdatatables'); ?>
                                     <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                       title="<?php esc_attr_e('Enable search in selectbox/multiselectbox', 'wpdatatables'); ?>"></i>
+                                       title="<?php esc_attr_e('Enable search in selectbox/multiselectbox. This option doesn\'t work when Cascade Filtering option from Powerful Filters add-on is enabled.', 'wpdatatables'); ?>"></i>
                                 </h4>
                                 <div class="form-group">
                                     <div class="toggle-switch" data-ts-color="blue">

@@ -9,6 +9,12 @@
     var selectedVAR1 = params.var1;
     var selectedVAR2 = params.var2;
     var selectedVAR3 = params.var3;
+    var selectedVAR4 = params.var4;
+    var selectedVAR5 = params.var5;
+    var selectedVAR6 = params.var6;
+    var selectedVAR7 = params.var7;
+    var selectedVAR8 = params.var8;
+    var selectedVAR9 = params.var9;
     var selectedExportFileName = params.export_file_name;
 
     if (selectedTable && selectedTable != 0 ) {  #>
@@ -25,6 +31,24 @@
     <# }  #>
     <# if (selectedVAR3) {  #>
     <span class="wpdatatable-var3"> var3=</span><span>{{{ selectedVAR3 }}}</span>
+    <# }  #>
+    <# if (selectedVAR4) {  #>
+    <span class="wpdatatable-var4"> var4=</span><span>{{{ selectedVAR4 }}}</span>
+    <# }  #>
+    <# if (selectedVAR5) {  #>
+    <span class="wpdatatable-var5"> var5=</span><span>{{{ selectedVAR5 }}}</span>
+    <# }  #>
+    <# if (selectedVAR6) {  #>
+    <span class="wpdatatable-var6"> var6=</span><span>{{{ selectedVAR6 }}}</span>
+    <# }  #>
+    <# if (selectedVAR7) {  #>
+    <span class="wpdatatable-var7"> var7=</span><span>{{{ selectedVAR7 }}}</span>
+    <# }  #>
+    <# if (selectedVAR8) {  #>
+    <span class="wpdatatable-var8"> var8=</span><span>{{{ selectedVAR8 }}}</span>
+    <# }  #>
+    <# if (selectedVAR9) {  #>
+    <span class="wpdatatable-var9"> var9=</span><span>{{{ selectedVAR9 }}}</span>
     <# }  #>
     <# if (selectedExportFileName) {  #>
     <span class="wpdatatable-export-file-name"> export_file_name=</span><span>{{{ selectedExportFileName }}}</span>

@@ -103,6 +103,66 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         );
 
         $this->add_control(
+            'wpdt-var4',
+            [
+                'label' => __( 'Set placeholder %VAR4%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR4% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
+            'wpdt-var5',
+            [
+                'label' => __( 'Set placeholder %VAR5%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR5% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
+            'wpdt-var6',
+            [
+                'label' => __( 'Set placeholder %VAR6%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR6% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
+            'wpdt-var7',
+            [
+                'label' => __( 'Set placeholder %VAR7%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR7% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
+            'wpdt-var8',
+            [
+                'label' => __( 'Set placeholder %VAR8%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR8% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
+            'wpdt-var9',
+            [
+                'label' => __( 'Set placeholder %VAR9%:', 'wpdatatables' ),
+                'label_block' => true,
+                'type' => Controls_Manager::TEXT,
+                'placeholder' => __( 'Insert %VAR9% placeholder', 'wpdatatables' ),
+            ]
+        );
+
+        $this->add_control(
             'wpdt-file-name',
             [
                 'label' => __( 'Set name for export file:', 'wpdatatables' ),
@@ -123,6 +183,12 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         $tableShortcodeParams .= $settings['wpdt-var1'] != '' ? ' var1=' . $settings['wpdt-var1'] : '';
         $tableShortcodeParams .= $settings['wpdt-var2'] != '' ? ' var2=' . $settings['wpdt-var2'] : '';
         $tableShortcodeParams .= $settings['wpdt-var3'] != '' ? ' var3=' . $settings['wpdt-var3'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var4'] != '' ? ' var4=' . $settings['wpdt-var4'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var5'] != '' ? ' var5=' . $settings['wpdt-var5'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var6'] != '' ? ' var6=' . $settings['wpdt-var6'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var7'] != '' ? ' var7=' . $settings['wpdt-var7'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var8'] != '' ? ' var8=' . $settings['wpdt-var8'] : '';
+        $tableShortcodeParams .= $settings['wpdt-var9'] != '' ? ' var9=' . $settings['wpdt-var9'] : '';
         $tableShortcodeParams .= $settings['wpdt-file-name'] != '' ? ' export_file_name=' . $settings['wpdt-file-name'] : '';
         $tableShortcodeParams .= ']';
 

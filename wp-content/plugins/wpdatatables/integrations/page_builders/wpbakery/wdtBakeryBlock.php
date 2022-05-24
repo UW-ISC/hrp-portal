@@ -62,6 +62,54 @@ if (function_exists('vc_map')) {
                 ),
                 array(
                     'type' => 'textfield',
+                    'heading' => __('Variable placeholder #4', 'wpdatatables'),
+                    'param_name' => 'var4',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR4 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Variable placeholder #5', 'wpdatatables'),
+                    'param_name' => 'var5',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR5 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Variable placeholder #6', 'wpdatatables'),
+                    'param_name' => 'var6',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR6 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Variable placeholder #7', 'wpdatatables'),
+                    'param_name' => 'var7',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR7 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Variable placeholder #8', 'wpdatatables'),
+                    'param_name' => 'var8',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR8 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
+                    'heading' => __('Variable placeholder #9', 'wpdatatables'),
+                    'param_name' => 'var9',
+                    'value' => '',
+                    'group' => __('Variables', 'wpdatatables'),
+                    'description' => __('If you used the VAR9 placeholder you can assign a value to it here', 'wpdatatables')
+                ),
+                array(
+                    'type' => 'textfield',
                     'heading' => __('Export file name', 'wpdatatables'),
                     'param_name' => 'export_file_name',
                     'value' => '',

@@ -749,7 +749,7 @@ class WDTColumn {
      * @return mixed
      */
     private function applyPlaceholders($value) {
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         if ($value && !is_array($value) && !is_object ($value)) {
             // Current user ID
@@ -788,6 +788,24 @@ class WDTColumn {
             }// Shortcode VAR3
             if (strpos($value, '%VAR3%') !== false) {
                 $value = str_replace('%VAR3%', $wdtVar3, $value);
+            }// Shortcode VAR4
+            if (strpos($value, '%VAR4%') !== false) {
+                $value = str_replace('%VAR4%', $wdtVar4, $value);
+            }// Shortcode VAR5
+            if (strpos($value, '%VAR5%') !== false) {
+                $value = str_replace('%VAR5%', $wdtVar5, $value);
+            }// Shortcode VAR6
+            if (strpos($value, '%VAR6%') !== false) {
+                $value = str_replace('%VAR6%', $wdtVar6, $value);
+            }// Shortcode VAR7
+            if (strpos($value, '%VAR7%') !== false) {
+                $value = str_replace('%VAR7%', $wdtVar7, $value);
+            }// Shortcode VAR8
+            if (strpos($value, '%VAR8%') !== false) {
+                $value = str_replace('%VAR8%', $wdtVar8, $value);
+            }// Shortcode VAR9
+            if (strpos($value, '%VAR9%') !== false) {
+                $value = str_replace('%VAR9%', $wdtVar9, $value);
             }
         }
 
@@ -1060,7 +1078,7 @@ class WDTColumn {
      * @return array|bool
      */
     public static function getPossibleValuesRead($column, $filterByUserId, $tableData = null) {
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
         $distValues = array();
         /** @var WPDataTable $parentTable */
         $parentTable = $column->getParentTable();
@@ -1081,6 +1099,12 @@ class WDTColumn {
         $wdtVar1 = $wdtVar1 === '' && isset($tableData->var1) ? $tableData->var1 : $wdtVar1;
         $wdtVar2 = $wdtVar2 === '' && isset($tableData->var2) ? $tableData->var2 : $wdtVar2;
         $wdtVar3 = $wdtVar3 === '' && isset($tableData->var3) ? $tableData->var3 : $wdtVar3;
+        $wdtVar4 = $wdtVar4 === '' && isset($tableData->var4) ? $tableData->var4 : $wdtVar4;
+        $wdtVar5 = $wdtVar5 === '' && isset($tableData->var5) ? $tableData->var5 : $wdtVar5;
+        $wdtVar6 = $wdtVar6 === '' && isset($tableData->var6) ? $tableData->var6 : $wdtVar6;
+        $wdtVar7 = $wdtVar7 === '' && isset($tableData->var7) ? $tableData->var7 : $wdtVar7;
+        $wdtVar8 = $wdtVar8 === '' && isset($tableData->var8) ? $tableData->var8 : $wdtVar8;
+        $wdtVar9 = $wdtVar9 === '' && isset($tableData->var9) ? $tableData->var9 : $wdtVar9;
 
         $tableContent = WDTTools::applyPlaceholders($parentTable->getTableContent());
 

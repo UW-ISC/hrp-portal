@@ -83,6 +83,54 @@ class WPDataTables_Fusion_Elements
                     ),
                     array(
                         'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR4%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR4% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var4',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR5%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR5% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var5',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR6%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR6% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var6',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR7%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR7% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var7',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR8%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR8% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var8',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
+                        'heading'     => __('Set placeholder %VAR9%:', 'wpdatatables'),
+                        'description' => __('If you use the %VAR9% placeholder, you can assign a value here.', 'wpdatatables'),
+                        'param_name'  => 'var9',
+                        'value'       => '',
+                        'group'       => esc_attr__('Placeholders', 'wpdatatables'),
+                    ),
+                    array(
+                        'type'        => 'textfield',
                         'heading'     => __('Export file name', 'wpdatatables'),
                         'description' => __('Set the name for the export file.', 'wpdatatables'),
                         'param_name'  => 'export_file_name',
@@ -148,6 +196,12 @@ class WPDataTables_Fusion_Elements
                 if ($atts['var1'] != '') $shortcode .= ' var1=' . $atts['var1'];
                 if ($atts['var2'] != '') $shortcode .= ' var2=' . $atts['var2'];
                 if ($atts['var3'] != '') $shortcode .= ' var3=' . $atts['var3'];
+                if ($atts['var4'] != '') $shortcode .= ' var4=' . $atts['var4'];
+                if ($atts['var5'] != '') $shortcode .= ' var5=' . $atts['var5'];
+                if ($atts['var6'] != '') $shortcode .= ' var6=' . $atts['var6'];
+                if ($atts['var7'] != '') $shortcode .= ' var7=' . $atts['var7'];
+                if ($atts['var8'] != '') $shortcode .= ' var8=' . $atts['var8'];
+                if ($atts['var9'] != '') $shortcode .= ' var9=' . $atts['var9'];
                 if ($atts['export_file_name'] != '') $shortcode .= ' export_file_name=' . $atts['export_file_name'];
             } else if ($type == 'chart'){
                 $wpDataChart = new WPDataChart();

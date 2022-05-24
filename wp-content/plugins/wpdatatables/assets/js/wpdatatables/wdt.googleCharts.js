@@ -378,7 +378,7 @@ var wpDataTablesGoogleChart = function(){
                                 var value_key = 'none';
                                 for(var j in output){
                                     if(value_key === 'none'){
-                                        if(output[j][0] == rowsToRender[i][0]){
+                                        if(output[j][0].toString() == rowsToRender[i][0].toString()){
                                             value_key = j;
                                         }
                                     }
