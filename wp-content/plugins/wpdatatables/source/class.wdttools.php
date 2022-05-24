@@ -57,7 +57,7 @@ class WDTTools
      */
     public static function applyPlaceholders($string)
     {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wpdb;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wpdb;
 
         $table = isset($_POST['table']) ? json_decode(stripslashes($_POST['table'])) : null;
 
@@ -180,6 +180,36 @@ class WDTTools
         // Shortcode VAR3
         if (strpos($string, '%VAR3%') !== false) {
             $string = str_replace('%VAR3%', addslashes($wdtVar3), $string);
+        }
+
+        // Shortcode VAR4
+        if (strpos($string, '%VAR4%') !== false) {
+            $string = str_replace('%VAR4%', addslashes($wdtVar4), $string);
+        }
+
+        // Shortcode VAR5
+        if (strpos($string, '%VAR5%') !== false) {
+            $string = str_replace('%VAR5%', addslashes($wdtVar5), $string);
+        }
+
+        // Shortcode VAR6
+        if (strpos($string, '%VAR6%') !== false) {
+            $string = str_replace('%VAR6%', addslashes($wdtVar6), $string);
+        }
+
+        // Shortcode VAR7
+        if (strpos($string, '%VAR7%') !== false) {
+            $string = str_replace('%VAR7%', addslashes($wdtVar7), $string);
+        }
+
+        // Shortcode VAR8
+        if (strpos($string, '%VAR8%') !== false) {
+            $string = str_replace('%VAR8%', addslashes($wdtVar8), $string);
+        }
+
+        // Shortcode VAR9
+        if (strpos($string, '%VAR9%') !== false) {
+            $string = str_replace('%VAR9%', addslashes($wdtVar9), $string);
         }
 
         return $string;

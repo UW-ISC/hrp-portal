@@ -83,6 +83,30 @@
                 type: 'string',
                 default: ''
             },
+            var4: {
+                type: 'string',
+                default: ''
+            },
+            var5: {
+                type: 'string',
+                default: ''
+            },
+            var6: {
+                type: 'string',
+                default: ''
+            },
+            var7: {
+                type: 'string',
+                default: ''
+            },
+            var8: {
+                type: 'string',
+                default: ''
+            },
+            var9: {
+                type: 'string',
+                default: ''
+            },
             export_file_name: {
                 type: 'string',
                 default: ''
@@ -133,6 +157,12 @@
                 var var1 = '';
                 var var2 = '';
                 var var3 = '';
+                var var4 = '';
+                var var5 = '';
+                var var6 = '';
+                var var7 = '';
+                var var8 = '';
+                var var9 = '';
                 var export_file_name = '';
 
                 if (attributes.var1) {
@@ -144,19 +174,37 @@
                 if (attributes.var3)  {
                     var3 = ' var3=' + attributes.var3;
                 }
+                if (attributes.var4)  {
+                    var4 = ' var4=' + attributes.var4;
+                }
+                if (attributes.var5)  {
+                    var5 = ' var5=' + attributes.var5;
+                }
+                if (attributes.var6)  {
+                    var6 = ' var6=' + attributes.var6;
+                }
+                if (attributes.var7)  {
+                    var7 = ' var7=' + attributes.var7;
+                }
+                if (attributes.var8)  {
+                    var8 = ' var8=' + attributes.var8;
+                }
+                if (attributes.var9)  {
+                    var9 = ' var9=' + attributes.var9;
+                }
 
                 if (attributes.export_file_name)  {
                     export_file_name = ' export_file_name=' + attributes.export_file_name;
                 }
 
                 if (attributes.tableID !== '' && attributes.tableView === 'regular') {
-                    short_code += '[wpdatatable id=' + attributes.tableID  + ' table_view=regular' + var1 + var2 + var3 + export_file_name + ']'
+                    short_code += '[wpdatatable id=' + attributes.tableID  + ' table_view=regular' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else if (attributes.tableID !== '' && attributes.tableView === 'excel-like') {
-                    short_code += '[wpdatatable id=' + attributes.tableID + ' table_view=excel' + var1 + var2 + var3 + export_file_name + ']'
+                    short_code += '[wpdatatable id=' + attributes.tableID + ' table_view=excel' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else if (tables.length !== 0 && attributes.tableView === 'regular') {
-                    short_code = '[wpdatatable id=' + tables[0].value + ' table_view=regular' + var1 + var2 + var3 + export_file_name + ']'
+                    short_code = '[wpdatatable id=' + tables[0].value + ' table_view=regular' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else if (tables.length !== 0 && attributes.tableView === 'excel-like') {
-                    short_code = '[wpdatatable id=' + tables[0].value + ' table_view=excel' + var1 + var2 + var3 + export_file_name + ']'
+                    short_code = '[wpdatatable id=' + tables[0].value + ' table_view=excel' + var1 + var2 + var3 + var4 + var5 + var6 + var7 + var8 + var9 + export_file_name + ']'
                 } else {
                     short_code += 'Please create wpdatatable first.';
                 }
@@ -219,6 +267,72 @@
                     value: attributes.var3,
                     onChange: function (content) {
                         return props.setAttributes({var3: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var4',
+                    label: 'Set placeholder %VAR4%:',
+                    value: attributes.var4,
+                    onChange: function (content) {
+                        return props.setAttributes({var4: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var5',
+                    label: 'Set placeholder %VAR5%:',
+                    value: attributes.var5,
+                    onChange: function (content) {
+                        return props.setAttributes({var5: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var6',
+                    label: 'Set placeholder %VAR6%:',
+                    value: attributes.var6,
+                    onChange: function (content) {
+                        return props.setAttributes({var6: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var7',
+                    label: 'Set placeholder %VAR7%:',
+                    value: attributes.var7,
+                    onChange: function (content) {
+                        return props.setAttributes({var7: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var8',
+                    label: 'Set placeholder %VAR8%:',
+                    value: attributes.var8,
+                    onChange: function (content) {
+                        return props.setAttributes({var8: content})
+                    }
+                }));
+
+                inspectorElements.push(el('div', {style: {'margin-bottom': '1em'}}, ''));
+
+                inspectorElements.push(el(components.TextControl, {
+                    id: 'wpdatatables-js-insert-var9',
+                    label: 'Set placeholder %VAR9%:',
+                    value: attributes.var9,
+                    onChange: function (content) {
+                        return props.setAttributes({var9: content})
                     }
                 }));
 

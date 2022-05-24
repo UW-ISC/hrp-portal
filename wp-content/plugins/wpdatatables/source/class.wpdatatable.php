@@ -1626,7 +1626,9 @@ class WPDataTable {
                             $this->_aggregateFuncsRes['sum'][$columnKey] = 0;
                         }
 
-                        $this->_aggregateFuncsRes['sum'][$columnKey] += $wdtRowDataArr[$columnKey];
+                        if ($wdtRowDataArr[$columnKey] != null && is_numeric($wdtRowDataArr[$columnKey])) {
+                            $this->_aggregateFuncsRes['sum'][$columnKey] += $wdtRowDataArr[$columnKey];
+                        }
                     }
                     if (
                     in_array(
@@ -1636,7 +1638,8 @@ class WPDataTable {
                     ) {
                         if (
                             !isset($this->_aggregateFuncsRes['min'][$columnKey])
-                            || ($wdtRowDataArr[$columnKey] < $this->_aggregateFuncsRes['min'][$columnKey])
+                            || ($wdtRowDataArr[$columnKey] < $this->_aggregateFuncsRes['min'][$columnKey]
+                                && is_numeric($wdtRowDataArr[$columnKey]))
                         ) {
                             $this->_aggregateFuncsRes['min'][$columnKey] = $wdtRowDataArr[$columnKey];
                         }
@@ -1650,7 +1653,8 @@ class WPDataTable {
                     ) {
                         if (
                             !isset($this->_aggregateFuncsRes['max'][$columnKey])
-                            || ($wdtRowDataArr[$columnKey] > $this->_aggregateFuncsRes['max'][$columnKey])
+                            || ($wdtRowDataArr[$columnKey] > $this->_aggregateFuncsRes['max'][$columnKey]
+                                && is_numeric($wdtRowDataArr[$columnKey]))
                         ) {
                             $this->_aggregateFuncsRes['max'][$columnKey] = $wdtRowDataArr[$columnKey];
                         }
@@ -1658,7 +1662,9 @@ class WPDataTable {
                 }
 
             if (in_array($columnKey, $this->getAvgColumns())) {
-                $this->_aggregateFuncsRes['avg'][$columnKey] = $this->_aggregateFuncsRes['sum'][$columnKey] / count($this->getDataRows());
+                $filteredRowsNumber = count(array_filter(array_column($this->getDataRows(),$columnKey)));
+                $notNullRowNumber = $filteredRowsNumber !== 0 ? $filteredRowsNumber : count($this->getDataRows());
+                $this->_aggregateFuncsRes['avg'][$columnKey] = $this->_aggregateFuncsRes['sum'][$columnKey] / $notNullRowNumber;
             }
         }
     }
@@ -1821,7 +1827,7 @@ class WPDataTable {
 
     //[<-- Full version -->]//
     public function queryBasedConstruct($query, $queryParams = array(), $wdtParameters = array(), $init_read = false) {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wpdb;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wpdb;
 
 
         $vendor = Connection::getVendor($this->connection);
@@ -2419,8 +2425,13 @@ class WPDataTable {
 
                         $floatCol->setDecimalPlaces($colObjs[$columnTitle]->getDecimalPlaces());
                         $floatCol->setParentTable($this);
-                        $output['avgColumnsValues'][$columnTitle] = (int)$output['recordsFiltered'] != 0 ?
-                            $floatCol->returnCellValue(($sumRow[$columnTitle]) / (int)$output['recordsFiltered']) : 0;
+                        $nonNullValues = (int)$output['recordsFiltered'];
+                        foreach ($main_res_dataRows as $row) {
+                            if ($row[$columnTitle] == null)
+                                $nonNullValues--;
+                        }
+                        $output['avgColumnsValues'][$columnTitle] = $nonNullValues != 0 ?
+                            $floatCol->returnCellValue(($sumRow[$columnTitle]) / $nonNullValues) : 0;
 
                     }
                     $output['sumAvgColumns'] = array_flip($output['sumAvgColumns']);
@@ -3133,12 +3144,18 @@ class WPDataTable {
         if (empty($tableData->table_type)) {
             return;
         }
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         // Set placeholders
         $wdtVar1 = $wdtVar1 === '' ? $tableData->var1 : $wdtVar1;
         $wdtVar2 = $wdtVar2 === '' ? $tableData->var2 : $wdtVar2;
         $wdtVar3 = $wdtVar3 === '' ? $tableData->var3 : $wdtVar3;
+        $wdtVar4 = $wdtVar4 === '' ? $tableData->var4 : $wdtVar4;
+        $wdtVar5 = $wdtVar5 === '' ? $tableData->var5 : $wdtVar5;
+        $wdtVar6 = $wdtVar6 === '' ? $tableData->var6 : $wdtVar6;
+        $wdtVar7 = $wdtVar7 === '' ? $tableData->var7 : $wdtVar7;
+        $wdtVar8 = $wdtVar8 === '' ? $tableData->var8 : $wdtVar8;
+        $wdtVar9 = $wdtVar9 === '' ? $tableData->var9 : $wdtVar9;
 
         // Defining column parameters if provided
         $params = array();
@@ -3630,7 +3647,7 @@ class WPDataTable {
      */
     public function getJsonDescription() {
         //[<-- Full version -->]//
-        global $wdtVar1, $wdtVar2, $wdtVar3;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
         //[<--/ Full version -->]//
         global $wdtExportFileName;
 
@@ -4045,6 +4062,24 @@ class WPDataTable {
             if (isset($wdtVar3) && $wdtVar3 !== '') {
                 $obj->dataTableParams->ajax['url'] .= '&wdt_var3=' . urlencode($wdtVar3);
             }
+            if (isset($wdtVar4) && $wdtVar4 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var4=' . urlencode($wdtVar4);
+            }
+            if (isset($wdtVar5) && $wdtVar5 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var5=' . urlencode($wdtVar5);
+            }
+            if (isset($wdtVar6) && $wdtVar6 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var6=' . urlencode($wdtVar6);
+            }
+            if (isset($wdtVar7) && $wdtVar7 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var7=' . urlencode($wdtVar7);
+            }
+            if (isset($wdtVar8) && $wdtVar8 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var8=' . urlencode($wdtVar8);
+            }
+            if (isset($wdtVar9) && $wdtVar9 !== '') {
+                $obj->dataTableParams->ajax['url'] .= '&wdt_var9=' . urlencode($wdtVar9);
+            }
             if (isset($_GET['wdt_column_filter']) && $_GET['wdt_column_filter'] !== '') {
                 foreach ($_GET['wdt_column_filter'] as $fltColKey => $fltDefVal) {
                     $obj->dataTableParams->ajax['url'] .= '&wdt_column_filter['. urlencode($fltColKey) .']=' . urlencode($fltDefVal);
@@ -4137,7 +4172,7 @@ class WPDataTable {
      * @return array
      */
     public function getDistinctValuesForColumns($foreignKeyRule) {
-        global $wdtVar1, $wdtVar2, $wdtVar3, $wpdb;
+        global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wpdb;
 
         $distinctValues = array();
         $storeColumnName = $foreignKeyRule->storeColumnName;
