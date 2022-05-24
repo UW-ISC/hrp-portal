@@ -1057,11 +1057,8 @@
                                 <select class="form-control selectpicker" multiple="multiple"
                                         title="<?php esc_attr_e('All', 'wpdatatables'); ?>" id="wdt-edit-buttons-displayed">
                                    <?php $wdtEditButtonsDisplayed = array('New Entry', 'Edit', 'Delete');
-                                   if (isset($tableData)) {
-                                       if ($tableData->table->enableDuplicateButton &&
-                                           !in_array('duplicate', $tableData->table->editButtonsDisplayed)) {
+                                   if (isset($tableData) && $tableData->table->enableDuplicateButton) {
                                            $wdtEditButtonsDisplayed[] = 'Duplicate';
-                                       }
                                    }
                                    foreach ($wdtEditButtonsDisplayed as $wdtEditButtonDisplayed) {
                                         /** @noinspection $wdtEditButtonsDisplayed */ ?>
@@ -1072,23 +1069,20 @@
 
                         </div>
 
-                        <?php if (isset($tableData)) {
-                            if (!($tableData->table->table_type === 'gravity') ||
-                                version_compare(WDT_GF_VERSION, "1.6.3", '>=')) {?>
-                                <div class="col-sm-4 m-b-16 editing-settings-block">
-                                    <h4 class="c-title-color m-b-4">
-                                        <?php esc_html_e('Show duplicate button', 'wpdatatables'); ?>
-                                        <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                           title="<?php esc_attr_e('Enable the duplicate button in Editing buttons', 'wpdatatables'); ?>"></i>
-                                    </h4>
-                                    <div class="toggle-switch" data-ts-color="blue">
-                                        <input id="wdt-enable-duplicate-button" type="checkbox">
-                                        <label for="wdt-enable-duplicate-button"
-                                               class="ts-label"><?php esc_html_e('Enable duplicate button', 'wpdatatables'); ?></label>
-                                    </div>
-                                </div>
-                            <?php }} ?>
-
+                        <div class="col-sm-4 m-b-16 editing-settings-block
+                            <?php if (defined('WDT_GF_VERSION') &&
+                                    version_compare(WDT_GF_VERSION, "1.6.3", '<=')) {?> hideDuplicateForGF<?php }?>">
+                            <h4 class="c-title-color m-b-4">
+                                <?php esc_html_e('Show duplicate button', 'wpdatatables'); ?>
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Enable the duplicate button in Editing buttons', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-enable-duplicate-button" type="checkbox">
+                                <label for="wdt-enable-duplicate-button"
+                                       class="ts-label"><?php esc_html_e('Enable duplicate button', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
 
                         <!-- /.row -->
 
@@ -1288,6 +1282,108 @@
 
                             <div class="fg-line form-group m-b-0">
                                 <input id="wdt-var3-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- .row -->
+                    <div class="row">
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR4%
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-var4-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR5%
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group  m-b-0">
+                                <input id="wdt-var5-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR6%
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-var6-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- /.row -->
+
+                    <!-- .row -->
+                    <div class="row">
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR7%
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-var7-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR8%
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group  m-b-0">
+                                <input id="wdt-var8-placeholder" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+                                %VAR9%
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('This placeholder will be replaced with any value that you will provide in a shortcode. Provide a default value here that will be used for table generation and when a different one is not defined in the shortcode.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-var9-placeholder" type="text" class="form-control input-sm"
                                        placeholder="<?php esc_attr_e('Default for table generation', 'wpdatatables'); ?>">
                             </div>
 

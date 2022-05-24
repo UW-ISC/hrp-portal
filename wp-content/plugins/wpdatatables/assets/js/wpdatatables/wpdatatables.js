@@ -120,6 +120,7 @@ var singleClick = false;
                     $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                     $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
                     $('.delete_table_entry[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
+                    $('.master_detail[aria-controls="' + tableDescription.tableId + '"]').addClass('disabled');
 
                     if (wpDataTablesSelRows[tableDescription.tableId] == -2) {
                         // -2 means select first row on "next" page
@@ -898,10 +899,14 @@ var singleClick = false;
 
                             for (var i in tableDescription.sumAvgColumns) {
 
-                                var columnData = api.column(tableDescription.sumAvgColumns[i] + ':name', {search: 'applied'}).data();
+                                var columnData = api.column(tableDescription.sumAvgColumns[i] + ':name', {search: 'applied'}).data().filter(function (el) {
+                                    return el !== '';
+                                });
                                 var columnType = oSettings.aoColumns[api.column(tableDescription.sumAvgColumns[i] + ':name').index()].wdtType;
 
                                 var sum = wdtCalculateColumnSum(columnData, thousandsSeparator);
+
+                                var nonNullLength = columnData.length;
 
                                 var sumStr = wdtFormatNumberByColumnType(parseFloat(sum), columnType, tableDescription.columnsDecimalPlaces[tableDescription.sumAvgColumns[i]],
                                     tableDescription.decimalPlaces, decimalSeparator, thousandsSeparator);
@@ -912,7 +917,7 @@ var singleClick = false;
                                 }
 
                                 if (_.contains(tableDescription.avgColumns, tableDescription.sumAvgColumns[i])) {
-                                    var avg = sum / api.page.info().recordsDisplay;
+                                    var avg = sum / nonNullLength;
 
                                     var avgStr = wdtFormatNumberByColumnType(avg, 'float', tableDescription.columnsDecimalPlaces[tableDescription.sumAvgColumns[i]],
                                         tableDescription.decimalPlaces, decimalSeparator, thousandsSeparator);
@@ -924,7 +929,9 @@ var singleClick = false;
                             }
                             for (i in tableDescription.minColumns) {
 
-                                columnData = api.column(tableDescription.minColumns[i] + ':name', {search: 'applied'}).data();
+                                columnData = api.column(tableDescription.minColumns[i] + ':name', {search: 'applied'}).data().filter(function (el) {
+                                    return el !== '';
+                                });
                                 columnType = oSettings.aoColumns[api.column(tableDescription.minColumns[i] + ':name').index()].wdtType;
 
                                 var min = wdtCalculateColumnMin(columnData, thousandsSeparator);
@@ -937,7 +944,9 @@ var singleClick = false;
                             }
                             for (i in tableDescription.maxColumns) {
 
-                                columnData = api.column(tableDescription.maxColumns[i] + ':name', {search: 'applied'}).data();
+                                columnData = api.column(tableDescription.maxColumns[i] + ':name', {search: 'applied'}).data().filter(function (el) {
+                                    return el !== '';
+                                });
                                 columnType = oSettings.aoColumns[api.column(tableDescription.maxColumns[i] + ':name').index()].wdtType;
 
                                 var max = wdtCalculateColumnMax(columnData, thousandsSeparator);
@@ -952,7 +961,9 @@ var singleClick = false;
                             // Update values from wpdatatables_{func} shortcode
                             if ($('.wdt-column-sum').length) {
                                 $('.wdt-column-sum[data-table-id="' + tableDescription.tableWpId + '"]').each(function () {
-                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data();
+                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data().filter(function (el) {
+                                        return el !== '';
+                                    });
                                     var columnType = oSettings.aoColumns[api.column($(this).data('column-orig-header') + ':name').index()].wdtType;
 
                                     var sum = wdtCalculateColumnSum(columnData, thousandsSeparator);
@@ -966,7 +977,9 @@ var singleClick = false;
 
                             if ($('.wdt-column-avg').length) {
                                 $('.wdt-column-avg[data-table-id="' + tableDescription.tableWpId + '"]').each(function () {
-                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data();
+                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data().filter(function (el) {
+                                        return el !== '';
+                                    });
 
                                     var avg = wdtCalculateColumnSum(columnData, thousandsSeparator) / api.page.info().recordsDisplay;
 
@@ -979,7 +992,9 @@ var singleClick = false;
 
                             if ($('.wdt-column-min').length) {
                                 $('.wdt-column-min[data-table-id="' + tableDescription.tableWpId + '"]').each(function () {
-                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data();
+                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data().filter(function (el) {
+                                        return el !== '';
+                                    });
                                     var columnType = oSettings.aoColumns[api.column($(this).data('column-orig-header') + ':name').index()].wdtType;
 
                                     var min = wdtCalculateColumnMin(columnData, thousandsSeparator);
@@ -993,7 +1008,9 @@ var singleClick = false;
 
                             if ($('.wdt-column-max').length) {
                                 $('.wdt-column-max[data-table-id="' + tableDescription.tableWpId + '"]').each(function () {
-                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data();
+                                    var columnData = api.column($(this).data('column-orig-header') + ':name', {search: 'applied'}).data().filter(function (el) {
+                                        return el !== '';
+                                    });
                                     var columnType = oSettings.aoColumns[api.column($(this).data('column-orig-header') + ':name').index()].wdtType;
 
                                     var max = wdtCalculateColumnMax(columnData, thousandsSeparator);

@@ -383,6 +383,48 @@
         });
 
         /**
+         * Set Placeholder VAR 4
+         */
+        $('#wdt-var4-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar4( $(this).val() );
+        });
+
+        /**
+         * Set Placeholder VAR 5
+         */
+        $('#wdt-var5-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar5( $(this).val() );
+        });
+
+        /**
+         * Set Placeholder VAR 6
+         */
+        $('#wdt-var6-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar6( $(this).val() );
+        });
+
+        /**
+         * Set Placeholder VAR 7
+         */
+        $('#wdt-var7-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar7( $(this).val() );
+        });
+
+        /**
+         * Set Placeholder VAR 8
+         */
+        $('#wdt-var8-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar8( $(this).val() );
+        });
+
+        /**
+         * Set Placeholder VAR 9
+         */
+        $('#wdt-var9-placeholder').change(function(e){
+            wpdatatable_config.setPlaceholderVar9( $(this).val() );
+        });
+
+        /**
          * Set Placeholder Current User ID
          */
         $('#wdt-user-id-placeholder').change(function (e) {

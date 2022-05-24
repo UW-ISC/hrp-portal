@@ -51,6 +51,12 @@ function wdtActivationCreateTables() {
                         var1 VARCHAR( 255 ) NOT NULL default '',
                         var2 VARCHAR( 255 ) NOT NULL default '',
                         var3 VARCHAR( 255 ) NOT NULL default '',
+                        var4 VARCHAR( 255 ) NOT NULL default '',
+                        var5 VARCHAR( 255 ) NOT NULL default '',
+                        var6 VARCHAR( 255 ) NOT NULL default '',
+                        var7 VARCHAR( 255 ) NOT NULL default '',
+                        var8 VARCHAR( 255 ) NOT NULL default '',
+                        var9 VARCHAR( 255 ) NOT NULL default '',
                         tabletools_config VARCHAR( 255 ) NOT NULL default '',
 						advanced_settings TEXT NOT NULL default '',
 						UNIQUE KEY id (id)
@@ -617,13 +623,19 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null) {
  * @return mixed|string
  */
 function wdtWpDataTableShortcodeHandler($atts, $content = null) {
-    global $wdtVar1, $wdtVar2, $wdtVar3, $wdtExportFileName;
+    global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wdtExportFileName;
 
     extract(shortcode_atts(array(
         'id' => '0',
         'var1' => '%%no_val%%',
         'var2' => '%%no_val%%',
         'var3' => '%%no_val%%',
+        'var4' => '%%no_val%%',
+        'var5' => '%%no_val%%',
+        'var6' => '%%no_val%%',
+        'var7' => '%%no_val%%',
+        'var8' => '%%no_val%%',
+        'var9' => '%%no_val%%',
         'export_file_name' => '%%no_val%%',
         'table_view' => 'regular'
     ), $atts));
@@ -656,6 +668,18 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
     $wdtVar2 = $var2 !== '%%no_val%%' ? $var2 : $tableData->var2;
     /** @var mixed $var3 */
     $wdtVar3 = $var3 !== '%%no_val%%' ? $var3 : $tableData->var3;
+    /** @var mixed $var4 */
+    $wdtVar4 = $var4 !== '%%no_val%%' ? $var4 : $tableData->var4;
+    /** @var mixed $var5 */
+    $wdtVar5 = $var5 !== '%%no_val%%' ? $var5 : $tableData->var5;
+    /** @var mixed $var6 */
+    $wdtVar6 = $var6 !== '%%no_val%%' ? $var6 : $tableData->var6;
+    /** @var mixed $var7 */
+    $wdtVar7 = $var7 !== '%%no_val%%' ? $var7 : $tableData->var7;
+    /** @var mixed $var8 */
+    $wdtVar8 = $var8 !== '%%no_val%%' ? $var8 : $tableData->var8;
+    /** @var mixed $var9 */
+    $wdtVar9 = $var9 !== '%%no_val%%' ? $var9 : $tableData->var9;
 
     /** @var mixed $export_file_name */
     $wdtExportFileName = $export_file_name !== '%%no_val%%' ? $export_file_name : '';

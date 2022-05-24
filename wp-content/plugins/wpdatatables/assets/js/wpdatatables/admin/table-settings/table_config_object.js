@@ -66,6 +66,12 @@ var wpdatatable_config = {
     var1: '',
     var2: '',
     var3: '',
+    var4: '',
+    var5: '',
+    var6: '',
+    var7: '',
+    var8: '',
+    var9: '',
     currentUserIdPlaceholder: jQuery('#wdt-user-id-placeholder').val(),
     currentUserLoginPlaceholder: jQuery('#wdt-user-login-placeholder').val(),
     currentPostIdPlaceholder: '',
@@ -569,7 +575,10 @@ var wpdatatable_config = {
         }
 
         if( editable == 1 ){
-            jQuery('.editing-settings-block').animateFadeIn();
+            jQuery('.editing-settings-block:not(.hideDuplicateForGF)').animateFadeIn();
+            if(wpdatatable_config.table_type === 'gravity') {
+                jQuery('.hideDuplicateForGF').hide();
+            }
             if( wpdatatable_config.edit_only_own_rows ){
                 jQuery('.own-rows-editing-settings-block').animateFadeIn();
                 jQuery('.show-all-rows-editing-settings-block').animateFadeIn();
@@ -801,6 +810,60 @@ var wpdatatable_config = {
         wpdatatable_config.var3 = var3;
         if( jQuery('#wdt-var3-placeholder').val() != wpdatatable_config.var3 ){
             jQuery('#wdt-var3-placeholder').val( wpdatatable_config.var3 );
+        }
+    },
+    /**
+     * Set the VAR 4 placeholder value
+     */
+    setPlaceholderVar4: function (var4) {
+        wpdatatable_config.var4 = var4;
+        if (jQuery('#wdt-var4-placeholder').val() != wpdatatable_config.var4) {
+            jQuery('#wdt-var4-placeholder').val(wpdatatable_config.var4);
+        }
+    },
+    /**
+     * Set the VAR 5 placeholder value
+     */
+    setPlaceholderVar5: function (var5) {
+        wpdatatable_config.var5 = var5;
+        if (jQuery('#wdt-var5-placeholder').val() != wpdatatable_config.var5) {
+            jQuery('#wdt-var5-placeholder').val(wpdatatable_config.var5);
+        }
+    },
+    /**
+     * Set the VAR 6 placeholder value
+     */
+    setPlaceholderVar6: function (var6) {
+        wpdatatable_config.var6 = var6;
+        if (jQuery('#wdt-var6-placeholder').val() != wpdatatable_config.var6) {
+            jQuery('#wdt-var6-placeholder').val(wpdatatable_config.var6);
+        }
+    },
+    /**
+     * Set the VAR 7 placeholder value
+     */
+    setPlaceholderVar7: function (var7) {
+        wpdatatable_config.var7 = var7;
+        if (jQuery('#wdt-var7-placeholder').val() != wpdatatable_config.var7) {
+            jQuery('#wdt-var7-placeholder').val(wpdatatable_config.var7);
+        }
+    },
+    /**
+     * Set the VAR 8 placeholder value
+     */
+    setPlaceholderVar8: function (var8) {
+        wpdatatable_config.var8 = var8;
+        if (jQuery('#wdt-var8-placeholder').val() != wpdatatable_config.var8) {
+            jQuery('#wdt-var8-placeholder').val(wpdatatable_config.var8);
+        }
+    },
+    /**
+     * Set the VAR 9 placeholder value
+     */
+    setPlaceholderVar9: function (var9) {
+        wpdatatable_config.var9 = var9;
+        if (jQuery('#wdt-var9-placeholder').val() != wpdatatable_config.var9) {
+            jQuery('#wdt-var9-placeholder').val(wpdatatable_config.var9);
         }
     },
     /**
@@ -1152,6 +1215,12 @@ var wpdatatable_config = {
         wpdatatable_config.setPlaceholderVar1( tableJSON.var1 );
         wpdatatable_config.setPlaceholderVar2( tableJSON.var2 );
         wpdatatable_config.setPlaceholderVar3( tableJSON.var3 );
+        wpdatatable_config.setPlaceholderVar4( tableJSON.var4 );
+        wpdatatable_config.setPlaceholderVar5( tableJSON.var5 );
+        wpdatatable_config.setPlaceholderVar6( tableJSON.var6 );
+        wpdatatable_config.setPlaceholderVar7( tableJSON.var7 );
+        wpdatatable_config.setPlaceholderVar8( tableJSON.var8 );
+        wpdatatable_config.setPlaceholderVar9( tableJSON.var9 );
         wpdatatable_config.setLanguage( tableJSON.language );
         wpdatatable_config.setTableSkin( tableJSON.tableSkin );
         wpdatatable_config.setTableBorderRemoval( tableJSON.tableBorderRemoval );

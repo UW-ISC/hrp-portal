@@ -664,6 +664,7 @@ var wdtChartColumnsData = {};
                             wdtChart.setColumnIndexes(data.column_indexes);
                         } else if (constructedChartData.engine == 'highcharts') {
                             wdtChart = new wpDataTablesHighchart();
+                            wdtChart.setNumberFormat(data.wdtNumberFormat);
                             wdtChart.setOptions(data.options);
                             wdtChart.setMultiplyYaxis(data);
                             wdtChart.setType(data.type);
@@ -671,7 +672,6 @@ var wdtChartColumnsData = {};
                             wdtChart.setHeight(data.height);
                             wdtChart.setColumnIndexes(data.column_indexes);
                             wdtChart.setContainer('#google-chart-container');
-                            wdtChart.setNumberFormat(data.wdtNumberFormat);
                         } else if (constructedChartData.engine == 'chartjs') {
                             if (wdtChart !== null) {
                                 wdtChart.chart.destroy();
@@ -954,6 +954,7 @@ var wdtChartColumnsData = {};
                         wdtChart.setColumnIndexes(data.column_indexes);
                     } else if (constructedChartData.engine == 'highcharts') {
                         wdtChart = new wpDataTablesHighchart();
+                        wdtChart.setNumberFormat(data.wdtNumberFormat);
                         wdtChart.setOptions(data.options);
                         wdtChart.setMultiplyYaxis(data);
                         wdtChart.setType(data.type);

@@ -277,6 +277,12 @@ function wdtDuplicateTable()
             'var1' => $tableData->var1,
             'var2' => $tableData->var2,
             'var3' => $tableData->var3,
+            'var4' => $tableData->var4,
+            'var5' => $tableData->var5,
+            'var6' => $tableData->var6,
+            'var7' => $tableData->var7,
+            'var8' => $tableData->var8,
+            'var9' => $tableData->var9,
             'tabletools_config' => serialize($tableData->tabletools_config),
             'advanced_settings' => $tableData->advanced_settings
         )

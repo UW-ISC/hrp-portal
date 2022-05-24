@@ -25,6 +25,7 @@
                         wdtGoogleCharts.push(wdtChart);
                     } else if (wpDataCharts[chart_id].engine == 'highcharts') {
                         var wdtChart = new wpDataTablesHighchart();
+                        wdtChart.setNumberFormat(wpDataCharts[chart_id].render_data.wdtNumberFormat);
                         wdtChart.setOptions(wpDataCharts[chart_id].render_data.options);
                         wdtChart.setMultiplyYaxis(wpDataCharts[chart_id].render_data);
                         wdtChart.setType(wpDataCharts[chart_id].render_data.type);
@@ -33,7 +34,6 @@
                         wdtChart.setColumnIndexes(wpDataCharts[chart_id].render_data.column_indexes);
                         wdtChart.setGrouping(wpDataCharts[chart_id].group_chart);
                         wdtChart.setContainer('#' + wpDataCharts[chart_id].container);
-                        wdtChart.setNumberFormat(wpDataCharts[chart_id].render_data.wdtNumberFormat);
                         if (typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[chart_id] !== 'undefined') {
                             wdtChart.setRenderCallback(wpDataChartsCallbacks[chart_id]);
                         }

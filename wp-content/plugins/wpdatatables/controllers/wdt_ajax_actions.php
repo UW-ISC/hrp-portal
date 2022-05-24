@@ -6,7 +6,7 @@ defined('ABSPATH') or die('Access denied.');
  * Handler which returns the AJAX response
  */
 function wdtGetAjaxData() {
-    global $wdtVar1, $wdtVar2, $wdtVar3;
+    global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
     if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendEditTableNonce' . (int)$_GET['table_id'])) {
         exit();
@@ -52,6 +52,12 @@ function wdtGetAjaxData() {
     $wdtVar1 = isset($_GET['wdt_var1']) ? wdtSanitizeQuery($_GET['wdt_var1']) : $tableData->var1;
     $wdtVar2 = isset($_GET['wdt_var2']) ? wdtSanitizeQuery($_GET['wdt_var2']) : $tableData->var2;
     $wdtVar3 = isset($_GET['wdt_var3']) ? wdtSanitizeQuery($_GET['wdt_var3']) : $tableData->var3;
+    $wdtVar4 = isset($_GET['wdt_var4']) ? wdtSanitizeQuery($_GET['wdt_var4']) : $tableData->var4;
+    $wdtVar5 = isset($_GET['wdt_var5']) ? wdtSanitizeQuery($_GET['wdt_var5']) : $tableData->var5;
+    $wdtVar6 = isset($_GET['wdt_var6']) ? wdtSanitizeQuery($_GET['wdt_var6']) : $tableData->var6;
+    $wdtVar7 = isset($_GET['wdt_var7']) ? wdtSanitizeQuery($_GET['wdt_var7']) : $tableData->var7;
+    $wdtVar8 = isset($_GET['wdt_var8']) ? wdtSanitizeQuery($_GET['wdt_var8']) : $tableData->var8;
+    $wdtVar9 = isset($_GET['wdt_var9']) ? wdtSanitizeQuery($_GET['wdt_var9']) : $tableData->var9;
 
     $tableView = isset($_POST['table']) ? sanitize_text_field($_POST['table']) : '';
 

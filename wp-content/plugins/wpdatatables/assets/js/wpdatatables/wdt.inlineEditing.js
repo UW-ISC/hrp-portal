@@ -83,7 +83,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
             wpDataTables[obj.params.tableId].fnUpdate(val, rowId, columnId, 0, 0);
             var data = wpDataTables[obj.params.tableId].fnGetData(rowId);
             wpDataTablesFunctions[obj.params.tableId].applyData(data);
-            wpDataTablesFunctions[obj.params.tableId].saveTableData(1);
+            wpDataTablesFunctions[obj.params.tableId].saveTableData(true, false, false);
             $(tableDescription.selector).find('td').removeClass('editing');
         },
         // Validate email and url fields
