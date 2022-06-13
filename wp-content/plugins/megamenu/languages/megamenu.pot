@@ -1,0 +1,2336 @@
+# Copyright (C) 2022 megamenu.com
+# This file is distributed under the GPL-2.0+.
+msgid ""
+msgstr ""
+"Project-Id-Version: Max Mega Menu 2.9.6\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/megamenu\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-05-31T10:11:08+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0-alpha\n"
+"X-Domain: megamenu\n"
+
+#. Plugin Name of the plugin
+#: classes/pages/page.php:38
+#: classes/pages/page.php:44
+#: classes/pages/page.php:46
+#: classes/pages/page.php:135
+#: classes/widgets/widget.class.php:20
+msgid "Max Mega Menu"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.megamenu.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "An easy to use mega menu plugin. Written the WordPress way."
+msgstr ""
+
+#. Author of the plugin
+msgid "megamenu.com"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:235
+msgid "Sub Menu"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:236
+msgid "Mega Menus can only be created on top level menu items."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:245
+msgid "Flyout Menu"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:246
+msgid "Mega Menu - Grid Layout"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:247
+msgid "Mega Menu - Standard Layout"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:252
+msgid "Sub menu display mode"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:267
+#: classes/menu-item-manager.class.php:465
+#: classes/widget-manager.class.php:147
+msgid "column"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:268
+#: classes/menu-item-manager.class.php:269
+#: classes/menu-item-manager.class.php:270
+#: classes/menu-item-manager.class.php:271
+#: classes/menu-item-manager.class.php:272
+#: classes/menu-item-manager.class.php:273
+#: classes/menu-item-manager.class.php:274
+#: classes/menu-item-manager.class.php:275
+#: classes/menu-item-manager.class.php:276
+#: classes/menu-item-manager.class.php:277
+#: classes/menu-item-manager.class.php:278
+#: classes/menu-item-manager.class.php:466
+#: classes/menu-item-manager.class.php:467
+#: classes/menu-item-manager.class.php:468
+#: classes/menu-item-manager.class.php:469
+#: classes/menu-item-manager.class.php:470
+#: classes/menu-item-manager.class.php:471
+#: classes/menu-item-manager.class.php:472
+#: classes/menu-item-manager.class.php:473
+#: classes/menu-item-manager.class.php:474
+#: classes/menu-item-manager.class.php:475
+#: classes/menu-item-manager.class.php:476
+#: classes/widget-manager.class.php:148
+#: classes/widget-manager.class.php:149
+#: classes/widget-manager.class.php:150
+#: classes/widget-manager.class.php:151
+#: classes/widget-manager.class.php:152
+msgid "columns"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:282
+msgid "Select a Widget to add to the panel"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:296
+#: classes/nav-menus.class.php:237
+#: classes/pages/page.php:38
+msgid "Mega Menu"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:319
+msgid "Your menu CSS needs to be updated first. Please go to %s and Clear the CSS Cache (you will only need to do this once)."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:348
+#: classes/menu-item-manager.class.php:439
+#: classes/menu-item-manager.class.php:440
+#: classes/menu-item-manager.class.php:441
+#: classes/menu-item-manager.class.php:442
+msgid "Row"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:439
+#: classes/menu-item-manager.class.php:533
+msgid "Visible on desktop"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:440
+#: classes/menu-item-manager.class.php:534
+msgid "Hidden on desktop"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:441
+#: classes/menu-item-manager.class.php:535
+msgid "Visible on mobile"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:442
+#: classes/menu-item-manager.class.php:536
+msgid "Hidden on mobile"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:459
+msgid "Row class"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:463
+msgid "Row columns"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:479
+#: classes/menu-item-manager.class.php:561
+msgid "Save"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:481
+#: classes/menu-item-manager.class.php:533
+#: classes/menu-item-manager.class.php:534
+#: classes/menu-item-manager.class.php:535
+#: classes/menu-item-manager.class.php:536
+msgid "Column"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:484
+msgid "You should rearrange the content of this row so that all columns fit onto a single line."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:487
+msgid "There is not enough space on this row to add a new column."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:551
+#: classes/menu-item-manager.class.php:609
+#: classes/widget-manager.class.php:1014
+msgid "Contract"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:553
+#: classes/menu-item-manager.class.php:611
+#: classes/widget-manager.class.php:1016
+msgid "Expand"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:559
+msgid "Column class"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:574
+#: classes/menu-item-manager.class.php:612
+#: classes/widget-manager.class.php:1019
+msgid "Edit"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:622
+msgid "No widgets found. Add a widget to this area using the Widget Selector (top right)"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:643
+msgid "Menu Item Settings"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:647
+msgid "Hide text"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:655
+msgid "Hide arrow"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:663
+msgid "Disable link"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:671
+msgid "Hide item on mobile"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:679
+msgid "Hide item on desktop"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:686
+msgid "Close sub menu when clicked"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:691
+msgid "Intended for use on anchor links (e.g. #about)"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:696
+msgid "Menu item align"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:709
+#: classes/menu-item-manager.class.php:730
+#: classes/pages/themes.php:846
+#: classes/pages/themes.php:1011
+#: classes/pages/themes.php:1215
+#: classes/pages/themes.php:1256
+#: classes/pages/themes.php:1405
+#: classes/pages/themes.php:1441
+#: classes/pages/themes.php:1503
+#: classes/pages/themes.php:1582
+#: classes/pages/themes.php:1613
+#: classes/pages/themes.php:1654
+#: classes/pages/themes.php:1800
+#: classes/pages/themes.php:1831
+#: classes/pages/themes.php:1872
+#: classes/pages/themes.php:1995
+#: classes/pages/themes.php:2027
+#: classes/pages/themes.php:2068
+#: classes/pages/themes.php:2144
+#: classes/pages/themes.php:2180
+#: classes/pages/themes.php:2299
+#: classes/pages/themes.php:2580
+#: classes/pages/themes.php:2942
+msgid "Left"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:710
+#: classes/style-manager.class.php:94
+msgid "Default"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:711
+#: classes/menu-item-manager.class.php:732
+#: classes/pages/themes.php:851
+#: classes/pages/themes.php:999
+#: classes/pages/themes.php:1203
+#: classes/pages/themes.php:1244
+#: classes/pages/themes.php:1393
+#: classes/pages/themes.php:1429
+#: classes/pages/themes.php:1491
+#: classes/pages/themes.php:1570
+#: classes/pages/themes.php:1601
+#: classes/pages/themes.php:1642
+#: classes/pages/themes.php:1788
+#: classes/pages/themes.php:1819
+#: classes/pages/themes.php:1860
+#: classes/pages/themes.php:1983
+#: classes/pages/themes.php:2015
+#: classes/pages/themes.php:2056
+#: classes/pages/themes.php:2132
+#: classes/pages/themes.php:2168
+#: classes/pages/themes.php:2287
+#: classes/pages/themes.php:2568
+#: classes/pages/themes.php:2944
+msgid "Right"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:715
+msgid "Item will be aligned based on the 'Menu Items Align' option set in the Theme Editor"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:716
+msgid "Right aligned items will appear in reverse order on the right hand side of the menu bar"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:719
+#: classes/menu-item-manager.class.php:760
+msgid "Option only available for top level menu items"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:726
+msgid "Icon position"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:731
+#: classes/pages/themes.php:993
+#: classes/pages/themes.php:1197
+#: classes/pages/themes.php:1238
+#: classes/pages/themes.php:1387
+#: classes/pages/themes.php:1423
+#: classes/pages/themes.php:1485
+#: classes/pages/themes.php:1564
+#: classes/pages/themes.php:1595
+#: classes/pages/themes.php:1636
+#: classes/pages/themes.php:1782
+#: classes/pages/themes.php:1813
+#: classes/pages/themes.php:1854
+#: classes/pages/themes.php:1977
+#: classes/pages/themes.php:2009
+#: classes/pages/themes.php:2050
+#: classes/pages/themes.php:2126
+#: classes/pages/themes.php:2162
+#: classes/pages/themes.php:2281
+#: classes/pages/themes.php:2562
+msgid "Top"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:742
+msgid "Sub Menu Settings"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:747
+msgid "Sub menu align"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:753
+msgid "Left edge of Parent"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:754
+msgid "Right edge of Parent"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:757
+msgid "Right aligned flyout menus will expand to the left"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:767
+msgid "Hide sub menu on mobile"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:781
+#: classes/widget-manager.class.php:134
+msgid "Your menu CSS needs to be updated before you can use the following setting. Please go to %s and Clear the CSS Cache (you will only need to do this once)."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:788
+msgid "Collapse sub menu"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:793
+msgid "Only applies to menu items displayed within mega sub menus."
+msgstr ""
+
+#: classes/menu-item-manager.class.php:806
+msgid "Settings"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:825
+msgid "Dashicons"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:830
+msgid "Font Awesome"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:832
+#: classes/menu-item-manager.class.php:837
+#: classes/menu-item-manager.class.php:842
+msgid "Max Mega Menu Pro"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:832
+msgid "Get access to over 400 Font Awesome Icons with {link}"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:835
+msgid "Genericons"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:837
+msgid "Choose from over 100 genericons with {link}"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:840
+msgid "Custom Icon"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:842
+msgid "Select icons from your media library with {link}"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:848
+msgid "Menu Item Icon"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:863
+msgid "Search"
+msgstr ""
+
+#: classes/menu-item-manager.class.php:881
+msgid "Icon"
+msgstr ""
+
+#: classes/nav-menus.class.php:149
+msgid "Max Mega Menu Settings"
+msgstr ""
+
+#: classes/nav-menus.class.php:236
+msgid "Launched for Menu ID"
+msgstr ""
+
+#: classes/nav-menus.class.php:238
+msgid "Please enable Max Mega Menu using the settings on the left of this page."
+msgstr ""
+
+#: classes/nav-menus.class.php:239
+msgid "Please save the menu structure to enable this option."
+msgstr ""
+
+#: classes/nav-menus.class.php:240
+msgid "The changes you made will be lost if you navigate away from this page."
+msgstr ""
+
+#: classes/nav-menus.class.php:241
+#: classes/pages/page.php:273
+msgid "Saving"
+msgstr ""
+
+#: classes/nav-menus.class.php:243
+msgid "Oops. Something went wrong. Please reload the page."
+msgstr ""
+
+#: classes/nav-menus.class.php:245
+msgid "Custom CSS Classes will be prefixed with 'mega-'"
+msgstr ""
+
+#: classes/nav-menus.class.php:246
+msgid "There is not enough space in this row to add a new column. Make space by reducing the width of the columns within the row or create a new row."
+msgstr ""
+
+#: classes/nav-menus.class.php:338
+msgid "here"
+msgstr ""
+
+#: classes/nav-menus.class.php:339
+msgid "This theme does not register any menu locations."
+msgstr ""
+
+#: classes/nav-menus.class.php:340
+msgid "You will need to create a new menu location and use the Max Mega Menu widget or shortcode to display the menu on your site."
+msgstr ""
+
+#: classes/nav-menus.class.php:341
+msgid "Click {link} for instructions."
+msgstr ""
+
+#: classes/nav-menus.class.php:345
+msgid "Please assign this menu to a theme location to enable the Mega Menu settings."
+msgstr ""
+
+#: classes/nav-menus.class.php:346
+msgid "To assign this menu to a theme location, scroll to the bottom of this page and tag the menu to a 'Display location'."
+msgstr ""
+
+#: classes/nav-menus.class.php:389
+msgid "More options"
+msgstr ""
+
+#: classes/nav-menus.class.php:418
+msgid "Enable"
+msgstr ""
+
+#: classes/nav-menus.class.php:424
+#: classes/pages/locations.php:646
+msgid "Event"
+msgstr ""
+
+#: classes/nav-menus.class.php:427
+#: classes/pages/locations.php:1407
+msgid "Hover Intent"
+msgstr ""
+
+#: classes/nav-menus.class.php:428
+#: classes/pages/locations.php:1408
+msgid "Hover"
+msgstr ""
+
+#: classes/nav-menus.class.php:429
+#: classes/pages/locations.php:1409
+msgid "Click"
+msgstr ""
+
+#: classes/nav-menus.class.php:434
+#: classes/pages/locations.php:658
+msgid "Effect"
+msgstr ""
+
+#: classes/nav-menus.class.php:445
+#: classes/nav-menus.class.php:516
+#: classes/pages/locations.php:1443
+#: classes/pages/locations.php:1528
+#: classes/pages/themes.php:3004
+msgid "None"
+msgstr ""
+
+#: classes/nav-menus.class.php:449
+#: classes/pages/locations.php:1447
+msgid "Fade"
+msgstr ""
+
+#: classes/nav-menus.class.php:453
+#: classes/pages/locations.php:1451
+msgid "Fade Up"
+msgstr ""
+
+#: classes/nav-menus.class.php:457
+#: classes/pages/locations.php:1455
+msgid "Slide"
+msgstr ""
+
+#: classes/nav-menus.class.php:461
+#: classes/pages/locations.php:1459
+msgid "Slide Up"
+msgstr ""
+
+#: classes/nav-menus.class.php:485
+#: classes/nav-menus.class.php:552
+#: classes/pages/locations.php:1492
+#: classes/pages/locations.php:1573
+msgid "Slow"
+msgstr ""
+
+#: classes/nav-menus.class.php:486
+#: classes/nav-menus.class.php:553
+#: classes/pages/locations.php:1493
+#: classes/pages/locations.php:1574
+msgid "Med"
+msgstr ""
+
+#: classes/nav-menus.class.php:487
+#: classes/nav-menus.class.php:554
+#: classes/pages/locations.php:1494
+#: classes/pages/locations.php:1575
+msgid "Fast"
+msgstr ""
+
+#: classes/nav-menus.class.php:505
+#: classes/pages/locations.php:677
+msgid "Effect (Mobile)"
+msgstr ""
+
+#: classes/nav-menus.class.php:520
+#: classes/pages/locations.php:1532
+msgid "Slide Down"
+msgstr ""
+
+#: classes/nav-menus.class.php:524
+#: classes/pages/locations.php:1536
+msgid "Slide Left (Off Canvas)"
+msgstr ""
+
+#: classes/nav-menus.class.php:528
+#: classes/pages/locations.php:1540
+msgid "Slide Right (Off Canvas)"
+msgstr ""
+
+#: classes/nav-menus.class.php:572
+#: classes/pages/locations.php:696
+msgid "Theme"
+msgstr ""
+
+#: classes/pages/general.php:34
+#: classes/pages/general.php:114
+#: classes/pages/locations.php:630
+#: classes/pages/themes.php:816
+msgid "General Settings"
+msgstr ""
+
+#: classes/pages/general.php:119
+msgid "CSS Output"
+msgstr ""
+
+#: classes/pages/general.php:125
+msgid "Save to filesystem"
+msgstr ""
+
+#: classes/pages/general.php:132
+#: classes/pages/general.php:154
+msgid "Output in &lt;head&gt;"
+msgstr ""
+
+#: classes/pages/general.php:133
+msgid "Don't output CSS"
+msgstr ""
+
+#: classes/pages/general.php:136
+msgid "CSS will be saved to wp-content/uploads/maxmegamenu/style.css and enqueued from there."
+msgstr ""
+
+#: classes/pages/general.php:137
+msgid "CSS will be loaded from the cache in a &lt;style&gt; tag in the &lt;head&gt; of the page."
+msgstr ""
+
+#: classes/pages/general.php:139
+msgid "CSS will not be output, you must enqueue the CSS for the menu manually."
+msgstr ""
+
+#: classes/pages/general.php:140
+msgid "Selecting this option will effectively disable the theme editor and many of the features available in Max Mega Menu and Max Mega Menu Pro. Only enable this option if you fully understand the consequences."
+msgstr ""
+
+#: classes/pages/general.php:147
+msgid "JavaScript Output"
+msgstr ""
+
+#: classes/pages/general.php:153
+msgid "Footer (default)"
+msgstr ""
+
+#: classes/pages/locations.php:40
+#: classes/pages/locations.php:265
+msgid "Menu Locations"
+msgstr ""
+
+#: classes/pages/locations.php:270
+msgid "Menu Location Settings"
+msgstr ""
+
+#: classes/pages/locations.php:272
+msgid "This is an overview of the menu locations supported by your theme."
+msgstr ""
+
+#: classes/pages/locations.php:273
+msgid "Use these options to enable Max Mega Menu and define the behaviour of each menu location."
+msgstr ""
+
+#: classes/pages/locations.php:281
+msgid "Your theme does not natively support menus, but you can add a new menu location using Max Mega Menu and display the menu using the Max Mega Menu widget or shortcode."
+msgstr ""
+
+#: classes/pages/locations.php:311
+msgid "Add another menu location"
+msgstr ""
+
+#: classes/pages/locations.php:396
+#: classes/pages/locations.php:438
+#: classes/pages/locations.php:479
+msgid "Assign a menu"
+msgstr ""
+
+#: classes/pages/locations.php:397
+msgid "to this location to enable these options."
+msgstr ""
+
+#: classes/pages/locations.php:418
+msgid "Add Menu Location"
+msgstr ""
+
+#: classes/pages/locations.php:427
+msgid "Location Name"
+msgstr ""
+
+#: classes/pages/locations.php:429
+msgid "Give the location a name that describes where the menu will be displayed on your site."
+msgstr ""
+
+#: classes/pages/locations.php:433
+msgid "E.g. Footer, Blog Sidebar, Header"
+msgstr ""
+
+#: classes/pages/locations.php:440
+msgid "Select a menu to be assigned to this location. This can be changed later using the Appearance > Menus > Manage Location page."
+msgstr ""
+
+#: classes/pages/locations.php:454
+msgid "Skip - I'll assign a menu later"
+msgstr ""
+
+#: classes/pages/locations.php:459
+msgid "Add menu location"
+msgstr ""
+
+#: classes/pages/locations.php:490
+msgid "View in Sandbox"
+msgstr ""
+
+#: classes/pages/locations.php:511
+msgid "Delete location"
+msgstr ""
+
+#: classes/pages/locations.php:634
+#: classes/pages/themes.php:888
+#: classes/pages/themes.php:929
+#: classes/pages/themes.php:941
+#: classes/pages/themes.php:1300
+#: classes/pages/themes.php:1323
+#: classes/pages/themes.php:2372
+#: classes/pages/themes.php:2520
+msgid "Enabled"
+msgstr ""
+
+#: classes/pages/locations.php:635
+msgid "Enable Max Mega Menu for this menu location?"
+msgstr ""
+
+#: classes/pages/locations.php:647
+msgid "Select the event to trigger sub menus"
+msgstr ""
+
+#: classes/pages/locations.php:659
+msgid "Select the sub menu animation type"
+msgstr ""
+
+#: classes/pages/locations.php:665
+msgid "Animation"
+msgstr ""
+
+#: classes/pages/locations.php:671
+#: classes/pages/locations.php:690
+msgid "Speed"
+msgstr ""
+
+#: classes/pages/locations.php:678
+msgid "Choose a style for your mobile menu"
+msgstr ""
+
+#: classes/pages/locations.php:684
+msgid "Style"
+msgstr ""
+
+#: classes/pages/locations.php:697
+msgid "Select a theme to be applied to the menu"
+msgstr ""
+
+#: classes/pages/locations.php:710
+msgid "Advanced"
+msgstr ""
+
+#: classes/pages/locations.php:714
+msgid "Click Event Behaviour"
+msgstr ""
+
+#: classes/pages/locations.php:715
+msgid "Define what should happen when the event is set to 'click'. This also applies to mobiles."
+msgstr ""
+
+#: classes/pages/locations.php:726
+msgid "Mobile Sub Menu Behaviour"
+msgstr ""
+
+#: classes/pages/locations.php:727
+msgid "Define the sub menu toggle behaviour for the mobile menu."
+msgstr ""
+
+#: classes/pages/locations.php:738
+msgid "Mobile Sub Menu Default State"
+msgstr ""
+
+#: classes/pages/locations.php:739
+msgid "Define the default state of the sub menus when the mobile menu is visible."
+msgstr ""
+
+#: classes/pages/locations.php:750
+msgid "Menu Item Descriptions"
+msgstr ""
+
+#: classes/pages/locations.php:751
+msgid "Enable output of menu item descriptions."
+msgstr ""
+
+#: classes/pages/locations.php:762
+msgid "Unbind JavaScript Events"
+msgstr ""
+
+#: classes/pages/locations.php:763
+msgid "To avoid conflicts with theme menu systems, JavaScript events which have been added to menu items will be removed by default."
+msgstr ""
+
+#: classes/pages/locations.php:774
+msgid "Prefix Menu Item Classes"
+msgstr ""
+
+#: classes/pages/locations.php:775
+msgid "Prefix custom menu item classes with 'mega-'?"
+msgstr ""
+
+#: classes/pages/locations.php:786
+msgid "Container"
+msgstr ""
+
+#: classes/pages/locations.php:787
+msgid "Use nav or div element for menu wrapper?"
+msgstr ""
+
+#: classes/pages/locations.php:798
+msgid "Active Menu Instance"
+msgstr ""
+
+#: classes/pages/locations.php:799
+msgid "0: Apply to all instances. 1: Apply to first instance. 2: Apply to second instance"
+msgstr ""
+
+#: classes/pages/locations.php:800
+msgid "Some themes will output this menu location multiple times on the same page. For example, it may be output once for the main menu, then again for the mobile menu. This setting can be used to make sure Max Mega Menu is only applied to one of those instances."
+msgstr ""
+
+#: classes/pages/locations.php:813
+msgid "Display Options"
+msgstr ""
+
+#: classes/pages/locations.php:817
+msgid "PHP Function"
+msgstr ""
+
+#: classes/pages/locations.php:818
+msgid "For use in a theme template (usually header.php)"
+msgstr ""
+
+#: classes/pages/locations.php:829
+msgid "Shortcode"
+msgstr ""
+
+#: classes/pages/locations.php:830
+msgid "For use in a post or page."
+msgstr ""
+
+#: classes/pages/locations.php:841
+msgid "Widget"
+msgstr ""
+
+#: classes/pages/locations.php:842
+msgid "For use in a widget area."
+msgstr ""
+
+#: classes/pages/locations.php:862
+msgid "Location Description"
+msgstr ""
+
+#: classes/pages/locations.php:863
+msgid "Update the custom location description"
+msgstr ""
+
+#: classes/pages/locations.php:917
+msgid "This menu location is registered by your theme. Your theme should already include the code required to display this menu location on your site."
+msgstr ""
+
+#: classes/pages/locations.php:1153
+msgid "New Menu Location Created"
+msgstr ""
+
+#: classes/pages/locations.php:1161
+msgid "Menu Location Deleted"
+msgstr ""
+
+#: classes/pages/locations.php:1169
+msgid "Menu Location Saved"
+msgstr ""
+
+#: classes/pages/locations.php:1243
+msgid "First click will open the sub menu, second click will close the sub menu."
+msgstr ""
+
+#: classes/pages/locations.php:1244
+msgid "First click will open the sub menu, second click will follow the link."
+msgstr ""
+
+#: classes/pages/locations.php:1245
+msgid "First click will follow the link (the arrow must be used to toggle sub menu visiblity)."
+msgstr ""
+
+#: classes/pages/locations.php:1269
+msgid "Standard - Open sub menus will remain open until closed by the user."
+msgstr ""
+
+#: classes/pages/locations.php:1270
+msgid "Accordion - Open sub menus will automatically close when another one is opened."
+msgstr ""
+
+#: classes/pages/locations.php:1291
+msgid "Collapse all"
+msgstr ""
+
+#: classes/pages/locations.php:1292
+msgid "Expand all"
+msgstr ""
+
+#: classes/pages/locations.php:1293
+msgid "Expand active parents"
+msgstr ""
+
+#: classes/pages/locations.php:1664
+msgid "Add the 'Max Mega Menu' widget to a widget area."
+msgstr ""
+
+#: classes/pages/page.php:78
+msgid "Homepage"
+msgstr ""
+
+#: classes/pages/page.php:83
+msgid "Documentation"
+msgstr ""
+
+#: classes/pages/page.php:89
+msgid "Troubleshooting"
+msgstr ""
+
+#: classes/pages/page.php:100
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: classes/pages/page.php:110
+msgid "Core version"
+msgstr ""
+
+#: classes/pages/page.php:114
+msgid "Pro extension"
+msgstr ""
+
+#: classes/pages/page.php:233
+msgid "Please enable Dashicons in the Clearfy plugin options. Max Mega Menu requires Dashicons."
+msgstr ""
+
+#: classes/pages/page.php:274
+msgid "Are you sure?"
+msgstr ""
+
+#: classes/pages/page.php:275
+msgid "Error saving theme."
+msgstr ""
+
+#: classes/pages/page.php:276
+msgid "Please try refreshing the page."
+msgstr ""
+
+#: classes/pages/page.php:277
+msgid "The server ran out of memory whilst trying to regenerate the menu CSS."
+msgstr ""
+
+#: classes/pages/page.php:278
+msgid "Try disabling unusued plugins to increase the available memory. Alternatively, for details on how to increase your server memory limit see:"
+msgstr ""
+
+#: classes/pages/page.php:279
+msgid "The server returned a 500 error. The server did not provide an error message (you should find details of the error in your server error log), but this is usually due to your server memory limit being reached."
+msgstr ""
+
+#: classes/pages/themes.php:75
+msgid "Menu Themes"
+msgstr ""
+
+#: classes/pages/themes.php:253
+#: classes/pages/themes.php:976
+#: classes/pages/themes.php:1143
+#: classes/pages/themes.php:1165
+#: classes/pages/themes.php:1348
+#: classes/pages/themes.php:1765
+#: classes/pages/themes.php:1960
+#: classes/pages/themes.php:2091
+#: classes/pages/themes.php:2229
+#: classes/pages/themes.php:2251
+#: classes/pages/themes.php:2430
+#: classes/pages/themes.php:2598
+#: classes/pages/themes.php:2620
+msgid "Copy"
+msgstr ""
+
+#: classes/pages/themes.php:387
+msgid " - Imported"
+msgstr ""
+
+#: classes/pages/themes.php:488
+msgid "Failed to delete theme. The theme is in use by a menu."
+msgstr ""
+
+#: classes/pages/themes.php:496
+msgid "Theme Deleted"
+msgstr ""
+
+#: classes/pages/themes.php:504
+msgid "Theme Duplicated"
+msgstr ""
+
+#: classes/pages/themes.php:512
+msgid "Theme Reverted"
+msgstr ""
+
+#: classes/pages/themes.php:520
+msgid "New Theme Created. To apply this theme to a menu location, go to <i>Mega Menu > Menu Locations</i> and select this theme from the 'Theme' dropdown."
+msgstr ""
+
+#: classes/pages/themes.php:604
+msgid "Export Theme"
+msgstr ""
+
+#: classes/pages/themes.php:608
+msgid "JSON Format"
+msgstr ""
+
+#: classes/pages/themes.php:609
+msgid "Log into the site you wish to import the theme to. Go to Mega Menu > Tools and paste this into the 'Import Theme' text area:"
+msgstr ""
+
+#: classes/pages/themes.php:617
+msgid "PHP Format"
+msgstr ""
+
+#: classes/pages/themes.php:618
+msgid "Paste this code into your themes functions.php file:"
+msgstr ""
+
+#: classes/pages/themes.php:651
+#: classes/pages/themes.php:655
+#: classes/pages/themes.php:663
+msgid "Import Theme"
+msgstr ""
+
+#: classes/pages/themes.php:656
+msgid "Import a menu theme in JSON format"
+msgstr ""
+
+#: classes/pages/themes.php:760
+msgid "Select theme to edit"
+msgstr ""
+
+#: classes/pages/themes.php:768
+msgid "Add new theme"
+msgstr ""
+
+#: classes/pages/themes.php:769
+msgid "Duplicate theme"
+msgstr ""
+
+#: classes/pages/themes.php:770
+msgid "Export theme"
+msgstr ""
+
+#: classes/pages/themes.php:771
+msgid "Import a theme"
+msgstr ""
+
+#: classes/pages/themes.php:773
+msgid "Delete theme"
+msgstr ""
+
+#: classes/pages/themes.php:775
+msgid "Revert theme"
+msgstr ""
+
+#: classes/pages/themes.php:780
+msgid "Editing theme"
+msgstr ""
+
+#: classes/pages/themes.php:790
+msgid "CSS Output (under Mega Menu > General Settings) has been disabled. Therefore, changes made within the theme editor will not be applied to your menu."
+msgstr ""
+
+#: classes/pages/themes.php:798
+msgid "This menu theme is not currently active as it has not been applied to any menu locations. You may wish to check you are editing the correct menu theme - you can choose a different theme to edit using the 'Select theme to edit' selector above. Alternatively, to apply this theme to a menu go to <i>Appearance > Menus > Max Mega Menu Settings</i> and select this theme from the 'Theme' dropdown."
+msgstr ""
+
+#: classes/pages/themes.php:820
+msgid "Theme Title"
+msgstr ""
+
+#: classes/pages/themes.php:832
+msgid "Arrow"
+msgstr ""
+
+#: classes/pages/themes.php:833
+msgid "Select the arrow styles."
+msgstr ""
+
+#: classes/pages/themes.php:836
+msgid "Up"
+msgstr ""
+
+#: classes/pages/themes.php:841
+msgid "Down"
+msgstr ""
+
+#: classes/pages/themes.php:859
+msgid "Line Height"
+msgstr ""
+
+#: classes/pages/themes.php:860
+msgid "Set the general line height to use in the sub menu contents."
+msgstr ""
+
+#: classes/pages/themes.php:871
+msgid "Z Index"
+msgstr ""
+
+#: classes/pages/themes.php:872
+msgid "Set the z-index to ensure the sub menus appear ontop of other content."
+msgstr ""
+
+#: classes/pages/themes.php:884
+msgid "Shadow"
+msgstr ""
+
+#: classes/pages/themes.php:885
+msgid "Apply a shadow to mega and flyout menus."
+msgstr ""
+
+#: classes/pages/themes.php:893
+msgid "Horizontal"
+msgstr ""
+
+#: classes/pages/themes.php:899
+msgid "Vertical"
+msgstr ""
+
+#: classes/pages/themes.php:905
+msgid "Blur"
+msgstr ""
+
+#: classes/pages/themes.php:911
+msgid "Spread"
+msgstr ""
+
+#: classes/pages/themes.php:917
+#: classes/pages/themes.php:1073
+#: classes/pages/themes.php:1116
+#: classes/pages/themes.php:1228
+#: classes/pages/themes.php:1305
+#: classes/pages/themes.php:1418
+#: classes/pages/themes.php:1521
+#: classes/pages/themes.php:1626
+#: classes/pages/themes.php:1667
+#: classes/pages/themes.php:1695
+#: classes/pages/themes.php:1738
+#: classes/pages/themes.php:1844
+#: classes/pages/themes.php:1890
+#: classes/pages/themes.php:1933
+#: classes/pages/themes.php:2040
+#: classes/pages/themes.php:2157
+#: classes/pages/themes.php:2312
+#: classes/pages/themes.php:2350
+#: classes/pages/themes.php:2377
+#: classes/pages/themes.php:2637
+#: classes/pages/themes.php:2660
+#: classes/toggle-blocks.class.php:923
+msgid "Color"
+msgstr ""
+
+#: classes/pages/themes.php:925
+msgid "Hover Transitions"
+msgstr ""
+
+#: classes/pages/themes.php:926
+msgid "Apply hover transitions to menu items. Note: Transitions will not apply to gradient backgrounds."
+msgstr ""
+
+#: classes/pages/themes.php:937
+msgid "Reset Widget Styling"
+msgstr ""
+
+#: classes/pages/themes.php:938
+msgid "Caution: Reset the styling of widgets within the mega menu? This may break the styling of widgets that you have added to your sub menus. Default: Disabled."
+msgstr ""
+
+#: classes/pages/themes.php:950
+msgid "Menu Bar"
+msgstr ""
+
+#: classes/pages/themes.php:954
+msgid "Menu Height"
+msgstr ""
+
+#: classes/pages/themes.php:955
+msgid "Define the height of each top level menu item link. This value plus the Menu Padding (top and bottom) settings define the overall height of the menu bar."
+msgstr ""
+
+#: classes/pages/themes.php:967
+#: classes/pages/themes.php:2589
+msgid "Menu Background"
+msgstr ""
+
+#: classes/pages/themes.php:968
+msgid "The background color for the main menu bar. Set each value to transparent for a 'button' style menu."
+msgstr ""
+
+#: classes/pages/themes.php:971
+#: classes/pages/themes.php:1138
+#: classes/pages/themes.php:1160
+#: classes/pages/themes.php:1343
+#: classes/pages/themes.php:1760
+#: classes/pages/themes.php:1955
+#: classes/pages/themes.php:2086
+#: classes/pages/themes.php:2224
+#: classes/pages/themes.php:2246
+#: classes/pages/themes.php:2425
+#: classes/pages/themes.php:2593
+#: classes/pages/themes.php:2615
+msgid "From"
+msgstr ""
+
+#: classes/pages/themes.php:981
+#: classes/pages/themes.php:1148
+#: classes/pages/themes.php:1170
+#: classes/pages/themes.php:1353
+#: classes/pages/themes.php:1770
+#: classes/pages/themes.php:1965
+#: classes/pages/themes.php:2096
+#: classes/pages/themes.php:2234
+#: classes/pages/themes.php:2256
+#: classes/pages/themes.php:2435
+#: classes/pages/themes.php:2603
+#: classes/pages/themes.php:2625
+msgid "To"
+msgstr ""
+
+#: classes/pages/themes.php:989
+#: classes/pages/themes.php:2558
+msgid "Menu Padding"
+msgstr ""
+
+#: classes/pages/themes.php:990
+msgid "Padding for the main menu bar."
+msgstr ""
+
+#: classes/pages/themes.php:1005
+#: classes/pages/themes.php:1209
+#: classes/pages/themes.php:1250
+#: classes/pages/themes.php:1399
+#: classes/pages/themes.php:1435
+#: classes/pages/themes.php:1497
+#: classes/pages/themes.php:1576
+#: classes/pages/themes.php:1607
+#: classes/pages/themes.php:1648
+#: classes/pages/themes.php:1794
+#: classes/pages/themes.php:1825
+#: classes/pages/themes.php:1866
+#: classes/pages/themes.php:1989
+#: classes/pages/themes.php:2021
+#: classes/pages/themes.php:2062
+#: classes/pages/themes.php:2138
+#: classes/pages/themes.php:2174
+#: classes/pages/themes.php:2293
+#: classes/pages/themes.php:2574
+msgid "Bottom"
+msgstr ""
+
+#: classes/pages/themes.php:1020
+msgid "Menu Border Radius"
+msgstr ""
+
+#: classes/pages/themes.php:1021
+msgid "Set a border radius on the main menu bar."
+msgstr ""
+
+#: classes/pages/themes.php:1024
+#: classes/pages/themes.php:1269
+#: classes/pages/themes.php:1454
+#: classes/pages/themes.php:2193
+#: classes/pages/themes.php:2459
+msgid "Top Left"
+msgstr ""
+
+#: classes/pages/themes.php:1030
+#: classes/pages/themes.php:1275
+#: classes/pages/themes.php:1460
+#: classes/pages/themes.php:2199
+#: classes/pages/themes.php:2465
+msgid "Top Right"
+msgstr ""
+
+#: classes/pages/themes.php:1036
+#: classes/pages/themes.php:1281
+#: classes/pages/themes.php:1466
+#: classes/pages/themes.php:2205
+#: classes/pages/themes.php:2471
+msgid "Bottom Right"
+msgstr ""
+
+#: classes/pages/themes.php:1042
+#: classes/pages/themes.php:1287
+#: classes/pages/themes.php:1472
+#: classes/pages/themes.php:2211
+#: classes/pages/themes.php:2477
+msgid "Bottom Left"
+msgstr ""
+
+#: classes/pages/themes.php:1051
+msgid "Top Level Menu Items"
+msgstr ""
+
+#: classes/pages/themes.php:1056
+msgid "Menu Items Align"
+msgstr ""
+
+#: classes/pages/themes.php:1057
+msgid "Align <i>all</i> menu items to the left (default), centrally or to the right."
+msgstr ""
+
+#: classes/pages/themes.php:1058
+msgid "This option will apply to all menu items. To align an individual menu item to the right, edit the menu item itself and set 'Menu Item Align' to 'Right'."
+msgstr ""
+
+#: classes/pages/themes.php:1069
+#: classes/pages/themes.php:1691
+#: classes/pages/themes.php:1886
+msgid "Item Font"
+msgstr ""
+
+#: classes/pages/themes.php:1070
+msgid "The font to use for each top level menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1078
+#: classes/pages/themes.php:1526
+#: classes/pages/themes.php:1672
+#: classes/pages/themes.php:1700
+#: classes/pages/themes.php:1895
+#: classes/pages/themes.php:2317
+#: classes/pages/themes.php:2642
+#: classes/toggle-blocks.class.php:927
+msgid "Size"
+msgstr ""
+
+#: classes/pages/themes.php:1084
+#: classes/pages/themes.php:1532
+#: classes/pages/themes.php:1678
+#: classes/pages/themes.php:1706
+#: classes/pages/themes.php:1901
+#: classes/pages/themes.php:2323
+msgid "Family"
+msgstr ""
+
+#: classes/pages/themes.php:1089
+#: classes/pages/themes.php:1537
+#: classes/pages/themes.php:1711
+#: classes/pages/themes.php:1906
+#: classes/pages/themes.php:2328
+msgid "Transform"
+msgstr ""
+
+#: classes/pages/themes.php:1094
+#: classes/pages/themes.php:1121
+#: classes/pages/themes.php:1542
+#: classes/pages/themes.php:1716
+#: classes/pages/themes.php:1743
+#: classes/pages/themes.php:1911
+#: classes/pages/themes.php:1938
+#: classes/pages/themes.php:2333
+#: classes/pages/themes.php:2355
+msgid "Weight"
+msgstr ""
+
+#: classes/pages/themes.php:1099
+#: classes/pages/themes.php:1126
+#: classes/pages/themes.php:1547
+#: classes/pages/themes.php:1721
+#: classes/pages/themes.php:1748
+#: classes/pages/themes.php:1916
+#: classes/pages/themes.php:1943
+#: classes/pages/themes.php:2338
+#: classes/pages/themes.php:2360
+msgid "Decoration"
+msgstr ""
+
+#: classes/pages/themes.php:1104
+#: classes/pages/themes.php:1552
+#: classes/pages/themes.php:1726
+#: classes/pages/themes.php:1921
+#: classes/pages/themes.php:2648
+msgid "Align"
+msgstr ""
+
+#: classes/pages/themes.php:1112
+#: classes/pages/themes.php:1734
+#: classes/pages/themes.php:1929
+msgid "Item Font (Hover)"
+msgstr ""
+
+#: classes/pages/themes.php:1113
+msgid "Set the font to use for each top level menu item (on hover)."
+msgstr ""
+
+#: classes/pages/themes.php:1134
+msgid "Item Background"
+msgstr ""
+
+#: classes/pages/themes.php:1135
+msgid "The background color for each top level menu item. Tip: Set these values to transparent if you've already set a background color on the menu bar."
+msgstr ""
+
+#: classes/pages/themes.php:1156
+#: classes/pages/themes.php:1756
+#: classes/pages/themes.php:1951
+msgid "Item Background (Hover)"
+msgstr ""
+
+#: classes/pages/themes.php:1157
+msgid "The background color for a top level menu item (on hover)."
+msgstr ""
+
+#: classes/pages/themes.php:1178
+msgid "Item Spacing"
+msgstr ""
+
+#: classes/pages/themes.php:1179
+msgid "Define the size of the gap between each top level menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1192
+#: classes/pages/themes.php:1778
+#: classes/pages/themes.php:1973
+msgid "Item Padding"
+msgstr ""
+
+#: classes/pages/themes.php:1193
+msgid "Set the padding for each top level menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1194
+msgid "Generally we advise against using the Top and Bottom options here. Use the 'Menu Height' setting to determine the height of your top level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1224
+#: classes/pages/themes.php:1840
+#: classes/pages/themes.php:2036
+msgid "Item Border"
+msgstr ""
+
+#: classes/pages/themes.php:1225
+msgid "Set the border to display on each top level menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1233
+#: classes/pages/themes.php:1631
+#: classes/pages/themes.php:1849
+#: classes/pages/themes.php:2045
+msgid "Color (Hover)"
+msgstr ""
+
+#: classes/pages/themes.php:1265
+msgid "Item Border Radius"
+msgstr ""
+
+#: classes/pages/themes.php:1266
+msgid "Set rounded corners for each top level menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1296
+msgid "Item Divider"
+msgstr ""
+
+#: classes/pages/themes.php:1297
+msgid "Show a small divider bar between each menu item."
+msgstr ""
+
+#: classes/pages/themes.php:1310
+msgid "Glow Opacity"
+msgstr ""
+
+#: classes/pages/themes.php:1319
+msgid "Highlight Current Item"
+msgstr ""
+
+#: classes/pages/themes.php:1320
+msgid "Apply the 'hover' styling to current menu items. Applies to top level menu items only."
+msgstr ""
+
+#: classes/pages/themes.php:1329
+msgid "Documentation: Highlighting Menu Items"
+msgstr ""
+
+#: classes/pages/themes.php:1335
+#: classes/pages/themes.php:2668
+msgid "Mega Menus"
+msgstr ""
+
+#: classes/pages/themes.php:1339
+msgid "Panel Background"
+msgstr ""
+
+#: classes/pages/themes.php:1340
+msgid "Set a background color for a whole sub menu."
+msgstr ""
+
+#: classes/pages/themes.php:1361
+msgid "Panel Width"
+msgstr ""
+
+#: classes/pages/themes.php:1362
+msgid "Mega Panel width."
+msgstr ""
+
+#: classes/pages/themes.php:1364
+msgid "A 100% wide panel will only ever be as wide as the menu itself. For a fixed sub menu width set this to a pixel value."
+msgstr ""
+
+#: classes/pages/themes.php:1365
+msgid "Advanced: Enter a jQuery selector to synchronize the width and position of the sub menu with existing page element (e.g. body, #container, .page)."
+msgstr ""
+
+#: classes/pages/themes.php:1366
+msgid "Documentation: Configuring the sub menu width"
+msgstr ""
+
+#: classes/pages/themes.php:1370
+msgid "Outer Width"
+msgstr ""
+
+#: classes/pages/themes.php:1375
+msgid "Inner Width"
+msgstr ""
+
+#: classes/pages/themes.php:1383
+msgid "Panel Padding"
+msgstr ""
+
+#: classes/pages/themes.php:1384
+msgid "Set the padding for the whole sub menu. Set these values 0px if you wish your sub menu content to go edge-to-edge."
+msgstr ""
+
+#: classes/pages/themes.php:1414
+msgid "Panel Border"
+msgstr ""
+
+#: classes/pages/themes.php:1415
+msgid "Set the border to display on the sub menu."
+msgstr ""
+
+#: classes/pages/themes.php:1450
+msgid "Panel Border Radius"
+msgstr ""
+
+#: classes/pages/themes.php:1451
+msgid "Set rounded corners for the sub menu."
+msgstr ""
+
+#: classes/pages/themes.php:1481
+msgid "Column Padding"
+msgstr ""
+
+#: classes/pages/themes.php:1482
+msgid "Use this to define the amount of space around each widget / set of menu items within the sub menu."
+msgstr ""
+
+#: classes/pages/themes.php:1512
+msgid "Widgets"
+msgstr ""
+
+#: classes/pages/themes.php:1517
+msgid "Title Font"
+msgstr ""
+
+#: classes/pages/themes.php:1518
+msgid "Set the font to use Widget headers in the mega menu. Tip: set this to the same style as the Second Level Menu Item Font to keep your styling consistent."
+msgstr ""
+
+#: classes/pages/themes.php:1560
+msgid "Title Padding"
+msgstr ""
+
+#: classes/pages/themes.php:1561
+msgid "Set the padding for the widget headings."
+msgstr ""
+
+#: classes/pages/themes.php:1591
+msgid "Title Margin"
+msgstr ""
+
+#: classes/pages/themes.php:1592
+msgid "Set the margin for the widget headings."
+msgstr ""
+
+#: classes/pages/themes.php:1622
+msgid "Title Border"
+msgstr ""
+
+#: classes/pages/themes.php:1623
+msgid "Set the border for the widget headings."
+msgstr ""
+
+#: classes/pages/themes.php:1663
+msgid "Content Font"
+msgstr ""
+
+#: classes/pages/themes.php:1664
+msgid "Set the font to use for panel contents."
+msgstr ""
+
+#: classes/pages/themes.php:1686
+msgid "Second Level Menu Items"
+msgstr ""
+
+#: classes/pages/themes.php:1692
+msgid "Set the font for second level menu items when they're displayed in a Mega Menu."
+msgstr ""
+
+#: classes/pages/themes.php:1735
+#: classes/pages/themes.php:1930
+msgid "Set the font style on hover."
+msgstr ""
+
+#: classes/pages/themes.php:1757
+msgid "Set the background hover color for second level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1779
+msgid "Set the padding for the second level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1809
+#: classes/pages/themes.php:2005
+msgid "Item Margin"
+msgstr ""
+
+#: classes/pages/themes.php:1810
+msgid "Set the margin for the second level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1841
+msgid "Set the border for the second level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1881
+msgid "Third Level Menu Items"
+msgstr ""
+
+#: classes/pages/themes.php:1887
+msgid "Set the font for third level menu items when they're displayed in a Mega Menu."
+msgstr ""
+
+#: classes/pages/themes.php:1952
+msgid "Set the background hover color for third level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:1974
+msgid "Set the padding for the third level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:2006
+msgid "Set the margin for the third level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:2037
+msgid "Set the border for the third level menu items."
+msgstr ""
+
+#: classes/pages/themes.php:2078
+msgid "Flyout Menus"
+msgstr ""
+
+#: classes/pages/themes.php:2082
+msgid "Sub Menu Background"
+msgstr ""
+
+#: classes/pages/themes.php:2083
+msgid "Set the background color for the flyout menu."
+msgstr ""
+
+#: classes/pages/themes.php:2104
+msgid "Sub Menu Width"
+msgstr ""
+
+#: classes/pages/themes.php:2105
+msgid "The width of each flyout menu. This must be a fixed pixel value."
+msgstr ""
+
+#: classes/pages/themes.php:2107
+msgid "Set this value to the width of your longest menu item title to stop menu items wrapping onto 2 lines."
+msgstr ""
+
+#: classes/pages/themes.php:2108
+msgid "Experimental: Set this value to 'auto' to use a flexible width."
+msgstr ""
+
+#: classes/pages/themes.php:2121
+msgid "Sub Menu Padding"
+msgstr ""
+
+#: classes/pages/themes.php:2122
+msgid "Set the padding for the whole flyout menu."
+msgstr ""
+
+#: classes/pages/themes.php:2123
+msgid "Only suitable for single level flyout menus. If you're using multi level flyout menus set these values to 0px."
+msgstr ""
+
+#: classes/pages/themes.php:2153
+msgid "Sub Menu Border"
+msgstr ""
+
+#: classes/pages/themes.php:2154
+msgid "Set the border for the flyout menu."
+msgstr ""
+
+#: classes/pages/themes.php:2189
+msgid "Sub Menu Border Radius"
+msgstr ""
+
+#: classes/pages/themes.php:2190
+msgid "Set rounded corners for flyout menus. Rounded corners will be applied to all flyout menu levels."
+msgstr ""
+
+#: classes/pages/themes.php:2220
+msgid "Menu Item Background"
+msgstr ""
+
+#: classes/pages/themes.php:2221
+msgid "Set the background color for a flyout menu item."
+msgstr ""
+
+#: classes/pages/themes.php:2242
+msgid "Menu Item Background (Hover)"
+msgstr ""
+
+#: classes/pages/themes.php:2243
+msgid "Set the background color for a flyout menu item (on hover)."
+msgstr ""
+
+#: classes/pages/themes.php:2264
+#: classes/pages/themes.php:2546
+msgid "Menu Item Height"
+msgstr ""
+
+#: classes/pages/themes.php:2265
+msgid "The height of each flyout menu item."
+msgstr ""
+
+#: classes/pages/themes.php:2277
+msgid "Menu Item Padding"
+msgstr ""
+
+#: classes/pages/themes.php:2278
+msgid "Set the padding for each flyout menu item."
+msgstr ""
+
+#: classes/pages/themes.php:2308
+msgid "Menu Item Font"
+msgstr ""
+
+#: classes/pages/themes.php:2309
+#: classes/pages/themes.php:2347
+msgid "Set the font for the flyout menu items."
+msgstr ""
+
+#: classes/pages/themes.php:2346
+msgid "Menu Item Font (Hover)"
+msgstr ""
+
+#: classes/pages/themes.php:2368
+msgid "Menu Item Divider"
+msgstr ""
+
+#: classes/pages/themes.php:2369
+msgid "Show a line divider below each menu item."
+msgstr ""
+
+#: classes/pages/themes.php:2386
+msgid "Mobile Menu"
+msgstr ""
+
+#: classes/pages/themes.php:2390
+msgid "Responsive Breakpoint"
+msgstr ""
+
+#: classes/pages/themes.php:2391
+msgid "The menu will be converted to a mobile menu when the browser width is below this value."
+msgstr ""
+
+#: classes/pages/themes.php:2403
+msgid "The 'Responsive Breakpoint' option has been set to 0px. The desktop version of the menu will be displayed for all browsers (regardless of the browser width), so the following options are disabled."
+msgstr ""
+
+#: classes/pages/themes.php:2408
+msgid "Mobile Toggle Bar"
+msgstr ""
+
+#: classes/pages/themes.php:2413
+msgid "The 'Disable Mobile Toggle Bar' option has been enabled. The following options are disabled as the mobile toggle bar will not be displayed."
+msgstr ""
+
+#: classes/pages/themes.php:2418
+msgid "Toggle Bar Background"
+msgstr ""
+
+#: classes/pages/themes.php:2419
+msgid "Set the background color for the mobile menu toggle bar."
+msgstr ""
+
+#: classes/pages/themes.php:2421
+msgid "Don't forget to update the Menu toggle block text and icon color in the Toggle Bar Designer above!"
+msgstr ""
+
+#: classes/pages/themes.php:2443
+msgid "Toggle Bar Height"
+msgstr ""
+
+#: classes/pages/themes.php:2444
+msgid "Set the height of the mobile menu toggle bar."
+msgstr ""
+
+#: classes/pages/themes.php:2455
+msgid "Toggle Bar Border Radius"
+msgstr ""
+
+#: classes/pages/themes.php:2456
+msgid "Set a border radius on the mobile toggle bar."
+msgstr ""
+
+#: classes/pages/themes.php:2486
+msgid "Disable Mobile Toggle Bar"
+msgstr ""
+
+#: classes/pages/themes.php:2487
+msgid "Hide the toggle bar and display the menu in it's open state by default."
+msgstr ""
+
+#: classes/pages/themes.php:2499
+msgid "Mobile Sub Menu"
+msgstr ""
+
+#: classes/pages/themes.php:2504
+msgid "Overlay Content"
+msgstr ""
+
+#: classes/pages/themes.php:2505
+msgid "If enabled, the mobile sub menu will overlay the page content (instead of pushing the page content down)"
+msgstr ""
+
+#: classes/pages/themes.php:2516
+msgid "Force Full Width"
+msgstr ""
+
+#: classes/pages/themes.php:2517
+msgid "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'."
+msgstr ""
+
+#: classes/pages/themes.php:2525
+msgid "Selector"
+msgstr ""
+
+#: classes/pages/themes.php:2533
+msgid "Off Canvas Width"
+msgstr ""
+
+#: classes/pages/themes.php:2534
+msgid "The width of the sub menu if the Mobile Effect is set to 'Slide Left' or 'Slide Right'. Must be specified in px."
+msgstr ""
+
+#: classes/pages/themes.php:2547
+msgid "Height of each top level item in the mobile menu."
+msgstr ""
+
+#: classes/pages/themes.php:2559
+msgid "Padding for the mobile sub menu."
+msgstr ""
+
+#: classes/pages/themes.php:2590
+msgid "The background color for the mobile menu."
+msgstr ""
+
+#: classes/pages/themes.php:2611
+msgid "Menu Item Background (Active)"
+msgstr ""
+
+#: classes/pages/themes.php:2612
+msgid "The background color for each top level menu item in the mobile menu when the sub menu is open."
+msgstr ""
+
+#: classes/pages/themes.php:2633
+msgid "Font"
+msgstr ""
+
+#: classes/pages/themes.php:2634
+msgid "The font to use for each top level menu item in the mobile menu."
+msgstr ""
+
+#: classes/pages/themes.php:2656
+msgid "Font (Active)"
+msgstr ""
+
+#: classes/pages/themes.php:2657
+msgid "The font color for each top level menu item in the mobile menu when the sub menu is open."
+msgstr ""
+
+#: classes/pages/themes.php:2673
+msgid "Mega Menu Columns"
+msgstr ""
+
+#: classes/pages/themes.php:2674
+msgid "Collapse mega menu content into this many columns on mobile."
+msgstr ""
+
+#: classes/pages/themes.php:2686
+msgid "Custom Styling"
+msgstr ""
+
+#: classes/pages/themes.php:2690
+msgid "CSS Editor"
+msgstr ""
+
+#: classes/pages/themes.php:2691
+msgid "Define any custom CSS you wish to add to menus using this theme. You can use standard CSS or SCSS."
+msgstr ""
+
+#: classes/pages/themes.php:2885
+msgid "Changes not showing up?"
+msgstr ""
+
+#: classes/pages/themes.php:2887
+msgid "We have detected the following plugin that may prevent changes made within the theme editor from being applied to the menu."
+msgid_plural "We have detected the following plugins that may prevent changes made within the theme editor from being applied to the menu."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/pages/themes.php:2897
+msgid "Try clearing the cache of the above plugin if your changes are not being applied to the menu."
+msgid_plural "Try clearing the caches of the above plugins if your changes are not being applied to the menu."
+msgstr[0] ""
+msgstr[1] ""
+
+#: classes/pages/themes.php:2943
+msgid "Center"
+msgstr ""
+
+#: classes/pages/themes.php:2982
+msgid "1 Column"
+msgstr ""
+
+#: classes/pages/themes.php:2983
+msgid "2 Columns"
+msgstr ""
+
+#: classes/pages/themes.php:3005
+msgid "Underline"
+msgstr ""
+
+#: classes/pages/themes.php:3049
+#: classes/toggle-blocks.class.php:959
+msgid "Disabled"
+msgstr ""
+
+#: classes/pages/themes.php:3108
+#: classes/pages/themes.php:3221
+msgid "Theme Default"
+msgstr ""
+
+#: classes/pages/themes.php:3109
+msgid "Light (300)"
+msgstr ""
+
+#: classes/pages/themes.php:3110
+msgid "Normal (400)"
+msgstr ""
+
+#: classes/pages/themes.php:3111
+msgid "Bold (700)"
+msgstr ""
+
+#: classes/pages/themes.php:3150
+msgid "Normal"
+msgstr ""
+
+#: classes/pages/themes.php:3151
+msgid "Capitalize"
+msgstr ""
+
+#: classes/pages/themes.php:3152
+msgid "UPPERCASE"
+msgstr ""
+
+#: classes/pages/themes.php:3153
+msgid "lowercase"
+msgstr ""
+
+#: classes/pages/themes.php:3174
+msgid "Custom Styling Tips"
+msgstr ""
+
+#: classes/pages/themes.php:3175
+msgid "You can enter standard CSS or <a href='https://sass-lang.com/guide' target='_blank'>SCSS</a> into the custom styling area. If using SCSS there are some variables and mixins you can use:"
+msgstr ""
+
+#: classes/pages/themes.php:3178
+msgid "converts to the ID selector of the menu wrapper, e.g. div#mega-menu-wrap-primary"
+msgstr ""
+
+#: classes/pages/themes.php:3179
+msgid "converts to the ID selector of the menu, e.g. ul#mega-menu-primary"
+msgstr ""
+
+#: classes/pages/themes.php:3180
+msgid "wraps the CSS within a media query based on the configured Responsive Breakpoint (see example CSS)"
+msgstr ""
+
+#: classes/pages/themes.php:3182
+msgid "Using the %wrap% and %menu% variables makes your theme portable (allowing you to apply the same theme to multiple menu locations)"
+msgstr ""
+
+#: classes/pages/themes.php:3187
+msgid "Example CSS"
+msgstr ""
+
+#: classes/pages/themes.php:3188
+msgid "Add text shadow to top level menu items on desktop AND mobile"
+msgstr ""
+
+#: classes/pages/themes.php:3194
+msgid "Add text shadow to top level menu items on desktop only"
+msgstr ""
+
+#: classes/pages/tools.php:35
+#: classes/pages/tools.php:116
+msgid "Tools"
+msgstr ""
+
+#: classes/pages/tools.php:120
+msgid "Cache"
+msgstr ""
+
+#: classes/pages/tools.php:121
+msgid "The CSS for your menu is updated each time a menu or a menu theme is changed. You can force the menu CSS to be updated using this tool."
+msgstr ""
+
+#: classes/pages/tools.php:128
+msgid "Clear CSS Cache"
+msgstr ""
+
+#: classes/pages/tools.php:131
+msgid "The menu CSS was last updated on %s"
+msgstr ""
+
+#: classes/pages/tools.php:138
+msgid "Plugin Data"
+msgstr ""
+
+#: classes/pages/tools.php:139
+msgid "Delete all saved Max Mega Menu plugin data from the database. Use with caution!"
+msgstr ""
+
+#: classes/pages/tools.php:146
+msgid "Delete Data"
+msgstr ""
+
+#: classes/pages/tools.php:166
+msgid "The cache has been cleared and the menu CSS has been regenerated."
+msgstr ""
+
+#: classes/pages/tools.php:180
+msgid "All plugin data removed"
+msgstr ""
+
+#: classes/style-manager.class.php:693
+msgid "Warning: CSS compilation failed. Please check your changes or revert the theme."
+msgstr ""
+
+#: classes/toggle-blocks.class.php:389
+msgid "Toggle Bar Designer"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:390
+msgid "Configure the contents of the mobile toggle bar"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:671
+msgid "Menu Toggle (Animated)"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:672
+msgid "Menu Toggle (Standard)"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:673
+#: classes/toggle-blocks.class.php:779
+msgid "Spacer"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:681
+msgid "Add block to toggle bar"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:749
+msgid "Click on a block to edit it, or drag and drop it to resposition the block within the toggle bar"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:781
+msgid "Spacer Settings"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:785
+msgid "Width"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:787
+#: classes/toggle-blocks.class.php:861
+#: classes/toggle-blocks.class.php:937
+#: classes/widget-manager.class.php:948
+msgid "Delete"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:822
+#: classes/toggle-blocks.class.php:915
+msgid "TOGGLE"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:822
+#: classes/toggle-blocks.class.php:915
+msgid "Menu Toggle"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:824
+msgid "Menu Toggle Settings"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:828
+msgid "Closed Text"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:831
+msgid "Open Text"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:834
+msgid "Closed Icon"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:838
+msgid "Open Icon"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:842
+msgid "Text Color"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:846
+msgid "Text Size"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:849
+msgid "Icon Color"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:853
+msgid "Icon Size"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:856
+msgid "Icon Position"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:857
+msgid "Before"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:858
+msgid "After"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:917
+msgid "Animated Menu Toggle Settings"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:928
+msgid "Small"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:929
+msgid "Medium"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:930
+msgid "Large"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:931
+msgid "X Large"
+msgstr ""
+
+#: classes/toggle-blocks.class.php:935
+msgid "Label"
+msgstr ""
+
+#: classes/widget-manager.class.php:144
+msgid "Sub menu columns"
+msgstr ""
+
+#: classes/widget-manager.class.php:157
+#: classes/widget-manager.class.php:949
+msgid "Close"
+msgstr ""
+
+#: classes/widget-manager.class.php:201
+#: classes/widget-manager.class.php:227
+msgid "Saved %s"
+msgstr ""
+
+#: classes/widget-manager.class.php:229
+msgid "Failed to save %s"
+msgstr ""
+
+#: classes/widget-manager.class.php:256
+#: classes/widget-manager.class.php:285
+msgid "Updated %1$s (new columns: %2$d)"
+msgstr ""
+
+#: classes/widget-manager.class.php:258
+#: classes/widget-manager.class.php:287
+msgid "Failed to update %s"
+msgstr ""
+
+#: classes/widget-manager.class.php:318
+msgid "Failed to add %1$s to %2$d"
+msgstr ""
+
+#: classes/widget-manager.class.php:344
+msgid "Deleted %s"
+msgstr ""
+
+#: classes/widget-manager.class.php:346
+msgid "Failed to delete %s"
+msgstr ""
+
+#: classes/widget-manager.class.php:376
+msgid "Moved (%s)"
+msgstr ""
+
+#: classes/widget-manager.class.php:378
+msgid "Didn't move items"
+msgstr ""
+
+#: classes/widget-manager.class.php:414
+msgid "Saved (%s)"
+msgstr ""
+
+#: classes/widget-manager.class.php:416
+msgid "Didn't save"
+msgstr ""
+
+#: classes/widget-manager.class.php:699
+#: classes/widget-manager.class.php:743
+msgid "Menu Item"
+msgstr ""
+
+#: classes/widgets/widget-elementor-template.class.php:21
+msgid "Outputs a saved Elementor template."
+msgstr ""
+
+#: classes/widgets/widget-elementor-template.class.php:95
+msgid "No Elementor Templates found."
+msgstr ""
+
+#: classes/widgets/widget-elementor-template.class.php:105
+msgid "Template"
+msgstr ""
+
+#: classes/widgets/widget-elementor-template.class.php:107
+#: classes/widgets/widget-reusable-block.class.php:102
+msgid "- Select -"
+msgstr ""
+
+#: classes/widgets/widget-reusable-block.class.php:23
+msgid "Outputs a reusable block."
+msgstr ""
+
+#: classes/widgets/widget-reusable-block.class.php:90
+msgid "No reusable blocks available."
+msgstr ""
+
+#: classes/widgets/widget-reusable-block.class.php:100
+msgid "Block"
+msgstr ""
+
+#: classes/widgets/widget.class.php:21
+msgid "Outputs a menu for a selected theme location."
+msgstr ""
+
+#: classes/widgets/widget.class.php:104
+msgid "Title:"
+msgstr ""
+
+#: classes/widgets/widget.class.php:107
+msgid "Menu Location:"
+msgstr ""
+
+#: classes/widgets/widget.class.php:112
+msgid "Select location"
+msgstr ""
+
+#: classes/widgets/widget.class.php:130
+msgid "Active locations"
+msgstr ""
+
+#: classes/widgets/widget.class.php:140
+msgid "Inactive locations"
+msgstr ""
+
+#: classes/widgets/widget.class.php:152
+msgid "No menu locations found"
+msgstr ""
+
+#: megamenu.php:313
+msgid "Max Mega Menu Widgets"
+msgstr ""
+
+#: megamenu.php:314
+msgid "This is where Max Mega Menu stores widgets that you have added to sub menus using the mega menu builder. You can edit existing widgets here, but new widgets must be added through the Mega Menu interface (under Appearance > Menus)."
+msgstr ""
+
+#: megamenu.php:1269
+msgid "Max Mega Menu is not compatible with your version of WordPress. Please upgrade WordPress to the latest version or disable Max Mega Menu."
+msgstr ""
+
+#: megamenu.php:1305
+msgid "clear the CSS cache"
+msgstr ""
+
+#. translators: %s is the link to clear the menu CSS cache
+#: megamenu.php:1320
+msgid "Max Mega Menu has been updated. Please %s to ensure maximum compatibility with the latest version."
+msgstr ""
+
+#: megamenu.php:1360
+msgid "If you are trying to display Max Mega Menu here, use the 'Max Mega Menu' widget instead."
+msgstr ""
+
+#: megamenu.php:1361
+msgid "More information"
+msgstr ""
