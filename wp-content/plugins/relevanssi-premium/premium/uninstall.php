@@ -66,6 +66,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_index_taxonomies_list' );
 	delete_option( 'relevanssi_index_terms' );
 	delete_option( 'relevanssi_index_user_fields' );
+	delete_option( 'relevanssi_index_user_meta' );
 	delete_option( 'relevanssi_index_users' );
 	delete_option( 'relevanssi_indexed' );
 	delete_option( 'relevanssi_internal_links' );
@@ -111,6 +112,7 @@ function relevanssi_uninstall() {
 
 	global $wpdb;
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_hide_post'" );
+	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_hide_content'" );
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pin_for_all'" );
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_pin'" );
 	$wpdb->query( "DELETE FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_unpin'" );

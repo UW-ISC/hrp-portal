@@ -263,18 +263,18 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with feature, some improvements and bug fixes:
+                            New update with a feature, some improvements and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added new placeholders %VAR4%, %VAR5%, %VAR6%, %VAR7%, %VAR8% and %VAR9%.</li>
-                                <li><strong>Improvement:</strong> Average calculation function will not count empty cells anymore.</li>
-                                <li><strong>Improvement:</strong> Remove unnecessary files from Divi integration.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with conditional formatting on front-end.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with number format in Highcharts tooltips.</li>
-                                <li><strong>BugFix:</strong> Fixed Fixed issue with position of Clear filters button when are used Edit table buttons.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Google charts when using Grouping and Follow table filtering options.</li>
+                                <li><strong>Feature:</strong> Added options for responsive actions - icon, row or cell.</li>
+                                <li><strong>Improvement:</strong> Compatibility with the latest version of Elementor.</li>
+                                <li><strong>Improvement:</strong> Improved error handling during activation and deactivation of a license.</li>
+                                <li><strong>Improvement:</strong> Automatically close the date picker after a date has been chosen.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Divi editor blocks not working when only one table or chart has been created.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with '%' symbol in string cells for separate connection tables.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with foreign keys for PostgreSQL database.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

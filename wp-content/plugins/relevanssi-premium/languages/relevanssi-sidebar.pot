@@ -1,138 +1,141 @@
 msgid ""
 msgstr ""
-"Content-Type: text/plain; charset=utf-8\n"
-"X-Generator: babel-plugin-makepot\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-03-18T08:08:41+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.6.0\n"
+"X-Domain: relevanssi\n"
 
-#: src/index.js:153
+#: index.js:152
 msgid "not this"
 msgstr ""
 
-#: src/index.js:176
+#: index.js:175
 msgid "use this"
 msgstr ""
 
-#: src/index.js:225
+#: index.js:224
 msgid "How Relevanssi sees this post"
 msgstr ""
 
-#: src/index.js:229
+#: index.js:228
 msgid "Title:"
 msgstr ""
 
-#: src/index.js:236
+#: index.js:235
 msgid "Content:"
 msgstr ""
 
-#: src/index.js:243
+#: index.js:242
 msgid "Author:"
 msgstr ""
 
-#: src/index.js:250
+#: index.js:249
 msgid "Categories:"
 msgstr ""
 
-#: src/index.js:257
+#: index.js:256
 msgid "Tags:"
 msgstr ""
 
-#: src/index.js:264
+#: index.js:263
 msgid "Other taxonomies:"
 msgstr ""
 
-#: src/index.js:271
+#: index.js:270
 msgid "Comments:"
 msgstr ""
 
-#: src/index.js:278
+#: index.js:277
 msgid "Custom fields:"
 msgstr ""
 
-#: src/index.js:285
+#: index.js:284
 msgid "Excerpt:"
 msgstr ""
 
-#: src/index.js:292
+#: index.js:291
 msgid "Links to this post:"
 msgstr ""
 
-#: src/index.js:299
+#: index.js:298
 msgid "MySQL columns:"
 msgstr ""
 
-#: src/index.js:307
+#: index.js:306
 msgid "Reason this post is not indexed:"
 msgstr ""
 
-#: src/index.js:316
+#: index.js:315
 msgid "Pinning"
 msgstr ""
 
-#: src/index.js:320
+#: index.js:319
 msgid "Pin this post for all searches it appears in."
 msgstr ""
 
-#: src/index.js:330
-msgid ""
-"A comma-separated list of single word keywords or multi-word phrases. If "
-"any of these keywords are present in the search query, this post will be "
-"moved on top of the search results."
+#: index.js:329
+msgid "A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be moved on top of the search results."
 msgstr ""
 
-#: src/index.js:340
+#: index.js:339
 msgid "Exclusion"
 msgstr ""
 
-#: src/index.js:345
+#: index.js:344
 msgid "Exclude this post or page from the index."
 msgstr ""
 
-#: src/index.js:355
-msgid ""
-"A comma-separated list of single word keywords or multi-word phrases. If "
-"any of these keywords are present in the search query, this post will be "
-"removed from the search results."
+#: index.js:354
+msgid "Ignore post content in the indexing."
 msgstr ""
 
-#: src/index.js:367
+#: index.js:364
+msgid "A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be removed from the search results."
+msgstr ""
+
+#: index.js:376
 msgid "Related posts"
 msgstr ""
 
-#: src/index.js:372
+#: index.js:381
 msgid "Don't append the related posts to this page."
 msgstr ""
 
-#: src/index.js:382
+#: index.js:391
 msgid "Don't show this as a related post for any post."
 msgstr ""
 
-#: src/index.js:392
-msgid ""
-"A comma-separated list of keywords to use for the Related Posts feature. "
-"Anything entered here will used when searching for related posts. Using "
-"phrases with quotes is allowed, but will restrict the related posts to "
-"posts including that phrase."
+#: index.js:401
+msgid "A comma-separated list of keywords to use for the Related Posts feature. Anything entered here will used when searching for related posts. Using phrases with quotes is allowed, but will restrict the related posts to posts including that phrase."
 msgstr ""
 
-#: src/index.js:402
+#: index.js:411
 msgid "A comma-separated list of post IDs to use as related posts for this post"
 msgstr ""
 
-#: src/index.js:409
+#: index.js:418
 msgid "Related posts for this post:"
 msgstr ""
 
-#: src/index.js:412
+#: index.js:421
 msgid "Excluded posts for this post:"
 msgstr ""
 
-#: src/index.js:419
+#: index.js:426
 msgid "Insights"
 msgstr ""
 
-#: src/index.js:421
+#: index.js:428
 msgid "The most common search terms used to find this post:"
 msgstr ""
 
-#: src/index.js:423
+#: index.js:435
 msgid "Low-ranking search terms used to find this post:"
 msgstr ""

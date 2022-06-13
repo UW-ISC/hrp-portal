@@ -16,6 +16,15 @@ function wdtTestSeparateConnectionSettings()
     $connections = Connection::getAll();
 
     foreach ($_POST['wdtSeparateCon'] as $separateConnection) {
+
+        //Sanitization
+        $separateConnection['host'] = sanitize_text_field($separateConnection['host']);
+        $separateConnection['database'] = sanitize_text_field($separateConnection['database']);
+        $separateConnection['user'] = sanitize_text_field($separateConnection['user']);
+        $separateConnection['port'] = (int)($separateConnection['port']);
+        $separateConnection['vendor'] = sanitize_text_field($separateConnection['vendor']);
+        $separateConnection['driver'] = sanitize_text_field($separateConnection['driver']);
+
         try {
             $Sql = Connection::create(
                 '',
@@ -999,17 +1008,18 @@ function wdtActivatePlugin()
     $subdomain = filter_var($_POST['subdomain'], FILTER_SANITIZE_STRING);
     $subdomain = WDTTools::getSubDomain($subdomain);
 
-    $request = wp_remote_get(
-        WDT_STORE_API_URL . 'activation/code?slug=' . $slug . '&purchaseCode=' . $purchaseCode . '&domain=' . $domain . '&subdomain=' . $subdomain
+    $ch = curl_init(
+        WDT_STORE_API_URL . 'activation/code?slug=' . $slug . '&purchaseCode=' . $purchaseCode .
+        '&domain=' . $domain . '&subdomain=' . $subdomain
     );
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    /** @var bool $valid */
-    $valid = json_decode($request['body'])->valid;
+    // Response from the TMS Store
+    $response = json_decode(curl_exec($ch));
 
-    /** @var bool $valid */
-    $domainRegistered = json_decode($request['body'])->domainRegistered;
+    curl_close($ch);
 
-    if ($valid && $domainRegistered) {
+    if ($response->valid && $response->domainRegistered) {
         if ($slug === 'wpdatatables') {
             update_option('wdtPurchaseCodeStore', $purchaseCode);
             update_option('wdtActivated', true);
@@ -1031,10 +1041,12 @@ function wdtActivatePlugin()
         }
     }
 
-    if (!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) {
-        echo $request['body'];
-    }
+    $result = [
+        'valid' => $response->valid,
+        'domainRegistered' => $response->domainRegistered
+    ];
 
+    echo json_encode($result);
     exit();
 }
 
@@ -1091,24 +1103,31 @@ function wdtDeactivatePlugin()
     $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
 
     if ($type === 'code') {
-        $request = wp_remote_get(
+        $ch = curl_init(
             WDT_STORE_API_URL . 'activation/code/deactivate?slug=' . $slug . '&purchaseCode=' . $purchaseCode . '&domain=' . $domain . '&subdomain=' . $subdomain
         );
     } else {
-        $request = wp_remote_get(
+        $ch = curl_init(
             WDT_STORE_API_URL . 'activation/envato/deactivate?slug=' . $slug . '&envatoTokenEmail=' . $envatoTokenEmail . '&domain=' . $domain . '&subdomain=' . $subdomain
         );
     }
 
-    /** @var bool $deactivated */
-    $deactivated = json_decode($request['body'])->deactivated;
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    if ($deactivated === true) {
+    // Response from the TMS Store
+    $response = json_decode(curl_exec($ch));
+
+    curl_close($ch);
+
+    if ($response->deactivated === true || $response === null) {
         WDTTools::deactivatePlugin($slug);
     }
 
-    echo $request['body'];
+    $result = [
+        'deactivated' => $response->deactivated,
+    ];
 
+    echo json_encode($result);
     exit();
 }
 

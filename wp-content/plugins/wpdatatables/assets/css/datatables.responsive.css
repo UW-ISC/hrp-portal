@@ -84,3 +84,7 @@ table.has-columns-hidden > tbody > tr.row-detail > td > ul {
 table.has-columns-hidden > tbody > tr.row-detail > td > ul > li > span.columnTitle {
     font-weight: bold;
 }
+
+td.wdt-responsive-cell-action, tr.wdt-responsive-row-action {
+	cursor: pointer;
+}

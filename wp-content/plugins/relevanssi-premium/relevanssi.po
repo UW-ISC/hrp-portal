@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Relevanssi Premium\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-01-28 08:26+0200\n"
+"POT-Creation-Date: 2022-04-28 08:22+0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Mikko Saari <mikko@mikkosaari.fi>\n"
 "Language-Team: \n"
@@ -76,15 +76,15 @@ msgstr ""
 msgid "hide"
 msgstr ""
 
-#: lib/common.php:143
+#: lib/common.php:147
 msgid "Missing"
 msgstr ""
 
-#: lib/common.php:1099
+#: lib/common.php:1103
 msgid "25 most common words in the index"
 msgstr ""
 
-#: lib/common.php:1100
+#: lib/common.php:1104
 msgid ""
 "These words are excellent stopword material. A word that appears in most of "
 "the posts in the database is quite pointless when searching. This is also an "
@@ -94,68 +94,68 @@ msgid ""
 "necessary."
 msgstr ""
 
-#: lib/common.php:1106
+#: lib/common.php:1110
 msgid "Stopword Candidates"
 msgstr ""
 
-#: lib/common.php:1111
+#: lib/common.php:1115
 msgid "Add to stopwords"
 msgstr ""
 
-#: lib/common.php:1114
+#: lib/common.php:1118
 msgid "Add to content stopwords"
 msgstr ""
 
-#: lib/common.php:1462
+#: lib/common.php:1475
 #, php-format
 msgid "Nothing found for ID %d."
 msgstr ""
 
-#: lib/common.php:1469
+#: lib/common.php:1482
 msgid "Possible reasons this post is not indexed"
 msgstr ""
 
-#: lib/common.php:1473
+#: lib/common.php:1486
 msgid "The title"
 msgstr ""
 
-#: lib/common.php:1477
+#: lib/common.php:1490
 msgid "The content"
 msgstr ""
 
-#: lib/common.php:1481 lib/tabs/indexing-tab.php:320
+#: lib/common.php:1494 lib/tabs/indexing-tab.php:320
 msgid "Comments"
 msgstr ""
 
-#: lib/common.php:1485
+#: lib/common.php:1498
 msgid "Tags"
 msgstr ""
 
-#: lib/common.php:1489
+#: lib/common.php:1502
 msgid "Categories"
 msgstr ""
 
-#: lib/common.php:1493
+#: lib/common.php:1506
 msgid "Other taxonomies"
 msgstr ""
 
-#: lib/common.php:1497
+#: lib/common.php:1510
 msgid "Links"
 msgstr ""
 
-#: lib/common.php:1501
+#: lib/common.php:1514
 msgid "Authors"
 msgstr ""
 
-#: lib/common.php:1505
+#: lib/common.php:1518
 msgid "Excerpt"
 msgstr ""
 
-#: lib/common.php:1509 lib/tabs/indexing-tab.php:334
+#: lib/common.php:1522 lib/tabs/indexing-tab.php:334
 msgid "Custom fields"
 msgstr ""
 
-#: lib/common.php:1513
+#: lib/common.php:1526
 msgid "MySQL content"
 msgstr ""
 
@@ -520,7 +520,7 @@ msgstr ""
 msgid "Relevanssi image attachment filter"
 msgstr ""
 
-#: lib/indexing.php:480 premium/common.php:539
+#: lib/indexing.php:480 premium/common.php:572
 msgid "Relevanssi index exclude"
 msgstr ""
 
@@ -528,33 +528,33 @@ msgstr ""
 msgid "Blocked by a filter function"
 msgstr ""
 
-#: lib/init.php:115
+#: lib/init.php:116
 msgid ""
 "You do not have an index! Remember to build the index (click the \"Build the "
 "index\" button), otherwise searching won't work."
 msgstr ""
 
-#: lib/init.php:127
+#: lib/init.php:128
 msgid ""
 "Multibyte string functions are not available. Relevanssi may not work well "
 "without them. Please install (or ask your host to install) the mbstring "
 "extension."
 msgstr ""
 
-#: lib/init.php:210 lib/init.php:211 lib/tabs/logging-tab.php:47
+#: lib/init.php:213 lib/init.php:214 lib/tabs/logging-tab.php:47
 #: lib/user-searches.php:18
 msgid "User searches"
 msgstr ""
 
-#: lib/init.php:222 lib/init.php:223 lib/tabs/searching-tab.php:252
+#: lib/init.php:225 lib/init.php:226 lib/tabs/searching-tab.php:252
 msgid "Admin search"
 msgstr ""
 
-#: lib/init.php:449
+#: lib/init.php:452
 msgid "Settings"
 msgstr ""
 
-#: lib/init.php:452
+#: lib/init.php:455
 msgid "Go Premium!"
 msgstr ""
 
@@ -774,8 +774,8 @@ msgstr ""
 msgid "Time"
 msgstr ""
 
-#: lib/log.php:158 lib/user-searches.php:304 lib/user-searches.php:318
-#: premium/click-tracking.php:609 premium/tabs/redirects-tab.php:52
+#: lib/log.php:158 lib/user-searches.php:308 lib/user-searches.php:322
+#: premium/click-tracking.php:617 premium/tabs/redirects-tab.php:52
 msgid "Query"
 msgstr ""
 
@@ -928,7 +928,7 @@ msgstr ""
 msgid "The ID"
 msgstr ""
 
-#: lib/tabs/debugging-tab.php:73 premium/click-tracking.php:469
+#: lib/tabs/debugging-tab.php:73 premium/click-tracking.php:477
 msgid "Post"
 msgstr ""
 
@@ -1647,7 +1647,7 @@ msgid ""
 "be logged."
 msgstr ""
 
-#: lib/tabs/logging-tab.php:85 premium/click-tracking.php:703
+#: lib/tabs/logging-tab.php:85 premium/click-tracking.php:711
 msgid "Trim logs"
 msgstr ""
 
@@ -1678,7 +1678,7 @@ msgstr ""
 msgid "Push the button to export the search log as a CSV file."
 msgstr ""
 
-#: lib/tabs/logging-tab.php:122 premium/click-tracking.php:677
+#: lib/tabs/logging-tab.php:122 premium/click-tracking.php:685
 msgid "Click tracking"
 msgstr ""
 
@@ -2404,7 +2404,7 @@ msgstr ""
 msgid "All history"
 msgstr ""
 
-#: lib/user-searches.php:112 premium/click-tracking.php:457
+#: lib/user-searches.php:112 premium/click-tracking.php:465
 msgid "# of Searches"
 msgstr ""
 
@@ -2456,15 +2456,15 @@ msgstr ""
 msgid "Reset"
 msgstr ""
 
-#: lib/user-searches.php:305 premium/tabs/redirects-tab.php:55
+#: lib/user-searches.php:309 premium/tabs/redirects-tab.php:55
 msgid "Hits"
 msgstr ""
 
-#: lib/user-searches.php:306
+#: lib/user-searches.php:310
 msgid "Clicks"
 msgstr ""
 
-#: lib/utils.php:1231
+#: lib/utils.php:1265
 msgid "There is no excerpt because this is a protected post."
 msgstr ""
 
@@ -2578,66 +2578,70 @@ msgid ""
 "the list, copy it to a different blog or otherwise need the list."
 msgstr ""
 
-#: premium/click-tracking.php:70
+#: premium/click-tracking.php:72
 msgid "Invalid click tracking value format."
 msgstr ""
 
-#: premium/click-tracking.php:361
+#: premium/click-tracking.php:366
 #, php-format
 msgid "The query '%s' deleted from the click tracking log."
 msgstr ""
 
-#: premium/click-tracking.php:373
+#: premium/click-tracking.php:378
 #, php-format
 msgid "Couldn't remove the query '%s' from the click tracking log."
 msgstr ""
 
-#: premium/click-tracking.php:395 premium/click-tracking.php:544
+#: premium/click-tracking.php:400 premium/click-tracking.php:552
 msgid "Back to the User Searches page"
 msgstr ""
 
-#: premium/click-tracking.php:401 premium/click-tracking.php:550
+#: premium/click-tracking.php:406 premium/click-tracking.php:558
 #, php-format
 msgid "Search insights for %s"
 msgstr ""
 
-#: premium/click-tracking.php:458 premium/click-tracking.php:598
+#: premium/click-tracking.php:466 premium/click-tracking.php:606
 msgid "# of Clicks"
 msgstr ""
 
-#: premium/click-tracking.php:464
+#: premium/click-tracking.php:472
 msgid "Posts found with this search term"
 msgstr ""
 
-#: premium/click-tracking.php:470 premium/click-tracking.php:610
+#: premium/click-tracking.php:478 premium/click-tracking.php:618
 msgid "Times clicked"
 msgstr ""
 
-#: premium/click-tracking.php:471 premium/click-tracking.php:611
+#: premium/click-tracking.php:479 premium/click-tracking.php:619
 msgid "Avg rank"
 msgstr ""
 
-#: premium/click-tracking.php:472 premium/click-tracking.php:612
+#: premium/click-tracking.php:480 premium/click-tracking.php:620
 msgid "Avg page"
 msgstr ""
 
-#: premium/click-tracking.php:486 premium/click-tracking.php:558
+#: premium/click-tracking.php:494 premium/click-tracking.php:566
 msgid "View post"
 msgstr ""
 
-#: premium/click-tracking.php:487 premium/click-tracking.php:559
+#: premium/click-tracking.php:495 premium/click-tracking.php:567
 msgid "Edit post"
 msgstr ""
 
-#: premium/click-tracking.php:498
+#: premium/click-tracking.php:506
 msgid "Remove this query from the click log"
 msgstr ""
 
-#: premium/click-tracking.php:604
+#: premium/click-tracking.php:512
+msgid "Delete"
+msgstr ""
+
+#: premium/click-tracking.php:612
 msgid "Search queries for this post"
 msgstr ""
 
-#: premium/click-tracking.php:679
+#: premium/click-tracking.php:687
 msgid ""
 "Enabling this option will add click tracking information to the post URLs on "
 "Relevanssi search results pages, allowing to you see stats on which posts "
@@ -2646,70 +2650,70 @@ msgid ""
 "searches page by clicking the search term."
 msgstr ""
 
-#: premium/click-tracking.php:681
+#: premium/click-tracking.php:689
 msgid ""
 "Click tracking stores post ID, the search query and ranking information for "
 "the post. No personal information about the user doing the search are stored."
 msgstr ""
 
-#: premium/click-tracking.php:686
+#: premium/click-tracking.php:694
 msgid "Enable click tracking"
 msgstr ""
 
-#: premium/click-tracking.php:696
+#: premium/click-tracking.php:704
 msgid "Enable click tracking on Relevanssi search results pages."
 msgstr ""
 
-#: premium/click-tracking.php:707
+#: premium/click-tracking.php:715
 msgid "How many days of click tracking logs to keep in the database."
 msgstr ""
 
-#: premium/click-tracking.php:711
+#: premium/click-tracking.php:719
 #, php-format
 msgid ""
 "Set to %d for no trimming. The click tracking logs will be smaller than the "
 "search logs, so this value can be bigger than the value for regular logs."
 msgstr ""
 
-#: premium/click-tracking.php:752
+#: premium/click-tracking.php:760
 msgid "Total clicks"
 msgstr ""
 
-#: premium/click-tracking.php:759
+#: premium/click-tracking.php:767
 #, php-format
 msgid "%s %% of all queries"
 msgstr ""
 
-#: premium/click-tracking.php:764
+#: premium/click-tracking.php:772
 msgid "Click tracking insights"
 msgstr ""
 
-#: premium/click-tracking.php:795
+#: premium/click-tracking.php:803
 msgid "These posts got the most clicks. This is content users like!"
 msgstr ""
 
-#: premium/click-tracking.php:824
+#: premium/click-tracking.php:832
 msgid ""
 "These posts were got clicks from a low ranking. Should they be boosted "
 "higher?"
 msgstr ""
 
-#: premium/click-tracking.php:855
+#: premium/click-tracking.php:863
 #, php-format
 msgid "%1$s posts"
 msgstr ""
 
-#: premium/click-tracking.php:860
+#: premium/click-tracking.php:868
 msgid ""
 "You have search queries that generate clicks to many posts. Perhaps more "
 "focus would be good?"
 msgstr ""
 
-#: premium/click-tracking.php:868
+#: premium/click-tracking.php:876
 msgid "Sorry, no clicks recorded for this period!"
 msgstr ""
 
-#: premium/common.php:487
+#: premium/common.php:502
 msgid ""
 "Your site is not public. By default, Relevanssi does not search private "
 "sites. If you want to be able to search on this site, either make it public "
@@ -2717,7 +2721,7 @@ msgid ""
 "'relevanssi_multisite_public_status' filter hook."
 msgstr ""
 
-#: premium/common.php:1037
+#: premium/common.php:1070
 msgid "Must have"
 msgstr ""
 
@@ -2857,12 +2861,12 @@ msgstr ""
 msgid "Plugin support page"
 msgstr ""
 
-#: premium/indexing.php:1131
+#: premium/indexing.php:1123
 #, php-format
 msgid "Indexed %d taxonomy terms."
 msgstr ""
 
-#: premium/indexing.php:1133
+#: premium/indexing.php:1125
 msgid "No taxonomies to index."
 msgstr ""
 
@@ -3243,28 +3247,46 @@ msgstr ""
 msgid "Spam Block"
 msgstr ""
 
-#: premium/interface.php:1195
+#: premium/interface.php:1189 premium/tabs/support-tab.php:26
+msgid "Support"
+msgstr ""
+
+#: premium/interface.php:1202
 msgid "Reset the option"
 msgstr ""
 
-#: premium/interface.php:1209
+#: premium/interface.php:1216
 msgid "Option successfully reset!"
 msgstr ""
 
-#: premium/interface.php:1211
+#: premium/interface.php:1218
 msgid "Couldn't reset the option, reload the page to try again."
 msgstr ""
 
-#: premium/interface.php:1216
+#: premium/interface.php:1223
 msgid "Reset the relevanssi_words option"
 msgstr ""
 
-#: premium/interface.php:1223
+#: premium/interface.php:1230
 #, php-format
 msgid ""
 "If you are having problems with the Did you mean? feature, you can reset the "
 "%1$s option that keeps a cache. Next time the Did you mean? suggestions are "
 "needed the option is regenerated."
+msgstr ""
+
+#: premium/interface.php:1280
+#, php-format
+msgid ""
+"The API key is not set. Please enter your API key in the %1$sthe Relevanssi "
+"settings%2$s. If you don't have one, %3$syou can buy a new license here%2$s."
+msgstr ""
+
+#: premium/interface.php:1288
+#, php-format
+msgid ""
+"Your API key is set, but it looks like you don't have a valid license. "
+"%1$sYou can buy a new license here%2$s."
 msgstr ""
 
 #: premium/network-options.php:47
@@ -3405,26 +3427,26 @@ msgstr ""
 msgid "Relevanssi"
 msgstr ""
 
-#: premium/post-metabox.php:78
+#: premium/post-metabox.php:79
 msgid "How Relevanssi sees this post"
 msgstr ""
 
-#: premium/post-metabox.php:80
+#: premium/post-metabox.php:81
 msgid "Pin this post"
 msgstr ""
 
-#: premium/post-metabox.php:81
+#: premium/post-metabox.php:82
 msgid ""
 "A comma-separated list of single word keywords or multi-word phrases. If any "
 "of these keywords are present in the search query, this post will be moved "
 "on top of the search results."
 msgstr ""
 
-#: premium/post-metabox.php:82
+#: premium/post-metabox.php:83
 msgid "Pinned keywords for this post"
 msgstr ""
 
-#: premium/post-metabox.php:88
+#: premium/post-metabox.php:89
 msgid ""
 "NOTE: You have set the post content weight to 0. This means that keywords "
 "that don't appear elsewhere in the post won't work, because they are indexed "
@@ -3432,47 +3454,51 @@ msgid ""
 "positive value, the pinned keywords will work again."
 msgstr ""
 
-#: premium/post-metabox.php:95
+#: premium/post-metabox.php:96
 msgid "Pin this post for all searches it appears in."
 msgstr ""
 
-#: premium/post-metabox.php:98
+#: premium/post-metabox.php:99
 msgid "Exclude this post"
 msgstr ""
 
-#: premium/post-metabox.php:99
+#: premium/post-metabox.php:100
 msgid ""
 "A comma-separated list of single word keywords or multi-word phrases. If any "
 "of these keywords are present in the search query, this post will be removed "
 "from the search results."
 msgstr ""
 
-#: premium/post-metabox.php:100
+#: premium/post-metabox.php:101
 msgid "Excluded keywords for this post"
 msgstr ""
 
-#: premium/post-metabox.php:105
+#: premium/post-metabox.php:106
 msgid "Exclude this post or page from the index."
 msgstr ""
 
-#: premium/post-metabox.php:336 premium/tabs/related-tab.php:103
+#: premium/post-metabox.php:111
+msgid "Ignore post content in the indexing."
+msgstr ""
+
+#: premium/post-metabox.php:353 premium/tabs/related-tab.php:103
 #: premium/templates/relevanssi-related.php:25
 msgid "Related Posts"
 msgstr ""
 
-#: premium/post-metabox.php:339
+#: premium/post-metabox.php:356
 msgid "Don't append the related posts to this page."
 msgstr ""
 
-#: premium/post-metabox.php:342
+#: premium/post-metabox.php:359
 msgid "Don't show this as a related post for any post."
 msgstr ""
 
-#: premium/post-metabox.php:344
+#: premium/post-metabox.php:361
 msgid "Related Posts keywords"
 msgstr ""
 
-#: premium/post-metabox.php:345
+#: premium/post-metabox.php:362
 msgid ""
 "A comma-separated list of keywords to use for the Related Posts feature. "
 "Anything entered here will used when searching for related posts. Using "
@@ -3480,37 +3506,37 @@ msgid ""
 "including that phrase."
 msgstr ""
 
-#: premium/post-metabox.php:346
+#: premium/post-metabox.php:363
 msgid "Related posts keywords for this post"
 msgstr ""
 
-#: premium/post-metabox.php:349
+#: premium/post-metabox.php:366
 msgid ""
 "A comma-separated list of post IDs to use as related posts for this post"
 msgstr ""
 
-#: premium/post-metabox.php:352
+#: premium/post-metabox.php:369
 msgid ""
 "These are the related posts Relevanssi currently will show for this post:"
 msgstr ""
 
-#: premium/post-metabox.php:361
+#: premium/post-metabox.php:378
 msgid "These posts are excluded from related posts for this post"
 msgstr ""
 
-#: premium/post-metabox.php:368
+#: premium/post-metabox.php:385
 msgid "Insights"
 msgstr ""
 
-#: premium/post-metabox.php:504
+#: premium/post-metabox.php:521
 msgid "not this"
 msgstr ""
 
-#: premium/post-metabox.php:538
+#: premium/post-metabox.php:555
 msgid "use this"
 msgstr ""
 
-#: premium/post-metabox.php:549
+#: premium/post-metabox.php:566
 msgid "Nothing excluded."
 msgstr ""
 
@@ -4224,4 +4250,58 @@ msgid ""
 "tools can be used to block bot traffic on your site, but using them requires "
 "expertise on server settings. Use them only if you know what you're doing, "
 "or have a professional help you."
+msgstr ""
+
+#: premium/tabs/support-tab.php:38
+#, php-format
+msgid ""
+"This form sends out an email to the Relevanssi support. If you have a "
+"question, please fill in the form below and we will get back to you as soon "
+"as possible. If you don't hear from us in a day or two, it's possible your "
+"email has gone astray. In that case, please contact us again and use %1$sthe "
+"support form at Relevanssi.com%2$s. You can also email us directly at %3$s. "
+"Expect slower response times during June and July."
+msgstr ""
+
+#: premium/tabs/support-tab.php:49
+#, php-format
+msgid ""
+"We have a large knowledge base. %1$sTake a look there%2$s, perhaps your "
+"question is already answered there."
+msgstr ""
+
+#: premium/tabs/support-tab.php:53
+msgid ""
+"Instead of telling us \"X doesn't work\", please try be as specific as "
+"possible. Please tell us what you expect to happen and what actually happens."
+msgstr ""
+
+#: premium/tabs/support-tab.php:55
+msgid ""
+"Feel free to ask questions in English or Finnish. Please do not send us "
+"video questions."
+msgstr ""
+
+#: premium/tabs/support-tab.php:62
+msgid "Your email address"
+msgstr ""
+
+#: premium/tabs/support-tab.php:66
+msgid "Subject"
+msgstr ""
+
+#: premium/tabs/support-tab.php:70
+msgid "Message"
+msgstr ""
+
+#: premium/tabs/support-tab.php:75
+msgid "Send"
+msgstr ""
+
+#: premium/tabs/support-tab.php:111
+msgid "Email sent!"
+msgstr ""
+
+#: premium/tabs/support-tab.php:117
+msgid "Email failed!"
 msgstr ""

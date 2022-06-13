@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="col-sm-12 wdt-constructor-date-input-format-block p-0" style="display: none;">
-                        <h5 class="c-title-color m-b-2">
+                        <h5 class="c-black m-b-10">
                             <?php esc_html_e('Date input format', 'wpdatatables'); ?>
                         </h5>
 

@@ -9902,7 +9902,7 @@ select.input-group-lg > .input-group-btn > .btn {
         padding-right: 0;
         margin-top: 10px;
     }
-    .wpdt-c .card .card-header .actions {
+    .wpdt-c .card .card-header .actions:not(.wdt-constructor-remove-column) {
         position: relative !important;
     }
     .wpdt-c .card .card-header .actions li{

@@ -528,6 +528,9 @@ function relevanssi_search( $args ) {
 		'missing_terms'       => $missing_terms,
 	);
 
+	if ( function_exists( 'relevanssi_premium_update_return_array' ) ) {
+		relevanssi_premium_update_return_array( $return, $match_arrays );
+	}
 	return $return;
 }
 
@@ -589,14 +592,15 @@ function relevanssi_do_query( &$query ) {
 	 * One of the key filters for Relevanssi. If you want to modify the results
 	 * Relevanssi finds, use this filter.
 	 *
-	 * @param array $filter_data The index 0 has an array of post objects (or
+	 * @param array    $filter_data The index 0 has an array of post objects (or
 	 * post IDs, or parent=>ID pairs, depending on the `fields` parameter) found
 	 * in the search, index 1 has the search query string.
+	 * @param WP_Query $query       The WP_Query object.
 	 *
 	 * @return array The return array composition is the same as the parameter
 	 * array, but Relevanssi only uses the index 0.
 	 */
-	$hits_filters_applied = apply_filters( 'relevanssi_hits_filter', $filter_data );
+	$hits_filters_applied = apply_filters( 'relevanssi_hits_filter', $filter_data, $query );
 	// array_values() to make sure the $hits array is indexed in numerical order
 	// Manipulating the array with array_unique() for example may mess with that.
 	$hits = array_values( $hits_filters_applied[0] );
@@ -1439,21 +1443,10 @@ function relevanssi_update_term_hits( &$term_hits, &$match_arrays, $match, $term
 	relevanssi_increase_value( $match_arrays['customfield'][ $match->doc ], $match->customfield );
 	relevanssi_increase_value( $match_arrays['author'][ $match->doc ], $match->author );
 	relevanssi_increase_value( $match_arrays['excerpt'][ $match->doc ], $match->excerpt );
-	relevanssi_increase_value( $match_arrays['mysqlcolumn'][ $match->doc ], $match->mysqlcolumn );
-}
 
-/**
- * Increases a value. If it's not set, sets it first to the default value.
- *
- * @param int $value    The value to increase (passed by reference).
- * @param int $increase The amount to increase the value, default 1.
- * @param int $default  The default value, default 0.
- */
-function relevanssi_increase_value( &$value, $increase = 1, $default = 0 ) {
-	if ( ! isset( $value ) ) {
-		$value = $default;
+	if ( function_exists( 'relevanssi_premium_update_term_hits' ) ) {
+		relevanssi_premium_update_term_hits( $term_hits, $match_arrays, $match, $term );
 	}
-	$value += $increase;
 }
 
 /**

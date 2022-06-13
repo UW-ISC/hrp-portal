@@ -28,6 +28,7 @@ class WPDataTable {
     private $_title = '';
     private $_interfaceLanguage;
     private $_responsive = false;
+    private $_responsiveAction = 'icon';
     private $_scrollable = false;
     private $_inlineEditing = false;
     private $_popoverTools = false;
@@ -992,6 +993,22 @@ class WPDataTable {
 
     public function isResponsive() {
         return $this->_responsive;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResponsiveAction()
+    {
+        return $this->_responsiveAction;
+    }
+
+    /**
+     * @param string $responsiveAction
+     */
+    public function setResponsiveAction($responsiveAction)
+    {
+        $this->_responsiveAction = $responsiveAction;
     }
 
     public function enableEditing() {
@@ -3443,6 +3460,7 @@ class WPDataTable {
             isset($advancedSettings->borderSpacing) ? $this->setBorderSpacing($advancedSettings->borderSpacing) : $this->setBorderSpacing(0);
             isset($advancedSettings->verticalScroll) ? $this->setVerticalScroll($advancedSettings->verticalScroll) : $this->setVerticalScroll(false);
             isset($advancedSettings->verticalScrollHeight) ? $this->setVerticalScrollHeight($advancedSettings->verticalScrollHeight) : $this->setVerticalScrollHeight(600);
+            isset($advancedSettings->responsiveAction) ? $this->setResponsiveAction($advancedSettings->responsiveAction) : $this->setResponsiveAction('icon');
             isset($advancedSettings->pagination) ? $this->setPagination($advancedSettings->pagination) : $this->setPagination(true);
             isset($advancedSettings->paginationAlign) ? $this->setPaginationAlign($advancedSettings->paginationAlign) : $this->setPaginationAlign('right');
             isset($advancedSettings->paginationLayout) ? $this->setPaginationLayout($advancedSettings->paginationLayout) : $this->setPaginationLayout('full_numbers');
@@ -3657,6 +3675,7 @@ class WPDataTable {
         $obj->selector = '#' . $this->getId();
         //[<-- Full version -->]//
         $obj->responsive = $this->isResponsive();
+        $obj->responsiveAction = $this->getResponsiveAction();
         $obj->editable = $this->isEditable();
         $obj->inlineEditing = $this->inlineEditingEnabled();
         $obj->infoBlock = $this->isInfoBlock();
@@ -4207,15 +4226,9 @@ class WPDataTable {
                 $groupBy = "{$columnQuoteStart}{$storeColumnName}{$columnQuoteEnd}";
             }
 
-            if ($isMSSql) {
+            if ($isMSSql || $isPostgreSql) {
                 $groupBy = "{$columnQuoteStart}{$storeColumnName}{$columnQuoteEnd}, {$columnQuoteStart}{$displayColumnName}{$columnQuoteEnd}";
             }
-
-            if ($isPostgreSql) {
-                $groupBy = "({$columnQuoteStart}{$storeColumnName}{$columnQuoteEnd}, {$columnQuoteStart}{$displayColumnName}{$columnQuoteEnd})";
-            }
-
-
 
             $distValuesQuery = "SELECT({$columnQuoteStart}{$storeColumnName}{$columnQuoteEnd}) AS {$columnQuoteStart}{$storeColumnName}{$columnQuoteEnd}, ({$columnQuoteStart}{$displayColumnName}{$columnQuoteEnd}) AS {$columnQuoteStart}{$displayColumnName}{$columnQuoteEnd} FROM ($tableContent) tbl GROUP BY $groupBy ORDER BY {$columnQuoteStart}{$displayColumnName}{$columnQuoteEnd}";
 

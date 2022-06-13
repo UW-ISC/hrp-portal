@@ -120,7 +120,7 @@ class DIVI_wpDataTable extends ET_Builder_Module
                 'default_on_front' => count($this->getAllTables()),
                 'show_if' => array(
                     'id' => -1
-                    )
+                )
             )
         );
     }
@@ -140,6 +140,13 @@ class DIVI_wpDataTable extends ET_Builder_Module
         $var8 = $this->props['var8'];
         $var9 = $this->props['var9'];
         $export_file_name = $this->props['export_file_name'];
+
+        //Fix for Divi not recognizing table ID as an int when only one table is created
+        if (!is_numeric($tableId)) {
+            $tableId = substr($tableId, strrpos($tableId, "(id:") + 4);
+            $tableId = substr($tableId, 0,strrpos($tableId, ')') );
+            $tableId = (int)$tableId;
+        }
 
         if (count($this->getAllTables()) == 1) {
             return __(WDTConfigController::wdt_create_table_notice());

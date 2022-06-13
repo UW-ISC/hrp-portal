@@ -11,7 +11,7 @@
 /**
  * Adds the search result match breakdown to the post object.
  *
- * Reads in the number of matches and stores it in the relevanssi_hits filed
+ * Reads in the number of matches and stores it in the relevanssi_hits field
  * of the post object. The post object is passed as a reference and modified
  * on the fly.
  *
@@ -28,10 +28,14 @@ function relevanssi_add_matches( &$post, $data ) {
 	$hits['author']               = $data['author_matches'][ $post->ID ] ?? 0;
 	$hits['excerpt']              = $data['excerpt_matches'][ $post->ID ] ?? 0;
 	$hits['customfield']          = $data['customfield_matches'][ $post->ID ] ?? 0;
-	$hits['mysqlcolumn']          = $data['mysqlcolumn_matches'][ $post->ID ] ?? 0;
+	$hits['mysqlcolumn']          = 0;
 	$hits['score']                = isset( $data['doc_weights'][ $post->ID ] ) ? round( $data['doc_weights'][ $post->ID ], 2 ) : 0;
 	$hits['terms']                = $data['term_hits'][ $post->ID ] ?? array();
 	$hits['missing_terms']        = $data['missing_terms'][ $post->ID ] ?? array();
+
+	if ( function_exists( 'relevanssi_premium_add_matches' ) ) {
+		relevanssi_premium_add_matches( $hits, $data, $post->ID );
+	}
 
 	arsort( $hits['terms'] );
 
@@ -220,7 +224,7 @@ function relevanssi_default_post_ok( $post_ok, $post_id ) {
 		apply_filters( 'relevanssi_valid_admin_status', array( 'draft', 'pending', 'future' ) ),
 		true
 	)
-	&& is_admin() ) {
+	&& is_admin() && ! relevanssi_is_live_search() ) {
 		// Only show drafts, pending and future posts in admin search.
 		$post_ok = true;
 	}
@@ -1134,6 +1138,9 @@ function relevanssi_common_words( $limit = 25, $wp_cli = false ) {
  */
 function relevanssi_get_forbidden_post_types() {
 	return array(
+		'wp_template_part',     // WP template parts.
+		'wp_global_styles',     // WP global styles.
+		'wp_navigation',        // Navigation menus.
 		'nav_menu_item',        // Navigation menu items.
 		'revision',             // Never index revisions.
 		'acf',                  // Advanced Custom Fields.
@@ -1214,6 +1221,12 @@ function relevanssi_get_forbidden_post_types() {
 		'fl-builder-template',  // Beaver Builder.
 		'itsec-dashboard',      // iThemes Security.
 		'itsec-dash-card',      // iThemes Security.
+		'astra-advanced-hook',  // Astra.
+		'astra_adv_header',     // Astra.
+		'astra_adv_header',     // Astra.
+		'udb_widgets',          // Ultimate Dashboard.
+		'udb_admin_page',       // Ultimate Dashboard.
+		'oxy_user_library',     // Oxygen.
 	);
 }
 
@@ -1224,6 +1237,7 @@ function relevanssi_get_forbidden_post_types() {
  */
 function relevanssi_get_forbidden_taxonomies() {
 	return array(
+		'wp_template_part_area',        // WP templates.
 		'nav_menu',                     // Navigation menus.
 		'link_category',                // Link categories.
 		'amp_validation_error',         // AMP.
@@ -1717,6 +1731,9 @@ function relevanssi_replace_synonyms_in_terms( array $terms ) : array {
 		function ( $term ) use ( $synonyms ) {
 			$new_term = array();
 			foreach ( $synonyms as $pair ) {
+				if ( empty( $pair ) ) {
+					continue;
+				}
 				list( $key, $value ) = explode( '=', $pair );
 				if ( $value === $term ) {
 					$new_term[] = $key;
@@ -1793,4 +1810,41 @@ function relevanssi_bot_block_list() : array {
 		'Ahrefs'               => 'AhrefsBot',
 	);
 	return $bots;
+}
+
+/**
+ * Removes unwanted metadata fields from custom field indexing.
+ *
+ * This function hooks on to relevanssi_index_custom_fields and stops Relevanssi
+ * from indexing a bunch of custom fields than only contain metadata that is
+ * not useful to index.
+ *
+ * @param array $custom_fields A list of custom field names.
+ *
+ * @return @array The custom fields with the excluded fields removed.
+ */
+function relevanssi_remove_metadata_fields( array $custom_fields ) : array {
+	$excluded_fields = array(
+		'_edit_last',
+		'_edit_lock',
+		'_encloseme',
+		'_pingme',
+		'_relevanssi_hide_content',
+		'_relevanssi_hide_content',
+		'_relevanssi_hide_post',
+		'_relevanssi_pin_for_all',
+		'_relevanssi_pin_keywords',
+		'_relevanssi_related_exclude_ids',
+		'_relevanssi_related_include_ids',
+		'_relevanssi_related_keywords',
+		'_relevanssi_related_no_append',
+		'_relevanssi_related_not_related',
+		'_relevanssi_related_posts',
+		'_relevanssi_unpin_keywords',
+		'_thumbnail_id',
+		'_wp_attachment_metadata',
+		'_wp_page_template',
+		'classic-editor-remember',
+	);
+	return array_diff( $custom_fields, $excluded_fields );
 }

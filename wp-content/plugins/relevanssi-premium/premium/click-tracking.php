@@ -13,6 +13,8 @@ add_action( 'wp_footer', 'relevanssi_remove_clicktracking' );
 add_action( 'relevanssi_create_tables', 'relevanssi_create_tracking_table', 10, 2 );
 add_filter( 'relevanssi_hits_filter', 'relevanssi_record_positions', PHP_INT_MAX );
 add_filter( 'relevanssi_hits_to_show', 'relevanssi_current_page_hits', PHP_INT_MAX );
+add_action( 'relevanssi_trim_click_logs', 'relevanssi_trim_click_logs' );
+add_action( 'relevanssi_init', 'relevanssi_schedule_click_tracking_trim' );
 
 /**
  * Logs the click.
@@ -64,7 +66,7 @@ function relevanssi_log_click() {
  * 'time'. Returns a WP_Error if the value doesn't explode into right number of
  * parts.
  */
-function relevanssi_extract_rt( string $rt ) : array {
+function relevanssi_extract_rt( string $rt ) {
 	$rt_values = explode( '|', $rt );
 	if ( count( $rt_values ) < 4 ) {
 		return new WP_Error( 'invalid-rt', __( 'Invalid click tracking value format.', 'relevanssi' ) );
@@ -192,6 +194,9 @@ function relevanssi_record_positions( array $hits ) : array {
 	foreach ( $hits[0] as $hit ) {
 		$position++;
 		$hit = relevanssi_get_an_object( $hit )['object'];
+		if ( ! $hit ) {
+			continue;
+		}
 		if ( $hit->ID > 0 ) {
 			$relevanssi_tracking_positions[ $hit->ID ] = $position;
 		} elseif ( isset( $hit->term_id ) ) {
@@ -415,8 +420,11 @@ function relevanssi_show_insights( string $query ) {
 	$post_average_rank = array();
 	$post_average_page = array();
 	$date_counts       = relevanssi_default_date_count( 'both' );
-
+	$oldest_date       = array_keys( $date_counts )[0];
 	foreach ( $results as $row ) {
+		if ( $row->timestamp < $oldest_date ) {
+			continue;
+		}
 		relevanssi_increase_value( $posts[ $row->post_id ] );
 		relevanssi_increase_value( $post_average_rank[ $row->post_id ], $row->rank );
 		relevanssi_increase_value( $post_average_page[ $row->post_id ], $row->page );
@@ -501,7 +509,7 @@ function relevanssi_show_insights( string $query ) {
 		<input type="hidden" name="action" value="delete_query" />
 		<input type="hidden" name="query" value="<?php echo esc_attr( $query ); ?>" />
 			<?php wp_nonce_field( 'relevanssi_delete_query' ); ?>
-		<input type="submit" value="Delete" id="delete_query" />
+		<input type="submit" value="<?php esc_attr_e( 'Delete', 'relevanssi' ); ?>" id="delete_query" />
 	</form>
 		<?php
 	}
@@ -899,7 +907,47 @@ function relevanssi_remove_clicktracking() {
  */
 function relevanssi_insights_link( $query ) : string {
 	global $relevanssi_variables;
-	$insights_url = admin_url( 'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) ) . '&insights=' . rawurlencode( $query->query );
+	$insights_url = admin_url( 'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) )
+		. '&insights=' . rawurlencode( $query->query );
 	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), esc_html( $query->query ) );
 	return $insights;
+}
+
+/**
+ * Trims Relevanssi click tracking table.
+ *
+ * Trims Relevanssi click tracking table, using the day interval setting from
+ * 'relevanssi_trim_click_logs'.
+ *
+ * @global object $wpdb                 The WordPress database interface.
+ * @global array  $relevanssi_variables The global Relevanssi variables, used
+ * for database table names.
+ *
+ * @return int|bool Number of rows deleted, or false on error.
+ */
+function relevanssi_trim_click_logs() {
+	global $wpdb, $relevanssi_variables;
+	$interval = intval( get_option( 'relevanssi_trim_click_logs' ) );
+	return $wpdb->query(
+		$wpdb->prepare(
+			'DELETE FROM ' . $relevanssi_variables['tracking_table'] . // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			' WHERE timestamp < TIMESTAMP(DATE_SUB(NOW(), INTERVAL %d DAY))',
+			$interval
+		)
+	);
+}
+
+/**
+ * Sets up the Relevanssi click tracking log trimming action.
+ */
+function relevanssi_schedule_click_tracking_trim() {
+	if ( get_option( 'relevanssi_trim_click_logs' ) > 0 ) {
+		if ( ! wp_next_scheduled( 'relevanssi_trim_click_logs' ) ) {
+			wp_schedule_event( time(), 'daily', 'relevanssi_trim_click_logs' );
+		}
+	} else {
+		if ( wp_next_scheduled( 'relevanssi_trim_click_logs' ) ) {
+			wp_clear_scheduled_hook( 'relevanssi_trim_click_logs' );
+		}
+	}
 }
