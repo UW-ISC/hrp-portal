@@ -13,6 +13,7 @@ var wpdatatable_config = {
     show_title: 1,
     tools: 1,
     responsive: 1,
+    responsiveAction: 'icon',
     hide_before_load: 1,
     fixed_layout: 0,
     scrollable: 0,
@@ -283,7 +284,24 @@ var wpdatatable_config = {
      */
     setResponsive: function( responsive ){
         wpdatatable_config.responsive = responsive;
-        jQuery('#wdt-responsive').prop( 'checked', responsive );
+        jQuery('#wdt-responsive').prop('checked', responsive);
+
+        if (responsive === 1) {
+            jQuery('.responsive-action-block').removeClass('hidden');
+        } else {
+            jQuery('.responsive-action-block').addClass('hidden');
+            wpdatatable_config.setResponsiveAction('icon');
+        }
+    },
+    /**
+     * Set responsive action
+     * @param responsiveAction string
+     */
+    setResponsiveAction: function (responsiveAction) {
+        wpdatatable_config.responsiveAction = responsiveAction;
+        jQuery('#wdt-responsive-action')
+            .val(responsiveAction)
+            .selectpicker('refresh');
     },
     /**
      * Enable or disable scrollable feature
@@ -1203,6 +1221,7 @@ var wpdatatable_config = {
         wpdatatable_config.setBorderSpacing( parseInt( tableJSON.borderSpacing) );
         wpdatatable_config.setVerticalScrollHeight( parseInt( tableJSON.verticalScrollHeight ) );
         wpdatatable_config.setResponsive( parseInt( tableJSON.responsive ) );
+        wpdatatable_config.setResponsiveAction( tableJSON.responsiveAction );
         wpdatatable_config.setScrollable( parseInt( tableJSON.scrollable ) );
         wpdatatable_config.setSimpleResponsive( parseInt( tableJSON.simpleResponsive ) );
         wpdatatable_config.setVerticalScroll( parseInt( tableJSON.verticalScroll ) );

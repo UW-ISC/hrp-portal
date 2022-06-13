@@ -14,7 +14,7 @@ class WpDataTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
-     shortcode: this.shortcode
+      shortcode: this.shortcode
     };
   }
 
@@ -36,6 +36,11 @@ class WpDataTable extends Component {
 
     if (tablesCount === 1) {
       return "Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target='_blank' href='https://wpdatatables.com/documentation/general/features-overview/'>link</a>.";
+    }
+
+    if (!isNumeric(tableId)) {
+      tableId = tableId.substring(tableId.lastIndexOf('(id: ') + 4);
+      tableId = tableId.substring(0, tableId.lastIndexOf(')'));
     }
 
     if (!parseInt(tableId)) {
@@ -111,6 +116,10 @@ class WpDataTable extends Component {
     )
   }
 
+}
+function isNumeric(str) {
+  if (typeof str != "string") return false
+  return !isNaN(str) && !isNaN(parseFloat(str))
 }
 
 export default WpDataTable;

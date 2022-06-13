@@ -37,7 +37,7 @@ class Connection {
 
             default:
                 return new PDTSql($host, $database, $user, $password, $port);
-                //return new PDOSql($vendor, "mysql:host=$host;port=$port;dbname=$database", $user, $password);
+//                return new PDOSql($vendor, "mysql:host=$host;port=$port;dbname=$database", $user, $password);
         }
     }
 

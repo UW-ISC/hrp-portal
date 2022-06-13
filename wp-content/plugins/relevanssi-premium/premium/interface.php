@@ -1184,7 +1184,14 @@ function relevanssi_premium_add_tabs( $tabs ) {
 		'callback' => 'relevanssi_spamblock_tab',
 		'save'     => true,
 	);
-
+	$tabs[] = array(
+		'slug'     => 'support',
+		'name'     => __( 'Support', 'relevanssi' ),
+		'require'  => dirname( $relevanssi_variables['file'] )
+			. '/premium/tabs/support-tab.php',
+		'callback' => 'relevanssi_support_tab',
+		'save'     => false,
+	);
 	return $tabs;
 }
 
@@ -1230,4 +1237,58 @@ EOH;
 
 	<?php
 	echo $reset; // phpcs:ignore WordPress.Security.EscapeOutput
+}
+
+/**
+ * Adds the license notification to the Plugins screen for unlicensed users.
+ *
+ * @param array $data Plugin update data.
+ */
+function relevanssi_premium_modify_plugin_update_message( $data ) {
+	if ( isset( $data['package'] ) && ! empty( $data['package'] ) ) {
+		return;
+	}
+
+	$message = relevanssi_get_api_key_notification();
+	echo '<br /><br />' . $message; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}
+
+/**
+ * Generates a message giving the reason for API key and license problems.
+ *
+ * @return string The message.
+ */
+function relevanssi_get_api_key_notification() {
+	global $relevanssi_variables;
+
+	$api_key = get_network_option( null, 'relevanssi_api_key' );
+	if ( ! $api_key ) {
+		$api_key = get_option( 'relevanssi_api_key' );
+	}
+
+	if ( ! $api_key ) {
+		$url = add_query_arg(
+			'page',
+			'relevanssi-premium%2Frelevanssi.php',
+			get_admin_url() . 'options-general.php'
+		);
+		if ( is_plugin_active_for_network( plugin_basename( $relevanssi_variables['file'] ) ) ) {
+			$url = network_admin_url( 'admin.php?page=relevanssi-premium%2Frelevanssi.php' );
+		}
+		$message = sprintf(
+			// Translators: %1$s opens the link to the Relevanssi Premium settings page, %3$s opens the link to the Relevanssi Premium license purchase page. %2$s closes the links.
+			esc_html__( "The API key is not set. Please enter your API key in the %1\$sthe Relevanssi settings%2\$s. If you don't have one, %3\$syou can buy a new license here%2\$s.", 'relevanssi' ),
+			'<a href="' . esc_url( $url ) . '">',
+			'</a>',
+			'<a href="https://www.relevanssi.com/buy-premium/">'
+		);
+	} else {
+		$message = sprintf(
+			// Translators: %1$s opens the link to the Relevanssi Premium license purchase page. %2$s closes the link.
+			esc_html__( "Your API key is set, but it looks like you don't have a valid license. %1\$sYou can buy a new license here%2\$s.", 'relevanssi' ),
+			'<a href="https://www.relevanssi.com/buy-premium/">',
+			'</a>'
+		);
+	}
+	return $message;
 }

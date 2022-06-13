@@ -375,8 +375,23 @@ function relevanssi_premium_generate_suggestion( $query ) {
 		$correct       = array();
 		$exact_matches = 0;
 		foreach ( array_keys( $tokens ) as $token ) {
-			$token = trim( $token );
-			$c     = $sc->correct( $token );
+			/**
+			 * Filters the tokens for Did you mean suggestions.
+			 *
+			 * You can use this filter hook to modify the tokens before Relevanssi
+			 * tries to come up with Did you mean suggestions for them. If you
+			 * return an empty string, the token will be skipped and no suggestion
+			 * will be made for the token.
+			 *
+			 * @param string $token An individual word from the search query.
+			 *
+			 * @return string The token.
+			 */
+			$token = apply_filters( 'relevanssi_didyoumean_token', trim( $token ) );
+			if ( ! $token ) {
+				continue;
+			}
+			$c = $sc->correct( $token );
 			if ( ! empty( $c ) && strval( $token ) !== $c ) {
 				array_push( $correct, $c );
 				$query = str_ireplace( $token, $c, $query ); // Replace misspelled word in query with suggestion.
@@ -512,12 +527,30 @@ function relevanssi_premium_init() {
 		);
 	}
 
-	$t15s_updater = new Relevanssi_Language_Packs(
-		'plugin',
-		'relevanssi',
-		'https://packages.translationspress.com/relevanssi/relevanssi/packages.json'
+	$update_translations = true;
+	if ( 'on' === get_option( 'relevanssi_do_not_call_home' ) ) {
+		$update_translations = false;
+	}
+	/**
+	 * Filters whether to update the Relevanssi translations.
+	 *
+	 * @param boolean $update_translations If false, don't update translations.
+	 */
+	$update_translations = apply_filters( 'relevanssi_update_translations', $update_translations );
+
+	if ( $update_translations ) {
+		$t15s_updater = new Relevanssi_Language_Packs(
+			'plugin',
+			'relevanssi',
+			'https://packages.translationspress.com/relevanssi/relevanssi/packages.json'
+		);
+		$t15s_updater->add_project();
+	}
+
+	add_action(
+		'in_plugin_update_message-' . $relevanssi_variables['plugin_basename'],
+		'relevanssi_premium_modify_plugin_update_message'
 	);
-	$t15s_updater->add_project();
 
 	// Add the related posts filters if necessary.
 	relevanssi_related_init();
@@ -535,7 +568,7 @@ function relevanssi_premium_init() {
 function relevanssi_hide_post_restriction( $restrictions ) {
 	global $wpdb;
 
-	$restrictions['mysql']  .= "AND post.ID NOT IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_hide_post' AND meta_value = 'on')";
+	$restrictions['mysql']  .= " AND post.ID NOT IN (SELECT post_id FROM $wpdb->postmeta WHERE meta_key = '_relevanssi_hide_post' AND meta_value = 'on')";
 	$restrictions['reason'] .= ' ' . __( 'Relevanssi index exclude', 'relevanssi' );
 
 	return $restrictions;
@@ -1036,4 +1069,157 @@ function relevanssi_add_must_have( $post ) {
 		'relevanssi_missing_terms_must_have',
 		' | ' . __( 'Must have', 'relevanssi' ) . ': <a href="' . $search_page_url . '">' . $search_term . '</a>'
 	);
+}
+
+/**
+ * Updates the $term_hits array used for showing how many hits were found for
+ * each term.
+ *
+ * @param array    $term_hits    The term hits array (passed as reference).
+ * @param array    $match_arrays The matches array (passed as reference).
+ * @param stdClass $match        The match object.
+ * @param string   $term         The search term.
+ */
+function relevanssi_premium_update_term_hits( &$term_hits, &$match_arrays, $match, $term ) {
+	relevanssi_increase_value( $match_arrays['mysqlcolumn'][ $match->doc ], $match->mysqlcolumn );
+
+	$match_arrays['customfield_detail'][ $match->doc ] = array();
+	$match_arrays['taxonomy_detail'][ $match->doc ]    = array();
+	$match_arrays['mysqlcolumn_detail'][ $match->doc ] = array();
+
+	if ( ! empty( $match->customfield_detail ) ) {
+		$match_arrays['customfield_detail'][ $match->doc ][ $term ] = $match->customfield_detail;
+	}
+	if ( ! empty( $match->taxonomy_detail ) ) {
+		$match_arrays['taxonomy_detail'][ $match->doc ][ $term ] = $match->taxonomy_detail;
+	}
+	if ( ! empty( $match->mysqlcolumn_detail ) ) {
+		$match_arrays['mysqlcolumn_detail'][ $match->doc ][ $term ] = $match->mysqlcolumn_detail;
+	}
+}
+
+/**
+ * Adds Premium features to the $return array from $match_arrays.
+ *
+ * @param array $return       The search return value array, passed as a
+ * reference.
+ * @param array $match_arrays The match array for source data.
+ */
+function relevanssi_premium_update_return_array( &$return, $match_arrays ) {
+	$match_arrays['mysqlcolumn_matches'] = $match_arrays['mysqlcolumn_matches'] ?? '';
+	$match_arrays['customfield_detail']  = $match_arrays['customfield_detail'] ?? '';
+	$match_arrays['taxonomy_detail']     = $match_arrays['taxonomy_detail'] ?? '';
+	$match_arrays['mysqlcolumn_detail']  = $match_arrays['mysqlcolumn_detail'] ?? '';
+
+	$additions = array(
+		'mysqlcolumn'        => $match_arrays['mysqlcolumn_matches'],
+		'customfield_detail' => $match_arrays['customfield_detail'],
+		'taxonomy_detail'    => $match_arrays['taxonomy_detail'],
+		'mysqlcolumn_detail' => $match_arrays['mysqlcolumn_detail'],
+	);
+
+	$return = array_merge( $return, $additions );
+}
+
+/**
+ * Adds Premium features to the $post->relevanssi_hits source array.
+ *
+ * @param array $hits    The search hits array.
+ * @param array $data    The source data.
+ * @param int   $post_id The post ID.
+ */
+function relevanssi_premium_add_matches( &$hits, $data, $post_id ) {
+	$hits['mysqlcolumn']        = $data['mysqlcolumn_matches'][ $post_id ] ?? 0;
+	$hits['customfield_detail'] = $data['customfield_detail'][ $post_id ] ?? array();
+	$hits['taxonomy_detail']    = $data['taxonomy_detail'][ $post_id ] ?? array();
+	$hits['mysqlcolumn_detail'] = $data['mysqlcolumn_detail'][ $post_id ] ?? array();
+
+	$hits['customfield_detail'] = array_map(
+		function( $value ) {
+			return (array) json_decode( $value );
+		},
+		$hits['customfield_detail']
+	);
+}
+
+/**
+ * Returns a string of custom field content for the user.
+ *
+ * Fetches the user custom field content based on the field indexing settings
+ * and concatenates it as a single space-separated string.
+ *
+ * @uses relevanssi_get_user_field_content
+ *
+ * @param string $user_id The ID of the user.
+ *
+ * @return string The custom field content.
+ */
+function relevanssi_get_user_custom_field_content( $user_id ) : string {
+	$custom_field_content = '';
+
+	$fields = relevanssi_get_user_field_content( $user_id );
+	if ( ! empty( $fields ) ) {
+		$custom_field_content = implode( ' ', array_values( $fields ) );
+	}
+
+	return $custom_field_content;
+}
+
+/**
+ * Returns an array of user custom field names.
+ *
+ * Gets the indexed user field names from relevanssi_index_user_fields and
+ * relevanssi_index_user_meta options and returns an array of field names.
+ *
+ * @return array Array of user custom field names.
+ */
+function relevanssi_generate_list_of_user_fields() : array {
+	$user_fields = array();
+
+	$user_fields_option = get_option( 'relevanssi_index_user_fields' );
+	if ( $user_fields_option ) {
+		$user_fields = explode( ',', $user_fields_option );
+	}
+
+	$user_meta = get_option( 'relevanssi_index_user_meta' );
+	if ( $user_meta ) {
+		$user_fields = array_merge( $user_fields, explode( ',', $user_meta ) );
+	}
+
+	$user_fields = array_map( 'trim', $user_fields );
+
+	return $user_fields;
+}
+
+/**
+ * Returns an array of user custom field content.
+ *
+ * Gets the indexed user field content from the fields specified in the user
+ * field indexing options.
+ *
+ * @uses relevanssi_generate_list_of_user_fields
+ *
+ * @param string $user_id The ID of the user.
+ *
+ * @return array An array of (field, value) pairs.
+ */
+function relevanssi_get_user_field_content( $user_id ) : array {
+	$fields    = relevanssi_generate_list_of_user_fields();
+	$user      = get_user_by( 'id', $user_id );
+	$user_vars = get_object_vars( $user );
+	$values    = array();
+	foreach ( $fields as $field ) {
+		$field_value = '';
+		if ( isset( $user_vars[ $field ] ) ) {
+			$field_value = $user_vars[ $field ];
+		}
+		if ( empty( $field_value ) && isset( $user_vars['data']->$field ) ) {
+			$field_value = $user_vars['data']->$field;
+		}
+		if ( empty( $field_value ) ) {
+			$field_value = get_user_meta( $user_id, $field, true );
+		}
+		$values[ $field ] = $field_value;
+	}
+	return $values;
 }

@@ -145,7 +145,14 @@ function relevanssi_search_multi( $multi_args ) {
 			);
 
 			foreach ( $df_counts as $term => $df ) {
-				$query   = relevanssi_generate_search_query( $term, $search_again, false, $query_join, $query_restrictions );
+				$this_query_restrictions = relevanssi_add_phrase_restrictions(
+					$query_restrictions,
+					$phrase_queries,
+					$term,
+					$operator
+				);
+
+				$query   = relevanssi_generate_search_query( $term, $search_again, false, $query_join, $this_query_restrictions );
 				$matches = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 				if ( count( $matches ) < 1 ) {
 					continue;

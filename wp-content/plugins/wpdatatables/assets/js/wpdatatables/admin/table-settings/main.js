@@ -67,6 +67,13 @@
         });
 
         /**
+         * Set pagination layout
+         */
+        $('#wdt-responsive-action').change(function (e) {
+            wpdatatable_config.setResponsiveAction($(this).val());
+        });
+
+        /**
          * Toggle Scrollable
          */
         $('#wdt-scrollable').change(function (e) {

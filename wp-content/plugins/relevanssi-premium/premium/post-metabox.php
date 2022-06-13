@@ -62,8 +62,9 @@ function relevanssi_post_metabox() {
 	global $relevanssi_variables, $post;
 	wp_nonce_field( plugin_basename( $relevanssi_variables['file'] ), 'relevanssi_hidepost' );
 
-	$hide_post   = checked( 'on', get_post_meta( $post->ID, '_relevanssi_hide_post', true ), false );
-	$pin_for_all = checked( 'on', get_post_meta( $post->ID, '_relevanssi_pin_for_all', true ), false );
+	$hide_post    = checked( 'on', get_post_meta( $post->ID, '_relevanssi_hide_post', true ), false );
+	$hide_content = checked( 'on', get_post_meta( $post->ID, '_relevanssi_hide_content', true ), false );
+	$pin_for_all  = checked( 'on', get_post_meta( $post->ID, '_relevanssi_pin_for_all', true ), false );
 
 	$pins = get_post_meta( $post->ID, '_relevanssi_pin', false );
 	$pin  = implode( ', ', $pins );
@@ -103,6 +104,11 @@ function relevanssi_post_metabox() {
 	<p><input type="checkbox" id="relevanssi_hide_post" name="relevanssi_hide_post" <?php echo esc_attr( $hide_post ); ?> />
 	<label for="relevanssi_hide_post">
 		<?php esc_html_e( 'Exclude this post or page from the index.', 'relevanssi' ); ?>
+	</label></p>
+
+	<p><input type="checkbox" id="relevanssi_hide_content" name="relevanssi_hide_content" <?php echo esc_attr( $hide_content ); ?> />
+	<label for="relevanssi_hide_content">
+		<?php esc_html_e( 'Ignore post content in the indexing.', 'relevanssi' ); ?>
 	</label></p>
 
 	<?php
@@ -223,6 +229,17 @@ function relevanssi_save_postdata( $post_id ) {
 		update_post_meta( $post_id, '_relevanssi_hide_post', $hide );
 	} else {
 		delete_post_meta( $post_id, '_relevanssi_hide_post' );
+	}
+
+	$hide_content = '';
+	if ( isset( $post['relevanssi_hide_content'] ) && 'on' === $post['relevanssi_hide_content'] ) {
+		$hide_content = 'on';
+	}
+
+	if ( 'on' === $hide_content ) {
+		update_post_meta( $post_id, '_relevanssi_hide_content', $hide_content );
+	} else {
+		delete_post_meta( $post_id, '_relevanssi_hide_content' );
 	}
 
 	$pin_for_all = '';

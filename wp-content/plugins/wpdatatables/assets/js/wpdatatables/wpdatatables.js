@@ -49,6 +49,7 @@ var singleClick = false;
                             wdtBreakpointDefinition.tablet = parseInt(tableDescription.tabletWidth);
                         }
                         wpDataTablesResponsiveHelpers[tableDescription.tableId] = new ResponsiveDatatablesHelper($(tableDescription.selector).dataTable(), wdtBreakpointDefinition, {
+                            clickOn: tableDescription.responsiveAction ? tableDescription.responsiveAction : 'icon',
                             showDetail: function (detailsRow) {
                                 if (tableDescription.conditional_formatting_columns) {
                                     var responsive_rows = detailsRow.find('li');

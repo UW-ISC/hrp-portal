@@ -86,8 +86,8 @@ class Relevanssi_WP_Auto_Update {
 			$obj              = new stdClass();
 			$obj->slug        = $this->slug;
 			$obj->new_version = $remote_version;
-			$obj->url         = $this->update_path;
-			$obj->package     = $this->update_path;
+			$obj->url         = $info->package;
+			$obj->package     = $info->package;
 			$obj->icons       = $info->icons;
 			$obj->banners     = $info->banners;
 
@@ -97,7 +97,7 @@ class Relevanssi_WP_Auto_Update {
 			// No update is available.
 			$item = (object) array(
 				'id'            => 'relevanssi-premium/relevanssi.php',
-				'slug'          => 'my-plugin',
+				'slug'          => 'relevanssi-premium',
 				'plugin'        => 'relevanssi-premium/relevanssi.php',
 				'new_version'   => $relevanssi_variables['plugin_version'],
 				'url'           => '',
@@ -208,6 +208,9 @@ class Relevanssi_WP_Auto_Update {
 			)
 		);
 		if ( ! is_wp_error( $request ) || 200 === wp_remote_retrieve_response_code( $request ) ) {
+			if ( 'false' === $request['body'] ) {
+				return false;
+			}
 			return $request['body'];
 		}
 		return false;
@@ -228,9 +231,13 @@ function relevanssi_activate_auto_update() {
 		$api_key = get_option( 'relevanssi_api_key' );
 	}
 	if ( 'su9qtC30xCLLA' === crypt( $api_key, 'suolaa' ) ) {
-		$relevanssi_plugin_remote_path = 'https://www.relevanssi.com/update/update-development.php';
+		$relevanssi_plugin_remote_path = 'https://www.relevanssi.com/update/update-development-2022.php';
 	} else {
-		$relevanssi_plugin_remote_path = 'https://www.relevanssi.com/update/update.php';
+		$relevanssi_plugin_remote_path = 'https://www.relevanssi.com/update/update-2022.php';
 	}
-	new Relevanssi_WP_Auto_Update( $relevanssi_variables['plugin_version'], $relevanssi_plugin_remote_path, $relevanssi_variables['plugin_basename'] );
+	$relevanssi_variables['autoupdate'] = new Relevanssi_WP_Auto_Update(
+		$relevanssi_variables['plugin_version'],
+		$relevanssi_plugin_remote_path,
+		$relevanssi_variables['plugin_basename']
+	);
 }

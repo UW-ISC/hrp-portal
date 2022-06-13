@@ -41,7 +41,6 @@ foreach (Connection::getAll() as $key => $wdtSeparateConnection) {
                 <button id="wp-my-sql-add" class="btn btn-primary"><?php esc_html_e('Add New Connection', 'wpdatatables'); ?></button>
             </div>
         </div>
-
     </div>
 
     <ul class="tab-nav mysql-serverside-settings-block" role="tablist">

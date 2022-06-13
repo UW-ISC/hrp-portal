@@ -78,7 +78,7 @@
 }
 
 .wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block-file .card {
-    min-height: 540px;
+    min-height: 555px;
 }
 
 .wpdt-c .wdt-constructor-column-block.gu-mirror .card, tr.gu-mirror {
@@ -102,6 +102,12 @@
     top: 12px;
     font-size: 16px;
     color: #c7c7c7;
+}
+
+@media (max-width: 768px) {
+    .wpdt-c .wdt-constructor-column-block .card-header i.wpdt-icon-pen {
+        right: 50px;
+    }
 }
 
 .wpdt-c .wdt-constructor-column-name {
@@ -353,6 +359,13 @@
 }
 .wpdt-c .wdt-constructor-remove-column {
     top: 16px !important;
+}
+
+@media (max-width: 768px) {
+    .wpdt-c .wdt-constructor-remove-column {
+        top: 19px !important;
+        right: 10px !important;
+    }
 }
 
 .wpdt-c .wdt-constructor-refresh-wp-query i {

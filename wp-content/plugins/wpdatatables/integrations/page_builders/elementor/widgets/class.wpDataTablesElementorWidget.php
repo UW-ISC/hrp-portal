@@ -40,7 +40,7 @@ class WPDataTables_Elementor_Widget extends Widget_Base {
         $this->_allTables = $allTables;
     }
 
-    protected function _register_controls() {
+    protected function register_controls() {
 
         $this->start_controls_section(
             'wpdatatables_section',

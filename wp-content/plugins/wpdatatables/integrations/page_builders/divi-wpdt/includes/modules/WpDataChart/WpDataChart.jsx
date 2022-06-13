@@ -23,6 +23,11 @@ class WpDataChart extends Component {
         let chartId = this.props.id;
         let chartsCount = parseInt(this.props.chart_array_length);
 
+        if (!isNumeric(chartId)) {
+            chartId = chartId.substring(chartId.lastIndexOf('(id: ') + 4);
+            chartId = chartId.substring(0, chartId.lastIndexOf(')'));
+        }
+
         if (chartsCount === 1) {
             return "Please create a wpDataChart first. You can check out how on this <a target='_blank' href='https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/'>link</a>.";
         }
@@ -65,6 +70,11 @@ class WpDataChart extends Component {
         )
     }
 
+}
+
+function isNumeric(str) {
+    if (typeof str != "string") return false
+    return !isNaN(str) && !isNaN(parseFloat(str))
 }
 
 export default WpDataChart;

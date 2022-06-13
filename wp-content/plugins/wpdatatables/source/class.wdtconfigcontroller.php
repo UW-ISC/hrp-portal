@@ -183,6 +183,7 @@ class WDTConfigController {
             $table->columns = self::getColumnsConfig($tableId);
             $table->info_block = (isset($advancedSettings->info_block)) ? $advancedSettings->info_block : 1;
             $table->showTableToolsIncludeHTML = (isset($advancedSettings->showTableToolsIncludeHTML)) ? $advancedSettings->showTableToolsIncludeHTML : 0;
+            $table->responsiveAction = (isset($advancedSettings->responsiveAction)) ? $advancedSettings->responsiveAction : 'icon';
             $table->pagination = (isset($advancedSettings->pagination)) ? $advancedSettings->pagination : 1;
             $table->paginationAlign = (isset($advancedSettings->paginationAlign)) ? $advancedSettings->paginationAlign : 'right';
             $table->paginationLayout = (isset($advancedSettings->paginationLayout)) ? $advancedSettings->paginationLayout : 'full_numbers';
@@ -358,6 +359,7 @@ class WDTConfigController {
                 array(
                     'info_block' => $table->info_block,
                     'showTableToolsIncludeHTML' => $table->showTableToolsIncludeHTML,
+                    'responsiveAction' => $table->responsiveAction,
                     'pagination' => $table->pagination,
                     'paginationAlign' => $table->paginationAlign,
                     'paginationLayout' => $table->paginationLayout,
@@ -437,6 +439,7 @@ class WDTConfigController {
         $table->server_side = (int)$table->server_side;
         $table->auto_refresh = (int)$table->auto_refresh;
         $table->info_block = (int)$table->info_block;
+        $table->responsiveAction = sanitize_text_field($table->responsiveAction);
         $table->pagination = (int)$table->pagination;
         $table->paginationAlign = sanitize_text_field($table->paginationAlign);
         $table->paginationLayout = sanitize_text_field($table->paginationLayout);
@@ -1358,6 +1361,7 @@ class WDTConfigController {
         $table->server_side = 0;
         $table->auto_refresh = 0;
         $table->info_block = 1;
+        $table->responsiveAction = 'icon';
         $table->pagination = 1;
         $table->paginationAlign = 'right';
         $table->paginationLayout = 'full_numbers';
