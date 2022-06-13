@@ -703,6 +703,7 @@
 
             // check if connections have all parameters
             for (var i = 0; i < connections.length; i++) {
+
                 if (connections[i]['name'].trim() === '' ||
                     connections[i]['database'].trim() === '' ||
                     connections[i]['host'].trim() === '' ||

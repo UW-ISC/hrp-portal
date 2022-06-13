@@ -76,6 +76,13 @@ class DIVI_wpDataChart extends ET_Builder_Module
         $shortcode = '[wpdatachart ';
         $chartId =  $this->props['id'];
 
+        //Fix for Divi not recognizing chart ID as an int when only one chart is created
+        if (!is_numeric($chartId)) {
+            $chartId = substr($chartId, strrpos($chartId, "(id:") + 4);
+            $chartId = substr($chartId, 0,strrpos($chartId, ')') );
+            $chartId = (int)$chartId;
+        }
+
         if(count($this->getAllCharts()) == 1) {
             return __(WDTConfigController::wdt_create_chart_notice());
         }

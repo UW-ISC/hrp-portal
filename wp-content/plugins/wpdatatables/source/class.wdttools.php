@@ -1281,16 +1281,10 @@ class WDTTools
             ]
         );
 
-        if (!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) {
-            if (json_decode($request['body'])) {
-                /** @var stdClass $remoteInformation */
-                $remoteInformation = unserialize(json_decode($request['body'])->info);
-                if (isset($remoteInformation->force_deactivate) && $remoteInformation->force_deactivate === true) {
-                    self::deactivatePlugin($slug);
-                }
+        if ((!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) && isset($request['body'])) {
+            $body = json_decode($request['body']);
 
-                return unserialize(json_decode($request['body'])->info);
-            }
+            return $body && isset($body->info) ? unserialize($body->info) : false;
         }
 
         return false;
@@ -1492,6 +1486,7 @@ class WDTTools
             }
             if ($isMySql) {
                 $string = $wpdb->_real_escape($string);
+                $string = $wpdb->remove_placeholder_escape($string);
             }
         }
         $string = self::wrapQuotes($string, $connection);
@@ -1979,9 +1974,9 @@ class WDTTools
                 $query = "SELECT {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} FROM {$mySqlTableName} WHERE {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} = {$idValCheck} AND {$leftSysIdentifier}{$userIDColumnName}{$rightSysIdentifier} =" . get_current_user_id();
                 if (!$sql->getField($query)) {
                     if ($action == 'delete'){
-                        $returnResult['error'] = __('User do not have permissions to delete this row! ', 'wpdatatables');
+                        $returnResult['error'] = __('User does not have permissions to delete this row! ', 'wpdatatables');
                     } else {
-                        $returnResult['error'] = __('User do not have permission to update data!', 'wpdatatables');
+                        $returnResult['error'] = __('User does not have permission to update data!', 'wpdatatables');
                     }
                     echo json_encode($returnResult);
                     exit();

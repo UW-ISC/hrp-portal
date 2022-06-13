@@ -321,6 +321,15 @@ function relevanssi_get_related_post_ids( $post_id, $use_cache = true ) {
 			);
 			relevanssi_do_query( $related_posts_query );
 			$related_posts = array_merge( $related_posts, $related_posts_query->posts );
+
+			// There may be null results in the set and those may cause problems
+			// further down the line.
+			$related_posts = array_filter(
+				$related_posts,
+				function( $value ) {
+					return $value;
+				}
+			);
 		}
 	}
 

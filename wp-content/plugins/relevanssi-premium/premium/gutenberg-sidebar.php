@@ -29,6 +29,10 @@ function relevanssi_register_gutenberg_meta() {
 			'description' => 'Hide this post',
 		),
 		array(
+			'meta_key'    => '_relevanssi_hide_content',
+			'description' => 'Hide post content',
+		),
+		array(
 			'meta_key'    => '_relevanssi_pin_for_all',
 			'description' => 'Pin for all searches',
 		),

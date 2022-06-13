@@ -152,7 +152,7 @@ jQuery(document).ready(function ($) {
             {
                 format: wdtDateFormat,
                 showClear: true,
-                keepOpen: true,
+                keepOpen: false,
                 useCurrent: false
             }
         )

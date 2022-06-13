@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: wpdatatables\n"
-"POT-Creation-Date: 2022-05-18 12:16+0200\n"
-"PO-Revision-Date: 2022-05-18 12:16+0200\n"
+"POT-Creation-Date: 2022-06-13 16:10+0200\n"
+"PO-Revision-Date: 2022-06-13 16:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: wpdatatables <cjbug@yandex.ru>\n"
 "Language: fr_FR\n"
@@ -62,12 +62,12 @@ msgstr ""
 #: wdt-formidable-integration/wdt-formidable-integration.php:620
 #: wdt-gravity-integration/wdt-gravity-integration.php:1602
 #: wdt-gravity-integration/wdt-gravity-integration.php:1616
-#: wdt-master-detail/wdt-master-detail.php:1110
-#: wdt-master-detail/wdt-master-detail.php:1124
+#: wdt-master-detail/wdt-master-detail.php:1105
+#: wdt-master-detail/wdt-master-detail.php:1119
 #: wdt-powerful-filters/wdt-powerful-filters.php:804
 #: wdt-powerful-filters/wdt-powerful-filters.php:818
-#: wpdatatables/controllers/wdt_functions.php:1133
-#: wpdatatables/controllers/wdt_functions.php:1148
+#: wpdatatables/controllers/wdt_functions.php:1132
+#: wpdatatables/controllers/wdt_functions.php:1147
 msgid "settings"
 msgstr "paramètres"
 
@@ -77,15 +77,6 @@ msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
 "to activate Report Builder for wpDataTables."
 msgstr ""
-
-#: reportbuilder/source/class.admin.php:43
-#: reportbuilder/source/class.admin.php:44
-#: reportbuilder/source/class.vcintegration.php:26
-#: reportbuilder/templates/activation.inc.php:8
-#: wpdatatables/templates/admin/addons/addons.inc.php:148
-#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:587
-msgid "Report Builder"
-msgstr "Report Builder"
 
 #: reportbuilder/source/class.admin.php:52
 #: reportbuilder/source/class.admin.php:53
@@ -137,6 +128,13 @@ msgstr ""
 #: reportbuilder/source/class.vcintegration.php:16
 msgid "Choose..."
 msgstr ""
+
+#: reportbuilder/source/class.vcintegration.php:26
+#: reportbuilder/templates/activation.inc.php:8
+#: wpdatatables/templates/admin/addons/addons.inc.php:148
+#: wpdatatables/templates/admin/dashboard/dashboard.inc.php:587
+msgid "Report Builder"
+msgstr "Report Builder"
 
 #: reportbuilder/source/class.vcintegration.php:28
 msgid "DOCX and XLSX Report Builder buttons and inputs"
@@ -212,7 +210,6 @@ msgstr "Code d'achat de la boutique TMS"
 
 #: reportbuilder/templates/activation.inc.php:21
 #: wdt-formidable-integration/templates/activation.inc.php:21
-#: wdt-gravity-integration/templates/activation.inc.php:21
 #: wdt-master-detail/templates/activation.inc.php:20
 #: wdt-powerful-filters/templates/activation.inc.php:21
 msgid ""
@@ -263,7 +260,6 @@ msgstr "API Envato"
 
 #: reportbuilder/templates/activation.inc.php:78
 #: wdt-formidable-integration/templates/activation.inc.php:79
-#: wdt-gravity-integration/templates/activation.inc.php:78
 #: wdt-powerful-filters/templates/activation.inc.php:78
 msgid ""
 "If you brought the plugin on the Envato (CodeCanyon) activate the plugin "
@@ -307,7 +303,7 @@ msgstr ""
 
 #: reportbuilder/templates/admin_actions.tpl.php:9
 #: wpdatatables/source/class.wdttools.php:483
-#: wpdatatables/source/class.wpdatatable.php:3968
+#: wpdatatables/source/class.wpdatatable.php:3987
 #: wpdatatables/templates/admin/browse/bulk_actions.inc.php:14
 #: wpdatatables/templates/admin/settings/tabs/separate_connection_form.php:166
 #: wpdatatables/templates/admin/settings/tabs/separate_connection_form.php:172
@@ -679,7 +675,7 @@ msgstr " Précédent"
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:1196
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:682
 #: wpdatatables/templates/admin/table-settings/table_preview_block.inc.php:95
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2276
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2295
 #: wpdatatables/templates/admin/welcome_page/welcome_page.inc.php:218
 msgid "View Documentation"
 msgstr "Voir la documentation"
@@ -836,15 +832,27 @@ msgstr ""
 msgid "Gravity Forms Integration"
 msgstr ""
 
+#: wdt-gravity-integration/templates/activation.inc.php:21
+msgid ""
+"If your bought the plugin directly on our website, enter TMS Store purchase "
+"code to enable auto updates."
+msgstr ""
+
 #: wdt-gravity-integration/templates/activation.inc.php:35
 msgid "Please enter your Gravity Forms Integration TMS Store Purchase Code"
+msgstr ""
+
+#: wdt-gravity-integration/templates/activation.inc.php:78
+msgid ""
+"If you bought the plugin on Envato (CodeCanyon) activate the plugin using "
+"Envato API to enable auto updates."
 msgstr ""
 
 #: wdt-gravity-integration/templates/alert_server_side.inc.php:11
 msgid ""
 "Please be aware that sorting and searching may not work as expected for "
-"complex entries when server side is turned on. This problem is on Gravity "
-"side and we are working on solution."
+"complex entries when server side is turned on. This is a problem on "
+"Gravity's side and we are working on a solution."
 msgstr ""
 
 #: wdt-gravity-integration/templates/alert_server_side.inc.php:13
@@ -898,7 +906,7 @@ msgid ""
 msgstr ""
 
 #: wdt-gravity-integration/templates/tabpanel.inc.php:15
-msgid "Show form deleted records"
+msgid "Show deleted form records"
 msgstr ""
 
 #: wdt-gravity-integration/templates/tabpanel.inc.php:22
@@ -928,7 +936,7 @@ msgstr ""
 
 #: wdt-gravity-integration/wdt-gravity-integration.php:566
 #: wpdatatables/controllers/wdt_ajax_actions.php:247
-#: wpdatatables/source/class.wpdatatable.php:3371
+#: wpdatatables/source/class.wpdatatable.php:3388
 msgid ""
 "You are trying to load a table of an unknown type. Probably you did not "
 "activate the addon which is required to use this table type."
@@ -1067,23 +1075,23 @@ msgstr ""
 msgid "Show/hide Master-detail column"
 msgstr ""
 
-#: wdt-master-detail/wdt-master-detail.php:664
+#: wdt-master-detail/wdt-master-detail.php:659
 msgid ""
 "Master-detail Tables for wpDataTables is an add-on - please install and "
 "activate wpDataTables to be able to use it!"
 msgstr ""
 
-#: wdt-master-detail/wdt-master-detail.php:673
+#: wdt-master-detail/wdt-master-detail.php:668
 msgid ""
 "Master-Detail Tables add-on for wpDataTables requires wpDataTables version "
 msgstr ""
 
-#: wdt-master-detail/wdt-master-detail.php:841
+#: wdt-master-detail/wdt-master-detail.php:836
 msgid "Details"
 msgstr ""
 
-#: wdt-master-detail/wdt-master-detail.php:1113
-#: wdt-master-detail/wdt-master-detail.php:1129
+#: wdt-master-detail/wdt-master-detail.php:1108
+#: wdt-master-detail/wdt-master-detail.php:1124
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1278,7 +1286,7 @@ msgid "Lite vs Premium"
 msgstr "Version allégée vs Premium"
 
 #: wpdatatables/controllers/wdt_admin.php:100
-#: wpdatatables/controllers/wdt_functions.php:1191
+#: wpdatatables/controllers/wdt_functions.php:1190
 msgid "Add-ons"
 msgstr "Suppléments d’extension"
 
@@ -1309,12 +1317,12 @@ msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 "Vous ne disposez pas des autorisations suffisantes pour accéder à cette page."
 
-#: wpdatatables/controllers/wdt_admin_ajax_actions.php:785
+#: wpdatatables/controllers/wdt_admin_ajax_actions.php:794
 msgid "There was an error while trying to import table"
 msgstr ""
 "Une erreur s’est produite lors de la tentative d’importation du tableau"
 
-#: wpdatatables/controllers/wdt_admin_ajax_actions.php:789
+#: wpdatatables/controllers/wdt_admin_ajax_actions.php:798
 msgid "There was an error while trying to import table. Exception: "
 msgstr ""
 "Une erreur s’est produite lors de la tentative d’importation du tableau. "
@@ -1397,8 +1405,8 @@ msgid "Provided column is not Integer or Float column type"
 msgstr ""
 "La colonne fournie n’est pas un type de colonne de nombre entier ou à vigule"
 
-#: wpdatatables/controllers/wdt_functions.php:1136
-#: wpdatatables/controllers/wdt_functions.php:1153
+#: wpdatatables/controllers/wdt_functions.php:1135
+#: wpdatatables/controllers/wdt_functions.php:1152
 #, php-format
 msgid ""
 "To receive automatic updates license activation is required. Please visit %s "
@@ -1407,20 +1415,20 @@ msgstr ""
 "Pour recevoir les mises à jour automatiques, l’activation de la licence est "
 "requise. Veuillez visiter %s pour activer wpDataTables."
 
-#: wpdatatables/controllers/wdt_functions.php:1188
+#: wpdatatables/controllers/wdt_functions.php:1187
 msgid "Go to Settings"
 msgstr ""
 
-#: wpdatatables/controllers/wdt_functions.php:1194
+#: wpdatatables/controllers/wdt_functions.php:1193
 msgid "Docs"
 msgstr ""
 
-#: wpdatatables/controllers/wdt_functions.php:1219
+#: wpdatatables/controllers/wdt_functions.php:1218
 #, php-format
 msgid "By %s"
 msgstr ""
 
-#: wpdatatables/controllers/wdt_functions.php:1226
+#: wpdatatables/controllers/wdt_functions.php:1225
 msgid "View details"
 msgstr ""
 
@@ -1936,17 +1944,17 @@ msgstr ""
 "Une erreur s’est produite lors de la tentative d’extraction des données du "
 "tableau: "
 
-#: wpdatatables/source/class.wdtconfigcontroller.php:805
+#: wpdatatables/source/class.wdtconfigcontroller.php:808
 msgid "Table in data source has no rows."
 msgstr "Le tableau dans la source de données n’a pas de lignes."
 
-#: wpdatatables/source/class.wdtconfigcontroller.php:861
+#: wpdatatables/source/class.wdtconfigcontroller.php:864
 msgid ""
 "One or more columns doesn't have a header. Please enter headers for all "
 "columns in order to proceed."
 msgstr ""
 
-#: wpdatatables/source/class.wdtconfigcontroller.php:1486
+#: wpdatatables/source/class.wdtconfigcontroller.php:1490
 msgid "Select a "
 msgstr ""
 
@@ -2094,9 +2102,9 @@ msgstr ""
 "tableau"
 
 #: wpdatatables/source/class.wdttools.php:478
-#: wpdatatables/source/class.wpdatatable.php:3846
-#: wpdatatables/source/class.wpdatatable.php:3932
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1147
+#: wpdatatables/source/class.wpdatatable.php:3865
+#: wpdatatables/source/class.wpdatatable.php:3951
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1166
 msgid "Copy"
 msgstr "Copier"
 
@@ -3473,14 +3481,20 @@ msgstr ""
 "n'importe quel WP article ou page. <br><br>Vous pouvez maintenant terminer "
 "ce tutoriel. "
 
-#: wpdatatables/source/class.wdttools.php:1958
-#: wpdatatables/source/class.wdttools.php:1982
+#: wpdatatables/source/class.wdttools.php:1953
 msgid "User do not have permissions to delete this row! "
 msgstr ""
 
-#: wpdatatables/source/class.wdttools.php:1960
-#: wpdatatables/source/class.wdttools.php:1984
+#: wpdatatables/source/class.wdttools.php:1955
 msgid "User do not have permission to update data!"
+msgstr ""
+
+#: wpdatatables/source/class.wdttools.php:1977
+msgid "User does not have permissions to delete this row! "
+msgstr ""
+
+#: wpdatatables/source/class.wdttools.php:1979
+msgid "User does not have permission to update data!"
 msgstr ""
 
 #: wpdatatables/source/class.wpdatachart.php:2040
@@ -3493,7 +3507,7 @@ msgstr ""
 "Vous mélangez des types de données (plusieurs axes de dates et plusieurs "
 "nombres)"
 
-#: wpdatatables/source/class.wpdatatable.php:2584
+#: wpdatatables/source/class.wpdatatable.php:2601
 msgid ""
 "No data fetched!  <br/> If you are trying to save table for the first time, "
 "please enter some date before saving so table could be set accurately. <br/> "
@@ -3504,90 +3518,90 @@ msgstr ""
 "que le tableau puisse être défini avec précision. <br/> Vous pouvez la "
 "supprimer plus tard si vous avez besoin d’un tableau vide pour commencer."
 
-#: wpdatatables/source/class.wpdatatable.php:2586
+#: wpdatatables/source/class.wpdatatable.php:2603
 msgid "Rendered query: "
 msgstr "Requête rendue: "
 
-#: wpdatatables/source/class.wpdatatable.php:2588
+#: wpdatatables/source/class.wpdatatable.php:2605
 msgid " MySQL said: "
 msgstr " MySQL a déclaré: "
 
-#: wpdatatables/source/class.wpdatatable.php:3119
+#: wpdatatables/source/class.wpdatatable.php:3136
 msgid "Unable to calculate"
 msgstr "Impossible de calculer"
 
-#: wpdatatables/source/class.wpdatatable.php:3126
+#: wpdatatables/source/class.wpdatatable.php:3143
 msgid "Result for first 5 rows: "
 msgstr "Résultat pour les 5 premières lignes: "
 
-#: wpdatatables/source/class.wpdatatable.php:3128
+#: wpdatatables/source/class.wpdatatable.php:3145
 msgid "Unable to calculate, error message: "
 msgstr "Impossible de calculer, message d’erreur: "
 
-#: wpdatatables/source/class.wpdatatable.php:3705
-#: wpdatatables/source/class.wpdatatable.php:3708
+#: wpdatatables/source/class.wpdatatable.php:3724
+#: wpdatatables/source/class.wpdatatable.php:3727
 #: wpdatatables/templates/admin/chart_wizard/steps/step3.inc.php:86
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:578
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:355
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1058
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:374
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1077
 msgid "All"
 msgstr "Tout"
 
-#: wpdatatables/source/class.wpdatatable.php:3768
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:774
+#: wpdatatables/source/class.wpdatatable.php:3787
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:793
 #: wpdatatables/templates/frontend/filter_form.inc.php:30
 msgid "Clear filters"
 msgstr "Effacer les filtres"
 
-#: wpdatatables/source/class.wpdatatable.php:3795
-#: wpdatatables/source/class.wpdatatable.php:3878
+#: wpdatatables/source/class.wpdatatable.php:3814
+#: wpdatatables/source/class.wpdatatable.php:3897
 #: wpdatatables/templates/admin/table-settings/columns_list_modal.inc.php:12
 msgid "Columns"
 msgstr "Colonnes"
 
-#: wpdatatables/source/class.wpdatatable.php:3808
-#: wpdatatables/source/class.wpdatatable.php:3891
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1144
+#: wpdatatables/source/class.wpdatatable.php:3827
+#: wpdatatables/source/class.wpdatatable.php:3910
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1163
 msgid "Print"
 msgstr "Imprimer"
 
-#: wpdatatables/source/class.wpdatatable.php:3822
-#: wpdatatables/source/class.wpdatatable.php:3906
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1145
+#: wpdatatables/source/class.wpdatatable.php:3841
+#: wpdatatables/source/class.wpdatatable.php:3925
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1164
 msgid "Excel"
 msgstr "Excel"
 
-#: wpdatatables/source/class.wpdatatable.php:3834
-#: wpdatatables/source/class.wpdatatable.php:3919
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1146
+#: wpdatatables/source/class.wpdatatable.php:3853
+#: wpdatatables/source/class.wpdatatable.php:3938
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1165
 msgid "CSV"
 msgstr "CSV"
 
-#: wpdatatables/source/class.wpdatatable.php:3858
-#: wpdatatables/source/class.wpdatatable.php:3944
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1148
+#: wpdatatables/source/class.wpdatatable.php:3877
+#: wpdatatables/source/class.wpdatatable.php:3963
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1167
 msgid "PDF"
 msgstr "PDF"
 
-#: wpdatatables/source/class.wpdatatable.php:3866
+#: wpdatatables/source/class.wpdatatable.php:3885
 msgid "Export"
 msgstr "Exporter"
 
-#: wpdatatables/source/class.wpdatatable.php:3959
+#: wpdatatables/source/class.wpdatatable.php:3978
 msgid "New entry"
 msgstr "Nouvelle entrée"
 
-#: wpdatatables/source/class.wpdatatable.php:3963
+#: wpdatatables/source/class.wpdatatable.php:3982
 msgid "Edit"
 msgstr "Editer"
 
-#: wpdatatables/source/class.wpdatatable.php:3988
+#: wpdatatables/source/class.wpdatatable.php:4007
 #: wpdatatables/templates/admin/browse/chart/duplicate_chart_modal.inc.php:47
 #: wpdatatables/templates/admin/browse/table/duplicate_table_modal.inc.php:64
 msgid "Duplicate"
 msgstr "Dupliquer"
 
-#: wpdatatables/source/class.wpdatatable.php:4019
+#: wpdatatables/source/class.wpdatatable.php:4038
 msgid "Search table"
 msgstr "Tableau de recherche"
 
@@ -3841,7 +3855,7 @@ msgstr "Libellé"
 
 #: wpdatatables/templates/admin/chart_wizard/chart_wizard.inc.php:157
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:681
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2123
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2142
 msgid "Color"
 msgstr "Couleur"
 
@@ -4337,8 +4351,8 @@ msgstr ""
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:105
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:426
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:661
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1783
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2101
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1802
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2120
 msgid "Background color"
 msgstr "Couleur de fond"
 
@@ -4369,7 +4383,7 @@ msgstr "La largeur en pixels de la bordure externe du graphique."
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:1578
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:124
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:445
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1804
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1823
 msgid "Border color"
 msgstr "Couleur de la bordure"
 
@@ -4610,7 +4624,7 @@ msgid "Set top offset for the dropshadow."
 msgstr ""
 
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:611
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:584
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:603
 msgid "Left"
 msgstr ""
 
@@ -4633,7 +4647,7 @@ msgstr ""
 
 #: wpdatatables/templates/admin/chart_wizard/steps/step4.inc.php:677
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:45
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1722
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1741
 msgid "Font size"
 msgstr "Taille de police"
 
@@ -4662,8 +4676,8 @@ msgstr "Le style de police par défaut pour tout le texte du graphique"
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:70
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:144
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:465
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1754
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1826
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1773
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1845
 msgid "Font color"
 msgstr "Couleur de la police"
 
@@ -6009,7 +6023,7 @@ msgstr "En savoir plus"
 
 #: wpdatatables/templates/admin/dashboard/dashboard.inc.php:733
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:221
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:497
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:498
 #: wpdatatables/templates/admin/support/support.inc.php:78
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:545
 #: wpdatatables/templates/admin/welcome_page/welcome_page.inc.php:348
@@ -6018,7 +6032,7 @@ msgstr "Réalisé par"
 
 #: wpdatatables/templates/admin/dashboard/dashboard.inc.php:741
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:229
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:505
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:506
 #: wpdatatables/templates/admin/support/support.inc.php:45
 #: wpdatatables/templates/admin/support/support.inc.php:86
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:553
@@ -6029,7 +6043,7 @@ msgstr "Documentation"
 
 #: wpdatatables/templates/admin/dashboard/dashboard.inc.php:745
 #: wpdatatables/templates/admin/getting-started/getting_started.inc.php:233
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:509
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:510
 #: wpdatatables/templates/admin/support/support.inc.php:24
 #: wpdatatables/templates/admin/support/support.inc.php:90
 #: wpdatatables/templates/admin/system-info/system_info.inc.php:557
@@ -6204,7 +6218,7 @@ msgid "Lite"
 msgstr "Version allégée"
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:63
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:482
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:483
 msgid "Premium"
 msgstr "Premium"
 
@@ -6238,6 +6252,7 @@ msgstr ""
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:290
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:303
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:412
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:461
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:107
 msgid "NEW!"
 msgstr ""
@@ -6258,16 +6273,16 @@ msgstr ""
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:167
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:47
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:669
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:677
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:688
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:696
 msgid "Sorting"
 msgstr "Tri"
 
 #: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:179
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:654
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:534
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:542
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1627
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:553
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:561
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1646
 msgid "Pagination"
 msgstr "Pagination"
 
@@ -6372,19 +6387,19 @@ msgstr "Outils de calcul"
 msgid "Placeholders"
 msgstr "Textes indicatifs"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:472
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:473
 msgid "Support"
 msgstr "Centre d'assistance"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:476
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:477
 msgid "Limited"
 msgstr "Limitée"
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:478
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:479
 msgid "Response time is slow and can be up to 3 business days."
 msgstr "Le temps de réponse est lent et peut aller jusqu'à 3 jours ouvrables."
 
-#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:489
+#: wpdatatables/templates/admin/lite-vs-premium/lite_vs_premium.inc.php:490
 msgid ""
 "* Please note that wpDataTables add-ons are not included in premium version "
 "of plugin."
@@ -6507,13 +6522,13 @@ msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:18
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:25
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1607
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1700
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1626
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1719
 msgid "Font"
 msgstr "Police de caractère"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:27
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1703
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1722
 msgid ""
 "This font will be used in rendered tables. Leave blank not to override "
 "default theme settings"
@@ -6522,12 +6537,12 @@ msgstr ""
 "pour ne pas remplacer les paramètres de thème par défaut"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:47
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1725
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1744
 msgid "Define the font size"
 msgstr "Définir la taille de la police"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:72
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1757
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1776
 msgid "This color is used for the main font in table cells."
 msgstr ""
 "Cette couleur est utilisée pour la police principale dans les cellules du "
@@ -6535,32 +6550,32 @@ msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:98
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:365
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1611
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1630
 msgid "Header"
 msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:107
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1786
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1805
 msgid "The color is used for background of the table header."
 msgstr "La couleur est utilisée pour l’arrière-plan de l’en-tête du tableau."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:126
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1807
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1826
 msgid "This color is used for the border in the table header."
 msgstr "Cette couleur est utilisée pour la bordure dans l’en-tête du tableau."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:146
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1829
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1848
 msgid "This color is used for the font in the table header."
 msgstr "Cette couleur est utilisée pour la police dans l’en-tête du tableau."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:163
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1847
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1866
 msgid "Active and hover color\t"
 msgstr "Couleur active et en survol\t"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:165
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1850
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1869
 msgid ""
 "This color is used when you hover the mouse above the table header, or when "
 "you choose a column."
@@ -6569,57 +6584,57 @@ msgstr ""
 "tête du tableau ou lorsque vous choisissez une colonne."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:192
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1615
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1634
 msgid "Table border"
 msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:199
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1877
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1896
 msgid "Inner border"
 msgstr "Bordure intérieure"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:201
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1880
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1899
 msgid "This color is used for the inner border in the table between cells."
 msgstr ""
 "Cette couleur est utilisée pour la bordure intérieure du tableau entre les "
 "cellules."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:219
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1899
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1918
 msgid "Outer border"
 msgstr "Bordure extérieure"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:221
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1902
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1921
 msgid "This color is used for the outer border of the whole table body."
 msgstr ""
 "Cette couleur est utilisée pour la bordure extérieure du corps entier du "
 "tableau."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:239
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1921
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1940
 msgid "Table borders"
 msgstr "Bordures de tableau"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:241
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1924
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1943
 msgid "When this is checked, borders in table will be removed "
 msgstr ""
 "Lorsque cette case est cochée, les bordures du tableau seront supprimées "
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:245
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1930
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1949
 msgid "Remove borders in table"
 msgstr "Supprimer les bordures dans le tableau"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:250
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1935
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1954
 msgid "Header border"
 msgstr "Bordure d’en-tête"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:252
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1938
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1957
 msgid "When this is checked,borders in header will be removed  "
 msgstr ""
 "Lorsque cette case est cochée, les bordures de l’en-tête seront supprimées  "
@@ -6629,37 +6644,37 @@ msgid "Remove borders in header"
 msgstr "Supprimer les bordures dans l'en-tête"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:270
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1619
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1638
 msgid "Row color"
 msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:277
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1957
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1976
 msgid "Even row background"
 msgstr "Fond ligne paire"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:279
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1960
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1979
 msgid "This color is used for for background in even rows."
 msgstr "Cette couleur est utilisée pour le fond dans les lignes paires."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:296
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1978
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1997
 msgid "Odd row background"
 msgstr "Fond ligne impaire"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:298
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1981
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2000
 msgid "This color is used for for background in odd rows."
 msgstr "Cette couleur est utilisée pour le fond dans les lignes impaires."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:315
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1999
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2018
 msgid "Hover row"
 msgstr "Survol ligne"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:317
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2002
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2021
 msgid ""
 "This color is used for to highlight the row when you hover your mouse above "
 "it."
@@ -6668,27 +6683,27 @@ msgstr ""
 "passez votre souris dessus."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:334
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2020
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2039
 msgid "Background for selected rows"
 msgstr "Fond pour les lignes sélectionnées"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:336
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2023
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2042
 msgid "This color is used for background in selected rows."
 msgstr "Cette couleur est utilisée pour le fond des lignes sélectionnées."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:363
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1623
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1642
 msgid "Cell color"
 msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:370
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2050
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2069
 msgid "Sorted columns, even rows"
 msgstr "Colonnes triées, lignes paires"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:372
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2053
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2072
 msgid ""
 "This color is used for background in cells which are in the active columns "
 "(columns used for sorting) in even rows."
@@ -6697,12 +6712,12 @@ msgstr ""
 "les colonnes actives (colonnes utilisées pour le tri) dans les lignes paires."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:390
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2072
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2091
 msgid "Sorted columns, odd rows"
 msgstr "Colonnes triées, lignes impaires"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:392
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2075
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2094
 msgid ""
 "This color is used for background in cells which are in the active columns "
 "(columns used for sorting) in odd rows."
@@ -6806,43 +6821,43 @@ msgstr ""
 "fenêtres contextuelles de l’extension."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:663
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2104
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2123
 msgid "This color is used for the background of the pagination"
 msgstr "Cette couleur est utilisée pour l’arrière-plan de la pagination"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:683
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2126
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2145
 msgid "This color is used for the color of the links in the pagination."
 msgstr ""
 "Cette couleur est utilisée pour la couleur des liens dans la pagination."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:701
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2145
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2164
 msgid "Current page background color"
 msgstr "Couleur de fond de la page actuelle"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:703
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2148
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2167
 msgid "The color is used for background of the current page"
 msgstr "La couleur est utilisée pour l’arrière-plan de la page en cours"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:720
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2167
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2186
 msgid "Current page color"
 msgstr "Couleur de fond de la page actuelle"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:722
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2170
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2189
 msgid "This color is used for the color of the current page."
 msgstr "Cette couleur est utilisée pour la couleur de la page actuelle."
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:740
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2189
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2208
 msgid "Other pages hover background color"
 msgstr "Autres pages couleur de fond lors du survol"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:742
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2192
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2211
 msgid ""
 "This background color is used when you hover the mouse above the other pages"
 msgstr ""
@@ -6850,12 +6865,12 @@ msgstr ""
 "autres pages"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:759
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2211
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2230
 msgid "Other pages hover color"
 msgstr "Autres couleur de survol de pages"
 
 #: wpdatatables/templates/admin/settings/tabs/color_and_font_settings.php:761
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2214
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2233
 msgid "This color is used when you hover the mouse above the other pages."
 msgstr ""
 "Cette couleur est utilisée lorsque vous passez la souris au-dessus des "
@@ -6874,7 +6889,7 @@ msgstr ""
 "possédant un wpDataTable."
 
 #: wpdatatables/templates/admin/settings/tabs/custom_js_and_css.php:31
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2240
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2259
 msgid "Custom wpDataTables CSS"
 msgstr "CSS WpDataTables personnalisé"
 
@@ -6944,17 +6959,17 @@ msgid "Remove account"
 msgstr ""
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:15
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1647
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1666
 msgid "Interface language"
 msgstr "Langue de l’interface"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:17
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1650
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1669
 msgid "Pick the language which will be used in tables interface."
 msgstr "Choisissez la langue qui sera utilisée dans l’interface des tableaux."
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:23
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1656
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1675
 msgid "English (default)"
 msgstr "Anglais (par défaut)"
 
@@ -6994,42 +7009,42 @@ msgid "Parse shortcodes in strings"
 msgstr "Analyser les shortcodes dans la chaîne de caractères"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:104
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1669
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1688
 msgid "Base skin"
 msgstr "Skin de base"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:106
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1672
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1691
 msgid "Choose the base skin for the plugin."
 msgstr "Choisissez le skin de base pour l’extension."
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:112
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1679
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1698
 msgid "Material"
 msgstr "Matériel"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:113
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1680
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1699
 msgid "Light"
 msgstr "Light"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:114
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1681
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1700
 msgid "Graphite"
 msgstr "Graphite"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:115
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1682
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1701
 msgid "Aqua"
 msgstr "Eau"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:116
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1683
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1702
 msgid "Purple"
 msgstr "Violet"
 
 #: wpdatatables/templates/admin/settings/tabs/main_plugin_settings.php:117
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1684
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1703
 msgid "Dark"
 msgstr "Foncé"
 
@@ -8470,7 +8485,7 @@ msgid "Allow filtering"
 msgstr "Autoriser le filtrage"
 
 #: wpdatatables/templates/admin/table-settings/column_settings_panel.inc.php:888
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:708
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:727
 msgid "Global search"
 msgstr "Recherche globale"
 
@@ -9008,6 +9023,7 @@ msgid "Manage rows"
 msgstr ""
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:132
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:315
 msgid "Row"
 msgstr ""
 
@@ -9243,55 +9259,55 @@ msgid "Enable responsive mode"
 msgstr ""
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:539
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:398
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:417
 msgid "Scrollable"
 msgstr "Scrollable"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:547
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:406
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:425
 msgid "Scrollable table"
 msgstr "Tableau à barre de défilement horizontale"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:551
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:413
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:432
 msgid "Enable this to enable a horizontal scrollbar below the table."
 msgstr ""
 "Activez cette option pour activer une barre de défilement horizontale sous "
 "la table."
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:559
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:422
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:441
 msgid "Show a horizontal scrollbar"
 msgstr "Afficher une barre de défilement horizontale"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:566
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:574
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:466
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:474
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:485
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:493
 msgid "Limit table width"
 msgstr "Largeur de tableau limite"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:578
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:481
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:500
 msgid "Enable this to restrict table width to page width."
 msgstr ""
 "Activez cette option pour restreindre la largeur du tableau à la largeur de "
 "la page."
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:586
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:490
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:509
 msgid "Limit table width to page width"
 msgstr "Limiter la largeur du tableau à la largeur de la page"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:593
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:601
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:498
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:506
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:517
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:525
 msgid "Word wrap"
 msgstr "Enveloppe de mots"
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:605
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:513
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:532
 msgid ""
 "Enable this to wrap long strings into multiple lines and stretch the cells "
 "height."
@@ -9300,7 +9316,7 @@ msgstr ""
 "plusieurs lignes et étirer la hauteur des cellules."
 
 #: wpdatatables/templates/admin/table-settings/simple_table_settings_block.inc.php:613
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:521
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:540
 msgid "Wrap words to newlines"
 msgstr "Envelopper les mots dans les nouvelles lignes"
 
@@ -9367,7 +9383,7 @@ msgid "Sorting and filtering"
 msgstr "Tri et filtrage"
 
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:98
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1104
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1123
 msgid "Table Tools"
 msgstr "Outils de tableau"
 
@@ -9511,10 +9527,26 @@ msgid "Allow collapsing on mobiles and tablets"
 msgstr "Autoriser l’écrasement sur les mobiles et les tablettes"
 
 #: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:305
+msgid "Responsive action"
+msgstr ""
+
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:307
+msgid "Choose between different options when responsive is turned on."
+msgstr ""
+
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:313
+msgid "Icon"
+msgstr ""
+
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:314
+msgid "Cell"
+msgstr ""
+
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:324
 msgid "Hide until loaded"
 msgstr "Cacher jusqu’au chargement"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:307
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:326
 msgid ""
 "Enable to make whole table hidden until it is initialized to prevent "
 "unformatted data flashing"
@@ -9522,28 +9554,28 @@ msgstr ""
 "Permet de masquer l’intégralité de la table jusqu’à ce qu’elle soit "
 "initialisée pour éviter que des données non formatées ne clignotent"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:312
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:331
 msgid "Hide the table before it is fully loaded"
 msgstr "Cacher la table avant qu’elle ne soit complètement chargée"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:324
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:343
 msgid "Default rows per page"
 msgstr "Lignes par défaut par page"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:332
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:367
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:351
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:386
 msgid "Rows per page"
 msgstr "Lignes par page"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:339
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:358
 msgid "How many rows to show per page by default?"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:375
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:394
 msgid "Show X entries"
 msgstr "Afficher X entrées"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:382
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:401
 msgid ""
 "Enable/disable this to show/hide \"Show X entries\" per page dropdown on the "
 "frontend."
@@ -9551,22 +9583,22 @@ msgstr ""
 "Activez/désactivez cette option pour afficher/masquer \"Afficher X entrées\" "
 "par page liste déroulante sur l’interface publique."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:390
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:409
 msgid "Show \"Show X entries\" dropdown"
 msgstr "Afficher le menu déroulant \"Afficher X entrées\""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:414
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:433
 msgid "This should be turned off if you want to set columns width manually."
 msgstr ""
 "Cette option doit être désactivée si vous souhaitez définir la largeur des "
 "colonnes manuellement."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:435
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:443
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:454
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:462
 msgid "Info block"
 msgstr "Bloc d’information"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:450
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:469
 msgid ""
 "Enable to show a block of information about the number of records below the "
 "table."
@@ -9574,11 +9606,11 @@ msgstr ""
 "Permet d’afficher un bloc d’informations sur le nombre d’enregistrements "
 "sous le tableau."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:458
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:477
 msgid "Show information block below the table"
 msgstr "Afficher le bloc d’informations sous le tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:482
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:501
 msgid ""
 "This should be turned on if you want to set columns width manually. Should "
 "be on to use word wrapping."
@@ -9586,74 +9618,74 @@ msgstr ""
 "Cela doit être activé si vous souhaitez définir la largeur des colonnes "
 "manuellement. Devrait être activé pour utiliser l’enveloppe de mots."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:546
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:565
 msgid "Enable to show a pagination"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:554
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:573
 msgid "Show pagination block below the table"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:562
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:570
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:581
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:589
 msgid "Pagination Alignment"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:574
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:593
 msgid "Here you can set pagination position: right, center or left."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:582
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:601
 msgid "Right"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:583
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:602
 msgid "Center"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:593
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:601
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:612
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:620
 msgid "Pagination Layout"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:605
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:624
 msgid "Here you can choose between different pagination layout."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:613
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:632
 msgid ""
 "\"First\", \"Previous\", \"Next\" and \"Last\" buttons, plus page numbers"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:614
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:633
 msgid "\"Previous\" and \"Next\" buttons only"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:615
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:634
 msgid "\"Previous\" and \"Next\" buttons, plus page numbers"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:616
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:635
 msgid "\"First\", \"Previous\", \"Next\" and \"Last\" buttons"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:617
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:636
 msgid "Page number buttons only"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:618
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:637
 msgid "\"First\" and \"Last\" buttons, plus page numbers"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:638
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:657
 msgid "Advanced column filters"
 msgstr "Filtres de colonne avancés"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:646
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:665
 msgid "Advanced filter"
 msgstr "Filtre avancé"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:653
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:672
 msgid ""
 "Enable to show an advanced filter for each of the columns, filters can be "
 "shown in table footer, header or in a separate form."
@@ -9662,11 +9694,11 @@ msgstr ""
 "filtres peuvent être affichés dans le pied de page du tableau, l’en-tête ou "
 "dans un formulaire séparé."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:661
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:680
 msgid "Enable advanced column filters"
 msgstr "Activer les filtres de colonne avancés"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:684
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:703
 msgid ""
 "If this is enabled, each column header will be clickable; clicking will sort "
 "the whole table by the content of this column cells ascending or descending."
@@ -9675,15 +9707,15 @@ msgstr ""
 "cliquant, vous trierez tout le tableau en fonction du contenu de cette "
 "colonne en ordre croissant ou décroissant."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:692
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:711
 msgid "Allow sorting for the table"
 msgstr "Autoriser le tri pour le tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:700
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:719
 msgid "Main search block"
 msgstr "Bloc de recherche principal"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:715
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:734
 msgid ""
 "If this is enabled, a search block will be displayed on the top right of the "
 "table, allowing to search through whole table with a single input."
@@ -9692,19 +9724,19 @@ msgstr ""
 "droite de la table, ce qui permettra de parcourir un tableau entier avec une "
 "seule entrée."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:723
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:742
 msgid "Enable search block"
 msgstr "Activer le bloc de recherche"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:737
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:756
 msgid "Filters in a form"
 msgstr "Filtres dans un formulaire"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:744
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:763
 msgid "Filter in form"
 msgstr "Filtrer sous forme"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:751
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:770
 msgid ""
 "Enable to show the advanced column filter in a form above the table, instead "
 "of showing in the table footer/header."
@@ -9713,19 +9745,19 @@ msgstr ""
 "dessus de la table, au lieu de l’afficher dans le pied de page/en-tête du "
 "tableau."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:759
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:778
 msgid "Show filters in a form above the table"
 msgstr "Afficher les filtres dans un formulaire au-dessus du tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:767
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:786
 msgid "Clear filters button"
 msgstr "Bouton effacer les filtres"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:778
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:797
 msgid "Enable to show the clear filters button."
 msgstr "Activer pour afficher le bouton effacer les filtres."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:779
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:798
 msgid ""
 "If filter in form is enabled, clear button will be rendered after the last "
 "filter."
@@ -9733,7 +9765,7 @@ msgstr ""
 "Si le filtre dans le formulaire est activé, le bouton effacer sera rendu "
 "après le dernier filtre."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:784
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:803
 msgid ""
 "Otherwise, clear filter button will be rendered above the table next to "
 "\"Table Tools\" buttons."
@@ -9741,35 +9773,35 @@ msgstr ""
 "Sinon, le bouton effacer filtre sera affiché au-dessus du tableau à côté des "
 "boutons \"Outils du tableau\"."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:796
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:815
 msgid "Show clear filters button"
 msgstr "Afficher le bouton effacer les filtres"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:817
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:836
 msgid "Allow editing"
 msgstr "Autoriser l’édition"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:825
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:844
 msgid "Front-end editing"
 msgstr "Modification interface publique"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:832
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:851
 msgid "Allow editing the table from the front-end."
 msgstr "Autoriser l’édition du tableau à partir de l’interface publique."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:840
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:859
 msgid "Allow front-end editing"
 msgstr "Autoriser l’édition à partir de l’interface publique"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:848
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:867
 msgid "Popover edit block"
 msgstr "Bloc d’édition Popover"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:856
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:875
 msgid "Popover tools"
 msgstr "Outils Popover"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:863
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:882
 msgid ""
 "If this is enabled, the New, Edit and Delete buttons will appear in a "
 "popover when you click on any row, instead of Table Tools block above the "
@@ -9779,16 +9811,16 @@ msgstr ""
 "s’affichent dans un popover lorsque vous cliquez sur une ligne quelconque, "
 "au lieu du bloc Outils de tableau situé au-dessus du tableau."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:871
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:890
 msgid "Editing buttons in a popover"
 msgstr "Modification de boutons dans un popover"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:879
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:887
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:898
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:906
 msgid "In-line editing"
 msgstr "Édition en ligne"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:894
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:913
 msgid ""
 "If this is enabled, front-end users will be able to edit cells by double-"
 "clicking them, not only with the editor dialog."
@@ -9797,30 +9829,30 @@ msgstr ""
 "pourront modifier les cellules en double-cliquant dessus, pas seulement avec "
 "la boîte de dialogue de l’éditeur."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:902
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:921
 msgid "Allow in-line editing"
 msgstr "Autoriser l’édition en ligne"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:917
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:936
 msgid "MySQL table name for editing"
 msgstr "Nom de la table MySQL pour l’édition"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:919
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:938
 msgid ""
 "Name of the MySQL table which will be updated when edited from front-end."
 msgstr ""
 "Nom de la table MySQL qui sera mis à jour lors de l’édition depuis "
 "l’interface publique."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:924
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:943
 msgid "MySQL table name"
 msgstr "Nom de la table MySQL"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:933
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:952
 msgid "ID column for editing"
 msgstr "Colonne d’identification pour l’édition"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:935
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:954
 msgid ""
 "Choose the column values from which will be used as row identifiers. MUST be "
 "a unique auto-increment integer on MySQL side so insert/edit/delete would "
@@ -9832,11 +9864,11 @@ msgstr ""
 "ainsi insérer/modifier/supprimer fonctionnent correctement! wpDataTables "
 "devinera la colonne correcte si elle s’appelle \"id\" ou \"ID\" côté MySQL."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:949
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:968
 msgid "Editor roles"
 msgstr "Rôles de l’éditeur"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:951
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:970
 msgid ""
 "If you want only specific user roles to be able to edit the table, choose in "
 "this dropdown. Leave unchecked to allow editing for everyone."
@@ -9845,19 +9877,19 @@ msgstr ""
 "modifier le tableau, choisissez dans cette liste déroulante. Ne cochez pas "
 "la case pour permettre l’édition à tout le monde."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:956
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:975
 msgid "Everyone"
 msgstr "Tout le monde"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:975
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:994
 msgid "Users see and edit only own data"
 msgstr "Les utilisateurs ne voient et ne modifient que leurs propres données"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:983
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1002
 msgid "Users see and edit only their own data"
 msgstr "Les utilisateurs ne voient et ne modifient que leurs propres données"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:990
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1009
 msgid ""
 "If this is enabled, users will see and edit only the rows that are related "
 "to them or were created by them (associated using the User ID column)."
@@ -9866,15 +9898,15 @@ msgstr ""
 "que les lignes qui leur sont associées ou qui ont été créées par eux "
 "(associées à l’aide de la colonne ID utilisateur)."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:998
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1017
 msgid "Limit editing to own data only"
 msgstr "Limiter l’édition à vos propres données uniquement"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1006
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1025
 msgid "User ID column"
 msgstr "Colonne ID utilisateur"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1008
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1027
 msgid ""
 "Choose the column values from which will be used as User identifiers. "
 "References the ID from WordPress Users table (wp_users), MUST be defined as "
@@ -9885,143 +9917,143 @@ msgstr ""
 "utilisateurs WordPress (wp_users), DOIT être défini comme un entier du côté "
 "MySQL."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1022
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1030
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1041
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1049
 msgid "Show all rows in back-end"
 msgstr "Afficher toutes les lignes en arrière-plan"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1034
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1053
 msgid ""
 "If this is enabled, users will see all data for this table in admin area."
 msgstr ""
 "Si cette option est activée, les utilisateurs verront toutes les données de "
 "ce tableau dans la zone d'administration."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1042
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1061
 msgid "Show all rows for this table in admin area"
 msgstr "Afficher toutes les lignes de ce tableau dans l'espace administrateur"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1051
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1070
 msgid "Edit buttons to be displayed on the front-end"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1053
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1072
 msgid ""
 "If you want to include only certain editing buttons on the front-end, select "
 "them from this dropdown. Leave unchecked to show all buttons."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1076
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1095
 msgid "Show duplicate button"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1078
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1097
 msgid "Enable the duplicate button in Editing buttons"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1083
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1102
 msgid "Enable duplicate button"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1112
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1131
 msgid "Table tools"
 msgstr "Outils de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1119
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1138
 msgid ""
 "If this is enabled, a toolbar with useful tools will be shown above the table"
 msgstr ""
 "Si cette option est activée, une barre d’outils contenant des outils utiles "
 "sera affichée au-dessus du tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1127
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1146
 msgid "Enable Table Tools"
 msgstr "Activer les outils de tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1135
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1154
 msgid "Buttons"
 msgstr "Boutons"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1137
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1156
 msgid "Choose which buttons to show in the Table Tools block."
 msgstr "Choisissez les boutons à afficher dans le bloc Outils de tableau."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1143
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1162
 msgid "Columns visibility"
 msgstr "Visibilité des colonnes"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1157
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1165
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1176
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1184
 msgid "Include HTML"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1169
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1188
 msgid ""
 " If this is enabled, columns that contain HTML (such as link, image, email, "
 "attachment, or HTML) will be rendered as HTML in the exported files of the "
 "CSV, Excel, Print and Copy options."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1171
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1190
 msgid ""
 "NOTICE: Please note that you should check this functionality on the front-"
 "end since if you use this option in the back-end the buttons in headers will "
 "be rendered as HTML as well."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1179
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1198
 msgid "Enable HTML in export files (CSV, Excel, Print and Copy)"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1192
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1211
 msgid "PDF Paper Size"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1194
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1213
 msgid "Choose between different paper sizes for the created PDF."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1200
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1219
 msgid "A3"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1201
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1220
 msgid "A4"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1202
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1221
 msgid "A5"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1203
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1222
 msgid "Legal"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1204
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1223
 msgid "Letter"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1205
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1224
 msgid "Tabloid"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1213
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1232
 msgid "Page orientation"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1215
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1234
 msgid "Choose a paper orientation for the created PDF."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1221
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1240
 msgid "Portrait"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1222
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1241
 msgid "Landscape"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1238
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1257
 msgid ""
 "Placeholders can be understood as predefined ‘search and replace‘ templates; "
 "that will be replaced with some actual values at the execution time; usually "
@@ -10036,15 +10068,15 @@ msgstr ""
 "manuels et ne filtrer que les tableaux créés à partir de XML, JSON, Excel, "
 "CSV, Google Spreadsheet et les tableaux PHP Serialized."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1250
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1265
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1280
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1301
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1316
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1331
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1352
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1367
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1382
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1269
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1284
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1299
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1320
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1335
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1350
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1371
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1386
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1401
 msgid ""
 "This placeholder will be replaced with any value that you will provide in a "
 "shortcode. Provide a default value here that will be used for table "
@@ -10055,29 +10087,29 @@ msgstr ""
 "génération de tableaux et quand une différente valeur n’est pas définie dans "
 "le shortcode."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1255
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1270
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1285
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1306
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1321
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1336
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1357
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1372
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1387
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1409
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1427
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1445
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1466
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1484
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1501
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1525
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1545
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1563
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1585
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1274
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1289
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1304
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1325
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1340
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1355
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1376
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1391
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1406
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1428
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1446
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1464
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1485
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1503
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1520
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1544
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1564
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1582
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1604
 msgid "Default for table generation"
 msgstr "Par défaut pour la génération de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1403
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1422
 msgid ""
 "This placeholder will be replaced with the ID of currently logged in user. "
 "Provide a value here to be used for table generation"
@@ -10085,7 +10117,7 @@ msgstr ""
 "Ce texte indicatif sera remplacé par l’ID de l’utilisateur actuellement "
 "connecté. Indiquez ici une valeur à utiliser pour la génération de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1419
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1438
 msgid ""
 "This placeholder will be replaced with the login of currently logged in "
 "user. Provide a value here to be used for table generation"
@@ -10093,7 +10125,7 @@ msgstr ""
 "Ce texte indicatif sera remplacé par le login de l’utilisateur actuellement "
 "connecté. Indiquez ici une valeur à utiliser pour la génération de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1437
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1456
 msgid ""
 "This placeholder will be replaced with the Email of currently logged in "
 "user. Provide a value here to be used for table generation"
@@ -10102,7 +10134,7 @@ msgstr ""
 "actuellement connecté. Indiquez ici une valeur à utiliser pour la création "
 "du tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1461
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1480
 msgid ""
 "This placeholder will be replaced with the ID of current post. Provide a "
 "value here to be used for table generation"
@@ -10110,7 +10142,7 @@ msgstr ""
 "Ce texte indicatif sera remplacé par l’ID du message en cours. Indiquez ici "
 "une valeur à utiliser pour la génération de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1476
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1495
 msgid ""
 "This placeholder will be replaced with the First Name of currently logged in "
 "user. Provide a value here to be used for table generation"
@@ -10118,7 +10150,7 @@ msgstr ""
 "Cet espace réservé sera remplacé par le Prénom de l’utilisateur actuellement "
 "connecté. Indiquez ici une valeur à utiliser pour la génération du tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1494
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1513
 msgid ""
 "This placeholder will be replaced with the Last Name of currently logged in "
 "user. Provide a value here to be used for table generation"
@@ -10127,19 +10159,19 @@ msgstr ""
 "actuellement connecté. Indiquez ici une valeur à utiliser pour la génération "
 "du tableau"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1517
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1536
 msgid "This placeholder will be replaced with current date."
 msgstr "Ce conteneur sera remplacé par la date actuelle."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1535
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1554
 msgid "This placeholder will be replaced with current datetime."
 msgstr "Ce conteneur sera remplacé par la date et l'heure actuelles."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1555
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1574
 msgid "This placeholder will be replaced with current time."
 msgstr "Ce conteneur sera remplacé par l'heure actuelle."
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1578
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1597
 msgid ""
 "This placeholder will be replaced with the current prefix of WordPress "
 "database. Provide a value here to be used for table generation"
@@ -10147,25 +10179,25 @@ msgstr ""
 "Ce texte indicatif sera remplacé par le préfixe actuel de la base de données "
 "WordPress. Indiquez ici une valeur à utiliser pour la génération de table"
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1598
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1617
 msgid ""
 "Now you can customize each table with different skin, font, background , "
 "colors and lot more. Checkout new table customize settings below."
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1603
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1622
 msgid "Main"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1631
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1650
 msgid "Custom CSS"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1944
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:1963
 msgid "Remove borders in table header"
 msgstr ""
 
-#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2243
+#: wpdatatables/templates/admin/table-settings/table_settings_block.inc.php:2262
 msgid ""
 "This CSS will be inserted as an inline style block on every page that has "
 "this wpDataTable."

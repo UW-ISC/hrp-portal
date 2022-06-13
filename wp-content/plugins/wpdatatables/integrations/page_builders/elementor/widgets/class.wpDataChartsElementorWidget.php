@@ -40,7 +40,7 @@ class WPDataCharts_Elementor_Widget extends Widget_Base {
         $this->_allCharts = $allCharts;
     }
 
-    protected function _register_controls() {
+    protected function register_controls() {
 
         $this->start_controls_section(
             'wpdatacharts_section',

@@ -299,6 +299,25 @@
 
                         </div>
 
+                        <div class="col-sm-4 m-b-16 responsive-action-block hidden">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Responsive action', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Choose between different options when responsive is turned on.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-responsive-action">
+                                    <option value="icon"><?php esc_html_e('Icon', 'wpdatatables'); ?></option>
+                                    <option value="cell"><?php esc_html_e('Cell', 'wpdatatables'); ?></option>
+                                    <option value="row"><?php esc_html_e('Row', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+
+                        </div>
+
                         <div class="col-sm-4 m-b-16 wdt-hide-until-load-block">
 
                             <h4 class="c-title-color m-b-2">

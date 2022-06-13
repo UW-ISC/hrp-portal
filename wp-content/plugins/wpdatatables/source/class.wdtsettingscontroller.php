@@ -24,7 +24,7 @@ class WDTSettingsController
                 } else {
                     $setting = sanitize_textarea_field($setting);
                 }
-            } else {
+            } elseif ($key !== 'wdtSeparateCon') {
                 $setting = sanitize_text_field($setting);
             }
         }

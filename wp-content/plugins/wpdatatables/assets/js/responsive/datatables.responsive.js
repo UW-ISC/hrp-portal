@@ -411,9 +411,11 @@ ResponsiveDatatablesHelper.prototype.createExpandIcon = function (tr) {
                 switch (this.options.clickOn) {
                     case 'cell':
                         td.on('click', {responsiveDatatablesHelperInstance: this}, this.showRowDetailEventHandler);
+                        td.addClass('wdt-responsive-cell-action');
                         break;
                     case 'row':
                         jQuery(tr).on('click', {responsiveDatatablesHelperInstance: this}, this.showRowDetailEventHandler);
+                        jQuery(tr).addClass('wdt-responsive-row-action');
                         break;
                     default:
                         td.on('click', 'span.responsiveExpander', {responsiveDatatablesHelperInstance: this}, this.showRowDetailEventHandler);
@@ -459,7 +461,9 @@ ResponsiveDatatablesHelper.prototype.showRowDetailEventHandler = function (event
     tr.toggleClass('detail-show');
 
     // Prevent click event from bubbling up to higher-level DOM elements.
-    event.stopPropagation();
+    if (responsiveDatatablesHelperInstance.options.clickOn === 'icon') {
+        event.stopPropagation();
+    }
 };
 
 /**

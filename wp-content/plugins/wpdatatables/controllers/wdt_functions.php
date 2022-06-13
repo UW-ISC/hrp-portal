@@ -1081,7 +1081,6 @@ function wdtCheckUpdate($transient)
 
     // If a newer version is available, add the update
     if ($remoteInformation && version_compare(WDT_CURRENT_VERSION, $remoteInformation->new_version, '<')) {
-        $remoteInformation->package = $remoteInformation->download_link;
         $transient->response[$wdtPluginSlug] = $remoteInformation;
     }
 

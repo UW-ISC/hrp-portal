@@ -112,7 +112,8 @@ function relevanssi_delete_taxonomy_term( $term, $term_taxonomy_id, $taxonomy ) 
 /**
  * Generates the custom field detail field for indexing.
  *
- * Premium stores more detail about custom field indexing. This function generates the custom field detail.
+ * Premium stores more detail about custom field indexing. This function
+ * generates the custom field detail.
  *
  * @param array  $insert_data Data used to generate the INSERT queries.
  * @param string $token       The indexed token.
@@ -129,13 +130,9 @@ function relevanssi_customfield_detail( $insert_data, $token, $count, $field ) {
 		// Nothing yet, create new.
 		$custom_field_detail = array();
 	}
-	if ( isset( $custom_field_detail[ $field ] ) ) {
-		// Matches in this field already exist, add to those.
-		$custom_field_detail[ $field ] += $count;
-	} else {
-		// No matches, create new.
-		$custom_field_detail[ $field ] = $count;
-	}
+
+	relevanssi_increase_value( $custom_field_detail[ $field ], $count );
+
 	$insert_data[ $token ]['customfield_detail'] = wp_json_encode( $custom_field_detail );
 	return $insert_data;
 }
@@ -183,9 +180,13 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 		$remove_stopwords    = true;
 		$minimum_word_length = get_option( 'relevanssi_min_word_length', 3 );
 		if ( is_array( $custom_column_data ) ) {
-			foreach ( $custom_column_data as $data ) {
+			foreach ( $custom_column_data as $column => $data ) {
 				/** This filter is documented in common/indexing.php */
-				$data = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length, 'indexing' ), 'mysql-content' );
+				$data = apply_filters(
+					'relevanssi_indexing_tokens',
+					relevanssi_tokenize( $data, $remove_stopwords, $minimum_word_length, 'indexing' ),
+					'mysql-content'
+				);
 				if ( count( $data ) > 0 ) {
 					foreach ( $data as $term => $count ) {
 						if ( isset( $insert_data[ $term ]['mysqlcolumn'] ) ) {
@@ -193,11 +194,40 @@ function relevanssi_index_mysql_columns( $insert_data, $post_id ) {
 						} else {
 							$insert_data[ $term ]['mysqlcolumn'] = $count;
 						}
+						$insert_data = relevanssi_mysqlcolumn_detail( $insert_data, $term, $count, $column );
 					}
 				}
 			}
 		}
 	}
+	return $insert_data;
+}
+
+/**
+ * Generates the MySQL column detail field for indexing.
+ *
+ * This function generates the MySQL column detail.
+ *
+ * @param array  $insert_data Data used to generate the INSERT queries.
+ * @param string $token       The indexed token.
+ * @param int    $count       The number of matches.
+ * @param string $column      Name of the column.
+ *
+ * @return array $insert_data New source data for the INSERT queries added.
+ */
+function relevanssi_mysqlcolumn_detail( $insert_data, $token, $count, $column ) {
+	if ( isset( $insert_data[ $token ]['mysqlcolumn_detail'] ) ) {
+		// Custom field detail for this token already exists.
+		$mysqlcolumn_detail = json_decode( $insert_data[ $token ]['mysqlcolumn_detail'], true );
+	} else {
+		// Nothing yet, create new.
+		$mysqlcolumn_detail = array();
+	}
+
+	relevanssi_increase_value( $mysqlcolumn_detail[ $column ], $count );
+
+	$insert_data[ $token ]['mysqlcolumn_detail'] = wp_json_encode( $mysqlcolumn_detail );
+
 	return $insert_data;
 }
 
@@ -782,55 +812,17 @@ function relevanssi_index_user( $user, $remove_first = false ) {
 	$min_length       = get_option( 'relevanssi_min_word_length', 3 );
 	$remove_stopwords = true;
 
-	$user_meta = get_option( 'relevanssi_index_user_meta' );
-	if ( $user_meta ) {
-		$user_meta_fields = explode( ',', $user_meta );
-		foreach ( $user_meta_fields as $key ) {
-			$key    = trim( $key );
-			$values = get_user_meta( $user->ID, $key, false );
-			foreach ( $values as $value ) {
-				/** This filter is documented in common/indexing.php */
-				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $value, $remove_stopwords, $min_length, 'indexing' ), 'user-meta' );
-				foreach ( $tokens as $term => $tf ) {
-					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
-						$insert_data[ $term ]['customfield'] += $tf;
-					} else {
-						$insert_data[ $term ]['customfield'] = $tf;
-					}
-					$insert_data = relevanssi_customfield_detail( $insert_data, $term, $tf, $key );
-				}
+	$values = relevanssi_get_user_field_content( $user->ID );
+	foreach ( $values as $field => $value ) {
+		/** This filter is documented in common/indexing.php */
+		$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $value, $remove_stopwords, $min_length, 'indexing' ), 'user-fields' );
+		foreach ( $tokens as $term => $tf ) {
+			if ( isset( $insert_data[ $term ]['customfield'] ) ) {
+				$insert_data[ $term ]['customfield'] += $tf;
+			} else {
+				$insert_data[ $term ]['customfield'] = $tf;
 			}
-		}
-	}
-
-	$extra_fields = get_option( 'relevanssi_index_user_fields' );
-	if ( $extra_fields ) {
-		$extra_fields = explode( ',', $extra_fields );
-		$user_vars    = get_object_vars( $user );
-		foreach ( $extra_fields as $field ) {
-			$field = trim( $field );
-			if ( isset( $user_vars[ $field ] ) || isset( $user_vars['data']->$field ) || get_user_meta( $user->ID, $field, true ) ) {
-				$to_tokenize = '';
-				if ( isset( $user_vars[ $field ] ) ) {
-					$to_tokenize = $user_vars[ $field ];
-				}
-				if ( empty( $to_tokenize ) && isset( $user_vars['data']->$field ) ) {
-					$to_tokenize = $user_vars['data']->$field;
-				}
-				if ( empty( $to_tokenize ) ) {
-					$to_tokenize = get_user_meta( $user->ID, $field, true );
-				}
-				/** This filter is documented in common/indexing.php */
-				$tokens = apply_filters( 'relevanssi_indexing_tokens', relevanssi_tokenize( $to_tokenize, $remove_stopwords, $min_length, 'indexing' ), 'user-fields' );
-				foreach ( $tokens as $term => $tf ) {
-					if ( isset( $insert_data[ $term ]['customfield'] ) ) {
-						$insert_data[ $term ]['customfield'] += $tf;
-					} else {
-						$insert_data[ $term ]['customfield'] = $tf;
-					}
-					$insert_data = relevanssi_customfield_detail( $insert_data, $term, $tf, $field );
-				}
-			}
+			$insert_data = relevanssi_customfield_detail( $insert_data, $term, $tf, $field );
 		}
 	}
 
