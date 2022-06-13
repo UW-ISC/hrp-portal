@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
-Tested up to: 5.9
-Stable tag: 2.9.5
+Tested up to: 6.0
+Stable tag: 2.9.6
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -133,6 +133,11 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 2.9.7 =
+
+* Fix: Position of Toggle Bar Designer in theme editor when using PHP 8
+* Update: Language files
 
 = 2.9.6 =
 

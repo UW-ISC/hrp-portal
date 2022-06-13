@@ -54,7 +54,8 @@ class Helpers
      */
     public static function get_current_or_first_user_id_with_licence_key()
     {
-        if ((defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST) || is_admin()) {
+        if ((defined('DOING_AJAX') && DOING_AJAX) || (defined('REST_REQUEST') && REST_REQUEST) || (defined('WP_CLI') && WP_CLI) || is_admin()) {
+
             if (is_user_logged_in()) {
                 return get_current_user_id();
             }

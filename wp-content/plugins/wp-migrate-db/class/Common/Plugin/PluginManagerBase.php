@@ -243,11 +243,11 @@ class PluginManagerBase
             $schema_version = 3.2;
         }
 
-        if($schema_version < 3.4) {
+        if($schema_version < 3.5) {
             $this->update_profiles();
 
             $update_schema  = true;
-            $schema_version = 3.4;
+            $schema_version = 3.5;
         }
 
         if (true === $update_schema) {
@@ -416,10 +416,14 @@ class PluginManagerBase
                         $profile_data->theme_plugin_files->plugins_excluded = [];
                     }
                     if ( ! property_exists($profile_data->theme_plugin_files, 'plugins_excludes')) {
-                        $profile_data->theme_plugin_files->plugins_excludes = $profile_data->theme_plugin_files->excludes;
+                        $profile_data->theme_plugin_files->plugins_excludes = property_exists($profile_data->theme_plugin_files, 'excludes')
+                            ? $profile_data->theme_plugin_files->excludes
+                            : '';
                     }
                     if ( ! property_exists($profile_data->theme_plugin_files, 'themes_excludes')) {
-                        $profile_data->theme_plugin_files->themes_excludes = $profile_data->theme_plugin_files->excludes;
+                        $profile_data->theme_plugin_files->themes_excludes = property_exists($profile_data->theme_plugin_files, 'excludes')
+                            ? $profile_data->theme_plugin_files->excludes
+                            : '';
                     }   
                 }
 

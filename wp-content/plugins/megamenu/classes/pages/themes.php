@@ -2385,9 +2385,32 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 							'mobile_menu'    => array(
 								'title'    => __( 'Mobile Menu', 'megamenu' ),
 								'settings' => array(
+									'responsive_breakpoint' => array(
+										'priority'    => 2,
+										'title'       => __( 'Responsive Breakpoint', 'megamenu' ),
+										'description' => __( 'The menu will be converted to a mobile menu when the browser width is below this value.', 'megamenu' ),
+										'settings'    => array(
+											array(
+												'title' => '',
+												'type'  => 'freetext',
+												'key'   => 'responsive_breakpoint',
+												'validation' => 'px',
+											),
+										),
+									),
+									'responsive_breakpoint_disabled' => array(
+										'priority'    => 3,
+										'title'       => __( "The 'Responsive Breakpoint' option has been set to 0px. The desktop version of the menu will be displayed for all browsers (regardless of the browser width), so the following options are disabled.", 'megamenu' ),
+										'description' => '',
+									),
 									'mobile_toggle_bar'   => array(
-										'priority'    => 5,
+										'priority'    => 4,
 										'title'       => __( 'Mobile Toggle Bar', 'megamenu' ),
+										'description' => '',
+									),
+									'mobile_toggle_disabled' => array(
+										'priority'    => 5,
+										'title'       => __( "The 'Disable Mobile Toggle Bar' option has been enabled. The following options are disabled as the mobile toggle bar will not be displayed.", 'megamenu' ),
 										'description' => '',
 									),
 									'toggle_bar_background' => array(
@@ -2470,29 +2493,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 											),
 										),
 									),
-									'responsive_breakpoint' => array(
-										'priority'    => 3,
-										'title'       => __( 'Responsive Breakpoint', 'megamenu' ),
-										'description' => __( 'The menu will be converted to a mobile menu when the browser width is below this value.', 'megamenu' ),
-										'settings'    => array(
-											array(
-												'title' => '',
-												'type'  => 'freetext',
-												'key'   => 'responsive_breakpoint',
-												'validation' => 'px',
-											),
-										),
-									),
-									'responsive_breakpoint_disabled' => array(
-										'priority'    => 4,
-										'title'       => __( "The 'Responsive Breakpoint' option has been set to 0px. The desktop version of the menu will be displayed for all browsers (regardless of the browser width), so the following options are disabled.", 'megamenu' ),
-										'description' => '',
-									),
-									'mobile_toggle_disabled' => array(
-										'priority'    => 5,
-										'title'       => __( "The 'Disable Mobile Toggle Bar' option has been enabled. The following options are disabled as the mobile toggle bar will not be displayed.", 'megamenu' ),
-										'description' => '',
-									),
+
 									'mobile_top_level_menu_items' => array(
 										'priority'    => 33,
 										'title'       => __( 'Mobile Sub Menu', 'megamenu' ),
@@ -2516,7 +2517,7 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 										'description' => __( "If enabled, the mobile sub menu will match the width and position on the given page element (rather than being limited to the width of the toggle bar). For a full width sub menu, leave the 'Selector' value set to 'body'.", 'megamenu' ),
 										'settings'    => array(
 											array(
-												'title' => 'Enabled',
+												'title' => __( 'Enabled', 'megamenu' ),
 												'type'  => 'checkbox',
 												'key'   => 'mobile_menu_force_width',
 											),
@@ -2916,7 +2917,11 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 				return 1;
 			}
 
-			return 0;
+			if ( $elem1['priority'] == $elem2['priority'] ) {
+				return 0;
+			}
+
+			return -1;
 		}
 
 
@@ -3167,7 +3172,8 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 		<textarea id='codemirror' name='settings[<?php echo $key; ?>]'><?php echo stripslashes( $value ); ?></textarea>
 
 		<p><b><?php _e( 'Custom Styling Tips', 'megamenu' ); ?></b></p>
-		<p><?php _e( "You can enter standard CSS or <a href='https://sass-lang.com/guide' target='_blank'>SCSS</a> into the custom styling area. If using SCSS there are some variables and mixins you can use:" ); ?></p>
+		<p><?php _e( "You can enter standard CSS or <a href='https://sass-lang.com/guide' target='_blank'>SCSS</a> into the custom styling area. If using SCSS there are some variables and mixins you can use:", 'megamenu'); ?></p>
+
 		<ul class='custom_styling_tips'>
 			<li><code>#{$wrap}</code> <?php _e( 'converts to the ID selector of the menu wrapper, e.g. div#mega-menu-wrap-primary', 'megamenu' ); ?></li>
 			<li><code>#{$menu}</code> <?php _e( 'converts to the ID selector of the menu, e.g. ul#mega-menu-primary', 'megamenu' ); ?></li>
@@ -3178,14 +3184,14 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 				$string = str_replace( '%menu%', '<code>#{$menu}</code>', $string );
 			?>
 			<li><?php echo $string; ?></li>
-			<li>Example CSS:</li>
-			<code>/** Add text shadow to top level menu items on desktop AND mobile **/
+			<li><?php _e( 'Example CSS', 'megamenu' ); ?>:</li>
+			<code>/** <?php _e( 'Add text shadow to top level menu items on desktop AND mobile', 'megamenu' ); ?> **/
 				<br />#{$wrap} #{$menu} > li.mega-menu-item > a.mega-menu-link {
 				<br />&nbsp;&nbsp;&nbsp;&nbsp;text-shadow: 1px 1px #000000;
 				<br />}
 			</code>
 			<br /><br />
-			<code>/** Add text shadow to top level menu items on desktop only **/
+			<code>/** <?php _e( 'Add text shadow to top level menu items on desktop only', 'megamenu' ); ?> **/
 				<br />@include desktop {
 				<br />&nbsp;&nbsp;&nbsp;&nbsp;#{$wrap} #{$menu} > li.mega-menu-item > a.mega-menu-link {
 				<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;text-shadow: 1px 1px #000000;
