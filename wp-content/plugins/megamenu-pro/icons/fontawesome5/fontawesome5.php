@@ -121,7 +121,7 @@ class Mega_Menu_Font_Awesome_5 {
         $html = "";
 
         if ( is_array( $settings ) && isset( $settings['enqueue_fa_5'] ) && $settings['enqueue_fa_5'] == 'disabled' ) {
-        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method.", "megamenupro") . "</div>";
+        	$html .= "<div class='notice notice-warning'>" . __("Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method.", "megamenu-pro") . "</div>";
         }
 
         foreach ( $this->icons() as $code => $class ) {
@@ -146,7 +146,7 @@ class Mega_Menu_Font_Awesome_5 {
         	$icon_prefix = substr( $menu_item_meta['icon'], 0, 3 );
         }
 
-        $title = __("Font Awesome 5", "megamenupro");
+        $title = __("Font Awesome 5", "megamenu-pro");
 
         if ( $this->use_pro() ) {
         	$title .= " Pro";

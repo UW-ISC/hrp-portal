@@ -66,7 +66,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
      * @return array
      */
     public function logo_add_as_available_block_option( $options ) {
-        $options['logo'] = __("Logo / Image", "megamenu_pro");
+        $options['logo'] = __("Logo / Image", "megamenu-pro");
 
         return $options;
 
@@ -187,39 +187,39 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block'>
-            <div class='block-title'><span title='<?php _e("Logo", "megamenupro"); ?>' class="dashicons dashicons-format-image"></span></div>
+            <div class='block-title'><span title='<?php _e("Logo", "megamenu-pro"); ?>' class="dashicons dashicons-format-image"></span></div>
             <div class='block-settings'>
-                <h3><?php _e("Logo Settings", "megamenupro") ?></h3>
+                <h3><?php _e("Logo Settings", "megamenu-pro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='logo' />
                 <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
                 <label>
-                    <?php _e("Media File", "megamenupro") ?>
+                    <?php _e("Media File", "megamenu-pro") ?>
 
                     <div class='mmm_image_selector' data-src='<?php echo $settings['logo_src']; ?>' data-field='logo_id_<?php echo $block_id; ?>'></div>
                     <input type='hidden' id='logo_id_<?php echo $block_id; ?>' name='toggle_blocks[<?php echo $block_id; ?>][logo_id]' value='<?php echo $settings['logo_id']; ?>' />
                 </label>
                 <label>
-                    <?php _e("URL", "megamenupro") ?>
+                    <?php _e("URL", "megamenu-pro") ?>
                     <input type='text' class='logo_url' name='toggle_blocks[<?php echo $block_id; ?>][url]' value='<?php echo esc_attr(stripslashes($settings['url'])) ?>' />
                 </label>
                 <label>
-                    <?php _e("Open in new window?", "megamenupro") ?>
+                    <?php _e("Open in new window?", "megamenu-pro") ?>
 
                     <select name='toggle_blocks[<?php echo $block_id; ?>][target]'>
-                        <option value='_self' <?php selected( $settings['target'], '_self' )  ?>><?php _e("No", "megamenupro") ?></option>
-                        <option value='_blank' <?php selected( $settings['target'], '_blank' ) ?>><?php  _e("Yes", "megamenupro") ?></option>
+                        <option value='_self' <?php selected( $settings['target'], '_self' )  ?>><?php _e("No", "megamenu-pro") ?></option>
+                        <option value='_blank' <?php selected( $settings['target'], '_blank' ) ?>><?php  _e("Yes", "megamenu-pro") ?></option>
                     </select>
                 </label>
                 <label>
-                    <?php _e("Vertical Offset", "megamenupro") ?>
+                    <?php _e("Vertical Offset", "megamenu-pro") ?>
                     <input type='text' class='logo_vertical_offset' name='toggle_blocks[<?php echo $block_id; ?>][vertical_offset]' value='<?php echo $settings['vertical_offset'] ?>' />
                 </label>
                 <label>
-                    <?php _e("Max Height", "megamenupro") ?>
+                    <?php _e("Max Height", "megamenu-pro") ?>
                     <input type='text' class='logo_max_height' name='toggle_blocks[<?php echo $block_id; ?>][max_height]' value='<?php echo $settings['max_height'] ?>' />
-                    <div class='mega-description' style='margin-top: 5px;'><?php _e("The Max Height should be specified in 'px' and be equal to or lower than the configured Toggle Bar Height.", "megamenupro") ?></div>
+                    <div class='mega-description' style='margin-top: 5px;'><?php _e("The Max Height should be specified in 'px' and be equal to or lower than the configured Toggle Bar Height.", "megamenu-pro") ?></div>
                 </label>
-                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+                <a class='mega-delete'><?php _e("Delete", "megamenu-pro"); ?></a>
             </div>
         </div>
 
@@ -308,7 +308,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
      * @return array
      */
     public function menu_toggle_custom_add_as_available_block_option( $options ) {
-        $options['menu_toggle_custom'] = __("Menu Toggle (Custom)", "megamenu_pro");
+        $options['menu_toggle_custom'] = __("Menu Toggle (Custom)", "megamenu-pro");
 
         return $options;
 
@@ -438,24 +438,24 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block'>
-            <div class='block-title'><?php _e("TOGGLE", "megamenupro"); ?> <span title='<?php _e("Menu Toggle", "megamenupro"); ?>' class="dashicons dashicons-menu"></span></div>
+            <div class='block-title'><?php _e("TOGGLE", "megamenu-pro"); ?> <span title='<?php _e("Menu Toggle", "megamenu-pro"); ?>' class="dashicons dashicons-menu"></span></div>
             <div class='block-settings'>
-                <h3><?php _e("Menu Toggle (Custom) Settings", "megamenupro") ?></h3>
+                <h3><?php _e("Menu Toggle (Custom) Settings", "megamenu-pro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='menu_toggle_custom' />
                 <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
                 <label>
-                    <?php _e("Open Icon", "megamenupro") ?>
+                    <?php _e("Open Icon", "megamenu-pro") ?>
 
                     <div class='mmm_image_selector' data-src='<?php echo $settings['open_src']; ?>' data-field='open_id_<?php echo $block_id; ?>'></div>
                     <input type='hidden' id='open_id_<?php echo $block_id; ?>' name='toggle_blocks[<?php echo $block_id; ?>][open_id]' value='<?php echo $settings['open_id']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Closed Icon", "megamenupro") ?>
+                    <?php _e("Closed Icon", "megamenu-pro") ?>
 
                     <div class='mmm_image_selector' data-src='<?php echo $settings['closed_src']; ?>' data-field='closed_id_<?php echo $block_id; ?>'></div>
                     <input type='hidden' id='closed_id_<?php echo $block_id; ?>' name='toggle_blocks[<?php echo $block_id; ?>][closed_id]' value='<?php echo $settings['closed_id']; ?>' />
                 </label>
-                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+                <a class='mega-delete'><?php _e("Delete", "megamenu-pro"); ?></a>
             </div>
         </div>
 
@@ -533,7 +533,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
      * @return array
      */
     public function search_add_as_available_block_option( $options ) {
-        $options['search'] = __("Search", "megamenu_pro");
+        $options['search'] = __("Search", "megamenu-pro");
 
         return $options;
 
@@ -595,7 +595,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         if ( $settings['search_type'] == 'expand_to_left' ) {
             $html = "<div class='mega-search-wrap'><form class='mega-search expand-to-left mega-search-closed' action='" . $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
-                        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+                        <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
                         <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
@@ -604,7 +604,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         if ( $settings['search_type'] == 'expand_to_right' ) {
             $html = "<div class='mega-search-wrap'><form class='mega-search expand-to-right mega-search-closed' action='" .  $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
-                        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+                        <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
                         <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
@@ -613,7 +613,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         if ( $settings['search_type'] == 'static' ) {
             $html = "<div class='mega-search-wrap mega-static'><form class='mega-search static mega-search-open' action='" . $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
-                        <input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+                        <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
                         <input type='text' aria-label='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
@@ -661,73 +661,73 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block'>
-            <div class='block-title'><span title='<?php _e("Search", "megamenupro"); ?>' class="dashicons dashicons-search"></span></div>
+            <div class='block-title'><span title='<?php _e("Search", "megamenu-pro"); ?>' class="dashicons dashicons-search"></span></div>
             <div class='block-settings'>
-                <h3><?php _e("Search Settings", "megamenupro") ?></h3>
+                <h3><?php _e("Search Settings", "megamenu-pro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='search' />
                 <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
 
                 <label>
-                    <?php _e("Style", "megamenupro") ?>
+                    <?php _e("Style", "megamenu-pro") ?>
 
                     <select name='toggle_blocks[<?php echo $block_id; ?>][search_type]'>
-                        <option value='expand_to_left' <?php selected( $settings['search_type'], 'expand_to_left' ); ?>><?php _e("Expand to Left", "megamenupro") ?></option>
-                        <option value='expand_to_right' <?php selected( $settings['search_type'], 'expand_to_right' ); ?>><?php _e("Expand to Right", "megamenupro") ?></option>
-                        <option value='static' <?php selected( $settings['search_type'], 'static' ); ?>><?php _e("Static", "megamenupro") ?></option>
+                        <option value='expand_to_left' <?php selected( $settings['search_type'], 'expand_to_left' ); ?>><?php _e("Expand to Left", "megamenu-pro") ?></option>
+                        <option value='expand_to_right' <?php selected( $settings['search_type'], 'expand_to_right' ); ?>><?php _e("Expand to Right", "megamenu-pro") ?></option>
+                        <option value='static' <?php selected( $settings['search_type'], 'static' ); ?>><?php _e("Static", "megamenu-pro") ?></option>
                     </select>
                 </label>
                 <label>
-                    <?php _e("Height", "megamenupro") ?>
+                    <?php _e("Height", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][height]' value='<?php echo $settings['height']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Width", "megamenupro") ?>
+                    <?php _e("Width", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][width]' value='<?php echo $settings['width']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Text Color", "megamenupro") ?>
+                    <?php _e("Text Color", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'text_color', $block_id, $settings['text_color'] ); ?>
                 </label>
                 <label>
-                    <?php _e("Icon Color (Closed)", "megamenupro") ?>
+                    <?php _e("Icon Color (Closed)", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'icon_color_closed', $block_id, $settings['icon_color_closed'] ); ?>
                 </label>
                 <label>
-                    <?php _e("Icon Color (Open)", "megamenupro") ?>
+                    <?php _e("Icon Color (Open)", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'icon_color_open', $block_id, $settings['icon_color_open'] ); ?>
                 </label>
                 <label>
-                    <?php _e("Background Color (Closed)", "megamenupro") ?>
+                    <?php _e("Background Color (Closed)", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'background_color_closed', $block_id, $settings['background_color_closed'] ); ?>
                 </label>
                 <label>
-                    <?php _e("Background Color (Open)", "megamenupro") ?>
+                    <?php _e("Background Color (Open)", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'background_color_open', $block_id, $settings['background_color_open'] ); ?>
                 </label>
                 <label>
-                    <?php _e("Border Radius", "megamenupro") ?>
+                    <?php _e("Border Radius", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][border_radius]' value='<?php echo $settings['border_radius']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Placeholder Text", "megamenupro") ?>
+                    <?php _e("Placeholder Text", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][placeholder_text]' value='<?php echo stripslashes( esc_attr( $settings['placeholder_text'] ) ); ?>' />
                 </label>
                 <label>
-                    <?php _e("Vertical Offset", "megamenupro") ?>
+                    <?php _e("Vertical Offset", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][vertical_offset]' value='<?php echo $settings['vertical_offset']; ?>' />
                 </label>
                 <?php if (is_plugin_active('woocommerce/woocommerce.php')): ?>
-                    <label><?php _e("Use WooCommerce Search", "megamenupro") ?>
+                    <label><?php _e("Use WooCommerce Search", "megamenu-pro") ?>
 
                     <select name='toggle_blocks[<?php echo $block_id; ?>][woocommerce]'>
-                        <option value='true' <?php selected( $settings['woocommerce'], 'true' )  ?>><?php _e("Yes", "megamenupro") ?></option>
-                        <option value='false' <?php selected( $settings['woocommerce'], 'false' ) ?>><?php  _e("No", "megamenupro") ?></option>
+                        <option value='true' <?php selected( $settings['woocommerce'], 'true' )  ?>><?php _e("Yes", "megamenu-pro") ?></option>
+                        <option value='false' <?php selected( $settings['woocommerce'], 'false' ) ?>><?php  _e("No", "megamenu-pro") ?></option>
                     </select>
 
                     </label>
                 <?php endif; ?>
 
-                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+                <a class='mega-delete'><?php _e("Delete", "megamenu-pro"); ?></a>
             </div>
         </div>
 
@@ -817,7 +817,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
      * @return array
      */
     public function html_add_as_available_block_option( $options ) {
-        $options['html'] = __("HTML", "megamenu_pro");
+        $options['html'] = __("HTML", "megamenu-pro");
 
         return $options;
 
@@ -862,18 +862,18 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block'>
-            <div class='block-title'><span title='<?php _e("HTML", "megamenupro"); ?>' class="dashicons dashicons-media-code"></span></div>
+            <div class='block-title'><span title='<?php _e("HTML", "megamenu-pro"); ?>' class="dashicons dashicons-media-code"></span></div>
             <div class='block-settings'>
-                <h3><?php _e("HTML Settings", "megamenupro") ?></h3>
+                <h3><?php _e("HTML Settings", "megamenu-pro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='html' />
                 <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
 
                 <label>
-                    <?php _e("HTML", "megamenupro") ?><br /><br />
+                    <?php _e("HTML", "megamenu-pro") ?><br /><br />
                     <textarea name='toggle_blocks[<?php echo $block_id; ?>][html]'><?php echo esc_textarea( wp_unslash( $settings['html'] ) ) ?></textarea>
                 </label>
 
-                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+                <a class='mega-delete'><?php _e("Delete", "megamenu-pro"); ?></a>
             </div>
         </div>
 
@@ -995,7 +995,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
      * @return array
      */
     public function icon_add_as_available_block_option( $options ) {
-        $options['icon'] = __("Icon", "megamenu_pro");
+        $options['icon'] = __("Icon", "megamenu-pro");
 
         return $options;
 
@@ -1079,41 +1079,41 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         ?>
 
         <div class='block icon_block'>
-            <div class='block-title'><span title='<?php _e("Icon", "megamenupro"); ?>' class="<?php echo $icon_type ?>" rel='<?php echo $icon_code_attr; ?>'></span></div>
+            <div class='block-title'><span title='<?php _e("Icon", "megamenu-pro"); ?>' class="<?php echo $icon_type ?>" rel='<?php echo $icon_code_attr; ?>'></span></div>
             <div class='block-settings'>
-                <h3><?php _e("Icon Settings", "megamenupro") ?></h3>
+                <h3><?php _e("Icon Settings", "megamenu-pro") ?></h3>
                 <input type='hidden' class='type' name='toggle_blocks[<?php echo $block_id; ?>][type]' value='icon' />
                 <input type='hidden' class='align' name='toggle_blocks[<?php echo $block_id; ?>][align]' value='<?php echo $settings['align'] ?>'>
 
                 <label>
-                    <?php _e("Icon", "megamenupro") ?>
+                    <?php _e("Icon", "megamenu-pro") ?>
                     <?php $this->print_icon_option( 'icon', $block_id, $settings['icon'], array() ); ?>
                 </label>
                 <label>
-                    <?php _e("Color", "megamenupro") ?>
+                    <?php _e("Color", "megamenu-pro") ?>
                     <?php $this->print_toggle_color_option( 'color', $block_id, $settings['color'] ); ?>
                 </label>
                 <label>
-                    <?php _e("URL", "megamenupro") ?>
+                    <?php _e("URL", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][url]' value='<?php echo $settings['url']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Open in new window?", "megamenupro") ?>
+                    <?php _e("Open in new window?", "megamenu-pro") ?>
 
                     <select name='toggle_blocks[<?php echo $block_id; ?>][target]'>
-                        <option value='_self' <?php selected( $settings['target'], '_self' )  ?>><?php _e("No", "megamenupro") ?></option>
-                        <option value='_blank' <?php selected( $settings['target'], '_blank' ) ?>><?php  _e("Yes", "megamenupro") ?></option>
+                        <option value='_self' <?php selected( $settings['target'], '_self' )  ?>><?php _e("No", "megamenu-pro") ?></option>
+                        <option value='_blank' <?php selected( $settings['target'], '_blank' ) ?>><?php  _e("Yes", "megamenu-pro") ?></option>
                     </select>
                 </label>
                 <label>
-                    <?php _e("Size", "megamenupro") ?>
+                    <?php _e("Size", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][size]' value='<?php echo $settings['size']; ?>' />
                 </label>
                 <label>
-                    <?php _e("Title", "megamenupro") ?>
+                    <?php _e("Title", "megamenu-pro") ?>
                     <input type='text' name='toggle_blocks[<?php echo $block_id; ?>][title]' value='<?php echo $settings['title']; ?>' />
                 </label>
-                <a class='mega-delete'><?php _e("Delete", "megamenupro"); ?></a>
+                <a class='mega-delete'><?php _e("Delete", "megamenu-pro"); ?></a>
             </div>
         </div>
 

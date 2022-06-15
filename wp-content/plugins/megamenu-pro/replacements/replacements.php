@@ -725,7 +725,7 @@ class Mega_Menu_Replacements {
 		if ( $type == 'expand_to_left' ) {
 			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-left mega-search-closed' role='search' action='" .  $action . "'>
 						" . $search_icon_html . "
-						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
 						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
 						" . apply_filters("megamenu_search_inputs", $inputs) . "
 					</form></div>";
@@ -734,7 +734,7 @@ class Mega_Menu_Replacements {
 		if ( $type == 'expand_to_right' ) {
 			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-right mega-search-closed' role='search' action='" .  $action . "'>
 						" . $search_icon_html . "
-						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
 						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
 						" . apply_filters("megamenu_search_inputs", $inputs) . "
 					</form></div>";
@@ -743,7 +743,7 @@ class Mega_Menu_Replacements {
 		if ( $type == 'static' ) {
 			$html = "<div class='mega-search-wrap mega-static'><form class='mega-search mega-search-open' role='search' action='" .  $action . "'>
 						" . $search_icon_html . "
-						<input type='submit' value='" . __( "Search" , "megamenupro" ) . "'>
+						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
 						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
 						" . apply_filters("megamenu_search_inputs", $inputs) . "
 					</form></div>";
@@ -821,30 +821,30 @@ class Mega_Menu_Replacements {
 		$html .= "    <input type='hidden' name='menu_item_id' value='{$menu_item_id}' />";
 		$html .= "    <input type='hidden' name='action' value='mm_save_menu_item_settings' />";
 		$html .= "    <input type='hidden' name='clear_cache' value='true' />";
-		$html .= "    <h4 class='first'>" . __("Replacements", "megamenu_pro") . "</h4>";
-		$html .= "    <p class='tab-description'>" . __("Replace this menu item with something else: a logo, a search box, WooCommerce total, EDD total, custom HTML or a shortcode", "megamenu_pro") . "</p>";
+		$html .= "    <h4 class='first'>" . __("Replacements", "megamenu-pro") . "</h4>";
+		$html .= "    <p class='tab-description'>" . __("Replace this menu item with something else: a logo, a search box, WooCommerce total, EDD total, custom HTML or a shortcode", "megamenu-pro") . "</p>";
 		$html .= "    <table>";
 		$html .= "        <tr class='type'>";
-		$html .= "            <td class='mega-name'>" . __("Type", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Type", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[replacements][type]' id='mega_replacement_type'>";
-		$html .= "                    <option value='disabled' " . selected( $type, 'disabled', false ) . ">" . __("Disabled", "megamenupro") . "</option>";
-		$html .= "                    <option value='logo' " . selected( $type, 'logo', false ) . ">" . __("Logo", "megamenupro") . "</option>";
-		$html .= "                    <option value='search' " . selected( $type, 'search', false ) . ">" . __("Search box", "megamenupro") . "</option>";
-		$html .= "                    <option value='html' " . selected( $type, 'html', false ) . ">" . __("HTML", "megamenupro") . "</option>";
-		$html .= "                    <option value='woo_cart_total' " . selected( $type, 'woo_cart_total', false ) . ">" . __("WooCommerce Cart Total", "megamenupro") . "</option>";
-		$html .= "                    <option value='woo_cart_count' " . selected( $type, 'woo_cart_count', false ) . ">" . __("WooCommerce Cart Count", "megamenupro") . "</option>";
-		$html .= "                    <option value='edd_cart_total' " . selected( $type, 'edd_cart_total', false ) . ">" . __("EDD Cart Total", "megamenupro") . "</option>";
-		$html .= "                    <option value='edd_cart_count' " . selected( $type, 'edd_cart_count', false ) . ">" . __("EDD Cart Count", "megamenupro") . "</option>";
-		$html .= "                    <option value='buddypress_avatar' " . selected( $type, 'buddypress_avatar', false ) . ">" . __("BuddyPress Avatar", "megamenupro") . "</option>";
-		$html .= "                    <option value='buddypress_notifications' " . selected( $type, 'buddypress_notifications', false ) . ">" . __("BuddyPress Notifications", "megamenupro") . "</option>";
+		$html .= "                    <option value='disabled' " . selected( $type, 'disabled', false ) . ">" . __("Disabled", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='logo' " . selected( $type, 'logo', false ) . ">" . __("Logo", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='search' " . selected( $type, 'search', false ) . ">" . __("Search box", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='html' " . selected( $type, 'html', false ) . ">" . __("HTML", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='woo_cart_total' " . selected( $type, 'woo_cart_total', false ) . ">" . __("WooCommerce Cart Total", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='woo_cart_count' " . selected( $type, 'woo_cart_count', false ) . ">" . __("WooCommerce Cart Count", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='edd_cart_total' " . selected( $type, 'edd_cart_total', false ) . ">" . __("EDD Cart Total", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='edd_cart_count' " . selected( $type, 'edd_cart_count', false ) . ">" . __("EDD Cart Count", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='buddypress_avatar' " . selected( $type, 'buddypress_avatar', false ) . ">" . __("BuddyPress Avatar", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='buddypress_notifications' " . selected( $type, 'buddypress_notifications', false ) . ">" . __("BuddyPress Notifications", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='logo' style='display: {$logo_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Logo", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __( "Choose an image from your Media Library" , "megamenupro") . "</div>";
+		$html .=                  __("Logo", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __( "Choose an image from your Media Library" , "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <div class='mmm_image_selector' data-src='{$logo_src}' data-field='custom_logo_id' data-menu-item-id='" . esc_attr( $menu_item_id ) . "'></div>";
@@ -853,7 +853,7 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='logo' style='display: {$logo_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Size", "megamenupro");
+		$html .=                  __("Size", "megamenu-pro");
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <div class='mega-width-height'>";
@@ -871,33 +871,33 @@ class Mega_Menu_Replacements {
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <p>";
-		$html .=                  __("The logo height should be smaller than the menu height (configured under Mega Menu > Menu Themes > Menu Bar > Menu Height).", "megamenupro");
+		$html .=                  __("The logo height should be smaller than the menu height (configured under Mega Menu > Menu Themes > Menu Bar > Menu Height).", "megamenu-pro");
 		$html .= "                </p>";
 		$html .= "                <p>";
-		$html .=                  __("Enter the desired visual size for the logo (we'll automatically handle outputting a 2x logo for retina displays).", "megamenupro");
+		$html .=                  __("Enter the desired visual size for the logo (we'll automatically handle outputting a 2x logo for retina displays).", "megamenu-pro");
 		$html .= "                </p>";
 		$html .= "                <p>";
-		$html .=                  __("Mobile Menu Tip: To hide this logo from the list of items in your mobile menu, go to the 'Settings' tab and enable 'Hide Item on Mobile'. Then you can add the logo directly to your mobile toggle bar, under Mega Menu > Menu Themes > Mobile Menu > Toggle Bar Designer", "megamenupro");
+		$html .=                  __("Mobile Menu Tip: To hide this logo from the list of items in your mobile menu, go to the 'Settings' tab and enable 'Hide Item on Mobile'. Then you can add the logo directly to your mobile toggle bar, under Mega Menu > Menu Themes > Mobile Menu > Toggle Bar Designer", "megamenu-pro");
 		$html .= "                </p>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Style", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Select the search box style", "megamenupro") . "</div>";
+		$html .=                  __("Style", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Select the search box style", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[replacements][search][type]'>";
-		$html .= "                    <option value='expand_to_left' " . selected( $search_type, 'expand_to_left', false ) . ">" . __("Expand to Left", "megamenupro") . "</option>";
-		$html .= "                    <option value='expand_to_right' " . selected( $search_type, 'expand_to_right', false ) . ">" . __("Expand to Right", "megamenupro") . "</option>";
-		$html .= "                    <option value='static' " . selected( $search_type, 'static', false ) . ">" . __("Static", "megamenupro") . "</option>";
+		$html .= "                    <option value='expand_to_left' " . selected( $search_type, 'expand_to_left', false ) . ">" . __("Expand to Left", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='expand_to_right' " . selected( $search_type, 'expand_to_right', false ) . ">" . __("Expand to Right", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='static' " . selected( $search_type, 'static', false ) . ">" . __("Static", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Height", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Define the height of the search icon and search input box", "megamenupro") . "</div>";
+		$html .=                  __("Height", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Define the height of the search icon and search input box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <input type='text' name='settings[replacements][search][height]' value='{$search_height}' required='required' />";
@@ -905,8 +905,8 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Width", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Define the width of the search box when expanded", "megamenupro") . "</div>";
+		$html .=                  __("Width", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Define the width of the search box when expanded", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <input type='text' name='settings[replacements][search][width]' value='{$search_width}' required='required' />";
@@ -914,8 +914,8 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Text Color", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Define the color for the text within the search input box", "megamenupro") . "</div>";
+		$html .=                  __("Text Color", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Define the color for the text within the search input box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('text_color', $search_text_color);
@@ -923,52 +923,52 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Icon Color", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Search icon color", "megamenupro") . "</div>";
+		$html .=                  __("Icon Color", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Search icon color", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <label>";
-		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenu-pro") . "</span>";
 		$html .=                      $this->print_theme_color_option('icon_color_closed', $search_icon_color_closed);
 		$html .= "                </label>";
 		$html .= "                <label>";
-		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenu-pro") . "</span>";
 		$html .=                      $this->print_theme_color_option('icon_color_open', $search_icon_color_open);
 		$html .= "                </label>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Search Icon", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("", "megamenupro") . "</div>";
+		$html .=                  __("Search Icon", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[replacements][search][search_icon_type]'>";
-		$html .= "                    <option value='dashicons-search' " . selected( $search_icon_type, 'dashicons-search', false ) . ">" . __("Dashicons Search", "megamenupro") . "</option>";
-		$html .= "                    <option value='custom' " . selected( $search_icon_type, 'custom', false ) . ">" . __("Use Menu Item Icon", "megamenupro") . "</option>";
+		$html .= "                    <option value='dashicons-search' " . selected( $search_icon_type, 'dashicons-search', false ) . ">" . __("Dashicons Search", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='custom' " . selected( $search_icon_type, 'custom', false ) . ">" . __("Use Menu Item Icon", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Background Color", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Background color for search icon and search input box", "megamenupro") . "</div>";
+		$html .=                  __("Background Color", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Background color for search icon and search input box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <label>";
-		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenupro") . "</span>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Closed State", "megamenu-pro") . "</span>";
 		$html .=                      $this->print_theme_color_option('background_color_closed', $search_background_color_closed);
 		$html .= "                </label>";
 		$html .= "                <label>";
-		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenupro") . "</span>";
+		$html .= "                    <span class='mega-short-desc'>" . __("Open State", "megamenu-pro") . "</span>";
 		$html .=                      $this->print_theme_color_option('background_color_open', $search_background_color_open);
 		$html .= "                </label>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Border Radius", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Set rounded corners for the search icon and search input box", "megamenupro") . "</div>";
+		$html .=                  __("Border Radius", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Set rounded corners for the search icon and search input box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <input type='text' name='settings[replacements][search][border_radius]' value='{$search_border_radius}' required='required' />";
@@ -976,8 +976,8 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Placeholder Text", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Define the pre-populated text within the search box", "megamenupro") . "</div>";
+		$html .=                  __("Placeholder Text", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Define the pre-populated text within the search box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <input type='text' name='settings[replacements][search][placeholder_text]' value='{$search_placeholder_text}' />";
@@ -985,8 +985,8 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Vertical Offset", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Vertical positioning for the search box", "megamenupro") . "</div>";
+		$html .=                  __("Vertical Offset", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Vertical positioning for the search box", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <input type='text' name='settings[replacements][search][vertical_offset]' value='{$search_vertical_offset}' required='required' />";
@@ -996,13 +996,13 @@ class Mega_Menu_Replacements {
 		if (is_plugin_active('woocommerce/woocommerce.php')) {
 			$html .= "        <tr class='search' style='display: {$search_display}'>";
 			$html .= "            <td class='mega-name'>";
-			$html .=                  __("WooCommerce Search", "megamenupro");
-			$html .= "                <div class='mega-description'>" . __("Use WooCommerce search results template?", "megamenupro") . "</div>";
+			$html .=                  __("WooCommerce Search", "megamenu-pro");
+			$html .= "                <div class='mega-description'>" . __("Use WooCommerce search results template?", "megamenu-pro") . "</div>";
 			$html .=              "</td>";
 			$html .= "            <td class='mega-value'>";
 			$html .= "                <select name='settings[replacements][search][woocommerce]'>";
-			$html .= "                    <option value='true' " . selected( $search_woocommerce, 'true', false ) . ">" . __("Yes", "megamenupro") . "</option>";
-			$html .= "                    <option value='false' " . selected( $search_woocommerce, 'false', false ) . ">" . __("No", "megamenupro") . "</option>";
+			$html .= "                    <option value='true' " . selected( $search_woocommerce, 'true', false ) . ">" . __("Yes", "megamenu-pro") . "</option>";
+			$html .= "                    <option value='false' " . selected( $search_woocommerce, 'false', false ) . ">" . __("No", "megamenu-pro") . "</option>";
 			$html .= "                </select>";
 			$html .= "            </td>";
 			$html .= "        </tr>";
@@ -1010,13 +1010,13 @@ class Mega_Menu_Replacements {
 
 		$html .= "        <tr class='html' style='display: {$html_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("Mode", "megamenupro");
+		$html .=                  __("Mode", "megamenu-pro");
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[replacements][html][mode]' id='mega_replacement_mode'>";
-		$html .= "                    <option value='inner' " . selected( $html_mode, 'inner', false ) . ">" . __("Replace the menu item link text", "megamenupro") . "</option>";
-		$html .= "                    <option value='outer' " . selected( $html_mode, 'outer', false ) . ">" . __("Replace the whole menu item link", "megamenupro") . "</option>";
-		$html .= "                    <option value='href' " . selected( $html_mode, 'href', false ) . ">" . __("Replace the menu item URL", "megamenupro") . "</option>";
+		$html .= "                    <option value='inner' " . selected( $html_mode, 'inner', false ) . ">" . __("Replace the menu item link text", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='outer' " . selected( $html_mode, 'outer', false ) . ">" . __("Replace the whole menu item link", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='href' " . selected( $html_mode, 'href', false ) . ">" . __("Replace the menu item URL", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
 		$html .= "                <div class='mega-description'>";
 		$html .= "                    <div class='inner' style='display:{$inner_display}'>&lt;li class='mega-menu-item'&gt;&lt;a class='mega-menu-link' href='url'&gt;<span style='color: red; font-weight: bold;'>Link Text</span>&lt;/a&gt;&lt;/li&gt;</div>";
@@ -1027,8 +1027,8 @@ class Mega_Menu_Replacements {
 		$html .= "        </tr>";
 		$html .= "        <tr class='html' style='display: {$html_display}'>";
 		$html .= "            <td class='mega-name'>";
-		$html .=                  __("HTML", "megamenupro");
-		$html .= "                <div class='mega-description'>" . __("Enter the text to replace this menu item with. HTML and Shortcodes accepted.", "megamenupro") . "</div>";
+		$html .=                  __("HTML", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("Enter the text to replace this menu item with. HTML and Shortcodes accepted.", "megamenu-pro") . "</div>";
 		$html .=              "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <textarea id='codemirror' name='settings[replacements][html][code]'>{$html_code}</textarea>";
@@ -1039,7 +1039,7 @@ class Mega_Menu_Replacements {
 		$html .= "</form>";
 
 		$tabs['replacements'] = array(
-			'title' => __("Replacements", "megamenupro"),
+			'title' => __("Replacements", "megamenu-pro"),
 			'content' => $html
 		);
 
