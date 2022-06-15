@@ -1,9 +1,19 @@
 === Max Mega Menu Pro ===
 Requires at least: 4.9
-Tested up to: 5.5
+Tested up to: 6.0
 Requires PHP: 5.6
 
 == Changelog ==
+
+= 2.2.6 =
+
+* Fix: Localisation fixes
+* Fix: Mobile menu sizing issue when menu becomes unstuck
+* Fix: On mobile, apply the custom hover icon when item is active
+
+= 2.2.5 =
+
+Improvement: Add alt text to Image Swap feature
 
 = 2.2.4 =
 

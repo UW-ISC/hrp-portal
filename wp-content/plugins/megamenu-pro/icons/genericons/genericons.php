@@ -77,7 +77,7 @@ class Mega_Menu_Genericons {
 		$settings = get_option("megamenu_settings");
         
         if ( is_array( $settings ) && isset( $settings['enqueue_genericons'] ) && $settings['enqueue_genericons'] == 'disabled' ) {
-        	$html = "<div class='notice notice-warning'>" . _("Genericons has been dequeued under Mega Menu > General Settings.") . "</div>";
+        	$html = "<div class='notice notice-warning'>" . __("Genericons has been dequeued under Mega Menu > General Settings.", "megamenu-pro") . "</div>";
         } else {
         	$html = "";
         }
@@ -96,7 +96,7 @@ class Mega_Menu_Genericons {
         }
     
 		$tabs['genericons'] = array(
-			'title' => __("Genericons", "megamenupro"),
+			'title' => __("Genericons", "megamenu-pro"),
 			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("genericon") ) === "genericon",
 			'content' => $html
 		);

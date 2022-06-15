@@ -218,7 +218,7 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 		 */
 		public function add_license_tab($tabs) {
 
-			$tabs['license'] = __("License", "megamenupro");
+			$tabs['license'] = __("License", "megamenu-pro");
 
 			return $tabs;
 
@@ -245,23 +245,23 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 				if ( isset( $_GET['error_code'] ) ) {
 					switch( $_GET['error_code'] ) {
 						case 'expired' :
-							$message = __("This licence key has expired. Please log in to your client area to renew your licence key.", "megamenupro" );
+							$message = __("This licence key has expired. Please log in to your client area to renew your licence key.", "megamenu-pro" );
 							break;
 						case 'revoked' :
-							$message =  __( 'Your license key has been disabled.', "megamenupro" );
+							$message =  __( 'Your license key has been disabled.', "megamenu-pro" );
 							break;
 						case 'missing' :
-							$message =  __( 'This licence key is not valid.', "megamenupro" );
+							$message =  __( 'This licence key is not valid.', "megamenu-pro" );
 							break;
 						case 'invalid' :
 						case 'site_inactive' :
-							$message =  __( 'Your license is not active for this URL.', "megamenupro" );
+							$message =  __( 'Your license is not active for this URL.', "megamenu-pro" );
 							break;
 						case 'item_name_mismatch' :
-							$message =  __( 'This appears to be an invalid license key.', "megamenupro" );
+							$message =  __( 'This appears to be an invalid license key.', "megamenu-pro" );
 							break;
 						case 'no_activations_left':
-							$message =  __( 'Your license key has reached its activation limit. Log into your client area to upgrade your licence or deactivate unused sites.', "megamenupro" );
+							$message =  __( 'Your license key has reached its activation limit. Log into your client area to upgrade your licence or deactivate unused sites.', "megamenu-pro" );
 							break;
 					}
 
@@ -276,15 +276,15 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 					<input type="hidden" name="action" value="megamenu_update_license" />
 					<?php wp_nonce_field( 'megamenu_update_license' ); ?>
 
-					<h3 class='first'><?php _e('Max Mega Menu Pro License', "megamenupro"); ?></h3>
+					<h3 class='first'><?php _e('Max Mega Menu Pro License', "megamenu-pro"); ?></h3>
 
 					<table>
 						<tbody>
 							<tr>
 								<td class='mega-name'>
-									<?php _e('License Key'); ?>
+									<?php _e('License Key', "megamenu-pro"); ?>
 									<div class='mega-description'>
-										<?php _e('A license key must be entered and activated to enable automatic plugin updates', "megamenupro"); ?>
+										<?php _e('A license key must be entered and activated to enable automatic plugin updates', "megamenu-pro"); ?>
 									</div>
 								</td>
 								<td class='mega-value'>
@@ -292,14 +292,14 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 									<input style='width: 25em;' name="edd_mmm_license_key" type="<?php echo apply_filters("megamenu_licence_key_field_type", "text"); ?>" class="regular-text" value="<?php esc_attr_e( $license ); ?>" />
 
 									<?php if( $status !== false && $status == 'valid' ) { ?>
-										<input type="submit" class="button-secondary" name="edd_mmm_license_deactivate" value="<?php _e('Deactivate License', "megamenupro"); ?>"/>
+										<input type="submit" class="button-secondary" name="edd_mmm_license_deactivate" value="<?php _e('Deactivate License', "megamenu-pro"); ?>"/>
 									<?php } else { ?>
-										<input style='width: auto;' type="submit" class="button-secondary" name="edd_mmm_license_activate" value="<?php _e('Activate License', "megamenupro"); ?>"/>
+										<input style='width: auto;' type="submit" class="button-secondary" name="edd_mmm_license_activate" value="<?php _e('Activate License', "megamenu-pro"); ?>"/>
 									<?php } ?>
 
 									<div class='licence_info'>
-										<p><b><?php _e('Did you know?', "megamenupro"); ?></b></p>
-										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.maxmegamenu.com/client-area/">Client Area</a>.', "megamenupro"); ?></p>
+										<p><b><?php _e('Did you know?', "megamenu-pro"); ?></b></p>
+										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.maxmegamenu.com/client-area/">Client Area</a>.', "megamenu-pro"); ?></p>
 									</div>
 
 									<?php

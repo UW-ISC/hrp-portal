@@ -61,12 +61,12 @@ class Mega_Menu_Style_Overrides {
 		$html .= "    <input type='hidden' name='menu_item_id' value='{$menu_item_id}' />";
 		$html .= "    <input type='hidden' name='action' value='mm_save_menu_item_settings' />";
 		$html .= "    <input type='hidden' name='clear_cache' value='true' />";
-		$html .= "    <h4 class='first'>" . __("Styling", "megamenupro") . "</h4>";
-		$html .= "    <p class='tab-description'>" . __("Apply custom styling to this menu item only. These values will override the styling set in the menu theme.", "megamenu_pro") . "</p>";
+		$html .= "    <h4 class='first'>" . __("Styling", "megamenu-pro") . "</h4>";
+		$html .= "    <p class='tab-description'>" . __("Apply custom styling to this menu item only. These values will override the styling set in the menu theme.", "megamenu-pro") . "</p>";
 		$html .= "    <table>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_background_from', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_background_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Background Color", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Background Color", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_background_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .=                  $this->print_theme_color_option('menu_item_background_to', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
@@ -74,7 +74,7 @@ class Mega_Menu_Style_Overrides {
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_background_hover_from', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_background_hover_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Background Color (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Background Color (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_background_hover_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .=                  $this->print_theme_color_option('menu_item_background_hover_to', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
@@ -82,14 +82,14 @@ class Mega_Menu_Style_Overrides {
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_color', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Font Color", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Font Color", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_link_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_color_hover', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Font Color (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Font Color (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_link_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
@@ -97,235 +97,235 @@ class Mega_Menu_Style_Overrides {
 
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_weight', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_weight', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Font Weight", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Font Weight", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_text_weight_option('menu_item_link_weight', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_weight_hover', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_weight_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Font Weight (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Font Weight (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_text_weight_option('menu_item_link_weight_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_font_size', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_font_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Font Size", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Font Size", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_font_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_text_align', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_text_align', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Text Align", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Text Align", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_align_option('menu_item_link_text_align', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_text_transform', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_text_transform', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Text Transform", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Text Transform", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_text_transform_option('menu_item_link_text_transform', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_text_decoration', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_text_decoration', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Text Decoration", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Text Decoration", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_text_decoration_option('menu_item_link_text_decoration', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_link_text_decoration_hover', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_link_text_decoration_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Text Decoration (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Text Decoration (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_text_decoration_option('menu_item_link_text_decoration_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_color', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Color", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Color", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_border_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_color_hover', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Color (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Color (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_border_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_top', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Width (Top)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Width (Top)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_right', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Width (Right)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Width (Right)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_bottom', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Width (Bottom)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Width (Bottom)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_left', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Width (Left)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Width (Left)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_radius_top_left', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_radius_top_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Radius (Top Left)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Radius (Top Left)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_radius_top_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_radius_top_right', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_radius_top_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Radius (Top Right)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Radius (Top Right)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_radius_top_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_radius_bottom_right', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_radius_bottom_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Radius (Bottom Right)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Radius (Bottom Right)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_radius_bottom_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_border_radius_bottom_left', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_border_radius_bottom_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Border Radius (Bottom Left)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Border Radius (Bottom Left)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_border_radius_bottom_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_icon_size', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_icon_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Icon Size", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Icon Size", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_icon_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_icon_color', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_icon_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Icon Color", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Icon Color", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_icon_color', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_icon_color_hover', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_icon_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Icon Color (Hover)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Icon Color (Hover)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('menu_item_icon_color_hover', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_padding_left', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_padding_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Left)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Left)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_padding_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_padding_right', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_padding_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Right)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Right)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_padding_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_padding_top', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_padding_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Top)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Top)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_padding_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
-		$html .= "                 <small><em>Not recommended for top level menu items</em></small>";
+		$html .= "                 <small><em>" . __("Not recommended for top level menu items", "megamenu-pro") . "</em></small>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_padding_bottom', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_padding_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Bottom)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Padding (Bottom)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_padding_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
-		$html .= "                 <small><em>Not recommended for top level menu items</em></small>";
+		$html .= "                 <small><em>" . __("Not recommended for top level menu items", "megamenu-pro") . "</em></small>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_margin_left', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_margin_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Left)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Left)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_margin_left', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_margin_right', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_margin_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Right)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Right)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_margin_right', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_margin_top', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_margin_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Top)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Top)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_margin_top', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
-		$html .= "                 <small><em>Not recommended for top level menu items</em></small>";
+		$html .= "                 <small><em>" . __("Not recommended for top level menu items", "megamenu-pro") . "</em></small>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_margin_bottom', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_margin_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Bottom)", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Margin (Bottom)", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_margin_bottom', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
-		$html .= "                 <small><em>Not recommended for top level menu items</em></small>";
+		$html .= "                 <small><em>" . __("Not recommended for top level menu items", "megamenu-pro") . "</em></small>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('menu_item_height', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'menu_item_height', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Menu Item Height", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Menu Item Height", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('menu_item_height', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_width', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_width', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Width", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Width", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('panel_width', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_horizontal_offset', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_horizontal_offset', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Horizontal Offset", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Horizontal Offset", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('panel_horizontal_offset', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_vertical_offset', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_vertical_offset', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Vertical Offset", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Vertical Offset", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_freetext_option('panel_vertical_offset', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_background_from', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_background_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Color", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Color", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_color_option('panel_background_from', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .=                  $this->print_theme_color_option('panel_background_to', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
@@ -333,28 +333,28 @@ class Mega_Menu_Style_Overrides {
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_background_image', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_background_image', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_background_option('panel_background_image', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_background_image_size', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_background_image_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Size", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Size", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_background_size_option('panel_background_image_size', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_background_image_repeat', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_background_image_repeat', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Repeat", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Repeat", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_background_repeat_option('panel_background_image_repeat', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='mega-" . $this->get_setting_state('panel_background_image_position', $menu_item_meta) . "'>";
 		$html .= "            <td class='mega-enable'>" . $this->print_theme_option_enabled( 'panel_background_image_position', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta ) . "</td>";
-		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Position", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Sub Menu - Background Image Position", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .=                  $this->print_theme_background_position_option('panel_background_image_position', $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
 		$html .= "            </td>";
@@ -364,7 +364,7 @@ class Mega_Menu_Style_Overrides {
 		$html .= "</form>";
 
 		$tabs['styling'] = array(
-			'title' => __("Styling", "megamenupro"),
+			'title' => __("Styling", "megamenu-pro"),
 			'content' => $html
 		);
 
@@ -449,9 +449,9 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "auto";
 
 		$html  = "<select name='settings[styles][{$enabled}][{$key}]' >";
-		$html .= "    <option value='auto' " . selected( $value, 'auto', false ) . ">" . __("Auto", "megamenupro") . "</option>";
-		$html .= "    <option value='cover' " . selected( $value, 'cover', false ) . ">" . __("Cover", "megamenupro") . "</option>";
-		$html .= "    <option value='contain' " . selected( $value, 'contain', false ) . ">" . __("Contain", "megamenupro") . "</option>";
+		$html .= "    <option value='auto' " . selected( $value, 'auto', false ) . ">" . __("Auto", "megamenu-pro") . "</option>";
+		$html .= "    <option value='cover' " . selected( $value, 'cover', false ) . ">" . __("Cover", "megamenu-pro") . "</option>";
+		$html .= "    <option value='contain' " . selected( $value, 'contain', false ) . ">" . __("Contain", "megamenu-pro") . "</option>";
 		$html .= "</select>";
 
 		return $html;
@@ -477,10 +477,10 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "none";
 
         $html  = "<select name='settings[styles][{$enabled}][{$key}]'>";
-        $html .= "    <option value='none' "      . selected( $value, 'none', false ) . ">" . __("Normal", "megamenu") . "</option>";
-        $html .= "    <option value='capitalize'" . selected( $value, 'capitalize', false ) . ">" . __("Capitalize", "megamenu") . "</option>";
-        $html .= "    <option value='uppercase'"  . selected( $value, 'uppercase', false ) . ">" . __("Uppercase", "megamenu") . "</option>";
-        $html .= "    <option value='lowercase'"  . selected( $value, 'lowercase', false ) . ">" . __("Lowercase", "megamenu") . "</option>";
+        $html .= "    <option value='none' "      . selected( $value, 'none', false ) . ">" . __("Normal", "megamenu-pro") . "</option>";
+        $html .= "    <option value='capitalize'" . selected( $value, 'capitalize', false ) . ">" . __("Capitalize", "megamenu-pro") . "</option>";
+        $html .= "    <option value='uppercase'"  . selected( $value, 'uppercase', false ) . ">" . __("Uppercase", "megamenu-pro") . "</option>";
+        $html .= "    <option value='lowercase'"  . selected( $value, 'lowercase', false ) . ">" . __("Lowercase", "megamenu-pro") . "</option>";
         $html .= "</select>";
 
 		return $html;
@@ -505,9 +505,9 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "none";
 
         $html  = "<select name='settings[styles][{$enabled}][{$key}]'>";
-        $html .= "    <option value='left' "  . selected( $value, 'left', false ) . ">" . __("Left", "megamenu") . "</option>";
-        $html .= "    <option value='center'" . selected( $value, 'center', false ) . ">" . __("Center", "megamenu") . "</option>";
-        $html .= "    <option value='right'"  . selected( $value, 'right', false ) . ">" . __("Right", "megamenu") . "</option>";
+        $html .= "    <option value='left' "  . selected( $value, 'left', false ) . ">" . __("Left", "megamenu-pro") . "</option>";
+        $html .= "    <option value='center'" . selected( $value, 'center', false ) . ">" . __("Center", "megamenu-pro") . "</option>";
+        $html .= "    <option value='right'"  . selected( $value, 'right', false ) . ">" . __("Right", "megamenu-pro") . "</option>";
         $html .= "</select>";
 
         return $html;
@@ -532,8 +532,8 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "none";
 
         $html  = "<select name='settings[styles][{$enabled}][{$key}]'>";
-        $html .= "    <option value='none' "      . selected( $value, 'none', false ) . ">" . __("None", "megamenu") . "</option>";
-        $html .= "    <option value='underline' " . selected( $value, 'underline', false ) . ">" . __("Underline", "megamenu") . "</option>";
+        $html .= "    <option value='none' "      . selected( $value, 'none', false ) . ">" . __("None", "megamenu-pro") . "</option>";
+        $html .= "    <option value='underline' " . selected( $value, 'underline', false ) . ">" . __("Underline", "megamenu-pro") . "</option>";
         $html .= "</select>";
 
 		return $html;
@@ -558,22 +558,22 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "inherit";
 
         $options = apply_filters( "megamenu_font_weights", array(
-            'inherit' => __("Theme Default", "megamenu"),
-            '300' => __("Light (300)", "megamenu"),
-            'normal' => __("Normal (400)", "megamenu"),
-            'bold' => __("Bold (700)", "megamenu"),
+            'inherit' => __("Theme Default", "megamenu-pro"),
+            '300' => __("Light (300)", "megamenu-pro"),
+            'normal' => __("Normal (400)", "megamenu-pro"),
+            'bold' => __("Bold (700)", "megamenu-pro"),
         ) );
 
         /**
-         *   '100' => __("Thin (100)", "megamenu"),
-         *   '200' => __("Extra Light (200)", "megamenu"),
-         *   '300' => __("Light (300)", "megamenu"),
-         *   'normal' => __("Normal (400)", "megamenu"),
-         *   '500' => __("Medium (500)", "megamenu"),
-         *   '600' => __("Semi Bold (600)", "megamenu"),
-         *   'bold' => __("Bold (700)", "megamenu"),
-         *   '800' => __("Extra Bold (800)", "megamenu"),
-         *   '900' => __("Black (900)", "megamenu")
+         *   '100' => __("Thin (100)", "megamenu-pro"),
+         *   '200' => __("Extra Light (200)", "megamenu-pro"),
+         *   '300' => __("Light (300)", "megamenu-pro"),
+         *   'normal' => __("Normal (400)", "megamenu-pro"),
+         *   '500' => __("Medium (500)", "megamenu-pro"),
+         *   '600' => __("Semi Bold (600)", "megamenu-pro"),
+         *   'bold' => __("Bold (700)", "megamenu-pro"),
+         *   '800' => __("Extra Bold (800)", "megamenu-pro"),
+         *   '900' => __("Black (900)", "megamenu-pro")
         */
 
         $html = "<select name='settings[styles][{$enabled}][{$key}]'>";
@@ -607,15 +607,15 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "auto";
 
 		$html  = "<select name='settings[styles][{$enabled}][{$key}]' >";
-		$html .= "    <option value='left top' " . selected( $value, 'left top', false ) . ">" . __("Left Top", "megamenupro") . "</option>";
-		$html .= "    <option value='left center' " . selected( $value, 'left center', false ) . ">" . __("Left Center", "megamenupro") . "</option>";
-		$html .= "    <option value='left bottom' " . selected( $value, 'left bottom', false ) . ">" . __("Left Bottom", "megamenupro") . "</option>";
-		$html .= "    <option value='right top' " . selected( $value, 'right top', false ) . ">" . __("Right Top", "megamenupro") . "</option>";
-		$html .= "    <option value='right center' " . selected( $value, 'right center', false ) . ">" . __("Right Center", "megamenupro") . "</option>";
-		$html .= "    <option value='right bottom' " . selected( $value, 'right bottom', false ) . ">" . __("Right Bottom", "megamenupro") . "</option>";
-		$html .= "    <option value='center top' " . selected( $value, 'center top', false ) . ">" . __("Center Top", "megamenupro") . "</option>";
-		$html .= "    <option value='center center' " . selected( $value, 'center center', false ) . ">" . __("Center Center", "megamenupro") . "</option>";
-		$html .= "    <option value='center bottom' " . selected( $value, 'center bottom', false ) . ">" . __("Center Bottom", "megamenupro") . "</option>";
+		$html .= "    <option value='left top' " . selected( $value, 'left top', false ) . ">" . __("Left Top", "megamenu-pro") . "</option>";
+		$html .= "    <option value='left center' " . selected( $value, 'left center', false ) . ">" . __("Left Center", "megamenu-pro") . "</option>";
+		$html .= "    <option value='left bottom' " . selected( $value, 'left bottom', false ) . ">" . __("Left Bottom", "megamenu-pro") . "</option>";
+		$html .= "    <option value='right top' " . selected( $value, 'right top', false ) . ">" . __("Right Top", "megamenu-pro") . "</option>";
+		$html .= "    <option value='right center' " . selected( $value, 'right center', false ) . ">" . __("Right Center", "megamenu-pro") . "</option>";
+		$html .= "    <option value='right bottom' " . selected( $value, 'right bottom', false ) . ">" . __("Right Bottom", "megamenu-pro") . "</option>";
+		$html .= "    <option value='center top' " . selected( $value, 'center top', false ) . ">" . __("Center Top", "megamenu-pro") . "</option>";
+		$html .= "    <option value='center center' " . selected( $value, 'center center', false ) . ">" . __("Center Center", "megamenu-pro") . "</option>";
+		$html .= "    <option value='center bottom' " . selected( $value, 'center bottom', false ) . ">" . __("Center Bottom", "megamenu-pro") . "</option>";
 		$html .= "</select>";
 
 		return $html;
@@ -640,10 +640,10 @@ class Mega_Menu_Style_Overrides {
 		$value = isset( $menu_item_meta['styles'][$enabled][$key] ) ? $menu_item_meta['styles'][$enabled][$key] : "auto";
 
 		$html  = "<select name='settings[styles][{$enabled}][{$key}]' >";
-		$html .= "    <option value='no-repeat' " . selected( $value, 'no-repeat', false ) . ">" . __("No Repeat", "megamenupro") . "</option>";
-		$html .= "    <option value='repeat' " . selected( $value, 'repeat', false ) . ">" . __("Repeat (Tiled)", "megamenupro") . "</option>";
-		$html .= "    <option value='repeat-x' " . selected( $value, 'repeat-x', false ) . ">" . __("Repeat X (Horizontally)", "megamenupro") . "</option>";
-		$html .= "    <option value='repeat-y' " . selected( $value, 'repeat-y', false ) . ">" . __("Repeat X (Vertically)", "megamenupro") . "</option>";
+		$html .= "    <option value='no-repeat' " . selected( $value, 'no-repeat', false ) . ">" . __("No Repeat", "megamenu-pro") . "</option>";
+		$html .= "    <option value='repeat' " . selected( $value, 'repeat', false ) . ">" . __("Repeat (Tiled)", "megamenu-pro") . "</option>";
+		$html .= "    <option value='repeat-x' " . selected( $value, 'repeat-x', false ) . ">" . __("Repeat X (Horizontally)", "megamenu-pro") . "</option>";
+		$html .= "    <option value='repeat-y' " . selected( $value, 'repeat-y', false ) . ">" . __("Repeat X (Vertically)", "megamenu-pro") . "</option>";
 		$html .= "</select>";
 
 		return $html;

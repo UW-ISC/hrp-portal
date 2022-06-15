@@ -84,7 +84,7 @@ class Mega_Menu_Font_Awesome {
 		$settings = get_option("megamenu_settings");
         
         if ( is_array( $settings ) && isset( $settings['enqueue_fa_4'] ) && $settings['enqueue_fa_4'] == 'disabled' ) {
-        	$html = "<div class='notice notice-warning'>" . __("Font Awesome 4 has been dequeued under Mega Menu > General Settings.", "megamenupro") . "</div>";
+        	$html = "<div class='notice notice-warning'>" . __("Font Awesome 4 has been dequeued under Mega Menu > General Settings.", "megamenu-pro") . "</div>";
         } else {
         	$html = "";
         }
@@ -103,7 +103,7 @@ class Mega_Menu_Font_Awesome {
         }
 
 		$tabs['fontawesome'] = array(
-			'title' => __("Font Awesome 4", "megamenupro"),
+			'title' => __("Font Awesome 4", "megamenu-pro"),
 			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("fa-") ) === "fa-",
 			'content' => $html
 		);

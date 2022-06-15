@@ -45,13 +45,17 @@ class Mega_Menu_Image_Swap {
 				$icon_id = $settings['image_swap']['id'];
 				$size = isset( $settings['image_swap']['size'] ) ? $settings['image_swap']['size'] : 'thumbnail';
 				$icon_url = "";
+				$icon_alt = "";
+
 
 				if ( $icon_id ) {
 					$icon = wp_get_attachment_image_src( $icon_id, $size );
 					$icon_url = $icon[0];
+					$icon_alt = trim(strip_tags( get_post_meta($icon_id, '_wp_attachment_image_alt', true) ));
 				}
 
 				$atts['data-image-swap-url'] = $icon_url;
+				$atts['data-image-swap-alt'] = $icon_alt;
 			}
 		}
 
@@ -100,21 +104,21 @@ class Mega_Menu_Image_Swap {
 		$html .= "    <input type='hidden' name='_wpnonce' value='" . wp_create_nonce('megamenu_edit') . "' />";
 		$html .= "    <input type='hidden' name='menu_item_id' value='{$menu_item_id}' />";
 		$html .= "    <input type='hidden' name='action' value='mm_save_menu_item_settings' />";
-		$html .= "    <h4 class='first'>" . __("Image Swap", "megamenupro") . "</h4>";
+		$html .= "    <h4 class='first'>" . __("Image Swap", "megamenu-pro") . "</h4>";
 		$html .= "    <p class='tab-description'>";
-		$html .=          __("Select an image to display in the 'Image Swap Widget' when the users hovers over this menu item.", "megamenupro");
-		$html .= "        <a href='https://www.megamenu.com/documentation/image-swap' target='_blank'>" . __("View documentation") . "</a>";
+		$html .=          __("Select an image to display in the 'Image Swap Widget' when the users hovers over this menu item.", "megamenu-pro");
+		$html .= "        <a href='https://www.megamenu.com/documentation/image-swap' target='_blank'>" . __("View documentation", "megamenu-pro") . "</a>";
 		$html .= "    </p>";
 		$html .= "    <table>";
 		$html .= "        <tr>";
-		$html .= "            <td class='mega-name'>" . __("Image", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Image", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <div class='mmm_image_selector' data-src='{$icon_url}' data-field='image_swap_id'></div>";
 		$html .= "                <input type='hidden' id='image_swap_id' name='settings[image_swap][id]' value='{$icon_id}' />";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr>";
-		$html .= "            <td class='mega-name'>" . __("Size", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Size", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[image_swap][size]'>";
 
@@ -126,11 +130,11 @@ class Mega_Menu_Image_Swap {
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "    </table>";
-		$html .= get_submit_button( __("Save", "megamenupro") );
+		$html .= get_submit_button( __("Save", "megamenu-pro") );
 		$html .= "</form>";
 
 		$tabs['image_swap'] = array(
-			'title' => __("Image Swap", "megamenupro"),
+			'title' => __("Image Swap", "megamenu-pro"),
 			'content' => $html
 		);
 

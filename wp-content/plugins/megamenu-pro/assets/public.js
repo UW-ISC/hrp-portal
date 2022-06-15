@@ -19,7 +19,9 @@
             // reset default
             var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
             var default_src = placeholder.attr('data-default-src');
+            var default_alt = placeholder.attr('data-default-alt');
             placeholder.attr('src', default_src);
+            placeholder.attr('alt', default_alt);
 
             // preload
             $('.mega-sub-menu [data-image-swap-url]', $(this) ).not(['data-preloaded']).each( function() {
@@ -32,7 +34,9 @@
             over: function () {
                 var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
                 var new_src = $(this).attr('data-image-swap-url');
+                var new_alt = $(this).is("[data-image-swap-alt]") ? $(this).attr('data-image-swap-alt') : "";
                 placeholder.attr('src', new_src);
+                placeholder.attr('alt', new_alt);
             },
             out: function() {}
         });
@@ -423,6 +427,10 @@
                 'left' : '',
                 'width' : ''
             });
+            
+            if ( $(window).width() <= breakpoint ) {
+                $menu.data('maxmegamenu').toggleBarForceWidth();
+            }
 
             if (sticky_transition == 'true' && ! doing_resize ) {
                 var delay = 250; // allows the transiton to complete before unwrapping the menu

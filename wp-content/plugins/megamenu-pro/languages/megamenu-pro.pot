@@ -1,0 +1,1521 @@
+# Copyright (C) 2022 megamenu.com
+# This file is distributed under the same license as the Max Mega Menu - Pro Addon plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Max Mega Menu - Pro Addon 2.2.5.2\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/megamenu-pro\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2022-05-31T10:45:48+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.5.0-alpha\n"
+"X-Domain: megamenu-pro\n"
+
+#. Plugin Name of the plugin
+msgid "Max Mega Menu - Pro Addon"
+msgstr ""
+
+#. Plugin URI of the plugin
+#. Author URI of the plugin
+msgid "https://www.megamenu.com"
+msgstr ""
+
+#. Description of the plugin
+msgid "Extends the free version of Max Mega Menu with additional functionality."
+msgstr ""
+
+#. Author of the plugin
+msgid "megamenu.com"
+msgstr ""
+
+#: badge/badge.php:123
+msgid "Menu Item Badge"
+msgstr ""
+
+#: badge/badge.php:126
+msgid "Badge Style"
+msgstr ""
+
+#: badge/badge.php:129
+#: replacements/replacements.php:831
+msgid "Disabled"
+msgstr ""
+
+#: badge/badge.php:130
+msgid "Style 1"
+msgstr ""
+
+#: badge/badge.php:131
+msgid "Style 2"
+msgstr ""
+
+#: badge/badge.php:132
+msgid "Style 3"
+msgstr ""
+
+#: badge/badge.php:133
+msgid "Style 4"
+msgstr ""
+
+#: badge/badge.php:139
+msgid "Badge Text"
+msgstr ""
+
+#: badge/badge.php:140
+msgid "Shortcodes accepted"
+msgstr ""
+
+#: badge/badge.php:148
+msgid "Hide on Mobile"
+msgstr ""
+
+#: badge/badge.php:156
+msgid "Hide on Desktop"
+msgstr ""
+
+#: badge/badge.php:167
+msgid "Badge"
+msgstr ""
+
+#: badge/badge.php:244
+msgid "Badges"
+msgstr ""
+
+#: badge/badge.php:248
+msgid "General Badge Styling"
+msgstr ""
+
+#: badge/badge.php:253
+msgid "Badge Border Radius"
+msgstr ""
+
+#: badge/badge.php:254
+msgid "Set rounded corners for badges."
+msgstr ""
+
+#: badge/badge.php:257
+msgid "Top Left"
+msgstr ""
+
+#: badge/badge.php:263
+msgid "Top Right"
+msgstr ""
+
+#: badge/badge.php:269
+msgid "Bottom Right"
+msgstr ""
+
+#: badge/badge.php:275
+msgid "Bottom Left"
+msgstr ""
+
+#: badge/badge.php:284
+msgid "Badge Padding"
+msgstr ""
+
+#: badge/badge.php:285
+msgid "Set the padding around the text within badges."
+msgstr ""
+
+#: badge/badge.php:288
+#: icons/custom/custom.php:225
+#: tabbed/tabbed.php:183
+msgid "Top"
+msgstr ""
+
+#: badge/badge.php:294
+#: style-overrides/style-overrides.php:510
+#: tabbed/tabbed.php:189
+msgid "Right"
+msgstr ""
+
+#: badge/badge.php:300
+#: icons/custom/custom.php:226
+#: tabbed/tabbed.php:195
+msgid "Bottom"
+msgstr ""
+
+#: badge/badge.php:306
+#: style-overrides/style-overrides.php:508
+#: tabbed/tabbed.php:201
+msgid "Left"
+msgstr ""
+
+#: badge/badge.php:315
+msgid "Badge Vertical Offset"
+msgstr ""
+
+#: badge/badge.php:316
+msgid "Move badges vertically relative to the menu item text."
+msgstr ""
+
+#: badge/badge.php:319
+#: sticky/sticky.php:147
+msgid "Offset"
+msgstr ""
+
+#: badge/badge.php:328
+msgid "Badge Style One"
+msgstr ""
+
+#: badge/badge.php:333
+#: badge/badge.php:399
+#: badge/badge.php:464
+#: badge/badge.php:529
+msgid "Background"
+msgstr ""
+
+#: badge/badge.php:334
+msgid "Set the background color for badge style one."
+msgstr ""
+
+#: badge/badge.php:337
+#: badge/badge.php:403
+#: badge/badge.php:468
+#: badge/badge.php:533
+#: tabbed/tabbed.php:111
+#: tabbed/tabbed.php:128
+msgid "From"
+msgstr ""
+
+#: badge/badge.php:342
+#: badge/badge.php:408
+#: badge/badge.php:473
+#: badge/badge.php:538
+msgid "Copy"
+msgstr ""
+
+#: badge/badge.php:347
+#: badge/badge.php:413
+#: badge/badge.php:478
+#: badge/badge.php:543
+#: tabbed/tabbed.php:116
+#: tabbed/tabbed.php:133
+msgid "To"
+msgstr ""
+
+#: badge/badge.php:355
+#: badge/badge.php:421
+#: badge/badge.php:486
+#: badge/badge.php:551
+msgid "Font"
+msgstr ""
+
+#: badge/badge.php:356
+msgid "Set the font for badge style one."
+msgstr ""
+
+#: badge/badge.php:359
+#: badge/badge.php:425
+#: badge/badge.php:490
+#: badge/badge.php:555
+#: tabbed/tabbed.php:171
+#: tabbed/tabbed.php:214
+#: tabbed/tabbed.php:252
+#: toggle-blocks/toggle-blocks.php:1093
+msgid "Color"
+msgstr ""
+
+#: badge/badge.php:364
+#: badge/badge.php:430
+#: badge/badge.php:495
+#: badge/badge.php:560
+#: image-swap/image-swap.php:121
+#: replacements/replacements.php:856
+#: tabbed/tabbed.php:219
+#: toggle-blocks/toggle-blocks.php:1109
+msgid "Size"
+msgstr ""
+
+#: badge/badge.php:370
+#: badge/badge.php:436
+#: badge/badge.php:501
+#: badge/badge.php:566
+#: tabbed/tabbed.php:225
+msgid "Family"
+msgstr ""
+
+#: badge/badge.php:375
+#: badge/badge.php:441
+#: badge/badge.php:506
+#: badge/badge.php:571
+#: tabbed/tabbed.php:230
+msgid "Transform"
+msgstr ""
+
+#: badge/badge.php:380
+#: badge/badge.php:446
+#: badge/badge.php:511
+#: badge/badge.php:576
+#: tabbed/tabbed.php:235
+#: tabbed/tabbed.php:257
+msgid "Weight"
+msgstr ""
+
+#: badge/badge.php:385
+#: badge/badge.php:451
+#: badge/badge.php:516
+#: badge/badge.php:581
+#: tabbed/tabbed.php:240
+#: tabbed/tabbed.php:262
+msgid "Decoration"
+msgstr ""
+
+#: badge/badge.php:394
+msgid "Badge Style Two"
+msgstr ""
+
+#: badge/badge.php:400
+msgid "Set the background color for badge style two."
+msgstr ""
+
+#: badge/badge.php:422
+msgid "Set the font for badge style two."
+msgstr ""
+
+#: badge/badge.php:459
+msgid "Badge Style Three"
+msgstr ""
+
+#: badge/badge.php:465
+msgid "Set the background color for badge style three."
+msgstr ""
+
+#: badge/badge.php:487
+msgid "Set the font for badge style three."
+msgstr ""
+
+#: badge/badge.php:524
+msgid "Badge Style Four"
+msgstr ""
+
+#: badge/badge.php:530
+msgid "Set the background color for badge style four."
+msgstr ""
+
+#: badge/badge.php:552
+msgid "Set the font for badge style four."
+msgstr ""
+
+#: fonts/custom/custom-fonts.php:84
+msgid "Fonts"
+msgstr ""
+
+#: fonts/custom/custom-fonts.php:89
+msgid "Custom Fonts"
+msgstr ""
+
+#: fonts/custom/custom-fonts.php:91
+msgid "Specify custom fonts to be made available in the Font dropdowns in the Theme Editor (one per line)"
+msgstr ""
+
+#: icons/custom/custom.php:186
+#: toggle-blocks/toggle-blocks.php:998
+#: toggle-blocks/toggle-blocks.php:1082
+#: toggle-blocks/toggle-blocks.php:1089
+msgid "Icon"
+msgstr ""
+
+#: icons/custom/custom.php:193
+msgid "Icon (Hover)"
+msgstr ""
+
+#: icons/custom/custom.php:200
+msgid "Icon Size (Desktop)"
+msgstr ""
+
+#: icons/custom/custom.php:202
+#: icons/custom/custom.php:213
+#: replacements/replacements.php:908
+#: toggle-blocks/toggle-blocks.php:684
+msgid "Width"
+msgstr ""
+
+#: icons/custom/custom.php:205
+#: icons/custom/custom.php:216
+#: replacements/replacements.php:899
+#: sticky/sticky.php:197
+#: toggle-blocks/toggle-blocks.php:680
+msgid "Height"
+msgstr ""
+
+#: icons/custom/custom.php:211
+msgid "Icon Size (Mobile)"
+msgstr ""
+
+#: icons/custom/custom.php:221
+msgid "Icon Vertical Align"
+msgstr ""
+
+#: icons/custom/custom.php:224
+msgid "Middle (Default)"
+msgstr ""
+
+#: icons/custom/custom.php:227
+msgid "Text-Top"
+msgstr ""
+
+#: icons/custom/custom.php:228
+msgid "Text-Bottom"
+msgstr ""
+
+#: icons/custom/custom.php:229
+msgid "Super"
+msgstr ""
+
+#: icons/custom/custom.php:230
+msgid "Sub"
+msgstr ""
+
+#: icons/custom/custom.php:231
+msgid "Initial"
+msgstr ""
+
+#: icons/custom/custom.php:232
+msgid "Inherit"
+msgstr ""
+
+#: icons/custom/custom.php:237
+msgid "Save custom icon"
+msgstr ""
+
+#: icons/custom/custom.php:241
+msgid "Custom Icon"
+msgstr ""
+
+#: icons/fontawesome/fontawesome.php:87
+msgid "Font Awesome 4 has been dequeued under Mega Menu > General Settings."
+msgstr ""
+
+#: icons/fontawesome/fontawesome.php:106
+#: megamenu-pro.php:166
+msgid "Font Awesome 4"
+msgstr ""
+
+#: icons/fontawesome5/fontawesome5.php:124
+msgid "Font Awesome 5 has been dequeued under Mega Menu > General Settings. You will need to ensure that Font Awesome 5 is enqueued on your site using an alternative method."
+msgstr ""
+
+#: icons/fontawesome5/fontawesome5.php:149
+#: megamenu-pro.php:174
+msgid "Font Awesome 5"
+msgstr ""
+
+#: icons/genericons/genericons.php:80
+msgid "Genericons has been dequeued under Mega Menu > General Settings."
+msgstr ""
+
+#: icons/genericons/genericons.php:99
+#: megamenu-pro.php:182
+msgid "Genericons"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:23
+msgid "Image Swap (MMM)"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:24
+msgid "Outputs a placeholder image for image swap functionality."
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:119
+msgid "Title:"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:123
+msgid "Default image:"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:128
+msgid "Size:"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:135
+msgid "Thumbnail"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:136
+msgid "Medium"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:137
+msgid "Large"
+msgstr ""
+
+#: image-swap/image-swap-widget.class.php:138
+msgid "Full Size"
+msgstr ""
+
+#: image-swap/image-swap.php:107
+#: image-swap/image-swap.php:137
+msgid "Image Swap"
+msgstr ""
+
+#: image-swap/image-swap.php:109
+msgid "Select an image to display in the 'Image Swap Widget' when the users hovers over this menu item."
+msgstr ""
+
+#: image-swap/image-swap.php:110
+#: tabbed/tabbed.php:46
+msgid "View documentation"
+msgstr ""
+
+#: image-swap/image-swap.php:114
+msgid "Image"
+msgstr ""
+
+#: image-swap/image-swap.php:133
+msgid "Save"
+msgstr ""
+
+#: megamenu-pro.php:149
+msgid "Icons"
+msgstr ""
+
+#: megamenu-pro.php:154
+msgid "Enqueue Icon Styles"
+msgstr ""
+
+#: megamenu-pro.php:204
+msgid "Pro version"
+msgstr ""
+
+#: megamenu-pro.php:251
+#: megamenu-pro.php:269
+msgid "Media Library"
+msgstr ""
+
+#: megamenu-pro.php:337
+msgid "Max Mega Menu Pro requires Max Mega Menu (free). Please {activate} the Max Mega Menu plugin."
+msgstr ""
+
+#: megamenu-pro.php:339
+msgid "activate"
+msgstr ""
+
+#: megamenu-pro.php:356
+msgid "Max Mega Menu Pro requires Max Mega Menu (free). Please install the Max Mega Menu plugin."
+msgstr ""
+
+#: megamenu-pro.php:359
+msgid "Install Max Mega Menu"
+msgstr ""
+
+#: replacements/replacements.php:728
+#: replacements/replacements.php:737
+#: replacements/replacements.php:746
+#: toggle-blocks/toggle-blocks.php:536
+#: toggle-blocks/toggle-blocks.php:598
+#: toggle-blocks/toggle-blocks.php:607
+#: toggle-blocks/toggle-blocks.php:616
+#: toggle-blocks/toggle-blocks.php:664
+msgid "Search"
+msgstr ""
+
+#: replacements/replacements.php:824
+#: replacements/replacements.php:1042
+msgid "Replacements"
+msgstr ""
+
+#: replacements/replacements.php:825
+msgid "Replace this menu item with something else: a logo, a search box, WooCommerce total, EDD total, custom HTML or a shortcode"
+msgstr ""
+
+#: replacements/replacements.php:828
+msgid "Type"
+msgstr ""
+
+#: replacements/replacements.php:832
+#: replacements/replacements.php:846
+#: toggle-blocks/toggle-blocks.php:190
+msgid "Logo"
+msgstr ""
+
+#: replacements/replacements.php:833
+msgid "Search box"
+msgstr ""
+
+#: replacements/replacements.php:834
+#: replacements/replacements.php:1030
+#: toggle-blocks/toggle-blocks.php:820
+#: toggle-blocks/toggle-blocks.php:865
+#: toggle-blocks/toggle-blocks.php:872
+msgid "HTML"
+msgstr ""
+
+#: replacements/replacements.php:835
+msgid "WooCommerce Cart Total"
+msgstr ""
+
+#: replacements/replacements.php:836
+msgid "WooCommerce Cart Count"
+msgstr ""
+
+#: replacements/replacements.php:837
+msgid "EDD Cart Total"
+msgstr ""
+
+#: replacements/replacements.php:838
+msgid "EDD Cart Count"
+msgstr ""
+
+#: replacements/replacements.php:839
+msgid "BuddyPress Avatar"
+msgstr ""
+
+#: replacements/replacements.php:840
+msgid "BuddyPress Notifications"
+msgstr ""
+
+#: replacements/replacements.php:847
+msgid "Choose an image from your Media Library"
+msgstr ""
+
+#: replacements/replacements.php:874
+msgid "The logo height should be smaller than the menu height (configured under Mega Menu > Menu Themes > Menu Bar > Menu Height)."
+msgstr ""
+
+#: replacements/replacements.php:877
+msgid "Enter the desired visual size for the logo (we'll automatically handle outputting a 2x logo for retina displays)."
+msgstr ""
+
+#: replacements/replacements.php:880
+msgid "Mobile Menu Tip: To hide this logo from the list of items in your mobile menu, go to the 'Settings' tab and enable 'Hide Item on Mobile'. Then you can add the logo directly to your mobile toggle bar, under Mega Menu > Menu Themes > Mobile Menu > Toggle Bar Designer"
+msgstr ""
+
+#: replacements/replacements.php:886
+#: toggle-blocks/toggle-blocks.php:671
+msgid "Style"
+msgstr ""
+
+#: replacements/replacements.php:887
+msgid "Select the search box style"
+msgstr ""
+
+#: replacements/replacements.php:891
+#: toggle-blocks/toggle-blocks.php:674
+msgid "Expand to Left"
+msgstr ""
+
+#: replacements/replacements.php:892
+#: toggle-blocks/toggle-blocks.php:675
+msgid "Expand to Right"
+msgstr ""
+
+#: replacements/replacements.php:893
+#: toggle-blocks/toggle-blocks.php:676
+msgid "Static"
+msgstr ""
+
+#: replacements/replacements.php:900
+msgid "Define the height of the search icon and search input box"
+msgstr ""
+
+#: replacements/replacements.php:909
+msgid "Define the width of the search box when expanded"
+msgstr ""
+
+#: replacements/replacements.php:917
+#: toggle-blocks/toggle-blocks.php:688
+msgid "Text Color"
+msgstr ""
+
+#: replacements/replacements.php:918
+msgid "Define the color for the text within the search input box"
+msgstr ""
+
+#: replacements/replacements.php:926
+#: style-overrides/style-overrides.php:226
+msgid "Icon Color"
+msgstr ""
+
+#: replacements/replacements.php:927
+msgid "Search icon color"
+msgstr ""
+
+#: replacements/replacements.php:931
+#: replacements/replacements.php:959
+msgid "Closed State"
+msgstr ""
+
+#: replacements/replacements.php:935
+#: replacements/replacements.php:963
+msgid "Open State"
+msgstr ""
+
+#: replacements/replacements.php:942
+msgid "Search Icon"
+msgstr ""
+
+#: replacements/replacements.php:947
+msgid "Dashicons Search"
+msgstr ""
+
+#: replacements/replacements.php:948
+msgid "Use Menu Item Icon"
+msgstr ""
+
+#: replacements/replacements.php:954
+#: style-overrides/style-overrides.php:69
+msgid "Background Color"
+msgstr ""
+
+#: replacements/replacements.php:955
+msgid "Background color for search icon and search input box"
+msgstr ""
+
+#: replacements/replacements.php:970
+#: toggle-blocks/toggle-blocks.php:708
+msgid "Border Radius"
+msgstr ""
+
+#: replacements/replacements.php:971
+msgid "Set rounded corners for the search icon and search input box"
+msgstr ""
+
+#: replacements/replacements.php:979
+#: toggle-blocks/toggle-blocks.php:712
+msgid "Placeholder Text"
+msgstr ""
+
+#: replacements/replacements.php:980
+msgid "Define the pre-populated text within the search box"
+msgstr ""
+
+#: replacements/replacements.php:988
+#: toggle-blocks/toggle-blocks.php:214
+#: toggle-blocks/toggle-blocks.php:716
+msgid "Vertical Offset"
+msgstr ""
+
+#: replacements/replacements.php:989
+msgid "Vertical positioning for the search box"
+msgstr ""
+
+#: replacements/replacements.php:999
+msgid "WooCommerce Search"
+msgstr ""
+
+#: replacements/replacements.php:1000
+msgid "Use WooCommerce search results template?"
+msgstr ""
+
+#: replacements/replacements.php:1004
+#: toggle-blocks/toggle-blocks.php:210
+#: toggle-blocks/toggle-blocks.php:723
+#: toggle-blocks/toggle-blocks.php:1105
+msgid "Yes"
+msgstr ""
+
+#: replacements/replacements.php:1005
+#: toggle-blocks/toggle-blocks.php:209
+#: toggle-blocks/toggle-blocks.php:724
+#: toggle-blocks/toggle-blocks.php:1104
+msgid "No"
+msgstr ""
+
+#: replacements/replacements.php:1013
+msgid "Mode"
+msgstr ""
+
+#: replacements/replacements.php:1017
+msgid "Replace the menu item link text"
+msgstr ""
+
+#: replacements/replacements.php:1018
+msgid "Replace the whole menu item link"
+msgstr ""
+
+#: replacements/replacements.php:1019
+msgid "Replace the menu item URL"
+msgstr ""
+
+#: replacements/replacements.php:1031
+msgid "Enter the text to replace this menu item with. HTML and Shortcodes accepted."
+msgstr ""
+
+#: roles/roles.php:148
+msgid "Roles & Restrictions"
+msgstr ""
+
+#: roles/roles.php:149
+msgid "Restrict the display of this menu item to selected user roles"
+msgstr ""
+
+#: roles/roles.php:152
+msgid "Display Mode"
+msgstr ""
+
+#: roles/roles.php:155
+msgid "All Users"
+msgstr ""
+
+#: roles/roles.php:156
+msgid "Logged Out Users"
+msgstr ""
+
+#: roles/roles.php:157
+msgid "Logged In Users"
+msgstr ""
+
+#: roles/roles.php:158
+msgid "By Role"
+msgstr ""
+
+#: roles/roles.php:163
+msgid "Role"
+msgstr ""
+
+#: roles/roles.php:183
+msgid "Roles"
+msgstr ""
+
+#: sticky/sticky.php:48
+#: sticky/sticky.php:328
+msgid "Sticky"
+msgstr ""
+
+#: sticky/sticky.php:52
+#: sticky/sticky.php:135
+#: sticky/sticky.php:192
+msgid "Enabled"
+msgstr ""
+
+#: sticky/sticky.php:53
+msgid "Stick the menu for this location"
+msgstr ""
+
+#: sticky/sticky.php:64
+msgid "Stick on Desktop"
+msgstr ""
+
+#: sticky/sticky.php:65
+#: sticky/sticky.php:353
+msgid "IMPORTANT: Only enable this if your menu is not already within a sticky container."
+msgstr ""
+
+#: sticky/sticky.php:76
+msgid "Stick on Mobile"
+msgstr ""
+
+#: sticky/sticky.php:77
+msgid "Enable the sticky menu on screen widths below the configured Responsive Breakpoint?"
+msgstr ""
+
+#: sticky/sticky.php:88
+#: sticky/sticky.php:371
+msgid "Sticky Opacity"
+msgstr ""
+
+#: sticky/sticky.php:89
+#: sticky/sticky.php:371
+msgid "Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1."
+msgstr ""
+
+#: sticky/sticky.php:100
+#: sticky/sticky.php:379
+msgid "Sticky Offset"
+msgstr ""
+
+#: sticky/sticky.php:101
+#: sticky/sticky.php:379
+msgid "Set the distance between top of window and top of menu when the menu is stuck. Default: 0."
+msgstr ""
+
+#: sticky/sticky.php:112
+msgid "Expand Background"
+msgstr ""
+
+#: sticky/sticky.php:113
+msgid "Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus."
+msgstr ""
+
+#: sticky/sticky.php:116
+msgid "Desktop"
+msgstr ""
+
+#: sticky/sticky.php:122
+msgid "Mobile"
+msgstr ""
+
+#: sticky/sticky.php:131
+msgid "Hide Until Scroll Up"
+msgstr ""
+
+#: sticky/sticky.php:132
+#: sticky/sticky.php:403
+msgid "Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus."
+msgstr ""
+
+#: sticky/sticky.php:141
+msgid "Tolerance"
+msgstr ""
+
+#: sticky/sticky.php:188
+msgid "Menu Height (Sticky)"
+msgstr ""
+
+#: sticky/sticky.php:189
+msgid "The height of the menu when sticky."
+msgstr ""
+
+#: sticky/sticky.php:203
+msgid "Transition"
+msgstr ""
+
+#: sticky/sticky.php:230
+msgid "Sticky Menu"
+msgstr ""
+
+#: sticky/sticky.php:231
+msgid "Is your theme already sticking/fixing the header?"
+msgstr ""
+
+#: sticky/sticky.php:232
+msgid "Only enable this option if your theme is not already sticking the theme header and menu."
+msgstr ""
+
+#: sticky/sticky.php:233
+msgid "If your theme is already sticking/fixing your header and menu, then enabling this sticky option will cause conflicts. Therefore, if your theme is already sticking the header, you should leave this option unchecked."
+msgstr ""
+
+#: sticky/sticky.php:288
+msgid "Visibility in Sticky Menu"
+msgstr ""
+
+#: sticky/sticky.php:292
+msgid "Always show"
+msgstr ""
+
+#: sticky/sticky.php:293
+msgid "Show only when menu is stuck"
+msgstr ""
+
+#: sticky/sticky.php:294
+msgid "Hide when menu is stuck"
+msgstr ""
+
+#: sticky/sticky.php:353
+msgid "Stick On Desktop"
+msgstr ""
+
+#: sticky/sticky.php:362
+msgid "Stick On Mobile"
+msgstr ""
+
+#: sticky/sticky.php:362
+msgid "IMPORTANT: Only enable this if your menu is small enough to fully fit on the screen without completely covering the page content."
+msgstr ""
+
+#: sticky/sticky.php:387
+msgid "Expand Background Desktop"
+msgstr ""
+
+#: sticky/sticky.php:387
+msgid "Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus"
+msgstr ""
+
+#: sticky/sticky.php:395
+msgid "Expand Mobile Menu"
+msgstr ""
+
+#: sticky/sticky.php:395
+msgid "Expand the width of the mobile menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus"
+msgstr ""
+
+#: sticky/sticky.php:403
+msgid "Hide until scroll up"
+msgstr ""
+
+#: sticky/sticky.php:411
+msgid "Scroll tolerance (0-50)"
+msgstr ""
+
+#: sticky/sticky.php:411
+msgid "Prevent the menu from being rapidly hidden and revealed due to small mouse movements. Default: 10"
+msgstr ""
+
+#: sticky/sticky.php:419
+msgid "Hide until scroll up offset"
+msgstr ""
+
+#: sticky/sticky.php:419
+msgid "Initiate the Hide Until Scroll Up functionality once the page has been scrolled down this distance."
+msgstr ""
+
+#: style-overrides/style-overrides.php:64
+#: style-overrides/style-overrides.php:367
+msgid "Styling"
+msgstr ""
+
+#: style-overrides/style-overrides.php:65
+msgid "Apply custom styling to this menu item only. These values will override the styling set in the menu theme."
+msgstr ""
+
+#: style-overrides/style-overrides.php:77
+msgid "Background Color (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:85
+msgid "Font Color"
+msgstr ""
+
+#: style-overrides/style-overrides.php:92
+msgid "Font Color (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:100
+msgid "Font Weight"
+msgstr ""
+
+#: style-overrides/style-overrides.php:107
+msgid "Font Weight (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:114
+msgid "Font Size"
+msgstr ""
+
+#: style-overrides/style-overrides.php:121
+msgid "Text Align"
+msgstr ""
+
+#: style-overrides/style-overrides.php:128
+msgid "Text Transform"
+msgstr ""
+
+#: style-overrides/style-overrides.php:135
+msgid "Text Decoration"
+msgstr ""
+
+#: style-overrides/style-overrides.php:142
+msgid "Text Decoration (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:149
+msgid "Border Color"
+msgstr ""
+
+#: style-overrides/style-overrides.php:156
+msgid "Border Color (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:163
+msgid "Border Width (Top)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:170
+msgid "Border Width (Right)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:177
+msgid "Border Width (Bottom)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:184
+msgid "Border Width (Left)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:191
+msgid "Border Radius (Top Left)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:198
+msgid "Border Radius (Top Right)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:205
+msgid "Border Radius (Bottom Right)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:212
+msgid "Border Radius (Bottom Left)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:219
+msgid "Icon Size"
+msgstr ""
+
+#: style-overrides/style-overrides.php:233
+msgid "Icon Color (Hover)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:240
+msgid "Menu Item Padding (Left)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:247
+msgid "Menu Item Padding (Right)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:254
+msgid "Menu Item Padding (Top)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:257
+#: style-overrides/style-overrides.php:265
+#: style-overrides/style-overrides.php:287
+#: style-overrides/style-overrides.php:295
+msgid "Not recommended for top level menu items"
+msgstr ""
+
+#: style-overrides/style-overrides.php:262
+msgid "Menu Item Padding (Bottom)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:270
+msgid "Menu Item Margin (Left)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:277
+msgid "Menu Item Margin (Right)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:284
+msgid "Menu Item Margin (Top)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:292
+msgid "Menu Item Margin (Bottom)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:300
+msgid "Menu Item Height"
+msgstr ""
+
+#: style-overrides/style-overrides.php:307
+msgid "Sub Menu - Width"
+msgstr ""
+
+#: style-overrides/style-overrides.php:314
+msgid "Sub Menu - Horizontal Offset"
+msgstr ""
+
+#: style-overrides/style-overrides.php:321
+msgid "Sub Menu - Vertical Offset"
+msgstr ""
+
+#: style-overrides/style-overrides.php:328
+msgid "Sub Menu - Background Color"
+msgstr ""
+
+#: style-overrides/style-overrides.php:336
+msgid "Sub Menu - Background Image"
+msgstr ""
+
+#: style-overrides/style-overrides.php:343
+msgid "Sub Menu - Background Image Size"
+msgstr ""
+
+#: style-overrides/style-overrides.php:350
+msgid "Sub Menu - Background Image Repeat"
+msgstr ""
+
+#: style-overrides/style-overrides.php:357
+msgid "Sub Menu - Background Image Position"
+msgstr ""
+
+#: style-overrides/style-overrides.php:452
+msgid "Auto"
+msgstr ""
+
+#: style-overrides/style-overrides.php:453
+msgid "Cover"
+msgstr ""
+
+#: style-overrides/style-overrides.php:454
+msgid "Contain"
+msgstr ""
+
+#: style-overrides/style-overrides.php:480
+msgid "Normal"
+msgstr ""
+
+#: style-overrides/style-overrides.php:481
+msgid "Capitalize"
+msgstr ""
+
+#: style-overrides/style-overrides.php:482
+msgid "Uppercase"
+msgstr ""
+
+#: style-overrides/style-overrides.php:483
+msgid "Lowercase"
+msgstr ""
+
+#: style-overrides/style-overrides.php:509
+msgid "Center"
+msgstr ""
+
+#: style-overrides/style-overrides.php:535
+msgid "None"
+msgstr ""
+
+#: style-overrides/style-overrides.php:536
+msgid "Underline"
+msgstr ""
+
+#: style-overrides/style-overrides.php:561
+msgid "Theme Default"
+msgstr ""
+
+#: style-overrides/style-overrides.php:562
+msgid "Light (300)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:563
+msgid "Normal (400)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:564
+msgid "Bold (700)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:610
+msgid "Left Top"
+msgstr ""
+
+#: style-overrides/style-overrides.php:611
+msgid "Left Center"
+msgstr ""
+
+#: style-overrides/style-overrides.php:612
+msgid "Left Bottom"
+msgstr ""
+
+#: style-overrides/style-overrides.php:613
+msgid "Right Top"
+msgstr ""
+
+#: style-overrides/style-overrides.php:614
+msgid "Right Center"
+msgstr ""
+
+#: style-overrides/style-overrides.php:615
+msgid "Right Bottom"
+msgstr ""
+
+#: style-overrides/style-overrides.php:616
+msgid "Center Top"
+msgstr ""
+
+#: style-overrides/style-overrides.php:617
+msgid "Center Center"
+msgstr ""
+
+#: style-overrides/style-overrides.php:618
+msgid "Center Bottom"
+msgstr ""
+
+#: style-overrides/style-overrides.php:643
+msgid "No Repeat"
+msgstr ""
+
+#: style-overrides/style-overrides.php:644
+msgid "Repeat (Tiled)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:645
+msgid "Repeat X (Horizontally)"
+msgstr ""
+
+#: style-overrides/style-overrides.php:646
+msgid "Repeat X (Vertically)"
+msgstr ""
+
+#: tabbed/tabbed.php:45
+msgid "To configure the mega menu for each of your tabs, close this window and load the mega menu settings for each sub menu item. You can configure the mega menu within the 'Tab Content' tab."
+msgstr ""
+
+#: tabbed/tabbed.php:102
+msgid "Tabbed Mega Menus"
+msgstr ""
+
+#: tabbed/tabbed.php:107
+msgid "Tab Background"
+msgstr ""
+
+#: tabbed/tabbed.php:108
+msgid "Set the background color for the tabs."
+msgstr ""
+
+#: tabbed/tabbed.php:124
+msgid "Tab Background (Hover)"
+msgstr ""
+
+#: tabbed/tabbed.php:125
+msgid "Set the background color for the tabs (on hover)."
+msgstr ""
+
+#: tabbed/tabbed.php:141
+msgid "Tab Height"
+msgstr ""
+
+#: tabbed/tabbed.php:142
+msgid "The height of each tab."
+msgstr ""
+
+#: tabbed/tabbed.php:154
+msgid "Tab Width"
+msgstr ""
+
+#: tabbed/tabbed.php:155
+msgid "Width of each tab. Value must be a percentage (e.g. 20%)"
+msgstr ""
+
+#: tabbed/tabbed.php:167
+msgid "Tab Vertical Divider"
+msgstr ""
+
+#: tabbed/tabbed.php:168
+msgid "Set the vertical divider color."
+msgstr ""
+
+#: tabbed/tabbed.php:179
+msgid "Tab Padding"
+msgstr ""
+
+#: tabbed/tabbed.php:180
+msgid "Set the padding for each of the tabs."
+msgstr ""
+
+#: tabbed/tabbed.php:210
+msgid "Tab Font"
+msgstr ""
+
+#: tabbed/tabbed.php:211
+#: tabbed/tabbed.php:249
+msgid "Set the font for the tabs."
+msgstr ""
+
+#: tabbed/tabbed.php:248
+msgid "Tab Font (Hover)"
+msgstr ""
+
+#: tabbed/tabbed.php:303
+msgid "Mega Menu - Tabbed"
+msgstr ""
+
+#: tabbed/tabbed.php:384
+msgid "Mega Menu - Standard Layout"
+msgstr ""
+
+#: tabbed/tabbed.php:385
+msgid "Mega Menu - Grid Layout"
+msgstr ""
+
+#: tabbed/tabbed.php:388
+msgid "Sub menu display mode"
+msgstr ""
+
+#: tabbed/tabbed.php:403
+msgid "column"
+msgstr ""
+
+#: tabbed/tabbed.php:404
+#: tabbed/tabbed.php:405
+#: tabbed/tabbed.php:406
+#: tabbed/tabbed.php:407
+#: tabbed/tabbed.php:408
+#: tabbed/tabbed.php:409
+#: tabbed/tabbed.php:410
+#: tabbed/tabbed.php:411
+msgid "columns"
+msgstr ""
+
+#: tabbed/tabbed.php:415
+msgid "Select a Widget to add to the panel"
+msgstr ""
+
+#: tabbed/tabbed.php:429
+msgid "Please update Max Mega Menu (free) to v2.4+"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:69
+msgid "Logo / Image"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:192
+msgid "Logo Settings"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:196
+msgid "Media File"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:202
+#: toggle-blocks/toggle-blocks.php:1097
+msgid "URL"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:206
+#: toggle-blocks/toggle-blocks.php:1101
+msgid "Open in new window?"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:218
+msgid "Max Height"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:220
+msgid "The Max Height should be specified in 'px' and be equal to or lower than the configured Toggle Bar Height."
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:222
+#: toggle-blocks/toggle-blocks.php:458
+#: toggle-blocks/toggle-blocks.php:730
+#: toggle-blocks/toggle-blocks.php:876
+#: toggle-blocks/toggle-blocks.php:1116
+msgid "Delete"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:311
+msgid "Menu Toggle (Custom)"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:441
+msgid "TOGGLE"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:441
+msgid "Menu Toggle"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:443
+msgid "Menu Toggle (Custom) Settings"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:447
+msgid "Open Icon"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:453
+msgid "Closed Icon"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:666
+msgid "Search Settings"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:692
+msgid "Icon Color (Closed)"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:696
+msgid "Icon Color (Open)"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:700
+msgid "Background Color (Closed)"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:704
+msgid "Background Color (Open)"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:720
+msgid "Use WooCommerce Search"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:867
+msgid "HTML Settings"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:1084
+msgid "Icon Settings"
+msgstr ""
+
+#: toggle-blocks/toggle-blocks.php:1113
+msgid "Title"
+msgstr ""
+
+#: updater/updater.php:221
+msgid "License"
+msgstr ""
+
+#: updater/updater.php:248
+msgid "This licence key has expired. Please log in to your client area to renew your licence key."
+msgstr ""
+
+#: updater/updater.php:251
+msgid "Your license key has been disabled."
+msgstr ""
+
+#: updater/updater.php:254
+msgid "This licence key is not valid."
+msgstr ""
+
+#: updater/updater.php:258
+msgid "Your license is not active for this URL."
+msgstr ""
+
+#: updater/updater.php:261
+msgid "This appears to be an invalid license key."
+msgstr ""
+
+#: updater/updater.php:264
+msgid "Your license key has reached its activation limit. Log into your client area to upgrade your licence or deactivate unused sites."
+msgstr ""
+
+#: updater/updater.php:279
+msgid "Max Mega Menu Pro License"
+msgstr ""
+
+#: updater/updater.php:285
+msgid "License Key"
+msgstr ""
+
+#: updater/updater.php:287
+msgid "A license key must be entered and activated to enable automatic plugin updates"
+msgstr ""
+
+#: updater/updater.php:295
+msgid "Deactivate License"
+msgstr ""
+
+#: updater/updater.php:297
+msgid "Activate License"
+msgstr ""
+
+#: updater/updater.php:301
+msgid "Did you know?"
+msgstr ""
+
+#: updater/updater.php:302
+msgid "You can also manage your active licenses and download updates in your <a href=\"https://www.maxmegamenu.com/client-area/\">Client Area</a>."
+msgstr ""
+
+#: vertical/vertical.php:132
+msgid "Orientation"
+msgstr ""
+
+#: vertical/vertical.php:135
+msgid "Horizontal"
+msgstr ""
+
+#: vertical/vertical.php:136
+msgid "Vertical"
+msgstr ""
+
+#: vertical/vertical.php:137
+msgid "Accordion"
+msgstr ""
+
+#: vertical/vertical.php:151
+msgid "Accordion Behaviour"
+msgstr ""
+
+#: vertical/vertical.php:154
+msgid "Expand active sub menus"
+msgstr ""
+
+#: vertical/vertical.php:155
+msgid "Expand all sub menus"
+msgstr ""
+
+#: vertical/vertical.php:156
+msgid "Always collapse submenus"
+msgstr ""

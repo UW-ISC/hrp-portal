@@ -145,22 +145,22 @@ class Mega_Menu_Roles {
 		$html .= "    <input type='hidden' name='_wpnonce' value='" . wp_create_nonce('megamenu_edit') . "' />";
 		$html .= "    <input type='hidden' name='menu_item_id' value='{$menu_item_id}' />";
 		$html .= "    <input type='hidden' name='action' value='mm_save_menu_item_settings' />";
-		$html .= "    <h4 class='first'>" . __("Roles & Restrictions", "megamenupro") . "</h4>";
-		$html .= "    <p class='tab-description'>" . __("Restrict the display of this menu item to selected user roles", "megamenu_pro") . "</p>";
+		$html .= "    <h4 class='first'>" . __("Roles & Restrictions", "megamenu-pro") . "</h4>";
+		$html .= "    <p class='tab-description'>" . __("Restrict the display of this menu item to selected user roles", "megamenu-pro") . "</p>";
 		$html .= "    <table>";
 		$html .= "        <tr>";
-		$html .= "            <td class='mega-name'>" . __("Display Mode", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Display Mode", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <select name='settings[roles][display_mode]'>";
-		$html .= "                    <option value='disabled' " . selected( $display_mode, 'disabled', false ) . ">" . __("All Users", "megamenupro") . "</option>";
-		$html .= "                    <option value='logged_out' " . selected( $display_mode, 'logged_out', false ) . ">" . __("Logged Out Users", "megamenupro") . "</option>";
-		$html .= "                    <option value='logged_in' " . selected( $display_mode, 'logged_in', false ) . ">" . __("Logged In Users", "megamenupro") . "</option>";
-		$html .= "                    <option value='by_role' " . selected( $display_mode, 'by_role', false ) . ">" . __("By Role", "megamenupro") . "</option>";
+		$html .= "                    <option value='disabled' " . selected( $display_mode, 'disabled', false ) . ">" . __("All Users", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='logged_out' " . selected( $display_mode, 'logged_out', false ) . ">" . __("Logged Out Users", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='logged_in' " . selected( $display_mode, 'logged_in', false ) . ">" . __("Logged In Users", "megamenu-pro") . "</option>";
+		$html .= "                    <option value='by_role' " . selected( $display_mode, 'by_role', false ) . ">" . __("By Role", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr>";
-		$html .= "            <td class='mega-name'>" . __("Role", "megamenupro") . "</td>";
+		$html .= "            <td class='mega-name'>" . __("Role", "megamenu-pro") . "</td>";
 		$html .= "            <td class='mega-value'>";
 		$html .= "                <ul>";
 
@@ -180,7 +180,7 @@ class Mega_Menu_Roles {
 		$html .= "</form>";
 
 		$tabs['roles'] = array(
-			'title' => __("Roles", "megamenupro"),
+			'title' => __("Roles", "megamenu-pro"),
 			'content' => $html
 		);
 
