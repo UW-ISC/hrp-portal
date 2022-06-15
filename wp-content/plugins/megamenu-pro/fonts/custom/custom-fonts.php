@@ -81,14 +81,14 @@ class Mega_Menu_Custom_Fonts {
 
 		?>
 
-        <h3><?php _e("Fonts", "megamenupro"); ?></h3>
+        <h3><?php _e("Fonts", "megamenu-pro"); ?></h3>
 
         <table>
             <tr>
                 <td class='mega-name'>
-                    <?php _e("Custom Fonts", "megamenupro"); ?>
+                    <?php _e("Custom Fonts", "megamenu-pro"); ?>
                     <div class='mega-description'>
-                    	<?php _e("Specify custom fonts to be made available in the Font dropdowns in the Theme Editor (one per line)", "megamenupro"); ?>
+                    	<?php _e("Specify custom fonts to be made available in the Font dropdowns in the Theme Editor (one per line)", "megamenu-pro"); ?>
                     </div>
                 </td>
                 <td class='mega-value'>

@@ -129,12 +129,12 @@ class Mega_Menu_Vertical {
 		?>
 
             <tr class='megamenu_orientation'>
-                <td><?php _e("Orientation", "megamenupro"); ?></td>
+                <td><?php _e("Orientation", "megamenu-pro"); ?></td>
                 <td>
                     <select class='megamenu_orientation_select' name='megamenu_meta[<?php echo $location ?>][orientation]'>
-                        <option value='horizontal'>Horizontal</option>
-                        <option value='vertical' <?php selected( isset($settings[$location]['orientation']) && $settings[$location]['orientation'] == 'vertical' ) ?>><?php _e("Vertical", "megamenupro"); ?></option>
-                        <option value='accordion' <?php selected( isset($settings[$location]['orientation']) && $settings[$location]['orientation'] == 'accordion' ) ?>><?php _e("Accordion", "megamenupro"); ?></option>
+                        <option value='horizontal'><?php _e("Horizontal", "megamenu-pro"); ?></option>
+                        <option value='vertical' <?php selected( isset($settings[$location]['orientation']) && $settings[$location]['orientation'] == 'vertical' ) ?>><?php _e("Vertical", "megamenu-pro"); ?></option>
+                        <option value='accordion' <?php selected( isset($settings[$location]['orientation']) && $settings[$location]['orientation'] == 'accordion' ) ?>><?php _e("Accordion", "megamenu-pro"); ?></option>
                     </select>
                 </td>
             </tr>
@@ -148,12 +148,12 @@ class Mega_Menu_Vertical {
             ?>
 
             <tr class='megamenu_accordion_behaviour' style='display: <?php echo $display; ?>;'>
-                <td><?php _e("Accordion Behaviour", "megamenupro"); ?></td>
+                <td><?php _e("Accordion Behaviour", "megamenu-pro"); ?></td>
                 <td>
                     <select name='megamenu_meta[<?php echo $location ?>][accordion_behaviour]'>
-                        <option value='open_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_parents' ) ?>><?php _e("Expand active sub menus", "megamenupro"); ?></option>
-                        <option value='open_all' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_all' ) ?>><?php _e("Expand all sub menus", "megamenupro"); ?></option>
-                        <option value='collapse_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'collapse_parents' ) ?>><?php _e("Always collapse submenus", "megamenupro"); ?></option>
+                        <option value='open_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_parents' ) ?>><?php _e("Expand active sub menus", "megamenu-pro"); ?></option>
+                        <option value='open_all' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'open_all' ) ?>><?php _e("Expand all sub menus", "megamenu-pro"); ?></option>
+                        <option value='collapse_parents' <?php selected( isset($settings[$location]['accordion_behaviour']) && $settings[$location]['accordion_behaviour'] == 'collapse_parents' ) ?>><?php _e("Always collapse submenus", "megamenu-pro"); ?></option>
                     </select>
                 </td>
             </tr>

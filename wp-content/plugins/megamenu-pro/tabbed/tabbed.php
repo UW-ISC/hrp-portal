@@ -42,8 +42,8 @@ class Mega_Menu_Tabbed {
         }
 
         $return = "<div id='megamenu-tabbed'>";
-        $return .= "<p>" . __("To configure the mega menu for each of your tabs, close this window and load the mega menu settings for each sub menu item. You can configure the mega menu within the 'Tab Content' tab.", "megamenupro") . "</p>";
-        $return .= "<p><a href='https://www.megamenu.com/documentation/tabbed-mega-menu/' target='_blank'>" . __("View documentation", "megamenupro") . "</a></p>";
+        $return .= "<p>" . __("To configure the mega menu for each of your tabs, close this window and load the mega menu settings for each sub menu item. You can configure the mega menu within the 'Tab Content' tab.", "megamenu-pro") . "</p>";
+        $return .= "<p><a href='https://www.megamenu.com/documentation/tabbed-mega-menu/' target='_blank'>" . __("View documentation", "megamenu-pro") . "</a></p>";
         $return .= "</div>";
 
         $tabs['mega_menu']['content'] = $tabs['mega_menu']['content'] . $return;
@@ -99,21 +99,21 @@ class Mega_Menu_Tabbed {
         $new_settings = array(
             'tabbed_submenus' => array(
                 'priority' => 240,
-                'title' => __( "Tabbed Mega Menus", "megamenupro" ),
+                'title' => __( "Tabbed Mega Menus", "megamenu-pro" ),
                 'description' => '',
             ),
             'tabbed_menu_item_background' => array(
                 'priority' => 250,
-                'title' => __( "Tab Background", "megamenupro" ),
-                'description' => __( "Set the background color for the tabs.", "megamenupro" ),
+                'title' => __( "Tab Background", "megamenu-pro" ),
+                'description' => __( "Set the background color for the tabs.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "From", "megamenupro" ),
+                        'title' => __( "From", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_background_from'
                     ),
                     array(
-                        'title' => __( "To", "megamenupro" ),
+                        'title' => __( "To", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_background_to'
                     )
@@ -121,16 +121,16 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_menu_item_background_hover' => array(
                 'priority' => 260,
-                'title' => __( "Tab Background (Hover)", "megamenupro" ),
-                'description' => __( "Set the background color for the tabs (on hover).", "megamenupro" ),
+                'title' => __( "Tab Background (Hover)", "megamenu-pro" ),
+                'description' => __( "Set the background color for the tabs (on hover).", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "From", "megamenupro" ),
+                        'title' => __( "From", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_background_hover_from'
                     ),
                     array(
-                        'title' => __( "To", "megamenupro" ),
+                        'title' => __( "To", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_background_hover_to'
                     )
@@ -138,11 +138,11 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_menu_item_height' => array(
                 'priority' => 270,
-                'title' => __( "Tab Height", "megamenupro" ),
-                'description' => __( "The height of each tab.", "megamenupro" ),
+                'title' => __( "Tab Height", "megamenu-pro" ),
+                'description' => __( "The height of each tab.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "", "megamenupro" ),
+                        'title' => __( "", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_height',
                         'validation' => 'px'
@@ -151,11 +151,11 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_link_width' => array(
                 'priority' => 275,
-                'title' => __( "Tab Width", "megamenupro" ),
-                'description' => __( "Width of each tab. Value must be a percentage (e.g. 20%)", "megamenupro" ),
+                'title' => __( "Tab Width", "megamenu-pro" ),
+                'description' => __( "Width of each tab. Value must be a percentage (e.g. 20%)", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "", "megamenupro" ),
+                        'title' => __( "", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_width',
                         'validation' => 'px'
@@ -164,11 +164,11 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_link_vertical_divider' => array(
                 'priority' => 278,
-                'title' => __( "Tab Vertical Divider", "megamenupro" ),
-                'description' => __( "Set the vertical divider color.", "megamenupro" ),
+                'title' => __( "Tab Vertical Divider", "megamenu-pro" ),
+                'description' => __( "Set the vertical divider color.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "Color", "megamenupro" ),
+                        'title' => __( "Color", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_vertical_divider'
                     )
@@ -176,29 +176,29 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_menu_item_padding' => array(
                 'priority' => 280,
-                'title' => __( "Tab Padding", "megamenupro" ),
-                'description' => __( "Set the padding for each of the tabs.", "megamenupro" ),
+                'title' => __( "Tab Padding", "megamenu-pro" ),
+                'description' => __( "Set the padding for each of the tabs.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "Top", "megamenupro" ),
+                        'title' => __( "Top", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_padding_top',
                         'validation' => 'px'
                     ),
                     array(
-                        'title' => __( "Right", "megamenupro" ),
+                        'title' => __( "Right", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_padding_right',
                         'validation' => 'px'
                     ),
                     array(
-                        'title' => __( "Bottom", "megamenupro" ),
+                        'title' => __( "Bottom", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_padding_bottom',
                         'validation' => 'px'
                     ),
                     array(
-                        'title' => __( "Left", "megamenupro" ),
+                        'title' => __( "Left", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_padding_left',
                         'validation' => 'px'
@@ -207,37 +207,37 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_menu_item_font' => array(
                 'priority' => 290,
-                'title' => __( "Tab Font", "megamenupro" ),
-                'description' => __( "Set the font for the tabs.", "megamenupro" ),
+                'title' => __( "Tab Font", "megamenu-pro" ),
+                'description' => __( "Set the font for the tabs.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "Color", "megamenupro" ),
+                        'title' => __( "Color", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_color'
                     ),
                     array(
-                        'title' => __( "Size", "megamenupro" ),
+                        'title' => __( "Size", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'tabbed_link_size',
                         'validation' => 'px'
                     ),
                     array(
-                        'title' => __( "Family", "megamenupro" ),
+                        'title' => __( "Family", "megamenu-pro" ),
                         'type' => 'font',
                         'key' => 'tabbed_link_family'
                     ),
                     array(
-                        'title' => __( "Transform", "megamenupro" ),
+                        'title' => __( "Transform", "megamenu-pro" ),
                         'type' => 'transform',
                         'key' => 'tabbed_link_text_transform'
                     ),
                     array(
-                        'title' => __( "Weight", "megamenupro" ),
+                        'title' => __( "Weight", "megamenu-pro" ),
                         'type' => 'weight',
                         'key' => 'tabbed_link_weight'
                     ),
                     array(
-                        'title' => __( "Decoration", "megamenupro" ),
+                        'title' => __( "Decoration", "megamenu-pro" ),
                         'type' => 'decoration',
                         'key' => 'tabbed_link_text_decoration'
                     ),
@@ -245,21 +245,21 @@ class Mega_Menu_Tabbed {
             ),
             'tabbed_menu_item_font_hover' => array(
                 'priority' => 300,
-                'title' => __( "Tab Font (Hover)", "megamenupro" ),
-                'description' => __( "Set the font for the tabs.", "megamenupro" ),
+                'title' => __( "Tab Font (Hover)", "megamenu-pro" ),
+                'description' => __( "Set the font for the tabs.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "Color", "megamenupro" ),
+                        'title' => __( "Color", "megamenu-pro" ),
                         'type' => 'color',
                         'key' => 'tabbed_link_color_hover'
                     ),
                     array(
-                        'title' => __( "Weight", "megamenupro" ),
+                        'title' => __( "Weight", "megamenu-pro" ),
                         'type' => 'weight',
                         'key' => 'tabbed_link_weight_hover'
                     ),
                     array(
-                        'title' => __( "Decoration", "megamenupro" ),
+                        'title' => __( "Decoration", "megamenu-pro" ),
                         'type' => 'decoration',
                         'key' => 'tabbed_link_text_decoration_hover'
                     ),
@@ -300,7 +300,7 @@ class Mega_Menu_Tabbed {
      */
     public function add_tabbed_megamenu_option( $options, $menu_item_meta ) {
 
-        $options['tabbed'] = __("Mega Menu - Tabbed", "megamenupro");
+        $options['tabbed'] = __("Mega Menu - Tabbed", "megamenu-pro");
 
         return $options;
 
@@ -381,11 +381,11 @@ class Mega_Menu_Tabbed {
         }
 
         $submenu_options = array(
-            'megamenu' => __("Mega Menu - Standard Layout", "megamenupro"),
-            'grid' => __("Mega Menu - Grid Layout", "megamenupro")
+            'megamenu' => __("Mega Menu - Standard Layout", "megamenu-pro"),
+            'grid' => __("Mega Menu - Grid Layout", "megamenu-pro")
         );
 
-        $return = "<label for='mm_enable_mega_menu'>" . __("Sub menu display mode", "megamenupro") . "</label>";
+        $return = "<label for='mm_enable_mega_menu'>" . __("Sub menu display mode", "megamenu-pro") . "</label>";
 
         $return .= "<select id='mm_enable_mega_menu' name='settings[type]'>";
 
@@ -400,19 +400,19 @@ class Mega_Menu_Tabbed {
 
         $return .= "<div class='mm_panel_options'>";
         $return .= "    <select id='mm_number_of_columns' name='settings[panel_columns]'>";
-        $return .= "        <option value='1' " . selected( $menu_item_meta['panel_columns'], 1, false ) . ">1 " . __("column", "megamenupro") . "</option>";
-        $return .= "        <option value='2' " . selected( $menu_item_meta['panel_columns'], 2, false ) . ">2 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='3' " . selected( $menu_item_meta['panel_columns'], 3, false ) . ">3 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='4' " . selected( $menu_item_meta['panel_columns'], 4, false ) . ">4 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='5' " . selected( $menu_item_meta['panel_columns'], 5, false ) . ">5 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='6' " . selected( $menu_item_meta['panel_columns'], 6, false ) . ">6 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='7' " . selected( $menu_item_meta['panel_columns'], 7, false ) . ">7 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='8' " . selected( $menu_item_meta['panel_columns'], 8, false ) . ">8 " . __("columns", "megamenupro") . "</option>";
-        $return .= "        <option value='9' " . selected( $menu_item_meta['panel_columns'], 9, false ) . ">9 " . __("columns", "megamenupro") . "</option>";
+        $return .= "        <option value='1' " . selected( $menu_item_meta['panel_columns'], 1, false ) . ">1 " . __("column", "megamenu-pro") . "</option>";
+        $return .= "        <option value='2' " . selected( $menu_item_meta['panel_columns'], 2, false ) . ">2 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='3' " . selected( $menu_item_meta['panel_columns'], 3, false ) . ">3 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='4' " . selected( $menu_item_meta['panel_columns'], 4, false ) . ">4 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='5' " . selected( $menu_item_meta['panel_columns'], 5, false ) . ">5 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='6' " . selected( $menu_item_meta['panel_columns'], 6, false ) . ">6 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='7' " . selected( $menu_item_meta['panel_columns'], 7, false ) . ">7 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='8' " . selected( $menu_item_meta['panel_columns'], 8, false ) . ">8 " . __("columns", "megamenu-pro") . "</option>";
+        $return .= "        <option value='9' " . selected( $menu_item_meta['panel_columns'], 9, false ) . ">9 " . __("columns", "megamenu-pro") . "</option>";
         $return .= "    </select>";
 
         $return .= "    <select id='mm_widget_selector'>";
-        $return .= "        <option value='disabled'>" . __("Select a Widget to add to the panel", "megamenupro") . "</option>";
+        $return .= "        <option value='disabled'>" . __("Select a Widget to add to the panel", "megamenu-pro") . "</option>";
 
         foreach ( $all_widgets as $widget ) {
             $return .= "    <option value='" . $widget['value'] . "'>" . $widget['text'] . "</option>";
@@ -426,7 +426,7 @@ class Mega_Menu_Tabbed {
             $return .= $menu_item_manager->get_megamenu_grid_html( $menu_item_id, $menu_id, $menu_item_depth, $menu_item_meta );
         } else {
             $return .= "<div class='notice notice-success'><p>";
-            $return .= __("Please update Max Mega Menu (free) to v2.4+", "megamenupro");
+            $return .= __("Please update Max Mega Menu (free) to v2.4+", "megamenu-pro");
             $return .= "</p></div>";
             $return .= "</div>";
         }

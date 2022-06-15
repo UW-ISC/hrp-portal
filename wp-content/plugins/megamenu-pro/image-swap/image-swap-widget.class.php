@@ -17,8 +17,8 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 		public function __construct() {
 			parent::__construct(
 				'maxmegamenu_image_swap', // Base ID
-				__( 'Image Swap (MMM)', 'megamenupro' ), // Name
-				array( 'description' => __( 'Outputs a placeholder image for image swap functionality.', 'megamenupro' ) ) // Args
+				__( 'Image Swap (MMM)', 'megamenu-pro' ), // Name
+				array( 'description' => __( 'Outputs a placeholder image for image swap functionality.', 'megamenu-pro' ) ) // Args
 			);
 		}
 
@@ -44,10 +44,12 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 			$media_file_size = ! empty( $instance['media_file_size'] ) ? $instance['media_file_size'] : 'thumbnail';
 
 			$icon_url = '';
+			$icon_alt = '';
 
 			if ( $media_file_id ) {
 				$icon     = wp_get_attachment_image_src( $media_file_id, $media_file_size );
 				$icon_url = $icon[0];
+				$icon_alt = trim(strip_tags( get_post_meta($media_file_id, '_wp_attachment_image_alt', true) ));
 			}
 
 			extract( $args );
@@ -62,7 +64,7 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 				}
 			}
 
-			echo "<img class='mega-placeholder' data-default-src='" . esc_attr( $icon_url ) . "' src='" . esc_attr( $icon_url ) . "' />";
+			echo "<img class='mega-placeholder' data-default-src='" . esc_attr( $icon_url ) . "' src='" . esc_attr( $icon_url ) . "' data-default-alt='" . esc_attr( $icon_alt ) . "' alt='" . esc_attr( $icon_alt ) . "' />";
 
 			echo $after_widget;
 		}
@@ -111,26 +113,26 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 
 			?>
 			<p>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'megamenu' ); ?></label>
+				<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'megamenu-pro' ); ?></label>
 				<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" />
 			</p>
 			<p class='clear'>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'media_file_id' ) ); ?>"><?php esc_attr_e( 'Default image:', 'megamenupro' ); ?></label> 
+				<label for="<?php echo esc_attr( $this->get_field_id( 'media_file_id' ) ); ?>"><?php esc_attr_e( 'Default image:', 'megamenu-pro' ); ?></label> 
 				<div class='mmm_image_selector' data-src='<?php echo esc_attr( $icon_url ); ?>' data-field='<?php echo esc_attr( $this->get_field_name( 'media_file_id' ) ); ?>'></div>
 				<input type='hidden' id='<?php echo esc_attr( $this->get_field_name( 'media_file_id' ) ); ?>' name='<?php echo esc_attr( $this->get_field_name( 'media_file_id' ) ); ?>' value='<?php echo esc_attr( $media_file_id ); ?>' />
 			</p>
 			<p class='clear'>
-				<label for="<?php echo esc_attr( $this->get_field_id( 'media_file_size' ) ); ?>"><?php esc_attr_e( 'Size:', 'megamenupro' ); ?></label> 
+				<label for="<?php echo esc_attr( $this->get_field_id( 'media_file_size' ) ); ?>"><?php esc_attr_e( 'Size:', 'megamenu-pro' ); ?></label> 
 				<select name='<?php echo esc_attr( $this->get_field_name( 'media_file_size' ) ); ?>'>
 					<?php
 
 					$sizes = apply_filters(
 						'image_size_names_choose',
 						array(
-							'thumbnail' => __( 'Thumbnail' ),
-							'medium'    => __( 'Medium' ),
-							'large'     => __( 'Large' ),
-							'full'      => __( 'Full Size' ),
+							'thumbnail' => __( 'Thumbnail', 'megamenu-pro' ),
+							'medium'    => __( 'Medium', 'megamenu-pro' ),
+							'large'     => __( 'Large', 'megamenu-pro' ),
+							'full'      => __( 'Full Size', 'megamenu-pro' ),
 						)
 					);
 

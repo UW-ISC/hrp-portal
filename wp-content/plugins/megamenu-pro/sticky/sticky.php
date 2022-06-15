@@ -45,12 +45,12 @@ class Mega_Menu_Sticky {
 
         $options['sticky'] = array(
             'priority' => 20,
-            'title' => __( "Sticky", "megamenu" ),
+            'title' => __( "Sticky", "megamenu-pro" ),
             'settings' => array(
                 'sticky_enabled' => array(
                     'priority' => 50,
-                    'title' => __( "Enabled", "megamenu" ),
-                    'description' => __( "Stick the menu for this location", "megamenu" ),
+                    'title' => __( "Enabled", "megamenu-pro" ),
+                    'description' => __( "Stick the menu for this location", "megamenu-pro" ),
                     'settings' => array(
                         array(
                             'type' => 'checkbox',
@@ -61,8 +61,8 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_desktop' => array(
                     'priority' => 50,
-                    'title' => __( "Stick on Desktop", "megamenu" ),
-                    'description' => __("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenupro"),
+                    'title' => __( "Stick on Desktop", "megamenu-pro" ),
+                    'description' => __("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenu-pro"),
                     'settings' => array(
                         array(
                             'type' => 'checkbox',
@@ -73,8 +73,8 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_mobile' => array(
                     'priority' => 50,
-                    'title' => __( "Stick on Mobile", "megamenu" ),
-                    'description' => __( "Enable the sticky menu on screen widths below the configured Responsive Breakpoint?", "megamenu" ),
+                    'title' => __( "Stick on Mobile", "megamenu-pro" ),
+                    'description' => __( "Enable the sticky menu on screen widths below the configured Responsive Breakpoint?", "megamenu-pro" ),
                     'settings' => array(
                         array(
                             'type' => 'checkbox',
@@ -85,8 +85,8 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_opacity' => array(
                     'priority' => 50,
-                    'title' => __( "Sticky Opacity", "megamenu" ),
-                    'description' => __("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenupro"),
+                    'title' => __( "Sticky Opacity", "megamenu-pro" ),
+                    'description' => __("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenu-pro"),
                     'settings' => array(
                         array(
                             'type' => 'freetext',
@@ -97,8 +97,8 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_offset' => array(
                     'priority' => 50,
-                    'title' => __( "Sticky Offset", "megamenu" ),
-                    'description' => __("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenupro"),
+                    'title' => __( "Sticky Offset", "megamenu-pro" ),
+                    'description' => __("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenu-pro"),
                     'settings' => array(
                         array(
                             'type' => 'freetext',
@@ -109,17 +109,17 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_expand' => array(
                     'priority' => 50,
-                    'title' => __( "Expand Background", "megamenu" ),
-                    'description' => __("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus.", "megamenupro"),
+                    'title' => __( "Expand Background", "megamenu-pro" ),
+                    'description' => __("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus.", "megamenu-pro"),
                     'settings' => array(
                         array(
-                            'title' => __("Desktop", "megamenupro"),
+                            'title' => __("Desktop", "megamenu-pro"),
                             'type' => 'checkbox',
                             'key' => 'sticky_expand',
                             'value' => $this->get_sticky_setting( $settings, $location, 'sticky_expand' )
                         ),
                         array(
-                            'title' => __("Mobile", "megamenupro"),
+                            'title' => __("Mobile", "megamenu-pro"),
                             'type' => 'checkbox',
                             'key' => 'sticky_expand_mobile',
                             'value' => $this->get_sticky_setting( $settings, $location, 'sticky_expand' )
@@ -128,23 +128,23 @@ class Mega_Menu_Sticky {
                 ),
                 'sticky_hide_until_scroll_up' => array(
                     'priority' => 50,
-                    'title' => __( "Hide Until Scroll Up", "megamenu" ),
-                    'description' => __("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus.", "megamenupro"),
+                    'title' => __( "Hide Until Scroll Up", "megamenu-pro" ),
+                    'description' => __("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus.", "megamenu-pro"),
                     'settings' => array(
                         array(
-                            'title' => __("Enabled", "megamenupro"),
+                            'title' => __("Enabled", "megamenu-pro"),
                             'type' => 'checkbox',
                             'key' => 'sticky_hide_until_scroll_up',
                             'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up')
                         ),
                         array(
-                            'title' => __("Tolerance", "megamenupro"),
+                            'title' => __("Tolerance", "megamenu-pro"),
                             'type' => 'freetext',
                             'key' => 'sticky_hide_until_scroll_up_tolerance',
                             'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_tolerance')
                         ),
                         array(
-                            'title' => __("Offset", "megamenupro"),
+                            'title' => __("Offset", "megamenu-pro"),
                             'type' => 'freetext',
                             'key' => 'sticky_hide_until_scroll_up_offset',
                             'value' => $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_offset')
@@ -185,22 +185,22 @@ class Mega_Menu_Sticky {
         $new_settings = array(
             'sticky_menu_item_link_height' => array(
                 'priority' => 06,
-                'title' => __( "Menu Height (Sticky)", "megamenu" ),
-                'description' => __( "The height of the menu when sticky.", "megamenu" ),
+                'title' => __( "Menu Height (Sticky)", "megamenu-pro" ),
+                'description' => __( "The height of the menu when sticky.", "megamenu-pro" ),
                 'settings' => array(
                     array(
-                        'title' => __( "Enabled", "megamenu" ),
+                        'title' => __( "Enabled", "megamenu-pro" ),
                         'type' => 'checkbox',
                         'key' => 'sticky_menu_height'
                     ),
                     array(
-                        'title' => __( "Height", "megamenu" ),
+                        'title' => __( "Height", "megamenu-pro" ),
                         'type' => 'freetext',
                         'key' => 'sticky_menu_item_link_height',
                         'validation' => 'px'
                     ),
                     array(
-                        'title' => __( "Transition", "megamenu" ),
+                        'title' => __( "Transition", "megamenu-pro" ),
                         'type' => 'checkbox',
                         'key' => 'sticky_menu_transition'
                     ),
@@ -226,10 +226,11 @@ class Mega_Menu_Sticky {
 
         if ( ob_get_contents() ) ob_clean(); // remove any warnings or output from other plugins which may corrupt the response
 
-        $response = "<h2>Sticky Menu</h2>";
-        $response .= "<p><b>Is your theme already sticking/fixing the header?</b></p>";
-        $response .= "<p>Only enable this option if your theme is not already sticking the theme header and menu.</p>";
-        $response .= "<o>If your theme is already sticking/fixing your header and menu, then enabling this sticky option will cause conflicts. Therefore, if your theme is already sticking the header, you should leave this option unchecked.</p>";
+
+        $response = "<h2>" . __("Sticky Menu", "megamenu-pro") . "</h2>";
+        $response .= "<p><b>" . __("Is your theme already sticking/fixing the header?", "megamenu-pro") . "</b></p>";
+        $response .= "<p>" . __("Only enable this option if your theme is not already sticking the theme header and menu.", "megamenu-pro") . "</p>";
+        $response .= "<p>" . __("If your theme is already sticking/fixing your header and menu, then enabling this sticky option will cause conflicts. Therefore, if your theme is already sticking the header, you should leave this option unchecked.", "megamenu-pro") . "</p>";
         
         wp_send_json_success( json_encode( $response ) );
     }
@@ -284,13 +285,13 @@ class Mega_Menu_Sticky {
 
         $return  = '        <tr>';
         $return .= '            <td class="mega-name">';
-        $return .=                  __("Visibility in Sticky Menu", "megamenupro");
+        $return .=                  __("Visibility in Sticky Menu", "megamenu-pro");
         $return .= '            </td>';
         $return .= '            <td class="mega-value">';
         $return .= '                <select name="settings[sticky_visibility]">';
-        $return .= '                    <option value="always" ' . selected( $menu_item_meta['sticky_visibility'], 'always', false ) . '>' . __("Always show", "megamenupro") . '</option>';
-        $return .= '                    <option value="show" ' . selected( $menu_item_meta['sticky_visibility'], 'show', false ) . '>' . __("Show only when menu is stuck", "megamenupro") . '</option>';
-        $return .= '                    <option value="hide" ' . selected( $menu_item_meta['sticky_visibility'], 'hide', false ) . '>' . __("Hide when menu is stuck", "megamenupro") . '</option>';
+        $return .= '                    <option value="always" ' . selected( $menu_item_meta['sticky_visibility'], 'always', false ) . '>' . __("Always show", "megamenu-pro") . '</option>';
+        $return .= '                    <option value="show" ' . selected( $menu_item_meta['sticky_visibility'], 'show', false ) . '>' . __("Show only when menu is stuck", "megamenu-pro") . '</option>';
+        $return .= '                    <option value="hide" ' . selected( $menu_item_meta['sticky_visibility'], 'hide', false ) . '>' . __("Hide when menu is stuck", "megamenu-pro") . '</option>';
         $return .= '                </select>';
         $return .= '            </td>';
         $return .= '        </tr>';
@@ -324,7 +325,7 @@ class Mega_Menu_Sticky {
             <table class='sticky_settings'>
                 <tr>
                     <td>
-                        <?php _e("Sticky", "megamenupro"); ?>
+                        <?php _e("Sticky", "megamenu-pro"); ?>
                     </td>
                     <td>
                         <input type='checkbox' class='megamenu_sticky_enabled' name='megamenu_meta[<?php echo $location ?>][sticky_enabled]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_enabled') == 'true' ); ?> />
@@ -349,7 +350,7 @@ class Mega_Menu_Sticky {
 
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Stick On Desktop", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenupro"); ?>"></i>
+                        <?php _e("Stick On Desktop", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is not already within a sticky container.", "megamenu-pro"); ?>"></i>
                         </div>
                     </td>
                     <td>
@@ -358,7 +359,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Stick On Mobile", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is small enough to fully fit on the screen without completely covering the page content.", "megamenupro"); ?>"></i>
+                        <?php _e("Stick On Mobile", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title="<?php _e("IMPORTANT: Only enable this if your menu is small enough to fully fit on the screen without completely covering the page content.", "megamenu-pro"); ?>"></i>
                         </div>
                     </td>
                     <td>
@@ -367,7 +368,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td class='mega-name'>
-                        <?php _e("Sticky Opacity", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenupro"); ?>'></i>
+                        <?php _e("Sticky Opacity", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the transparency of the menu when sticky (values 0.2 - 1.0). Default: 1.", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='number' step='0.1' min='0.2' max='1' name='megamenu_meta[<?php echo $location; ?>][sticky_opacity]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_opacity'); ?>' />
@@ -375,7 +376,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Sticky Offset", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenupro"); ?>'></i>
+                        <?php _e("Sticky Offset", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Set the distance between top of window and top of menu when the menu is stuck. Default: 0.", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='number' name='megamenu_meta[<?php echo $location; ?>][sticky_offset]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_offset'); ?>' /><span class='mega-after'>px</span>
@@ -383,7 +384,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Expand Background Desktop", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenupro"); ?>'></i>
+                        <?php _e("Expand Background Desktop", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the background of the menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_expand]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_expand') == 'true' ); ?> />
@@ -391,7 +392,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Expand Mobile Menu", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the width of the mobile menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenupro"); ?>'></i>
+                        <?php _e("Expand Mobile Menu", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Expand the width of the mobile menu to fill the page width once the menu becomes sticky. Only compatible with Horizontal menus", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='checkbox' name='megamenu_meta[<?php echo $location ?>][sticky_expand_mobile]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_expand_mobile') == 'true' ); ?> />
@@ -399,7 +400,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_behaviour' style='display: <?php echo $sticky_display; ?>;'>
                     <td>
-                        <?php _e("Hide until scroll up", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus", "megamenupro"); ?>'></i>
+                        <?php _e("Hide until scroll up", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Hide the menu as the user scrolls down the page, and reveal the menu when the user scrolls up. Only compatible with Horizontal menus.", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='checkbox' class='megamenu_sticky_husu_enabled' name='megamenu_meta[<?php echo $location ?>][sticky_hide_until_scroll_up]' value='true' <?php checked( $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up') == 'true' ); ?> />
@@ -407,7 +408,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_husu' style='display: <?php echo $sticky_husu_display; ?>;'>
                     <td>
-                        <?php _e("Scroll tolerance (0-50)", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Prevent the menu from being rapidly hidden and revealed due to small mouse movements. Default: 10", "megamenupro"); ?>'></i>
+                        <?php _e("Scroll tolerance (0-50)", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Prevent the menu from being rapidly hidden and revealed due to small mouse movements. Default: 10", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='number' step='1' min='0' max='50' name='megamenu_meta[<?php echo $location; ?>][sticky_hide_until_scroll_up_tolerance]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_tolerance'); ?>' /><span class='mega-after'>px</span>
@@ -415,7 +416,7 @@ class Mega_Menu_Sticky {
                 </tr>
                 <tr class='megamenu_sticky_husu' style='display: <?php echo $sticky_husu_display; ?>;'>
                     <td>
-                        <?php _e("Hide until scroll up offset", "megamenupro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Initiate the Hide Until Scroll Up functionality once the page has been scrolled down this distance.", "megamenupro"); ?>'></i>
+                        <?php _e("Hide until scroll up offset", "megamenu-pro"); ?><i class='mmm_tooltip dashicons dashicons-info' title='<?php _e("Initiate the Hide Until Scroll Up functionality once the page has been scrolled down this distance.", "megamenu-pro"); ?>'></i>
                     </td>
                     <td>
                         <input type='number' step='1' min='0' name='megamenu_meta[<?php echo $location; ?>][sticky_hide_until_scroll_up_offset]' value='<?php echo $this->get_sticky_setting($settings, $location, 'sticky_hide_until_scroll_up_offset'); ?>' /><span class='mega-after'>px</span>

@@ -183,62 +183,62 @@ class Mega_Menu_Custom_Icon {
         $html .= "    <input type='hidden' name='clear_cache' value='true' />";
         $html .= "    <table>";
         $html .= "        <tr>";
-        $html .= "            <td class='mega-name'>" . __("Icon", "megamenupro") . "</td>";
+        $html .= "            <td class='mega-name'>" . __("Icon", "megamenu-pro") . "</td>";
         $html .= "            <td class='mega-value'>";
         $html .= "                <div class='mmm_image_selector' data-src='{$icon_url}' data-field='custom_icon_id'></div>";
         $html .= "                <input type='hidden' id='custom_icon_id' name='settings[custom_icon][id]' value='{$icon_id}' />";
         $html .= "            </td>";
         $html .= "        </tr>";
         $html .= "        <tr>";
-        $html .= "            <td class='mega-name'>" . __("Icon (Hover)", "megamenupro") . "</td>";
+        $html .= "            <td class='mega-name'>" . __("Icon (Hover)", "megamenu-pro") . "</td>";
         $html .= "            <td class='mega-value'>";
         $html .= "                <div class='mmm_image_selector' data-src='{$icon_url_hover}' data-field='custom_icon_id_hover'></div>";
         $html .= "                <input type='hidden' id='custom_icon_id_hover' name='settings[custom_icon][id_hover]' value='{$icon_id_hover}' />";
         $html .= "            </td>";
         $html .= "        </tr>";
         $html .= "        <tr>";
-        $html .= "            <td class='mega-name'>" . __("Icon Size (Desktop)", "megamenupro") . "</td>";
+        $html .= "            <td class='mega-name'>" . __("Icon Size (Desktop)", "megamenu-pro") . "</td>";
         $html .= "            <td class='mega-value'>";
-        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>Width</span>";
+        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>" . __("Width", "megamenu-pro") . "</span>";
         $html .= "                    <input type='number' name='settings[custom_icon][width]' class='mm_icon_width' value='{$icon_width}' /><span class='mega-after'>px</span>";
         $html .= "                </div>";
-        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>Height</span>";
+        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>" . __("Height", "megamenu-pro") . "</span>";
         $html .= "                    <input type='number' name='settings[custom_icon][height]' class='mm_icon_height' value='{$icon_height}' /><span class='mega-after'>px</span>";
         $html .= "                </div>";
         $html .= "            </td>";
         $html .= "        <tr>";
         $html .= "        <tr>";
-        $html .= "            <td class='mega-name'>" . __("Icon Size (Mobile)", "megamenupro") . "</td>";
+        $html .= "            <td class='mega-name'>" . __("Icon Size (Mobile)", "megamenu-pro") . "</td>";
         $html .= "            <td class='mega-value'>";
-        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>Width</span>";
+        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>" . __("Width", "megamenu-pro") . "</span>";
         $html .= "                    <input type='number' name='settings[custom_icon][width_mobile]' class='mm_icon_width' value='{$icon_width_mobile}' /><span class='mega-after'>px</span>";
         $html .= "                </div>";
-        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>Height</span>";
+        $html .= "                <div class='mega-desc-with-input'><span class='mega-short-desc'>" . __("Height", "megamenu-pro") . "</span>";
         $html .= "                    <input type='number' name='settings[custom_icon][height_mobile]' class='mm_icon_height' value='{$icon_height_mobile}' /><span class='mega-after'>px</span>";
         $html .= "                </div>";
         $html .= "            </td>";
         $html .= "        <tr>";
-        $html .= "            <td class='mega-name'>" . __("Icon Vertical Align", "megamenupro") . "</td>";
+        $html .= "            <td class='mega-name'>" . __("Icon Vertical Align", "megamenu-pro") . "</td>";
         $html .= "            <td class='mega-value'>";
         $html .= "                <select name='settings[custom_icon][vertical_align]'>";
-        $html .= "                    <option value='middle' " . selected( $icon_align, 'middle', false) . ">" . __("Middle (Default)", "megamenupro") . "</option>";
-        $html .= "                    <option value='top' " . selected( $icon_align, 'top', false) . ">" . __("Top", "megamenupro") . "</option>";
-        $html .= "                    <option value='bottom' " . selected( $icon_align, 'bottom', false) . ">" . __("Bottom", "megamenupro") . "</option>";
-        $html .= "                    <option value='text-top' " . selected( $icon_align, 'text-top', false) . ">" . __("Text-Top", "megamenupro") . "</option>";
-        $html .= "                    <option value='text-bottom' " . selected( $icon_align, 'text-bottom', false) . ">" . __("Text-Bottom", "megamenupro") . "</option>";
-        $html .= "                    <option value='super' " . selected( $icon_align, 'super', false) . ">" . __("Super", "megamenupro") . "</option>";
-        $html .= "                    <option value='sub' " . selected( $icon_align, 'sub', false) . ">" . __("Sub", "megamenupro") . "</option>";
-        $html .= "                    <option value='initial' " . selected( $icon_align, 'initial', false) . ">" . __("Initial", "megamenupro") . "</option>";
-        $html .= "                    <option value='inherit' " . selected( $icon_align, 'inherit', false) . ">" . __("Inherit", "megamenupro") . "</option>";
+        $html .= "                    <option value='middle' " . selected( $icon_align, 'middle', false) . ">" . __("Middle (Default)", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='top' " . selected( $icon_align, 'top', false) . ">" . __("Top", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='bottom' " . selected( $icon_align, 'bottom', false) . ">" . __("Bottom", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='text-top' " . selected( $icon_align, 'text-top', false) . ">" . __("Text-Top", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='text-bottom' " . selected( $icon_align, 'text-bottom', false) . ">" . __("Text-Bottom", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='super' " . selected( $icon_align, 'super', false) . ">" . __("Super", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='sub' " . selected( $icon_align, 'sub', false) . ">" . __("Sub", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='initial' " . selected( $icon_align, 'initial', false) . ">" . __("Initial", "megamenu-pro") . "</option>";
+        $html .= "                    <option value='inherit' " . selected( $icon_align, 'inherit', false) . ">" . __("Inherit", "megamenu-pro") . "</option>";
         $html .= "                <select>";
         $html .= "            </td>";
         $html .= "        </tr>";
         $html .= "    </table>";
-        $html .= get_submit_button( __("Save custom icon", "megamenupro") );
+        $html .= get_submit_button( __("Save custom icon", "megamenu-pro") );
 
         // add the tab
         $tabs['custom'] = array(
-            'title' => __("Custom Icon", "megamenupro"),
+            'title' => __("Custom Icon", "megamenu-pro"),
             'active' => isset( $menu_item_meta['icon'] ) && $menu_item_meta['icon'] === "custom",
             'content' => $html
         );
