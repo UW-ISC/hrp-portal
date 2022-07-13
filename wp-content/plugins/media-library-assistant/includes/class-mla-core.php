@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '2.99';
+	const CURRENT_MLA_VERSION = '3.01';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -274,6 +274,33 @@ class MLACore {
 	 * @var	string
 	 */
 	const MLA_ADMIN_SINGLE_ADD = 'single_item_add';
+
+	/**
+	 * Action name; gives a context for the 'download-zip'/'mla_download_file nonce
+	 *
+	 * @since 3.00
+	 *
+	 * @var	string
+	 */
+	const MLA_DOWNLOAD_NONCE_ACTION = 'mla_download_nonce_action';
+
+	/**
+	 * Action name; gives a context for the 'mla_download_example_plugin' nonce
+	 *
+	 * @since 3.00
+	 *
+	 * @var	string
+	 */
+	const MLA_DOWNLOAD_EXAMPLE_NONCE_ACTION = 'mla_download_example_nonce_action';
+
+	/**
+	 * Action name; gives a context for the 'mla_download_error_log' nonce
+	 *
+	 * @since 3.00
+	 *
+	 * @var	string
+	 */
+	const MLA_ERROR_LOG_NONCE_ACTION = 'mla_error_log_nonce_action';
 
 	/**
 	 * Action name; gives a context for the nonce

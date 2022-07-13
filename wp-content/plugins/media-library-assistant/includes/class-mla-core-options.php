@@ -288,6 +288,11 @@ class MLACoreOptions {
 	const MLA_DELETE_OPTION_BACKUPS = 'delete_option_backups';
 
 	/**
+	 * Provides a unique name for the Enabled Featured Image option
+	 */
+	const MLA_ENABLE_FEATURED_IMAGE = 'enable_featured_image';
+
+	/**
 	 * Provides a unique name for the Media Manager Force Image Default Setings option
 	 */
 	const MLA_MEDIA_MODAL_APPLY_DISPLAY_SETTINGS = 'media_modal_apply_display_settings';
@@ -1106,7 +1111,7 @@ class MLACoreOptions {
 					'std' => 'checked',
 					'help' => __( 'Check this option to allow the "mla_viewer" to generate thumbnail images for PDF  documents. Thumbnails are generated dynamically, each time the item appears in an [mla_gallery] display.<br>&nbsp;&nbsp;<strong>IMPORTANT: both Ghostscript and Imagick/ImageMagick must be installed for this feature.</strong>', 'media-library-assistant' )),
 
-			'enable_featured_image' =>
+			MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE =>
 				array('tab' => 'mla_gallery',
 					'name' => __( 'Enable Featured Images', 'media-library-assistant' ),
 					'type' => 'checkbox',
@@ -1135,17 +1140,13 @@ class MLACoreOptions {
 					'size' => 20,
 					'help' => __( 'If your &ldquo;gs&rdquo; executable is in a non-standard location, enter the full path and filename here, e.g., &ldquo;/usr/bin/gs&rdquo;. It will override the search for Ghostscript in other places.', 'media-library-assistant' )),
 
-			/*
-			 * Managed by mla_get_style_templates and mla_put_style_templates
-			 */
+			// Managed by mla_get_style_templates and mla_put_style_templates
 			'style_templates' =>
 				array('tab' => '',
 					'type' => 'hidden',
 					'std' => array()),
 
-			/*
-			 * Managed by mla_get_markup_templates and mla_put_markup_templates
-			 */
+			// Managed by mla_get_markup_templates and mla_put_markup_templates
 			'markup_templates' =>
 				array('tab' => '',
 					'type' => 'hidden',

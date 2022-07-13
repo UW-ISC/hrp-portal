@@ -1290,6 +1290,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 		// Check for other page-level actions
 		if ( isset( $_REQUEST['mla_reset_log'] ) && 'true' == $_REQUEST['mla_reset_log'] ) {
+			check_admin_referer( MLACore::MLA_ERROR_LOG_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			$file_error = false;
 			$file_handle = @fopen( $error_log_name, 'w' );
 
@@ -1378,7 +1379,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 					'page' => MLACore::ADMIN_PAGE_SLUG,
 					'mla_download_error_log' => 'true',
 				);
-				$download_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
+				$download_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_ERROR_LOG_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
 			} else {
 				$download_link = '';
 			}
@@ -1388,7 +1389,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 				'mla_tab' => 'debug',
 				'mla_reset_log' => 'true'
 			);
-			$reset_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'options-general.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Reset', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Reset', 'media-library-assistant' ) . '</a>';
+			$reset_link = '<a class="button-secondary" href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'options-general.php', MLACore::MLA_ERROR_LOG_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Reset', 'media-library-assistant' ) . ' &#8220;' . __( 'Error Log', 'media-library-assistant' ) . '&#8221;">' . __( 'Reset', 'media-library-assistant' ) . '</a>';
 		}
 
 		$settings_list  = self::_compose_settings_row( 'Display Limit', $display_limit );

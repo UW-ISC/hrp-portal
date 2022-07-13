@@ -670,7 +670,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 				'page' => MLACore::ADMIN_PAGE_SLUG,
 				'mla_download_example_plugin' => urlencode( $item->file ),
 			);
-			$actions['download'] = '<a href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . esc_attr( $item->file ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
+			$actions['download'] = '<a href="' . add_query_arg( $args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_DOWNLOAD_EXAMPLE_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . esc_attr( $item->file ) . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
 		}
 
 		$actions['view'] = '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( '?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_EDIT_DISPLAY, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'View this item', 'media-library-assistant' ) . '">' . __( 'View', 'media-library-assistant' ) . '</a>';

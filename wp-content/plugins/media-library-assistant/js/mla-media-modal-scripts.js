@@ -286,13 +286,15 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 
 			change: function() {
-				var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
-					filter = this.filters[ this.el.value ];
+				// var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
+				var filter = this.filters[ this.el.value ];
 
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
-					this.model.set( filter.props, { silent: true } );
-					$( '#mla-search-submit', toolbar ).trigger('click');
+					// this.model.set( filter.props, { silent: true } );
+					// $( '#mla-search-submit', toolbar ).trigger('click');
+					// console.log('AttachmentFilters.Mla filter: ', JSON.stringify( filter ) );
+					this.model.set( filter.props, { silent: false } );
 				}
 			}
 		});
@@ -392,13 +394,15 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			},
 
 			change: function() {
-				var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
-					filter = this.filters[ this.el.value ];
+				// var toolbar = $( this.el ).closest( 'div.media-toolbar' ), 
+				var filter = this.filters[ this.el.value ];
 
 				if ( filter ) {
 					// silent because we must change the "s" prop before triggering an update
-					this.model.set( filter.props, { silent: true } );
-					$( '#mla-search-submit', toolbar ).trigger('click');
+					// this.model.set( filter.props, { silent: true } );
+					// $( '#mla-search-submit', toolbar ).trigger('click');
+					// console.log('AttachmentFilters.MlaUploaded filter: ', JSON.stringify( filter ) );
+					this.model.set( filter.props, { silent: false } );
 				}
 			}
 		});

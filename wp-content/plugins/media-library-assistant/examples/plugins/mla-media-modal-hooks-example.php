@@ -7,7 +7,7 @@
  *     - items assigned to a taxonomy term can be excluded from the "Query Attachments" results
  *
  * @package MLA Media Modal Hooks Example
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -15,10 +15,10 @@ Plugin Name: MLA Media Modal Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides examples of the filters provided by the "Media Manager Enhancements" feature
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
-Copyright 2014-2015 David Lingren
+Copyright 2014-2022 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -87,6 +87,7 @@ class MLAMediaModalExample {
 		add_filter( 'mla_media_modal_end_update_compat_fields', 'MLAMediaModalExample::mla_media_modal_end_update_compat_fields', 10, 3 );
 		add_filter( 'mla_media_modal_query_initial_terms', 'MLAMediaModalExample::mla_media_modal_query_initial_terms', 10, 2 );
 		add_filter( 'mla_media_modal_query_filtered_terms', 'MLAMediaModalExample::mla_media_modal_query_filtered_terms', 10, 2 );
+		add_filter( 'mla_media_modal_query_items', 'MLAMediaModalExample::mla_media_modal_query_items', 10, 5 );
 
 		/*
 		 * Defined in /media-library-assistant/includes/class-mla-data.php
@@ -399,6 +400,25 @@ class MLAMediaModalExample {
 		return $query;
 	} // mla_media_modal_query_filtered_terms
 
+	/**
+	 * MLA Media Modal Query Items
+	 *
+	 * Gives you an opportunity to Record or modify
+	 * the results of the "mla_query_media_modal_items" query.
+	 *
+	 * @since 1.03
+	 *
+	 * @param	object	$attachments_query WP_Query results, passed by reference
+	 * @param	array	$query query parameters passed to WP_Query
+	 * @param	array	$raw_query query parameters passed in to function
+	 * @param	integer	$offset parameter_name => parameter_value pairs
+	 * @param	integer	$count parameter_name => parameter_value pairs
+	 */
+	public static function mla_media_modal_query_items( $attachments_query, $query, $raw_query, $offset, $count ) {
+//error_log( __LINE__ . " MLAMediaModalExample::mla_media_modal_query_items( {$offset}, {$count} ) query = " . var_export( $query, true ), 0 );
+//error_log( __LINE__ . " MLAMediaModalExample::mla_media_modal_query_items( {$offset}, {$count} ) raw_query = " . var_export( $raw_query, true ), 0 );
+//error_log( __LINE__ . " MLAMediaModalExample::mla_media_modal_query_items( {$attachments_query->post_count}, {$attachments_query->found_posts} ) query_vars = " . var_export( $attachments_query->query_vars, true ), 0 );
+	} // mla_media_modal_query_items
 	/**
 	 * MLA Edit Media "Query Attachments" final terms Filter
 	 *

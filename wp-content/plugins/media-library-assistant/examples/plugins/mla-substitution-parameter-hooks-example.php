@@ -13,6 +13,7 @@
  *     - a "current_term:" prefix accesses the term named in a $_REQUEST variable
  *         e.g. {+current_term:taxonomy.default_value(term_field)+}
  *     - a "ucwords" custom format value uppercases the first character of each word in a string
+ *     - a "computed_orientation" custom data source derives "Landscape" or "Portrait" from image height and width values
  *
  * Created for support topic "Parent category tag"
  * opened on 5/20/2016 by "Levy":
@@ -50,8 +51,12 @@
  * opened on 8/1/2020 by "perchera":
  * https://wordpress.org/support/topic/auto-alt-text-from-field-in-exif-or-iptc/
  *
+ * Enhanced for support topic "Perform Comparison (If Then Else Logic) when Mapping Metadata to Custom Field"
+ * opened on 2/27/2022  by "tplunkett87":
+ * https://wordpress.org/support/topic/perform-calculation-when-mapping-metadata-to-custom-field/
+ *
  * @package MLA Substitution Parameter Hooks Example
- * @version 1.13
+ * @version 1.14
  */
 
 /*
@@ -59,7 +64,7 @@ Plugin Name: MLA Substitution Parameter Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Adds "parent_terms:", "page_terms:", "parent:", "author:", "conditional:", "wp_query_vars" and "current_term" Field-level Substitution Parameters and "ucwords" custom format value
 Author: David Lingren
-Version: 1.13
+Version: 1.14
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2020 David Lingren
@@ -101,12 +106,13 @@ class MLASubstitutionParameterExample {
 	 */
 	public static function initialize() {
 		// Defined in /media-library-assistant/includes/class-mla-data.php
-		//add_filter( 'mla_expand_custom_data_source', 'MLASubstitutionParameterExample::mla_expand_custom_data_source', 10, 9 );
+		add_filter( 'mla_expand_custom_data_source', 'MLASubstitutionParameterExample::mla_expand_custom_data_source', 10, 9 );
 		add_filter( 'mla_expand_custom_prefix', 'MLASubstitutionParameterExample::mla_expand_custom_prefix', 10, 8 );
 		add_filter( 'mla_apply_custom_format', 'MLASubstitutionParameterExample::mla_apply_custom_format', 10, 2 );
 
 		// Defined in /media-library-assistant/includes/class-mla-data-source.php
-		//add_filter( 'mla_evaluate_custom_data_source', 'MLASubstitutionParameterExample::mla_evaluate_custom_data_source', 10, 5 );
+		add_filter( 'mla_evaluate_custom_data_source', 'MLASubstitutionParameterExample::mla_evaluate_custom_data_source', 10, 5 );
+
 
 		/*
 		 * Additional hooks defined in "MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)".
@@ -183,6 +189,12 @@ class MLASubstitutionParameterExample {
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$candidate}, {$post_id} ) query = " . var_export( $query, true ), 0 );
 		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$candidate}, {$post_id} ) markup_values = " . var_export( $markup_values, true ), 0 );
 
+		if ( 'computed_orientation' === $candidate ) {
+			if ( isset( $markup_values['width'] ) && isset( $markup_values['height'] ) && 0 < $markup_values['height'] ) {
+				return ( ( $markup_values['width'] / $markup_values['height'] ) > 1.0 ) ? 'Landscape' : 'Portrait';
+			}
+		}
+		
 		return $custom_value;
 	} // mla_expand_custom_data_source
 
@@ -469,8 +481,10 @@ class MLASubstitutionParameterExample {
 
 			if ( property_exists( $author, $value['value'] ) ) {
 				$custom_value = $author->{$value['value']};
+//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) property custom_value = " . var_export( $custom_value, true ), 0 );
 			} else {
 				$custom_value = $author->get( $value['value'] );
+//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) get custom_value = " . var_export( $custom_value, true ), 0 );
 			}
 
 //error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_prefix( {$key}, {$post_id} ) custom_value = " . var_export( $custom_value, true ), 0 );
@@ -597,8 +611,23 @@ class MLASubstitutionParameterExample {
 	 * @param	array 	_wp_attachment_metadata, default NULL (use current postmeta database value)
 	 */
 	public static function mla_evaluate_custom_data_source( $custom_value, $post_id, $category, $data_value, $attachment_metadata ) {
-		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$post_id}, {$category} ) data_value = " . var_export( $data_value, true ), 0 );
-		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_expand_custom_data_source( {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
+		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_evaluate_custom_data_source( {$post_id}, {$category} ) data_value = " . var_export( $data_value, true ), 0 );
+		//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_evaluate_custom_data_source( {$post_id} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
+
+		if ( 'computed_orientation' === $data_value['data_source'] ) {
+			if ( !is_array( $attachment_metadata ) ) {
+				if ( 0 < $post_id ) {
+					$attachment_metadata = get_metadata( 'post', $post_id, '_wp_attachment_metadata', true );
+				} else {
+					$attachment_metadata = array();
+				}
+			}
+			//error_log( __LINE__ . " MLASubstitutionParameterExample::mla_evaluate_custom_data_source( {$post_id} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
+
+			if ( isset( $attachment_metadata['width'] ) && isset( $attachment_metadata['height'] ) && 0 < $attachment_metadata['height'] ) {
+				return ( ( $attachment_metadata['width'] / $attachment_metadata['height'] ) > 1.0 ) ? 'Landscape' : 'Portrait';
+			}
+		}
 
 		return $custom_value;
 	} // mla_evaluate_custom_data_source

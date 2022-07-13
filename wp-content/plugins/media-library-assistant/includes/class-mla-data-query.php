@@ -897,7 +897,7 @@ class MLAQuery {
 					break;
 				case 'orderby':
 					// 'rml' is for Real Media Library compatibility
-					if ( in_array( $value, array( 'none', 'post__in', 'rml' ) ) ) {
+					if ( in_array( $value, array( 'none', 'post__in', 'menu_order ID', 'rml' ) ) ) {
 						$clean_request[ $key ] = $value;
 					} else {
 						$orderby = NULL;
@@ -2134,6 +2134,9 @@ class MLAQuery {
 					// post__in is passed from Media Manager Modal Window
 					case 'post__in':
 						return $orderby_clause;
+					// menu_order ID is passed from Media Manager Modal Window
+					case 'menu_order ID':
+						return "{$wpdb->posts}.menu_order,{$wpdb->posts}.ID";
 					/*
 					 * There are two columns defined that end up sorting on post_title,
 					 * so we can't use the database column to identify the column but

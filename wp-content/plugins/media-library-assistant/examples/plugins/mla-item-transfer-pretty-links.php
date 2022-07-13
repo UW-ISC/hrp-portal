@@ -9,8 +9,12 @@
  * opened on 8/19/2017 by "lwcorp".
  * https://wordpress.org/support/topic/how-about-mla_gallery-listmask/
  *
+ * Enhanced (settings screen notes) for support topic "Cannot open PDFs"
+ * opened on 5/10/2022 by "gerdski".
+ * https://wordpress.org/support/topic/cannot-open-pdfs/
+ *
  * @package MLA Item Transfer Pretty Links
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -18,7 +22,7 @@ Plugin Name: MLA Item Transfer Pretty Links
 Plugin URI: http://davidlingren.com/
 Description: Converts "Transfer by Item Name" links to pretty links, adds URL rewrite rule to convert them back.
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 
 Author URI: http://davidlingren.com/
 
@@ -55,7 +59,7 @@ class MLAItemTransferPrettyLinks {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.00';
+	const CURRENT_VERSION = '1.02';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -264,6 +268,7 @@ class MLAItemTransferPrettyLinks {
 		echo "\t\t" . '<form action="' . admin_url( 'options-general.php?page=' . self::SLUG_PREFIX . 'settings' ) . '" method="post" class="' . self::SLUG_PREFIX . 'settings-form-class" id="' . self::SLUG_PREFIX . 'settings-form-id">' . "\n";
 		echo "\t\t" . '  <p class="submit" style="padding-bottom: 0;">' . "\n";
 		echo "\t\t" . '    <table width=99%>' . "\n";
+		echo "\t\t" . '      <tr><td colspan=2>The <code>mla_named_transfer=true</code> parameter implements the “simple” approach described in the Settings/Media Library Assistant Documentation tab. The example plugin adds the “more complex” alternative, transforming the links from the <code>admin-ajax.php</code> format to something like:<br />&nbsp;<br /><code>http://www.mysite.com/mla-transfer/view/my-item-slug<br />http://www.mysite.com/mla-transfer/download/my-item-slug</code><br />&nbsp;<br />The example plugin adds a Settings/MLA Pretty Links page that allows you to change the “mla-transfer”, “download” and “view” portions of the pretty links. It will transform any [mla_gallery] shortcode containing a <code>mla_named_transfer=true</code> parameter.<br />&nbsp;<br /></td></tr>' . "\n";
 
 		echo "\t\t" . '      <tr><td colspan=2>Enter the "pretty link" elements for your site, then click Save Settings.</td></tr>' . "\n";
 		echo "\t\t" . '      <tr><td colspan=2>Make sure the labels do not conflict with other WordPress elements, e.g., Custom Post Types.</td></tr>' . "\n";

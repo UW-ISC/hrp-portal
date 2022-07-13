@@ -3,9 +3,9 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: media, media library, gallery, images, categories, tags, attachments, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
 Requires at least: 3.5.0
-Tested up to: 5.9
+Tested up to: 6.0
 Requires PHP: 5.3
-Stable tag: 2.99
+Stable tag: 3.01
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,37 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.01 =
+
+* Fix: For the Media/Assistant Bulk Edit feature, AJAX errors have been corrected.
+
+= 3.00 =
+
+* New: For the "MLA UI Elements Example" plugin, HTML attributes can be added to the `[muie_terms_search]` and `[muie_keyword_search]` shortcodes. The Settings/MLA UI Elements Documentation tab has details.
+* New: The "MLA UI Elements Example" plugin has enhanced `[muie_terms_search]` and `[muie_keyword_search]` shortcodes that support multiple independent search boxes on a single post/page. The Settings/MLA UI Elements Documentation tab has details.
+* New: The new "MLA Preset Terms Example" plugin adds "Preset Terms" to Media/Assistant rollover actions, redirecting to Media/Add New (Upload New Media) screen with terms copied from the selected item.
+* New: The "MLA Substitution Parameter Hooks Example" plugin now provides a `computed_orientation` custom data source that derives "Landscape" or "Portrait" from image height and width values.
+* New: For `[mla_gallery]`, a new `mla_use_featured` parameter lets you substitute an item&rsquo;s Featured Image in a gallery display even if it has a native thumbnail image.
+* New: The "MLA Multisite Extensions" example plugin now supports the "Multisite Global Media" plugin, which adds a "Global Media" tab to the Media Manager Modal (popup) Window.
+* New: The `file_size` and `size_bytes` data sources take advantage of the `filesize` value added to attachment metadata in WP 6.0.
+* Fix: For `[mla_term_list]` and `[mla_tag_cloud]`, the `include=` parameter can be used to filter the results of an `ids=` parameter.
+* Fix: For `[mla_gallery]`, adding attributes to thumbnail links will work if other attributes are already present before the `href=` attribute.
+* Fix: For the "MLA UI Elements Example" plugin, `mla_control_name` more completely overrides `tax_input`.
+* Fix: The WordPress `wptexturize()` function is no longer applied to the data sources `absolute_path`, `path`, `absolute_file_name`, `file_name`, `name_only` and `extension`.
+* Fix: To increase security, all Media/Assistant bulk actions must pass a NONCE validation.
+* Fix: To increase security, file, example plugin and error log downloads now have unique NONCE action values.
+* Fix: The Media/Assistant "Download" bulk action now rejects a missing list of attachment IDs.
+* Fix: Some problems with pagination links when `mla_page-parameter` is specified have been corrected.
+* Fix: The `class-mla-file-downloader.php` file now exits silently when called outside the WordPress context, avoiding PHP Warning messages in the error log.
+* Fix: A PHP8.x deprecated array element notation in `mla_hooks-example.php` has been corrected.
+* Fix: An "undefined variable" defect in support for Jordy Meow's Media File Renamer plugin has been corrected.
+* Fix: Improved parsing of XMP metadata in PDF documents that do not strictly conform to the standard.
+* Fix: For the Media/Assistant submenu table, filtering by a specific MIME type, e.g., `application/pdf` within a general MIME type view, e.g. `application`, has been corrected.
+* Fix: On the Media/Edit Media screen, the "Attachment File Metadata" text box now allows "invalid code points" (characters), replacing them with a harmless Unicode Replacement Character.
+* Fix: For the Media Manager Modal (popup) Window, thumbnails in the "Uploaded to this post" can be re-ordered by drag and drop.
+* Fix: For the Media/Assistant Bulk Edit Area, failure to update a field to a value of '0' has been corrected.
+* Fix: For the "MLA Simple Mapping Hooks Example" plugin, the plugin is now active when media item inserts are performed in Gutenberg blocks.
+
 = 2.99 =
 
 * New: On the Media/Add New (Upload New Media) and Media/Assistant screens, **MLA Bulk Edit Area values can be saved and recalled for future/repeated use.**
@@ -209,26 +240,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: For `[mla_term_list]`, `current_item_class` assignments for term_id values have been restored.
 * Fix: For the "MLA Advanced Custom Fields Example" plugin, a PHP warning message during Media/Assistant bulk actions has been eliminated.
 
-= 2.98 =
-
-* New: A new **"Attachment File Metadata" meta box on the Media/Edit Media screen** displays IPTC, EXIF, XMP, ID3, PDF and/or MSO metadata embedded in the item's file. More information in the pull-down Help menu on that screen.
-* New: For `[mla_gallery]`, a special `mla_minimum` parameter lets you display an empty gallery unless a minimum number of items is selected.
-* New: The "MLA Advanced Custom Fields Example" plugin now supports ACF "Select" fields, mapping between the field label and field value on the Media/Assistant submenu table and the Bulk and Quick Areas.
-* New: The new "MLA Filename Issues Example" plugin creates a custom data source to help identify items with duplicate file names for cleanup consideration.
-* New: The term Parent column has been added to the Settings/Media Library Assistant Debug tab "Add Tax. Columns" results.
-* Fix: Custom Field Rules with an "Inactive" status are now excluded from Media/Assistant submenu table columns and the Quick and Bulk Edit areas.
-* Fix: An inconsistency in counting attachments that caused the Settings/Media Library Assistant IPTC/EXIF tab "Execute" and "Execute All Rules" actions to fail has been corrected.
-* Fix: An XMP metadata parsing error for empty "rdf:Description" values has been corrected.
-* Fix: The "MLA Custom Field Search Example" plugin has been updated to use the latest plugin settings class file, so the class can be shared with other example plugins.
-* Fix: The old "MLA ACF Checkbox Example" plugin has been flagged as obsolete, replaced by the more useful "MLA Advanced Custom Fields Example" plugin.
-* Fix: For the Media/Assistant Quick Edit Area, users with the 'unfilitered_html' permission can add any HTML tag to a custom field value.
-* Fix: Incorrect display of counts for `[mla_tag_cloud]` and `[mla_term_list]` terms with more than 1,000 assigned items has been corrected.
-* Fix: Toolbar cropping in the "Add media" popup window for WordPress versions before 5.8 has been corrected.
-* Fix: Toolbar cropping in the "Add media" popup window when the Disable Gutenberg (by Jeff Starr) plugin is active has been corrected.
-* Fix: For the "gallery in" and "MLA Gallery in" reporting, PHP "trigger_error" Warning messages have been converted to MLA debug logging messages.
-* Fix: For the "MLA Insert Fixit" example plugin, a PHP 8.0+ Deprecation Error has been resolved.
-
-= 2.90 - 2.97 =
+= 2.90 - 2.98 =
+* 2.98 - New "Attachment File Metadata" meta box on the Media/Edit Media screen. Enhanced "MLA Advanced Custom Fields Example" and new "MLA Filename Issues Example" plugins.  Five enhancements in all, eleven fixes.
 * 2.97 - IMPORTANT: [mla_gallery] PHP "Warning: array_key_exists()..." messages have been eliminated. WP 5.8, cropping of MMMW top row image thubmnails fixed. Description element added to mapping rules. Four enhancements in all, four fixes.
 * 2.96 - WordPress 5.8 support! New [muie_archive_list] shortcode. CSV export item values. Support for Enhanced Media Library plugin. Donation links are back. Thirteen enhancements in all, fourteen fixes.
 * 2.95 - Support for Real Media Library plugin in Media/Assistant and `[mla_gallery]`, MLA Insert Fixit improvements, `[mla_gallery]` simple date parameters, "Mine" filter/view. Four enhancements in all, twelve fixes.
@@ -348,8 +361,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 2.99 =
-WordPress 5.9 support. Bulk Edit values save/restore, current date/time data sources, custom field Library views filtered by MIME type. Four enhancements in all, fifteen fixes.
+= 3.01 =
+IMPORTANT: For the Media/Assistant Bulk Edit feature, AJAX errors have been corrected.
 
 == Other Notes ==
 

@@ -266,7 +266,7 @@ class MLA_WPML {
 		}
 
 		self::_build_existing_terms( $post_id );
-		if ( isset( $_REQUEST['action'] ) && 'mla-inline-edit-scripts' === $_REQUEST['action'] && isset( $_REQUEST['tax_input'] ) ) {
+		if ( isset( $_REQUEST['action'] ) && MLACore::JAVASCRIPT_INLINE_EDIT_SLUG === $_REQUEST['action'] && isset( $_REQUEST['tax_input'] ) ) {
 			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_inline_action( {$post_id} ) Quick Edit initial \$_REQUEST['tax_input'] = " . var_export( $_REQUEST['tax_input'], true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE ); // phpcs:ignore
 
 			if ( 'checked' == MLACore::mla_get_option( 'term_assignment', false, false, MLA_WPML::$mla_language_option_definitions ) ) {

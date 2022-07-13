@@ -6,6 +6,8 @@
  * @since 2.32
  */
 
+defined( 'ABSPATH' ) or die();
+
 /**
  * Class MLA (Media Library Assistant) File Downloader provides file streaming to client.
  *
