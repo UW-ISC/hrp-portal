@@ -21,12 +21,16 @@
  * opened on  8/4/2016 by "ciano":
  * https://wordpress.org/support/topic/replacing-sort-order-attribute
  *
- * Enhanced for support topic "Plugin ‘MLA Simple Mapping Hooks Example’"
+ * Enhanced for support topic "Plugin 'MLA Simple Mapping Hooks Example'"
  * opened on  12/7/2020 by "ernstwg":
  * https://wordpress.org/support/topic/plugin-mla-simple-mapping-hooks-example/
  *
+ * Enhanced for support topic "Using MLA Plugin 'Simple Mapping Hooks'"
+ * opened on  3/2/2022 by "ernstwg":
+ * https://wordpress.org/support/topic/using-mla-plugin-simple-mapping-hooks/
+ *
  * @package MLA Simple Mapping Hooks Example
- * @version 1.04
+ * @version 1.05
  */
 
 /*
@@ -34,10 +38,10 @@ Plugin Name: MLA Simple Mapping Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Populates custom fields based on a regular expression; updates menu_order; cleans up Title and ALT Text
 Author: David Lingren
-Version: 1.04
+Version: 1.05
 Author URI: http://davidlingren.com/
 
-Copyright 2014 - 2020 David Lingren
+Copyright 2014 - 2022 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -77,7 +81,8 @@ class MLASimpleMappingHooksExample {
 		$is_wplr_sync = isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' ); // phpcs:ignore
 
 		// The filters are only useful in the admin section or during WP/LR Sync; exit if in the "front-end" posts/pages. 
-		if ( is_admin() || $is_wplr_sync ) {
+		// Test disabled - is_admin() returns false for images inserted in Gutenberg blocks, etc.
+		if ( true || is_admin() || $is_wplr_sync ) {
 			/*
 			 * This filter is applied in class-mla-options.php functions
 			 * mla_evaluate_iptc_exif_mapping and mla_evaluate_custom_field_mapping

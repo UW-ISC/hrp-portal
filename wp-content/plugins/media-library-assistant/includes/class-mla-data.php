@@ -1666,7 +1666,6 @@ class MLAData {
 	 */
 	public static function mla_get_template_placeholders( $tpl, $default_option = 'text' ) {
 		$results = array();
-
 		/*
 		 * Look for and process templates, removing them from the input so substitution parameters within
 		 * the template are not expanded. They will be expanded when the template itself is expanded.
@@ -4727,7 +4726,7 @@ class MLAData {
 			if ( class_exists( 'Meow_MFRH_Core', false ) && isset( $updates['post_title'] ) ) {
 				global $mfrh_core;
 
-				if ( is_object( $mrfh_core ) ) {
+				if ( is_object( $mfrh_core ) ) {
 					$mfrh_core->rename( $post_id );
 				}
 			}

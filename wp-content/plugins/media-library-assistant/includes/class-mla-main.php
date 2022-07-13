@@ -141,14 +141,14 @@ class MLA {
 
 		// Process secure file download requests
 		if ( isset( $_REQUEST['mla_download_file'] ) && isset( $_REQUEST['mla_download_type'] ) ) {
-			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+			check_admin_referer( MLACore::MLA_DOWNLOAD_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 			self::_process_mla_download_file( $_REQUEST, true );
 			exit();
 		}
 
 		// Process example plugin download requests from the Documentation tab
 		if ( isset( $_REQUEST['mla_download_example_plugin'] ) ) {
-			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+			check_admin_referer( MLACore::MLA_DOWNLOAD_EXAMPLE_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 			$request = array (
 				'mla_download_file' => str_replace( '\\', '/', MLA_PLUGIN_PATH . 'examples/plugins/' . sanitize_text_field( wp_unslash( $_REQUEST['mla_download_example_plugin'] ) ) ),
@@ -161,7 +161,7 @@ class MLA {
 
 		// Process error log download requests from the Debug tab
 		if ( isset( $_REQUEST['mla_download_error_log'] ) ) {
-			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
+			check_admin_referer( MLACore::MLA_ERROR_LOG_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
 
 			// Find the appropriate error log file
 			$error_log_name = MLACore::mla_get_option( MLACoreOptions::MLA_DEBUG_FILE );
@@ -195,7 +195,8 @@ class MLA {
 			$bulk_action = 'download-zip';
 		}
 
-		if ( 'download-zip' == $bulk_action ) {
+		if ( 'download-zip' === $bulk_action ) {
+			check_admin_referer( 'bulk-attachments' );
 			// Exits after redirect unless it returns an error
 			$_REQUEST['mla_zip_archive_error_message'] =  self::_process_zip_archive_download( $_REQUEST );
 			MLACore::mla_debug_add( __LINE__ . " MLA::_process_zip_archive_download message = " . var_export( $_REQUEST['mla_zip_archive_error_message'], true ), MLACore::MLA_DEBUG_CATEGORY_ANY ); // phpcs:ignore
@@ -896,6 +897,11 @@ class MLA {
 			return __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'no ZipArchive support.', 'media-library-assistant' );
 		}
 
+		// Make sure we have attachments to process
+		if ( empty( $request['cb_attachment'] ) ) {
+			return __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Could not retrieve Attachment.', 'media-library-assistant' );
+		}
+
 		// Create unique local names in case the same file name appears in multiple year/month/ directories.
 		$file_names = array();
 		foreach ( $request['cb_attachment'] as $index => $post_id ) {
@@ -915,7 +921,7 @@ class MLA {
 		$upload_dir = wp_upload_dir();
 		$prefix = ( defined( MLA_OPTION_PREFIX ) ) ? MLA_OPTION_PREFIX : 'mla_';
 		$date = date("Ymd_B");
-		$archive_name = $upload_dir['basedir'] . '/' . "{$prefix}_options_{$date}.zip";
+		$archive_name = $upload_dir['basedir'] . '/' . "{$prefix}attachments_{$date}.zip";
 
 		// Clean up an obsolete file
 		if ( file_exists( $archive_name ) ) {
@@ -948,7 +954,7 @@ class MLA {
 
 		$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $archive_name ), 'mla_download_type' => 'application/zip', 'mla_download_disposition' => 'delete' );
 
-		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
+		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_DOWNLOAD_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
 		exit;
 	}
 
@@ -979,7 +985,7 @@ class MLA {
 			if ( ' ' == $new_value ) {
 				$new_value = '';
 			}
-		} elseif ( ! empty( $new_value ) ) {
+		} elseif ( strlen( $new_value ) ) {
 			// preserve leading/trailing whitespace on non-empty entered values
 			return $bulk_value;
 		}
@@ -1006,7 +1012,7 @@ class MLA {
 		$new_data = array() ;
 		if ( isset( $request['post_title'] ) ) {
 			$test_value = self::_process_bulk_value( $post_id, $request['post_title'] );
-			if ( ! empty( $test_value ) ) {
+			if ( strlen( $test_value ) ) {
 				$new_data['post_title'] = $test_value;
 			} elseif ( is_null( $test_value ) ) {
 				$new_data['post_title'] = '';
@@ -1015,7 +1021,7 @@ class MLA {
 
 		if ( isset( $request['post_excerpt'] ) ) {
 			$test_value = self::_process_bulk_value( $post_id, $request['post_excerpt'] );
-			if ( ! empty( $test_value ) ) {
+			if ( strlen( $test_value ) ) {
 				$new_data['post_excerpt'] = $test_value;
 			} elseif ( is_null( $test_value ) ) {
 				$new_data['post_excerpt'] = '';
@@ -1024,7 +1030,7 @@ class MLA {
 
 		if ( isset( $request['post_content'] ) ) {
 			$test_value = self::_process_bulk_value( $post_id, $request['post_content'] );
-			if ( ! empty( $test_value ) ) {
+			if ( strlen( $test_value ) ) {
 				$new_data['post_content'] = $test_value;
 			} elseif ( is_null( $test_value ) ) {
 				$new_data['post_content'] = '';
@@ -1038,7 +1044,7 @@ class MLA {
 		 */
 		if ( isset( $request['image_alt'] ) ) {
 			$test_value = self::_process_bulk_value( $post_id, $request['image_alt'] );
-			if ( ! empty( $test_value ) ) {
+			if ( strlen( $test_value ) ) {
 				$new_data['bulk_image_alt'] = $test_value;
 			} elseif ( is_null( $test_value ) ) {
 				$new_data['bulk_image_alt'] = '';
@@ -1047,7 +1053,7 @@ class MLA {
 
 		if ( isset( $request['post_date'] ) ) {
 			$test_value = self::_process_bulk_value( $post_id, $request['post_date'] );
-			if ( ! empty( $test_value ) ) {
+			if ( strlen( $test_value ) ) {
 				// User input is in local time, not UTC
 				$tz = get_option( 'timezone_string' );
 				if ( !$tz ) {
@@ -1108,7 +1114,7 @@ class MLA {
 			foreach ( $custom_field_map as $slug => $details ) {
 				if ( isset( $request[ $slug ] ) ) {
 					$test_value = self::_process_bulk_value( $post_id, $request[ $slug ] );
-					if ( ! empty( $test_value ) ) {
+					if ( strlen( $test_value ) ) {
 						$custom_fields[ $details['name'] ] = $test_value;
 					} elseif ( is_null( $test_value ) ) {
 						if ( $details['no_null'] ) {
@@ -1278,6 +1284,11 @@ class MLA {
 		 * It is passed in the $request so it can be filtered.
 		 */
 		if ( NULL == $request ) {
+			// Bulk Edit actions have their own NONCE check
+			if ( isset( $_REQUEST['_wpnonce'] ) ) {
+				check_admin_referer( 'bulk-attachments' );
+			}
+
 			$request = $_REQUEST;
 			$request['mla_bulk_action_do_cleanup'] = true;
 		} else {
@@ -1285,7 +1296,7 @@ class MLA {
 		}
 
 		$request = apply_filters( 'mla_list_table_bulk_action_initial_request', $request, $bulk_action, $custom_field_map );
-		MLACore::mla_debug_add( __LINE__ . " MLA::mla_process_bulk_action request = " . var_export( $request, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+		MLACore::mla_debug_add( __LINE__ . " MLA::mla_process_bulk_action( {$bulk_action} ) request = " . var_export( $request, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 
 		if ( isset( $request['cb_attachment'] ) ) {
 			if ( !empty( $request['cb_offset'] ) ) {

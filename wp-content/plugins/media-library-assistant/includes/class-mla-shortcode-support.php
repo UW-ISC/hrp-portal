@@ -163,6 +163,15 @@ class MLAShortcode_Support {
 	private static $size_parameter = '';
 
 	/**
+	 * Informs _get_attachment_image_src() of the 'size=icon_feature' setting
+	 *
+	 * @since 3.00
+	 *
+	 * @var	boolean 'mla_use_featured' parameter value
+	 */
+	private static $mla_use_featured = false;
+
+	/**
 	 * Filters the image src result, returning the "Featured Image" or an icon to represent a non-image attachment.
 	 *
 	 * @since 2.76
@@ -187,13 +196,28 @@ class MLAShortcode_Support {
 			$image = false;
 		}
 
+		// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
+		if ( self::$mla_use_featured && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE ) ) ) {
+			$nested_call = true;
+			$feature = get_the_post_thumbnail( $attachment_id, $size, array( 'class' => 'attachment-thumbnail' ) );
+			$nested_call = false;
+
+			if ( ! empty( $feature ) ) {
+				$match_count = preg_match_all( '# width=\"([^\"]+)\" height=\"([^\"]+)\" src=\"([^\"]+)\" #', $feature, $matches, PREG_OFFSET_CAPTURE );
+				if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+					$image = array( $matches[3][0][0], $matches[1][0][0], $matches[2][0][0] );
+					return $image;
+				}
+			}
+		} // enable_featured_image
+
 		// If a native image exists, we're done
 		if ( false !== $image ) {
 			return $image;
 		}
 
 		// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
-		if ( ( 'icon_only' !== self::$size_parameter ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
+		if ( ( 'icon_only' !== self::$size_parameter ) && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE ) ) ) {
 			$nested_call = true;
 			$feature = get_the_post_thumbnail( $attachment_id, $size, array( 'class' => 'attachment-thumbnail' ) );
 			$nested_call = false;
@@ -499,6 +523,7 @@ class MLAShortcode_Support {
 			'mla_rml_include_children' => false,
 
 			'mla_named_transfer' => false,
+			'mla_use_featured' => false,
 			'mla_viewer' => false,
 			'mla_single_thread' => false,
 			'mla_viewer_extensions' => 'ai,eps,pdf,ps',
@@ -772,6 +797,9 @@ class MLAShortcode_Support {
 		// Pass size argument to _get_attachment_image_src() and replace special values
 		$size = strtolower( $arguments['size'] );
 		self::$size_parameter = $size;
+
+		// Pass mla_use_featured argument to _get_attachment_image_src() and replace special values
+		self::$mla_use_featured = !empty( $arguments['mla_use_featured'] ) ? 'true' === strtolower( $arguments['mla_use_featured'] ) : false;
 
 		if ( ( 'icon_only' === $size ) || ( 'icon_feature' === $size ) ) {
 			$size = 'icon';
@@ -1395,7 +1423,7 @@ class MLAShortcode_Support {
 			} else {
 				$thumbnail_content = $attachment->post_title;
 
-				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
+				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE ) ) ) {
 					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
 					$thumb = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
 					$thumb = apply_filters( 'mla_gallery_featured_image', $thumb, $attachment, $size, $item_values );
@@ -1462,8 +1490,10 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $link_attributes ) ) {
-				$item_values['pagelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['pagelink'] );
-				$item_values['filelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['filelink'] );
+				$item_values['pagelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['pagelink'] );
+				$item_values['filelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['filelink'] );
+//				$item_values['pagelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['pagelink'] );
+//				$item_values['filelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['filelink'] );
 			}
 
 			/*
@@ -1683,7 +1713,7 @@ class MLAShortcode_Support {
 				$item_values['thumbnail_url'] = '';
 
 				/* Replaced by logic in _get_attachment_image_src v2.90
-				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) ) {
+				if ( ( 'none' !== $arguments['size'] ) && ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE ) ) ) {
 					// Look for the "Featured Image" as an alternate thumbnail for PDFs, etc.
 					$feature = get_the_post_thumbnail( $attachment->ID, $size, array( 'class' => 'attachment-thumbnail' ) );
 					$feature = apply_filters( 'mla_gallery_featured_image', $feature, $attachment, $size, $item_values );
@@ -4527,15 +4557,19 @@ class MLAShortcode_Support {
 	 * @since 2.20
 	 *
 	 * @param array	value(s) for mla_output_type parameter
-	 * @param string template substitution values, e.g., ('instance' => '1', ...  )
-	 * @param string merged default and passed shortcode parameter values
-	 * @param string raw passed shortcode parameter values
+	 * @param array template substitution values, e.g., ('instance' => '1', ...  )
+	 * @param array merged default and passed shortcode parameter values
+	 * @param array raw passed shortcode parameter values
 	 * @param integer number of attachments in the gallery, without pagination
 	 * @param string output text so far, may include debug values
 	 *
 	 * @return mixed	false or string with HTML for pagination output types
 	 */
 	private static function _process_pagination_output_types( $output_parameters, $markup_values, $arguments, $attr, $found_rows, $output = '' ) {
+//error_log( __LINE__ . ' _process_pagination_output_types output_parameters = ' . var_export( $output_parameters, true ), 0 );
+//error_log( __LINE__ . ' _process_pagination_output_types markup_values = ' . var_export( $markup_values, true ), 0 );
+//error_log( __LINE__ . ' _process_pagination_output_types arguments = ' . var_export( $arguments, true ), 0 );
+//error_log( __LINE__ . ' _process_pagination_output_types attr = ' . var_export( $attr, true ), 0 );
 		if ( ! in_array( $output_parameters[0], array( 'previous_page', 'next_page', 'paginate_links' ) ) ) {
 			return false;
 		}
@@ -4556,6 +4590,7 @@ class MLAShortcode_Support {
 				$arguments[ $mla_page_parameter ] = '';
 			}
 		}
+//error_log( __LINE__ . ' _process_pagination_output_types arguments = ' . var_export( $arguments, true ), 0 );
 
 		if ( 0 == $posts_per_page ) {
 			$posts_per_page = absint( $arguments['numberposts'] );
@@ -4651,8 +4686,8 @@ class MLAShortcode_Support {
 			$markup_values['new_offset'] = 0;
 		}
 
-		$markup_values['current_page_text'] = 'mla_paginate_current="[+current_page+]"';
-		$markup_values['new_page_text'] = 'mla_paginate_current="[+new_page+]"';
+		$markup_values['current_page_text'] = $mla_page_parameter . '="[+current_page+]"';
+		$markup_values['new_page_text'] = $mla_page_parameter . '="[+new_page+]"';
 		$markup_values['last_page_text'] = 'mla_paginate_total="[+last_page+]"';
 		$markup_values['posts_per_page_text'] = 'posts_per_page="[+posts_per_page+]"';
 
@@ -4674,6 +4709,10 @@ class MLAShortcode_Support {
 			$uri_query = add_query_arg( array(  $mla_page_parameter  => $new_page ), $uri_query );	
 		}
 
+		if ( ( 0 < strlen( $uri_query ) ) && ( '?' !== $uri_query[0] ) ) {
+			$uri_query = '?' . $uri_query;
+		}
+
 		// Validate the query arguments to prevent cross-site scripting (reflection) attacks
 		$test_query = array();
 		parse_str( strval( $uri_query ), $test_query );
@@ -4691,7 +4730,8 @@ class MLAShortcode_Support {
 		$markup_values['query_string'] = $clean_query;
 
 		if ( !empty( $clean_query ) ) {
-			$markup_values['request_uri'] = $uri_path .  '?' . $clean_query;	
+//			$markup_values['request_uri'] = $uri_path .  '?' . $clean_query;	
+			$markup_values['request_uri'] = $uri_path . $clean_query;	
 		} else {
 			$markup_values['request_uri'] = $uri_path;
 		}
@@ -6906,7 +6946,7 @@ class MLAShortcode_Support {
 		 * The "ids" parameter can build an item-specific cloud.
 		 * Compile a list of all the terms assigned to the items.
 		 */
-		if ( ! empty( $arguments['ids'] ) && empty( $arguments['include'] ) ) {
+		if ( ! empty( $arguments['ids'] ) ) {
 			$ids = wp_parse_id_list( $arguments['ids'] );
 		    $placeholders = implode( "','", $ids );
 			$clause[] = "AND tr.object_id IN ( '{$placeholders}' )";
@@ -6922,6 +6962,11 @@ class MLAShortcode_Support {
 					}
 				} // taxonomies
 			} // ids
+
+			// Apply a non-empty argument before we replace it.
+			if ( ! empty( $arguments['include'] ) ) {
+				$includes = array_intersect( $includes, wp_parse_id_list( $arguments['include'] ) );
+			}
 
 			// If there are no terms we want an empty cloud
 			if ( empty( $includes ) ) {

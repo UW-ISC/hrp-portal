@@ -272,6 +272,9 @@ For gallery pagination links, the term list parameters (e.g., "tax_input") are r
 If the <code>$_REQUEST['tax_input']</code> element is present the selected terms are added to the <code>[mla_term_list]</code> shortcode parameters so the list output reflects them. They can also be accessed in an <code>[mla_gallery]</code> shortcode with the `request:` substitution parameter prefix.
 </p>
 <p>
+If you use the "mla_control_name" to replace the default <code>tax_input[[+taxonomy+]][]</code> name attribute, term selections will still be copied to the <code>$_REQUEST['tax_input']</code> element and the <code>muie_filters['tax_input']</code> query attribute. You can disable this behavoir by coding "use_filters=local".
+</p>
+<p>
 If you are not getting the results you expect carefully inspecting the results of parsing the specification and generating the query can be a valuable exercise. You can add the <code>muie_debug=true</code> or <code>muie_debug=log</code> parameters to the <code>[mla_gallery]</code> shortcode, run a test and inspect the log file or the screen messages for more information about what's going on.
 <a name="add_filters_to"></a>
 </p>
@@ -294,7 +297,10 @@ If you add "add_filters_to={taxonomy_slug}" to an [mla_gallery] shortcode this p
 </p>
 <h3>default_empty_gallery, for [mla_gallery]</h3>
 <p>
-If you add "default_empty_gallery=true" an [mla_gallery] shortcode the initial gallery display will show no items, until a selection is made from the other controls.
+If you add "default_empty_gallery=true" to an [mla_gallery] shortcode the initial gallery display will show no items, until a selection is made from the other controls.
+</p>
+<p>
+If you also add an "mla_control_name" parameter to the shortcode with a comma-separated list of one or more control names, the presence of any non-empty control name elements in the request will cause the "empty gallery" test to fail and will display the gallery.
 <a name="muie_terms_search"></a>
 </p>
 <p>
@@ -305,15 +311,19 @@ If you add "default_empty_gallery=true" an [mla_gallery] shortcode the initial g
 The <code>[muie_terms_search]</code> shortcode generates a text box for passing the "mla_terms_phrases" parameter to an <code>[mla_gallery]</code> shortcode. You can add parameters to this shortcode to pass the other terms search parameters as well:
 </p>
 <ul class="mla-doc-toc-list">
+<li>muie_terms_parameter</li>
+<li>muie_attributes</li>
 <li>mla_terms_taxonomies</li>
 <li>mla_phrase_delimiter</li>
-<li>mla_term_delimiter</li>
 <li>mla_phrase_connector</li>
 <li>mla_term_delimiter</li>
 <li>mla_term_connector</li>
 </ul>
 <p>
-The shortcode is meant to be placed in an HTML form that lets the user enter criteria to filter a gallery display.
+The shortcode is meant to be placed in an HTML form that lets the user enter criteria to filter a gallery display. If you require multiple shortcodes on the same page you can use the <code>muie_terms_parameter</code> parameter to give them unique names. Be sure to add a <code>muie_terms_parameter</code> parameter with the same name to every <code>[mla_gallery]</code> shortcode that uses the results of this shortcode.
+</p>
+<p>
+You can use the <code>muie_attributes</code> parameter to replace the default <code>type=text</code> and/or <code>size=20</code> attributes or to add attributes such as <code>placeholder="Enter some terms"</code>. separate multiple attributes with spaces and quote any value containing spaces.
 <a name="muie_keyword_search"></a>
 </p>
 <p>
@@ -324,14 +334,21 @@ The shortcode is meant to be placed in an HTML form that lets the user enter cri
 The <code>[muie_keyword_search]</code> shortcode generates a text box for passing the "s" parameter to an <code>[mla_gallery]</code> shortcode. You can add parameters to this shortcode to pass the other keyword search parameters as well:
 </p>
 <ul class="mla-doc-toc-list">
+<li>muie_keyword_parameter</li>
+<li>muie_attributes</li>
 <li>mla_search_fields</li>
 <li>mla_search_connector</li>
-<li>mla_term_delimiter</li>
 <li>sentence</li>
 <li>exact</li>
 </ul>
 <p>
-The shortcode is meant to be placed in an HTML form that lets the user enter criteria to filter a gallery display.
+The shortcode is meant to be placed in an HTML form that lets the user enter criteria to filter a gallery display. If you require multiple shortcodes on the same page you can use the <code>muie_keyword_parameter</code> parameter to give them unique names. Be sure to add a <code>muie_keyword_parameter</code> parameter with the same name to every <code>[mla_gallery]</code> shortcode that uses the results of this shortcode.
+</p>
+<p>
+The <code>mla_search_fields</code>, <code>mla_search_connector</code>, <code>sentence</code> and <code>exact</code> parameters are passed to <code>[mla_gallery]</code> as well.
+</p>
+<p>
+You can use the <code>muie_attributes</code> parameter to replace the default <code>type=text</code> and/or <code>size=20</code> attributes or to add attributes such as <code>placeholder="Enter some keywords"</code>. separate multiple attributes with spaces and quote any value containing spaces.
 <a name="muie_orderby"></a>
 </p>
 <p>
@@ -487,15 +504,15 @@ The data source for an archive must be a text database field that contains a val
 </tr>
 <tr>
 <td class="mla-doc-table-label">custom</td>
-<td>a custom field value. The custom field must contain a text value with a date format recognized by the database SQL date query functions.</td>
+<td style="padding-bottom: 2em;">a custom field value. The custom field must contain a text value with a date format recognized by the database SQL date query functions.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">archive_key</td>
-<td>for the "custom" archive source, the name of the custom field to be used for the query.</td>
+<td>for the "custom" archive source, this separate parameter gives the name of the custom field to be used for the query. For example, you can code something like <code>archive_source=custom archive_key="Date Taken"</code> where &ldquo;Date Taken&rdquo; is the name of a custom field you have created.</td>
 </tr>
 </table>
 <p>
-The four values from the wp_posts table are in a valid date format. For custom fields, a vairety of common formats are acceptable. For example, you can use a mapping rule to source the custom field from:
+The four values from the wp_posts table are in a valid date format. For custom fields, a variety of common formats are acceptable. For example, you can use a mapping rule to source the custom field from:
 </p>
 <table>
 <tr>
@@ -1169,7 +1186,7 @@ The first two shortcodes in the example use the alternative "enclosing shortcode
 The <code>[muie_terms_search]</code> shortcode generates a text box that accepts one or more phrases to be matched to part or all of a term name in the Att. Tags taxonomy. Phrases are separated by spaces and if two or more phrases are entered any one of them will yield a match. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>mla_terms_phrases</code>. The <code>mla_terms_taxonomies</code>, <code>mla_term_delimiter</code> and <code>mla_phrase_connector</code> parameters are passed to <code>[mla_gallery]</code> as well.
 </p>
 <p>
-The <code>[muie_keyword_search]</code> shortcode generates a text box that accepts one or more keywords to be matched to part or all of the Title, Caption (excerpt) or Description (content) fields. If two or more keywords are entered any one of them will yield a match. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>s</code>. The <code>mla_search_fields</code> and <code>mla_search_connector</code> parameters are passed to <code>[mla_gallery]</code> as well.
+The <code>[muie_keyword_search]</code> shortcode generates a text box that accepts one or more keywords to be matched to part or all of the Title, Caption (excerpt) or Description (content) fields. If two or more keywords are entered any one of them will yield a match. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>s</code>. The <code>mla_search_fields</code>, <code>mla_search_connector</code>, <code>sentence</code> and <code>exact</code> parameters are passed to <code>[mla_gallery]</code> as well.
 </p>
 <p>
 The <code>[muie_per_page]</code> shortcode generates a text box that accepts the number of posts per page to be displayed in the gallery. The value entered in the text box is passed to <code>[mla_gallery]</code> as <code>muie_per_page</code> and it will be converted to <code>posts_per_page</code>. The initial gallery display will not be limited unless you also add an explicit <code>posts_per_page</code> parameter to <code>[mla_gallery]</code>; as the above example shows, its value should match the default value entered in <code>[muie_per_page]</code>.
@@ -1204,6 +1221,7 @@ The default output is a dropdown control you can add to an HTML "search form". Y
 <br />&nbsp;<br />
 The above example also limits the display to the ten most recent values and adds a count of the number of items selected by each value to the display.
 </p>
+<h4>Archive List and MLA Gallery combinations</h4>
 <p>
 The MUIE Archive List shortcode is designed to work with the <code>[mla_gallery]</code> shortcode to display galleries filtered by a date value. To link the archive list to the gallery simply add <code>archive_parameter_name=muie_current_archive</code> to your <code>[mla_gallery]</code> shortcode. Here is a simple example combining an archive search form with a gallery display:
 <br />&nbsp;<br />
@@ -1231,6 +1249,20 @@ The above example displays all of the image items in the Media Library when the 
 <br />&nbsp;<br />
 Note the double backslash characters in the template; they prevent the template processor from interpreting the parentheses as a "Conditional" element. Two are required because of the way WordPress processes shortcode parameters.
 </p>
+<h4>Filtering the MLA Gallery directly</h4>
+<p>You can use the <code>[mla_gallery]</code> parameters by themselves to filter a gallery display by date values. This is particularly useful when you want to filter based on a date held in a custom field, which the core WordPress date parameters and date query do not support. For example, if you have a custom field named "Publication Date" and want to display what was published in 2020 you can code something like:
+<br />&nbsp;<br />
+<code>[mla_gallery post_parent=all archive_parameter_name=muie_current_archive muie_current_archive="custom:Publication Date,Y(2020)"]
+</code>
+<br />&nbsp;<br />
+Note the use of <code>post_parent=all</code>  to overide the default display of items attached to the current post/page. You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items published in the current month. Code something like:
+<br />&nbsp;<br />
+<code>[mla_gallery post_parent=all archive_parameter_name=muie_current_archive muie_current_archive="custom:Publication Date,M({+current_datetime,date( 'Ym' )+})"]
+</code>
+<br />&nbsp;<br />
+By adjusting the format code you can specify any of the four archive types: daily 'Ymd', weekly 'YW', monthly 'Ym', yearly 'Y'.
+</p>
+<h4>Filtered Archive List and MLA Gallery combinations</h4>
 <p>
 As described in the "Archive List Data Selection Parameters" section above you can filter the archive list to show the dates present in a subset of your Media Library items. For example, here is a taxonomy term-specific variation on the archive search form:
 <br />&nbsp;<br />
@@ -1246,8 +1278,8 @@ As described in the "Archive List Data Selection Parameters" section above you c
 <br />&nbsp;<br />
 This example will initially show all items assigned to <code>attachment_category=abc</code> and the dropdown control will show only those dates that have one or more items assigned to the term. Selecting an archive value will combine the term filter and the date filter for the gallery display.
 </p>
+<h4>Combining an Archive List with other criteria</h4>
 <p>
-</p>
 Finally, here is an example that shows how you can combine <code>[muie_archive_list]</code> with the other MUIE elements to create a powerful multi-criteria search application. In this example the <code>tax_input={+template:({+request:tax_input,array+})+}</code> parameter added to the <code>[muie_archive_list]</code> shortcode links the archive list to whatever taxonomy term is selected in the <code>[mla_term_list]</code> shortcode:
 <br />&nbsp;<br />
 <code>

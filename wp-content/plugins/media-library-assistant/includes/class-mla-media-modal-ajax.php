@@ -766,6 +766,9 @@ class MLAModal_Ajax {
 //error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() query = ' . var_export( $query, true ), 0 );
 
 		$attachments_query = MLAQuery::mla_query_media_modal_items( $query, $offset, $count );
+
+		do_action_ref_array( 'mla_media_modal_query_items', array( &$attachments_query, $query, $raw_query, $offset, $count ) );
+
 		$posts = array_map( 'wp_prepare_attachment_for_js', $attachments_query->posts );
 		$posts = array_filter( $posts );
 		$total_posts = $attachments_query->found_posts;

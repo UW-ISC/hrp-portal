@@ -837,7 +837,7 @@ class MLA_List_Table extends WP_List_Table {
 				$file = get_attached_file( $item->ID );
 				$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $file ), 'mla_download_type' => $item->post_mime_type );
 
-				$actions['download'] = '<a href="' . add_query_arg( $download_args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
+				$actions['download'] = '<a href="' . add_query_arg( $download_args, MLACore::mla_nonce_url( 'upload.php', MLACore::MLA_DOWNLOAD_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Download', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'Download', 'media-library-assistant' ) . '</a>';
 
 				$actions['view']  = '<a href="' . site_url( ) . '?attachment_id=' . $item->ID . '" rel="permalink" title="' . __( 'View', 'media-library-assistant' ) . ' &#8220;' . $att_title . '&#8221;">' . __( 'View', 'media-library-assistant' ) . '</a>';
 			}
@@ -1466,11 +1466,11 @@ class MLA_List_Table extends WP_List_Table {
 	 * @return	string	HTML markup to be placed inside the column
 	 */
 	function column_post_mime_type( $item ) {
-		return sprintf( '<a href="%1$s" title="' . __( 'Filter by', 'media-library-assistant' ) . ' &#8220;%2$s&#8221;">%2$s</a>', esc_url( add_query_arg( array_merge( array(
+		return sprintf( '<a href="%1$s" title="' . __( 'Filter by', 'media-library-assistant' ) . ' &#8220;%2$s&#8221;">%2$s</a>', esc_url( add_query_arg( array_merge( self::mla_submenu_arguments( false ), array(
 			'page' => MLACore::ADMIN_PAGE_SLUG,
 			'post_mime_type' => urlencode( $item->post_mime_type ),
 			'heading_suffix' => urlencode( __( 'MIME Type', 'media-library-assistant' ) . ': ' . $item->post_mime_type ) 
-		), self::mla_submenu_arguments( false ) ), 'upload.php' ) ), esc_html( $item->post_mime_type ), esc_html( $item->post_mime_type ) );
+		) ), 'upload.php' ) ), esc_html( $item->post_mime_type ), esc_html( $item->post_mime_type ) );
 	}
 
 	/**

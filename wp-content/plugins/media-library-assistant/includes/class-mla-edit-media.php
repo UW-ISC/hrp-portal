@@ -80,7 +80,7 @@ class MLAEdit {
 	 */
 	public static function mla_admin_init_action( ) {
 		$edit_media_support = array( 'custom-fields' );
-		if ( ( 'checked' == MLACore::mla_get_option( 'enable_featured_image' ) ) && current_theme_supports( 'post-thumbnails', 'attachment' ) ) {
+		if ( ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_FEATURED_IMAGE ) ) && current_theme_supports( 'post-thumbnails', 'attachment' ) ) {
 			$edit_media_support[] = 'thumbnail';
 		}
 
@@ -355,14 +355,18 @@ class MLAEdit {
 	}
 
 	/**
-	 * Generates the bulk edit area presets HTML for the Media/Add New screen
+	 * Generates the bulk edit area fieldsets HTML for the Media/Assistant and Media/Add New screens
 	 *
-	 * Fires on the post upload UI screen; legacy (pre-3.5.0) upload interface.
+	 * For Media/Assistant, fires in the _build_inline_edit_form function that generates the Bulk Edit Area.
+	 
+	 * For Media/Add New, fires on the post upload UI screen; legacy (pre-3.5.0) upload interface.
 	 * Anything echoed here goes below the "Maximum upload file size" message
 	 * and above the id="media-items" div.
 	 *
 	 * @param	array	$fieldset_values Initial taxonomy terms and field values
-	 * @param	string	$filter_root Root portion of "_values" and _template" filter names
+	 * @param	string	$filter_root Root portion of '_fieldset_values', '_values' and '_template' filter names:
+	 * 					'mla_upload_bulk_edit_form_blank', 'mla_upload_bulk_edit_form_initial', 'mla_upload_bulk_edit_form_preset', 
+	 * 					'mla_list_table_inline_blank', 'mla_list_table_inline_initial', 'mla_list_table_inline_preset',
 	 *
 	 * @since 2.99
 	 *
@@ -374,6 +378,8 @@ class MLAEdit {
 			MLACore::mla_debug_add( $message, MLACore::MLA_DEBUG_CATEGORY_ANY );
 			return $message;
 		}
+
+		$fieldset_values = apply_filters( $filter_root . '_fieldset_values', $fieldset_values, $filter_root );
 
 		// Initialize blank/default fieldset values
 		$page_values = array(
@@ -1437,10 +1443,10 @@ class MLAEdit {
 	 */
 	public static function mla_file_metadata_handler( $post ) {
 		$value = MLAData::mla_compose_attachment_metadata( $post->ID );
+		$value = apply_filters( 'mla_file_metadata_meta_box', array( 'value' => $value, 'rows' => 5, 'cols' => 80, 'flags' => ENT_SUBSTITUTE ), $post );
 
-		$value = apply_filters( 'mla_file_metadata_meta_box', array( 'value' => $value, 'rows' => 5, 'cols' => 80 ), $post );
-
-		$html =  '<label class="screen-reader-text" for="mla_file_metadata">' . __( 'Attachment File Metadata', 'media-library-assistant' ) . '</label><textarea class="readonly" id="mla_file_metadata" rows="' . absint( $value['rows'] ) . '" cols="' . absint( $value['cols'] ) . '" readonly="readonly" name="mla_file_metadata" >' . esc_textarea( $value['value'] ) . "</textarea>\n";
+		// Can't use esc_textarea( $value['value'] ) because the value might contain invalid code unit sequences
+		$html =  '<label class="screen-reader-text" for="mla_file_metadata">' . __( 'Attachment File Metadata', 'media-library-assistant' ) . '</label><textarea class="readonly" id="mla_file_metadata" rows="' . absint( $value['rows'] ) . '" cols="' . absint( $value['cols'] ) . '" readonly="readonly" name="mla_file_metadata" >' . htmlspecialchars( $value['value'], $value['flags'] ) . "</textarea>\n";
 		echo apply_filters( 'mla_file_metadata_meta_box_html', $html, $value, $post ); // phpcs:ignore
 	}
 

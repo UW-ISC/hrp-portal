@@ -12,19 +12,23 @@
  * opened on 7/12/2017 by "jeynon (@jeynon)".
  * https://wordpress.org/support/topic/using-shortcodes-to-retrieve-media-from-another-sites-media-library/
  *
+ * Enhanced for support topic "MLA and Multisite Global Media plugin"
+ * opened on 2/15/2022 by "rughjm (@rughjm)".
+ * https://wordpress.org/support/topic/mla-and-multisite-global-media-plugin/
+ *
  * @package MLA Multisite Extensions
- * @version 1.04
+ * @version 1.05
  */
 
 /*
 Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
-Description: Adds Multisite filters to MLA shortcodes
+Description: Adds Multisite filters to MLA shortcodes and supports the "Multisite Global Media" plugin
 Author: David Lingren
-Version: 1.04
+Version: 1.05
 Author URI: http://davidlingren.com/
 
-Copyright 2017 David Lingren
+Copyright 2017-2022 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -61,6 +65,9 @@ class MLAMultisiteExtensions {
 		add_filter( 'mla_gallery_the_attachments', 'MLAMultisiteExtensions::mla_gallery_the_attachments', 10, 2 );
 		add_filter( 'mla_gallery_item_initial_values', 'MLAMultisiteExtensions::mla_gallery_item_initial_values', 10, 2 );
 		add_filter( 'mla_gallery_item_values', 'MLAMultisiteExtensions::mla_gallery_item_values', 10, 1 );
+
+		// Filter for detecting the Multisite Global Media plugin
+		add_action( 'mla_media_modal_query_filtered_terms', 'MLAMultisiteExtensions::mla_media_modal_query_filtered_terms', 10, 2 );
 	}
 
 	/**
@@ -255,7 +262,7 @@ class MLAMultisiteExtensions {
 			} else {
 				unset( self::$shortcode_attributes['site_id'] );
 			}
-		}
+		} // isset( self::$shortcode_attributes['site_id'] )
 
 		return $all_query_parameters;
 	} // mla_gallery_query_arguments
@@ -571,6 +578,67 @@ class MLAMultisiteExtensions {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_values $item_values = ' . var_export( $item_values, true ), 0 );
 		return $item_values;
 	} // mla_gallery_item_values
+
+	/**
+	 * MLA Media Modal Query Filtered Terms
+	 *
+	 * @since 1.05
+	 *
+	 * @param	array	$query query parameters to be passed to WP_Query
+	 * @param	array	$raw_query query parameters passed in to function
+	 *
+	 * @return	array	updated query parameters
+	 */
+	public static function mla_media_modal_query_filtered_terms( $query, $raw_query ) {
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_filtered_terms() query = " . var_export( $query, true ), 0 );
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_filtered_terms() raw_query = " . var_export( $raw_query, true ), 0 );
+
+		if ( !empty( $raw_query['global_media'] ) ) {
+			switch_to_blog( (integer) apply_filters( 'global_media.site_id', 1 ) );
+			add_action( 'mla_media_modal_query_items', 'MLAMultisiteExtensions::mla_media_modal_query_items', 10, 5 );
+		}
+
+		return $query;
+	} // mla_media_modal_query_filtered_terms
+
+	/**
+	 * MLA Media Modal Query Items
+	 *
+	 * @since 1.05
+	 *
+	 * @param	object	$attachments_query WP_Query results, passed by reference
+	 * @param	array	$query query parameters passed to WP_Query
+	 * @param	array	$raw_query query parameters passed in to function
+	 * @param	integer	$offset parameter_name => parameter_value pairs
+	 * @param	integer	$count parameter_name => parameter_value pairs
+	 */
+	public static function mla_media_modal_query_items( $attachments_query, $query, $raw_query, $offset, $count ) {
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_items( {$offset}, {$count} ) query = " . var_export( $query, true ), 0 );
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_items( {$offset}, {$count} ) raw_query = " . var_export( $raw_query, true ), 0 );
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_items( {$attachments_query->post_count}, {$attachments_query->found_posts} ) query_vars = " . var_export( $attachments_query->query_vars, true ), 0 );
+
+		$posts_in = array();
+		foreach ( $attachments_query->posts as $post ) {
+			$posts_in[] = (string) $post->ID;
+		}
+
+		$_POST['query'] = array(
+			'global_media' => 'true',
+			'order' => 'ASC',
+			'orderby' => 'post__in',
+			'post__in' => $posts_in,
+			'posts_per_page' => '-1',
+			'post_mime_type' => 'image',
+			's' => '',
+		);
+
+		$_REQUEST['query'] = $_POST['query'];
+//error_log( __LINE__ . " MLAMultisiteExtensions::mla_media_modal_query_items( {$offset}, {$count} ) query = " . var_export( $_REQUEST['query'], true ), 0 );
+		restore_current_blog();
+
+		// Control never returns from this action, which sends the JSON response and dies.
+		do_action( "wp_ajax_query-attachments" );
+	} // mla_media_modal_query_items
 } // MLAMultisiteExtensions
 
 // Install the shortcode at an early opportunity
