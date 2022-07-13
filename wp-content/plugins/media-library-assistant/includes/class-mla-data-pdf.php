@@ -714,13 +714,13 @@ class MLAPDF {
 	 * @return	array	( 'xmp' => array( key => value ), 'pdf' => array( key => value ) ) for each metadata field, in string format
 	 */
 	public static function mla_extract_pdf_metadata( $file_name ) {
-		$xmp = array();
+		$xmp = NULL;
 		$metadata = array();
 		self::$pdf_indirect_objects = NULL;
 		$chunksize = 16384;
 
 		if ( ! file_exists( $file_name ) ) {
-			return array( 'xmp' => $xmp, 'pdf' => $metadata );
+			return array( 'xmp' => array(), 'pdf' => $metadata );
 		}
 
 		$filesize = filesize( $file_name );
@@ -740,14 +740,12 @@ class MLAPDF {
 			$metadata['PDF_VersionNumber'] = substr( $header, 5, 3 );
 		}
 
-		/*
-		 * Find the xref and (optional) trailer
-		 */
+		// Find the xref and (optional) trailer
 		$match_count = preg_match_all( '/startxref[\x00-\x20]+(\d+)[\x00-\x20]+\%\%EOF/', $tail, $matches, PREG_OFFSET_CAPTURE );
 		if ( 0 == $match_count ) {
 			/* translators: 1: ERROR tag 2: path and file */
 			MLACore::mla_debug_add( sprintf( _x( '%1$s: File "%2$s", startxref not found.', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $path ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-			return array( 'xmp' => $xmp, 'pdf' => $metadata );
+			return array( 'xmp' => array(), 'pdf' => $metadata );
 		}
 
 		$startxref = (integer) $matches[1][ $match_count - 1 ][0];
@@ -766,9 +764,7 @@ class MLAPDF {
 			if ( isset( $info_reference ) ) {	
 				$info_object = self::_find_pdf_indirect_dictionary( $file_name, $info_reference['object'], $info_reference['generation'] );
 
-				/*
-				 * Handle single or multiple Info instances
-				 */
+				// Handle single or multiple Info instances
 				$info_objects = array();
 				if ( $info_object ) {
 					if ( 1 == $info_object['count'] ) {
@@ -802,20 +798,17 @@ class MLAPDF {
 					} // each info entry
 				} // foreach Info object
 				
-				/*
-				 * Remove spurious "Filter" dictionaries
-				 */
+				// Remove spurious "Filter" dictionaries
 				unset( $metadata['Filter'] );
 				unset( $metadata['Length'] );
 				unset( $metadata['Length1'] );
 			} // found Info reference
 //error_log( __LINE__ . ' MLAPDF::mla_extract_pdf_metadata pdf metadata = ' . var_export( $metadata, true ), 0 );
 
-			/*
-			 * Look for XMP Metadata
-			 */
+			// Look for XMP Metadata
 			$root_reference = NULL;
 //error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata info_dictionary = " . var_export( $info_dictionary, true ), 0 );
+//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata trailer_dictionaries = " . var_export( $trailer_dictionaries, true ), 0 );
 			foreach ( $trailer_dictionaries as $trailer_dictionary ) {
 				if ( isset( $trailer_dictionary['Root'] ) ) {
 					$root_reference = $trailer_dictionary['Root'];
@@ -834,20 +827,33 @@ class MLAPDF {
 
 					if ( isset( $root_dictionary['Metadata'] ) ) {
 						$xmp_object = self::_find_pdf_indirect_dictionary( $file_name, $root_dictionary['Metadata']['object'], $root_dictionary['Metadata']['generation'] );
-//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata xmp_object = " . var_export( $xmp_object, true ), 0 );
+//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata( {$file_name} ) root_dictionary = " . var_export( $root_dictionary, true ), 0 );
+//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata( {$file_name} ) xmp_object = " . var_export( $xmp_object, true ), 0 );
 						$xmp = MLAData::mla_parse_xmp_metadata( $file_name, $xmp_object['start'] + $xmp_object['length'] );
-
 						if ( is_array( $xmp ) ) {
 							$metadata = array_merge( $metadata, $xmp );
-						} else {
-							$xmp = array();
-							$xmp = MLAData::mla_parse_xmp_metadata( $file_name, 0 );
-//error_log( __LINE__ . ' MLAPDF::mla_extract_pdf_metadata recovered xmp = ' . var_export( $xmp, true ), 0 );
 						}
 					} // found Metadata reference
 				} // found Root object
 			} // found Root reference
 		} // found trailer_dictionaries
+
+		// Last try for XML recovery
+		if ( is_null( $xmp ) ) {
+			$xmp = MLAData::mla_parse_xmp_metadata( $file_name, 0 );
+//error_log( __LINE__ . ' MLAPDF::mla_extract_pdf_metadata recovered xmp = ' . var_export( $xmp, true ), 0 );
+
+			if ( is_array( $xmp ) ) {
+				// Add scalar values to pdf: array to populate as many  D.I.D. entries as possible
+				foreach ( $xmp as $key => $value ) {
+					if ( is_scalar( $value ) ) {
+						$metadata[ $key ] = $value;
+					}
+				}
+			} else {
+				$xmp = array();
+			}
+		}
 //error_log( __LINE__ . ' MLAPDF::mla_extract_pdf_metadata pdf = ' . var_export( $metadata, true ), 0 );
 //error_log( __LINE__ . ' MLAPDF::mla_extract_pdf_metadata xmp = ' . var_export( $xmp, true ), 0 );
 

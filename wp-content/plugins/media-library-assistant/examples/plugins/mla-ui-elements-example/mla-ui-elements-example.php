@@ -5,53 +5,6 @@
  *
  * Detailed information is in the Settings/MLA UI Elements Documentation tab.
  *
- * In this example:
- *
- * 1. If you add "use_filters=true" to an [mla_term_list] shortcode this plugin will retain the
- *    selected terms when the page is refreshed and pass them back into the shortcode.
- *
- * 2. If you add "add_filters_to=any" to an [mla_gallery] shortcode this plugin will retain
- *    settings for terms search, keyword search, taxonomy queries and posts_per_page when the
- *    page is refreshed or pagination moves to a new page.
- *
- * 3. If you add "add_filters_to=<taxonomy_slug>" to an [mla_gallery] shortcode this plugin will
- *    do the actions in 2. and will also match the taxonomy_slug to a simple taxonomy query (if
- *    present) and add that query to the taxonomy queries. If the simple query is 'muie-no-terms',
- *    it will be ignored.
- *
- * 4. If you add "default_empty_gallery=true" an [mla_gallery] shortcode the initial gallery display
- *    will show no items, until a selection is made from the other controls.
- *
- * 5. The [muie_archive_list] lets you construct lists and controls for filtering a gallery on the
- *     values of date variables in the items' post row or a custom field.
- *
- * 6. Shortcodes are provided to generate text box controls and retain their settings when the
- *    page is refreshed or pagination moves to a new page:
- *
- *    [muie_terms_search] generates a terms search text box
- *    [muie_keyword_search] generates a keyword search text box
- *    [muie_orderby] generates an order by dropdown control
- *    [muie_order] generates ascending/descending radio buttons
- *    [muie_per_page] generates an items per page text box
- *    [muie_assigned_items_count] returns the number of items assigned to any term(s) in the
- *    selected taxonomy
- *
- * 7. With a bit of work you can add a tag cloud that works with these filters. Here's an example
- *    you can adapt for your application:
- *
- * <style type='text/css'>
- * #mla-tag-cloud .mla_current_item {
- * 	color:#FF0000;
- * 	font-weight:bold}
- * </style>
- * <span id=mla-tag-cloud>
- * <strong>Tag Cloud</strong>
- * [mla_tag_cloud taxonomy=attachment_tag number=20 current_item="{+request:current_item+}" mla_link_href="{+currentlink_url+}&tax_input{{+query:taxonomy+}}{}={+slug+}&muie_per_page={+template:({+request:muie_per_page+}|5)+}" link_class="{+current_item_class+}"]
- * </span>
- *
- * This example plugin uses three of the many filters available in the [mla_gallery] and [mla_term_list] shortcodes
- * and illustrates some of the techniques you can use to customize the gallery display and term list controls.
- *
  * Created for support topic "How do I provide a front-end search of my media items using Custom Fields?"
  * opened on 4/15/2016 by "direys".
  * https://wordpress.org/support/topic/how-do-i-provide-a-front-end-search-of-my-media-items-using-custom-fields
@@ -92,8 +45,16 @@
  * opened on 5/18/2021 by "heb51".
  * https://wordpress.org/support/topic/checklist-behaviour-my_custom_sql-muie_terms_search/
  *
+ * Enhanced (named control fixes) for support topic "how to split 2 types of tags?"
+ * opened on 5/29/2022 by "agdagan".
+ * https://wordpress.org/support/topic/how-to-split-2-types-of-tags/
+ *
+ * Enhanced (attributes parameters on keyword and terms search) for support topic "How to paginate 2 separate gallery"
+ * opened on 6/12/2022 by "jejela19".
+ * https://wordpress.org/support/topic/how-to-paginate-2-separate-gallery/
+ *
  * @package MLA UI Elements Example
- * @version 2.01
+ * @version 2.04
  */
 
 /*
@@ -101,10 +62,10 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
 Author: David Lingren
-Version: 2.01
+Version: 2.04
 Author URI: http://davidlingren.com/
 
-Copyright 2016-2021 David Lingren
+Copyright 2016-2022 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -135,7 +96,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.01';
+	const PLUGIN_VERSION = '2.04';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -216,6 +177,7 @@ class MLAUIElementsExample {
 
 		add_filter( 'mla_term_list_attributes', 'MLAUIElementsExample::mla_term_list_attributes', 10, 1 );
 		add_filter( 'mla_gallery_attributes', 'MLAUIElementsExample::mla_gallery_attributes', 10, 1 );
+		add_filter( 'mla_gallery_pagination_values', 'MLAUIElementsExample::mla_gallery_pagination_values', 10, 1 );
 
 		// Add the custom shortcode for generating "sticky" term search text box
 		add_shortcode( 'muie_terms_search', 'MLAUIElementsExample::muie_terms_search' );
@@ -269,8 +231,11 @@ class MLAUIElementsExample {
 	 */
 	public static function mla_term_list_attributes( $shortcode_attributes ) {
 		// Exit if this is not a "filtered" term list
-		$use_filters = !empty( $shortcode_attributes['use_filters'] )  && ( 'true' === trim ( strtolower( $shortcode_attributes['use_filters'] ) ) );
+		$use_filters = !empty( $shortcode_attributes['use_filters'] ) ? trim ( strtolower( $shortcode_attributes['use_filters'] ) ) : '';;
 		unset( $shortcode_attributes['use_filters'] );
+
+		$local_filters = 'local' === $use_filters;
+		$use_filters = $local_filters || 'true' === $use_filters;
 		if ( !$use_filters ) {
 			return $shortcode_attributes;
 		}
@@ -309,6 +274,8 @@ class MLAUIElementsExample {
 			// Handle default 'tax_input[[+taxonomy+]][]' values
 			if ( $index = strpos( $mla_control_name, '[]' ) ) {
 				$mla_control_name = substr( $mla_control_name, 0, $index );
+			} elseif ( $index = strpos( $mla_control_name, '{}' ) ) {
+				$mla_control_name = substr( $mla_control_name, 0, $index );
 			}
 		}
 
@@ -325,37 +292,44 @@ class MLAUIElementsExample {
 			}
 		}
 
-		// Check for a named control with possible taxonomy.term values from "combined" taxonomies
+		$terms = array();
 		if ( $mla_control_name && !empty( $_REQUEST[ $mla_control_name ] ) ) {
 			self::$mla_control_names[ $mla_control_name ] = $_REQUEST[ $mla_control_name ];
-			if ( is_scalar( $_REQUEST[ $mla_control_name ] ) ) {
-				$input = array( $_REQUEST[ $mla_control_name ] );
-			} else {
-				$input = $_REQUEST[ $mla_control_name ];
-			}
-
-			foreach( $input as $input_element ) {
-				$value = explode( '.', $input_element );
-
-				if ( 2 === count( $value ) ) {
-					$taxonomy = $value[0];
-					$_REQUEST['tax_input'][ $taxonomy ][] = $value[1];
+			$terms = $_REQUEST[ $mla_control_name ];
+			
+			// Copy named control terms to tax_input by default
+			if ( !$local_filters ) {
+				if ( is_scalar( $terms ) ) {
+					$input = array( $terms );
 				} else {
-					$_REQUEST['tax_input'][ $taxonomy ][] = $input_element;
+					$input = $terms;
 				}
-			}
+	
+				// Check for with possible taxonomy.term values from "combined" taxonomies
+				foreach( $input as $input_element ) {
+					$value = explode( '.', $input_element );
+	
+					if ( 2 === count( $value ) ) {
+						$taxonomy = $value[0];
+						$_REQUEST['tax_input'][ $taxonomy ][] = $value[1];
+					} else {
+						$_REQUEST['tax_input'][ $taxonomy ][] = $input_element;
+					}
+				}
+			} // !$local_filters
+		} elseif ( !empty( $_REQUEST['tax_input'] ) && array_key_exists( $taxonomy, $_REQUEST['tax_input'] ) ) {
+			$terms = $_REQUEST['tax_input'][ $taxonomy ];
 		}
-
+		
 		// If nothing is set for this taxonomy we're done
-		if ( empty( $_REQUEST['tax_input'] ) || !array_key_exists( $taxonomy, $_REQUEST['tax_input'] ) ) {
+		if ( empty( $terms ) ) {
 			if ( $muie_debug ) {
-				MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_term_list_attributes no changes' );
+				MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_term_list_attributes no terms present' );
 			}
 
 			return $shortcode_attributes;
 		}
 
-		$terms = $_REQUEST['tax_input'][ $taxonomy ];
 		if ( is_string( $terms ) ) {
 			$terms = (array) trim( stripslashes( $terms ), ' \'"' );
 		}
@@ -382,9 +356,14 @@ class MLAUIElementsExample {
 		}
 
 		// Reflect option_all changes in the query arguments
-		$_REQUEST['tax_input'][ $taxonomy ] = $terms;
+		if ( $mla_control_name ) {
+			$_REQUEST[ $mla_control_name ] = $terms;
+		} else {
+			$_REQUEST['tax_input'][ $taxonomy ] = $terms;
+		}
+
 		if ( $muie_debug ) {
-			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_term_list_attributes tax_input = ' . var_export( $_REQUEST['tax_input'], true ) );
+			MLACore::mla_debug_add( __LINE__ . ' MLAUIElementsExample::mla_term_list_attributes _REQUEST = ' . var_export( $_REQUEST, true ) );
 		}
 
 		// Pass selected terms to the shortcode
@@ -467,6 +446,9 @@ class MLAUIElementsExample {
 		// Fill these in from $_REQUEST parameters
 		$muie_filters = array();
 
+		// Flag for the "empty_default_gallery" parameter
+		$default_gallery = true;
+
 		/*
 		 * Special handling of the current archive parameter to make archive processing easier.
 		 * Look for this parameter in $_REQUEST if it's not present in the shortcode itself.
@@ -481,9 +463,11 @@ class MLAUIElementsExample {
 			unset( $shortcode_attributes[ $archive_parameter_name ] );
 		}
 
-		$mla_control_name = !empty( $shortcode_attributes['mla_control_name'] ) ? $shortcode_attributes['mla_control_name'] : '';
-		if ( !empty( $_REQUEST[ $mla_control_name ] ) ) {
-			$muie_filters[ $mla_control_name ] = $_REQUEST[ $mla_control_name ];
+		$mla_control_names = !empty( $shortcode_attributes['mla_control_name'] ) ? explode( ',', $shortcode_attributes['mla_control_name'] ) : array();
+		foreach ( $mla_control_names as $control_name ) {
+			if ( !empty( $_REQUEST[ $control_name ] ) ) {
+				$default_gallery = false;
+			}
 		}
 
 		// Add the orderby & order parameters
@@ -499,9 +483,6 @@ class MLAUIElementsExample {
 			$muie_filters['muie_order'] = $shortcode_attributes['order'] = $_REQUEST['muie_order'];
 		}
 
-		// Flag for the "empty_default_gallery" parameter
-		$default_gallery = true;
-
 		// Add the terms search parameters, if present
 		if ( !empty( $_REQUEST['muie_terms_search'] ) && is_array( $_REQUEST['muie_terms_search'] ) && !empty( $_REQUEST['muie_terms_search']['mla_terms_phrases'] ) ) {
 			$default_gallery = false;
@@ -514,10 +495,24 @@ class MLAUIElementsExample {
 		}
 
 		// Add the keyword search parameters, if present
-		if ( !empty( $_REQUEST['muie_keyword_search'] ) && is_array( $_REQUEST['muie_keyword_search'] ) && !empty( $_REQUEST['muie_keyword_search']['s'] ) ) {
+		$muie_keyword_search = array( 's' => '', );
+		if ( !empty( $_REQUEST['muie_keyword_search'] ) && is_array( $_REQUEST['muie_keyword_search'] ) ) {
+			if ( !empty( $shortcode_attributes['muie_keyword_parameter'] ) && isset( $_REQUEST['muie_keyword_search'][ $shortcode_attributes['muie_keyword_parameter'] ] ) ) {
+				$muie_keyword_search = $_REQUEST['muie_keyword_search'][ $shortcode_attributes['muie_keyword_parameter'] ];
+			} else {
+				// Skip any named muie_keyword_parameter arrays and copy default values
+				foreach ( $_REQUEST['muie_keyword_search'] as $key => $value ) {
+					if ( !is_array( $value ) ) {
+						$muie_keyword_search[ $key ] = $value;
+					}
+				}
+			}
+		}
+
+		if ( !empty( $muie_keyword_search['s'] ) ) {
 			$default_gallery = false;
 			$muie_filters['muie_keyword_search'] = $_REQUEST['muie_keyword_search'];
-			foreach( $muie_filters['muie_keyword_search'] as $key => $value ) {
+			foreach( $muie_keyword_search as $key => $value ) {
 				if ( !empty( $value ) ) {
 					$shortcode_attributes[ $key ] = $value;
 				}
@@ -564,6 +559,7 @@ class MLAUIElementsExample {
 			if ( !empty( $simple_tax_queries ) ) {
 				foreach ( $simple_tax_queries as $key => $value ) {
 					$tax_input[ $key ] = explode( ',', $value );
+					unset( $shortcode_attributes[ $key ] );
 				}
 			}
 			if ( $muie_debug ) {
@@ -702,13 +698,12 @@ class MLAUIElementsExample {
 		}
 
 		// Add the filter settings to pagination URLs
+		MLAUIElementsExample::$muie_filters = array();
 		if ( !empty( $shortcode_attributes['mla_output'] ) ) {
-
-			$filters = urlencode( json_encode( $muie_filters ) );
-			$shortcode_attributes['mla_link_href'] = '[+new_url+]?[+new_page_text+]&muie_filters=' . $filters;
+			MLAUIElementsExample::$muie_filters['muie_filters'] = urlencode( json_encode( $muie_filters ) );
 
 			if ( !empty( $shortcode_attributes['posts_per_page'] ) ) {
-				$shortcode_attributes['mla_link_href'] .= '&muie_per_page=' . $shortcode_attributes['posts_per_page'];
+				MLAUIElementsExample::$muie_filters['muie_per_page'] = $shortcode_attributes['posts_per_page'];
 			}
 		}
 
@@ -720,6 +715,47 @@ class MLAUIElementsExample {
 
 		return $shortcode_attributes;
 	} // mla_gallery_attributes
+
+	/**
+	 * Pass muie_filters from mla_gallery_attributes to mla_gallery_pagination_values
+	 *
+	 * @since 2.02
+	 *
+	 * @var	array
+	 */
+	private static $muie_filters = NULL;
+
+	/**
+	 * Pagination control substitution values
+	 *
+	 * @since 2.02
+	 *
+	 * @param	array	substitution para,eters and values
+	 */
+	public static function mla_gallery_pagination_values( $markup_values ) {
+		// Add or replace the filter parameters
+		if ( !empty( MLAUIElementsExample::$muie_filters ) ) {
+			$old_query = $markup_values['query_string'];
+			$new_query = remove_query_arg( MLAUIElementsExample::$muie_filters, $old_query );
+			$new_query = add_query_arg( MLAUIElementsExample::$muie_filters, $new_query );	
+
+			if ( '?' !== $new_query[0] ) {
+				$new_query = '?' . $new_query;
+			}
+	
+			$markup_values['query_string'] = $new_query;
+	
+			if ( !empty( $old_query ) ) {
+				$markup_values['request_uri'] = str_replace( $old_query, $new_query, $markup_values['request_uri'] );
+				$markup_values['new_url'] = str_replace( $old_query, $new_query, $markup_values['new_url'] );
+			} else {
+				$markup_values['request_uri'] .= $new_query;
+				$markup_values['new_url'] .= $new_query;
+			}
+		}
+
+		return $markup_values;
+	} // mla_gallery_pagination_values
 
 	/**
 	 * Terms search generator shortcode
@@ -735,10 +771,11 @@ class MLAUIElementsExample {
 	 */
 	public static function muie_terms_search( $attr, $content = NULL ) {
 		$default_arguments = array(
+			'muie_terms_parameter' => '',
+			'muie_attributes' => '',
 			'mla_terms_phrases' => '',
 			'mla_terms_taxonomies' => '',
 			'mla_phrase_delimiter' => '',
-			'mla_term_delimiter' => '',
 			'mla_phrase_connector' => '',
 			'mla_term_delimiter' => '',
 			'mla_term_connector' => '',
@@ -749,6 +786,10 @@ class MLAUIElementsExample {
 		
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
+		$qualifier = $arguments['muie_terms_parameter'];
+		unset( $arguments['muie_terms_parameter'] );
+		$muie_attributes = MLAShortcodes::mla_validate_attributes( $arguments['muie_attributes'] );
+		unset( $arguments['muie_attributes'] );
 
 		// Pagination links, e.g. Previous or Next, have muie_filters that encode the form parameters
 		if ( !empty( $_REQUEST['muie_filters'] ) ) {
@@ -761,9 +802,17 @@ class MLAUIElementsExample {
 
 		// muie_terms_search has settings from the form or pagination link
 		if ( !empty( $_REQUEST['muie_terms_search'] ) && is_array( $_REQUEST['muie_terms_search'] ) ) {
-			foreach ( $arguments as $key => $value ) {
-				if ( !empty( $_REQUEST['muie_terms_search'][ $key ] ) ) {
-					$arguments[ $key ] = stripslashes( $_REQUEST['muie_terms_search'][ $key ] );
+			if ( empty( $qualifier ) ) {
+				foreach ( $arguments as $key => $value ) {
+					if ( !empty( $_REQUEST['muie_terms_search'][ $key ] ) ) {
+						$arguments[ $key ] = stripslashes( $_REQUEST['muie_terms_search'][ $key ] );
+					}
+				}
+			} else {
+				foreach ( $arguments as $key => $value ) {
+					if ( !empty( $_REQUEST['muie_terms_search'][$qualifier][ $key ] ) ) {
+						$arguments[ $key ] = stripslashes( $_REQUEST['muie_terms_search'][$qualifier][ $key ] );
+					}
 				}
 			}
 		}
@@ -775,14 +824,31 @@ class MLAUIElementsExample {
 			$delimiter = '"';
 		}
 
-		$return_value = '<input name="muie_terms_search[mla_terms_phrases]" id="muie-terms-phrases" type="text" size="20" value=' . $delimiter . $arguments['mla_terms_phrases'] . $delimiter . " />\n";		
+		$added_attributes = array_merge( array( 'type' => 'text', 'size' => '20' ), $muie_attributes );
+		$attributes = ' ';
+		foreach ( $added_attributes as $key => $value ) {
+			$attributes .= $key . '="' . $value . '" ';
+		}
+		
+		if ( empty( $qualifier ) ) {
+			$return_value = '<input name="muie_terms_search[mla_terms_phrases]" id="muie-terms-phrases"' . $attributes . 'value=' . $delimiter . $arguments['mla_terms_phrases'] . $delimiter . " />\n";		
+		} else {
+			$return_value = '<input name="muie_terms_search[' . $qualifier . '][mla_terms_phrases]" id="muie-terms-phrases-' . $qualifier . '"' . $attributes . 'value=' . $delimiter . $arguments['mla_terms_phrases'] . $delimiter . " />\n";
+		}
+		
 		unset( $arguments['mla_terms_phrases'] );
 
 		// Add optional parameters
 		foreach( $arguments as $key => $value ) {
 			if ( !empty( $value ) ) {
 				$id_value = str_replace( '_', '-', substr( $key, 4 ) );
-				$return_value .= sprintf( '<input name="muie_terms_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );		
+
+				if ( empty( $qualifier ) ) {
+					$return_value .= sprintf( '<input name="muie_terms_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );
+				} else {
+					$id_value .= '-' . $qualifier;
+					$return_value .= sprintf( '<input name="muie_terms_search[' . $qualifier . '][%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );	
+				}
 			}
 		}
 
@@ -803,6 +869,8 @@ class MLAUIElementsExample {
 	 */
 	public static function muie_keyword_search( $attr, $content = NULL ) {
 		$default_arguments = array(
+			'muie_keyword_parameter' => '',
+			'muie_attributes' => '',
 			's' => '',
 			'mla_search_fields' => '',
 			'mla_search_connector' => '',
@@ -815,6 +883,10 @@ class MLAUIElementsExample {
 
 		// Accept only the attributes we need and supply defaults
 		$arguments = shortcode_atts( $default_arguments, $attr );
+		$qualifier = $arguments['muie_keyword_parameter'];
+		unset( $arguments['muie_keyword_parameter'] );
+		$muie_attributes = MLAShortcodes::mla_validate_attributes( $arguments['muie_attributes'] );
+		unset( $arguments['muie_attributes'] );
 
 		// Pagination links, e.g. Previous or Next, have muie_filters that encode the form parameters
 		if ( !empty( $_REQUEST['muie_filters'] ) ) {
@@ -827,9 +899,17 @@ class MLAUIElementsExample {
 
 		// muie_keyword_search has settings from the form or pagination link
 		if ( !empty( $_REQUEST['muie_keyword_search'] ) && is_array( $_REQUEST['muie_keyword_search'] ) ) {
-			foreach ( $arguments as $key => $value ) {
-				if ( !empty( $_REQUEST['muie_keyword_search'][ $key ] ) ) {
-					$arguments[ $key ] = stripslashes( $_REQUEST['muie_keyword_search'][ $key ] );
+			if ( empty( $qualifier ) ) {
+				foreach ( $arguments as $key => $value ) {
+					if ( !empty( $_REQUEST['muie_keyword_search'][ $key ] ) ) {
+						$arguments[ $key ] = stripslashes( $_REQUEST['muie_keyword_search'][ $key ] );
+					}
+				}
+			} else {
+				foreach ( $arguments as $key => $value ) {
+					if ( !empty( $_REQUEST['muie_keyword_search'][$qualifier][ $key ] ) ) {
+						$arguments[ $key ] = stripslashes( $_REQUEST['muie_keyword_search'][$qualifier][ $key ] );
+					}
 				}
 			}
 		}
@@ -841,14 +921,35 @@ class MLAUIElementsExample {
 			$delimiter = '"';
 		}
 
-		$return_value = '<input name="muie_keyword_search[s]" id="muie-s" type="text" size="20" value=' . $delimiter . $arguments['s'] . $delimiter . " />\n";		
+		$added_attributes = array_merge( array( 'type' => 'text', 'size' => '20' ), $muie_attributes );
+		$attributes = ' ';
+		foreach ( $added_attributes as $key => $value ) {
+			$attributes .= $key . '="' . $value . '" ';
+		}
+		
+		if ( empty( $qualifier ) ) {
+			$return_value = '<input name="muie_keyword_search[s]" id="muie-s"' . $attributes . 'value=' . $delimiter . $arguments['s'] . $delimiter . " />\n";
+		} else {
+			$return_value = '<input name="muie_keyword_search[' . $qualifier . '][s]" id="muie-s-' . $qualifier . '"' . $attributes . 'value=' . $delimiter . $arguments['s'] . $delimiter . " />\n";
+		}
+		
 		unset( $arguments['s'] );
 
 		// Add optional parameters
 		foreach( $arguments as $key => $value ) {
 			if ( !empty( $value ) ) {
-				$id_value = str_replace( '_', '-', substr( $key, 4 ) );
-				$return_value .= sprintf( '<input name="muie_keyword_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );		
+				if ( 0 === strpos( $key, 'mla' ) ) {
+					$id_value = str_replace( '_', '-', substr( $key, 4 ) );
+				} else {
+					$id_value = str_replace( '_', '-', $key );
+				}
+				
+				if ( empty( $qualifier ) ) {
+					$return_value .= sprintf( '<input name="muie_keyword_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );
+				} else {
+					$id_value .= '-' . $qualifier;
+					$return_value .= sprintf( '<input name="muie_keyword_search[' . $qualifier . '][%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );	
+				}
 			}
 		}
 

@@ -1277,7 +1277,9 @@ function wck_serialized_update_from_unserialized( $replace, $object_id, $meta_ke
 						$unserialized_key = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $object_id, $slug, $cfc_args[0]['meta-name'] );
 
 						/* I will limit this to maximum 100 repeater field entries */
-						for( $i=0; $i<1000;$i++ ){
+						$maximum_repeater_count = apply_filters( 'wck_cfc_maximum_repeater_count', 2000 );
+
+						for( $i=0; $i < $maximum_repeater_count; $i++ ){
 							/* search for the unseralized form in the db */
 							if( $i == 0 )
 								$suffix = '';

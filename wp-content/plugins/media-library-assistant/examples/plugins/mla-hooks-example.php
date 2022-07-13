@@ -16,7 +16,7 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.15
+ * @version 1.16
  */
 
 /*
@@ -24,7 +24,7 @@ Plugin Name: MLA Gallery Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
 Author: David Lingren
-Version: 1.15
+Version: 1.16
 Author URI: http://davidlingren.com/
 
 Copyright 2013 - 2017 David Lingren
@@ -61,9 +61,7 @@ class MLAGalleryHooksExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful for front-end posts/pages; exit if in the admin section
-		 */
+		// The filters are only useful for front-end posts/pages; exit if in the admin section
 		if ( is_admin() )
 			return;
 
@@ -146,9 +144,7 @@ class MLAGalleryHooksExample {
 	 * @return	array	updated shortcode attributes
 	 */
 	public static function mla_gallery_raw_attributes( $shortcode_attributes ) {
-		/*
-		 * Uncomment the error_log statements in any of the filters to see what's passed in
-		 */
+		// Uncomment the error_log statements in any of the filters to see what's passed in
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
 
 		/*
@@ -160,9 +156,7 @@ class MLAGalleryHooksExample {
 		global $post;
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_raw_attributes $post->ID = ' . var_export( $post->ID, true ), 0 );
 
-		/*
-		 * For this example, we delete the selected file.
-		 */
+		// For this example, we delete the selected file.
 		if ( isset( $shortcode_attributes['my_filter'] ) && 'allow file deletion' == $shortcode_attributes['my_filter'] ) {
 			if ( isset( $_REQUEST['attachment_ID'] ) ) {
 				$id = (integer) $_REQUEST['attachment_ID'];
@@ -202,14 +196,10 @@ class MLAGalleryHooksExample {
 	 * @return	array	updated shortcode attributes
 	 */
 	public static function mla_gallery_attributes( $shortcode_attributes ) {
-		/*
-		 * Uncomment the error_log statements in any of the filters to see what's passed in
-		 */
+		// Uncomment the error_log statements in any of the filters to see what's passed in
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_attributes $shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
 
-		/*
-		 * Save the attributes for use in the later filters
-		 */
+		// Save the attributes for use in the later filters
 		self::$shortcode_attributes = $shortcode_attributes;
 
 		unset( $shortcode_attributes['my_custom_sql'] );
@@ -245,9 +235,7 @@ class MLAGalleryHooksExample {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_initial_content $shortcode_content = ' . var_export( $shortcode_content, true ), 0 );
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_initial_content $shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
 
-		/*
-		 * Save the attributes for use in the later filters
-		 */
+		// Save the attributes for use in the later filters
 		self::$shortcode_content = $shortcode_content;
 
 		return $shortcode_content;
@@ -610,9 +598,7 @@ class MLAGalleryHooksExample {
 			$query[] = "AND p.post_status = 'inherit'";
 			$query[] = "GROUP BY p.ID";
 
-			/*
-			 * ORDER BY clause
-			 */
+			// ORDER BY clause
 			if ( ! empty( $my_query_vars['orderby'] ) ) {
 				$orderby = strtolower( $my_query_vars['orderby'] );
 			} else {
@@ -769,9 +755,7 @@ class MLAGalleryHooksExample {
 
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_wp_query_object self::$wp_query_properties = ' . var_export( self::$wp_query_properties, true ), 0 );
 
-		/*
-		 * Unlike Filters, Actions never return anything
-		 */
+		// Unlike Filters, Actions never return anything
 		return;
 	} // mla_gallery_wp_query_object
 
@@ -894,9 +878,7 @@ class MLAGalleryHooksExample {
 		//error_log( 'MLAGalleryHooksExample::use_mla_gallery_style $use_style_template = ' . var_export( $use_style_template, true ), 0 );
 		//error_log( 'MLAGalleryHooksExample::use_mla_gallery_style $style_template_name = ' . var_export( $style_template_name, true ), 0 );
 
-		/*
-		 * Filters must return the first argument passed in, unchanged or updated
-		 */
+		// Filters must return the first argument passed in, unchanged or updated
 		return $use_style_template;
 	} // use_mla_gallery_style
 
@@ -917,9 +899,7 @@ class MLAGalleryHooksExample {
 	public static function mla_gallery_style_values( $style_values ) {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_style_values $style_values = ' . var_export( $style_values, true ), 0 );
 
-		/*
-		 * You also have access to the PHP Super Globals, e.g., $_REQUEST, $_SERVER
-		 */
+		// You also have access to the PHP Super Globals, e.g., $_REQUEST, $_SERVER
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_style_values $_REQUEST = ' . var_export( $_REQUEST, true ), 0 );
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_style_values $_SERVER[ REQUEST_URI ] = ' . var_export( $_SERVER['REQUEST_URI'], true ), 0 );
 
@@ -1023,9 +1003,7 @@ class MLAGalleryHooksExample {
 	public static function mla_gallery_open_template( $open_template ) {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_open_template $open_template = ' . var_export( $open_template, true ), 0 );
 
-		/*
-		 * Check for a display message
-		 */
+		// Check for a display message
 		if ( isset( self::$shortcode_attributes['gallery_open_message'] ) ) {
 			$open_template = '<p><strong>' . self::$shortcode_attributes['gallery_open_message'] . '</strong></p>' . $open_template;
 		}
@@ -1201,9 +1179,7 @@ class MLAGalleryHooksExample {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_values terms = ' . var_export( $item_values['terms:attachment_category'], true ), 0 );
 		}
 
-		/*
-		 * For this first example, we will reformat the 'date' value as d/m/Y.
-		 */
+		// For this first example, we will reformat the 'date' value as d/m/Y.
 		if ( 'format date' == self::$shortcode_attributes['my_filter'] ) {
 
 			/*
@@ -1229,9 +1205,7 @@ class MLAGalleryHooksExample {
 			return $item_values;
 		}
 
-		/*
-		 * The second example adds a formatted file size element to the existing caption.
-		 */
+		// The second example adds a formatted file size element to the existing caption.
 		if ( 'file size' == self::$shortcode_attributes['my_filter'] ) {
 
 			/*
@@ -1253,15 +1227,11 @@ class MLAGalleryHooksExample {
 				$file_size = number_format( $file_size );
 			}
 
-			/*
-			 * Compose a new caption, adding the file size.
-			 */
+			// Compose a new caption, adding the file size.
 			return self::_update_caption( $item_values, sprintf( '%1$s<br>Size: %2$s', $item_values['caption'], $file_size ) );
 		}
 
-		/*
-		 * Our third example changes taxonomy terms into links to term-specific archive pages.
-		 */
+		// Our third example changes taxonomy terms into links to term-specific archive pages.
 		if ( 'term gallery' == self::$shortcode_attributes['my_filter'] ) {
 			/*
 			 * Use the "my_href" parameter to link to a static page,
@@ -1302,9 +1272,7 @@ class MLAGalleryHooksExample {
 			return $item_values;
 		}
 
-		/*
-		 * For the fourth example, we compose a URL to allow file deletion and add it to the caption.
-		 */
+		// For the fourth example, we compose a URL to allow file deletion and add it to the caption.
 		if ( 'allow file deletion' == self::$shortcode_attributes['my_filter'] ) {
 			$id = (integer) $item_values['attachment_ID'];
 			if ( current_user_can( 'delete_post', $id ) ) { 
@@ -1316,9 +1284,7 @@ class MLAGalleryHooksExample {
 			}
 		}
 
-		/*
-		 * For the fifth example, we compose a caption with "Inserted in" links.
-		 */
+		// For the fifth example, we compose a caption with "Inserted in" links.
 		if ( 'show post inserts' == self::$shortcode_attributes['my_filter'] ) {
 			 // You can use MLAShortcodes::mla_get_data_source() to get anything available.
 			$my_setting = array(
@@ -1366,9 +1332,7 @@ class MLAGalleryHooksExample {
 		if ( 'all custom' != self::$shortcode_attributes['my_filter'] )
 			return $item_values; // leave them unchanged
 
-		/*
-		 * Preserve the existing caption, if present
-		 */
+		// Preserve the existing caption, if present
 		$my_caption = '';
 		if ( ! empty( $item_values['caption'] ) )
 			$my_caption .= $item_values['caption'] . "<br />\r\n";
@@ -1391,7 +1355,7 @@ class MLAGalleryHooksExample {
 				 * Some of the values you might find useful are:
 				 * _wp_attached_file, _wp_attachment_metadata, and _wp_attachment_image_alt
 				 */
-				if ( '_' == $post_meta_key{0} )
+				if ( '_' == $post_meta_key[0] )
 						continue;
 
 				/*
@@ -1413,15 +1377,11 @@ class MLAGalleryHooksExample {
 		}
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_values $custom_fields = ' . var_export( $custom_fields, true ), 0 );
 
-		/*
-		 * Don't alter the caption if there are no custom fields to display
-		 */
+		// Don't alter the caption if there are no custom fields to display
 		if ( empty( $custom_fields ) )
 			return $item_values;
 
-		/*
-		 * Add the definition list to the caption
-		 */
+		// Add the definition list to the caption
 		$my_caption .= "<dl class=\"custom_field\">\r\n";
 		foreach ( $custom_fields as $key => $value ) {
 			$my_caption .= "<dt class=\"name\">{$key}</dt>\r\n";
@@ -1429,9 +1389,7 @@ class MLAGalleryHooksExample {
 		} // foreach custom field
 		$my_caption .= "</dl>";
 
-		/*
-		 * Update the $item_values and pass them back from the filter.
-		 */
+		// Update the $item_values and pass them back from the filter.
 		$item_values = self::_update_caption( $item_values, $my_caption );
 		return $item_values;
 	} // mla_gallery_item_values
@@ -1570,8 +1528,6 @@ class MLAGalleryHooksExample {
 
 } // Class MLAGalleryHooksExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAGalleryHooksExample::initialize');
 ?>

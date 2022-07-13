@@ -206,6 +206,7 @@ class MLAData_Source {
 			'height' => '',
 			'orientation' => '',
 			'hwstring_small' => '',
+			'filesize' => '',
 			'sizes' => array()
 		);
 
@@ -225,6 +226,10 @@ class MLAData_Source {
 			if ( isset( $attachment_metadata['image_meta'] ) ) {
 				foreach ( $attachment_metadata['image_meta'] as $key => $value )
 					$results[ $key ] = $value;
+			}
+
+			if ( isset( $attachment_metadata['filesize'] ) ) {
+				$results['filesize'] = $attachment_metadata['filesize'];
 			}
 
 			$sizes = isset( $attachment_metadata['sizes'] ) ? $attachment_metadata['sizes'] : array();
@@ -250,24 +255,32 @@ class MLAData_Source {
 			$results['hwstring_small'] = isset( $attachment_metadata['hwstring_small'] ) ? $attachment_metadata['hwstring_small'] : '';
 		}
 
+		// Removed wptexturize() in MLA 3.00
 		if ( ! empty( $base_file ) ) {
 			$pathinfo = pathinfo( $base_file );
 			$results['base_file'] = $base_file;
 			if ( '.' == $pathinfo['dirname'] ) {
 				$results['absolute_path_raw'] = $upload_dir;
-				$results['absolute_path'] = wptexturize( str_replace( '\\', '/', $upload_dir ) );
+//				$results['absolute_path'] = wptexturize( str_replace( '\\', '/', $upload_dir ) );
+				$results['absolute_path'] = str_replace( '\\', '/', $upload_dir );
 				$results['path'] = '';
 			} else {
 				$results['absolute_path_raw'] = $upload_dir . $pathinfo['dirname'] . '/';
-				$results['absolute_path'] = wptexturize(  str_replace( '\\', '/', $results['absolute_path_raw'] ) );
-				$results['path'] = wptexturize(  $pathinfo['dirname'] . '/' );
+//				$results['absolute_path'] = wptexturize(  str_replace( '\\', '/', $results['absolute_path_raw'] ) );
+				$results['absolute_path'] = str_replace( '\\', '/', $results['absolute_path_raw'] );
+//				$results['path'] = wptexturize(  $pathinfo['dirname'] . '/' );
+				$results['path'] = $pathinfo['dirname'] . '/';
 			}
 
 			$results['absolute_file_name_raw'] = $results['absolute_path_raw'] . $pathinfo['basename'];
-			$results['absolute_file_name'] = wptexturize(  str_replace( '\\', '/', $results['absolute_file_name_raw'] ) );
-			$results['file_name'] = wptexturize(  $pathinfo['basename'] );
-			$results['name_only'] = wptexturize(  $pathinfo['filename'] );
-			$results['extension'] = wptexturize(  $pathinfo['extension'] );
+//			$results['absolute_file_name'] = wptexturize(  str_replace( '\\', '/', $results['absolute_file_name_raw'] ) );
+			$results['absolute_file_name'] = str_replace( '\\', '/', $results['absolute_file_name_raw'] );
+//			$results['file_name'] = wptexturize(  $pathinfo['basename'] );
+			$results['file_name'] = $pathinfo['basename'];
+//			$results['name_only'] = wptexturize(  $pathinfo['filename'] );
+			$results['name_only'] = $pathinfo['filename'];
+//			$results['extension'] = wptexturize(  $pathinfo['extension'] );
+			$results['extension'] = $pathinfo['extension'];
 		}
 
 		$results['sizes'] = $sizes;
@@ -625,6 +638,11 @@ class MLAData_Source {
 				}
 				break;
 			case 'file_size':
+				if ( !empty( $file_info['filesize'] ) ) {
+					$result = $file_info['filesize'];
+					break;
+				}
+
 				$filesize = @ filesize( $file_info['absolute_file_name_raw'] );
 				if ( ! (false === $filesize ) ) {
 					$result = $filesize;
@@ -664,7 +682,12 @@ class MLAData_Source {
 			case 'size_bytes':
 				$result = array();
 				foreach ( $file_info['sizes'] as $key => $value ) {
-					$filesize = @ filesize( $file_info['absolute_path_raw'] . $value['file'] );
+					if ( !empty( $value['filesize'] ) ) {
+						$filesize = $value['filesize'];
+					} else {
+						$filesize = @ filesize( $file_info['absolute_path_raw'] . $value['file'] );
+					}
+
 					if ( false === $filesize ) {
 						$result[] = '?';
 					} else {
@@ -714,7 +737,12 @@ class MLAData_Source {
 				$result = $size_info['file'];
 				break;
 			case 'size_bytes[size]':
-				$result = @ filesize( $file_info['absolute_path_raw'] . $size_info['file'] );
+				if ( !empty( $size_info['filesize'] ) ) {
+					$result = $size_info['filesize'];
+				} else {
+					$result = @ filesize( $file_info['absolute_path_raw'] . $size_info['file'] );
+				}
+				
 				if ( false === $result ) {
 					$result = '?';
 				}

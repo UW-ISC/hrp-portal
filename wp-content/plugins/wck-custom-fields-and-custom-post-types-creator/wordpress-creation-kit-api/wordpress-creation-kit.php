@@ -1409,12 +1409,19 @@ class Wordpress_Creation_Kit{
 									foreach ($this->args['meta_array'] as $meta_field) {
 										/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
 										$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_id, Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ), $meta_name );
-										$meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )];
-										if( is_array($meta_val) )
-                                            $meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
-										else
-                                            $meta_val = $this->wck_sanitize_value( $meta_val );
-										update_post_meta($post_id, $name, $meta_val );
+
+										if( isset( $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )] ) ) {
+
+											$meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )];
+											
+											if( is_array($meta_val) )
+												$meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
+											else
+												$meta_val = $this->wck_sanitize_value( $meta_val );
+											update_post_meta($post_id, $name, $meta_val );
+
+										}
+
 									}
 								}
 							}

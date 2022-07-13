@@ -1,20 +1,20 @@
 <?php
 /**
- * Provides an example of hooking the filters provided by the MLA_List_Table class
+ * Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
  *
  * @package MLA List Table Hooks Example
- * @version 1.11
+ * @version 1.12
  */
 
 /*
 Plugin Name: MLA List Table Hooks Example
 Plugin URI: http://davidlingren.com/
-Description: Provides an example of hooking the filters provided by the MLA_List_Table class
+Description: Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
 Author: David Lingren
-Version: 1.11
+Version: 1.12
 Author URI: http://davidlingren.com/
 
-Copyright 2014 - 2017 David Lingren
+Copyright 2014 - 2022 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -98,19 +98,24 @@ class MLAListTableHooksExample {
 
 		add_filter( 'mla_list_table_single_action', 'MLAListTableHooksExample::mla_list_table_single_action', 10, 3 );
 		add_filter( 'mla_list_table_custom_single_action', 'MLAListTableHooksExample::mla_list_table_custom_single_action', 10, 3 );
-		add_action( 'mla_list_table_clear_filter_by', 'MLAListTableHooksExample::mla_list_table_clear_filter_by' );
+		add_action( 'mla_list_table_clear_filter_by', 'MLAListTableHooksExample::mla_list_table_clear_filter_by', 10, 0 );
 		add_filter( 'mla_list_table_new_instance', 'MLAListTableHooksExample::mla_list_table_new_instance', 10, 1 );
+
 		add_filter( 'mla_list_table_inline_values', 'MLAListTableHooksExample::mla_list_table_inline_values', 10, 1 );
-		add_filter( 'mla_list_table_inline_template', 'MLAListTableHooksExample::mla_list_table_inline_template', 10, 1 );
+		add_filter( 'mla_list_table_inline_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 1 );
 		add_filter( 'mla_list_table_inline_parse', 'MLAListTableHooksExample::mla_list_table_inline_parse', 10, 3 );
+
+		add_filter( 'mla_list_table_inline_blank_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
+		add_filter( 'mla_list_table_inline_initial_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
+		add_filter( 'mla_list_table_inline_preset_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
 
 		add_filter( 'mla_list_table_inline_blank_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 		add_filter( 'mla_list_table_inline_initial_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 		add_filter( 'mla_list_table_inline_preset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 
-		add_filter( 'mla_list_table_inline_blank_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
-		add_filter( 'mla_list_table_inline_initial_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
-		add_filter( 'mla_list_table_inline_preset_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_list_table_inline_blank_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
+		add_filter( 'mla_list_table_inline_initial_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
+		add_filter( 'mla_list_table_inline_preset_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
 
 		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_get_columns', 'MLAListTableHooksExample::mla_list_table_get_columns', 10, 1 );
@@ -139,13 +144,17 @@ class MLAListTableHooksExample {
 		add_filter( 'mla_upload_bulk_edit_form_template', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_template', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_parse', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_parse', 10, 3 );
 
+		add_filter( 'mla_upload_bulk_edit_form_blank_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
+
 		add_filter( 'mla_upload_bulk_edit_form_blank_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_initial_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_preset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_values', 10, 1 );
 
-		add_filter( 'mla_upload_bulk_edit_form_blank_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
-		add_filter( 'mla_upload_bulk_edit_form_initial_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
-		add_filter( 'mla_upload_bulk_edit_form_preset_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_blank_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_template', 'MLAListTableHooksExample::mla_list_table_inline_bulk_template', 10, 2 );
 	}
 
 	/**
@@ -167,6 +176,7 @@ class MLAListTableHooksExample {
 	 * Filter the list table Bulk Actions drop-down
 	 *
 	 * This filter gives you an opportunity to filter the list table Bulk Actions drop-down.
+	 * This WordPress filter can currently only be used to remove bulk actions.
 	 *
 	 * @since 1.00
 	 *
@@ -226,67 +236,6 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::manage_media_page_mla_menu_sortable_columns $sortable_columns = ' . var_export( $sortable_columns, true ), 0 );
 		return $sortable_columns;
 	} // manage_media_page_mla_menu_sortable_columns
-
-	/**
-	 * Records the list of active search fields
-	 *
-	 * @since 1.00
-	 *
-	 * @var	array
-	 */
-	private static $search_fields = array();
-
-	/**
-	 * Process the list of fields for keywords search 
-	 *
-	 * This filter gives you an opportunity to add or remove any of the MLA standard fields for Search Media.
-	 *
-	 * @since 1.00
-	 *
-	 * @param	array	$active_fields	Fields that will be searched.
-	 * @param	array	$all_fields		All of the fields that can be searched.
-	 */
-	public static function mla_list_table_search_filter_fields( $active_fields, $all_fields ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $active_fields = ' . var_export( $active_fields, true ), 0 );
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $all_fields = ' . var_export( $all_fields, true ), 0 );
-
-		if ( in_array( 'name', $active_fields ) ) {
-			/* Uncomment next line to add File URL (guid) to the list of active search fields
-			   when the "Name" box below the Search Media text box is checked */ 
-			//$active_fields[] = 'guid';
-		}
-
-		// Uncomment next line to ALWAYS add File URL (guid) to the list of active search fields
-		//$active_fields[] = 'guid';
-		self::$search_fields = $active_fields;
-
-		return $active_fields;
-	} // mla_list_table_search_filter_fields
-
-	/**
-	 * Process the inner WHERE clause for keywords search 
-	 *
-	 * This filter gives you an opportunity to modify or add to the inner WHERE clause for Search Media.
-	 *
-	 * @since 1.00
-	 *
-	 * @param	string	$inner_clause		Current SQL inner WHERE clause.
-	 * @param	string	$inner_connector	AND/OR connector between the search field clauses.
-	 * @param	string	$wpdb_posts			Name of the POSTS database table.
-	 * @param	string	$sql_term			Keyword value for the search.
-	 */
-	public static function mla_list_table_search_filter_inner_clause( $inner_clause, $inner_connector, $wpdb_posts, $sql_term ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $inner_clause = ' . var_export( $inner_clause, true ), 0 );
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $inner_connector = ' . var_export( $inner_connector, true ), 0 );
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $wpdb_posts = ' . var_export( $wpdb_posts, true ), 0 );
-		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $sql_term = ' . var_export( $sql_term, true ), 0 );
-
-		if ( in_array( 'guid', self::$search_fields ) ) {
-			$inner_clause .= "{$inner_connector}({$wpdb_posts}.guid LIKE {$sql_term})";
-		}
-
-		return $inner_clause;
-	} // mla_list_table_search_filter_inner_clause
 
 	/**
 	 * Pre-process the Edit Taxonomy submenu table columns
@@ -349,6 +298,104 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::mla_taxonomy_column_final $count_terms = ' . var_export( $count_terms, true ), 0 );
 		return $filter_content;
 	} // mla_taxonomy_column_final
+
+	/**
+	 * Filter the WP_Query request parameters for the prepare_items query
+	 *
+	 * Gives you an opportunity to change the terms of the prepare_items query
+	 * after they are processed by the "Prepare List Table Query" handler.
+	 *
+	 * @since 1.03
+	 *
+	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
+	 */
+	public static function mla_list_table_query_final_terms( $request ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_query_final_terms $request = ' . var_export( $request, true ), 0 );
+
+		return $request;
+	} // mla_list_table_query_final_terms
+
+	/**
+	 * Replace the prepare_items WP_Query object with your own results
+	 *
+	 * Gives you an opportunity to substitute the results of the prepare_items query
+	 * with alternative results of your own.
+	 *
+	 * @since 1.03
+	 *
+	 * @param	object	$wp_query_object NULL, indicating no results substitution
+	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
+	 */
+	public static function mla_list_table_query_custom_items( $wp_query_object, $request ) {
+		//error_log( 'MLAListTableHooksExample::mla_media_modal_query_custom_items $request = ' . var_export( $request, true ), 0 );
+
+		/*
+		 * You can replace the NULL $wp_query_object with a new WP_Query( $request )
+		 * object using your own $request parameters
+		 */
+		return $wp_query_object;
+	} // mla_media_modal_query_custom_items
+
+	/**
+	 * Records the list of active search fields
+	 *
+	 * @since 1.00
+	 *
+	 * @var	array
+	 */
+	private static $search_fields = array();
+
+	/**
+	 * Process the list of fields for keywords search 
+	 *
+	 * This filter gives you an opportunity to add or remove any of the MLA standard fields for Search Media.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	array	$active_fields	Fields that will be searched.
+	 * @param	array	$all_fields		All of the fields that can be searched.
+	 */
+	public static function mla_list_table_search_filter_fields( $active_fields, $all_fields ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $active_fields = ' . var_export( $active_fields, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $all_fields = ' . var_export( $all_fields, true ), 0 );
+
+		if ( in_array( 'name', $active_fields ) ) {
+			/* Uncomment next line to add File URL (guid) to the list of active search fields
+			   when the "Name" box below the Search Media text box is checked */ 
+			//$active_fields[] = 'guid';
+		}
+
+		// Uncomment next line to ALWAYS add File URL (guid) to the list of active search fields
+		//$active_fields[] = 'guid';
+		self::$search_fields = $active_fields;
+
+		return $active_fields;
+	} // mla_list_table_search_filter_fields
+
+	/**
+	 * Process the inner WHERE clause for keywords search 
+	 *
+	 * This filter gives you an opportunity to modify or add to the inner WHERE clause for Search Media.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	string	$inner_clause		Current SQL inner WHERE clause.
+	 * @param	string	$inner_connector	AND/OR connector between the search field clauses.
+	 * @param	string	$wpdb_posts			Name of the POSTS database table.
+	 * @param	string	$sql_term			Keyword value for the search.
+	 */
+	public static function mla_list_table_search_filter_inner_clause( $inner_clause, $inner_connector, $wpdb_posts, $sql_term ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $inner_clause = ' . var_export( $inner_clause, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $inner_connector = ' . var_export( $inner_connector, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $wpdb_posts = ' . var_export( $wpdb_posts, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_search_filter_fields $sql_term = ' . var_export( $sql_term, true ), 0 );
+
+		if ( in_array( 'guid', self::$search_fields ) ) {
+			$inner_clause .= "{$inner_connector}({$wpdb_posts}.guid LIKE {$sql_term})";
+		}
+
+		return $inner_clause;
+	} // mla_list_table_search_filter_inner_clause
 
 	/**
 	 * Process the "where-used" reference reporting results 
@@ -434,25 +481,6 @@ class MLAListTableHooksExample {
 	} // mla_updated_single_item
 
 	/**
-	 * Pre-process an MLA_List_Table admin action
-	 *
-	 * This filter gives you an opportunity to pre-process an MLA_List_Table item-level action,
-	 * standard or custom, before the MLA handler. This filter is called before anything is output
-	 * for the Media/Assistant submenu, so you can redirect to another admin screen if desired.
-	 *
-	 * @since 1.03
-	 *
-	 * @param	boolean	$process_action		true, to let MLA process the requested action.
-	 * @param	string	$mla_admin_action	The requested action.
-	 * @param	integer	$mla_item_ID		Zero (0), or the affected attachment.
-	 */
-	public static function mla_list_table_admin_action( $process_action, $mla_admin_action, $mla_item_ID ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_admin_action $mla_admin_action = ' . var_export( $mla_admin_action, true ), 0 );
-		//error_log( 'MLAListTableHooksExample::mla_list_table_admin_action $mla_item_ID = ' . var_export( $mla_item_ID, true ), 0 );
-		return $process_action;
-	} // mla_list_table_admin_action
-
-	/**
 	 * Load the MLA_List_Table dropdown help menu template
 	 *
 	 * This filter gives you the opportunity to add material to the "Help" dropdown menu
@@ -474,6 +502,25 @@ class MLAListTableHooksExample {
 	} // mla_list_table_help_template
 
 	/**
+	 * Pre-process an MLA_List_Table admin action
+	 *
+	 * This filter gives you an opportunity to pre-process an MLA_List_Table item-level action,
+	 * standard or custom, before the MLA handler. This filter is called before anything is output
+	 * for the Media/Assistant submenu, so you can redirect to another admin screen if desired.
+	 *
+	 * @since 1.03
+	 *
+	 * @param	boolean	$process_action		true, to let MLA process the requested action.
+	 * @param	string	$mla_admin_action	The requested action.
+	 * @param	integer	$mla_item_ID		Zero (0), or the affected attachment.
+	 */
+	public static function mla_list_table_admin_action( $process_action, $mla_admin_action, $mla_item_ID ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_admin_action $mla_admin_action = ' . var_export( $mla_admin_action, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_admin_action $mla_item_ID = ' . var_export( $mla_item_ID, true ), 0 );
+		return $process_action;
+	} // mla_list_table_admin_action
+
+	/**
 	 * Process an MLA_List_Table custom admin action
 	 *
 	 * This filter gives you an opportunity to process an MLA_List_Table item-level action
@@ -489,6 +536,21 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::mla_list_table_custom_admin_action $mla_admin_action = ' . var_export( $mla_admin_action, true ), 0 );
 		//error_log( 'MLAListTableHooksExample::mla_list_table_custom_admin_action $mla_item_ID = ' . var_export( $mla_item_ID, true ), 0 );
 	} // mla_list_table_custom_admin_action
+
+	/**
+	 * Define the fields for inline (Quick) editing
+	 *
+	 * This filter gives you an opportunity to name the fields passed to the
+	 * JavaScript functions for Quick editing.
+	 *
+	 * @since 1.00
+	 *
+	 * @param	array	$fields	The field names for inline data.
+	 */
+	public static function mla_list_table_inline_fields( $fields ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_fields $fields = ' . var_export( $fields, true ), 0 );
+		return $fields;
+	} // mla_list_table_inline_fields
 
 	/**
 	 * Process an MLA_List_Table inline action, i.e., Quick Edit 
@@ -739,30 +801,6 @@ class MLAListTableHooksExample {
 	} // mla_list_table_inline_values
 
 	/**
-	 * MLA_List_Table item bulk edit fieldset values
-	 *
-	 * This filter gives you a chance to modify and extend the substitution values
-	 * for the three Bulk Edit form fieldsets.
-	 *
-	 * @since 1.10
-	 *
-	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
-	 */
-	public static function mla_list_table_bulk_values( $item_values ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
-
-		/*
-		 * You can use the 'filter_root' element to distinguish among :
-		 *     mla_list_table_inline_blank_values,
-		 *     mla_list_table_inline_initial_values,
-		 *     mla_list_table_inline_preset_values
-		 */
-		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
-
-		return $item_values;
-	} // mla_list_table_bulk_values
-
-	/**
 	 * MLA_List_Table inline edit template
 	 *
 	 * This filter gives you a chance to modify and extend the template used
@@ -771,43 +809,11 @@ class MLAListTableHooksExample {
 	 * @since 1.00
 	 *
 	 * @param	string	$item_template Template used to generate the HTML markup
-	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
 	 */
-	public static function mla_list_table_inline_template( $item_template, $item_values ) {
+	public static function mla_list_table_inline_template( $item_template ) {
 		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_template $item_template = ' . var_export( $item_template, true ), 0 );
-
-		/*
-		 * You can use the 'filter_root' element to distinguish among :
-		 *     mla_list_table_inline_blank_template,
-		 *     mla_list_table_inline_initial_template,
-		 *     mla_list_table_inline_preset_template
-		 */
-		//error_log( "MLAListTableHooksExample::mla_list_table_inline_template filter_root = {$item_values['filter_root']}", 0 );
-
 		return $item_template;
 	} // mla_list_table_inline_template
-
-	/**
-	 * MLA_List_Table item bulk edit fieldset template
-	 *
-	 * This filter gives you a chance to modify and extend the template used
-	 * for the three Bulk Edit form fieldsets.
-	 *
-	 * @since 1.10
-	 *
-	 * @param	array	$item_template Template used to generate the HTML markup
-	 */
-	public static function mla_list_table_bulk_template( $item_template ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_template = ' . var_export( $item_template, true ), 0 );
-
-		/*
-		 * You can use the 'filter_root' element to distinguish among :
-		 *     mla_list_table_inline_blank_values
-		 */
-		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
-
-		return $item_values;
-	} // mla_list_table_bulk_values
 
 	/**
 	 * MLA_List_Table inline edit parse
@@ -827,6 +833,85 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_parse $item_values = ' . var_export( $item_values, true ), 0 );
 		return $html_markup;
 	} // mla_list_table_inline_parse
+
+	/**
+	 * MLA_List_Table item bulk edit fieldset values
+	 *
+	 * This filter gives you a chance to modify the raw data used to populate
+	 * the Bulk Edit on Upload form.
+	 *
+	 * @since 1.12
+	 *
+	 * @param	array	$fieldset_values data values to populate the form
+	 * @param	string	$filter_root identify the blank, initial and preset fieldsets
+	 */
+	public static function mla_list_table_inline_bulk_fieldset_values( $fieldset_values, $filter_root ) {
+		/*
+		 * You can use the 'filter_root' argument to distinguish among :
+		 *     mla_list_table_inline_blank_fieldset_values,
+		 *     mla_list_table_inline_initial_fieldset_values,
+		 *     mla_list_table_inline_preset_fieldset_values
+		 */
+		//error_log( __LINE__ . " MLAListTableHooksExample::mla_list_table_bulk_fieldset_values( {$filter_root} ) \$fieldset_values = " . var_export( $fieldset_values, true ), 0 );
+
+		return $fieldset_values;
+	} // mla_list_table_bulk_fieldset_values
+
+	/**
+	 * MLA_List_Table item bulk edit substitution values
+	 *
+	 * This filter gives you a chance to modify and extend the substitution values
+	 * for the three Bulk Edit form fieldsets.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
+	 */
+	public static function mla_list_table_inline_bulk_values( $item_values ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
+
+		/*
+		 * You can use the 'filter_root' element to distinguish among :
+		 *     'mla_upload_bulk_edit_form_blank',
+		 *     'mla_upload_bulk_edit_form_initial',
+		 *     'mla_upload_bulk_edit_form_preset',
+		 *     'mla_list_table_inline_blank',
+		 *     'mla_list_table_inline_initial',
+		 *     'mla_list_table_inline_preset'
+		 */
+		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
+
+		return $item_values;
+	} // mla_list_table_bulk_values
+
+	/**
+	 * MLA_List_Table item bulk edit fieldset template
+	 *
+	 * This filter gives you a chance to modify and extend the template used
+	 * for the three Bulk Edit form fieldsets.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	array	$item_template Template used to generate the HTML markup
+	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
+	 */
+	public static function mla_list_table_inline_bulk_template( $item_template, $item_values ) {
+		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_template = ' . var_export( $item_template, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
+
+		/*
+		 * You can use the 'filter_root' element to distinguish among :
+		 *     'mla_upload_bulk_edit_form_blank',
+		 *     'mla_upload_bulk_edit_form_initial',
+		 *     'mla_upload_bulk_edit_form_preset',
+		 *     'mla_list_table_inline_blank',
+		 *     'mla_list_table_inline_initial',
+		 *     'mla_list_table_inline_preset'
+		 */
+		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_template filter_root = {$item_values['filter_root']}", 0 );
+
+		return $item_template;
+	} // mla_list_table_bulk_template
 
 	/**
 	 * Filter the MLA_List_Table columns
@@ -1023,43 +1108,6 @@ class MLAListTableHooksExample {
 	} // mla_list_table_prepare_items_the_items
 
 	/**
-	 * Filter the WP_Query request parameters for the prepare_items query
-	 *
-	 * Gives you an opportunity to change the terms of the prepare_items query
-	 * after they are processed by the "Prepare List Table Query" handler.
-	 *
-	 * @since 1.03
-	 *
-	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
-	 */
-	public static function mla_list_table_query_final_terms( $request ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_query_final_terms $request = ' . var_export( $request, true ), 0 );
-
-		return $request;
-	} // mla_list_table_query_final_terms
-
-	/**
-	 * Replace the prepare_items WP_Query object with your own results
-	 *
-	 * Gives you an opportunity to substitute the results of the prepare_items query
-	 * with alternative results of your own.
-	 *
-	 * @since 1.03
-	 *
-	 * @param	object	$wp_query_object NULL, indicating no results substitution
-	 * @param	array	$request WP_Query request prepared by "Prepare List Table Query"
-	 */
-	public static function mla_list_table_query_custom_items( $wp_query_object, $request ) {
-		//error_log( 'MLAListTableHooksExample::mla_media_modal_query_custom_items $request = ' . var_export( $request, true ), 0 );
-
-		/*
-		 * You can replace the NULL $wp_query_object with a new WP_Query( $request )
-		 * object using your own $request parameters
-		 */
-		return $wp_query_object;
-	} // mla_media_modal_query_custom_items
-
-	/**
 	 * Inspect or modify the results of prepare_items()
 	 *
 	 * This action gives you an opportunity to record or modify the results of the
@@ -1094,21 +1142,6 @@ class MLAListTableHooksExample {
 		//error_log( "MLAListTableHooksExample::mla_list_table_build_rollover_actions ({$column}) \$item = " . var_export( $item, true ), 0 );
 		return $actions;
 	} // mla_list_table_build_rollover_actions
-
-	/**
-	 * Define the fields for inline (Quick) editing
-	 *
-	 * This filter gives you an opportunity to name the fields passed to the
-	 * JavaScript functions for Quick editing.
-	 *
-	 * @since 1.00
-	 *
-	 * @param	array	$fields	The field names for inline data.
-	 */
-	public static function mla_list_table_inline_fields( $fields ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_fields $fields = ' . var_export( $fields, true ), 0 );
-		return $fields;
-	} // mla_list_table_inline_fields
 
 	/**
 	 * Filter the data for inline (Quick and Bulk) editing
@@ -1192,8 +1225,6 @@ class MLAListTableHooksExample {
 	} // mla_upload_bulk_edit_form_parse
 } // Class MLAListTableHooksExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAListTableHooksExample::initialize');
 ?>

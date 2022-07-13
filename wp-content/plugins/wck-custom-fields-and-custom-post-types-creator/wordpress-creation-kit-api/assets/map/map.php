@@ -37,7 +37,15 @@ function wck_map_field_add_meta( $meta, $id, $values, $element_id = '' ) {
             continue;
 
         // calculate element id
-        $element_id = ( $element_id != '' ? ( (int)$element_id + 1 ) : ( $args[0]['repeater'] == 'false' ? 1 : count( (array)$meta_values ) + 1 ) );
+        if ( function_exists( 'is_countable' ) && is_countable($meta_values) && count($meta_values) > 0) {
+            $meta_values_count = count($meta_values);
+        } else if( is_array( $meta_values ) && count($meta_values) > 0 ){
+            $meta_values_count = count($meta_values);
+        } else {
+            $meta_values_count = 1;
+        }
+
+        $element_id = ( $element_id != '' ? ( (int)$element_id + 1 ) : ( $args[0]['repeater'] == 'false' ? 1 : $meta_values_count + 1 ) );
 
         $fields = get_post_meta( $field_set->ID, 'wck_' . ( !empty( $id ) ? 'cfc' : 'opc' ) . '_fields', true );
 
