@@ -50,7 +50,7 @@ class wpDataTableConstructor
     public function __construct($connection = null)
     {
         if (WDT_ENABLE_MYSQL && (Connection::isSeparate($connection))) {
-            $this->_db = Connection::create($connection);
+            $this->_db = Connection::getInstance($connection);
         }
     }
 
@@ -1347,7 +1347,7 @@ class wpDataTableConstructor
             return __('<div class="alert alert-danger"><i class="wpdt-icon-exclamation-triangle"></i>No results found. Please check if this query is correct and DOES NOT contain SQL reserved words! Table Constructor needs a query that returns data to build a wpDataTable.', 'wpdatatables');
 
         if (Connection::isSeparate($connection)) {
-            $sql = Connection::create($connection);
+            $sql = Connection::getInstance($connection);
 
             $vendor = Connection::getVendor($connection);
             $isMySql = $vendor === Connection::$MYSQL;
@@ -1466,7 +1466,7 @@ class wpDataTableConstructor
 
         if (Connection::isSeparate($connection)) {
             try {
-                $sql = Connection::create($connection);
+                $sql = Connection::getInstance($connection);
             } catch (Exception $ex) {
                 return $tables;
             }
@@ -1514,7 +1514,7 @@ class wpDataTableConstructor
         if (!empty($tables)) {
             if (Connection::isSeparate($connection)) {
                 try {
-                    $sql = Connection::create($connection);
+                    $sql = Connection::getInstance($connection);
                 } catch (Exception $ex) {
                     return $columns;
                 }
@@ -1809,12 +1809,13 @@ class wpDataTableConstructor
                     if (in_array($columnTypes[$dataColumnHeading], array('date', 'datetime', 'time'))) {
                         if ($columnTypes[$dataColumnHeading] == 'date') {
                             $date = WDTTools::wdtConvertStringToUnixTimestamp($namedDataArray[$row][$dataColumnHeading], $columnDateInputFormat[$dataColumnHeading]);
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . date('Y-m-d', $date) . "'";
+                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('Y-m-d', $date) . "'";
                         } elseif ($columnTypes[$dataColumnHeading] == 'datetime') {
                             $date = strtotime($namedDataArray[$row][$dataColumnHeading]);
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . date('Y-m-d H:i:s', $date) . "'";
+                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' :  "'" . date('Y-m-d H:i:s', $date) . "'";
                         } elseif ($columnTypes[$dataColumnHeading] == 'time') {
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . date('H:i:s', strtotime($namedDataArray[$row][$dataColumnHeading])) . "'";
+                            $date = strtotime($namedDataArray[$row][$dataColumnHeading]);
+                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('H:i:s', $date) . "'";
                         }
                     } elseif ($columnTypes[$dataColumnHeading] == 'float') {
                         if ($numberFormat == 1) {
@@ -1967,7 +1968,7 @@ class wpDataTableConstructor
         // First delete the column from the MySQL table
         if (Connection::isSeparate($tableData->connection)) {
             // External DB
-            $Sql = Connection::create($tableData->connection);
+            $Sql = Connection::getInstance($tableData->connection);
             $Sql->doQuery($drop_statement, array());
         } else {
             $wpdb->query($drop_statement);
@@ -2047,7 +2048,7 @@ class wpDataTableConstructor
         // Call the create statement on WPDB or on external DB if it is defined
         if (Connection::isSeparate($tableData->connection)) {
             // External DB
-            $Sql = Connection::create($tableData->connection);
+            $Sql = Connection::getInstance($tableData->connection);
             $Sql->doQuery($alter_table_statement, array());
         } else {
             $wpdb->query($alter_table_statement);

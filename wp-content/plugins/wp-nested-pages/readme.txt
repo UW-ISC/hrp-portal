@@ -5,7 +5,7 @@ Tags: pages, admin, nested, tree view, page tree, sort, quick edit, structure
 Requires at least: 3.8
 Tested up to: 6.0
 Requires PHP: 5.4
-Stable tag: 3.1.20
+Stable tag: 3.1.21
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -104,6 +104,9 @@ No. The menu synchronization currently only works within the pages post type.
 9. The Nested Pages interface can be enabled on a per-post-type basis, with customizable options for each type.
 
 == Changelog ==
+
+= 3.1.22 =
+* Fixes deprecation notice from new Yoast release
 
 = 3.1.21 =
 * Fixes issue where Nested Pages menu persists in some instances when "Disable menu completely" is checked/enabled.

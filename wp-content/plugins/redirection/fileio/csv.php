@@ -14,7 +14,7 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function get_data( array $items, array $groups ) {
-		$lines = [ implode( ',', array( 'source', 'target', 'regex', 'type', 'code', 'match', 'hits', 'title' ) ) ];
+		$lines = [ implode( ',', array( 'source', 'target', 'regex', 'type', 'code', 'match', 'hits', 'title', 'status' ) ) ];
 
 		foreach ( $items as $line ) {
 			$lines[] = $this->item_as_csv( $line );
@@ -35,6 +35,7 @@ class Red_Csv_File extends Red_FileIO {
 			$item->get_action_type(),
 			$item->get_hits(),
 			$item->get_title(),
+			$item->is_enabled() ? 'active' : 'disabled'
 		);
 
 		$csv = array_map( array( $this, 'escape_csv' ), $csv );
@@ -73,6 +74,8 @@ class Red_Csv_File extends Red_FileIO {
 	}
 
 	public function load_from_file( $group_id, $file, $separator ) {
+		global $wpdb;
+
 		$count = 0;
 
 		while ( ( $csv = fgetcsv( $file, 5000, $separator ) ) ) {
@@ -81,11 +84,15 @@ class Red_Csv_File extends Red_FileIO {
 			if ( $item ) {
 				$created = Red_Item::create( $item );
 
+				// The query log can use up all the memory
+				$wpdb->queries = [];
+
 				if ( ! is_wp_error( $created ) ) {
 					$count++;
 				}
 			}
 		}
+
 
 		return $count;
 	}

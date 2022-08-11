@@ -1134,7 +1134,7 @@ class WDTColumn {
                 return false;
             }
         } else {
-            $sql = Connection::create($parentTable->connection);
+            $sql = Connection::getInstance($parentTable->connection);
             $rows = $sql->getArray($distValuesQuery);
 
             if (!empty($rows)) {
@@ -1178,7 +1178,7 @@ class WDTColumn {
         if (!(Connection::isSeparate($parentTable->connection))) {
             return (float)$wpdb->get_row($minQuery)->min;
         } else {
-            $sql = Connection::create($parentTable->connection);
+            $sql = Connection::getInstance($parentTable->connection);
             $minValue= $sql->getRow($minQuery)['min'];
             return (float)($minValue);
         }
@@ -1212,7 +1212,7 @@ class WDTColumn {
         if (!(Connection::isSeparate($parentTable->connection))) {
             return (float)$wpdb->get_row($maxQuery)->max;
         } else {
-            $sql = Connection::create($parentTable->connection);
+            $sql = Connection::getInstance($parentTable->connection);
             $maxValue = $sql->getRow($maxQuery)['max'];
             return (float)($maxValue);
         }

@@ -207,7 +207,7 @@ function wdtDuplicateTable()
                 if (!(Connection::isSeparate($tableData->connection))) {
                     $res = $wpdb->get_results($checkTableQuery);
                 } else {
-                    $sql = Connection::create($tableData->connection);
+                    $sql = Connection::getInstance($tableData->connection);
                     $res = $sql->getRow($checkTableQuery);
                 }
                 if (!empty($res)) {

@@ -263,18 +263,22 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with a feature, some improvements and bug fixes:
+                            New update with a awesome feature, some improvements and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added options for responsive actions - icon, row or cell.</li>
-                                <li><strong>Improvement:</strong> Compatibility with the latest version of Elementor.</li>
-                                <li><strong>Improvement:</strong> Improved error handling during activation and deactivation of a license.</li>
-                                <li><strong>Improvement:</strong> Automatically close the date picker after a date has been chosen.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Divi editor blocks not working when only one table or chart has been created.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with '%' symbol in string cells for separate connection tables.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with foreign keys for PostgreSQL database.</li>
+                                <li><strong>Feature:</strong> Added single cell shortcode.</li>
+                                <li><strong>Improvement:</strong> Improved separate connections performance.</li>
+                                <li><strong>Improvement:</strong> Added Highcharts accessibility module.</li>
+                                <li><strong>Improvement:</strong> Changed type of mysql_table_name column to TEXT.</li>
+                                <li><strong>Improvement:</strong> Added a new hooks for PDO dsn and for MySQLi link connection:
+                                    wpdatatables_filter_pdo_connection_dsn and wpdatatables_filter_mysqli_connection_link</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Gutenberg and editable tables for media upload.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with date format m/Y and Google sheet.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with fatal error with old versions of Avada theme.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with conditional formatting if cell contains HTML.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with sanitized SQL queries.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>
@@ -396,7 +400,7 @@
                                             'title' => $node->getElementsByTagName('title')->item(0)->nodeValue,
                                             'link' => $node->getElementsByTagName('link')->item(0)->nodeValue
                                         );
-                                        array_push($feed, $item);
+                                        $feed[] = $item;
                                     }
                                     $limit = 4;
                                     if(!empty($feed)){

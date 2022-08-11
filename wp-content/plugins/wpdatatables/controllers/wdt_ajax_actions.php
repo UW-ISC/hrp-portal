@@ -469,7 +469,7 @@ function wdtSaveTableFrontend() {
         $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
         $rightSysIdentifier = Connection::getRightColumnQuote($vendor);
 
-        $sql = Connection::create($tableData->connection);
+        $sql = Connection::getInstance($tableData->connection);
         if ($idVal != '0') {
             $query = 'UPDATE ' . $mySqlTableName . ' SET ';
             $i = 1;
@@ -486,6 +486,7 @@ function wdtSaveTableFrontend() {
             $query .= ' WHERE ' . $leftSysIdentifier . $idKey . $rightSysIdentifier . ' = ' . $idVal;
             $query = apply_filters('wpdatatables_query_before_save_frontend', $query, $tableId);
             if ($sql->doQuery($query)) {
+                if (!$isPostgreSql)
                 $idVal = $sql->getLastInsertId();
                 $returnResult['success'] = $idVal;
             } else {
@@ -668,7 +669,7 @@ function wdtSaveTableCellsFrontend() {
 
                     $query = apply_filters('wpdatatables_filter_excel_editor_query', $query, $tableId);
 
-                    $sql = Connection::create($tableData->connection);
+                    $sql = Connection::getInstance($tableData->connection);
                     $sql->doQuery($query);
                     $sqlLastError = $sql->getLastError();
 
@@ -822,7 +823,7 @@ function wdtDeleteTableRow() {
             $returnResult['success'] = true;
         }
     } else {
-        $sql = Connection::create($tableData->connection);
+        $sql = Connection::getInstance($tableData->connection);
         $query = "DELETE FROM " . $mySqlTableName . " WHERE " . $idKey . "='" . $idVal . "'";
         $sql->doQuery($query);
         if ($sql->getLastError() !== '') {
@@ -928,7 +929,7 @@ function wdtDeleteTableRows() {
 
                     do_action('wpdatatables_excel_after_delete_row', $rowId, $tableId, $wpdb->last_error);
                 } else {
-                    $sql = Connection::create($tableData->connection);
+                    $sql = Connection::getInstance($tableData->connection);
                     $query = "DELETE FROM " . $mySqlTableName . " WHERE `" . $idColumnKey . "`='" . $rowId . "'";
                     $sql->doQuery($query);
                     $sqlLastError = $sql->getLastError();

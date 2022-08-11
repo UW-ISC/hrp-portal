@@ -438,24 +438,7 @@ class WPDataTableRows
         }
         if ($this->getCellMetaData() != []) {
             $cellClasses = array_unique($this->getCellMetaData());
-            $systemFonts = WDTSettingsController::wdtGetSystemFonts();
-            foreach ($cellClasses as $cellClass) {
-                if (strpos($cellClass, 'wpdt-tc-') !== false) {
-                    $textColor = str_replace('wpdt-tc-', '', $cellClass);
-                    $returnData .= "." . $cellClass . " { color: #" . $textColor . " !important;}\n";
-                } else if (strpos($cellClass, 'wpdt-bc-') !== false) {
-                    $bgColor = str_replace('wpdt-bc-', '', $cellClass);
-                    $returnData .= "." . $cellClass . " { background-color: #" . $bgColor . " !important;}\n";
-                } else if (strpos($cellClass, 'wpdt-ff-') !== false) {
-                    $fontFamilyIndex = strval(intval(str_replace('wpdt-ff-', '', $cellClass)));
-                    $fontFamily = $fontFamilyIndex == "0" ? 'inherit' : $systemFonts[$fontFamilyIndex - 1];
-                    $returnData .= "." . $cellClass . " { font-family: " . $fontFamily . " !important;}\n";
-                } else if (strpos($cellClass, 'wpdt-fs-') !== false) {
-                    $fontSizeIndex = strval(intval(str_replace('wpdt-fs-', '', $cellClass)));
-                    $fontSize = $fontSizeIndex == "0" ? '10' : $fontSizeIndex;
-                    $returnData .= "." . $cellClass . " { font-size: " . $fontSize . "px !important;}\n";
-                }
-            }
+            $returnData .= self::getDynamicCellClasses($cellClasses, $returnData);
         }
         $returnData .= "</style>\n";
         wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.min.css', array(), WDT_CURRENT_VERSION);
@@ -521,5 +504,78 @@ class WPDataTableRows
         $returnData .= $this->renderStyles();
 
         return $returnData;
+    }
+
+    /**
+     * Get dynamic classes for colors and fonts in simple table
+     * @param array $cellClasses
+     * @param string $returnData
+     * @return string
+     */
+    public static function getDynamicCellClasses($cellClasses, $returnData)
+    {
+        $systemFonts = WDTSettingsController::wdtGetSystemFonts();
+        foreach ($cellClasses as $cellClass) {
+            if (strpos($cellClass, 'wpdt-tc-') !== false) {
+                $textColor = str_replace('wpdt-tc-', '', $cellClass);
+                $returnData .= "." . $cellClass . " { color: #" . $textColor . " !important;}\n";
+            } else if (strpos($cellClass, 'wpdt-bc-') !== false) {
+                $bgColor = str_replace('wpdt-bc-', '', $cellClass);
+                $returnData .= "." . $cellClass . " { background-color: #" . $bgColor . " !important;}\n";
+            } else if (strpos($cellClass, 'wpdt-ff-') !== false) {
+                $fontFamilyIndex = strval(intval(str_replace('wpdt-ff-', '', $cellClass)));
+                $fontFamily = $fontFamilyIndex == "0" ? 'inherit' : $systemFonts[$fontFamilyIndex - 1];
+                $returnData .= "." . $cellClass . " { font-family: " . $fontFamily . " !important;}\n";
+            } else if (strpos($cellClass, 'wpdt-fs-') !== false) {
+                $fontSizeIndex = strval(intval(str_replace('wpdt-fs-', '', $cellClass)));
+                $fontSize = $fontSizeIndex == "0" ? '10' : $fontSizeIndex;
+                $returnData .= "." . $cellClass . " { font-size: " . $fontSize . "px !important;}\n";
+            }
+        }
+
+        return $returnData;
+    }
+
+    /**
+     * Helper method that prepare cell data output for single cell shortcode
+     * @return string
+     */
+    public static function prepareCellDataOutput($cellData, $cellMetaClasses, $rowID, $columnKey, $tableID){
+        $emptyClasses = true;
+        $includeFormatting = apply_filters('wpdatatable_cell_include_formatting', true, $columnKey, $rowID, $tableID);
+        if ($cellMetaClasses != [] && $includeFormatting){
+            $emptyClasses = false;
+            $cellClasses = '';
+            foreach ($cellMetaClasses as $class){
+                $cellClasses .= $class . ' ';
+            }
+            $cellDataFormatted = '<div class="wpdt-c"><div class="' . $cellClasses . '">' . $cellData . '</div></div>';
+            $cellDataFormatted = apply_filters(
+                'wpdatatable_cell_filter_formatted_cell',
+                $cellDataFormatted, $cellClasses, $cellData, $rowID, $columnKey, $tableID);
+            $cellData = $cellDataFormatted;
+
+            $addStyle = '';
+            $addStyleData = WPDataTableRows::getDynamicCellClasses($cellMetaClasses, $addStyle);
+            $addStyle .= '<style>' . $addStyleData . "</style>";
+            $cellData .= $addStyleData == '' ? '' : $addStyle;
+
+            wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.css', array(), WDT_CURRENT_VERSION);
+            wp_enqueue_style('wdt-font-style', WDT_CSS_PATH . 'style.min.css', array(), WDT_CURRENT_VERSION);
+        }
+        if (strpos($cellData, 'wpdt-do-shortcode') !== false) {
+            $cellData = substr($cellData, strpos($cellData, '>[') + 1, strpos($cellData, ']<') - strpos($cellData, '>['));
+            $cellData = do_shortcode($cellData);
+        } else if (strpos($cellData, 'wpdt-star-rating') !== false ||
+            strpos($cellData, 'wpdt-link-content') !== false) {
+            if ($emptyClasses){
+                $cellData = '<div class="wpdt-c">' . $cellData . '</div>';
+            }
+            wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.css', array(), WDT_CURRENT_VERSION);
+            wp_enqueue_style('wdt-font-style', WDT_CSS_PATH . 'style.min.css', array(), WDT_CURRENT_VERSION);
+        }
+
+        return $cellData;
+
     }
 }

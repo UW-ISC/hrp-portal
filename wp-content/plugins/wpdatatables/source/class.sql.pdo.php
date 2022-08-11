@@ -21,7 +21,7 @@ class PDOSql {
      */
     public function __construct( $vendor, $dsn, $user, $password ) {
         $this->vendor = $vendor;
-
+        $dsn = apply_filters('wpdatatables_filter_pdo_connection_dsn', $dsn, $this->vendor, $_POST);
         try {
             $this->link = new PDO ($dsn,"$user","$password");
         } catch (PDOException $e) {

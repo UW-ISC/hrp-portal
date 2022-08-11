@@ -11,7 +11,7 @@ class WPDataTables_Fusion_Elements
         $this->add_wpdatacharts_fusion_element();
         add_action( 'fusion_builder_before_init', [$this,'add_wpdatatables_fusion_element'] );
         add_action( 'fusion_builder_before_init', [$this,'add_wpdatacharts_fusion_element'] );
-        if (fusion_is_builder_frame()) {
+        if (function_exists( 'fusion_is_builder_frame' ) && fusion_is_builder_frame()) {
             add_action('wp_enqueue_scripts', [$this,'elements_frontend_css'], 999);
         }
     }

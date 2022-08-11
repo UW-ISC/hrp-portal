@@ -8,7 +8,7 @@ Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 4.4
+Version: 4.5
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -136,6 +136,7 @@ register_uninstall_hook(__FILE__, 'wdtUninstall');
 
 add_shortcode('wpdatatable', 'wdtWpDataTableShortcodeHandler');
 add_shortcode('wpdatachart', 'wdtWpDataChartShortcodeHandler');
+add_shortcode('wpdatatable_cell', 'wdtWpDataTableCellShortcodeHandler');
 add_shortcode('wpdatatable_sum', 'wdtFuncsShortcodeHandler');
 add_shortcode('wpdatatable_avg', 'wdtFuncsShortcodeHandler');
 add_shortcode('wpdatatable_min', 'wdtFuncsShortcodeHandler');
