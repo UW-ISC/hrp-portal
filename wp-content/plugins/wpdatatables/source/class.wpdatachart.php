@@ -3034,7 +3034,7 @@ class WPDataChart {
                 if($i == 0) {
                     $apexchartsRender['xaxis']['categories'] = array();
                     foreach ($this->_render_data['rows'] as $row) {
-                        array_push($apexchartsRender['xaxis']['categories'], $row[0]);
+                        $apexchartsRender['xaxis']['categories'][] = $row[0];
                     }
                 } else {
                     $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
@@ -3061,9 +3061,9 @@ class WPDataChart {
                     foreach ($this->_render_data['rows'] as $row) {
                         $seriesEntry['data'][] = $row[$i];
                     }
-                    array_push($apexchartsRender['fill']['type'], $fillType);
-                    array_push($apexchartsRender['fill']['image']['src'], $seriesImage);
-                    array_push($apexchartsRender['colors'], $seriesColor);
+                    $apexchartsRender['fill']['type'][] = $fillType;
+                    $apexchartsRender['fill']['image']['src'][] = $seriesImage;
+                    $apexchartsRender['colors'][] = $seriesColor;
                 }
                 if ($i != 0) {
                     $apexchartsRender['series'][] = $seriesEntry;
@@ -3076,7 +3076,7 @@ class WPDataChart {
                 if($i == 0) {
                     $apexchartsRender['xaxis']['categories'] = array();
                     foreach ($this->_render_data['rows'] as $row) {
-                        array_push($apexchartsRender['xaxis']['categories'], $row[0]);
+                        $apexchartsRender['xaxis']['categories'][] = $row[0];
                     }
                 } else {
                     $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
@@ -3096,9 +3096,9 @@ class WPDataChart {
                     foreach ($this->_render_data['rows'] as $row) {
                         $seriesEntry['data'][] = $row[$i];
                     }
-                    array_push($apexchartsRender['fill']['type'], $fillType);
-                    array_push($apexchartsRender['fill']['image']['src'], $seriesImage);
-                    array_push($apexchartsRender['colors'], $seriesColor);
+                    $apexchartsRender['fill']['type'][] = $fillType;
+                    $apexchartsRender['fill']['image']['src'][] = $seriesImage;
+                    $apexchartsRender['colors'][] = $seriesColor;
                 }
                 if ($i != 0) {
                     $apexchartsRender['series'][] = $seriesEntry;
@@ -3127,10 +3127,10 @@ class WPDataChart {
 
                 if ($i != 0) {
                     $apexchartsRender['series'] = $seriesEntry['data'];
-                    array_push($apexchartsRender['orig_header'], $seriesEntry['orig_header']);
+                    $apexchartsRender['orig_header'][] = $seriesEntry['orig_header'];
                     $seriesColor =  $this->_render_data['series'][$i - 1]['color'] != '' ? $this->_render_data['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
                     if(!$isRadialType) {
-                        array_push($apexchartsRender['colors'], $seriesColor);
+                        $apexchartsRender['colors'][] = $seriesColor;
                     }
                 }
             }
@@ -3734,8 +3734,8 @@ class WPDataChart {
             $this->setGridPosition(isset($renderData['apexcharts_render_data']['options']['grid']['position']) ? $renderData['apexcharts_render_data']['options']['grid']['position'] : 'back');
             $gridAxes = array();
             if (isset($renderData['apexcharts_render_data']['options']['grid'])) {
-                if ($renderData['apexcharts_render_data']['options']['grid']['xaxis']['lines']['show']) array_push($gridAxes, 'xaxis');
-                if ($renderData['apexcharts_render_data']['options']['grid']['yaxis']['lines']['show']) array_push($gridAxes, 'yaxis');
+                if ($renderData['apexcharts_render_data']['options']['grid']['xaxis']['lines']['show']) $gridAxes[] = 'xaxis';
+                if ($renderData['apexcharts_render_data']['options']['grid']['yaxis']['lines']['show']) $gridAxes[] = 'yaxis';
             }
             $this->setGridAxes($gridAxes);
             $this->setMajorAxisLabel(isset($renderData['apexcharts_render_data']['options']['xaxis']['title']['text']) ? $renderData['apexcharts_render_data']['options']['xaxis']['title']['text'] : '');
@@ -3781,7 +3781,7 @@ class WPDataChart {
                 $toolbarButtons = array();
                 foreach ($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'] as $toolbarTool => $show) {
                     if ($toolbarTool != 'customIcons' && $show == true) {
-                        array_push($toolbarButtons, $toolbarTool);
+                        $toolbarButtons[] = $toolbarTool;
                     }
                 }
                 $this->setToolbarButtons($toolbarButtons);
@@ -3854,6 +3854,7 @@ class WPDataChart {
                     wp_enqueue_script('wdt-export-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION);
                 }
             }
+            wp_enqueue_script('wdt-highcharts-accessibility', '//code.highcharts.com/modules/accessibility.js', array(), WDT_CURRENT_VERSION);
             // Highchart wpDataTable JS library
             wp_enqueue_script('wpdatatables-highcharts', WDT_JS_PATH . 'wpdatatables/wdt.highcharts' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
             $json_chart_render_data = json_encode($this->_highcharts_render_data);

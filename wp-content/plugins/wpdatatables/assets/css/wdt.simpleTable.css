@@ -135,6 +135,7 @@
     white-space: pre-line;
 }
 
+a[data-link-content="wpdt-link-content"] button,
 .wpdt-c.wpDataTableContainerConfigSimpleTable table td a[data-link-content="wpdt-link-content"] button,
 .wpdt-c.wpDataTableContainerSimpleTable .wpdtSimpleTable td.wpdt-cell a[data-link-content="wpdt-link-content"] button {
     background-color: #4CAF50;

@@ -45,6 +45,7 @@ class PDTSql {
      */
     function sqlConnect() {
         $this->link = @mysqli_connect( $this->dbhost, $this->dbuser, $this->dbpass, $this->dbname, $this->dbport );
+        $this->link = apply_filters('wpdatatables_filter_mysqli_connection_link', $this->link, $this, $_POST);
         if (!$this->link) {
             throw new Exception('There was a problem with your SQL connection - '.((is_admin()) ? mysqli_connect_error() : 'Please contact the administrator') );
         } else {

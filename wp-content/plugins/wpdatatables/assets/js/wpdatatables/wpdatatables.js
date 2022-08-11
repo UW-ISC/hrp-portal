@@ -1989,7 +1989,11 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
         ruleVal = conditionalFormattingRules.cellVal;
     } else {
         // Process string comparison
-        cellVal = getPurifiedValue(element, responsive);
+        if (responsive) {
+            cellVal = element.children('.columnValue').html();
+        } else {
+            cellVal = element.clone().html();
+        }
         ruleVal = conditionalFormattingRules.cellVal;
     }
 

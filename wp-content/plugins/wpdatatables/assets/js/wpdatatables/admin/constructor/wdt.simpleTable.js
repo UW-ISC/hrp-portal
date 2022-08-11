@@ -917,9 +917,10 @@
                     if (attachment.sizes['full']) {
                         fullUrl = attachment.sizes['full'].url;
                     }
-                }
-                if (type == 'image') {
-                    attrs = 'width="' + attachment.sizes[displaySettings.size].width + '" height="' + attachment.sizes[displaySettings.size].width + '"';
+
+                    if (type == 'image') {
+                        attrs = 'width="' + attachment.sizes[displaySettings.size].width + '" height="' + attachment.sizes[displaySettings.size].width + '"';
+                    }
                 }
                 switch (displaySettings.link) {
                     case 'file':
@@ -1502,10 +1503,6 @@
                 },
                 height: "400",
                 menubar: false,
-                forced_root_block: "div",
-                forced_root_block_attrs: {
-                    'data-type-content': 'wpdt-html-content'
-                },
                 plugins: 'link image media lists hr colorpicker fullscreen textcolor code',
                 toolbar: 'undo redo formatselect bold italic underline strikethrough subscript superscript | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent blockquote | hr fullscreen | link unlink image | forecolor backcolor | code '
             });
@@ -1524,9 +1521,16 @@
                 e.stopImmediatePropagation();
                 let selectedRange = wpdtEditor.getSelectedRange()[0],
                     highlightRow = selectedRange.highlight.row,
-                    highlightCol = selectedRange.highlight.col;
-
-                wpdtEditor.setDataAtCell(highlightRow, highlightCol, tinyMCE.activeEditor.getContent());
+                    highlightCol = selectedRange.highlight.col,
+                    cellHTMLContent = '';
+                if(tinyMCE.activeEditor.getContent().indexOf('wpdt-html-content') >= 0) {
+                    cellHTMLContent = tinyMCE.activeEditor.getContent();
+                } else {
+                    cellHTMLContent = '<div data-type-content="wpdt-html-content">'
+                                      + tinyMCE.activeEditor.getContent()
+                                      + '</div>';
+                }
+                wpdtEditor.setDataAtCell(highlightRow, highlightCol, cellHTMLContent);
                 wpdtEditor.render();
                 modal.modal('hide');
                 $('.wdt-save-data').click();
