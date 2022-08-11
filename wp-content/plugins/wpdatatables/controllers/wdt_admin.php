@@ -374,6 +374,7 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-highcharts-accessibility', '//code.highcharts.com/modules/accessibility.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-apexcharts', '//cdn.jsdelivr.net/npm/apexcharts', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');

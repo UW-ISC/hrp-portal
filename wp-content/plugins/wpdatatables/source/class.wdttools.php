@@ -1129,6 +1129,9 @@ class WDTTools
             return 'string';
         } else {
 
+            if (self::_detect($values, 'self::wdtIsIP')) {
+                return 'string';
+            }
             if (self::_detect($values, 'self::wdtIsInteger')) {
                 return 'int';
             }
@@ -1165,6 +1168,11 @@ class WDTTools
     private static function wdtIsInteger($input)
     {
         return ctype_digit((string)$input);
+    }
+
+    private static function wdtIsIP($input)
+    {
+        return (bool)filter_var($input, FILTER_VALIDATE_IP);
     }
 
     /**
@@ -1615,11 +1623,34 @@ class WDTTools
             $returnDate = strtotime(str_replace('/', '-', $dateString));
         } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y', 'm-d-y','d.m.y','Y.m.d','d-m-Y'])) {
             $returnDate = strtotime(str_replace(['.', '-'], '/', $dateString));
+        } else if (null !== $dateFormat && $dateFormat == 'm/Y') {
+            if ($dateString == '') return null;
+            $dateObject = DateTime::createFromFormat($dateFormat, $dateString);
+            $returnDate = $dateObject->getTimestamp();
         } else {
             $returnDate = strtotime($dateString);
         }
 
         return $returnDate;
+    }
+
+    /**
+     * Helper method that converts provided Unix Timestamp to string
+     * based on provided date format
+     * @param $columnType
+     * @param $displayColumnNameData
+     */
+    public static function wdtConvertUnixTimestampToString($columnType, $displayColumnNameData)
+    {
+        if ($columnType == 'date'){
+            $displayColumnNameData =  date(get_option('wdtDateFormat'), $displayColumnNameData);
+        } else if ($columnType == 'datetime'){
+            $displayColumnNameData =  date(get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'), $displayColumnNameData);
+        } else if ($columnType == 'time'){
+            $displayColumnNameData =  date(get_option('wdtTimeFormat'), $displayColumnNameData);
+        }
+
+        return $displayColumnNameData;
     }
 
     /**
@@ -1969,7 +2000,7 @@ class WDTTools
             $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
             $rightSysIdentifier = Connection::getRightColumnQuote($vendor);
 
-            $sql = Connection::create($tableData->connection);
+            $sql = Connection::getInstance($tableData->connection);
             if ($idValCheck != '0') {
                 $query = "SELECT {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} FROM {$mySqlTableName} WHERE {$leftSysIdentifier}{$idColumnName}{$rightSysIdentifier} = {$idValCheck} AND {$leftSysIdentifier}{$userIDColumnName}{$rightSysIdentifier} =" . get_current_user_id();
                 if (!$sql->getField($query)) {

@@ -6,7 +6,31 @@ class Connection {
     public static $MYSQL = 'mysql';
     public static $MSSQL = 'mssql';
     public static $POSTGRESQL = 'postgresql';
+    private static $_instance = [];
 
+    /**
+     * Return only one instance of separate connection
+     * @param $id
+     */
+    public static function getInstance($id = null) {
+
+        if (empty(self::$_instance) || !isset(self::$_instance[$id]))
+            self::$_instance[$id] = self::create($id);
+
+        return self::$_instance[$id];
+    }
+
+    /**
+     * Create separate connection
+     * @param $id
+     * @param $host
+     * @param $database
+     * @param $user
+     * @param $password
+     * @param $port
+     * @param $vendor
+     * @param $driver
+     */
     public static function create($id = null, $host = null, $database = null, $user = null, $password = null, $port = null, $vendor = null, $driver = null) {
         if ($id) {
             foreach (self::getAll() as $connection) {

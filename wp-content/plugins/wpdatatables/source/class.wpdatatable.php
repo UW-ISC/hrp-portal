@@ -899,11 +899,16 @@ class WPDataTable {
         $this->_tableCustomCss = $tableCustomCss;
     }
 
+    public function getDBConnection()
+    {
+        return $this->_db;
+    }
+
     public function __construct($connection = null) {
         //[<-- Full version -->]//
         // connect to MySQL if enabled
         if (WDT_ENABLE_MYSQL && (Connection::isSeparate($connection))) {
-            $this->_db = Connection::create($connection);
+            $this->_db = Connection::getInstance($connection);
             $this->connection = $connection;
         }
         //[<--/ Full version -->]//
@@ -1127,6 +1132,10 @@ class WPDataTable {
 
     public function countColumns() {
         return count($this->_wdtIndexedColumns);
+    }
+
+    public function getNamedColumns() {
+        return $this->_wdtNamedColumns;
     }
 
     public function getColumnKeys() {
@@ -1718,7 +1727,7 @@ class WPDataTable {
      * @param string $value
      * @return string
      */
-    private function getDateTimeExpression($vendor, $filterType, $value) {
+    public function getDateTimeExpression($vendor, $filterType, $value) {
         $wpDateFormat = get_option('wdtDateFormat');
 
         $date_format = '';
@@ -2246,7 +2255,7 @@ class WPDataTable {
             if ($foreignKeyJoin) {
 
                 $parsedForeignKeyJoin = $parser->parse($foreignKeyJoin);
-                array_push($parsedQuery['FROM'], $parsedForeignKeyJoin['FROM'][1]);
+                $parsedQuery['FROM'][] = $parsedForeignKeyJoin['FROM'][1];
 
                 foreach ($parsedQuery['SELECT'] as &$selectClause) {
                     if ($selectClause['expr_type'] == 'colref') {
@@ -2278,7 +2287,7 @@ class WPDataTable {
 
                 if ($parsedSearch) {
                     if (isset($parsedQuery['WHERE'])) {
-                        array_push($parsedQuery['WHERE'], ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false]);
+                        $parsedQuery['WHERE'][] = ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false];
                         $parsedQuery['WHERE'] = array_merge($parsedQuery['WHERE'], $parsedSearch['WHERE']);
                     } else {
                         $parsedQuery['WHERE'] = $parsedSearch['WHERE'];
@@ -2289,7 +2298,7 @@ class WPDataTable {
 
             if ($parsedOnlyOwnRows) {
                 if (isset($parsedQuery['WHERE'])) {
-                    array_push($parsedQuery['WHERE'], ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false]);
+                    $parsedQuery['WHERE'][] = ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false];
                     $parsedQuery['WHERE'] = array_merge($parsedQuery['WHERE'], $parsedOnlyOwnRows['WHERE']);
                 } else {
                     $parsedQuery['WHERE'] = $parsedOnlyOwnRows['WHERE'];
@@ -2423,7 +2432,7 @@ class WPDataTable {
 
                     // execute query
                     if (Connection::isSeparate($this->connection)) {
-                        $sql = Connection::create($this->connection);
+                        $sql = Connection::getInstance($this->connection);
                         $sumRow = $sql->getRow($sumFunctionQuery);
                         $sql = null;
                     } else {
@@ -2483,7 +2492,7 @@ class WPDataTable {
                     }
 
                     if (Connection::isSeparate($this->connection)) {
-                        $sql = Connection::create($this->connection);
+                        $sql = Connection::getInstance($this->connection);
                         $minRow = $sql->getRow($minFunctionQuery);
                         $sql = null;
                     } else {
@@ -2526,7 +2535,7 @@ class WPDataTable {
                     }
 
                     if (Connection::isSeparate($this->connection)) {
-                        $sql = Connection::create($this->connection);
+                        $sql = Connection::getInstance($this->connection);
                         $maxRow = $sql->getRow($maxFunctionQuery);
                         $sql = null;
                     } else {
@@ -2557,7 +2566,7 @@ class WPDataTable {
 
             if ($parsedOnlyOwnRows) {
                 if (isset($parsedQuery['WHERE'])) {
-                    array_push($parsedQuery['WHERE'], ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false]);
+                    $parsedQuery['WHERE'][] = ['expr_type' => 'operator', 'base_expr' => 'AND', 'sub_tree' => false];
                     $parsedQuery['WHERE'] = array_merge($parsedQuery['WHERE'], $parsedOnlyOwnRows['WHERE']);
                 } else {
                     $parsedQuery['WHERE'] = $parsedOnlyOwnRows['WHERE'];
@@ -2984,7 +2993,11 @@ class WPDataTable {
         !empty($this->_tableToolsConfig['pdf']) ? wp_enqueue_script('wdt-pdf-make', WDT_JS_PATH . 'export-tools/pdfmake.min.js', array('jquery'), WDT_CURRENT_VERSION, true) : null;
         !empty($this->_tableToolsConfig['pdf']) ? wp_enqueue_script('wdt-vfs-fonts', WDT_JS_PATH . 'export-tools/vfs_fonts.js', array('jquery'), WDT_CURRENT_VERSION, true) : null;
 
-        if ($this->isEditable()) {
+        if (!(is_admin() &&
+                function_exists('register_block_type') &&
+                (substr($_SERVER['PHP_SELF'], '-8') == 'post.php' ||
+                    substr($_SERVER['PHP_SELF'], '-12') == 'post-new.php')
+            ) && $this->isEditable()) {
             wp_enqueue_media();
         }
 
@@ -4197,6 +4210,7 @@ class WPDataTable {
         $storeColumnName = $foreignKeyRule->storeColumnName;
         $displayColumnName = $foreignKeyRule->displayColumnName;
         $tableType = $this->getTableType();
+        $columnTypeDisplayColumnName = $this->getWdtColumnTypes()[$displayColumnName];
 
         if ($tableType === 'mysql' || $tableType === 'manual') {
             $tableContent = $this->getTableContent();
@@ -4237,18 +4251,24 @@ class WPDataTable {
                 $mySqlResult = $wpdb->get_results($distValuesQuery);
 
                 foreach ($mySqlResult as $dataRow) {
+                    if (in_array($columnTypeDisplayColumnName,['date','datetime','time']) && is_numeric($dataRow->$displayColumnName))
+                        $dataRow[$displayColumnName] = WDTTools::wdtConvertUnixTimestampToString($columnTypeDisplayColumnName, $dataRow->$displayColumnName);
                     $distinctValues[$dataRow->$storeColumnName] = $dataRow->$displayColumnName;
                 }
             } else {
-                $sql = Connection::create($this->connection);
+                $sql = Connection::getInstance($this->connection);
                 $mySqlResult = $sql->getAssoc($distValuesQuery);
 
                 foreach ($mySqlResult ?: [] as $dataRow) {
+                    if (in_array($columnTypeDisplayColumnName,['date','datetime','time']) && is_numeric($dataRow[$displayColumnName]))
+                        $dataRow[$displayColumnName] = WDTTools::wdtConvertUnixTimestampToString($columnTypeDisplayColumnName, $dataRow[$displayColumnName]);
                     $distinctValues[$dataRow[$storeColumnName]] = $dataRow[$displayColumnName];
                 }
             }
         } else {
             foreach ($this->getDataRows() as $dataRow) {
+                if (in_array($columnTypeDisplayColumnName,['date','datetime','time']) && is_numeric($dataRow[$displayColumnName]))
+                    $dataRow[$displayColumnName] = WDTTools::wdtConvertUnixTimestampToString($columnTypeDisplayColumnName, $dataRow[$displayColumnName]);
                 $distinctValues[$dataRow[$storeColumnName]] = $dataRow[$displayColumnName];
             }
         }
@@ -4281,7 +4301,7 @@ class WPDataTable {
                 if (!(Connection::isSeparate($table->connection))) {
                     $wpdb->query("DROP TABLE {$table->mysql_table_name}");
                 } else {
-                    $sql = Connection::create($table->connection);
+                    $sql = Connection::getInstance($table->connection);
                     $sql->doQuery("DROP TABLE {$table->mysql_table_name}");
                 }
             }

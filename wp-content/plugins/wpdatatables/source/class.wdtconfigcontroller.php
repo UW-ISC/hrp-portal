@@ -731,8 +731,8 @@ class WDTConfigController {
                     $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
                     $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
                 } else {
-                    $column->text_after = wp_kses_post($column->text_after);
-                    $column->text_before = wp_kses_post($column->text_before);
+                    $column->text_after =(string)$column->text_after;
+                    $column->text_before = (string)$column->text_before;
                 }
                 $column->css_class = sanitize_text_field($column->css_class);
                 $column->type = sanitize_text_field($column->type);
@@ -945,7 +945,7 @@ class WDTConfigController {
                         $wpdb->query($alterQueryNull);
                     }
                 } else {
-                    $sql = Connection::create($table->connection);
+                    $sql = Connection::getInstance($table->connection);
                     $sql->doQuery($alterQuery);
                     if ($alterQueryNull) {
                         $sql->doQuery($alterQueryNull);
@@ -1443,6 +1443,7 @@ class WDTConfigController {
 
         return $rows;
     }
+
 
     /**
      * Save row data from Simple table in database
