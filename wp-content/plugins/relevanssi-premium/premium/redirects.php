@@ -28,6 +28,10 @@ function relevanssi_redirects() {
 	}
 	$query = relevanssi_strtolower( get_search_query( false ) );
 
+	if ( empty( $query ) && function_exists( 'FWP' ) ) {
+		$query = relevanssi_get_facetwp_query();
+	}
+
 	foreach ( $redirects as $redirect ) {
 		if ( ! $redirect || is_string( $redirect ) ) {
 			continue;
@@ -181,4 +185,32 @@ function relevanssi_process_redirects( $request ) {
 		}
 	}
 	return $redirects;
+}
+
+/**
+ * Gets the search query for FacetWP searches.
+ *
+ * @return string The search query, empty string if nothing is found.
+ *
+ * @author Jan Willem Oostendorp
+ */
+function relevanssi_get_facetwp_query() {
+	$query = '';
+
+	if ( ! empty( FWP()->helper->settings['facets'] ) && ! empty( FWP()->request->url_vars ) ) {
+		$facet_searches = array();
+		$url_vars       = FWP()->request->url_vars;
+		foreach ( FWP()->helper->settings['facets'] as $facet ) {
+			if ( 'search' === $facet['type'] && 'relevanssi' === $facet['search_engine'] ) {
+				$facet_searches = array_merge( $facet_searches, $url_vars[ $facet['name'] ] );
+			}
+		}
+
+		// If there are multiple search queries we won't even try.
+		if ( 1 === count( $facet_searches ) ) {
+			$query = $facet_searches[0];
+		}
+	}
+
+	return $query;
 }

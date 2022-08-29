@@ -629,13 +629,13 @@
 
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "true");
 
-            plugin.toggleBarForceWidth();
-
             if (plugin.settings.effect_mobile === "slide") {
                 $menu.animate({"height":"show"}, plugin.settings.effect_speed_mobile);
             }
 
             $toggle_bar.addClass("mega-menu-open");
+
+            plugin.toggleBarForceWidth();
 
             $menu.triggerHandler("mmm:showMobileMenu");
         };

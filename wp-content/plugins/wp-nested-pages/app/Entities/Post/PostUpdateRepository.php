@@ -63,34 +63,28 @@ class PostUpdateRepository
 			$post_id = sanitize_text_field($post['id']);
 			$original_modifed_date = get_post_modified_time('Y-m-d H:i:s', false, $post_id);
 			$original_modifed_date_gmt = get_post_modified_time('Y-m-d H:i:s', true, $post_id);
+			$args = [
+				'ID' => $post_id,
+				'menu_order' => intval($key),
+				'post_modified' => $original_modifed_date,
+				'post_modified_gmt' => $original_modifed_date_gmt
+			];
+			if ( !$filtered ) $args['post_parent'] = intval($parent);
+			wp_update_post($args);
 
 			// Reset the modified date to the last modified date
-			if ( !$filtered ) :
-				$query = $wpdb->prepare(
-					"UPDATE $wpdb->posts 
-					SET menu_order = '%d', post_parent = '%d', post_modified = '%s', post_modified_gmt = '%s' 
-					WHERE ID = '%d'", 
-					intval($key), 
-					intval($parent),
-					$original_modifed_date, 
-					$original_modifed_date_gmt, 
-					intval($post_id)
-				);
-			else : // The posts are filtered, don't update the parent
-				$query = $wpdb->prepare(
-					"UPDATE $wpdb->posts 
-					SET menu_order = '%d', post_modified = '%s', post_modified_gmt = '%s' 
-					WHERE ID = '%d'", 
-					intval($key), 
-					$original_modifed_date, 
-					$original_modifed_date_gmt, 
-					intval($post_id)
-				); 
-			endif;
+			// We can't use the above update_post, because wp_insert_post defaults to the current time
+			$query = $wpdb->prepare(
+				"UPDATE $wpdb->posts 
+				SET post_modified = '%s', post_modified_gmt = '%s' 
+				WHERE ID = '%d'", 
+				$original_modifed_date, 
+				$original_modifed_date_gmt, 
+				intval($post_id)
+			);
+			$wpdb->query($query);
 
-			$wpdb->query( $query );
 			do_action('nestedpages_post_order_updated', $post_id, $parent, $key, $filtered);
-
 			if ( isset($post['children']) ) $this->updateOrder($post['children'], $post_id);
 		}
 		do_action('nestedpages_posts_order_updated', $posts, $parent);
@@ -168,6 +162,7 @@ class PostUpdateRepository
 		$this->updateLinkTarget($data);
 		$this->updateTitleAttribute($data);
 		$this->updateNavCSS($data);
+		$this->updateNavCustomUrl($data);
 
 		return true;
 	}
@@ -257,6 +252,25 @@ class PostUpdateRepository
 				$data['post_id'], 
 				'_np_nav_css_classes', 
 				$css_classes
+			);
+		}
+	}
+
+	/**
+	* Update Nested Pages Menu Custom URL
+	* @since 3.2.0
+	* @param array data
+	*/
+	private function updateNavCustomUrl($data)
+	{
+		if ( !current_user_can('edit_post', $data['post_id']) ) return;
+		if ( isset($data['np_nav_custom_url']) ){
+			$url_input = $data['np_nav_custom_url'];
+			$url = ( $url_input == '#' ) ? '#' : esc_url($data['np_nav_custom_url']);
+			update_post_meta( 
+				$data['post_id'], 
+				'_np_nav_custom_url', 
+				$url
 			);
 		}
 	}
