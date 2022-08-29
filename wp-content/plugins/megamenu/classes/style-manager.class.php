@@ -784,6 +784,20 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 					$vars[ $name ] = "'" . stripslashes( htmlspecialchars_decode( $value ) ) . "'";
 
+					// find font names that end with/contain a number, e.g. Baloo 2, and add extra quotes so that they still retain quotes when CSS is compiled.
+					$font_name_with_single_quotes = $vars[ $name ];
+					$font_name_with_no_quotes = str_replace( "'", "", $font_name_with_single_quotes );
+					$font_name_parts = explode( " ", $font_name_with_no_quotes );
+
+					if ( is_array( $font_name_parts) ) {
+						foreach ( $font_name_parts as $part ) {
+							if ( is_numeric ($part) ) {
+								$vars[ $name ] = "\"{$font_name_with_single_quotes}\"";
+								continue;
+							}
+						}
+					}
+
 					continue;
 				}
 

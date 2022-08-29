@@ -722,6 +722,16 @@ function relevanssi_click_tracking_interface() {
 		</td>
 	</tr>
 
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Export click logs', 'relevanssi' ); ?>
+		</th>
+		<td>
+			<?php submit_button( __( 'Export the click tracking log as a CSV file', 'relevanssi' ), 'secondary', 'relevanssi_export_clicks' ); ?>
+			<p class="description"><?php esc_html_e( 'Push the button to export the click tracking log as a CSV file.', 'relevanssi' ); ?></p>
+		</td>
+	</tr>
+
 	</table>
 	<?php
 }
@@ -909,7 +919,7 @@ function relevanssi_insights_link( $query ) : string {
 	global $relevanssi_variables;
 	$insights_url = admin_url( 'admin.php?page=' . rawurlencode( $relevanssi_variables['plugin_basename'] ) )
 		. '&insights=' . rawurlencode( $query->query );
-	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), esc_html( $query->query ) );
+	$insights     = sprintf( "<a href='%s'>%s</a>", esc_url( $insights_url ), esc_html( relevanssi_hyphenate( $query->query ) ) );
 	return $insights;
 }
 
@@ -950,4 +960,23 @@ function relevanssi_schedule_click_tracking_trim() {
 			wp_clear_scheduled_hook( 'relevanssi_trim_click_logs' );
 		}
 	}
+}
+
+/**
+ * Prints out the Relevanssi click tracking log as a CSV file.
+ *
+ * Exports the whole Relevanssi click tracking log as a CSV file.
+ *
+ * @uses relevanssi_output_exported_log
+ */
+function relevanssi_export_click_log() {
+	global $wpdb, $relevanssi_variables;
+
+	$data = $wpdb->get_results( 'SELECT * FROM ' . $relevanssi_variables['tracking_table'], ARRAY_A ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+
+	relevanssi_output_exported_log(
+		'relevanssi_click_log.csv',
+		$data,
+		__( 'No search clicks logged.', 'relevanssi' )
+	);
 }

@@ -3,7 +3,7 @@ Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
 Tested up to: 6.0
-Stable tag: 2.9.6
+Stable tag: 2.9.7
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -133,6 +133,11 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 2.9.8 =
+
+* Fix: Delay forcing the mobile sub menu width until after the 'mega-menu-open' class has been added
+* Fix: Add quotes to font families that contain a number, e.g. 'Baloo 2'
 
 = 2.9.7 =
 
