@@ -121,11 +121,13 @@ function relevanssi_extract_multiple_excerpts( $terms, $content, $excerpt_length
 	if ( empty( $excerpts ) && $gap > 0 ) {
 		$result = relevanssi_get_first_match( $words, $terms, $excerpt_length );
 
-		$excerpts[] = array(
-			'text'  => $result['excerpt'],
-			'hits'  => $result['best_excerpt_term_hits'],
-			'start' => $result['start'],
-		);
+		if ( ! empty( $result['excerpt'] ) ) {
+			$excerpts[] = array(
+				'text'  => $result['excerpt'],
+				'hits'  => $result['best_excerpt_term_hits'],
+				'start' => $result['start'],
+			);
+		}
 	}
 
 	if ( empty( $excerpts ) ) {

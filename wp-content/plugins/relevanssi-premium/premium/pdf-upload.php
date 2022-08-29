@@ -339,7 +339,7 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 
 	$api_key = get_network_option( null, 'relevanssi_api_key' );
 	if ( ! $api_key ) {
-		get_option( 'relevanssi_api_key' );
+		$api_key = get_option( 'relevanssi_api_key' );
 	}
 	$server_url = relevanssi_get_server_url();
 
