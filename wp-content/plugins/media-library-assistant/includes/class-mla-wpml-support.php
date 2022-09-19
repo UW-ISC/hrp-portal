@@ -47,7 +47,15 @@ class MLA_WPML {
 		add_action( 'mla_updated_single_item', 'MLA_WPML::mla_updated_single_item', 10, 2 );
 
 		// Defined in /media-library-assistant/includes/class-mla-edit-media.php
-		add_filter( 'mla_upload_bulk_edit_form_values', 'MLA_WPML::mla_upload_bulk_edit_form_values', 10, 1 );
+		add_filter( 'mla_get_bulk_edit_form_presets', 'MLA_WPML::mla_get_bulk_edit_form_presets', 10, 3 );
+
+		add_filter( 'mla_upload_bulk_edit_form_blank_fieldset_values', 'MLA_WPML::mla_upload_bulk_edit_fieldset_values', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_fieldset_values', 'MLA_WPML::mla_upload_bulk_edit_fieldset_values', 10, 2 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_fieldset_values', 'MLA_WPML::mla_upload_bulk_edit_fieldset_values', 10, 2 );
+
+		add_filter( 'mla_upload_bulk_edit_form_blank_values', 'MLA_WPML::mla_upload_bulk_edit_values', 10, 1 );
+		add_filter( 'mla_upload_bulk_edit_form_initial_values', 'MLA_WPML::mla_upload_bulk_edit_values', 10, 1 );
+		add_filter( 'mla_upload_bulk_edit_form_preset_values', 'MLA_WPML::mla_upload_bulk_edit_values', 10, 1 );
 
 		// Defined in /media-library-assistant/includes/class-mla-media-modal.php
 		add_action( 'mla_media_modal_begin_update_compat_fields', 'MLA_WPML::mla_media_modal_begin_update_compat_fields', 10, 1 );
@@ -368,9 +376,7 @@ class MLA_WPML {
 	public static function mla_list_table_bulk_action_item_request( $request, $bulk_action, $post_id, $custom_field_map ) {
 		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_list_table_bulk_action_item_request( {$post_id} ) request = " . var_export( $request, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
-		/*
-		 * Note that $request may be modified by previous items, so we must return to the initial vlues
-		 */
+		// Note that $request may be modified by previous items, so we must return to the initial vlues
 		if ( 'edit' == $bulk_action && ( ! empty( self::$bulk_edit_request['tax_input'] ) ) && ( 'checked' == MLACore::mla_get_option( 'term_assignment', false, false, MLA_WPML::$mla_language_option_definitions ) ) ) {
 			self::_build_existing_terms( $post_id );
 			self::_build_tax_input( $post_id, self::$bulk_edit_request['tax_input'], self::$bulk_edit_request['tax_action'], true );
@@ -863,9 +869,7 @@ class MLA_WPML {
 		$taxonomies = $sitepress->get_translatable_taxonomies( true, 'attachment' );
 		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_build_existing_terms( {$post_id} ) \$sitepress->get_translatable_taxonomies() = " . var_export( $taxonomies, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
-		/*
-		 * Find all assigned terms and build term_master array
-		 */
+		// Find all assigned terms and build term_master array
 		$current_language = $sitepress->get_current_language();
 		foreach ( $translations as $language_code => $translation ) {
 			$sitepress->switch_lang( $language_code, true );
@@ -881,9 +885,7 @@ class MLA_WPML {
 			} // taxonomy
 		} // translation
 
-		/*
-		 * Add missing translated terms to the term_master array
-		 */		
+		// Add missing translated terms to the term_master array
 		foreach ( self::$relevant_terms as $term ) {
 			foreach ( $term['translations'] as $translation ) {
 				if ( array_key_exists( $translation->element_id, self::$relevant_terms ) ) {
@@ -1009,6 +1011,8 @@ class MLA_WPML {
 			return;
 		}
 
+		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_build_tax_input( {$post_id} ) \$tax_actions = " . var_export( $tax_actions, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
+		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_build_tax_input( {$post_id} ) \$tax_inputs = " . var_export( $tax_inputs, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 		self::$tax_input = array( 'tax_input_post_id' => $post_id );
 		$active_languages = $sitepress->get_active_languages();
 
@@ -1095,9 +1099,7 @@ class MLA_WPML {
 			} // flat taxonomy
 
 			foreach( $active_languages as $language => $language_details ) {
-				/*
-				 * Apply the tax_action to the terms_before to find the terms_after
-				 */
+				// Apply the tax_action to the terms_before to find the terms_after
 				$term_changes = isset( $input_terms[ $language ] ) ? $input_terms[ $language ] : array();
 				if ( 'replace' == $tax_action ) {
 					$terms_after = $term_changes;
@@ -1113,9 +1115,7 @@ class MLA_WPML {
 					} // input_term
 				}
 
-				/*
-				 * Convert terms_after to tax_input format
-				 */
+				// Convert terms_after to tax_input format
 				$term_changes = array();
 				foreach( $terms_after as $input_term ) {
 					$term_changes[] = $input_term->term_id;
@@ -1290,9 +1290,9 @@ class MLA_WPML {
 			$terms_before = self::_update_existing_terms( $post_id );
 			MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_apply_term_synchronization( {$post_id} ) terms_before = " . var_export( $terms_before, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 
-			// $tax_input is a convenient source of language codes; ignore $tax_inputs
 			$current_language = $sitepress->get_current_language();
-			foreach( self::$tax_input as $language => $tax_inputs ) {
+			$active_languages = $sitepress->get_active_languages();
+			foreach( $active_languages as $language => $tax_inputs ) {
 				MLACore::mla_debug_add( __LINE__ . " MLA_WPML::_apply_term_synchronization( {$post_id}, {$language} ) tax_inputs = " . var_export( $tax_inputs, true ), MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
 				// Skip the language we've already updated
 				if ( ( ! isset( self::$existing_terms[ $language ] ) ) || ( self::$existing_terms[ 'language_code' ] == $language ) ) {
@@ -1322,6 +1322,11 @@ class MLA_WPML {
 	 */
 	public static function mla_updated_single_item( $post_id, $result ) {
 		MLACore::mla_debug_add( __LINE__ . " MLA_WPML::mla_updated_single_item( {$post_id}, {$result} )", MLACore::MLA_DEBUG_CATEGORY_LANGUAGE );
+
+		// Existing terms might have changed, e.g., during uploads
+		if ( self::$existing_terms['element_id'] == 0 ) {
+			self::_build_existing_terms( $post_id );
+		}
 
 		if ( self::$existing_terms['element_id'] == $post_id ) {
 			// Synchronize the changes to all other translations
@@ -1560,24 +1565,101 @@ class MLA_WPML {
 	} // edit_attachment
 
 	/**
-	 * Modify and extend the substitution values used for the Bulk Edit on Upload form.
+	 * MLA_List_Table item bulk edit form preset values
 	 *
-	 * @since 2.20
+	 * This filter gives you a chance to modify or extend the presets used to populate
+	 * the Bulk Edit on Upload form.
 	 *
-	 * @param	array	$page_values [ parameter_name => parameter_value ] pairs
+	 * @since 3.02
+	 *
+	 * @param	array	$option_value data values to populate the form presets
+	 * @param	string	$option 'mla_bulk_edit_presets' or 'mla_bulk_edit_presets_per_user'
+	 * @param	boolean	$get_default True to ignore current setting and return default values
 	 */
-	public static function mla_upload_bulk_edit_form_values( $page_values ) {
+	public static function mla_get_bulk_edit_form_presets( $option_value, $option, $get_default ) {
+		//error_log( __LINE__ . " MLA_WPML::mla_get_bulk_edit_form_presets( {$option}, {$get_default} ) \$option_value = " . var_export( $option_value, true ), 0 );
+
+		if ( class_exists( 'WPML_Media', false ) ) {
+			if ( $get_default || empty( $option_value['mla_always_translate_media'] ) ) {
+				$content_defaults = WPML_Media::get_setting( 'new_content_settings' );
+				if ( isset( $content_defaults['always_translate_media'] ) && $content_defaults['always_translate_media'] ) {
+					$option_value['mla_always_translate_media'] = 'true';
+				} else {
+					$option_value['mla_always_translate_media'] = 'false';
+				}
+			}
+		} else {
+			unset( $option_value['mla_always_translate_media'] );
+		}
+
+		return $option_value;
+	} // mla_get_bulk_edit_form_presets
+	
+	/**
+	 * MLA_List_Table item bulk edit fieldset values
+	 *
+	 * This filter gives you a chance to modify the data values that populate the Bulk Edit form.
+	 *
+	 * @since 3.02
+	 *
+	 * @param	array	$fieldset_values data values to populate the form
+	 * @param	string	$filter_root identify the blank, initial and preset fieldsets
+	 */
+	public static function mla_upload_bulk_edit_fieldset_values( $fieldset_values, $filter_root ) {
 		/*
-		 * Add markup to the $page_values ['custom_fields'] element for the "Always translate" checkbox
+		 * You can use the 'filter_root' argument to distinguish among :
+		 *     mla_upload_bulk_edit_form_blank,
+		 *     mla_upload_bulk_edit_form_initial,
+		 *     mla_upload_bulk_edit_form_preset
 		 */
+		//error_log( __LINE__ . " MLA_WPML::mla_upload_bulk_edit_fieldset_values( {$filter_root} ) \$fieldset_values = " . var_export( $fieldset_values, true ), 0 );
+
+		if ( empty( $fieldset_values['mla_always_translate_media'] ) ) {
+			$fieldset_values['mla_always_translate_media'] = 'true';
+		}
+
+		//error_log( __LINE__ . " MLA_WPML::mla_upload_bulk_edit_fieldset_values( {$filter_root} ) \$fieldset_values = " . var_export( $fieldset_values, true ), 0 );
+		self::$_upload_bulk_edit_fieldset_values = $fieldset_values;
+		
+		return $fieldset_values;
+	} // mla_upload_bulk_edit_fieldset_values
+
+	/**
+	 * Share fieldset values between mla_upload_bulk_edit_fieldset_values() and mla_upload_bulk_edit_values()
+	 *
+	 * @since 3.02
+	 *
+	 * @var	array	fieldset values
+	 */
+	private static $_upload_bulk_edit_fieldset_values = array( 'mla_always_translate_media' => 'true' );
+
+	/**
+	 * MLA_List_Table item bulk edit values
+	 *
+	 * This filter gives you a chance to modify the substitution parameters used to populate
+	 * the Bulk Edit on Upload form.
+	 *
+	 * @since 3.02
+	 *
+	 * @param	array	$page_values subsitiution parameter values to populate the form
+	 */
+	public static function mla_upload_bulk_edit_values( $page_values ) {
+		/*
+		 * You can use the 'filter_root' argument to distinguish among :
+		 *     mla_upload_bulk_edit_form_blank,
+		 *     mla_upload_bulk_edit_form_initial,
+		 *     mla_upload_bulk_edit_form_preset
+		 */
+		//error_log( __LINE__ . " MLA_WPML::mla_upload_bulk_edit_values() \$page_values = " . var_export( $page_values, true ), 0 );
+
+		// Add markup to the $fieldset_values ['custom_fields'] element for the "Always translate" checkbox
 		if ( class_exists( 'WPML_Media' ) ) {
-			$content_defaults = WPML_Media::get_setting( 'new_content_settings' );
-			if ( isset( $content_defaults['always_translate_media'] ) && $content_defaults['always_translate_media'] ) {
-				$true_selected = 'selected="selected"';
-				$false_selected = '';
-			} else {
+			if ( isset( self::$_upload_bulk_edit_fieldset_values['mla_always_translate_media'] ) && ( 'false' === self::$_upload_bulk_edit_fieldset_values['mla_always_translate_media'] ) ) {
 				$true_selected = '';
 				$false_selected = 'selected="selected"';
+			} else {
+				$true_selected = 'selected="selected"';
+				$false_selected = '';
 			}
 
 			$page_values['custom_fields'] .= '      <label class="inline-edit-c_0 clear"><span class="title">WPML</span><span class="input-text-wrap">' . "\n";
@@ -1588,8 +1670,9 @@ class MLA_WPML {
 			$page_values['custom_fields'] .= '      </span></label>' . "\n";
 		}
 
- 		return $page_values;
-	} // mla_upload_bulk_edit_form_values
+		//error_log( __LINE__ . " MLA_WPML::mla_upload_bulk_edit_values() \$page_values = " . var_export( $page_values, true ), 0 );
+		return $page_values;
+	} // mla_upload_bulk_edit_values
 
 	/**
 	 * Adds the "Language" tab to the Settings/Media Library Assistant list
@@ -1718,9 +1801,7 @@ class MLA_WPML {
 			return $page_content;
 		}
 
-		/*
-		 * Find WPML Media plugin status
-		 */
+		// Find WPML Media plugin status
 		$installed = false;
 		$active = false;
 		$wpml_media = SitePress::get_installed_plugins();

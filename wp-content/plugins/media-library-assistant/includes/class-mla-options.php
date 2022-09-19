@@ -801,6 +801,11 @@ class MLAOptions {
 				do_action( 'mla_end_mapping' );
 			}
 		} else {
+			// WPLR sync invokes this filter multiple times, changing file data in between; flush the cache
+			if ( isset( $_SERVER['REQUEST_URI'] ) && false !== strpos( $_SERVER['REQUEST_URI'], '/?wplr-sync-api' ) ) { // phpcs:ignore
+				MLAData::mla_expand_field_level_parameters( '', NULL, array(), -1 );
+			}
+
 			if ( $options['enable_iptc_exif_update'] || $options['enable_custom_field_update'] ) {
 				do_action( 'mla_begin_mapping', 'update_metadata', $post_id );
 			}

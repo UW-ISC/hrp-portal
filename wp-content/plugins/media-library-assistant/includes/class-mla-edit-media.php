@@ -321,17 +321,19 @@ class MLAEdit {
 	public static function mla_get_bulk_edit_form_presets( $option, $get_default = false ) {
 //error_log( __LINE__ . " MLAEdit::mla_get_bulk_edit_form_presets( {$option}, {$get_default} ) _per_user = " . var_export( MLACore::mla_get_option( $option . '_per_user' ), true ), 0 );
 		if ( $get_default || ( 'checked' !== MLACore::mla_get_option( $option . '_per_user' ) ) ) {
-			return MLACore::mla_get_option( $option, $get_default );
+			$option_value = MLACore::mla_get_option( $option, $get_default );
+		} else {
+			// Handle per-user option
+			$option_value = get_user_meta( get_current_user_id(), $option, true );
 		}
-		
-		// Handle per-user option
-		$option_value = get_user_meta( get_current_user_id(), $option, true );
-//error_log( __LINE__ . ' MLAEdit::mla_get_bulk_edit_form_presets option_value = ' . var_export( $option_value, true ), 0 );
+//error_log( __LINE__ . " MLAEdit::mla_get_bulk_edit_form_presets( {$option}, {$get_default} ) option_value = " . var_export( $option_value, true ), 0 );
 
 		if ( empty( $option_value ) ) {
-			return MLACore::mla_get_option( $option, true );
+			$option_value = MLACore::mla_get_option( $option, true );
 		}
+		$option_value = apply_filters( 'mla_get_bulk_edit_form_presets', $option_value, $option, $get_default );
 
+//error_log( __LINE__ . " MLAEdit::mla_get_bulk_edit_form_presets( {$option}, {$get_default} ) option_value = " . var_export( $option_value, true ), 0 );
 		return $option_value;
 	}
 
@@ -710,6 +712,11 @@ class MLAEdit {
 				  'label' => esc_attr( $details['name'] ),
 				  'value' => '',
 			  );
+			  
+			  if ( !empty( $fieldset_values['custom_fields'][ $details['name'] ] ) ) {
+				  $element_values['value'] = $fieldset_values['custom_fields'][ $details['name'] ];
+			  }
+
 			  $custom_fields .= MLAData::mla_parse_template( self::$fieldset_template_array['custom_field'], $element_values );
 		}
 
