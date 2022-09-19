@@ -6,7 +6,7 @@
  * will the rest of the plugin be loaded and run.
  *
  * @package Media Library Assistant
- * @version 3.01
+ * @version 3.04
  */
 
 /*
@@ -16,7 +16,7 @@ Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] 
 Author: David Lingren
 Text Domain: media-library-assistant
 Domain Path: /languages
-Version: 3.01
+Version: 3.04
 Author URI: http://davidlingren.com/
 
 Copyright 2011-2022 David Lingren

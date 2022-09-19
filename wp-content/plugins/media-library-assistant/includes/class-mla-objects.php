@@ -369,7 +369,7 @@ class MLATextWidget extends WP_Widget {
 		<p><label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php echo esc_html__( 'Title', 'media-library-assistant' ) . ':'; ?></label>
 		<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>" /></p>
 
-		<textarea class="widefat" rows="16" cols="20" id="<?php echo esc_attr( $this->get_field_id( 'text' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'text' ) ); ?>"><?php echo esc_textarea( $text ); ?></textarea>
+		<textarea class="widefat" rows="16" cols="20" id="<?php echo esc_attr( $this->get_field_id( 'text' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'text' ) ); ?>"><?php echo $text; // phpcs:ignore ?></textarea>
 
 		<p><input id="<?php echo esc_attr( $this->get_field_id( 'filter' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'filter' ) ); ?>" type="checkbox" <?php checked( isset( $instance['filter'] ) ? $instance['filter'] : 0 ); ?> />&nbsp;<label for="<?php echo esc_attr( $this->get_field_id( 'filter' ) ); ?>"><?php esc_html_e( 'Automatically add paragraphs', 'media-library-assistant' ); ?></label></p>
 		<p><input id="<?php echo esc_attr( $this->get_field_id( 'textwidget_div' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'textwidget_div' ) ); ?>" type="checkbox" <?php checked( isset( $instance['textwidget_div'] ) ? $instance['textwidget_div'] : 1 ); ?> />&nbsp;<label for="<?php echo esc_attr( $this->get_field_id( 'textwidget_div' ) ); ?>"><?php esc_html_e( 'Add .textwidget div tags', 'media-library-assistant' ); ?></label></p>

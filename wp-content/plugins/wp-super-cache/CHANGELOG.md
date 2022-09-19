@@ -5,14 +5,22 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.8] - 2022-08-16
+## [1.9] - 2022-09-16
 ### Added
-- Added WP Super cache to the repo.
-- PHP 8 Support: Ensure the expected value for the $auto_release in sem_get is used.
+- Cache deletion: add new hook to trigger actions after a successful cache deletion from the admin bar. [#26202]
 
 ### Fixed
-- Fixed the display issue with the survey link
-- Updated readme.txt, changelog.md and the composer slug.
+- Fixes to URL parsing to prevent cache pollution issues around URLs with double-slashes. [#26247]
+
+## [1.8] - 2022-08-16
+### Added
+- PHP 8 Support: Ensure the expected value for the $auto_release in sem_get is used.
+- Added a link to give feedback on WP Super Cache
+- Added information on Jetpack Boost
+
+### Fixed
+- Fixed jQuery deprecated notice
+- Fixed replacing dirname(__FILE__) with __DIR__
 
 ## 1.7.9 - 2022-06-07
 
@@ -602,4 +610,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Misc fixes
 
+[1.9]: https://github.com/Automattic/wp-super-cache/compare/v1.8...v1.9
 [1.8]: https://github.com/Automattic/wp-super-cache/compare/v1.7.9...v1.8

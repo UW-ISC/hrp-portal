@@ -1332,7 +1332,7 @@ class MLAData {
 	 * @param	string	A formatting string containing [+placeholders+]
 	 * @param	array	Optional: an array of values from the query, if any, e.g. shortcode parameters
 	 * @param	array	Optional: an array of values to add to the returned array
-	 * @param	integer	Optional: attachment ID for attachment-specific placeholders
+	 * @param	integer	Optional: attachment ID for attachment-specific placeholders; use -1 to flush the cache
 	 * @param	boolean	Optional: for option 'multi', retain existing values
 	 * @param	string	Optional: default option value
 	 * @param	array	Optional: attachment_metadata, required during item uploads
@@ -1342,12 +1342,18 @@ class MLAData {
 	public static function mla_expand_field_level_parameters( $tpl, $query = NULL, $markup_values = array(), $post_id = 0, $keep_existing = false, $default_option = 'text', $upload_metadata = NULL ) {
 		static $cached_post_id = 0, $item_metadata = NULL, $attachment_metadata = NULL, $id3_metadata = NULL;
 
-		if ( $cached_post_id != $post_id ) {
+		if ( $cached_post_id !== $post_id ) {
+			
 			$item_metadata = NULL;
 			$attachment_metadata = NULL;
 			$id3_metadata = NULL;
 			MLAData::mla_reset_regex_matches( $post_id );
 			$cached_post_id = $post_id;
+			
+			if ( -1 === $post_id ) {
+				$cached_post_id = 0;
+				return array();
+			}
 		}
 
 		$template_count = 0;

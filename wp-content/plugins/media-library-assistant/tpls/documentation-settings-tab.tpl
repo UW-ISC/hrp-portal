@@ -6138,6 +6138,10 @@ The Media/Assistant Bulk Edit area has three copies of field-level values. The "
 </p>
 <table>
 <tr>
+<td class="mla-doc-hook-label">mla_get_bulk_edit_form_presets</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify or extend the presets used to populate the Media/Assistant Bulk Edit and Bulk Edit on Upload forms.</td>
+</tr>
+<tr>
 <td class="mla-doc-hook-label">mla_list_table_inline_blank_fieldset_values,<br />
 mla_list_table_inline_initial_fieldset_values,<br />
 mla_list_table_inline_preset_fieldset_values
@@ -6245,6 +6249,10 @@ The following hooks are defined in <code>/media-library-assistant/includes/class
 The Media/Add New (Upload New Media) Bulk Edit area has three copies of field-level values. The "initial" values are displayed when the Area opens. The "blank" values are used when the "Reset" button is clicked. The "preset" values are used when the "Import" button is clicked. There are filters that give you a chance to modify the values and templates used to populate each of these three copies separately. The following hooks are defined in <code>/media-library-assistant/includes/class-mla-edit-media.php</code>, function <code>mla_generate_bulk_edit_form_fieldsets()</code>:
 </p>
 <table>
+<tr>
+<td class="mla-doc-hook-label">mla_get_bulk_edit_form_presets</td>
+<td class="mla-doc-hook-definition">Gives you a chance to modify or extend the presets used to populate the Media/Assistant Bulk Edit and Bulk Edit on Upload forms.</td>
+</tr>
 <tr>
 <td class="mla-doc-hook-label">mla_upload_bulk_edit_form_blank_fieldset_values,<br />
 mla_upload_bulk_edit_form_initial_fieldset_values,<br />

@@ -1,11 +1,11 @@
 ﻿=== Media Library Assistant ===
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
-Tags: media, media library, gallery, images, categories, tags, attachments, IPTC, EXIF, XMP, GPS, PDF, metadata, photos, photographs, photo albums, MIME, mime-type, icon, upload, file extensions, WPML, Polylang
+Tags: categories, gallery, images, media, media library, tags
 Requires at least: 3.5.0
-Tested up to: 6.0
+Tested up to: 6.0.2
 Requires PHP: 5.3
-Stable tag: 3.01
+Stable tag: 3.04
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -187,6 +187,27 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.04 =
+* Fix: When Photo Engine (WP/LR Sync) is active, a PHP Fatal Error with mapping rules during "sync" operations has been corrected.
+
+= 3.03 =
+* Fix: For the `[mla_gallery]` shortcode, a defect (introduced in v3.02) in expanding template values has been corrected.
+
+= 3.02 =
+
+* New: The new "MLA WFU Data Source" example plugin provides enhanced access to the "additional fields" created by the WordPress File Upload plugin. The Settings/MLA WFU Data Documentation tab has details.
+* New: For the Media/Assistant Bulk Edit area and the Bulk Edit on Upload area, the new "mla_get_bulk_edit_form_presets" filter lets you customize preset fields and content.
+* Fix: When Polyang is active, a defect with the "Language" dropdown for Quick Translate, Quick Edit and Bulk Edit has been corrected.
+* Fix: When Photo Engine (WP/LR Sync) is active, a defect with mapping rules during "sync" operations has been corrected.
+* Fix: For the Media/Assistant Search Media function, the enter key now triggers a search when the text box is not empty.
+* Fix: When WPML is active, the "Make media available in all languages" dropdown control has been restored to the Bulk Edit on Upload area.
+* Fix: When WPML is active, term synchronization has been restored when new items are uploaded.
+* Fix: For the Media/Assistant Bulk Edit area and the Bulk Edit on Upload area, custom field values are now retained as presets for the export/import actions.
+* Fix: For the Media/Assistant admin submenu, Fatal PHP errors when Bulk Editing the Uploaded on values on a site with a positive UTC offset Timezone have been avoided.
+* Fix: For the "MLA CSV Data Source Example" plugin, links to the Settings/Media Library Assistant Documentation tab have been restored.
+* Fix: HTML markup is preserved when editing the source of an "MLA Text" widget, subject to a `current_user_can('unfiltered_html')` check.
+* Fix: For the Media/Assistant admin submenu, Fatal PHP errors when pressing the "Terms Search" button before the page load is finished have been avoided.
+
 = 3.01 =
 
 * Fix: For the Media/Assistant Bulk Edit feature, AJAX errors have been corrected.
@@ -218,29 +239,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: For the Media/Assistant Bulk Edit Area, failure to update a field to a value of '0' has been corrected.
 * Fix: For the "MLA Simple Mapping Hooks Example" plugin, the plugin is now active when media item inserts are performed in Gutenberg blocks.
 
-= 2.99 =
-
-* New: On the Media/Add New (Upload New Media) and Media/Assistant screens, **MLA Bulk Edit Area values can be saved and recalled for future/repeated use.**
-* New: Current date and time values are available as field-level data sources, `current_timestamp`, `current_datetime` and `current_getdate`.
-* New: Library Views based on a custom field query can now include MIME type filters in addition to the custom field query.
-* New: The "MLA Advanced Custom Fields Example" and "MLA Image Source Control Example" plugins have been updated to support the new Bulk Edit Area features.
-* Fix: For the `terms:` substitution prefix, operation of the field qualifier, e.g., `terms:attachment_tag(slug)`, has been restored.
-* Fix: For the Polylang plugin, some defects in the display of the Media/Assistent country/flags column have been corrected.
-* Fix: To reduce security risks, taxonomy, date and meta queries no longer use the "eval" function to convert parameter values to array variables.
-* Fix: For some forms of the Media Manager Modal (popup) Window, taxonomy "click to toggle" functions have been restored.
-* Fix: For `[mla_gallery]`, `mla_nolink_text` handling for `paginate_links` has been restored.
-* Fix: For `[mla_gallery]` with Real Media Library Pro, the `orderby=` parameter has been restored.
-* Fix: Version numbers for CSS and JavaScript files now include Development Version date to prevent "stale" stylesheet and script problems.
-* Fix: For the "Smart Media Categories" example plugin, syncing child and parent terms during attachment uploads has been restored.
-* Fix: For the "Smart Media Categories" example plugin, synch status coloring in the Posts/All Posts "Children" table column has been corrected.
-* Fix: For the Settings/Media Library Assistant Views tab, a PHP warning message when canceling an Edit View action has been eliminated.
-* Fix: For the Media/Add New Bulk Edit area and the Media/Assistant Bulk and Quick Edit areas, the taxonomy "Add New Term" function has been repaired.
-* Fix: For `[mla_term_list]`, `include_tree` and `exclude_tree` are now evaluated before `child_of` to improve the results.
-* Fix: For `[mla_term_list]`, named control values are removed from the `$_REQUEST` array if the value is not present in the current term list.
-* Fix: For `[mla_term_list]`, `current_item_class` assignments for term_id values have been restored.
-* Fix: For the "MLA Advanced Custom Fields Example" plugin, a PHP warning message during Media/Assistant bulk actions has been eliminated.
-
-= 2.90 - 2.98 =
+= 2.90 - 2.99 =
+* 2.99 - WordPress 5.9 support. Bulk Edit values save/restore, current date/time data sources, custom field Library views filtered by MIME type. Four enhancements in all, fifteen fixes.
 * 2.98 - New "Attachment File Metadata" meta box on the Media/Edit Media screen. Enhanced "MLA Advanced Custom Fields Example" and new "MLA Filename Issues Example" plugins.  Five enhancements in all, eleven fixes.
 * 2.97 - IMPORTANT: [mla_gallery] PHP "Warning: array_key_exists()..." messages have been eliminated. WP 5.8, cropping of MMMW top row image thubmnails fixed. Description element added to mapping rules. Four enhancements in all, four fixes.
 * 2.96 - WordPress 5.8 support! New [muie_archive_list] shortcode. CSV export item values. Support for Enhanced Media Library plugin. Donation links are back. Thirteen enhancements in all, fourteen fixes.
@@ -361,8 +361,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.01 =
-IMPORTANT: For the Media/Assistant Bulk Edit feature, AJAX errors have been corrected.
+= 3.04 =
+Fix: When Photo Engine (WP/LR Sync) is active, a PHP Fatal Error with mapping rules during "sync" operations has been corrected.
 
 == Other Notes ==
 

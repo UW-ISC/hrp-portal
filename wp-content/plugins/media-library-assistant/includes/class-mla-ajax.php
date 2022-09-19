@@ -378,6 +378,7 @@ class MLA_Ajax {
 
 		// Get a "blank" presets array we can fill in with current settings
 		$presets = MLAEdit::mla_get_bulk_edit_form_presets( $_REQUEST['mla_preset_option'], true );
+//error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action presets = ' . var_export( $presets, true ), 0 );
 
 		foreach ( $presets as $key => $value ) {
 			if ( !empty( $args[ $key ] ) ) {

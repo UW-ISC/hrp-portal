@@ -40,7 +40,7 @@ if ( empty( $supported_taxonomies ) ) {
 ?>
 <p class="search-box">
 <label class="screen-reader-text" for="mla-media-search-input"><?php esc_html_e( 'Search Media', 'media-library-assistant' ); ?></label>
-<input name="s" id="mla-media-search-input" type="text" size="45" value="<?php echo esc_attr( $search_value ) ?>" />
+<input name="s" id="mla-media-search-input" type="search" size="45" value="<?php echo esc_attr( $search_value ) ?>" />
 <input name="mla-search-submit" class="button" id="search-submit" type="submit" value="<?php esc_attr_e( 'Search Media', 'media-library-assistant' ); ?>" /><br />
 <span <?php echo wp_kses( $controls_style, 'post' ) ?>>
 <span id="search-title-span">
