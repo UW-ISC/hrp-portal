@@ -296,10 +296,15 @@ class MLA_Polylang {
 				}
 
 				if ( ! array_key_exists( $inline_lang_choice, $translations ) ) {
-					$post = get_post( $post_id );
-					// save_post() does a check_admin_referer() security test
-					$_REQUEST['_inline_edit'] = wp_create_nonce( 'inlineeditnonce' );
-					$polylang->filters_post->save_post( $post_id, $post, true );
+					if ( self::$polylang_1dot8_plus ) {
+						$lang = PLL()->model->get_language( $inline_lang_choice );
+						PLL()->model->post->update_language( $post_id, $lang );
+					} else {
+						$post = get_post( $post_id );
+						// save_post() does a check_admin_referer() security test
+						$_REQUEST['_inline_edit'] = wp_create_nonce( 'inlineeditnonce' );
+						$polylang->filters_post->save_post( $post_id, $post, true );
+					}
 
 					if ( 'checked' == MLACore::mla_get_option( 'term_assignment', false, false, MLA_Polylang::$mla_language_option_definitions ) ) {
 						// Record new language for Term Assignment and Synchronization
@@ -1732,10 +1737,15 @@ class MLA_Polylang {
 
 			$inline_lang_choice = sanitize_text_field( wp_unslash( $_REQUEST['inline_lang_choice'] ) );
 			if ( ! array_key_exists( $inline_lang_choice, $translations ) ) {
-				$post = get_post( $post_id );
-				// save_post() does a check_admin_referer() security test
-				$_REQUEST['_inline_edit'] = wp_create_nonce( 'inlineeditnonce' );
-				$polylang->filters_post->save_post( $post_id, $post, true );
+				if ( self::$polylang_1dot8_plus ) {
+					$lang = PLL()->model->get_language( $inline_lang_choice );
+					PLL()->model->post->update_language( $post_id, $lang );
+				} else {
+					$post = get_post( $post_id );
+					// save_post() does a check_admin_referer() security test
+					$_REQUEST['_inline_edit'] = wp_create_nonce( 'inlineeditnonce' );
+					$polylang->filters_post->save_post( $post_id, $post, true );
+				}
 
 				// Record new language for Term Assignment and Synchronization
 				if ( ( ! empty( $_REQUEST['tax_input'] ) ) && ( 'checked' == MLACore::mla_get_option( 'term_assignment', false, false, MLA_Polylang::$mla_language_option_definitions ) ) ) {
@@ -1852,12 +1862,17 @@ class MLA_Polylang {
 
 		// Language dropdown in Bulk Edit area
 		if ( isset( $_POST['inline_lang_choice'] ) && ( '-1' != $_POST['inline_lang_choice'] ) ) {
-			$post = get_post( $post_id );
-			// save_post() does a check_admin_referer() security test
-			$_REQUEST['_wpnonce'] = wp_create_nonce( 'bulk-posts' );
-			// save_post() looks for $_GET['bulk_edit']
-			$_REQUEST['bulk_edit'] = $_GET['bulk_edit'] ='Update';
-			$polylang->filters_post->save_post( $post_id, $post, true );
+			if ( self::$polylang_1dot8_plus ) {
+				$lang = PLL()->model->get_language( $_POST['inline_lang_choice'] );
+				PLL()->model->post->update_language( $post_id, $lang );
+			} else {
+				$post = get_post( $post_id );
+				// save_post() does a check_admin_referer() security test
+				$_REQUEST['_wpnonce'] = wp_create_nonce( 'bulk-posts' );
+				// save_post() looks for $_GET['bulk_edit']
+				$_REQUEST['bulk_edit'] = $_GET['bulk_edit'] ='Update';
+				$polylang->filters_post->save_post( $post_id, $post, true );
+			}
 
 			if ( isset( $_REQUEST['inline_lang_choice'] ) &&( $_REQUEST['inline_lang_choice'] != -1 ) ) {
 				$item_content = array( 'message' => "Item {$post_id}, language updated." );
@@ -2072,9 +2087,7 @@ class MLA_Polylang {
 	public static function mla_list_table_inline_parse( $html_markup, $item_template, $item_values ) {
 		global $polylang, $post_ID;
 
-		/*
-		 * Add the Quick and Bulk Translate Markup
-		 */
+		// Add the Quick and Bulk Translate Markup
 		$page_template_array = MLACore::mla_load_template( 'mla-polylang-support.tpl' );
 		if ( ! is_array( $page_template_array ) ) {
 			MLACore::mla_debug_add( 'ERROR: mla-polylang-support.tpl path = ' . var_export( plugin_dir_path( __FILE__ ) . 'mla-polylang-support.tpl', true ), MLACore::MLA_DEBUG_CATEGORY_ANY );
@@ -2164,9 +2177,12 @@ class MLA_Polylang {
 			MLA_Polylang::$language_columns = array();
 
 			if ( isset( $_REQUEST['quick_current_language'] ) ) {
-				$current_language = (object) array( 'slug' => sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) ) );
+				$current_language = sanitize_text_field( wp_unslash( $_REQUEST['quick_current_language'] ) );
+				if ( !empty( $current_language ) ) {
+					$current_language = (object) array( 'slug' => $current_language );
+				}
 			} else {
-				$current_language =  $polylang->curlang;
+				$current_language = $polylang->curlang;
 			}
 
 			if ( $show_language && empty( $current_language ) ) {

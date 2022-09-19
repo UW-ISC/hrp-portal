@@ -1058,7 +1058,17 @@ class MLA {
 				$tz = get_option( 'timezone_string' );
 				if ( !$tz ) {
 					$tz = get_option( 'gmt_offset' );
-					if ( !$tz ) {
+					if ( $tz ) {
+						// Adapted from /wp-includes/functions.php wp_timezone_string() added in WP 5.3.0
+						$offset  = (float) $tz;
+						$hours   = (int) $offset;
+						$minutes = ( $offset - $hours );
+					
+						$sign      = ( $offset < 0 ) ? '-' : '+';
+						$abs_hour  = abs( $hours );
+						$abs_mins  = abs( $minutes * 60 );
+						$tz = sprintf( '%s%02d:%02d', $sign, $abs_hour, $abs_mins );
+					} else {
 						$tz = 'UTC';
 					}
 				}
@@ -1734,7 +1744,7 @@ class MLA {
 			// Display Attachments list
 			if ( !empty( $_REQUEST['heading_suffix'] ) ) {
 				echo ' - ' . esc_html( urldecode( wp_kses( wp_unslash( $_REQUEST['heading_suffix'] ), 'post' ) ) ) . wp_kses( $heading_tail, 'post' );
-			} elseif ( !empty( $_REQUEST['mla_terms_search'] ) ) {
+			} elseif ( !empty( $_REQUEST['mla_terms_search'] ) && is_array( $_REQUEST['mla_terms_search'] ) ) {
 					echo ' - ' . esc_html__( 'term search results for', 'media-library-assistant' ) . ' "' . esc_html( trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) ) ). "\"" . wp_kses( $heading_tail, 'post' );
 			} elseif ( !empty( $_REQUEST['s'] ) ) {
 				if ( empty( $_REQUEST['mla_search_fields'] ) ) {

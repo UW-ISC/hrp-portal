@@ -3,7 +3,7 @@
  * Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
  *
  * @package MLA List Table Hooks Example
- * @version 1.12
+ * @version 1.13
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: MLA List Table Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
 Author: David Lingren
-Version: 1.12
+Version: 1.13
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2022 David Lingren
@@ -140,6 +140,8 @@ class MLAListTableHooksExample {
 		add_filter( 'views_upload', 'MLAListTableHooksExample::views_upload', 10, 1 );
 
 		// Defined in /media-library-assistant/includes/class-mla-edit-media.php
+		add_filter( 'mla_get_bulk_edit_form_presets', 'MLAListTableHooksExample::mla_get_bulk_edit_form_presets', 10, 3 );
+
 		add_filter( 'mla_upload_bulk_edit_form_values', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_values', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_template', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_template', 10, 1 );
 		add_filter( 'mla_upload_bulk_edit_form_parse', 'MLAListTableHooksExample::mla_upload_bulk_edit_form_parse', 10, 3 );
@@ -1175,6 +1177,24 @@ class MLAListTableHooksExample {
 		return $views;
 	} // views_upload
 
+	/**
+	 * MLA_List_Table item bulk edit form preset values
+	 *
+	 * This filter gives you a chance to modify or extend the presets used to populate
+	 * the Media/Assistant Bulk Edit and Bulk Edit on Upload forms.
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$option_value data values to populate the form presets
+	 * @param	string	$option 'mla_bulk_edit_presets' or 'mla_bulk_edit_presets_per_user'
+	 * @param	boolean	$get_default True to ignore current setting and return default values
+	 */
+	public static function mla_get_bulk_edit_form_presets( $option_value, $option, $get_default ) {
+		//error_log( __LINE__ . " MLAListTableHooksExample::mla_get_bulk_edit_form_presets( {$option}, {$get_default} ) \$option_value = " . var_export( $option_value, true ), 0 );
+
+		return $option_value;
+	} // mla_get_bulk_edit_form_presets
+	
 	/**
 	 * MLAEdit bulk edit on upload item values
 	 *
