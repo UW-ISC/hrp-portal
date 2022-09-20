@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.0
-Stable tag: 2.19.0
+Stable tag: 2.19.1
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,10 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.19.1 =
+* Minor fix: WooCommerce layered navigation compatibility caused enough problems that I've disabled it by default. You can enable it with `add_filter( 'woocommerce_get_filtered_term_product_counts_query', 'relevanssi_filtered_term_product_counts_query' );`.
+* Minor fix: Data attribute handling for in-document highlighting is now better.
+
 = 2.19.0 =
 * New feature: New CLI command `list_pinned_posts` lists all pinned and unpinned posts.
 * New feature: New CLI command `list` lists indexed and unindexed posts, taxonomy terms and users.
@@ -334,8 +338,8 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: The Bricks compatibility was improved, Relevanssi now notices changes to Bricks posts more often. Relevanssi also only reads the text from the `_bricks_page_content_2` custom field.
 
 == Upgrade notice ==
+= 2.19.1 =
+* Disables the WooCommerce layered navigation support by default.
+
 = 2.19.0 =
 * Large number of bug fixes and general improvements.
-
-= 2.18.0 =
-* Indexing improvements; please reindex after upgrade! Oxygen 4 compatibility.
