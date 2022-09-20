@@ -5,6 +5,12 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.2.7 =
+
+* Improvement: Update list of available Google Fonts
+* Improvement: Process shortcodes in icon toggle block URL
+* Fix: Custom icon toggle block could not be activated using keyboard navigation
+
 = 2.2.6 =
 
 * Fix: Localisation fixes

@@ -388,7 +388,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
             $closed_img .= "></img>";
         }
 
-        $html = '<span class="mega-toggle-label" role="button" aria-expanded="false">';
+        $html = '<span class="mega-menu-toggle-block mega-toggle-label" role="button" aria-expanded="false" tabindex="0">';
         $html .=     '<span class="mega-toggle-label-closed">';
         $html .=         $closed_img;
         $html .=     '</span>';
@@ -1014,7 +1014,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
         $anchor_attributes = apply_filters( "megamenu_toggle_icon_attributes", array(
             'class' => 'mega-icon',
-            'href' => isset($settings['url']) ? $settings['url'] : get_home_url(),
+            'href' => isset($settings['url']) ? do_shortcode( stripslashes( html_entity_decode( $settings['url'], ENT_QUOTES ) ) ) : get_home_url(),
             'target' => isset($settings['target']) ? $settings['target'] : '_self',
             'title' => isset($settings['title']) ? $settings['title'] : ''
         ), $settings );

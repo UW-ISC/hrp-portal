@@ -491,7 +491,7 @@ function relevanssi_premium_init() {
 		}
 	}
 
-	if ( function_exists( 'get_blog_status' ) ) {
+	if ( function_exists( 'is_multisite' ) && is_multisite() && function_exists( 'get_blog_status' ) ) {
 		$public = (bool) get_blog_status( get_current_blog_id(), 'public' );
 		if ( ! $public && 'options-general.php' === $pagenow && $on_relevanssi_page ) {
 			add_action(
