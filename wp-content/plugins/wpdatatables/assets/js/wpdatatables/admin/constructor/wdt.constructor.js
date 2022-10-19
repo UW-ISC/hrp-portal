@@ -183,19 +183,19 @@ var aceEditor = null;
                     case 'wp':
 
                         $('#wdt-constructor-table-connection').find("option:selected").each(function() {
-                          // remove data for selected 'wp' option if connection is not WP
-                          if ($(this).attr("data-vendor")) {
-                            // remove data for selected 'mysql' option
-                            $('#wdt-constructor-post-types-selected-table').find('tr').each(function(index, element) {
-                              $(element).addClass('selected');
-                            });
+                            // remove data for selected 'wp' option if connection is not WP
+                            if ($(this).attr("data-vendor")) {
+                                // remove data for selected 'mysql' option
+                                $('#wdt-constructor-post-types-selected-table').find('tr').each(function(index, element) {
+                                    $(element).addClass('selected');
+                                });
 
-                            $('.wdt-constructor-remove-post-type').trigger('click');
+                                $('.wdt-constructor-remove-post-type').trigger('click');
 
-                            $('#wdt-constructor-post-types-all-table').children().hide();
-                          } else {
-                            $('#wdt-constructor-post-types-all-table').children().show();
-                          }
+                                $('#wdt-constructor-post-types-all-table').children().hide();
+                            } else {
+                                $('#wdt-constructor-post-types-all-table').children().show();
+                            }
                         });
                         $('div.wdt-constructor-step[data-step="1-3"]').animateFadeIn();
                         previousStepButton.animateFadeIn();
@@ -438,13 +438,13 @@ var aceEditor = null;
     });
 
     function disableGroupingOptions (select) {
-      $(select).find("option:selected").each(function() {
-        if ($(this).attr("data-vendor") === 'mssql' || $(this).attr("data-vendor") === 'postgresql') {
-          $('.wdt-constructor-mysql-grouping-rules-block').css('visibility', 'hidden');
-        } else {
-          $('.wdt-constructor-mysql-grouping-rules-block').css('visibility', 'visible');
-        }
-      });
+        $(select).find("option:selected").each(function() {
+            if ($(this).attr("data-vendor") === 'mssql' || $(this).attr("data-vendor") === 'postgresql') {
+                $('.wdt-constructor-mysql-grouping-rules-block').css('visibility', 'hidden');
+            } else {
+                $('.wdt-constructor-mysql-grouping-rules-block').css('visibility', 'visible');
+            }
+        });
     }
 
     disableGroupingOptions('#wdt-constructor-table-connection');
@@ -457,7 +457,7 @@ var aceEditor = null;
 
         // remove data for selected 'mysql' option
         $('#wdt-constructor-mysql-tables-selected-table').find('tr').each(function(index, element) {
-          $(element).addClass('selected');
+            $(element).addClass('selected');
         });
 
         $('.wdt-constructor-remove-mysql-table').trigger('click');
@@ -470,7 +470,7 @@ var aceEditor = null;
         var inputMethod = $('.wdt-constructor-type-selecter-block .card.selected').data('value');
 
         if (typeof inputMethod !== 'undefined') {
-          $('#wdt-constructor-next-step').prop('disabled', true);
+            $('#wdt-constructor-next-step').prop('disabled', true);
         }
 
         $.ajax({
@@ -487,11 +487,11 @@ var aceEditor = null;
                 $('#wdt-constructor-mysql-tables-all-table').html('');
 
                 for (var i = 0; i < tables.length; i++) {
-                  $('#wdt-constructor-mysql-tables-all-table').append($('<tr>').append($('<td>').text(tables[i])));
+                    $('#wdt-constructor-mysql-tables-all-table').append($('<tr>').append($('<td>').text(tables[i])));
                 }
 
                 if (typeof inputMethod !== 'undefined') {
-                  $('#wdt-constructor-next-step').prop('disabled', false);
+                    $('#wdt-constructor-next-step').prop('disabled', false);
                 }
             },
             error: function (data) {
@@ -500,7 +500,7 @@ var aceEditor = null;
                 $('.wdt-preload-layer').animateFadeOut();
 
                 if (typeof inputMethod !== 'undefined') {
-                  $('#wdt-constructor-next-step').prop('disabled', false);
+                    $('#wdt-constructor-next-step').prop('disabled', false);
                 }
             }
         })
@@ -620,31 +620,7 @@ var aceEditor = null;
         e.stopImmediatePropagation();
         e.preventDefault();
 
-        var attachment = '';
-        //If the uploader object has already been created, reopen the dialog
-        if (customUploader) {
-            customUploader.open();
-            return;
-        }
-
-        customUploader = wp.media.frames.file_frame = wp.media({
-            title: wdtConstructorStrings.selectExcelCsv,
-            button: {
-                text: wdtConstructorStrings.chooseFile
-            },
-            multiple: false,
-            library: {
-                type: 'application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            }
-        });
-
-        customUploader.on('select', function () {
-            attachment = customUploader.state().get('selection').first().toJSON();
-            $('#wdt-constructor-input-url').val(attachment.url);
-        });
-
-        customUploader.open();
-
+        openCustomMediaUploader(customUploader);
     });
 
     /**
@@ -666,7 +642,7 @@ var aceEditor = null;
                 if (data.result == 'error') {
                     $('.wdt-preload-layer').hide();
                     $('div.wdt-constructor-step[data-step="1-2"]').animateFadeIn();
-                    nextStepButton.prop('disabled', false);
+                    nextStepButton.show();
                     $('.wdt-constructor-create-buttons').hide();
                     wdtNotify(wpdatatables_edit_strings.error, data.message, 'danger')
                 } else {
@@ -675,6 +651,9 @@ var aceEditor = null;
                     $('#wdt-constructor-number-of-columns').val(constructedTableData.columnCount);
                     $('div.wdt-constructor-step[data-step="2-2"]').animateFadeIn();
                     $('.wdt-constructor-column-type').change();
+                    $('.wdt-constructor-column-name').each(function () {
+                        $(this).attr('disabled', 'disabled');
+                    });
                     nextStepButton.prop('disabled', 'disabled');
                     $('.wdt-constructor-create-buttons').show();
                     wdtApplyBootstrapElements();
@@ -686,6 +665,8 @@ var aceEditor = null;
                 $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
                 $('#wdt-error-modal').modal('show');
                 $('.wdt-preload-layer').animateFadeOut();
+                previousStepButton.hide();
+                nextStepButton.show();
                 $('div.wdt-constructor-step[data-step="1-2"]').animateFadeIn();
             }
         })
@@ -753,10 +734,13 @@ var aceEditor = null;
             }
             // Validation
             var valid = true;
-            $('.wdt-constructor-column-name').each(function () {
-                if ($(this).val() == '') {
-                    $(this).click();
+            var emptyHeader = 0;
+            $('.wdt-constructor-column-name').each(function (index, element) {
+                emptyHeader++;
+                if ($(element).val() == '') {
+                    $(element).click();
                     valid = false;
+                    return false;
                 }
             });
 
@@ -779,6 +763,12 @@ var aceEditor = null;
                 $('#wdt-constructor-file-table-name').change();
 
                 wdtReadFileDataAndEditTable(tableView);
+            } else {
+                let index = emptyHeader > 0 ? emptyHeader - 1 : emptyHeader;
+                $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! The column header at position ' + emptyHeader  + ' is empty. Please edit your source file so none of your column headers are empty and try again.');
+                $('#wdt-error-modal').modal('show');
+                $('.wdt-preload-layer').animateFadeOut();
+                $('.wdt-constructor-column-name:eq(' + index + ')').css('cssText', 'background: red!important');
             }
         } else {
             $.ajax({
@@ -832,6 +822,7 @@ var aceEditor = null;
                 }
             },
             error: function (data) {
+                $('div.wdt-constructor-step[data-step="2-2"]').show();
                 $('#wdt-error-modal .modal-body').html('There was an error while trying to save the table! ' + data.statusText + ' ' + data.responseText);
                 $('#wdt-error-modal').modal('show');
                 $('.wdt-preload-layer').animateFadeOut();

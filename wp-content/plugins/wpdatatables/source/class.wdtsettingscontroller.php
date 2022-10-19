@@ -58,6 +58,26 @@ class WDTSettingsController
     public static function saveSettings($settings)
     {
         $settings = self::sanitizeSettings(stripslashes_deep($settings));
+        $autoUpdateOption = (int)$settings['wdtAutoUpdateOption'];
+
+        if (!$autoUpdateOption){
+            global $wpdb;
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . $wpdb->prefix . "wpdatatables_cache
+                           SET auto_update = %d",
+                   $autoUpdateOption
+                )
+            );
+            $wpdb->query(
+                $wpdb->prepare(
+                    "UPDATE " . $wpdb->prefix . "wpdatatables
+                           SET auto_update_cache = %d",
+                    $autoUpdateOption
+                )
+            );
+
+        }
 
         foreach ($settings as $key => $value) {
             update_option($key, $value);
@@ -119,6 +139,7 @@ class WDTSettingsController
             'wdtEnvatoTokenEmailFormidable' => get_option('wdtEnvatoTokenEmailFormidable'),
             'wdtActivatedMasterDetail' => get_option('wdtActivatedMasterDetail'),
             'wdtPurchaseCodeStoreMasterDetail' => get_option('wdtPurchaseCodeStoreMasterDetail') != '' ? 1 : 0,
+            'wdtAutoUpdateOption' => get_option('wdtAutoUpdateOption'),
         );
     }
 

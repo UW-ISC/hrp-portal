@@ -32,6 +32,7 @@ var settingsPageLinks = {
     'color-and-font-settings': '#color-font-settings',
     'custom-js-and-css': '#custom-js-css',
     'google-sheet-api-settings': '#google-sheet-api-settings',
+    'cache-settings': '#cache-settings',
     'wdt-activation': '#activation'
 };
 

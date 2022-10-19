@@ -2056,6 +2056,8 @@ body.toplevel_page_maxmegamenu {
 				table.output_options td.mega-value {
 					textarea {
 						width: 100%;
+						height: auto;
+						margin-bottom: 0;
 					}
 					label {
 						float: none;

@@ -337,7 +337,7 @@ if ( ! class_exists( 'Mega_Menu_Nav_Menus' ) ) :
 				echo "<div style='padding: 15px;'>";
 				$link = '<a href="https://www.megamenu.com/documentation/widget/?utm_source=free&amp;utm_medium=link&amp;utm_campaign=pro" target="_blank">' . __( 'here', 'megamenu' ) . '</a>';
 				echo '<p>' . esc_html__( 'This theme does not register any menu locations.', 'megamenu' ) . '</p>';
-				echo '<p>' . esc_html__( 'You will need to create a new menu location and use the Max Mega Menu widget or shortcode to display the menu on your site.', 'megamenu' ) . '</p>';
+				echo '<p>' . esc_html__( 'You will need to create a new menu location and use the Max Mega Menu block, widget or shortcode to display the menu on your site.', 'megamenu' ) . '</p>';
 				echo '<p>' . str_replace( '{link}', $link, esc_html__( 'Click {link} for instructions.', 'megamenu' ) ) . '</p>';
 				echo "</div>";
 			} elseif ( ! count( $tagged_menu_locations ) ) {

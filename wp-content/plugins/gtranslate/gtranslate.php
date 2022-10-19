@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 2.9.12
+Version: 2.9.13
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 Text Domain: gtranslate
@@ -265,7 +265,7 @@ class GTranslate extends WP_Widget {
 
         extract($data);
 
-        $gt_lang_array_json = '{"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","be":"Belarusian","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","ca":"Catalan","ceb":"Cebuano","ny":"Chichewa","zh-CN":"Chinese (Simplified)","zh-TW":"Chinese (Traditional)","co":"Corsican","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","eo":"Esperanto","et":"Estonian","tl":"Filipino","fi":"Finnish","fr":"French","fy":"Frisian","gl":"Galician","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","haw":"Hawaiian","iw":"Hebrew","hi":"Hindi","hmn":"Hmong","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jw":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ku":"Kurdish (Kurmanji)","ky":"Kyrgyz","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","lb":"Luxembourgish","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","my":"Myanmar (Burmese)","ne":"Nepali","no":"Norwegian","ps":"Pashto","fa":"Persian","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sm":"Samoan","gd":"Scottish Gaelic","sr":"Serbian","st":"Sesotho","sn":"Shona","sd":"Sindhi","si":"Sinhala","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","su":"Sudanese","sw":"Swahili","sv":"Swedish","tg":"Tajik","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","xh":"Xhosa","yi":"Yiddish","yo":"Yoruba","zu":"Zulu"}';
+        $gt_lang_array_json = '{"af":"Afrikaans","sq":"Albanian","am":"Amharic","ar":"Arabic","hy":"Armenian","az":"Azerbaijani","eu":"Basque","be":"Belarusian","bn":"Bengali","bs":"Bosnian","bg":"Bulgarian","ca":"Catalan","ceb":"Cebuano","ny":"Chichewa","zh-CN":"Chinese (Simplified)","zh-TW":"Chinese (Traditional)","co":"Corsican","hr":"Croatian","cs":"Czech","da":"Danish","nl":"Dutch","en":"English","eo":"Esperanto","et":"Estonian","tl":"Filipino","fi":"Finnish","fr":"French","fy":"Frisian","gl":"Galician","ka":"Georgian","de":"German","el":"Greek","gu":"Gujarati","ht":"Haitian Creole","ha":"Hausa","haw":"Hawaiian","iw":"Hebrew","hi":"Hindi","hmn":"Hmong","hu":"Hungarian","is":"Icelandic","ig":"Igbo","id":"Indonesian","ga":"Irish","it":"Italian","ja":"Japanese","jw":"Javanese","kn":"Kannada","kk":"Kazakh","km":"Khmer","ko":"Korean","ku":"Kurdish (Kurmanji)","ky":"Kyrgyz","lo":"Lao","la":"Latin","lv":"Latvian","lt":"Lithuanian","lb":"Luxembourgish","mk":"Macedonian","mg":"Malagasy","ms":"Malay","ml":"Malayalam","mt":"Maltese","mi":"Maori","mr":"Marathi","mn":"Mongolian","my":"Myanmar (Burmese)","ne":"Nepali","no":"Norwegian","ps":"Pashto","fa":"Persian","pl":"Polish","pt":"Portuguese","pa":"Punjabi","ro":"Romanian","ru":"Russian","sm":"Samoan","gd":"Scottish Gaelic","sr":"Serbian","st":"Sesotho","sn":"Shona","sd":"Sindhi","si":"Sinhala","sk":"Slovak","sl":"Slovenian","so":"Somali","es":"Spanish","su":"Sundanese","sw":"Swahili","sv":"Swedish","tg":"Tajik","ta":"Tamil","te":"Telugu","th":"Thai","tr":"Turkish","uk":"Ukrainian","ur":"Urdu","uz":"Uzbek","vi":"Vietnamese","cy":"Welsh","xh":"Xhosa","yi":"Yiddish","yo":"Yoruba","zu":"Zulu"}';
         $gt_lang_array = get_object_vars(json_decode($gt_lang_array_json));
         include dirname(__FILE__) . '/native_names_map.php'; // defines $native_names_map array
         //echo '<pre>' . print_r($native_names_map, true) . '</pre>';
@@ -1196,7 +1196,7 @@ EOT;
                                 <option value="sl"><?php _e('Slovenian', 'gtranslate'); ?></option>
                                 <option value="so"><?php _e('Somali', 'gtranslate'); ?></option>
                                 <option value="es"><?php _e('Spanish', 'gtranslate'); ?></option>
-                                <option value="su"><?php _e('Sudanese', 'gtranslate'); ?></option>
+                                <option value="su"><?php _e('Sundanese', 'gtranslate'); ?></option>
                                 <option value="sw"><?php _e('Swahili', 'gtranslate'); ?></option>
                                 <option value="sv"><?php _e('Swedish', 'gtranslate'); ?></option>
                                 <option value="tg"><?php _e('Tajik', 'gtranslate'); ?></option>
@@ -2660,6 +2660,11 @@ if($data['pro_version'] or $data['enterprise_version']) {
                     $server_id = intval(substr(md5(preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'])), 0, 5), 16) % count($servers);
                     $server = $servers[$server_id];
                     $host = $_SERVER['HTTP_X_GT_LANG'] . '.' . preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']);
+                    if($data['custom_domains'] and !empty($data['custom_domains_data'])) {
+                        $custom_domains_data = json_decode(stripslashes($data['custom_domains_data']), true);
+                        if(isset($custom_domains_data[$_SERVER['HTTP_X_GT_LANG']]))
+                            $host = $custom_domains_data[$_SERVER['HTTP_X_GT_LANG']];
+                    }
                     $protocol = ((isset($_SERVER['HTTPS']) and ($_SERVER['HTTPS'] == 'on' or $_SERVER['HTTPS'] == 1)) or (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and  $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https' : 'http';
 
                     $headers = array();
@@ -2741,6 +2746,103 @@ if($data['pro_version'] or $data['enterprise_version']) {
             return $args;
         }
 
+        // woocommerce pdf invoice translation
+        function gt_translate_invoice_pdf($html) {
+            if(function_exists('curl_init') and isset($_SERVER['HTTP_X_GT_LANG'])) {
+                $data = get_option('GTranslate');
+                GTranslate::load_defaults($data);
+
+                // add notranslate for addresses
+                $html = str_replace('-address"', 'notranslate -address"', $html);
+
+                include dirname(__FILE__) . '/url_addon/config.php';
+                $server_id = intval(substr(md5(preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'])), 0, 5), 16) % count($servers);
+                $server = $servers[$server_id];
+                $host = $_SERVER['HTTP_X_GT_LANG'] . '.' . preg_replace('/^www\./', '', $_SERVER['HTTP_HOST']);
+                if($data['custom_domains'] and !empty($data['custom_domains_data'])) {
+                    $custom_domains_data = json_decode(stripslashes($data['custom_domains_data']), true);
+                    if(isset($custom_domains_data[$_SERVER['HTTP_X_GT_LANG']]))
+                        $host = $custom_domains_data[$_SERVER['HTTP_X_GT_LANG']];
+                }
+                $protocol = ((isset($_SERVER['HTTPS']) and ($_SERVER['HTTPS'] == 'on' or $_SERVER['HTTPS'] == 1)) or (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) and  $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https' : 'http';
+
+                $headers = array();
+                $headers[] = 'Host: ' . $host;
+                // add real visitor IP header
+                if(isset($_SERVER['HTTP_CLIENT_IP']) and !empty($_SERVER['HTTP_CLIENT_IP']))
+                    $viewer_ip_address = $_SERVER['HTTP_CLIENT_IP'];
+                if(isset($_SERVER['HTTP_CF_CONNECTING_IP']) and !empty($_SERVER['HTTP_CF_CONNECTING_IP']))
+                    $viewer_ip_address = $_SERVER['HTTP_CF_CONNECTING_IP'];
+                if(isset($_SERVER['HTTP_X_SUCURI_CLIENTIP']) and !empty($_SERVER['HTTP_X_SUCURI_CLIENTIP']))
+                    $viewer_ip_address = $_SERVER['HTTP_X_SUCURI_CLIENTIP'];
+                if(!isset($viewer_ip_address))
+                    $viewer_ip_address = $_SERVER['REMOTE_ADDR'];
+
+                $headers[] = 'X-GT-Viewer-IP: ' . $viewer_ip_address;
+                $headers[] = 'User-Agent: GTranslate-Email-Translate';
+
+                // add X-Forwarded-For
+                if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) and !empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+                    $headers[] = 'X-GT-Forwarded-For: ' . $_SERVER['HTTP_X_FORWARDED_FOR'];
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $protocol.'://'.$server.'.tdn.gtranslate.net'.wp_make_link_relative(plugins_url('gtranslate/url_addon/gtranslate-email.php').'?format=pdf_html&glang='.$_SERVER['HTTP_X_GT_LANG']));
+                curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
+                if(defined('CURL_IPRESOLVE_V4')) curl_setopt($ch, CURLOPT_IPRESOLVE, CURL_IPRESOLVE_V4);
+                curl_setopt($ch, CURLOPT_CAINFO, dirname(__FILE__) . '/url_addon/cacert.pem');
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, array('body' => base64_encode(do_shortcode("<subject>PDF Invoice</subject><message>$html</message>")), 'access_key' => md5(substr(NONCE_SALT, 0, 10) . substr(NONCE_KEY, 0, 5))));
+
+                if($data['email_translation_debug']) {
+                    $fh = fopen(dirname(__FILE__) . '/url_addon/debug.txt', 'a');
+                    curl_setopt($ch, CURLOPT_VERBOSE, true);
+                    curl_setopt($ch, CURLOPT_STDERR, $fh);
+                }
+
+                $response = curl_exec($ch);
+                $response_info = curl_getinfo($ch);
+                curl_close($ch);
+
+                if($data['email_translation_debug']) {
+                    file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response PDF: ' . $response . "\n", FILE_APPEND);
+                    file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Response_info PDF: ' . print_r($response_info, true) . "\n", FILE_APPEND);
+                }
+
+                if(isset($response_info['http_code']) and $response_info['http_code'] == 200) {
+                    $response = json_decode($response, true);
+                    if(empty($response))
+                        return $html;
+
+                    $response = base64_decode($response['email-body']);
+                    if($response === false)
+                        return $html;
+
+                    if($data['pro_version'])
+                        $response = str_ireplace($host, $_SERVER['HTTP_HOST'] . '/' . $_SERVER['HTTP_X_GT_LANG'], $response);
+
+                    preg_match_all('/<subject>(.*?)<\/subject><message>(.*?)<\/message>/s', $response, $matches);
+                    //file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Matches: ' . print_r($matches, true) . "\n", FILE_APPEND);
+
+                    if(isset($matches[1][0], $matches[2][0])) {
+                        $html = $matches[2][0];
+
+                        // fix image
+                        $html = str_replace('<img src="https://' . $_SERVER['HTTP_HOST'], '<img src="', $html);
+
+                        if($data['email_translation_debug']) {
+                            file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Translated PDF HTML: ' . $html . "\n", FILE_APPEND);
+                        }
+                    }
+                }
+            }
+
+            return $html;
+        }
+
+        add_filter('wpo_wcpdf_get_html', 'gt_translate_invoice_pdf', 10000, 1);
         add_filter('wp_mail', 'gt_translate_emails', 10000, 1);
     }
 }

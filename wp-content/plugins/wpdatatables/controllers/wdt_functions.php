@@ -30,6 +30,8 @@ function wdtActivationCreateTables() {
 						content text NOT NULL,
 						filtering tinyint(1) NOT NULL default '1',
 						filtering_form tinyint(1) NOT NULL default '0',
+						cache_source_data tinyint(1) NOT NULL default '0',
+						auto_update_cache tinyint(1) NOT NULL default '0',
 						sorting tinyint(1) NOT NULL default '1',
 						tools tinyint(1) NOT NULL default '1',
 						server_side tinyint(1) NOT NULL default '0',
@@ -110,11 +112,24 @@ function wdtActivationCreateTables() {
                                   data TEXT NOT NULL default '',
                                   UNIQUE KEY id (id)
                                 ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
+    $cacheTableName = $wpdb->prefix . 'wpdatatables_cache';
+    $cacheSql = "CREATE TABLE {$cacheTableName} (
+                                  id bigint(20) NOT NULL AUTO_INCREMENT,
+                                  table_id bigint(20) NOT NULL,
+                                  table_type varchar(55) NOT NULL default '',
+                                  table_content text NOT NULL default '',
+                                  auto_update tinyint(1) NOT NULL default 0,
+                                  updated_time TIMESTAMP NOT NULL default CURRENT_TIMESTAMP,
+                                  data LONGTEXT NOT NULL default '',
+                                  log_errors text NOT NULL default '',
+                                  UNIQUE KEY id (id)
+                                ) DEFAULT CHARSET=utf8 COLLATE utf8_general_ci";
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
     dbDelta($tablesSql);
     dbDelta($columnsSql);
     dbDelta($chartsSql);
     dbDelta($rowsSql);
+    dbDelta($cacheSql);
     if (!get_option('wdtUseSeparateCon')) {
         update_option('wdtUseSeparateCon', false);
     }
@@ -171,6 +186,9 @@ function wdtActivationCreateTables() {
     }
     if (!get_option('wdtDateFormat')) {
         update_option('wdtDateFormat', 'd/m/Y');
+    }
+    if (get_option('wdtAutoUpdateOption') === false) {
+        update_option('wdtAutoUpdateOption', 0);
     }
     if (get_option('wdtParseShortcodes') === false) {
         update_option('wdtParseShortcodes', false);
@@ -292,6 +310,9 @@ function wdtActivationCreateTables() {
     if (get_option('wdtTempFutureDate') === false) {
         update_option('wdtTempFutureDate', date( 'Y-m-d'));
     }
+    if (!get_option('wdtAutoUpdateHash')) {
+        update_option('wdtAutoUpdateHash', bin2hex(openssl_random_pseudo_bytes(22)));
+    }
 }
 
 function wdtDeactivation() {
@@ -335,6 +356,7 @@ function wdtUninstallDelete() {
         delete_option('wdtDecimalPlaces');
         delete_option('wdtCSVDelimiter');
         delete_option('wdtDateFormat');
+        delete_option('wdtAutoUpdateOption');
         delete_option('wdtCustomJs');
         delete_option('wdtGoogleSettings');
         delete_option('wdtGoogleToken');
@@ -348,6 +370,7 @@ function wdtUninstallDelete() {
         delete_option('wdtTempFutureDate');
         delete_option('wdtSimpleTableAlert');
         delete_option('wdtActivated');
+        delete_option('wdtAutoUpdateHash');
         delete_option('wdtPurchaseCodeStore');
         delete_option('wdtEnvatoTokenEmail');
         delete_option('wdtActivatedPowerful');
@@ -369,6 +392,7 @@ function wdtUninstallDelete() {
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_columns");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatacharts");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_rows");
+        $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_cache");
     }
 }
 

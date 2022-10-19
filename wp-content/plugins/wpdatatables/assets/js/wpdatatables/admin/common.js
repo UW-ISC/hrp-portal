@@ -448,3 +448,40 @@ function wdtNotify(title, message, type) {
             '</div>'
     });
 }
+
+/**
+ * Opens WP media uploader on browse button click
+ * @param customUploader
+ */
+
+    function openCustomMediaUploader(customUploader = null) {
+    (function ($) {
+        let attachment = '';
+
+        //If the uploader object has already been created, reopen the dialog
+        if (customUploader) {
+            customUploader.open();
+            return;
+        }
+
+        customUploader = wp.media.frames.file_frame = wp.media({
+            title: wpdatatables_edit_strings.selectExcelCsv,
+            button: {
+                text: wpdatatables_edit_strings.chooseFile
+            },
+            multiple: false,
+            library: {
+                type: 'application/vnd.ms-excel,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            }
+        });
+
+        customUploader.on('select', function () {
+            attachment = customUploader.state().get('selection').first().toJSON();
+            $('.input-url-path').val(attachment.url);
+        });
+
+        customUploader.open();
+    })(jQuery);
+    }
+
+

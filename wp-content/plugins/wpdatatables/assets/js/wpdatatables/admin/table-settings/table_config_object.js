@@ -49,6 +49,8 @@ var wpdatatable_config = {
     showAllRows: false,
     inline_editing: 0,
     filtering_form: 0,
+    cache_source_data: 0,
+    auto_update_cache: 0,
     clearFilters: 0,
     display_length: 10,
     showRowsPerPage: true,
@@ -90,7 +92,7 @@ var wpdatatable_config = {
     tableCustomCss: '',
     /**
      * Method to set the data source type - hides all dependent controls
-     * @param type mysql, google_spreadsheet, xml, json, serialized, csv, excel
+     * @param type mysql, google_spreadsheet, xml, json, nested_json, serialized, csv, excel
      */
     setTableType: function( type ){
         wpdatatable_config.table_type = type;
@@ -102,14 +104,27 @@ var wpdatatable_config = {
                 }
                 if( jQuery('.wdt-table-settings .mysql-settings-block').hasClass('hidden') ){
                     jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .cache-settings-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+                    jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
                     jQuery('.wdt-table-settings .mysql-settings-block').animateFadeIn();
                     jQuery('.wdt-table-settings .wdt-server-side-processing').animateFadeIn();
                 }
+                jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
                 break;
             case 'manual':
                 wpdatatable_config.setServerSide( 1 );
                 jQuery('.wdt-input-data-source-type').hide();
+                jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-get-nested-json-roots').addClass('hidden');
                 jQuery('.placeholders-settings-tab').animateFadeIn();
+                jQuery('.wdt-add-data-source-field').removeClass('hidden');
+                jQuery('.wdt-source-file-path').removeClass('hidden');
+                jQuery('.wdt-add-data-source-change-field').removeClass('col-sm-6').addClass('col-sm-4');
                 break;
             case 'csv':
             case 'xls':
@@ -119,24 +134,82 @@ var wpdatatable_config = {
             case 'serialized':
                 jQuery('.placeholders-settings-tab').animateFadeIn();
                 jQuery('.wdt-table-settings #wdt-browse-button').removeClass('hidden');
+                jQuery('.wdt-table-settings #wdt-get-nested-json-roots').addClass('hidden');
                 if( jQuery('.wdt-table-settings .input-path-block').hasClass('hidden') ) {
                     jQuery('.wdt-table-settings .input-path-block').animateFadeIn();
                 }
+                jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
                 jQuery('.wdt-table-settings .mysql-settings-block').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-server-side-processing').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-auto-refresh').addClass('hidden');
                 wpdatatable_config.setServerSide( 0 );
-                if (jQuery.inArray(type, ['google_spreadsheet', 'xml', 'json', 'serialized']) != -1 )
+                jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
+                if (jQuery.inArray(type, ['google_spreadsheet', 'xml', 'json', 'nested_json', 'serialized']) != -1 )
                     jQuery('.wdt-table-settings #wdt-browse-button').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
                 break;
-            default:
+            case 'nested_json':
+                jQuery('.placeholders-settings-tab').animateFadeIn();
                 jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
+                if( jQuery('.wdt-table-settings .input-nested-json-url-block').hasClass('hidden') ) {
+                    jQuery('.wdt-table-settings .input-nested-json-url-block').animateFadeIn();
+                }
+                jQuery('.wdt-table-settings #wdt-browse-button').addClass('hidden');
                 jQuery('.wdt-table-settings .mysql-settings-block').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-server-side-processing').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-auto-refresh').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-block').removeClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-additional-block').removeClass('hidden');
+                jQuery('.wdt-table-settings #wdt-get-nested-json-roots').removeClass('hidden');
+                jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
+                wpdatatable_config.setServerSide( 0 );
+                break;
+            default:
+                jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
+                jQuery('.wdt-table-settings .input-nested-json-url-block').addClass('hidden');
+                jQuery('.wdt-table-settings .mysql-settings-block').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-server-side-processing').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-auto-refresh').addClass('hidden');
+                jQuery('.wdt-table-settings .cache-settings-block').addClass('hidden');
+                jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-get-nested-json-roots').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
+                jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
                 break;
         }
         jQuery( '#wdt-table-type').val( type ).selectpicker('refresh');
+    },
+    /**
+     * Method to get custom headers row template
+     */
+    renderCustomHeadersRow: function (row){
+        var custom_headers_row = jQuery('#wdt-nested-json-custom-headers-template').html();
+        var $block = jQuery(custom_headers_row)
+            .appendTo('div.wdt-nested-json-custom-headers-container');
+        $block.find('input.custom-header-key-name-value')
+            .val(row.setKeyName);
+
+        $block.find('textarea.custom-header-key-value-value')
+            .val(row.setKeyValue);
+    },
+    /**
+     * Method to compile custom headers row data
+     */
+    compileCustomHeadersRow: function () {
+        var customHeadersRowRule = [];
+        jQuery('div.wdt-nested-json-custom-headers-container div.wdt-custom-headers-row-rule').each(function () {
+            let keyNameValue = jQuery(this).find('input.custom-header-key-name-value').val(),
+                keyValueValue = jQuery(this).find('textarea.custom-header-key-value-value').val()
+            if (keyNameValue !== '' && keyValueValue !== ''){
+                customHeadersRowRule.push({
+                    setKeyName: keyNameValue,
+                    setKeyValue: keyValueValue
+                });
+            }
+        });
+        return customHeadersRowRule;
     },
     /**
      * Method to set ID for new tables
@@ -199,6 +272,7 @@ var wpdatatable_config = {
                 jQuery('.table-sorting-filtering-settings-tab').animateFadeIn();
                 jQuery('.table-tools-settings-tab').animateFadeIn();
                 jQuery('.customize-table-settings-tab').animateFadeIn();
+                jQuery('.master-detail-settings-tab').animateFadeIn();
             }
             if( wpdatatable_config.table_type == 'mysql' ) {
                 if( !jQuery('.placeholders-settings-tab').is(':visible') ){
@@ -223,11 +297,35 @@ var wpdatatable_config = {
             jQuery('.table-tools-settings-tab').addClass('hidden');
             jQuery('.editing-settings-tab').addClass('hidden');
             jQuery('.placeholders-settings-tab').addClass('hidden');
+            jQuery('.master-detail-settings-tab').addClass('hidden');
             jQuery('button.wdt-apply').prop( 'disabled', 'disabled' );
         }
-        if (jQuery.inArray(wpdatatable_config.table_type, ['xml', 'json', 'serialized', 'csv', 'excel', 'google_spreadsheet']) != -1 ){
-            if( !jQuery('.placeholders-settings-tab').is(':visible') ){
-                jQuery('.placeholders-settings-tab').animateFadeIn();
+        if (wpdatatable_config.table_type == 'nested_json' && content != '' ) {
+            let jsonParams = JSON.parse(content)
+            jQuery('#wdt-nested-json-url').val(jsonParams.url);
+            jQuery('#wdt-nested-json-get-type').val(jsonParams.method).selectpicker('refresh');
+            jQuery('#wdt-nested-json-auth-option').val(jsonParams.authOption).selectpicker('refresh');
+            jQuery('.wdt-table-settings .nested-json-basic-auth-inputs').addClass('hidden');
+            if (jsonParams.authOption != '') {
+                jQuery('#wdt-nested-json-username').val(jsonParams.username);
+                jQuery('#wdt-nested-json-password').val(jsonParams.password);
+                jQuery('.wdt-table-settings .nested-json-basic-auth-inputs').removeClass('hidden');
+            }
+            if (jsonParams.customHeaders.length != 0){
+                jQuery('div.wdt-nested-json-custom-headers-container').html('');
+                for (var i in jsonParams.customHeaders) {
+                    wpdatatable_config.renderCustomHeadersRow(jsonParams.customHeaders[i]);
+                }
+                let customHeaderFirstRow = jQuery('div.wdt-nested-json-custom-headers-container .wdt-custom-headers-row-rule:first-child');
+                jQuery(customHeaderFirstRow).find('.wdt-delete-custom-headers-wrapper').remove();
+                jQuery(customHeaderFirstRow).find('.wdt-custom-header-key-value').removeClass('col-sm-5-3 p-r-0').addClass('col-sm-6');
+            }
+
+            if (typeof jsonParams.root !== 'undefined'){
+                jQuery('.wdt-table-settings .nested-json-roots').removeClass('hidden');
+                let option = '<option value="' + jsonParams.root + '">' + jsonParams.root + '</option>';
+                jQuery('.wdt-table-settings #wdt-nested-json-root').html(option).selectpicker('refresh');
+                jQuery('#wdt-nested-json-root').val(jsonParams.root).selectpicker('refresh');
             }
         }
     },
@@ -540,6 +638,37 @@ var wpdatatable_config = {
             }
         }
         jQuery('#wdt-advanced-filter').prop( 'checked', filtering );
+    },
+    /**
+     * Enable or disable cache source data
+     * @param cacheSourceData 1 or 0
+     */
+    setCacheSourceData: function( cacheSourceData ){
+        wpdatatable_config.cache_source_data = cacheSourceData;
+        let allowedTableTypes = ['csv', 'xls', 'google_spreadsheet', 'xml', 'json','nested_json','serialized'];
+        if (allowedTableTypes.includes(wpdatatable_config.table_type)){
+            jQuery('.wdt-table-settings .cache-settings-block').removeClass('hidden');
+            jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('hidden');
+        } else {
+            jQuery('.wdt-table-settings .cache-settings-block').addClass('hidden');
+            jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+        }
+        if (cacheSourceData == 0){
+            wpdatatable_config.auto_update_cache = 0
+            jQuery('#wpdt-auto-update-cache').prop( 'checked', 0 );
+            jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+        } else {
+            jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('hidden');
+        }
+        jQuery('#wpdt-cache-source-data').prop( 'checked', cacheSourceData );
+    },
+    /**
+     * Enable or disable auto update data in cache
+     * @param autoUpdateCache 1 or 0
+     */
+    setAutoUpdateCache: function( autoUpdateCache ){
+        wpdatatable_config.auto_update_cache = autoUpdateCache;
+        jQuery('#wpdt-auto-update-cache').prop( 'checked', autoUpdateCache );
     },
     /**
      * Enable or disable the filtering form
@@ -1206,6 +1335,8 @@ var wpdatatable_config = {
             wpdatatable_config.setFilteringForm( parseInt( tableJSON.filtering_form ) );
             wpdatatable_config.setClearFilters( parseInt( tableJSON.clearFilters ) );
         }
+        wpdatatable_config.setCacheSourceData( parseInt( tableJSON.cache_source_data ) );
+        wpdatatable_config.setAutoUpdateCache( parseInt( tableJSON.auto_update_cache ) );
         wpdatatable_config.setLimitLayout( parseInt( tableJSON.fixed_layout ) );
         wpdatatable_config.setGlobalSearch( parseInt( tableJSON.global_search ) );
         wpdatatable_config.setHideBeforeLoad( parseInt( tableJSON.hide_before_load ) );

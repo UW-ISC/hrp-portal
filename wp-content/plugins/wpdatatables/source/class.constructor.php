@@ -2,12 +2,6 @@
 
 defined('ABSPATH') or die('Access denied.');
 
-use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
-use PhpOffice\PhpSpreadsheet\Reader\Xls;
-use PhpOffice\PhpSpreadsheet\Reader\Ods;
-use PhpOffice\PhpSpreadsheet\Reader\Csv;
-use PhpOffice\PhpSpreadsheet\Shared\Date;
-
 /**
  * Class Constructor contains methods and properties for constructing the tables
  * in wpDataTables WordPress plugin
@@ -104,7 +98,7 @@ class wpDataTableConstructor
      *
      * @return array
      */
-    private static function defineColumnProperties($column_header, $column, $connection = null)
+    public static function defineColumnProperties($column_header, $column, $connection = null)
     {
         $vendor = Connection::getVendor($connection);
         $isMySql = $vendor === Connection::$MYSQL;
@@ -113,13 +107,13 @@ class wpDataTableConstructor
 
         $columnQuoteStart = Connection::getLeftColumnQuote($vendor);
         $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
+        $nullable = '';
+        $columnCollate = '';
+        $columnTextType = 'TEXT';
 
         if ($isMySql) {
-            $columnCollate = '';
-            $columnTextType = 'TEXT';
             $columnIntType = 'INT(11)';
             $columnDateTimeType = 'DATETIME';
-            $nullable = '';
         }
 
         if ($isMSSql) {
@@ -131,11 +125,8 @@ class wpDataTableConstructor
         }
 
         if ($isPostgreSql) {
-            $columnCollate = '';
-            $columnTextType = 'TEXT';
             $columnIntType = 'INT';
             $columnDateTimeType = 'TIMESTAMP';
-            $nullable = '';
         }
 
         $column_header = $columnQuoteStart . $column_header. $columnQuoteEnd;
@@ -250,7 +241,7 @@ class wpDataTableConstructor
                     'editor_type' => 'text',
                     'column_type' => 'string',
                     'filter_type' => 'text',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
+                    'create_block' => "{$column_header} $columnTextType $columnCollate "
                 );
                 break;
         }
@@ -260,7 +251,7 @@ class wpDataTableConstructor
             'exactFiltering' => 0,
             'rangeSlider' => 0,
             'filterLabel' => '',
-            'editingDefaultValue' => $column['type'] === 'multiselect' ? isset($column['default_value']) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
+            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
             'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
             'searchInSelectBox' => 1,
             'searchInSelectBoxEditing' => 1,
@@ -1414,6 +1405,8 @@ class wpDataTableConstructor
             'content' => '',
             'filtering' => 1,
             'filtering_form' => 0,
+            'cache_source_data' => 0,
+            'auto_update_cache' => 0,
             'sorting' => 1,
             'fixed_layout' => 0,
             'responsive' => 0,
@@ -1582,79 +1575,22 @@ class wpDataTableConstructor
      */
     public function previewFileTable($tableData)
     {
+        try {
+            if(!($file = self::isUploadedFileEmpty($tableData['file'])))
+                throw new Exception(__('Empty file', 'wpdatatables'));
 
-        if (!empty($tableData['file'])) {
-            $xls_url = urldecode(esc_url($tableData['file']));
-            $uploads_dir = wp_upload_dir();
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $xls_url = str_replace($uploads_dir['baseurl'], str_replace('\\', '/', $uploads_dir['basedir']), $xls_url);
-            } else {
-                $xls_url = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $xls_url);
-            }
-        } else {
-            return array('result' => 'error', 'message' => __('Empty file', 'wpdatatables'));
+            $tableDataObject = json_decode(json_encode($tableData), FALSE);
+            $objSourceFile = new wpDataTableSourceFile($file, $tableDataObject);
+
+            $objSourceFile->setIsPreview(1);
+            $objSourceFile->getTableTypeFromFile();
+            $objSourceFile->prepareHeadingsArray();
+        } catch (Exception $e) {
+            return array('result' => 'error', 'message' => $e->getMessage());
         }
 
-        if (strpos(strtolower($xls_url), 'https://docs.google.com/spreadsheets') !== false) {
-            // Preview from Google Spreadsheet
-            $credentials = get_option('wdtGoogleSettings');
-            $token = get_option('wdtGoogleToken');
-            if ($credentials) {
-                $googleSheet = new WPDataTable_Google_Sheet();
-                $namedDataArray = $googleSheet->getData($xls_url, $credentials, $token);
-            } else {
-                $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
-            }
-            if (!empty($namedDataArray)) {
-                $headingsArray = array_keys($namedDataArray[0]);
-                $namedDataArray = array_slice($namedDataArray, 0, 4);
-            } else {
-                return array(
-                    'result' => 'error',
-                    'message' => __(
-                        'Could not read Google spreadsheet, please check if the URL is correct and the spreadsheet is published to everyone',
-                        'wpdatatables'
-                    )
-                );
-            }
-        } else {
-            if (strpos(strtolower($xls_url), '.xlsx')) {
-                $objReader = new Xlsx();
-            } elseif (strpos(strtolower($xls_url), '.xls')) {
-                $objReader = new Xls();
-            } elseif (strpos(strtolower($xls_url), '.ods')) {
-                $objReader = new Ods();
-            } elseif (strpos(strtolower($xls_url), '.csv')) {
-                $objReader = new Csv();
-                $csvDelimiter = get_option('wdtCSVDelimiter') ? get_option('wdtCSVDelimiter') : WDTTools::detectCSVDelimiter($xls_url);
-                $objReader->setDelimiter($csvDelimiter);
-            } else {
-                return array('result' => 'error', 'message' => __('Could not read input file!', 'wpdatatables'));
-            }
-
-            $objPHPExcel = $objReader->load($xls_url);
-            $objWorksheet = $objPHPExcel->getActiveSheet();
-            $highestRow = $objWorksheet->getHighestRow();
-            $highestRow = $highestRow > 5 ? 5 : $highestRow;
-            $highestColumn = $objWorksheet->getHighestDataColumn();
-
-            $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
-            $headingsArray = array_map('trim', $headingsArray[1]);
-
-            $r = 0;
-            $namedDataArray = array();
-            $dataRows = $objWorksheet->rangeToArray('A2:' . $highestColumn . $highestRow, null, true, true, true);
-            for ($row = 2; $row <= $highestRow; ++$row) {
-                if (max($dataRows[$row]) !== null) {
-                    ++$r;
-                    foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
-                        $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
-                        $namedDataArray[$r][$dataColumnHeading] = $dataRows[$row][$dataColumnIndex];
-                    }
-                }
-            }
-        }
-
+        $namedDataArray = $objSourceFile->getNamedDataArray();
+        $headingsArray = $objSourceFile->getHeadingsArray();
 
         /** @noinspection PhpUnusedLocalVariableInspection */
         $columnTypeArray = WDTTools::detectColumnDataTypes($namedDataArray, $headingsArray);
@@ -1695,69 +1631,38 @@ class wpDataTableConstructor
     {
         $columnTypes = array();
         $columnDateInputFormat = array();
-        $numberFormat = get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1;
+        $columnHeadersTemp = array();
 
-        if (!empty($tableData['file'])) {
-            $xls_url = urldecode(esc_url($tableData['file']));
-            $uploads_dir = wp_upload_dir();
-            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
-                $xls_url = str_replace($uploads_dir['baseurl'], str_replace('\\', '/', $uploads_dir['basedir']), $xls_url);
-            } else {
-                $xls_url = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $xls_url);
-            }
-        } else {
-            return _('Empty file', 'wpdatatables');
-        }
+        if(!($file = wpDataTableConstructor::isUploadedFileEmpty($tableData['file'])))
+            return __('Empty file', 'wpdatatables');
 
         for ($i = 0; $i < count($tableData['columns']); $i++) {
             if ($tableData['columns'][$i]['orig_header'] == '%%NEW_COLUMN%%') {
                 $tableData['columns'][$i]['orig_header'] = 'column' . $i;
             }
-            $columnTypes[$tableData['columns'][$i]['orig_header']] = sanitize_text_field($tableData['columns'][$i]['type']);
-            $columnDateInputFormat[$tableData['columns'][$i]['orig_header']] = sanitize_text_field($tableData['columns'][$i]['dateInputFormat']);
+            $columnHeader = WDTTools::generateMySQLColumnName($tableData['columns'][$i]['orig_header'], $columnHeadersTemp);
+            $columnTypes[$columnHeader] = sanitize_text_field($tableData['columns'][$i]['type']);
+            $columnDateInputFormat[$columnHeader] = sanitize_text_field($tableData['columns'][$i]['dateInputFormat']);
+            $columnHeadersTemp[] = $columnHeader;
+        }
+
+        $tableDataObject = json_decode(json_encode($tableData), FALSE);
+        $objSourceFile = new wpDataTableSourceFile(
+            $file,
+            $tableDataObject,
+            $columnTypes,
+            $columnDateInputFormat,
+            null
+        );
+
+        $objSourceFile->getTableTypeFromFile();
+        try {
+            $objSourceFile->prepareHeadingsArray();
+        } catch (Exception $e) {
+            die($e->getMessage());
         }
 
         $this->_id = $this->generateManualTable($tableData);
-
-        if (strpos(strtolower($xls_url), 'https://docs.google.com/spreadsheets') !== false) {
-            $table_type = 'google';
-            $credentials = get_option('wdtGoogleSettings');
-            $token = get_option('wdtGoogleToken');
-            if ($credentials) {
-                $googleSheet = new WPDataTable_Google_Sheet();
-                $namedDataArray = $googleSheet->getData($xls_url, $credentials, $token);
-            } else {
-                $namedDataArray = WDTTools::extractGoogleSpreadsheetArray($xls_url);
-            }
-            $headingsArray = array_keys($namedDataArray[0]);
-            $highestRow = count($namedDataArray) - 1;
-        } else {
-            $table_type = 'excel';
-            if (strpos(strtolower($xls_url), '.xlsx')) {
-                $objReader = new Xlsx();
-            } elseif (strpos(strtolower($xls_url), '.xls')) {
-                $objReader = new Xls();
-            } elseif (strpos(strtolower($xls_url), '.ods')) {
-                $objReader = new Ods();
-            } elseif (strpos(strtolower($xls_url), '.csv')) {
-                $objReader = new Csv();
-                $csvDelimiter = get_option('wdtCSVDelimiter') ? get_option('wdtCSVDelimiter') : WDTTools::detectCSVDelimiter($xls_url);
-                $objReader->setDelimiter($csvDelimiter);
-            } else {
-                return _('File format not supported!', 'wpdatatables');
-            }
-
-            $objPHPExcel = $objReader->load($xls_url);
-            $objWorksheet = $objPHPExcel->getActiveSheet();
-            $highestRow = $objWorksheet->getHighestRow();
-            $highestColumn = $objWorksheet->getHighestDataColumn();
-
-            $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
-            $headingsArray = array_map('trim', $headingsArray[1]);
-        }
-
-        $r = -1;
-
 
         $this->_column_headers = apply_filters('wpdt_insert_additional_column_header', $this->_column_headers);
 
@@ -1767,175 +1672,33 @@ class wpDataTableConstructor
         $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
 
         // Insert statement default beginning
-        $insert_statement_beginning = "INSERT INTO "
-            . $this->_name . " ("
-            . implode(
-                ', ',
-                array_map(
-                    function ($header) use ($columnQuoteStart, $columnQuoteEnd) {
-                        return "{$columnQuoteStart}{$header}{$columnQuoteEnd}";
-                    },
-                    array_values($this->_column_headers)
-                )
-            )
-            . ") ";
-        $insert_blocks = array();
-        if ($table_type != 'google') {
-            $dataRows = $objWorksheet->rangeToArray('A2:' . $highestColumn . $highestRow, null, true, true, true);
-        }
-        for ($row = 0; $row <= $highestRow; ++$row) {
+        $insert_statement_beginning = WDTConfigController::createInsertStatement(
+            $this->_name,
+            $this->_column_headers,
+            $columnQuoteStart,
+            $columnQuoteEnd
+        );
 
-            $insertArray = array();
-
-            if (($row <= 1) && ($table_type == 'excel')) {
-                continue;
-            }
-
-            if ($table_type == 'google') {
-
-                // Set all cells in the row to their defaults
-                foreach ($tableData['columns'] as $column) {
-                    $insertArray[$this->_column_headers[$column['orig_header']]] = "'" . sanitize_text_field($column['default_value']) . "'";
-                }
-
-                foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
-
-                    $dataColumnHeading = addslashes($dataColumnHeading);
-
-                    if (!in_array($dataColumnHeading, array_keys($this->_column_headers))) {
-                        continue;
-                    }
-
-                    if (in_array($columnTypes[$dataColumnHeading], array('date', 'datetime', 'time'))) {
-                        if ($columnTypes[$dataColumnHeading] == 'date') {
-                            $date = WDTTools::wdtConvertStringToUnixTimestamp($namedDataArray[$row][$dataColumnHeading], $columnDateInputFormat[$dataColumnHeading]);
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('Y-m-d', $date) . "'";
-                        } elseif ($columnTypes[$dataColumnHeading] == 'datetime') {
-                            $date = strtotime($namedDataArray[$row][$dataColumnHeading]);
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' :  "'" . date('Y-m-d H:i:s', $date) . "'";
-                        } elseif ($columnTypes[$dataColumnHeading] == 'time') {
-                            $date = strtotime($namedDataArray[$row][$dataColumnHeading]);
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('H:i:s', $date) . "'";
-                        }
-                    } elseif ($columnTypes[$dataColumnHeading] == 'float') {
-                        if ($numberFormat == 1) {
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . esc_sql(str_replace(',', '.', str_replace('.', '', $namedDataArray[$row][$dataColumnHeading]))) . "'";
-                        } else {
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . esc_sql(str_replace(',', '', $namedDataArray[$row][$dataColumnHeading])) . "'";
-                        }
-                    } elseif ($columnTypes[$dataColumnHeading] == 'int') {
-                        if ($numberFormat == 1) {
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . esc_sql(str_replace('.', '', $namedDataArray[$row][$dataColumnHeading])) . "'";
-                        } else {
-                            $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . esc_sql(str_replace(',', '', $namedDataArray[$row][$dataColumnHeading])) . "'";
-                        }
-                    } else {
-                        $insertArray[$this->_column_headers[$dataColumnHeading]] = "'" . esc_sql($namedDataArray[$row][$dataColumnHeading]) . "'";
-                    }
-                }
-            } else {
-                if (max($dataRows[$row]) !== null) {
-                    // Set all cells in the row to their defaults
-                    foreach ($tableData['columns'] as $column) {
-                        $insertArray[$this->_column_headers[$column['orig_header']]] = "'" . sanitize_text_field($column['default_value']) . "'";
-                    }
-                    ++$r;
-                    foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
-                        $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
-                        $dataColumnHeading = addslashes($dataColumnHeading);
-
-                        if (!in_array($dataColumnHeading, array_keys($this->_column_headers))) {
-                            continue;
-                        }
-
-                        if (in_array($columnTypes[$dataColumnHeading], array('date', 'datetime', 'time'))) {
-                            if ($objReader instanceof PHPExcel_Reader_CSV) {
-                                $date = WDTTools::wdtConvertStringToUnixTimestamp($dataRows[$row][$dataColumnIndex], $columnDateInputFormat[$dataColumnHeading]);
-                            } else {
-                                if ($dataRows[$row][$dataColumnIndex] == null) {
-                                    $date = null;
-                                } else {
-                                    $cell = $objPHPExcel->getActiveSheet()->getCell($dataColumnIndex . '' . $row);
-                                    if (Date::isDateTime($cell)) {
-                                        $date = Date::excelToTimestamp($cell->getValue());
-                                    } else {
-                                        $date = WDTTools::wdtConvertStringToUnixTimestamp($dataRows[$row][$dataColumnIndex], $columnDateInputFormat[$dataColumnHeading]);
-                                    }
-                                }
-                            }
-
-                            if ($columnTypes[$dataColumnHeading] == 'date') {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('Y-m-d', $date) . "'";
-                            } elseif ($columnTypes[$dataColumnHeading] == 'datetime') {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('Y-m-d H:i:s', $date) . "'";
-                            } elseif ($columnTypes[$dataColumnHeading] == 'time') {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = ($date == null) ? 'NULL' : "'" . date('H:i:s', $date) . "'";
-                            }
-                        } elseif ($columnTypes[$dataColumnHeading] == 'float' && gettype($dataRows[$row][$dataColumnIndex]) === 'string') {
-                            if ($numberFormat == 1) {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace(',', '.', str_replace('.', '', $dataRows[$row][$dataColumnIndex]))) . "'" : 'NULL';
-                            } else {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace(',', '', $dataRows[$row][$dataColumnIndex])) . "'" : 'NULL';
-                            }
-                        } elseif ($columnTypes[$dataColumnHeading] == 'int') {
-                            if ($numberFormat == 1) {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace('.', '', $dataRows[$row][$dataColumnIndex])) . "'" : 'NULL';
-                            } else {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace(',', '', $dataRows[$row][$dataColumnIndex])) . "'" : 'NULL';
-                            }
-                        } else {
-                            if ($columnTypes[$dataColumnHeading] === 'float') {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'" : 'NULL';
-                            } else {
-                                $insertArray[$this->_column_headers[$dataColumnHeading]] =  "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'";
-                            }
-                        }
-
-                    }
-                }
-            }
-
-            if ( ! current_user_can( 'unfiltered_html' ) ) {
-                foreach ($this->_column_headers as $columnHeader){
-                    $insertArray[$columnHeader] = wp_kses_post($insertArray[$columnHeader]);
-                }
-            }
-
-            $insertArray = apply_filters('wpdt_insert_additional_column_value', $insertArray, $row, $table_type);
-
-            if (!empty($insertArray)) {
-                $insert_blocks[] = '(' . implode(', ', $insertArray) . ')';
-            }
-
-            if ($row % 100 == 0) {
-                $this->insertRowsChunk($insert_statement_beginning, $insert_blocks, $tableData['connection']);
-                $insert_blocks = array();
-            }
-
-        }
-
-        $this->insertRowsChunk($insert_statement_beginning, $insert_blocks, $tableData['connection']);
-
+        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $this->_column_headers, 'import');
     }
 
     /**
-     * Inserts a blocks of rows read from file
-     *
-     * @param $insert_statement_beginning
-     * @param $insert_blocks
+     * Helper function to determine if an uploaded file is empty and converts upload URL to Path
+     * @param $file
+     * @return mixed|string|string[]|void
      */
-    private function insertRowsChunk($insert_statement_beginning, $insert_blocks, $connection = null)
-    {
-        global $wpdb;
-
-        if (count($insert_blocks) > 0) {
-            $insert_statement = $insert_statement_beginning . " VALUES " . implode(', ', $insert_blocks);
-            if (Connection::isSeparate($connection)) {
-                // External DB
-                $this->_db->doQuery($insert_statement, array());
+    public static function isUploadedFileEmpty($file) {
+        if (!empty($file)) {
+            $xls_url = urldecode(esc_url($file));
+            $uploads_dir = wp_upload_dir();
+            if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+                $xls_url = str_replace($uploads_dir['baseurl'], str_replace('\\', '/', $uploads_dir['basedir']), $xls_url);
             } else {
-                $wpdb->query($insert_statement);
+                $xls_url = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $xls_url);
             }
+            return $xls_url;
+        } else {
+            return 0;
         }
     }
 
@@ -1944,16 +1707,17 @@ class wpDataTableConstructor
      *
      * @param $tableId
      * @param $columnName
+     * @throws Exception
      */
-    public static function deleteManualColumn($tableId, $columnName)
+    public static function deleteManualColumn($tableId, $columnName, $columnType = null)
     {
         global $wpdb;
-
-        $tableData = WDTConfigController::loadTableFromDB($tableId);
-        $existing_columns = WDTConfigController::loadColumnsFromDB($tableId);
-
         $delete_column_id = 0;
         $delete_column_index = 0;
+
+        $tableData = WDTConfigController::loadTableFromDB($tableId);
+
+        $existing_columns = WDTConfigController::loadColumnsFromDB($tableId);
 
         foreach ($existing_columns as $existing_column) {
             if ($existing_column->orig_header == $columnName) {
@@ -1963,19 +1727,25 @@ class wpDataTableConstructor
             }
         }
 
-        $drop_statement = "ALTER TABLE {$tableData->mysql_table_name} DROP COLUMN {$columnName}";
+        $vendor = Connection::getVendor($tableData->connection);
+        $columnQuoteStart = Connection::getLeftColumnQuote($vendor);
+        $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
 
-        // First delete the column from the MySQL table
-        if (Connection::isSeparate($tableData->connection)) {
-            // External DB
-            $Sql = Connection::getInstance($tableData->connection);
-            $Sql->doQuery($drop_statement, array());
-        } else {
-            $wpdb->query($drop_statement);
+        $drop_statement = "ALTER TABLE {$tableData->mysql_table_name} DROP COLUMN " . $columnQuoteStart . "{$columnName}" . $columnQuoteEnd;
+
+        // Delete the column from the MySQL table
+        if ('formula' !== $columnType && 'masterdetail' !== $columnType) {
+            if (Connection::isSeparate($tableData->connection)) {
+                // External DB
+                $Sql = Connection::getInstance($tableData->connection);
+                $Sql->doQuery($drop_statement, array());
+            } else {
+                $wpdb->query($drop_statement);
+            }
         }
 
+        // Delete the column from wp_wpdatatable_columns
         if ($delete_column_id != 0) {
-            // Delete the column from wp_wpdatatable_columns
             $wpdb->delete(
                 $wpdb->prefix . 'wpdatatables_columns',
                 array('id' => $delete_column_id)
@@ -1986,12 +1756,11 @@ class wpDataTableConstructor
                                       SET pos = pos - 1 
                                       WHERE table_id = {$tableId} 
                                           AND pos >= " . (int)$delete_column_index;
-            $wpdb->query($update_statement);
 
+            $wpdb->query($update_statement);
         }
 
     }
-
     /**
      * Add a new column to manually generated table
      */
