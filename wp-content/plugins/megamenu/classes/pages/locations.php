@@ -278,7 +278,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 
 							if ( ! count( $enabled_locations + $disabled_locations ) ) {
 								echo '<p>';
-								esc_html_e( 'Your theme does not natively support menus, but you can add a new menu location using Max Mega Menu and display the menu using the Max Mega Menu widget or shortcode.', 'megamenu' );
+								esc_html_e( 'Add a new menu location below, then display the menu using the Max Mega Menu block, widget or shortcode.', 'megamenu' );
 								echo '</p>';
 							}
 
@@ -812,10 +812,22 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 								'priority' => 30,
 								'title'    => __( 'Display Options', 'megamenu' ),
 								'settings' => array(
+									'location_block' => array(
+										'priority'    => 10,
+										'title'       => __( 'Block (Gutenberg)', 'megamenu' ),
+										'description' => __( 'Display this menu location in any block supported area.', 'megamenu' ),
+										'settings'    => array(
+											array(
+												'type'  => 'location_block',
+												'key'   => 'location_block',
+												'value' => $location,
+											),
+										),
+									),
 									'location_php_function' => array(
 										'priority'    => 10,
 										'title'       => __( 'PHP Function', 'megamenu' ),
-										'description' => __( 'For use in a theme template (usually header.php)', 'megamenu' ),
+										'description' => __( 'Display this menu location in a theme template (usually header.php).', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'type'  => 'location_php_function',
@@ -827,7 +839,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 									'location_shortcode' => array(
 										'priority'    => 20,
 										'title'       => __( 'Shortcode', 'megamenu' ),
-										'description' => __( 'For use in a post or page.', 'megamenu' ),
+										'description' => __( 'Display this menu location in a post or page.', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'type'  => 'location_shortcode',
@@ -839,7 +851,7 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 									'location_widget'    => array(
 										'priority'    => 30,
 										'title'       => __( 'Widget', 'megamenu' ),
-										'description' => __( 'For use in a widget area.', 'megamenu' ),
+										'description' => __( 'Display this menu location in a widget area.', 'megamenu' ),
 										'settings'    => array(
 											array(
 												'type'  => 'location_widget',
@@ -978,6 +990,9 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 										break;
 									case 'checkbox':
 										$this->print_location_checkbox_option( $location, $setting['key'], $setting['value'] );
+										break;
+									case 'location_block':
+										$this->print_location_block_option( $location, $setting['key'], $setting['value'] );
 										break;
 									case 'location_php_function':
 										$this->print_location_php_function_option( $location, $setting['value'] );
@@ -1662,6 +1677,19 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 		public function print_location_widget_option( $location, $value ) {
 			?>
 			<textarea readonly="readonly"><?php _e( "Add the 'Max Mega Menu' widget to a widget area.", 'megamenu' ); ?></textarea>
+			<?php
+		}
+
+		/**
+		 * Print the textbox containing instructions on how to display this menu location using a widget
+		 *
+		 * @since 2.8
+		 * @param string $key
+		 * @param string $value
+		 */
+		public function print_location_block_option( $location, $value ) {
+			?>
+			<textarea readonly="readonly"><?php _e( "Add the 'Max Mega Menu' block to any block enabled area.", 'megamenu' ); ?></textarea>
 			<?php
 		}
 

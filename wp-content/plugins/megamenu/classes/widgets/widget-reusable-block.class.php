@@ -19,7 +19,7 @@ if ( ! class_exists( 'Mega_Menu_Widget_Reusable_Block' ) ) :
 		public function __construct() {
 			parent::__construct(
 				'maxmegamenu_reusable_block', // Base ID
-				'Reusable Block', // Name
+				'Reusable Block (MMM)', // Name
 				array( 'description' => __( 'Outputs a reusable block.', 'megamenu' ) ) // Args
 			);
 		}
@@ -94,17 +94,17 @@ if ( ! class_exists( 'Mega_Menu_Widget_Reusable_Block' ) ) :
 
 			// Input field with id is required for WordPress to display the title in the widget header.
 			?>
-		<input type="hidden" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" value="<?php echo esc_attr( $widget_title ); ?>">
+			<input type="hidden" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" value="<?php echo esc_attr( $widget_title ); ?>">
 		
-		<p>
-			<label for="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>"><?php esc_attr_e( 'Block', 'megamenu' ); ?>:</label> 
-			<select id="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>" class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'block' ) ); ?>">
-				<option value=""><?php esc_html_e( '- Select -', 'megamenu' ); ?></option>
-				<?php foreach ( $posts as $post ) : ?>
-				<option value="<?php echo esc_attr( $post->ID ); ?>"<?php selected( $post->ID, $block_id ); ?>><?php echo esc_html( $post->post_title ); ?></option>
-				<?php endforeach; ?>
-			</select>
-		</p>
+			<p>
+				<label for="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>"><?php esc_attr_e( 'Block', 'megamenu' ); ?>:</label> 
+				<select id="<?php echo esc_attr( $this->get_field_id( 'block' ) ); ?>" class="widefat" name="<?php echo esc_attr( $this->get_field_name( 'block' ) ); ?>">
+					<option value=""><?php esc_html_e( '- Select -', 'megamenu' ); ?></option>
+					<?php foreach ( $posts as $post ) : ?>
+					<option value="<?php echo esc_attr( $post->ID ); ?>"<?php selected( $post->ID, $block_id ); ?>><?php echo esc_html( $post->post_title ); ?></option>
+					<?php endforeach; ?>
+				</select>
+			</p>
 
 			<?php
 		}

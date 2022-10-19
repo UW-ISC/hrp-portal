@@ -316,7 +316,7 @@
     position: relative;
     top: 1px;
     display: inline-block;
-    font-family: 'Glyphicons Halflings';
+    font-family: 'Glyphicons Halflings', serif;
     font-style: normal;
     font-weight: normal;
     line-height: 1;
@@ -1588,7 +1588,7 @@
 
 @media (min-width: 768px) {
     .wpdt-c .lead {
-        font-size: 19.5px;
+        font-size: 20px;
     }
 }
 
@@ -1812,7 +1812,7 @@
 .wpdt-c blockquote {
     padding: 9px 18px;
     margin: 0 0 18px;
-    font-size: 16.25px;
+    font-size: 16px;
     border-left: 5px solid #eeeeee;
 }
 
@@ -1944,7 +1944,7 @@
     margin-right: -15px;
 }
 
-.wpdt-c .col-sm-0-8, .wpdt-c .col-xs-1, .wpdt-c .col-sm-1, .wpdt-c .col-md-1, .wpdt-c .col-lg-1, .wpdt-c .col-xs-2, .wpdt-c .col-sm-2, .wpdt-c .col-md-2, .wpdt-c .col-lg-2, .wpdt-c .col-sm-0-4, .wpdt-c .col-sm-2-6, .col-sm-5-5, .wpdt-c .col-xs-3, .wpdt-c .col-sm-3, .wpdt-c .col-md-3, .wpdt-c .col-lg-3, .wpdt-c .col-xs-4, .wpdt-c .col-sm-4, .wpdt-c .col-sm-1-0, .wpdt-c .col-sm-2-0, .wpdt-c .col-md-4, .wpdt-c .col-lg-4, .wpdt-c .col-xs-5, .wpdt-c .col-sm-5, .wpdt-c .col-md-5, .wpdt-c .col-lg-5, .wpdt-c .col-xs-6, .wpdt-c .col-sm-6, .wpdt-c .col-md-6, .wpdt-c .col-lg-6, .wpdt-c .col-xs-7, .wpdt-c .col-sm-7, .wpdt-c .col-md-7, .wpdt-c .col-lg-7, .wpdt-c .col-xs-8, .wpdt-c .col-sm-8, .wpdt-c .col-md-8, .wpdt-c .col-lg-8, .wpdt-c .col-xs-9, .wpdt-c .col-sm-9, .wpdt-c .col-md-9, .wpdt-c .col-lg-9, .wpdt-c .col-xs-10, .wpdt-c .col-sm-10, .wpdt-c .col-md-10, .wpdt-c .col-lg-10, .wpdt-c .col-xs-11, .wpdt-c .col-sm-11, .wpdt-c .col-md-11, .wpdt-c .col-lg-11, .wpdt-c .col-xs-12, .wpdt-c .col-sm-12, .wpdt-c .col-md-12, .wpdt-c .col-lg-12 {
+.wpdt-c .col-sm-0-8, .wpdt-c .col-xs-1, .wpdt-c .col-sm-1,.wpdt-c .col-sm-1-2, .wpdt-c .col-md-1, .wpdt-c .col-lg-1, .wpdt-c .col-xs-2, .wpdt-c .col-sm-2, .wpdt-c .col-md-2, .wpdt-c .col-lg-2, .wpdt-c .col-sm-0-4, .wpdt-c .col-sm-2-6, .col-sm-5-5, .wpdt-c .col-xs-3, .wpdt-c .col-sm-3, .wpdt-c .col-md-3, .wpdt-c .col-lg-3, .wpdt-c .col-xs-4, .wpdt-c .col-sm-4, .wpdt-c .col-sm-1-0, .wpdt-c .col-sm-2-0, .wpdt-c .col-md-4, .wpdt-c .col-lg-4, .wpdt-c .col-xs-5, .wpdt-c .col-sm-5,.wpdt-c .col-sm-5-3, .wpdt-c .col-md-5, .wpdt-c .col-lg-5, .wpdt-c .col-xs-6, .wpdt-c .col-sm-6, .wpdt-c .col-md-6, .wpdt-c .col-lg-6, .wpdt-c .col-xs-7, .wpdt-c .col-sm-7, .wpdt-c .col-md-7, .wpdt-c .col-lg-7, .wpdt-c .col-xs-8, .wpdt-c .col-sm-8, .wpdt-c .col-md-8, .wpdt-c .col-lg-8, .wpdt-c .col-xs-9, .wpdt-c .col-sm-9, .wpdt-c .col-md-9, .wpdt-c .col-lg-9, .wpdt-c .col-xs-10, .wpdt-c .col-sm-10, .wpdt-c .col-md-10, .wpdt-c .col-lg-10, .wpdt-c .col-xs-11, .wpdt-c .col-sm-11, .wpdt-c .col-md-11, .wpdt-c .col-lg-11, .wpdt-c .col-xs-12, .wpdt-c .col-sm-12, .wpdt-c .col-md-12, .wpdt-c .col-lg-12 {
     position: relative;
     min-height: 1px;
     padding-left: 15px;
@@ -2156,7 +2156,7 @@
 }
 
 .wpdt-c .col-xs-offset-0 {
-    margin-left: 0%;
+    margin-left: 0;
 }
 
 .wpdt-c .opacity-50 {
@@ -2167,11 +2167,13 @@
     .wpdt-c .col-sm-0-8,
     .wpdt-c .col-sm-0-1,
     .wpdt-c .col-sm-1,
+    .wpdt-c .col-sm-1-2,
     .wpdt-c .col-sm-2,
     .wpdt-c .col-sm-2-6,
     .wpdt-c .col-sm-3,
     .wpdt-c .col-sm-4,
     .wpdt-c .col-sm-5,
+    .wpdt-c .col-sm-5-3,
     .wpdt-c .col-sm-5-5,
     .wpdt-c .col-sm-0-4,
     .wpdt-c .col-sm-1-0,
@@ -2218,6 +2220,10 @@
         width: 48%;
     }
 
+    .wpdt-c .col-sm-5-3 {
+        width: 44%;
+    }
+
     .wpdt-c .col-sm-5 {
         width: 41.66666667%;
     }
@@ -2232,6 +2238,10 @@
 
     .wpdt-c .col-sm-2-0 {
         width: 22.66666667%;
+    }
+
+    .wpdt-c .col-sm-1-2 {
+        width: 6%;
     }
 
     .wpdt-c .col-sm-1-0 {
@@ -2415,7 +2425,7 @@
     }
 
     .wpdt-c .col-sm-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -2636,7 +2646,7 @@
     }
 
     .wpdt-c .col-md-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -2857,7 +2867,7 @@
     }
 
     .wpdt-c .col-lg-offset-0 {
-        margin-left: 0%;
+        margin-left: 0;
     }
 }
 
@@ -2991,7 +3001,7 @@
 @media screen and (max-width: 767px) {
     .wpdt-c .table-responsive {
         width: 100%;
-        margin-bottom: 13.5px;
+        margin-bottom: 14px;
         overflow-y: hidden;
         -ms-overflow-style: -ms-autohiding-scrollbar;
         border: 1px solid #F5F5F5;
@@ -3052,7 +3062,7 @@
     width: 100%;
     padding: 0;
     margin-bottom: 18px;
-    font-size: 19.5px;
+    font-size: 20px;
     line-height: inherit;
     color: #333333;
     border: 0;
@@ -3101,8 +3111,6 @@
 .wpdt-c input[type="file"]:focus,
 .wpdt-c input[type="radio"]:focus,
 .wpdt-c input[type="checkbox"]:focus {
-    outline: thin dotted;
-    outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
     outline: none !important;
 }
@@ -3379,7 +3387,7 @@
 }
 
 .wpdt-c .has-feedback .form-control {
-    padding-right: 43.75px;
+    padding-right: 44px;
 }
 
 .wpdt-c .form-control-feedback {
@@ -3620,15 +3628,12 @@
     border-radius: 2px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
 }
 
 .wpdt-c .btn:focus, .wpdt-c .btn:active:focus, .wpdt-c .btn.active:focus, .wpdt-c .btn.focus, .wpdt-c .btn:active.focus, .wpdt-c .btn.active.focus {
-    outline: thin dotted;
-    outline: 5px auto -webkit-focus-ring-color;
     outline-offset: -2px;
     outline: none !important;
 }
@@ -3742,7 +3747,7 @@
     border: none;
     box-sizing: border-box;
     border-radius: 3px;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
@@ -4492,7 +4497,6 @@
 
 .wpdt-c .btn-lg .caret {
     border-width: 5px 5px 0;
-    border-bottom-width: 0;
 }
 
 .wpdt-c .dropup .btn-lg .caret {
@@ -4520,17 +4524,11 @@
 }
 
 .wpdt-c .btn-group-vertical > .btn:first-child:not(:last-child) {
-    border-top-right-radius: 2px;
-    border-top-left-radius: 2px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-radius: 2px 2px 0 0;
 }
 
 .wpdt-c .btn-group-vertical > .btn:last-child:not(:first-child) {
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-right-radius: 2px;
-    border-bottom-left-radius: 2px;
+    border-radius: 0 0 2px 2px;
 }
 
 .wpdt-c .btn-group-vertical > .btn-group:not(:first-child):not(:last-child) > .btn {
@@ -5190,15 +5188,12 @@ select.input-group-lg > .input-group-btn > .btn {
 }
 
 .wpdt-c .navbar-form {
-    margin-left: -15px;
-    margin-right: -15px;
     padding: 10px 15px;
     border-top: 1px solid transparent;
     border-bottom: 1px solid transparent;
     -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1px 0 rgba(255, 255, 255, 0.1);
-    margin-top: 7.5px;
-    margin-bottom: 7.5px;
+    margin: 8px -15px;
 }
 
 @media (min-width: 768px) {
@@ -5293,15 +5288,12 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
     margin-bottom: 0;
-    border-top-right-radius: 2px;
-    border-top-left-radius: 2px;
-    border-bottom-right-radius: 0;
-    border-bottom-left-radius: 0;
+    border-radius: 2px 2px 0 0;
 }
 
 .wpdt-c .navbar-btn {
-    margin-top: 7.5px;
-    margin-bottom: 7.5px;
+    margin-top: 8px;
+    margin-bottom: 8px;
 }
 
 .wpdt-c .navbar-btn.btn-sm {
@@ -5575,7 +5567,7 @@ select.input-group-lg > .input-group-btn > .btn {
 }
 
 .wpdt-c .breadcrumb > li + li:before {
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     content: "\f531";
     padding: 0 5px;
     color: #ccc;
@@ -5929,7 +5921,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-radius: 3px;
 }
 
-.wpdt-c.alert h4
+.wpdt-c.alert h4,
 .wpdt-c .alert h4 {
     margin-top: 0;
     color: inherit;
@@ -6073,7 +6065,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .progress-bar {
     float: left;
-    width: 0%;
+    width: 0;
     height: 100%;
     font-size: 12px;
     line-height: 18px;
@@ -6796,7 +6788,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .close {
     float: right;
-    font-size: 19.5px;
+    font-size: 20px;
     font-weight: bold;
     line-height: 1;
     color: #000;
@@ -7042,7 +7034,7 @@ select.input-group-lg > .input-group-btn > .btn {
 .wpdt-c .tooltip-inner {
     max-width: 200px;
     padding: 3px 8px;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -7150,7 +7142,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border: 1px solid #fff;
     -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -7300,10 +7292,8 @@ select.input-group-lg > .input-group-btn > .btn {
         -o-transition: -o-transform 0.6s ease-in-out;
         transition: transform 0.6s ease-in-out;
         -webkit-backface-visibility: hidden;
-        -moz-backface-visibility: hidden;
         backface-visibility: hidden;
         -webkit-perspective: 1000px;
-        -moz-perspective: 1000px;
         perspective: 1000px;
     }
 
@@ -7807,7 +7797,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 
 .wpdt-c #weather-widget [class*="icon-"] {
-    font-family: 'weather-icons';
+    font-family: 'weather-icons', serif;
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -8034,7 +8024,7 @@ select.input-group-lg > .input-group-btn > .btn {
     padding-top: 7px;
     padding-bottom: 5px;
     display: inline-block;
-    margin-bottom: 0px;
+    margin-bottom: 0;
     vertical-align: middle;
     cursor: text;
 }
@@ -8135,23 +8125,23 @@ select.input-group-lg > .input-group-btn > .btn {
     margin, margin-top, margin-bottom, margin-left, margin-right
 ----------------------------------------------------------------------------*/
 .wpdt-c .m-0 {
-    margin: 0px !important;
+    margin: 0 !important;
 }
 
 .wpdt-c .m-t-0 {
-    margin-top: 0px !important;
+    margin-top: 0 !important;
 }
 
 .wpdt-c .m-b-0 {
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
 }
 
 .wpdt-c .m-l-0 {
-    margin-left: 0px !important;
+    margin-left: 0 !important;
 }
 
 .wpdt-c .m-r-0 {
-    margin-right: 0px !important;
+    margin-right: 0 !important;
 }
 
 .wpdt-c .m-5 {
@@ -8306,23 +8296,23 @@ select.input-group-lg > .input-group-btn > .btn {
     padding, padding-top, padding-bottom, padding-left, padding-right
 ----------------------------------------------------------------------------*/
 .wpdt-c .p-0 {
-    padding: 0px !important;
+    padding: 0 !important;
 }
 
 .wpdt-c .p-t-0 {
-    padding-top: 0px !important;
+    padding-top: 0 !important;
 }
 
 .wpdt-c .p-b-0 {
-    padding-bottom: 0px !important;
+    padding-bottom: 0 !important;
 }
 
 .wpdt-c .p-l-0 {
-    padding-left: 0px !important;
+    padding-left: 0 !important;
 }
 
 .wpdt-c .p-r-0 {
-    padding-right: 0px !important;
+    padding-right: 0 !important;
 }
 
 .wpdt-c .p-5 {
@@ -9147,11 +9137,10 @@ select.input-group-lg > .input-group-btn > .btn {
 ---------------------------------------------------*/
 
 .wpdt-c #header {
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     min-height: 70px;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -9165,7 +9154,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 @media (max-width: 767px) {
     .wpdt-c #header {
-        padding: 0px 8px;
+        padding: 0 8px;
     }
 }
 
@@ -9223,7 +9212,7 @@ select.input-group-lg > .input-group-btn > .btn {
     font-style: normal;
     width: 45px;
     text-align: center;
-    border-radius: 2px 0px 0px 2px;
+    border-radius: 2px 0 0 2px;
     cursor: pointer;
     left: 15px;
     height: 40px;
@@ -9256,7 +9245,7 @@ select.input-group-lg > .input-group-btn > .btn {
 ---------------------------------------------------*/
 
 .wpdt-c #header-alt {
-    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
     position: relative;
     margin-bottom: -50px;
     z-index: 10;
@@ -9358,7 +9347,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
     .ha-menu > ul > li.active > a {
         color: #fff;
-        box-shadow: inset 0px -3px 0 0px #FFEB3B;
+        box-shadow: inset 0 -3px 0 0 #FFEB3B;
     }
 
     .ha-menu > ul > li > a {
@@ -9818,7 +9807,7 @@ select.input-group-lg > .input-group-btn > .btn {
     transition: all;
     -webkit-transition-duration: 250ms;
     transition-duration: 250ms;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -9873,6 +9862,7 @@ select.input-group-lg > .input-group-btn > .btn {
     .wpdt-c .col-xs-6 button,
     .wpdt-c .col-xs-6 input,
     .wpdt-c .wdt-table-settings .input-path-block .fg-line,
+    .wpdt-c .wdt-table-settings .wdt-add-data-source-field .fg-line,
     .wpdt-c .pull-right:not(.wdt-column-settings):not(.wdt-column-block-icon):not(.wdt-column-move-arrows),
     .wpdt-c .pull-left,
     .wpdt-c .btn.btn-default.wdt-documentation,
@@ -10007,7 +9997,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .card .card-header h2 {
     margin: 0;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
@@ -10140,7 +10130,6 @@ select.input-group-lg > .input-group-btn > .btn {
     -webkit-transition-duration: 500ms;
     transition-duration: 500ms;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     content: "";
     width: 105px;
@@ -10971,7 +10960,6 @@ select.input-group-lg > .input-group-btn > .btn {
     -webkit-transition-duration: 200ms;
     transition-duration: 200ms;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
@@ -11142,7 +11130,6 @@ select.input-group-lg > .input-group-btn > .btn {
     -o-transition: all;
     transition: all;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     -webkit-transition-duration: 250ms;
     transition-duration: 250ms;
@@ -11568,7 +11555,7 @@ input:focus {
     -o-transform: scale(0);
     transform: scale(0);
     content: '\f0c8';
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     position: absolute;
     font-size: 12px;
     left: 2px;
@@ -11674,7 +11661,7 @@ input:focus {
 }
 
 .wpdt-c .input-group-addon {
-    border-width: 0px 0px 1px 0px;
+    border-width: 0 0 1px 0;
     min-width: 42px;
 }
 
@@ -11793,7 +11780,6 @@ input:focus {
     vertical-align: top;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
-    -khtml-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
@@ -11883,7 +11869,7 @@ input:focus {
 
 .wpdt-c .wdt-datatables-admin-wrap .check-column input[type=checkbox]:checked::before,
 .wpdt-c .wpDataTableFilterSection .wdt_checkbox_option input[type=checkbox]:checked::before {
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     content: '\f00c';
     width: 16px;
     height: 16px;
@@ -11908,7 +11894,7 @@ input:focus {
 
 
 .wpdt-c .toggle-switch input[type=checkbox]:checked:before {
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     content: '\f00c';
     width: 16px;
     height: 16px;
@@ -12232,7 +12218,7 @@ input:focus {
     box-sizing: border-box;
     color: #061938;
     padding: 8px 12px;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 12px;
     line-height: 20px;
 }
@@ -12251,9 +12237,9 @@ input:focus {
     background: linear-gradient(0deg, rgba(240, 62, 62, 0.04), rgba(240, 62, 62, 0.04)), #FFFFFF;
     border: 1px solid #F03E3E;
     box-sizing: border-box;
-    box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.08), 0 5px 5px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08), 0 5px 5px rgba(0, 0, 0, 0.04);
     border-radius: 4px;
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -12390,7 +12376,6 @@ input:focus {
 }
 
 .wpdt-c .carousel .carousel-indicators {
-    bottom: 10px;
     margin: 0;
     left: 0;
     bottom: 0;
@@ -12448,7 +12433,6 @@ input:focus {
 }
 
 .wpdt-c .modal:not([data-modal-color]) .modal-footer .btn-link:hover {
-    background-color: #eee;
     background: #eee;
 }
 
@@ -12513,7 +12497,7 @@ input:focus {
 }
 
 .wpdt-c .modal[data-modal-color="red"] {
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-style: normal;
     font-weight: normal;
 }
@@ -12578,7 +12562,6 @@ input:focus {
     -webkit-transition-duration: 300ms;
     transition-duration: 300ms;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
 }
 
@@ -12594,7 +12577,7 @@ input:focus {
 }
 
 .wpdt-c .panel-collapse .panel-heading:before, .wpdt-c .panel-collapse .panel-heading:after {
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     font-size: 17px;
     position: absolute;
     left: 0;
@@ -12604,7 +12587,6 @@ input:focus {
     -webkit-transition-duration: 300ms;
     transition-duration: 300ms;
     -webkit-backface-visibility: hidden;
-    -moz-backface-visibility: hidden;
     backface-visibility: hidden;
     top: 7px;
 }
@@ -12689,7 +12671,7 @@ input:focus {
 
 @media (min-width: 1280px) {
     .wpdt-c .breadcrumb {
-        padding: 10px 33px 11px 0px;
+        padding: 10px 33px 11px 0;
     }
 }
 
@@ -12782,7 +12764,7 @@ input:focus {
 
 .wpdt-c .ms-search .zmdi-search {
     position: absolute;
-    left: 0px;
+    left: 0;
     top: 8px;
     font-size: 20px;
 }
@@ -12813,7 +12795,7 @@ input:focus {
 
 .wpdt-c .mb-header {
     background-color: #F7F7F7;
-    box-shadow: 0px -1px 0px 1px #eaeaea;
+    box-shadow: 0 -1px 0 1px #eaeaea;
     position: relative;
     z-index: 2;
 }
@@ -13283,8 +13265,6 @@ input:focus {
     height: 150px;
     top: -74px;
     -webkit-transform-origin: center;
-    -moz-transform-origin: center;
-    -ms-transform-origin: center;
     transform-origin: center;
 }
 
@@ -13432,8 +13412,7 @@ input:focus {
 
 @media (min-width: 768px) {
     .wpdt-c .timeline {
-        padding: 50px;
-        padding-left: 100px;
+        padding: 50px 50px 50px 100px;
     }
 }
 
@@ -13511,7 +13490,7 @@ input:focus {
 }
 
 .wpdt-c .card .card-header h2 small {
-    font-family: Inter;
+    font-family: Inter, sans-serif;
     font-size: 11px;
     margin-top: 2px;
     color: #8796AF;
@@ -13641,7 +13620,7 @@ input:focus {
 
 #wdt-frontend-modal .wdt_checkbox_option input[type="checkbox"]:checked:before,
 #wdt-frontend-modal .wdt-search-filters-button-container .wdt_checkbox_option input[type="checkbox"]:checked:before {
-    font-family: 'wpDataTablesIcons';
+    font-family: 'wpDataTablesIcons', sans-serif;
     content: '\f00c';
     width: 16px;
     height: 16px;
@@ -13687,7 +13666,7 @@ input:focus {
 }
 
 #datatables_buttons_info h2{
-    font-family: GraphikWeb;
+    font-family: GraphikWeb, sans-serif;
     font-size: 16px;
     font-weight: 500;
     font-style: normal;

@@ -70,6 +70,10 @@
 
     <!-- Templates -->
 
+    <!-- Custom headers row block-->
+    <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/custom_headers_row_block.inc.php'; ?>
+    <!-- /Custom headers row block -->
+
     <!-- Conditional formatting block for column -->
     <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/conditional_formatting_block.inc.php'; ?>
     <!-- /Conditional formatting block for column -->
@@ -93,6 +97,10 @@
     <!-- Edit modal -->
     <?php include WDT_TEMPLATE_PATH . 'frontend/modal.inc.php'; ?>
     <!-- /Edit modal -->
+
+    <!-- Save table modal -->
+    <?php include WDT_TEMPLATE_PATH . 'admin/common/save_table_modal.inc.php'; ?>
+    <!-- /Save table modal -->
 
     <!-- /Templates -->
 

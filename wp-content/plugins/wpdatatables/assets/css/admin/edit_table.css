@@ -578,8 +578,9 @@ div.wdt-column-block.gu-mirror span {
     font-size: 15px;
 }
 
-.wpdt-c .wdt-table-settings .input-path-block .fg-line {
-    width: 75%;
+.wpdt-c .wdt-table-settings .input-path-block .fg-line,
+.wpdt-c .wdt-table-settings .input-nested-json-url-block .fg-line {
+    width: 75% !important;
 }
 
 .wpdt-c .wdt-table-settings .wdt-pf-cascade-filtering-logic-block .form-group {
@@ -979,6 +980,28 @@ div.wdt-column-block.gu-mirror span {
         max-width: 100% !important;
     }
 }
+
+@media (min-width: 481px) and (max-width: 768px) {
+    .wdt-input-url-container {
+        width: 100% !important;
+    }
+
+    .wdt-source-browse-container {
+        padding: 0 !important;
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 769px) and (max-width:1470px) {
+    .col-sm-4.m-b-16.wdt-add-data-source-field {
+        width: 66.66666667%;
+    }
+
+    .c-title-color.m-b-2.m-t-20 {
+        width: 20rem;
+    }
+}
+
 @media (max-width: 480px) {
     .wpdt-c .wdt-datatables-admin-wrap div.wdt-column-block {
        min-height: 100px;
@@ -1008,6 +1031,11 @@ div.wdt-column-block.gu-mirror span {
     }
     .wpdt-c #wpdt-cell-action-buttons .btn.btn-primary {
         width: auto !important;
+    }
+
+    .wdt-source-browse-container {
+        padding: 0;
+        float: right;
     }
 
 }

@@ -68,6 +68,8 @@ if ( ! class_exists( 'Mega_Menu_Tools' ) ) :
 			delete_option( 'megamenu_initial_version' );
 			delete_option( 'megamenu_themes_last_updated' );
 			delete_option( 'megamenu_multisite_share_themes' );
+			delete_option( 'megamenu_dismissed_notices' );
+			delete_option( 'megamenu_install_date' );
 
 			// delete all widgets assigned to menus
 			$widget_manager = new Mega_Menu_Widget_Manager();

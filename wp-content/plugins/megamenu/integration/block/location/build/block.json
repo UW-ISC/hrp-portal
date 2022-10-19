@@ -1,0 +1,24 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 2,
+  "name": "maxmegamenu/location",
+  "version": "0.1.0",
+  "title": "Max Mega Menu",
+  "category": "widgets",
+  "icon": "menu",
+  "description": "",
+  "supports": {
+    "html": false
+  },
+  "attributes": {
+    "location": {
+      "type": "string"
+    }
+  },
+  "keywords": [
+    "navigation"
+  ],
+  "textdomain": "location",
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./index.css"
+}

@@ -244,8 +244,9 @@ class WDTTools
 
                 throw new Exception($error);
             }
-            if (strpos($data, '<TITLE>Moved Temporarily</TITLE>')) {
-                throw new Exception(__('wpDataTables was unable to read your Google Spreadsheet, probably it is not published correctly. <br/> You can publish it by going to <b>File -> Publish to the web</b> ', 'wpdatatables'));
+            if (strpos($data, '<TITLE>Moved Temporarily</TITLE>') ||
+                strpos($data, 'Error 400 (Bad Request)')) {
+                throw new Exception(__('wpDataTables was unable to read your Google Spreadsheet, as it\'s not been published correctly. <br/> You can publish it by going to <b>File ->Share -> Publish to the web</b> ', 'wpdatatables'));
             }
             $info = curl_getinfo($ch);
             curl_close($ch);
@@ -421,6 +422,7 @@ class WDTTools
      * Helper function that extract Google Spreadsheet
      * @param $url
      * @return array|string
+     * @throws Exception
      */
     public static function extractGoogleSpreadsheetArray($url)
     {
@@ -488,6 +490,7 @@ class WDTTools
             'errorText' => __('Unable to retrieve results', 'wpdatatables'),
             'fileUploadEmptyFile' => __('Please upload or choose a file from Media Library!', 'wpdatatables'),
             'from' => __('From', 'wpdatatables'),
+            'getJsonRoots' => __('JSON roots are found!', 'wpdatatables'),
             'invalid_email' => __('Please provide a valid e-mail address for field', 'wpdatatables'),
             'invalid_link' => __('Please provide a valid URL link for field', 'wpdatatables'),
             'invalid_value' => __('You have entered invalid value. Press ESC to cancel.', 'wpdatatables'),
@@ -555,6 +558,9 @@ class WDTTools
             'envato_api_activated' => __('Activated with Envato', 'wpdatatables'),
             'activateWithEnvato' => __('Activate with Envato', 'wpdatatables'),
             'unable_to_deactivate_plugin' => __('Unable to deactivate plugin. Please try again later.', 'wpdatatables'),
+            'selected_replace_data_option' => __("<small>You've selected the <strong>'Replace rows with source data'</strong> option. This means that you're about to <strong>delete all the data</strong> you currently have in your table and replace it with data from your source file.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
+            'selected_add_data_option' => __("<small>You've selected the <strong>'Add data to current table data'</strong> option. This means that you're about to <strong>add data</strong> from the file source to your table.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small>", "wpdatatables"),
+            'selected_replace_table_option' => __("<small>You've selected the <strong>'Replace entire table data'</strong> option. This means that you're about to <strong>delete your entire table data and current column settings</strong> and replace it with data from your source file with default settings for columns.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first. <br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
         );
     }
 
@@ -658,7 +664,7 @@ class WDTTools
                 'step11' => array(
                     'title' => __('This is Simple table editor', 'wpdatatables'),
                     'content' => __('Here you can populate your table with data. <br><br>You can move around the cells using keyboard arrows and the Tab button. <br><br>Rearrange columns or rows by drag and drop column or row headers. Easily resize column width and row height by dragging the right corner of the column header, or the bottom line of the row header. Click \'Continue\' to move on.', 'wpdatatables'),
-                   ),
+                ),
                 'step12' => array(
                     'title' => __('Check out the Simple table toolbar', 'wpdatatables'),
                     'content' => __('Here you can style and insert custom data for each cell or range of cells. You can add or delete columns and rows, merge cells, customize sections by colors, background, alignment, insert custom links, media, shortcodes, star ratings or custom HTML code.', 'wpdatatables'),
@@ -1087,7 +1093,7 @@ class WDTTools
             if ($attributes = $node->attributes()) {
                 $data = array(
                     'attributes' => array(),
-                    'value' => (count($node) > 0) ? self::xmlToArray($node, false) : (string)$node
+                    'value' => (count($node) > 0) ? self::convertXMLtoArr($node, false) : (string)$node
                 );
 
                 foreach ($attributes as $attr => $value) {
@@ -1135,7 +1141,9 @@ class WDTTools
             if (self::_detect($values, 'self::wdtIsInteger')) {
                 return 'int';
             }
-            if (self::_detect($values, 'preg_match', WDT_TIME_12H_REGEX) || self::_detect($values, 'preg_match', WDT_TIME_24H_REGEX)) {
+            if (self::_detect($values, 'preg_match', WDT_TIME_12H_REGEX)
+                || self::_detect($values, 'preg_match', WDT_TIME_24H_REGEX)
+                || self::_detect($values, 'preg_match', WDT_TIME_WITH_SECONDS_REGEX)) {
                 return 'time';
             }
             if (self::_detect($values, 'self::wdtIsDateTime')) {
@@ -1221,8 +1229,8 @@ class WDTTools
             ) &&
             (
                 call_user_func('preg_match', WDT_TIME_12H_REGEX, substr($input, strpos($input, ':') - 2, 5)) ||
-                call_user_func('preg_match', WDT_TIME_24H_REGEX, substr($input, strpos($input, ':') - 2, 5))
-
+                call_user_func('preg_match', WDT_TIME_24H_REGEX, substr($input, strpos($input, ':') - 2, 5)) ||
+                call_user_func('preg_match', WDT_AM_PM_TIME_REGEX, substr($input, strpos($input, ':') - 2))
             );
     }
 
@@ -1619,19 +1627,21 @@ class WDTTools
      */
     public static function wdtConvertStringToUnixTimestamp($dateString, $dateFormat)
     {
-        if (null !== $dateFormat && $dateFormat == 'd/m/Y') {
+        if(!$dateFormat) $dateFormat = get_option('wdtDateFormat');
+        if (null !== $dateFormat && substr($dateFormat, 0,5) === 'd/m/Y') {
             $returnDate = strtotime(str_replace('/', '-', $dateString));
         } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y', 'm-d-y','d.m.y','Y.m.d','d-m-Y'])) {
             $returnDate = strtotime(str_replace(['.', '-'], '/', $dateString));
         } else if (null !== $dateFormat && $dateFormat == 'm/Y') {
             if ($dateString == '') return null;
             $dateObject = DateTime::createFromFormat($dateFormat, $dateString);
+            if (!$dateObject) return strtotime($dateString);
             $returnDate = $dateObject->getTimestamp();
         } else {
             $returnDate = strtotime($dateString);
         }
 
-        return $returnDate;
+        return $returnDate ?: '';
     }
 
     /**
@@ -1728,7 +1738,7 @@ class WDTTools
      * @param $text
      * @return mixed|string
      */
-    private static function slugify($text)
+    public static function slugify($text)
     {
         // replace non letter or digits by _
         $text = preg_replace('#[^\\pL\d]+#u', '_', $text);
@@ -1931,6 +1941,9 @@ class WDTTools
                 break;
             case 'json':
                 return 'JSON';
+                break;
+            case 'nested_json':
+                return 'Nested JSON';
                 break;
             case 'serialized':
                 return 'Serialized PHP array';

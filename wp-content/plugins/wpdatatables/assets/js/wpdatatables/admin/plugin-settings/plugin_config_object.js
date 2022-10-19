@@ -40,6 +40,20 @@ var wpdatatable_plugin_config = {
         }
     },
 
+    setAutoUpdateOption: function ( option ) {
+        if( wdt_current_config.wdtAutoUpdateOption != option ){
+            wdt_current_config.wdtAutoUpdateOption = option;
+        }
+        if (option){
+            jQuery('.auto-update-cache-instructions').removeClass('hidden');
+        } else {
+            jQuery('.auto-update-cache-instructions').addClass('hidden');
+        }
+        if( jQuery('#wdt-auto-update-option').val() != option ){
+            jQuery('#wdt-auto-update-option').prop( 'checked', option );
+        }
+    },
+
     setTablesAdmin: function ( tablesAdmin ) {
         if( wdt_current_config.wdtTablesPerPage != tablesAdmin ){
             wdt_current_config.wdtTablesPerPage = tablesAdmin;

@@ -11,6 +11,7 @@
 <div class="card wdt-table-settings">
 
     <?php
+    $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
     // set connection if $connection is not set with GET parameter
     if ($connection === null) {
         if (Connection::enabledSeparate()) {
@@ -137,6 +138,7 @@
                                             <option value="google_spreadsheet"><?php esc_html_e('Google Spreadsheet', 'wpdatatables'); ?></option>
                                             <option value="xml"><?php esc_html_e('XML file', 'wpdatatables'); ?></option>
                                             <option value="json"><?php esc_html_e('JSON file', 'wpdatatables'); ?></option>
+                                            <option value="nested_json"><?php esc_html_e('Nested JSON', 'wpdatatables'); ?></option>
                                             <option value="serialized"><?php esc_html_e('Serialized PHP array', 'wpdatatables'); ?></option>
                                             <?php do_action('wdt_add_table_type_option'); ?>
                                         </select>
@@ -146,7 +148,7 @@
                             <!-- /input source type selection -->
                         </div>
 
-                        <div class="col-sm-6 input-path-block hidden">
+                        <div class="col-sm-6 input-path-block hidden" id="wdt-input-path-block">
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e('Input file path or URL', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
@@ -165,6 +167,27 @@
                                 </div>
                             </div>
                             <!-- /input URL or path -->
+                        </div>
+
+                        <div class="col-sm-6 input-nested-json-url-block hidden">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Input JSON URL', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Insert JSON URL. Please note that you are able to use dynamic Placeholders for this input like https://api.com/v1/data/%VAR1%/', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- input JSON URL -->
+                            <div class="form-group">
+                                <div class="fg-line col-sm-9 p-0">
+                                    <input type="text" id="wdt-nested-json-url" class="form-control input-sm"
+                                           placeholder="<?php esc_attr_e('Insert or paste JSON URL', 'wpdatatables'); ?>">
+                                </div>
+                                <div class="col-sm-3 p-r-0">
+                                    <button class="btn btn-primary" id="wdt-get-nested-json-roots">
+                                        <?php esc_html_e('Get JSON roots', 'wpdatatables'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /input JSON URL -->
                         </div>
 
                         <?php do_action('wdt_add_data_source_elements'); ?>
@@ -189,6 +212,7 @@
                     <!-- /.row -->
 
                     <div class="row">
+
                         <div class="col-sm-6 hidden mysql-settings-block">
 
                             <h4 class="c-title-color m-b-2">
@@ -201,9 +225,9 @@
                             </h4>
                             <pre id="wdt-mysql-query" style="width: 100%; height: 250px"></pre>
                         </div>
-                        <div class="col-sm-6 hidden wdt-auto-refresh">
+                        <div class="col-sm-6 hidden wdt-auto-refresh wdt-add-data-source-change-field">
 
-                            <h4 class="c-title-color m-b-2 m-t-20">
+                            <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e('Auto-refresh', 'wpdatatables'); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                    title="<?php esc_attr_e('If you enter a non-zero value, table will auto-refresh to show actual data with a given interval of seconds. Leave zero or empty not to use auto-refresh.', 'wpdatatables'); ?>"></i>
@@ -226,9 +250,237 @@
                             </div>
 
                         </div>
-                    </div>
-                    <!-- /.row -->
+                        <div class="col-sm-4 m-b-16 form-group wdt-add-data-source-field hidden">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Select how to use source file data', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right" title=""
+                                   data-original-title="<?php esc_attr_e('If you\'re using the same column headers, choose if you want to replace existing data with source data or add source data to existing table data, or if you\'re using a completely different table and want to replace table data with source file data.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="fg-line">
+                                <div class="select">
+                                    <select class="form-control selectpicker" id="wdt-source-file-data" autocomplete="off">
+                                        <option selected value><?php esc_html_e('Select an option', 'wpdatatables'); ?></option>
+                                        <option value="replaceTableData"><?php esc_html_e('Replace rows with source data', 'wpdatatables'); ?></option>
+                                        <option value="addDataToTable"><?php esc_html_e('Add rows to the current table data', 'wpdatatables'); ?></option>
+                                        <option value="replaceTable"><?php esc_html_e('Replace the entire table with the source', 'wpdatatables'); ?></option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- /rows per page selection -->
 
+                        <div class="col-sm-4 m-b-16 wdt-source-file-path hidden">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Source file path or URL', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right" title=""
+                                   data-original-title="<?php esc_attr_e('Upload your file or provide the full URL here. For CSV or Excel input sources only URLs or paths from same servers are supported. For Google Spreadsheets: please do not forget to publish the spreadsheet before pasting the URL.', 'wpdatatables'); ?>"></i>
+                            </h4>
+
+                            <div class="form-group">
+                                <div class="col-sm-9 p-0 wdt-input-url-container">
+                                    <input type="text" id="wdt-add-data-source-input" class="form-control input-sm input-url-path"
+                                           placeholder="Paste URL or path, or click Browse to choose">
+                                </div>
+                                <div class="col-sm-3 wdt-source-browse-container">
+                                    <button class="btn bgm-blue" id="wdt-add-data-browse-button">
+                                        <?php esc_html_e('Browse...', 'wpdatatables'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Block for Nested JSON options -->
+                    <div class="row hidden" id="wdt-nested-json-block" >
+                        <!-- Choose method -->
+                        <div class="col-sm-3 nested-json-get-method">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Choose method', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Choose method GET or POST for getting data. GET is set by default.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- select JSON HTTP method -->
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" id="wdt-nested-json-get-type">
+                                            <option value="get"><?php esc_html_e('GET', 'wpdatatables'); ?></option>
+                                            <option value="post"><?php esc_html_e('POST', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /select JSON HTTP method -->
+                        </div>
+                        <!-- /Choose method -->
+
+                        <!-- JSON authentication -->
+                        <div class="col-sm-3 nested-json-auth-options">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('JSON authentication', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Set JSON authentication option. You can choose "Basic Authentication" with username and password or "No Auth" option. By default is set to "No Auth".', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- select JSON Auth option -->
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" id="wdt-nested-json-auth-option">
+                                            <option value=""><?php esc_html_e('No Auth', 'wpdatatables'); ?></option>
+                                            <option value="basic_auth"><?php esc_html_e('Basic Authentication', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /select JSON Auth option -->
+                        </div>
+                        <!-- /JSON authentication -->
+
+                        <!-- Basic Authentication Credentials -->
+                        <div class="col-sm-6 nested-json-basic-auth-inputs hidden">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Basic Authentication Credentials', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Credentials for Basic Authentication ex. Username and Password', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- input Username and Password -->
+                            <div class="form-group">
+                                <div class="col-sm-6 p-l-0">
+                                    <input type="text" id="wdt-nested-json-username" class="form-control input-sm"
+                                           placeholder="<?php esc_attr_e('ex. Username', 'wpdatatables'); ?>">
+                                </div>
+                                <div class="col-sm-6 p-0">
+                                    <input type="password" id="wdt-nested-json-password" class="form-control input-sm"
+                                           placeholder="<?php esc_attr_e('ex. Password', 'wpdatatables'); ?>">
+                                </div>
+                            </div>
+                            <!-- input Username and Password -->
+                        </div>
+                        <!-- /Basic Authentication Credentials -->
+                    </div>
+                    <!-- /Block for Nested JSON options -->
+
+                    <!-- Block for Nested JSON additional options -->
+                    <div class="row hidden" id="wdt-nested-json-additional-block" >
+                        <!-- Custom headers option-->
+                        <div class="col-sm-6 json-custom-headers">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Custom headers', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Headers are a key–value pair in clear-text string format. Add custom headers for API like key value pairs, ex. for key name insert apiKey, and for key value apiKeyValue.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- inputs for custom headers: Key Name and Key Value-->
+                            <div class="wdt-nested-json-custom-headers-container">
+                                <div class="row wdt-custom-headers-row-rule">
+                                    <div class="col-sm-6 wdt-custom-header-key-name">
+                                        <div class="form-group m-b-10">
+                                            <input placeholder="<?php esc_attr_e('Insert key name', 'wpdatatables'); ?>" type="text" class="form-control input-sm custom-header-key-name-value" value="">
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 wdt-custom-header-key-value">
+                                        <div class="form-group m-b-10">
+                                            <textarea placeholder="<?php esc_attr_e('Insert key value', 'wpdatatables'); ?>" type="text" class="form-control input-sm custom-header-key-value-value" value=""></textarea>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /inputs for custom headers: Key Name and Key Value-->
+
+                            <!-- Add row button for custom headers -->
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button class="btn pull-left m-t-10 wdt-add-nested-json-custom-headers-row">
+                                        <i class="wpdt-icon-plus-thin"></i> <?php esc_html_e('Add Row', 'wpdatatables'); ?>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /Add row button for custom headers -->
+                        </div>
+                        <!-- /Custom headers option-->
+
+                        <!-- JSON root-->
+                        <div class="col-sm-6 nested-json-roots hidden">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Choose JSON root', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Here will be listed all roots from JSON endpoint. Every key that is array or object will be treated as separate root path. Choose root path where is your data.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- select JSON root -->
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" id="wdt-nested-json-root">
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /select JSON root -->
+                        </div>
+                        <!-- /JSON root-->
+                    </div>
+                    <!-- Block for Nested JSON additional options -->
+
+                    <div class="row" id="wdt-cache-block">
+                        <div class="col-sm-3 m-b-16 hidden cache-settings-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Cache data', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#cache-source-data-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="cache-source-data-hint">
+                                <div class="popover-heading">
+                                    <?php esc_html_e('Cache data from source', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php esc_html_e('Enable this to cache data from source file. Available for tables created from existing data source like Excel, CSV, JSON, Nested JSON, Google Spredsheet and PHP array.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wpdt-cache-source-data" type="checkbox">
+                                <label for="wpdt-cache-source-data"
+                                       class="ts-label"><?php esc_html_e('Cache data from source', 'wpdatatables'); ?></label>
+                            </div>
+
+                        </div>
+                        <?php if ($globalAutoUpdateOption) { ?>
+                            <div class="col-sm-3 m-b-16 hidden auto-update-cache-block">
+
+                                <h4 class="c-title-color m-b-2">
+                                    <?php esc_html_e('Auto update cache', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-popover-content="#auto-update-cache-hint"
+                                       data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                                </h4>
+
+                                <!-- Hidden popover with image hint -->
+                                <div class="hidden" id="auto-update-cache-hint">
+                                    <div class="popover-heading">
+                                        <?php esc_html_e('Auto update cache from source', 'wpdatatables'); ?>
+                                    </div>
+
+                                    <div class="popover-body">
+                                        <?php esc_html_e('Enable this to auto update cache from source file.', 'wpdatatables'); ?>
+                                    </div>
+                                </div>
+                                <!-- /Hidden popover with image hint -->
+
+                                <div class="toggle-switch" data-ts-color="blue">
+                                    <input id="wpdt-auto-update-cache" type="checkbox">
+                                    <label for="wpdt-auto-update-cache"
+                                           class="ts-label"><?php esc_html_e('Auto update cache from source', 'wpdatatables'); ?></label>
+                                </div>
+
+                            </div>
+                        <?php } ?>
+                    </div>
                 </div>
                 <!-- /Main table settings -->
 
@@ -1075,13 +1327,13 @@
                             <div class="select">
                                 <select class="form-control selectpicker" multiple="multiple"
                                         title="<?php esc_attr_e('All', 'wpdatatables'); ?>" id="wdt-edit-buttons-displayed">
-                                   <?php $wdtEditButtonsDisplayed = array('New Entry', 'Edit', 'Delete');
-                                   if (isset($tableData) && $tableData->table->enableDuplicateButton) {
-                                           $wdtEditButtonsDisplayed[] = 'Duplicate';
-                                   }
-                                   foreach ($wdtEditButtonsDisplayed as $wdtEditButtonDisplayed) {
+                                    <?php $wdtEditButtonsDisplayed = array('New Entry', 'Edit', 'Delete');
+                                    if (isset($tableData) && $tableData->table->enableDuplicateButton) {
+                                        $wdtEditButtonsDisplayed[] = 'Duplicate';
+                                    }
+                                    foreach ($wdtEditButtonsDisplayed as $wdtEditButtonDisplayed) {
                                         /** @noinspection $wdtEditButtonsDisplayed */ ?>
-                                    <option value="<?php echo esc_attr(str_replace(' ','_',strtolower($wdtEditButtonDisplayed))) ?>"><?php echo esc_html($wdtEditButtonDisplayed) ?></option>
+                                        <option value="<?php echo esc_attr(str_replace(' ','_',strtolower($wdtEditButtonDisplayed))) ?>"><?php echo esc_html($wdtEditButtonDisplayed) ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -1090,7 +1342,7 @@
 
                         <div class="col-sm-4 m-b-16 editing-settings-block
                             <?php if (defined('WDT_GF_VERSION') &&
-                                    version_compare(WDT_GF_VERSION, "1.6.3", '<=')) {?> hideDuplicateForGF<?php }?>">
+                            version_compare(WDT_GF_VERSION, "1.6.3", '<=')) {?> hideDuplicateForGF<?php }?>">
                             <h4 class="c-title-color m-b-4">
                                 <?php esc_html_e('Show duplicate button', 'wpdatatables'); ?>
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"

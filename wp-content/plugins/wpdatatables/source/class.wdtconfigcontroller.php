@@ -19,6 +19,7 @@ class WDTConfigController {
     /**
      * Validate and save the table config to DB
      * @param StdClass $tableData
+     * @throws WDTException
      */
     public static function saveTableConfig($tableData) {
         global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
@@ -44,6 +45,11 @@ class WDTConfigController {
         $wdtVar9 = isset($tableData->var9) ?
             sanitize_text_field($tableData->var9) : '';
 
+        //Add data source to table if a file was used
+        if( isset($tableData->file) && $tableData->file != 'http://0' && $tableData->file && $tableData->fileSourceAction) {
+            $tableData = WDTConfigController::addDataSourceToTable($tableData);
+        }
+
         // trying to generate/validate the WPDataTable config
         $res = self::tryCreateTable($tableData->table_type, $tableData->content, $tableData->connection);
 
@@ -57,7 +63,8 @@ class WDTConfigController {
                 }
                 // Saving the columns
                 try {
-                    self::saveColumns($tableData->columns, $res->table, $tableData->id);
+                    if(!(isset($tableData->replaceFileData) && $tableData->replaceFileData))
+                        self::saveColumns($tableData->columns, $res->table, $tableData->id);
 
                     $wpDataTable = WPDataTable::loadWpDataTable($tableData->id);
                     $tableData = self::loadTableFromDB($tableData->id, false);
@@ -106,7 +113,7 @@ class WDTConfigController {
     /**
      * Returns the JSON string with config object for the table and all of its columns
      *
-     * @param $tableId - Id of the table
+     * @param $tableId - ID of the table
      * @param $tableView - Standard or Excel-like table view
      * @throws Exception
      * @return stdClass Object with the wpDataTable HTML and config
@@ -335,6 +342,8 @@ class WDTConfigController {
             'tabletools_config' => serialize($table->tabletools_config),
             'filtering' => $table->filtering,
             'filtering_form' => $table->filtering_form,
+            'cache_source_data' => $table->cache_source_data,
+            'auto_update_cache' => $table->auto_update_cache,
             'responsive' => $table->responsive,
             'scrollable' => $table->scrollable,
             'server_side' => $table->server_side,
@@ -459,6 +468,8 @@ class WDTConfigController {
         $table->inline_editing = (int)$table->inline_editing;
         $table->mysql_table_name = sanitize_text_field($table->mysql_table_name);
         $table->filtering_form = (int)$table->filtering_form;
+        $table->cache_source_data = (int)$table->cache_source_data;
+        $table->auto_update_cache = (int)$table->auto_update_cache;
         $table->clearFilters = (int)$table->clearFilters;
         $table->display_length = (int)$table->display_length;
         $table->showRowsPerPage = (int)$table->showRowsPerPage;
@@ -516,6 +527,11 @@ class WDTConfigController {
             $table = self::sanitizeTableSettingsSimpleTable($table);
         }
 
+        if ($table->table_type == 'nested_json' && isset($table->jsonAuthParams)) {
+            $table->jsonAuthParams = WDTConfigController::sanitizeNestedJsonParams($table->jsonAuthParams);
+            $table->content = json_encode($table->jsonAuthParams);
+        }
+
         if (isset($table->cascadeFiltering) && $table->cascadeFiltering === 1) {
             foreach ($table->columns as &$column) {
                 $column->possibleValuesAjax = -1;
@@ -525,6 +541,9 @@ class WDTConfigController {
         if (($table->table_type == 'csv') || ($table->table_type == 'xls')) {
             $table->content = WDTTools::urlToPath($table->content);
         }
+
+        $table->file = isset($table->file) && $table->file ? esc_url_raw($_POST['file']) : 0;
+        $table->fileSourceAction = isset($table->fileSourceAction) && $table->fileSourceAction ? sanitize_text_field($_POST['fileSourceAction']) : null;
 
         return $table;
 
@@ -603,6 +622,69 @@ class WDTConfigController {
             }
         }
         return $table;
+    }
+
+    /**
+     * Helper method for sanitizing the user input for nested JSON params
+     * @param stdClass $jsonParams object with nested JSON params
+     * @return stdClass object with sanitized nested JSON params
+     */
+    public static function sanitizeNestedJsonParams($jsonParams){
+        $sanitizedParams = new stdClass();
+
+        if (isset($jsonParams->url)){
+            $sanitizedParams->url = sanitize_url($jsonParams->url);
+            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
+                $sanitizedParams->url = sanitize_url(wp_kses_post($jsonParams->url));
+        } else {
+            $sanitizedParams->url = '';
+        }
+
+        if (isset($jsonParams->method)){
+            $sanitizedParams->method = sanitize_text_field($jsonParams->method);
+        } else {
+            $sanitizedParams->method = 'get';
+        }
+
+        if (isset($jsonParams->authOption)){
+            $sanitizedParams->authOption = sanitize_text_field($jsonParams->authOption);
+        } else {
+            $sanitizedParams->authOption = '';
+        }
+        if (isset($jsonParams->username)){
+            $sanitizedParams->username = sanitize_text_field($jsonParams->username);
+            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
+                $sanitizedParams->username = sanitize_text_field(wp_kses_post($jsonParams->username));
+        } else {
+            $sanitizedParams->username = '';
+        }
+        if (isset($jsonParams->password)){
+            $sanitizedParams->password = sanitize_text_field($jsonParams->password);
+            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
+                $sanitizedParams->password = sanitize_text_field(wp_kses_post($jsonParams->password));
+        } else {
+            $sanitizedParams->password = '';
+        }
+        if (isset($jsonParams->customHeaders) && !empty($jsonParams->customHeaders)){
+            foreach ($jsonParams->customHeaders as &$customHeader){
+                $customHeader->setKeyName = sanitize_text_field($customHeader->setKeyName);
+                $customHeader->setKeyValue = sanitize_textarea_field($customHeader->setKeyValue);
+                if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+                    $customHeader->setKeyName = sanitize_text_field(wp_kses_post($customHeader->setKeyName));
+                    $customHeader->setKeyValue = sanitize_textarea_field(wp_kses_post($customHeader->setKeyValue));
+                }
+            }
+            $sanitizedParams->customHeaders = $jsonParams->customHeaders;
+        } else {
+            $sanitizedParams->customHeaders = [];
+        }
+        if (isset($jsonParams->root)){
+            $sanitizedParams->root = sanitize_text_field($jsonParams->root);
+        } else {
+            $sanitizedParams->root = '';
+        }
+
+        return $sanitizedParams;
     }
 
     /**
@@ -972,22 +1054,22 @@ class WDTConfigController {
                 if ($feColumn->type != 'formula') {
                     continue;
                 }
+                if (!self::$_resetColumnPosition){
+                    // Removing this column from the array of marked for deletion
+                    $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
 
-                // Removing this column from the array of marked for deletiong
-                $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
+                    $wdtColumn = WDTColumn::generateColumn(
+                        'formula',
+                        array(
+                            'orig_header' => $feColumn->orig_header,
+                            'decimalPlaces' => $feColumn->decimalPlaces
+                        )
+                    );
+                    $columnConfig = self::prepareDBColumnConfig($wdtColumn, $frontendColumns, $tableId);
+                    $columnConfig['filter_type'] = 'none';
 
-                $wdtColumn = WDTColumn::generateColumn(
-                    'formula',
-                    array(
-                        'orig_header' => $feColumn->orig_header,
-                        'decimalPlaces' => $feColumn->decimalPlaces
-                    )
-                );
-                $columnConfig = self::prepareDBColumnConfig($wdtColumn, $frontendColumns, $tableId);
-                $columnConfig['filter_type'] = 'none';
-
-                self::saveSingleColumn($columnConfig);
-
+                    self::saveSingleColumn($columnConfig);
+                }
             }
         }
 
@@ -1383,6 +1465,8 @@ class WDTConfigController {
         $table->enableDuplicateButton = false;
         $table->mysql_table_name = '';
         $table->filtering_form = 0;
+        $table->cache_source_data = 0;
+        $table->auto_update_cache = 0;
         $table->clearFilters = 0;
         $table->display_length = 10;
         $table->showRowsPerPage = 10;
@@ -1468,6 +1552,110 @@ class WDTConfigController {
     }
 
     /**
+     * Adding data from source to the table columns
+     * @param $tableData
+     * @return mixed|string|void
+     * @throws WDTException
+     * @throws Exception
+     */
+    public static function addDataSourceToTable($tableData) {
+        $columnTypes = array();
+        $columnDateInputFormat = array();
+
+        $uploadedFile = $tableData->file;
+        $fileSourceAction = $tableData->fileSourceAction;
+
+        if(!($file = wpDataTableConstructor::isUploadedFileEmpty($uploadedFile))) return __('Empty file', 'wpdatatables');
+
+        for ($i = 0; $i < count($tableData->columns); $i++) {
+            $columnTypes[$tableData->columns[$i]->orig_header] = sanitize_text_field($tableData->columns[$i]->type);
+            $columnDateInputFormat[$tableData->columns[$i]->orig_header] = sanitize_text_field($tableData->columns[$i]->dateInputFormat);
+        }
+
+        $objSourceFile = new wpDataTableSourceFile(
+            $file,
+            $tableData,
+            $columnTypes,
+            $columnDateInputFormat,
+            $fileSourceAction
+        );
+
+        $objSourceFile->getTableTypeFromFile();
+        try {
+            $objSourceFile->prepareHeadingsArray();
+        } catch (Exception $e) {
+            die($e);
+        }
+
+        $vendor = Connection::getVendor($objSourceFile->getTableData()->connection);
+
+        $columnQuoteStart = Connection::getLeftColumnQuote($vendor);
+        $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
+
+        $columnHeaders = array();
+        foreach ($objSourceFile->getTableData()->columns as $column) {
+            if (!in_array($column->type, array('formula', 'masterdetail'))) {
+                $columnHeaders[] = preg_replace('/\s*/', '', strtolower($column->orig_header));
+            }
+        }
+        //Removes the WPDT table id from the array
+        $columnHeaders = array_values(array_filter($columnHeaders, function($el) { return $el != "wdt_id"; }));
+
+        //Error handling
+        try {
+            $objSourceFile->checkIfFileDataIsCorrect($columnHeaders);
+        } catch (WDTException $exception) {
+            die($exception);
+        }
+
+        if ($objSourceFile->getFileSourceAction() == 'replaceTableData' || $objSourceFile->getFileSourceAction() == 'replaceTable') {
+            //Creating delete statement
+            $delete_table_data_statement = "DELETE FROM " . $columnQuoteStart
+                . $objSourceFile->getTableData()->mysql_table_name . $columnQuoteEnd;
+
+            $objSourceFile->executeQueryStatement($delete_table_data_statement, $objSourceFile->getTableData()->connection);
+        }
+
+        //Removing all existing columns from the table
+        $objSourceFile->maybeReplaceData($columnTypes);
+
+        //Creating insert statement
+        $insert_statement_beginning = self::createInsertStatement(
+            $objSourceFile->getTableData()->mysql_table_name,
+            $objSourceFile->getColumnOrigHeaders(),
+            $columnQuoteStart,
+            $columnQuoteEnd
+        );
+
+        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(),'upload');
+
+        return $objSourceFile->getTableData();
+    }
+
+    /**
+     * Create insert statement beginning
+     * @param $tableName
+     * @param $columnHeaders
+     * @param $columnQuoteStart
+     * @param $columnQuoteEnd
+     * @return string
+     */
+    public static function createInsertStatement($tableName, $columnHeaders, $columnQuoteStart, $columnQuoteEnd) {
+        return "INSERT INTO "
+            . $tableName . " ( "
+            .implode(
+                ', ',
+                array_map(
+                    function ($header) use ($columnQuoteStart, $columnQuoteEnd) {
+                        return "{$columnQuoteStart}{$header}{$columnQuoteEnd}";
+                    },
+                    array_values($columnHeaders)
+                )
+            )
+            . " )";
+    }
+
+    /**
      * Helper function for getting all tables and charts from the database for page builders
      *
      * @param $builder
@@ -1535,5 +1723,4 @@ class WDTConfigController {
 
         return 'Please select a wpDataTable.';
     }
-
 }

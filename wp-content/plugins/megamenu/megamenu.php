@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     2.9.8
+ * Version:     3.0
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '2.9.8';
+		public $version = '3.0';
 
 
 		/**
@@ -111,6 +111,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 					'Mega_Menu_Locations',
 					'Mega_Menu_Themes',
 					'Mega_Menu_Tools',
+					'Mega_Menu_Admin_Notices'
 				);
 
 				foreach ( $admin_classes as $class ) {
@@ -130,7 +131,6 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			}
 
 		}
-
 
 		/**
 		 * Add a body class for each active mega menu location.
@@ -232,7 +232,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 * Load TinyMCE assets on nav-menus.php page.
 		 *
 		 * @since  1.8
-.		 * @param  array $pages Pages to load tinymce scripts on
+		 * @param  array $pages Pages to load tinymce scripts on
 		 * @return array $pages
 		 */
 		public function megamenu_blackstudio_tinymce( $pages ) {
@@ -248,18 +248,18 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 */
 		public function install_upgrade_check() {
 			$version = get_option( 'megamenu_version' );
+			$install_date = get_option( 'megamenu_install_date');
+
+			if ( ! $install_date ) {
+				add_option( 'megamenu_install_date', time() );
+			}
 
 			if ( $version ) {
-
 				if ( version_compare( $this->version, $version, '!=' ) ) {
-
 					update_option( 'megamenu_version', $this->version );
-
 					do_action( 'megamenu_after_update' );
-
 				}
 			} else {
-
 				add_option( 'megamenu_version', $this->version );
 				add_option( 'megamenu_initial_version', $this->version );
 				add_option( 'megamenu_multisite_share_themes', 'false' );
@@ -289,14 +289,16 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			if ( class_exists( 'Mega_Menu_Widget' ) ) {
 				register_widget( 'Mega_Menu_Widget' );
 			}
-			//register_widget( 'Mega_Menu_Widget_Reusable_Block' );
+
+			if ( class_exists( 'Mega_Menu_Widget_Reusable_Block' ) ) {
+				register_widget( 'Mega_Menu_Widget_Reusable_Block' );
+			}
 
 			// Check if Elementor installed and activated
 			//if ( did_action( 'elementor/loaded' ) ) {
 			//    register_widget( 'Mega_Menu_Widget_Elementor_Template' );
 			//}
 		}
-
 
 		/**
 		 * Create our own widget area to store all mega menu widgets.
@@ -386,6 +388,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 				'Mega_Menu_Widget_Reusable_Block'     => MEGAMENU_PATH . 'classes/widgets/widget-reusable-block.class.php',
 				'Mega_Menu_Widget_Elementor_Template' => MEGAMENU_PATH . 'classes/widgets/widget-elementor-template.class.php',
 				'Mega_Menu_toggle_Blocks'             => MEGAMENU_PATH . 'classes/toggle-blocks.class.php',
+				'Mega_Menu_Admin_Notices'             => MEGAMENU_PATH . 'classes/admin-notices.class.php'
 			);
 
 			return $classes;
@@ -421,7 +424,8 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			}
 
 			// gutenberg block
-			//include_once MEGAMENU_PATH . "integration/location/location.php";
+			include_once MEGAMENU_PATH . 'integration/block/location/block.php';
+
 		}
 
 

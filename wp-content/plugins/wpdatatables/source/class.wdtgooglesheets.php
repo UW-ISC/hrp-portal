@@ -50,7 +50,8 @@ class WPDataTable_Google_Sheet
             'body' => array(
                 'grant_type' => 'urn:ietf:params:oauth:grant-type:jwt-bearer',
                 'assertion' => $jwt,
-            )
+            ),
+            'timeout'   => 100
         );
 
         $googleResponse = wp_remote_post('https://oauth2.googleapis.com/token', $args);
@@ -71,7 +72,7 @@ class WPDataTable_Google_Sheet
     {
         if (is_array($token) && isset($token['access_token'])) {
             if (empty($token['access_token'])) return new WDTException('Empty access_token');
-            $request = wp_remote_get('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' . $token['access_token']);
+            $request = wp_remote_get('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=' . $token['access_token'], array('timeout' => 100));
         }
 
         if (isset($request['response']['code']) && $request['response']['code'] == 200) {
@@ -108,7 +109,7 @@ class WPDataTable_Google_Sheet
         $isValid = $this->wdtTokenValidationChecker($token);
         $worksheetsName = '';
         if ($isValid[0]) {
-            $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token']);
+            $requestGoogleSheetMetaData = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/?access_token=' . $token['access_token'], array('timeout'=> 100));
             if (!is_wp_error($requestGoogleSheetMetaData) && isset($requestGoogleSheetMetaData['response']['code']) && $requestGoogleSheetMetaData['response']['code'] == 200) {
                 $googleSheetMetaData = json_decode($requestGoogleSheetMetaData['body'], TRUE);
                 foreach ($googleSheetMetaData['sheets'] as $sheet) {
@@ -116,10 +117,14 @@ class WPDataTable_Google_Sheet
                         $worksheetsName = $sheet['properties']['title'];
                     }
                 }
-                $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . urlencode($worksheetsName) . '?access_token=' . $token['access_token']);
+                $googleSheetDataRequest = wp_remote_get('https://sheets.googleapis.com/v4/spreadsheets/' . $spreadsheetID . '/values/' . urlencode($worksheetsName) . '?access_token=' . $token['access_token'], array('timeout' => 100));
 
                 if (!is_wp_error($googleSheetDataRequest) && isset($googleSheetDataRequest['response']['code']) && $googleSheetDataRequest['response']['code'] == 200) {
                     $googleSheetData = json_decode($googleSheetDataRequest['body'], TRUE);
+                    if (!isset($googleSheetData['values']))
+                        throw new WDTException('Google sheet does not have data. Please fill with data and try again.');
+                    if (isset($googleSheetData['values'][0]) && empty($googleSheetData['values'][0]))
+                        throw new WDTException('Google sheet does not have data in first row. Please fill with data and try again.');
                     return WDTTools::gsArrayToWDTArray($googleSheetData['values']);
                 } else {
                     if (is_wp_error($googleSheetDataRequest)){

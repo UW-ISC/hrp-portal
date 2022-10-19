@@ -1757,7 +1757,9 @@ body.toplevel_page_maxmegamenu .megamenu_right {
     padding-bottom: 0; }
   body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings.menu_settings_menu_locations table.output_options td.mega-value textarea,
   body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_menu_locations table.output_options td.mega-value textarea {
-    width: 100%; }
+    width: 100%;
+    height: auto;
+    margin-bottom: 0; }
   body[class*='_page_maxmegamenu_'] .megamenu_right .menu_settings.menu_settings_menu_locations table.output_options td.mega-value label,
   body.toplevel_page_maxmegamenu .megamenu_right .menu_settings.menu_settings_menu_locations table.output_options td.mega-value label {
     float: none; }

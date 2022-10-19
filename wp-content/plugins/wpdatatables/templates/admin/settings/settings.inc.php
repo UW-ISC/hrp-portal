@@ -59,6 +59,10 @@
                                 <a href="#google-sheet-api-settings" aria-controls="google_sheet_settings" role="tab"
                                    data-toggle="tab"><?php esc_html_e('Google Spreadsheet API settings', 'wpdatatables'); ?></a>
                             </li>
+                            <li class="cache_settings-tab">
+                                <a href="#cache-settings" aria-controls="cache_settings" role="tab"
+                                   data-toggle="tab"><?php esc_html_e('Cache settings', 'wpdatatables'); ?></a>
+                            </li>
                             <li class="wdt-activation-tab">
                                 <a href="#wdt-activation" aria-controls="wdt-activation" role="tab"
                                    data-toggle="tab"><?php esc_html_e('Activation', 'wpdatatables'); ?></a>
@@ -85,6 +89,10 @@
                             <!-- Google Sheet settings tab-->
                             <?php include 'tabs/google_sheet_settings.php' ?>
                             <!-- /Google Sheet settings tab-->
+
+                            <!-- Cache settings tab-->
+                            <?php include 'tabs/cache_settings.php' ?>
+                            <!-- /Cache settings tab-->
 
                             <!-- Activation tab-->
                             <?php include 'tabs/activation.php' ?>

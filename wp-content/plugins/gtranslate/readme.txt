@@ -3,8 +3,8 @@ Contributors: edo888
 Author: Translate AI Multilingual Solutions
 Tags: translate, translate wordpress, multilingual, translation, translate language, bilingual, localization, translation proxy, localisation, multilanguage, google translate
 Requires at least: 2.8.1
-Tested up to: 5.9
-Stable tag: 2.9.12
+Tested up to: 6.0
+Stable tag: 2.9.13
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -251,6 +251,11 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard
 
 == Changelog ==
+= 2.9.13 =
+* Added translation support for PDF invoices in WooCommerce PDF Invoices plugin
+* Fixed email translation issue with custom domains
+* Fixed typo in Sundanese language name
+
 = 2.9.12 =
 * Fix for conflict with WP Rocket plugin when "Load JavaScript deferred" option is enabled
 
