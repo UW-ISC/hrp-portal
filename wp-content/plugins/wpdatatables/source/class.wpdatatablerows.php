@@ -438,7 +438,7 @@ class WPDataTableRows
         }
         if ($this->getCellMetaData() != []) {
             $cellClasses = array_unique($this->getCellMetaData());
-            $returnData .= self::getDynamicCellClasses($cellClasses, $returnData);
+            $returnData .= self::getDynamicCellClasses($cellClasses);
         }
         $returnData .= "</style>\n";
         wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.min.css', array(), WDT_CURRENT_VERSION);
@@ -509,11 +509,11 @@ class WPDataTableRows
     /**
      * Get dynamic classes for colors and fonts in simple table
      * @param array $cellClasses
-     * @param string $returnData
      * @return string
      */
-    public static function getDynamicCellClasses($cellClasses, $returnData)
+    public static function getDynamicCellClasses($cellClasses)
     {
+        $returnData = '';
         $systemFonts = WDTSettingsController::wdtGetSystemFonts();
         foreach ($cellClasses as $cellClass) {
             if (strpos($cellClass, 'wpdt-tc-') !== false) {
@@ -555,9 +555,8 @@ class WPDataTableRows
                 $cellDataFormatted, $cellClasses, $cellData, $rowID, $columnKey, $tableID);
             $cellData = $cellDataFormatted;
 
-            $addStyle = '';
-            $addStyleData = WPDataTableRows::getDynamicCellClasses($cellMetaClasses, $addStyle);
-            $addStyle .= '<style>' . $addStyleData . "</style>";
+            $addStyleData = WPDataTableRows::getDynamicCellClasses($cellMetaClasses);
+            $addStyle = '<style>' . $addStyleData . "</style>";
             $cellData .= $addStyleData == '' ? '' : $addStyle;
 
             wp_enqueue_style('wdt-simple-table', WDT_CSS_PATH . 'wdt.simpleTable.css', array(), WDT_CURRENT_VERSION);

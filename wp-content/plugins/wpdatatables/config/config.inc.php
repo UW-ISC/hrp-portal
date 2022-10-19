@@ -9,7 +9,7 @@ defined('ABSPATH') or die('Access denied.');
 
 // Current version
 //[<-- Full version -->]//
-define('WDT_CURRENT_VERSION', '4.5');
+define('WDT_CURRENT_VERSION', '5.0');
 //[<--/ Full version -->]//
 //[<-- Full version insertion #15 -->]//
 
@@ -21,6 +21,8 @@ define('WDT_URL_REGEX', '/^\b(?:(?:https?|ftp):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:
 define('WDT_CURRENCY_REGEX', '"^\$?\-?([1-9]{1}[0-9]{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\-?\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))$|^\(\$?([1-9]{1}\d{0,2}(\,\d{3})*(\.\d{0,2})?|[1-9]{1}\d{0,}(\.\d{0,2})?|0(\.\d{0,2})?|(\.\d{1,2}))\)$"');
 define('WDT_TIME_12H_REGEX', '/^(1[0-2]|0?[1-9]):[0-5][0-9]/');
 define('WDT_TIME_24H_REGEX', '/^(2[0-3]|[01][0-9]):([0-5][0-9])/');
+define('WDT_AM_PM_TIME_REGEX', '/(([01]?[0-9]):([0-5][0-9]) ([AaPp][Mm]))/');
+define('WDT_TIME_WITH_SECONDS_REGEX', '/^([01]?[0-9]|2[0-3])\:([0-5][0-9]):([0-5][0-9])/');
 
 /**
  * Path settings.

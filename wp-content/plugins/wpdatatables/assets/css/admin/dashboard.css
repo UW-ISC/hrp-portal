@@ -1,40 +1,40 @@
-.wdt-datatables-admin-wrap .wdt-dashbord {
+.wdt-datatables-admin-wrap .wdt-dashboard {
     font-family: Inter;
     font-style: normal;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord a {
+.wdt-datatables-admin-wrap .wdt-dashboard a {
     box-shadow: none;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .card:not('.plugin-dashboard') {
+.wdt-datatables-admin-wrap .wdt-dashboard .card:not(.plugin-dashboard) {
     border-radius: 3px;
     margin-bottom: 24px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .card-header {
+.wdt-datatables-admin-wrap .wdt-dashboard .card-header {
     padding: 12px 16px;
     border-bottom: 1px solid #F3F3FA;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .wpdt-text {
+.wdt-datatables-admin-wrap .wdt-dashboard .wpdt-text {
     font-size: 13px;
     line-height: 20px;
     color: #304463;
     margin-bottom: 12px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .card-header .actions {
+.wdt-datatables-admin-wrap .wdt-dashboard .card-header .actions {
     top: 10px;
     right: 16px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .btn-primary {
+.wdt-datatables-admin-wrap .wdt-dashboard .btn-primary {
     font-weight: 500;
     border-radius: 5px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-row-title {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-row-title {
     font-weight: 500;
     font-size: 24px;
     line-height: 32px;
@@ -62,7 +62,7 @@
     margin-left: 8px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-row-desc {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-row-desc {
     font-weight: normal;
     font-size: 13px;
     line-height: 20px;
@@ -654,7 +654,7 @@
     color: #5A6C89;
     box-shadow: none;
 }
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-footer-title {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-footer-title {
     font-size: 13px;
     line-height: 20px;
     color: #304463;
@@ -662,7 +662,7 @@
     margin-bottom: 20px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-footer-title img {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-footer-title img {
     margin-left: 10px;
     vertical-align: bottom;
 }
@@ -681,21 +681,21 @@
     margin-bottom: 20px;
 }
 
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-stars-container {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-stars-container {
     position: relative;
     display: inline-block;
     color: transparent;
     font-size: 15px;
     line-height:normal;
 }
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-stars-container::before{
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-stars-container::before{
     position: absolute;
     top: 0;
     left: 0;
     content: '★★★★★';
     color:lightgray;
 }
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-stars-container::after {
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-stars-container::after {
     position: absolute;
     top: 0;
     left: 0;
@@ -703,10 +703,10 @@
     color: gold;
     overflow: hidden;
 }
-.wdt-datatables-admin-wrap .wdt-dashbord .stars-100::after { width: 100%; }
-.wdt-datatables-admin-wrap .wdt-dashbord .wdt-rating { font-size: 13px  }
+.wdt-datatables-admin-wrap .wdt-dashboard .stars-100::after { width: 100%; }
+.wdt-datatables-admin-wrap .wdt-dashboard .wdt-rating { font-size: 13px  }
 
-.wdt-dashbord .ribbon {
+.wdt-dashboard .ribbon {
     position: absolute;
     right: -5px;
     top: -5px;
@@ -717,7 +717,7 @@
     text-align: right;
 }
 
-.wdt-dashbord .ribbon span {
+.wdt-dashboard .ribbon span {
     font-size: 10px;
     font-weight: 700;
     color: #fff;
@@ -736,7 +736,7 @@
     right: -21px;
 }
 
-.wdt-dashbord .ribbon span::before {
+.wdt-dashboard .ribbon span::before {
     content: "";
     position: absolute;
     left: 0;
@@ -748,7 +748,7 @@
     border-top: 3px solid #091D70;
 }
 
-.wdt-dashbord .ribbon span::after {
+.wdt-dashboard .ribbon span::after {
     content: "";
     position: absolute;
     right: 0;
@@ -895,7 +895,7 @@
     .wdt-datatables-admin-wrap .wdt-amelia-card .card-body {
         padding:18px !important;
     }
-    .wdt-datatables-admin-wrap .wdt-dashbord .card-header .actions {
+    .wdt-datatables-admin-wrap .wdt-dashboard .card-header .actions {
         right: 0 !important;
     }
     .wdt-datatables-admin-wrap .wdt-welcome-card .card-padding.card-body {
@@ -946,7 +946,7 @@
         background: url(../../img/dashboard/dashboard-support.svg) no-repeat top right !important;
         background-size: 200px 130px !important;
     }
-    .wdt-datatables-admin-wrap .wdt-dashbord .wdt-support-card .wpdt-text {
+    .wdt-datatables-admin-wrap .wdt-dashboard .wdt-support-card .wpdt-text {
         margin-right: 150px;
     }
     .wdt-datatables-admin-wrap .wdt-amelia-card .card-body .amelia-desc {
@@ -956,8 +956,8 @@
         background: url(../../img/dashboard/amelia.svg) no-repeat top right !important;
         background-size: 200px 100px !important;
     }
-    .wdt-datatables-admin-wrap .wdt-dashbord .wdt-footer-title,
-    .wdt-datatables-admin-wrap .wdt-dashbord .wdt-row-title {
+    .wdt-datatables-admin-wrap .wdt-dashboard .wdt-footer-title,
+    .wdt-datatables-admin-wrap .wdt-dashboard .wdt-row-title {
         margin-top: 0;
     }
 }

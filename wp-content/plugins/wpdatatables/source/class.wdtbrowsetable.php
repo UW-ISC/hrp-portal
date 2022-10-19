@@ -282,6 +282,9 @@ class WDTBrowseTable extends WP_List_Table
             case 'json':
                 return '<span class="wpdt-type-column">' . esc_html__('JSON', 'wpdatatables') . '</span>';
                 break;
+            case 'nested_json':
+                return '<span class="wpdt-type-column">' . esc_html__('Nested JSON', 'wpdatatables') . '</span>';
+                break;
             case 'serialized':
                 return '<span class="wpdt-type-column">' . esc_html__('Serialized PHP array', 'wpdatatables') . '</span>';
                 break;

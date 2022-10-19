@@ -3,7 +3,7 @@ Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 4.9
 Tested up to: 6.0
-Stable tag: 2.9.7
+Stable tag: 2.9.8
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -12,7 +12,7 @@ An easy to use mega menu plugin. Written the WordPress way.
 
 == Description ==
 
-Max Mega Menu will automatically convert your existing menu or menus into a mega menu. You can then add any WordPress widget to your menu, restyle your menu using the theme editor and change the menu behaviour using the built in settings. Max Mega Menu is a complete menu management plugin, perfect for taking control of your existing menu and turning it into a user-friendly, accessible and touch ready menu with just a few clicks.
+Max Mega Menu will automatically convert your existing menu into a mega menu. You can then add any WordPress widget to your menu, restyle your menu using the theme editor and change the menu behaviour using the built in settings. Max Mega Menu is a complete menu management plugin, perfect for taking control of your existing menu and turning it into a user-friendly, accessible and touch ready menu with just a few clicks.
 
 https://www.youtube.com/watch?v=44dJwP1AXT8
 
@@ -32,11 +32,12 @@ Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 ###Features
 
 * Builds upon the standard WordPress menus system
+* Restores the *Appearance > Menus* screen in "full site editing" themes
 * Supports multiple menu locations each with their own configuration
 * Off canvas (slide in from left or right) or standard drop down mobile menu
-* Organise your sub menus into rows and columns using the Grid Layout builder
+* Organise your sub menu content into rows and columns using the Grid Layout builder
 * Display WordPress Widgets in your menu
-* Customise the styling of your menus using a built in theme editor
+* Fully customise the styling of your menus using the built in theme editor
 * Supports Flyout (traditional) or Mega Menu sub menu styles
 * Hover, Hover Intent or Click event to open sub menus
 * Fade, Fade Up, Slide Up or Slide sub menu transitions
@@ -44,6 +45,7 @@ Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 * Menu item options including Hide Text, Disable Link, Hide on Mobile etc
 * Align menu items to the left or right of the menu bar
 * Align sub menus to left or right of parent menu item
+* Display your menu using Automatic Integration, Block, Widget or Shortcode.
 
 ###Accessibility
 
@@ -59,27 +61,27 @@ Max Mega Menu is developed with a focus on code quality, performance and usabili
 * The only mega menu plugin with zero "!important", block or inline CSS styles
 * Menus are styled using a single, static CSS file
 * Less than 2kb JavaScript (when gzipped)
-* Responsive, Touch & Retina Ready
+* Responsive, touch & retina ready
 * Built with accessibility in mind - keyboard navigation supported
 * Extensively tested in all modern desktop and mobile browsers
 * Clean code with a low memory footprint
-* Filters and actions where you need them
+* Supports all core nav_menu filters (prepend filter name with "mega_")
 * In depth documentation
-* Basic Support
+* Basic Support included with free version
 
 ####Pro Features:
 
 > * Tabbed Mega Menus
 > * Sticky Menu
 > * Vertical & Accordion Menus
-> * FontAwesome 5, Genericon & Custom Icons
+> * FontAwesome, Genericon & Custom Icons
 > * Custom Item Styling
 > * Menu Logo
-> * Search box
+> * Search Box
 > * WooCommerce & EDD support
 > * Google Fonts
 > * Roles & Restrictions
-> * Extra mobile toggle blocks
+> * Mobile toggle blocks
 > * Automatic updates
 > * Priority Support
 >
@@ -133,6 +135,11 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.0 =
+
+* New feature: Add Gutenberg Block. Restores the *Appearance > Menus* page for FSE (Full Site Editing) themes and adds a new Max Mega Menu block to display a menu location.
+* New feature: Add Reusable Block widget. Allows block content to be saved as a Reusable Block and displayed within sub menus.
 
 = 2.9.8 =
 
@@ -422,17 +429,17 @@ We hope you enjoy Max Mega Menu and the new updates. If you have a spare moment 
 * Fix: Grid sub menu styling in Twenty Sixteen
 * Change: Fallback to using Flex Layout (rather than backwards compatible layout) if the css_version transient is missing
 
-= 2.4.1.2 [20/02/18] =
+= 2.4.1.2 =
 
 * Fix: Centrally aligned mobile toggle blocks
 * Fix: Logo width in mobile toggle blocks
 
-= 2.4.1.1 [20/02/18] =
+= 2.4.1.1 =
 
 * Fix: Impossible to save theme if the mobile toggle block Text Size option is deleted, then the theme saved, then the Text Size option is reinstated.
 * Fix: Width of menu item descriptions within sub menus
 
-= 2.4.1 [19/02/18] =
+= 2.4.1 =
 
 * Change: WCAG accessibility fix (do not use "content" CSS for mobile menu toggle block text). Important: If you have applied custom styling to the menu toggle block you may need to update it.
 * Change: To avoid CSS conflicts, when a menu item has a custom icon, use "mega-custom-icon" class instead of "custom"
@@ -457,7 +464,7 @@ We hope you enjoy Max Mega Menu and the new updates. If you have a spare moment 
 * Fix: Only apply dynamic sub menu widths to top level mega menus
 
 
-= 2.4 [17/10/17] =
+= 2.4 =
 
 * New (BETA): Grid Layout Option for Mega Menus
 * Fix: Keyboard navigation for mobile menu
@@ -469,25 +476,25 @@ We hope you enjoy Max Mega Menu and the new updates. If you have a spare moment 
 * Fix: jQuery Migrate notices (admin)
 * Fix: Authenticated XSS issue. Thanks to detectify.com for discovering it and pluginvulnerabilities.com for reporting it!
 
-= 2.3.8 [25/08/17] =
+= 2.3.8 =
 
 * Fix: Compatibility fix for Reamaze plugin
 * Fix: Respect the 'Unbind JavaScript Events' setting on mobile menus
 * Improvement: Add support for vh/vw units in theme editor
 * Change: Don't close open sub menus when mobile toggle is clicked
 
-= 2.3.7.1 [06/07/17] =
+= 2.3.7.1 =
 
 * Fix: Conflict with Site Origin Page Builder
 
-= 2.3.7 [06/07/17] =
+= 2.3.7 =
 
 * Compatibility with WordPress 4.8 Text and Media Widgets
 * Fix: Compatibility with SiteOrigin Page Builder Layout builder
 * Improvement: Add support for MEGAMENU_SHARE_THEMES_MULTISITE constant
 * Improvement: Process shortcodes in mobile toggle block open and closed text
 
-= 2.3.6 [09/05/17] =
+= 2.3.6 =
 
 * Fix: Mobile breakpoint detection
 * Fix: Increase wp_nav_menu_args priority to fix conflict with Thim-Core (Eduma theme)
@@ -505,29 +512,29 @@ We hope you enjoy Max Mega Menu and the new updates. If you have a spare moment 
 * Improvement: Update translations
 * Improvement: Add megamenu_submitted_settings_meta filter
 
-= 2.3.5 [19/02/17] =
+= 2.3.5 =
 
 * Fix: Image Widget Deluxe extra options not displaying
 * Fix: Don't reverse the order or right aligned items in the mobile menu for RTL languages
 * Fix: Keyboard navigation
 
-= 2.3.4 [15/01/16] =
+= 2.3.4 =
 
 * New: Automatic integration for GeneratePress and Twenty Twelve (hide duplicate mobile button)
 * New: "Icon Position" option added in the menu item settings (left, top, right) (requires clearing the Mega Menu CSS under Mega Menu > Tools)
 * Fix: JavaScript fix for tabbed mobile menus
 
-= 2.3.3 [29/12/16] =
+= 2.3.3 =
 
 * Fix: Compatibility with WPML Language switcher
 * Fix: Remove max height from CSS Editor
 
-= 2.3.2 [23/12/16] =
+= 2.3.2 =
 
 * Fix: Theme changes not being applied when PolyLang used in conjunction with the "Output in <head>" option
 * Fix: JavaScript error when a dynamic width has been used for the sub menu, but the matching element does not exist on the page
 
-= 2.3.1 [21/12/16] =
+= 2.3.1 =
 
 * Improvement: Theme Editor switched to tabbed interface
 * Improvement: Theme Editor now uses AJAX save so you don't lose your place in the theme editor
@@ -547,7 +554,7 @@ We hope you enjoy Max Mega Menu and the new updates. If you have a spare moment 
 * Fix: Account for scrollbars when determining sub menu width
 * Fix: Conflict with Maps Builder plugin
 
-= 2.3 [11/10/16] =
+= 2.3 =
 
 * New Feature: "Hover" event added (options are now Hover Intent, Hover or Click)
 * New Feature: Menu Item Description support added
@@ -567,11 +574,11 @@ Mac FireFox/Safari/Chrome, Windows Edge/IE9/IE10/IE11/FireFox/Chrome, iPhone, iP
 * Change: Add "mega-menu-location" body class when MMM is enabled for a location to pave the way for automatic theme integration
 * Improvement: Add ".mega-multi-line" CSS to aid display of menu items with br tags in title
 
-= 2.2.3.1 [23/08/2016] =
+= 2.2.3.1 =
 
 * Fix: JavaScript fix for themes/plugins that force WordPress to load outdated versions of jQuery (CherryFramework)
 
-= 2.2.3 [15/08/2016] =
+= 2.2.3 =
 
 * Fix: Mega sub menus not correctly closed on mobile when effect is set to Fade
 * Fix: Cursor styling for disabled links
@@ -582,7 +589,7 @@ Mac FireFox/Safari/Chrome, Windows Edge/IE9/IE10/IE11/FireFox/Chrome, iPhone, iP
 * Improvement: Only prompt for SCSS compilation when current CSS is outdated
 * Change: Indicate whether style.css file was generated from core or custom version of megamenu.scss
 
-= 2.2.2 [21/07/2016] =
+= 2.2.2 =
 
 * Fix: Save button missing from menu locations
 * Fix: Compatibility with 'Profit Builder' plugin

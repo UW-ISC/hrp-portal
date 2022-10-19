@@ -62,7 +62,7 @@
                     </div>
                     <div class="card-body p-b-20 p-r-20 p-t-20">
                         <h4 class="m-t-0 m-b-8 f-14"><?php esc_html_e('Create a data table linked to an existing data source', 'wpdatatables'); ?>.</h4>
-                        <span><?php esc_html_e('Excel, CSV, Google Spreadsheet, SQL query, XML, JSON, serialized PHP array. Data will be read from the source every time on page load. Only SQL-based tables can be made editable.', 'wpdatatables'); ?></span>
+                        <span><?php esc_html_e('Excel, CSV, Google Spreadsheet, SQL query, XML, JSON, Nested JSON, serialized PHP array. Data will be read from the source every time on page load. Only SQL-based tables can be made editable.', 'wpdatatables'); ?></span>
                     </div>
                 </div>
             </div>

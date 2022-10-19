@@ -38,6 +38,13 @@
         });
 
         /**
+         * Turn on auto update option - "Auto update cache option"
+         */
+        $('#wdt-auto-update-option').change(function (e) {
+            wpdatatable_plugin_config.setAutoUpdateOption($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Number of tables on admin page - "Tables per admin page"
          */
         $('#wdt-tables-per-page').change(function (e) {
@@ -276,6 +283,7 @@
         wpdatatable_plugin_config.setSeparateConnection(wdt_current_config.wdtUseSeparateCon == 1 ? 1 : 0);
         wpdatatable_plugin_config.setLanguage(wdt_current_config.wdtInterfaceLanguage);
         wpdatatable_plugin_config.setDateFormat(wdt_current_config.wdtDateFormat);
+        wpdatatable_plugin_config.setAutoUpdateOption(wdt_current_config.wdtAutoUpdateOption == 1 ? 1 : 0);
         wpdatatable_plugin_config.setTablesAdmin(wdt_current_config.wdtTablesPerPage);
         wpdatatable_plugin_config.setTimeFormat(wdt_current_config.wdtTimeFormat);
         wpdatatable_plugin_config.setBaseSkin(wdt_current_config.wdtBaseSkin);
@@ -420,6 +428,14 @@
         $(document).on('click', '#wdt-delete-google-settings', function (e) {
             $('.wdt-preload-layer').animateFadeIn();
             deleteGoogleAccountSettings();
+        });
+
+        /**
+         * Delete Google settings
+         */
+        $(document).on('click', '#wdt-delete-log-errors-cache', function (e) {
+            $('.wdt-preload-layer').animateFadeIn();
+            deleteLogErrorsCache();
         });
 
         /**
@@ -787,6 +803,36 @@
                 },
                 error: function (data){
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to delete google settings! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            });
+        }
+
+        function deleteLogErrorsCache() {
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_delete_log_errors_cache',
+                    wdtNonce: $('#wdtNonce').val()
+                },
+                success: function (result) {
+                    if (result != '') {
+                        $('#wdt-error-modal .modal-body').html(result);
+                        $('#wdt-error-modal').modal('show');
+                        $('.wdt-preload-layer').animateFadeOut();
+                    } else {
+                        $('.wdt-preload-layer').animateFadeOut();
+                        wdtNotify(
+                            wpdatatables_edit_strings.success,
+                            'Deleted errors log from cache table!',
+                            'success'
+                        );
+                    }
+                },
+                error: function (){
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to delete errors log in cache table!');
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
                 }

@@ -93,6 +93,7 @@ add_action('wp_ajax_wpdatatables_get_connection_tables', 'wdtGetConnectionTables
 
 /**
  * Method to save the config for the table and columns
+ * @throws Exception
  */
 function wdtSaveTableWithColumns()
 {
@@ -106,6 +107,9 @@ function wdtSaveTableWithColumns()
             stripslashes_deep($_POST['table'])
         )
     );
+
+    $table->file = $_POST['file'];
+    $table->fileSourceAction = $_POST['fileSourceAction'];
 
     WDTConfigController::saveTableConfig($table);
 }
@@ -139,7 +143,7 @@ function wdtSaveGoogleSettings()
     $settings = json_decode(stripslashes_deep($_POST['settings']),true);
     if (json_last_error() === JSON_ERROR_NONE) {
         WDTSettingsController::saveGoogleSettings($settings);
-        $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google_sheet_settings');
+        $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
         echo json_encode($result);
         exit();
     } else {
@@ -164,11 +168,35 @@ function wdtDeleteGoogleSettings()
     update_option('wdtGoogleSettings', '');
     update_option('wdtGoogleToken', '');
 
-    echo admin_url('admin.php?page=wpdatatables-settings#google_sheet_settings');
+    echo admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
     exit();
 }
 
 add_action('wp_ajax_wpdatatables_delete_google_settings', 'wdtDeleteGoogleSettings');
+
+/**
+ * Delete log_errors in cache table
+ */
+function wdtDeleteLogErrorsCache()
+{
+    global $wpdb;
+
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtSettingsNonce')) {
+        exit();
+    }
+    $result = '';
+
+    $wpdb->query("UPDATE " . $wpdb->prefix . "wpdatatables_cache SET log_errors = ''");
+
+    if ($wpdb->last_error != '') {
+        $result = 'Database error: ' . $wpdb->last_error;
+    }
+
+    echo $result;
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_delete_log_errors_cache', 'wdtDeleteLogErrorsCache');
 
 /**
  * Duplicate the table
@@ -265,6 +293,8 @@ function wdtDuplicateTable()
             'content' => $content,
             'filtering' => $tableData->filtering,
             'filtering_form' => $tableData->filtering_form,
+            'cache_source_data' => $tableData->cache_source_data,
+            'auto_update_cache' => $tableData->auto_update_cache,
             'sorting' => $tableData->sorting,
             'tools' => $tableData->tools,
             'server_side' => $tableData->server_side,
@@ -493,15 +523,15 @@ function generateSimpleTableID($wpDataTableRows)
                 'pdf' => 0
             )),
             'advanced_settings' => json_encode(array(
-                'simpleResponsive' => 0,
-                'simpleHeader' => 0,
-                'stripeTable' => 0,
-                'cellPadding' => 10,
-                'removeBorders' => 0,
-                'borderCollapse' => 'collapse',
-                'borderSpacing' => 0,
-                'verticalScroll' => 0,
-                'verticalScrollHeight' => 600
+                    'simpleResponsive' => 0,
+                    'simpleHeader' => 0,
+                    'stripeTable' => 0,
+                    'cellPadding' => 10,
+                    'removeBorders' => 0,
+                    'borderCollapse' => 'collapse',
+                    'borderSpacing' => 0,
+                    'verticalScroll' => 0,
+                    'verticalScrollHeight' => 600
                 )
             )
         )
@@ -732,6 +762,7 @@ add_action('wp_ajax_wpdatatables_generate_mysql_based_query', 'wdtGenerateMySqlB
 
 /**
  * Generate a file-based table preview (first 4 rows)
+ * @throws WDTException
  */
 function wdtConstructorPreviewFileTable()
 {
@@ -966,6 +997,49 @@ function wdtReadDistinctValuesFromTable()
 }
 
 add_action('wp_ajax_wpdatatable_get_column_distinct_values', 'wdtReadDistinctValuesFromTable');
+
+/**
+ * Get Roots from Nested JSON url
+ */
+function wdtGetNestedJsonRoots()
+{
+    if ( !current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtEditNonce') ) {
+        exit();
+    }
+    global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
+    $tableConfig = json_decode(stripslashes_deep($_POST['tableConfig']));
+    // Set placeholders
+    $wdtVar1 = $wdtVar1 === '' ? $tableConfig->var1 : $wdtVar1;
+    $wdtVar2 = $wdtVar2 === '' ? $tableConfig->var2 : $wdtVar2;
+    $wdtVar3 = $wdtVar3 === '' ? $tableConfig->var3 : $wdtVar3;
+    $wdtVar4 = $wdtVar4 === '' ? $tableConfig->var4 : $wdtVar4;
+    $wdtVar5 = $wdtVar5 === '' ? $tableConfig->var5 : $wdtVar5;
+    $wdtVar6 = $wdtVar6 === '' ? $tableConfig->var6 : $wdtVar6;
+    $wdtVar7 = $wdtVar7 === '' ? $tableConfig->var7 : $wdtVar7;
+    $wdtVar8 = $wdtVar8 === '' ? $tableConfig->var8 : $wdtVar8;
+    $wdtVar9 = $wdtVar9 === '' ? $tableConfig->var9 : $wdtVar9;
+
+    $tableID = (int)$tableConfig->id;
+
+    $params = json_decode(stripslashes_deep($_POST['params']));
+    $params = WDTConfigController::sanitizeNestedJsonParams($params);
+    $nestedJSON = new WDTNestedJson($params);
+    $response = $nestedJSON->getResponse($tableID);
+
+    if (!is_array($response)) {
+        wp_send_json_error( array( 'msg' => $response ) );
+    }
+
+    $roots = $nestedJSON->prepareRoots( 'root', '', array(), $response);
+
+    if ( empty( $roots ) ) {
+        wp_send_json_error( array( 'msg' => esc_html__("Unable to retrieve data. Roots empty.", 'wpdatatables') ) );
+    }
+
+    wp_send_json_success( array( 'url' => $nestedJSON->getUrl(), 'roots' => $roots ) );
+}
+
+add_action('wp_ajax_wpdatatables_get_nested_json_roots', 'wdtGetNestedJsonRoots');
 
 /**
  * Get the preview for formula column

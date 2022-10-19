@@ -1425,8 +1425,9 @@ WDTColumn.prototype.applyChanges = function () {
     this.filterLabel = jQuery('#wdt-column-filter-label').val();
     this.globalSearchColumn = jQuery('#wdt-column-enable-global-search').is(':checked') ? 1 : 0;
     this.searchInSelectBox = jQuery('#wdt-search-in-selectbox').is(':checked') ? 1 : 0;
-
-    if (jQuery.inArray(this.filter_type, ['text', 'number']) != -1) {
+    if (this.filter_type == 'none') {
+        this.filterDefaultValue = null;
+    } else if (jQuery.inArray(this.filter_type, ['text', 'number']) != -1) {
         this.filterDefaultValue = jQuery('#wdt-filter-default-value').val();
     } else if (jQuery.inArray(this.filter_type, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
         this.filterDefaultValue = jQuery('#wdt-filter-default-value-from').val() + '|' + jQuery('#wdt-filter-default-value-to').val();

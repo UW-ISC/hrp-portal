@@ -5,7 +5,7 @@
     <?php do_action('wpdatatables_admin_before_dashboard'); ?>
 
     <!-- .container -->
-    <div class="container wdt-dashbord">
+    <div class="container wdt-dashboard">
 
         <!-- .row -->
         <div class="row">
@@ -263,23 +263,22 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with a awesome feature, some improvements and bug fixes:
+                            New major update with awesome features, some improvements and bug fixes::
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added single cell shortcode.</li>
-                                <li><strong>Improvement:</strong> Improved separate connections performance.</li>
-                                <li><strong>Improvement:</strong> Added Highcharts accessibility module.</li>
-                                <li><strong>Improvement:</strong> Changed type of mysql_table_name column to TEXT.</li>
-                                <li><strong>Improvement:</strong> Added a new hooks for PDO dsn and for MySQLi link connection:
-                                    wpdatatables_filter_pdo_connection_dsn and wpdatatables_filter_mysqli_connection_link</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Gutenberg and editable tables for media upload.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with date format m/Y and Google sheet.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with fatal error with old versions of Avada theme.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with conditional formatting if cell contains HTML.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with sanitized SQL queries.</li>
-                                <li>Other small bug fixes</li>
+                                <li><strong>Feature:</strong> New data source type: Nested JSON.</li>
+                                <li><strong>Feature:</strong> JSON authentication.</li>
+                                <li><strong>Feature:</strong> Caching data for non-server-side tables (Excel, CSV, Google sheet, XML, JSON, Nested JSON and PHP array).</li>
+                                <li><strong>Feature:</strong> Auto update cache for non server-side tables (Excel, CSV, Google sheet, XML, JSON, Nested JSON and PHP array).</li>
+                                <li><strong>Feature:</strong> Update manual tables: Replace data within an existing table.</li>
+                                <li><strong>Feature:</strong> Update manual tables: Add data into an existing table.</li>
+                                <li><strong>Feature:</strong> Update manual tables: Replace the entire table with new data.</li>
+                                <li><strong>Improvement:</strong> Improved error handling.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with saving CSS rules in a simple table.</li>
+                                <li><strong>BugFix:</strong> Fixed tab index for Google sheet API in main settings.</li>
+                                <li>Other small bug fixes.</li>
                             </ul>
                         </div>
 
@@ -439,9 +438,8 @@
                                     about 1 message per month and never spam!', 'wpdatatables'); ?> </p>
                             </div>
                             <div class="wdt-subscribe-form">
-                                <div class="_form_38"></div>
-                                <script src="https://tmsoutsource.activehosted.com/f/embed.php?id=38"
-                                        type="text/javascript" charset="utf-8"></script>
+                                <div id="form-acm_31408"></div>
+                                <script type="text/javascript" src="https://acumbamail.com/newform/dynamic/js/ET8rshmNeLvQox6J8U99sSJZ8B1DZo1mhOgs408R0mHYiwgmM/31408/"></script>
                             </div>
                         </div>
                     </div>

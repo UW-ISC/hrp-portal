@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 4.4
+ * @version 5.0
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 4.5
+Version: 5.0
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -61,6 +61,8 @@ function wpdatatables_load()
     }
     require_once(WDT_ROOT_PATH . 'source/class.wdttools.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtconfigcontroller.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablelimitreadfilter.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wdtsourcefile.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtsettingscontroller.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtexception.php');
     require_once(WDT_ROOT_PATH . 'source/class.connection.php');
@@ -70,6 +72,8 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wpdatacolumn.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablerows.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtgooglesheets.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablecache.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wdtnestedjson.php');
     //[<-- Full version -->]//
     require_once(WDT_ROOT_PATH . 'source/class.wpexceldatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpexcelcolumn.php');
