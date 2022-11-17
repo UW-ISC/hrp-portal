@@ -44,7 +44,7 @@ class WPDataTableCache
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables_cache",
                 array(
-                    'data' => json_encode($sourceData),
+                    'data' => json_encode($sourceData, JSON_NUMERIC_CHECK),
                     'updated_time' => current_time('mysql'),
                 ),
                 array('table_id' => $tableID)
@@ -84,7 +84,7 @@ class WPDataTableCache
                         'table_type' => $tableType,
                         'table_content' => $tableContent,
                         'auto_update' => $autoUpdate,
-                        'data' => json_encode($sourceData)
+                        'data' => json_encode($sourceData, JSON_NUMERIC_CHECK)
                     )
                 );
                 if ($wpdb->last_error !== '')
@@ -177,11 +177,11 @@ class WPDataTableCache
         if ($tableID) {
             $logMessage = $logMessage . ' Table ID=' . $tableID;
             if ($autoUpdate) {
-                $logError = current_time('mysql') . ' - ' . $title . ' ' . $log . '<br>';
+                $logError = current_time('mysql') . ' - ' . $title . ' ' . $log;
                 $wpdb->query(
                     $wpdb->prepare(
                         "UPDATE " . $wpdb->prefix . "wpdatatables_cache
-                           SET log_errors = CONCAT(log_errors, %s) WHERE table_id = %d",
+                           SET log_errors = %s WHERE table_id = %d",
                         $logError,
                         $tableID
                     )
@@ -240,7 +240,7 @@ class WPDataTableCache
                     continue;
                 }
 
-                if ($cacheTable['data'] === json_encode($result['data'])) continue;
+                if ($cacheTable['data'] === json_encode($result['data'], JSON_NUMERIC_CHECK)) continue;
 
                 self::updateData($cacheTable['table_id'], $result['data']);
             }
@@ -257,7 +257,7 @@ class WPDataTableCache
             ];
         }
         try {
-            if (in_array($source_type, ['xls', 'csv'])) {
+            if (in_array($source_type, ['xlsx','ods', 'xls', 'csv'])) {
                 $tableData = WDTConfigController::loadTableFromDB($table_id);
                 $params = array(
                     'dateInputFormat' => array(),
@@ -270,6 +270,7 @@ class WPDataTableCache
                         }
                         $params['dateInputFormat'][$column->orig_header] = isset($column->dateInputFormat) ? $column->dateInputFormat : null;
                     }
+                    $source = $tableData->content;
                 }
 
             }
@@ -280,12 +281,24 @@ class WPDataTableCache
                 case 'xls':
                 case 'csv':
                     ini_set('memory_limit', '2048M');
-                    if (!file_exists($source)) {
+                    if (isset($tableData) && $tableData->file_location == 'wp_media_lib' && !file_exists($source)) {
                         self::_logErrors('Error message:', 'Provided file ' . stripcslashes($source) . ' does not exist!', 1, $table_id);
                     }
                     $format = substr(strrchr($source, "."), 1);
                     $objReader = WPDataTable::createObjectReader($source);
+                    $tempFileName = 'tempfile.txt';
+                    if (isset($tableData) && $tableData->file_location == 'wp_any_url'){
+                        $data = WDTTools::curlGetData($source);
+                        if ($data == null)
+                            throw new WDTException(esc_html__("File from provided URL is empty."));
+                        $tempFileName = 'tempfile' . $tableData->id . '.' .  $format;
+                        $fillFileWithData = file_put_contents($tempFileName, $data);
+                        if ($fillFileWithData === false)
+                            throw new WDTException(esc_html__("File from provided URL is empty."));
+                        $source = $tempFileName;
+                    }
                     $objPHPExcel = $objReader->load($source);
+                    if (isset($tableData) && $tableData->file_location == 'wp_any_url') unlink($tempFileName);
                     $objWorksheet = $objPHPExcel->getActiveSheet();
                     $highestRow = $objWorksheet->getHighestRow();
                     $highestColumn = $objWorksheet->getHighestDataColumn();

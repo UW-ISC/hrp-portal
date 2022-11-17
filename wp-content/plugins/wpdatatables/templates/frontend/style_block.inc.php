@@ -168,7 +168,8 @@
 /* buttons background color */
 .wpDataTables .wdt-checkbox-filter.btn,
 .wdt-frontend-modal .btn,
-div.dt-button-collection a.dt-button.active:not(.disabled) {
+div.dt-button-collection a.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled) {
 	background-color: <?php echo $wdtFontColorSettings['wdtButtonColor'] ?> !important;
     background-image: none !important;
 }
@@ -177,7 +178,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
 /* buttons border color */
 .wpDataTables .wdt-checkbox-filter.btn,
 .wdt-frontend-modal .btn:not(.dropdown-toggle),
-div.dt-button-collection a.dt-button.active:not(.disabled) {
+div.dt-button-collection a.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled) {
     <?php if ($wdtFontColorSettings['wdtButtonBorderColor']) { ?>
     border: 1px solid;
 	border-color: <?php echo $wdtFontColorSettings['wdtButtonBorderColor'] ?> !important;
@@ -189,7 +191,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
 .wpDataTables .wdt-checkbox-filter.btn,
 .wpDataTables .selecter .selecter-selected,
 .wdt-frontend-modal .btn:not(.dropdown-toggle),
-div.dt-button-collection a.dt-button.active:not(.disabled) {
+div.dt-button-collection a.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled) {
 	color: <?php echo $wdtFontColorSettings['wdtButtonFontColor'] ?> !important;
 }
 <?php } ?>
@@ -198,7 +201,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
 /* buttons and inputs border radius */
 .wpDataTables .wdt-checkbox-filter.btn,
 .wdt-frontend-modal .btn:not(.dropdown-toggle),
-div.dt-button-collection a.dt-button.active:not(.disabled) {
+div.dt-button-collection a.dt-button.active:not(.disabled),
+div.dt-button-collection button.dt-button.active:not(.disabled) {
 	border-radius: <?php echo $wdtBorderRadius ?>px !important;
 }
 .wpDataTables input {
@@ -213,7 +217,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled) {
 /** buttons background hover color */
 .wpDataTables .wdt-checkbox-filter.btn:hover,
 .wdt-frontend-modal .btn:not(.dropdown-toggle).btn:hover,
-div.dt-button-collection a.dt-button.active:not(.disabled):hover {
+div.dt-button-collection a.dt-button.active:not(.disabled):hover,
+div.dt-button-collection button.dt-button.active:not(.disabled):hover {
 	background-color: <?php echo $wdtFontColorSettings['wdtButtonBackgroundHoverColor'] ?> !important;
     background-image: none !important;
 }
@@ -222,7 +227,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled):hover {
 /** buttons hover border color */
 .wpDataTables .wdt-checkbox-filter.btn:hover,
 .wdt-frontend-modal .btn:not(.dropdown-toggle).btn:hover,
-div.dt-button-collection a.dt-button.active:not(.disabled):hover {
+div.dt-button-collection a.dt-button.active:not(.disabled):hover,
+div.dt-button-collection button.dt-button.active:not(.disabled):hover {
 	border-color: <?php echo $wdtFontColorSettings['wdtButtonBorderHoverColor'] ?> !important;
 }
 <?php } ?>
@@ -230,7 +236,8 @@ div.dt-button-collection a.dt-button.active:not(.disabled):hover {
 /** buttons hover font color */
 .wpDataTables .wdt-checkbox-filter.btn:hover,
 .wdt-frontend-modal .btn:not(.dropdown-toggle).btn:hover,
-div.dt-button-collection a.dt-button.active:not(.disabled):hover {
+div.dt-button-collection a.dt-button.active:not(.disabled):hover,
+div.dt-button-collection button.dt-button.active:not(.disabled):hover {
 	color: <?php echo $wdtFontColorSettings['wdtButtonFontHoverColor'] ?> !important;
 }
 <?php } ?>

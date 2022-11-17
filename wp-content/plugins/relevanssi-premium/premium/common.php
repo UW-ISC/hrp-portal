@@ -527,7 +527,10 @@ function relevanssi_premium_init() {
 		);
 	}
 
-	$update_translations = true;
+	$update_translations = false;
+	if ( 'on' === get_option( 'relevanssi_update_translations' ) ) {
+		$update_translations = true;
+	}
 	if ( 'on' === get_option( 'relevanssi_do_not_call_home' ) ) {
 		$update_translations = false;
 	}
@@ -656,6 +659,7 @@ function relevanssi_premium_install() {
 	add_option( 'relevanssi_spamblock', array() );
 	add_option( 'relevanssi_thousand_separator', '' );
 	add_option( 'relevanssi_trim_click_logs', '180' );
+	add_option( 'relevanssi_update_translations', 'off' );
 	add_option(
 		'relevanssi_recency_bonus',
 		array(

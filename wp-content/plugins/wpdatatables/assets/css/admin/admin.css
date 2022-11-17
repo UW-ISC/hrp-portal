@@ -1099,6 +1099,7 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c button#wdt-foreign-key-open,
 .wpdt-c button.wdt-save-foreign-key-rule,
 .wpdt-c button.wdt-column-apply,
+.wpdt-c button#wdt-delete-log-errors-cache,
 .wpdt-c #wdt-duplicate-table-modal .btn-danger,
 .wpdt-c #wdt-duplicate-chart-modal .btn-danger,
 .wpdt-c #wdt-add-column-modal .btn-danger,

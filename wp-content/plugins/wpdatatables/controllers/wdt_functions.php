@@ -26,6 +26,7 @@ function wdtActivationCreateTables() {
 						title varchar(255) NOT NULL,
                         show_title tinyint(1) NOT NULL default '1',
 						table_type varchar(55) NOT NULL,
+						file_location varchar(15) NOT NULL default '',
 						connection varchar(55) NOT NULL DEFAULT '$connection',
 						content text NOT NULL,
 						filtering tinyint(1) NOT NULL default '1',
@@ -1410,6 +1411,7 @@ function wdtSanitizeQuery($query) {
     $query = str_replace(' ALTER ', '', $query);
     $query = str_replace(' alter ', '', $query);
     $query = stripslashes($query);
+    $query = rtrim($query, "; \t\n");
 
     $query = apply_filters('wpdt_sanitize_query',$query);
 

@@ -1654,6 +1654,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     margin-right: 0;
     margin-bottom: 0;
 }
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button{
     display: flex;
     align-items: center;
@@ -1680,6 +1681,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     text-transform: uppercase;
 }
 
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button:not(.disabled),
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button:not(.disabled){
     opacity: 1;
 }
@@ -1711,14 +1713,44 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_edit:hover,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_duplicate:hover,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_delete:hover,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:hover{
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_colvis:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_export:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_print:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_new:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_edit:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_duplicate:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_delete:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_export:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_print:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_new:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_edit:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_duplicate:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_delete:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:active:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_export:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_print:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_new:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_edit:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_duplicate:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_delete:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:visited,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_export:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_print:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_new:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_edit:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_duplicate:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_delete:hover,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_colvis:hover{
     background-color: #000000;
     background-image: none;
     box-shadow:none !important;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_spacer,
-.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_spacer:active{
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons a.DTTT_button_spacer:active,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_spacer,
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dt-buttons button.DTTT_button_spacer:active{
     opacity: 0;
     background: none;
 }
@@ -1727,6 +1759,10 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel:before,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv:before,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy:before,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf:before,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .DTTT_button.DTTT_button_export:before,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .DTTT_button.DTTT_button_print:before,
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .DTTT_button.DTTT_button_new:before,
@@ -1797,22 +1833,26 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:before,
     box-shadow: none !important;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel:before{
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel:before{
     content: '\e90a';
     vertical-align: middle;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv:before{
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv:before{
     content: '\e900';
     vertical-align: middle;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy:before{
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy:before{
     content: '\e908';
     vertical-align: middle;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:before{
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf:before{
     content: '\e912';
     vertical-align: middle;
 }
@@ -1903,7 +1943,11 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:before{
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel span,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv span,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy span,
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf span {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf span,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel span,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv span,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy span,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf span {
     margin-left: 10px;
     color: #606266;
     vertical-align: bottom;
@@ -2036,7 +2080,8 @@ div.dt-button-collection.wdt-skin-dark {
 
 
 
-div.dt-button-collection.wdt-skin-dark a.dt-button {
+div.dt-button-collection.wdt-skin-dark a.dt-button,
+div.dt-button-collection.wdt-skin-dark button.dt-button {
     border: 0;
     padding: 10px 16px;
     text-align: left;
@@ -2046,23 +2091,26 @@ div.dt-button-collection.wdt-skin-dark a.dt-button {
     text-transform: uppercase;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility) {
+div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility),
+div.dt-button-collection.wdt-skin-dark button.dt-button:hover:not(.buttons-columnVisibility) {
     background-color: #262626;
     text-decoration: none;
-    border: none;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility) span {
+div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility) span,
+div.dt-button-collection.wdt-skin-dark button.dt-button:hover:not(.buttons-columnVisibility) span {
     color: #ffffff;
     opacity: 1;
     text-transform: uppercase;
 }
-div.dt-button-collection.wdt-skin-dark a.dt-button:not(.buttons-columnVisibility) span {
+div.dt-button-collection.wdt-skin-dark a.dt-button:not(.buttons-columnVisibility) span,
+div.dt-button-collection.wdt-skin-dark button.dt-button:not(.buttons-columnVisibility) span {
     text-transform: uppercase;
 }
 
 
-div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility):before {
+div.dt-button-collection.wdt-skin-dark a.dt-button:hover:not(.buttons-columnVisibility):before,
+div.dt-button-collection.wdt-skin-dark button.dt-button:hover:not(.buttons-columnVisibility):before {
     color: #ffffff;
     opacity: 1;
 }
@@ -2077,7 +2125,8 @@ div.dt-button-background {
     z-index: 2001;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility {
     margin: 0 16px;
 }
 
@@ -2085,7 +2134,12 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf,
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy{
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy{
     height: 43px;
     font-family: Roboto;
     font-size: 14px;
@@ -2105,7 +2159,8 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy{
 }
 
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.active:not(.disabled) {
+div.dt-button-collection.wdt-skin-dark a.dt-button.active:not(.disabled),
+div.dt-button-collection.wdt-skin-dark button.dt-button.active:not(.disabled) {
     background-color: transparent;
     color: #ffffff !important;
     border-color: #353535;
@@ -2113,7 +2168,9 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.active:not(.disabled) {
 }
 
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:last-child,
-.dt-button-collection.wdt-skin-dark a.dt-button:last-child {
+.dt-button-collection.wdt-skin-dark a.dt-button:last-child,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility:last-child,
+.dt-button-collection.wdt-skin-dark button.dt-button:last-child {
     border-bottom: none;
 }
 
@@ -2122,22 +2179,31 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv:active,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf:active,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy:active,
 div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:active,
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:visited {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:visited,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel:active,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv:active,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf:active,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy:active,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility:active,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility:visited {
     outline:none;
     border-bottom: 1px solid #353535 !important;
     background-color: #1a1a1a;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button:last-child {
+div.dt-button-collection.wdt-skin-dark a.dt-button:last-child,
+div.dt-button-collection.wdt-skin-dark button.dt-button:last-child {
     border-bottom: none;
 }
 
-.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility span {
+.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility span,
+.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility span {
     margin-left: 25px;
     line-height: 20px;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.active:before {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.active:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility.active:before {
     position: absolute;
     content: "\f14b";
     font-size: 19px;
@@ -2148,7 +2214,8 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.acti
     -o-transform: scale(1);
     transform: scale(1);
 }
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.active:after {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.active:after,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility.active:after {
     position: absolute;
     content: "\f00c";
     font-size: 15px;
@@ -2163,7 +2230,8 @@ div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility.acti
     top: 13px;
 }
 
-div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:before {
+div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-columnVisibility:before,
+div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility:before {
     position: absolute;
     content: "\f04e";
     font-weight: 400;

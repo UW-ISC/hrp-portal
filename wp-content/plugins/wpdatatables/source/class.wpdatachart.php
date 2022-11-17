@@ -2693,16 +2693,16 @@ class WPDataChart {
 
         if ($this->getVerticalAxisMin() != '') {
             if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['min'] = $this->getVerticalAxisMin();
+                $this->_highcharts_render_data['options']['yAxis'][0]['min'] = (float)$this->getVerticalAxisMin();
             } else {
-                $this->_highcharts_render_data['options']['yAxis']['min'] = $this->getVerticalAxisMin();
+                $this->_highcharts_render_data['options']['yAxis']['min'] = (float)$this->getVerticalAxisMin();
             }
         }
         if ($this->getVerticalAxisMax() != '') {
             if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['max'] = $this->getVerticalAxisMax();
+                $this->_highcharts_render_data['options']['yAxis'][0]['max'] = (float)$this->getVerticalAxisMax();
             } else {
-                $this->_highcharts_render_data['options']['yAxis']['max'] = $this->getVerticalAxisMax();
+                $this->_highcharts_render_data['options']['yAxis']['max'] = (float)$this->getVerticalAxisMax();
             }
         }
         $this->_highcharts_render_data['options']['chart']['inverted'] = $this->isInverted();
@@ -3619,13 +3619,13 @@ class WPDataChart {
             if ($this->getSeriesType() != '') {
                 $this->setHighchartsLineDashStyle(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['gridLineDashStyle']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['gridLineDashStyle'] : 'Solid');
                 $this->setVerticalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['crosshair']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['crosshair'] : false);
-                $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['min']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['min'] : '');
-                $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['max']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['max'] : '');
+                $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['min']) ? (float)$renderData['highcharts_render_data']['options']['yAxis'][0]['min'] : '');
+                $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['max']) ? (float)$renderData['highcharts_render_data']['options']['yAxis'][0]['max'] : '');
             } else {
                 $this->setHighchartsLineDashStyle(isset($renderData['highcharts_render_data']['options']['yAxis']['gridLineDashStyle']) ? $renderData['highcharts_render_data']['options']['yAxis']['gridLineDashStyle'] : 'Solid');
                 $this->setVerticalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['yAxis']['crosshair']) ? $renderData['highcharts_render_data']['options']['yAxis']['crosshair'] : false);
-                $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis']['min']) ? $renderData['highcharts_render_data']['options']['yAxis']['min'] : '');
-                $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis']['max']) ? $renderData['highcharts_render_data']['options']['yAxis']['max'] : '');
+                $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis']['min']) ? (float)$renderData['highcharts_render_data']['options']['yAxis']['min'] : '');
+                $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis']['max']) ?(float) $renderData['highcharts_render_data']['options']['yAxis']['max'] : '');
             }
             $this->setHorizontalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['xAxis']['crosshair']) ? $renderData['highcharts_render_data']['options']['xAxis']['crosshair'] : false);
             $this->setInverted(isset($renderData['highcharts_render_data']['options']['chart']['inverted']) ? $renderData['highcharts_render_data']['options']['chart']['inverted'] : false);

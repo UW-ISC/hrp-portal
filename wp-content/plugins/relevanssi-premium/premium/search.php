@@ -152,17 +152,19 @@ function relevanssi_set_operator( $query ) {
  * If negative terms are present, will remove them from the $terms array. If negative
  * or positive terms are present, will return the query restrictions MySQL for them.
  *
- * @param array  $terms An array of search terms.
- * @param string $query The search query as a string.
+ * @param array  $terms          An array of search terms.
+ * @param array  $original_terms An array of unstemmed search terms.
+ * @param string $query          The search query as a string.
  *
  * @return array An array containing the updated terms and the query restrictions.
  */
-function relevanssi_process_terms( $terms, $query ) {
+function relevanssi_process_terms( $terms, $original_terms, $query ) {
 	$negative_terms = relevanssi_recognize_negatives( $query );
 	$positive_terms = relevanssi_recognize_positives( $query );
 
 	if ( $negative_terms ) {
-		$terms = array_diff( $terms, $negative_terms );
+		$terms          = array_diff( $terms, $negative_terms );
+		$original_terms = array_diff( $original_terms, $negative_terms );
 	}
 
 	// Clean: escaped in the function.
@@ -170,6 +172,7 @@ function relevanssi_process_terms( $terms, $query ) {
 
 	return array(
 		'terms'              => $terms,
+		'original_terms'     => $original_terms,
 		'query_restrictions' => $query_restrictions,
 	);
 }

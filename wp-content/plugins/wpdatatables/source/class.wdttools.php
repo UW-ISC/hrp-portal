@@ -225,7 +225,7 @@ class WDTTools
     public static function curlGetData($url)
     {
         $ch = curl_init();
-        $timeout = 25;
+        $timeout = 100;
         $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
 
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -253,6 +253,9 @@ class WDTTools
 
             if ($info['http_code'] === 404) {
                 return NULL;
+            }
+            if ($info['http_code'] === 401) {
+                throw new Exception(__('wpDataTables was unable to access data. Unauthorized access. Please make file accessible.', 'wpdatatables'));
             }
         }
         return $data;
