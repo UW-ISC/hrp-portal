@@ -330,6 +330,10 @@ function relevanssi_handle_insights_screens( array $request ) : bool {
 			check_admin_referer( 'relevanssi_delete_query' );
 			relevanssi_delete_query( $request['query'] );
 		}
+		if ( isset( $request['action'] ) && isset( $request['query'] ) && 'delete_query_from_log' === $request['action'] ) {
+			check_admin_referer( 'relevanssi_delete_query' );
+			relevanssi_delete_query_from_log( $request['query'] );
+		}
 		relevanssi_show_insights( stripslashes( $request['insights'] ) );
 		return true;
 	}
@@ -471,7 +475,7 @@ function relevanssi_show_insights( string $query ) {
 
 	<h2><?php esc_html_e( 'Posts found with this search term', 'relevanssi' ); ?></h2>
 
-	<table class="widefat">
+	<table class="widefat" style="margin-bottom: 2em">
 	<thead>
 	<tr>
 	<th><?php esc_html_e( 'Post', 'relevanssi' ); ?></th>
@@ -503,6 +507,7 @@ function relevanssi_show_insights( string $query ) {
 	</tbody>
 	</table>
 
+	<div style="width: 48%; float: left">
 	<h2><?php esc_html_e( 'Remove this query from the click log', 'relevanssi' ); ?></h2>
 
 	<form method="post">
@@ -511,8 +516,21 @@ function relevanssi_show_insights( string $query ) {
 			<?php wp_nonce_field( 'relevanssi_delete_query' ); ?>
 		<input type="submit" value="<?php esc_attr_e( 'Delete', 'relevanssi' ); ?>" id="delete_query" />
 	</form>
+	</div>
 		<?php
 	}
+	?>
+	<div style="width: 48%; float: left">
+	<h2><?php esc_html_e( 'Remove this query from the search log', 'relevanssi' ); ?></h2>
+
+	<form method="post">
+		<input type="hidden" name="action" value="delete_query_from_log" />
+		<input type="hidden" name="query" value="<?php echo esc_attr( $query ); ?>" />
+			<?php wp_nonce_field( 'relevanssi_delete_query' ); ?>
+		<input type="submit" value="<?php esc_attr_e( 'Delete', 'relevanssi' ); ?>" id="delete_query" />
+	</form>
+	</div>
+	<?php
 }
 
 /**

@@ -3,8 +3,8 @@ Contributors: donncha, automattic
 Tags: performance, caching, wp-cache, wp-super-cache, cache
 Requires at least: 5.9
 Requires PHP: 5.6
-Tested up to: 6.0
-Stable tag: 1.9
+Tested up to: 6.1
+Stable tag: 1.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -268,6 +268,10 @@ Your theme is probably responsive which means it resizes the page to suit whatev
 
 
 == Changelog ==
+### 1.9.1 - 2022-11-02
+#### Fixed
+- Fixes crash when using the "Jetpack Mobile Theme" plugin alongside Jetpack 11.5.
+
 ### 1.9 - 2022-09-16
 #### Added
 - Cache deletion: add new hook to trigger actions after a successful cache deletion from the admin bar.

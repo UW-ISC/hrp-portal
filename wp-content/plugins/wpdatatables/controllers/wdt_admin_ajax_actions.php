@@ -289,6 +289,7 @@ function wdtDuplicateTable()
             'title' => $newTableName,
             'show_title' => $tableData->show_title,
             'table_type' => $tableData->table_type,
+            'file_location' => $tableData->file_location,
             'connection' => $tableData->connection,
             'content' => $content,
             'filtering' => $tableData->filtering,

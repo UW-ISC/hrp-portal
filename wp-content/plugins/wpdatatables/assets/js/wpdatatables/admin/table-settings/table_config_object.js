@@ -21,6 +21,7 @@ var wpdatatable_config = {
     sorting: 1,
     word_wrap: 0,
     table_type: '',
+    file_location: 'wp_media_lib',
     server_side: 1,
     auto_refresh: 0,
     content: '',
@@ -63,6 +64,7 @@ var wpdatatable_config = {
     pdfPaperSize: 'A4',
     pdfPageOrientation: 'portrait',
     showTableToolsIncludeHTML: 0,
+    showTableToolsIncludeTitle: 0,
     columns: [],
     columns_by_headers: {},
     currentOpenColumn: null,
@@ -113,6 +115,9 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
                 jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-input-data-source-type').removeClass('col-sm-4').addClass('col-sm-6');
+                jQuery('.wdt-table-settings .input-path-block').removeClass('col-sm-4').addClass('col-sm-6');
                 break;
             case 'manual':
                 wpdatatable_config.setServerSide( 1 );
@@ -124,6 +129,7 @@ var wpdatatable_config = {
                 jQuery('.placeholders-settings-tab').animateFadeIn();
                 jQuery('.wdt-add-data-source-field').removeClass('hidden');
                 jQuery('.wdt-source-file-path').removeClass('hidden');
+                jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 jQuery('.wdt-add-data-source-change-field').removeClass('col-sm-6').addClass('col-sm-4');
                 break;
             case 'csv':
@@ -148,6 +154,16 @@ var wpdatatable_config = {
                 if (jQuery.inArray(type, ['google_spreadsheet', 'xml', 'json', 'nested_json', 'serialized']) != -1 )
                     jQuery('.wdt-table-settings #wdt-browse-button').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
+                if (jQuery.inArray(type, ['csv', 'xls']) != -1 ){
+                    wpdatatable_config.setFileLocation('wp_media_lib');
+                    jQuery('.wdt-table-settings .wdt-file-location').removeClass('hidden');
+                    jQuery('.wdt-table-settings .wdt-input-data-source-type').removeClass('col-sm-6').addClass('col-sm-4');
+                    jQuery('.wdt-table-settings .input-path-block').removeClass('col-sm-6').addClass('col-sm-4');
+                } else {
+                    jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
+                    jQuery('.wdt-table-settings .wdt-input-data-source-type').removeClass('col-sm-4').addClass('col-sm-6');
+                    jQuery('.wdt-table-settings .input-path-block').removeClass('col-sm-4').addClass('col-sm-6');
+                }
                 break;
             case 'nested_json':
                 jQuery('.placeholders-settings-tab').animateFadeIn();
@@ -164,6 +180,9 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings #wdt-get-nested-json-roots').removeClass('hidden');
                 jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
                 wpdatatable_config.setServerSide( 0 );
+                jQuery('.wdt-table-settings .wdt-input-data-source-type').removeClass('col-sm-4').addClass('col-sm-6');
+                jQuery('.wdt-table-settings .input-path-block').removeClass('col-sm-4').addClass('col-sm-6');
+                jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 break;
             default:
                 jQuery('.wdt-table-settings .input-path-block').addClass('hidden');
@@ -177,6 +196,7 @@ var wpdatatable_config = {
                 jQuery('.wdt-table-settings #wdt-nested-json-block').addClass('hidden');
                 jQuery('.wdt-table-settings #wdt-nested-json-additional-block').addClass('hidden');
                 jQuery('.wdt-table-settings .wdt-source-file-path').addClass('hidden');
+                jQuery('.wdt-table-settings .wdt-file-location').addClass('hidden');
                 break;
         }
         jQuery( '#wdt-table-type').val( type ).selectpicker('refresh');
@@ -184,6 +204,22 @@ var wpdatatable_config = {
     /**
      * Method to get custom headers row template
      */
+    setFileLocation: function( fileLocation ){
+        wpdatatable_config.file_location = fileLocation;
+        switch( fileLocation ){
+            case 'wp_media_lib':
+                jQuery('#wdt-browse-button').removeClass('hidden');
+                jQuery('#wdt-input-url').closest('.col-sm-9').css('cssText', 'width: 75% !important');
+                jQuery('#wdt-input-url').val('');
+                break;
+            case 'wp_any_url':
+                jQuery('#wdt-browse-button').addClass('hidden');
+                jQuery('#wdt-input-url').closest('.col-sm-9').css('cssText', 'width: 100% !important');
+                jQuery('#wdt-input-url').val('');
+                break;
+        }
+        jQuery('#wdt-file-location').val( fileLocation ).selectpicker('refresh');
+    },
     renderCustomHeadersRow: function (row){
         var custom_headers_row = jQuery('#wdt-nested-json-custom-headers-template').html();
         var $block = jQuery(custom_headers_row)
@@ -347,10 +383,12 @@ var wpdatatable_config = {
         if( show_tabletools == 1 ){
             jQuery('.wdt-table-settings .table-tools-settings-block').animateFadeIn();
             jQuery('.wdt-table-settings .table-tools-include-html-block').animateFadeIn();
+            jQuery('.wdt-table-settings .table-tools-include-title-block').animateFadeIn();
             jQuery.isEmptyObject( table_tools ) ?
                 wpdatatable_config.setTableToolsConfig( { print: 1, copy: 1, excel: 1, csv: 1, pdf: 0 } ) :
                 wpdatatable_config.setTableToolsConfig( table_tools );
             wpdatatable_config.setTableToolsIncludeHTML( 0 );
+            wpdatatable_config.setTableToolsIncludeTitle( 0 );
             // Show/hide PDF export options
             if (typeof wpdatatable_config.tabletools_config.pdf !== "undefined" && wpdatatable_config.tabletools_config.pdf == 1) {
                 jQuery('div.pdf-export-options').animateFadeIn();
@@ -360,9 +398,11 @@ var wpdatatable_config = {
         }else{
             jQuery('.wdt-table-settings .table-tools-settings-block').addClass('hidden');
             jQuery('.wdt-table-settings .table-tools-include-html-block').addClass('hidden');
+            jQuery('.wdt-table-settings .table-tools-include-title-block').addClass('hidden');
             jQuery('div.pdf-export-options').animateFadeOut();
             wpdatatable_config.setTableToolsConfig({})
             wpdatatable_config.setTableToolsIncludeHTML( 0 );
+            wpdatatable_config.setTableToolsIncludeTitle( 0 );
             wpdatatable_config.setPdfPaperSize('A4')
             wpdatatable_config.setPdfPageOrientation('portrait')
         }
@@ -375,6 +415,14 @@ var wpdatatable_config = {
     setTableToolsIncludeHTML: function( showTableToolsIncludeHTML ){
         wpdatatable_config.showTableToolsIncludeHTML = showTableToolsIncludeHTML;
         jQuery('#wdt-table-tools-include-html').prop( 'checked', showTableToolsIncludeHTML );
+    },
+    /**
+     * Enable or disable table tools include table title
+     * @param showTableToolsIncludeTitle 1 or 0
+     */
+    setTableToolsIncludeTitle: function( showTableToolsIncludeTitle ){
+        wpdatatable_config.showTableToolsIncludeTitle = showTableToolsIncludeTitle;
+        jQuery('#wdt-table-tools-include-title').prop( 'checked', showTableToolsIncludeTitle );
     },
     /**
      * Enable or disable responsiveness
@@ -649,9 +697,18 @@ var wpdatatable_config = {
         if (allowedTableTypes.includes(wpdatatable_config.table_type)){
             jQuery('.wdt-table-settings .cache-settings-block').removeClass('hidden');
             jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('hidden');
+            if (['csv', 'xls'].includes(wpdatatable_config.table_type)) {
+                jQuery('.wdt-table-settings .cache-settings-block').removeClass('col-sm-3').addClass('col-sm-4');
+                jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('col-sm-3').addClass('col-sm-4');
+            } else {
+                jQuery('.wdt-table-settings .cache-settings-block').removeClass('col-sm-4').addClass('col-sm-3');
+                jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('col-sm-4').addClass('col-sm-3');
+            }
         } else {
             jQuery('.wdt-table-settings .cache-settings-block').addClass('hidden');
             jQuery('.wdt-table-settings .auto-update-cache-block').addClass('hidden');
+            jQuery('.wdt-table-settings .cache-settings-block').removeClass('col-sm-4').addClass('col-sm-3');
+            jQuery('.wdt-table-settings .auto-update-cache-block').removeClass('col-sm-4').addClass('col-sm-3');
         }
         if (cacheSourceData == 0){
             wpdatatable_config.auto_update_cache = 0
@@ -1300,6 +1357,7 @@ var wpdatatable_config = {
         wpdatatable_config.setId( tableJSON.id );
         wpdatatable_config.setTitle( tableJSON.title );
         wpdatatable_config.setTableType( tableJSON.table_type );
+        wpdatatable_config.setFileLocation( tableJSON.file_location );
         wpdatatable_config.setAutoRefresh( tableJSON.auto_refresh );
         wpdatatable_config.setShowTitle( tableJSON.show_title );
         if( wpdatatable_config.table_type == 'mysql' ){
@@ -1359,6 +1417,7 @@ var wpdatatable_config = {
         wpdatatable_config.setSorting( parseInt( tableJSON.sorting ) );
         wpdatatable_config.setShowTableTools( parseInt( tableJSON.tools ), tableJSON.tabletools_config );
         wpdatatable_config.setTableToolsIncludeHTML( parseInt( tableJSON.showTableToolsIncludeHTML ) );
+        wpdatatable_config.setTableToolsIncludeTitle( parseInt( tableJSON.showTableToolsIncludeTitle ) );
         wpdatatable_config.setPdfPaperSize( tableJSON.pdfPaperSize);
         wpdatatable_config.setPdfPageOrientation( tableJSON.pdfPageOrientation);
         wpdatatable_config.setWordWrap( tableJSON.word_wrap );

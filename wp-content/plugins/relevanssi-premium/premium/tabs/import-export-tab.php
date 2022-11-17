@@ -158,6 +158,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_title_boost']              = get_option( 'relevanssi_title_boost' );
 	$serialize_options['relevanssi_trim_logs']                = get_option( 'relevanssi_trim_logs' );
 	$serialize_options['relevanssi_txt_col']                  = $txt_col;
+	$serialize_options['relevanssi_update_translations']      = get_option( 'relevanssi_update_translations' );
 	$serialize_options['relevanssi_wpml_only_current']        = get_option( 'relevanssi_wpml_only_current' );
 
 	$serialized_options = wp_json_encode( $serialize_options );

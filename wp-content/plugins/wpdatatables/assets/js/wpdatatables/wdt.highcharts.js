@@ -502,14 +502,14 @@ var wpDataTablesHighchart = function(){
                 chartConfig.highcharts_line_dash_style ? this.options.yAxis[0].gridLineDashStyle = chartConfig.highcharts_line_dash_style : null;
                 chartConfig.vertical_axis_crosshair == 1 ? this.options.yAxis[0].crosshair = true : this.options.yAxis[0].crosshair = false;
                 chartConfig.horizontal_axis_label ? this.options.yAxis[0].title = { text: chartConfig.vertical_axis_label } : null;
-                chartConfig.vertical_axis_min ? this.options.yAxis[0].min = chartConfig.vertical_axis_min : this.options.yAxis[0].min = undefined;
-                chartConfig.vertical_axis_max ? this.options.yAxis[0].max = chartConfig.vertical_axis_max : this.options.yAxis[0].max = undefined;
+                chartConfig.vertical_axis_min ? this.options.yAxis[0].min = Number(chartConfig.vertical_axis_min) : this.options.yAxis[0].min = undefined;
+                chartConfig.vertical_axis_max ? this.options.yAxis[0].max = Number(chartConfig.vertical_axis_max) : this.options.yAxis[0].max = undefined;
             } else {
                 chartConfig.highcharts_line_dash_style ? this.options.yAxis.gridLineDashStyle = chartConfig.highcharts_line_dash_style : null;
                 chartConfig.vertical_axis_crosshair == 1 ? this.options.yAxis.crosshair = true : this.options.yAxis.crosshair = false;
                 chartConfig.horizontal_axis_label ? this.options.yAxis.title = { text: chartConfig.vertical_axis_label } : null;
-                chartConfig.vertical_axis_min ? this.options.yAxis.min = chartConfig.vertical_axis_min : this.options.yAxis.min = undefined;
-                chartConfig.vertical_axis_max ? this.options.yAxis.max = chartConfig.vertical_axis_max : this.options.yAxis.max = undefined;
+                chartConfig.vertical_axis_min ? this.options.yAxis.min = Number(chartConfig.vertical_axis_min) : this.options.yAxis.min = undefined;
+                chartConfig.vertical_axis_max ? this.options.yAxis.max = Number(chartConfig.vertical_axis_max) : this.options.yAxis.max = undefined;
             }
             chartConfig.vertical_axis_label ? this.options.xAxis.title = { text: chartConfig.horizontal_axis_label } : null;
             chartConfig.horizontal_axis_crosshair == 1 ? this.options.xAxis.crosshair = true : this.options.xAxis.crosshair = false;

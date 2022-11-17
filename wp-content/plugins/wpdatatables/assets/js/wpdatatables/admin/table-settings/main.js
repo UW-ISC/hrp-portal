@@ -39,6 +39,13 @@
         });
 
         /**
+         * Change file location
+         */
+        $('#wdt-file-location').change(function (e) {
+            wpdatatable_config.setFileLocation($(this).val());
+        });
+
+        /**
          * Toggle server-side processing
          */
         $('.wdt-server-side').change(function (e) {
@@ -78,6 +85,13 @@
          */
         $('#wdt-table-tools-include-html').change(function (e) {
             wpdatatable_config.setTableToolsIncludeHTML($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Toggle Table Tools Include table title option
+         */
+        $('#wdt-table-tools-include-title').change(function (e) {
+            wpdatatable_config.setTableToolsIncludeTitle($(this).is(':checked') ? 1 : 0);
         });
 
         /**
@@ -1478,6 +1492,7 @@
                         $('#wdt-error-modal .modal-body').html(data.error);
                         $('#wdt-error-modal').modal('show');
                         $('.wdt-preload-layer').animateFadeOut();
+                        return;
                     } else {
                         // Reinitialize table with returned data
                         wpdatatable_config.initFromJSON(data.table);

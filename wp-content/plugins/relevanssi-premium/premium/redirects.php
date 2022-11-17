@@ -201,7 +201,7 @@ function relevanssi_get_facetwp_query() {
 		$facet_searches = array();
 		$url_vars       = FWP()->request->url_vars;
 		foreach ( FWP()->helper->settings['facets'] as $facet ) {
-			if ( 'search' === $facet['type'] && 'relevanssi' === $facet['search_engine'] ) {
+			if ( 'search' === $facet['type'] && 'relevanssi' === $facet['search_engine'] && ! empty( $url_vars[ $facet['name'] ] ) ) {
 				$facet_searches = array_merge( $facet_searches, $url_vars[ $facet['name'] ] );
 			}
 		}
@@ -212,5 +212,5 @@ function relevanssi_get_facetwp_query() {
 		}
 	}
 
-	return $query;
+	return strtolower( $query );
 }

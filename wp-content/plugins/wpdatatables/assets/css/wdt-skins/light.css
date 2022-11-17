@@ -42,7 +42,7 @@
     opacity: .6;
 }
 
-.wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable thead th.sorting:after,
+
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after {
     border-top-width: 0;
 }
@@ -282,7 +282,9 @@
 }
 
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper a.DTTT_button,
-.wpdt-c.wdt-skin-light .wpDataTablesWrapper a.DTTT_button:hover {
+.wpdt-c.wdt-skin-light .wpDataTablesWrapper a.DTTT_button:hover,
+.wpdt-c.wdt-skin-light .wpDataTablesWrapper button.DTTT_button,
+.wpdt-c.wdt-skin-light .wpDataTablesWrapper button.DTTT_button:hover {
     border-color: transparent;
     border-style: solid;
 }
@@ -314,7 +316,8 @@
     bottom: -7px;
 }
 
-.wpdt-c.wdt-skin-light .wpDataTablesPopover.editTools a.DTTT_button {
+.wpdt-c.wdt-skin-light .wpDataTablesPopover.editTools a.DTTT_button,
+.wpdt-c.wdt-skin-light .wpDataTablesPopover.editTools button.DTTT_button {
     color: #ffffff !important;
 }
 

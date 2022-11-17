@@ -1317,6 +1317,10 @@ var singleClick = false;
 
                     var row = $(tableDescription.selector + ' tr.selected').get(0);
 
+                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                        row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
+                    }
+
                     if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
                         if(typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function'){
                             if (singleClick === false){
@@ -1482,6 +1486,10 @@ var singleClick = false;
 
                     var row = $(tableDescription.selector + ' tr.selected').get(0);
 
+                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                        row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
+                    }
+
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
@@ -1613,6 +1621,9 @@ var singleClick = false;
                             }
                         } else {
                             var row = $(tableDescription.selector + ' tr.selected').get(0);
+                            if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                                row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
+                            }
                             var data = wpDataTables[tableDescription.tableId].fnGetData(row);
                             var id_val = data[tableDescription.idColumnIndex];
                             $.ajax({

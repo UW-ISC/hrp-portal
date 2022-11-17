@@ -18,6 +18,14 @@ add_action( 'relevanssi_indexing_tab_advanced', 'relevanssi_form_mysql_columns',
 add_action( 'relevanssi_indexing_tab_advanced', 'relevanssi_form_internal_links', 12 );
 add_action( 'relevanssi_indexing_tab_advanced', 'relevanssi_form_index_post_type_archives', 13 );
 add_action( 'relevanssi_debugging_tab', 'relevanssi_form_reset_words', 10 );
+add_filter( 'manage_posts_columns', 'relevanssi_manage_columns', 10, 2 );
+add_filter( 'manage_pages_columns', 'relevanssi_manage_columns', 10, 2 );
+add_action( 'admin_print_footer_scripts-edit.php', 'relevanssi_quick_edit_js' );
+add_filter( 'default_hidden_columns', 'relevanssi_hide_columns' );
+add_action( 'save_post', 'relevanssi_quick_edit_save' );
+add_filter( 'quick_edit_custom_box', 'relevanssi_quick_edit_custom_box', 10, 2 );
+add_filter( 'manage_posts_custom_column', 'relevanssi_manage_custom_column', 10, 2 );
+add_filter( 'manage_pages_custom_column', 'relevanssi_manage_custom_column', 10, 2 );
 
 /**
  * Adds the Premium page actions.
@@ -99,7 +107,31 @@ function relevanssi_form_do_not_call_home() {
 				<input type='checkbox' name='relevanssi_do_not_call_home' id='relevanssi_do_not_call_home' <?php echo esc_attr( $can_i_call_home ); ?> />
 				<?php esc_html_e( 'Disable update version checking and attachment indexing', 'relevanssi' ); ?>
 			</label>
-		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will stop all outside connections. This means the plugin won't check for updates from Relevanssi.com and won't read attachment contents using Relevanssiservices.com attachment reader (using custom attachment reader is still allowed). Do not check this box unless you know what you're doing, because this will disable Relevanssi updates.", 'relevanssi' ); ?></p>
+		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will stop all outside connections. This means the plugin won't check for updates from Relevanssi.com, won't read attachment contents using Relevanssiservices.com attachment reader (using custom attachment reader is still allowed), or update plugin translations. Do not check this box unless you know what you're doing, because this will disable Relevanssi updates.", 'relevanssi' ); ?></p>
+		</td>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Prints out the form fields for updating translations.
+ */
+function relevanssi_form_update_translations() {
+	$option              = get_option( 'relevanssi_update_translations' );
+	$update_translations = relevanssi_check( $option );
+	?>
+	<tr>
+		<th scope="row">
+			<?php esc_html_e( 'Update translations', 'relevanssi' ); ?>
+		</th>
+		<td>
+			<label for='relevanssi_update_translations'>
+				<input type='checkbox' name='relevanssi_update_translations' id='relevanssi_update_translations' <?php echo esc_attr( $update_translations ); ?> />
+				<?php esc_html_e( 'Check for plugin translation updates', 'relevanssi' ); ?>
+			</label>
+		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will check for updates to the plugin translations. At the moment, translations are available for: ", 'relevanssi' ); ?>
+		Deutsch (de_DE), español (es_ES), français (fr_FR), suomi (fi)</p>
 		</td>
 		</td>
 	</tr>
@@ -962,6 +994,7 @@ function relevanssi_update_premium_options() {
 			$request,
 			array(
 				'relevanssi_do_not_call_home',
+				'relevanssi_update_translations',
 				'relevanssi_hide_post_controls',
 				'relevanssi_show_post_controls',
 			)
@@ -1105,6 +1138,7 @@ function relevanssi_update_premium_options() {
 	relevanssi_update_off_or_on( $request, 'relevanssi_searchblogs_all', false );
 	relevanssi_update_off_or_on( $request, 'relevanssi_send_pdf_files', false );
 	relevanssi_update_off_or_on( $request, 'relevanssi_show_post_controls', false );
+	relevanssi_update_off_or_on( $request, 'relevanssi_update_translations', false );
 	relevanssi_update_sanitized( $request, 'relevanssi_api_key', true );
 	relevanssi_update_sanitized( $request, 'relevanssi_disable_shortcodes', false );
 	relevanssi_update_sanitized( $request, 'relevanssi_index_user_fields', false );
@@ -1291,4 +1325,250 @@ function relevanssi_get_api_key_notification() {
 		);
 	}
 	return $message;
+}
+
+/**
+ * Adds the Relevanssi columns to the post list.
+ *
+ * @param array  $columns   The columns.
+ * @param string $post_type The post type.
+ */
+function relevanssi_manage_columns( $columns, $post_type = 'page' ) {
+	$post_types = get_option( 'relevanssi_index_post_types' );
+	if ( ! in_array( $post_type, $post_types, true ) ) {
+		return $columns;
+	}
+
+	$columns['pinned_keywords']   = __( 'Pinned keywords', 'relevanssi' );
+	$columns['unpinned_keywords'] = __( 'Excluded keywords', 'relevanssi' );
+	$columns['pin_for_all']       = __( 'Pin for all searches', 'relevanssi' );
+	$columns['exclude_post']      = __( 'Exclude post', 'relevanssi' );
+	$columns['ignore_content']    = __( 'Ignore post content', 'relevanssi' );
+	return $columns;
+}
+
+/**
+ * Adds the Relevanssi Premium columns to the post list.
+ *
+ * @param array $column  The column name.
+ * @param int   $post_id The post ID.
+ */
+function relevanssi_manage_custom_column( $column, $post_id ) {
+	switch ( $column ) {
+		case 'pinned_keywords':
+			$keywords = get_post_meta( $post_id, '_relevanssi_pin_keywords', true );
+			if ( ! empty( $keywords ) ) {
+				echo esc_html( $keywords );
+			}
+			break;
+		case 'unpinned_keywords':
+			$keywords = get_post_meta( $post_id, '_relevanssi_unpin_keywords', true );
+			if ( ! empty( $keywords ) ) {
+				echo esc_html( $keywords );
+			}
+			break;
+		case 'pin_for_all':
+			$pin_for_all = get_post_meta( $post_id, '_relevanssi_pin_for_all', true );
+			if ( ! empty( $pin_for_all ) ) {
+				echo '✓';
+			} else {
+				echo '✗';
+			}
+			break;
+		case 'exclude_post':
+			$hide_post = get_post_meta( $post_id, '_relevanssi_hide_post', true );
+			if ( ! empty( $hide_post ) ) {
+				echo '✓';
+			} else {
+				echo '✗';
+			}
+			break;
+		case 'ignore_content':
+			$hide_content = get_post_meta( $post_id, '_relevanssi_hide_content', true );
+			if ( ! empty( $hide_content ) ) {
+				echo '✓';
+			} else {
+				echo '✗';
+			}
+			break;
+	}
+}
+
+/**
+ * Adds the Relevanssi custom fields to the quick edit box.
+ *
+ * @param string $column    The column name.
+ * @param string $post_type The post type.
+ */
+function relevanssi_quick_edit_custom_box( $column, $post_type ) {
+	switch ( $column ) {
+		case 'pinned_keywords':
+			?>
+			<style>
+				.relevanssi-quick-edit-columns {
+					width: 100%;
+					display: block;
+					clear: both;
+				}
+
+				#wpbody-content fieldset.rlv-inline-edit-col-wide {
+					width: 40%;
+					margin-right: 1em;
+				}
+
+				.inline-edit-row fieldset label span.rlv-title, .rlv-input {
+					width: 100%;
+				}
+			</style>
+			<div class="relevanssi-quick-edit-columns">
+				<legend class="inline-edit-legend"><?php esc_html_e( 'Relevanssi pinning', 'relevanssi' ); ?></legend>
+				<fieldset class="rlv-inline-edit-col-wide">
+					<div class="inline-edit-col">
+						<label class="inline-edit-group">
+							<span class="title rlv-title"><?php esc_html_e( 'Pinned keywords', 'relevanssi' ); ?></span>
+							<input type="text" class="rlv-input" name="relevanssi_pin_keywords" value="" />
+						</label>
+			<?php
+			wp_nonce_field( 'relevanssi_quick_edit_nonce', 'relevanssi_quick_edit_nonce' );
+			break;
+		case 'unpinned_keywords':
+			?>
+						<label class="inline-edit-group">
+							<span class="title rlv-title"><?php esc_html_e( 'Excluded keywords', 'relevanssi' ); ?></span>
+							<input type="text" class="rlv-input" name="relevanssi_unpin_keywords" value="" />
+						</label>
+					</div>
+				</fieldset>
+			</div>
+			<?php
+			break;
+		case 'pin_for_all':
+			?>
+				<fieldset class="rlv-inline-edit-col-wide">
+					<div class="inline-edit-col">
+						<label class="inline-edit-group">
+							<input type="checkbox" name="relevanssi_pin_for_all" value="" />
+							<span class="checkbox-title"><?php esc_html_e( 'Pin this post for all searches it appears in.', 'relevanssi' ); ?></span>
+						</label>
+			<?php
+			break;
+		case 'exclude_post':
+			?>
+						<label class="inline-edit-group">
+							<input type="checkbox" name="relevanssi_hide_post" value="" />
+							<span class="checkbox-title"><?php esc_html_e( 'Exclude this post or page from the index.', 'relevanssi' ); ?></span>
+						</label>
+			<?php
+			break;
+		case 'ignore_content':
+			?>
+						<label class="inline-edit-group">
+							<input type="checkbox" name="relevanssi_hide_content" value="" />
+							<span class="checkbox-title"><?php esc_html_e( 'Ignore post content in the indexing.', 'relevanssi' ); ?></span>
+						</label>
+					</div>
+				</fieldset>
+			<?php
+			break;
+	}
+}
+
+/**
+ * Updates the custom fields from the quick edit saves.
+ *
+ * @param int $post_id The post ID.
+ */
+function relevanssi_quick_edit_save( $post_id ) {
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return;
+	}
+	if ( ! wp_verify_nonce( filter_input( INPUT_POST, 'relevanssi_quick_edit_nonce', FILTER_SANITIZE_STRING ), 'relevanssi_quick_edit_nonce' ) ) {
+		return;
+	}
+ 	if ( isset( $_POST['relevanssi_pin_keywords'] ) ) {
+		$keywords = filter_input( INPUT_POST, 'relevanssi_pin_keywords', FILTER_SANITIZE_STRING );
+		update_post_meta( $post_id, '_relevanssi_pin_keywords', $keywords );
+		relevanssi_update_pin_fields( $post_id, $keywords );
+	}
+	if ( isset( $_POST['relevanssi_unpin_keywords'] ) ) {
+		$keywords = filter_input( INPUT_POST, 'relevanssi_unpin_keywords', FILTER_SANITIZE_STRING );
+		update_post_meta( $post_id, '_relevanssi_unpin_keywords', $keywords );
+		relevanssi_update_unpin_fields( $post_id, $keywords );
+	}
+	if ( isset( $_POST['relevanssi_pin_for_all'] ) ) {
+		update_post_meta( $post_id, '_relevanssi_pin_for_all', 'on' );
+	} else {
+		delete_post_meta( $post_id, '_relevanssi_pin_for_all' );
+	}
+	if ( isset( $_POST['relevanssi_hide_post'] ) ) {
+		update_post_meta( $post_id, '_relevanssi_hide_post', 'on' );
+	} else {
+		delete_post_meta( $post_id, '_relevanssi_hide_post' );
+	}
+	if ( isset( $_POST['relevanssi_hide_content'] ) ) {
+		update_post_meta( $post_id, '_relevanssi_hide_content', 'on' );
+	} else {
+		delete_post_meta( $post_id, '_relevanssi_hide_content' );
+	}
+}
+
+/**
+ * Adds the quick edit JS on admin edit.php pages.
+ */
+function relevanssi_quick_edit_js() {
+	wp_enqueue_script( 'jquery' );
+	?>
+	<script type="text/javascript">
+		jQuery(function($) {
+			var relevanssiInlineEditor = inlineEditPost.edit;
+			inlineEditPost.edit = function(id) {
+				relevanssiInlineEditor.apply(this, arguments);
+				var postId = 0;
+				if ( typeof(id) == 'object' ) {
+					postId = parseInt(this.getId(id));
+				}
+				if ( postId !== 0 ) {
+					var editRow = $("#edit-" + postId);
+					var postRow = $("#post-" + postId);
+					var pinnedKeywords = $(".pinned_keywords", postRow).text();
+					$("input[name='relevanssi_pin_keywords']", editRow).val(pinnedKeywords);
+					var unpinnedKeywords = $(".unpinned_keywords", postRow).text();
+					$("input[name='relevanssi_unpin_keywords']", editRow).val(unpinnedKeywords);
+					if ($(".pin_for_all", postRow).text() == '✓') {
+						$("input[name='relevanssi_pin_for_all']", editRow).prop('checked', true);
+					} else {
+						$("input[name='relevanssi_pin_for_all']", editRow).prop('checked', false);
+					}
+					if ($(".exclude_post", postRow).text() == '✓') {
+						$("input[name='relevanssi_hide_post']", editRow).prop('checked', true);
+					} else {
+						$("input[name='relevanssi_hide_post']", editRow).prop('checked', false);
+					}
+					if ($(".ignore_content", postRow).text() == '✓') {
+						$("input[name='relevanssi_hide_content']", editRow).prop('checked', true);
+					} else {
+						$("input[name='relevanssi_hide_content']", editRow).prop('checked', false);
+					}
+				}
+			}
+		})
+	</script>
+	<?php
+}
+
+/**
+ * By default, hide the Relevanssi columns.
+ *
+ * @param array $columns The columns to hide.
+ */
+function relevanssi_hide_columns( $columns ) {
+	$columns[] = 'pinned_keywords';
+	$columns[] = 'unpinned_keywords';
+	$columns[] = 'pin_for_all';
+	$columns[] = 'exclude_post';
+	$columns[] = 'ignore_content';
+	return $columns;
 }

@@ -81,7 +81,7 @@ function relevanssi_post_metabox() {
 	<p><strong><?php esc_html_e( 'Pin this post', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be moved on top of the search results.', 'relevanssi' ); ?></p>
 	<label for="relevanssi_pin" class="screen-reader-text"><?php esc_html_e( 'Pinned keywords for this post', 'relevanssi' ); ?></label>
-	<textarea id="relevanssi_pin" name="relevanssi_pin" cols="30" rows="2"><?php echo esc_html( $pin ); ?></textarea/>
+	<textarea id="relevanssi_pin" name="relevanssi_pin" cols="30" rows="2" style="max-width: 100%"><?php echo esc_html( $pin ); ?></textarea/>
 
 	<?php
 	if ( 0 === intval( get_option( 'relevanssi_content_boost' ) ) ) {
@@ -99,7 +99,7 @@ function relevanssi_post_metabox() {
 	<p><strong><?php esc_html_e( 'Exclude this post', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of single word keywords or multi-word phrases. If any of these keywords are present in the search query, this post will be removed from the search results.', 'relevanssi' ); ?></p>
 	<label for="relevanssi_unpin" class="screen-reader-text"><?php esc_html_e( 'Excluded keywords for this post', 'relevanssi' ); ?></label>
-	<textarea id="relevanssi_unpin" name="relevanssi_unpin" cols="30" rows="2"><?php echo esc_html( $unpin ); ?></textarea>
+	<textarea id="relevanssi_unpin" name="relevanssi_unpin" cols="30" rows="2" style="max-width: 100%"><?php echo esc_html( $unpin ); ?></textarea>
 
 	<p><input type="checkbox" id="relevanssi_hide_post" name="relevanssi_hide_post" <?php echo esc_attr( $hide_post ); ?> />
 	<label for="relevanssi_hide_post">
@@ -139,32 +139,52 @@ function relevanssi_save_gutenberg_postdata( $post ) {
 
 	// Check nonce here?
 
-	$pin = get_post_meta( $post->ID, '_relevanssi_pin_keywords', true );
-	if ( $pin ) {
-		delete_post_meta( $post->ID, '_relevanssi_pin' );
-		$pins = explode( ',', sanitize_text_field( wp_unslash( $pin ) ) );
+	$keywords = get_post_meta( $post->ID, '_relevanssi_pin_keywords', true );
+	relevanssi_update_pin_fields( $post->ID, $keywords );
+
+	$keywords = get_post_meta( $post->ID, '_relevanssi_unpin_keywords', true );
+	relevanssi_update_unpin_fields( $post->ID, $keywords );
+}
+
+/**
+ * Updates the _relevanssi_pin custom fields based on a list of keywords.
+ *
+ * @param int    $post_id  The post ID.
+ * @param string $keywords The keywords.
+ */
+function relevanssi_update_pin_fields( $post_id, $keywords ) {
+	if ( $keywords ) {
+		delete_post_meta( $post_id, '_relevanssi_pin' );
+		$pins = explode( ',', sanitize_text_field( wp_unslash( $keywords ) ) );
 		foreach ( $pins as $pin ) {
 			$pin = trim( $pin );
 			if ( ! empty( $pin ) ) {
-				add_post_meta( $post->ID, '_relevanssi_pin', $pin );
+				add_post_meta( $post_id, '_relevanssi_pin', $pin );
 			}
 		}
 	} else {
-		delete_post_meta( $post->ID, '_relevanssi_pin' );
+		delete_post_meta( $post_id, '_relevanssi_pin' );
 	}
+}
 
-	$unpin = get_post_meta( $post->ID, '_relevanssi_unpin_keywords', true );
-	if ( $unpin ) {
-		delete_post_meta( $post->ID, '_relevanssi_unpin' );
-		$unpins = explode( ',', sanitize_text_field( wp_unslash( $unpin ) ) );
-		foreach ( $unpins as $unpin ) {
-			$unpin = trim( $unpin );
-			if ( ! empty( $unpin ) ) {
-				add_post_meta( $post->ID, '_relevanssi_unpin', $unpin );
+/**
+ * Updates the _relevanssi_unpin custom fields based on a list of keywords.
+ *
+ * @param int    $post_id  The post ID.
+ * @param string $keywords The keywords.
+ */
+function relevanssi_update_unpin_fields( $post_id, $keywords ) {
+	if ( $keywords ) {
+		delete_post_meta( $post_id, '_relevanssi_unpin' );
+		$pins = explode( ',', sanitize_text_field( wp_unslash( $keywords ) ) );
+		foreach ( $pins as $pin ) {
+			$pin = trim( $pin );
+			if ( ! empty( $pin ) ) {
+				add_post_meta( $post_id, '_relevanssi_unpin', $pin );
 			}
 		}
 	} else {
-		delete_post_meta( $post->ID, '_relevanssi_unpin' );
+		delete_post_meta( $post_id, '_relevanssi_unpin' );
 	}
 }
 
@@ -361,7 +381,7 @@ function relevanssi_related_posts_metabox( $post_id ) {
 	<p><strong><?php esc_html_e( 'Related Posts keywords', 'relevanssi' ); ?></strong></p>
 	<p><?php esc_html_e( 'A comma-separated list of keywords to use for the Related Posts feature. Anything entered here will used when searching for related posts. Using phrases with quotes is allowed, but will restrict the related posts to posts including that phrase.', 'relevanssi' ); ?></p>
 	<label for="relevanssi_related_keywords" class="screen-reader-text"><?php esc_html_e( 'Related posts keywords for this post', 'relevanssi' ); ?></label>
-	<p><textarea id="relevanssi_related_keywords" name="relevanssi_related_keywords" cols="30" rows="2"><?php echo esc_html( $related ); ?></textarea></p>
+	<p><textarea id="relevanssi_related_keywords" name="relevanssi_related_keywords" cols="30" rows="2" style="max-width: 100%"><?php echo esc_html( $related ); ?></textarea></p>
 
 	<p><label for="relevanssi_related_include_ids"><?php esc_html_e( 'A comma-separated list of post IDs to use as related posts for this post', 'relevanssi' ); ?></label>:</p>
 	<p><input type="text" id="relevanssi_related_include_ids" name="relevanssi_related_include_ids" value="<?php echo esc_html( $include_ids ); ?>"/></p>
