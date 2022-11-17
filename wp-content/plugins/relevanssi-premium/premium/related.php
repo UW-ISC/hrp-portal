@@ -71,7 +71,12 @@ function relevanssi_related_posts( $post_id = null, $just_objects = false, $no_t
 
 	$settings = get_option( 'relevanssi_related_settings', relevanssi_related_default_settings() );
 
-	$transient_name = 'relevanssi_related_posts_' . $post_id;
+	/**
+	 * Filters the related posts transient cache name.
+	 *
+	 * @param string The transient name, defaults to relevanssi_related_posts_[ID].
+	 */
+	$transient_name = apply_filters( 'relevanssi_related_posts_cache_id', 'relevanssi_related_posts_' . $post_id );
 	if ( $just_objects ) {
 		$transient_name .= '_jo';
 	}

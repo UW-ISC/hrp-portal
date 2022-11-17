@@ -263,21 +263,17 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New major update with awesome features, some improvements and bug fixes::
+                            New update with awesome features, some improvements and bug fixes::
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> New data source type: Nested JSON.</li>
-                                <li><strong>Feature:</strong> JSON authentication.</li>
-                                <li><strong>Feature:</strong> Caching data for non-server-side tables (Excel, CSV, Google sheet, XML, JSON, Nested JSON and PHP array).</li>
-                                <li><strong>Feature:</strong> Auto update cache for non server-side tables (Excel, CSV, Google sheet, XML, JSON, Nested JSON and PHP array).</li>
-                                <li><strong>Feature:</strong> Update manual tables: Replace data within an existing table.</li>
-                                <li><strong>Feature:</strong> Update manual tables: Add data into an existing table.</li>
-                                <li><strong>Feature:</strong> Update manual tables: Replace the entire table with new data.</li>
-                                <li><strong>Improvement:</strong> Improved error handling.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with saving CSS rules in a simple table.</li>
-                                <li><strong>BugFix:</strong> Fixed tab index for Google sheet API in main settings.</li>
+                                <li><strong>Feature:</strong> Creating tables from Excel or CSV from any URL.</li>
+                                <li><strong>Feature:</strong> New option: Include table title in exported Excel file and Copy as well.</li>
+                                <li><strong>Improvement:</strong> Remove unnecessary characters from SQL queries.</li>
+                                <li><strong>Improvement:</strong> Update libraries (Datatables, Table Tools, moment.js).</li>
+                                <li><strong>BugFix:</strong> Fixed issue with new version of Highcharts for axis min and max values.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with editing when responsive mode is used.</li>
                                 <li>Other small bug fixes.</li>
                             </ul>
                         </div>

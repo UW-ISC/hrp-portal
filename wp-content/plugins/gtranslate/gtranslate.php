@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 2.9.13
+Version: 2.9.14
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 Text Domain: gtranslate
@@ -2753,7 +2753,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                 GTranslate::load_defaults($data);
 
                 // add notranslate for addresses
-                $html = str_replace('-address"', 'notranslate -address"', $html);
+                $html = str_replace('-address"', '-address notranslate"', $html);
 
                 include dirname(__FILE__) . '/url_addon/config.php';
                 $server_id = intval(substr(md5(preg_replace('/^www\./', '', $_SERVER['HTTP_HOST'])), 0, 5), 16) % count($servers);
@@ -2830,7 +2830,7 @@ if($data['pro_version'] or $data['enterprise_version']) {
                         $html = $matches[2][0];
 
                         // fix image
-                        $html = str_replace('<img src="https://' . $_SERVER['HTTP_HOST'], '<img src="', $html);
+                        $html = str_replace(' src="https://' . $_SERVER['HTTP_HOST'], ' src="', $html);
 
                         if($data['email_translation_debug']) {
                             file_put_contents(dirname(__FILE__) . '/url_addon/debug.txt', 'Translated PDF HTML: ' . $html . "\n", FILE_APPEND);

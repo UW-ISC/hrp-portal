@@ -65,6 +65,11 @@ function relevanssi_pinning( $hits ) {
 		}
 	}
 
+	$full_search_phrase = esc_sql( trim( $hits[1] ) );
+	if ( ! in_array( $full_search_phrase, $term_list, true ) ) {
+		$term_list[] = $full_search_phrase;
+	}
+
 	/**
 	 * Doing this instead of individual get_post_meta() calls can cut hundreds
 	 * of database queries!

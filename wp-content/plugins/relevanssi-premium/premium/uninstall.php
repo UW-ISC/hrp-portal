@@ -106,6 +106,7 @@ function relevanssi_uninstall() {
 	delete_option( 'relevanssi_trim_click_logs' );
 	delete_option( 'relevanssi_trim_logs' );
 	delete_option( 'relevanssi_txt_col' );
+	delete_option( 'relevanssi_update_translations' );
 	delete_option( 'relevanssi_user_count' );
 	delete_option( 'relevanssi_words' );
 	delete_option( 'relevanssi_wpml_only_current' );

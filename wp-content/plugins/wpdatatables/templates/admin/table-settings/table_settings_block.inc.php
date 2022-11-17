@@ -148,6 +148,26 @@
                             <!-- /input source type selection -->
                         </div>
 
+                        <div class="col-sm-4 wdt-file-location hidden">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('File location', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Please choose a file location (WordPress Media Library or URL from any domain) for CSV or Excel files. Default option is WordPress Media Library.', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <!-- input source type selection -->
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" id="wdt-file-location">
+                                            <option value="wp_media_lib"><?php esc_html_e('WordPress Media Library', 'wpdatatables'); ?></option>
+                                            <option value="wp_any_url"><?php esc_html_e('URL from any domain', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /input source type selection -->
+                        </div>
+
                         <div class="col-sm-6 input-path-block hidden" id="wdt-input-path-block">
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e('Input file path or URL', 'wpdatatables'); ?>
@@ -1497,6 +1517,35 @@
 
                     </div>
                     <!-- /.row -->
+                    <div class="row">
+                        <div class="col-sm-4 m-b-16 table-tools-include-title-block hidden">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Include Table title', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#table-tools-title-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="table-tools-title-hint">
+                                <div class="popover-heading">
+                                    <?php esc_html_e('Include Table title', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php esc_html_e(' If this is enabled, table title will be shown in first row  in the exported files of the Excel and Copy options.(CSV is not supported and on Print and PDF is included.)', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-table-tools-include-title" type="checkbox">
+                                <label for="wdt-table-tools-include-title"
+                                       class="ts-label"><?php esc_html_e('Show table title in export files (Excel and Copy)', 'wpdatatables'); ?></label>
+                            </div>
+
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /Table tools settings -->
