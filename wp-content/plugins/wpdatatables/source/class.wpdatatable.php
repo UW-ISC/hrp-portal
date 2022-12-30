@@ -1247,6 +1247,7 @@ class WPDataTable {
             $dataColumnProperties['searchInSelectBox'] =        !empty($wdtParameters['searchInSelectBox'][$key]) ? $wdtParameters['searchInSelectBox'][$key] : false;
             $dataColumnProperties['searchInSelectBoxEditing'] = !empty($wdtParameters['searchInSelectBoxEditing'][$key]) ? $wdtParameters['searchInSelectBoxEditing'][$key] : false;
             $dataColumnProperties['checkboxesInModal'] =        isset($wdtParameters['checkboxesInModal'][$key]) ? $wdtParameters['checkboxesInModal'][$key] : null;
+            $dataColumnProperties['andLogic'] =                 isset($wdtParameters['andLogic'][$key]) ? $wdtParameters['andLogic'][$key] : null;
             $dataColumnProperties['filterDefaultValue'] =       isset($wdtParameters['filterDefaultValue'][$key]) ? $wdtParameters['filterDefaultValue'][$key] : null;
             $dataColumnProperties['possibleValuesType'] =       !empty($wdtParameters['possibleValuesType'][$key]) ? $wdtParameters['possibleValuesType'][$key] : 'read';
             $dataColumnProperties['possibleValuesAddEmpty'] =   !empty($wdtParameters['possibleValuesAddEmpty'][$key]) ? $wdtParameters['possibleValuesAddEmpty'][$key] : false;
@@ -2195,19 +2196,28 @@ class WPDataTable {
                                         }
                                     }
                                     $j = 0;
-                                    $search .= " (";
+                                    $useAndExactLogic = $wdtParameters['exactFiltering'][$aColumns[$i]] == 1 && $wdtParameters['andLogic'][$aColumns[$i]] == true;
+                                    $search .= $useAndExactLogic ? " (" . $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" : " (";
                                     foreach ($checkboxSearches as $checkboxSearch) {
-                                        if ($j > 0) {
-                                            $search .= " OR ";
-                                        }
-
-                                        if ($wdtParameters['exactFiltering'][$aColumns[$i]] == 1) {
-                                            $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $checkboxSearch . "' ";
+                                        if ($useAndExactLogic) {
+                                            ++$j;
+                                            if (count($checkboxSearches) != $j) {
+                                                $search .= $checkboxSearch . ", ";
+                                            } else {
+                                                $search .= $checkboxSearch . "' ";
+                                            }
                                         } else {
-                                            $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $checkboxSearch . '%');
-                                        }
+                                            if ($j > 0) {
+                                                $search .=  $wdtParameters['andLogic'][$aColumns[$i]] == true ? " AND " : " OR ";
+                                            }
 
-                                        $j++;
+                                            if ($wdtParameters['exactFiltering'][$aColumns[$i]] == 1) {
+                                                $search .= $leftSysIdentifier . $tableName . "{$rightSysIdentifier}.{$leftSysIdentifier}" . $aColumns[$i] . "{$rightSysIdentifier} = '" . $checkboxSearch . "' ";
+                                            } else {
+                                                $search .= $this->getLikeExpression($vendor, $leftSysIdentifier . $tableName . $rightSysIdentifier, $leftSysIdentifier . $aColumns[$i] . $rightSysIdentifier, '%' . $checkboxSearch . '%');
+                                            }
+
+                                            $j++;                                        }
                                     }
                                     $search .= ") ";
                                     break;
@@ -3290,6 +3300,9 @@ class WPDataTable {
             case "dark":
                 $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/dark.css';
                 break;
+            case "raspberry-cream":
+                $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/raspberry-cream.css';
+                break;
             default:
                 $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/material.css';
                 break;
@@ -3342,6 +3355,7 @@ class WPDataTable {
             'searchInSelectBox' => array(),
             'searchInSelectBoxEditing' => array(),
             'checkboxesInModal' => array(),
+            'andLogic' => array(),
             'filterTypes' => array(),
             'foreignKeyRule' => array(),
             'possibleValues' => array(),
@@ -3393,6 +3407,7 @@ class WPDataTable {
                 $returnArray['searchInSelectBox'][$column->orig_header] = isset($column->searchInSelectBox) ? $column->searchInSelectBox : null;
                 $returnArray['searchInSelectBoxEditing'][$column->orig_header] = isset($column->searchInSelectBoxEditing) ? $column->searchInSelectBoxEditing : null;
                 $returnArray['checkboxesInModal'][$column->orig_header] = isset($column->checkboxesInModal) ? $column->checkboxesInModal : null;
+                $returnArray['andLogic'][$column->orig_header] = isset($column->andLogic) ? $column->andLogic : null;
                 $returnArray['foreignKeyRule'][$column->orig_header] = isset($column->foreignKeyRule) ? $column->foreignKeyRule : null;
                 $returnArray['possibleValues'][$column->orig_header] = isset($column->valuesList) ? $column->valuesList : null;
                 $returnArray['possibleValuesAddEmpty'][$column->orig_header] = isset($column->possibleValuesAddEmpty) ? $column->possibleValuesAddEmpty : null;
@@ -3544,6 +3559,9 @@ class WPDataTable {
         }
         if (isset($columnData['checkboxesInModal'])) {
             $params['checkboxesInModal'] = $columnData['checkboxesInModal'];
+        }
+        if (isset($columnData['andLogic'])) {
+            $params['andLogic'] = $columnData['andLogic'];
         }
         if (isset($columnData['possibleValuesType'])) {
             $params['possibleValuesType'] = $columnData['possibleValuesType'];
@@ -4100,8 +4118,9 @@ class WPDataTable {
         }
 
         $currentSkin = $this->getTableSkin();
-        $skinsWithNewTableToolsButtons = ['aqua','purple','dark'];
+        $skinsWithNewTableToolsButtons = ['aqua','purple','dark','raspberry-cream'];
         $tableToolsIncludeHTML = !$this->getTableToolsIncludeHTML();
+        $printBttnText = $currentSkin == 'raspberry-cream' ? '' : __('Print', 'wpdatatables');
         $tableToolsExportTitle = $this->getTableToolsIncludeTitle() ? $this->getName() : null;
 
         $pdfPaperSize = $this->getPdfPaperSize();
@@ -4128,9 +4147,9 @@ class WPDataTable {
                                 'columns'   => ':visible',
                                 'stripHtml' => $tableToolsIncludeHTML
                             ),
-                            'className'     => 'DTTT_button DTTT_button_print',
-                            'title'         => $wdtExportFileName,
-                            'text'          => __('Print', 'wpdatatables'),
+                            'className' => 'DTTT_button DTTT_button_print',
+                            'text' => $printBttnText,
+                            'title' => $wdtExportFileName
                         );
                 }
 
@@ -4279,6 +4298,7 @@ class WPDataTable {
             (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
 
             $obj->dataTableParams->editButtonsDisplayed = $this->getEditButtonsDisplayed();
+            $deleteBttnText = $currentSkin == 'raspberry-cream' ? '' : __('Delete', 'wpdatatables');
 
             /** @var array $editButtons */
             $editButtons = array(
@@ -4292,7 +4312,7 @@ class WPDataTable {
                     'enabled' => false
                 ),
                 'delete' => array(
-                    'text' => __('Delete', 'wpdatatables'),
+                    'text' => $deleteBttnText,
                     'className' => 'delete_table_entry DTTT_button DTTT_button_delete',
                     'enabled' => false
                 )

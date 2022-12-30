@@ -1053,6 +1053,20 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-sm-6 wdt-filtering-enabled-block wdt-and-logic-block">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php esc_html_e('Use AND logic in multiselectbox/checkbox', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                       title="<?php esc_attr_e('Use AND logic instead of OR in multiselectbox/checkbox. This means that checking multiple options restricts the results instead of broadening them.', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="form-group">
+                                    <div class="toggle-switch" data-ts-color="blue">
+                                        <input id="wdt-and-logic" type="checkbox">
+                                        <label for="wdt-and-logic"
+                                               class="ts-label"><?php esc_html_e('Enable AND logic in multiselectbox/checkbox', 'wpdatatables'); ?></label>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <!--/ .row -->
 

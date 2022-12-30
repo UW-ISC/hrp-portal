@@ -33,6 +33,7 @@ class WDTColumn {
     protected $_searchInSelectBoxEditing = 1;
     protected $_filterLabel;
     protected $_checkboxesInModal = false;
+    protected $_andLogic = false;
     protected $_possibleValuesType;
     protected $_possibleValuesAddEmpty = false;
     protected $_possibleValuesAjax = 10;
@@ -64,6 +65,7 @@ class WDTColumn {
         $this->setFilterDefaultValue(WDTTools::defineDefaultValue($properties, 'filterDefaultValue', null));
         $this->setFilterLabel(WDTTools::defineDefaultValue($properties, 'filterLabel', null));
         $this->setCheckboxesInModal(WDTTools::defineDefaultValue($properties, 'checkboxesInModal', false));
+        $this->setAndLogic(WDTTools::defineDefaultValue($properties, 'andLogic', false));
         $this->_possibleValuesType = WDTTools::defineDefaultValue($properties, 'possibleValuesType', '');
         $this->setPossibleValuesAddEmpty(WDTTools::defineDefaultValue($properties, 'possibleValuesAddEmpty', false));
         $this->setPossibleValuesAjax(WDTTools::defineDefaultValue($properties, 'possibleValuesAjax', 10));
@@ -576,6 +578,20 @@ class WDTColumn {
     }
 
     /**
+     * @return bool
+     */
+    public function isAndLogic() {
+        return $this->_andLogic;
+    }
+
+    /**
+     * @param bool $andLogic
+     */
+    public function setAndLogic($andLogic) {
+        $this->_andLogic = $andLogic;
+    }
+
+    /**
      * @return string
      */
     public function getPossibleValuesType() {
@@ -947,6 +963,7 @@ class WDTColumn {
         $jsFilterDef->searchInSelectBox = $this->getSearchInSelectBox();
         $jsFilterDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
         $jsFilterDef->checkboxesInModal = $this->isCheckboxesInModal();
+        $jsFilterDef->andLogic = $this->isAndLogic();
         $jsFilterDef->linkButtonLabel = $this->getLinkButtonLabel();
         $jsFilterDef->rangeSlider = $this->getRangeSlider();
 

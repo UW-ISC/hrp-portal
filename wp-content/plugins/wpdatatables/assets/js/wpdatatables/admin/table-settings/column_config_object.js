@@ -278,6 +278,11 @@ var WDTColumn = function (column, parent_table) {
     this.checkboxesInModal = 0;
 
     /**
+     * Use AND logic in multiselectbox/checkbox filter
+     */
+    this.andLogic = 0;
+
+    /**
      * Open link column in a popup
      */
     this.linkTargetAttribute = '_self';
@@ -323,6 +328,7 @@ var WDTColumn = function (column, parent_table) {
         this.calculateMin = column.calculateMin || 0;
         this.calculateTotal = column.calculateTotal || 0;
         this.checkboxesInModal = column.checkboxesInModal || 0;
+        this.andLogic = column.andLogic || 0;
         this.color = column.color || '';
         this.conditional_formatting = column.conditional_formatting || [];
         this.css_class = column.css_class || '';
@@ -1174,12 +1180,17 @@ WDTColumn.prototype.fillInputs = function () {
             jQuery('#wdt-column-filter-type').selectpicker('val', this.filter_type);
             jQuery('#wdt-column-enable-filter').prop('checked', 1).change();
 
-            if (this.filter_type === 'checkbox' && this.parent_table.filtering_form === 1) {
-                jQuery('#wdt-checkboxes-in-modal').prop('checked', this.checkboxesInModal).change();
+            if (this.filter_type === 'checkbox') {
+                if (this.parent_table.filtering_form === 1)
+                    jQuery('#wdt-checkboxes-in-modal').prop('checked', this.checkboxesInModal).change();
+                jQuery('#wdt-and-logic').prop('checked', this.andLogic).change();
             }
 
             if (jQuery.inArray(this.filter_type, ['select', 'multiselect']) !== -1) {
                 jQuery('#wdt-search-in-selectbox').prop('checked', this.searchInSelectBox).change();
+
+                if (this.filter_type === 'multiselect')
+                    jQuery('#wdt-and-logic').prop('checked', this.andLogic).change();
             }
 
             if (this.filterDefaultValue) {
@@ -1436,6 +1447,8 @@ WDTColumn.prototype.applyChanges = function () {
             jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val').join('|') :
             jQuery('#wdt-filter-default-value-selectpicker').selectpicker('val');
 
+        this.andLogic = jQuery('#wdt-and-logic').is(':checked') ? 1 : 0;
+
         if (this.parent_table.filtering_form === 1) {
             this.checkboxesInModal = ((jQuery('#wdt-checkboxes-in-modal').is(':checked') && this.filter_type === 'checkbox')) ? 1 : 0;
         }
@@ -1480,6 +1493,7 @@ WDTColumn.prototype.getJSON = function () {
         calculateMin: this.calculateMin,
         calculateTotal: this.calculateTotal,
         checkboxesInModal: this.checkboxesInModal,
+        andLogic: this.andLogic,
         color: this.color,
         conditional_formatting: this.conditional_formatting,
         css_class: this.css_class,

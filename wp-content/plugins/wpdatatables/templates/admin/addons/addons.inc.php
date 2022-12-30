@@ -89,7 +89,8 @@
                                            role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                         </a>
                                         <button id="wdt-master-detail"
-                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                                onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                                class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
                                             <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                         </button>
                                         <div class="clear"></div>
@@ -125,7 +126,8 @@
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>
                                     <button id="wdt-powerful-filters"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
                                         <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                     </button>
                                     <div class="clear"></div>
@@ -157,7 +159,8 @@
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>
                                     <button id="reportbuilder"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
                                         <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                     </button>
                                     <div class="clear"></div>
@@ -193,7 +196,8 @@
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>
                                     <button id="wdt-formidable-integration"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
                                         <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                     </button>
                                     <div class="clear"></div>
@@ -226,7 +230,8 @@
                                        role="button"><?php esc_html_e('Learn more ', 'wpdatatables'); ?>
                                     </a>
                                     <button id="wdt-gravity-integration"
-                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                            onclick="window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"
+                                            class="btn btn-sm btn-icon-text btn-primary wdt-checkout-button">
                                         <i class="wpdt-icon-shopping-bag"></i><?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                     </button>
                                     <div class="clear"></div>
