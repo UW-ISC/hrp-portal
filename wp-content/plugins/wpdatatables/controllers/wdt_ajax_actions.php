@@ -31,6 +31,7 @@ function wdtGetAjaxData() {
     $globalSearchColumn = array();
     $searchInSelectBox = array();
     $searchInSelectBoxEditing = array();
+    $andLogic = array();
     $foreignKeyRule = array();
     $idColumn = '';
     $linkTargetAttribute = array();
@@ -127,6 +128,7 @@ function wdtGetAjaxData() {
         $globalSearchColumn[$column->orig_header] = isset($advancedSettings->globalSearchColumn) ? $advancedSettings->globalSearchColumn : null;
         $searchInSelectBox[$column->orig_header] = isset($advancedSettings->searchInSelectBox) ? $advancedSettings->searchInSelectBox : null;
         $searchInSelectBoxEditing[$column->orig_header] = isset($advancedSettings->searchInSelectBoxEditing) ? $advancedSettings->searchInSelectBoxEditing : null;
+        $andLogic[$column->orig_header] = isset($advancedSettings->andLogic) ? $advancedSettings->andLogic : null;
         $linkTargetAttribute[$column->orig_header] = isset($advancedSettings->linkTargetAttribute) ? $advancedSettings->linkTargetAttribute : null;
         $linkNoFollowAttribute[$column->orig_header] = isset($advancedSettings->linkNoFollowAttribute) ? $advancedSettings->linkNoFollowAttribute : null;
         $linkNoreferrerAttribute[$column->orig_header] = isset($advancedSettings->linkNoreferrerAttribute) ? $advancedSettings->linkNoreferrerAttribute : null;
@@ -207,6 +209,7 @@ function wdtGetAjaxData() {
         'globalSearchColumn'  => $globalSearchColumn,
         'searchInSelectBox'   => $searchInSelectBox,
         'searchInSelectBoxEditing' => $searchInSelectBoxEditing,
+        'andLogic'            => $andLogic,
         'filterTypes'         => $columnFilterTypes,
         'foreignKeyRule'      => $foreignKeyRule,
         'idColumn'            => $idColumn,

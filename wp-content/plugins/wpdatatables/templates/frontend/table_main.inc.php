@@ -27,6 +27,9 @@ if ($this->getFilteringForm()) {
            data-described-by='<?php echo esc_attr($this->getId()) ?>_desc'
            data-wpdatatable_id="<?php echo esc_attr($this->getWpId()); ?>
 ">
+        <?php if (is_admin() || $this->getTableSkin() == 'raspberry-cream') { ?>
+            <colgroup id="<?php echo 'colgrup-' . esc_attr($this->getId()) ?>"></colgroup>
+        <?php } ?>
 
         <!-- Table header -->
         <?php include WDT_TEMPLATE_PATH . 'frontend/table_head.inc.php'; ?>

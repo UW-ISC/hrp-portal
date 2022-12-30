@@ -1520,7 +1520,7 @@ var wpdatatable_config = {
         jQuery('.wpDataTablesWrapper .dataTables_length .length_menu').selectpicker();
     },
     /**
-     * Helper method that fills in the columns in he column popup
+     * Helper method that fills in the columns in the column popup
      * from the wpdatatable_config.columns array
      */
     fillColumnsBlock: function(){

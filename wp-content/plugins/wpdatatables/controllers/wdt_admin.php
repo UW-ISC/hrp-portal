@@ -264,6 +264,7 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-skin-aqua', WDT_ASSETS_PATH . 'css/wdt-skins/aqua.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-purple', WDT_ASSETS_PATH . 'css/wdt-skins/purple.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-dark', WDT_ASSETS_PATH . 'css/wdt-skins/dark.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-skin-raspberry-cream', WDT_ASSETS_PATH . 'css/wdt-skins/raspberry-cream.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
@@ -428,9 +429,6 @@ function wdtDashboardEnqueue()
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-doc-js');
     wp_enqueue_script('wdt-dashboard-psl', WDT_ROOT_URL . 'assets/js/psl/psl.min.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-dashboard-tms-store-checkout', WDT_JS_PATH . 'wpdatatables/wdt.store.checkout.js', array('jquery'), 1.12, true);
-
-    wp_localize_script('wdt-dashboard-tms-store-checkout', 'tmsStore', ['url' => WDT_STORE_URL]);
 
     do_action('wdt_enqueue_on_dashboard_page');
 }
@@ -504,9 +502,6 @@ function wdtAddOnsEnqueue()
 
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-doc-js');
-    wp_enqueue_script('wdt-addons-tms-store-checkout', WDT_JS_PATH . 'wpdatatables/wdt.store.checkout.js', array('jquery'), 1.12, true);
-
-    wp_localize_script('wdt-addons-tms-store-checkout', 'tmsStore', ['url' => WDT_STORE_URL]);
 }
 
 /**

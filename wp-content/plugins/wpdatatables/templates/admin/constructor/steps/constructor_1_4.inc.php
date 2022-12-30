@@ -15,7 +15,7 @@
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Table name', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                   title="<?php esc_attr_e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>?"></i>
+                   title="<?php esc_attr_e('What is the header of the table that will be visible to the site visitors?', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="form-group">
                 <div class="fg-line">

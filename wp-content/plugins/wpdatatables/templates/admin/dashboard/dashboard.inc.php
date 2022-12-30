@@ -263,17 +263,15 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with awesome features, some improvements and bug fixes::
+                            New update with awesome features, some improvements and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Creating tables from Excel or CSV from any URL.</li>
-                                <li><strong>Feature:</strong> New option: Include table title in exported Excel file and Copy as well.</li>
-                                <li><strong>Improvement:</strong> Remove unnecessary characters from SQL queries.</li>
-                                <li><strong>Improvement:</strong> Update libraries (Datatables, Table Tools, moment.js).</li>
-                                <li><strong>BugFix:</strong> Fixed issue with new version of Highcharts for axis min and max values.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with editing when responsive mode is used.</li>
+                                <li><strong>Feature:</strong> A new light skin - Raspberry Cream.</li>
+                                <li><strong>Feature:</strong> Use 'AND' logic to narrow down your filtering results instead of the only previously available 'OR' logic.</li>
+                                <li><strong>BugFix:</strong> Fixed file location on table save changes.</li>
+                                <li><strong>BugFix:</strong> Removed empty space below excel-like tables.</li>
                                 <li>Other small bug fixes.</li>
                             </ul>
                         </div>
@@ -511,7 +509,8 @@
                         <?php if (!defined('WDT_MD_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="wdt-master-detail"
-                                        class="btn btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                        class="btn btn-icon-text btn-primary wdt-checkout-button"
+                                        onclick=" window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&amp;utm_medium=addons&amp;utm_content=wpdt&amp;utm_campaign=wpdt','_blank')">
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
@@ -552,7 +551,8 @@
                         <?php if (!defined('WDT_PF_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="wdt-powerful-filters"
-                                        class="btn btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                        class="btn btn-icon-text btn-primary wdt-checkout-button"
+                                        onclick=" window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&amp;utm_medium=addons&amp;utm_content=wpdt&amp;utm_campaign=wpdt','_blank')">
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
@@ -592,7 +592,8 @@
                         <?php if (!defined('WDT_RB_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="reportbuilder"
-                                        class="btn btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                        class="btn btn-icon-text btn-primary wdt-checkout-button"
+                                        onclick=" window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&amp;utm_medium=addons&amp;utm_content=wpdt&amp;utm_campaign=wpdt','_blank')">
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
@@ -633,7 +634,8 @@
                         <?php if (!defined('WDT_FF_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="wdt-formidable-integration"
-                                        class="btn btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                        class="btn btn-icon-text btn-primary wdt-checkout-button"
+                                        onclick=" window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&amp;utm_medium=addons&amp;utm_content=wpdt&amp;utm_campaign=wpdt','_blank')">
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
@@ -673,7 +675,8 @@
                         <?php if (!defined('WDT_GF_ROOT_PATH')) { ?>
                             <div class="wdt-addons-links text-center">
                                 <button id="wdt-gravity-integration"
-                                        class="btn btn-icon-text btn-primary wdt-checkout-button tms-store-checkout">
+                                        class="btn btn-icon-text btn-primary wdt-checkout-button"
+                                        onclick=" window.open('https://wpdatatables.com/addons/?utm_source=wpdt-premium&amp;utm_medium=addons&amp;utm_content=wpdt&amp;utm_campaign=wpdt','_blank')">
                                     <i class="wpdt-icon-shopping-bag"></i>
                                     <?php esc_html_e('Purchase', 'wpdatatables'); ?>
                                 </button>
@@ -710,7 +713,7 @@
                                 <?php esc_html_e('Appointments and Events WordPress Booking Plugin', 'wpdatatables'); ?>
                             </div>
                             <p class="wpdt-text wpdt-font m-b-0">
-                                <?php esc_html_e('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! 40,000+ businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage 500,000+ appointments and events worldwide each month.', 'wpdatatables'); ?></p>
+                                <?php esc_html_e('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! 50,000+ businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage 500,000+ appointments and events worldwide each month.', 'wpdatatables'); ?></p>
                             <p>
                                 <span class="wdt-stars-container stars-100">★★★★★</span>
                                 <span class="wdt-rating"> <?php esc_html_e('Rating: 4.8 - ‎123 reviews') ?></span>
