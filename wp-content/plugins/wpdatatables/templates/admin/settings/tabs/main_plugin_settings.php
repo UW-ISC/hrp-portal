@@ -115,6 +115,7 @@
                             <option value="aqua"><?php esc_html_e('Aqua', 'wpdatatables'); ?></option>
                             <option value="purple"><?php esc_html_e('Purple', 'wpdatatables'); ?></option>
                             <option value="dark"><?php esc_html_e('Dark', 'wpdatatables'); ?></option>
+                            <option value="raspberry-cream"><?php esc_html_e('Raspberry Cream', 'wpdatatables'); ?></option>
                         </select>
                     </div>
                 </div>

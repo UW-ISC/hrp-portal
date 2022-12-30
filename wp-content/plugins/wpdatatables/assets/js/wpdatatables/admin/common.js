@@ -23,12 +23,12 @@ var wdtHideTooltip = function () {
 };
 
 /**
-  * Extend jQuery to use our custom function for tooltip
-  */
+ * Extend jQuery to use our custom function for tooltip
+ */
 jQuery.fn.wdtBootstrapTooltip = jQuery.fn.tooltip;
 /**
 
-/**
+ /**
  * Extend jQuery to use AnimateCSS
  */
 jQuery.fn.extend({
@@ -454,7 +454,7 @@ function wdtNotify(title, message, type) {
  * @param customUploader
  */
 
-    function openCustomMediaUploader(customUploader = null) {
+function openCustomMediaUploader(customUploader = null) {
     (function ($) {
         let attachment = '';
 
@@ -482,6 +482,4 @@ function wdtNotify(title, message, type) {
 
         customUploader.open();
     })(jQuery);
-    }
-
-
+}

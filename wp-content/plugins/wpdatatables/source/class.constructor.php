@@ -256,6 +256,7 @@ class wpDataTableConstructor
             'searchInSelectBox' => 1,
             'searchInSelectBoxEditing' => 1,
             'globalSearchColumn' => 1,
+            'andLogic' => 0,
         );
 
         $columnProperties['create_block'] = $columnProperties['create_block'] . ' ' . $nullable;

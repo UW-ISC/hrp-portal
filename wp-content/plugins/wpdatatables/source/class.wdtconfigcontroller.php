@@ -334,7 +334,7 @@ class WDTConfigController {
         $wdtVar9 = isset($table->var9) ?
             sanitize_text_field($table->var9) : '';
 
-        $tableSkin = in_array($table->tableSkin, ['material','light','graphite','aqua','purple','dark']) ? $table->tableSkin : get_option('wdtBaseSkin');
+        $tableSkin = in_array($table->tableSkin, ['material','light','graphite','aqua','purple','dark', 'raspberry-cream']) ? $table->tableSkin : get_option('wdtBaseSkin');
 
         // Preparing the config
         $tableConfig = array(
@@ -661,9 +661,9 @@ class WDTConfigController {
         if (isset($jsonParams->url)){
             $sanitizedParams->url = trim($jsonParams->url);
             $sanitizedParams->url = sanitize_url($sanitizedParams->url);
-            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
-                $sanitizedParams->url = trim($jsonParams->url);
-                $sanitizedParams->url = sanitize_url(wp_kses_post($sanitizedParams->url));
+            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+                $sanitizedParams->url = wp_kses_post($sanitizedParams->url);
+            }
         } else {
             $sanitizedParams->url = '';
         }
@@ -797,6 +797,7 @@ class WDTConfigController {
                 $column->calculateMin = (int)$column->calculateMin;
                 $column->calculateTotal = (int)$column->calculateTotal;
                 $column->checkboxesInModal = (int)$column->checkboxesInModal;
+                $column->andLogic = (int)$column->andLogic;
                 $column->color = sanitize_text_field($column->color);
                 $column->dateInputFormat = sanitize_text_field($column->dateInputFormat);
                 $column->decimalPlaces = isset($column->decimalPlaces) ? (int)$column->decimalPlaces : get_option('wdtDecimalPlaces');
@@ -1223,6 +1224,8 @@ class WDTConfigController {
             $feColumn ? $feColumn->searchInSelectBoxEditing : 1;
         $columnConfig['advanced_settings']['checkboxesInModal'] =
             $feColumn ? $feColumn->checkboxesInModal : null;
+        $columnConfig['advanced_settings']['andLogic'] =
+            $feColumn ? $feColumn->andLogic : null;
         $columnConfig['advanced_settings']['editingDefaultValue'] =
             $feColumn ? $feColumn->editingDefaultValue : null;
         $columnConfig['advanced_settings']['dateInputFormat'] =
@@ -1404,6 +1407,8 @@ class WDTConfigController {
             $advancedSettings->searchInSelectBoxEditing : 1;
         $feColumn->checkboxesInModal = isset($advancedSettings->checkboxesInModal) ?
             $advancedSettings->checkboxesInModal : 0;
+        $feColumn->andLogic = isset($advancedSettings->andLogic) ?
+            $advancedSettings->andLogic : 0;
         $feColumn->possibleValuesType = isset($advancedSettings->possibleValuesType) ?
             $advancedSettings->possibleValuesType : 'read';
         $feColumn->editingDefaultValue = isset($advancedSettings->editingDefaultValue) ?

@@ -361,6 +361,10 @@
     margin: 0 !important;
 }
 
+.wpdt-c.wdt-skin-light .wpDataTableFilterSection .wdt_checkbox_option input[type="checkbox"] {
+    top: 2px;
+}
+
 .wpdt-c.wdt-skin-light .wpDataTablesFilter .wpDataTableFilterSection input.form-control,
 #wdt-filter-widget .wdt-skin-light .wpDataTableFilterSection input.form-control {
     height: 35px !important;
