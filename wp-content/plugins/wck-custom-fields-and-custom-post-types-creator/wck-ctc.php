@@ -113,33 +113,33 @@ function wck_ctc_create_taxonomy(){
         foreach( $cts as $ct ){
 
             $labels = array(
-                'name' => _x( $ct['plural-label'], 'taxonomy general name' ),
-                'singular_name' => _x( $ct['singular-label'], 'taxonomy singular name'),
-                'search_items' => __( $ct['search-items'] ? $ct['search-items'] : 'Search '.$ct['plural-label'], 'wck' ),
-                'popular_items' => __( $ct['popular-items'] ? $ct['popular-items'] : "Popular ".$ct['plural-label'], 'wck' ),
-                'all_items' => __( $ct['all-items'] ? $ct['all-items'] : "All ".$ct['plural-label'], 'wck' ) ,
-                'parent_item' => __( $ct['parent-item'] ? $ct['parent-item'] : "Parent ".$ct['singular-label'], 'wck' ),
-                'parent_item_colon' => __( $ct['parent-item-colon'] ? $ct['parent-item-colon'] : "Parent ".$ct['singular-label'].':', 'wck' ),
-                'edit_item' => __( $ct['edit-item'] ? $ct['edit-item'] : "Edit ".$ct['singular-label'], 'wck' ),
-                'update_item' => __( $ct['update-item'] ? $ct['update-item'] : "Update ".$ct['singular-label'], 'wck' ),
-                'add_new_item' =>  __( $ct['add-new-item'] ? $ct['add-new-item'] : "Add New ". $ct['singular-label'], 'wck' ),
-                'new_item_name' => __( $ct['new-item-name'] ? $ct['new-item-name'] :  "New ". $ct['singular-label']. ' Name', 'wck' ),
-                'separate_items_with_commas' => __( $ct['separate-items-with-commas'] ? $ct['separate-items-with-commas'] :  "Separate  ". strtolower( $ct['plural-label'] ). ' with commas', 'wck' ),
-                'add_or_remove_items' => __( $ct['add-or-remove-items'] ? $ct['add-or-remove-items'] : "Add or remove " .strtolower( $ct['plural-label'] ), 'wck' ),
-                'choose_from_most_used' => __( $ct['choose-from-most-used'] ? $ct['choose-from-most-used'] : "Choose from the most used " .strtolower( $ct['plural-label'] ), 'wck' ),
-                'menu_name' => $ct['menu-name'] ? $ct['menu-name'] : $ct['plural-label']
+                'name' => _x( $ct['plural-label'], 'taxonomy general name', "wck" ), //phpcs:ignore
+                'singular_name' => _x( $ct['singular-label'], 'taxonomy singular name', "wck"), //phpcs:ignore
+                'search_items' => __( $ct['search-items'] ? $ct['search-items'] : 'Search '.$ct['plural-label'], 'wck' ), //phpcs:ignore
+                'popular_items' => __( $ct['popular-items'] ? $ct['popular-items'] : "Popular ".$ct['plural-label'], 'wck' ), //phpcs:ignore
+                'all_items' => __( $ct['all-items'] ? $ct['all-items'] : "All ".$ct['plural-label'], 'wck' ) , //phpcs:ignore
+                'parent_item' => __( $ct['parent-item'] ? $ct['parent-item'] : "Parent ".$ct['singular-label'], 'wck' ), //phpcs:ignore
+                'parent_item_colon' => __( $ct['parent-item-colon'] ? $ct['parent-item-colon'] : "Parent ".$ct['singular-label'].':', 'wck' ), //phpcs:ignore
+                'edit_item' => __( $ct['edit-item'] ? $ct['edit-item'] : "Edit ".$ct['singular-label'], 'wck' ), //phpcs:ignore
+                'update_item' => __( $ct['update-item'] ? $ct['update-item'] : "Update ".$ct['singular-label'], 'wck' ), //phpcs:ignore
+                'add_new_item' =>  __( $ct['add-new-item'] ? $ct['add-new-item'] : "Add New ". $ct['singular-label'], 'wck' ), //phpcs:ignore
+                'new_item_name' => __( $ct['new-item-name'] ? $ct['new-item-name'] :  "New ". $ct['singular-label']. ' Name', 'wck' ), //phpcs:ignore
+                'separate_items_with_commas' => __( $ct['separate-items-with-commas'] ? $ct['separate-items-with-commas'] :  "Separate  ". strtolower( $ct['plural-label'] ). ' with commas', 'wck' ), //phpcs:ignore
+                'add_or_remove_items' => __( $ct['add-or-remove-items'] ? $ct['add-or-remove-items'] : "Add or remove " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore
+                'choose_from_most_used' => __( $ct['choose-from-most-used'] ? $ct['choose-from-most-used'] : "Choose from the most used " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore
+                'menu_name' => $ct['menu-name'] ? $ct['menu-name'] : $ct['plural-label'] //phpcs:ignore
             );
 
             if( version_compare( $wp_version, '4.3', '>=' ) ) {
-                $labels_v43 = array( 'no_terms' => __( !empty( $ct['no_terms'] ) ? $ct['no_terms'] : "No Terms" ) );
+                $labels_v43 = array( 'no_terms' => __( !empty( $ct['no_terms'] ) ? $ct['no_terms'] : "No Terms", "wck" ) ); //phpcs:ignore
 
                 array_push( $labels, $labels_v43 );
             }
 
             if( version_compare( $wp_version, '4.4', '>=' ) ) {
                 $labels_v44 = array(
-                    'items_list_navigation' => __( !empty( $ct['items_list_navigation'] ) ? $ct['items_list_navigation'] : "Items List Navigation" ),
-                    'items_list' => __( !empty( $ct['items_list'] ) ? $ct['items_list'] : "Items List" )
+                    'items_list_navigation' => __( !empty( $ct['items_list_navigation'] ) ? $ct['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore
+                    'items_list' => __( !empty( $ct['items_list'] ) ? $ct['items_list'] : "Items List", "wck" ) //phpcs:ignore
                 );
 
                 foreach( $labels_v44 as $label_v44 ) {
@@ -288,13 +288,13 @@ function ctc_flush_rules(){
 add_action("wck_refresh_list_wck_ctc", "wck_ctc_after_refresh_list");
 add_action("wck_refresh_entry_wck_ctc", "wck_ctc_after_refresh_list");
 function wck_ctc_after_refresh_list(){
-    echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=ctc-page&updated=true' .'";</script>';
+    echo '<script type="text/javascript">window.location="'. esc_url_raw( get_admin_url() ) . 'admin.php?page=ctc-page&updated=true' .'";</script>';
 }
 
 /* advanced labels container for add form */
 add_action( "wck_before_add_form_wck_ctc_element_5", 'wck_ctc_form_label_wrapper_start' );
 function wck_ctc_form_label_wrapper_start(){
-    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#ctc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \''. __( 'Show Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Hide Advanced Label Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. __( 'Hide Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Show Advanced Label Options', 'wck' ) .'\');">'. __( 'Show Advanced Label Options', 'wck' ) .'</a></li>';
+    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#ctc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \''. esc_html__( 'Show Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Hide Advanced Label Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. esc_html__( 'Hide Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Show Advanced Label Options', 'wck' ) .'\');">'. esc_html__( 'Show Advanced Label Options', 'wck' ) .'</a></li>';
     echo '<li id="ctc-advanced-label-options-container" style="display:none;"><ul>';
 }
 
@@ -306,7 +306,7 @@ function wck_ctc_form_label_wrapper_end(){
 /* advanced options container for add form */
 add_action( "wck_before_add_form_wck_ctc_element_21", 'wck_ctc_form_wrapper_start' );
 function wck_ctc_form_wrapper_start(){
-    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#ctc-advanced-options-container\').toggle(); if( jQuery(this).text() == \''. __( 'Show Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Hide Advanced Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. __( 'Hide Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Show Advanced Options', 'wck' ) .'\');">'. __( 'Show Advanced Options', 'wck' ) .'</a></li>';
+    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#ctc-advanced-options-container\').toggle(); if( jQuery(this).text() == \''. esc_html__( 'Show Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Hide Advanced Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. esc_html__( 'Hide Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Show Advanced Options', 'wck' ) .'\');">'. esc_html__( 'Show Advanced Options', 'wck' ) .'</a></li>';
     echo '<li id="ctc-advanced-options-container" style="display:none;"><ul>';
 }
 
@@ -384,7 +384,7 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                    src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
+                    src="<?php echo esc_url( plugins_url('/images/banner_pro.png', __FILE__) ) ?>?v=1" width="254" height="448"
                     alt="WCK-PRO"/></a>
         <?php
     }
@@ -401,7 +401,7 @@ function wck_ctc_side_box_trp()
 {
     ?>
     <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img
-                src="<?php echo plugins_url('/images/banner_trp.png', __FILE__) ?>?v=1" width="254"
+                src="<?php echo esc_url( plugins_url('/images/banner_trp.png', __FILE__) ) ?>?v=1" width="254"
                 alt="TranslatePress"/></a>
     <h4>Easily translate your entire WordPress website</h4>
     <p><a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank">Translate</a> your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.<br/><br/>

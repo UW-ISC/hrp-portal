@@ -99,6 +99,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <a href="#real_media_library"><strong>Support for the &#8220;Real Media Library&#8221; Plugin</strong></a>
 </li>
 <li>
+<a href="#catfolders"><strong>Support for the &#8220;CatFolders – WP Media Folders&#8221; Plugin</strong></a>
+</li>
+<li>
 <a href="#mla_gallery_templates"><strong>Style and Markup Templates</strong></a>
 </li>
 <li style="list-style-type:none"><ul class="mla-doc-toc-list">
@@ -3907,12 +3910,12 @@ You can use the "Photonic" screen of the Insert Media dialog to build the displa
 </p>
 <h3>Support for the &#8220;Real Media Library&#8221; Plugin</h3>
 <p>
-The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real Media Library plugin directory page" target="_blank">WordPress Real Media Library: Media Library Folder & File Manager</a> plugin helps you with media management. Organize thousands of uploaded files into folders, collections and galleries. You can add parameters to the <code>[mla_gallery]</code> shortcode to filter the gallery display by RML folder, collection or gallery ID. There are three <code>[mla_gallery]</code> shortcode parameters for this purpose:
+The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real Media Library plugin directory page" target="_blank">WordPress Real Media Library: Media Library Folder & File Manager</a> plugin helps you with media management. Organize thousands of uploaded files into folders, collections and galleries. You can add parameters to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific RML folder, collection or gallery ID. There are three <code>[mla_gallery]</code> shortcode parameters for this purpose:
 </p>
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_rml_folder</td>
-<td>the name of the RML folder, collection or gallery from which to source items gor the gallery display. You can find the ID of a folder easily in your media library. Simply select a folder, afterwards click the three-dots icon in the folder toolbar. A dialog opens and in the bottom right corner you can find a number which represents the folder ID.</td>
+<td>the ID of the RML folder, collection or gallery from which to source items for the gallery display. You can find the ID of a folder easily in your media library. Simply select a folder, afterwards click the three-dots icon in the folder toolbar. A dialog opens and in the bottom right corner you can find a number which represents the folder ID.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_rml_include_children</td>
@@ -3925,6 +3928,23 @@ The <a href="https://wordpress.org/plugins/real-media-library-lite/" title="Real
 </table>
 <p>
 You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in an RML gallery.
+<a name="catfolders"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;CatFolders – WP Media Folders&#8221; Plugin</h3>
+<p>
+The <a href="https://wordpress.org/plugins/catfolders/" title="CatFolders – WP Media Folders plugin directory page" target="_blank">CatFolders – WP Media Folders</a> free/lite and pro plugins help you categorize media files better and faster. You can add a parameter to the <code>[mla_gallery]</code> shortcode to filter the gallery display by a specific folder ID. There is one <code>[mla_gallery]</code> shortcode parameter for this purpose:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_catf_folder</td>
+<td>the name of the folder from which to source items for the gallery display. To find the ID of a folder, right-click on the folder name to display the context menu, then click "Properties". In the Image Folder display you will see the folder ID. For the <code>mla_catf_folder</code> value do not include the pound sign ('#'), just the folder number.</td>
+</tr>
+</table>
+<p>
+You can use the other <code>[mla_gallery]</code> data selection parameters to further refine your query. For example, you can use <code>post_mime_type=application/pdf</code> to display only the PDF documents in a folder, or use <code>application_category=abc</code> to display only the images assigned to Att. Category "abc" in the folder.
 <a name="mla_gallery_templates"></a>
 </p>
 <p>
