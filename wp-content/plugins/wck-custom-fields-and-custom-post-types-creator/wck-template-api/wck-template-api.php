@@ -77,7 +77,7 @@ if( !function_exists( 'the_cfc_field' ) ){
 		}
 
 		if ( $do_echo ){
-			echo $current_field;
+			echo wp_kses_post( $current_field );
 		} else { 
 			return $current_field;
 		}

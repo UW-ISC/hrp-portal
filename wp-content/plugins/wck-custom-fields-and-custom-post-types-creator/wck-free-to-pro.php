@@ -49,9 +49,9 @@ function wck_free_to_pro_stp( $hook ) {
 	
 ?>
 	<div class="wck-wrap wck-info-wrap">
-		<img class="stp-logo" src="<?php echo plugins_url( 'images/swift-template-logo.png' , __FILE__ ); ?>" alt="Swift Templates" />
-		<h1><?php _e( 'Swift Templates', 'wck' ); ?></h1>
-		<p class="wck-info-text"><?php _e( 'A straight forward alternative to WordPress templates', 'wck' ); ?></p>
+		<img class="stp-logo" src="<?php echo esc_url( plugins_url( 'images/swift-template-logo.png' , __FILE__ ) ); ?>" alt="Swift Templates" />
+		<h1><?php esc_html_e( 'Swift Templates', 'wck' ); ?></h1>
+		<p class="wck-info-text"><?php esc_html_e( 'A straight forward alternative to WordPress templates', 'wck' ); ?></p>
 		<hr />
 		<h2>You're not a programmer. You keep delaying work with any of the templates in fear of making a bigger mess than where you started.</h2>
 		<p><strong>When you're starting out it's just painful. You would do anything BUT custom code your WordPress templates:</strong></p>
@@ -83,16 +83,16 @@ function wck_free_to_pro_stp( $hook ) {
 		
 		<h2>Screenshots</h2>
 		<p><strong>1. Creating a Custom Post Type Archive page</strong></p>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/swift-templates.png' , __FILE__ ); ?>" alt="Custom Post Type Archive page" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/swift-templates.png' , __FILE__ ) ); ?>" alt="Custom Post Type Archive page" />
 		
 		<p><strong>2. Build your Archive and Single Templates for any Custom Post Type by simply selecting from the list of available variables. </strong></p>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/swift-templates-code.png' , __FILE__ ); ?>" alt="Swift Templates - Archive and Single Templates" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/swift-templates-code.png' , __FILE__ ) ); ?>" alt="Swift Templates - Archive and Single Templates" />
 		
 		<p><strong>3. Create individual templates for pages, posts or custom post types that include all your custom fields.</strong></p>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/swift_single_team_page.png' , __FILE__ ); ?>" alt="individual page template" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/swift_single_team_page.png' , __FILE__ ) ); ?>" alt="individual page template" />
 		
 		<p><strong>3. Here's how the Team page will look in the front-end.</strong> It now includes the post content as well as the all custom fields data.</p>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/team-page-final.jpg' , __FILE__ ); ?>" alt="team page" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/team-page-final.jpg' , __FILE__ ) ); ?>" alt="team page" />
 		
 		<h3 class="wck-free-to-pro-call-to-action">Swift Templates is available in <br/><a class="button button-primary button-free-to-pro" href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCK-FreetoPRO">WordPress Creation Kit PRO</a></h3>
 		<p class="wck-free-to-pro-call-to-action">* Simply deactivate the free version before installing WCK PRO and all your existing settings/setup will be ported over.</p>	
@@ -115,9 +115,9 @@ function wck_free_to_pro_fep( $hook ) {
 		
 ?>
 	<div class="wck-wrap wck-info-wrap">
-		<img class="stp-logo" src="<?php echo plugins_url( 'images/fep_logo.png' , __FILE__ ); ?>" alt="Front End Posting" />
-		<h1><?php _e( 'Front End Posting', 'wck' ); ?></h1>
-		<p class="wck-info-text"><?php _e( 'An easy way to add and edit content from the front-end', 'wck' ); ?></p>
+		<img class="stp-logo" src="<?php echo esc_url( plugins_url( 'images/fep_logo.png' , __FILE__ ) ); ?>" alt="Front End Posting" />
+		<h1><?php esc_html_e( 'Front End Posting', 'wck' ); ?></h1>
+		<p class="wck-info-text"><?php esc_html_e( 'An easy way to add and edit content from the front-end', 'wck' ); ?></p>
 		<hr />
 		<h2>Wouldn't it be nice to allow your users to post content directly from the front-end without ever seeing the backend?</h2>
 		<p><strong>If you've been looking for an easy way to:</strong></p>
@@ -153,11 +153,11 @@ function wck_free_to_pro_fep( $hook ) {
 		<p class="wck-free-to-pro-call-to-action">* Simply deactivate the free version before installing WCK PRO and all your existing settings/setup will be ported over.</p>	
 			
 		<h2>Screenshots</h2>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/FEP_form_setup.png' , __FILE__ ); ?>" alt="form setup screenshot" />
-		<img class="screenshot" src="<?php echo plugins_url( 'images/FEP_form_fields.png' , __FILE__ ); ?>" alt="form fields screenshot" />
-		<img class="screenshot" src="<?php echo plugins_url( 'images/FEP_form_example.png' , __FILE__ ); ?>" alt="fep screenshot" /><br/>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/FEP_dashboard.png' , __FILE__ ); ?>" alt="fep dashboard" /><br/>
-		<img class="screenshot" src="<?php echo plugins_url( 'images/FEP_dashboard_edit.png' , __FILE__ ); ?>" alt="fep dashboard" /><br/>
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/FEP_form_setup.png' , __FILE__ ) ); ?>" alt="form setup screenshot" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/FEP_form_fields.png' , __FILE__ ) ); ?>" alt="form fields screenshot" />
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/FEP_form_example.png' , __FILE__ ) ); ?>" alt="fep screenshot" /><br/>
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/FEP_dashboard.png' , __FILE__ ) ); ?>" alt="fep dashboard" /><br/>
+		<img class="screenshot" src="<?php echo esc_url( plugins_url( 'images/FEP_dashboard_edit.png' , __FILE__ ) ); ?>" alt="fep dashboard" /><br/>
 		
 		<h3 class="wck-free-to-pro-call-to-action">Frontend Posting is available in <br/><a class="button button-primary button-free-to-pro" href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCK-FreetoPRO">WordPress Creation Kit PRO</a></h3>
 		<p class="wck-free-to-pro-call-to-action">* Simply deactivate the free version before installing WCK PRO and all your existing settings/setup will be ported over.</p>	

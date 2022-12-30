@@ -26,9 +26,9 @@ add_action( 'init', 'wck_cfc_create_custom_fields_cpt' );
 function wck_cfc_create_custom_fields_cpt(){
 	if( is_admin() && current_user_can( 'edit_theme_options' ) ){
 		$labels = array(
-			'name' => _x( 'WCK Custom Meta Boxes', 'post type general name'),
-			'singular_name' => _x( 'Custom Meta Box', 'post type singular name'),
-			'add_new' => _x( 'Add New', 'Custom Meta Box' ),
+			'name' => _x( 'WCK Custom Meta Boxes', 'post type general name', "wck"),
+			'singular_name' => _x( 'Custom Meta Box', 'post type singular name', "wck"),
+			'add_new' => _x( 'Add New', 'Custom Meta Box', "wck" ),
 			'add_new_item' => __( "Add New Meta Box", "wck" ),
 			'edit_item' => __( "Edit Meta Box", "wck" ) ,
 			'new_item' => __( "New Meta Box", "wck" ),
@@ -204,7 +204,7 @@ function wck_cfc_create_box(){
 /* advanced label options container for update form */
 add_action( "wck_before_add_form_wck_cfc_args_element_0", 'wck_cfc_description_for_args_box' );
 function wck_cfc_description_for_args_box(){
-	echo '<div class="cfc-message"><p>'. __( 'Enter below the arguments for the meta box.', 'wck' ) .'</p></div>';
+	echo '<div class="cfc-message"><p>'. esc_html__( 'Enter below the arguments for the meta box.', 'wck' ) .'</p></div>';
 }
 
 /* add css classes on update form. Allows us to show/hide elements based on field type select value */
@@ -224,7 +224,7 @@ function wck_cfc_element_class($wck_element_class, $meta, $results, $element_id)
 /* add refresh to page */
 add_action("wck_refresh_list_wck_cfc", "wck_cfc_after_refresh_list");
 function wck_cfc_after_refresh_list(){
-	echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=cfc-page&updated=true' .'";</script>';
+	echo '<script type="text/javascript">window.location="'. esc_url_raw( get_admin_url() ) . 'admin.php?page=cfc-page&updated=true' .'";</script>';
 }
 
 /* hook to create custom meta boxes */
@@ -720,17 +720,17 @@ add_action("manage_wck-meta-box_posts_custom_column",  "wck_cfc_custom_columns",
 function wck_cfc_custom_columns( $column_name, $post_id ){
 	if( $column_name == 'cfc-id' ){
 		$post_id_arg = get_post_meta( $post_id, 'wck_cfc_post_id_arg', true );
-		echo $post_id_arg;
+		echo esc_html($post_id_arg);
 	}
 
 	if( $column_name == 'cfc-post-type' ){
 		$post_type_arg = get_post_meta( $post_id, 'wck_cfc_post_type_arg', true );
-		echo $post_type_arg;
+		echo esc_html( $post_type_arg );
 	}
 
 	if( $column_name == 'cfc-page-template' ){
 		$page_template_arg = get_post_meta( $post_id, 'wck_cfc_page_template_arg', true );
-		echo $page_template_arg;
+		echo esc_html( $page_template_arg );
 	}
 
 	/* only in pro version */
@@ -738,7 +738,7 @@ function wck_cfc_custom_columns( $column_name, $post_id ){
 		if( $column_name == 'cfc-nested-repeater' ){
 			$box_args = get_post_meta( $post_id, 'wck_cfc_args', true );
 			if( !empty( $box_args[0]['nested'] ) )
-				echo $box_args[0]['nested'];
+				echo esc_html( $box_args[0]['nested'] );
 		}
 	}
 }
@@ -755,7 +755,7 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
+                src="<?php echo esc_url( plugins_url('/images/banner_pro.png', __FILE__) ) ?>?v=1" width="254" height="448"
                 alt="WCK-PRO"/></a>
     <?php
     }
@@ -772,7 +772,7 @@ function wck_cfc_side_box_trp()
 {
     ?>
     <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img
-                src="<?php echo plugins_url('/images/banner_trp.png', __FILE__) ?>?v=1" width="254"
+                src="<?php echo esc_url( plugins_url('/images/banner_trp.png', __FILE__) ) ?>?v=1" width="254"
                 alt="TranslatePress"/></a>
 	<h4>Easily translate your entire WordPress website</h4>
 	<p><a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank">Translate</a> your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.<br/><br/>
@@ -933,8 +933,8 @@ function wck_edit_button_for_field_slug( $element, $meta, $details ){
 add_action( 'wp_ajax_wck_generate_slug', 'wck_generate_slug' );
 function wck_generate_slug(){
 	if( !empty( $_POST['field_title'] ) ){
-		$slug = Wordpress_Creation_Kit::wck_generate_slug( $_POST['field_title'] );
-		die( $slug );
+		$slug = Wordpress_Creation_Kit::wck_generate_slug( sanitize_text_field( $_POST['field_title'] ) );
+		die( esc_html( $slug ) );
 	}
 	die('failed');
 }
@@ -1044,26 +1044,26 @@ function wck_unserialized_page_callback(){
 	$per_batch = 30;
 	$step    = isset( $_GET['step'] )        			? absint( $_GET['step'] )   : 0;
 	$total   = isset( $_GET['total'] )       			? absint( $_GET['total'] )  : false;
-	$finish   = isset( $_GET['wckbatch-complete'] ) 	? esc_url( $_GET['wckbatch-complete'] )  : false;
+	$finish   = isset( $_GET['wckbatch-complete'] ) 	? sanitize_text_field( $_GET['wckbatch-complete'] )  : false;
 	$processed = round( ( $step * $per_batch ), 0 );
 	if( $processed > $total )
 		$processed = $total;
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Processing Unserialized Fields', 'wck' ); ?></h2>
+		<h2><?php esc_html_e( 'Processing Unserialized Fields', 'wck' ); ?></h2>
 
 		<?php if( !$finish ): ?>
 			<div id="wck-unserialized-processing">
-				<p><?php _e( 'The process has started, please be patient. This could take several minutes. You will be automatically redirected when the process is finished.', 'wck' ); ?></p>
+				<p><?php esc_html_e( 'The process has started, please be patient. This could take several minutes. You will be automatically redirected when the process is finished.', 'wck' ); ?></p>
 				<?php if( ! empty( $total ) ) : ?>
-					<p><strong><?php printf( __( '%d posts of %d processed', 'wck' ), $processed, $total ); ?></strong></p>
+					<p><strong><?php echo esc_html( sprintf( __( '%d posts of %d processed', 'wck' ), $processed, $total ) ); ?></strong></p>
 				<?php endif; ?>
 			</div>
 			<script type="text/javascript">
-				document.location.href = "edit.php?action=wck_unbatch_process&step=<?php echo $step; ?>&total=<?php echo $total; ?>&_wpnonce=<?php echo wp_create_nonce( 'wck-unbatch-nonce' ); ?>";
+				document.location.href = "edit.php?action=wck_unbatch_process&step=<?php echo esc_js( $step ); ?>&total=<?php echo esc_js( $total ); ?>&_wpnonce=<?php echo esc_js( wp_create_nonce( 'wck-unbatch-nonce' ) ); ?>";
 			</script>
 		<?php else: ?>
-			<p><?php _e( 'The process has finished.', 'wck' ); ?></p>
+			<p><?php esc_html_e( 'The process has finished.', 'wck' ); ?></p>
 			<?php update_option( 'wck_update_to_unserialized', 'no' )  ?>
 		<?php endif; ?>
 	</div>
@@ -1088,7 +1088,7 @@ function wck_cfc_process_unserialized_batch() {
 		return;
 	}
 
-	if( ! wp_verify_nonce( $_GET['_wpnonce'], 'wck-unbatch-nonce' ) ) {
+	if( !isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( sanitize_text_field( $_GET['_wpnonce'] ), 'wck-unbatch-nonce' ) ) {
 		return;
 	}
 

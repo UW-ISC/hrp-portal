@@ -124,15 +124,15 @@ function wck_sas_welcome($hook){
         if( version_compare(PHP_VERSION, '5.3.0') < 0 ) { ?>
             <div class="notice-error notice">
                 <p>
-                    <?php _e('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has serious security and performance issues. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0','wck'); ?>
+                    <?php esc_html_e('<strong>You are using a very old version of PHP</strong> (5.2.x or older) which has serious security and performance issues. Please ask your hoster to provide you with an upgrade path to 5.6 or 7.0','wck'); ?>
                 </p>
             </div>
         <?php }
 ?>
 		<div class="wrap about-wrap">
-			<div class="wck-badge <?php echo esc_attr($plugin_name_class); ?>"><span><?php printf( __( 'Version %s' ), esc_html( $plugin_version ) ); ?></span></div>
-			<h1><?php printf( __( 'Welcome to %s', 'wck' ), $plugin_name ); ?></h1>
-			<div class="about-text"><?php _e( 'WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ', 'wck' ); ?></div>
+			<div class="wck-badge <?php echo esc_attr($plugin_name_class); ?>"><span><?php echo esc_html( sprintf( __( 'Version %s', "wck" ), esc_html( $plugin_version ) ) ); ?></span></div>
+			<h1><?php echo esc_html( sprintf( __( 'Welcome to %s', 'wck' ), $plugin_name ) ); ?></h1>
+			<div class="about-text"><?php echo wp_kses_post( 'WCK helps you create <strong>repeater custom fields, custom post types</strong> and <strong>taxonomies</strong> in just a couple of clicks, directly from the WordPress admin interface. WCK content types will improve the usability of the sites you build, making them easy to manage by your clients. ', 'wck' ); ?></div>
 		</div>
 
 <?php
@@ -151,7 +151,7 @@ function wck_sas_quickintro($hook){
 
             <div>
                 <div style="float:right">
-                    <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img src="<?php echo plugins_url( './images/pb-trp-cross-promotion.png', __FILE__ ); ?>" alt="TranslatePress Logo"/></a>
+                    <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img src="<?php echo esc_url( plugins_url( './images/pb-trp-cross-promotion.png', __FILE__ ) ); ?>" alt="TranslatePress Logo"/></a>
                 </div>
                 <div>
                     <h3>Easily translate your entire WordPress website</h3>
@@ -164,38 +164,38 @@ function wck_sas_quickintro($hook){
 
 
 			<div class="changelog">
-				<h2><?php _e( 'Quick Start-Up Guide', 'wck' ); ?></h2>
+				<h2><?php esc_html_e( 'Quick Start-Up Guide', 'wck' ); ?></h2>
 
 				<div class="feature-section">
 
-					<h4><?php _e( 'Custom Fields Creator', 'wck' ); ?></h4>
-					<p><?php _e( 'WordPress Creation Kit Pro has support for a wide list of custom fields: WYSIWYG Editor, Upload Field, Date, User, Country, Text Input, Textarea, Drop-Down, Select, Checkboxes, Radio Buttons', 'wck' ); ?></p>
-					<p><?php _e( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Fields_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
+					<h4><?php esc_html_e( 'Custom Fields Creator', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'WordPress Creation Kit Pro has support for a wide list of custom fields: WYSIWYG Editor, Upload Field, Date, User, Country, Text Input, Textarea, Drop-Down, Select, Checkboxes, Radio Buttons', 'wck' ); ?></p>
+					<p><?php echo wp_kses_post( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Fields_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
 
-					<h4><?php _e( 'Post Type Creator', 'wck' ); ?></h4>
-					<p><?php _e( 'Create & manage all your custom content types', 'wck' ); ?></p>
-					<p><?php _e( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Post_Type_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
+					<h4><?php esc_html_e( 'Post Type Creator', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'Create & manage all your custom content types', 'wck' ); ?></p>
+					<p><?php echo wp_kses_post( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Post_Type_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
 					
-					<h4><?php _e( 'Taxonomy Creator', 'wck' ); ?></h4>
-					<p><?php _e( 'Create new taxonomies for filtering your content', 'wck' ); ?></p>
-					<p><?php _e( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Taxonomy_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
+					<h4><?php esc_html_e( 'Taxonomy Creator', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'Create new taxonomies for filtering your content', 'wck' ); ?></p>
+					<p><?php echo wp_kses_post( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Custom_Taxonomy_Creator" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
 					
-					<h4><?php _e( 'Swift Templates (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
-					<p><?php _e( 'Build your front-end templates directly from the WordPress admin UI, without writing any PHP code.', 'wck' ); ?></p>
-					<p><?php _e( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Swift_Templates" target="_blank">here</a> on how to easily display registered custom post types, custom fields and taxonomies in your theme.', 'wck' ); ?></p>		
+					<h4><?php echo wp_kses_post( 'Swift Templates (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'Build your front-end templates directly from the WordPress admin UI, without writing any PHP code.', 'wck' ); ?></p>
+					<p><?php echo wp_kses_post( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/#Swift_Templates" target="_blank">here</a> on how to easily display registered custom post types, custom fields and taxonomies in your theme.', 'wck' ); ?></p>
 					
-					<h4><?php _e( 'Front-End Posting (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
-					<p><?php _e( 'Create and edit posts/pages or custom posts directly from the front-end.', 'wck' ); ?></p>					
-					<p><?php _e( 'Available shortcodes:', 'wck' ); ?></p>					
+					<h4><?php echo wp_kses_post( 'Front-End Posting (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'Create and edit posts/pages or custom posts directly from the front-end.', 'wck' ); ?></p>
+					<p><?php esc_html_e( 'Available shortcodes:', 'wck' ); ?></p>
 					<ul>
-						<li><?php _e( '[fep form_name="front-end-post-name"] - displays your form in the front-end', 'wck' ); ?></li>
-						<li><?php _e( '[fep-dashboard] - the quick-dashboard allows: simple profile updates, editing/deletion of posts, pages and custom post types.', 'wck' ); ?></li>
-						<li><?php _e( '[fep-lilo] - login/logout/register widget with the simple usage of a shortcode. Can be added in a page or text widget.', 'wck' ); ?></li>
+						<li><?php esc_html_e( '[fep form_name="front-end-post-name"] - displays your form in the front-end', 'wck' ); ?></li>
+						<li><?php esc_html_e( '[fep-dashboard] - the quick-dashboard allows: simple profile updates, editing/deletion of posts, pages and custom post types.', 'wck' ); ?></li>
+						<li><?php esc_html_e( '[fep-lilo] - login/logout/register widget with the simple usage of a shortcode. Can be added in a page or text widget.', 'wck' ); ?></li>
 					</ul>
-					<p><?php _e( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/frontend-posting/" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>					
+					<p><?php echo wp_kses_post( 'Access documentation <a href="http://www.cozmoslabs.com/docs/wordpress-creation-kit-documentation/frontend-posting/" target="_blank">here</a> about how to display them in your templates.', 'wck' ); ?></p>
 					
-					<h4><?php _e( 'Option Pages (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
-					<p><?php _e( 'The Options Page Creator Allows you to create a new menu item called "Options"(for example) which can hold advanced custom field groups. Perfect for theme options or a simple UI for your custom plugin (like a simple testimonials section in the front-end).', 'wck' ); ?></p>
+					<h4><?php echo wp_kses_post( 'Option Pages (available in the <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree-SAS" target="_blank">PRO</a> version)', 'wck' ); ?></h4>
+					<p><?php esc_html_e( 'The Options Page Creator Allows you to create a new menu item called "Options"(for example) which can hold advanced custom field groups. Perfect for theme options or a simple UI for your custom plugin (like a simple testimonials section in the front-end).', 'wck' ); ?></p>
 
 				</div>
 			</div>
@@ -227,7 +227,7 @@ function wck_sas_serial_notification(){
     if ( strpos( $status, 'about' ) === 0 ) $notif = '<p class="serial-notification yellow">' . __( 'Your WordPress Creation Kit serial number is about to expire. To continue receiving access to product downloads, automatic updates and support please update your serial number for another year from <a href="http://www.cozmoslabs.com/account/?utm_source=WCK-sas&utm_medium=dashboard&utm_campaign=WCK-Renewal" target="_blank"><strong>your account page</strong></a>.', 'wck' ) . ' </p>';
 
     if( !empty( $notif ) )
-	    echo $notif;
+	    echo wp_kses_post( $notif );
 }
 
 /* Check if serial is valid on Start and Settings page load. 
@@ -312,7 +312,7 @@ class wck_add_serial_notices{
 
                 // Check that the user hasn't already clicked to ignore the message
                 if ( ! get_user_meta($user_id, $this->pluginPrefix.'_dismiss_notification' ) || $force_show ) {
-                    echo $finalMessage = apply_filters($this->pluginPrefix.'_notification_message','<div class="error wck-serial-notification" >'.$this->notificaitonMessage.'</div>', $this->notificaitonMessage);
+                    echo wp_kses_post( apply_filters($this->pluginPrefix.'_notification_message','<div class="error wck-serial-notification" >'.$this->notificaitonMessage.'</div>', $this->notificaitonMessage) );
                 }
             }
 
@@ -350,19 +350,19 @@ if (file_exists ($wck_premium_update . 'update-checker.php')) {
          $wck_version = 'hobbyist';
 
     if ($wck_serial_status == 'notFound' || $wck_serial_status == 'noserial' || $wck_serial_status == '') {
-        new wck_add_serial_notices('wck', sprintf(__('<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>', 'wck'), "<a href='admin.php?page=sas-page'>", "</a>", "<a href='https://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase' target='_blank' class='button-primary'>", "</a>"), 'wck_serial_status');
+        new wck_add_serial_notices('wck', sprintf(__('<p>Your <strong>WordPress Creation Kit</strong> serial number is invalid or missing. <br/>Please %1$sregister your copy%2$s of WCK to receive access to automatic updates and support. Need a license key? %3$sPurchase one now%4$s</p>', 'wck'), "<a href='admin.php?page=sas-page'>", "</a>", "<a href='https://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-SN-Purchase' target='_blank' class='button-primary'>", "</a>"), 'wck_serial_status'); //phpcs:ignore
     } elseif ($wck_serial_status == 'expired') {
         /* on our plugin pages do not add the dismiss button for the expired notification*/
         $wck_notifications = WCK_Plugin_Notifications::get_instance();
         if( $wck_notifications->is_plugin_page() )
-            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s</p>', 'wck');
+            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s</p>', 'wck'); //phpcs:ignore
         else
-            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>', 'wck');
+            $message = __('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> licence has expired. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %5$sDismiss%6$s</p>', 'wck'); //phpcs:ignore
         new wck_add_serial_notices('wck_expired', sprintf( $message, "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal' target='_blank'>", "</a>", "<a href='". esc_url( "https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal") ."' target='_blank' class='button-primary'>", "</a>", "<a href='" . esc_url( add_query_arg('wck_expired_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
     } elseif (strpos($wck_serial_status, 'aboutToExpire') === 0) {
         $serial_status_parts = explode( '#', $wck_serial_status );
         $date = $serial_status_parts[1];
-        new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='". esc_url( "https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal" ) ."' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . esc_url( add_query_arg('wck_about_to_expire_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status');
+        new wck_add_serial_notices('wck_about_to_expire', sprintf(__('<p style="position:relative;">Your <strong>WordPress Creation Kit</strong> serial number is about to expire on %5$s. <br/>Please %1$sRenew Your Licence%2$s to continue receiving access to product downloads, automatic updates and support. %3$sRenew now %4$s %6$sDismiss%7$s</p>', 'wck'), "<a href='https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal'>", "</a>", "<a href='". esc_url( "https://www.cozmoslabs.com/account/?utm_source=WCK&utm_medium=dashboard&utm_campaign=WCK-Renewal" ) ."' target='_blank' class='button-primary'>", "</a>", $date, "<a href='" . esc_url( add_query_arg('wck_about_to_expire_dismiss_notification', '0') ) . "' class='wck-dismiss-notification' style='position:absolute; right:0px; top:50%; margin-top:-7px;'>", "</a>"), 'wck_serial_status'); //phpcs:ignore
     }
 
 	/* change serial field type to password */

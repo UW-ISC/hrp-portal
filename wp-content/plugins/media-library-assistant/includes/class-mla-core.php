@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.04';
+	const CURRENT_MLA_VERSION = '3.05';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -1951,9 +1951,12 @@ class MLACore {
 		if ( function_exists( 'ACP' ) ) {
 			$legacy_version = version_compare( ACP()->get_version(), '5.0.0', '<' );
 
-			if ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) {
-				// Load the latest version, with bulk edit changes
+			if ( version_compare( ACP()->get_version(), '6.0', '>=' ) ) {
+				// Load the latest version, with PHP 7.2 changes
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support.php' );
+			} elseif ( version_compare( ACP()->get_version(), '4.5', '>=' ) ) {
+				// Load the interim version, with bulk edit support
+				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-45.php' );
 			} elseif ( version_compare( ACP()->get_version(), '4.3', '>=' ) ) {
 				// Load the interim version, with namespace support, without bulk edit support
 				require_once( MLA_PLUGIN_PATH . 'includes/class-mla-admin-columns-pro-support-44.php' );
@@ -2050,22 +2053,16 @@ class MLA_Checklist_Walker extends Walker_Category {
 	}
 }// Class MLA_Checklist_Walker
 
-/*
- * Custom Taxonomies and WordPress objects.
- */
+// Custom Taxonomies and WordPress objects.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-objects.php' );
 add_action( 'init', 'MLAObjects::mla_build_taxonomies', 5 );
 add_action( 'init', 'MLAObjects::initialize', 0x7FFFFFFF );
 
-/*
- * MIME Type functions; some filters required in all modes.
- */
+// MIME Type functions; some filters required in all modes.
 require_once( MLA_PLUGIN_PATH . 'includes/class-mla-mime-types.php' );
 add_action( 'init', 'MLAMime::initialize', 0x7FFFFFFF );
 
-/*
- * Admin Columns plugin support
- */
+// Admin Columns plugin support
 add_filter( 'cac/storage_models', 'MLACore::admin_columns_support_deprecated', 10, 2 );
 add_action( 'ac/list_screens', 'MLACore::register_list_screen', 10, 0 );
 ?>

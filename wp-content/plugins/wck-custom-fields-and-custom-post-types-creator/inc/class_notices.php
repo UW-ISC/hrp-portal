@@ -244,10 +244,10 @@ Class WCK_Plugin_Notifications {
     public function is_plugin_page() {
         if( !empty( $this->pluginPages ) ){
             foreach ( $this->pluginPages as $pluginPage ){
-                if( ! empty( $_GET['page'] ) && false !== strpos( $_GET['page'], $pluginPage ) )
+                if( ! empty( $_GET['page'] ) && false !== strpos( sanitize_text_field( $_GET['page'] ), $pluginPage ) )
                     return true;
 
-                if( ! empty( $_GET['post_type'] ) && false !== strpos( $_GET['post_type'], $pluginPage ) )
+                if( ! empty( $_GET['post_type'] ) && false !== strpos( sanitize_text_field( $_GET['post_type'] ), $pluginPage ) )
                     return true;
 
                 if( ! empty( $_GET['post'] ) && false !== strpos( get_post_type( (int)$_GET['post'] ), $pluginPage ) )
