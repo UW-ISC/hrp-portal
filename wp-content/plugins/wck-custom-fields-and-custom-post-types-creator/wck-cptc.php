@@ -3,14 +3,14 @@
 
 
 $args = array(
-    'page_title' => __( 'WCK Post Type Creator', 'wck' ),
-    'menu_title' => __( 'Post Type Creator', 'wck' ),
-    'capability' => 'edit_theme_options',
-    'menu_slug' => 'cptc-page',
-    'page_type' => 'submenu_page',
+    'page_title'  => __( 'WCK Post Type Creator', 'wck' ),
+    'menu_title'  => __( 'Post Type Creator', 'wck' ),
+    'capability'  => 'edit_theme_options',
+    'menu_slug'   => 'cptc-page',
+    'page_type'   => 'submenu_page',
     'parent_slug' => 'wck-page',
-    'priority' => 8,
-    'page_icon' => plugins_url('/images/wck-32x32.png', __FILE__)
+    'priority'    => 8,
+    'page_icon'   => plugins_url('/images/wck-32x32.png', __FILE__)
 );
 $cptc_page = new WCK_Page_Creator( $args );
 
@@ -117,13 +117,13 @@ function wck_cptc_create_box(){
 
         /* set up the box arguments */
         $args = array(
-            'metabox_id' => 'option_page',
+            'metabox_id'    => 'option_page',
             'metabox_title' => __( 'Custom Post Type Creation', 'wck' ),
-            'post_type' => 'cptc-page',
-            'meta_name' => 'wck_cptc',
-            'meta_array' => $cpt_creation_fields,
-            'context' 	=> 'option',
-            'sortable' => false
+            'post_type'     => 'cptc-page',
+            'meta_name'     => 'wck_cptc',
+            'meta_array'    => $cpt_creation_fields,
+            'context'       => 'option',
+            'sortable'      => false
         );
 
         /* create the box */
@@ -143,27 +143,27 @@ function wck_cptc_create_cpts(){
         foreach( $cpts as $cpt ){
 
             $labels = array(
-                'name' => _x( $cpt['plural-label'], 'post type general name'),
-                'singular_name' => _x( $cpt['singular-label'], 'post type singular name'),
-                'add_new' => _x( $cpt['add-new'] ? $cpt['add-new'] : 'Add New', strtolower( $cpt['singular-label'] ) ),
-                'add_new_item' => __( $cpt['add-new-item'] ? $cpt['add-new-item'] : "Add New ".$cpt['singular-label']),
-                'edit_item' => __( $cpt['edit-item'] ? $cpt['edit-item'] : "Edit ".$cpt['singular-label'], 'wck' ) ,
-                'new_item' => __( $cpt['new-item'] ? $cpt['new-item'] : "New ".$cpt['singular-label'], 'wck' ),
-                'all_items' => __( $cpt['all-items'] ? $cpt['all-items'] : "All ".$cpt['plural-label'] , 'wck'),
-                'view_item' => __( !empty( $cpt['view-item'] ) ? $cpt['view-item'] : "View ".$cpt['singular-label'] , 'wck'),
-                'search_items' => __( $cpt['search-items'] ? $cpt['search-items'] : "Search ".$cpt['plural-label'], 'wck' ),
-                'not_found' =>  __( $cpt['not-found'] ? $cpt['not-found'] : "No ". strtolower( $cpt['plural-label'] ) ." found", 'wck' ),
-                'not_found_in_trash' => __( $cpt['not-found-in-trash'] ? $cpt['not-found-in-trash'] :  "No ". strtolower( $cpt['plural-label'] ) ." found in Trash", 'wck' ),
-                'parent_item_colon' => __( !empty( $cpt['parent-item-colon'] ) ? $cpt['parent-item-colon'] :  "Parent Page", 'wck' ),
-                'menu_name' => $cpt['menu-name'] ? $cpt['menu-name'] : $cpt['plural-label']
+                'name'               => _x( $cpt['plural-label'], 'post type general name', "wck"), //phpcs:ignore
+                'singular_name'      => _x( $cpt['singular-label'], 'post type singular name', "wck"), //phpcs:ignore
+                'add_new'            => _x( $cpt['add-new'] ? $cpt['add-new'] : 'Add New', strtolower( $cpt['singular-label'] ), "wck" ), //phpcs:ignore
+                'add_new_item'       => __( $cpt['add-new-item'] ? $cpt['add-new-item'] : "Add New ".$cpt['singular-label'], "wck"), //phpcs:ignore
+                'edit_item'          => __( $cpt['edit-item'] ? $cpt['edit-item'] : "Edit ".$cpt['singular-label'], 'wck' ), //phpcs:ignore
+                'new_item'           => __( $cpt['new-item'] ? $cpt['new-item'] : "New ".$cpt['singular-label'], 'wck' ), //phpcs:ignore
+                'all_items'          => __( $cpt['all-items'] ? $cpt['all-items'] : "All ".$cpt['plural-label'] , 'wck'), //phpcs:ignore
+                'view_item'          => __( !empty( $cpt['view-item'] ) ? $cpt['view-item'] : "View ".$cpt['singular-label'] , 'wck'), //phpcs:ignore
+                'search_items'       => __( $cpt['search-items'] ? $cpt['search-items'] : "Search ".$cpt['plural-label'], 'wck' ), //phpcs:ignore
+                'not_found'          => __( $cpt['not-found'] ? $cpt['not-found'] : "No ". strtolower( $cpt['plural-label'] ) ." found", 'wck' ), //phpcs:ignore
+                'not_found_in_trash' => __( $cpt['not-found-in-trash'] ? $cpt['not-found-in-trash'] :  "No ". strtolower( $cpt['plural-label'] ) ." found in Trash", 'wck' ), //phpcs:ignore
+                'parent_item_colon'  => __( !empty( $cpt['parent-item-colon'] ) ? $cpt['parent-item-colon'] :  "Parent Page", 'wck' ), //phpcs:ignore
+                'menu_name'          => $cpt['menu-name'] ? $cpt['menu-name'] : $cpt['plural-label']
             );
 
             if( version_compare( $wp_version, '4.3', '>=' ) ) {
                 $labels_v43 = array(
-                    'featured_image' => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image" ),
-                    'set_featured_image' => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image" ),
-                    'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image" ),
-                    'use_featured_image' => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image" )
+                    'featured_image'        => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image", "wck" ), //phpcs:ignore
+                    'set_featured_image'    => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image", "wck" ), //phpcs:ignore
+                    'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image", "wck" ), //phpcs:ignore
+                    'use_featured_image'    => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image", "wck" ) //phpcs:ignore
                 );
 
                 foreach( $labels_v43 as $label_v43 ) {
@@ -173,12 +173,12 @@ function wck_cptc_create_cpts(){
 
             if( version_compare( $wp_version, '4.4', '>=' ) ) {
                 $labels_v44 = array(
-                    'archives' => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives" ),
-                    'insert_into_item' => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'] ),
-                    'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'] ),
-                    'filter_items_list' => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List" ),
-                    'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation" ),
-                    'items_list' => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List" )
+                    'archives'              => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives", "wck" ), //phpcs:ignore
+                    'insert_into_item'      => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'], "wck" ), //phpcs:ignore
+                    'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'], "wck" ), //phpcs:ignore
+                    'filter_items_list'     => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List", "wck" ), //phpcs:ignore
+                    'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore
+                    'items_list'            => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List", "wck" ) //phpcs:ignore
                 );
 
                 foreach( $labels_v44 as $label_v44 ) {
@@ -187,15 +187,15 @@ function wck_cptc_create_cpts(){
             }
 
             $args = array(
-                'labels' => $labels,
-                'public' => $cpt['public'] == 'false' ? false : true,
-                'description'	=> $cpt['description'],
-                'show_ui' => $cpt['show-ui'] == 'false' ? false : true,
+                'labels'            => $labels,
+                'public'            => $cpt['public'] == 'false' ? false : true,
+                'description'       => $cpt['description'],
+                'show_ui'           => $cpt['show-ui'] == 'false' ? false : true,
                 'show_in_nav_menus' => !empty( $cpt['show-in-nav-menus'] ) && $cpt['show-in-nav-menus'] == 'false' ? false : true,
-                'has_archive' => $cpt['has-archive'] == 'false' ? false : true,
-                'hierarchical' => $cpt['hierarchical'] == 'false' ? false : true,
-                'supports' => explode( ', ', $cpt['supports'] )	,
-                'show_in_rest' => !empty($cpt['show-in-rest']) ? $cpt['show-in-rest'] : false,
+                'has_archive'       => $cpt['has-archive'] == 'false' ? false : true,
+                'hierarchical'      => $cpt['hierarchical'] == 'false' ? false : true,
+                'supports'          => explode( ', ', $cpt['supports'] ),
+                'show_in_rest'      => !empty($cpt['show-in-rest']) ? $cpt['show-in-rest'] : false,
             );
 
             if( !empty( $cpt['show-in-menu'] ) ){
@@ -247,7 +247,7 @@ function cptc_flush_rules(){
 /* advanced labels container for add form */
 add_action( "wck_before_add_form_wck_cptc_element_7", 'wck_cptc_form_label_wrapper_start' );
 function wck_cptc_form_label_wrapper_start(){
-    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \''. __( 'Show Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Hide Advanced Label Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. __( 'Hide Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. __( 'Show Advanced Label Options', 'wck' ) .'\');">'. __('Show Advanced Label Options', 'wck' ) .'</a></li>';
+    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-label-options-container\').toggle(); if( jQuery(this).text() == \''. esc_html__( 'Show Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Hide Advanced Label Options', 'wck' ) .'\');  else if( jQuery(this).text() == \''. esc_html__( 'Hide Advanced Label Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__( 'Show Advanced Label Options', 'wck' ) .'\');">'. esc_html__('Show Advanced Label Options', 'wck' ) .'</a></li>';
     echo '<li id="cptc-advanced-label-options-container" style="display:none;"><ul>';
 }
 
@@ -259,7 +259,7 @@ function wck_cptc_form_label_wrapper_end(){
 /* advanced options container for add form */
 add_action( "wck_before_add_form_wck_cptc_element_28", 'wck_cptc_form_wrapper_start' );
 function wck_cptc_form_wrapper_start(){
-    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-container\').toggle(); if( jQuery(this).text() == \''. __('Show Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \''. __('Hide Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. __('Show Advanced Options', 'wck' ) .'\');">'. __('Show Advanced Options', 'wck' ) .'</a></li>';
+    echo '<li><a href="javascript:void(0)" onclick="jQuery(\'#cptc-advanced-options-container\').toggle(); if( jQuery(this).text() == \''. esc_html__('Show Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\'Hide Advanced Options\');  else if( jQuery(this).text() == \''. esc_html__('Hide Advanced Options', 'wck' ) .'\' ) jQuery(this).text(\''. esc_html__('Show Advanced Options', 'wck' ) .'\');">'. esc_html__('Show Advanced Options', 'wck' ) .'</a></li>';
     echo '<li id="cptc-advanced-options-container" style="display:none;"><ul>';
 }
 
@@ -329,7 +329,7 @@ function wck_cptc_display_adv_wrapper_end( $form, $i ){
 add_action("wck_refresh_list_wck_cptc", "wck_cptc_after_refresh_list");
 add_action("wck_refresh_entry_wck_cptc", "wck_cptc_after_refresh_list");
 function wck_cptc_after_refresh_list(){
-    echo '<script type="text/javascript">window.location="'. get_admin_url() . 'admin.php?page=cptc-page&updated=true' .'";</script>';
+    echo '<script type="text/javascript">window.location="'. esc_url_raw( get_admin_url() ) . 'admin.php?page=cptc-page&updated=true' .'";</script>';
 }
 
 /* Add side metaboxes */
@@ -344,7 +344,7 @@ if( !file_exists( dirname(__FILE__).'/wck-stp.php' ) ) {
     {
         ?>
         <a href="http://www.cozmoslabs.com/wck-custom-fields-custom-post-types-plugin/?utm_source=wpbackend&utm_medium=clientsite&utm_campaign=WCKFree"><img
-                    src="<?php echo plugins_url('/images/banner_pro.png', __FILE__) ?>?v=1" width="254" height="448"
+                    src="<?php echo esc_url( plugins_url('/images/banner_pro.png', __FILE__) ) ?>?v=1" width="254" height="448"
                     alt="WCK-PRO"/></a>
         <?php
     }
@@ -361,7 +361,7 @@ function wck_cptc_side_box_trp()
 {
     ?>
     <a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank"><img
-                src="<?php echo plugins_url('/images/banner_trp.png', __FILE__) ?>?v=1" width="254"
+                src="<?php echo esc_url( plugins_url('/images/banner_trp.png', __FILE__) ) ?>?v=1" width="254"
                 alt="TranslatePress"/></a>
     <h4>Easily translate your entire WordPress website</h4>
     <p><a href="https://wordpress.org/plugins/translatepress-multilingual/" target="_blank">Translate</a> your Custom Post Types and Custom Fields with a WordPress translation plugin that anyone can use.<br/><br/>

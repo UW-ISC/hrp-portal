@@ -71,6 +71,14 @@
  * opened on 11/18/2015 by "Thrive Internet Marketing".
  * https://wordpress.org/support/topic/bulk-addition-of-image-alt-tags-to-woocommerce-product-images/
  *
+ * Enhanced for support topic "Woocommerce product tags?"
+ * opened on 11/12/2016 by "gyulai.zoltan".
+ * https://wordpress.org/support/topic/woocommerce-product-tags-2/
+ *
+ * Enhanced for support topic "Maping Image ALT Tags to Product Meta Title"
+ * opened on 12/6/2016 by "webpresencech".
+ * https://wordpress.org/support/topic/maping-image-alt-tags-to-product-meta-title/
+ *
  * Enhanced for support topic "Regenerate Bulk ALT TEXT with Product Name + Product Category + Keyword"
  * opened on 2/21/2017 by "bueyfx".
  * https://wordpress.org/support/topic/regenerate-bulk-alt-text-with-product-name-product-category-keyword/
@@ -96,7 +104,7 @@
  * https://wordpress.org/support/topic/adding-images-to-product/
  *
  * @package WooCommerce Fixit
- * @version 2.10
+ * @version 2.11
  */
 
 /*
@@ -104,7 +112,7 @@ Plugin Name: WooCommerce Fixit
 Plugin URI: http://davidlingren.com/
 Description: Adds "product:" and "product_terms:" custom substitution prefixes and adds a Tools/Woo Fixit submenu with buttons to perform a variety of MLA/WooCommerce repair and enhancement operations.
 Author: David Lingren
-Version: 2.10
+Version: 2.11
 Author URI: http://davidlingren.com/
 
 Copyright 2014-2021 David Lingren
@@ -137,7 +145,7 @@ class Woo_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '2.10';
+	const CURRENT_VERSION = '2.11';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets and scripts
@@ -1042,7 +1050,7 @@ class Woo_Fixit {
 	 * @return	array	Updated array of links for the Plugin
 	 */
 	public static function add_plugin_links_filter( $links, $file ) {
-		if ( $file == 'woofixit.php' ) {
+		if ( 0 === strpos( $file, 'woofixit' ) ) {
 			$tools_link = sprintf( '<a href="%s">%s</a>', admin_url( 'tools.php?page=' . self::SLUG_PREFIX . 'tools' ), 'Tools' );
 			array_unshift( $links, $tools_link );
 		}
@@ -2843,7 +2851,7 @@ VALUES ( {$attachment},'_wp_attachment_image_alt','{$text}' )";
 	} // _replace_product_tags
 
 	/**
-	 * Common code for the Product Category operations
+	 * Common code for the Product Tag operations
  	 *
 	 * @since 1.11
 	 *

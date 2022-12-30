@@ -2,10 +2,10 @@
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, gallery, images, media, media library, tags
-Requires at least: 3.5.0
-Tested up to: 6.0.2
+Requires at least: 4.1
+Tested up to: 6.1.1
 Requires PHP: 5.3
-Stable tag: 3.04
+Stable tag: 3.05
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -26,6 +26,8 @@ The Media Library Assistant provides several enhancements for managing the Media
 * **Integrates with Photonic Gallery, Jetpack and other plugins**, so you can add slideshows, thumbnail strips and special effects to your `[mla_gallery]` galleries.
 
 * Works with **[WordPress Real Media Library: Media Library Folder & File Manager](https://wordpress.org/plugins/real-media-library-lite/)** (Lite and Pro) to organize your files into folders, collections and galleries. This combination enhances both the Media/Assistant admin submenu and the `[mla_gallery]` shortcode.
+
+* Works with **[CatFolders – WP Media Folders](https://wordpress.org/plugins/catfolders/)** (Lite and Pro) to categorize media files better and faster. This combination enhances both the Media/Assistant admin submenu and the `[mla_gallery]` shortcode.
 
 * Powerful **Content Templates**, which let you compose a value from multiple data sources, mix literal text with data values, test for empty values and choose among two or more alternatives or suppress output entirely.
 
@@ -186,6 +188,16 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 9. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
 
 == Changelog ==
+
+= 3.06 =
+* Fix: For the Media/Assistant screen when Admin Columns Pro 6.0+ is active, the Conditional format button is suppressed because ACP does not yet support it.
+
+= 3.05 =
+* New: The new "MLA Content Items Example" plugin provides `[+content_items+]`, a custom substitution parameter value with the IDs of Media Library items in the post content.
+* New: The "MLA Yoast SEO Example" plugin has been completely rewritten. It now supports Schema generation and has a Settings screen with several options and a Documentation tab.
+* New: Support added for the "CatFolders - WP Media Folders" plugin in the Media/Assistant admin page and `[mla_gallery]` shortcode.
+* Fix: Support for Admin Columns Pro version 6.0+ has been added.
+* Fix: A Plugins/Installed Plugins "Tools" link has been restored for the three "Fixit" example plugins.
 
 = 3.04 =
 * Fix: When Photo Engine (WP/LR Sync) is active, a PHP Fatal Error with mapping rules during "sync" operations has been corrected.
@@ -361,8 +373,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.04 =
-Fix: When Photo Engine (WP/LR Sync) is active, a PHP Fatal Error with mapping rules during "sync" operations has been corrected.
+= 3.05 =
+IMPORTANT: Admin Columns Pro v6.0+ support. Support for the "CatFolders - WP Media Folders" plugin. The "MLA Yoast SEO Example" plugin has been completely rewritten. New "MLA Content Items Example" plugin. Three enhancements in all, two fixes.
 
 == Other Notes ==
 

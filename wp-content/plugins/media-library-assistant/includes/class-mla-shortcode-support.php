@@ -521,6 +521,8 @@ class MLAShortcode_Support {
 			'mla_allow_rml' => false,
 			'mla_rml_folder' => NULL,
 			'mla_rml_include_children' => false,
+			'mla_allow_catf' => true,
+			'mla_catf_folder' => NULL,
 
 			'mla_named_transfer' => false,
 			'mla_use_featured' => false,
@@ -540,7 +542,6 @@ class MLAShortcode_Support {
 			'mla_alt_ids_name' => 'ids',
 			'mla_alt_ids_template' => NULL,
 			'mla_alt_parameters' => NULL,
-
 			// paginatation arguments defined in $mla_get_shortcode_attachments_parameters
 			// 'mla_page_parameter' => 'mla_paginate_current', handled in code with $mla_page_parameter
 			// 'mla_paginate_current' => NULL,
@@ -4277,6 +4278,9 @@ class MLAShortcode_Support {
 	 * @return string HTML content to display the term list.
 	 */
 	public static function mla_term_list_shortcode( $attr, $content = NULL ) {
+//error_log( __LINE__ . " mla_term_list_shortcode() _REQUEST = " . var_export( $_REQUEST, true ), 0 );
+//error_log( __LINE__ . " mla_term_list_shortcode() attr = " . var_export( $attr, true ), 0 );
+//error_log( __LINE__ . " mla_term_list_shortcode() content = " . var_export( $content, true ), 0 );
 		/*
 		 * Make sure $attr is an array, even if it's empty,
 		 * and repair damage caused by link-breaks in the source text
@@ -5243,6 +5247,9 @@ class MLAShortcode_Support {
 			'mla_allow_rml' => false,
 			'mla_rml_folder' => NULL,
 			'mla_rml_include_children' => false,
+			// WordPress CatFolders plugin support
+			'mla_allow_catf' => true,
+			'mla_catf_folder' => NULL,
 		);
 
 	/**
@@ -5432,6 +5439,12 @@ class MLAShortcode_Support {
 		if ( ! empty( $arguments['mla_rml_folder'] ) ) {
 			$arguments['mla_rml_folder'] = absint( $arguments['mla_rml_folder'] );
 			$arguments['mla_allow_rml'] = 0 < $arguments['mla_rml_folder'];
+		}
+
+		$arguments['mla_allow_catf'] = 'true' === ( ( ! empty( $arguments['mla_allow_catf'] ) ) ? trim( strtolower( $arguments['mla_allow_catf'] ) ) : 'true' );
+		if ( ! empty( $arguments['mla_catf_folder'] ) ) {
+			$arguments['mla_catf_folder'] = intval( $arguments['mla_catf_folder'] );
+			$arguments['mla_allow_catf'] = 0 < $arguments['mla_catf_folder'];
 		}
 
 		/*
@@ -6292,6 +6305,16 @@ class MLAShortcode_Support {
 					$query_arguments['post_type'] = 'mladisablerml';
 				}
 			}
+
+			if ( defined('CATF_VERSION')){	
+				if ( $arguments['mla_allow_catf'] ) {
+					if ( ! empty( $arguments['mla_catf_folder'] ) ) {
+						unset( $query_arguments['post_parent'] );
+						$query_arguments['catf'] = $arguments['mla_catf_folder'];
+					}
+				}
+			}
+
 		} // post_type is attachment
 
 		MLAShortcodes::$mla_gallery_wp_query_object = new WP_Query;

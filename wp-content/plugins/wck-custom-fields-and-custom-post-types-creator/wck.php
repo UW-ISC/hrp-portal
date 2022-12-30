@@ -3,7 +3,7 @@
 Plugin Name: WCK - Custom Fields and Custom Post Types Creator
 Description: WordPress Creation Kit consists of three tools that can help you create and maintain custom post types, custom taxonomies and most importantly, custom fields and metaboxes for your posts, pages or CPT's.
 Author: Cozmoslabs, Madalin Ungureanu, Cristian Antohe
-Version: 2.3.2
+Version: 2.3.4
 Author URI: http://www.cozmoslabs.com
 Text Domain: wck
 Domain Path: /languages
@@ -28,7 +28,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 define( 'WCK_PLUGIN_DIR', WP_PLUGIN_DIR . '/' . dirname( plugin_basename( __FILE__ ) ) );
 define( 'WCK_PLUGIN_DIR_URL', plugin_dir_url( __FILE__ ) );
-define( 'WCK_PLUGIN_VERSION', '2.6.4' );
+define( 'WCK_PLUGIN_VERSION', '2.6.7' );
 
 /* ready for localization */
 $current_theme = wp_get_theme();
@@ -184,7 +184,7 @@ function wck_admin_rate_us( $footer_text ) {
     global $current_screen;
 
     if ($current_screen->parent_base == 'wck-page'){
-        $rate_text = sprintf( __( 'If you enjoy using <strong> WordPress Creation Kit </strong> please <a href="%1$s" target="_blank">rate us on WordPress.org</a> to help us reach more people. More happy users means more features, less bugs and better support for everyone. ', 'profilebuilder' ),
+        $rate_text = sprintf( __( 'If you enjoy using <strong> WordPress Creation Kit </strong> please <a href="%1$s" target="_blank">rate us on WordPress.org</a> to help us reach more people. More happy users means more features, less bugs and better support for everyone. ', 'wck' ),
             'https://wordpress.org/support/view/plugin-reviews/wck-custom-fields-and-custom-post-types-creator?filter=5#postform'
         );
         return '<span id="footer-thankyou">' .$rate_text . '</span>';

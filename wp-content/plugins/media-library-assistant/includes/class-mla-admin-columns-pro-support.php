@@ -5,6 +5,9 @@
  * @package Media Library Assistant
  * @since 2.71
  */
+
+use AC\ListTable;
+
 defined( 'ABSPATH' ) or die();
 
 /**
@@ -67,9 +70,9 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 	 *
 	 * @since 2.71
 	 *
-	 * @param AC_ListScreen $list_screen
+	 * @param object $list_screen
 	 */
-	public function export_table_global( AC_ListScreen $list_screen ) {
+	public function export_table_global( $list_screen ) {
 		global $wp_list_table;
 
 		if ( ! $list_screen instanceof ACP_Addon_MLA_ListScreen ) {
@@ -210,6 +213,32 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 
 } // class ACP_Addon_MLA_ListScreen
 
+class MLA_Media implements ListTable {
+
+	public function __construct( MLA_List_Table $table ) {
+		$this->table = $table;
+	}
+
+	public function get_column_value( $column, $id ) {
+		ob_start();
+
+		$method = 'column_' . $column;
+
+		if ( method_exists( $this->table, $method ) ) {
+			call_user_func( [ $this->table, $method ], get_post( $id ) );
+		} else {
+			$this->table->column_default( get_post( $id ), $column );
+		}
+
+		return ob_get_clean();
+	}
+
+	public function get_total_items() {
+		return $this->table->get_pagination_arg( 'total_items' );
+	}
+
+}
+
 /**
  * Exportability class for posts list screen
  *
@@ -231,7 +260,7 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 	 *
 	 * @return ListTable
 	 */
-	protected function get_list_table() {
+	protected function get_list_table(): ?ListTable {
 		global $wp_list_table;
 
 		if ( ! class_exists( 'MLA_List_Table' ) ) {
@@ -240,13 +269,13 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 		}
 
 		if ( $wp_list_table instanceof MLA_List_Table ) {
-			return $wp_list_table;
+			return new MLA_Media( $wp_list_table );
 		}
 
 		$wp_list_table = new MLA_List_Table();
 		$wp_list_table->prepare_items();
 
-		return $wp_list_table;
+		return new MLA_Media( $wp_list_table );
 	}
 
 	/**
@@ -257,7 +286,7 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 	 * @since 1.0
 	 * @return string[] Associative array of header labels for the columns.
 	 */
-	public function get_headers( array $columns ) {
+	public function get_headers( array $columns ): array {
 		$headers = parent::get_headers( $columns );
 
 		// Fix the first header to avoid MS Excel SYLK file format error
@@ -278,7 +307,7 @@ class ACP_Addon_MLA_Export_Strategy extends ACP\Export\Strategy {
 	 * @since 2.71
 	 * @see   ACP_Export_ExportableListScreen::ajax_export()
 	 */
-	protected function ajax_export() {
+	protected function ajax_export(): void {
 		// Hooks
 		add_filter( 'mla_list_table_query_final_terms', array( $this, 'mla_list_table_query_final_terms' ), 1e6 );
 		add_action( 'mla_list_table_prepare_items', array( $this, 'mla_list_table_prepare_items' ), 10, 2 );

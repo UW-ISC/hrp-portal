@@ -3455,6 +3455,8 @@ class MLAData {
 			}
 
 			$data = $id3->analyze( $path );
+		} else {
+			$data = array();
 		}
 
 		if ( ! empty( $data['filesize'] ) )
@@ -3491,6 +3493,7 @@ class MLAData {
 				break;
 			}
 		}
+
 		unset( $data['id3v2']['comments'] );
 		unset( $data['id3v1']['comments'] );
 

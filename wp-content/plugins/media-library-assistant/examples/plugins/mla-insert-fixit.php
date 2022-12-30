@@ -8,7 +8,7 @@
  * opened on 6/6/2015 by "pikaren":
  * https://wordpress.org/support/topic/changed-alt-text-doesnt-not-reflect-in-published-posts
  *
- * Created for support topic "alt text reconciliation"
+ * Enhanced for support topic "alt text reconciliation"
  * opened on 6/19/2015 by "fredmr"
  * https://wordpress.org/support/topic/alt-text-reconciliation
  *
@@ -53,7 +53,7 @@
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
  * @package Insert Fixit
- * @version 1.22
+ * @version 1.23
  */
 
 /*
@@ -61,7 +61,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.22
+Version: 1.23
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2021 David Lingren
@@ -94,7 +94,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.22';
+	const CURRENT_VERSION = '1.23';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -180,7 +180,7 @@ class Insert_Fixit {
 	 * @return	array	Updated array of links for the Plugin
 	 */
 	public static function add_plugin_links_filter( $links, $file ) {
-		if ( $file == 'mla-insert-fixit.php' ) {
+		if ( 0 === strpos( $file, 'mla-insert-fixit' ) ) {
 			$tools_link = sprintf( '<a href="%s">%s</a>', admin_url( 'tools.php?page=' . self::SLUG_PREFIX . 'tools' ), 'Tools' );
 			array_unshift( $links, $tools_link );
 		}
