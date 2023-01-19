@@ -82,6 +82,12 @@ function relevanssi_query( $posts, $query = false ) {
 		 */
 		$query = apply_filters( 'relevanssi_modify_wp_query', $query );
 		$posts = relevanssi_do_query( $query );
+
+		if ( relevanssi_is_debug() ) {
+			relevanssi_debug_posts( $posts );
+			exit();
+		}
+
 	}
 
 	return $posts;
@@ -118,6 +124,8 @@ function relevanssi_search( $args ) {
 	$order         = $filtered_args['order'];
 	$fields        = $filtered_args['fields'];
 
+	relevanssi_is_debug() && relevanssi_debug_array( $filtered_args, 'Filtered args' );
+
 	$hits = array();
 
 	$query_data         = relevanssi_process_query_args( $filtered_args );
@@ -126,6 +134,8 @@ function relevanssi_search( $args ) {
 	$q                  = $query_data['query_query'];
 	$q_no_synonyms      = $query_data['query_no_synonyms'];
 	$phrase_queries     = $query_data['phrase_queries'];
+
+	relevanssi_is_debug() && relevanssi_debug_array( $query_data, 'Processed query args' );
 
 	$min_length = get_option( 'relevanssi_min_word_length' );
 
@@ -160,6 +170,8 @@ function relevanssi_search( $args ) {
 		$no_terms       = true;
 		$terms['terms'] = array( 'term' );
 	}
+
+	relevanssi_is_debug() && relevanssi_debug_array( $terms, 'Terms' );
 
 	/**
 	 * Filters the query restrictions for the Relevanssi query.
@@ -228,6 +240,8 @@ function relevanssi_search( $args ) {
 
 			$query   = relevanssi_generate_search_query( $term, $search_again, $no_terms, $query_join, $this_query_restrictions );
 			$matches = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
+
+			relevanssi_is_debug() && relevanssi_debug_string( $query, 'Query' );
 
 			if ( count( $matches ) < 1 ) {
 				continue;
@@ -437,8 +451,11 @@ function relevanssi_search( $args ) {
 					$hits[ intval( $i ) ] = relevanssi_generate_id_type( $doc );
 				}
 			} else {
-				$hits[ intval( $i ) ]                  = relevanssi_get_post( $doc );
-				$hits[ intval( $i ) ]->relevance_score = round( $weight, 2 );
+				$post_object = relevanssi_get_post( $doc );
+				if ( ! is_wp_error( $post_object ) ) {
+					$hits[ intval( $i ) ]                  = $post_object;
+					$hits[ intval( $i ) ]->relevance_score = round( $weight, 2 );
+				}
 
 				if ( isset( $missing_terms[ $doc ] ) ) {
 					$hits[ intval( $i ) ]->missing_terms = $missing_terms[ $doc ];
@@ -665,7 +682,11 @@ function relevanssi_do_query( &$query ) {
 	 *
 	 * @return array An array of post objects.
 	 */
-	foreach ( apply_filters( 'relevanssi_hits_to_show', $hits_to_show, $query ) as $post ) {
+	$hits_to_show = apply_filters( 'relevanssi_hits_to_show', $hits_to_show, $query );
+	if ( ! is_array( $hits_to_show ) ) {
+		$hits_to_show = array();
+	}
+	foreach ( $hits_to_show as $post ) {
 		if ( $highlight_title && $return_posts ) {
 			relevanssi_highlight_post_title( $post, $q );
 		}
@@ -1381,7 +1402,7 @@ function relevanssi_calculate_weight( $match, $idf, $post_type_weights, $query )
 		$recency_cutoff_date = $recency_details['cutoff'];
 		if ( $recency_bonus ) {
 			$post = relevanssi_get_post( $match->doc );
-			if ( strtotime( $post->post_date ) > $recency_cutoff_date ) {
+			if ( ! is_wp_error( $post ) && strtotime( $post->post_date ) > $recency_cutoff_date ) {
 				$weight = $weight * $recency_bonus;
 			}
 		}
@@ -1404,10 +1425,10 @@ function relevanssi_calculate_weight( $match, $idf, $post_type_weights, $query )
 
 		$post        = relevanssi_get_post( $match->doc );
 		$clean_query = str_replace( '"', '', $query );
-		if ( stristr( $post->post_title, $clean_query ) !== false ) {
+		if ( ! is_wp_error( $post ) && stristr( $post->post_title, $clean_query ) !== false ) {
 			$weight *= $exact_match_boost['title'];
 		}
-		if ( stristr( $post->post_content, $clean_query ) !== false ) {
+		if ( ! is_wp_error( $post ) && stristr( $post->post_content, $clean_query ) !== false ) {
 			$weight *= $exact_match_boost['content'];
 		}
 	}

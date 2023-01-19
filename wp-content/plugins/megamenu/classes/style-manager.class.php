@@ -508,10 +508,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 				$css .= ".wp-block {}"; // hack required for loading CSS in site editor https://github.com/WordPress/gutenberg/issues/40603#issuecomment-1112807162
 
 				$this->set_cached_css( $css );
-
-				if ( $this->get_css_output_method() == 'fs' ) {
-					$this->save_to_filesystem( $css );
-				}
+				$this->save_to_filesystem( $css );
 			}
 
 			return $css;

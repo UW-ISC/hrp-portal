@@ -143,27 +143,27 @@ function wck_cptc_create_cpts(){
         foreach( $cpts as $cpt ){
 
             $labels = array(
-                'name'               => _x( $cpt['plural-label'], 'post type general name', "wck"), //phpcs:ignore
-                'singular_name'      => _x( $cpt['singular-label'], 'post type singular name', "wck"), //phpcs:ignore
-                'add_new'            => _x( $cpt['add-new'] ? $cpt['add-new'] : 'Add New', strtolower( $cpt['singular-label'] ), "wck" ), //phpcs:ignore
-                'add_new_item'       => __( $cpt['add-new-item'] ? $cpt['add-new-item'] : "Add New ".$cpt['singular-label'], "wck"), //phpcs:ignore
-                'edit_item'          => __( $cpt['edit-item'] ? $cpt['edit-item'] : "Edit ".$cpt['singular-label'], 'wck' ), //phpcs:ignore
-                'new_item'           => __( $cpt['new-item'] ? $cpt['new-item'] : "New ".$cpt['singular-label'], 'wck' ), //phpcs:ignore
-                'all_items'          => __( $cpt['all-items'] ? $cpt['all-items'] : "All ".$cpt['plural-label'] , 'wck'), //phpcs:ignore
-                'view_item'          => __( !empty( $cpt['view-item'] ) ? $cpt['view-item'] : "View ".$cpt['singular-label'] , 'wck'), //phpcs:ignore
-                'search_items'       => __( $cpt['search-items'] ? $cpt['search-items'] : "Search ".$cpt['plural-label'], 'wck' ), //phpcs:ignore
-                'not_found'          => __( $cpt['not-found'] ? $cpt['not-found'] : "No ". strtolower( $cpt['plural-label'] ) ." found", 'wck' ), //phpcs:ignore
-                'not_found_in_trash' => __( $cpt['not-found-in-trash'] ? $cpt['not-found-in-trash'] :  "No ". strtolower( $cpt['plural-label'] ) ." found in Trash", 'wck' ), //phpcs:ignore
-                'parent_item_colon'  => __( !empty( $cpt['parent-item-colon'] ) ? $cpt['parent-item-colon'] :  "Parent Page", 'wck' ), //phpcs:ignore
+                'name'               => _x( $cpt['plural-label'], 'post type general name', "wck"), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'singular_name'      => _x( $cpt['singular-label'], 'post type singular name', "wck"), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'add_new'            => _x( $cpt['add-new'] ? $cpt['add-new'] : 'Add New', 'post type label', "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'add_new_item'       => __( $cpt['add-new-item'] ? $cpt['add-new-item'] : "Add New ".$cpt['singular-label'], "wck"), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'edit_item'          => __( $cpt['edit-item'] ? $cpt['edit-item'] : "Edit ".$cpt['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'new_item'           => __( $cpt['new-item'] ? $cpt['new-item'] : "New ".$cpt['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'all_items'          => __( $cpt['all-items'] ? $cpt['all-items'] : "All ".$cpt['plural-label'] , 'wck'), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'view_item'          => __( !empty( $cpt['view-item'] ) ? $cpt['view-item'] : "View ".$cpt['singular-label'] , 'wck'), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'search_items'       => __( $cpt['search-items'] ? $cpt['search-items'] : "Search ".$cpt['plural-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'not_found'          => __( $cpt['not-found'] ? $cpt['not-found'] : "No ". strtolower( $cpt['plural-label'] ) ." found", 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'not_found_in_trash' => __( $cpt['not-found-in-trash'] ? $cpt['not-found-in-trash'] :  "No ". strtolower( $cpt['plural-label'] ) ." found in Trash", 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'parent_item_colon'  => __( !empty( $cpt['parent-item-colon'] ) ? $cpt['parent-item-colon'] :  "Parent Page", 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
                 'menu_name'          => $cpt['menu-name'] ? $cpt['menu-name'] : $cpt['plural-label']
             );
 
             if( version_compare( $wp_version, '4.3', '>=' ) ) {
                 $labels_v43 = array(
-                    'featured_image'        => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image", "wck" ), //phpcs:ignore
-                    'set_featured_image'    => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image", "wck" ), //phpcs:ignore
-                    'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image", "wck" ), //phpcs:ignore
-                    'use_featured_image'    => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image", "wck" ) //phpcs:ignore
+                    'featured_image'        => __( !empty( $cpt['featured_image'] ) ? $cpt['featured_image'] : "Featured Image", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'set_featured_image'    => __( !empty( $cpt['set_featured_image'] ) ? $cpt['set_featured_image'] : "Set featured image", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'remove_featured_image' => __( !empty( $cpt['remove_featured_image'] ) ? $cpt['remove_featured_image'] : "Remove featured image", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'use_featured_image'    => __( !empty( $cpt['use_featured_image'] ) ? $cpt['use_featured_image'] : "Use as featured image", "wck" ) //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
                 );
 
                 foreach( $labels_v43 as $label_v43 ) {
@@ -173,12 +173,12 @@ function wck_cptc_create_cpts(){
 
             if( version_compare( $wp_version, '4.4', '>=' ) ) {
                 $labels_v44 = array(
-                    'archives'              => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives", "wck" ), //phpcs:ignore
-                    'insert_into_item'      => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'], "wck" ), //phpcs:ignore
-                    'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'], "wck" ), //phpcs:ignore
-                    'filter_items_list'     => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List", "wck" ), //phpcs:ignore
-                    'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore
-                    'items_list'            => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List", "wck" ) //phpcs:ignore
+                    'archives'              => __( !empty( $cpt['archives'] ) ? $cpt['archives'] : $cpt['singular-label'] . " Archives", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'insert_into_item'      => __( !empty( $cpt['insert_into_item'] ) ? $cpt['insert_into_item'] : "Insert Into " . $cpt['singular-label'], "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'uploaded_to_this_item' => __( !empty( $cpt['uploaded_to_this_item'] ) ? $cpt['uploaded_to_this_item'] : "Uploaded to this " . $cpt['singular-label'], "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'filter_items_list'     => __( !empty( $cpt['filter_items_list'] ) ? $cpt['filter_items_list'] : "Filter Items List", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'items_list_navigation' => __( !empty( $cpt['items_list_navigation'] ) ? $cpt['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'items_list'            => __( !empty( $cpt['items_list'] ) ? $cpt['items_list'] : "Items List", "wck" ) //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
                 );
 
                 foreach( $labels_v44 as $label_v44 ) {

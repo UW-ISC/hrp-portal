@@ -237,6 +237,10 @@
             });
 
             clickable_parents.not("[data-has-click-event]").on("click.megamenu", function(e) {
+                if ( $menu.parent().hasClass("mega-keyboard-navigation") ) {
+                    return;
+                }
+
                 if (plugin.isDesktopView() && $(this).parent().hasClass("mega-toggle-on") && $(this).parent().parent().parent().hasClass("mega-menu-tabbed") ) {
                     if (plugin.settings.second_click === "go") {
                         return;
@@ -325,9 +329,14 @@
 
             $menu.parent().on("keyup.megamenu", function(e) {
                 var keyCode = e.keyCode || e.which;
+                var active_link = $(e.target);
 
                 if (keyCode === tab_key) {
                     $menu.parent().addClass("mega-keyboard-navigation");
+
+                    if ( active_link.parent().parent().is(".max-mega-menu" ) ) {
+                        plugin.hideAllPanels();
+                    }
                 }
             });
 
@@ -347,26 +356,21 @@
                         }
                     }
                 }
-            });
 
-            $menu.parent().on("keyup.megamenu", function(e) {
-                var keyCode = e.keyCode || e.which;
-                var active_link = $(e.target);
-                
-                if ( keyCode === tab_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
-                    if ( active_link.parent().is(items_with_submenus) && active_link.is("[href]") !== false ) {
-                        plugin.showPanel(active_link);
+                if ( keyCode === space_key && active_link.is("mega-indicator") && $menu.parent().hasClass("mega-keyboard-navigation") ) {
+                    e.preventDefault();
+
+                    if ( active_link.parent().parent().hasClass("mega-toggle-on") && ! active_link.parent().parent().parent().parent().hasClass("mega-menu-tabbed") ) {
+                        plugin.hidePanel(active_link.parent());
                     } else {
-                        if ( ! active_link.parent().parent().parent().hasClass("mega-menu-tabbed") ) {
-                            plugin.hideSiblingPanels(active_link);
-                        }
+                        plugin.showPanel(active_link.parent());
                     }
                 }
 
                 if ( keyCode === escape_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
                     var submenu_open = $("> .mega-toggle-on", $menu).length !== 0;
 
-                    $("> .mega-toggle-on > a.mega-menu-link", $menu).focus();
+                    $("> .mega-toggle-on > a.mega-menu-link > span.mega-indicator", $menu).focus();
 
                     plugin.hideAllPanels();
 
@@ -385,8 +389,17 @@
                         }
                     }
 
+                    // pressing enter on an arrow will toggle the sub menu
+                    if ( active_link.hasClass("mega-indicator") ) {
+                        if ( active_link.parent().parent().hasClass("mega-toggle-on") && ! active_link.parent().parent().parent().parent().hasClass("mega-menu-tabbed") ) {
+                            plugin.hidePanel(active_link.parent());
+                        } else {
+                            plugin.showPanel(active_link.parent());
+                        }
+                    }
+
                     // pressing enter on a parent item without a link will toggle the sub menu
-                    if ( active_link.parent().is(items_with_submenus) && active_link.is("[href]") === false ) {
+                    if ( ( active_link.parent().is(items_with_submenus) && active_link.is("[href]") === false ) ) {
                         if ( active_link.parent().hasClass("mega-toggle-on") && ! active_link.parent().parent().parent().hasClass("mega-menu-tabbed") ) {
                             plugin.hidePanel(active_link);
                         } else {
@@ -396,37 +409,38 @@
                 }
 
                 if ( keyCode === right_arrow_key && plugin.isDesktopView() && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
+                    e.preventDefault();
+
                     var next_top_level_item = $("> .mega-toggle-on", $menu).nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
 
                     if (next_top_level_item.length === 0) {
                         next_top_level_item = $(":focus", $menu).parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
                     }
 
-                    next_top_level_item.focus();
-
-                    if ( next_top_level_item.parent().is(items_with_submenus) && next_top_level_item.is("[href]") !== false ) {
-                        plugin.showPanel(next_top_level_item);
-                    } else {
-                        plugin.hideSiblingPanels(next_top_level_item);
+                    if (next_top_level_item.length === 0) {
+                        next_top_level_item = $(":focus", $menu).parent().parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
                     }
+
+                    plugin.hideAllPanels();
+                    next_top_level_item.focus();
                 }
 
                 if ( keyCode === left_arrow_key && plugin.isDesktopView() && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
+                    e.preventDefault();
+
                     var prev_top_level_item = $("> .mega-toggle-on", $menu).prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").last();
 
                     if (prev_top_level_item.length === 0) {
                         prev_top_level_item = $(":focus", $menu).parent().prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").last();
                     }
 
-                    prev_top_level_item.focus();
-
-                    if ( prev_top_level_item.parent().is(items_with_submenus) && prev_top_level_item.is("[href]") !== false  ) {
-                        plugin.showPanel(prev_top_level_item);
-                    } else {
-                        plugin.hideSiblingPanels(prev_top_level_item);
+                    if (prev_top_level_item.length === 0) {
+                        prev_top_level_item = $(":focus", $menu).parent();
                     }
-                }
 
+                    plugin.hideAllPanels();
+                    prev_top_level_item.focus();
+                }
             });
 
             $menu.parent().on("focusout.megamenu", function(e) {

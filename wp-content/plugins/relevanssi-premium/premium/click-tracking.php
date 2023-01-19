@@ -68,14 +68,20 @@ function relevanssi_log_click() {
  */
 function relevanssi_extract_rt( string $rt ) {
 	$rt_values = explode( '|', $rt );
-	if ( count( $rt_values ) < 4 ) {
+	if ( count( $rt_values ) != 4 ) {
+		return new WP_Error( 'invalid-rt', __( 'Invalid click tracking value format.', 'relevanssi' ) );
+	}
+	$rank = intval( $rt_values[0] );
+	$page = intval( $rt_values[1] );
+	$time = intval( $rt_values[3] );
+	if ( $rank === 0 || $page === 0 || $time === 0 ) {
 		return new WP_Error( 'invalid-rt', __( 'Invalid click tracking value format.', 'relevanssi' ) );
 	}
 	return array(
-		'rank'  => $rt_values[0],
-		'page'  => $rt_values[1],
+		'rank'  => $rank,
+		'page'  => $page,
 		'query' => $rt_values[2],
-		'time'  => $rt_values[3],
+		'time'  => $time,
 	);
 }
 
@@ -357,7 +363,7 @@ function relevanssi_delete_query( string $query ) {
 	$deleted = $wpdb->query(
 		$wpdb->prepare(
 			"DELETE FROM {$relevanssi_variables['tracking_table']} WHERE query = %s", // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
-			$query
+			stripslashes( $query )
 		)
 	);
 

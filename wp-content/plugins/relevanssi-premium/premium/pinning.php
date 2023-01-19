@@ -123,18 +123,19 @@ function relevanssi_pinning( $hits ) {
 				}
 			}
 			$hit_id = strval( $hit->ID ); // The IDs from the database are strings, the one from the post is an integer in some contexts.
-			if ( $hit_id && is_array( $positive_ids[ $blog_id ] ) && count( $positive_ids[ $blog_id ] ) > 0 && in_array( $hit_id, $positive_ids[ $blog_id ], true ) ) {
+
+			$positive_match = is_array( $positive_ids[ $blog_id ] ) && in_array( $hit_id, $positive_ids[ $blog_id ], true );
+			$negative_match = is_array( $negative_ids[ $blog_id ] ) && in_array( $hit_id, $negative_ids[ $blog_id ], true );
+			$pinned_for_all = isset( $hit->ID ) && isset( $posts_pinned_for_all[ $hit->ID ] );
+
+			if ( $hit_id && $positive_match && ! $negative_match ) {
 				$hit->relevanssi_pinned = 1;
 				$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
 			} else {
-				if ( isset( $hit->ID ) && isset( $posts_pinned_for_all[ $hit->ID ] ) ) {
+				if ( $pinned_for_all && ! $negative_match ) {
 					$hit->relevanssi_pinned = 1;
 					$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
-				} elseif ( is_array( $negative_ids[ $blog_id ] ) && count( $negative_ids[ $blog_id ] ) > 0 ) {
-					if ( ! in_array( $hit_id, $negative_ids[ $blog_id ], true ) ) {
-						$other_posts[] = relevanssi_return_value( $hit, $return_value );
-					}
-				} else {
+				} elseif ( ! $negative_match ) {
 					$other_posts[] = relevanssi_return_value( $hit, $return_value );
 				}
 			}
