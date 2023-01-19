@@ -248,7 +248,7 @@ class Wordpress_Creation_Kit{
 
 		//output the entries only for repeater fields
         if( !$this->args['single'] )
-		    echo self::wck_output_meta_content($metabox['args']['meta_name'], $post_id, $metabox['args']['meta_array']); //phpcs:ignore
+		    echo self::wck_output_meta_content($metabox['args']['meta_name'], $post_id, $metabox['args']['meta_array']); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --escaped inside the function
 	}
 	
 	/**
@@ -298,7 +298,7 @@ class Wordpress_Creation_Kit{
 				icl_register_string( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $details['title'] );
 				$details['title'] = icl_translate( 'plugin wck', 'wck_label_translation_'.Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ), $details['title'] );
 			}
-			$element .= '<label for="'. $single_prefix . esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="field-label">'.  ucfirst( $details['title'] ) .':';
+			$element .= '<label for="'. esc_attr( $single_prefix . Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" class="field-label">'.  esc_html( ucfirst( $details['title'] ) ) .':';
 			if( !empty( $details['required'] ) && $details['required'] )
 				$element .= '<span class="required">*</span>';
 			$element .= '</label>';
@@ -308,7 +308,7 @@ class Wordpress_Creation_Kit{
 			}
 
 			if( !empty( $details['description'] ) ){
-				$element .= '<p class="description">'. $details['description'].'</p>';
+				$element .= '<p class="description">'. wp_kses_post( $details['description'] ).'</p>';
 			}
 		}
 
@@ -334,7 +334,7 @@ class Wordpress_Creation_Kit{
 			$element = apply_filters( "wck_field_before_description", $element, $meta, $details );
 
 			if( ! empty( $details['description'] ) ) {
-				$element .= '<p class="description">' . $details['description'] . '</p>';
+				$element .= '<p class="description">' . wp_kses_post( $details['description'] ) . '</p>';
 			}
 
 			$element .= '</div><!-- .mb-right-column -->';
@@ -393,7 +393,7 @@ class Wordpress_Creation_Kit{
                             $value = null;
                             /* see if we have any posted values */
                             if( !empty( $_GET['postedvalues'] ) ){
-                                $posted_values = json_decode( sanitize_text_field( urldecode( base64_decode( $_GET['postedvalues'] ) ) ) , true); //phpcs:ignore
+                                $posted_values = json_decode( sanitize_text_field( urldecode( base64_decode( $_GET['postedvalues'] ) ) ) , true); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
 								if( !empty( $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )] ) )
                                 	$value = $posted_values[$meta][Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details )];
                             }
@@ -406,7 +406,7 @@ class Wordpress_Creation_Kit{
 						
 						?>
 							<li class="row-<?php echo esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) ?>">
-								<?php echo self::wck_output_form_field( $meta, $details, $value, $context, $post_id ); //phpcs:ignore ?>
+								<?php echo self::wck_output_form_field( $meta, $details, $value, $context, $post_id ); //phpcs:ignore  WordPress.Security.EscapeOutput.OutputNotEscaped --escaped inside the function ?>
 							</li>
 						<?php
 						
@@ -449,11 +449,11 @@ class Wordpress_Creation_Kit{
 			$results = get_option( $meta );		
 		
 		/* Filter primary used for CFC/OPC fields in order to show/hide fields based on type */
-		$wck_update_container_css_class = " class='update_container_$meta'";
+		$wck_update_container_css_class = " class='update_container_" . esc_attr( $meta ) . "'";
 		$wck_update_container_css_class = apply_filters("wck_update_container_class_{$meta}", $wck_update_container_css_class, $meta, $results, $element_id );
 		
 		$form = '';
-		$form .= '<tr id="update_container_'.$meta.'_'.$element_id.'" ' . $wck_update_container_css_class . '><td colspan="4">';
+		$form .= '<tr id="update_container_'. esc_attr( $meta ) .'_'. esc_attr( $element_id ) .'" ' . $wck_update_container_css_class . '><td colspan="4">';
 		
 		if($results != null){
 			$i = 0;
@@ -481,8 +481,8 @@ class Wordpress_Creation_Kit{
 				}
 			}
 			$form .= '<li style="overflow:visible;">';
-			$form .= '<a href="javascript:void(0)" class="button-primary" onclick=\'updateMeta("'.esc_js($meta).'", "'.esc_js($id).'", "'.esc_js($element_id).'", "'.esc_js($update_nonce).'")\'><span>'. esc_html__( apply_filters( 'wck_save_changes_button', 'Save Changes', $meta ), 'wck' ) .'</span></a>'; //phpcs:ignore
-			$form .= '<a href="javascript:void(0)" class="button-secondary" style="margin-left:10px;" onclick=\'removeUpdateForm("'. esc_js( 'update_container_'.$meta.'_'.$element_id ). '" )\'><span>'. esc_html__( apply_filters( 'wck_cancel_button', 'Cancel', $meta ), 'wck' ) .'</span></a>'; //phpcs:ignore
+			$form .= '<a href="javascript:void(0)" class="button-primary" onclick=\'updateMeta("'.esc_js($meta).'", "'.esc_js($id).'", "'.esc_js($element_id).'", "'.esc_js($update_nonce).'")\'><span>'. apply_filters( 'wck_save_changes_button', esc_html__( 'Save Changes', 'wck' ), $meta ) .'</span></a>';
+			$form .= '<a href="javascript:void(0)" class="button-secondary" style="margin-left:10px;" onclick=\'removeUpdateForm("'. esc_js( 'update_container_'.$meta.'_'.$element_id ). '" )\'><span>'. apply_filters( 'wck_cancel_button', esc_html__(  'Cancel', 'wck' ), $meta ) .'</span></a>';
 			$form .= '</li>';			
 			
 			$form .= '</ul>';
@@ -523,7 +523,7 @@ class Wordpress_Creation_Kit{
 		
 		
 		if( !empty( $results ) ){
-			$list .= apply_filters( 'wck_metabox_content_header_'.$meta , '<thead><tr><th class="wck-number">#</th><th class="wck-content">'. __( 'Content', 'wck' ) .'</th><th class="wck-edit">'. __( 'Edit', 'wck' ) .'</th><th class="wck-delete">'. __( 'Delete', 'wck' ) .'</th></tr></thead>' );
+			$list .= apply_filters( 'wck_metabox_content_header_'.$meta , '<thead><tr><th class="wck-number">#</th><th class="wck-content">'. esc_html__( 'Content', 'wck' ) .'</th><th class="wck-edit">'. esc_html__( 'Edit', 'wck' ) .'</th><th class="wck-delete">'. esc_html__( 'Delete', 'wck' ) .'</th></tr></thead>' );
 			$i=0;
 			foreach ($results as $result){
 				$list .= self::wck_output_entry_content( $meta, $id, $fields, $results, $i );
@@ -547,8 +547,8 @@ class Wordpress_Creation_Kit{
 		
 
 		$list = '';
-		$list .= '<tr id="element_'.$element_id.'" ' . $wck_element_class . '>'; 
-		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-number">'. $entry_nr .'</td>'; 
+		$list .= '<tr id="element_'. esc_attr( $element_id ) .'" ' . $wck_element_class . '>';
+		$list .= '<td style="text-align:center;vertical-align:middle;" class="wck-number">'. esc_html( $entry_nr ) .'</td>';
 		$list .= '<td class="wck-content"><ul>';
 		
 		$j = 0;				
@@ -571,17 +571,17 @@ class Wordpress_Creation_Kit{
 				if( $details['type'] == 'upload' ){	
 					$display_value = self::wck_get_entry_field_upload($value);
 				} elseif ( $details['type'] == 'user select' ) {
-					$display_value = self::wck_get_entry_field_user_select( $value ) . '</pre>';
+					$display_value = '<pre>' . self::wck_get_entry_field_user_select( $value ) . '</pre>';
 				} elseif ( $details['type'] == 'cpt select' ){
-					$display_value = self::wck_get_entry_field_cpt_select( $value ) . '</pre>';
+					$display_value = '<pre>' . self::wck_get_entry_field_cpt_select( $value ) . '</pre>';
 				} elseif ( $details['type'] == 'checkbox' && is_array( $value ) ){
-                    $display_value = implode( ', ', $value );
+                    $display_value = implode( ', ', array_map( 'esc_html', $value ) );
                 } elseif ( $details['type'] == 'select' ){
-                    $display_value = '<pre>' . __(self::wck_get_entry_field_select( $value, $details ), 'wck') . '</pre>'; //phpcs:ignore
+                    $display_value = '<pre>' . __(self::wck_get_entry_field_select( $value, $details ), 'wck') . '</pre>'; //phpcs:ignore  WordPress.WP.I18n.NonSingularStringLiteralText --want the ability to register strings that can be translated
                 } elseif ( $details['type'] == 'map' ){
                     $display_value = '<pre>' . ( !empty( $value ) ? count( $value ) : 0 ) . ' ' . esc_html__( 'Map Markers', 'wck' ) . '</pre>';
                 }else {
-					$display_value = '<pre>'.htmlspecialchars( $value ) . '</pre>';
+					$display_value = '<pre>'.wp_kses_post( $value ) . '</pre>';
 				}
 				
 				
@@ -591,12 +591,12 @@ class Wordpress_Creation_Kit{
 									$details['type'] = 'nested-repeater';
 
 				if( $details['type'] != 'html' ) {
-					$list .= '<li class="row-'. esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" data-type="'. $details['type'] .'">';
+					$list .= '<li class="row-'. esc_attr( Wordpress_Creation_Kit::wck_generate_slug( $details['title'], $details ) ) .'" data-type="'. esc_attr( $details['type'] ) .'">';
 					if( $details['type'] != 'heading' ) {
-						$list .= '<strong>' . $details['title'] . ':' . ' </strong>';
+						$list .= '<strong>' . esc_html( $details['title'] ) . ':' . ' </strong>';
 					}
 					else{
-						$list .= '<h5>' . $details['title'] . ' </h5>';
+						$list .= '<h5>' . esc_html( $details['title'] ) . ' </h5>';
 					}
 					$list .= $display_value .' </li>';
 				}
@@ -647,13 +647,13 @@ class Wordpress_Creation_Kit{
 		foreach( $field_details['options'] as $option ){
             if ( strpos( $option, $value ) !== false ){
                 if( strpos( $option, '%' ) === false ){
-                    return $value;
+                    return esc_html( $value );
 				} else {
                     $option_parts = explode( '%', $option );
                 	if( !empty( $option_parts ) ){
                         if( empty( $option_parts[0] ) && count( $option_parts ) == 3 ){
                             $label = $option_parts[1];
-                        	return $label;
+                        	return esc_html( $label );
 						}
 					}
 				}
@@ -669,14 +669,13 @@ class Wordpress_Creation_Kit{
 			$file_src = wp_get_attachment_url($id);
 			$thumbnail = wp_get_attachment_image( $id, array( 80, 60 ), true );
 			$file_name = get_the_title( $id );
-			$attachment_url = admin_url( "post.php?post={$id}&action=edit" );
 
 			if ( preg_match( '/^.*?\.(\w+)$/', get_attached_file( $id ), $matches ) )
-				$file_type = esc_html( strtoupper( $matches[1] ) );
+				$file_type = strtoupper( $matches[1] );
 			else
 				$file_type = strtoupper( str_replace( 'image/', '', get_post_mime_type( $id ) ) );
 
-			return $display_value = '<div class="upload-field-details"><a href="'. $attachment_url. '"  target="_blank" class="wck-attachment-link">' . $thumbnail .'</a><p><span class="file-name">'. $file_name .'</span><span class="file-type">'. $file_type . '</span></p></div>';
+			return '<div class="upload-field-details"><a href="'. admin_url( "post.php?post={$id}&action=edit" ) . '"  target="_blank" class="wck-attachment-link">' . esc_html( $thumbnail ) .'</a><p><span class="file-name">'. esc_html( $file_name ) .'</span><span class="file-type">'. esc_html(  $file_type ) . '</span></p></div>';
 		} else {
 			return '';
 		}
@@ -687,7 +686,7 @@ class Wordpress_Creation_Kit{
 		if( !empty ( $id ) && is_numeric( $id ) ){				
 			$user = get_user_by( 'id', $id );
 			if ( $user ) 
-				return '<pre>'.htmlspecialchars( $user->display_name );
+				return esc_html( $user->display_name );
 			else
 				return 'Error - User ID not found in database';
 				
@@ -705,7 +704,7 @@ class Wordpress_Creation_Kit{
 				if ( $post->post_title == '' )
 					$post->post_title = 'No title. ID: ' . $id;
 					
-				return '<pre>'.htmlspecialchars( $post->post_title );	
+				return esc_html( $post->post_title );
 			}
 			else
 				return 'Error - Post ID not found in database';
@@ -890,11 +889,7 @@ class Wordpress_Creation_Kit{
 		$values = array();
 
 		if( !empty( $_POST['values'] ) && is_array( $_POST['values'] ) ){
-
-			foreach( $_POST['values'] as $meta_name => $value ){//phpcs:ignore
-				$values[ $meta_name ] = $this->wck_sanitize_value( $value, $meta_name );
-			}
-
+            $values = $this->wck_sanitize_associative_array( $_POST['values'] ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
 		}
 
 		// Security checks
@@ -998,11 +993,7 @@ class Wordpress_Creation_Kit{
 		$values = array();
 
 		if( !empty( $_POST['values'] ) && is_array( $_POST['values'] ) ){
-
-			foreach( $_POST['values'] as $meta_name => $value ){ //phpcs:ignore
-				$values[ $meta_name ] = $this->wck_sanitize_value( $value, $meta_name );
-			}
-
+            $values = $this->wck_sanitize_associative_array( $_POST['values'] );//phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
 		}
 
 		// Security checks
@@ -1078,7 +1069,7 @@ class Wordpress_Creation_Kit{
 	/* function to output the the meta content list */
 	function wck_refresh_list( $meta = '', $id = '' ){
 		ob_start();		
-			echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']); //phpcs:ignore
+			echo self::wck_output_meta_content($meta, $id, $this->args['meta_array']); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --escaped inside the function
 			do_action( "wck_refresh_list_{$meta}", $id );
 		$entry_list = ob_get_clean();
 
@@ -1093,7 +1084,7 @@ class Wordpress_Creation_Kit{
 			$results = get_option( $meta );
 
 		ob_start();
-			echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id ); //phpcs:ignore
+			echo self::wck_output_entry_content( $meta, $id, $this->args['meta_array'], $results, $element_id ); //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --escaped inside the function
 			do_action( "wck_refresh_entry_{$meta}", $id );
 		$entry_content = ob_get_clean();
 
@@ -1120,7 +1111,7 @@ class Wordpress_Creation_Kit{
 		$id = isset( $_POST['id'] ) ? absint($_POST['id']) : '';
 		$element_id = isset( $_POST['element_id'] ) ? absint( $_POST['element_id'] ) : '';
 		
-		echo self::mb_update_form($this->args['meta_array'], $meta, $id, $element_id); //phpcs:ignore
+		echo self::mb_update_form($this->args['meta_array'], $meta, $id, $element_id); //phpcs:ignore  WordPress.Security.EscapeOutput.OutputNotEscaped --escaped inside the function
 		
 		do_action( 'wck_after_adding_form', $meta, $id, $element_id );
         do_action( "wck_after_adding_form_{$meta}", $id, $element_id );
@@ -1363,7 +1354,6 @@ class Wordpress_Creation_Kit{
             /* for single metaboxes we save a hidden input that contains the meta_name attr as a key so we need to search for it */
             foreach( $_POST as $request_key => $request_value ){
                 $request_key = sanitize_text_field($request_key);
-                $request_value = $this->wck_sanitize_value($request_value);
 
                 if( strpos( $request_key, '_wckmetaname_' ) !== false && strpos( $request_key, '#wck' ) !== false ){
                     /* found it so now retrieve the meta_name from the key formatted _wckmetaname_actuaname#wck */
@@ -1377,23 +1367,21 @@ class Wordpress_Creation_Kit{
                         if( !empty( $this->args['meta_array'] ) ){
                             foreach ($this->args['meta_array'] as $meta_field){
                                 /* in the $_POST the names for the fields are prefixed with the meta_name for the single metaboxes in case there are multiple metaboxes that contain fields wit hthe same name */
-                                $single_field_name = $this->args['meta_name'] .'_'. Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
+                                $field_slug = Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
+                                $single_field_name = $this->args['meta_name'] .'_'. $field_slug;
                                 if (isset($_POST[$single_field_name])) {
                                     /* checkbox needs to be stored as string not array */
                                     if( $meta_field['type'] == 'checkbox' ) {
                                         if( is_array($_POST[$single_field_name]) )
-                                            $_POST[$single_field_name] = implode(', ', array_map(array($this, 'wck_sanitize_value'), $_POST[$single_field_name])); //phpcs:ignore
+                                            $_POST[$single_field_name] = implode(', ', $this->wck_sanitize_value( $_POST[$single_field_name], $field_slug ) ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
                                         else
-                                            $_POST[$single_field_name] = $this->wck_sanitize_value( $_POST[$single_field_name] ); //phpcs:ignore
+                                            $_POST[$single_field_name] = $this->wck_sanitize_value( $_POST[$single_field_name], $field_slug ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
                                     }
 
-                                    if( is_array($_POST[$single_field_name]) )
-                                        $meta_values[Wordpress_Creation_Kit::wck_generate_slug($meta_field['title'], $meta_field )] = array_map( array($this, 'wck_sanitize_value'),  $_POST[$single_field_name] ); //phpcs:ignore
-                                    else
-                                        $meta_values[Wordpress_Creation_Kit::wck_generate_slug($meta_field['title'], $meta_field )] = $this->wck_sanitize_value( $_POST[$single_field_name] ); //phpcs:ignore
+                                    $meta_values[$field_slug] = $this->wck_sanitize_value( $_POST[$single_field_name], $field_slug ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
                                 }
                                 else
-                                    $meta_values[Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )] = '';
+                                    $meta_values[$field_slug] = '';
                             }
                         }
 
@@ -1423,17 +1411,14 @@ class Wordpress_Creation_Kit{
 							if ($this->args['unserialize']) {
 								if (!empty($this->args['meta_array'])) {
 									foreach ($this->args['meta_array'] as $meta_field) {
+                                        $field_slug = Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
 										/* check to see if we already have a meta name like this from the old structure to avoid conflicts */
-										$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_id, Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ), $meta_name );
+										$name = Wordpress_Creation_Kit::wck_generate_unique_meta_name_for_unserialized_field( $post_id, $field_slug, $meta_name );
 
-										if( isset( $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )] ) ) {
+										if( isset( $_POST[$this->args['meta_name'] . '_' . $field_slug] ) ) {
 
-											$meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )]; //phpcs:ignore
-											
-											if( is_array($meta_val) )
-												$meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
-											else
-												$meta_val = $this->wck_sanitize_value( $meta_val );
+											$meta_val = $this->wck_sanitize_value( $_POST[$this->args['meta_name'] . '_' . $field_slug], $field_slug ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
+
 											update_post_meta($post_id, $name, $meta_val );
 
 										}
@@ -1447,14 +1432,11 @@ class Wordpress_Creation_Kit{
                             if ($this->args['unserialize_fields']) {
                                 if (!empty($this->args['meta_array'])) {
                                     foreach ($this->args['meta_array'] as $meta_field) {
+                                        $field_slug = Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field );
 
-                                        $meta_val = $_POST[$this->args['meta_name'] . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field )]; //phpcs:ignore
-                                        if( is_array($meta_val) )
-                                            $meta_val = array_map( array($this, 'wck_sanitize_value'),  $meta_val );
-                                        else
-                                            $meta_val = $this->wck_sanitize_value( $meta_val );
+                                        $meta_val = $this->wck_sanitize_value( $_POST[$this->args['meta_name'] . '_' . $field_slug], $field_slug ); //phpcs:ignore  WordPress.Security.ValidatedSanitizedInput.InputNotSanitized --we sanitize with our own function
 
-                                        update_post_meta($post_id, $meta_name . '_' . Wordpress_Creation_Kit::wck_generate_slug( $meta_field['title'], $meta_field ) . '_1', $meta_val );
+                                        update_post_meta($post_id, $meta_name . '_' . $field_slug . '_1', $meta_val );
                                     }
                                 }
                             }
@@ -1481,8 +1463,10 @@ class Wordpress_Creation_Kit{
                 $error_messages .= $wck_single_forms_error['error'];
                 $error_fields .= implode( ',', $wck_single_forms_error['errorfields'] ).',';
             }
-            wp_safe_redirect( add_query_arg( array( 'wckerrormessages' => base64_encode( urlencode( $error_messages ) ), 'wckerrorfields' => base64_encode( urlencode( $error_fields ) ), 'postedvalues' => base64_encode( urlencode( json_encode( $wck_single_forms_posted_values ) ) ) ), esc_url_raw( $_SERVER["HTTP_REFERER"] ) ) ); //phpcs:ignore
+            if( isset( $_SERVER["HTTP_REFERER"] ) )
+                wp_safe_redirect(add_query_arg(array('wckerrormessages' => base64_encode(urlencode($error_messages)), 'wckerrorfields' => base64_encode(urlencode($error_fields)), 'postedvalues' => base64_encode(urlencode(json_encode($wck_single_forms_posted_values)))), esc_url_raw($_SERVER["HTTP_REFERER"])));
             exit;
+
         }
     }
 
@@ -1503,7 +1487,7 @@ class Wordpress_Creation_Kit{
         /* mark the fields */
         if( isset( $_GET['wckerrorfields'] ) && !empty( $_GET['wckerrorfields'] ) ){
             echo '<script type="text/javascript">';
-            $field_names = explode( ',', sanitize_text_field( urldecode( base64_decode( $_GET['wckerrorfields'] ) ) ) ); //phpcs:ignore
+            $field_names = explode( ',',  urldecode( base64_decode( sanitize_text_field( $_GET['wckerrorfields'] ) ) ) );
             foreach( $field_names as $field_name ){
                 echo "jQuery( '.field-label[for=\"". esc_js( $field_name ) ."\"]' ).addClass('error');";
 
@@ -1513,7 +1497,7 @@ class Wordpress_Creation_Kit{
 
         /* alert the error messages */
         if( isset( $_GET['wckerrormessages'] ) ){
-            echo '<script type="text/javascript">alert("'. str_replace( '%0A', '\n', esc_js( urldecode( base64_decode( $_GET['wckerrormessages'] ) ) ) ) .'")</script>'; //phpcs:ignore
+            echo '<script type="text/javascript">alert("'. str_replace( '%0A', '\n', esc_js( urldecode( base64_decode(  sanitize_text_field( $_GET['wckerrormessages'] ) ) ) ) ) .'")</script>'; //phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped --it is escaped
         }
     }
 	
@@ -1741,46 +1725,62 @@ class Wordpress_Creation_Kit{
 
     /**
      * Function that strips the script tags from an input
-     * @param $string
+     * @param $value
      * @return mixed
      */
-    function wck_sanitize_value( $string, $meta_name = false ){
+    function wck_sanitize_value( $value, $meta_name = false ){
 
-		$is_wysiwyg_field  = false;
-		$is_textarea_field = false;
+        $is_wysiwyg_field  = false;
+        $is_textarea_field = false;
 
-		if( !empty( $meta_name ) && !empty( $this->args['meta_array'] ) ){
+        if( !empty( $meta_name ) && !empty( $this->args['meta_array'] ) ){
 
-			foreach( $this->args['meta_array'] as $field ){
+            foreach( $this->args['meta_array'] as $field ){
 
-				if( $field['slug'] == $meta_name && $field['type'] == 'wysiwyg editor' )
-					$is_wysiwyg_field = true;
+                if( $field['slug'] === $meta_name && $field['type'] === 'wysiwyg editor' )
+                    $is_wysiwyg_field = true;
 
-				if( $field['slug'] == $meta_name && $field['type'] == 'textarea' )
-					$is_textarea_field = true;
+                if( $field['slug'] === $meta_name && $field['type'] === 'textarea' )
+                    $is_textarea_field = true;
 
-			}
+            }
 
-		} 
-		
-		if( $is_wysiwyg_field )
-			return wp_kses_post( $string );
-		elseif( $is_textarea_field )
-			return sanitize_textarea_field( $string );
-		else
-			return sanitize_text_field( $string );
-
-    }
-
-    function wck_sanitize_request( $request ){
-        if( is_array( $request ) ){
-            $request = array_map( array( $this, 'wck_sanitize_value' ), $request );
         }
-        else
-            $request = $this->wck_sanitize_value($request);
 
-        return $request;
+        if( is_array( $value ) ) {
+            $sanitized_array = array();
+
+            foreach ($value as $element) {
+                if( $is_wysiwyg_field )
+                    $sanitized_array[] =  wp_kses_post( $element );
+                elseif( $is_textarea_field )
+                    $sanitized_array[] = sanitize_textarea_field( $element );
+                else
+                    $sanitized_array[] = sanitize_text_field( $element );
+            }
+
+            return $sanitized_array;
+        }
+        else{
+            if( $is_wysiwyg_field )
+                return wp_kses_post( $value );
+            elseif( $is_textarea_field )
+                return sanitize_textarea_field( $value );
+            else
+                return sanitize_text_field( $value );
+        }
     }
+
+    function wck_sanitize_associative_array( $associative_array ){
+        $sanitized_associative_array = array();
+
+        foreach ( $associative_array as $meta_name => $value) {
+            $sanitized_associative_array[$meta_name] = $this->wck_sanitize_value($value, $meta_name);
+        }
+
+        return $sanitized_associative_array;
+    }
+
 }
 
 

@@ -1,9 +1,9 @@
 === Max Mega Menu ===
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
-Requires at least: 4.9
+Requires at least: 5.0
 Tested up to: 6.0
-Stable tag: 2.9.8
+Stable tag: 3.0
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -17,8 +17,6 @@ Max Mega Menu will automatically convert your existing menu into a mega menu. Yo
 https://www.youtube.com/watch?v=44dJwP1AXT8
 
 Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
-
-[](http://coderisk.com/wp/plugin/megamenu/RIPS-1tlo19jJE_)
 
 ###Mobile
 
@@ -51,9 +49,7 @@ Documentation & Demo: [https://www.megamenu.com](https://www.megamenu.com)
 
 * Keyboard Navigation built in
 * `TAB` activates keyboard navigation and navigates through the menu
-* `ENTER` on a parent item opens a sub menu (pressing `ENTER` a second time will respect the "Second Click Behaviour" setting)
-* `ENTER` on a standard item will follow the link
-* `SPACE` toggles the sub menu visibility
+* `ENTER` or `SPACE` on a sub menu arrow indicator shows/hides the sub menu
 * `ESC` closes all open sub menus
 
 Max Mega Menu is developed with a focus on code quality, performance and usability.
@@ -135,6 +131,17 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.1 =
+
+* Accessibility improvement: sub menus no longer appear automatically when parent items are tabbed to. Each sub menu arrow indicator can now be tabbed to and activated (by pressing Enter) independently. Note: it is required to clear the CSS cache to enable correct focus highlighting of the arrow indicators when using keyboard navigation, see megamenu.com for a demonstration.
+* Accessibility improvement: add "aria-current" attribute to current menu items
+* Accessibility improvement: space bar key press on sub menu indicator now shows/hides sub menu
+* Accessibility improvement: add role='button' to sub menu indicator arrow
+* Accessibility improvement: add aria-label attribute to sub menu indicator arrow which identifies the sub menu that will be opened/closed when activated
+* Fix: Correct Required WordPress version (5.0)
+* Fix: Prevent CSS from being repeatedly regenerated in Block Editor pages when using CSS "Output in head" option
+* Fix: Toggle bar disappears when specifying custom container_aria_label
 
 = 3.0 =
 

@@ -107,8 +107,8 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				}
 
 			//} else if ( 'block' === $item->type ) {
-			//	/** This filter is documented in wp-includes/post-template.php */
-			//	$item_output = apply_filters( 'the_content', $item->content );
+			//  /** This filter is documented in wp-includes/post-template.php */
+			//  $item_output = apply_filters( 'the_content', $item->content );
 			} else {
 
 				$atts = array();
@@ -144,6 +144,10 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 						$atts['role'] = 'button';
 					}
+				}
+
+				if ( is_array( $classes ) && in_array( 'current-menu-item', $classes ) ) {
+					$atts['aria-current'] = 'page';
 				}
 
 				if ( $depth == 0 ) {
@@ -193,7 +197,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				}
 
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) ) {
-					$item_output .= '<span class="mega-indicator"></span>';
+					$item_output .= '<span class="mega-indicator" tabindex="0" role="button" aria-label="' . esc_attr( apply_filters( 'megamenu_the_title', $item->title, $item->ID ) ) . " " . esc_html( 'submenu', 'megamenu' ) . '"></span>';
 				}
 
 				$item_output .= '</a>';

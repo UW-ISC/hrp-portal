@@ -421,7 +421,8 @@ function relevanssi_premium_generate_suggestion( $query ) {
  * @param int $blogid The blog ID.
  * @param int $id     The post ID.
  *
- * @return object $post The post object.
+ * @return object|WP_Error $post The post object or a WP_Error if the post
+ * cannot be found.
  */
 function relevanssi_get_multisite_post( $blogid, $id ) {
 	switch_to_blog( $blogid );

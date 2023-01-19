@@ -113,33 +113,33 @@ function wck_ctc_create_taxonomy(){
         foreach( $cts as $ct ){
 
             $labels = array(
-                'name' => _x( $ct['plural-label'], 'taxonomy general name', "wck" ), //phpcs:ignore
-                'singular_name' => _x( $ct['singular-label'], 'taxonomy singular name', "wck"), //phpcs:ignore
-                'search_items' => __( $ct['search-items'] ? $ct['search-items'] : 'Search '.$ct['plural-label'], 'wck' ), //phpcs:ignore
-                'popular_items' => __( $ct['popular-items'] ? $ct['popular-items'] : "Popular ".$ct['plural-label'], 'wck' ), //phpcs:ignore
-                'all_items' => __( $ct['all-items'] ? $ct['all-items'] : "All ".$ct['plural-label'], 'wck' ) , //phpcs:ignore
-                'parent_item' => __( $ct['parent-item'] ? $ct['parent-item'] : "Parent ".$ct['singular-label'], 'wck' ), //phpcs:ignore
-                'parent_item_colon' => __( $ct['parent-item-colon'] ? $ct['parent-item-colon'] : "Parent ".$ct['singular-label'].':', 'wck' ), //phpcs:ignore
-                'edit_item' => __( $ct['edit-item'] ? $ct['edit-item'] : "Edit ".$ct['singular-label'], 'wck' ), //phpcs:ignore
-                'update_item' => __( $ct['update-item'] ? $ct['update-item'] : "Update ".$ct['singular-label'], 'wck' ), //phpcs:ignore
-                'add_new_item' =>  __( $ct['add-new-item'] ? $ct['add-new-item'] : "Add New ". $ct['singular-label'], 'wck' ), //phpcs:ignore
-                'new_item_name' => __( $ct['new-item-name'] ? $ct['new-item-name'] :  "New ". $ct['singular-label']. ' Name', 'wck' ), //phpcs:ignore
-                'separate_items_with_commas' => __( $ct['separate-items-with-commas'] ? $ct['separate-items-with-commas'] :  "Separate  ". strtolower( $ct['plural-label'] ). ' with commas', 'wck' ), //phpcs:ignore
-                'add_or_remove_items' => __( $ct['add-or-remove-items'] ? $ct['add-or-remove-items'] : "Add or remove " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore
-                'choose_from_most_used' => __( $ct['choose-from-most-used'] ? $ct['choose-from-most-used'] : "Choose from the most used " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore
-                'menu_name' => $ct['menu-name'] ? $ct['menu-name'] : $ct['plural-label'] //phpcs:ignore
+                'name' => _x( $ct['plural-label'], 'taxonomy general name', "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'singular_name' => _x( $ct['singular-label'], 'taxonomy singular name', "wck"), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'search_items' => __( $ct['search-items'] ? $ct['search-items'] : 'Search '.$ct['plural-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'popular_items' => __( $ct['popular-items'] ? $ct['popular-items'] : "Popular ".$ct['plural-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'all_items' => __( $ct['all-items'] ? $ct['all-items'] : "All ".$ct['plural-label'], 'wck' ) , //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'parent_item' => __( $ct['parent-item'] ? $ct['parent-item'] : "Parent ".$ct['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'parent_item_colon' => __( $ct['parent-item-colon'] ? $ct['parent-item-colon'] : "Parent ".$ct['singular-label'].':', 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'edit_item' => __( $ct['edit-item'] ? $ct['edit-item'] : "Edit ".$ct['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'update_item' => __( $ct['update-item'] ? $ct['update-item'] : "Update ".$ct['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'add_new_item' =>  __( $ct['add-new-item'] ? $ct['add-new-item'] : "Add New ". $ct['singular-label'], 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'new_item_name' => __( $ct['new-item-name'] ? $ct['new-item-name'] :  "New ". $ct['singular-label']. ' Name', 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'separate_items_with_commas' => __( $ct['separate-items-with-commas'] ? $ct['separate-items-with-commas'] :  "Separate  ". strtolower( $ct['plural-label'] ). ' with commas', 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'add_or_remove_items' => __( $ct['add-or-remove-items'] ? $ct['add-or-remove-items'] : "Add or remove " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'choose_from_most_used' => __( $ct['choose-from-most-used'] ? $ct['choose-from-most-used'] : "Choose from the most used " .strtolower( $ct['plural-label'] ), 'wck' ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                'menu_name' => $ct['menu-name'] ? $ct['menu-name'] : $ct['plural-label'] //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
             );
 
             if( version_compare( $wp_version, '4.3', '>=' ) ) {
-                $labels_v43 = array( 'no_terms' => __( !empty( $ct['no_terms'] ) ? $ct['no_terms'] : "No Terms", "wck" ) ); //phpcs:ignore
+                $labels_v43 = array( 'no_terms' => __( !empty( $ct['no_terms'] ) ? $ct['no_terms'] : "No Terms", "wck" ) ); //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
 
                 array_push( $labels, $labels_v43 );
             }
 
             if( version_compare( $wp_version, '4.4', '>=' ) ) {
                 $labels_v44 = array(
-                    'items_list_navigation' => __( !empty( $ct['items_list_navigation'] ) ? $ct['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore
-                    'items_list' => __( !empty( $ct['items_list'] ) ? $ct['items_list'] : "Items List", "wck" ) //phpcs:ignore
+                    'items_list_navigation' => __( !empty( $ct['items_list_navigation'] ) ? $ct['items_list_navigation'] : "Items List Navigation", "wck" ), //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
+                    'items_list' => __( !empty( $ct['items_list'] ) ? $ct['items_list'] : "Items List", "wck" ) //phpcs:ignore WordPress.WP.I18n.NonSingularStringLiteralText --we want to allow translations
                 );
 
                 foreach( $labels_v44 as $label_v44 ) {
