@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.1
-Stable tag: 2.20.0
+Stable tag: 2.20.3
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,24 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.20.3 =
+* New feature: Relevanssi now has a debug mode that will help troubleshooting and support.
+* Minor fix: Using the_permalink() caused problems with search result links. That is now fixed. Relevanssi no longer hooks onto `the_permalink` hook and instead uses `post_link` and other similar hooks.
+* Minor fix: Click tracking parameters have more control to avoid problems from malformed click tracking data.
+
+= 2.20.2 =
+* Fixes the persistent update nag.
+
+= 2.20.1 =
+* New feature: New filter hook `relevanssi_add_highlight_and_tracking` can be used to force Relevanssi to add the `highlight` and tracking parameters to permalinks.
+* Changed behaviour: Exclusions now override pinning. If a post is pinned for 'foo' and excluded for 'foo bar', it will now be excluded when someone searches for 'foo bar'. Previously pinning overrode the exclusion.
+* Changed behaviour: The 'relevanssi_wpml_filter' filter function now runs on priority 9 instead of 10 to avoid problems with custom filters on relevanssi_hits_filter.
+* Minor fix: Page links didn't get the click tracking tags. This is fixed now.
+* Minor fix: Including posts in the Related posts could cause duplicates. Now Relevanssi excludes the included posts from the search so that there won't be duplicates.
+* Minor fix: Handle cases of missing posts better; relevanssi_get_post() now returns a WP_Error if no post is found.
+* Minor fix: Avoid a slow query on the searching tab when the throttle is not enabled.
+* Minor fix: Search queries that contain apostrophes and quotes can now be deleted from the log.
+
 = 2.20.0 =
 * New feature: Relevanssi now shows the MySQL `max_allowed_packet` size on the debug tab.
 * New feature: Relevanssi now shows the indexing query on the debug tab.
@@ -320,6 +338,15 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Prevents fatal errors from `relevanssi_strip_all_tags()`.
 
 == Upgrade notice ==
+= 2.20.3 =
+* Fixes a bug with broken permalinks.
+
+= 2.20.2 =
+* Fixes the persistent update nag.
+
+= 2.20.1 =
+* Bug fixes and small improvements.
+
 = 2.20.0 =
 * New features, performance improvements, bug fixes.
 

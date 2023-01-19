@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.0
+ * Version:     3.1
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.0';
+		public $version = '3.1';
 
 
 		/**
@@ -522,7 +522,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 				return $nav_menu;
 			}
 
-			$find = 'class="' . $args->container_class . '">';
+			$find = '<ul id="' . $args->menu_id . '"';
 
 			$theme_id = mmm_get_theme_id_for_location( $args->theme_location );
 
@@ -530,7 +530,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			$content = apply_filters( 'megamenu_toggle_bar_content', $content, $nav_menu, $args, $theme_id );
 
-			$replace = $find . '<div class="mega-menu-toggle">' . $content . '</div>';
+			$replace = '<div class="mega-menu-toggle">' . $content . '</div>' . $find;
 
 			return str_replace( $find, $replace, $nav_menu );
 		}

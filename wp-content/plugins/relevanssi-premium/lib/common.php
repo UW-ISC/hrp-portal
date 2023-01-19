@@ -202,7 +202,7 @@ function relevanssi_default_post_ok( $post_ok, $post_id ) {
 		$current_user = wp_get_current_user();
 		if ( ! $post_ok && $current_user->ID > 0 ) {
 			$post = relevanssi_get_post( $post_id );
-			if ( $current_user->ID === (int) $post->post_author ) {
+			if ( ! is_wp_error( $post ) && $current_user->ID === (int) $post->post_author ) {
 				// Allow authors to see their own private posts.
 				$post_ok = true;
 			}
@@ -1041,8 +1041,14 @@ function relevanssi_permalink( $link, $link_post = null ) {
 		global $post;
 		$link_post = $post;
 	} elseif ( is_int( $link_post ) ) {
-		$link_post = get_post( $link_post );
+		$link_post = relevanssi_get_post( $link_post );
 	}
+	if ( is_object( $link_post ) && ! property_exists( $link_post, 'relevance_score' ) ) {
+		// get_permalink( $post_id ) uses get_post() which eliminates Relevanssi
+		// data from the post, thus we use relevanssi_get_post() to get it.
+		$link_post = relevanssi_get_post( $link_post->ID );
+	}
+
 	// Using property_exists() to avoid troubles from magic variables.
 	if ( is_object( $link_post ) && property_exists( $link_post, 'relevanssi_link' ) ) {
 		// $link_post->relevanssi_link can still be false.
@@ -1063,11 +1069,28 @@ function relevanssi_permalink( $link, $link_post = null ) {
 		$add_highlight_and_tracking = true;
 	}
 
-	if ( $add_highlight_and_tracking && is_object( $link_post ) && property_exists( $link_post, 'relevance_score' ) ) {
+	if ( is_object( $link_post ) && ! property_exists( $link_post, 'relevance_score' ) ) {
+		$add_highlight_and_tracking = false;
+	}
+
+	/**
+	 * Filters whether to add the highlight and tracking parameters to the link.
+	 *
+	 * @param boolean $add_highlight_and_tracking Whether to add the highlight
+	 * and tracking parameters to the link.
+	 * @param object $link_post                   The post object.
+	 */
+	$add_highlight_and_tracking = apply_filters(
+		'relevanssi_add_highlight_and_tracking',
+		$add_highlight_and_tracking,
+		$link_post
+	);
+
+	if ( $add_highlight_and_tracking ) {
 		$link = relevanssi_add_highlight( $link, $link_post );
 	}
 
-	if ( $add_highlight_and_tracking && function_exists( 'relevanssi_add_tracking' ) && property_exists( $link_post, 'relevance_score' ) ) {
+	if ( $add_highlight_and_tracking && function_exists( 'relevanssi_add_tracking' ) ) {
 		$link = relevanssi_add_tracking( $link, $link_post );
 	}
 

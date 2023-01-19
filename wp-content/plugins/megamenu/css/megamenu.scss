@@ -79,6 +79,7 @@
         .mega-toggle-block .mega-search input[type=text]:focus,
         .mega-toggle-block button.mega-toggle-animated:focus,
         #{$menu} a:focus,
+        #{$menu} span:focus,
         #{$menu} input:focus,
         #{$menu} li.mega-menu-item a.mega-menu-link:focus {
             outline: 3px solid #109cde;
@@ -894,7 +895,7 @@
                 font-family: $arrow_font;
                 font-weight: $arrow_font_weight;
                 display: inline-block;
-                margin: 0 0 0 6px;
+                margin: 0;
                 vertical-align: top;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
@@ -909,7 +910,7 @@
             }
 
             > a.mega-menu-link > span.mega-indicator {
-                display: inline;
+                display: inline-block;
                 height: auto;
                 width: auto;
                 background: transparent;
@@ -921,6 +922,7 @@
                 color: inherit;
                 font-size: inherit;
                 padding: 0;
+                margin: 0 0 0 6px;
             }
 
             li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {

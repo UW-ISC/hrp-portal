@@ -282,6 +282,7 @@ function relevanssi_get_related_post_ids( $post_id, $use_cache = true ) {
 	);
 
 	$exclude_ids = array_merge( $exclude_ids, $global_exclude_ids );
+	$exclude_ids = array_merge( $exclude_ids, $related_posts );
 	$exclude_ids = array_keys( array_flip( $exclude_ids ) );
 
 	$date_query = array();
