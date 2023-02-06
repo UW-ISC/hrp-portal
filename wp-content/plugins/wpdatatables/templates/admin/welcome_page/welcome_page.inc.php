@@ -51,7 +51,7 @@
                                     <?php esc_html_e('The Best Tables & Charts WordPress Plugin', 'wpdatatables'); ?>
                                 </h2>
                                 <p>
-                                    <?php esc_html_e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 60,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
+                                    <?php esc_html_e('wpDataTables is the best-selling WordPress table plugin which makes your work with tables, charts and data management easy. 70,000+ companies and individuals already trust wpDataTables', 'wpdatatables'); ?>
                                 </p>
                                 <div class="wdt-changelog-button">
                                     <div class="wdt-changelog-button-background">

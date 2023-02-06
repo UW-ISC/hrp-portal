@@ -111,6 +111,9 @@ function relevanssi_pinning( $hits ) {
 				if ( ! isset( $pins_fetched[ $blog_id ] ) ) {
 					$positive_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_pin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 					$negative_ids[ $blog_id ] = $wpdb->get_col( 'SELECT post_id FROM ' . $wpdb->prefix . "postmeta WHERE meta_key = '_relevanssi_unpin' AND meta_value IN ( $term_list )" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+					if ( ! is_array( $pins_fetched ) ) {
+						$pins_fetched = array();
+					}
 					$pins_fetched[ $blog_id ] = true;
 				}
 				restore_current_blog();
@@ -124,8 +127,12 @@ function relevanssi_pinning( $hits ) {
 			}
 			$hit_id = strval( $hit->ID ); // The IDs from the database are strings, the one from the post is an integer in some contexts.
 
-			$positive_match = is_array( $positive_ids[ $blog_id ] ) && in_array( $hit_id, $positive_ids[ $blog_id ], true );
-			$negative_match = is_array( $negative_ids[ $blog_id ] ) && in_array( $hit_id, $negative_ids[ $blog_id ], true );
+			$positive_match = isset( $positive_ids[ $blog_id ] )
+				&& is_array( $positive_ids[ $blog_id ] )
+				&& in_array( $hit_id, $positive_ids[ $blog_id ], true );
+			$negative_match = isset( $negative_ids[ $blog_id ] )
+				&& is_array( $negative_ids[ $blog_id ] )
+				&& in_array( $hit_id, $negative_ids[ $blog_id ], true );
 			$pinned_for_all = isset( $hit->ID ) && isset( $posts_pinned_for_all[ $hit->ID ] );
 
 			if ( $hit_id && $positive_match && ! $negative_match ) {

@@ -599,7 +599,7 @@
     margin-bottom: 12px;
 }
 .wdt-datatables-admin-wrap .wdt-amelia-card .card-body {
-    background: url(../../img/dashboard/amelia.svg) no-repeat right !important;
+    background: url(../../img/dashboard/amelia.png) no-repeat right !important;
     background-size: contain !important;
 }
 
@@ -796,7 +796,7 @@
         background-size: 200px 200px !important;
     }
     .wdt-datatables-admin-wrap .wdt-amelia-card .card-body {
-        background: url(../../img/dashboard/amelia.svg) no-repeat right !important;
+        background: url(../../img/dashboard/amelia.png) no-repeat right !important;
         background-size: 400px 260px !important;
     }
 }
@@ -953,7 +953,7 @@
         padding: 40px 0 0 0 !important;
     }
     .wdt-datatables-admin-wrap .wdt-amelia-card .card-body {
-        background: url(../../img/dashboard/amelia.svg) no-repeat top right !important;
+        background: url(../../img/dashboard/amelia.png) no-repeat top right !important;
         background-size: 200px 100px !important;
     }
     .wdt-datatables-admin-wrap .wdt-dashboard .wdt-footer-title,

@@ -53,7 +53,7 @@
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
  * @package Insert Fixit
- * @version 1.23
+ * @version 1.24
  */
 
 /*
@@ -61,7 +61,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.23
+Version: 1.24
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2021 David Lingren
@@ -94,7 +94,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.23';
+	const CURRENT_VERSION = '1.24';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -542,6 +542,36 @@ class Insert_Fixit {
 	private static $attached_items = array();
 
 	/**
+	 * Validate Post Type(s) user input text to prevent SQL injectioin attacks
+ 	 *
+	 * @since 1.24
+	 *
+	 * @param	string	$post_types Input text; should have comma-separated, single-quoted post type names
+	 *
+	 * @return	string	Sanitized post type(s) string
+	 */
+	private static function _validate_post_types( $post_types ) {
+		$post_type_array = explode( ',', $post_types );
+		
+		$valid_post_types = get_post_types();
+		
+		$output_post_types = array();
+		foreach ( $post_type_array as $post_type ) {
+			$post_type = trim( $post_type, " '" );
+			
+			if ( in_array( $post_type, $valid_post_types ) ) {
+				$output_post_types[] = "'" . $post_type . "'";
+			}
+		}
+
+		if ( count( $output_post_types ) ) {
+			return implode( ',', $output_post_types );
+		} else {
+			return "'post', 'page'";
+		}
+	}
+	
+	/**
 	 * Compile array of post/page IDs giving attached item IDs
  	 *
 	 * @since 1.00
@@ -666,6 +696,8 @@ class Insert_Fixit {
 			$post_types = "'post', 'page'";
 		}
 
+		$post_types = self::_validate_post_types( $post_types );
+		
 		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<img%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
 		$results = $wpdb->get_results( $query );
@@ -780,7 +812,6 @@ class Insert_Fixit {
 		}
 
 		$return = delete_transient( self::SLUG_PREFIX . 'figcaption_inserts' );
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache delete_transient return = " . var_export( $return, true ), 0 );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
 			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
@@ -801,7 +832,8 @@ class Insert_Fixit {
 		} else {
 			$post_types = "'post', 'page'";
 		}
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache post_types = " . var_export( $post_types, true ), 0 );
+		
+		$post_types = self::_validate_post_types( $post_types );
 
 		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<figcaption%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_figcaption_inserts_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
@@ -815,7 +847,7 @@ class Insert_Fixit {
 			// Items within a gallery require a different <figcaption> tag
 			$match_count = preg_match_all( '/\<\!-- wp:gallery \{"ids":\[([^\]]*?)\]/', $result->post_content, $matches );
 			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), self::MLA_DEBUG_CATEGORY );
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), 0 );
+
 			if ( $match_count ) {
 				foreach( $matches[1] as $match ) {
 					$match = explode( ',', $match );
@@ -824,11 +856,9 @@ class Insert_Fixit {
 					}
 				}
 			}
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$gallery_items = " . var_export( $gallery_items, true ), 0 );
 			
 			$match_count = preg_match_all( '/\<figure[^\>]*?\>\<img.*?(wp-image-([0-9]*)).*?(\<figcaption.*?\>(.*?)\<\/figcaption\>|)\<\/figure\>/', $result->post_content, $matches, PREG_OFFSET_CAPTURE );
 			MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), self::MLA_DEBUG_CATEGORY );
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache( {$result->ID} ) count = {$match_count}, src \$matches = " . var_export( $matches, true ), 0 );
 
 			if ( $match_count ) {
 				$figcaption_inserts[ $result->ID ]['content'] = $result->post_content;
@@ -858,11 +888,9 @@ class Insert_Fixit {
 		}
 
 		$return = set_transient( self::SLUG_PREFIX . 'figcaption_inserts', $figcaption_inserts, 900 ); // fifteen minutes
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache set_transient return = " . var_export( $return, true ), 0 );
 		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache() return = {$return}, \$figcaption_inserts = " . var_export( $figcaption_inserts, true ), self::MLA_DEBUG_CATEGORY );
 		self::$figcaption_inserts = $figcaption_inserts;
 
-//error_log( __LINE__ . " Insert_Fixit::_build_figcaption_inserts_cache figcaption_inserts = " . var_export( $figcaption_inserts, true ), 0 );
 		return 'Image inserts cache refreshed with ' . count( self::$figcaption_inserts ) . ' post/page elements.';
 	} // _build_figcaption_inserts_cache
 
@@ -899,7 +927,6 @@ class Insert_Fixit {
 		}
 
 		$return = delete_transient( self::SLUG_PREFIX . 'featured_objects' );
-//error_log( __LINE__ . " Insert_Fixit::_build_featured_objects_cache delete_transient return = " . var_export( $return, true ), 0 );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ) {
 			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ];
@@ -950,7 +977,6 @@ class Insert_Fixit {
 		}
 
 		$return = set_transient( self::SLUG_PREFIX . 'featured_objects', $references, 900 ); // fifteen minutes
-//error_log( __LINE__ . " Insert_Fixit::_build_featured_objects_cache set_transient return = " . var_export( $return, true ), 0 );
 		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_featured_objects_cache return = {$return}, references = " . var_export( $references, true ), self::MLA_DEBUG_CATEGORY );
 		self::$featured_objects = $references;
 
@@ -990,7 +1016,6 @@ class Insert_Fixit {
 		}
 
 		$return = delete_transient( self::SLUG_PREFIX . 'item_references' );
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache delete_transient return = " . var_export( $return, true ), 0 );
 
 		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ) {
 			$lower_bound = (integer) $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ];
@@ -1011,7 +1036,8 @@ class Insert_Fixit {
 		} else {
 			$post_types = "'post', 'page'";
 		}
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache post_types = " . var_export( $post_types, true ), 0 );
+
+		$post_types = self::_validate_post_types( $post_types );
 
 		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( ( post_content LIKE \'%5$s\' ) OR ( post_content LIKE \'%6$s\' ) ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%wp-image-%', '%ids=%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
@@ -1061,7 +1087,6 @@ class Insert_Fixit {
 		$return = set_transient( self::SLUG_PREFIX . 'item_references', self::$item_references, 900 ); // fifteen minutes
 		MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_build_item_references_cache return = {$return}, self::\$item_references " . var_export( self::$item_references, true ), self::MLA_DEBUG_CATEGORY );
 
-//error_log( __LINE__ . " Insert_Fixit::_build_item_references_cache item_references = " . var_export( self::$item_references, true ), 0 );
 		return 'Item references cache refreshed with ' . count( self::$item_references ) . ' items referenced in ' . count( $results ) . ' post/page elements.';
 	} // _build_item_references_cache
 

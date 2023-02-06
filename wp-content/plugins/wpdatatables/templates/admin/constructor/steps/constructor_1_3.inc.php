@@ -314,7 +314,7 @@
         <div class="col-sm-3 p-r-0">
             <div class="form-group">
                 <div class="fg-line">
-                    <input type="text" placeholder="Choose criteria" class="form-control input-sm" value="" id="wdt-constructor-where-value">
+                    <input type="text" placeholder="<?php esc_attr_e('Choose criteria','wpdatables'); ?>" class="form-control input-sm" value="" id="wdt-constructor-where-value">
                 </div>
             </div>
         </div>

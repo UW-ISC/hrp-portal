@@ -100,7 +100,7 @@
                         </h5>
                         <div class="form-group">
                             <div class="fg-line">
-                                <input type="text" class="form-control input-sm wdt-constructor-default-value" value="" placeholder="Enter predifined value">
+                                <input type="text" class="form-control input-sm wdt-constructor-default-value" value="" placeholder="<?php esc_attr_e('Enter predefined value','wpdatatables'); ?>">
                             </div>
                         </div>
                     </div>

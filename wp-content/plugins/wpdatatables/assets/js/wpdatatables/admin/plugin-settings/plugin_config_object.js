@@ -170,6 +170,12 @@ var wpdatatable_plugin_config = {
             jQuery('#wdt-lite-vs-premium-page-status').prop( 'checked', liteVSPremiumPageStatus );
         }
     },
+    setIncludeGogleFonts: function (includeGoogleFonts) {
+        wdt_current_config.wdtIncludeGoogleFonts = includeGoogleFonts;
+        if( jQuery('#wdt-include-google-fonts').val() != includeGoogleFonts ){
+            jQuery('#wdt-include-google-fonts').prop( 'checked', includeGoogleFonts );
+        }
+    },
     setIncludeBootstrap: function (includeBootstrap) {
         wdt_current_config.wdtIncludeBootstrap = includeBootstrap;
         if( jQuery('#wdt-include-bootstrap').val() != includeBootstrap ){

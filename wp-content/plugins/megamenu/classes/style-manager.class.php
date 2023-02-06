@@ -918,9 +918,6 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 		 * @since 1.0
 		 */
 		public function enqueue_scripts() {
-
-			wp_enqueue_script( 'hoverIntent' );
-
 			$js_path = MEGAMENU_BASE_URL . 'js/maxmegamenu.js';
 
 			$dependencies = apply_filters( 'megamenu_javascript_dependencies', array( 'jquery', 'hoverIntent' ) );

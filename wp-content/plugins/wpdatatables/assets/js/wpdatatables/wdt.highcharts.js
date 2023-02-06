@@ -164,6 +164,55 @@ var wpDataTablesHighchart = function(){
                 case 'highcharts_basic_area_chart':
                     this.options.chart.type = 'area';
                     break;
+                case 'highcharts_funnel3d_chart':
+                    this.options.chart.type = 'funnel3d';
+                    this.options.chart.options3d = {
+                        enabled: true,
+                        alpha: 10,
+                        depth: 50,
+                        viewDistance: 50
+                   };
+                    this.options.plotOptions = {
+                          series: {
+                                     dataLabels: {
+                                         enabled: true,
+                                         format: '<b>{point.name}</b> ({point.y:,.0f})',
+                                         y:10,
+                                     },
+                             neckWidth: '30%',
+                             neckHeight: '25%',
+                             width: '70%',
+                             height: '70%'
+                         },
+                     };
+                     this.options.legend = {
+                       enabled: false
+                     };
+                    break;
+                case 'highcharts_funnel_chart':
+                    this.options.chart.type = 'funnel';
+
+                     this.options.plotOptions = {
+                         series: {
+                             dataLabels: {
+                                 enabled: true,
+                                 format: '<b>{point.name}</b> ({point.y:,.0f})',
+                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                 softConnector: true
+                             },
+                             neckWidth: '30%',
+                             neckHeight: '25%',
+                             width: '55%'
+                         },
+                         funnel: {
+                             name : '<b>{point.name}</b> ({point.y:,.2f})'
+                         }
+
+                     };
+                     this.options.legend = {
+                       enabled: false
+                     };
+                    break;
                 case 'highcharts_stacked_area_chart':
                     this.options.chart.type = 'area';
                     this.options.plotOptions = { area: { stacking: 'normal' } };
@@ -180,6 +229,7 @@ var wpDataTablesHighchart = function(){
                     break;
                 case 'highcharts_basic_column_chart':
                     this.options.chart.type = 'column';
+                    this.options.tooltip.useHTML = true;
                     break;
                 case 'highcharts_3d_column_chart':
                     this.options.chart.type = 'column';
@@ -192,8 +242,10 @@ var wpDataTablesHighchart = function(){
                         depth: 40
                     };
                     this.options.plotOptions = { column: { depth: 25 } };
+                    this.options.tooltip.useHTML = true;
                     break;
                 case 'highcharts_stacked_column_chart':
+                    this.options.tooltip.useHTML = true;
                     this.options.chart.type = 'column';
                     this.options.plotOptions = { column: { stacking: 'normal' } };
                     break;
@@ -407,7 +459,7 @@ var wpDataTablesHighchart = function(){
             chartConfig.plot_border_width ?  this.options.chart.plotBorderWidth = chartConfig.plot_border_width : null;
             this.options.chart.plotBorderColor = chartConfig.plot_border_color;
             // Series
-            if ( this.options.chart.type != 'pie' ) {
+            if ( this.options.chart.type != 'pie') {
                 var j = 0;
 
                   Array.isArray(this.options.yAxis) ? this.options.yAxis.splice(1) : '';

@@ -24,7 +24,7 @@
            class="wpdtSimpleTable wpDataTable"
            data-column="<?php echo esc_attr($this->getColNumber()) ?>"
            data-rows="<?php echo esc_attr($this->getRowNumber()) ?>"
-           data-wpID="<?php echo esc_attr($this->getTableID()) ?>"
+           data-wpID="<?php echo (int)$this->getTableID() ?>"
            data-responsive="<?php echo esc_attr($isResponsive) ?>"
            data-has-header="<?php echo esc_attr($header) ?>">
 

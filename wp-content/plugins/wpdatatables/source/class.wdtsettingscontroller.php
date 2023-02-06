@@ -103,6 +103,7 @@ class WDTSettingsController
             'wdtMobileWidth' => get_option('wdtMobileWidth'),
             'wdtGettingStartedPageStatus' => get_option('wdtGettingStartedPageStatus'),
             'wdtLiteVSPremiumPageStatus' => get_option('wdtLiteVSPremiumPageStatus'),
+            'wdtIncludeGoogleFonts' => get_option('wdtIncludeGoogleFonts'),
             'wdtIncludeBootstrap' => get_option('wdtIncludeBootstrap'),
             'wdtIncludeBootstrapBackEnd' => get_option('wdtIncludeBootstrapBackEnd'),
             'wdtPreventDeletingTables' => get_option('wdtPreventDeletingTables'),

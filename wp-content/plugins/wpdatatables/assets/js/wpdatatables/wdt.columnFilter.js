@@ -183,7 +183,7 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
 
     input.on('keyup input',_.debounce(function (e) {
         inputSearch(this.value, e.keyCode);
-    }, 500)
+    }, serverSide ? 500 : 0)
     )
 
     function inputSearch(value, keyCode) {

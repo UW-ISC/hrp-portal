@@ -2,6 +2,10 @@
  * wpDataTables Base styles
  *
 */
+:root {
+    --wpdt-inter-google-font: 'Inter', sens-serif;
+    --wpdt-roboto-google-font: 'Roboto', sens-serif;
+}
 
 @font-face {
     font-weight: 400;

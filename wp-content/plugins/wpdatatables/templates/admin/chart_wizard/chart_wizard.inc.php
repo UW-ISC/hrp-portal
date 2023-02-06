@@ -215,7 +215,7 @@
                     <div class="fg-line">
                         <div class="row">
                             <div class="col-sm-12" style="display: flex">
-                                <input type="text" name="font-name" id="series-image-{{:#index}}" value="" class="form-control input-sm series-image" placeHolder="Upload an image or paste URL" />
+                                <input type="text" name="font-name" id="series-image-{{:#index}}" value="" class="form-control input-sm series-image" placeHolder="<?php esc_attr_e('Upload an image or paste URL','wpdatatables'); ?>" />
                                 <button id="wdt-upload-chart-image-{{:#index}}" class="wdt-series-image-button"><span class="wpdt-icon-image"></span></button>
                             </div>
                         </div>

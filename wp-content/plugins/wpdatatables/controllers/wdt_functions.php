@@ -233,6 +233,9 @@ function wdtActivationCreateTables() {
     if (get_option('wdtLiteVSPremiumPageStatus') === false) {
         update_option('wdtLiteVSPremiumPageStatus', 0 );
     }
+    if (get_option('wdtIncludeGoogleFonts') === false) {
+        update_option('wdtIncludeGoogleFonts', true );
+    }
     if (get_option('wdtIncludeBootstrap') === false) {
         update_option('wdtIncludeBootstrap', true);
     }
@@ -337,6 +340,7 @@ function wdtUninstallDelete() {
         delete_option('wdtRenderCharts');
         delete_option('wdtGettingStartedPageStatus');
         delete_option('wdtLiteVSPremiumPageStatus');
+        delete_option('wdtIncludeGoogleFonts');
         delete_option('wdtIncludeBootstrap');
         delete_option('wdtIncludeBootstrapBackEnd');
         delete_option('wdtPreventDeletingTables');
@@ -615,6 +619,8 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null) {
         'id' => '0'
     ), $atts));
 
+    $id = absint($id);
+
     if (is_admin() && defined( 'AVADA_VERSION' ) && is_plugin_active('fusion-builder/fusion-builder.php') &&
         class_exists('Fusion_Element') && class_exists('WPDataTables_Fusion_Elements') &&
         isset($_POST['action']) && $_POST['action'] === 'get_shortcode_render')
@@ -626,19 +632,22 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null) {
     if (!$id) {
         return false;
     }
+    try {
+        $wpDataChart = new WPDataChart();
+        $wpDataChart->setId($id);
+        $wpDataChart->loadFromDB();
 
-    $wpDataChart = new WPDataChart();
-    $wpDataChart->setId($id);
-    $wpDataChart->loadFromDB();
+        $chartExists = $wpDataChart->getwpDataTableId();
+        if (empty($chartExists)) {
+            return esc_html__('wpDataChart with provided ID not found!', 'wpdatatables');
+        }
 
-    $chartExists = $wpDataChart->getwpDataTableId();
-    if (empty($chartExists)) {
-        return esc_html__('wpDataChart with provided ID not found!', 'wpdatatables');
+        do_action('wpdatatables_before_render_chart', $wpDataChart->getId());
+
+        return $wpDataChart->renderChart();
+    } catch (Exception $e) {
+        return esc_html__('There is some issue of displaying chart. Please edit chart in admin area for more details.');
     }
-
-    do_action('wpdatatables_before_render_chart', $wpDataChart->getId());
-
-    return $wpDataChart->renderChart();
 }
 
 /**
@@ -658,6 +667,10 @@ function wdtWpDataTableCellShortcodeHandler($atts, $content = null) {
         'column_id_value' => '%%no_val%%',
         'sort' => '1'
     ), $atts));
+
+    $table_id = absint($table_id);
+    $row_id = absint($row_id);
+    $sort = absint($sort);
 
     /**
      * Protection
@@ -1091,6 +1104,7 @@ function formulaFormat($headersInFormulaColumn, $formulaColumn, $tableName, $lef
  * @param $atts
  * @param null $content
  * @return mixed|string
+ * @throws Exception
  */
 function wdtWpDataTableShortcodeHandler($atts, $content = null) {
     global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $wdtExportFileName;
@@ -1110,6 +1124,8 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
         'table_view' => 'regular'
     ), $atts));
 
+    $id = absint($id);
+
     if (is_admin() && defined( 'AVADA_VERSION' ) && is_plugin_active('fusion-builder/fusion-builder.php') &&
         class_exists('Fusion_Element') && class_exists('WPDataTables_Fusion_Elements') &&
         isset($_POST['action']) && $_POST['action'] === 'get_shortcode_render')
@@ -1117,10 +1133,6 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
         return WPDataTables_Fusion_Elements::get_content_for_avada_live_builder($atts, 'table');
     }
 
-    /**
-     * Protection
-     * @var int $id
-     */
     if (!$id) {
         return false;
     }
@@ -1167,10 +1179,8 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
         try{
             /** @var mixed $table_view */
             if ($table_view == 'excel') {
-                /** @var WPExcelDataTable $wpDataTable */
                 $wpDataTable = new WPExcelDataTable($tableData->connection);
             } else {
-                /** @var WPDataTable $wpDataTable */
                 $wpDataTable = new WPDataTable($tableData->connection);
             }
         } catch (Exception $e) {
@@ -1219,25 +1229,30 @@ function wdtFuncsShortcodeHandler($atts, $content = null, $shortcode = null) {
         'value_only' => 0
     ), $atts);
 
-    if (!$attributes['table_id']) {
+    $table_id   = absint($attributes['table_id']);
+    $col_id     = absint($attributes['col_id']);
+    $label      = is_null($attributes['label']) ? null : sanitize_text_field($attributes['label']);
+    $value_only = absint($attributes['value_only']);
+
+    if (!$table_id) {
         return esc_html__("Please provide table_id attribute for {$shortcode} shortcode!", 'wpdatatables');
     }
-    if (!$attributes['col_id']) {
+    if (!$col_id) {
         return esc_html__("Please provide col_id attribute for {$shortcode} shortcode!", 'wpdatatables');
     }
 
-    $wpDataTable = WPDataTable::loadWpDataTable($attributes['table_id'], null, true);
+    $wpDataTable = WPDataTable::loadWpDataTable($table_id, null, true);
 
     $wpDataTableColumns = $wpDataTable->getColumns();
     if (empty($wpDataTableColumns)) {
         return esc_html__('wpDataTable with provided ID not found!', 'wpdatatables');
     }
 
-    $column = WDTConfigController::loadSingleColumnFromDB($attributes['col_id']);
+    $column = WDTConfigController::loadSingleColumnFromDB($col_id);
 
-    $columnExists = $column['table_id'] === $attributes['table_id'];
+    $columnExists = (int)$column['table_id'] === $table_id;
     if ($columnExists === false) {
-        return esc_html__("Column with ID {$attributes['col_id']} is not found in table with ID {$attributes['table_id']}!", 'wpdatatables');
+        return esc_html__("Column with ID {$col_id} is not found in table with ID {$table_id}!", 'wpdatatables');
     }
     if ($column['column_type'] !== 'int' && $column['column_type'] !== 'float' && $column['column_type'] !== 'formula') {
         return esc_html__('Provided column is not Integer or Float column type', 'wpdatatables');
@@ -1245,23 +1260,23 @@ function wdtFuncsShortcodeHandler($atts, $content = null, $shortcode = null) {
 
     if ($shortcode === 'wpdatatable_sum') {
         $function = 'sum';
-        if (!isset($attributes['label'])) {
-            $attributes['label'] = get_option('wdtSumFunctionsLabel') ? get_option('wdtSumFunctionsLabel') : '&#8721; =';
+        if (!isset($label)) {
+            $label = get_option('wdtSumFunctionsLabel') ? get_option('wdtSumFunctionsLabel') : '&#8721; =';
         }
     } else if ($shortcode === 'wpdatatable_avg') {
         $function = 'avg';
-        if (!isset($attributes['label'])) {
-            $attributes['label'] = get_option('wdtAvgFunctionsLabel') ? get_option('wdtAvgFunctionsLabel') : 'Avg =';
+        if (!isset($label)) {
+            $label = get_option('wdtAvgFunctionsLabel') ? get_option('wdtAvgFunctionsLabel') : 'Avg =';
         }
     } else if ($shortcode === 'wpdatatable_min') {
         $function = 'min';
-        if (!isset($attributes['label'])) {
-            $attributes['label'] = get_option('wdtMinFunctionsLabel') ? get_option('wdtMinFunctionsLabel') : 'Min =';
+        if (!isset($label)) {
+            $label = get_option('wdtMinFunctionsLabel') ? get_option('wdtMinFunctionsLabel') : 'Min =';
         }
     } else {
         $function = 'max';
-        if (!isset($attributes['label'])) {
-            $attributes['label'] = get_option('wdtMaxFunctionsLabel') ? get_option('wdtMaxFunctionsLabel') : 'Max =';
+        if (!isset($label)) {
+            $label = get_option('wdtMaxFunctionsLabel') ? get_option('wdtMaxFunctionsLabel') : 'Max =';
         }
     }
 

@@ -129,6 +129,13 @@
         });
 
         /**
+         * Set Include Google fonts
+         */
+        $('#wdt-include-google-fonts').change(function (e) {
+            wpdatatable_plugin_config.setIncludeGogleFonts($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
          * Set Getting Started Page status
          */
         $('#wdt-getting-started-page-status').change(function (e) {
@@ -294,8 +301,9 @@
         wpdatatable_plugin_config.setDecimalPlaces(wdt_current_config.wdtDecimalPlaces);
         wpdatatable_plugin_config.setTabletWidth(wdt_current_config.wdtTabletWidth);
         wpdatatable_plugin_config.setMobileWidth(wdt_current_config.wdtMobileWidth);
-        wpdatatable_plugin_config.setGettingStartedPageStatus(wdt_current_config.wdtGettingStartedPageStatus== 1 ? 1 : 0);
-        wpdatatable_plugin_config.setLiteVSPremiumPageStatus(wdt_current_config.wdtLiteVSPremiumPageStatus== 1 ? 1 : 0);
+        wpdatatable_plugin_config.setGettingStartedPageStatus(wdt_current_config.wdtGettingStartedPageStatus == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setLiteVSPremiumPageStatus(wdt_current_config.wdtLiteVSPremiumPageStatus == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setIncludeGogleFonts(wdt_current_config.wdtIncludeGoogleFonts == 1 ? 1 : 0);
         wpdatatable_plugin_config.setIncludeBootstrap(wdt_current_config.wdtIncludeBootstrap == 1 ? 1 : 0);
         wpdatatable_plugin_config.setIncludeBootstrapBackEnd(wdt_current_config.wdtIncludeBootstrapBackEnd == 1 ? 1 : 0);
         wpdatatable_plugin_config.setPreventDeletingTables(wdt_current_config.wdtPreventDeletingTables == 1 ? 1 : 0);

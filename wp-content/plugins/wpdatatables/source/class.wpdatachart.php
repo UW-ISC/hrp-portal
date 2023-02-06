@@ -39,6 +39,7 @@ class WPDataChart {
     private $_plot_border_color = '#C0C0C0';
     private $_font_size = NULL;
     private $_font_name = 'Arial';
+    private $_font_weight = 'bold';
     private $_font_style = 'normal';
     private $_font_color = '#666';
     private $_three_d = false;
@@ -90,7 +91,8 @@ class WPDataChart {
     private $_title_align = 'center';
     private $_title_position = 'top';
     private $_title_font_name = 'Arial';
-    private $_title_font_style = 'bold';
+    private $_title_font_style = 'normal';
+    private $_title_font_weight = 'bold';
     private $_title_font_color = '#666';
     private $_subtitle = 'undefined';
     private $_subtitle_align = 'center';
@@ -143,61 +145,72 @@ class WPDataChart {
 
     private $_type_counters;
 
-    public function __construct() {
+    public function __construct()
+    {
 
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->_id = $id;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
     // Chart
 
-    public function setWidth($width) {
+    public function setWidth($width)
+    {
         $this->_width = $width;
     }
 
-    public function getWidth() {
+    public function getWidth()
+    {
         return $this->_width;
     }
 
     /**
      * @return boolean
      */
-    public function isResponsiveWidth() {
+    public function isResponsiveWidth()
+    {
         return $this->_responsiveWidth;
     }
 
     /**
      * @param boolean $responsiveWidth
      */
-    public function setResponsiveWidth($responsiveWidth) {
+    public function setResponsiveWidth($responsiveWidth)
+    {
         $this->_responsiveWidth = $responsiveWidth;
     }
 
-    public function setHeight($height) {
+    public function setHeight($height)
+    {
         $this->_height = $height;
     }
 
-    public function getHeight() {
+    public function getHeight()
+    {
         return $this->_height;
     }
 
     /**
      * @param boolean $group_chart
      */
-    public function setGroupChart($group_chart) {
+    public function setGroupChart($group_chart)
+    {
         $this->_group_chart = $group_chart;
     }
 
     /**
      * @return boolean
      */
-    public function isGroupChart() {
+    public function isGroupChart()
+    {
         return $this->_group_chart;
     }
 
@@ -252,70 +265,80 @@ class WPDataChart {
     /**
      * @param $background_color
      */
-    public function setBackgroundColor($background_color) {
+    public function setBackgroundColor($background_color)
+    {
         $this->_background_color = $background_color;
     }
 
     /**
      * @return string
      */
-    public function getBackgroundColor() {
+    public function getBackgroundColor()
+    {
         return $this->_background_color;
     }
 
     /**
      * @param $border_width
      */
-    public function setBorderWidth($border_width) {
+    public function setBorderWidth($border_width)
+    {
         $this->_border_width = $border_width;
     }
 
     /**
      * @return int
      */
-    public function getBorderWidth() {
+    public function getBorderWidth()
+    {
         return $this->_border_width;
     }
 
     /**
      * @param $border_color
      */
-    public function setBorderColor($border_color) {
+    public function setBorderColor($border_color)
+    {
         $this->_border_color = $border_color;
     }
 
     /**
      * @return string
      */
-    public function getBorderColor() {
+    public function getBorderColor()
+    {
         return $this->_border_color;
     }
 
     /**
      * @param $border_radius
      */
-    public function setBorderRadius($border_radius) {
+    public function setBorderRadius($border_radius)
+    {
         $this->_border_radius = $border_radius;
     }
 
     /**
      * @return int
      */
-    public function getBorderRadius() {
+    public function getBorderRadius()
+    {
         return $this->_border_radius;
     }
 
     /**
      * @param $zoom_type
      */
-    public function setZoomType($zoom_type) {
+    public function setZoomType($zoom_type)
+    {
         $this->_zoom_type = $zoom_type;
     }
 
     /**
      * @return string
      */
-    public function getZoomType() {
+    public function getZoomType()
+    {
         return $this->_zoom_type;
     }
 
@@ -323,182 +346,312 @@ class WPDataChart {
     /**
      * @param $panning
      */
-    public function setPanning($panning) {
+    public function setPanning($panning)
+    {
         $this->_panning = (bool)$panning;
     }
 
     /**
      * @return bool
      */
-    public function getPanning() {
+    public function getPanning()
+    {
         return $this->_panning;
     }
 
     /**
      * @param $pan_key
      */
-    public function setPanKey($pan_key) {
+    public function setPanKey($pan_key)
+    {
         $this->_pan_key = $pan_key;
     }
 
     /**
      * @return string
      */
-    public function getPanKey() {
+    public function getPanKey()
+    {
         return $this->_pan_key;
     }
 
     /**
      * @param $plot_background_color
      */
-    public function setPlotBackgroundColor($plot_background_color) {
+    public function setPlotBackgroundColor($plot_background_color)
+    {
         $this->_plot_background_color = $plot_background_color;
     }
 
     /**
      * @return string
      */
-    public function getPlotBackgroundColor() {
+    public function getPlotBackgroundColor()
+    {
         return $this->_plot_background_color;
     }
 
     /**
      * @param $plot_background_image
      */
-    public function setPlotBackgroundImage($plot_background_image) {
+    public function setPlotBackgroundImage($plot_background_image)
+    {
         $this->_plot_background_image = $plot_background_image;
     }
 
     /**
      * @return string
      */
-    public function getPlotBackgroundImage() {
+    public function getPlotBackgroundImage()
+    {
         return $this->_plot_background_image;
     }
 
     /**
      * @param $line_background_image
      */
-    public function setLineBackgroundImage($line_background_image) {
+    public function setLineBackgroundImage($line_background_image)
+    {
         $this->_line_background_image = $line_background_image;
     }
 
     /**
      * @return array
      */
-    public function getLineBackgroundImage() {
+    public function getLineBackgroundImage()
+    {
         return $this->_line_background_image;
     }
 
     /**
      * @param $plot_border_width
      */
-    public function setPlotBorderWidth($plot_border_width) {
+    public function setPlotBorderWidth($plot_border_width)
+    {
         $this->_plot_border_width = $plot_border_width;
     }
 
     /**
      * @return int
      */
-    public function getPlotBorderWidth() {
+    public function getPlotBorderWidth()
+    {
         return $this->_plot_border_width;
     }
 
     /**
      * @param $plot_border_color
      */
-    public function setPlotBorderColor($plot_border_color) {
+    public function setPlotBorderColor($plot_border_color)
+    {
         $this->_plot_border_color = $plot_border_color;
     }
 
     /**
      * @return string
      */
-    public function getPlotBorderColor() {
+    public function getPlotBorderColor()
+    {
         return $this->_plot_border_color;
     }
 
     /**
      * @param $credits
      */
-    public function setCredits($credits) {
+    public function setCredits($credits)
+    {
         $this->_credits = (bool)$credits;
     }
 
     /**
      * @return bool
      */
-    public function getCredits() {
+    public function getCredits()
+    {
         return $this->_credits;
     }
 
     /**
      * @return null
      */
-    public function getFontSize() {
+    public function getFontSize()
+    {
         return $this->_font_size;
     }
 
     /**
      * @param null $font_size
      */
-    public function setFontSize($font_size) {
+    public function setFontSize($font_size)
+    {
         $this->_font_size = $font_size;
     }
 
     /**
      * @return string
      */
-    public function getFontName() {
+    public function getFontName()
+    {
         return $this->_font_name;
     }
 
     /**
      * @param string $font_name
      */
-    public function setFontName($font_name) {
+    public function setFontName($font_name)
+    {
         $this->_font_name = $font_name;
     }
 
     /**
      * @return string
      */
-    public function getFontStyle() {
+    public function getFontWeight()
+    {
+        return $this->_font_weight;
+    }
+
+    /**
+     * @param string $font_weight
+     */
+    public function setFontWeight($font_weight)
+    {
+        $this->_font_weight = $font_weight;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFontStyle()
+    {
         return $this->_font_style;
     }
 
     /**
      * @param string $font_style
      */
-    public function setFontStyle($font_style) {
+    public function setFontStyle($font_style)
+    {
         $this->_font_style = $font_style;
     }
 
     /**
      * @return string
      */
-    public function getFontColor() {
+    public function getFontColor()
+    {
         return $this->_font_color;
     }
 
     /**
      * @param string $font_color
      */
-    public function setFontColor($font_color) {
+    public function setFontColor($font_color)
+    {
         $this->_font_color = $font_color;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRealFontStyle()
+    {
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle'])) {
+            $oldFontStyle = $this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle'];
+            if (strpos($oldFontStyle, 'bold italic') !== false ||
+                strpos($oldFontStyle, 'italic') !== false
+            ) {
+                return 'italic';
+            }
+
+            if (strpos($oldFontStyle, 'bold') !== false) {
+                return 'normal';
+            }
+        }
+
+        return $this->getFontStyle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRealFontWeight()
+    {
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle'])) {
+            $oldFontStyle = $this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle'];
+            if (strpos($oldFontStyle, 'bold italic') !== false ||
+                strpos($oldFontStyle, 'bold') !== false
+            ) {
+                return 'bold';
+            }
+
+            if (strpos($oldFontStyle, 'italic') !== false) {
+                return 'normal';
+            }
+        }
+
+        return $this->getFontWeight();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRealTitleFontStyle()
+    {
+        if (isset($this->_chartjs_render_data['options']['options']['title'])) {
+            $oldTitleFontStyle = $this->_chartjs_render_data['options']['options']['title']['fontStyle'];
+            if (strpos($oldTitleFontStyle, 'bold italic') !== false ||
+                strpos($oldTitleFontStyle, 'italic') !== false
+            ) {
+                return 'italic';
+            }
+
+            if (strpos($oldTitleFontStyle, 'bold') !== false ||
+                strpos($oldTitleFontStyle, 'normal') !== false
+            ) {
+                return 'normal';
+            }
+        }
+
+        return $this->getTitleFontStyle();
+    }
+
+    /**
+     * @return string
+     */
+    public function getRealTitleFontWeight()
+    {
+        if (isset($this->_chartjs_render_data['options']['options']['title'])) {
+            $oldTitleFontStyle = $this->_chartjs_render_data['options']['options']['title']['fontStyle'];
+            if (strpos($oldTitleFontStyle, 'bold italic') !== false ||
+                strpos($oldTitleFontStyle, 'bold') !== false
+            ) {
+                return 'bold';
+            }
+
+            if (strpos($oldTitleFontStyle, 'italic') !== false ||
+                strpos($oldTitleFontStyle, 'normal') !== false
+            ) {
+                return 'normal';
+            }
+        }
+
+        return $this->getTitleFontWeight();
     }
 
     /**
      * @param boolean $three_d
      */
-    public function setThreeD($three_d) {
+    public function setThreeD($three_d)
+    {
         $this->_three_d = (bool)$three_d;
     }
 
     /**
      * @return boolean
      */
-    public function isThreeD() {
+    public function isThreeD()
+    {
         return $this->_three_d;
     }
 
@@ -537,14 +690,16 @@ class WPDataChart {
     /**
      * @param  $enable_color_palette
      */
-    public function setEnableColorPalette($enable_color_palette) {
+    public function setEnableColorPalette($enable_color_palette)
+    {
         $this->_enable_color_palette = (bool)$enable_color_palette;
     }
 
     /**
      * @return bool
      */
-    public function isEnableColorPalette() {
+    public function isEnableColorPalette()
+    {
         return $this->_enable_color_palette;
     }
 
@@ -583,14 +738,16 @@ class WPDataChart {
     /**
      * @param  $enable_dropshadow
      */
-    public function setEnableDropshadow($enable_dropshadow) {
+    public function setEnableDropshadow($enable_dropshadow)
+    {
         $this->_enable_dropshadow = (bool)$enable_dropshadow;
     }
 
     /**
      * @return bool
      */
-    public function isEnableDropshadow() {
+    public function isEnableDropshadow()
+    {
         return $this->_enable_dropshadow;
     }
 
@@ -694,27 +851,32 @@ class WPDataChart {
     /**
      * @param string $curve_type
      */
-    public function setCurveType($curve_type) {
+    public function setCurveType($curve_type)
+    {
         $this->_curve_type = (bool)$curve_type;
     }
 
     /**
      * @return string
      */
-    public function getCurveType() {
+    public function getCurveType()
+    {
         return $this->_curve_type;
     }
 
     /**
      * @return string
      */
-    public function getSeriesType() {
+    public function getSeriesType()
+    {
         return $this->_series_type;
     }
+
     /**
-     *  @param string $series_type
+     * @param string $series_type
      */
-    public function setSeriesType($series_type) {
+    public function setSeriesType($series_type)
+    {
         $this->_series_type = $series_type;
     }
 
@@ -723,14 +885,16 @@ class WPDataChart {
     /**
      * @param $show_grid
      */
-    public function setShowGrid($show_grid) {
+    public function setShowGrid($show_grid)
+    {
         $this->_show_grid = (bool)$show_grid;
     }
 
     /**
      * @return bool
      */
-    public function getShowGrid() {
+    public function getShowGrid()
+    {
         return $this->_show_grid;
     }
 
@@ -802,98 +966,112 @@ class WPDataChart {
     /**
      * @param string $highcharts_line_dash_style
      */
-    public function setHighchartsLineDashStyle($highcharts_line_dash_style) {
+    public function setHighchartsLineDashStyle($highcharts_line_dash_style)
+    {
         $this->_highcharts_line_dash_style = $highcharts_line_dash_style;
     }
 
     /**
      * @return string
      */
-    public function getHighchartsLineDashStyle() {
+    public function getHighchartsLineDashStyle()
+    {
         return $this->_highcharts_line_dash_style;
     }
 
     /**
      * @param $label
      */
-    public function setMajorAxisLabel($label) {
+    public function setMajorAxisLabel($label)
+    {
         $this->_axes['major']['label'] = $label;
     }
 
     /**
      * @return mixed
      */
-    public function getMajorAxisLabel() {
+    public function getMajorAxisLabel()
+    {
         return $this->_axes['major']['label'];
     }
 
     /**
      * @param boolean $horizontal_axis_crosshair
      */
-    public function setHorizontalAxisCrosshair($horizontal_axis_crosshair) {
+    public function setHorizontalAxisCrosshair($horizontal_axis_crosshair)
+    {
         $this->_horizontal_axis_crosshair = (bool)$horizontal_axis_crosshair;
     }
 
     /**
      * @return boolean
      */
-    public function isHorizontalAxisCrosshair() {
+    public function isHorizontalAxisCrosshair()
+    {
         return $this->_horizontal_axis_crosshair;
     }
 
     /**
      * @param int $horizontal_axis_direction
      */
-    public function setHorizontalAxisDirection($horizontal_axis_direction) {
+    public function setHorizontalAxisDirection($horizontal_axis_direction)
+    {
         $this->_horizontal_axis_direction = $horizontal_axis_direction;
     }
 
     /**
      * @return int
      */
-    public function getHorizontalAxisDirection() {
+    public function getHorizontalAxisDirection()
+    {
         return $this->_horizontal_axis_direction;
     }
 
     /**
      * @param $label
      */
-    public function setMinorAxisLabel($label) {
+    public function setMinorAxisLabel($label)
+    {
         $this->_axes['minor']['label'] = $label;
     }
 
     /**
      * @return mixed
      */
-    public function getMinorAxisLabel() {
+    public function getMinorAxisLabel()
+    {
         return $this->_axes['minor']['label'];
     }
 
     /**
      * @param boolean $vertical_axis_crosshair
      */
-    public function setVerticalAxisCrosshair($vertical_axis_crosshair) {
+    public function setVerticalAxisCrosshair($vertical_axis_crosshair)
+    {
         $this->_vertical_axis_crosshair = (bool)$vertical_axis_crosshair;
     }
 
     /**
      * @return boolean
      */
-    public function isVerticalAxisCrosshair() {
+    public function isVerticalAxisCrosshair()
+    {
         return $this->_vertical_axis_crosshair;
     }
 
     /**
      * @param int $vertical_axis_direction
      */
-    public function setVerticalAxisDirection($vertical_axis_direction) {
+    public function setVerticalAxisDirection($vertical_axis_direction)
+    {
         $this->_vertical_axis_direction = $vertical_axis_direction;
     }
 
     /**
      * @return int
      */
-    public function getVerticalAxisDirection() {
+    public function getVerticalAxisDirection()
+    {
         return $this->_vertical_axis_direction;
     }
 
@@ -932,56 +1110,64 @@ class WPDataChart {
     /**
      * @param mixed $vertical_axis_min
      */
-    public function setVerticalAxisMin($vertical_axis_min) {
+    public function setVerticalAxisMin($vertical_axis_min)
+    {
         $this->_vertical_axis_min = $vertical_axis_min;
     }
 
     /**
      * @return mixed
      */
-    public function getVerticalAxisMin() {
+    public function getVerticalAxisMin()
+    {
         return $this->_vertical_axis_min;
     }
 
     /**
      * @param mixed $vertical_axis_max
      */
-    public function setVerticalAxisMax($vertical_axis_max) {
+    public function setVerticalAxisMax($vertical_axis_max)
+    {
         $this->_vertical_axis_max = $vertical_axis_max;
     }
 
     /**
      * @return mixed
      */
-    public function getVerticalAxisMax() {
+    public function getVerticalAxisMax()
+    {
         return $this->_vertical_axis_max;
     }
 
     /**
      * @param int $tick_amount
      */
-    public function setTickAmount($tick_amount) {
+    public function setTickAmount($tick_amount)
+    {
         $this->_tick_amount = (int)$tick_amount;
     }
 
     /**
      * @return int
      */
-    public function getTickAmount() {
+    public function getTickAmount()
+    {
         return $this->_tick_amount;
     }
 
     /**
      * @param $inverted
      */
-    public function setInverted($inverted) {
+    public function setInverted($inverted)
+    {
         $this->_inverted = (bool)$inverted;
     }
 
     /**
      * @return bool
      */
-    public function isInverted() {
+    public function isInverted()
+    {
         return $this->_inverted;
     }
 
@@ -1007,140 +1193,177 @@ class WPDataChart {
     /**
      * @param string $title
      */
-    public function setTitle($title) {
+    public function setTitle($title)
+    {
         $this->_title = $title;
     }
 
     /**
      * @return string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         return $this->_title;
     }
 
     /**
      * @param boolean $show_title
      */
-    public function setShowTitle($show_title) {
+    public function setShowTitle($show_title)
+    {
         $this->_show_title = $show_title;
     }
 
     /**
      * @return boolean
      */
-    public function isShowTitle() {
+    public function isShowTitle()
+    {
         return $this->_show_title;
     }
 
     /**
      * @param boolean $title_floating
      */
-    public function setTitleFloating($title_floating) {
+    public function setTitleFloating($title_floating)
+    {
         $this->_title_floating = (bool)$title_floating;
     }
 
     /**
      * @return boolean
      */
-    public function isTitleFloating() {
+    public function isTitleFloating()
+    {
         return $this->_title_floating;
     }
 
     /**
      * @param string $title_align
      */
-    public function setTitleAlign($title_align) {
+    public function setTitleAlign($title_align)
+    {
         $this->_title_align = $title_align;
     }
 
     /**
      * @return string
      */
-    public function getTitleAlign() {
+    public function getTitleAlign()
+    {
         return $this->_title_align;
     }
 
     /**
      * @return string
      */
-    public function getTitlePosition() {
+    public function getTitlePosition()
+    {
         return $this->_title_position;
     }
 
     /**
      * @param string $title_position
      */
-    public function setTitlePosition($title_position) {
+    public function setTitlePosition($title_position)
+    {
         $this->_title_position = $title_position;
     }
 
     /**
      * @return string
      */
-    public function getTitleFontName() {
+    public function getTitleFontName()
+    {
         return $this->_title_font_name;
     }
 
     /**
      * @param string $title_font_name
      */
-    public function setTitleFontName($title_font_name) {
+    public function setTitleFontName($title_font_name)
+    {
         $this->_title_font_name = $title_font_name;
     }
 
     /**
      * @return string
      */
-    public function getTitleFontStyle() {
+    public function getTitleFontStyle()
+    {
         return $this->_title_font_style;
     }
 
     /**
      * @param string $title_font_style
      */
-    public function setTitleFontStyle($title_font_style) {
+    public function setTitleFontStyle($title_font_style)
+    {
         $this->_title_font_style = $title_font_style;
     }
 
     /**
      * @return string
      */
-    public function getTitleFontColor() {
+    public function getTitleFontWeight()
+    {
+        return $this->_title_font_weight;
+    }
+
+    /**
+     * @param string $title_font_weight
+     */
+    public function setTitleFontWeight($title_font_weight)
+    {
+        $this->_title_font_weight = $title_font_weight;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getTitleFontColor()
+    {
         return $this->_title_font_color;
     }
 
     /**
      * @param string $title_font_color
      */
-    public function setTitleFontColor($title_font_color) {
+    public function setTitleFontColor($title_font_color)
+    {
         $this->_title_font_color = $title_font_color;
     }
 
     /**
      * @param string $subtitle
      */
-    public function setSubtitle($subtitle) {
+    public function setSubtitle($subtitle)
+    {
         $this->_subtitle = $subtitle;
     }
 
     /**
      * @return string
      */
-    public function getSubtitle() {
+    public function getSubtitle()
+    {
         return $this->_subtitle;
     }
 
     /**
      * @param string $subtitle_align
      */
-    public function setSubtitleAlign($subtitle_align) {
+    public function setSubtitleAlign($subtitle_align)
+    {
         $this->_subtitle_align = $subtitle_align;
     }
 
     /**
      * @return string
      */
-    public function getSubtitleAlign() {
+    public function getSubtitleAlign()
+    {
         return $this->_subtitle_align;
     }
 
@@ -1149,112 +1372,128 @@ class WPDataChart {
     /**
      * @param boolean $tooltip_enabled
      */
-    public function setTooltipEnabled($tooltip_enabled) {
+    public function setTooltipEnabled($tooltip_enabled)
+    {
         $this->_tooltip_enabled = (bool)$tooltip_enabled;
     }
 
     /**
      * @return boolean
      */
-    public function isTooltipEnabled() {
+    public function isTooltipEnabled()
+    {
         return $this->_tooltip_enabled;
     }
 
     /**
      * @param string $tooltip_background_color
      */
-    public function setTooltipBackgroundColor($tooltip_background_color) {
+    public function setTooltipBackgroundColor($tooltip_background_color)
+    {
         $this->_tooltip_background_color = $tooltip_background_color;
     }
 
     /**
      * @return string
      */
-    public function getTooltipBackgroundColor() {
+    public function getTooltipBackgroundColor()
+    {
         return $this->_tooltip_background_color;
     }
 
     /**
      * @param int $tooltip_border_width
      */
-    public function setTooltipBorderWidth($tooltip_border_width) {
+    public function setTooltipBorderWidth($tooltip_border_width)
+    {
         $this->_tooltip_border_width = $tooltip_border_width;
     }
 
     /**
      * @return int
      */
-    public function getTooltipBorderWidth() {
+    public function getTooltipBorderWidth()
+    {
         return $this->_tooltip_border_width;
     }
 
     /**
      * @param null $tooltip_border_color
      */
-    public function setTooltipBorderColor($tooltip_border_color) {
+    public function setTooltipBorderColor($tooltip_border_color)
+    {
         $this->_tooltip_border_color = $tooltip_border_color;
     }
 
     /**
      * @return null
      */
-    public function getTooltipBorderColor() {
+    public function getTooltipBorderColor()
+    {
         return $this->_tooltip_border_color;
     }
 
     /**
      * @param int $tooltip_border_radius
      */
-    public function setTooltipBorderRadius($tooltip_border_radius) {
+    public function setTooltipBorderRadius($tooltip_border_radius)
+    {
         $this->_tooltip_border_radius = (int)$tooltip_border_radius;
     }
 
     /**
      * @return int
      */
-    public function getTooltipBorderRadius() {
+    public function getTooltipBorderRadius()
+    {
         return $this->_tooltip_border_radius;
     }
 
     /**
      * @param boolean $tooltip_shared
      */
-    public function setTooltipShared($tooltip_shared) {
+    public function setTooltipShared($tooltip_shared)
+    {
         $this->_tooltip_shared = (bool)$tooltip_shared;
     }
 
     /**
      * @return boolean
      */
-    public function isTooltipShared() {
+    public function isTooltipShared()
+    {
         return $this->_tooltip_shared;
     }
 
     /**
      * @param string $tooltip_value_prefix
      */
-    public function setTooltipValuePrefix($tooltip_value_prefix) {
+    public function setTooltipValuePrefix($tooltip_value_prefix)
+    {
         $this->_tooltip_value_prefix = $tooltip_value_prefix;
     }
 
     /**
      * @return string
      */
-    public function getTooltipValuePrefix() {
+    public function getTooltipValuePrefix()
+    {
         return $this->_tooltip_value_prefix;
     }
 
     /**
      * @param string $tooltip_value_suffix
      */
-    public function setTooltipValueSuffix($tooltip_value_suffix) {
+    public function setTooltipValueSuffix($tooltip_value_suffix)
+    {
         $this->_tooltip_value_suffix = $tooltip_value_suffix;
     }
 
     /**
      * @return string
      */
-    public function getTooltipValueSuffix() {
+    public function getTooltipValueSuffix()
+    {
         return $this->_tooltip_value_suffix;
     }
 
@@ -1292,172 +1531,209 @@ class WPDataChart {
     }
 
 
-
     // Legend
 
-    public function setShowLegend($show_legend) {
+    public function setShowLegend($show_legend)
+    {
         $this->_show_legend = (bool)$show_legend;
     }
 
-    public function getShowLegend() {
+    public function getShowLegend()
+    {
         return $this->_show_legend;
     }
 
     /**
      * @return string
      */
-    public function getLegendPosition() {
+    public function getLegendPosition()
+    {
         return $this->_legend_position;
     }
 
     /**
      * @param string $legend_position
      */
-    public function setLegendPosition($legend_position) {
+    public function setLegendPosition($legend_position)
+    {
         $this->_legend_position = $legend_position;
     }
 
-    public function setLegendBackgroundColor($legend_background_color) {
+    public function setLegendBackgroundColor($legend_background_color)
+    {
         $this->_legend_background_color = $legend_background_color;
     }
 
-    public function getLegendBackgroundColor() {
+    public function getLegendBackgroundColor()
+    {
         return $this->_legend_background_color;
     }
 
-    public function setLegendTitle($legend_title) {
+    public function setLegendTitle($legend_title)
+    {
         $this->_legend_title = $legend_title;
     }
 
-    public function getLegendTitle() {
+    public function getLegendTitle()
+    {
         return $this->_legend_title;
     }
 
-    public function setLegendLayout($legend_layout) {
+    public function setLegendLayout($legend_layout)
+    {
         $this->_legend_layout = $legend_layout;
     }
 
-    public function getLegendLayout() {
+    public function getLegendLayout()
+    {
         return $this->_legend_layout;
     }
 
-    public function setLegendAlign($legend_align) {
+    public function setLegendAlign($legend_align)
+    {
         $this->_legend_align = $legend_align;
     }
 
-    public function getLegendAlign() {
+    public function getLegendAlign()
+    {
         return $this->_legend_align;
     }
 
-    public function setLegendVerticalAlign($legend_vertical_align) {
+    public function setLegendVerticalAlign($legend_vertical_align)
+    {
         $this->_legend_vertical_align = $legend_vertical_align;
     }
 
-    public function getLegendVerticalAlign() {
+    public function getLegendVerticalAlign()
+    {
         return $this->_legend_vertical_align;
     }
 
-    public function setLegendBorderWidth($legend_border_width) {
+    public function setLegendBorderWidth($legend_border_width)
+    {
         $this->_legend_border_width = $legend_border_width;
     }
 
-    public function getLegendBorderWidth() {
+    public function getLegendBorderWidth()
+    {
         return $this->_legend_border_width;
     }
 
-    public function setLegendBorderColor($legend_border_color) {
+    public function setLegendBorderColor($legend_border_color)
+    {
         $this->_legend_border_color = $legend_border_color;
     }
 
-    public function getLegendBorderColor() {
+    public function getLegendBorderColor()
+    {
         return $this->_legend_border_color;
     }
 
-    public function setLegendBorderRadius($legend_border_radius) {
+    public function setLegendBorderRadius($legend_border_radius)
+    {
         $this->_legend_border_radius = $legend_border_radius;
     }
 
-    public function getLegendBorderRadius() {
+    public function getLegendBorderRadius()
+    {
         return $this->_legend_border_radius;
     }
 
     /**
      * @return string
      */
-    public function getLegendPositionCjs() {
+    public function getLegendPositionCjs()
+    {
         return $this->_legend_position_cjs;
     }
 
     /**
      * @param string $legend_position_cjs
      */
-    public function setLegendPositionCjs($legend_position_cjs) {
+    public function setLegendPositionCjs($legend_position_cjs)
+    {
         $this->_legend_position_cjs = $legend_position_cjs;
     }
 
     // Exporting
 
-    public function setExporting($exporting) {
+    public function setExporting($exporting)
+    {
         $this->_exporting = (bool)$exporting;
     }
 
-    public function getExporting() {
+    public function getExporting()
+    {
         return $this->_exporting;
     }
 
-    public function setExportingDataLabels($exporting_data_labels) {
+    public function setExportingDataLabels($exporting_data_labels)
+    {
         $this->_exporting_data_labels = (bool)$exporting_data_labels;
     }
 
-    public function getExportingDataLabels() {
+    public function getExportingDataLabels()
+    {
         return $this->_exporting_data_labels;
     }
 
-    public function setExportingFileName($exporting_file_name) {
+    public function setExportingFileName($exporting_file_name)
+    {
         $this->_exporting_file_name = $exporting_file_name;
     }
 
-    public function getExportingFileName() {
+    public function getExportingFileName()
+    {
         return $this->_exporting_file_name;
     }
 
-    public function setExportingWidth($exporting_width) {
+    public function setExportingWidth($exporting_width)
+    {
         $this->_exporting_width = $exporting_width;
     }
 
-    public function getExportingWidth() {
+    public function getExportingWidth()
+    {
         return $this->_exporting_width;
     }
 
-    public function setExportingButtonAlign($exporting_button_align) {
+    public function setExportingButtonAlign($exporting_button_align)
+    {
         $this->_exporting_button_align = $exporting_button_align;
     }
 
-    public function getExportingButtonAlign() {
+    public function getExportingButtonAlign()
+    {
         return $this->_exporting_button_align;
     }
 
-    public function setExportingButtonVerticalAlign($exporting_button_vertical_align) {
+    public function setExportingButtonVerticalAlign($exporting_button_vertical_align)
+    {
         $this->_exporting_button_vertical_align = $exporting_button_vertical_align;
     }
 
-    public function getExportingButtonVerticalAlign() {
+    public function getExportingButtonVerticalAlign()
+    {
         return $this->_exporting_button_vertical_align;
     }
 
-    public function setExportingButtonColor($exporting_button_color) {
+    public function setExportingButtonColor($exporting_button_color)
+    {
         $this->_exporting_button_color = $exporting_button_color;
     }
 
-    public function getExportingButtonColor() {
+    public function getExportingButtonColor()
+    {
         return $this->_exporting_button_color;
     }
 
-    public function setExportingButtonText($exporting_button_text) {
+    public function setExportingButtonText($exporting_button_text)
+    {
         $this->_exporting_button_text = $exporting_button_text;
     }
 
-    public function getExportingButtonText() {
+    public function getExportingButtonText()
+    {
         return $this->_exporting_button_text;
     }
 
@@ -1466,35 +1742,40 @@ class WPDataChart {
     /**
      * @return string
      */
-    public function getCreditsText() {
+    public function getCreditsText()
+    {
         return $this->_credits_text;
     }
 
     /**
      * @param string $credits_text
      */
-    public function setCreditsText($credits_text) {
+    public function setCreditsText($credits_text)
+    {
         $this->_credits_text = $credits_text;
     }
 
     /**
      * @return string
      */
-    public function getCreditsHref() {
+    public function getCreditsHref()
+    {
         return $this->_credits_href;
     }
 
     /**
      * @param string $credits_href
      */
-    public function setCreditsHref($credits_href) {
+    public function setCreditsHref($credits_href)
+    {
         $this->_credits_href = $credits_href;
     }
 
     /**
      * @param $series_data
      */
-    public function setUserDefinedSeriesData($series_data) {
+    public function setUserDefinedSeriesData($series_data)
+    {
         if (is_array($series_data)) {
             $this->_user_defined_series_data = $series_data;
         }
@@ -1503,105 +1784,120 @@ class WPDataChart {
     /**
      * @return array
      */
-    public function getUserDefinedSeriesData() {
+    public function getUserDefinedSeriesData()
+    {
         return $this->_user_defined_series_data;
     }
 
     /**
      * @param $follow_filtering
      */
-    public function setFollowFiltering($follow_filtering) {
+    public function setFollowFiltering($follow_filtering)
+    {
         $this->_follow_filtering = (bool)$follow_filtering;
     }
 
     /**
      * @return bool
      */
-    public function getFollowFiltering() {
+    public function getFollowFiltering()
+    {
         return $this->_follow_filtering;
     }
 
     /**
      * @param $engine
      */
-    public function setEngine($engine) {
+    public function setEngine($engine)
+    {
         $this->_engine = $engine;
     }
 
     /**
      * @return string
      */
-    public function getEngine() {
+    public function getEngine()
+    {
         return $this->_engine;
     }
 
     /**
      * @param $type
      */
-    public function setType($type) {
+    public function setType($type)
+    {
         $this->_type = $type;
     }
 
     /**
      * @return string
      */
-    public function getType() {
+    public function getType()
+    {
         return $this->_type;
     }
 
     /**
      * @param $row_range
      */
-    public function setRowRange($row_range) {
+    public function setRowRange($row_range)
+    {
         $this->_row_range = $row_range;
     }
 
     /**
      * @return array
      */
-    public function getRowRange() {
+    public function getRowRange()
+    {
         return $this->_row_range;
     }
 
     /**
      * @param $selected_columns
      */
-    public function setSelectedColumns($selected_columns) {
+    public function setSelectedColumns($selected_columns)
+    {
         $this->_selected_columns = $selected_columns;
     }
 
     /**
      * @return array
      */
-    public function getSelectedColumns() {
+    public function getSelectedColumns()
+    {
         return $this->_selected_columns;
     }
 
     /**
      * @param $wdt_id
      */
-    public function setwpDataTableId($wdt_id) {
+    public function setwpDataTableId($wdt_id)
+    {
         $this->_wpdatatable_id = $wdt_id;
     }
 
     /**
      * @return null
      */
-    public function getwpDataTableId() {
+    public function getwpDataTableId()
+    {
         return $this->_wpdatatable_id;
     }
 
     /**
      * @param $range_type
      */
-    public function setRangeType($range_type) {
+    public function setRangeType($range_type)
+    {
         $this->_range_type = $range_type;
     }
 
     /**
      * @return string
      */
-    public function getRangeType() {
+    public function getRangeType()
+    {
         return $this->_range_type;
     }
 
@@ -1639,11 +1935,13 @@ class WPDataChart {
         $this->_toolbar_buttons = $toolbar_buttons;
     }
 
-    public function setApexExportingFileName($apex_exporting_file_name) {
+    public function setApexExportingFileName($apex_exporting_file_name)
+    {
         $this->_apex_exporting_file_name = $apex_exporting_file_name;
     }
 
-    public function getApexExportingFileName() {
+    public function getApexExportingFileName()
+    {
         return $this->_apex_exporting_file_name;
     }
 
@@ -1651,8 +1949,10 @@ class WPDataChart {
      * @param $constructedChartData
      * @param bool $loadFromDB
      * @return WPDataChart
+     * @throws WDTException
      */
-    public static function factory($constructedChartData, $loadFromDB = true) {
+    public static function factory($constructedChartData, $loadFromDB = true)
+    {
         $chartObj = new self();
 
         if (isset($constructedChartData['chart_id'])) {
@@ -1703,14 +2003,15 @@ class WPDataChart {
         $chartObj->setFontSize(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_size', null)));
         $chartObj->setFontName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_name', 'Arial')));
         $chartObj->setFontStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_style', 'normal')));
+        $chartObj->setFontWeight(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_weight', 'bold')));
         $chartObj->setFontColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'font_color', '#666')));
         $chartObj->setThreeD(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'three_d', false)));
-        $chartObj->setMonochrome(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'monochrome', false)));
-        $chartObj->setMonochromeColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'monochrome_color','#255aee' )));
-        $chartObj->setEnableColorPalette(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'enable_color_palette', false)));
+        $chartObj->setMonochrome(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'monochrome', false)));
+        $chartObj->setMonochromeColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'monochrome_color', '#255aee')));
+        $chartObj->setEnableColorPalette(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'enable_color_palette', false)));
         $chartObj->setColorPalette(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'color_palette', 'palette1')));
         $chartObj->setShowDataLabels(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_data_labels', false)));
-        $chartObj->setEnableDropshadow(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'enable_dropshadow', false)));
+        $chartObj->setEnableDropshadow(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'enable_dropshadow', false)));
         $chartObj->setDropshadowBlur((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_blur', 3));
         $chartObj->setDropshadowOpacity((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
         $chartObj->setDropshadowColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_color', '#000000')));
@@ -1744,8 +2045,8 @@ class WPDataChart {
         $chartObj->setMinorAxisLabel(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_label', '')));
         $chartObj->setVerticalAxisCrosshair(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_crosshair', false)));
         $chartObj->setVerticalAxisDirection(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_direction', 1)));
-        $chartObj->setMarkerSize(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'marker_size',0)));
-        $chartObj->setStrokeWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'stroke_width',2)));
+        $chartObj->setMarkerSize(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'marker_size', 0)));
+        $chartObj->setStrokeWidth(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'stroke_width', 2)));
         $chartObj->setVerticalAxisMin(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_min', '')));
         $chartObj->setVerticalAxisMax(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'vertical_axis_max', '')));
         $chartObj->setTickAmount(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'tick_amount', 0)));
@@ -1758,7 +2059,8 @@ class WPDataChart {
         $chartObj->setTitleAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_align', 'center')));
         $chartObj->setTitlePosition(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_position', 'top')));
         $chartObj->setTitleFontName(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_name', 'Arial')));
-        $chartObj->setTitleFontStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_style', 'bold')));
+        $chartObj->setTitleFontStyle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_style', 'normal')));
+        $chartObj->setTitleFontWeight(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_weight', 'bold')));
         $chartObj->setTitleFontColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'title_font_color', '#666')));
         $chartObj->setSubtitle(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'subtitle', false)));
         $chartObj->setSubtitleAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'subtitle_align', 'center')));
@@ -1804,7 +2106,7 @@ class WPDataChart {
         $chartObj->setCreditsText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com')));
 
         //Toolbar
-        $chartObj->setShowToolbar(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData,'show_toolbar', false)));
+        $chartObj->setShowToolbar(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_toolbar', false)));
         if (isset($constructedChartData['toolbar_buttons'])) {
             $chartObj->setToolbarButtons(array_map('sanitize_text_field', $constructedChartData['toolbar_buttons']));
         }
@@ -1815,15 +2117,21 @@ class WPDataChart {
         return $chartObj;
     }
 
-    public function loadChildWPDataTable() {
-        if (empty($this->_wpdatatable_id)) {
-            return false;
+    /**
+     * @throws WDTException
+     */
+    public function loadChildWPDataTable()
+    {
+        if (empty($this->getwpDataTableId())) {
+            throw new WDTException('Table ID does not exist for created chart.');
         }
 
-        $this->_wpdatatable = WPDataTable::loadWpDataTable($this->_wpdatatable_id, null, empty($this->_follow_filtering));
+        $this->_wpdatatable = WPDataTable::loadWpDataTable($this->getwpDataTableId(), null, empty($this->_follow_filtering));
+
     }
 
-    public function shiftStringColumnUp() {
+    public function shiftStringColumnUp()
+    {
         /**
          * Check if the string column is not in the beginning and move it up
          */
@@ -1883,7 +2191,8 @@ class WPDataChart {
 
     }
 
-    public function prepareSeriesData() {
+    public function prepareSeriesData()
+    {
         // Init render data if it is empty
         if (empty($this->_render_data)) {
             $this->_render_data = array(
@@ -1936,23 +2245,23 @@ class WPDataChart {
         }
 
         // Define series colors,type and yaxis
-        if ( $this->_type == 'highcharts_basic_column_chart'||
-             $this->_type == 'highcharts_line_chart' ||
-             $this->_type == 'highcharts_basic_bar_chart'||
-             $this->_type == 'highcharts_spline_chart'||
-             $this->_type == 'highcharts_basic_area_chart' ||
-             $this->_type == 'highcharts_polar_chart' ||
-             $this->_type == 'highcharts_spiderweb_chart') {
+        if ($this->_type == 'highcharts_basic_column_chart' ||
+            $this->_type == 'highcharts_line_chart' ||
+            $this->_type == 'highcharts_basic_bar_chart' ||
+            $this->_type == 'highcharts_spline_chart' ||
+            $this->_type == 'highcharts_basic_area_chart' ||
+            $this->_type == 'highcharts_polar_chart' ||
+            $this->_type == 'highcharts_spiderweb_chart') {
 
             if (!empty($this->_user_defined_series_data)) {
                 $seriesIndex = 0;
                 $i = 1;
                 foreach ($this->_user_defined_series_data as $series_data) {
-                    if (!empty($series_data['color']) || !empty($series_data['type']) || isset($series_data['yAxis'])){
+                    if (!empty($series_data['color']) || !empty($series_data['type']) || isset($series_data['yAxis'])) {
                         $this->_render_data['options']['series'][(int)$seriesIndex] = array(
                             'color' => $series_data['color'],
                             'type' => $series_data['type'],
-                            'yAxis' =>  $series_data['yAxis'] == 1 ? $i : 0
+                            'yAxis' => $series_data['yAxis'] == 1 ? $i : 0
                         );
                         if ($series_data['yAxis']) {
                             $i++;
@@ -1961,10 +2270,10 @@ class WPDataChart {
                     $seriesIndex++;
                 }
             }
-        } else if (in_array($this->_type, [ 'apexcharts_straight_line_chart',
-                        'apexcharts_spline_chart','apexcharts_stepline_chart', 'apexcharts_spline_area_chart',
-                        'apexcharts_stepline_area_chart', 'apexcharts_basic_area_chart', 'apexcharts_column_chart'])
-                        && !empty($this->_user_defined_series_data)) {
+        } else if (in_array($this->_type, ['apexcharts_straight_line_chart',
+                'apexcharts_spline_chart', 'apexcharts_stepline_chart', 'apexcharts_spline_area_chart',
+                'apexcharts_stepline_area_chart', 'apexcharts_basic_area_chart', 'apexcharts_column_chart'])
+            && !empty($this->_user_defined_series_data)) {
             $seriesIndex = 0;
             $i = 1;
             foreach ($this->_user_defined_series_data as $series_data) {
@@ -1979,9 +2288,9 @@ class WPDataChart {
                 }
                 $seriesIndex++;
             }
-        } else if (in_array($this->_type, ['apexcharts_radar_chart','apexcharts_grouped_bar_chart',
-                        'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart',
-                        'apexcharts_stacked_column_chart', 'apexcharts_100_stacked_column_chart'])) {
+        } else if (in_array($this->_type, ['apexcharts_radar_chart', 'apexcharts_grouped_bar_chart',
+            'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_column_chart', 'apexcharts_100_stacked_column_chart'])) {
             $seriesIndex = 0;
             $i = 1;
             foreach ($this->_user_defined_series_data as $series_data) {
@@ -1998,7 +2307,7 @@ class WPDataChart {
             if (!empty($this->_user_defined_series_data)) {
                 $seriesIndex = 0;
                 foreach ($this->_user_defined_series_data as $series_data) {
-                    if (!empty($series_data['color']) || !empty($series_data['type'])){
+                    if (!empty($series_data['color']) || !empty($series_data['type'])) {
                         $this->_render_data['options']['series'][(int)$seriesIndex] = array(
                             'color' => $series_data['color'],
                             'label' => $series_data['label']
@@ -2056,8 +2365,10 @@ class WPDataChart {
 
     /**
      * Prepares the data for Google charts format
+     * @throws WDTException
      */
-    public function prepareData() {
+    public function prepareData()
+    {
 
         // Prepare series and columns
         if (empty($this->_render_data['columns'])) {
@@ -2073,9 +2384,11 @@ class WPDataChart {
                 foreach ($this->_wpdatatable->getDataRows() as $row) {
                     $return_data_row = array();
                     foreach ($this->getSelectedColumns() as $columnKey) {
+                        if (!$this->_wpdatatable->getColumn($columnKey))
+                            throw new WDTException('In chart, selected column "' . $columnKey . '" does not exist anymore in source table with ID =' . $this->_wpdatatable->getWpId() . '.<br> Please check your source that you use for creating this table or create new chart from that table and replace new chart shortcode with old one on the front page.');
                         $dataType = $this->_wpdatatable->getColumn($columnKey)->getDataType();
-                        $decimalPlaces =$this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
-                        $thousandsSeparator =$this->_wpdatatable->getColumn($columnKey)->isShowThousandsSeparator();
+                        $decimalPlaces = $this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
+                        $thousandsSeparator = $this->_wpdatatable->getColumn($columnKey)->isShowThousandsSeparator();
                         switch ($dataType) {
                             case 'date':
                                 $timestamp = is_int($row[$columnKey]) ? $row[$columnKey] : strtotime(str_replace('/', '-', $row[$columnKey]));
@@ -2134,19 +2447,19 @@ class WPDataChart {
                                         $return_data_row[] = null;
                                     }
                                 } else {
-                                    if ($decimalPlaces != -1){
+                                    if ($decimalPlaces != -1) {
                                         $return_data_row[] = (float)number_format(
                                             (float)($row[$columnKey]),
                                             $decimalPlaces,
                                             '.',
                                             $thousandsSeparator ? '' : '.');
-                                    }else {
+                                    } else {
                                         $return_data_row[] = (float)$row[$columnKey];
                                     }
                                 }
                                 break;
                             case 'link':
-                                if (!in_array($this->getEngine(),['google','chartjs','apexcharts'])) {
+                                if (!in_array($this->getEngine(), ['google', 'chartjs', 'apexcharts'])) {
                                     if (strpos($row[$columnKey], '||') !== false) {
                                         list($link, $row[$columnKey]) = explode('||', $row[$columnKey]);
                                         $return_data_row[] = '<a href="' . $link . '">' . $row[$columnKey] . '</a>';
@@ -2157,7 +2470,7 @@ class WPDataChart {
                                     $return_data_row[] = $row[$columnKey];
                                 }
                                 break;
-                                case 'string':
+                            case 'string':
                             default:
                                 if ($this->getEngine() == 'apexcharts') {
                                     $return_data_row[] = $row[$columnKey] === null ? '' : $row[$columnKey];
@@ -2175,7 +2488,7 @@ class WPDataChart {
                     foreach ($this->getSelectedColumns() as $columnKey) {
 
                         $dataType = $this->_wpdatatable->getColumn($columnKey)->getDataType();
-                        $decimalPlaces =$this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
+                        $decimalPlaces = $this->_wpdatatable->getColumn($columnKey)->getDecimalPlaces();
                         switch ($dataType) {
                             case 'date':
                                 $timestamp = is_int($this->_wpdatatable->getCell($columnKey, $rowIndex)) ?
@@ -2216,13 +2529,13 @@ class WPDataChart {
                                     } else {
                                         $return_data_row[] = null;
                                     }
-                                }else {
+                                } else {
                                     $return_data_row[] = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);
                                 }
                                 break;
                             case 'float':
                                 if (has_filter('wpdatatables_filter_float_cell_data_in_charts')) {
-                                    $floatNumber = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey , $this->getId(), $this->_wpdatatable->getWpId());
+                                    $floatNumber = apply_filters('wpdatatables_filter_float_cell_data_in_charts', $this->_wpdatatable->getCell($columnKey, $rowIndex), $columnKey, $this->getId(), $this->_wpdatatable->getWpId());
                                     if (!is_null($floatNumber)) {
                                         if ($decimalPlaces != -1) {
                                             $return_data_row[] = (float)number_format($floatNumber, $decimalPlaces);
@@ -2233,9 +2546,9 @@ class WPDataChart {
                                         $return_data_row[] = null;
                                     }
                                 } else {
-                                    $floatNumber= (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);;
-                                    if ($decimalPlaces != -1){
-                                        $return_data_row[] = (float)number_format ($floatNumber, $decimalPlaces);
+                                    $floatNumber = (float)$this->_wpdatatable->getCell($columnKey, $rowIndex);;
+                                    if ($decimalPlaces != -1) {
+                                        $return_data_row[] = (float)number_format($floatNumber, $decimalPlaces);
                                     } else {
                                         $return_data_row[] = $floatNumber;
                                     }
@@ -2243,13 +2556,13 @@ class WPDataChart {
                                 break;
                             case 'link':
                                 $cellData = $this->_wpdatatable->getCell($columnKey, $rowIndex);
-                                if (!in_array($this->getEngine(),['google','chartjs'])) {
-                                     if (strpos($cellData, '||') !== false) {
-                                         list($link, $cellData) = explode('||', $cellData);
-                                         $return_data_row[] = '<a href="' . $link . '">' . $cellData . '</a>';
-                                     } else {
-                                         $return_data_row[] = '<a href="' . $cellData . '">' . $cellData . '</a>';
-                                     }
+                                if (!in_array($this->getEngine(), ['google', 'chartjs'])) {
+                                    if (strpos($cellData, '||') !== false) {
+                                        list($link, $cellData) = explode('||', $cellData);
+                                        $return_data_row[] = '<a href="' . $link . '">' . $cellData . '</a>';
+                                    } else {
+                                        $return_data_row[] = '<a href="' . $cellData . '">' . $cellData . '</a>';
+                                    }
                                 } else {
                                     $return_data_row[] = $cellData;
                                 }
@@ -2275,7 +2588,8 @@ class WPDataChart {
         return $this->_render_data;
     }
 
-    public function groupData() {
+    public function groupData()
+    {
         if (isset($this->_render_data['group_chart'])) {
             if ($this->isGroupChart() || $this->_render_data['group_chart'] == true) {
                 $output = array();
@@ -2311,7 +2625,8 @@ class WPDataChart {
 
     }
 
-    public function prepareGoogleChartsRender() {
+    public function prepareGoogleChartsRender()
+    {
         // Chart
         if (!$this->_responsiveWidth) {
             $this->_render_data['width'] = $this->getWidth();
@@ -2390,7 +2705,8 @@ class WPDataChart {
 
     }
 
-    public function prepareHighchartsRender() {
+    public function prepareHighchartsRender()
+    {
         $highchartsRender = array(
             'title' => array(
                 'text' => $this->_show_title ? $this->getTitle() : ''
@@ -2401,14 +2717,30 @@ class WPDataChart {
 
         if ($this->_type == 'highcharts_basic_column_chart') {
             $this->setSeriesType('column');
-        }else if($this->_type == 'highcharts_line_chart'){
+        } else if ($this->_type == 'highcharts_line_chart') {
             $this->setSeriesType('line');
-        }else if ($this->_type == 'highcharts_basic_bar_chart'){
+        } else if ($this->_type == 'highcharts_basic_bar_chart') {
             $this->setSeriesType('bar');
-        }else if ($this->_type == 'highcharts_spline_chart'){
+        } else if ($this->_type == 'highcharts_spline_chart') {
             $this->setSeriesType('spline');
-        }else if ($this->_type == 'highcharts_basic_area_chart'){
+        } else if ($this->_type == 'highcharts_basic_area_chart') {
             $this->setSeriesType('area');
+        }else if ($this->_type == 'highcharts_funnel3d_chart'){
+            $this->setSeriesType('funnel3d');
+        }else if ($this->_type == 'highcharts_funnel_chart'){
+            $this->setSeriesType('funnel');
+        }else  if (
+            in_array(
+                $this->_type,
+                array(
+                    'highcharts_pie_chart',
+                    'highcharts_pie_with_gradient_chart',
+                    'highcharts_donut_chart',
+                    'highcharts_3d_pie_chart',
+                    'highcharts_3d_donut_chart',
+                )
+            )){
+            $this->setSeriesType('pie');
         }
 
         if ($this->_type == 'highcharts_treemap_chart') {
@@ -2528,7 +2860,9 @@ class WPDataChart {
                 'highcharts_3d_pie_chart',
                 'highcharts_3d_donut_chart',
                 'highcharts_treemap_chart',
-                'highcharts_treemap_level_chart'
+                'highcharts_treemap_level_chart',
+                'highcharts_funnel3d_chart',
+                'highcharts_funnel_chart'
             )
         )
         ) {
@@ -2551,7 +2885,7 @@ class WPDataChart {
                         $seriesEntry['pointPlacement'] = 'on';
                     }
 
-                    if ( $this->getSeriesType() != '') {
+                    if ($this->getSeriesType() != '') {
                         $seriesEntry['yAxis'] = isset($this->_render_data['options']['series'][$i - 1]['yAxis']) ? $this->_render_data['options']['series'][$i - 1]['yAxis'] : 0;
 
                         if (isset($this->_render_data['options']['series'][$i - 1]['yAxis']) && $this->_render_data['options']['series'][$i - 1]['yAxis']) {
@@ -2571,11 +2905,11 @@ class WPDataChart {
                 }
                 foreach ($this->_render_data['rows'] as $row) {
                     if ($i == 0) {
-                        if ($this->_type != 'highcharts_scatter_plot' || ($this->_type == 'highcharts_scatter_plot' && $this->_render_data['columns'][0]['type'] != 'number') ) {
+                        if ($this->_type != 'highcharts_scatter_plot' || ($this->_type == 'highcharts_scatter_plot' && $this->_render_data['columns'][0]['type'] != 'number')) {
                             $highchartsRender['xAxis']['categories'][] = $row[$i];
                         }
                     } else {
-                         if ($this->_type == 'highcharts_scatter_plot' && ($this->_render_data['columns'][0]['type'] == 'number') ) {
+                         if ($this->_type == 'highcharts_scatter_plot' && ($this->_render_data['columns'][0]['type'] == 'number')) {
                              $seriesEntry['data'][] = [$row[$i-1],$row[$i]];
                          } else {
                              $seriesEntry['data'][] = $row[$i];
@@ -2595,20 +2929,18 @@ class WPDataChart {
                     'highcharts_pie_with_gradient_chart',
                     'highcharts_donut_chart',
                     'highcharts_3d_pie_chart',
-                    'highcharts_3d_donut_chart'
+                    'highcharts_3d_donut_chart',
+                    'highcharts_funnel_chart',
+                    'highcharts_funnel3d_chart'
                 )
             )
             ) {
-                $seriesEntry = array(
-                    'type' => 'pie',
-                    'data' => array()
-                );
                 $highchartsRender['series'] = array(
-                    array(
-                        'type' => 'pie',
-                        'name' => $this->_render_data['columns'][1]['label'],
-                        'data' => $this->_render_data['rows']
-                    )
+                       array(
+                           'type' => $this->getSeriesType(),
+                           'name' => $this->_render_data['columns'][1]['label'],
+                           'data' => $this->_render_data['rows']
+                       )
                 );
                 unset($highchartsRender['xAxis']);
             }
@@ -2651,7 +2983,7 @@ class WPDataChart {
             $this->_highcharts_render_data['options']['xAxis']['lineColor'] = 'transparent';
             $this->_highcharts_render_data['options']['xAxis']['minorTickLength'] = 0;
             $this->_highcharts_render_data['options']['xAxis']['tickLength'] = 0;
-            if ( $this->getSeriesType() != '') {
+            if ($this->getSeriesType() != '') {
                 $this->_highcharts_render_data['options']['yAxis'][0]['lineWidth'] = 0;
                 $this->_highcharts_render_data['options']['yAxis'][0]['gridLineWidth'] = 0;
                 $this->_highcharts_render_data['options']['yAxis'][0]['minorGridLineWidth'] = 0;
@@ -2730,7 +3062,7 @@ class WPDataChart {
 
         // Legend
         if ($this->_highcharts_render_data['type'] == 'highcharts_treemap_level_chart') {
-            $this->_highcharts_render_data['options']['legend']['enabled']= false;
+            $this->_highcharts_render_data['options']['legend']['enabled'] = false;
         } else {
             $this->_highcharts_render_data['options']['legend']['enabled'] = $this->getShowLegend();
         }
@@ -2756,7 +3088,7 @@ class WPDataChart {
             $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['symbolStroke'] = $this->getExportingButtonColor();
         }
         $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['text'] = $this->getExportingButtonText();
-        if ( $this->getExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart']) ){
+        if ($this->getExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
             $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['menuItems'] = ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'];
         }
 
@@ -2772,7 +3104,8 @@ class WPDataChart {
     /**
      * Prepare ChartJS Data and Options
      */
-    public function prepareChartJSRender() {
+    public function prepareChartJSRender()
+    {
 
         $seriesEntry = array();
 
@@ -2813,6 +3146,9 @@ class WPDataChart {
                     'chartjs_area_chart',
                     'chartjs_stacked_area_chart',
                     'chartjs_column_chart',
+                    'chartjs_stacked_column_chart',
+                    'chartjs_bar_chart',
+                    'chartjs_stacked_bar_chart',
                     'chartjs_radar_chart'
                 )
             )) {
@@ -2888,7 +3224,7 @@ class WPDataChart {
                             $seriesEntry = array(
                                 'data' => array()
                             );
-                            $seriesEntry['backgroundColor'] = $colors[$key  % 10];
+                            $seriesEntry['backgroundColor'] = $colors[$key % 10];
                             $seriesEntry['hoverBackgroundColor'] = $colors[$key % 10];
                             $seriesEntry['data'][0]['x'] = $row[$i];
                             $seriesEntry['data'][0]['y'] = $row[$i + 1];
@@ -2921,59 +3257,131 @@ class WPDataChart {
         $this->_chartjs_render_data['configurations']['canvas']['borderWidth'] = $this->getBorderWidth();
         $this->_chartjs_render_data['configurations']['canvas']['borderColor'] = $this->getBorderColor();
         $this->_chartjs_render_data['configurations']['canvas']['borderRadius'] = $this->getBorderRadius();
-        $this->_chartjs_render_data['options']['globalOptions']['defaultFontSize'] = $this->getFontSize();
-        $this->_chartjs_render_data['options']['globalOptions']['defaultFontFamily'] = $this->getFontName();
-        $this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle'] = $this->getFontStyle();
-        $this->_chartjs_render_data['options']['globalOptions']['defaultFontColor'] = $this->getFontColor();
+        $this->_chartjs_render_data['options']['globalOptions']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['globalOptions']['font']['family'] = $this->getFontName();
+        $this->_chartjs_render_data['options']['globalOptions']['font']['style'] = $this->getRealFontStyle();
+        $this->_chartjs_render_data['options']['globalOptions']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['globalOptions']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
 
         // Axes
         if (!$this->_show_grid) {
-            $this->_chartjs_render_data['options']['options']['scales']['xAxes'][0]['display'] = false;
-            $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['display'] = false;
+            $this->_chartjs_render_data['options']['options']['scales']['x']['display'] = false;
+            $this->_chartjs_render_data['options']['options']['scales']['y']['display'] = false;
         }
-        $this->_chartjs_render_data['options']['options']['scales']['xAxes'][0]['scaleLabel']['display'] = true;
-        $this->_chartjs_render_data['options']['options']['scales']['xAxes'][0]['scaleLabel']['labelString'] = $this->getMajorAxisLabel();
-        $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['scaleLabel']['display'] = true;
-        $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['scaleLabel']['labelString'] = $this->getMinorAxisLabel();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['display'] = true;
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['text'] = $this->getMajorAxisLabel();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['font']['style'] = $this->getRealFontStyle();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['font']['family'] = $this->getFontName();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['title']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['display'] = true;
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['text'] = $this->getMinorAxisLabel();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['font']['style'] = $this->getRealFontStyle();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['font']['family'] = $this->getFontName();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['title']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
         if ($this->getVerticalAxisMin() != '') {
-            $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['min'] = intval($this->getVerticalAxisMin());
+            $this->_chartjs_render_data['options']['options']['scales']['y']['min'] = intval($this->getVerticalAxisMin());
         } else {
-            if (in_array($this->_type, $chartToSetOptionBeginAtZero)){
-                $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['beginAtZero'] = true;
-                $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['min'] = 0;
+            if (in_array($this->_type, $chartToSetOptionBeginAtZero)) {
+                $this->_chartjs_render_data['options']['options']['scales']['y']['beginAtZero'] = true;
+                $this->_chartjs_render_data['options']['options']['scales']['y']['min'] = 0;
             } else {
-                $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['beginAtZero'] = false;
+                $this->_chartjs_render_data['options']['options']['scales']['y']['beginAtZero'] = false;
             }
         }
+        $this->_chartjs_render_data['options']['options']['scales']['y']['ticks']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['ticks']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['options']['scales']['y']['ticks']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['ticks']['font']['style'] = $this->getRealFontStyle();
+        $this->_chartjs_render_data['options']['options']['scales']['y']['ticks']['font']['family'] = $this->getFontName();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['ticks']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['ticks']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['options']['scales']['x']['ticks']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['ticks']['font']['style'] = $this->getRealFontStyle();
+        $this->_chartjs_render_data['options']['options']['scales']['x']['ticks']['font']['family'] = $this->getFontName();
+        if (in_array($this->_type, array('chartjs_polar_area_chart', 'chartjs_radar_chart'))) {
+            $this->_chartjs_render_data['options']['options']['scales']['r']['ticks']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+            $this->_chartjs_render_data['options']['options']['scales']['r']['ticks']['font']['weight'] = $this->getRealFontWeight();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['ticks']['font']['style'] = $this->getRealFontStyle();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['ticks']['font']['family'] = $this->getFontName();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['ticks']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
+
+            $this->_chartjs_render_data['options']['options']['scales']['r']['pointLabels']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+            $this->_chartjs_render_data['options']['options']['scales']['r']['pointLabels']['font']['weight'] = $this->getRealFontWeight();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['pointLabels']['font']['style'] = $this->getRealFontStyle();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['pointLabels']['font']['family'] = $this->getFontName();
+            $this->_chartjs_render_data['options']['options']['scales']['r']['pointLabels']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();
+        }
         if ($this->getVerticalAxisMax() != '') {
-            $this->_chartjs_render_data['options']['options']['scales']['yAxes'][0]['ticks']['max'] = intval($this->getVerticalAxisMax());
+            $this->_chartjs_render_data['options']['options']['scales']['y']['max'] = intval($this->getVerticalAxisMax());
         }
 
         // Title
         if ($this->_show_title) {
-            $this->_chartjs_render_data['options']['options']['title']['display'] = true;
-            $this->_chartjs_render_data['options']['options']['title']['text'] = $this->getTitle();
+            $this->_chartjs_render_data['options']['options']['plugins']['title']['display'] = true;
+            $this->_chartjs_render_data['options']['options']['plugins']['title']['text'] = $this->getTitle();
         } else {
-            $this->_chartjs_render_data['options']['options']['title']['display'] = false;
+            $this->_chartjs_render_data['options']['options']['plugins']['title']['display'] = false;
         }
-        $this->_chartjs_render_data['options']['options']['title']['position'] = $this->getTitlePosition();
-        $this->_chartjs_render_data['options']['options']['title']['fontFamily'] = $this->getTitleFontName();
-        $this->_chartjs_render_data['options']['options']['title']['fontStyle'] = $this->getTitleFontStyle();
-        $this->_chartjs_render_data['options']['options']['title']['fontColor'] = ($this->getTitleFontColor() != '') ? $this->getTitleFontColor() : '#666';
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['position'] = $this->getTitlePosition();
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['font']['family'] = $this->getTitleFontName();
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['font']['weight'] = $this->getRealTitleFontWeight();
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['font']['style'] = $this->getRealTitleFontStyle();
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;
+        $this->_chartjs_render_data['options']['options']['plugins']['title']['color'] = ($this->getTitleFontColor() != '') ? $this->getTitleFontColor() : '#666';
 
         // Tooltip
-        $this->_chartjs_render_data['options']['options']['tooltips']['enabled'] = $this->isTooltipEnabled();
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['enabled'] = $this->isTooltipEnabled();
         if ($this->isTooltipShared()) {
-            $this->_chartjs_render_data['options']['options']['tooltips']['mode'] = 'label';
+            $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['mode'] = 'index';
         } else {
-            $this->_chartjs_render_data['options']['options']['tooltips']['mode'] = 'single';
+            $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['mode'] = 'nearest';
+            $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['intersect'] = true;
         }
-        $this->_chartjs_render_data['options']['options']['tooltips']['backgroundColor'] = strpos($this->getTooltipBackgroundColor(), 'rgba') !== false ? $this->getTooltipBackgroundColor() : WDTTools::hex2rgba($this->getTooltipBackgroundColor(), 0.8);
-        $this->_chartjs_render_data['options']['options']['tooltips']['cornerRadius'] = $this->getTooltipBorderRadius();
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['backgroundColor'] = strpos($this->getTooltipBackgroundColor(), 'rgba') !== false ? $this->getTooltipBackgroundColor() : WDTTools::hex2rgba($this->getTooltipBackgroundColor(), 0.8);
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['cornerRadius'] = $this->getTooltipBorderRadius();
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['titleFont']['size'] = 12;
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['bodyFont']['size'] = 12;
+        $this->_chartjs_render_data['options']['options']['plugins']['tooltip']['footerFont']['size'] = 12;
 
         // Legend
-        $this->_chartjs_render_data['options']['options']['legend']['display'] = $this->getShowLegend();
-        $this->_chartjs_render_data['options']['options']['legend']['position'] = $this->getLegendPositionCjs();
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['display'] = $this->getShowLegend();
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['position'] = $this->getLegendPositionCjs();
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['labels']['color'] = $this->getFontColor() == '' ? '#666' : $this->getFontColor();;
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['labels']['font']['size'] = $this->getFontSize() != '' ? (int)$this->getFontSize() : 12;;
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['labels']['font']['weight'] = $this->getRealFontWeight();
+        $this->_chartjs_render_data['options']['options']['plugins']['legend']['labels']['font']['style'] = $this->getRealFontStyle();
+
+        // Compatibility with Chartjs 4.x version for old charts
+        if (isset($this->_chartjs_render_data['options']['options']['title']))
+            unset($this->_chartjs_render_data['options']['options']['title']);
+        if (isset($this->_chartjs_render_data['options']['options']['legend']))
+            unset($this->_chartjs_render_data['options']['options']['legend']);
+        if (isset($this->_chartjs_render_data['options']['options']['tooltips']))
+            unset($this->_chartjs_render_data['options']['options']['tooltips']);
+        if (isset($this->_chartjs_render_data['options']['options']['scales']['xAxes']))
+            unset($this->_chartjs_render_data['options']['options']['scales']['xAxes']);
+        if (isset($this->_chartjs_render_data['options']['options']['scales']['yAxes']))
+            unset($this->_chartjs_render_data['options']['options']['scales']['yAxes']);
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontSize']))
+            unset($this->_chartjs_render_data['options']['globalOptions']['defaultFontSize']);
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontFamily']))
+            unset($this->_chartjs_render_data['options']['globalOptions']['defaultFontFamily']);
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle']))
+            unset($this->_chartjs_render_data['options']['globalOptions']['defaultFontStyle']);
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontColor']))
+            unset($this->_chartjs_render_data['options']['globalOptions']['defaultFontColor']);
+        if (isset($this->_chartjs_render_data['options']['globalOptions']['defaultFontColor']))
+            unset($this->_chartjs_render_data['options']['globalOptions']['defaultFontColor']);
+        if (isset($this->_chartjs_render_data['options']['title']['fontFamily']))
+            unset($this->_chartjs_render_data['options']['title']['fontFamily']);
+        if (isset($this->_chartjs_render_data['options']['title']['fontStyle']))
+            unset($this->_chartjs_render_data['options']['title']['fontStyle']);
+        if (isset($this->_chartjs_render_data['options']['title']['fontColor']))
+            unset($this->_chartjs_render_data['options']['title']['fontColor']);
 
         $this->_chartjs_render_data = apply_filters('wpdatatables_filter_chartjs_render_data', $this->_chartjs_render_data, $this->getId(), $this);
 
@@ -2992,13 +3400,13 @@ class WPDataChart {
                 'align' => 'center',
             ),
             'xaxis' => array(
-              'type' => 'category',
+                'type' => 'category',
             ),
             'colors' => array(),
             'fill' => array(
-              'image' => array(
-                  'src' => array(),
-              ),
+                'image' => array(
+                    'src' => array(),
+                ),
             ),
             'orig_header' => array(),
         );
@@ -3031,13 +3439,13 @@ class WPDataChart {
         ) {
             $apexchartsRender['fill']['type'] = array();
             for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
-                if($i == 0) {
+                if ($i == 0) {
                     $apexchartsRender['xaxis']['categories'] = array();
                     foreach ($this->_render_data['rows'] as $row) {
                         $apexchartsRender['xaxis']['categories'][] = $row[0];
                     }
                 } else {
-                    $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    $seriesColor = isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
                     $seriesImage = (isset($this->_render_data['options']['series'][$i - 1]['chart_image']) && $this->_render_data['options']['series'][$i - 1]['chart_image'] !== '') ? $this->_render_data['options']['series'][$i - 1]['chart_image'] : '';
                     $fillType = $seriesImage == '' ? 'solid' : 'image';
                     $seriesEntry = array(
@@ -3054,9 +3462,9 @@ class WPDataChart {
                         array('apexcharts_grouped_bar_chart', 'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_bar_chart'))
                     )
                         $seriesEntry['type'] = isset($this->_render_data['options']['series'][$i - 1]['type']) ?
-                        $this->_render_data['options']['series'][$i - 1]['type'] : $this->getApexChartType($this->getType());
+                            $this->_render_data['options']['series'][$i - 1]['type'] : $this->getApexChartType($this->getType());
 
-                    if(isset($this->_render_data['series'][$i - 1]['opposite'])) $seriesEntry['opposite'] = $this->_render_data['series'][$i - 1]['opposite'];
+                    if (isset($this->_render_data['series'][$i - 1]['opposite'])) $seriesEntry['opposite'] = $this->_render_data['series'][$i - 1]['opposite'];
 
                     foreach ($this->_render_data['rows'] as $row) {
                         $seriesEntry['data'][] = $row[$i];
@@ -3073,13 +3481,13 @@ class WPDataChart {
             $apexchartsRender['options']['grid']['show'] = false;
             $apexchartsRender['fill']['type'] = array();
             for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
-                if($i == 0) {
+                if ($i == 0) {
                     $apexchartsRender['xaxis']['categories'] = array();
                     foreach ($this->_render_data['rows'] as $row) {
                         $apexchartsRender['xaxis']['categories'][] = $row[0];
                     }
                 } else {
-                    $seriesColor =  isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    $seriesColor = isset($this->_render_data['options']['series'][$i - 1]['color']) ? $this->_render_data['options']['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
                     $seriesImage = (isset($this->_render_data['options']['series'][$i - 1]['chart_image']) && $this->_render_data['options']['series'][$i - 1]['chart_image'] !== '') ? $this->_render_data['options']['series'][$i - 1]['chart_image'] : '';
                     $fillType = $seriesImage == '' ? 'solid' : 'image';
                     $seriesEntry = array(
@@ -3120,7 +3528,7 @@ class WPDataChart {
                         $seriesEntry['data'][] = $row[$i];
                     }
                     if ($isRadialType) {
-                        $apexchartsRender['colors'][$j] =  $colors[($j + 1) % $colorsNum];
+                        $apexchartsRender['colors'][$j] = $colors[($j + 1) % $colorsNum];
                         $j++;
                     }
                 }
@@ -3128,8 +3536,8 @@ class WPDataChart {
                 if ($i != 0) {
                     $apexchartsRender['series'] = $seriesEntry['data'];
                     $apexchartsRender['orig_header'][] = $seriesEntry['orig_header'];
-                    $seriesColor =  $this->_render_data['series'][$i - 1]['color'] != '' ? $this->_render_data['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
-                    if(!$isRadialType) {
+                    $seriesColor = $this->_render_data['series'][$i - 1]['color'] != '' ? $this->_render_data['series'][$i - 1]['color'] : $colors[$i % $colorsNum];
+                    if (!$isRadialType) {
                         $apexchartsRender['colors'][] = $seriesColor;
                     }
                 }
@@ -3145,12 +3553,12 @@ class WPDataChart {
         $this->_apexcharts_render_data['options']['chart']['height'] = $this->getHeight();
         $this->_apexcharts_render_data['options']['chart']['animations']['enabled'] = $this->isEnableAnimation();
         $this->_apexcharts_render_data['options']['chart']['background'] = ($this->getPlotBackgroundImage() != 'undefined' && $this->getPlotBackgroundImage() != '') ? $this->getPlotBackgroundImage() : $this->getBackgroundColor();
-        if (in_array( $this->_type, array( 'apexcharts_pie_chart', 'apexcharts_pie_with_gradient_chart',
-                'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart'))) {
+        if (in_array($this->_type, array('apexcharts_pie_chart', 'apexcharts_pie_with_gradient_chart',
+            'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart'))) {
             $this->_apexcharts_render_data['options']['theme']['monochrome'] = array();
             $this->_apexcharts_render_data['options']['theme']['monochrome']['enabled'] = $this->isMonochrome();
             $this->_apexcharts_render_data['options']['theme']['monochrome']['color'] = $this->getMonochromeColor();
-            if($this->_enable_color_palette) {
+            if ($this->_enable_color_palette) {
                 $this->_apexcharts_render_data['options']['theme']['monochrome']['enabled'] = false;
                 $this->_apexcharts_render_data['options']['theme']['palette'] = $this->getColorPalette();
             }
@@ -3195,15 +3603,15 @@ class WPDataChart {
         $this->_apexcharts_render_data['options']['xaxis']['crosshairs']['show'] = $this->isHorizontalAxisCrosshair();
         $this->_apexcharts_render_data['options']['xaxis']['title']['text'] = $this->getMajorAxisLabel();
         $i = 0;
-        if (!in_array( $this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
-                'apexcharts_stacked_bar_chart', 'apexcharts_radar_chart', 'apexcharts_pie_chart',
-                'apexcharts_pie_with_gradient_chart', 'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart',
-                'apexcharts_radialbar_chart', 'apexcharts_radialbar_gauge_chart'))) {
-            foreach ($apexchartsRender['series'] as $series ) {
+        if (!in_array($this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_bar_chart', 'apexcharts_radar_chart', 'apexcharts_pie_chart',
+            'apexcharts_pie_with_gradient_chart', 'apexcharts_donut_chart', 'apexcharts_donut_with_gradient_chart',
+            'apexcharts_radialbar_chart', 'apexcharts_radialbar_gauge_chart'))) {
+            foreach ($apexchartsRender['series'] as $series) {
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $apexchartsRender['series'][0]['name'];
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['title']['text'] = $series['label'];
                 if ($this->getMinorAxisLabel()) $this->_apexcharts_render_data['options']['yaxis'][0]['title']['text'] = $this->getMinorAxisLabel();
-                if($i != 0) $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = false;
+                if ($i != 0) $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = false;
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['crosshairs']['show'] = $this->_apexcharts_render_data['options']['yaxis'][$i]['tooltip']['enabled'] = $this->isVerticalAxisCrosshair();
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['reversed'] = $this->isReversed();
                 if ($this->getVerticalAxisMin() !== '') {
@@ -3218,15 +3626,15 @@ class WPDataChart {
                     $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = $showOppositeAxis;
                     if ($showOppositeAxis && isset($this->_apexcharts_render_data['options']['yaxis'][$i]['orig_header'])) {
                         $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $this->_apexcharts_render_data['options']['yaxis'][$i]['orig_header'];
-                    } else if(isset($this->_apexcharts_render_data['options']['yaxis'][0]['seriesName'])) {
+                    } else if (isset($this->_apexcharts_render_data['options']['yaxis'][0]['seriesName'])) {
                         $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $this->_apexcharts_render_data['options']['yaxis'][0]['seriesName'];
                     }
                 }
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['tickAmount'] = $this->getTickAmount() ?: 0;
                 $i++;
             }
-        } else if (in_array( $this->_type, array('apexcharts_grouped_bar_chart','apexcharts_100_stacked_bar_chart',
-                'apexcharts_stacked_bar_chart','apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
+        } else if (in_array($this->_type, array('apexcharts_grouped_bar_chart', 'apexcharts_100_stacked_bar_chart',
+            'apexcharts_stacked_bar_chart', 'apexcharts_100_stacked_column_chart', 'apexcharts_stacked_column_chart'))) {
             $this->_apexcharts_render_data['options']['yaxis']['seriesName'] = $apexchartsRender['series'][0]['name'];
             $this->_apexcharts_render_data['options']['yaxis']['title']['text'] = $this->getMinorAxisLabel() ?: $this->_render_data["series"][0]['label'];
             if ($this->getVerticalAxisMin() !== '') {
@@ -3236,7 +3644,7 @@ class WPDataChart {
                 $this->_apexcharts_render_data['options']['yaxis']['max'] = (int)$this->getVerticalAxisMax();
             }
             $this->_apexcharts_render_data['options']['yaxis']['reversed'] = $this->isReversed();
-            if($this->_type != 'apexcharts_100_stacked_column_chart')
+            if ($this->_type != 'apexcharts_100_stacked_column_chart')
                 $this->_apexcharts_render_data['options']['yaxis']['tickAmount'] = $this->getTickAmount() ?: 0;
         }
         $this->_apexcharts_render_data['options']['markers']['size'] = $this->getMarkerSize();
@@ -3267,7 +3675,7 @@ class WPDataChart {
         $this->_apexcharts_render_data['options']['chart']['selection'] = array();
         $this->_apexcharts_render_data['options']['chart']['selection']['enabled'] = true;
         $allToolbarButtons = ['download', 'selection', 'zoom', 'zoomin', 'zoomout', 'pan'];
-        $notShownToolbarButtons = array_diff( array_values($allToolbarButtons), $this->getToolbarButtons() );
+        $notShownToolbarButtons = array_diff(array_values($allToolbarButtons), $this->getToolbarButtons());
         foreach ($allToolbarButtons as $button) {
             $this->_apexcharts_render_data['options']['chart']['toolbar']['tools'][$button] = !in_array($button, $notShownToolbarButtons);
         }
@@ -3285,7 +3693,8 @@ class WPDataChart {
         $this->_apexcharts_render_data = apply_filters('wpdatatables_filter_apexcharts_render_data', $this->_apexcharts_render_data, $this->getId(), $this);
     }
 
-    public function returnGoogleChartData() {
+    public function returnGoogleChartData()
+    {
         $this->prepareData();
         $this->groupData();
         $this->shiftStringColumnUp();
@@ -3293,7 +3702,8 @@ class WPDataChart {
         return $this->_render_data;
     }
 
-    public function returnHighChartsData() {
+    public function returnHighChartsData()
+    {
         $this->prepareData();
         $this->groupData();
         $this->shiftStringColumnUp();
@@ -3301,7 +3711,8 @@ class WPDataChart {
         return $this->_highcharts_render_data;
     }
 
-    public function returnChartJSData() {
+    public function returnChartJSData()
+    {
         $this->prepareData();
         $this->groupData();
         $this->shiftStringColumnUp();
@@ -3309,7 +3720,8 @@ class WPDataChart {
         return $this->_chartjs_render_data;
     }
 
-    public function returnApexChartsData() {
+    public function returnApexChartsData()
+    {
         $this->prepareData();
         $this->groupData();
         $this->shiftStringColumnUp();
@@ -3317,7 +3729,8 @@ class WPDataChart {
         return $this->_apexcharts_render_data;
     }
 
-    public function returnData() {
+    public function returnData()
+    {
         if ($this->getEngine() == 'google') {
             return $this->returnGoogleChartData();
         } else if ($this->getEngine() == 'highcharts') {
@@ -3334,26 +3747,26 @@ class WPDataChart {
      * Saves the chart data to DB
      * @global WPDB $wpdb
      */
-    public function save() {
+    public function save()
+    {
         global $wpdb;
 
         $this->prepareSeriesData();
         $this->shiftStringColumnUp();
 
-        if ($this->_engine == 'google') {
-            $this->prepareGoogleChartsRender();
-        }
-
-        if ($this->_engine == 'highcharts') {
-            $this->prepareHighchartsRender();
-        }
-
-        if ($this->_engine == 'chartjs') {
-            $this->prepareChartJSRender();
-        }
-
-        if ($this->_engine == 'apexcharts') {
-            $this->prepareApexchartsRender();
+        switch ($this->getEngine()) {
+            case 'google':
+                $this->prepareGoogleChartsRender();
+                break;
+            case 'highcharts':
+                $this->prepareHighchartsRender();
+                break;
+            case 'chartjs':
+                $this->prepareChartJSRender();
+                break;
+            case 'apexcharts':
+                $this->prepareApexchartsRender();
+                break;
         }
 
         $render_data = array(
@@ -3377,9 +3790,9 @@ class WPDataChart {
             $wpdb->insert(
                 $wpdb->prefix . "wpdatacharts",
                 array(
-                    'wpdatatable_id' => $this->_wpdatatable_id,
-                    'title' => $this->_title,
-                    'engine' => $this->_engine,
+                    'wpdatatable_id' => $this->getwpDataTableId(),
+                    'title' => $this->getTitle(),
+                    'engine' => $this->getEngine(),
                     'type' => $this->_type,
                     'json_render_data' => json_encode($render_data)
                 )
@@ -3392,7 +3805,7 @@ class WPDataChart {
             $wpdb->update(
                 $wpdb->prefix . "wpdatacharts",
                 array(
-                    'wpdatatable_id' => $this->_wpdatatable_id,
+                    'wpdatatable_id' => $this->getwpDataTableId(),
                     'title' => $this->_title,
                     'engine' => $this->_engine,
                     'type' => $this->_type,
@@ -3407,7 +3820,8 @@ class WPDataChart {
 
     }
 
-    public function getColumnIndexes() {
+    public function getColumnIndexes()
+    {
         foreach ($this->getSelectedColumns() as $columnKey) {
             $this->_render_data['column_indexes'][] = $this->_wpdatatable->getColumnHeaderOffset($columnKey);
         }
@@ -3417,7 +3831,8 @@ class WPDataChart {
      * Returns series type based on selected chart type
      * @return string
      */
-    public function getApexChartType($type) {
+    public function getApexChartType($type)
+    {
         switch ($type) {
             case 'apexcharts_spline_area_chart':
             case 'apexcharts_stepline_area_chart':
@@ -3466,13 +3881,16 @@ class WPDataChart {
      */
     function containsOnlyNull($array)
     {
-        return empty(array_filter($array, function ($a) { return $a !== null && $a !== '';}));
+        return empty(array_filter($array, function ($a) {
+            return $a !== null && $a !== '';
+        }));
     }
 
     /**
      * Return the shortcode
      */
-    public function getShortCode() {
+    public function getShortCode()
+    {
         if (!empty($this->_id)) {
             return '[wpdatachart id=' . $this->_id . ']';
         } else {
@@ -3484,7 +3902,8 @@ class WPDataChart {
      * Load from DB
      * @return bool
      */
-    public function loadFromDB() {
+    public function loadFromDB()
+    {
         global $wpdb;
 
         if (empty($this->_id)) {
@@ -3528,7 +3947,7 @@ class WPDataChart {
         $this->setEngine($chartData->engine);
         $this->setwpDataTableId($chartData->wpdatatable_id);
         $this->setType($chartData->type);
-        if (!empty($renderData['series_type'])){
+        if (!empty($renderData['series_type'])) {
             $this->setSeriesType($renderData['series_type']);
         };
         $this->setSelectedColumns($renderData['selected_columns']);
@@ -3672,37 +4091,88 @@ class WPDataChart {
             $this->setBorderWidth($renderData['chartjs_render_data']['configurations']['canvas']['borderWidth']);
             $this->setBorderColor($renderData['chartjs_render_data']['configurations']['canvas']['borderColor']);
             $this->setBorderRadius($renderData['chartjs_render_data']['configurations']['canvas']['borderRadius']);
-            $this->setFontSize($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontSize']);
-            $this->setFontName($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontFamily']);
-            $this->setFontStyle($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontStyle']);
-            $this->setFontColor($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontColor']);
+            if (isset($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontSize'])) {
+                $this->setFontSize($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontSize']);
+            } else {
+                $this->setFontSize($renderData['chartjs_render_data']['options']['globalOptions']['font']['size']);
+            }
+            if (isset($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontFamily'])) {
+                $this->setFontName($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontFamily']);
+            } else {
+                $this->setFontName($renderData['chartjs_render_data']['options']['globalOptions']['font']['family']);
+            }
+            if (isset($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontStyle'])) {
+                $this->setFontStyle($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontStyle']);
+            } else {
+                $this->setFontStyle($renderData['chartjs_render_data']['options']['globalOptions']['font']['style']);
+                $this->setFontWeight($renderData['chartjs_render_data']['options']['globalOptions']['font']['weight']);
+            }
+            if (isset($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontColor'])) {
+                $this->setFontColor($renderData['chartjs_render_data']['options']['globalOptions']['defaultFontColor']);
+            } else {
+                $this->setFontColor($renderData['chartjs_render_data']['options']['globalOptions']['color']);
+            }
             // Series
             isset($renderData['chartjs_render_data']['options']['data']['datasets'][0]['lineTension']) ?
                 $this->setCurveType($renderData['chartjs_render_data']['options']['data']['datasets'][0]['lineTension']) : null;
             // Axes
-            $this->setMajorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['xAxes'][0]['scaleLabel']['labelString']);
-            $this->setMinorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['scaleLabel']['labelString']);
-            isset($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['min']) ?
-                $this->setVerticalAxisMin($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['min']) : null;
-            isset($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['max']) ?
-                $this->setVerticalAxisMax($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['max']) : null;
-            // Title
-            $this->setTitlePosition($renderData['chartjs_render_data']['options']['options']['title']['position']);
-            $this->setTitleFontName($renderData['chartjs_render_data']['options']['options']['title']['fontFamily']);
-            $this->setTitleFontStyle($renderData['chartjs_render_data']['options']['options']['title']['fontStyle']);
-            $this->setTitleFontColor($renderData['chartjs_render_data']['options']['options']['title']['fontColor']);
-            // Tooltip
-            $this->setTooltipEnabled($renderData['chartjs_render_data']['options']['options']['tooltips']['enabled']);
-            if ($renderData['chartjs_render_data']['options']['options']['tooltips']['mode'] == 'single') {
-                $this->setTooltipShared(false);
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['xAxes'][0]['scaleLabel']['labelString'])) {
+                $this->setMajorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['xAxes'][0]['scaleLabel']['labelString']);
             } else {
-                $this->setTooltipShared(true);
+                $this->setMajorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['x']['title']['text']);
             }
-            $this->setTooltipBackgroundColor($renderData['chartjs_render_data']['options']['options']['tooltips']['backgroundColor']);
-            $this->setTooltipBorderRadius($renderData['chartjs_render_data']['options']['options']['tooltips']['cornerRadius']);
-            // Legend
-            $this->setShowLegend($renderData['chartjs_render_data']['options']['options']['legend']['display']);
-            $this->setLegendPositionCjs($renderData['chartjs_render_data']['options']['options']['legend']['position']);
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['scaleLabel']['labelString'])) {
+                $this->setMinorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['scaleLabel']['labelString']);
+            } else {
+                $this->setMinorAxisLabel($renderData['chartjs_render_data']['options']['options']['scales']['y']['title']['text']);
+            }
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['min']))
+                $this->setVerticalAxisMin($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['min']);
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['max']))
+                $this->setVerticalAxisMax($renderData['chartjs_render_data']['options']['options']['scales']['yAxes'][0]['ticks']['max']);
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['y']['min']))
+                $this->setVerticalAxisMin($renderData['chartjs_render_data']['options']['options']['scales']['y']['min']);
+            if (isset($renderData['chartjs_render_data']['options']['options']['scales']['y']['max']))
+                $this->setVerticalAxisMax($renderData['chartjs_render_data']['options']['options']['scales']['y']['max']);
+
+            if (isset($renderData['chartjs_render_data']['options']['options']['plugins'])) {
+                // Title
+                $this->setTitlePosition($renderData['chartjs_render_data']['options']['options']['plugins']['title']['position']);
+                $this->setTitleFontName($renderData['chartjs_render_data']['options']['options']['plugins']['title']['font']['family']);
+                $this->setTitleFontStyle($renderData['chartjs_render_data']['options']['options']['plugins']['title']['font']['style']);
+                $this->setTitleFontWeight($renderData['chartjs_render_data']['options']['options']['plugins']['title']['font']['weight']);
+                $this->setTitleFontColor($renderData['chartjs_render_data']['options']['options']['plugins']['title']['color']);
+                // Tooltip
+                $this->setTooltipEnabled($renderData['chartjs_render_data']['options']['options']['plugins']['tooltip']['enabled']);
+                if ($renderData['chartjs_render_data']['options']['options']['plugins']['tooltip']['mode'] == 'nearest') {
+                    $this->setTooltipShared(false);
+                } else {
+                    $this->setTooltipShared(true);
+                }
+                $this->setTooltipBackgroundColor($renderData['chartjs_render_data']['options']['options']['plugins']['tooltip']['backgroundColor']);
+                $this->setTooltipBorderRadius($renderData['chartjs_render_data']['options']['options']['plugins']['tooltip']['cornerRadius']);
+                // Legend
+                $this->setShowLegend($renderData['chartjs_render_data']['options']['options']['plugins']['legend']['display']);
+                $this->setLegendPositionCjs($renderData['chartjs_render_data']['options']['options']['plugins']['legend']['position']);
+            } else {
+                // Title
+                $this->setTitlePosition($renderData['chartjs_render_data']['options']['options']['title']['position']);
+                $this->setTitleFontName($renderData['chartjs_render_data']['options']['options']['title']['fontFamily']);
+                $this->setTitleFontStyle($renderData['chartjs_render_data']['options']['options']['title']['fontStyle']);
+                $this->setTitleFontColor($renderData['chartjs_render_data']['options']['options']['title']['fontColor']);
+                // Tooltip
+                $this->setTooltipEnabled($renderData['chartjs_render_data']['options']['options']['tooltips']['enabled']);
+                if ($renderData['chartjs_render_data']['options']['options']['tooltips']['mode'] == 'single') {
+                    $this->setTooltipShared(false);
+                } else {
+                    $this->setTooltipShared(true);
+                }
+                $this->setTooltipBackgroundColor($renderData['chartjs_render_data']['options']['options']['tooltips']['backgroundColor']);
+                $this->setTooltipBorderRadius($renderData['chartjs_render_data']['options']['options']['tooltips']['cornerRadius']);
+                // Legend
+                $this->setShowLegend($renderData['chartjs_render_data']['options']['options']['legend']['display']);
+                $this->setLegendPositionCjs($renderData['chartjs_render_data']['options']['options']['legend']['position']);
+            }
 
         } else if ($chartData->engine == 'apexcharts') {
             // Chart
@@ -3712,13 +4182,13 @@ class WPDataChart {
             $this->setMonochrome(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['enabled']) ? $renderData['apexcharts_render_data']['options']['theme']['monochrome']['enabled'] : false);
             $this->setMonochromeColor(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) ? $renderData['apexcharts_render_data']['options']['theme']['monochrome']['color'] : '#255aee');
             $this->setEnableColorPalette(isset($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) && WDTTools::isStringAColor($renderData['apexcharts_render_data']['options']['theme']['monochrome']['color']) && !$this->isMonochrome());
-            $this->setColorPalette(isset($renderData['apexcharts_render_data']['options']['theme']['palette'] ) ? $renderData['apexcharts_render_data']['options']['theme']['palette']  : 'palette1');
+            $this->setColorPalette(isset($renderData['apexcharts_render_data']['options']['theme']['palette']) ? $renderData['apexcharts_render_data']['options']['theme']['palette'] : 'palette1');
             $this->setStartAngle(isset($renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['startAngle']) ? $renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['startAngle'] : 0);
             $this->setEndAngle(isset($renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['endAngle']) ? $renderData['apexcharts_render_data']['options']['plotOptions']['radialBar']['endAngle'] : 360);
             $this->setTextColor(isset($renderData['apexcharts_render_data']['options']['chart']['foreColor']) ? $renderData['apexcharts_render_data']['options']['chart']['foreColor'] : '#373d3f');
             $this->setZoomType(isset($renderData['apexcharts_render_data']['options']['chart']['zoom']['type']) ? $renderData['apexcharts_render_data']['options']['chart']['zoom']['type'] : 'None');
             $this->setPlotBackgroundImage((isset($renderData['apexcharts_render_data']['options']['chart']['background']) && !$isBackgroundAColor && $renderData['apexcharts_render_data']['options']['chart']['background'] !== '') ? "url(" . $renderData['apexcharts_render_data']['options']['chart']['background'] . ") no-repeat center/cover" : '');
-            $this->setLineBackgroundImage((isset($renderData['apexcharts_render_data']['options']['fill']['image']['src']) && !is_array($renderData['apexcharts_render_data']['options']['fill']['image']['src']) ) ? $renderData['apexcharts_render_data']['options']['fill']['image']['src'] : '');
+            $this->setLineBackgroundImage((isset($renderData['apexcharts_render_data']['options']['fill']['image']['src']) && !is_array($renderData['apexcharts_render_data']['options']['fill']['image']['src'])) ? $renderData['apexcharts_render_data']['options']['fill']['image']['src'] : '');
             $this->setShowDataLabels(isset($renderData['apexcharts_render_data']['options']['dataLabels']['enabled']) ? $renderData['apexcharts_render_data']['options']['dataLabels']['enabled'] : false);
             $this->setEnableDropshadow(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['enabled']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['enabled'] : false);
             $this->setDropshadowBlur(isset($renderData['apexcharts_render_data']['options']['chart']['dropShadow']['blur']) ? $renderData['apexcharts_render_data']['options']['chart']['dropShadow']['blur'] : 3);
@@ -3771,13 +4241,13 @@ class WPDataChart {
             $this->setFillSeriesColor(isset($renderData['apexcharts_render_data']['options']['tooltip']['fillSeriesColor']) && $renderData['apexcharts_render_data']['options']['tooltip']['fillSeriesColor']);
 
             // Legend
-            $this->setShowLegend(isset($renderData['apexcharts_render_data']['options']['legend']['show']) ? $renderData['apexcharts_render_data']['options']['legend']['show'] : true );
+            $this->setShowLegend(isset($renderData['apexcharts_render_data']['options']['legend']['show']) ? $renderData['apexcharts_render_data']['options']['legend']['show'] : true);
             $this->setLegendPositionCjs(isset($renderData['apexcharts_render_data']['options']['legend']['position']) ? $renderData['apexcharts_render_data']['options']['legend']['position'] : 'bottom');
 
             //Toolbar
             $this->setShowToolbar(isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['show']) ? $renderData['apexcharts_render_data']['options']['chart']['toolbar']['show'] : false);
 
-            if(isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'])) {
+            if (isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'])) {
                 $toolbarButtons = array();
                 foreach ($renderData['apexcharts_render_data']['options']['chart']['toolbar']['tools'] as $toolbarTool => $show) {
                     if ($toolbarTool != 'customIcons' && $show == true) {
@@ -3785,7 +4255,7 @@ class WPDataChart {
                     }
                 }
                 $this->setToolbarButtons($toolbarButtons);
-            } else $this->setToolbarButtons(['download', 'selection', 'zoomin', 'zoomout', 'zoom' , 'pan']);
+            } else $this->setToolbarButtons(['download', 'selection', 'zoomin', 'zoomout', 'zoom', 'pan']);
             $this->setApexExportingFileName((isset($renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename']) && $renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename'] != '') ? $renderData['apexcharts_render_data']['options']['chart']['toolbar']['export']['png']['filename'] : 'Chart');
         }
 
@@ -3796,7 +4266,8 @@ class WPDataChart {
     /**
      * Render Chart
      */
-    public function renderChart() {
+    public function renderChart()
+    {
         $minified_js = get_option('wdtMinifiedJs');
 
         $this->prepareData();
@@ -3844,9 +4315,17 @@ class WPDataChart {
             wp_enqueue_script('wdt-highcharts', '//code.highcharts.com/highcharts.js', array(), WDT_CURRENT_VERSION);
             wp_enqueue_script('wdt-highcharts-more', '//code.highcharts.com/highcharts-more.js', array(), WDT_CURRENT_VERSION);
             wp_enqueue_script('wdt-highcharts3d', '//code.highcharts.com/highcharts-3d.js', array(), WDT_CURRENT_VERSION);
-            if ( in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart']) ){
+            if (in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
                 wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION);
                 wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION);
+            }
+            if( $this->getType() =='highcharts_funnel3d_chart'){
+                wp_enqueue_script('wdt-cylinder', '//code.highcharts.com/modules/cylinder.js', array(), WDT_CURRENT_VERSION);
+                wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION);
+                wp_enqueue_script('wdt-funnel3d', '//code.highcharts.com/modules/funnel3d.js', array(), WDT_CURRENT_VERSION);
+            }
+            if( $this->getType() =='highcharts_funnel_chart'){
+                wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION);
             }
             if ( $this->getExporting() ) {
                 wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION);
@@ -3862,7 +4341,7 @@ class WPDataChart {
             $this->prepareChartJSRender();
             wp_enqueue_script('wdt-chartjs', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION);
             // ChartJS wpDataTable JS library
-            wp_enqueue_script('wpdatatables-chartjs', WDT_JS_PATH . 'wpdatatables/wdt.chartJS' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wpdatatables-chartjs', WDT_JS_PATH . 'wpdatatables/wdt.chartJS.js', array('jquery'), WDT_CURRENT_VERSION);
             $json_chart_render_data = json_encode($this->_chartjs_render_data);
         } else if ($this->_engine = 'apexcharts') {
             $this->prepareApexchartsRender();
@@ -3885,7 +4364,8 @@ class WPDataChart {
     /**
      * Return render data
      */
-    public function getRenderData() {
+    public function getRenderData()
+    {
         return $this->_render_data;
     }
 
@@ -3893,7 +4373,8 @@ class WPDataChart {
      * Return highcharts render data
      * @return array
      */
-    public function getHighchartsRenderData() {
+    public function getHighchartsRenderData()
+    {
         return $this->_highcharts_render_data;
     }
 
@@ -3901,7 +4382,8 @@ class WPDataChart {
      * Return ChartJS render data
      * @return null
      */
-    public function getChartJSRenderData() {
+    public function getChartJSRenderData()
+    {
         return $this->_chartjs_render_data;
     }
 
@@ -3909,7 +4391,8 @@ class WPDataChart {
      * Return Apexcharts render data
      * @return null
      */
-    public function getApexchartsRenderData() {
+    public function getApexchartsRenderData()
+    {
         return $this->_apexcharts_render_data;
     }
 
@@ -3918,7 +4401,8 @@ class WPDataChart {
      * @param $chartId
      * @return bool
      */
-    public static function deleteChart($chartId) {
+    public static function deleteChart($chartId)
+    {
         global $wpdb;
 
         if (!isset($_REQUEST['wdtNonce']) || empty($chartId) || !current_user_can('manage_options')
@@ -3941,7 +4425,8 @@ class WPDataChart {
      * Get all charts non-paged for the MCE editor
      * @return array|null|object
      */
-    public static function getAllCharts() {
+    public static function getAllCharts()
+    {
         global $wpdb;
         $query = "SELECT id, title FROM {$wpdb->prefix}wpdatacharts ";
         $allCharts = $wpdb->get_results($query, ARRAY_A);
