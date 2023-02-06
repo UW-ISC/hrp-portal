@@ -232,8 +232,13 @@
             var clickable_parents = $("> a.mega-menu-link", items_with_submenus).add(collapse_children_parents);
 
             clickable_parents.on("touchend.megamenu", function(e) {
-                plugin.unbindHoverEvents();
-                plugin.unbindHoverIntentEvents();
+                if (plugin.settings.event === "hover_intent") {
+                    plugin.unbindHoverIntentEvents();
+                }
+
+                if (plugin.settings.event === "hover") {
+                    plugin.unbindHoverEvents();
+                }
             });
 
             clickable_parents.not("[data-has-click-event]").on("click.megamenu", function(e) {
@@ -396,6 +401,8 @@
                         } else {
                             plugin.showPanel(active_link.parent());
                         }
+
+                        return;
                     }
 
                     // pressing enter on a parent item without a link will toggle the sub menu
@@ -403,6 +410,18 @@
                         if ( active_link.parent().hasClass("mega-toggle-on") && ! active_link.parent().parent().parent().hasClass("mega-menu-tabbed") ) {
                             plugin.hidePanel(active_link);
                         } else {
+                            plugin.showPanel(active_link);
+                        }
+
+                        return;
+                    }
+
+                    // pressing enter on a parent item without a sub menu indicator will first open the sub menu, then follow the link
+                    if ( ( active_link.parent().is(items_with_submenus) && active_link.parent().is(".mega-hide-arrow") ) ) {
+                        if ( active_link.parent().hasClass("mega-toggle-on") && ! active_link.parent().parent().parent().hasClass("mega-menu-tabbed") ) {
+                            //plugin.hidePanel(active_link);
+                        } else {
+                            e.preventDefault();
                             plugin.showPanel(active_link);
                         }
                     }
@@ -612,16 +631,18 @@
                         left: "",
                         display: ""
                     });
-                });
-            }
 
-            $menu.css({
-                width: "",
-                left: "",
-                display: ""
-            });
-                
-            $toggle_bar.removeClass("mega-menu-open");
+                    $toggle_bar.removeClass("mega-menu-open");
+                });
+            } else {
+                $menu.css({
+                    width: "",
+                    left: "",
+                    display: ""
+                });
+                    
+                $toggle_bar.removeClass("mega-menu-open");
+            }
 
             $menu.triggerHandler("mmm:hideMobileMenu");
         };

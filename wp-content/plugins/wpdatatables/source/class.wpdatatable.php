@@ -2939,7 +2939,7 @@ class WPDataTable {
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
             foreach($headingsArray[1] as $heading){
-                if ($heading == NULL)
+                if ($heading === '')
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
             $headingsArray = array_map('trim', $headingsArray[1]);
@@ -2953,7 +2953,7 @@ class WPDataTable {
                     ++$r;
                     foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
                         $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
-                        $namedDataArray[$r][$dataColumnHeading] = trim($dataRows[$row][$dataColumnIndex]);
+                        $namedDataArray[$r][$dataColumnHeading] = trim(isset($dataRows[$row][$dataColumnIndex]) ? $dataRows[$row][$dataColumnIndex] : '');
                         $currentDateFormat = isset($wdtParameters['dateInputFormat'][$dataColumnHeading]) ? $wdtParameters['dateInputFormat'][$dataColumnHeading] : null;
                         if (!empty($wdtParameters['data_types'][$dataColumnHeading]) && in_array($wdtParameters['data_types'][$dataColumnHeading], array('date', 'datetime', 'time'))) {
                             if ($format === 'xls' || $format === 'ods') {
@@ -3307,6 +3307,10 @@ class WPDataTable {
                 $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/material.css';
                 break;
         }
+        if (get_option('wdtIncludeGoogleFonts')){
+            wp_enqueue_style( 'wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',  array(), WDT_CURRENT_VERSION);
+            wp_enqueue_style( 'wdt-include-roboto-google-fonts', 'https://fonts.googleapis.com/css?family=Roboto:wght@400;500&display=swap',  array(), WDT_CURRENT_VERSION);
+        }
 
         wp_enqueue_style('wdt-skin-' . $skin, $renderSkin, array(), WDT_CURRENT_VERSION);
 
@@ -3380,7 +3384,7 @@ class WPDataTable {
         if ($tableData) {
             foreach ($tableData->columns as $column) {
                 $returnArray['columnOrder'][(int)$column->pos] = $column->orig_header;
-                if ($column->display_header) {
+                if ($column->display_header != '') {
                     $returnArray['columnTitles'][$column->orig_header] = $column->display_header;
                 }
                 if ($column->width) {

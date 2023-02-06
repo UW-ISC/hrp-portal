@@ -718,15 +718,31 @@
                         <h4 class="c-title-color m-b-2">
                             <?php esc_html_e('Font style', 'wpdatatables'); ?>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                               title="<?php esc_attr_e('The default font style for all text in the chart', 'wpdatatables'); ?>"></i>
+                               title="<?php esc_attr_e('The default font style for all text in the chart (except title and tooltip)', 'wpdatatables'); ?>"></i>
                         </h4>
                         <div class="form-group">
                             <div class="fg-line">
                                 <div class="select">
                                     <select class="selectpicker" name="font-style" id="font-style">
-                                        <option value="bold">Bold</option>
+                                        <option selected="selected" value="normal">Normal</option>
                                         <option value="italic">Italic</option>
-                                        <option value="bold italic">Bold Italic</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chartjs" id="font-weight-row">
+                        <h4 class="c-title-color m-b-2">
+                            <?php esc_html_e('Font weight', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php esc_attr_e('The default font weight for all text in the chart (except title and tooltip)', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="form-group">
+                            <div class="fg-line">
+                                <div class="select">
+                                    <select class="selectpicker" name="font-weight" id="font-weight">
+                                        <option value="normal">Normal</option>
+                                        <option selected="selected" value="bold">Bold</option>
                                     </select>
                                 </div>
                             </div>
@@ -1188,10 +1204,25 @@
                                 <div class="fg-line">
                                     <div class="select">
                                         <select class="selectpicker" name="title-font-style" id="title-font-style">
+                                            <option selected="selected" value="normal">Normal</option>
+                                            <option value="italic">Italic</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chartjs" id="title-font-weight-row">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Title font weight', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('The default font weight for text in the title', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker" name="title-font-weight" id="title-font-weight">
                                             <option value="normal">Normal</option>
                                             <option selected="selected" value="bold">Bold</option>
-                                            <option value="italic">Italic</option>
-                                            <option value="bold italic">Bold Italic</option>
                                         </select>
                                     </div>
                                 </div>
@@ -1894,7 +1925,7 @@
         <div class="chart-preview-container">
             <div id="google-chart-container"></div>
             <div id="chart-js-container">
-                <canvas id="chart-js-canvas"></canvas>
+                <canvas id="chart-js-canvas" aria-label="Chartjs canvas" role="img"></canvas>
             </div>
             <div id="apex-chart-container"></div>
         </div>

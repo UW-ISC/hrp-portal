@@ -2539,6 +2539,11 @@ class MLA_Custom_Field_Query {
 			}
 		}
 
+		// Read Only fields are a historical (MLA defect) artifact of interest to very few MLA users
+		if ( 0 === $template_items[ 'read_only' ]['count'] ) {
+			unset( $template_items[ 'read_only' ] );
+		}
+
 		return $template_items;
 	}
 } // class MLA_Custom_Field_Query

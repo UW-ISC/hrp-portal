@@ -405,7 +405,7 @@ class wpDataTableSourceFile
 
             $headingsArray = array_keys($namedDataArray[0]);
             foreach($headingsArray as $heading){
-                if ($heading == NULL)
+                if ($heading === '')
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
             $highestRow = count($namedDataArray) - 1;
@@ -433,7 +433,7 @@ class wpDataTableSourceFile
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $this->getHighestColumn() . '1', null, true, true, true);
             foreach($headingsArray[1] as $heading){
-                if ($heading == NULL)
+                if ($heading === '')
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
             $headingsArray = array_map('trim', $headingsArray[1]);

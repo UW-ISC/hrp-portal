@@ -973,7 +973,7 @@ class WDTConfigController {
 
         try {
             foreach ($dataSourceColumnsHeaders as $dataSourceColumnsHeader)
-                if ($dataSourceColumnsHeader == '') throw new WDTException(__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
+                if ($dataSourceColumnsHeader === '') throw new WDTException(__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
         } catch (WDTException $exception) {
             die($exception);
         }

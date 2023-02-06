@@ -166,8 +166,13 @@ class MLAMime {
 	 */
 	public static function mla_ext2type_filter( $standard_types ) {
 		if ( self::$mla_debug_active ) {
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter standard_types = " . var_export( $standard_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter wp_filter = " . MLACore::mla_decode_wp_filter('ext2type'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			static $log_mla_ext2type_filter = true;
+			
+			if ( $log_mla_ext2type_filter ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter standard_types = " . var_export( $standard_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter wp_filter = " . MLACore::mla_decode_wp_filter('ext2type'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+				$log_mla_ext2type_filter = false;
+			}
 		}
 
 		if ( self::$disable_mla_filtering ) {
@@ -213,7 +218,12 @@ class MLAMime {
 		unset( self::$mla_icon_type_associations['.bad.value.'] );
 
 		if ( self::$mla_debug_active ) {
-			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter mla_icon_type_associations = " . var_export( self::$mla_icon_type_associations, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			static $log_mla_icon_type_associations = true;
+			
+			if ( $log_mla_icon_type_associations ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_ext2type_filter mla_icon_type_associations = " . var_export( self::$mla_icon_type_associations, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+				$log_mla_icon_type_associations = false;
+			}
 		}
 		
 		return self::$mla_icon_type_associations;

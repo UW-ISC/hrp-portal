@@ -30,7 +30,7 @@
                                 <div class="fg-line">
                                     <div class="select">
                                         <select id="wdt-table-font" data-name="wdtTableFont" class="selectpicker"
-                                                title="Choose font for the table">
+                                                title="<?php esc_attr_e('Choose font for the table', 'wpdatatables'); ?>">
                                             <option value=""></option>
                                             <?php foreach (WDTSettingsController::wdtGetSystemFonts() as $font) { ?>
                                                 <option value="<?php echo $font ?>"><?php echo $font ?></option>

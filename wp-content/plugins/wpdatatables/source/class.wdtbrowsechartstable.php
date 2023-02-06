@@ -271,6 +271,12 @@ class WDTBrowseChartsTable extends WP_List_Table {
             case 'highcharts_basic_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Basic Area Chart', 'wpdatatables') . '</span>';
                 break;
+	        case 'highcharts_funnel3d_chart':
+		        return '<span class="wdt-chart-type">' . esc_html__('3D Funnel Chart', 'wpdatatables') . '</span>';
+		        break;
+	        case 'highcharts_funnel_chart':
+		        return '<span class="wdt-chart-type">' . esc_html__('Funnel Chart', 'wpdatatables') . '</span>';
+		        break;
             case 'highcharts_stacked_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Stacked Area Chart', 'wpdatatables') . '</span>';
                 break;
@@ -324,6 +330,15 @@ class WDTBrowseChartsTable extends WP_List_Table {
                 break;
             case 'chartjs_column_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Column Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'chartjs_stacked_column_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Column Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'chartjs_bar_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Bar Chart', 'wpdatatables') . '</span>';
+                break;
+            case 'chartjs_stacked_bar_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Stacked Bar Chart', 'wpdatatables') . '</span>';
                 break;
             case 'chartjs_radar_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Radar Chart', 'wpdatatables') . '</span>';

@@ -5,7 +5,7 @@ Tags: categories, gallery, images, media, media library, tags
 Requires at least: 4.1
 Tested up to: 6.1.1
 Requires PHP: 5.3
-Stable tag: 3.05
+Stable tag: 3.06
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,7 +33,7 @@ The Media Library Assistant provides several enhancements for managing the Media
 
 * **Attachment metadata** such as file size, image dimensions and where-used information can be assigned to WordPress custom fields. You can then use the custom fields in your `[mla_gallery]` display and you can add custom fields as sortable, searchable columns in the Media/Assistant submenu table. You can also **modify the WordPress `_wp_attachment_metadata` contents** to suit your needs.
 
-* **IPTC**, **EXIF (including GPS)**, **XMP** and **PDF** metadata can be assigned to standard WordPress fields, taxonomy terms and custom fields. You can update all existing attachments from the Settings page IPTC/EXIF tab, groups of existing attachments with a Bulk Action or one existing attachment from the Edit Media/Edit Single Item screen. Display **IPTC**, **EXIF**, **XMP** and **PDF** metadata with `[mla_gallery]` custom templates. **Twelve hooks** provided for complete mapping customization from your theme or plugin code.
+* **IPTC**, **EXIF (including GPS)**, **XMP** and **PDF** metadata can be assigned to standard WordPress fields, taxonomy terms and custom fields. You can update all existing attachments from the Settings page IPTC/EXIF tab, groups of existing attachments with a Bulk Action or one existing attachment from the Edit Media/Edit Single Item screen. Display **IPTC**, **EXIF**, **XMP** and **PDF** metadata with `[mla_gallery]` custom templates. **Twelve hooks** provided for complete mapping customization from your theme or plugin code. You can view and/or download this PDF document with more information: [Mapping File Metadata to WordPress Fields with Media Library Assistant](http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf)
 
 * Complete control over **Post MIME Types, File Upload extensions/MIME Types and file type icon images**. Fifty four (54) additional upload types, 112 file type icon images and a searchable list of over 1,500 file extension/MIME type associations.
 
@@ -190,6 +190,14 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 == Changelog ==
 
 = 3.06 =
+* New: A mapping rules tutorial is available at: [Mapping File Metadata to WordPress Fields with Media Library Assistant](http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf).
+* Fix: For the "MLA Insert Fixit" example plugin, an SQL injection security flaw has been corrected.
+* Fix: PDF Document metadata containing indirect objects for string or array values are now parsed correctly.
+* Fix: PDF Document metadata containing UTF-16BE (big-endian) string encodings are now parsed correctly.
+* Fix: For the Custom Fields and IPTC/EXIF settings tabs the "Read Only" table view is suppressed when there are no Read Only rules (a historical artifact) defined.
+* Fix: Redundant debug logging for MLA's MIME Type processing has been substantially reduced.
+* Fix: The "WordPress default title, slug and description mapping" Documentation section has been improved.
+* Fix: In the "The IPTC/EXIF rule elements" section of the Settings/Media Library Assistant Documentation tab, the "Option" element of taxonomy mapping rules is now documented.
 * Fix: For the Media/Assistant screen when Admin Columns Pro 6.0+ is active, the Conditional format button is suppressed because ACP does not yet support it.
 
 = 3.05 =
@@ -373,8 +381,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.05 =
-IMPORTANT: Admin Columns Pro v6.0+ support. Support for the "CatFolders - WP Media Folders" plugin. The "MLA Yoast SEO Example" plugin has been completely rewritten. New "MLA Content Items Example" plugin. Three enhancements in all, two fixes.
+= 3.06 =
+IMPORTANT: SECURITY FIX for the MLA Insert Fixit example plugin removes an SQL injection risk. New mapping rules tutorial available, some PDF parsing improvements and documentation improvements. One enhancement, eight fixes in all.
 
 == Other Notes ==
 

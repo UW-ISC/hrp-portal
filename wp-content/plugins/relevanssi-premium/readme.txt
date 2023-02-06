@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.1
-Stable tag: 2.20.3
+Stable tag: 2.20.4
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,14 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.20.4 =
+* New feature: New filter hook `relevanssi_blocked_field_types` can be used to control which ACF field types are excluded from the index. By default, this includes 'repeater', 'flexible_content', and 'group'.
+* New feature: New filter hook `relevanssi_acf_field_object` can be used to filter the ACF field object before Relevanssi indexes it. Return false to have Relevanssi ignore the field type.
+* Minor fix: ACF field exclusion is now recursive. If a parent field is excluded, all sub fields will also be excluded.
+* Minor fix: The indexing settings tab now checks if the wp_relevanssi database table exists and will create the table if it doesn't.
+* Minor fix: Pinning code has been foolproofed to cover some situations that would lead to errors.
+* Minor fix: Handling of data attributes in in-document highlighting had a bug that caused problems with third-party plugins.
+
 = 2.20.3 =
 * New feature: Relevanssi now has a debug mode that will help troubleshooting and support.
 * Minor fix: Using the_permalink() caused problems with search result links. That is now fixed. Relevanssi no longer hooks onto `the_permalink` hook and instead uses `post_link` and other similar hooks.
@@ -338,6 +346,9 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Prevents fatal errors from `relevanssi_strip_all_tags()`.
 
 == Upgrade notice ==
+= 2.20.4 =
+* Better ACF field controls, bug fixes.
+
 = 2.20.3 =
 * Fixes a bug with broken permalinks.
 

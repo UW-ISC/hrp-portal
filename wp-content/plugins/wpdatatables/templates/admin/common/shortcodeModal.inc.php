@@ -29,7 +29,7 @@
                         </label>
                         <div class="col-sm-12 p-0">
                             <div class="fg-line">
-                                <textarea id="wpdt-shortcode-data" rows="10" placeholder="[shortcode]" required></textarea>
+                                <textarea id="wpdt-shortcode-data" rows="10" placeholder="<?php esc_attr_e('[shortcode]','wpdatatables'); ?>" required></textarea>
                             </div>
                         </div>
                         <div class="error-msg" hidden> <?php esc_html_e('Field can not be empty!', 'wpdatatables') ?></div>

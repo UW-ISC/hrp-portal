@@ -27,7 +27,7 @@ var WDTColumn = function (column, parent_table) {
      * Header to display
      * @type {null|string}
      */
-    this.display_header = null;
+    this.display_header = '';
 
     /**
      * Position of column in the table
@@ -335,7 +335,7 @@ var WDTColumn = function (column, parent_table) {
         this.dateInputFormat = column.dateInputFormat || '';
         this.decimalPlaces = column.decimalPlaces;
         this.defaultSortingColumn = column.defaultSortingColumn || 0;
-        this.display_header = column.display_header || null;
+        this.display_header = column.display_header || '';
         this.editingDefaultValue = column.editingDefaultValue || null;
         this.editingNonEmpty = column.input_mandatory || 0;
         this.searchInSelectBoxEditing = column.searchInSelectBoxEditing || 0;
@@ -1558,7 +1558,7 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
 
     // Adding to the columns quickaccess modal
     var $columnBlock = jQuery(columnHtml).appendTo('#wdt-columns-list-modal div.wdt-columns-container');
-    this.display_header != null ?
+    this.display_header != '' ?
         $columnBlock.find('div.fg-line input').val(this.display_header) :
         $columnBlock.find('div.fg-line input').val(this.orig_header);
     $columnBlock.attr('data-orig_header', this.orig_header);

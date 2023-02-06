@@ -371,7 +371,10 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-highcharts', '//code.highcharts.com/highcharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-more', '//code.highcharts.com/highcharts-more.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-3d', '//code.highcharts.com/highcharts-3d.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
+	wp_enqueue_script('wdt-cylinder', '//code.highcharts.com/modules/cylinder.js', array(), WDT_CURRENT_VERSION, true);
+	wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
+	wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION, true);
+	wp_enqueue_script('wdt-funnel3d', '//code.highcharts.com/modules/funnel3d.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
@@ -712,11 +715,30 @@ function wdtChartWizard()
 
     $chartId = isset($_GET['chart_id']) ? (int)$_GET['chart_id'] : false;
     if (!empty($chartId)) {
-        $chartObj = new WPDataChart();
-        $chartObj->setId($chartId);
-        $chartObj->loadFromDB();
-        $chartObj->prepareData();
-        $chartObj->shiftStringColumnUp();
+        try {
+            $chartObj = new WPDataChart();
+            $chartObj->setId($chartId);
+            $chartObj->loadFromDB();
+            $chartObj->prepareData();
+            $chartObj->shiftStringColumnUp();
+            switch ($chartObj->getEngine()){
+                case 'google':
+                    $chartObj->prepareGoogleChartsRender();
+                    break;
+                case 'highcharts':
+                    $chartObj->prepareHighchartsRender();
+                    break;
+                case 'chartjs':
+                    $chartObj->prepareChartJSRender();
+                    break;
+                case 'apexcharts':
+                    $chartObj->prepareApexchartsRender();
+                    break;
+            }
+        } catch (Exception $e) {
+            echo $e->getMessage();
+            exit;
+        }
     }
 
     ob_start();

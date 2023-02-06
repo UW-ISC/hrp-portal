@@ -13,7 +13,7 @@
         <div class="form-group">
             <div class="fg-line col-sm-9 p-0">
                 <input type="text" id="wdt-constructor-input-url" class="form-control input-sm input-url-path"
-                       placeholder="Paste URL or path, or click Browse to choose">
+                       placeholder="<?php esc_attr_e('Paste URL or path, or click Browse to choose', 'wpdatatables'); ?>">
             </div>
             <div class="col-sm-3">
                 <button class="btn bgm-blue" id="wdt-constructor-browse-button">

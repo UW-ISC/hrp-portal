@@ -237,7 +237,7 @@
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-tablet-width">
                                     <i class="wpdt-icon-minus"></i>
                                 </button>
-                                <input type="number" name="wdt-tablet-width" placeholder="Set tablet width in px" min="0" value="" class="form-control input-sm input-number" id="wdt-tablet-width">
+                                <input type="number" name="wdt-tablet-width" placeholder="<?php esc_attr_e('Set tablet width in px','wpdatatables'); ?>" min="0" value="" class="form-control input-sm input-number" id="wdt-tablet-width">
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-tablet-width">
                                     <i class="wpdt-icon-plus-full"></i>
                                 </button>
@@ -261,7 +261,7 @@
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-minus" data-type="minus" data-field="wdt-mobile-width">
                                     <i class="wpdt-icon-minus"></i>
                                 </button>
-                                <input type="number" name="wdt-mobile-width" placeholder="Set mobile width in px" min="0" value="" class="form-control input-sm input-number" id="wdt-mobile-width">
+                                <input type="number" name="wdt-mobile-width" placeholder="<?php esc_attr_e('Set mobile width in px','wpdatatables'); ?>" min="0" value="" class="form-control input-sm input-number" id="wdt-mobile-width">
                                 <button type="button" class="btn btn-default wdt-btn-number wdt-button-plus" data-type="plus" data-field="wdt-mobile-width">
                                     <i class="wpdt-icon-plus-full"></i>
                                 </button>
@@ -317,7 +317,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="text" name="wdt-sum-function-label" id="wdt-sum-function-label"
-                                   class="form-control input-sm" placeholder="Enter the default SUM functions label"
+                                   class="form-control input-sm" placeholder="<?php esc_attr_e('Enter the default SUM functions label', 'wpdatatables'); ?>"
                                    value=""/>
                         </div>
                     </div>
@@ -336,7 +336,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="text" name="wdt-avg-function-label" id="wdt-avg-function-label"
-                                   class="form-control input-sm" placeholder="Enter the default AVG functions label"
+                                   class="form-control input-sm" placeholder="<?php esc_attr_e('Enter the default AVG functions label', 'wpdatatables'); ?>"
                                    value=""/>
                         </div>
                     </div>
@@ -360,7 +360,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="text" name="wdt-min-function-label" id="wdt-min-function-label"
-                                   class="form-control input-sm" placeholder="Enter the default MIN functions label"
+                                   class="form-control input-sm" placeholder="<?php esc_attr_e('Enter the default MIN functions label', 'wpdatatables'); ?>"
                                    value=""/>
                         </div>
                     </div>
@@ -379,7 +379,7 @@
                     <div class="row">
                         <div class="col-sm-12">
                             <input type="text" name="wdt-max-function-label" id="wdt-max-function-label"
-                                   class="form-control input-sm" placeholder="Enter the default MAX functions label"
+                                   class="form-control input-sm" placeholder="<?php esc_attr_e('Enter the default MAX functions label', 'wpdatatables'); ?>"
                                    value=""/>
                         </div>
                     </div>
@@ -452,6 +452,17 @@
             <div class="toggle-switch" data-ts-color="blue">
                 <input type="checkbox" name="wdt-lite-vs-premium-page-status" id="wdt-lite-vs-premium-page-status"/>
                 <label for="wdt-lite-vs-premium-page-status" class="ts-label"><?php esc_html_e('Remove "Lite vs Premium" page from admin menu.', 'wpdatatables'); ?></label>
+            </div>
+        </div>
+        <div class="col-sm-4 wdt-include-google-fonts-block">
+            <h4 class="c-title-color m-b-2">
+                <?php esc_html_e('Include Google fonts', 'wpdatatables'); ?>
+                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php esc_attr_e('Uncheck this option if you want to remove Google fonts from tables.', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="toggle-switch" data-ts-color="blue">
+                <input type="checkbox" name="wdt-include-google-fonts" id="wdt-include-google-fonts"/>
+                <label for="wdt-include-google-fonts" class="ts-label"><?php esc_html_e('Include Google fonts.', 'wpdatatables'); ?></label>
             </div>
         </div>
     </div>

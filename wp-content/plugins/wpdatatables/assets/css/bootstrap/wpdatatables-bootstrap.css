@@ -9,7 +9,6 @@
  */
 
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
 
 @font-face {
     font-family: 'wpDataTablesIcons' !important;
@@ -3747,7 +3746,7 @@
     border: none;
     box-sizing: border-box;
     border-radius: 3px;
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 600;
     font-size: 14px;
@@ -7034,7 +7033,7 @@ select.input-group-lg > .input-group-btn > .btn {
 .wpdt-c .tooltip-inner {
     max-width: 200px;
     padding: 3px 8px;
-    font-family: Inter, sans-serif;
+    font-family:var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -7142,7 +7141,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border: 1px solid #fff;
     -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -9807,7 +9806,7 @@ select.input-group-lg > .input-group-btn > .btn {
     transition: all;
     -webkit-transition-duration: 250ms;
     transition-duration: 250ms;
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -9997,7 +9996,7 @@ select.input-group-lg > .input-group-btn > .btn {
 
 .wpdt-c .card .card-header h2 {
     margin: 0;
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 20px;
     font-style: normal;
     font-weight: normal;
@@ -12218,7 +12217,7 @@ input:focus {
     box-sizing: border-box;
     color: #061938;
     padding: 8px 12px;
-    font-family: Inter, sans-serif;
+    font-family:var(--wpdt-inter-google-font, inherit);
     font-size: 12px;
     line-height: 20px;
 }
@@ -12239,7 +12238,7 @@ input:focus {
     box-sizing: border-box;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.08), 0 5px 5px rgba(0, 0, 0, 0.04);
     border-radius: 4px;
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: normal;
     font-size: 12px;
@@ -12497,7 +12496,7 @@ input:focus {
 }
 
 .wpdt-c .modal[data-modal-color="red"] {
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: normal;
 }
@@ -13490,7 +13489,7 @@ input:focus {
 }
 
 .wpdt-c .card .card-header h2 small {
-    font-family: Inter, sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 11px;
     margin-top: 2px;
     color: #8796AF;

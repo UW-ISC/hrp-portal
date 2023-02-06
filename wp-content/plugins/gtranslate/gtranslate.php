@@ -3,7 +3,7 @@
 Plugin Name: GTranslate
 Plugin URI: https://gtranslate.io/?xyz=998
 Description: Translate your website and make it multilingual. For support visit <a href="https://wordpress.org/support/plugin/gtranslate">GTranslate Support Forum</a>.
-Version: 2.9.14
+Version: 2.9.15
 Author: Translate AI Multilingual Solutions
 Author URI: https://gtranslate.io
 Text Domain: gtranslate
@@ -84,8 +84,11 @@ class GTranslate extends WP_Widget {
                 $config_file = dirname(__FILE__) . '/url_addon/config.php';
                 if(is_readable($config_file) and is_writable($config_file)) {
                     $config = file_get_contents($config_file);
-                    $config = preg_replace('/\$main_lang = \'[a-z-]{2,5}\'/i', '$main_lang = \''.$data['default_language'].'\'', $config);
-                    file_put_contents($config_file, $config);
+                    if(strpos($config, 'main_lang') !== false) {
+                        $config = preg_replace('/\$main_lang = \'[a-z-]{2,5}\'/i', '$main_lang = \''.$data['default_language'].'\'', $config);
+                        if(is_string($config) and strlen($config) > 10)
+                            file_put_contents($config_file, $config);
+                    }
                 }
             }
         }
@@ -544,12 +547,8 @@ function RefreshDoWidgetCode() {
         // Adding onfly html and css
         if(translation_method == 'onfly') {
             widget_code += '<style>';
-            widget_code += "#goog-gt-tt{display:none!important;}";
-            widget_code += ".goog-te-banner-frame{display:none!important;}";
-            widget_code += ".goog-te-menu-value:hover{text-decoration:none!important;}";
-            widget_code += ".goog-text-highlight{background-color:transparent!important;box-shadow:none!important;}";
+            widget_code += "div.skiptranslate,#google_translate_element2{display:none!important;}";
             widget_code += "body{top:0!important;}";
-            widget_code += "#google_translate_element2{display:none!important;}";
             widget_code += '</style>'+new_line;
             widget_code += '<div id="google_translate_element2"></div>'+new_line;
             widget_code += '<script>';

@@ -353,7 +353,7 @@ class WDTColumn {
      * @param string $defaultValue
      */
     public function setFilterDefaultValue($defaultValue) {
-        if (strpos($defaultValue, '|') !== false) {
+        if ($defaultValue !== null && strpos($defaultValue, '|') !== false) {
             $defaultValue = explode('|', $defaultValue);
         }
         $this->_filterDefaultValue = $defaultValue;

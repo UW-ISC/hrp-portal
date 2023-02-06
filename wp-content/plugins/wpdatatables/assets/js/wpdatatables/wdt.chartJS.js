@@ -37,46 +37,54 @@ var wpDataTablesChartJS = function(){
             },
             options: {
                 scales: {
-                    xAxes: [{
-                        scaleLabel: {
+                    x: {
+                        title: {
                             display: true
                         }
-                    }],
-                    yAxes: [{
-                        scaleLabel: {
+                    },
+                    y: {
+                        title: {
                           display: true
                         },
-                        ticks: {
-                            beginAtZero: false
-                        }
-                    }]
-                },
-                title: {
-                    text: '',
-                    display: true,
-                    position: 'top',
-                    fontSize: 16,
-                    fontColor: '#666'
-                },
-                legend: {
-                    display: true,
-                    labels: {
-                        fontColor: '#666',
-                        fontSize: 12,
-                        boxWidth: 40
+                        beginAtZero: false
                     }
                 },
-                tooltips: {
-                    enabled: true,
-                    mode: 'single',
-                    backgroundColor: 'rgba(0,0,0,0.8)',
-                    titleFontSize: 12,
-                    titleFontStyle: 'bold',
-                    titleFontColor: '#fff',
-                    bodyFontSize: 12,
-                    bodyFontStyle: 'normal',
-                    caretSize: 5,
-                    cornerRadius: 6
+                plugins:{
+                    title: {
+                        text: '',
+                        display: true,
+                        position: 'top',
+                        font:{
+                            size: 16,
+                        },
+                        color: '#666'
+                    },
+                    legend: {
+                        display: true,
+                        labels: {
+                            font:{
+                                fontSize: 12,
+                            },
+                            color: '#666',
+                            boxWidth: 40
+                        }
+                    },
+                    tooltip: {
+                        enabled: true,
+                        mode: 'single',
+                        backgroundColor: 'rgba(0,0,0,0.8)',
+                        titleFont: {
+                            size: 12,
+                            weight: 'bold',
+                        },
+                        titleColor: '#fff',
+                        bodyFont:{
+                            size: 12,
+                            style: 'normal',
+                        },
+                        caretSize: 5,
+                        cornerRadius: 6
+                    }
                 },
                 maintainAspectRatio: false
             }
@@ -110,31 +118,49 @@ var wpDataTablesChartJS = function(){
                 this.renderCallback( this );
             }
             for( var property in this.globalOptions ){
-                Chart.defaults.global[property] = this.globalOptions[property];
+                Chart.defaults[property] = this.globalOptions[property];
             }
             this.chart = new Chart(this.canvas, this.options);
         },
         setType: function( type ){
             switch( type ){
                 case 'chartjs_line_chart':
-                    Chart.defaults.global.elements.line.fill = false;
+                    Chart.defaults.elements.line.fill = false;
                     this.options.type = 'line';
                     break;
                 case 'chartjs_area_chart':
-                    Chart.defaults.global.elements.line.fill = true;
+                    Chart.defaults.elements.line.fill = true;
                     this.options.type = 'line';
                     break;
                 case 'chartjs_stacked_area_chart':
-                    Chart.defaults.global.elements.line.fill = true;
+                    Chart.defaults.elements.line.fill = true;
                     this.options.type = 'line';
-                    this.options.options.scales.yAxes[0].stacked = true;
+                    this.options.options.scales.y.stacked = true;
                     break;
                 case 'chartjs_column_chart':
-                    Chart.defaults.global.elements.line.fill = true;
+                    Chart.defaults.elements.line.fill = true;
                     this.options.type = 'bar';
                     break;
+                case 'chartjs_stacked_column_chart':
+                    Chart.defaults.elements.line.fill = true;
+                    this.options.type = 'bar';
+                    this.options.options.scales.y.stacked = true;
+                    this.options.options.scales.x.stacked = true;
+                    break;
+                case 'chartjs_bar_chart':
+                    Chart.defaults.elements.line.fill = true;
+                    this.options.type = 'bar';
+                    this.options.options.indexAxis = 'y';
+                    break;
+                case 'chartjs_stacked_bar_chart':
+                    Chart.defaults.elements.line.fill = true;
+                    this.options.type = 'bar';
+                    this.options.options.scales.y.stacked = true;
+                    this.options.options.scales.x.stacked = true;
+                    this.options.options.indexAxis = 'y';
+                    break;
                 case 'chartjs_radar_chart':
-                    Chart.defaults.global.elements.line.fill = true;
+                    Chart.defaults.elements.line.fill = true;
                     this.options.type = 'radar';
                     break;
                 case 'chartjs_polar_area_chart':
@@ -172,10 +198,139 @@ var wpDataTablesChartJS = function(){
             this.canvas.style.backgroundColor = chartConfig.background_color;
             this.canvas.style.border = chartConfig.border_width + 'px solid ' + chartConfig.border_color;
             chartConfig.border_radius ? this.canvas.style.borderRadius = chartConfig.border_radius + 'px' : null;
-            chartConfig.font_size ? this.globalOptions.defaultFontSize = chartConfig.font_size : null;
-            chartConfig.font_name ? this.globalOptions.defaultFontFamily = chartConfig.font_name : null;
-            chartConfig.font_style ? this.globalOptions.defaultFontStyle = chartConfig.font_style : null;
-            chartConfig.font_color ? this.globalOptions.defaultFontColor = chartConfig.font_color :  '#666';
+            if (chartConfig.font_size){
+                this.globalOptions.font.size = parseInt(chartConfig.font_size)
+                this.options.options.plugins.legend.labels.font.size  = parseInt(chartConfig.font_size)
+                this.options.options.plugins.title.font.size  = parseInt(chartConfig.font_size)
+                this.options.options.scales.x.ticks.font.size = parseInt(chartConfig.font_size)
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.size = parseInt(chartConfig.font_size)
+                    this.options.options.scales.r.pointLabels.font.size = parseInt(chartConfig.font_size)
+                }
+                this.options.options.scales.y.ticks.font.size = parseInt(chartConfig.font_size)
+                this.options.options.scales.x.title.font.size = parseInt(chartConfig.font_size)
+                this.options.options.scales.y.title.font.size = parseInt(chartConfig.font_size)
+            } else {
+                this.globalOptions.font.size = 12
+                this.options.options.plugins.legend.labels.font.size = 12
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.size = 12
+                    this.options.options.scales.r.pointLabels.font.size = 12
+                }
+                this.options.options.plugins.title.font.size = 12
+                this.options.options.scales.x.ticks.font.size = 12
+                this.options.options.scales.y.ticks.font.size = 12
+                this.options.options.scales.x.title.font.size = 12
+                this.options.options.scales.y.title.font.size = 12
+            }
+            if (chartConfig.font_name){
+                this.globalOptions.font.family = chartConfig.font_name
+                this.options.options.plugins.legend.labels.font.family  = chartConfig.font_name
+                this.options.options.scales.x.title.font.family = chartConfig.font_name
+                this.options.options.scales.y.title.font.family = chartConfig.font_name
+                this.options.options.scales.x.ticks.font.family = chartConfig.font_name
+                this.options.options.scales.y.ticks.font.family = chartConfig.font_name
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.family = chartConfig.font_name
+                    this.options.options.scales.r.pointLabels.font.family = chartConfig.font_name
+                }
+            } else {
+                this.globalOptions.font.family = 'Arial'
+                this.options.options.plugins.legend.labels.font.family  = 'Arial'
+                this.options.options.scales.x.ticks.font.family = 'Arial'
+                this.options.options.scales.y.ticks.font.family = 'Arial'
+                this.options.options.scales.y.title.font.family = 'Arial'
+                this.options.options.scales.x.ticks.font.family = 'Arial'
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.family = 'Arial'
+                    this.options.options.scales.r.pointLabels.font.family = 'Arial'
+                }
+            }
+            if (chartConfig.font_style){
+                this.options.options.plugins.legend.labels.font.style = chartConfig.font_style;
+                this.options.options.scales.x.ticks.font.style = chartConfig.font_style;
+                this.options.options.scales.y.ticks.font.style = chartConfig.font_style;
+                this.options.options.scales.x.title.font.style = chartConfig.font_style
+                this.options.options.scales.y.title.font.style = chartConfig.font_style
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.style = chartConfig.font_style
+                    this.options.options.scales.r.pointLabels.font.style = chartConfig.font_style
+                }
+            } else {
+                this.options.options.plugins.legend.labels.font.style  = 'normal'
+                this.options.options.scales.x.ticks.font.style = 'normal'
+                this.options.options.scales.y.ticks.font.style = 'normal'
+                this.options.options.scales.x.title.font.style = 'normal'
+                this.options.options.scales.y.title.font.style = 'normal'
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.style = 'normal'
+                    this.options.options.scales.r.pointLabels.font.style = 'normal'
+                }
+            }
+            if (chartConfig.font_weight){
+                this.options.options.plugins.legend.labels.font.weight = chartConfig.font_weight
+                this.options.options.scales.x.ticks.font.weight = chartConfig.font_weight
+                this.options.options.scales.y.ticks.font.weight = chartConfig.font_weight
+                this.options.options.scales.x.title.font.weight = chartConfig.font_weight
+                this.options.options.scales.y.title.font.weight = chartConfig.font_weight
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.weight = chartConfig.font_weight
+                    this.options.options.scales.r.pointLabels.font.weight = chartConfig.font_weight
+                }
+            } else {
+                this.options.options.plugins.legend.labels.font.weight  ='bold'
+                this.options.options.scales.x.ticks.font.weight ='bold'
+                this.options.options.scales.y.ticks.font.weight ='bold'
+                this.options.options.scales.x.title.font.weight = 'bold'
+                this.options.options.scales.y.title.font.weight = 'bold'
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.font.weight = 'bold'
+                    this.options.options.scales.r.pointLabels.font.weight = 'bold'
+                }
+            }
+            if (chartConfig.font_color){
+                this.globalOptions.color = chartConfig.font_color
+                this.options.options.plugins.legend.labels.color  = chartConfig.font_color
+                this.options.options.scales.x.ticks.color = chartConfig.font_color
+                this.options.options.scales.y.ticks.color = chartConfig.font_color
+                this.options.options.scales.x.title.color = chartConfig.font_color
+                this.options.options.scales.y.title.color = chartConfig.font_color
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.color = chartConfig.font_color
+                    this.options.options.scales.r.pointLabels.color = chartConfig.font_color
+                }
+            } else {
+                this.globalOptions.color = '#666'
+                this.options.options.plugins.legend.labels.color  = '#666'
+                this.options.options.scales.x.ticks.color = '#666'
+                this.options.options.scales.y.ticks.color = '#666'
+                this.options.options.scales.x.title.color = '#666'
+                this.options.options.scales.y.title.color = '#666'
+                if (chartConfig.chart_type == 'chartjs_radar_chart' ||
+                    chartConfig.chart_type == 'chartjs_polar_area_chart'
+                ){
+                    this.options.options.scales.r.ticks.color = '#666'
+                    this.options.options.scales.r.pointLabels.color = '#666'
+                }
+            }
             // Series
             if ( this.pieCharts.indexOf(chartConfig.chart_type) == -1 && chartConfig.chart_type != 'chartjs_bubble_chart') {
                 var j = 0;
@@ -197,35 +352,66 @@ var wpDataTablesChartJS = function(){
             }
             // Axes
             if (chartConfig.show_grid == 0) {
-                this.options.options.scales.xAxes[0].display = false;
-                this.options.options.scales.yAxes[0].display = false;
+                this.options.options.scales.x.display = false;
+                this.options.options.scales.y.display = false;
             } else {
-                this.options.options.scales.xAxes[0].display = true;
-                this.options.options.scales.yAxes[0].display = true;
+                this.options.options.scales.x.display = true;
+                this.options.options.scales.y.display = true;
             }
-            chartConfig.horizontal_axis_label ? this.options.options.scales.xAxes[0].scaleLabel.labelString = chartConfig.horizontal_axis_label : null;
-            chartConfig.vertical_axis_label ? this.options.options.scales.yAxes[0].scaleLabel.labelString = chartConfig.vertical_axis_label : null;
-            chartConfig.vertical_axis_min != '' ? this.options.options.scales.yAxes[0].ticks.min = parseInt(chartConfig.vertical_axis_min) : this.options.options.scales.yAxes[0].ticks.beginAtZero = delete this.options.options.scales.yAxes[0].ticks.min;
-            chartConfig.vertical_axis_max != '' ? this.options.options.scales.yAxes[0].ticks.max = parseInt(chartConfig.vertical_axis_max) : delete this.options.options.scales.yAxes[0].ticks.max;
+            chartConfig.horizontal_axis_label ? this.options.options.scales.x.title.text = chartConfig.horizontal_axis_label : null;
+            chartConfig.vertical_axis_label ? this.options.options.scales.y.title.text = chartConfig.vertical_axis_label : null;
+            if (chartConfig.vertical_axis_min != '') {
+                this.options.options.scales.y.min = parseInt(chartConfig.vertical_axis_min)
+            } else {
+                if (['chartjs_pie_chart',
+                    'chartjs_radar_chart',
+                    'chartjs_doughnut_chart',
+                    'chartjs_polar_area_chart',
+                    'chartjs_bubble_chart'].includes(chartConfig.chart_type)
+                ) {
+                    this.options.options.scales.y.beginAtZero = true;
+                    this.options.options.scales.y.min = 0;
+                } else {
+                    this.options.options.scales.y.beginAtZero = false;
+                    delete this.options.options.scales.y.min;
+                }
+            }
+            chartConfig.vertical_axis_max != '' ? this.options.options.scales.y.max = parseInt(chartConfig.vertical_axis_max) : delete this.options.options.scales.y.max;
+
             // Title
             if (chartConfig.show_title == 1) {
-                this.options.options.title.display = true;
-                this.options.options.title.text = chartConfig.chart_title
+                this.options.options.plugins.title.display = true;
+                this.options.options.plugins.title.text = chartConfig.chart_title
             } else {
-                this.options.options.title.display = false;
+                this.options.options.plugins.title.display = false;
             }
-            chartConfig.title_position ? this.options.options.title.position = chartConfig.title_position : null;
-            chartConfig.title_font_name ? this.options.options.title.fontFamily = chartConfig.title_font_name : null;
-            chartConfig.title_font_style ? this.options.options.title.fontStyle = chartConfig.title_font_style : null;
-            chartConfig.title_font_color ? this.options.options.title.fontColor = chartConfig.title_font_color : this.options.options.title.fontColor = '#666';
+            chartConfig.title_position ? this.options.options.plugins.title.position = chartConfig.title_position : null;
+            chartConfig.title_font_name ? this.options.options.plugins.title.font.family = chartConfig.title_font_name : null;
+            if (chartConfig.title_font_style){
+                this.options.options.plugins.title.font.style = chartConfig.title_font_style.includes('italic') ? 'italic' : 'normal';
+            } else {
+                this.options.options.plugins.title.font.style = 'normal'
+            }
+            if (chartConfig.title_font_weight){
+                this.options.options.plugins.title.font.weight = chartConfig.title_font_weight;
+            } else {
+                this.options.options.plugins.title.font.wieght = 'bold';
+            }
+            chartConfig.title_font_color ? this.options.options.plugins.title.color = chartConfig.title_font_color : this.options.options.plugins.title.color = '#666';
             // Tooltip
-            chartConfig.tooltip_enabled == 1 ? this.options.options.tooltips.enabled = true : this.options.options.tooltips.enabled = false;
-            chartConfig.tooltip_background_color ? this.options.options.tooltips.backgroundColor = chartConfig.tooltip_background_color : this.options.options.tooltips.backgroundColor = 'rgba(0,0,0,0.8)';
-            chartConfig.tooltip_border_radius ? this.options.options.tooltips.cornerRadius = parseInt(chartConfig.tooltip_border_radius) : null;
-            chartConfig.tooltip_shared == 1 ? this.options.options.tooltips.mode = 'label' : this.options.options.tooltips.mode = 'single';
+            chartConfig.tooltip_enabled == 1 ? this.options.options.plugins.tooltip.enabled = true : this.options.options.plugins.tooltip.enabled = false;
+            chartConfig.tooltip_background_color ? this.options.options.plugins.tooltip.backgroundColor = chartConfig.tooltip_background_color : this.options.options.plugins.tooltip.backgroundColor = 'rgba(0,0,0,0.8)';
+            chartConfig.tooltip_border_radius ? this.options.options.plugins.tooltip.cornerRadius = parseInt(chartConfig.tooltip_border_radius) : null;
+            if (chartConfig.tooltip_shared == 1) {
+                this.options.options.plugins.tooltip.mode = 'index';
+            } else {
+                this.options.options.plugins.tooltip.mode = 'nearest';
+                this.options.options.plugins.tooltip.intersect = true;
+            }
             // Legend
-            chartConfig.show_legend == 1 ? this.options.options.legend.display = true : this.options.options.legend.display = false;
-            chartConfig.legend_position_cjs ? this.options.options.legend.position = chartConfig.legend_position_cjs : null;
+            chartConfig.show_legend == 1 ? this.options.options.plugins.legend.display = true : this.options.options.plugins.legend.display = false;
+            chartConfig.legend_position_cjs ? this.options.options.plugins.legend.position = chartConfig.legend_position_cjs : null;
+
         },
         enableFollowFiltering: function(){
             if( this.connectedWPDataTable == null ){ return; }
