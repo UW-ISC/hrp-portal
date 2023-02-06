@@ -251,12 +251,38 @@
             <div class="card-header">
                 <div class="wdt-chart-wizard-overlay"></div>
                 <img class="img-responsive"
-                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_spiderweb_chart.jpg">
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_spiderweb_chart.png">
             </div>
             <div class="card-body">
                 <h4 class="f-14"><?php esc_html_e('Spiderweb chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
+    <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+        <div class="card" data-type="highcharts_funnel3d_chart" data-min_columns="2" data-max_columns="2">
+            <div class="card-header">
+                <div class="wdt-chart-wizard-overlay"></div>
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_funnel3d_charts.jpg">
+            </div>
+            <div class="card-body">
+                <h4 class="f-14"><?php esc_html_e('3d funnel chart', 'wpdatatables'); ?></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+        <div class="card" data-type="highcharts_funnel_chart" data-min_columns="2" data-max_columns="2">
+            <div class="card-header">
+                <div class="wdt-chart-wizard-overlay"></div>
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/highcharts_funnel_chart.jpg">
+            </div>
+            <div class="card-body">
+                <h4 class="f-14"><?php esc_html_e('Funnel chart', 'wpdatatables'); ?></h4>
+            </div>
+        </div>
+    </div>
+
 
 </div>

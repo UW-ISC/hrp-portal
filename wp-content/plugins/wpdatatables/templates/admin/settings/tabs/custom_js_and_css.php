@@ -44,7 +44,7 @@
             <h4 class="c-title-color m-b-2">
                 <?php esc_html_e('Use minified wpDataTables Javascript ', 'wpdatatables'); ?>
                 <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right" title=""
-                   data-original-title="Uncheck if you would like to make some changes to the main wpDataTables JS file (wpdatatables.js). Minified is inserted by default (better performance)."></i>
+                   data-original-title="<?php esc_attr_e('Uncheck if you would like to make some changes to the main wpDataTables JS file (wpdatatables.js). Minified is inserted by default (better performance).','wpdatatables'); ?>"></i>
             </h4>
             <div class="toggle-switch" data-ts-color="blue">
                 <input type="checkbox" name="wdt-minified-js" id="wdt-minified-js">

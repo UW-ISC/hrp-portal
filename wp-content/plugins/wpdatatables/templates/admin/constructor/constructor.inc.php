@@ -60,7 +60,7 @@
                         <div class="btn-group wdt-constructor-create-buttons pull-right m-l-5" style="display: none;">
                             <button type="button" class="btn btn-primary dropdown-toggle"
                                     data-toggle="dropdown" aria-expanded="false">
-                                Create the table
+                                <?php esc_html_e('Create the table', 'wpdatatables'); ?>
                                 <i class="wpdt-icon-caret-down-full"></i>
                             </button>
                             <ul class="dropdown-menu" role="menu">

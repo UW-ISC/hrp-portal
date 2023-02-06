@@ -227,7 +227,7 @@
                         <div class="col-sm-12 p-l-0 p-r-0">
                             <div class="col-sm-6 p-l-12 p-b-12 p-t-12 p-r-0 pull-left">
                                 <h4 class="wdt-card-header-title m-t-0 m-b-4">
-                                    <?php esc_html_e('Still need help? ', 'wpdatatables'); ?>
+                                    <?php esc_html_e('Need help? ', 'wpdatatables'); ?>
                                 </h4>
                                 <p class="wpdt-text wpdt-font">
                                     <?php esc_html_e('We provide professional support to all our users via our ticketing system.'); ?></p>
@@ -263,16 +263,25 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with awesome features, some improvements and bug fixes:
+                            New update with some new features, improvements, and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> A new light skin - Raspberry Cream.</li>
-                                <li><strong>Feature:</strong> Use 'AND' logic to narrow down your filtering results instead of the only previously available 'OR' logic.</li>
-                                <li><strong>BugFix:</strong> Fixed file location on table save changes.</li>
-                                <li><strong>BugFix:</strong> Removed empty space below excel-like tables.</li>
-                                <li>Other small bug fixes.</li>
+                                <li><strong>Feature:</strong> New Highcharts chart types - Funnel and 3D Funnel Chart.</li>
+                                <li><strong>Feature:</strong> New Chart.js chart types - Stacked Column Chart, Bar Chart and Stacked Bar Chart.</li>
+                                <li><strong>Improvement:</strong> Option to remove Google Fonts from table for GDPR compliant users.</li>
+                                <li><strong>Improvement:</strong> Update chart.js libraries.</li>
+                                <li><strong>Improvement:</strong> Registered more strings for translation.</li>
+                                <li><strong>Improvement:</strong> Updated back-end images.</li>
+                                <li><strong>Improvement:</strong> Improve agent parameter in curl calls.</li>
+                                <li><strong>Improvement:</strong> Added wpdatatables_curl_get_data_complete filter.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with table not displaying zero (0) in table headers.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with reduced row height when displaying empty fields.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with Highcharts tooltip not being displayed properly in Chrome.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with simple table scroll in back-end.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with input filter.</li>
+                                <li>Other small bug fixes</li>
                             </ul>
                         </div>
 
@@ -701,7 +710,7 @@
         </div>
         <div class="row">
             <h4 class="wdt-row-title m-b-20 text-center">
-                <?php esc_html_e('Need booking plugin?', 'wpdatatables'); ?></h4>
+                <?php esc_html_e('Need a booking plugin?', 'wpdatatables'); ?></h4>
         </div>
         <div class="row">
             <div class="col-sm-12 p-l-0 p-r-0">
@@ -713,7 +722,7 @@
                                 <?php esc_html_e('Appointments and Events WordPress Booking Plugin', 'wpdatatables'); ?>
                             </div>
                             <p class="wpdt-text wpdt-font m-b-0">
-                                <?php esc_html_e('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! 50,000+ businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage 500,000+ appointments and events worldwide each month.', 'wpdatatables'); ?></p>
+                                <?php echo sprintf(esc_html__('Amelia is a simple yet powerful automated booking specialist, working 24/7 to make sure your customers can book appointments or events and pay online even while you sleep! %s businesses from healthcare, beauty, sports, automotive, educational, creative, HR and other industries use Amelia to flawlessly manage %s appointments and events worldwide each month.', 'wpdatatables') ,AMELIA_NUMBER_OF_ACTIVE_INSTALLS , AMELIA_NUMBER_OF_APPOINTMENTS );?></p>
                             <p>
                                 <span class="wdt-stars-container stars-100">★★★★★</span>
                                 <span class="wdt-rating"> <?php esc_html_e('Rating: 4.8 - ‎123 reviews') ?></span>
@@ -721,7 +730,7 @@
                             </p>
                             <a href="https://wpamelia.com/?utm_source=full&utm_medium=plugin&utm_campaign=wpdtful" target="_blank" class="btn btn-primary">
                                 <?php esc_html_e('Learn More', 'wpdatatables'); ?>
-                                <i class="wpdt-icon-external-link-square-alt"></i>
+                                <i class="wpdt-icon-arrow-right"></i>
                             </a>
 
                         </div>

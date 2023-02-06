@@ -62,7 +62,7 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-db"
-                       placeholder="<?php _e('Database name', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['database']); ?>">
+                       placeholder="<?php esc_attr_e('Database name', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['database']); ?>">
             </div>
         </div>
     </div>
@@ -76,7 +76,7 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-host"
-                       placeholder="<?php _e('Host address', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['host']); ?>">
+                       placeholder="<?php esc_attr_e('Host address', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['host']); ?>">
             </div>
         </div>
         <div class="col-sm-6 col-md-6 m-b-16">
@@ -97,7 +97,7 @@
             </h4>
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-port"
-                       placeholder="<?php _e('Port', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['port']); ?>">
+                       placeholder="<?php esc_attr_e('Port', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['port']); ?>">
             </div>
         </div>
     </div>
@@ -112,7 +112,7 @@
 
             <div class="fg-line">
                 <input type="text" class="form-control" name="wdt-my-sql-user"
-                       placeholder="<?php _e('User', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['user']); ?>">
+                       placeholder="<?php esc_attr_e('User', 'wpdatatables'); ?>" value="<?php echo esc_attr($wdtSeparateConnection['user']); ?>">
             </div>
         </div>
         <div class="col-sm-6 col-md-6 m-b-16">
@@ -122,7 +122,7 @@
                    title="<?php esc_attr_e('Password for the provided user.', 'wpdatatables'); ?>"></i>
             </h4>
             <div class="fg-line">
-                <input type="password" class="form-control" placeholder="<?php _e('Password', 'wpdatatables'); ?>"
+                <input type="password" class="form-control" placeholder="<?php esc_attr_e('Password', 'wpdatatables'); ?>"
                        value="<?php echo $wdtSeparateConnection['password']; ?>" name="wdtMySqlPwd">
             </div>
         </div>

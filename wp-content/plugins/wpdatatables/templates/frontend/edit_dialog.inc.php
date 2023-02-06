@@ -70,7 +70,7 @@
                             if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?> wdt-search-in-select <?php };
                             if ($dataColumn->getPossibleValuesAjax() !== -1) { ?> wdt-possible-values-ajax <?php }; ?>"
                             <?php if ($dataColumn->getInputType() === 'multi-selectbox') { ?>multiple="multiple"<?php } ?>
-                            <?php if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?>data-live-search="true" data-live-search-placeholder="Search..."<?php } ?>
+                            <?php if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?>data-live-search="true" data-live-search-placeholder="<?php esc_attr_e('Search...','wpdatatables'); ?>"<?php } ?>
                             data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>">
                         <?php
                         if ($dataColumn->getPossibleValuesAjax() === -1) {

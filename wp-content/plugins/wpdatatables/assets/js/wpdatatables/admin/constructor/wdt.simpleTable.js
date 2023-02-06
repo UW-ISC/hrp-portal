@@ -28,25 +28,42 @@
                 mergeCells: true,
                 contextMenu: {
                     items: {
-                        'row_above': {},
-                        'row_below': {},
-                        'remove_row': {},
+                        'row_above': {
+                            name: wpdatatables_frontend_strings.insert_row_above
+                        },
+                        'row_below': {
+                            name: wpdatatables_frontend_strings.insert_row_below
+                        },
+                        'remove_row': {
+                            name: wpdatatables_frontend_strings.remove_row
+                        },
                         'separator': Handsontable.plugins.ContextMenu.SEPARATOR,
-                        'col_left': {},
-                        'col_right': {},
-                        'remove_col': {},
+                        'col_left': {
+                            name: wpdatatables_frontend_strings.insert_col_left
+                        },
+                        'col_right': {
+                            name: wpdatatables_frontend_strings.insert_col_right
+                        },
+                        'remove_col': {
+                            name: wpdatatables_frontend_strings.remove_column
+                        },
                         'separator2': Handsontable.plugins.ContextMenu.SEPARATOR,
-                        'undo': {},
-                        'redo': {},
+                        'undo': {
+                            name: wpdatatables_frontend_strings.undo
+                        },
+                        'redo': {
+                            name: wpdatatables_frontend_strings.redo
+                        },
                         'separator3': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'alignment': {
+                            name: wpdatatables_frontend_strings.alignment,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
 
                                     {
                                         key: 'alignment:left',
-                                        name: 'Left',
+                                        name: wpdatatables_frontend_strings.left,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[5].click()
@@ -55,7 +72,7 @@
                                     },
                                     {
                                         key: 'alignment:center',
-                                        name: 'Center',
+                                        name: wpdatatables_frontend_strings.center,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[6].click()
@@ -64,7 +81,7 @@
                                     },
                                     {
                                         key: 'alignment:right',
-                                        name: 'Right',
+                                        name: wpdatatables_frontend_strings.right,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[7].click()
@@ -73,7 +90,7 @@
                                     },
                                     {
                                         key: 'alignment:justify',
-                                        name: 'Justify',
+                                        name: wpdatatables_frontend_strings.justify,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[8].click()
@@ -85,7 +102,7 @@
                                     },
                                     {
                                         key: 'alignment:top',
-                                        name: 'Top',
+                                        name: wpdatatables_frontend_strings.top,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[10].click()
@@ -94,7 +111,7 @@
                                     },
                                     {
                                         key: 'alignment:middle',
-                                        name: 'Middle',
+                                        name: wpdatatables_frontend_strings.middle,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[9].click()
@@ -103,7 +120,7 @@
                                     },
                                     {
                                         key: 'alignment:bottom',
-                                        name: 'Bottom',
+                                        name: wpdatatables_frontend_strings.bottom,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[11].click()
@@ -115,13 +132,13 @@
                         },
                         'separator4': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'wrapping': {
-                            name: 'Text wrapping',
+                            name: wpdatatables_frontend_strings.text_wrapping,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
                                     {
                                         key: 'wrapping:wrap',
-                                        name: 'Wrap',
+                                        name: wpdatatables_frontend_strings.wrap,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[12].click()
@@ -130,7 +147,7 @@
                                     },
                                     {
                                         key: 'wrapping:overflow',
-                                        name: 'Overflow',
+                                        name: wpdatatables_frontend_strings.overflow,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[13].click()
@@ -139,7 +156,7 @@
                                     },
                                     {
                                         key: 'wrapping:clip',
-                                        name: 'Clip',
+                                        name: wpdatatables_frontend_strings.clip,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 cellActionButtons[14].click()
@@ -151,17 +168,21 @@
                             }
                         },
                         'separator5': Handsontable.plugins.ContextMenu.SEPARATOR,
-                        'cut': {},
-                        'copy': {},
+                        'cut': {
+                            name: wpdatatables_frontend_strings.cut
+                        },
+                        'copy': {
+                            name: wpdatatables_frontend_strings.copy
+                        },
                         'separator6': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'add': {
-                            name: 'Insert custom',
+                            name: wpdatatables_frontend_strings.insert_custom,
                             submenu: {
                                 // Custom option with submenu of items
                                 items: [
                                     {
                                         key: 'add:link',
-                                        name: 'Link',
+                                        name: wpdatatables_frontend_strings.link,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-link').click()
@@ -170,7 +191,7 @@
                                     },
                                     {
                                         key: 'add:media',
-                                        name: 'Media',
+                                        name: wpdatatables_frontend_strings.media,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-media').click()
@@ -179,7 +200,7 @@
                                     },
                                     {
                                         key: 'add:html',
-                                        name: 'HTML code',
+                                        name: wpdatatables_frontend_strings.html_code,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-html').click()
@@ -188,7 +209,7 @@
                                     },
                                     {
                                         key: 'add:shortcode',
-                                        name: 'Shortcode',
+                                        name: wpdatatables_frontend_strings.shortcode,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-do-shortcode').click()
@@ -197,7 +218,7 @@
                                     },
                                     {
                                         key: 'add:star',
-                                        name: 'Star rating',
+                                        name: wpdatatables_frontend_strings.star_rating,
                                         callback: function (key, selection, clickEvent) {
                                             setTimeout(function () {
                                                 $('#wpdt-star-rating').click()
@@ -209,7 +230,7 @@
                         },
                         'separator7': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'clear': {
-                            name: 'Clear table data',
+                            name: wpdatatables_frontend_strings.clear_table_data,
                             callback: function (key, selection, clickEvent) {
                                 setTimeout(function () {
                                     $('#wpdt-clear').click()
@@ -218,6 +239,7 @@
                         },
                         'separator8': Handsontable.plugins.ContextMenu.SEPARATOR,
                         'mergeCells': {
+                            name: wpdatatables_frontend_strings.merge_cells,
                             callback: function (key, selection, clickEvent) {
                                 setTimeout(function () {
                                     $('#wpdt-merge').click()

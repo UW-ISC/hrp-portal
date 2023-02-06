@@ -300,7 +300,7 @@
                             <div class="form-group">
                                 <div class="col-sm-9 p-0 wdt-input-url-container">
                                     <input type="text" id="wdt-add-data-source-input" class="form-control input-sm input-url-path"
-                                           placeholder="Paste URL or path, or click Browse to choose">
+                                           placeholder="<?php esc_attr_e('Paste URL or path, or click Browse to choose','wpdatatables'); ?>">
                                 </div>
                                 <div class="col-sm-3 wdt-source-browse-container">
                                     <button class="btn bgm-blue" id="wdt-add-data-browse-button">

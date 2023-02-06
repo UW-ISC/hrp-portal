@@ -117,7 +117,8 @@
     -ms-transition:.5s;
     -moz-transition:.5s;
     -webkit-transition:.5s;
-    transition:.5s;	
+    transition:.5s;
+    height : 25px;
 }
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable tr:last-child td {

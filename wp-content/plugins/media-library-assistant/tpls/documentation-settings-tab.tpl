@@ -6607,6 +6607,9 @@ Put on your boots and have a paddle handy - it's a swamp! Good luck.
 In the Custom Fields tab of the Settings screen you can define the rules for mapping several types of file and image metadata to WordPress custom fields. You can also use this screen to define rules for adding or updating elements within the WordPress-supplied "Attachment Metadata", stored in the "_wp_attachment_metadata" custom field. See the <a href="#attachment_metadata_mapping">Adding or changing Attachment Metadata</a> section below for details.
 </p>
 <p>
+You can view and/or download this PDF document with more information: <a href="http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf" target="_blank">Mapping File Metadata to WordPress Fields with Media Library Assistant</a>
+</p>
+<p>
 In this tab there are three ways to execute one or more custom field mapping rules for <strong>ALL</strong> of your Media Library items:
 </p>
 <ul class="mla_settings">
@@ -6938,6 +6941,9 @@ You can define the rules for mapping metadata on the "IPTC/EXIF" tab of the Sett
 <p>
 If you just want to add a custom field to the Media/Assistant submenu, the quick edit area and/or the bulk edit area go to the "Custom Fields" tab and follow the instructions there.
 </p>
+<p>
+You can view and/or download this PDF document with more information: <a href="http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf" target="_blank">Mapping File Metadata to WordPress Fields with Media Library Assistant</a>
+</p>
 <p>In this tab there are three ways to execute one or more IPTC/EXIF mapping rules for <strong>ALL</strong> of your Media Library items:
 </p>
 <ul class="mla_settings">
@@ -7058,12 +7064,15 @@ Two special exif "pseudo-values" are available; <strong>ALL_IPTC</strong> and <s
 </dd>
 </dl>
 <p>
-The Taxonomy mapping rules have two additional elements:
+The Taxonomy mapping rules have three additional elements:
 </p>
 <dl>
+<dt>Option</dt>
+<dd>
+For most rules the default "Array" value will be the best option. For certain Content Templates the "Text" option will give better results. For example, if you want to combine two EXIF fields into one compound term name use the "Text" option and enter something like this in the EXIF/Template element: <code>template:([+exif:Image.Make+] [+exif:Image.Model+])</code>. For this template the default "Array" option would create two terms, one for each EXIF field.</dd>
 <dt>Delimiter(s)</dt>
 <dd>
-In some cases multiple terms will be contained in a single IPTC or EXIF value. For example, Microsoft Windows stores its "Tags" in a single EXIF value (called Keywords) as a semicolon-delimited list, e.g., "tag1; tag2". You can separate terms encoded in this way by entering one or more delimiter characters in this column.
+In some cases multiple terms will be contained in a single IPTC or EXIF value. For example, Microsoft Windows stores its "Tags" in a single EXIF value (called Keywords) as a semicolon-separated list, e.g., "tag1; tag2". Other tools use a comma-separated list. For example, the IPTC standard allows either commas or semicolons in the "2#025 keywords" field. You can separate terms encoded in this way by entering one or more delimiter characters in this column.
 </dd>
 <dt>Parent</dt>
 <dd>For hierarchical taxonomies such as Categories you can select one of the existing terms in the taxonomy as the parent term for any terms you are mapping from metadata values. For example, you could define "IPTC Keywords" as a parent and then assign all of the 2#025 values under that parent term.
@@ -7260,10 +7269,18 @@ In fact, WordPress contains its own rules for composing a Title from IPTC/Exif m
 </p>
 <h4>WordPress default title, slug and description mapping</h4>
 <p>
-When WordPress uploads a new image file that contains IPTC and EXIF metadata it automatically maps metadata values to the title (post_title), name/slug (post_name) and description (post_content) fields. This happens before the MLA mapping rules are applied, so if you want to override the default mapping you must select "Replace" in the "Existing Text" column.
+When WordPress uploads a new image file the default title is derived from the file name. If the file contains IPTC and/or EXIF metadata WordPress automatically maps metadata values to the title (post_title), name/slug (post_name) and description (post_content) fields. This happens before the MLA mapping rules are applied, so if you want to override the default mapping you must select "Replace" in the "Existing Text" column.
 </p>
 <p>
-The WordPress rules are somewhat complex; consult the source code if you need exact details. Roughly speaking, the priority order for mapping the post_title and post_name values from non-blank IPTC/EXIF metadata is:
+The WordPress rules are somewhat complex; consult the source code if you need exact details. Here are some functions to example:
+</p>
+<ol>
+<li>/wpadmin/includes/image.php, function wp_read_image_metadata()</li>
+<li>/wpadmin/includes/media.php, function media_handle_upload()</li>
+<li>/wpadmin/includes/media.php, function media_handle_sideload()</li>
+</ol>
+<p>
+Roughly speaking, the priority order for mapping the post_title and post_name values from non-blank IPTC/EXIF metadata is:
 </p>
 <ol>
 <li>EXIF "Title"</li>

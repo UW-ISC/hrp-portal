@@ -70,7 +70,7 @@ function wdtGetAjaxData() {
         }
 
         $columnOrder[(int)$column->pos] = $column->orig_header;
-        if ($column->display_header) {
+        if ($column->display_header !='') {
             $columnTitles[$column->orig_header] = $column->display_header;
         } else {
             $columnTitles[$column->orig_header] = $column->orig_header;

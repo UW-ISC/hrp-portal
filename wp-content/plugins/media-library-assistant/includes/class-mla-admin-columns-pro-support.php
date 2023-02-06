@@ -7,6 +7,7 @@
  */
 
 use AC\ListTable;
+use ACP\ConditionalFormat\FormattableConfig;
 
 defined( 'ABSPATH' ) or die();
 
@@ -213,12 +214,34 @@ class ACP_Addon_MLA_ListScreen extends AC_Addon_MLA_ListScreen
 
 } // class ACP_Addon_MLA_ListScreen
 
+/**
+ * Class MLA (Media Library Assistant) Media supports the ACP ListTable interface
+ *
+ * @since 3.05
+ */
 class MLA_Media implements ListTable {
 
+	/**
+	 * Initializes some properties.
+	 *
+	 * @param	MLA_List_Table	MLA Table object
+	 *
+	 * @since 3.05
+	 */
 	public function __construct( MLA_List_Table $table ) {
 		$this->table = $table;
 	}
 
+	/**
+	 * Supply the content for a table column
+	 *
+	 * @since 3.05
+	 * 
+	 * @param	string	A column name
+	 * @param	integer	An item ID
+	 *
+	 * @return	string	HTML markup to be placed inside the column
+	 */
 	public function get_column_value( $column, $id ) {
 		ob_start();
 
@@ -233,11 +256,17 @@ class MLA_Media implements ListTable {
 		return ob_get_clean();
 	}
 
+	/**
+	 * Supply the total number of items
+	 *
+	 * @since 3.05
+	 * 
+	 * @return	integer	Total number of items
+	 */
 	public function get_total_items() {
 		return $this->table->get_pagination_arg( 'total_items' );
 	}
-
-}
+} // Class MLA_Media
 
 /**
  * Exportability class for posts list screen
@@ -906,6 +935,13 @@ class ACP_Addon_MLA_Column_AltText extends ACP\Column\Media\AlternateText
 	}
 
 	/**
+	 * Suppress Conditional Formatting; not working yet
+	 */
+	public function conditional_format(): ?FormattableConfig {
+		return NULL;
+	}
+
+	/**
 	 * Support export
 	 */
 	public function export() {
@@ -950,6 +986,14 @@ class ACP_Addon_MLA_Column_Caption extends ACP\Column\Media\Caption
 	public function __construct() {
 		$this->set_original( true );
 		$this->set_type( 'caption' );
+	}
+
+
+	/**
+	 * Suppress Conditional Formatting; not working yet
+	 */
+	public function conditional_format(): ?FormattableConfig {
+		return NULL;
 	}
 
 	/**

@@ -343,9 +343,9 @@ class WPDataTableRows
         $tableData->borderSpacing = isset($advancedSettings->borderSpacing) ? $advancedSettings->borderSpacing : 0;
 
         $wpDataTableRows = new WPDataTableRows($tableData);
-        $wpDataTableRows->setTableID($tableId);
+        $wpDataTableRows->setTableID($tableData->id);
 
-        $rowsDataPrepared = WDTConfigController::loadRowsDataFromDB($tableId);;
+        $rowsDataPrepared = WDTConfigController::loadRowsDataFromDB($tableData->id);
 
         $wpDataTableRows->fillFromData($rowsDataPrepared);
 

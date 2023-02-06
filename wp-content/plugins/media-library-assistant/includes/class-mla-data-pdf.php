@@ -216,6 +216,122 @@ class MLAPDF {
 				MLACore::mla_debug_add( sprintf( _x( '%1$s: _build_pdf_indirect_objects bad value at $index = "%2$d".', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $index ), MLACore::MLA_DEBUG_CATEGORY_ANY );
 			}
 		} // for each match
+//error_log( __LINE__ . " MLAPDF::_build_pdf_indirect_objects pdf_indirect_objects = \r\n" . var_export( self::$pdf_indirect_objects, true ), 0 );
+	}
+
+	/**
+	 * Find the offset, length and contents of an indirect object containing a string or array
+	 *
+	 * The function searches the entire file, if necessary, to find the last/most recent copy of the object.
+	 * This is required because Adobe Acrobat does NOT increment the generation number when it reuses an object.
+	 * 
+	 * @since 3.06
+	 *
+	 * @param	string	full path and file name
+	 * @param	integer	The object number
+	 * @param	integer	The object generation number; default zero (0)
+	 * @param	integer	The desired object instance (when multiple instances are present); default "highest/latest"
+	 *
+	 * @return	mixed	NULL on failure else array( 'start' => offset in the file, 'length' => object length, 'content' => object contents )
+	 */
+	private static function _find_pdf_indirect_value( $file_name, $object, $generation = 0, $instance = NULL ) {
+		$chunksize = 16384;
+		$key = ( $object * 1000 ) + $generation;
+		if ( isset( self::$pdf_indirect_objects ) && isset( self::$pdf_indirect_objects[ $key ] ) ) {
+			$file_offset = self::$pdf_indirect_objects[ $key ]['start'];
+		} else { // found object location
+			$file_offset = 0;
+		}
+
+		$object_starts = array();
+		$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$file_name}, {$file_offset} ) object_content = \r\n" . MLAData::mla_hex_dump( $object_content ), 0 );
+
+		// Match the object header
+		$pattern = sprintf( '!%1$d\\h+%2$d\\h+obj[\\x00-\\x20]*([\(|\[])!', $object, $generation );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$object}, {$generation} ) pattern = " . var_export( $pattern, true ), 0 );
+		$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$match_count} ) matches = " . var_export( $matches, true ), 0 );
+		if ( $match_count ) {
+			$object_starts[] = array( 'offset' => $file_offset, 'start' => $matches[1][1]);
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$file_offset}, {$matches[1][1]} ) object_content = \r\n" . MLAData::mla_hex_dump( substr( $object_content, $matches[1][1] ), 512 ), 0 );
+			$match_count = 0;
+		}
+
+		// If necessary and possible, advance the $object_content through the file until it contains the start tag
+		if ( 0 == $match_count && ( $chunksize == strlen( $object_content ) ) ) {
+			$file_offset += ( $chunksize - 16 );
+			$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
+			$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$match_count} ) matches = " . var_export( $matches, true ), 0 );
+
+			if ( $match_count ) {
+				$object_starts[] = array( 'offset' => $file_offset, 'start' => $matches[1][1]);
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$file_offset}, {$matches[1][1]} ) object_content = \r\n" . MLAData::mla_hex_dump( substr( $object_content, $matches[1][1] ), 512 ), 0 );
+				$match_count = 0;
+			}
+
+			while ( 0 == $match_count && ( $chunksize == strlen( $object_content ) ) ) {
+				$file_offset += ( $chunksize - 16 );
+				$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
+				$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$match_count} ) matches = " . var_export( $matches, true ), 0 );
+
+				if ( $match_count ) {
+					$object_starts[] = array( 'offset' => $file_offset, 'start' => $matches[1][1]);
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value( {$file_offset}, {$matches[1][1]} ) object_content = \r\n" . MLAData::mla_hex_dump( substr( $object_content, $matches[1][1] ), 512 ), 0 );
+					$match_count = 0;
+				}
+			} // while not found
+		} // if not found
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value object_starts = " . var_export( $object_starts, true ), 0 );
+
+		// Return the highest/latest instance unless a specific instance is requested
+		$object_count = count( $object_starts );
+		if ( is_null( $instance ) ) {
+			$object_start = array_pop( $object_starts );
+		} else {
+			$instance = absint( $instance );
+			$object_start = isset( $object_starts[ $instance ] ) ? $object_starts[ $instance ] : NULL;
+		}
+	
+		if ( is_null( $object_start ) ) {
+			return NULL;
+		} else {
+			$file_offset = $object_start['offset'];
+			$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
+			$start = $object_start['start'];
+		}
+
+		// If necessary and possible, expand the $object_content until it contains the end tag
+		$pattern = '!([\)|\]])!';
+		$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE, $start );
+		if ( 0 == $match_count && ( $chunksize == strlen( $object_content ) ) ) {
+			$file_offset = $file_offset + $start;
+			$start = 0;
+			$new_chunksize = $chunksize + $chunksize;
+			$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $new_chunksize );
+			$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE, $start );
+
+			while ( 0 == $match_count && ( $new_chunksize == strlen( $object_content ) ) ) {
+				$new_chunksize = $new_chunksize + $chunksize;
+				$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $new_chunksize );
+				$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE, $start );
+			} // while not found
+		} // if not found
+
+		if ( 0 == $match_count ) {
+			return NULL;
+		}
+
+		if ($match_count) {
+			$results = array( 'count' => $object_count, 'start' => $file_offset + $start, 'length' => ($matches[0][1] + 1) - $start );
+			$results['content'] = substr( $object_content, $start, $results['length'] );
+//error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_value results = " . var_export( $results, true ), 0 );
+			return $results;
+		} // found trailer
+
+		return NULL; 
 	}
 
 	/**
@@ -246,9 +362,7 @@ class MLAPDF {
 		$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
 //error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_dictionary( {$file_name}, {$file_offset} ) object_content = \r\n" . MLAData::mla_hex_dump( $object_content ), 0 );
 
-		/*
-		 * Match the object header
-		 */
+		// Match the object header
 		$pattern = sprintf( '!%1$d\\h+%2$d\\h+obj[\\x00-\\x20]*(<<)!', $object, $generation );
 //error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_dictionary( {$object}, {$generation} ) pattern = " . var_export( $pattern, true ), 0 );
 		$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE );
@@ -259,9 +373,7 @@ class MLAPDF {
 			$match_count = 0;
 		}
 
-		/*
-		 * If necessary and possible, advance the $object_content through the file until it contains the start tag
-		 */
+		// If necessary and possible, advance the $object_content through the file until it contains the start tag
 		if ( 0 == $match_count && ( $chunksize == strlen( $object_content ) ) ) {
 			$file_offset += ( $chunksize - 16 );
 			$object_content = file_get_contents( $file_name, true, NULL, $file_offset, $chunksize );
@@ -289,9 +401,7 @@ class MLAPDF {
 		} // if not found
 //error_log( __LINE__ . " MLAPDF::_find_pdf_indirect_dictionary object_starts = " . var_export( $object_starts, true ), 0 );
 
-		/*
-		 * Return the highest/latest instance unless a specific instance is requested
-		 */
+		// Return the highest/latest instance unless a specific instance is requested
 		$object_count = count( $object_starts );
 		if ( is_null( $instance ) ) {
 			$object_start = array_pop( $object_starts );
@@ -308,9 +418,7 @@ class MLAPDF {
 			$start = $object_start['start'];
 		}
 
-		/*
-		 * If necessary and possible, expand the $object_content until it contains the end tag
-		 */
+		// If necessary and possible, expand the $object_content until it contains the end tag
 		$pattern = '!>>[\\x00-\\x20]*[endobj|stream]!';
 		$match_count = preg_match( $pattern, $object_content, $matches, PREG_OFFSET_CAPTURE, $start );
 		if ( 0 == $match_count && ( $chunksize == strlen( $object_content ) ) ) {
@@ -384,9 +492,7 @@ class MLAPDF {
 			return array( 'type' => 'unknown', 'value' => '', '/length' => 0 );
 		}
 
-		/*
-		 * Brute force, here we come...
-		 */
+		// Brute force, here we come...
 		$output = '';
 		$level = 0;
 		$in_string = true;
@@ -500,9 +606,9 @@ class MLAPDF {
 	 * @return	array	( '/length' => length, key => array( 'type' => type, 'value' => value ) ) for each dictionary field
 	 */
 	private static function _parse_pdf_dictionary( &$source_string, $offset ) {
-		/*
-		 * Find the end of the dictionary
-		 */
+		static $byte_values = array ( '0' => 0, '1' => 1, '2' => 2, '3' => 3, '4' => 4, '5' => 5, '6' => 6, '7' => 7, '8' => 8, '9' => 9, 'A' => 0xA, 'B' => 0xB, 'C' => 0xC, 'D' => 0xD, 'E' => 0xE, 'F' => 0xF, );
+
+		// Find the end of the dictionary
 		if ( '<<' == substr( $source_string, $offset, 2 ) ) {
 			$nest = $offset + 2;
 		} else {
@@ -544,9 +650,7 @@ class MLAPDF {
 			$name = $matches[1][ $match_index ][0];
 			$value_start = $offset + $matches[2][ $match_index ][1] + strlen( $matches[2][ $match_index ][0] );
 
-			/*
-			 * Skip over false matches within a string or nested dictionary
-			 */
+			// Skip over false matches within a string or nested dictionary
 			if ( $value_start < $end_data ) {
 				continue;
 			}
@@ -580,6 +684,24 @@ class MLAPDF {
 						$dictionary[ $name ]['type'] = 'dictionary';
 						$end_data = $value_start + 4 + $dictionary[ $name ]['value']['/length'];
 						unset( $dictionary[ $name ]['value']['/length'] );
+					} elseif ( 0 === strpos( $value, '<FEFF' ) ) {
+						// UTF-16BE (big-endian) string encoding: 2 hex characters per byte TODO
+						$utf_string = '';
+						$limit = strlen( $value ) - 1;
+						for ( $index = 1; $index < $limit; $index++ ) {
+							// Encode upper digit
+							$byte = 0x10 * $byte_values[ $value[ $index++ ] ];
+							// Encode lower (or missing, assumed zero) digit
+							if ( $index < $limit ) {
+								$byte = $byte + $byte_values[ $value[ $index ] ];
+							}
+
+							$utf_string .= chr( $byte );
+						}
+//error_log( __LINE__ . " MLAPDF::UTF16-BE {$index}, {$limit}, utf_string = " . MLAData::mla_hex_dump( $utf_string ), 0 );
+
+						$dictionary[ $name ]['value'] = $utf_string;
+						$dictionary[ $name ]['type'] = 'string';
 					} else {
 						$dictionary[ $name ]['type'] = 'hex';
 					}
@@ -668,9 +790,7 @@ class MLAPDF {
 				}
 			} // found 'trailer'
 		} else { // found 'xref'
-		/*
-		 * Look for a cross-reference stream
-		 */
+		// Look for a cross-reference stream
 		$match_count = preg_match( '!(\d+)\\h+(\d+)\\h+obj[\x00-\x20]*!', $tail, $matches, PREG_OFFSET_CAPTURE );
 		if ( $match_count ) {
 			$chunk_offset = $matches[0][1] + strlen( $matches[0][0] );
@@ -678,9 +798,7 @@ class MLAPDF {
 			if ( '<<' == substr( $tail, $chunk_offset, 2) ) {
 				$dictionary = self::_parse_pdf_dictionary( $tail, $chunk_offset );
 
-				/*
-				 * Parse the cross-reference stream following the dictionary, if present
-				 */
+				// Parse the cross-reference stream following the dictionary, if present
 				 if ( isset( $dictionary['Type'] ) && 'XRef' == $dictionary['Type']['value'] ) {
 		 			$xref_length =	self::_parse_pdf_xref_stream( $file_name, $file_offset + $chunk_offset + (integer) $dictionary['/length'], $dictionary['W']['value'] );
 				 }
@@ -783,6 +901,22 @@ class MLAPDF {
 					unset( $info_dictionary['/length'] );
 
 					foreach ( $info_dictionary as $name => $value ) {
+						 if ( 'indirect' == $value['type'] ) { //TODO FIND INDIRECT VALUE, NOT DICTIONARY
+							$indirect_value = self::_find_pdf_indirect_value( $file_name, $value['object'], $value['generation'] );
+							if ( is_array( $indirect_value ) ) {
+								$content = $indirect_value['content'];
+								if ( '(' === $content[0] ) {
+									$value['value'] = substr( $content, 1, strlen( $content ) - 2 );
+									$value['type'] = 'string';
+//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata indirect string = " . var_export( $value['value'], true ), 0 );
+								} elseif ( '[' === $content[0] ) {
+									$value['value'] = trim( substr( $content, 1, strlen( $content ) - 2 ) );
+									$value['type'] = 'array';
+//error_log( __LINE__ . " MLAPDF::mla_extract_pdf_metadata indirect array = " . var_export( $value['value'], true ), 0 );
+								}
+							}
+						 }
+
 						if ( 'string' == $value['type'] ) {
 							$prefix = substr( $value['value'], 0, 2 );
 							if ( 'D:' == $prefix ) {
@@ -792,6 +926,9 @@ class MLAPDF {
 							} else {
 								$metadata[ $name ] = $value['value'];
 							}
+						 } elseif ( 'indirect' == $value['type'] ) {
+							// Failed to match the object to its value above
+							$metadata[ $name ] = $value['value'];
 						 } else {
 							$metadata[ $name ] = $value['value'];
 						 }

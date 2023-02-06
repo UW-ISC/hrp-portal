@@ -65,7 +65,7 @@ There is no "trash" area or "undo" feature, so use the "Purge Values" and "Delet
 <!-- template="mla-read-only" -->
 <!-- title="Read Only Rules" order="70" -->
 <p>Long ago in an MLA version far away there was a bug that caused some custom field mapping rule names to be mis-interpreted. This added multiple rules for the same custom field to the table.</p>
-<p>If you have any of these damaged rules they are detected and marked "Read Only" in the submenu table. You can delete them, or edit them and change the name to some other custom field. Have a look at any other rules with a similar name and decide which one you want to keep.</p>
+<p>If you have any of these damaged rules they are detected and marked "Read Only" in the submenu table. A specific "Read Only" view will be added to the list of table views as well. You can delete the rules, or edit them and change the name to some other custom field. Have a look at any other rules with a similar name and decide which one you want to keep.</p>
 <!-- template="sidebar" -->
 <p><strong>For more information:</strong></p>
 <p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#mla_iptc_exif_mapping" target="_blank">Documentation on IPTC/EXIF Mapping Rules</a></p>

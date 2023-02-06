@@ -56,7 +56,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 13px;
     font-weight: normal;
     font-style: normal;
@@ -106,7 +106,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_filter input[type="search"],
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length label {
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 16px;
     font-weight: normal;
     font-style: normal;
@@ -147,7 +147,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_length .bootstrap-select.btn-group ul.dropdown-menu {
     width: 116px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
 }
 
@@ -215,7 +215,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding-left: 12px;
     padding-bottom: 4px;
     padding-top: 4px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 500;
     font-size: 12px;
@@ -367,7 +367,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate {
     font-size: 14px !important;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-weight: normal;
     font-style: normal;
     font-stretch: normal;
@@ -453,7 +453,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.previous:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.last:before,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .paginate_button.first:before{
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: normal;
     font-style: normal;
@@ -853,7 +853,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border-radius: 6px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
     border: solid 1px #ebedf2;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -912,7 +912,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTables .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn {
     text-align: center;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 12px !important;
     font-weight: 500;
     font-style: normal;
@@ -932,7 +932,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 #wdt-filter-widget .wdt-skin-raspberry-cream .wpDataTableFilterSection .wdt_checkbox_option,
 .wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream .wdt_checkbox_option label {
 
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -1050,7 +1050,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-left: 0;
     width: 30px;
     height: 24px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -1100,7 +1100,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog {
     max-width: 690px;
     width: 690px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-weight: normal;
     font-style: normal;
     font-stretch: normal;
@@ -1108,7 +1108,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #6B7280;
 }
 .wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog{
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-weight: normal;
     font-style: normal;
     font-stretch: normal;
@@ -1147,7 +1147,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-md-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header .modal-title{
     clear: inherit;
     padding: 0;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 500;
     font-size: 18px;
@@ -1296,7 +1296,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-style: normal;
     font-weight: 500;
     font-size: 14px;
@@ -1322,7 +1322,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block input.editDialogInput {
     border-radius: 6px;
     border: solid 1px #dcdfe6;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: normal;
     font-style: normal;
@@ -1346,7 +1346,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     height: 40px;
     width: 38px;
     top: 14px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -1419,7 +1419,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border-radius: 6px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.07);
     text-transform: none;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -1504,7 +1504,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer #wdt-checkbox-filter-reset,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer #wdt-checkbox-filter-close {
     text-transform: capitalize;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -1601,7 +1601,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     padding: 8px;
     margin-right: 12px;
     margin-bottom: 10px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 14px;
     font-weight: 500;
     font-style: normal;
@@ -2060,7 +2060,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-csv,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-pdf,
 div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-copy{
     height: 42px;
-    font-family: 'Inter', sans-serif;
+    font-family: var(--wpdt-inter-google-font, inherit);
     font-size: 16px;
     font-weight: 500;
     font-style: normal;

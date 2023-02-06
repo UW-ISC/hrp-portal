@@ -9,10 +9,13 @@ defined('ABSPATH') or die('Access denied.');
 
 // Current version
 //[<-- Full version -->]//
-define('WDT_CURRENT_VERSION', '5.2');
+define('WDT_CURRENT_VERSION', '5.3');
 //[<--/ Full version -->]//
 //[<-- Full version insertion #15 -->]//
-
+// Number of active plugin installs for Amelia
+define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '50,000+');
+// Number of appointments for Amelia
+define('AMELIA_NUMBER_OF_APPOINTMENTS', '500,000+');
 /**
  * Regular Expressions
  */

@@ -4,7 +4,7 @@ Author: Translate AI Multilingual Solutions
 Tags: translate, translate wordpress, multilingual, translation, translate language, bilingual, localization, translation proxy, localisation, multilanguage, google translate
 Requires at least: 2.8.1
 Tested up to: 6.1
-Stable tag: 2.9.14
+Stable tag: 2.9.15
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -251,6 +251,10 @@ If you want us to translate your website professionally or provide you a proofre
 8. User Dashboard
 
 == Changelog ==
+= 2.9.15 =
+* Google Translate Toolbar CSS updated
+* Added main language validity check for config.php file before modifying it
+
 = 2.9.14 =
 * Fix for images not appearing in WooCommerce PDF Invoices after translation
 * Converted get parameters encoding from rfc1738 to rfc3986

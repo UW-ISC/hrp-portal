@@ -226,7 +226,7 @@ class WDTTools
     {
         $ch = curl_init();
         $timeout = 100;
-        $agent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0';
+        $agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36';
 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -257,6 +257,8 @@ class WDTTools
             if ($info['http_code'] === 401) {
                 throw new Exception(__('wpDataTables was unable to access data. Unauthorized access. Please make file accessible.', 'wpdatatables'));
             }
+
+            $data = apply_filters('wpdatatables_curl_get_data_complete', $data, $url);
         }
         return $data;
     }
@@ -564,7 +566,36 @@ class WDTTools
             'selected_replace_data_option' => __("<small>You've selected the <strong>'Replace rows with source data'</strong> option. This means that you're about to <strong>delete all the data</strong> you currently have in your table and replace it with data from your source file.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
             'selected_add_data_option' => __("<small>You've selected the <strong>'Add data to current table data'</strong> option. This means that you're about to <strong>add data</strong> from the file source to your table.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small>", "wpdatatables"),
             'selected_replace_table_option' => __("<small>You've selected the <strong>'Replace entire table data'</strong> option. This means that you're about to <strong>delete your entire table data and current column settings</strong> and replace it with data from your source file with default settings for columns.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first. <br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
-        );
+            'clear_table_data' => __('Clear table data', 'wpdatatables'),
+            'star_rating' => __('Star rating', 'wpdatatables'),
+            'shortcode' => __('Shortcode', 'wpdatatables'),
+            'html_code' => __('HTML code', 'wpdatatables'),
+            'media' => __('Media', 'wpdatatables'),
+            'link' => __('Link', 'wpdatatables'),
+            'clip' => __('Clip', 'wpdatatables'),
+            'overflow' => __('Overflow', 'wpdatatables'),
+            'wrap' => __('Wrap', 'wpdatatables'),
+            'left' => __('Left', 'wpdatatables'),
+            'center' => __('Center', 'wpdatatables'),
+            'right' => __('Right', 'wpdatatables'),
+            'justify' => __('Justify', 'wpdatatables'),
+            'top' => __('Top', 'wpdatatables'),
+            'middle' => __('Middle', 'wpdatatables'),
+            'bottom' => __('Bottom', 'wpdatatables'),
+            'insert_row_above' => __('Insert row above', 'wpdatatables'),
+            'insert_row_below' => __('Insert row below', 'wpdatatables'),
+            'remove_row' => __('Remove row', 'wpdatatables'),
+            'insert_col_left' => __('Insert column left', 'wpdatatables'),
+            'insert_col_right' => __('Insert column right', 'wpdatatables'),
+            'remove_column' => __('Remove column', 'wpdatatables'),
+            'alignment' => __('Alignment', 'wpdatatables'),
+            'cut' => __('Cut', 'wpdatatables'),
+            'insert_custom' => __('Insert custom', 'wpdatatables'),
+            'undo' => __('Undo', 'wpdatatables'),
+            'redo' => __('Redo', 'wpdatatables'),
+            'text_wrapping' => __('Text wrapping', 'wpdatatables'),
+            'merge_cells' => __('Merge cells', 'wpdatatables'),
+            );
     }
 
     /**
@@ -1557,7 +1588,9 @@ class WDTTools
      */
     public static function wdtUIKitEnqueue()
     {
-        wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.min.css', array(), WDT_CURRENT_VERSION);
+        if (get_option('wdtIncludeGoogleFonts'))
+            wp_enqueue_style( 'wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',  array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-select', WDT_CSS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-tagsinput', WDT_CSS_PATH . 'bootstrap/bootstrap-tagsinput/bootstrap-tagsinput.css', array(), WDT_CURRENT_VERSION);
         wp_enqueue_style('wdt-bootstrap-datetimepicker', WDT_CSS_PATH . 'bootstrap/bootstrap-datetimepicker/bootstrap-datetimepicker.min.css', array(), WDT_CURRENT_VERSION);
@@ -1630,13 +1663,14 @@ class WDTTools
      */
     public static function wdtConvertStringToUnixTimestamp($dateString, $dateFormat)
     {
-        if(!$dateFormat) $dateFormat = get_option('wdtDateFormat');
+        if ($dateString == '') return null;
+        if (!$dateFormat) $dateFormat = get_option('wdtDateFormat');
+
         if (null !== $dateFormat && substr($dateFormat, 0,5) === 'd/m/Y') {
             $returnDate = strtotime(str_replace('/', '-', $dateString));
         } else if (null !== $dateFormat && in_array($dateFormat, ['m.d.Y', 'm-d-Y', 'm-d-y','d.m.y','Y.m.d','d-m-Y'])) {
             $returnDate = strtotime(str_replace(['.', '-'], '/', $dateString));
         } else if (null !== $dateFormat && $dateFormat == 'm/Y') {
-            if ($dateString == '') return null;
             $dateObject = DateTime::createFromFormat($dateFormat, $dateString);
             if (!$dateObject) return strtotime($dateString);
             $returnDate = $dateObject->getTimestamp();

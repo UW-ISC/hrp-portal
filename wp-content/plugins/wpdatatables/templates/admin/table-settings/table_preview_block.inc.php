@@ -25,7 +25,7 @@
             <span class="pull-right wdt-view-buttons">
                 <?php if (isset($_GET['table_view']) && $_GET['table_view'] == 'excel') { ?>
                     <button class="btn wdt-standard-view" title="" data-toggle="tooltip"
-                            data-original-title="Swich to Standard table view">
+                            data-original-title="<?php esc_attr_e('Switch to Standard table view','wpdatatables'); ?>">
                     <a href="<?php echo admin_url(isset($_GET['table_id']) ? 'admin.php?page=wpdatatables-constructor&source&table_id=' . (int)$_GET['table_id'] : ''); ?>">
                        <?php esc_html_e('Standard view', 'wpdatatables'); ?></a></button>
                     <button class="btn pull-right wdt-excel-view-selected" title="">
@@ -34,7 +34,7 @@
                     <button class="btn wdt-standard-view-selected " title="">
                     <?php esc_html_e('Standard view', 'wpdatatables'); ?></button>
                     <button class="btn pull-right wdt-excel-view " title="" data-toggle="tooltip"
-                            data-original-title="Swich to Excel-like table view">
+                            data-original-title="<?php esc_attr_e('Switch to Excel-like table view','wpdatatables'); ?>">
                     <a href="<?php echo admin_url(isset($_GET['table_id']) ? 'admin.php?page=wpdatatables-constructor&source&table_id=' . (int)$_GET['table_id'] . '&table_view=excel' : ''); ?>">
                         <?php esc_html_e('Excel Like', 'wpdatatables'); ?></a></button>
                 <?php } ?>
@@ -49,7 +49,7 @@
         <div class="wdt-table-action-buttons">
             <span class="pull-right">
                  <button class="btn pull-right"
-                         title="<?php esc_html_e('Complete column list', 'wpdatatables'); ?>" data-toggle="tooltip"
+                         title="<?php esc_attr_e('Complete column list', 'wpdatatables'); ?>" data-toggle="tooltip"
                          id="wdt-open-columns-list">
                <i class="wpdt-icon-line-columns"></i>
                      <?php esc_html_e('Column List', 'wpdatatables'); ?>
