@@ -58,7 +58,12 @@
         $('#wdt-table-title-edit').change(function (e) {
             wpdatatable_config.setTitle($(this).val());
         });
-
+        /**
+         * Change table description
+         */
+        $('#wdt-table-description-edit').change(function (e) {
+            wpdatatable_config.setDescription($(this).val());
+        });
         /**
          * Change auto-refresh
          */
@@ -148,6 +153,12 @@
          */
         $('#wdt-show-title').change(function (e) {
             wpdatatable_config.setShowTitle($(this).is(':checked') ? 1 : 0);
+        });
+        /**
+         * Toggle show description
+         */
+        $('#wdt-show-description').change(function (e) {
+            wpdatatable_config.setShowDescription($(this).is(':checked') ? 1 : 0);
         });
 
         /**
@@ -890,6 +901,9 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
+                if ($('#wdt-column-filter-type').val() === 'number-range' ) {
+                    $('div.wdt-number-range-slider').show();
+                }
             } else if ($(this).val() == 'string') {
                 $('div.wdt-possible-values-type-block').show();
                 $('div.wdt-possible-values-options-block').show();
@@ -903,6 +917,7 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
+                $('div.wdt-number-range-slider').hide();
             } else if (['date', 'datetime'].indexOf($(this).val()) !== -1
                 && $.inArray(wpdatatable_config.table_type, ['xls', 'csv', 'google_spreadsheet', 'json', 'nested_json', 'xml', 'serialized']) !== -1) {
                 $('div.wdt-date-input-format-block').show();
@@ -917,6 +932,7 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
+                $('div.wdt-number-range-slider').hide();
             } else if ($(this).val() == 'link') {
                 $('div.wdt-possible-values-type-block').hide();
                 $('div.wdt-possible-values-options-block').hide();
@@ -932,6 +948,7 @@
                     $('div.wdt-link-button-class-block').show();
                 }
                 $('div.wdt-link-button-attribute-block').show();
+                $('div.wdt-number-range-slider').hide();
             } else {
                 $('div.wdt-possible-values-type-block').hide();
                 $('div.wdt-possible-values-options-block').hide();
@@ -945,6 +962,7 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
+                $('div.wdt-number-range-slider').hide();
             }
         });
 
@@ -966,6 +984,9 @@
             var $renderSearchInSelectBox = $('.wdt-search-in-selectbox-block #wdt-search-in-selectbox');
             var $renderCheckboxesInModalBlock = $('.wdt-checkboxes-in-modal-block');
             var $renderSearchInSelectBoxBlock = $('.wdt-search-in-selectbox-block');
+            let $rangeSliderMaxBlock = $('.wdt-range-max-value');
+            let $rangeSliderCustomMaxBlock = $('.wdt-range-max-value-custom');
+            let columnType = $('#wdt-column-type').val();
             var $andLogicBlock = $('.wdt-and-logic-block');
             var $useAndLogicBlock = $('#wdt-column-type').val() === 'string' && $('#wdt-column-values').val() !== 'foreignkey';
             var typeAttr = 'text';
@@ -975,6 +996,8 @@
             if ($.inArray(filterType, ['text', 'number']) != -1) {
                 $('div.wdt-exact-filtering-block').show();
                 $('div.wdt-number-range-slider').hide();
+                $rangeSliderMaxBlock.hide();
+                $rangeSliderCustomMaxBlock.hide();
                 if (filterType === 'number')
                     typeAttr = 'number';
                 $filterInput.attr('type', typeAttr);
@@ -991,6 +1014,8 @@
             } else if ($.inArray(filterType, ['number-range', 'date-range', 'datetime-range', 'time-range']) != -1) {
                 $('div.wdt-exact-filtering-block').hide();
                 $('div.wdt-number-range-slider').hide();
+                $rangeSliderMaxBlock.hide();
+                $rangeSliderCustomMaxBlock.hide();
                 $filterInputBlock.hide();
                 $filterInputFromBlock.show();
                 $filterInputToBlock.show();
@@ -1008,9 +1033,14 @@
                 if ($filterInputTo.data('DateTimePicker') != undefined)
                     $filterInputTo.data('DateTimePicker').destroy();
 
-                if (filterType == 'number-range'){
+                if (filterType == 'number-range' && $.inArray(columnType, ['float', 'int']) !== -1){
                     $('div.wdt-number-range-slider').show();
                     typeAttr = 'number';
+
+                    if ($('#wdt-column-range-slider').is(':checked')) {
+                        $rangeSliderMaxBlock.show();
+                        $('#wdt-max-value-display').trigger('change');
+                    }
                 }
 
 
@@ -1030,6 +1060,8 @@
             } else {
                 $('div.wdt-exact-filtering-block').show();
                 $('div.wdt-number-range-slider').hide();
+                $rangeSliderMaxBlock.hide();
+                $rangeSliderCustomMaxBlock.hide();
                 $filterInputBlock.hide();
                 $filterInputFromBlock.hide();
                 $filterInputToBlock.hide();
@@ -1341,6 +1373,34 @@
                 columnEnableFilter.prop('checked', 0).change().attr('disabled', true);
             } else {
                 columnEnableFilter.attr('disabled', false).prop('checked', 1).change();
+            }
+        });
+
+        /**
+         * Show/hide number range settings and on 'range slider'  toggle
+         */
+        $('#wdt-column-range-slider').change(function (e) {
+            let $rangeSliderMaxBlock = $('.wdt-range-max-value');
+            let $rangeSliderCustomMaxBlock = $('.wdt-range-max-value-custom');
+            if ($(this).is(':checked')) {
+                $rangeSliderMaxBlock.show();
+            } else {
+                $('#wdt-max-value-display').val('default').selectpicker('refresh');
+                $rangeSliderMaxBlock.hide();
+                $rangeSliderCustomMaxBlock.hide();
+            }
+        });
+
+        /**
+         * Show/hide number range settings and on 'range slider'  toggle
+         */
+        $('#wdt-max-value-display').change(function (e) {
+            let $rangeSliderCustomMaxBlock = $('.wdt-range-max-value-custom');
+            if ($(this).val() === 'custom_text') {
+                $rangeSliderCustomMaxBlock.show();
+            } else {
+                $('#wdt-custom-max-value').val('');
+                $rangeSliderCustomMaxBlock.hide();
             }
         });
 

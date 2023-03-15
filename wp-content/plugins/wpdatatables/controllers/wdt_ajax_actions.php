@@ -49,6 +49,8 @@ function wdtGetAjaxData() {
     $userIdColumnHeader = '';
     $filterDefaultValue = array();
     $rangeSlider = array();
+    $rangeMaxValueDisplay = array();
+    $customMaxRangeValue = array();
 
     $wdtVar1 = isset($_GET['wdt_var1']) ? wdtSanitizeQuery($_GET['wdt_var1']) : $tableData->var1;
     $wdtVar2 = isset($_GET['wdt_var2']) ? wdtSanitizeQuery($_GET['wdt_var2']) : $tableData->var2;
@@ -121,6 +123,12 @@ function wdtGetAjaxData() {
         }
         if (isset($advancedSettings->rangeSlider) && $advancedSettings->rangeSlider == 1 ) {
             $rangeSlider[] = $column->orig_header;
+            if (isset($advancedSettings->rangeMaxValueDisplay)) {
+                $rangeMaxValueDisplay[] = $column->orig_header;
+            }
+            if (isset($advancedSettings->customMaxRangeValue)) {
+                $customMaxRangeValue[] = $column->orig_header;
+            }
         }
 
         $decimalPlaces[$column->orig_header] = isset($advancedSettings->decimalPlaces) ? $advancedSettings->decimalPlaces : null;
@@ -138,8 +146,11 @@ function wdtGetAjaxData() {
         $linkButtonClass[$column->orig_header] = isset($advancedSettings->linkButtonClass) ? $advancedSettings->linkButtonClass : null;
         $possibleValuesAddEmpty[$column->orig_header] = isset($advancedSettings->possibleValuesAddEmpty) ? $advancedSettings->possibleValuesAddEmpty : null;
         $rangeSlider[$column->orig_header] = isset($advancedSettings->rangeSlider) ? $advancedSettings->rangeSlider : null;
+        $rangeMaxValueDisplay[$column->orig_header] = isset($advancedSettings->rangeMaxValueDisplay) ? $advancedSettings->rangeMaxValueDisplay : null;
+        $customMaxRangeValue[$column->orig_header] = isset($advancedSettings->customMaxRangeValue) ? $advancedSettings->customMaxRangeValue : null;
         $foreignKeyRule[$column->orig_header] = isset($advancedSettings->foreignKeyRule) ? $advancedSettings->foreignKeyRule : null;
-
+	    $column_align_header[$column->orig_header] = isset($advancedSettings->column_align_header) ? $advancedSettings->column_align_header : '';
+	    $column_align_fields[$column->orig_header] = isset($advancedSettings->column_align_fields) ? $advancedSettings->column_align_fields : '';
     }
 
     if ($tableView == 'excel') {
@@ -223,6 +234,8 @@ function wdtGetAjaxData() {
         'linkButtonClass'     => $linkButtonClass,
         'skip_thousands'      => $skipThousands,
         'rangeSlider'         => $rangeSlider,
+        'rangeMaxValueDisplay' => $rangeMaxValueDisplay,
+        'customMaxRangeValue'         => $customMaxRangeValue,
         'filterDefaultValue'  => $filterDefaultValue
     );
 

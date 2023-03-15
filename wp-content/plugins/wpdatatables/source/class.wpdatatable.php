@@ -27,6 +27,8 @@ class WPDataTable {
     private $_tableType = '';
     private $_fileLocation = 'wp_media_lib';
     private $_title = '';
+	private $_table_description = '';
+	private $_show_table_description = false;
     private $_interfaceLanguage;
     private $_responsive = false;
     private $_responsiveAction = 'icon';
@@ -420,6 +422,25 @@ class WPDataTable {
     public function getName() {
         return $this->_title;
     }
+	public function setDescription($description) {
+		$this->_table_description = $description;
+	}
+
+	public function getDescription() {
+		return $this->_table_description;
+	}
+
+	public function setShowDescription($show_description) {
+		if ($show_description) {
+			$this->_show_table_description = true;
+		} else {
+			$this->_show_table_description = false;
+		}
+	}
+
+	public function getShowDescription() {
+		return $this->_show_table_description ;
+	}
 
     public function setScrollable($scrollable) {
         if ($scrollable) {
@@ -1256,12 +1277,14 @@ class WPDataTable {
             $dataColumnProperties['editingDefaultValue'] =      isset($wdtParameters['editingDefaultValue'][$key]) ? $wdtParameters['editingDefaultValue'][$key] : '';
             $dataColumnProperties['linkTargetAttribute'] =      isset($wdtParameters['linkTargetAttribute'][$key]) ? $wdtParameters['linkTargetAttribute'][$key] : '';
             $dataColumnProperties['linkNoFollowAttribute'] =    isset($wdtParameters['linkNoFollowAttribute'][$key]) ? $wdtParameters['linkNoFollowAttribute'][$key] : false;
-            $dataColumnProperties['linkNoreferrerAttribute'] = isset($wdtParameters['linkNoreferrerAttribute'][$key]) ? $wdtParameters['linkNoreferrerAttribute'][$key] : false;
-            $dataColumnProperties['linkSponsoredAttribute'] = isset($wdtParameters['linkSponsoredAttribute'][$key]) ? $wdtParameters['linkSponsoredAttribute'][$key] : false;
+            $dataColumnProperties['linkNoreferrerAttribute'] =  isset($wdtParameters['linkNoreferrerAttribute'][$key]) ? $wdtParameters['linkNoreferrerAttribute'][$key] : false;
+            $dataColumnProperties['linkSponsoredAttribute'] =   isset($wdtParameters['linkSponsoredAttribute'][$key]) ? $wdtParameters['linkSponsoredAttribute'][$key] : false;
             $dataColumnProperties['linkButtonAttribute'] =      isset($wdtParameters['linkButtonAttribute'][$key]) ? $wdtParameters['linkButtonAttribute'][$key] : false;
             $dataColumnProperties['linkButtonLabel'] =          isset($wdtParameters['linkButtonLabel'][$key]) ? $wdtParameters['linkButtonLabel'][$key] : '';
             $dataColumnProperties['linkButtonClass'] =          isset($wdtParameters['linkButtonClass'][$key]) ? $wdtParameters['linkButtonClass'][$key] : '';
             $dataColumnProperties['rangeSlider'] =              !empty($wdtParameters['rangeSlider'][$key]) ? $wdtParameters['rangeSlider'][$key] : false;
+            $dataColumnProperties['rangeMaxValueDisplay'] =     isset($wdtParameters['rangeMaxValueDisplay'][$key]) ? $wdtParameters['rangeMaxValueDisplay'][$key] : 'default';
+            $dataColumnProperties['customMaxRangeValue'] =      isset($wdtParameters['customMaxRangeValue'][$key]) ? $wdtParameters['customMaxRangeValue'][$key] : null;
             $dataColumnProperties['parentTable'] =              $this;
             $dataColumnProperties['globalSearchColumn'] =       isset($wdtParameters['globalSearchColumn'][$key]) ? $wdtParameters['globalSearchColumn'][$key] : false;
             $dataColumnProperties = apply_filters('wpdt_filter_data_column_properties', $dataColumnProperties, $wdtParameters, $key);
@@ -2700,7 +2723,9 @@ class WPDataTable {
                 'linkButtonAttribute' => $wdtParameters['linkButtonAttribute'][$dataColumn_key],
                 'linkButtonLabel' => $wdtParameters['linkButtonLabel'][$dataColumn_key],
                 'linkButtonClass' => $wdtParameters['linkButtonClass'][$dataColumn_key],
-                'rangeSlider' => $wdtParameters['rangeSlider'][$dataColumn_key]
+                'rangeSlider' => $wdtParameters['rangeSlider'][$dataColumn_key],
+                'rangeMaxValueDisplay' => $wdtParameters['rangeMaxValueDisplay'][$dataColumn_key],
+                'customMaxRangeValue' => $wdtParameters['customMaxRangeValue'][$dataColumn_key]
             );
             $colObjOptions = apply_filters('wpdt_filter_supplementary_array_column_object', $colObjOptions, $wdtParameters, $dataColumn_key);
             $colObjs[$dataColumn_key] = $tableColumnClass::generateColumn($dataColumn_type, $colObjOptions);
@@ -3376,6 +3401,8 @@ class WPDataTable {
             'linkButtonLabel' => array(),
             'linkButtonClass' => array(),
             'rangeSlider' => array(),
+            'rangeMaxValueDisplay' => array(),
+            'customMaxRangeValue' => array(),
             'globalSearchColumn' => array(),
         );
 
@@ -3416,6 +3443,7 @@ class WPDataTable {
                 $returnArray['possibleValues'][$column->orig_header] = isset($column->valuesList) ? $column->valuesList : null;
                 $returnArray['possibleValuesAddEmpty'][$column->orig_header] = isset($column->possibleValuesAddEmpty) ? $column->possibleValuesAddEmpty : null;
                 $returnArray['possibleValuesAjax'][$column->orig_header] = isset($column->possibleValuesAjax) ? $column->possibleValuesAjax : null;
+	            $returnArray['column_align_fields'][$column->orig_header] = isset($column->column_align_fields) ? $column->column_align_fields : '';
                 $returnArray['possibleValuesType'][$column->orig_header] = isset($column->possibleValuesType) ? $column->possibleValuesType : null;
                 $returnArray['sorting'][$column->orig_header] = isset($column->sorting) ? $column->sorting : null;
                 $returnArray['linkTargetAttribute'][$column->orig_header]= isset($column->linkTargetAttribute) ? $column->linkTargetAttribute : null;
@@ -3426,7 +3454,10 @@ class WPDataTable {
                 $returnArray['linkButtonLabel'][$column->orig_header]= isset($column->linkButtonLabel) ? $column->linkButtonLabel : null;
                 $returnArray['linkButtonClass'][$column->orig_header]= isset($column->linkButtonClass) ? $column->linkButtonClass : null;
                 $returnArray['rangeSlider'][$column->orig_header] = isset($column->rangeSlider) ? $column->rangeSlider : null;
+                $returnArray['rangeMaxValueDisplay'][$column->orig_header] = isset($column->rangeMaxValueDisplay) ? $column->rangeMaxValueDisplay : null;
+                $returnArray['customMaxRangeValue'][$column->orig_header] = isset($column->customMaxRangeValue) ? $column->customMaxRangeValue : null;
                 $returnArray['globalSearchColumn'][$column->orig_header] = isset($column->globalSearchColumn) ? $column->globalSearchColumn : null;
+	            $returnArray['column_align_header'][$column->orig_header] = isset($column->column_align_header) ? $column->column_align_header : '';
 
                 $returnArray = apply_filters('wpdatatables_prepare_column_data', $returnArray, $column);
             }
@@ -3554,6 +3585,12 @@ class WPDataTable {
         }
         if (isset($columnData['rangeSlider'])) {
             $params['rangeSlider'] = $columnData['rangeSlider'];
+        }
+        if (isset($columnData['rangeMaxValueDisplay'])) {
+            $params['rangeMaxValueDisplay'] = $columnData['rangeMaxValueDisplay'];
+        }
+        if (isset($columnData['customMaxRangeValue'])) {
+            $params['customMaxRangeValue'] = $columnData['customMaxRangeValue'];
         }
         if (isset($columnData['filterDefaultValue'])) {
             $params['filterDefaultValue'] = $columnData['filterDefaultValue'];
@@ -3721,6 +3758,9 @@ class WPDataTable {
         if (!empty($tableData->title)) {
             $this->setTitle($tableData->title);
         }
+	    if (!empty($tableData->table_description)) {
+		    $this->setDescription($tableData->table_description);
+	    }
         if (!empty($tableData->hide_before_load)) {
             $this->hideBeforeLoad();
         } else {
@@ -3770,9 +3810,9 @@ class WPDataTable {
 
         if (!empty($tableData->advanced_settings)) {
             $advancedSettings = json_decode($tableData->advanced_settings);
-            $this->setInfoBlock($advancedSettings->info_block);
-            $this->setGlobalSearch($advancedSettings->global_search);
-            $this->setShowRowsPerPage($advancedSettings->showRowsPerPage);
+            isset($advancedSettings->info_block) ? $this->setInfoBlock($advancedSettings->info_block) : $this->setInfoBlock(true);
+	        isset($advancedSettings->global_search) ? $this->setGlobalSearch($advancedSettings->global_search) :$this->setGlobalSearch(true);
+	        isset($advancedSettings->showRowsPerPage) ? $this->setShowRowsPerPage($advancedSettings->showRowsPerPage) : $this->setShowRowsPerPage(true);
             isset($advancedSettings->showAllRows) ? $this->setShowAllRows($advancedSettings->showAllRows) : $this->setShowAllRows(false);
             isset($advancedSettings->simpleResponsive) ? $this->setSimpleResponsive($advancedSettings->simpleResponsive) : $this->setSimpleResponsive(false);
             isset($advancedSettings->simpleHeader) ? $this->setSimpleHeader($advancedSettings->simpleHeader) : $this->setSimpleHeader(false);
@@ -3799,6 +3839,8 @@ class WPDataTable {
             isset($advancedSettings->pdfPageOrientation) ? $this->setPdfPageOrientation($advancedSettings->pdfPageOrientation) : $this->setPdfPageOrientation('portrait');
             isset($advancedSettings->showTableToolsIncludeHTML) ? $this->setTableToolsIncludeHTML($advancedSettings->showTableToolsIncludeHTML) : $this->setTableToolsIncludeHTML(false);
             isset($advancedSettings->showTableToolsIncludeTitle) ? $this->setTableToolsIncludeTitle($advancedSettings->showTableToolsIncludeTitle) : $this->setTableToolsIncludeTitle(false);
+	        isset($advancedSettings->show_table_description) ? $this->setShowDescription($advancedSettings->show_table_description) : $this->setShowDescription(false);
+	        isset($advancedSettings->table_description) ? $this->setDescription($advancedSettings->table_description) : $this->setDescription('');
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -3828,6 +3870,8 @@ class WPDataTable {
             $this->setPdfPageOrientation('portrait');
             $this->setTableToolsIncludeHTML(false);
             $this->setTableToolsIncludeTitle(false);
+	        $this->setShowDescription(false);
+	        $this->setDescription('');
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -3968,6 +4012,13 @@ class WPDataTable {
                     . "#{$this->getId()} > thead > tr > th.{$cssColumnHeader}, "
                     . "#{$this->getId()} > tfoot > tr > th.{$cssColumnHeader} { background-color: {$column->color} !important; }";
             }
+	        if ($column->column_align_fields != '') {
+		        $this->_columnsCSS .= "\n#{$this->getId()} > tbody > tr > td.{$cssColumnHeader} { text-align: {$column->column_align_fields} !important; }";
+	        }
+
+	        if ($column->column_align_header != '') {
+		        $this->_columnsCSS .= "\n#{$this->getId()} > thead > tr > th.{$cssColumnHeader} { text-align: {$column->column_align_header} !important; }";
+			}
 
             $this->_columnsCSS = apply_filters('wpdt_filter_columns_css', $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader );
 

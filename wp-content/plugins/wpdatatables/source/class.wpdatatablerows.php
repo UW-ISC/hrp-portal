@@ -6,6 +6,7 @@ class WPDataTableRows
 {
     protected $_tableID;
     protected $_tableName = 'New wpDataTable';
+	protected $_table_description = '';
     protected $_tableType = 'simple';
     protected $_colHeaders = [];
     protected $_colWidths = [];
@@ -23,6 +24,7 @@ class WPDataTableRows
     public function __construct(stdClass $tableData)
     {
         $this->setTableName($tableData->title);
+	    $this->setTableDescription($tableData->table_description);
         $this->setTableType($tableData->table_type);
         $this->setColNumber($tableData->content->colNumber);
         $this->setRowNumber($tableData->content->rowNumber);
@@ -64,6 +66,19 @@ class WPDataTableRows
     {
         $this->_tableName = $tableName;
     }
+
+	/**
+	 * @param string $tableName
+	 */
+	public function setTableDescription($descriptionName)
+	{
+		$this->_table_description = $descriptionName;
+	}
+
+	public function getTableDescription()
+	{
+		return $this->_table_description;
+	}
 
     /**
      * @return string

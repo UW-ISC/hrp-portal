@@ -462,10 +462,10 @@
                             location.reload()
                         } else {
                             $('.wdt-preload-layer').animateFadeOut();
-                            var heightHT = jQuery('.ht_master .wtHider');
-                            wpdtEditor.updateSettings({
-                                height: setHeightHT(heightHT)
-                            });
+                            // var heightHT = jQuery('.ht_master .wtHider');
+                            // wpdtEditor.updateSettings({
+                            //     height: setHeightHT(heightHT)
+                            // });
                             $('.wpDataTablesSimpleWrapper-' + wpdatatable_config.id).empty().append(data.tableHTML);
                             $('#wpdt-views ul li:first-child a').click();
                         }
@@ -1838,22 +1838,22 @@
                 }
                 getHeightData();
                 wpdtEditor.selectCell(0, 0)
-            });
-            wpdtEditor.addHook('beforeRemoveRow', function (from, amount) {
-                var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
-                    to = from + amount - 1,
-                    mergeLenght = merge.length;
-                for (var i = mergeLenght - 1; i >= 0; i--) {
-                    var row = merge[i].row;
-                    if (row >= from) {
-                        if (row <= to) {
-                            merge.splice(i, 1);
-                        } else {
-                            merge[i].row -= (amount - 1);
-                        }
-                    }
-                }
-            });
+             });
+            // wpdtEditor.addHook('beforeRemoveRow', function (from, amount) {
+            //     var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
+            //         to = from + amount - 1,
+            //         mergeLenght = merge.length;
+            //     for (var i = mergeLenght - 1; i >= 0; i--) {
+            //         var row = merge[i].row;
+            //         if (row >= from) {
+            //             if (row <= to) {
+            //                 merge.splice(i, 1);
+            //             } else {
+            //                 merge[i].row -= (amount - 1);
+            //             }
+            //         }
+            //     }
+            // });
             wpdtEditor.addHook('afterRemoveRow', function (from, amount) {
                 getHeightData();
                 wpdtEditor.allHeights.splice(from, amount);
@@ -1869,29 +1869,29 @@
                     }
                 }
                 disableButtons();
-                setTimeout(function () {
-                    let heightHT = $('.ht_master .wtHider');
-                    wpdtEditor.updateSettings({
-                        height: setHeightHT(heightHT)
-                    });
-                }, 500);
+                // setTimeout(function () {
+                //     let heightHT = $('.ht_master .wtHider');
+                //     wpdtEditor.updateSettings({
+                //         height: setHeightHT(heightHT)
+                //     });
+                // }, 500);
 
             });
-            wpdtEditor.addHook('beforeRemoveCol', function (from, amount) {
-                var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
-                    to = from + amount - 1,
-                    cntMerge = merge.length;
-                for (var i = cntMerge - 1; i >= 0; i--) {
-                    var col = merge[i].col;
-                    if (col >= from) {
-                        if (col <= to) {
-                            merge.splice(i, 1);
-                        } else {
-                            merge[i].col -= (amount - 1);
-                        }
-                    }
-                }
-            });
+            // wpdtEditor.addHook('beforeRemoveCol', function (from, amount) {
+            //     var merge = wpdtEditor.getPlugin('mergeCells').mergedCellsCollection.mergedCells,
+            //         to = from + amount - 1,
+            //         cntMerge = merge.length;
+            //     for (var i = cntMerge - 1; i >= 0; i--) {
+            //         var col = merge[i].col;
+            //         if (col >= from) {
+            //             if (col <= to) {
+            //                 merge.splice(i, 1);
+            //             } else {
+            //                 merge[i].col -= (amount - 1);
+            //             }
+            //         }
+            //     }
+            // });
             wpdtEditor.addHook('afterRemoveCol', function (from, amount) {
                 getWidthData();
                 wpdtEditor.allWidths.splice(from, amount);
@@ -1905,38 +1905,38 @@
                         plugin.setManualSize(i, wpdtEditor.allWidths[i]);
                     }
                 }
-                let heightHT = $('.ht_master .wtHider');
-                wpdtEditor.updateSettings({
-                    height: setHeightHT(heightHT)
-                });
+                // let heightHT = $('.ht_master .wtHider');
+                // wpdtEditor.updateSettings({
+                //     height: setHeightHT(heightHT)
+                // });
                 disableButtons();
             });
             wpdtEditor.addHook('afterRowResize', function (row, height) {
                 getHeightData();
                 wpdtEditor.allHeights.splice(row, 1, height);
-                let heightHT = $('.ht_master .wtHider');
-                wpdtEditor.updateSettings({
-                    height: setHeightHT(heightHT)
-                });
+                // let heightHT = $('.ht_master .wtHider');
+                // wpdtEditor.updateSettings({
+                //     height: setHeightHT(heightHT)
+                // });
             });
             wpdtEditor.addHook('afterColumnResize', function (column, width) {
                 getWidthData();
                 wpdtEditor.allWidths.splice(column, 1, width);
             });
-            wpdtEditor.addHook('afterRowMove', function (rows, target) {
-                let heightHT = $('.ht_master .wtHider');
-                wpdtEditor.updateSettings({
-                    height: setHeightHT(heightHT)
-                });
-                wpdtEditor.render();
-            });
-            wpdtEditor.addHook('afterColumnMove', function (columns, target) {
-                let heightHT = $('.ht_master .wtHider');
-                wpdtEditor.updateSettings({
-                    height: setHeightHT(heightHT)
-                });
-                wpdtEditor.render();
-            });
+            // wpdtEditor.addHook('afterRowMove', function (rows, target) {
+            //     let heightHT = $('.ht_master .wtHider');
+            //     wpdtEditor.updateSettings({
+            //         height: setHeightHT(heightHT)
+            //     });
+            //     wpdtEditor.render();
+            // });
+            // wpdtEditor.addHook('afterColumnMove', function (columns, target) {
+            //     let heightHT = $('.ht_master .wtHider');
+            //     wpdtEditor.updateSettings({
+            //         height: setHeightHT(heightHT)
+            //     });
+            //     wpdtEditor.render();
+            // });
             wpdtEditor.addHook('afterCopy', function (changes, copyCoords) {
                 getCellsMetaData(changes, copyCoords);
             });

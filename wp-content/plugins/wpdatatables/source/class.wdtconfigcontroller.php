@@ -228,6 +228,8 @@ class WDTConfigController {
             $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings)  ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
             $table->pdfPaperSize = isset($advancedSettings->pdfPaperSize) ? $advancedSettings->pdfPaperSize : 'A4';
             $table->pdfPageOrientation = isset($advancedSettings->pdfPageOrientation) ? $advancedSettings->pdfPageOrientation : 'portrait';
+	        $table->show_table_description = isset($advancedSettings->show_table_description) ? $advancedSettings->show_table_description : false;
+	        $table->table_description = isset($advancedSettings->table_description) ? $advancedSettings->table_description : '';
 
             $table = self::sanitizeTableConfig($table);
 
@@ -407,10 +409,11 @@ class WDTConfigController {
                     'tableFontColorSettings' => $table->tableFontColorSettings,
                     'pdfPaperSize' => $table->pdfPaperSize,
                     'pdfPageOrientation' => $table->pdfPageOrientation,
+                    'table_description' => $table->table_description,
+                    'show_table_description' => $table->show_table_description
                 )
-            )
+            ),
         );
-
         $tableConfig = apply_filters('wpdatatables_filter_insert_table_array', $tableConfig);
 
         if (!$table->id) {
@@ -447,6 +450,8 @@ class WDTConfigController {
         }
         $table->title = sanitize_text_field($table->title);
         $table->show_title = (int)$table->show_title;
+	    $table->table_description = sanitize_textarea_field($table->table_description);
+	    $table->show_table_description = (int)$table->show_table_description;
         $table->table_type = sanitize_text_field($table->table_type);
         $table->tools = (int)$table->tools;
         $table->showTableToolsIncludeHTML = (int)$table->showTableToolsIncludeHTML;
@@ -591,6 +596,11 @@ class WDTConfigController {
         } else {
             $table->name = '';
         }
+	    if (isset($table->table_description)){
+		    $table->table_description = sanitize_textarea_field($table->table_description);
+	    } else {
+		    $table->table_description = '';
+	    }
 
         if (isset($table->content)){
             $isContentObj = false;
@@ -835,7 +845,11 @@ class WDTConfigController {
                 $column->possibleValuesAddEmpty = (int)$column->possibleValuesAddEmpty;
                 $column->possibleValuesAjax = (int)$column->possibleValuesAjax;
                 $column->possibleValuesType = sanitize_text_field($column->possibleValuesType);
+	            $column->column_align_header = sanitize_text_field($column->column_align_header);
+	            $column->column_align_fields = sanitize_text_field($column->column_align_fields);
                 $column->rangeSlider = (int)$column->rangeSlider;
+                $column->rangeMaxValueDisplay = sanitize_text_field($column->rangeMaxValueDisplay);
+                $column->customMaxRangeValue = sanitize_text_field($column->customMaxRangeValue);
                 $column->skip_thousands_separator = (int)$column->skip_thousands_separator;
                 $column->sorting = (int)$column->sorting;
                 if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
@@ -1204,8 +1218,12 @@ class WDTConfigController {
             $feColumn ? $feColumn->possibleValuesAddEmpty : 0;
         $columnConfig['advanced_settings']['possibleValuesAjax'] =
             $feColumn ? $feColumn->possibleValuesAjax : 10;
+	    $columnConfig['advanced_settings']['column_align_fields'] =
+		    $feColumn ? $feColumn->column_align_fields : '';
         $columnConfig['advanced_settings']['calculateAvg'] =
             $feColumn ? $feColumn->calculateAvg : 0;
+	    $columnConfig['advanced_settings']['column_align_header'] =
+		    $feColumn ? $feColumn->column_align_header : '';
         $columnConfig['advanced_settings']['calculateMax'] =
             $feColumn ? $feColumn->calculateMax : 0;
         $columnConfig['advanced_settings']['calculateMin'] =
@@ -1246,6 +1264,10 @@ class WDTConfigController {
             $feColumn ? $feColumn->linkButtonClass : null;
         $columnConfig['advanced_settings']['rangeSlider'] =
             $feColumn ? $feColumn->rangeSlider : 0;
+        $columnConfig['advanced_settings']['rangeMaxValueDisplay'] =
+            $feColumn ? $feColumn->rangeMaxValueDisplay : 'default';
+        $columnConfig['advanced_settings']['customMaxRangeValue'] =
+            $feColumn ? $feColumn->customMaxRangeValue : null;
 
         // Possible values
         $columnConfig['possible_values'] = '';
@@ -1391,8 +1413,12 @@ class WDTConfigController {
             $advancedSettings->possibleValuesAjax : 0;
         $feColumn->calculateAvg = isset($advancedSettings->calculateAvg) ?
             $advancedSettings->calculateAvg : 0;
+	    $feColumn->column_align_fields = isset($advancedSettings->column_align_fields) ?
+		    $advancedSettings->column_align_fields : '';
         $feColumn->calculateMax = isset($advancedSettings->calculateMax) ?
             $advancedSettings->calculateMax : 0;
+	    $feColumn->column_align_header = isset($advancedSettings->column_align_header) ?
+		    $advancedSettings->column_align_header : '';
         $feColumn->calculateMin = isset($advancedSettings->calculateMin) ?
             $advancedSettings->calculateMin : 0;
         $feColumn->sorting = isset($advancedSettings->sorting) ?
@@ -1433,6 +1459,10 @@ class WDTConfigController {
             $advancedSettings->linkButtonClass : null;
         $feColumn->rangeSlider = isset($advancedSettings->rangeSlider) ?
             $advancedSettings->rangeSlider : 0;
+        $feColumn->rangeMaxValueDisplay = isset($advancedSettings->rangeMaxValueDisplay) ?
+            $advancedSettings->rangeMaxValueDisplay : 0;
+        $feColumn->customMaxRangeValue = isset($advancedSettings->customMaxRangeValue) ?
+            $advancedSettings->customMaxRangeValue : 0;
 
 
         if ($feColumn->possibleValuesType === 'foreignkey') {
@@ -1520,6 +1550,8 @@ class WDTConfigController {
         $table->content = '';
         $table->pdfPaperSize = 'A4';
         $table->pdfPageOrientation = 'portrait';
+	    $table->table_description = '';
+	    $table->show_table_description = 0;
 
         return $table;
     }

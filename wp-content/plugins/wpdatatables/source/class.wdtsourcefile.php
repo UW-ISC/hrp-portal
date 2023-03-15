@@ -763,7 +763,11 @@ class wpDataTableSourceFile
         $column->possibleValuesAddEmpty = 0;
         $column->possibleValuesType = null;
         $column->possibleValuesAjax = 10;
+	    $column->column_align_fields = '';
         $column->rangeSlider = 0;
+	    $column->column_align_header = '';
+        $column->rangeMaxValueDisplay = 'default';
+        $column->customMaxRangeValue = null;
         $column->skip_thousands_separator = 0;
         $column->sorting = 1;
         $column->text_after = '';

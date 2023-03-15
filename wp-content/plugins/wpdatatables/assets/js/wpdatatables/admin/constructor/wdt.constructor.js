@@ -1,9 +1,10 @@
 var constructedTableData = {
     name: '',
+    table_description: '',
     method: '',
     columnCount: 0,
     columns: [],
-    connection: ''
+    connection: '',
 };
 
 var defaultPostColumns = [
@@ -170,6 +171,7 @@ var aceEditor = null;
                         $('div.wdt-constructor-step[data-step="1-1"]').animateFadeIn();
                         $('#wdt-constructor-number-of-columns').change().keyup();
                         $('#wdt-constructor-manual-table-name').change();
+                        $('#wdt-constructor-manual-table-description').change();
                         previousStepButton.animateFadeIn();
                         nextStepButton.prop('disabled', 'disabled');
                         nextStepButton.hide();
@@ -340,6 +342,13 @@ var aceEditor = null;
         e.preventDefault();
         constructedTableData.name = $(this).val();
     });
+    /**
+     * Change table description for Simple table
+     */
+    $('#wdt-constructor-simple-table-description').change(function (e) {
+        e.preventDefault();
+        constructedTableData.table_description = $(this).val();
+    });
 
     /**
      * Handler which creates the table
@@ -368,9 +377,12 @@ var aceEditor = null;
             var colWidths = Array(parseInt(columns)).fill(null).map((u, i) => i)
 
             $('#wdt-constructor-simple-table-name').change();
+            $('#wdt-constructor-simple-table-description').change();
 
             constructedTableData.title = constructedTableData.name;
             constructedTableData.table_type = constructedTableData.method;
+            constructedTableData.advanced_settings = {};
+            constructedTableData.advanced_settings.table_description = constructedTableData.table_description;
             constructedTableData.content = {};
             constructedTableData.content.rowNumber = parseInt(rows);
             constructedTableData.content.colNumber = parseInt(columns);
@@ -435,6 +447,13 @@ var aceEditor = null;
     $(document).on('change','#wdt-constructor-manual-table-name, #wdt-constructor-wp-query-table-name, #wdt-constructor-mysql-query-table-name', function (e) {
         e.preventDefault();
         constructedTableData.name = $(this).val();
+    });
+    /**
+     * Change table description for manual, wp-query and mysql-query based tables
+     */
+    $(document).on('change','#wdt-constructor-manual-table-description, #wdt-constructor-wp-query-table-description, #wdt-constructor-mysql-query-table-description', function (e) {
+        e.preventDefault();
+        constructedTableData.table_description = $(this).val();
     });
 
     function disableGroupingOptions (select) {
@@ -512,6 +531,10 @@ var aceEditor = null;
     $('#wdt-constructor-file-table-name').change(function (e) {
         e.preventDefault();
         constructedTableData.name = $(this).val();
+    });
+    $('#wdt-constructor-file-table-description').change(function (e) {
+        e.preventDefault();
+        constructedTableData.table_description = $(this).val();
     });
 
     /**
@@ -701,6 +724,7 @@ var aceEditor = null;
                 if (defaultValue != null && columnType == 'multiselect') {
                     defaultValue.join('|');
                 }
+
                 constructedTableData.columns.push({
                     name: $(this).find('.wdt-constructor-column-name').val(),
                     type: columnType,
@@ -761,6 +785,7 @@ var aceEditor = null;
                 });
 
                 $('#wdt-constructor-file-table-name').change();
+                $('#wdt-constructor-file-table-description').change();
 
                 wdtReadFileDataAndEditTable(tableView);
             } else {

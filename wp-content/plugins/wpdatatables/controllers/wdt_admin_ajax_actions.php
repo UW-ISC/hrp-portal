@@ -532,9 +532,11 @@ function generateSimpleTableID($wpDataTableRows)
                     'borderCollapse' => 'collapse',
                     'borderSpacing' => 0,
                     'verticalScroll' => 0,
-                    'verticalScrollHeight' => 600
+                    'verticalScrollHeight' => 600,
+                    'show_table_description' => false,
+                    'table_description' => sanitize_textarea_field($wpDataTableRows->getTableDescription()),
                 )
-            )
+            ),
         )
     );
 
@@ -589,8 +591,11 @@ function wdtSaveDataSimpleTable()
                     'borderSpacing' => $tableSettings->borderSpacing,
                     'verticalScroll' => $tableSettings->verticalScroll,
                     'verticalScrollHeight' => $tableSettings->verticalScrollHeight,
+                    'show_table_description' => $tableSettings->show_table_description,
+                    'table_description' => $tableSettings->table_description
                 )
-            )
+            ),
+
         ),
         array('id' => $tableID)
     );
