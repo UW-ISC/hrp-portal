@@ -53,8 +53,25 @@
 
     </div>
     <!-- /.row -->
+    <div class="row wdt-constructor-table-name-and-columns">
 
-    <div class="row">
+        <div class="col-sm-6">
+            <h4 class="c-title-color m-b-2">
+				<?php esc_html_e('Table description', 'wpdatatables'); ?>
+                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                   title="<?php esc_attr_e('What is the description of the table? (optional)', 'wpdatatables'); ?>"></i>
+            </h4>
+            <div class="form-group">
+                <div class="fg-line">
+                        <textarea class="form-control" value=""
+                                  id="wdt-constructor-manual-table-description"
+                                  placeholder="<?php esc_attr_e('Insert description of your wpDataTable', 'wpdatatables'); ?>"></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <div class="row">
         <div class="col-sm-11 ">
             <h4 class="c-title-color m-b-16">
                 <span class="d-block p-b-2"><?php esc_html_e('Column names and types', 'wpdatatables'); ?></span><br>

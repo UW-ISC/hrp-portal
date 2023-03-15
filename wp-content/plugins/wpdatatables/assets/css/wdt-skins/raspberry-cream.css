@@ -17,12 +17,9 @@
     padding: 16px;
 }
 
-.wpdt-c.wdt-skin-raspberry-cream * {
-    color: #6B7280;
-}
-
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable {
     margin-bottom: 12px;
+    color: #6B7280;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dropdown-menu>li>a {
@@ -191,8 +188,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_info {
     font-size: 14px;
     margin-left: 20px;
-    margin-top: 14px;
+    margin-top: 17px;
     padding: 0;
+    color: #6B7280;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .outlined {
@@ -294,7 +292,6 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody td {
     border: 1px solid #f5f7fa;     /* td inner border color */
-    color: #6B7280;
     -o-transition:.5s;
     -ms-transition:.5s;
     -moz-transition:.5s;
@@ -819,7 +816,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block){
     width: 241px;
-    margin-right: 0;
+    margin-right: 14px;
     margin-bottom: 4px;
     min-height: 120px;
 }
@@ -2492,7 +2489,7 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 }
 .wpdt-c.wdt-skin-raspberry-cream .noUi-horizontal,
 #wdt-filter-widget .wdt-skin-raspberry-cream .noUi-horizontal{
-    margin-top: 20px !important;
+    margin-top: 40px !important;
     margin-right: 15px !important;
 }
 .wpdt-c.wdt-skin-raspberry-cream .noUi-connect,
@@ -2506,4 +2503,10 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 }
 .wpdt-c.wdt-skin-raspberry-cream .noUi-tooltip {
     background: #F9FAFB;
+    padding: 0 5px 0 5px;
+    font-size: 13px;
+}
+
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead .noUi-tooltip {
+    font-size: 10px;
 }

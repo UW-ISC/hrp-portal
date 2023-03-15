@@ -1,8 +1,12 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
 
 <?php if ($this->getTableSettingsData() && $this->getTableSettingsData()->show_title && $this->getTableSettingsData()->title) { ?>
-    <h2 class="wpdt-c"
-        id="wdt-table-title-<?php echo (int)$this->getTableID() ?>"><?php echo esc_html($this->getTableSettingsData()->title) ?></h2>
+    <h3 class="wpdt-c"
+        id="wdt-table-title-<?php echo (int)$this->getTableID() ?>"><?php echo esc_html($this->getTableSettingsData()->title) ?></h3>
+<?php } ?>
+<?php if ($this->getTableSettingsData() && $this->getTableSettingsData()->show_table_description && $this->getTableSettingsData()->table_description) { ?>
+    <p class="wpdt-c"
+        id="wdt-table-description-<?php echo (int)$this->getTableID() ?>"><?php echo esc_html($this->getTableSettingsData()->table_description) ?></p>
 <?php } ?>
 <div class="wpdt-c row wpDataTableContainerSimpleTable wpDataTables wpDataTablesWrapper
 <?php if ($this->getTableSettingsData()->scrollable) echo ' wdtscroll' ?>

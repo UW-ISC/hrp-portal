@@ -483,6 +483,58 @@ div.mce-widget button i.mce-i-wpdatachart{
      background:#ffffff !important;
 }
 
+#wdt-constructor-simple-table-description,
+#wdt-constructor-manual-table-description,
+#wdt-constructor-file-table-description,
+#wdt-constructor-wp-query-table-description,
+#wdt-constructor-mysql-query-table-description {
+    min-height: 30px;
+    font: inherit;
+    margin: 0;
+    font-family: inherit;
+    display: block;
+    width: 100%;
+    font-size: 13px;
+    line-height: 20px;
+    color: #061938;
+    padding: 12px 6px;
+    background: #FFFFFF;
+    border: 1px solid #D7D9E2;
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px rgba(90, 108, 137, 0.08) !important;
+    border-radius: 3px;
+    height: 80px !important;
+}
+#wdt-table-description-edit{
+    display : block;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    box-sizing: border-box;
+    box-shadow: 0 1px 1px rgb(0 0 0 / 6%) !important;
+    resize: vertical;
+    color: #253858 !important;
+    border-color: #DFE1E6 !important;
+    border: 1px solid;
+    height: 50px;
+    font-size: 13px;
+    line-height: initial;
+    padding-top: 10px;
+    padding-left: 4px;
+    border-radius: 3px;
+    width: 455px;
+    position: relative;
+    top: 3px;
+    cursor: unset;
+}
+
+#wdt-table-description-edit:hover{
+    background: #D7D9E2;
+}
+#wdt-table-description-edit:focus{
+    background: #FFFFFF;
+}
+
 .wpdt-c #wdt-configure-foreign-key-modal .bootstrap-select > .btn-default.btn-group .dropdown-menu li a,
 .wpdt-c #wdt-add-column-modal .bootstrap-select > .btn-default.btn-group .dropdown-menu li a,
 .wpdt-c #wdt-remove-column-modal .bootstrap-select > .btn-default.btn-group .dropdown-menu li a,
@@ -556,10 +608,13 @@ div.mce-widget button i.mce-i-wpdatachart{
 .wpdt-c .wdt-add-data-source-field,
 .wpdt-c .mysql-settings-block,
 .wpdt-c .wdt-constructor-file-table-name-block,
+.wpdt-c .wdt-constructor-file-table-description-block,
 .wpdt-c #wdt-constructor-mysql-tables-block,
 .wpdt-c .wdt-constructor-post-types-block,
 .wpdt-c .wdt-constructor-mysql-query-table-name-block,
 .wpdt-c .wdt-constructor-wp-query-table-name-block,
+.wpdt-c .wdt-constructor-mysql-query-table-description-block,
+.wpdt-c .wdt-constructor-wp-query-table-description-block,
 .wpdt-c .wdt-constructor-columns-container,
 .wpdt-c .wdt-constructor-table-name-and-columns,
 .wpdt-c .wdt-constructor-post-conditions-block,
@@ -1525,12 +1580,18 @@ wpdt-c button#wdt-add-data-browse-button {
         margin-top: 10px;
         margin-bottom: 0;
     }
+    #wdt-table-description-edit{
+        width: 350px;
+    }
 
 }
 @media only screen and (max-width : 960px) {
     #adminmenu .wp-submenu li a[href='admin.php?page=wpdatatables-getting-started'],
     .wdt-datatables-admin-wrap .wdt-link-tutorials{
         display: none !important;
+    }
+    #wdt-table-description-edit{
+        width: 300px;
     }
 }
 @media only screen and (max-width : 480px) {
@@ -1575,17 +1636,15 @@ wpdt-c button#wdt-add-data-browse-button {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
-
-.wdt-custom-headers-row-rule textarea.form-control.input-sm{
-    border: 1px solid #D7D9E2 !important;
-    padding: 10px 12px !important;
-    box-sizing: border-box;
-    box-shadow: 0 1px 2px rgb(90 108 137 / 8%) !important;
-    border-radius: 3px;
-    resize: vertical !important;
-    height: 40px;
-}
-
+.wdt-custom-headers-row-rule textarea.form-control.input-sm {
+     border: 1px solid #D7D9E2 !important;
+     padding: 10px 12px !important;
+     box-sizing: border-box;
+     box-shadow: 0 1px 2px rgb(90 108 137 / 8%) !important;
+     border-radius: 3px;
+     resize: vertical !important;
+     height: 40px;
+ }
 .wdt-custom-headers-row-rule .wdt-delete-custom-headers-row-rule.btn{
     background: #ffffff;
     font-size: 20px !important;

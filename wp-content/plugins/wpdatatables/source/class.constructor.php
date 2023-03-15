@@ -18,7 +18,6 @@ class wpDataTableConstructor
     private $_db;
     private $_id = false;
 
-
     /*** For the WP DB type query ***/
 
     private $_tables_fields = array();
@@ -250,6 +249,8 @@ class wpDataTableConstructor
             'sorting' => 1,
             'exactFiltering' => 0,
             'rangeSlider' => 0,
+            'rangeMaxValueDisplay' => 'default',
+            'customMaxRangeValue' => null,
             'filterLabel' => '',
             'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
             'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
@@ -301,7 +302,11 @@ class wpDataTableConstructor
                     'excel' => 1,
                     'csv' => 1,
                     'pdf' => 0
-                ))
+                )),
+                'advanced_settings' => json_encode(array(
+	                'show_table_description' => false,
+	                'table_description' => sanitize_textarea_field($this->_table_data['table_description']),
+					)),
             )
         );
 
@@ -1426,7 +1431,11 @@ class wpDataTableConstructor
                 'excel' => 1,
                 'csv' => 1,
                 'pdf' => 0
-            ))
+            )),
+            'advanced_settings' => json_encode(array(
+	            'show_table_description' => false,
+	            'table_description' => sanitize_textarea_field($tableData['table_description']),
+            )),
         );
 
         $table_array['content'] = $tableData['query'];

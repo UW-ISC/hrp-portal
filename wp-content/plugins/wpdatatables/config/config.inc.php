@@ -9,7 +9,7 @@ defined('ABSPATH') or die('Access denied.');
 
 // Current version
 //[<-- Full version -->]//
-define('WDT_CURRENT_VERSION', '5.3');
+define('WDT_CURRENT_VERSION', '5.4.1');
 //[<--/ Full version -->]//
 //[<-- Full version insertion #15 -->]//
 // Number of active plugin installs for Amelia

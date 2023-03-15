@@ -11,6 +11,8 @@ var wpdatatable_config = {
     id: null,
     title: 'New wpDataTable',
     show_title: 1,
+    table_description: '',
+    show_table_description: false,
     tools: 1,
     responsive: 1,
     responsiveAction: 'icon',
@@ -269,6 +271,10 @@ var wpdatatable_config = {
         wpdatatable_config.title = title;
         jQuery( '#wdt-table-title-edit' ).val( title );
     },
+    setDescription: function( description ){
+        wpdatatable_config.table_description = description;
+        jQuery( '#wdt-table-description-edit' ).val( description );
+    },
     /**
      * Method to enable or disable the server side processing
      * Shows or hides the auto-refresh input
@@ -372,6 +378,14 @@ var wpdatatable_config = {
     setShowTitle: function( show_title ){
         wpdatatable_config.show_title = show_title;
         jQuery('#wdt-show-title').prop( 'checked', show_title );
+    },
+    /**
+     * Set the show / hide description
+     * @param show_description 1 or 0
+     */
+    setShowDescription: function( show_description ){
+        wpdatatable_config.show_table_description = show_description;
+        jQuery('#wdt-show-description').prop( 'checked', show_description );
     },
     /**
      * Set the table tools
@@ -1356,6 +1370,7 @@ var wpdatatable_config = {
     initFromJSON: function( tableJSON ){
         wpdatatable_config.setId( tableJSON.id );
         wpdatatable_config.setTitle( tableJSON.title );
+        wpdatatable_config.setDescription( tableJSON.table_description );
         wpdatatable_config.setTableType( tableJSON.table_type );
         wpdatatable_config.setFileLocation( tableJSON.file_location );
         wpdatatable_config.setAutoRefresh( tableJSON.auto_refresh );
@@ -1366,6 +1381,7 @@ var wpdatatable_config = {
         wpdatatable_config.setContent( tableJSON.content );
         wpdatatable_config.setDisplayLength( tableJSON.display_length );
         wpdatatable_config.setShowRowsPerPage( tableJSON.showRowsPerPage );
+        wpdatatable_config.setShowDescription( tableJSON.show_table_description );
         wpdatatable_config.connection = tableJSON.connection;
         wpdatatable_config.columns = [];
         wpdatatable_config.columns_by_headers = {};

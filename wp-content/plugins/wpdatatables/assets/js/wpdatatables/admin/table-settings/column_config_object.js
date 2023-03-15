@@ -125,13 +125,13 @@ var WDTColumn = function (column, parent_table) {
      * @type {number}
      */
     this.possibleValuesAjax = 10;
-
+    this.column_align_header = '';
+    this.column_align_fields = '';
     /**
      * Toggle calculate total for numeric columns
      * @type {int}
      */
     this.calculateTotal = 0;
-
     /**
      * Toggle calculate average for numeric columns
      * @type {int}
@@ -197,6 +197,18 @@ var WDTColumn = function (column, parent_table) {
       *  @type {int}
       */
     this.rangeSlider = 0;
+
+    /**
+      * Display max value on range slider
+      *  @type {string}
+      */
+    this.rangeMaxValueDisplay = 'default';
+
+    /**
+      * Custom max value string in the range slider
+      *  @type {string}
+      */
+    this.customMaxRangeValue = null;
 
     /**
      * Filter label
@@ -362,14 +374,18 @@ var WDTColumn = function (column, parent_table) {
         this.linkButtonLabel = column.linkButtonLabel || null;
         this.linkButtonClass = column.linkButtonClass || null;
         this.rangeSlider = column.rangeSlider || 0;
+        this.rangeMaxValueDisplay = column.rangeMaxValueDisplay || 'default';
+        this.customMaxRangeValue = column.customMaxRangeValue || null;
         this.orig_header = column.orig_header || null;
         this.parent_table = column.parent_table || null;
         this.pos = column.pos || 0;
         this.possibleValuesAddEmpty = column.possibleValuesAddEmpty || 0;
         this.possibleValuesType = column.possibleValuesType || null;
         this.possibleValuesAjax = column.possibleValuesAjax || 10;
+        this.column_align_fields = column.column_align_fields || '';
         this.skip_thousands_separator = column.skip_thousands_separator || 0;
         this.sorting = typeof column.sorting !== 'undefined' ? column.sorting : 1;
+        this.column_align_header = column.column_align_header || '';
         this.text_after = column.text_after || null;
         this.text_before = column.text_before || null;
         this.type = column.type || null;
@@ -1107,6 +1123,8 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-column-values').selectpicker('val', this.possibleValuesType).change();
     jQuery('#wdt-column-values-list').tagsinput('removeAll');
     jQuery('#wdt-possible-values-ajax').selectpicker('val', this.possibleValuesAjax).change();
+    jQuery('#wdt-column-align-header').selectpicker('val', this.column_align_header).change();
+    jQuery('#wdt-column-align-fields').selectpicker('val', this.column_align_fields).change();
     if (this.possibleValuesType == 'list') {
         jQuery('#wdt-column-values-list').tagsinput('add', this.valuesList);
     } else if (this.possibleValuesType == 'foreignkey') {
@@ -1173,6 +1191,8 @@ WDTColumn.prototype.fillInputs = function () {
         jQuery('li.column-filtering-settings-tab').removeClass('active').show();
         jQuery('#wdt-column-exact-filtering').prop('checked', this.exactFiltering).change();
         jQuery('#wdt-column-range-slider').prop('checked',this.rangeSlider).change();
+        jQuery('#wdt-max-value-display').selectpicker('val', this.rangeMaxValueDisplay);
+        jQuery('#wdt-custom-max-value').val(this.customMaxRangeValue);
         jQuery('#wdt-column-filter-label').val(this.filterLabel);
         jQuery('#wdt-search-in-selectbox').prop('checked', this.searchInSelectBox).change();
 
@@ -1410,6 +1430,8 @@ WDTColumn.prototype.applyChanges = function () {
     }
     this.possibleValuesAddEmpty = jQuery('#wdt-column-values-add-empty').is(':checked') ? 1 : 0;
     this.possibleValuesAjax = jQuery('#wdt-possible-values-ajax').val();
+    this.column_align_header = jQuery('#wdt-column-align-header').val();
+    this.column_align_fields = jQuery('#wdt-column-align-fields').val();
     this.calculateTotal = ( jQuery('#wdt-column-calc-total').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
     this.calculateAvg = ( jQuery('#wdt-column-calc-avg').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
     this.calculateMax = ( jQuery('#wdt-column-calc-max').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
@@ -1458,6 +1480,8 @@ WDTColumn.prototype.applyChanges = function () {
     this.editingNonEmpty = jQuery('#wdt-column-not-null').is(':checked') ? 1 : 0;
     this.searchInSelectBoxEditing = jQuery('#wdt-search-in-selectbox-editing').is(':checked') ? 1 : 0;
     this.rangeSlider = jQuery('#wdt-column-range-slider').is(':checked') ? 1 : 0;
+    this.rangeMaxValueDisplay = jQuery('#wdt-max-value-display').selectpicker('val');
+    this.customMaxRangeValue = jQuery('#wdt-custom-max-value').val();
 
     if ( typeof callbackApplyUIChangesForNewColumnOption !== 'undefined' ) {
         callbackApplyUIChangesForNewColumnOption(this);
@@ -1531,8 +1555,12 @@ WDTColumn.prototype.getJSON = function () {
         possibleValuesAddEmpty: this.possibleValuesAddEmpty,
         possibleValuesType: this.possibleValuesType,
         possibleValuesAjax: this.type === 'string' ? this.possibleValuesAjax : -1,
+        column_align_fields: this.column_align_fields,
         rangeSlider: this.rangeSlider,
+        rangeMaxValueDisplay: this.rangeMaxValueDisplay,
+        customMaxRangeValue: this.customMaxRangeValue,
         skip_thousands_separator: this.skip_thousands_separator,
+        column_align_header: this.column_align_header,
         sorting: this.sorting,
         text_after: this.text_after,
         text_before: this.text_before,
