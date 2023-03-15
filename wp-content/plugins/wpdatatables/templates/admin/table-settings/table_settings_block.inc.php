@@ -46,6 +46,14 @@
         <button class="btn hidden" id="wdt-table-id">[wpdatatable id=23]
         </button>
         <div class="clear"></div>
+        <h2 class="pull-left">
+            <div class="col-sm-2-4 ">
+                <textarea class="form-control" value="Insert wpDataTable description" id="wdt-table-description-edit"
+                          placeholder="<?php esc_attr_e('Insert description of your wpDataTable', 'wpdatatables'); ?>"></textarea>
+<!--                <i class="wpdt-icon-pen"></i>-->
+            </div>
+        </h2>
+        <div class="clear"></div>
         <ul id="wdt-tour-actions" class="actions p-t-5">
             <li>
                 <button class="btn wdt-collapse-table-settings <?php if (isset($_GET['collapsed'])) { ?>collapsed <?php } else { ?>expanded <?php } ?>">
@@ -538,6 +546,33 @@
                             </div>
 
                         </div>
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
+			                    <?php esc_html_e('Table description','wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#table-description-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="table-description-hint">
+                                <div class="popover-heading">
+				                    <?php esc_html_e('Show table description', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">  
+				                  <?php esc_html_e('Enable this to show the table descrtiption, disable to hide.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="toggle-switch" data-ts-color="blue">
+                                <input id="wdt-show-description" type="checkbox">
+                                <label for="wdt-show-description"
+                                       class="ts-label"><?php esc_html_e('Show table description on the page', 'wpdatatables'); ?></label>
+                            </div>
+                        </div>
+
 
                         <div class="col-sm-4 m-b-16 wdt-responsive-block">
 

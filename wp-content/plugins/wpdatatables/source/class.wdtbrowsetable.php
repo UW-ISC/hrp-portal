@@ -27,7 +27,7 @@ class WDTBrowseTable extends WP_List_Table
      */
     function get_columns()
     {
-        return array(
+        $allColumns = array(
             'cb' => '1',
             'id' => __('ID', 'wpdatatables'),
             'title' => __('Title', 'wpdatatables'),
@@ -36,6 +36,13 @@ class WDTBrowseTable extends WP_List_Table
             'shortcode' => __('Shortcode', 'wpdatatables'),
             'functions' => ''
         );
+        if (!$this->useNotSupportedMySQLVersion()){
+            $allColumns = array_slice($allColumns, 0, 3, true) +
+                array("table_description" =>  __('Description', 'wpdatatables')) +
+                array_slice($allColumns, 3, count($allColumns) - 1, true);
+        }
+
+        return $allColumns;
     }
 
     /**
@@ -53,12 +60,36 @@ class WDTBrowseTable extends WP_List_Table
      */
     function get_sortable_columns()
     {
-        return array(
+        $sortableColumns = array(
             'id' => array('id', true),
             'title' => array('title', false),
             'table_type' => array('table_type', false),
             'connection' => array('connection', false)
         );
+        if (!$this->useNotSupportedMySQLVersion()){
+            $sortableColumns = array_slice($sortableColumns, 0, 2, true) +
+                array("table_description" => array('table_description', false)) +
+                array_slice($sortableColumns, 2, count($sortableColumns) - 1, true);
+        }
+
+        return $sortableColumns;
+    }
+
+    /**
+     * Check MySQL version
+     *
+     * @return bool
+     */
+    function useNotSupportedMySQLVersion()
+    {
+        global $wpdb;
+        $dbVersion = $wpdb->db_version();
+        if (version_compare($dbVersion, '5.6', '>=')
+            && version_compare($dbVersion, '5.7', '<'))
+        {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -69,12 +100,18 @@ class WDTBrowseTable extends WP_List_Table
     function getTableCount()
     {
         global $wpdb;
-        $query = "SELECT COUNT(*) FROM {$wpdb->prefix}wpdatatables";
+        if (!$this->useNotSupportedMySQLVersion()){
+            $query = "SELECT COUNT(*) FROM (SELECT id, title,  table_type, connection, editable, if(advanced_settings != '', JSON_UNQUOTE(JSON_EXTRACT(advanced_settings, '$.table_description')), '') as table_description FROM {$wpdb->prefix}wpdatatables) as t";
+        } else {
+            $query = "SELECT COUNT(*) FROM (SELECT id, title,  table_type, connection, editable FROM {$wpdb->prefix}wpdatatables) as t";
+        }
         if (isset($_REQUEST['s'])) {
             if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+                $query .= " WHERE t.id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $query .= " WHERE t.title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                if (!$this->useNotSupportedMySQLVersion())
+                    $query .= " OR t.table_description LIKE '%" . sanitize_textarea_field($_REQUEST['s']) . "%'";
             }
         }
         $count = $wpdb->get_var($query);
@@ -90,16 +127,24 @@ class WDTBrowseTable extends WP_List_Table
     {
         global $wpdb;
         $predifinedOrderByValue = ['id', 'title', 'table_type'];
+        if (!$this->useNotSupportedMySQLVersion())
+            $predifinedOrderByValue[] = 'table_description';
         $orderByValue = 'id';
         $defaultSortingOrder = get_option('wdtSortingOrderBrowseTables');
 
-        $query = "SELECT id, title, table_type, connection, editable FROM {$wpdb->prefix}wpdatatables ";
+        if (!$this->useNotSupportedMySQLVersion()) {
+            $query = "SELECT * FROM (SELECT id, title,  table_type, connection, editable, if(advanced_settings != '', JSON_UNQUOTE(JSON_EXTRACT(advanced_settings, '$.table_description')), '') as table_description FROM {$wpdb->prefix}wpdatatables) as t";
+        } else {
+            $query = "SELECT * FROM (SELECT id, title,  table_type, connection, editable FROM {$wpdb->prefix}wpdatatables) as t";
+        }
 
         if (isset($_REQUEST['s'])) {
             if (is_numeric($_REQUEST['s'])) {
-                $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
+                $query .= " WHERE t.id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
             } else {
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                $query .= " WHERE t.title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+                if (!$this->useNotSupportedMySQLVersion())
+                    $query .= " OR t.table_description LIKE '%" . sanitize_textarea_field($_REQUEST['s']) . "%'";
             }
         }
 
@@ -120,7 +165,7 @@ class WDTBrowseTable extends WP_List_Table
                 }
             }
         } else {
-            $query .= " ORDER BY id " . $defaultSortingOrder . ' ';
+            $query .= " ORDER BY t.id " . $defaultSortingOrder . ' ';
         }
 
         if (isset($_REQUEST['paged'])) {
@@ -176,6 +221,10 @@ class WDTBrowseTable extends WP_List_Table
      */
     function column_default($item, $column_name)
     {
+        if ($this->useNotSupportedMySQLVersion()){
+            if ($column_name =='table_description')
+                return '';
+        }
         switch ($column_name) {
             case 'shortcode':
                 return '<a class="wdt-copy-shortcode-browse" data-toggle="tooltip" data-shortcode="[wpdatatable id=' . esc_attr($item['id']) . ']" data-placement="top"  title="' . esc_attr__('Click to copy shortcode', 'wpdatatables') . '"><i class="wpdt-icon-copy"></i></a><span class="wdt-shortcode">[wpdatatable id=' . (int)$item['id'] . ']</span>';
@@ -224,6 +273,7 @@ class WDTBrowseTable extends WP_List_Table
                 break;
             case 'id':
             case 'title':
+            case 'table_description':
             default:
                 return $item[$column_name];
                 break;

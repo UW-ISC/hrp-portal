@@ -1199,8 +1199,11 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
 
             $output = '';
             if ($tableData->show_title && $tableData->title) {
-                $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h2 class="wpdt-c" id="wdt-table-title-'. $id .'">' . $tableData->title . '</h2>'), $id);
+                $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h3 class="wpdt-c" id="wdt-table-title-'. $id .'">' . $tableData->title . '</h3>'), $id);
             }
+	        if ($tableData->show_table_description && $tableData->table_description) {
+		        $output .= apply_filters('wpdatatables_filter_table_description_text', (empty($tableData->table_description) ? '' : '<p class="wpdt-c" id="wdt-table-description-'. $id .'">' . $tableData->table_description . '</p>'), $id);
+	        }
             $output .= $wpDataTable->generateTable($tableData->connection);
         } catch (Exception $e) {
             $output = WDTTools::wdtShowError($e->getMessage());

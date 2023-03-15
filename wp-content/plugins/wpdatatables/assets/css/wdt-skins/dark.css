@@ -40,6 +40,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable {
     margin-bottom: 12px;
+    color: #ffffff;
 }
 
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dropdown-menu>li>a {
@@ -240,7 +241,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper .dataTables_info {
     font-size: 14px;
     margin-left: 20px;
-    margin-top: 14px;
+    margin-top: 17px;
     padding: 0;
     color: #ffffff80;
     text-transform: uppercase;
@@ -344,7 +345,6 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tbody td {
     border: 1px solid;
     border-color: #373737; /* td inner border color */
-    color: #606266;
     -o-transition:.5s;
     -ms-transition:.5s;
     -moz-transition:.5s;
@@ -360,14 +360,12 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
     background-color: #000000;  /* odd rows background color */
     border-left: none;
     border-right: none;
-    color: #ffffff;
 }
 
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tr.even td {
     background-color: #000000;  /* even rows background color */
     border-left: none;
     border-right: none;
-    color: #ffffff;
 }
 
 .wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable tr td:first-child,
@@ -846,7 +844,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-dark .wpD
 .wpdt-c.wdt-skin-dark .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block),
 #wdt-filter-widget .wpDataTablesFilter.wdt-skin-dark .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block){
     width: 241px;
-    margin-right: 0;
+    margin-right: 14px;
     margin-bottom: 4px;
     min-height: 110px;
 }
@@ -2613,4 +2611,18 @@ div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility
 #wdt-filter-widget .wdt-skin-dark .noUi-connect{
     background-color: #606fc7 !important ;
     margin-top: 0px !important;
+}
+
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .noUi-origin {
+    font-size: 13px;
+}
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper .noUi-tooltip {
+    padding: 5px;
+    bottom: -32px;
+}
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead .noUi-tooltip {
+    bottom: 25px;
+}
+.wpdt-c.wdt-skin-dark .wpDataTablesWrapper table.wpDataTable thead .noUi-tooltip {
+    bottom: -30px;
 }

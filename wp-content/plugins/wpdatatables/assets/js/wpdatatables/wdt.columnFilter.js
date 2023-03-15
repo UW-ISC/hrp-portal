@@ -353,18 +353,20 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
             customSearchIndexes.push(columnIndex);
 
             var numberArray = oTable.api().column(columnIndex).data();
-            var formattedNumber = numberArray.map(function (numberArray) {
+            var formattedNumber = numberArray.map(function(numberArray) {
                 if (numberFormat === 1) {
                     return parseFloat(numberArray.replace(/\./g, '').replace(',', '.'));
                 }
                 return parseFloat(numberArray.replace(/,/g, ''))
+            }).filter(function(el) {
+                return !isNaN(el);
             })
             var minValue = serverSide === false ? Math.min.apply(Math, formattedNumber) : aoColumn.minValue
             var maxValue = serverSide === false ? Math.max.apply(Math, formattedNumber) : aoColumn.maxValue
+            var sliderDecimals =  aoColumn.columnType === 'int' ? 0 : aoColumn.numberOfDecimalPlaces
 
             noUiSlider.create(slider, {
                 start: [fromDefaultValue ? fromDefaultValue : minValue, toDefaultValue ? toDefaultValue : maxValue],
-                tooltips: true,
                 connect: true,
                 behaviour: 'drag',
                 range: {
@@ -372,10 +374,32 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
                     'max': maxValue
                 },
                 format: wNumb({
-                    decimals: aoColumn.columnType === 'int' ? 0 : aoColumn.numberOfDecimalPlaces,
+                    decimals: sliderDecimals,
                     thousand: numberFormat === 1 ? aoColumn.columnType === 'float' ? aoColumn.thousandsSeparator : '.' : ',',
                     mark: numberFormat === 1 ? ',' : '.'
-                })
+                }),
+                tooltips: [
+                    true,
+                    { to: function (value) {
+                            if (value === maxValue && aoColumn.rangeMaxValueDisplay !== 'default') {
+                                switch (aoColumn.rangeMaxValueDisplay) {
+                                    case 'unlimited_text':
+                                        return 'Unlimited';
+                                    case 'unlimited_symbol':
+                                        return '<div style="">∞</div>';
+                                    case 'custom_text':
+                                        let returnMaxVal = aoColumn.customMaxRangeValue ? aoColumn.customMaxRangeValue : maxValue;
+                                        return '<div class="wdt-range-custom-unlimited">' + returnMaxVal + '</div>';
+                                    case 'default':
+                                    default:
+                                        return maxValue;
+                                }
+                            }
+                            return value.toFixed(sliderDecimals);
+                        },
+                        from: function (value) { return value }
+                    }
+                ]
             });
 
             slider.noUiSlider.on('end', function () {

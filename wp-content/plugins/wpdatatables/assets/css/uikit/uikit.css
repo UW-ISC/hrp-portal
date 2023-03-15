@@ -2261,10 +2261,22 @@ html.ismobile .page-loader {
   background: #d4d4d4;
   padding: 5px 10px;
   bottom: -30px;
+  font-size: 13px;
 }
 
 .wpdt-c table.wpDataTable thead .noUi-tooltip {
   bottom: 25px;
+}
+
+.wpdt-c table.wpDataTable thead .wdt-range-custom-unlimited {
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+.wpdt-c table.wpDataTable tfoot .wdt-range-custom-unlimited {
+  max-width: 65px;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .wpdt-c .cp-container {

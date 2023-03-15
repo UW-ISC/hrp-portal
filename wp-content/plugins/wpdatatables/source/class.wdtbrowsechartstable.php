@@ -69,7 +69,7 @@ class WDTBrowseChartsTable extends WP_List_Table {
             if (is_numeric($_REQUEST['s'])){
                 $query .= " WHERE id LIKE '" . sanitize_text_field($_REQUEST['s']) . "'";
             }else{
-                $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
+	            $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
             }
         }
 

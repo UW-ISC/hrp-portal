@@ -263,24 +263,12 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with some new features, improvements, and bug fixes:
+                            A minor update with bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> New Highcharts chart types - Funnel and 3D Funnel Chart.</li>
-                                <li><strong>Feature:</strong> New Chart.js chart types - Stacked Column Chart, Bar Chart and Stacked Bar Chart.</li>
-                                <li><strong>Improvement:</strong> Option to remove Google Fonts from table for GDPR compliant users.</li>
-                                <li><strong>Improvement:</strong> Update chart.js libraries.</li>
-                                <li><strong>Improvement:</strong> Registered more strings for translation.</li>
-                                <li><strong>Improvement:</strong> Updated back-end images.</li>
-                                <li><strong>Improvement:</strong> Improve agent parameter in curl calls.</li>
-                                <li><strong>Improvement:</strong> Added wpdatatables_curl_get_data_complete filter.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with table not displaying zero (0) in table headers.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with reduced row height when displaying empty fields.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Highcharts tooltip not being displayed properly in Chrome.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with simple table scroll in back-end.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with input filter.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with browse page not loading when using SQL 5.6.x versions.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>
