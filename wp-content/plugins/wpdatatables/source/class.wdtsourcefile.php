@@ -776,6 +776,7 @@ class wpDataTableSourceFile
         $column->valuesList = null;
         $column->visible = 1;
         $column->width = 0;
+	    $column->column_rotate_header_name = '';
 
         return $column;
     }

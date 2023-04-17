@@ -284,14 +284,6 @@
             }
         }
 
-        li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-collapse-children > ul.mega-sub-menu {
-            display: none;
-        }
-
-        li.mega-menu-item.mega-menu-megamenu ul.mega-sub-menu li.mega-collapse-children.mega-toggle-on > ul.mega-sub-menu {
-            display: block;
-        }
-
         &.mega-no-js li.mega-menu-item:hover > ul.mega-sub-menu,
         &.mega-no-js li.mega-menu-item:focus > ul.mega-sub-menu,
         li.mega-menu-item.mega-toggle-on > ul.mega-sub-menu {
@@ -360,8 +352,10 @@
         }
 
         @if unit($panel_width) == '%' {
-            > li.mega-menu-megamenu.mega-menu-item {
-                position: static;
+            @include desktop {
+                > li.mega-menu-megamenu.mega-menu-item {
+                    position: static;
+                }
             }
         }
 
@@ -400,7 +394,10 @@
             }
 
             @include desktop {
-                > a.mega-menu-link:hover {
+                > a.mega-menu-link:has(+ span.mega-indicator:hover),
+                > a.mega-menu-link:has(+ span.mega-indicator:focus),
+                > a.mega-menu-link:hover,
+                > a.mega-menu-link:focus {
                     @include background($menu_item_background_hover_from, $menu_item_background_hover_to);
                     color: $menu_item_link_color_hover;
                     font-weight: $menu_item_link_weight_hover;
@@ -504,8 +501,6 @@
 
         // sub menu items (grid)
         li.mega-menu-megamenu > ul.mega-sub-menu > li.mega-menu-row {
-
-
             @if unit($panel_inner_width) == 'px' {
                 max-width: $panel_inner_width; /** Panel Width (Inner) **/
                 margin: 0 auto;
@@ -677,6 +672,21 @@
                     }
                 }
 
+                @if $arrow_combinator == '+' {
+                    &.mega-collapse-children > a.mega-menu-link {
+                        display: inline-flex;
+                    }
+                }
+
+                &.mega-collapse-children > ul.mega-sub-menu {
+                    display: none;
+                }
+
+                &.mega-collapse-children.mega-toggle-on > ul.mega-sub-menu {
+                    display: block;
+                }
+
+                // third level menu items
                 li.mega-menu-item {
                     > a.mega-menu-link {
                         color: $panel_third_level_font_color; /* Mega Menu > Menu Themes > Mega Menus > Third Level Menu Items */
@@ -887,77 +897,112 @@
             }
         }
 
+        @if $arrow_combinator == '+' {
+            > li.mega-menu-item-has-children:not(.mega-hide-arrow) > a.mega-menu-link {
+                padding-right: $menu_item_link_padding_right + 14px;
+
+                & #{$arrow_combinator} span.mega-indicator {
+                    color: $menu_item_link_color;
+                    line-height: $menu_item_link_height;
+                    height: $menu_item_link_height;
+                }
+            }
+        }
+
         // Arrows
         li.mega-menu-item-has-children {
-
-            > a.mega-menu-link > span.mega-indicator:after {
-                content: $arrow_down;
-                font-family: $arrow_font;
-                font-weight: $arrow_font_weight;
+            > a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
                 display: inline-block;
-                margin: 0;
-                vertical-align: top;
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                transform: rotate(0);
-                color: inherit;
-                position: relative;
-                background: transparent;
-                height: auto;
-                width: auto;
-                right: auto;
-                line-height: inherit;
-            }
-
-            > a.mega-menu-link > span.mega-indicator {
-                display: inline-block;
-                height: auto;
                 width: auto;
                 background: transparent;
                 position: relative;
                 pointer-events: auto;
                 left: auto;
                 min-width: auto;
-                line-height: inherit;
-                color: inherit;
                 font-size: inherit;
                 padding: 0;
-                margin: 0 0 0 6px;
+
+                @if $arrow_combinator == '>' {
+                    margin: 0 0 0 6px;
+                    height: auto;
+                    line-height: inherit;
+                    color: inherit;
+                } @else {
+                    cursor: pointer;
+                    margin-right: -14px;
+                    right: 19px;
+                    top: 0;
+
+                    @include mobile {
+                        position: absolute;
+                    }
+                }
+
+                &:after {
+                    content: $arrow_down;
+                    font-family: $arrow_font;
+                    font-weight: $arrow_font_weight;
+                    display: inline-block;
+                    margin: 0;
+                    vertical-align: top;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    transform: rotate(0);
+                    color: inherit;
+                    position: relative;
+                    background: transparent;
+                    height: auto;
+                    width: auto;
+                    right: auto;
+                    line-height: inherit;
+                }
             }
 
-            li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
+            @if $arrow_combinator == '+' {
+                &.mega-menu-flyout ul.mega-sub-menu a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
+                    position: absolute;
+                }
+            }
+
+            li.mega-menu-item-has-children > a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
                 float: right;
+
+                @if $arrow_combinator == '+' {
+                    height: 100%;
+                    align-items: center;
+                    display: inline-flex;
+                }
             }
 
-            &.mega-collapse-children.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+            &.mega-collapse-children.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
                 content: $arrow_up;
             }
 
             @include mobile {
-                > a.mega-menu-link > span.mega-indicator {
+                > a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
                     float: right;
                 }
 
-                &.mega-toggle-on > a.mega-menu-link > span.mega-indicator:after {
+                &.mega-toggle-on > a.mega-menu-link #{$arrow_combinator} span.mega-indicator:after {
                     content: $arrow_up;
                 }
 
-                &.mega-hide-sub-menu-on-mobile > a.mega-menu-link > span.mega-indicator  {
+                &.mega-hide-sub-menu-on-mobile > a.mega-menu-link #{$arrow_combinator} span.mega-indicator  {
                     display: none;
                 }
             }
         }
 
         // Hide arrows
-        li.mega-menu-megamenu:not(.mega-menu-tabbed) li.mega-menu-item-has-children:not(.mega-collapse-children) > a.mega-menu-link > span.mega-indicator,
-        li.mega-menu-item-has-children.mega-hide-arrow > a.mega-menu-link > span.mega-indicator {
+        li.mega-menu-megamenu:not(.mega-menu-tabbed) li.mega-menu-item-has-children:not(.mega-collapse-children) > a.mega-menu-link #{$arrow_combinator} span.mega-indicator,
+        li.mega-menu-item-has-children.mega-hide-arrow > a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
             display: none;
         }
 
         // Flyout menus
         @include desktop {
             li.mega-menu-flyout {
-                li.mega-menu-item a.mega-menu-link > span.mega-indicator {
+                li.mega-menu-item a.mega-menu-link #{$arrow_combinator} span.mega-indicator {
                     &:after {
                         content: $arrow_right;
                     }
@@ -967,7 +1012,7 @@
                     li.mega-menu-item a.mega-menu-link {
                         text-align: right;
 
-                        > span.mega-indicator {
+                        #{$arrow_combinator} span.mega-indicator {
                             float: left;
 
                             &:after {
@@ -988,13 +1033,6 @@
                         top: 0;
                     }
                 }
-            }
-        }
-
-        // arrows
-        @include desktop {
-            &.mega-menu-accordion > li.mega-menu-item-has-children > a.mega-menu-link > span.mega-indicator {
-                float: right;
             }
         }
 

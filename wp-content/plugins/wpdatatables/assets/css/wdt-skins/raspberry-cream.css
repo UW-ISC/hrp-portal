@@ -15,6 +15,7 @@
     margin-bottom: 0;
     background: #ffffff;
     padding: 16px;
+    line-height:normal !important;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable {
@@ -962,7 +963,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream .wdt-edit-dialog-alert-block {
-    margin-top: 75px;
+    margin-top: -30px;
 }
 
 .wpdt-c #wdt-frontend-modal.wdt-skin-raspberry-cream .wdt-search-filters-button-container .wdt_checkbox_option:before {
@@ -1239,7 +1240,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-body .wdt-edit-dialog-fields-block{
-    margin: 80px 0 0 0;
+    margin: 60px 0 0 0;
     display: flex;
     flex-wrap: wrap;
     font-size: 16px;
@@ -1398,6 +1399,7 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block {
     max-width: 421px;
     float: right;
+    display: flex;
 }
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button,
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button,
@@ -2459,6 +2461,17 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
     }
 
 }
+
+@media screen and (max-width: 430px) {
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button,
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-next-edit-button {
+        width: 8%;
+    }
+    .wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-prev-edit-button{
+        left: 267px;
+    }
+}
+
 
 @media screen and (max-width: 376px) {
     .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.has-columns-hidden tr.row-detail > td ul li span.columnValue {

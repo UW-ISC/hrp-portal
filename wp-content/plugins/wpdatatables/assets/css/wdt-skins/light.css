@@ -3,7 +3,9 @@
  */
 
 /*  Table   */
-
+.wpdt-c.wdt-skin-light .wpDataTablesFilter{
+    line-height:normal !important;
+}
 /*  Table Header  */
 
 .wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable > thead > tr > th {

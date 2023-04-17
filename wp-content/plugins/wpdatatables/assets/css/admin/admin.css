@@ -1660,3 +1660,34 @@ wpdt-c button#wdt-add-data-browse-button {
     border-radius: 3px;
 }
 
+#wpdt-star-rating-color {
+    border: 1px solid #dde0e3;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 18px 45px 19px 12px;
+    width: 100%;
+}
+
+.pcr-app.visible {
+    z-index: 1000000;
+}
+
+.wpdt-c h4.wdt-beta-feature {
+    float: left;
+}
+
+.wpdt-c p.wdt-beta-feature {
+    color: #B46118;
+    background-color: #FADF7E;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 11px;
+    line-height: 14px;
+    text-align: center;
+    letter-spacing: normal;
+    max-width: 62px;
+    padding: 2px 16px;
+    border-radius: 13px;
+    float: right;
+    margin-left: 10px;
+}

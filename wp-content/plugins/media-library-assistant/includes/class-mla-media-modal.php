@@ -277,6 +277,9 @@ class MLAModal {
 			self::$mla_media_modal_settings['allMimeTypes']['trash'] = $default_types['trash']['plural'];
 		}
 
+		// Set Featured Image allows views based on custom field queries
+		self::$mla_media_modal_settings['uploadMimeTypes'] = MLAMime::mla_pluck_table_views( true );
+
 		self::$mla_media_modal_settings['months'] = self::_months_dropdown('attachment');
 
 		self::$mla_media_modal_settings['termsTaxonomy'] =  MLACore::mla_taxonomy_support('', 'filter');

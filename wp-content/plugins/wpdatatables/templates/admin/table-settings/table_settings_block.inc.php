@@ -11,6 +11,8 @@
 <div class="card wdt-table-settings">
 
     <?php
+    $wpRoles = new WP_Roles();
+    $wdtUserRoles = $wpRoles->get_names();
     $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
     // set connection if $connection is not set with GET parameter
     if ($connection === null) {
@@ -946,6 +948,39 @@
                             </div>
 
                         </div>
+                        <div class="col-sm-4 m-b-16 pagination-layout-mobile-settings-block">
+
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Pagination Layout for mobile', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#pagination-layout-mobile"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
+
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="pagination-layout-mobile">
+                                <div class="popover-heading">
+                                    <?php esc_html_e('Pagination Layout for mobile devices', 'wpdatatables'); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php esc_html_e('Here you can choose between different pagination layout for mobile devices.', 'wpdatatables'); ?>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="wdt-pagination-layout-mobile">
+                                    <option value="full_numbers"><?php esc_html_e('"First", "Previous", "Next" and "Last" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                    <option value="simple"><?php esc_html_e('"Previous" and "Next" buttons only', 'wpdatatables'); ?></option>
+                                    <option value="simple_numbers"><?php esc_html_e('"Previous" and "Next" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                    <option value="full"><?php esc_html_e('"First", "Previous", "Next" and "Last" buttons', 'wpdatatables'); ?></option>
+                                    <option value="numbers"><?php esc_html_e('Page number buttons only', 'wpdatatables'); ?></option>
+                                    <option value="first_last_numbers"><?php esc_html_e('"First" and "Last" buttons, plus page numbers', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+
+                        </div>
 
                     </div>
                     <!-- /.row -->
@@ -1282,7 +1317,7 @@
                                         title="<?php esc_attr_e('Everyone', 'wpdatatables'); ?>" id="wdt-editor-roles">
                                     <?php foreach ($wdtUserRoles as $wdtUserRole) {
                                         /** @noinspection $wdtUserRoles */ ?>
-                                        <option value="<?php echo esc_attr($wdtUserRole['name']) ?>"><?php echo esc_html($wdtUserRole['name']) ?></option>
+                                        <option value="<?php echo esc_attr($wdtUserRole) ?>"><?php echo esc_html($wdtUserRole) ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -2038,6 +2073,7 @@
                                                         <option value="purple"><?php esc_html_e('Purple', 'wpdatatables'); ?></option>
                                                         <option value="dark"><?php esc_html_e('Dark', 'wpdatatables'); ?></option>
                                                         <option value="raspberry-cream"><?php esc_html_e('Raspberry Cream', 'wpdatatables'); ?></option>
+                                                        <option value="mojito"><?php esc_html_e('Mojito', 'wpdatatables'); ?></option>
                                                     </select>
                                                 </div>
                                             </div>

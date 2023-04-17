@@ -799,7 +799,8 @@ class MLASettings {
 					'Go to Top' => __( 'Go to Top', 'media-library-assistant' ),
 					'Go to Bottom' => __( 'Go to Bottom', 'media-library-assistant' ),
 					'key' => MLA_OPTION_PREFIX . $key,
-					'value' => $value['name'] 
+					'value' => $value['name'],
+					'help' =>  $value['help']
 				);
 
 				return MLAData::mla_parse_template( self::$page_template_array[ $value['type'] ], $option_values );
@@ -1071,7 +1072,7 @@ class MLASettings {
 			/* translators: 1: donation hyperlink */
 			'Donate Text' => sprintf( __( '<strong>I do not solicit nor accept personal donations in support of the plugin.</strong> WordPress and its global community means a lot to me and I am happy to give something back.
 <br />&nbsp;<br />
-If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our Chateau Seaview Fund at the Golden West Chapter of the ALS Association. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!', 'media-library-assistant' ), '<a href="http://webgw.alsa.org/goto/ChateauSeaviewFund" title="' . __( 'Donate to our fund', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
+If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a %1$s to our Chateau Seaview Fund at the Golden West Chapter of the ALS Association. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!', 'media-library-assistant' ), '<a href="http://secure.alsagoldenwest.org/goto/Chateau_Seaview_Fund" title="' . __( 'Donate to our fund', 'media-library-assistant' ) . '" target="_blank" style="font-weight:bold">' . __( 'tax-deductible donation', 'media-library-assistant' ) . '</a>' ),
 			'shortcode_list' => '',
 			'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-general&mla_tab=general',
 			'options_list' => '',
@@ -1668,8 +1669,11 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	 * @return	string	HTML markup for the Import All Settings button and dropdown list, if any
 	 */
 	private static function _compose_import_settings( ) {
+		$disabled_button = '<input name="mla-general-options-import" type="submit" disabled="disabled" class="button-primary" value="' . __( 'Import ALL Settings', 'media-library-assistant' ) . '" />';
+
+
 		if ( ! file_exists( MLA_BACKUP_DIR ) ) {
-			return '';
+			return $disabled_button;
 		}
 
 		$prefix = ( ( defined( MLA_OPTION_PREFIX ) ) ? MLA_OPTION_PREFIX : 'mla_' ) . '_options_';
@@ -1685,7 +1689,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		}
 
 		if ( empty( $backup_files ) ) {
-			return '';
+			return $disabled_button;
 		}
 
 		$option_values = array(
@@ -1714,22 +1718,20 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	} // _compose_import_settings
 
 	/**
-	 * Serialize option settings and write them to a file
+	 * Generate an array of non-default option settings
  	 *
-	 * Options with a default value, i.e., not stored in the database are NOT written to the file.
+	 * Options with a default value, i.e., not stored in the database are NOT added to the array.
+	 * The "message_list" array element gives the exported/skipped status of each option.
 	 *
-	 * @since 1.50
+	 * @since 3.07
 	 *
-	 * @return	array	Message(s) reflecting the results of the operation
+	 * @return	array	( 'settings' => array( $key => $value ), 'message_list' => status messages string )
 	 */
-	private static function _export_settings( ) {
+	public static function mla_get_export_settings( ) {
 		$message_list = '';
 		$settings = array();
-		$stored_count = 0;
 
-		/*
-		 * These are WordPress options, not MLA options
-		 */
+		// These are WordPress options, not MLA options
 		foreach( array( 'image_default_align', 'image_default_link_type', 'image_default_size' ) as $key ) {
 			$stored_value = get_option( $key );
 			if ( empty( $stored_value ) ) {
@@ -1738,7 +1740,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 			if ( 'default' !== $stored_value ) {
 				$settings[ $key ] = $stored_value;
-				$stored_count++;
 				$message = "<br>{$key} " . _x( 'exported', 'message_list', 'media-library-assistant' );
 			} else {
 				$message = "<br>{$key} " . _x( 'skipped', 'message_list', 'media-library-assistant' );
@@ -1747,14 +1748,11 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			$message_list .= $message;
 		}
 
-		/*
-		 * Accumulate the settings into an array, then serialize it for writing to the file.
-		 */
+		// Accumulate the settings into an array, then serialize it for writing to the file.
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
 			$stored_value = MLACore::mla_get_option( $key, false, true );
 			if ( false !== $stored_value ) {
 				$settings[ $key ] = $stored_value;
-				$stored_count++;
 				$message = "<br>{$key} " . _x( 'exported', 'message_list', 'media-library-assistant' );
 			} else {
 				$message = "<br>{$key} " . _x( 'skipped', 'message_list', 'media-library-assistant' );
@@ -1763,12 +1761,28 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			$message_list .= $message;
 		}
 
-		$settings = serialize( $settings );
+		return array( 'settings' => $settings, 'message_list' => $message_list );
+	} // mla_get_export_settings
+
+	/**
+	 * Serialize option settings and write them to a file
+ 	 *
+	 * Options with a default value, i.e., not stored in the database are NOT written to the file.
+	 *
+	 * @since 1.50
+	 *
+	 * @uses $_REQUEST
+	 *
+	 * @return	array	Message(s) reflecting the results of the operation
+	 */
+	private static function _export_settings( ) {
+		$settings = self::mla_get_export_settings();
+		$message_list = $settings['message_list'];
+		$stored_count = count( $settings['settings'] );
+		$settings = serialize( $settings['settings'] );
 		$page_content = array( 'message' => __( 'ALL settings exported.', 'media-library-assistant' ), 'body' => '' );
 
-		/*
-		 * Make sure the directory exists and is writable, then create the file
-		 */
+		// Make sure the directory exists and is writable, then create the file
 		$prefix = ( defined( MLA_OPTION_PREFIX ) ) ? MLA_OPTION_PREFIX : 'mla_';
 		$date = date("Ymd_B");
 		$filename = MLA_BACKUP_DIR . "{$prefix}_options_{$date}.txt";
@@ -1814,18 +1828,70 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		/* translators: 1: number of option settings */
 		$page_content['message'] = sprintf( __( 'Settings exported; %1$s settings recorded in %2$s.', 'media-library-assistant' ), $stored_count, $filename );
 
-		/*
-		 * Uncomment this for debugging.
-		 */
+		// Uncomment the next statement for debugging.
 		//$page_content['message'] .= $message_list;
 
 		return $page_content;
 	} // _export_settings
 
 	/**
+	 * Store an array of option settings to the database
+ 	 *
+	 * The "message_list" array element gives the exported/skipped status of each option.
+	 *
+	 * @since 3.07
+	 *
+	 * @param	array	$settings Array ( $key => $value ) of option settings to be stored
+	 *
+	 * @return	array	( 'updated' => $updated_count, 'unchanged' => $unchanged_count, 'message_list' => status messages string )
+	 */
+	public static function mla_put_export_settings( $settings ) {
+		$message_list = '';
+		$updated_count = 0;
+		$unchanged_count = 0;
+		foreach ( $settings as $key => $value ) {
+
+			// These are WordPress options, not MLA options
+			if ( in_array( $key, array( 'image_default_align', 'image_default_link_type', 'image_default_size' ) ) ) {
+				$stored_value = get_option( $key );
+				if ( empty( $stored_value ) ) {
+					$stored_value = 'default';
+				}
+
+				if ( $stored_value !== $value ) {
+					$updated_count++;
+					$message_list .= "<br>{$key} " . _x( 'updated', 'message_list', 'media-library-assistant' );
+				} else {
+					$unchanged_count++;
+					$message_list .= "<br>{$key} " . _x( 'unchanged', 'message_list', 'media-library-assistant' );
+				}
+
+				if ( 'default' === $value ) {
+					$value = '';
+				}
+
+				update_option( $key, $value );
+				continue;
+			}
+
+			if ( MLACore::mla_update_option( $key, $value ) ) {
+				$updated_count++;
+				$message_list .= "<br>{$key} " . _x( 'updated', 'message_list', 'media-library-assistant' );
+			} else {
+				$unchanged_count++;
+				$message_list .= "<br>{$key} " . _x( 'unchanged', 'message_list', 'media-library-assistant' );
+			}
+		}
+
+		return array( 'updated' => $updated_count, 'unchanged' => $unchanged_count, 'message_list' => $message_list );
+	} // mla_put_export_settings
+
+	/**
 	 * Read a serialized file of option settings and write them to the database
  	 *
 	 * @since 1.50
+	 *
+	 * @uses $_REQUEST
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
@@ -1865,50 +1931,13 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		}
 
 		$settings = unserialize( $settings );
-		$updated_count = 0;
-		$unchanged_count = 0;
-		foreach ( $settings as $key => $value ) {
-			/*
-			 * These are WordPress options, not MLA options
-			 */
-			if ( in_array( $key, array( 'image_default_align', 'image_default_link_type', 'image_default_size' ) ) ) {
-				$stored_value = get_option( $key );
-				if ( empty( $stored_value ) ) {
-					$stored_value = 'default';
-				}
-
-				if ( $stored_value !== $value ) {
-					$updated_count++;
-					$message_list .= "<br>{$key} " . _x( 'updated', 'message_list', 'media-library-assistant' );
-				} else {
-					$unchanged_count++;
-					$message_list .= "<br>{$key} " . _x( 'unchanged', 'message_list', 'media-library-assistant' );
-				}
-
-				if ( 'default' === $value ) {
-					$value = '';
-				}
-
-				update_option( $key, $value );
-				continue;
-			}
-
-			if ( MLACore::mla_update_option( $key, $value ) ) {
-				$updated_count++;
-				$message_list .= "<br>{$key} " . _x( 'updated', 'message_list', 'media-library-assistant' );
-			} else {
-				$unchanged_count++;
-				$message_list .= "<br>{$key} " . _x( 'unchanged', 'message_list', 'media-library-assistant' );
-			}
-		}
-
+		$results = self::mla_put_export_settings( $settings );
+		
 		/* translators: 1: number of option settings updated 2: number of option settings unchanged */
-		$page_content['message'] = sprintf( __( 'Settings imported; %1$s updated, %2$s unchanged.', 'media-library-assistant' ), $updated_count, $unchanged_count );
+		$page_content['message'] = sprintf( __( 'Settings imported; %1$s updated, %2$s unchanged.', 'media-library-assistant' ), $results['updated'], $results['unchanged'] );
 
-		/*
-		 * Uncomment this for debugging.
-		 */
-		//$page_content['message'] .= $message_list;
+		// Uncomment the next statement for debugging.
+		//$page_content['message'] .= $results['message_list'];
 
 		return $page_content;
 	} // _import_settings

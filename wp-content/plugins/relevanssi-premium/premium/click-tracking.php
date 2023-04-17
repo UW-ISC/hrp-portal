@@ -117,7 +117,7 @@ function relevanssi_add_tracking( string $permalink, $link_post = null ) : strin
 		global $post;
 		$link_post = $post;
 	}
-	if ( ! relevanssi_is_front_page_id( isset( $link_post->ID ) ?? null ) ) {
+	if ( ! relevanssi_is_front_page_id( $link_post->ID ?? null ) ) {
 		global $relevanssi_tracking_positions, $relevanssi_tracking_permalink;
 		$position = $relevanssi_tracking_positions[ $link_post->ID ] ?? null;
 

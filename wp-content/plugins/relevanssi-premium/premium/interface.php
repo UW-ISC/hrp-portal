@@ -130,7 +130,7 @@ function relevanssi_form_update_translations() {
 				<input type='checkbox' name='relevanssi_update_translations' id='relevanssi_update_translations' <?php echo esc_attr( $update_translations ); ?> />
 				<?php esc_html_e( 'Check for plugin translation updates', 'relevanssi' ); ?>
 			</label>
-		<p class="description"><?php esc_html_e( "If you check this box, Relevanssi will check for updates to the plugin translations. At the moment, translations are available for: ", 'relevanssi' ); ?>
+		<p class="description"><?php esc_html_e( 'If you check this box, Relevanssi will check for updates to the plugin translations. At the moment, translations are available for: ', 'relevanssi' ); ?>
 		Deutsch (de_DE), español (es_ES), français (fr_FR), suomi (fi)</p>
 		</td>
 		</td>
@@ -870,8 +870,17 @@ function relevanssi_premium_add_admin_scripts( $hook ) {
 	$post_hooks = array( 'post.php', 'post-new.php' );
 	if ( in_array( $hook, $post_hooks, true ) ) {
 		global $post;
-		// Only add the scripts for attachment posts.
-		if ( 'attachment' === $post->post_type ) {
+		/**
+		 * Filters whether to add the attachment scripts.
+		 *
+		 * By default, Relevanssi only adds the attachment scripts to the post
+		 * type "attachment". With this filter hook, you can add these scripts
+		 * to other post types as well.
+		 *
+		 * @param boolean $add_scripts Whether to add the scripts.
+		 * @param string  $post_type   The post type.
+		 */
+		if ( apply_filters( 'relevanssi_add_attachment_scripts', 'attachment' === $post->post_type, $post->post_type ) ) {
 			$api_key = get_network_option( null, 'relevanssi_api_key' );
 			if ( ! $api_key ) {
 				$api_key = get_option( 'relevanssi_api_key' );
@@ -1334,7 +1343,7 @@ function relevanssi_get_api_key_notification() {
  * @param string $post_type The post type.
  */
 function relevanssi_manage_columns( $columns, $post_type = 'page' ) {
-	$post_types = get_option( 'relevanssi_index_post_types' );
+	$post_types = get_option( 'relevanssi_index_post_types', array() );
 	if ( ! in_array( $post_type, $post_types, true ) ) {
 		return $columns;
 	}
@@ -1485,16 +1494,16 @@ function relevanssi_quick_edit_save( $post_id ) {
 	if ( ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
-	if ( ! wp_verify_nonce( filter_input( INPUT_POST, 'relevanssi_quick_edit_nonce', FILTER_SANITIZE_STRING ), 'relevanssi_quick_edit_nonce' ) ) {
+	if ( ! wp_verify_nonce( filter_input( INPUT_POST, 'relevanssi_quick_edit_nonce', FILTER_SANITIZE_SPECIAL_CHARS ), 'relevanssi_quick_edit_nonce' ) ) {
 		return;
 	}
- 	if ( isset( $_POST['relevanssi_pin_keywords'] ) ) {
-		$keywords = filter_input( INPUT_POST, 'relevanssi_pin_keywords', FILTER_SANITIZE_STRING );
+	if ( isset( $_POST['relevanssi_pin_keywords'] ) ) {
+		$keywords = filter_input( INPUT_POST, 'relevanssi_pin_keywords', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES );
 		update_post_meta( $post_id, '_relevanssi_pin_keywords', $keywords );
 		relevanssi_update_pin_fields( $post_id, $keywords );
 	}
 	if ( isset( $_POST['relevanssi_unpin_keywords'] ) ) {
-		$keywords = filter_input( INPUT_POST, 'relevanssi_unpin_keywords', FILTER_SANITIZE_STRING );
+		$keywords = filter_input( INPUT_POST, 'relevanssi_unpin_keywords', FILTER_SANITIZE_FULL_SPECIAL_CHARS, FILTER_FLAG_NO_ENCODE_QUOTES );
 		update_post_meta( $post_id, '_relevanssi_unpin_keywords', $keywords );
 		relevanssi_update_unpin_fields( $post_id, $keywords );
 	}

@@ -13,7 +13,9 @@
     padding: 7px 10px;
     text-align: left;
 }
-
+.wpdt-c.wdt-skin-graphite .wpDataTablesFilter{
+    line-height:normal !important;
+}
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable > thead > tr > th,
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable thead th.sorting,
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .wdt-checkbox-filter.btn,

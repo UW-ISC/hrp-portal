@@ -74,6 +74,10 @@ class Relevanssi_WP_Auto_Update {
 	 * @return object $transient
 	 */
 	public function check_update( $transient ) {
+		if ( ! is_object( $transient ) ) {
+			return $transient;
+		}
+
 		// Get the remote version.
 		$info           = $this->get_remote_information();
 		$remote_version = 0;

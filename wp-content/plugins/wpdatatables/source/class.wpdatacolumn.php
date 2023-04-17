@@ -47,6 +47,7 @@ class WDTColumn {
     protected $_linkButtonLabel;
 	protected $_column_align_header = '';
 
+	protected $_column_rotate_header_name = '';
     /**
      * WDTColumn constructor.
      *
@@ -687,6 +688,14 @@ class WDTColumn {
         return $this->_foreignKeyRule;
     }
 
+	public function getColumnRotationHeader() {
+			return $this->_column_rotate_header_name;
+ 	}
+
+	public function setColumnRotationHeader($column_rotate) {
+			$this->_column_rotate_header_name = $column_rotate;
+	}
+
     /**
      * @param mixed $foreignKeyRule
      */
@@ -1007,6 +1016,7 @@ class WDTColumn {
 	    $jsFilterDef->column_align_fields = $this->getColumnAlignFields();
         $jsFilterDef->defaultValue = $this->getFilterDefaultValue();
 	    $jsFilterDef->column_align_header = $this->getColumnAlignHeader();
+	    $jsFilterDef->column_rotate_header_name = $this->getColumnRotationHeader();
         $jsFilterDef->exactFiltering = $this->getExactFiltering();
         $jsFilterDef->filterLabel = $this->getFilterLabel();
         $jsFilterDef->searchInSelectBox = $this->getSearchInSelectBox();
@@ -1094,6 +1104,7 @@ class WDTColumn {
         $jsEditingDef->foreignKeyRule = $this->getForeignKeyRule();
         $jsEditingDef->searchInSelectBoxEditing = $this->getSearchInSelectBoxEditing();
 	    $jsEditingDef->column_align_header = $this->getColumnAlignHeader();
+	    $jsEditingDef->column_rotate_header_name = $this->getColumnRotationHeader();
 
         return apply_filters(
             'wpdatatables_filter_js_editing_definition',

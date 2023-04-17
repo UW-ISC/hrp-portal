@@ -660,7 +660,6 @@ class MLAModal_Ajax {
 
 		// Pick out and clean up the query terms we can process
 		$raw_query = isset( $_REQUEST['query'] ) ? (array) $_REQUEST['query'] : array(); // phpcs:ignore
-//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() raw_query = ' . var_export( $raw_query, true ), 0 );
 
 		$query = array_intersect_key( $raw_query, array_flip( $keys ) );
 
@@ -689,7 +688,15 @@ class MLAModal_Ajax {
 				$query = array_merge( $query, MLACore::mla_prepare_view_query( 'view', $view ) );
 			}
 		}
+//error_log( __LINE__ . ' MLAModal_Ajax::mla_query_attachments_action() query = ' . var_export( $query, true ), 0 );
 
+		// Set Featured Image queries must use only images
+		if ( isset( $raw_query['mla_state'] ) && ( 'featured-image' === $raw_query['mla_state'] ) ) {
+			if ( 0 !== strpos( $query['post_mime_type'], 'image' ) ) {
+				$query['post_mime_type'] = 'image';
+			}
+		}
+		
 		// Convert mla_filter_month back to the WordPress "m" parameter
 		if ( isset( $query['mla_filter_month'] ) ) {
 			if ( '0' != $query['mla_filter_month'] ) {

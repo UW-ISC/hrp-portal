@@ -1137,6 +1137,8 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null) {
         return false;
     }
 
+    do_action('wpdatatables_before_render_table_config_data', $id);
+
     $tableData = WDTConfigController::loadTableFromDB($id);
     if (empty($tableData->content)) {
         return esc_html__('wpDataTable with provided ID not found!', 'wpdatatables');

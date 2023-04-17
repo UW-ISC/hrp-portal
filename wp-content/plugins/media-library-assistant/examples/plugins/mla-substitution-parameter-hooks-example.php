@@ -55,8 +55,12 @@
  * opened on 2/27/2022  by "tplunkett87":
  * https://wordpress.org/support/topic/perform-calculation-when-mapping-metadata-to-custom-field/
  *
+ * Enhanced for support topic "how to extract from the parameters field"
+ * opened on 3/25/2023 by "reassure".
+ * https://wordpress.org/support/topic/how-to-extract-from-the-parameters/
+ *
  * @package MLA Substitution Parameter Hooks Example
- * @version 1.14
+ * @version 1.15
  */
 
 /*
@@ -64,10 +68,10 @@ Plugin Name: MLA Substitution Parameter Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Adds "parent_terms:", "page_terms:", "parent:", "author:", "conditional:", "wp_query_vars" and "current_term" Field-level Substitution Parameters and "ucwords" custom format value
 Author: David Lingren
-Version: 1.14
+Version: 1.15
 Author URI: http://davidlingren.com/
 
-Copyright 2016-2020 David Lingren
+Copyright 2016-2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -109,6 +113,9 @@ class MLASubstitutionParameterExample {
 		add_filter( 'mla_expand_custom_data_source', 'MLASubstitutionParameterExample::mla_expand_custom_data_source', 10, 9 );
 		add_filter( 'mla_expand_custom_prefix', 'MLASubstitutionParameterExample::mla_expand_custom_prefix', 10, 8 );
 		add_filter( 'mla_apply_custom_format', 'MLASubstitutionParameterExample::mla_apply_custom_format', 10, 2 );
+
+		add_filter( 'mla_fetch_attachment_image_metadata_raw', 'MLASubstitutionParameterExample::mla_fetch_attachment_image_metadata_raw', 10, 3 );
+		add_filter( 'mla_fetch_attachment_image_metadata_final', 'MLASubstitutionParameterExample::mla_fetch_attachment_image_metadata_final', 10, 3 );
 
 		// Defined in /media-library-assistant/includes/class-mla-data-source.php
 		add_filter( 'mla_evaluate_custom_data_source', 'MLASubstitutionParameterExample::mla_evaluate_custom_data_source', 10, 5 );
@@ -631,10 +638,42 @@ class MLASubstitutionParameterExample {
 
 		return $custom_value;
 	} // mla_evaluate_custom_data_source
+
+	/**
+	 * MLA Fetch Attachment Image Metadata Raw
+	 *
+	 * For metadata extraction, gives you an opportunity to add or modify elements before MLA's EXIF CAMERA and GPS enhancementws are added.
+	 *
+	 * @since 1.15
+	 *
+	 * @param array $metadata The metadata MLA extracted from the attached file
+	 * @param array $post_id The ID of the attachment representing the file
+	 * @param array $path The location of the attached file
+	 */
+	public static function mla_fetch_attachment_image_metadata_raw( $metadata, $post_id, $path ) {
+		error_log( __LINE__ . " MLASubstitutionParameterExample::mla_fetch_attachment_image_metadata_raw( {$post_id}, {$path} ) metadata = " . var_export( $metadata, true ), 0 );
+
+		return $metadata;
+	} // mla_fetch_attachment_image_metadata_raw
+
+	/**
+	 * MLA Fetch Attachment Image Metadata Final
+	 *
+	 * For metadata extraction, gives you an opportunity to add or modify elements after MLA's EXIF CAMERA and GPS enhancementws are added.
+	 *
+	 * @since 1.15
+	 *
+	 * @param array $metadata The metadata MLA extracted from the attached file
+	 * @param array $post_id The ID of the attachment representing the file
+	 * @param array $path The location of the attached file
+	 */
+	public static function mla_fetch_attachment_image_metadata_final( $metadata, $post_id, $path ) {
+		error_log( __LINE__ . " MLASubstitutionParameterExample::mla_fetch_attachment_image_metadata_final( {$post_id}, {$path} ) metadata = " . var_export( $metadata, true ), 0 );
+
+		return $metadata;
+	} // mla_fetch_attachment_image_metadata_final
 } //MLASubstitutionParameterExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLASubstitutionParameterExample::initialize');
 ?>

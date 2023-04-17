@@ -496,6 +496,15 @@ var wdtChartColumnsData = {};
                                     for (j = 0; j < editing_chart_data.apexcharts_render_data.options.series.length; j++) {
                                         if (data.options.series[i].orig_header === editing_chart_data.apexcharts_render_data.options.series[j].orig_header) {
                                             data.options.series[i].label = editing_chart_data.apexcharts_render_data.options.series[j].label;
+                                            var apex_yaxis = editing_chart_data.apexcharts_render_data.options.yaxis;
+                                            if (Array.isArray(apex_yaxis)) {
+                                                data.options.series[i].name =
+                                                    apex_yaxis[j].title && apex_yaxis[j].title.text !== "" ?
+                                                        apex_yaxis[j].title.text
+                                                        : editing_chart_data.apexcharts_render_data.options.series[j].label;
+                                            } else {
+                                                data.options.series[i].name = editing_chart_data.apexcharts_render_data.options.series[j].label;
+                                            }
                                         }
                                     }
                                 }
@@ -704,7 +713,7 @@ var wdtChartColumnsData = {};
                             wdtChart.setContainer('#apex-chart-container');
                             wdtChart.setNumberFormat(data.wdtNumberFormat);
                             wdtChart.setDecimalPlaces(data.wdtDecimalPlaces);
-                            wdtChart.setCustomOptions(data.options);
+                            wdtChart.setSeriesAndAxis(data.options);
                             wdtChart.setStartEndAngles(data.options);
                             wdtChart.setColumnIndexes(data.column_indexes);
                         }
@@ -986,12 +995,12 @@ var wdtChartColumnsData = {};
                     } else if (constructedChartData.engine == 'apexcharts') {
                         wdtChart = new wpDataTablesApexChart();
                         wdtChart.setOptions(data.options);
-                        wdtChart.setMultipleYaxis(data);
                         wdtChart.setType(data.type);
                         wdtChart.setWidth(data.width);
                         wdtChart.setHeight(data.height);
                         wdtChart.setStartEndAngles(data.options);
                         wdtChart.setBackground(data.options.chart.background);
+                        wdtChart.setAxisTitles();
                         wdtChart.setColumnIndexes(data.column_indexes);
                         wdtChart.setContainer('#apex-chart-container');
                     }
@@ -2330,7 +2339,9 @@ var wdtChartColumnsData = {};
                         $('#background-color').val(editing_chart_data.apexcharts_render_data.options.chart.background);
                         $('#plot-background-image-container').removeClass('apexcharts');
                     } else if (editing_chart_data.apexcharts_render_data.options.chart.background) {
-                        $('#plot-background-image').val(editing_chart_data.apexcharts_render_data.options.chart.background);
+                        $('#plot-background-image')
+                            .val(editing_chart_data.apexcharts_render_data.options.chart.background
+                                .replace('url(','').replace(') no-repeat center/cover',''));
                         $('#wdt-plot-image-clear-button').html("Clear");
                         $('#background-color-container').hide();
                     }

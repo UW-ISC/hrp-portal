@@ -36,7 +36,12 @@ class MLAMime {
 		add_filter( 'ext2type', 'MLAMime::mla_ext2type_filter', 0x7FFFFFFF, 1 );
 
 		// Check for active debug setting
-		self::$mla_debug_active = ( MLACore::$mla_debug_level & 1 ) && ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+		if ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) {
+			self::$mla_debug_active = false;
+		} else {
+			self::$mla_debug_active = ( MLACore::$mla_debug_level & 1 ) && ( MLACore::$mla_debug_level & MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+		}
+		
 		if ( self::$mla_debug_active ) {
 			add_filter( 'sanitize_mime_type', 'MLAMime::mla_sanitize_mime_type_filter', 0x7FFFFFFF, 2 );
 			add_filter( 'wp_check_filetype_and_ext', 'MLAMime::mla_wp_check_filetype_and_ext_filter', 0x7FFFFFFF, $filter_args );
@@ -128,6 +133,10 @@ class MLAMime {
 	 */
 	public static function mla_sanitize_mime_type_filter( $sanitized_mime_type, $raw_mime_type ) {
 		if ( self::$mla_debug_active ) {
+			if ( class_exists( 'MLAData', false ) ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_sanitize_mime_type_filter(  ) dump raw_mime_type = " . MLAData::mla_hex_dump( $raw_mime_type ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			}
+			
 			MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_sanitize_mime_type_filter( $sanitized_mime_type, $raw_mime_type ) wp_filter = " . MLACore::mla_decode_wp_filter('sanitize_mime_type'), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 		}
 
@@ -768,8 +777,8 @@ class MLAMime {
 	public static $default_sortable_view_columns = array(
 		'name' => array('slug',false),
 		'specification' => array('specification',false),
-		'post_mime_type' => array('post_mime_type',false),
-		'table_view' => array('table_view',false),
+		'post_mime_type' => array('post_mime_type',true),
+		'table_view' => array('table_view',true),
 		'singular' => array('singular',false),
 		'plural' => array('plural',false),
 		'menu_order' => array('menu_order',false),
@@ -1008,10 +1017,13 @@ class MLAMime {
 	 *
 	 * @since 1.40
 	 *
+	 * @param	boolean	true to exclude MIME types and empty specifications for set Featured Image
+	 *
 	 * @return	array	table views array ( specification => Plural Label )
 	 */
-	public static function mla_pluck_table_views() {
+	public static function mla_pluck_table_views( $exclude_post_mime_types = false ) {
 		$mla_types = MLAMime::mla_query_view_items( array( 'orderby' => 'menu_order' ), 0, 0 );
+
 		if ( ! is_array( $mla_types ) ) {
 			$mla_types = array ();
 		}
@@ -1023,6 +1035,12 @@ class MLAMime {
 				continue;
 			}
 
+			if ( $exclude_post_mime_types ) {
+				if ( $value->post_mime_type || empty( $value->specification ) ) {
+					continue;
+				}
+			}
+			
 			if ( $value->table_view ) {
 				if ( empty( $value->specification ) ) {
 					$results[ $value->slug ] = $value->plural;
@@ -1794,9 +1812,7 @@ class MLAMime {
 			return true;
 		}
 
-		/*
-		 * wp_ext2type will apply our filter in a special mode, initializing the list
-		 */
+		// wp_ext2type will apply our filter in a special mode, initializing the list
 		self::$disable_mla_filtering = true;
 		$save_filters = $wp_filter['ext2type'];
 		unset( $wp_filter['ext2type'] );
@@ -1805,10 +1821,7 @@ class MLAMime {
 		$wp_filter['ext2type'] = $save_filters;
 		self::$disable_mla_filtering = false;
 
-		/*
-		 * Rebuild the list as extension => type,
-		 * Explode any entries with multiple extensions
-		 */
+		// Rebuild the list as extension => type, Explode any entries with multiple extensions
 		$standard_types = array ();
 		foreach ( self::$mla_core_icon_types as $key => $extensions )
 			foreach ( $extensions as $extension )
@@ -1830,9 +1843,7 @@ class MLAMime {
 			return true;
 		}
 
-		/*
-		 * Get the directories in reverse order, so earlier entries will overwrite later entries and win
-		 */
+		// Get the directories in reverse order, so earlier entries will overwrite later entries and win
 		$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/crystal' );
 		$icon_dir_uri = apply_filters( 'icon_dir_uri', includes_url('images/crystal') );
 		$dirs = array_reverse( apply_filters( 'icon_dirs', array($icon_dir => $icon_dir_uri) ), true );
@@ -2028,30 +2039,43 @@ class MLAMime {
 			unset( $wp_filter['mime_types'] );
 			$core_types = wp_get_mime_types();
 			$wp_filter['mime_types'] = $save_filters;
+
+			self::$disable_mla_filtering = true;
+			$filtered_types = get_allowed_mime_types();
+			self::$disable_mla_filtering = false;
 		} else {
 			$core_types = wp_get_mime_types();
+			$filtered_types = array();
 		}
 
-		/*
-		 * If this is the first time MLA Upload support is invoked, match to the 
-		 * filter-enhanced extensions, retain anything new as a custom type.
-		 */
-		$custom_types = array();
+		// Find the custom types we already know or start from scratch
+		$save_changes = false;
 		$mla_upload_mimes = MLACore::mla_get_option( MLACoreOptions::MLA_UPLOAD_MIMES );
+
 		if ( is_array( $mla_upload_mimes ) ) {
-			$first_time_called = false;
 			$custom_types = $mla_upload_mimes['custom'];
 		} else {
-			$first_time_called = true;
+			$save_changes = true;
 			$mla_upload_mimes = array ( 'custom' => array(), 'disabled' => array(), 'description' => array(), 'icon_type' => array() );
-			self::$disable_mla_filtering = true;
-			foreach ( get_allowed_mime_types() as $key => $value ) {
-				if ( ! isset( $core_types[ $key ]) ) {
-					$custom_types[ $key ] = $value;
-				}
-			}
+			$custom_types = array();
+		}
 
-			self::$disable_mla_filtering = false;
+		// separate out the non-core types
+		foreach( $filtered_types as $key => $value ) {
+			if ( isset( $core_types[ $key ] ) || isset( $custom_types[ $key ] ) ) {
+				unset( $filtered_types[ $key ] );
+			}
+		}
+
+		// Add any as-yet undiscovered types
+		if ( !empty( $filtered_types ) ) {
+			$save_changes = true;
+			$custom_types = array_merge( $mla_upload_mimes['custom'], $filtered_types );
+			$mla_upload_mimes['custom'] = $custom_types;
+
+			if ( self::$mla_debug_active ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::_get_upload_mime_templates new custom type(s) = " . var_export( $filtered_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			}
 		}
 
 		// Explode any entries with multiple extensions
@@ -2173,7 +2197,7 @@ class MLAMime {
 				// Make sure it's really custom
 				if ( ( 'core' == $source && $value == $core_type ) || ( 'mla' == $source && $value == $mla_type ) ) {
 					continue;
-					 }
+				}
 			} else { // existing type
 				$core_type = '';
 				$mla_type = '';
@@ -2203,7 +2227,7 @@ class MLAMime {
 			);
 		}
 
-		if ( $first_time_called ) {
+		if ( $save_changes ) {
 			self::_put_upload_mime_templates();
 			return true;
 		}
@@ -2447,6 +2471,7 @@ class MLAMime {
 			$clean_mime_type = $original_type['mime_type'];
 		} else {
 			$clean_mime_type = sanitize_mime_type( $request['mime_type'] );
+
 			if ( $clean_mime_type != $request['mime_type'] ) {
 				/* translators: 1: ERROR tag 2: clean_mime_type */
 				$errors .= '<br>' . sprintf( __( '%1$s: Bad MIME type; try "%2$s"', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $clean_mime_type );

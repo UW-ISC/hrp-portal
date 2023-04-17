@@ -581,15 +581,14 @@ var jQuery,
 
 			// hierarchical taxonomies
 			$('.mla_category', rowData).each(function(){
-				var term_ids = $(this).text(), taxname = $(this).attr('id').replace('_'+id, ''), checkedLabels, checkedTerms;
+				var term_ids = $(this).text(), taxname = $(this).attr('id').replace('_'+id, ''), checkedLabels;
 
 				if ( term_ids ) {
 					$('ul.'+taxname+'checklist :checkbox', editRow).val(term_ids.split(','));
 					
 					if ( -1 !== checkedOnTop.indexOf( taxname ) ) {
-						checkedLabels = $('ul.'+taxname+'checklist li :checked', editRow ).parents( 'label' ).remove().toArray().reverse();
-						checkedTerms = $( '<li></li>' ).html( checkedLabels );
-						$('ul.'+taxname+'checklist', editRow ).prepend( checkedTerms );
+						checkedLabels = $('ul.'+taxname+'checklist li :checked', editRow ).parents( 'li' ).remove().toArray().reverse();
+						$('ul.'+taxname+'checklist', editRow ).prepend( checkedLabels );
 					}
 				}
 			});

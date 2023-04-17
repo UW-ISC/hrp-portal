@@ -197,7 +197,21 @@ function relevanssi_attachment_metabox() {
 
 	$pdf_modified = get_post_meta( $post->ID, '_relevanssi_pdf_modified', true );
 
-	$url         = wp_get_attachment_url( $post->ID );
+	/**
+	 * Filters the attachment URL.
+	 *
+	 * If you want to make Relevanssi index attached file content from
+	 * files that are stored outside the WP attachment system, use this
+	 * filter to provide the URL of the file.
+	 *
+	 * @param string The URL of the attached file.
+	 * @param int    The post ID of the attachment post.
+	 */
+	$url         = apply_filters(
+		'relevanssi_get_attachment_url',
+		wp_get_attachment_url( $post->ID ),
+		$post->ID
+	);
 	$id          = $post->ID;
 	$button_text = $pdf_modified ? __( 'Reread the attachment content', 'relevanssi' ) : __( 'Read the attachment content', 'relevanssi' );
 	$api_key     = get_network_option( null, 'relevanssi_api_key' );

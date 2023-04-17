@@ -1723,7 +1723,7 @@ class MLA_WPML {
 			'media_assistant_table_header' =>
 				array('tab' => 'language',
 					'name' => __( 'Media/Assistant submenu table', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			'language_column' =>
 				array('tab' => 'language',
@@ -1742,7 +1742,7 @@ class MLA_WPML {
 			'term_translation_header' =>
 				array('tab' => 'language',
 					'name' => __( 'Term Management', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			'term_assignment' =>
 				array('tab' => 'language',
