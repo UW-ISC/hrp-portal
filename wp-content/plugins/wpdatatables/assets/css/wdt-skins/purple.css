@@ -18,6 +18,11 @@
     padding: 16px;
 }
 
+.wpdt-c.wdt-skin-purple .wpDataTablesFilter{
+    line-height:normal !important;
+}
+
+
 .wpdt-c.wdt-skin-purple .wpDataTablesWrapper table.wpDataTable {
     margin-bottom: 12px;
     color: #606266;

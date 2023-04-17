@@ -80,7 +80,6 @@
                                 if ($possibleValue['value'] !== 'possibleValuesAddEmpty') { ?>
                                     <option value="<?php echo esc_attr($possibleValue['value']) ?>"
                                             data-label="<?php echo esc_attr($possibleValue['label']) ?>"><?php echo esc_html($possibleValue['label']) ?></option>
-
                                 <?php } ?>
                             <?php } ?>
                         <?php } ?>
@@ -149,7 +148,7 @@
 </div>
 
 <?php $currentSkin = $this->getTableSkin();
-      $skinsWithNewEditButtons = ['aqua','purple','dark','raspberry-cream']; ?>
+      $skinsWithNewEditButtons = ['aqua','purple','dark','raspberry-cream', 'mojito']; ?>
 
 <div id="<?php echo esc_attr($this->getId()) ?>_edit_dialog_buttons" class="wdt-edit-dialog-button-block"
      style="display: none">
@@ -159,10 +158,10 @@
     </button>
     <button id="<?php echo $this->getId() ?>_prev_edit_dialog" class="btn bgm-gray btn-icon-text wdt-prev-edit-button">
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons )) { echo 'wpdt-icon-chevron-left'; } else { echo 'wpdt-icon-step-backward'; }?>"></i>
-        <?php if ($currentSkin !== 'raspberry-cream') esc_html_e('Prev', 'wpdatatables'); ?>
+        <?php if (!in_array($currentSkin, ['mojito','raspberry-cream'])) esc_html_e('Prev', 'wpdatatables'); ?>
     </button>
     <button id="<?php echo $this->getId() ?>_next_edit_dialog" class="btn bgm-gray btn-icon-text wdt-next-edit-button">
-        <?php if ($currentSkin !== 'raspberry-cream')  esc_html_e('Next', 'wpdatatables'); ?>
+        <?php if (!in_array($currentSkin, ['mojito','raspberry-cream']))  esc_html_e('Next', 'wpdatatables'); ?>
         <i class="<?php if(in_array($currentSkin, $skinsWithNewEditButtons)) { echo 'wpdt-icon-chevron-right'; } else { echo 'wpdt-icon-step-forward'; }?>"></i>
     </button>
     <?php if ( !empty(array_intersect(['all', 'new_entry'], $this->getEditButtonsDisplayed()))) { ?>

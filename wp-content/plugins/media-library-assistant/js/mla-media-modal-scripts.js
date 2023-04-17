@@ -151,10 +151,33 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				else
 					s = { 'mla_search_value': '' };
 
-			if ( 'undefined' != typeof query.post_mime_type )
+			if ( 'undefined' != typeof query.post_mime_type ) {
 				mlaModal.settings.query[state].filterMime = query.post_mime_type;
-			else
+			} else {
 				mlaModal.settings.query[state].filterMime = 'all';
+			}
+
+			if ( 'featured-image' === state ) {
+				if ( 'image' !== mlaModal.settings.query[state].filterMime ) {
+					mlaModal.settings.query[state].filterUploaded = mlaModal.settings.query[state].filterMime;
+				} else {
+					mlaModal.settings.query[state].filterUploaded = 'all';
+	
+					if ( 'undefined' !== typeof query.author ) {
+						mlaModal.settings.query[state].filterUploaded = 'mine';
+					} else {
+						if ( 'undefined' !== typeof query.post_parent ) {
+							if ( 0 === query.post_parent ) {
+								mlaModal.settings.query[state].filterUploaded = 'unattached';
+							} else {
+								if ( wp.media.view.settings.post.id === query.post_parent ) {
+									mlaModal.settings.query[state].filterUploaded = 'uploaded';
+								}
+							}
+						} // post_parent present
+					} // author undefined
+				} // filterMime === image
+			} // featured-image
 
 			if ( 'undefined' != typeof s.mla_filter_month ){
 				mlaModal.settings.query[state].filterMonth = s.mla_filter_month;
@@ -174,6 +197,9 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 				mlaModal.settings.query[state].searchValue = s.mla_search_value;
 
 			searchValues = {
+				'mla_state': state,
+				'mla_filter_mime': mlaModal.settings.query[state].filterMime,
+				'mla_filter_uploaded': mlaModal.settings.query[state].filterUploaded,
 				'mla_filter_month': mlaModal.settings.query[state].filterMonth,
 				'mla_filter_term': mlaModal.settings.query[state].filterTerm,
 				'mla_terms_search': mlaModal.settings.query[state].termsSearch,
@@ -305,7 +331,9 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 					types = wp.media.view.settings.mimeTypes,
 					text,
 					state = this.controller._state,
-					filters = {};
+					filters = {},
+					l10n = wp.media.view.l10n,
+					uid = window.userSettings ? parseInt( window.userSettings.uid, 10 ) : 0;
 
 				if ( types && type ) {
 					text = types[ type ];
@@ -319,42 +347,62 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 								type:    key,
 								uploadedTo: null,
 								orderby: 'date',
-								order:   'DESC'
+								order:   'DESC',
+								author:  null
 							}
 						};
 					}
 				});
 
 				filters.all = {
-					text:  text || wp.media.view.l10n.allMediaItems,
+					text:  text || l10n.allMediaItems,
 					props: {
+						type:    'image',
 						uploadedTo: null,
 						orderby: 'date',
-						order:   'DESC'
+						order:   'DESC',
+						author:  null
 					},
 					priority: 10
 				};
 
 				filters.uploaded = {
-					text:  wp.media.view.l10n.uploadedToThisPost,
+					text:  l10n.uploadedToThisPost,
 					props: {
-						type:    null,
+						type:    'image',
 						uploadedTo: wp.media.view.settings.post.id,
 						orderby: 'menuOrder',
-						order:   'ASC'
+						order:   'ASC',
+						author:  null
 					},
 					priority: 20
 				};
 
 				filters.unattached = {
-					text:  wp.media.view.l10n.unattached,
+					text:  l10n.unattached,
 					props: {
+						type:    'image',
 						uploadedTo: 0,
 						orderby: 'menuOrder',
-						order:   'ASC'
+						order:   'ASC',
+						author:  null
 					},
 					priority: 50
 				};
+
+				if ( uid ) {
+					filters.mine = {
+						text:  l10n.mine,
+						props: {
+							type:    'image',
+							uploadedTo:	null,
+							orderby:	'date',
+							order:		'DESC',
+							author:		uid
+						},
+						priority: 50
+					};
+				}
 
 				this.filters = filters;
 				if ( 'undefined' === typeof filters[ mlaModal.settings.query[state].filterUploaded ] ) {
@@ -369,7 +417,7 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 			select: function() {
 				var state = this.controller._state, 
 					model = this.model,
-					value = mlaModal.settings.query[state].filterMime,
+					value = mlaModal.settings.query[state].filterUploaded,
 					props = model.toJSON();
 
 				if ( false === mlaModal.settings.enableSearchBox ) {

@@ -133,14 +133,6 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				}
 
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
-
-					$atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
-					$atts['aria-expanded'] = 'false';
-
-					if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
-						$atts['aria-expanded'] = 'true';
-					}
-
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 						$atts['role'] = 'button';
 					}
@@ -164,6 +156,15 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$atts['class'] = $atts['class'] . ' mega-menu-link';
 				} else {
 					$atts['class'] = 'mega-menu-link';
+				}
+
+				if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+					$atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
+					$atts['aria-expanded'] = 'false';
+
+					if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
+						$atts['aria-expanded'] = 'true';
+					}
 				}
 
 				$attributes = '';
@@ -196,11 +197,43 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$item_output .= '</span>';
 				}
 
-				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) ) {
-					$item_output .= '<span class="mega-indicator" tabindex="0" role="button" aria-label="' . esc_attr( apply_filters( 'megamenu_the_title', $item->title, $item->ID ) ) . " " . esc_html( 'submenu', 'megamenu' ) . '"></span>';
+				if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+					$item_output .= '</a>';
 				}
 
-				$item_output .= '</a>';
+				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) ) {
+
+					$item_output .= '<span class="mega-indicator"';
+
+					$indicator_atts = array();
+
+					if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+						$indicator_atts['tabindex'] = '0';
+						$indicator_atts['role'] = 'button';
+						$indicator_atts['aria-label'] = esc_attr( apply_filters( 'megamenu_the_title', $item->title, $item->ID ) ) . " " . esc_html( 'submenu', 'megamenu' );
+						$indicator_atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
+						$indicator_atts['aria-expanded'] = 'false';
+
+						if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
+							$indicator_atts['aria-expanded'] = 'true';
+						}
+					}
+
+					$indicator_atts = apply_filters( 'megamenu_indicator_atts', $indicator_atts, $item, $args, $mega_classes );
+
+					foreach ( $indicator_atts as $attr => $value ) {
+						if ( strlen( $value ) ) {
+							$item_output .= ' ' . $attr . '="' . esc_attr( $value ) . '"';
+						}
+					}
+
+					$item_output .= "></span>";
+				}
+
+				if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+					$item_output .= '</a>';
+				}
+
 				$item_output .= $args->after;
 
 				if ( is_array( $classes ) && ( in_array( 'menu-column', $classes ) || in_array( 'menu-row', $classes ) ) ) {

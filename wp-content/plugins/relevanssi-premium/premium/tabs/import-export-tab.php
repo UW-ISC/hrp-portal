@@ -114,7 +114,7 @@ function relevanssi_serialize_options() {
 	$serialize_options['relevanssi_index_limit']              = get_option( 'relevanssi_index_limit' );
 	$serialize_options['relevanssi_index_pdf_parent']         = get_option( 'relevanssi_index_pdf_parent' );
 	$serialize_options['relevanssi_index_post_type_archives'] = get_option( 'relevanssi_index_post_type_archives' );
-	$serialize_options['relevanssi_index_post_types']         = get_option( 'relevanssi_index_post_types' );
+	$serialize_options['relevanssi_index_post_types']         = get_option( 'relevanssi_index_post_types', array() );
 	$serialize_options['relevanssi_index_subscribers']        = get_option( 'relevanssi_index_subscribers' );
 	$serialize_options['relevanssi_index_synonyms']           = get_option( 'relevanssi_index_synonyms' );
 	$serialize_options['relevanssi_index_taxonomies']         = get_option( 'relevanssi_index_taxonomies' );

@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 6.1
-Stable tag: 2.20.4
+Tested up to: 6.2
+Stable tag: 2.21.0
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,15 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.21.0 =
+* New feature: You can now add weights to pinned terms to control the order of the pinned posts.
+* New feature: New filter hook `relevanssi_add_attachment_scripts` lets you add the attachment javascripts to other post types than `attachment`.
+* New feature: New filter hook `relevanssi_highlight_query` lets you modify the search query for highlighting.
+* Changed behavior: Relevanssi no longer searches in feed searches by default.
+* Minor fix: The filter `relevanssi_get_attachment_url` is now also used when adding the attachment metabox.
+* Minor fix: No more crashes from Polylang forced plugin updates.
+* Minor fix: PHP 8.1 deprecated FILTER_SANITIZE_STRING, those are now replaced.
+
 = 2.20.4 =
 * New feature: New filter hook `relevanssi_blocked_field_types` can be used to control which ACF field types are excluded from the index. By default, this includes 'repeater', 'flexible_content', and 'group'.
 * New feature: New filter hook `relevanssi_acf_field_object` can be used to filter the ACF field object before Relevanssi indexes it. Return false to have Relevanssi ignore the field type.
@@ -346,6 +355,9 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Prevents fatal errors from `relevanssi_strip_all_tags()`.
 
 == Upgrade notice ==
+= 2.21.0 =
+* You can now assign weights to pinned keywords.
+
 = 2.20.4 =
 * Better ACF field controls, bug fixes.
 

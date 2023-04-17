@@ -560,6 +560,8 @@ g3,image/g3fax,G3 Fax Image
 g3w,application/vnd.geospace,GeospacW
 gac,application/vnd.groove-account,Groove - Account
 gdl,model/vnd.gdl,Geometric Description Language (GDL)
+gdz,text/plain,GEnealogical Data COMmunications (GEDCOM)
+ged,text/plain,GEnealogical Data COMmunications (GEDCOM)
 geo,application/vnd.dynageo,DynaGeo
 gex,application/vnd.geometry-explorer,GeoMetry Explorer
 ggb,application/vnd.geogebra.file,GeoGebra

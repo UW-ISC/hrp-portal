@@ -14,6 +14,55 @@ if (!class_exists('WP_List_Table')) {
  */
 class WDTBrowseTable extends WP_List_Table
 {
+    private $dbVersion;
+    private $dbEngine;
+
+    public function __construct( $args = array() ) {
+        global $wpdb;
+        parent::__construct($args);
+        $this->setDBVersion($wpdb->db_version());
+        $this->setDBEngine($wpdb->db_server_info());
+    }
+
+    /**
+     * Get database engine version
+     *
+     * @return string|null
+     */
+    public function getDBVersion()
+    {
+        return $this->dbVersion;
+    }
+
+    /**
+     * Set database engine version
+     *
+     * @param string|null $dbVersion
+     */
+    public function setDBVersion($dbVersion)
+    {
+        $this->dbVersion = $dbVersion;
+    }
+
+    /**
+     * Get database engine
+     *
+     * @return mixed
+     */
+    public function getDBEngine()
+    {
+        return $this->dbEngine;
+    }
+
+    /**
+     * Set database engine
+     *
+     * @param mixed $dbEngine
+     */
+    public function setDBEngine($dbEngine)
+    {
+        $this->dbEngine = $dbEngine;
+    }
 
     /**
      * Get a list of columns. The format is:
@@ -82,10 +131,9 @@ class WDTBrowseTable extends WP_List_Table
      */
     function useNotSupportedMySQLVersion()
     {
-        global $wpdb;
-        $dbVersion = $wpdb->db_version();
-        if (version_compare($dbVersion, '5.6', '>=')
-            && version_compare($dbVersion, '5.7', '<'))
+        if (version_compare($this->getDBVersion(), '5.7.8', '<') ||
+            (strpos($this->getDBEngine(), "MariaDB") !== false &&
+                version_compare($this->getDBVersion(), '10.6', '<')))
         {
             return true;
         }

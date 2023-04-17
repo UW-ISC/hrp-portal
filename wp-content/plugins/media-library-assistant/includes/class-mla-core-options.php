@@ -460,7 +460,7 @@ class MLACoreOptions {
 			'where_used_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Where-used Reporting', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => sprintf( ' %1$s <a href="%2$s" target="_blank">%3$s</a>.<br />&nbsp;',  __( 'For complete documentation', 'media-library-assistant' ), admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation&amp;mla_tab=documentation#where_used_reporting' ), __( 'click here', 'media-library-assistant' ) )),
 
 			self::MLA_EXCLUDE_REVISIONS =>
 				array('tab' => 'general',
@@ -473,7 +473,7 @@ class MLACoreOptions {
 			'where_used_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Where-used database access tuning', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => '' ),
 
 			self::MLA_FEATURED_IN_TUNING =>
 				array('tab' => 'general',
@@ -518,7 +518,7 @@ class MLACoreOptions {
 			'taxonomy_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Taxonomy Support', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			self::MLA_COUNT_TERM_ATTACHMENTS =>
 				array('tab' => 'general',
@@ -579,12 +579,12 @@ class MLACoreOptions {
 			'media_assistant_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Media/Assistant Screen Options', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			'admin_sidebar_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Admin Menu Options', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_SCREEN_PAGE_TITLE =>
 				array('tab' => 'general',
@@ -632,7 +632,7 @@ class MLACoreOptions {
 			'table_defaults_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Table Defaults', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_DEFAULT_ORDERBY =>
 				array('tab' => 'general',
@@ -720,7 +720,7 @@ class MLACoreOptions {
 			'taxonomy_filter_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Taxonomy Filter parameters', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_TAXONOMY_FILTER_DEPTH =>
 				array('tab' => 'general',
@@ -742,7 +742,7 @@ class MLACoreOptions {
 			'search_media_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Search Media Defaults', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_SEARCH_MEDIA_FILTER_SHOW_CONTROLS =>
 				array('tab' => 'general',
@@ -769,7 +769,7 @@ class MLACoreOptions {
 			'edit_media_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Media/Edit Media Enhancements', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			self::MLA_EDIT_MEDIA_SEARCH_TAXONOMY =>
 				array('tab' => 'general',
@@ -801,7 +801,7 @@ class MLACoreOptions {
 			'media_add_new_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Media/Add New Enhancements', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			self::MLA_ADD_NEW_BULK_EDIT =>
 				array('tab' => 'general',
@@ -836,7 +836,7 @@ class MLACoreOptions {
 			'media_modal_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Media Manager/Media Grid Enhancements', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			self::MLA_MEDIA_GRID_TOOLBAR =>
 				array('tab' => 'general',
@@ -936,7 +936,7 @@ class MLACoreOptions {
 			'attachment_display_settings_subheader' =>
 				array('tab' => 'general',
 					'name' => __( 'Attachment Display Settings', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_MEDIA_MODAL_APPLY_DISPLAY_SETTINGS =>
 				array('tab' => 'general',
@@ -990,7 +990,7 @@ class MLACoreOptions {
 			'uninstall_plugin_header' =>
 				array('tab' => 'general',
 					'name' => __( 'Uninstall (Delete) Plugin Settings', 'media-library-assistant' ),
-					'type' => 'header'),
+					'type' => 'header', 'help' => ''),
 
 			self::MLA_DELETE_OPTION_SETTINGS =>
 				array('tab' => 'general',
@@ -1009,7 +1009,7 @@ class MLACoreOptions {
 			'template_header' =>
 				array('tab' => 'mla_gallery',
 					'name' => __( 'Default [mla_gallery] Templates and Settings', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			'default_tag_cloud_style' =>
 				array('tab' => '',
@@ -1102,7 +1102,7 @@ class MLACoreOptions {
 			'mal_viewer_header' =>
 				array('tab' => 'mla_gallery',
 					'name' => __( 'Thumbnail Substitution Support, mla_viewer', 'media-library-assistant' ),
-					'type' => 'subheader'),
+					'type' => 'subheader', 'help' => ''),
 
 			'enable_mla_viewer' =>
 				array('tab' => 'mla_gallery',

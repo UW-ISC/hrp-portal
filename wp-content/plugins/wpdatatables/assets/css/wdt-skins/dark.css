@@ -17,6 +17,11 @@
     padding: 16px;
     margin-bottom: 0;
 }
+
+.wpdt-c.wdt-skin-dark .wpDataTablesFilter{
+    line-height:normal !important;
+}
+
 .wpdt-c.wdt-skin-dark .wpDataTableFilterBox ,
 #wdt-filter-widget .wdt-skin-dark .wpDataTableFilterBox {
     padding-left: 0;

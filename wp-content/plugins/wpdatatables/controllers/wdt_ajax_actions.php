@@ -151,6 +151,7 @@ function wdtGetAjaxData() {
         $foreignKeyRule[$column->orig_header] = isset($advancedSettings->foreignKeyRule) ? $advancedSettings->foreignKeyRule : null;
 	    $column_align_header[$column->orig_header] = isset($advancedSettings->column_align_header) ? $advancedSettings->column_align_header : '';
 	    $column_align_fields[$column->orig_header] = isset($advancedSettings->column_align_fields) ? $advancedSettings->column_align_fields : '';
+	    $column_rotate_header_name[$column->orig_header] = isset($advancedSettings->column_rotate_header_name) ? $advancedSettings->column_rotate_header_name : '';
     }
 
     if ($tableView == 'excel') {

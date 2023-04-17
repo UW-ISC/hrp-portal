@@ -204,6 +204,13 @@
         });
 
         /**
+         * Set pagination layout for mobile devices
+         */
+        $('#wdt-pagination-layout-mobile').change(function (e) {
+            wpdatatable_config.setPaginationLayoutMobile($(this).val());
+        });
+
+        /**
          * Toggle simple responsive
          */
         $('#wdt-simple-responsive').change(function (e) {

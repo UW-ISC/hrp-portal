@@ -803,7 +803,7 @@
                             } else {
                                 newValue = value;
                             }
-                            if (newValue != ''){
+                            if (newValue != '') {
                                 newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), partClass + newValue);
                             } else {
                                 newClassName = cell.className.replace(cell.className.substring(cell.className.indexOf(partClass), cell.className.indexOf(partClass) + 14), '');
@@ -812,7 +812,7 @@
                             if (partClass == 'wpdt-ff-' || partClass == 'wpdt-fs-') {
                                 newClassName = cell.className + ' ' + partClass + String(value).padStart(6, '0');
                             } else {
-                                if (value != ''){
+                                if (value != '') {
                                     newClassName = cell.className + ' ' + partClass + value;
                                 } else {
                                     newClassName = cell.className + ' ';
@@ -833,6 +833,9 @@
             } else if (partClass === 'wpdt-ff-') {
                 let fontFamily = value === '0' ? 'inherit' : fontFamilyArr[value - 1];
                 addStylesheetRules('.' + partClass + String(value).padStart(6, '0'), 'font-family:' + fontFamily + ' !important;');
+            } else if (partClass === 'wpdt-sc-') {
+                addStylesheetRules('.' + partClass + value + '.rating > span.full.rated:after', 'color:#' + value + ' !important;');
+                addStylesheetRules('.' + partClass + value + '.rating > .half:before', 'color:#' + value + ' !important;');
             }
         }
 
@@ -1030,6 +1033,87 @@
             wpdtEditor.render();
         }
 
+        function wdtApplyColorPickerSC(selectedCells, selecter) {
+            var starRateElement = $("#wdt-backend-star-modal .rateYo");
+            var element = '#' + selecter,
+                defoult = jQuery(element).val() == "" ? '#FFD700' : jQuery(element).val(),
+                partClass = selecter === 'wpdt-star-rating-color' ? 'wpdt-sc-': '',
+                selectedStarColor = '';
+
+            const pickr = new Pickr({
+                el: element,
+                useAsButton: true,
+                default: defoult,
+                theme: 'classic',
+                autoReposition: true,
+                position: 'bottom-end',
+                outputPrecision: 1,
+                comparison: true,
+                lockOpacity: true,
+                swatches: [
+                    'rgba(244, 67, 54, 1)',
+                    'rgba(233, 30, 99, 1)',
+                    'rgba(156, 39, 176, 1)',
+                    'rgba(103, 58, 183, 1)',
+                    'rgba(63, 81, 181, 1)',
+                    'rgba(33, 150, 243, 1)',
+                    'rgba(3, 169, 244, 1)',
+                    'rgba(0, 188, 212, 1)',
+                    'rgba(0, 150, 136, 1)',
+                    'rgba(76, 175, 80, 1)',
+                    'rgba(139, 195, 74, 1)',
+                    'rgba(205, 220, 57, 1)',
+                    'rgba(255, 235, 59, 1)',
+                    'rgba(255, 193, 7, 1)'
+                ],
+                components: {
+                        preview: true,
+                        opacity: false,
+                        hue: true,
+                        interaction: {
+                            hex: true,
+                            rgba: true,
+                            hsla: false,
+                            hsva: false,
+                            cmyk: false,
+                            clear: true,
+                            input: true,
+                            save: true
+                        }
+                    }
+                }).on('init', pickr => {
+
+                pickr.show();
+                selectedStarColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
+                jQuery(element).parent('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", pickr.getColor().toHEXA().toString(0));
+                addDynamicStyle(selectedCells, selectedStarColor, partClass);
+
+            }).on('save', color => {
+                if (color != null) {
+                    selectedStarColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
+                    jQuery(element).val(pickr.getColor().toHEXA().toString(0));
+                    jQuery(element).change();
+                    starRateElement.rateYo("option", "ratedFill", pickr.getColor().toHEXA().toString(0));
+                    jQuery(element).parent('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", pickr.getColor().toHEXA().toString(0));
+                    selectedStarColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
+                    addDynamicStyle(selectedCells, selectedStarColor, partClass);
+                }
+                pickr.hide();
+
+            }).on('change', color => {
+                jQuery(element).val(pickr.getColor().toHEXA().toString(0));
+                starRateElement.rateYo("option", "ratedFill", pickr.getColor().toHEXA().toString(0));
+                jQuery(element).closest('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", pickr.getColor().toHEXA().toString(0));
+                selectedStarColor = pickr.getColor().toHEXA().toString(0).replace('#', "");
+                jQuery(element).change();
+                addDynamicStyle(selectedCells, selectedStarColor, partClass);
+
+            }).on('clear', color => {
+                jQuery(element).val('');
+                jQuery(element).change();
+                jQuery(element).parent('.wdt-color-picker').find('.wpcolorpicker-icon i').css("background", 'none');
+            })
+        }
         /**
          * Apply color picker on Text and Background color of cell
          */
@@ -1281,6 +1365,15 @@
                 selectedCells = wpdtEditor.getSelected();
             $('.pcr-app').remove();
             wdtApplyColorPickerHT(selectedCells, target)
+        });
+        /**
+         * Apply color for star rating
+         */
+        $('#wpdt-star-rating-color').on('click', function (e) {
+            let target = $(this)[0].id,
+                selectedCells = wpdtEditor.getSelected();
+            $('.pcr-app').remove();
+            wdtApplyColorPickerSC(selectedCells, target);
         });
 
         /**
@@ -1645,6 +1738,7 @@
                     starRateElement.rateYo('destroy');
                 starRateElement.rateYo({
                     normalFill: "#A0A0A0",
+                    ratedFill : (starData.data('star-color') === '') ? "#FFD700" : starData.data('star-color'),
                     halfStar: true,
                     numStars: starData.data('star-num'),
                     maxValue: starData.data('star-num'),
@@ -1661,9 +1755,27 @@
                     starRateElement.css("margin-bottom", "55px");
                     starRateNumber.empty().hide().append(starData.data('star-rating') + '/' + starData.data('star-num'));
                 }
+
+                $('#wpdt-star-rating-color').val(starData.data('star-color'));
+                if (starData.data('star-color') === '') {
+                    jQuery('#wpdt-star-rating-color')
+                        .closest('.wdt-color-picker')
+                        .find('.wpcolorpicker-icon i')
+                        .css("background", 'none');
+                } else {
+                    jQuery('#wpdt-star-rating-color')
+                        .closest('.wdt-color-picker')
+                        .find('.wpcolorpicker-icon i')
+                        .css("background", starData.data('star-color'));
+                }
             } else {
                 if ($("#wdt-backend-star-modal .jq-ry-container").length)
                     starRateElement.rateYo('destroy');
+                jQuery('#wpdt-star-rating-color')
+                    .closest('.wdt-color-picker')
+                    .find('.wpcolorpicker-icon i')
+                    .css("background", 'none');
+                jQuery('#wpdt-star-rating-color').val('');
                 starRateElement.rateYo({
                     normalFill: "#A0A0A0",
                     halfStar: true,
@@ -1722,8 +1834,8 @@
                 var maxValue = parseInt(starRateElement.rateYo("option", "maxValue")),
                     rating = starRateElement.rateYo("option", "rating"),
                     showNumber = $('#wpdt-star-rating-number').is(":checked"),
+                    starColor =jQuery('#wpdt-star-rating-color').val();
                     colHeaderArr = wpdtEditor.getColHeader();
-
 
                 starRateElement.css("margin-bottom", "5px");
                 starWrapper = '<div class="rating">';
@@ -1748,6 +1860,7 @@
                 formatData += 'data-cell-id="' + colHeaderArr[highlightCol] + highlightRow + '" ';
                 formatData += 'data-star-num="' + maxValue + '" ';
                 formatData += 'data-star-rating="' + rating + '" ';
+                formatData += 'data-star-color="' + starColor + '" ';
                 formatData += 'data-star-show-number="' + showNumber + '">';
                 formatData += starWrapper;
                 formatData += '</span>';

@@ -2013,7 +2013,7 @@ class WPDataChart {
         $chartObj->setShowDataLabels(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'show_data_labels', false)));
         $chartObj->setEnableDropshadow(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'enable_dropshadow', false)));
         $chartObj->setDropshadowBlur((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_blur', 3));
-        $chartObj->setDropshadowOpacity((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
+        $chartObj->setDropshadowOpacity((float)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_opacity', 35));
         $chartObj->setDropshadowColor(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_color', '#000000')));
         $chartObj->setDropshadowTop((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_top', 5));
         $chartObj->setDropshadowLeft((int)WDTTools::defineDefaultValue($constructedChartData, 'dropshadow_left', 5));
@@ -3610,7 +3610,7 @@ class WPDataChart {
             foreach ($apexchartsRender['series'] as $series) {
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['seriesName'] = $apexchartsRender['series'][0]['name'];
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['title']['text'] = $series['label'];
-                if ($this->getMinorAxisLabel()) $this->_apexcharts_render_data['options']['yaxis'][0]['title']['text'] = $this->getMinorAxisLabel();
+                $this->_apexcharts_render_data['options']['yaxis'][0]['title']['text'] = $this->getMinorAxisLabel() ? $this->getMinorAxisLabel() : "";
                 if ($i != 0) $this->_apexcharts_render_data['options']['yaxis'][$i]['show'] = false;
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['crosshairs']['show'] = $this->_apexcharts_render_data['options']['yaxis'][$i]['tooltip']['enabled'] = $this->isVerticalAxisCrosshair();
                 $this->_apexcharts_render_data['options']['yaxis'][$i]['reversed'] = $this->isReversed();

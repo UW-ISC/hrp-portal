@@ -9,8 +9,12 @@
  * opened on 2/24/2015 by "milkchic".
  * https://wordpress.org/support/topic/filter-by-post-status/
  *
+ * Enhanced (MMMW support) for support topic "See only “unfeatured” images in Add Media modal?"
+ * opened on 3/7/2023 by "zkarj".
+ * https://wordpress.org/support/topic/see-only-unfeatured-images-in-add-media-modal/
+ *
  * @package MLA Not Featured View Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
@@ -18,10 +22,10 @@ Plugin Name:MLA Not Featured View Example
 Plugin URI: http://davidlingren.com/
 Description: Adds a Media/Assistant submenu table view for items NOT featured in any posts/pages.
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
-Copyright 2014 - 2015 David Lingren
+Copyright 2014 - 2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -51,13 +55,14 @@ class MLANotFeaturedViewExample {
 	 * Initialization function, similar to __construct()
 	 *
 	 * @since 1.00
-	 *
-	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The remaining filters are only useful for the admin section; exit in the front-end posts/pages
-		 */
+		// This plugin requires MLA
+		if ( ! class_exists( 'MLACore', false ) ) {
+			return;
+		}
+
+		// The remaining filters are only useful for the admin section; exit in the front-end posts/pages
 		if ( ! is_admin() ) {
 			return;
 		}
@@ -70,19 +75,27 @@ class MLANotFeaturedViewExample {
 		 * $accepted_args - number of arguments your function accepts
 		 */
 
-		 /*
-		  * Defined in /wp-admin/includes/class-wp-list-table.php
-		  */
+		 // Defined in /wp-admin/includes/class-wp-list-table.php
 		add_filter( 'views_media_page_mla-menu', 'MLANotFeaturedViewExample::views_media_page_mla_menu', 10, 1 );
 
-		 /*
-		  * Defined in /media-library-assistant/includes/class-mla-list-table.php
-		  */
+		// Defined in /media-library-assistant/includes/class-mla-list-table.php
 		add_filter( 'mla_list_table_submenu_arguments', 'MLANotFeaturedViewExample::mla_list_table_submenu_arguments', 10, 2 );
 
 		add_filter( 'mla_list_table_prepare_items_pagination', 'MLANotFeaturedViewExample::mla_list_table_prepare_items_pagination', 10, 2 );
 		add_filter( 'mla_list_table_prepare_items_total_items', 'MLANotFeaturedViewExample::mla_list_table_prepare_items_total_items', 10, 2 );
 		add_filter( 'mla_list_table_prepare_items_the_items', 'MLANotFeaturedViewExample::mla_list_table_prepare_items_the_items', 10, 2 );
+
+		// Defined in /media-library-assistant/includes/class-mla-media-modal.php
+		add_filter( 'mla_media_modal_settings', 'MLANotFeaturedViewExample::mla_media_modal_settings', 10, 2 );
+
+		// Defined in /media-library-assistant/includes/class-mla-media-modal-ajax.php
+		add_filter( 'mla_media_modal_query_initial_terms', 'MLANotFeaturedViewExample::mla_media_modal_query_initial_terms', 10, 2 );
+		//add_filter( 'mla_media_modal_query_filtered_terms', 'MLANotFeaturedViewExample::mla_media_modal_query_filtered_terms', 10, 2 );
+		add_action( 'mla_media_modal_query_items', 'MLANotFeaturedViewExample::mla_media_modal_query_items', 10, 5 );
+
+		// Defined in /media-library-assistant/includes/class-mla-data-query.php
+		//add_filter( 'mla_media_modal_query_final_terms', 'MLANotFeaturedViewExample::mla_media_modal_query_final_terms', 10, 1 );
+		//add_filter( 'mla_media_modal_query_custom_items', 'MLANotFeaturedViewExample::mla_media_modal_query_custom_items', 10, 2 );
 	}
 
 	/**
@@ -101,9 +114,7 @@ class MLANotFeaturedViewExample {
 			$view_singular = array (),
 			$view_plural = array ();
 
-		/*
-		 * Calculate the common values once per page load
-		 */
+		// Calculate the common values once per page load
 		if ( is_null( $posts_per_view ) ) {
 			$items = (integer) $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} AS item LEFT JOIN ( SELECT DISTINCT sub.meta_value FROM {$wpdb->postmeta} AS sub WHERE ( sub.meta_key = '_thumbnail_id' ) ) AS meta ON item.ID = meta.meta_value WHERE meta.meta_value IS NULL AND item.post_type = 'attachment' AND item.post_status = 'inherit'" );
 			$posts_per_view = array( 'notfeatured' => $items );
@@ -116,9 +127,7 @@ class MLANotFeaturedViewExample {
 			);
 		}
 
-		/*
-		 * Make sure the slug is in our list and has posts
-		 */
+		// Make sure the slug is in our list and has posts
 		if ( array_key_exists( $view_slug, $posts_per_view ) ) {
 			$post_count = $posts_per_view[ $view_slug ];
 			$singular = sprintf('%s <span class="count">(%%s)</span>', $view_singular[ $view_slug ] );
@@ -255,6 +264,7 @@ class MLANotFeaturedViewExample {
 	 */
 	public static function posts_clauses( $pieces ) {
 		global $wpdb;
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::posts_clauses $pieces = ' . var_export( $pieces, true ), 0 );
 
 		if ( isset( $_REQUEST['nfve_view'] ) ) {
 			switch( $_REQUEST['nfve_view'] ) {
@@ -333,10 +343,154 @@ class MLANotFeaturedViewExample {
 
 		return $items;
 	} // mla_list_table_prepare_items_the_items
+
+	/**
+	 * MLA Edit Media Toolbar Settings Filter
+	 *
+	 * Gives you an opportunity to change the content of the
+	 * Media Manager Modal Window toolbar controls.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	array	associative array with setting => value pairs
+	 * @param	object	current post object, if available, else NULL
+	 */
+	public static function mla_media_modal_settings( $settings, $post ) {
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_settings $settings = ' . var_export( $settings, true ), 0 );
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_settings $post = ' . var_export( $post, true ), 0 );
+
+		// Add our view to the MIME Types dropdown list
+		if ( isset( $settings['mla_settings']['allMimeTypes'] ) ) {
+			$settings['mla_settings']['allMimeTypes']['nfve_view'] = 'Not Featured';
+		}
+		
+		if ( isset( $settings['mla_settings']['uploadMimeTypes'] ) ) {
+			$settings['mla_settings']['uploadMimeTypes']['nfve_view'] = 'Not Featured';
+		}
+		
+		return $settings;
+	} // mla_media_modal_settings
+
+	/**
+	 * MLA Edit Media "Query Attachments" initial terms Filter
+	 *
+	 * Gives you an opportunity to change the terms of the 
+	 * Media Manager Modal Window "Query Attachments" query
+	 * before they are pre-processed by the MLA handler.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	array	WP_Query terms supported for "Query Attachments"
+	 * @param	array	All terms passed in the request
+	 */
+	public static function mla_media_modal_query_initial_terms( $query, $raw_query ) {
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_initial_terms $query = ' . var_export( $query, true ), 0 );
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_initial_terms $raw_query = ' . var_export( $raw_query, true ), 0 );
+
+		if ( isset( $query['post_mime_type'] ) && ( 'nfve_view' === $query['post_mime_type'] ) ) {
+			// Convert the MIME Type selection to the custom view
+			//unset( $query['post_mime_type'] );
+			$query['post_mime_type'] = 'image';
+			$_REQUEST['nfve_view'] = 'notfeatured';
+			add_filter( 'posts_clauses', 'MLANotFeaturedViewExample::posts_clauses', 10, 1 );
+		}
+
+		return $query;
+	} // mla_media_modal_query_initial_terms
+
+	/**
+	 * MLA Edit Media "Query Attachments" filtered terms Filter
+	 *
+	 * Gives you an opportunity to change the terms of the 
+	 * Media Manager Modal Window "Query Attachments" query
+	 * after they are pre-processed by the Ajax handler.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	array	WP_Query terms supported for "Query Attachments"
+	 * @param	array	All terms passed in the request
+	 */
+	public static function mla_media_modal_query_filtered_terms( $query, $raw_query ) {
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_filtered_terms $query = ' . var_export( $query, true ), 0 );
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_filtered_terms $raw_query = ' . var_export( $raw_query, true ), 0 );
+
+		return $query;
+	} // mla_media_modal_query_filtered_terms
+
+	/**
+	 * MLA Media Modal Query Items
+	 *
+	 * Gives you an opportunity to Record or modify
+	 * the results of the "mla_query_media_modal_items" query.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	object	$attachments_query WP_Query results, passed by reference
+	 * @param	array	$query query parameters passed to WP_Query
+	 * @param	array	$raw_query query parameters passed in to function
+	 * @param	integer	$offset parameter_name => parameter_value pairs
+	 * @param	integer	$count parameter_name => parameter_value pairs
+	 */
+	public static function mla_media_modal_query_items( $attachments_query, $query, $raw_query, $offset, $count ) {
+		//error_log( __LINE__ . " MLANotFeaturedViewExample::mla_media_modal_query_items( {$offset}, {$count} ) query = " . var_export( $query, true ), 0 );
+		//error_log( __LINE__ . " MLANotFeaturedViewExample::mla_media_modal_query_items( {$offset}, {$count} ) raw_query = " . var_export( $raw_query, true ), 0 );
+		//error_log( __LINE__ . " MLANotFeaturedViewExample::mla_media_modal_query_items( {$attachments_query->post_count}, {$attachments_query->found_posts} ) query_vars = " . var_export( $attachments_query->query_vars, true ), 0 );
+		
+		// The query is done and we no longer need our filter
+		remove_filter( 'posts_clauses', 'MLANotFeaturedViewExample::posts_clauses', 10 );
+
+		return $attachments_query;
+	} // mla_media_modal_query_items
+
+	/**
+	 * MLA Edit Media "Query Attachments" final terms Filter
+	 *
+	 * Gives you an opportunity to change the terms of the 
+	 * Media Manager Modal Window "Query Attachments" query
+	 * after they are processed by the "Prepare List Table Query" handler.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	array	WP_Query request prepared by "Prepare List Table Query"
+	 */
+	public static function mla_media_modal_query_final_terms( $request ) {
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_final_terms $request = ' . var_export( $request, true ), 0 );
+
+		/*
+		 * MLAData::$query_parameters and MLAData::$search_parameters contain
+		 * additional parameters used in some List Table queries.
+		 */
+		 
+		/*
+		 * Comment the next line out to remove items assigned to the
+		 *  Att. Categories "Admin" term from the query results.
+		 */
+		return $request;
+	} // mla_media_modal_query_final_terms
+
+	/**
+	 * MLA Edit Media "Query Attachments" custom results filter
+	 *
+	 * Gives you an opportunity to substitute the results of the 
+	 * Media Manager Modal Window "Query Attachments" query
+	 * with alternative results of your own.
+	 *
+	 * @since 1.02
+	 *
+	 * @param	object	NULL, indicating no results substitution
+	 * @param	array	WP_Query request prepared by "Prepare List Table Query"
+	 */
+	public static function mla_media_modal_query_custom_items( $wp_query_object, $request ) {
+		//error_log( __LINE__ . ' MLANotFeaturedViewExample::mla_media_modal_query_custom_items $request = ' . var_export( $request, true ), 0 );
+
+		/*
+		 * You can replace the NULL $wp_query_object with a new WP_Query( $request )
+		 * object using your own $request parameters
+		 */
+		return $wp_query_object;
+	} // mla_media_modal_query_custom_items
 } // Class MLANotFeaturedViewExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLANotFeaturedViewExample::initialize');
 ?>

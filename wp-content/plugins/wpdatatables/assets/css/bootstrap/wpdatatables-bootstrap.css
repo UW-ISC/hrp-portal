@@ -3720,6 +3720,7 @@
     color: #333;
     background-color: #fff;
     border-color: transparent;
+    overflow: visible;
 }
 
 .wpdt-c .btn-default:active, .wpdt-c .btn-default.active, .wpdt-c .open > .dropdown-toggle.btn-default {
@@ -7029,7 +7030,6 @@ select.input-group-lg > .input-group-btn > .btn {
     margin-left: -3px;
     padding: 0 5px;
 }
-
 .wpdt-c .tooltip-inner {
     max-width: 200px;
     padding: 3px 8px;

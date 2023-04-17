@@ -713,7 +713,7 @@ var singleClick = false;
             /**
              * Add outline class to selected column col for initial table load
              */
-            if (tableDescription.tableSkin === 'raspberry-cream') {
+            if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito']) !== -1) {
                 dataTableOptions.fnInitComplete = function () {
                     //  Find the column that the table is initially sorted by
                     let columnPos = tableDescription.dataTableParams.order[0][0];
@@ -723,6 +723,12 @@ var singleClick = false;
 
                     let tableId = tableDescription.tableId;
                     addOutlineBorder(tableId, columnTitle);
+
+                    if (tableDescription.tableSkin === 'mojito') {
+                        cubeLoaderMojito(tableId);
+                        if (tableDescription.showRowsPerPage)
+                            hideLabelShowXEntries(tableId);
+                    }
 
                     if (tableDescription.hideBeforeLoad) {
                         $(tableDescription.selector).animateFadeIn();
@@ -812,7 +818,7 @@ var singleClick = false;
             wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
                 sName: 'addOutlineClass',
                 fn: function (oSettings) {
-                    if (tableDescription.tableSkin === 'raspberry-cream') {
+                    if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito']) !== -1) {
                         //Find the column that the table is sorted by
                         let columnPos = oSettings.aaSorting[0][0];
                         let columnTitle = oSettings.aoColumns[columnPos].className.substring(
@@ -848,7 +854,25 @@ var singleClick = false;
 
                 $('#' +tableId + '-column-' + columnTitle + '-col').addClass('outlined');
             }
+            /**
+             * Helper function for hiding label 'show entries' for mojito skin
+             */
 
+            function hideLabelShowXEntries(tableId){
+                let showEntriesText = $('#' + tableId +'_length')[0].firstChild;
+                showEntriesText.removeChild(showEntriesText.firstChild);
+                showEntriesText.removeChild(showEntriesText.lastChild);
+
+            }
+
+            function cubeLoaderMojito(tableId){
+                let cubesAnimation = '<div class="wdt_cubes">';
+                for (let i = 1; i <= 9; i++) {
+                    cubesAnimation += '<div class="wdt_cube wdt_cube-' + i + '"></div>';
+                }
+                cubesAnimation += ' </div>';
+                $('#' + tableId).append(cubesAnimation)
+            }
             /**
              * Enable auto-refresh if defined
              */

@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 5.0
-Tested up to: 6.0
-Stable tag: 3.1
+Tested up to: 6.1
+Stable tag: 3.1.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -132,7 +132,13 @@ See https://www.megamenu.com for more screenshots
 
 == Changelog ==
 
-- 3.1.1 =
+= 3.2 =
+
+* Revert: Remove tabindex from arrow indicator due to HTML validation errors, restore pre 3.1 tab/focus behaviour
+* New: Introduce experimental "MEGAMENU_EXPERIMENTAL_MOVE_ARROW" option to move arrow indicator HTML alongside the link element and allow separate keyboard focus (requires clearing the CSS Cache after enabling)
+* Fix: PHP 8.1 compatibility
+
+= 3.1.1 =
 
 * Fix: Pressing Enter on a menu item where the arrow indicator has been hidden should first show the sub menu, then follow the link.
 * Fix: Mobile menu slides down, but does not slide back up

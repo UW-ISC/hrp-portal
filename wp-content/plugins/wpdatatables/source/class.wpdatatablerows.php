@@ -545,7 +545,11 @@ class WPDataTableRows
                 $fontSizeIndex = strval(intval(str_replace('wpdt-fs-', '', $cellClass)));
                 $fontSize = $fontSizeIndex == "0" ? '10' : $fontSizeIndex;
                 $returnData .= "." . $cellClass . " { font-size: " . $fontSize . "px !important;}\n";
-            }
+            } else if (strpos($cellClass, 'wpdt-sc-') !== false) {
+	            $starColor = str_replace('wpdt-sc-', '', $cellClass);
+	            $returnData .= "." . $cellClass . " .rating > span.full.rated:after { color: #" . $starColor . " !important;}\n";
+	            $returnData .= "." . $cellClass . " .rating > .half:before { color: #" . $starColor . " !important;}\n";
+			}
         }
 
         return $returnData;

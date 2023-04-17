@@ -217,9 +217,20 @@ class MLA_Ajax {
 			} else {
 				continue;
 			}
+
 			$term = get_term( $id, $key );
 			$name = $term->name;
-			$new_terms_markup .= "<li id='{$key}-{$id}'><label class='selectit'><input value='{$name}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$id}' checked='checked' />{$name}</label></li>\n";
+
+			/*
+			 * Quick and Bulk edit areas use term ID, Edit Media and Media Modal use term name.
+			 * mla-add-term-scripts.js has this line to identify Quick and Bulk edit areas.
+			 * settings.data += '&mla_source=add-flat-checklist-term';
+			 */
+			if ( isset( $_REQUEST['mla_source'] ) && ( 'add-flat-checklist-term' === $_REQUEST['mla_source'] ) ) {
+				$new_terms_markup .= "<li id='{$key}-{$id}'><label class='selectit'><input value='{$id}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$id}' checked='checked' /> {$name}</label></li>\n";
+			} else {
+				$new_terms_markup .= "<li id='{$key}-{$id}'><label class='selectit'><input value='{$name}' type='checkbox' name='tax_input[{$key}][]' id='in-{$key}-{$id}' checked='checked' /> {$name}</label></li>\n";
+			}
 		} // foreach new_name
 
 		$input_new_parent_name = "new{$key}_parent";
