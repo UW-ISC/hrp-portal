@@ -5,7 +5,7 @@
  *  - In the "mla_gallery_query_arguments" filter are two examples of custom SQL queries
  *    that replace the usual get_posts/WP_Query results.
  *
- *  - In the "mla_gallery_item_values" filter are six examples that modify the 
+ *  - In the "mla_gallery_item_values" filter are five examples that modify the 
  *    attachment-specific data elements used to compose the gallery display.
  *
  *  - The "mla_gallery_raw_attributes", "mla_gallery_open_template" and
@@ -16,18 +16,19 @@
  * and illustrates some of the techniques you can use to customize the gallery display.
  *
  * @package MLA Gallery Hooks Example
- * @version 1.16
+ * @version 1.17
  */
 
 /*
 Plugin Name: MLA Gallery Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides examples of hooking the filters provided by the [mla_gallery] shortcode
+Tags: Hooks,MLA Gallery,Shortcode
 Author: David Lingren
-Version: 1.16
+Version: 1.17
 Author URI: http://davidlingren.com/
 
-Copyright 2013 - 2017 David Lingren
+Copyright 2013 - 2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -1141,11 +1142,10 @@ class MLAGalleryHooksExample {
 	 * @since 1.13
 	 *
 	 * @param array	$markup_values gallery-level parameter_name => parameter_value pairs
-	 * @param array $attachment WP_Post object of the current item
+	 * @param object $attachment WP_Post object of the current item
 	 */
 	public static function mla_gallery_item_initial_values( $markup_values, $attachment ) {
-		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_initial_values $markup_values = ' . var_export( $markup_values, true ), 0 );
-		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_initial_values $attachment = ' . var_export( $attachment, true ), 0 );
+		//error_log( "MLAGalleryHooksExample::mla_gallery_item_initial_values( {$attachment->ID} ) \$markup_values = " . var_export( $markup_values, true ), 0 );
 
 		return $markup_values;
 	} // mla_gallery_item_initial_values
@@ -1171,6 +1171,7 @@ class MLAGalleryHooksExample {
 			return $item_values; // leave them unchanged
 		}
 
+		// Our first example replaces the item caption with a space-delimited list of Att. Categories term slugs.
 		if ( 'format terms' == self::$shortcode_attributes['my_filter'] ) {
 			$object_terms = wp_get_object_terms ( absint( $item_values['attachment_ID'] ), 'attachment_category', array( 'fields' => 'slugs' ) );
 			$item_values['terms:attachment_category'] = implode( ' ', $object_terms );
@@ -1179,59 +1180,10 @@ class MLAGalleryHooksExample {
 		//error_log( 'MLAGalleryHooksExample::mla_gallery_item_values terms = ' . var_export( $item_values['terms:attachment_category'], true ), 0 );
 		}
 
-		// For this first example, we will reformat the 'date' value as d/m/Y.
-		if ( 'format date' == self::$shortcode_attributes['my_filter'] ) {
-
-			/*
-			 * Default format is YYYY-MM-DD HH:MM:SS (HH = 00 - 23), or 'Y-m-d H:i:s'
-			 * Convert to UNIX timestamp so any reformat is possible
-			 */
-			$old_date = $item_values['date'];
-			$timestamp = mktime( substr( $old_date, 11, 2 ), substr( $old_date, 14, 2 ), substr( $old_date, 17, 2 ), substr( $old_date, 5, 2 ), substr( $old_date, 8, 2 ), substr( $old_date, 0, 4 ) );
-
-			/*
-			 * Update the $item_values and pass them back from the filter.
-			 * We must also update the caption because it was composed before this filter is called.
-			 */
-			$item_values['date'] = date( 'd/m/Y', $timestamp );
-			$item_values = self::_update_caption( $item_values,$item_values['description'] . ', ' . $item_values['date'] );
-
-			/*
-			 * This alternative generates a "clickable" caption value
-			 * linked directly to the item's attached file.
-			 */
-			//$item_values = self::_update_caption( $item_values, sprintf( '<a href="%1$s">%2$s<br>%3$s</a>', $item_values['file_url'], $item_values['title'], $item_values['date'] ) );
-
-			return $item_values;
-		}
-
-		// The second example adds a formatted file size element to the existing caption.
-		if ( 'file size' == self::$shortcode_attributes['my_filter'] ) {
-
-			/*
-			 * Compose the file size in different formats.
-			 *
-			 * You can use MLAShortcodes::mla_get_data_source() to get anything available.
-			 */
-			$my_setting = array(
-				'data_source' => 'file_size',
-				'option' => 'raw'
-			);
-			$file_size = (float) MLAShortcodes::mla_get_data_source( $item_values['attachment_ID'], 'single_attachment_mapping', $my_setting, NULL );
-
-			if ( 1048576 < $file_size ) {
-				$file_size = number_format( ($file_size/1048576), 3 ).' MB';
-			} elseif ( 10240 < $file_size ) {
-				$file_size = number_format( ($file_size/1024), 3 ).' KB';
-			} else {
-				$file_size = number_format( $file_size );
-			}
-
-			// Compose a new caption, adding the file size.
-			return self::_update_caption( $item_values, sprintf( '%1$s<br>Size: %2$s', $item_values['caption'], $file_size ) );
-		}
-
-		// Our third example changes taxonomy terms into links to term-specific archive pages.
+		/*
+		 * Our second example changes taxonomy terms into links to term-specific archive pages.
+		 * NOTE: This happens AFTER the caption has been generated.
+		 */
 		if ( 'term gallery' == self::$shortcode_attributes['my_filter'] ) {
 			/*
 			 * Use the "my_href" parameter to link to a static page,
@@ -1272,7 +1224,7 @@ class MLAGalleryHooksExample {
 			return $item_values;
 		}
 
-		// For the fourth example, we compose a URL to allow file deletion and add it to the caption.
+		// For the third example, we compose a URL to allow file deletion and add it to the caption.
 		if ( 'allow file deletion' == self::$shortcode_attributes['my_filter'] ) {
 			$id = (integer) $item_values['attachment_ID'];
 			if ( current_user_can( 'delete_post', $id ) ) { 
@@ -1284,7 +1236,7 @@ class MLAGalleryHooksExample {
 			}
 		}
 
-		// For the fifth example, we compose a caption with "Inserted in" links.
+		// For the fourth example, we compose a caption with "Inserted in" links.
 		if ( 'show post inserts' == self::$shortcode_attributes['my_filter'] ) {
 			 // You can use MLAShortcodes::mla_get_data_source() to get anything available.
 			$my_setting = array(
@@ -1384,6 +1336,10 @@ class MLAGalleryHooksExample {
 		// Add the definition list to the caption
 		$my_caption .= "<dl class=\"custom_field\">\r\n";
 		foreach ( $custom_fields as $key => $value ) {
+			if ( is_array( $value ) ) {
+				$value = var_export( $value, true );
+			}
+			
 			$my_caption .= "<dt class=\"name\">{$key}</dt>\r\n";
 			$my_caption .= "<dd class=\"value\">{$value}</dd>\r\n";
 		} // foreach custom field

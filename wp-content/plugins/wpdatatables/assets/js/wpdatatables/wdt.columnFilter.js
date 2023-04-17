@@ -1188,7 +1188,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
                 }
                 search += buildSearchStringForMultiFilters(value, aoColumn.exactFiltering);
             });
-            oTable.fnFilter(search.substring(0, search.length - 1), columnIndex, true, false);
+            oTable.api().column(columnIndex).search(search.substring(0, search.length - 1), true, false);
         }
 
         if (typeof wpDataTables[tableId].drawTable === 'undefined' || wpDataTables[tableId].drawTable === true) {

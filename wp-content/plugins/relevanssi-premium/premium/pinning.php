@@ -82,12 +82,26 @@ function relevanssi_pinning( $hits ) {
 		)
 	);
 
+	$pin_weights_sql = $wpdb->get_results(
+		"SELECT post_id, meta_value FROM $wpdb->postmeta
+		WHERE meta_key = '_relevanssi_pin_weights'"
+	);
+
+	$pin_weights = array();
+	foreach ( $pin_weights_sql as $row ) {
+		$pin_weights[ $row->post_id ] = $row->meta_value;
+	}
+	unset( $pin_weights_sql );
+
 	/**
 	 * If the search query is "foo bar baz", $term_list now contains "foo", "bar",
 	 *"baz", "foo bar", "bar baz", and "foo bar baz".
 	*/
-
 	if ( is_array( $term_list ) ) {
+		$term_list_array = $term_list;
+
+		array_multisort( array_map( 'relevanssi_strlen', $term_list_array ), SORT_DESC, $term_list_array );
+
 		$term_list = implode( "','", $term_list );
 		$term_list = "'$term_list'";
 
@@ -135,20 +149,42 @@ function relevanssi_pinning( $hits ) {
 				&& in_array( $hit_id, $negative_ids[ $blog_id ], true );
 			$pinned_for_all = isset( $hit->ID ) && isset( $posts_pinned_for_all[ $hit->ID ] );
 
+			$pin_weight = 0;
+			$weights    = unserialize( $pin_weights[ $hit->ID ] ?? '' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize
+			foreach ( $term_list_array as $term ) {
+				if ( isset( $weights[ $term ] ) ) {
+					$pin_weight = $weights[ $term ];
+					break;
+				}
+			}
+
+			if ( 0 === $pin_weight ) {
+				$term       = $term_list_array[0];
+				$pin_weight = 1;
+			}
+
 			if ( $hit_id && $positive_match && ! $negative_match ) {
-				$hit->relevanssi_pinned = 1;
-				$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
+				$hit->relevanssi_pinned                 = 1;
+				$pinned_posts[ $term ][ $pin_weight ][] = relevanssi_return_value( $hit, $return_value );
 			} else {
 				if ( $pinned_for_all && ! $negative_match ) {
 					$hit->relevanssi_pinned = 1;
-					$pinned_posts[]         = relevanssi_return_value( $hit, $return_value );
+					$pinned_posts[0][0][]   = relevanssi_return_value( $hit, $return_value );
 				} elseif ( ! $negative_match ) {
 					$other_posts[] = relevanssi_return_value( $hit, $return_value );
 				}
 			}
 		}
+		array_multisort( array_map( 'relevanssi_strlen', array_keys( $pinned_posts ) ), SORT_DESC, $pinned_posts );
 
-		$hits[0] = array_merge( $pinned_posts, $other_posts );
+		$all_pinned_posts = array();
+		foreach ( $pinned_posts as $term => $posts_for_term ) {
+			krsort( $posts_for_term, SORT_NUMERIC );
+			$posts_for_term   = call_user_func_array( 'array_merge', $posts_for_term );
+			$all_pinned_posts = array_merge( $all_pinned_posts, $posts_for_term );
+		}
+
+		$hits[0] = array_merge( $all_pinned_posts, $other_posts );
 	}
 	return $hits;
 }

@@ -5689,14 +5689,14 @@ class MLAShortcode_Support {
 		}
 
 		// Convert lists to arrays, if they have more than one element
-		if ( is_string( $arguments['post_type'] ) ) {
+		if ( isset( $arguments['post_type'] ) && is_string( $arguments['post_type'] ) ) {
 			$value = explode( ',', $arguments['post_type'] );
 			if ( 1 < count( $value ) ) {
 				$arguments['post_type'] = $value;
 			}
 		}
 
-		if ( is_string( $arguments['post_status'] ) ) {
+		if ( isset( $arguments['post_status'] ) && is_string( $arguments['post_status'] ) ) {
 			$value = explode( ',', $arguments['post_status'] );
 			if ( 1 < count( $value ) ) {
 				$arguments['post_status'] = $value;

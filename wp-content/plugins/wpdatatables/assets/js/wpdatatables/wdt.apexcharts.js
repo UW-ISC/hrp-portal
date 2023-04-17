@@ -250,6 +250,8 @@ var wpDataTablesApexChart = function() {
         },
         setCustomOptions: function(chartConfig) {
             this.setBackground(chartConfig.chart.background);
+            if (this.options.xaxis.title)
+                this.options.xaxis.title.position = "bottom";
             if (!(['pie', 'donut', 'radialBar', 'radar', 'bar'].includes(this.options.chart.type))
                 || Array.isArray(this.options.yaxis)
                 || chartConfig.chart_type === 'apexcharts_column_chart'
@@ -286,11 +288,11 @@ var wpDataTablesApexChart = function() {
             }
         },
         setSingleSeriesType: function(chartConfig) {
-          if (Object.keys(chartConfig.series).length === 1 && chartConfig.series[0].type) {
-              this.options.chart.type = chartConfig.series[0].type;
-              this.options.stroke.curve = this.options.stroke.curve ? this.options.stroke.curve : 'smooth';
-              this.options.plotOptions.bar.horizontal = this.options.plotOptions.bar.horizontal ? this.options.plotOptions.bar.horizontal : false;
-          }
+            if (Object.keys(chartConfig.series).length === 1 && chartConfig.series[0].type) {
+                this.options.chart.type = chartConfig.series[0].type;
+                this.options.stroke.curve = this.options.stroke.curve ? this.options.stroke.curve : 'smooth';
+                this.options.plotOptions.bar.horizontal = this.options.plotOptions.bar.horizontal ? this.options.plotOptions.bar.horizontal : false;
+            }
         },
         setStartEndAngles: function(chartConfig) {
             if (this.options.chart.type === 'radialBar') {
@@ -310,7 +312,7 @@ var wpDataTablesApexChart = function() {
                 }
                 this.options.yaxis[i].opposite = chartConfig.yaxis[i].opposite;
                 this.options.yaxis[i].seriesName = this.options.yaxis[i].opposite ? chartConfig.series[i].name : chartConfig.series[0].name;
-                this.options.series[i].name = chartConfig.series[i].label;
+                if (!this.options.yaxis[i].title.text) this.options.yaxis[i].title.text = this.options.series[i].label;
             }
             this.setDecimalsInFloat();
         },
@@ -330,14 +332,49 @@ var wpDataTablesApexChart = function() {
             }
             this.setDecimalsInFloat();
         },
-        isRegularBarType: function () {
-            return !this.options.chart.stacked && (!this.options.plotOptions.bar.horizontal || this.options.series.length === 1);
+        setSeriesAndAxis: function (chartConfig) {
+            this.setBackground(chartConfig.chart.background);
+            if (this.options.xaxis.title)
+                this.options.xaxis.title.position = "bottom";
+            if (['line', 'area','column'].includes(chartConfig.chart.type)) {
+                var j = 0;
+
+                for (var i in chartConfig.series) {
+                    this.options.colors[j] = chartConfig.series[i].color ? chartConfig.series[i].color : this.options.colors[j];
+                    this.options.fill.image[j] = chartConfig.series[i].chart_image ? chartConfig.series[i].chart_image : '';
+                    if (chartConfig.series[i].type)
+                        this.options.series[j].type = chartConfig.series[i].type;
+
+                    this.options.yaxis[j] = {
+                        title: {
+                            text: chartConfig.series[i].name,
+                        },
+                        label: chartConfig.series[i].label,
+                        show: j === 0 || chartConfig.series[i].yAxis,
+                        tooltip: {
+                            enabled: true
+                        },
+                        seriesName: chartConfig.series[i].yAxis == 1 ? this.options.series[j].name : this.options.series[0].name,
+                        min: chartConfig.yaxis[0].min ? parseFloat(chartConfig.yaxis[0].min) : undefined,
+                        max: chartConfig.yaxis[0].max ? parseFloat(chartConfig.yaxis[0].max) : undefined,
+                        tickAmount: chartConfig.yaxis[0].tickAmount != '0' && chartConfig.yaxis[0].tickAmount != undefined
+                            ? parseInt(chartConfig.yaxis[0].tickAmount) : undefined,
+                        opposite: chartConfig.series[i].yAxis == 1,
+                        reversed: chartConfig.yaxis[i].reversed,
+                    };
+                    j++;
+                    this.options.series[i].name = this.options.series[i].label;
+                }
+            }
+        },
+        setAxisTitles: function() {
+            if (!this.options.xaxis.title.text)
+                this.options.xaxis.title.text = this.options.series[0].label;
+            if (Array.isArray(this.options.yaxis) && !this.options.yaxis[0].title.text)
+                this.options.yaxis[0].title.text = this.options.series[0].label;
         },
         setStrokeWidth: function(width) {
-          if (width) this.options.stroke.width = parseInt(width);
-        },
-        getUniqueList: function(array, property) {
-            return array.filter((e, i) => array.findIndex(a => a[property] === e[property]) === i);
+            if (width) this.options.stroke.width = parseInt(width);
         },
         isColorValid: function(color) {
             var e = document.getElementById('divValidColor');
@@ -350,9 +387,6 @@ var wpDataTablesApexChart = function() {
             var tmpcolor = e.style.borderColor;
             return tmpcolor.length != 0;
 
-        },
-        isNumberFloat: function(n) {
-            return Number(n) === n && n % 1 !== 0;
         },
         assesGradientFillType: function(imageSource) {
             return imageSource != '' || (Array.isArray(imageSource) && imageSource.length);
@@ -367,7 +401,6 @@ var wpDataTablesApexChart = function() {
                 var j = 0;
 
                 for (var i in chartConfig.options.series) {
-                    this.options.series[j].name = chartConfig.options.series[i].label;
                     this.options.colors[j] = chartConfig.options.series[i].color ? chartConfig.options.series[i].color : this.options.colors[j];
                     this.options.fill.image[j] = chartConfig.options.series[i].chart_image ? chartConfig.options.series[i].chart_image : '';
                     if (chartConfig.options.series[i].type)
@@ -375,15 +408,20 @@ var wpDataTablesApexChart = function() {
 
                     this.options.yaxis[j] = {
                         title: {
-                            text: chartConfig.options.series[i].label,
+                            text: chartConfig.options.series[i].name,
                         },
-                        show: j === 0,
+                        label: chartConfig.options.series[i].label,
                         tooltip: {
                             enabled: true
                         },
-                        seriesName: this.options.series[0].name,
-                        min: undefined,
-                        max: undefined,
+                        show: j === 0 ? true : chartConfig.options.yaxis.opposite,
+                        seriesName: chartConfig.options.series[i].yAxis == 1 ? chartConfig.options.series[j].name : chartConfig.options.series[0].name,
+                        min: chartConfig.options.yaxis[0].min ? parseFloat(chartConfig.options.yaxis[0].min) : undefined,
+                        max: chartConfig.options.yaxis[0].max ? parseFloat(chartConfig.options.yaxis[0].max) : undefined,
+                        tickAmount: chartConfig.options.yaxis[0].tickAmount != '0' && chartConfig.options.yaxis[0].tickAmount != undefined
+                            ? parseInt(chartConfig.options.yaxis[0].tickAmount) : undefined,
+                        opposite: chartConfig.options.series[i].yAxis == 1,
+                        reversed: chartConfig.options.yaxis[i].reversed
                     };
                     j++;
 
@@ -531,7 +569,6 @@ var wpDataTablesApexChart = function() {
                 this.options
             );
             this.setStrokeWidth(this.options.stroke.width);
-            this.setCustomOptions(this.options);
             this.setDecimalsInFloat();
             this.chart.render();
 

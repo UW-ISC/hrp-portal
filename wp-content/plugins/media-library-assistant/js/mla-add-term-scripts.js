@@ -377,6 +377,7 @@ var jQuery;
 				action:      settings.action
 			}, wpAjax.unserialize( data[4] || '' ) ) );
 
+			settings.data += '&mla_source=add-flat-checklist-term';
 			formValues = $( '#' + settings.element + ' :input', mla.mlaList.settings.context ).not( '[name="_ajax_nonce"], [name="_wpnonce"], [name="action"]' );
 			formData   = typeof formValues.fieldSerialize === 'function' ? formValues.fieldSerialize() : formValues.serialize();
 

@@ -721,6 +721,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$vars['elementor_pro_active'] = 'false';
 			$vars['arrow_font']           = 'dashicons';
 			$vars['arrow_font_weight']    = 'normal';
+			$vars['arrow_combinator']     = "'>'";
+
+			if ( defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') && MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+				$vars['arrow_combinator'] = "'+'";
+			}
 
 			$current_theme = wp_get_theme();
 			$theme_id      = $current_theme->template;

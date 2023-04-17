@@ -5,6 +5,9 @@
 .wpdt-c.wdt-skin-material {
     font-size: 13px;
 }
+.wpdt-c.wdt-skin-material .wpDataTablesFilter{
+    line-height:normal !important;
+}
 
 .wpdt-c.wdt-skin-material table.wpDataTable {
     font-family: var(--wpdt-roboto-google-font, inherit);

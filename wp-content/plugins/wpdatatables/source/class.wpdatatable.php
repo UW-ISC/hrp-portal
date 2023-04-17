@@ -91,6 +91,7 @@ class WPDataTable {
     private $_pagination = true;
     private $_paginationAlign = 'right';
     private $_paginationLayout = 'full_numbers';
+    private $_paginationLayoutMobile = 'simple';
     private $_simpleResponsive = false;
     private $_verticalScroll = false;
     private $_simpleHeader = false;
@@ -649,6 +650,9 @@ class WPDataTable {
     public function setPaginationAlign($paginationAlign)
     {
         $this->_paginationAlign = $paginationAlign;
+        if (wp_is_mobile()) {
+            $this->_paginationAlign = 'center';
+        }
     }
 
     /**
@@ -665,6 +669,22 @@ class WPDataTable {
     public function setPaginationLayout($paginationLayout)
     {
         $this->_paginationLayout = $paginationLayout;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaginationLayoutMobile()
+    {
+        return $this->_paginationLayoutMobile;
+    }
+
+    /**
+     * @param string $paginationLayout
+     */
+    public function setPaginationLayoutMobile($paginationLayout)
+    {
+        $this->_paginationLayoutMobile = $paginationLayout;
     }
 
     /**
@@ -3328,6 +3348,9 @@ class WPDataTable {
             case "raspberry-cream":
                 $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/raspberry-cream.css';
                 break;
+	        case "mojito":
+		        $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/mojito.css';
+		        break;
             default:
                 $renderSkin = WDT_ASSETS_PATH . 'css/wdt-skins/material.css';
                 break;
@@ -3355,11 +3378,10 @@ class WPDataTable {
         }
 
         do_action('wdt_enqueue_on_frontend', $this);
-
-        wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
-        wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
-        wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
-        wp_localize_script('wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
+		wp_localize_script( 'wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings() );
+		wp_localize_script( 'wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings() );
+		wp_localize_script( 'wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings() );
+		wp_localize_script( 'wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings() );
     }
 
     /**
@@ -3827,6 +3849,7 @@ class WPDataTable {
             isset($advancedSettings->pagination) ? $this->setPagination($advancedSettings->pagination) : $this->setPagination(true);
             isset($advancedSettings->paginationAlign) ? $this->setPaginationAlign($advancedSettings->paginationAlign) : $this->setPaginationAlign('right');
             isset($advancedSettings->paginationLayout) ? $this->setPaginationLayout($advancedSettings->paginationLayout) : $this->setPaginationLayout('full_numbers');
+            isset($advancedSettings->paginationLayoutMobile) ? $this->setPaginationLayoutMobile($advancedSettings->paginationLayoutMobile) : $this->setPaginationLayoutMobile('simple');
             isset($advancedSettings->editButtonsDisplayed) ? $this->setEditButtonsDisplayed($advancedSettings->editButtonsDisplayed) : $this->setEditButtonsDisplayed(array('all'));
             isset($advancedSettings->enableDuplicateButton) ? $this->setEnableDuplicateButton($advancedSettings->enableDuplicateButton) : $this->setEnableDuplicateButton(false);
             (isset($advancedSettings->language) && $advancedSettings->language != '' ? $this->setInterfaceLanguage($advancedSettings->language) : get_option('wdtInterfaceLanguage') != '') ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
@@ -3858,6 +3881,7 @@ class WPDataTable {
             $this->setPagination(true);
             $this->setPaginationAlign('right');
             $this->setPaginationLayout('full_numbers');
+            $this->setPaginationLayoutMobile('simple');
             $this->setEditButtonsDisplayed(array('all'));
             $this->setEnableDuplicateButton(false);
             $this->setTableSkin(get_option('wdtBaseSkin'));
@@ -4019,6 +4043,30 @@ class WPDataTable {
 	        if ($column->column_align_header != '') {
 		        $this->_columnsCSS .= "\n#{$this->getId()} > thead > tr > th.{$cssColumnHeader} { text-align: {$column->column_align_header} !important; }";
 			}
+			$currentSkin = $this->getTableSkin();
+	        if ( $column->column_rotate_header_name != '') {
+		        if ( $column->column_rotate_header_name == '180' ) {
+			        $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}{rotate: {$column->column_rotate_header_name}deg; writing-mode: vertical-rl; width: auto;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{rotate: 180deg; left:15px !important; top: 16px !important; writing-mode: horizontal-tb;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
+
+		        } else if ($column->column_rotate_header_name == '360') {
+			        $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} {writing-mode: vertical-rl;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{writing-mode: horizontal-tb;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
+		        }
+				if (in_array($currentSkin, ['graphite','light'])) {
+					$this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}.sorting_asc:after{position: relative !important; left: -10px !important; top: 4px !important;}";
+					$this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}.sorting_desc:after{position: relative !important; left: -10px !important; top: 4px !important;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}.sorting:after{position: relative; left: -10px; top: 0px;}";
+				}
+                if (in_array($currentSkin, ['graphite','light']) && $column->column_rotate_header_name == '180') {
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}{position: relative; bottom: 0.5px; z-index: 0; left:0.5px; padding: 7px 8px;}";
+                }
+                if (in_array($currentSkin, ['purple','aqua','raspberry-cream','mojito']) && $column->column_rotate_header_name == '180') {
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}{position: relative; bottom: 1px; z-index:0;}";
+                }
+	        }
 
             $this->_columnsCSS = apply_filters('wpdt_filter_columns_css', $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader );
 
@@ -4058,6 +4106,7 @@ class WPDataTable {
         $obj->pagination = $this->isPagination();
         $obj->paginationAlign = $this->getPaginationAlign();
         $obj->paginationLayout = $this->getPaginationLayout();
+        $obj->paginationLayoutMobile = $this->getPaginationLayoutMobile();
         $obj->file_location = $this->getFileLocation();
         $obj->tableSkin = $this->getTableSkin();
         $obj->globalSearch = $this->isGlobalSearch();
@@ -4084,20 +4133,30 @@ class WPDataTable {
         $obj->tableWpId = $this->getWpId();
         $obj->dataTableParams = new StdClass();
 
+		$currentSkin = $this->getTableSkin();
         $infoBlock = ($obj->infoBlock == true) ? 'i' : '';
         $globalSearch = ($obj->globalSearch == true) ? 'f' : '';
         $showRowsPerPage = ($obj->showRowsPerPage == true) ? 'l' : '';
         $pagination = ($obj->pagination == true) ? 'p' : '';
         $scrollable = ($this->isScrollable() == true) ? "<'wdtscroll't>" : 't';
-        $obj->dataTableParams->sDom = "BT<'clear'>{$showRowsPerPage}{$globalSearch}{$scrollable}{$infoBlock}{$pagination}";
+		if ($currentSkin === 'mojito') {
+			$obj->dataTableParams->sDom = "<'wdt_wrapper_for_buttons'{$globalSearch}{$showRowsPerPage}BT>{$scrollable}{$infoBlock}{$pagination}";
+		} else {
+			$obj->dataTableParams->sDom = "BT<'clear'>{$showRowsPerPage}{$globalSearch}{$scrollable}{$infoBlock}{$pagination}";
+		}
 
-        $obj->dataTableParams->bSortCellsTop = false;
+	    $obj->dataTableParams->bSortCellsTop = false;
         //[<-- Full version -->]//
         $obj->dataTableParams->bFilter = $this->filterEnabled();
         //[<--/ Full version -->]//
         if ($this->paginationEnabled()) {
             $obj->dataTableParams->bPaginate = true;
-            $obj->dataTableParams->sPaginationType = $this->getPaginationLayout();
+
+            if (wp_is_mobile()) {
+                $obj->dataTableParams->sPaginationType = $this->getPaginationLayoutMobile();
+            } else {
+                $obj->dataTableParams->sPaginationType = $this->getPaginationLayout();
+            }
             $obj->dataTableParams->aLengthMenu = json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
             $obj->dataTableParams->iDisplayLength = (int)$this->getDisplayLength();
         } else {
@@ -4146,51 +4205,54 @@ class WPDataTable {
                 $wdtExportFileName = 'wpdt_export';
             }
         }
-
-        if (!$this->getNoData() && $this->advancedFilterEnabled()) {
-            $obj->advancedFilterEnabled = true;
-            $obj->advancedFilterOptions = array();
-            if (get_option('wdtRenderFilter') == 'header') {
-                $obj->advancedFilterOptions['sPlaceHolder'] = "head:before";
-            }
-            if ($this->getFilteringForm()) {
-                $obj->filterInForm = true;
-            } else {
-                $obj->filterInForm = false;
-                if ($this->isClearFilters()) {
-                    (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
-                    $obj->dataTableParams->buttons[] =
-                        array(
-                            'text' => __('Clear filters', 'wpdatatables'),
-                            'className' => 'wdt-clear-filters-button DTTT_button DTTT_button_clear_filters'
-                        );
-                }
-            }
-            $obj->advancedFilterOptions['aoColumns'] = json_decode('[' . $this->getColumnFilterDefinitions() . ']');
-            $obj->advancedFilterOptions['bUseColVis'] = true;
-        } else {
-            $obj->advancedFilterEnabled = false;
-        }
+	    $currentSkin = $this->getTableSkin();
+	    $clearfiltersBttnText = $currentSkin == 'mojito' ? '' : __('Clear filters', 'wpdatatables');
+		    if ( !$this->getNoData() && $this->advancedFilterEnabled() ) {
+			    $obj->advancedFilterEnabled = true;
+			    $obj->advancedFilterOptions = array();
+			    if ( get_option( 'wdtRenderFilter' ) == 'header' ) {
+				    $obj->advancedFilterOptions['sPlaceHolder'] = "head:before";
+			    }
+			    if ( $this->getFilteringForm() ) {
+				    $obj->filterInForm = true;
+			    } else {
+				    $obj->filterInForm = false;
+				    if ( $this->isClearFilters() ) {
+					    ( ! isset( $obj->dataTableParams->buttons ) ) ? $obj->dataTableParams->buttons = array() : '';
+					    $obj->dataTableParams->buttons[] =
+						    array(
+							    'text'      => $clearfiltersBttnText,
+							    'className' => 'wdt-clear-filters-button DTTT_button DTTT_button_clear_filters'
+						    );
+				    }
+			    }
+			    $obj->advancedFilterOptions['aoColumns']  = json_decode( '[' . $this->getColumnFilterDefinitions() . ']' );
+			    $obj->advancedFilterOptions['bUseColVis'] = true;
+		    } else {
+			    $obj->advancedFilterEnabled = false;
+		    }
 
         $currentSkin = $this->getTableSkin();
-        $skinsWithNewTableToolsButtons = ['aqua','purple','dark','raspberry-cream'];
+        $skinsWithNewTableToolsButtons = ['aqua','purple','dark','raspberry-cream', 'mojito'];
         $tableToolsIncludeHTML = !$this->getTableToolsIncludeHTML();
-        $printBttnText = $currentSkin == 'raspberry-cream' ? '' : __('Print', 'wpdatatables');
+	    $printBttnText = in_array($currentSkin, ['mojito','raspberry-cream']) ? '' : __('Print', 'wpdatatables');
         $tableToolsExportTitle = $this->getTableToolsIncludeTitle() ? $this->getName() : null;
-
+	    $exportBttnText = $currentSkin == 'mojito' ? '' : __('Export', 'wpdatatables');
         $pdfPaperSize = $this->getPdfPaperSize();
         $pdfPageOrientation = $this->getPdfPageOrientation();
+	    $columnsBttnText = $currentSkin == 'mojito' ? '' : __('Columns', 'wpdatatables');
+
 
         if ($this->TTEnabled()) {
             (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
-            if (in_array($currentSkin, $skinsWithNewTableToolsButtons)){
+            if (in_array($currentSkin, $skinsWithNewTableToolsButtons)) {
 
                 if (!empty($this->_tableToolsConfig['columns'])) {
                     $obj->dataTableParams->buttons[] =
                         array(
                             'extend'           => 'colvis',
                             'className'        => 'DTTT_button DTTT_button_colvis',
-                            'text'             => __('Columns', 'wpdatatables'),
+                            'text'             => $columnsBttnText,
                             'collectionLayout' => 'wdt-skin-' . $currentSkin
                         );
                 }
@@ -4262,7 +4324,7 @@ class WPDataTable {
                     $obj->dataTableParams->buttons[] = array(
                         'extend'    => 'collection',
                         'className' => 'DTTT_button DTTT_button_export',
-                        'text'      => __('Export', 'wpdatatables'),
+                        'text'      => $exportBttnText,
                         'buttons'   => $exportButtons
                     );
                 }
@@ -4274,7 +4336,7 @@ class WPDataTable {
                         array(
                             'extend'           => 'colvis',
                             'className'        => 'DTTT_button DTTT_button_colvis',
-                            'text'             => __('Columns', 'wpdatatables'),
+                            'text'             => $columnsBttnText,
                             'collectionLayout' => 'wdt-skin-' . $currentSkin
                         );
                 }
@@ -4288,7 +4350,7 @@ class WPDataTable {
                             ),
                             'className'     => 'DTTT_button DTTT_button_print',
                             'title'         => $wdtExportFileName,
-                            'text'          => __('Print', 'wpdatatables'),
+                            'text'          => $printBttnText,
                         );
                 }
 
@@ -4350,19 +4412,28 @@ class WPDataTable {
 
         //[<-- Full version -->]//
         if ($this->isEditable()) {
+			if ($currentSkin == 'mojito' && $this->TTEnabled()) {
+				$obj->dataTableParams->buttons[] = [
+					'text' => '',
+					'className' => 'DTTT_button DTTT_button_spacer'
+				];
+			}
             (!isset($obj->dataTableParams->buttons)) ? $obj->dataTableParams->buttons = array() : '';
 
             $obj->dataTableParams->editButtonsDisplayed = $this->getEditButtonsDisplayed();
-            $deleteBttnText = $currentSkin == 'raspberry-cream' ? '' : __('Delete', 'wpdatatables');
+            $deleteBttnText = in_array($currentSkin, ['mojito','raspberry-cream']) ? '' : __('Delete', 'wpdatatables');
+	        $newEntryBttnText = $currentSkin == 'mojito' ? '' : __('New entry', 'wpdatatables');
+	        $editBttnText = $currentSkin == 'mojito' ? '' : __('Edit', 'wpdatatables');
+	        $duplicateBttnText = $currentSkin == 'mojito' ? '' : __('Duplicate', 'wpdatatables');
 
             /** @var array $editButtons */
             $editButtons = array(
                 'new_entry' => array(
-                    'text' => __('New entry', 'wpdatatables'),
+                    'text' => $newEntryBttnText,
                     'className' => 'new_table_entry DTTT_button DTTT_button_new'
                 ),
                 'edit' => array(
-                    'text' => __('Edit', 'wpdatatables'),
+                    'text' => $editBttnText,
                     'className' => 'edit_table DTTT_button DTTT_button_edit',
                     'enabled' => false
                 ),
@@ -4387,12 +4458,11 @@ class WPDataTable {
             if ($this->isEnableDuplicateButton() &&
                 !empty(array_intersect(['all', 'duplicate'], $obj->dataTableParams->editButtonsDisplayed))) {
                 $obj->dataTableParams->buttons[] = [
-                    'text' => __('Duplicate', 'wpdatatables'),
+                    'text' => $duplicateBttnText,
                     'className' => 'duplicate_table_entry DTTT_button DTTT_button_duplicate',
                     'enabled' => false,
                 ];
             }
-
             //Define the order for the edit buttons
             $order    = 'text';
             $ordering = ['New Entry', 'Edit', 'Duplicate', 'Delete'];
@@ -4414,29 +4484,31 @@ class WPDataTable {
             $obj->advancedEditingOptions['aoColumns'] = json_decode('[' . $this->getColumnEditingDefinitions() . ']');
         }
 
-        if (in_array($currentSkin, $skinsWithNewTableToolsButtons)) {
+	    if (in_array($currentSkin, $skinsWithNewTableToolsButtons)) {
 
-            if (!isset($obj->dataTableParams->oLanguage)) {
-                $obj->dataTableParams->oLanguage = new stdClass();
-                $obj->dataTableParams->oLanguage->sSearchPlaceholder = __('Search table', 'wpdatatables');
-            }
+		    if (!isset($obj->dataTableParams->oLanguage)) {
+			    $obj->dataTableParams->oLanguage = new stdClass();
+			    $obj->dataTableParams->oLanguage->sSearchPlaceholder = __('Search table', 'wpdatatables');
+		    }
 
-            $obj->dataTableParams->oLanguage->sSearch = '<span class="wdt-search-icon"></span>';
+		    $obj->dataTableParams->oLanguage->sSearch = '<span class="wdt-search-icon"></span>';
 
-            if ($this->isEditable() || $this->TTEnabled() || $this->isClearFilters()) {
-                $obj->dataTableParams->buttons[] = array(
-                    'buttons' => ['pageLength'],
-                    'className' => 'DTTT_button DTTT_button_spacer',
-                );
-            }
-        } else {
+		    if ($this->isEditable() || $this->TTEnabled() || $this->isClearFilters()) {
+			    if($currentSkin != 'mojito') {
+				    $obj->dataTableParams->buttons[] = array(
+					    'buttons'   => [ 'pageLength' ],
+					    'className' => 'DTTT_button DTTT_button_spacer',
+				    );
+			    }
+		    }
+	    } else {
 
-            if (!isset($obj->dataTableParams->oLanguage)) {
-                $obj->dataTableParams->oLanguage = new stdClass();
-            }
+		    if (!isset($obj->dataTableParams->oLanguage)) {
+			    $obj->dataTableParams->oLanguage = new stdClass();
+		    }
 
-            $obj->dataTableParams->oLanguage->sSearchPlaceholder = '';
-        }
+		    $obj->dataTableParams->oLanguage->sSearchPlaceholder = '';
+	    }
 
         //[<--/ Full version -->]//
 

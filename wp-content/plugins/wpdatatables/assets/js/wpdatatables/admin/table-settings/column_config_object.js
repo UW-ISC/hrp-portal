@@ -128,6 +128,11 @@ var WDTColumn = function (column, parent_table) {
     this.column_align_header = '';
     this.column_align_fields = '';
     /**
+     * Column rotate header name
+     *
+     */
+    this.column_rotate_header_name = '';
+    /**
      * Toggle calculate total for numeric columns
      * @type {int}
      */
@@ -392,6 +397,7 @@ var WDTColumn = function (column, parent_table) {
         this.valuesList = column.valuesList || null;
         this.visible = typeof column.visible !== 'undefined' ? column.visible : 1;
         this.width = column.width || null;
+        this.column_rotate_header_name = column.column_rotate_header_name || '';
 
         if ( typeof callbackExtendColumnObject !== 'undefined' ) {
             callbackExtendColumnObject(column, this);
@@ -1125,6 +1131,7 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-possible-values-ajax').selectpicker('val', this.possibleValuesAjax).change();
     jQuery('#wdt-column-align-header').selectpicker('val', this.column_align_header).change();
     jQuery('#wdt-column-align-fields').selectpicker('val', this.column_align_fields).change();
+    jQuery('#wdt-column-rotate-header-name').selectpicker('val', this.column_rotate_header_name).change();
     if (this.possibleValuesType == 'list') {
         jQuery('#wdt-column-values-list').tagsinput('add', this.valuesList);
     } else if (this.possibleValuesType == 'foreignkey') {
@@ -1432,6 +1439,7 @@ WDTColumn.prototype.applyChanges = function () {
     this.possibleValuesAjax = jQuery('#wdt-possible-values-ajax').val();
     this.column_align_header = jQuery('#wdt-column-align-header').val();
     this.column_align_fields = jQuery('#wdt-column-align-fields').val();
+    this.column_rotate_header_name = jQuery('#wdt-column-rotate-header-name').val();
     this.calculateTotal = ( jQuery('#wdt-column-calc-total').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
     this.calculateAvg = ( jQuery('#wdt-column-calc-avg').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
     this.calculateMax = ( jQuery('#wdt-column-calc-max').is(':checked') && ( this.type == 'int' || this.type == 'float' || this.type == 'formula') ) ? 1 : 0;
@@ -1567,7 +1575,8 @@ WDTColumn.prototype.getJSON = function () {
         type: this.type,
         valuesList: this.valuesList,
         visible: this.visible,
-        width: this.width
+        width: this.width,
+        column_rotate_header_name: this.column_rotate_header_name
     };
 
     if ( typeof callbackExtendOptionInObjectFormat !== 'undefined' ) {

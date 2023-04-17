@@ -363,6 +363,26 @@
 
                             </div>
 
+
+                            <div class="col-sm-6">
+                                <h4 class="c-title-color m-b-2 wdt-beta-feature">
+                                    <?php esc_html_e('Column header text rotation', 'wpdatatables'); ?>
+                                    <p class="m-b-2 wdt-beta-feature"><?php esc_html_e('BETA', 'wpdatatables'); ?></p>
+                                       <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right" title=""
+                                          data-original-title="<?php esc_attr_e('Here you can override the default rotation for the column header text.', 'wpdatatables'); ?>"></i>
+                                </h4>
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="form-control selectpicker" id="wdt-column-rotate-header-name" autocomplete="off"
+                                                title="<?php esc_attr_e('Default', 'wpdatatables'); ?>">
+                                            <option value="360"><?php esc_html_e('-90', 'wpdatatables'); ?></option>
+                                            <option value=""><?php esc_html_e('0', 'wpdatatables'); ?></option>
+                                            <option value="180"><?php esc_html_e('90', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
                             <?php do_action('wdt_add_column_display_settings_element'); ?>
                         </div>
 

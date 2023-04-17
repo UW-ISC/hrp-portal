@@ -265,6 +265,7 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-skin-purple', WDT_ASSETS_PATH . 'css/wdt-skins/purple.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-dark', WDT_ASSETS_PATH . 'css/wdt-skins/dark.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-raspberry-cream', WDT_ASSETS_PATH . 'css/wdt-skins/raspberry-cream.css', array(), WDT_CURRENT_VERSION);
+	wp_enqueue_style('wdt-skin-mojito', WDT_ASSETS_PATH . 'css/wdt-skins/mojito.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
@@ -581,9 +582,6 @@ function wdtEdit()
         }
         WDTTools::exportJSVar('wpdatatable_init_config', $tableData->table);
     }
-
-    /** @noinspection PhpUnusedLocalVariableInspection */
-    $wdtUserRoles = get_editable_roles();
 
     if (isset($tableData) && isset($tableData->table)) {
         $connection = $tableData->table->connection;

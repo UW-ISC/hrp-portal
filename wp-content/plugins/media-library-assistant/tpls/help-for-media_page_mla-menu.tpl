@@ -9,7 +9,7 @@
 <p><strong>NOTE:</strong> Month and category filters are &#8220;sticky&#8221;, i.e., they will persist as you resort the display or change the file type/status view.</p>
 <!-- template="mla-where-used" -->
 <!-- title="Where-used Reporting" order="20" -->
-<p>The &#8220;where-used&#8221; columns (Featured in, Inserted in, Gallery in, MLA Gallery in) are a powerful tool for managing your attachments. They help you identify Media Library items that are obsolete or, well, unused.
+<p>The &#8220;where-used&#8221; columns (Featured in, Inserted in, Gallery in, MLA Gallery in) are a powerful tool for managing your attachments. They help you identify Media Library items that are obsolete or, well, unused. You can find complete information on this feature in the "Where-used Reporting" section of the Settings/Media Library Assistant Documentation tab; see the link on the right.
 </p>
 <p>
 The "<strong>(INVALID PARENT)</strong>" notation means that the item is attached (i.e., the <code>post_parent</code> database field is not zero), but either the parent ID is for a post or page which has been deleted or the parent ID exists but the attachment is not used as the Featured Image, not inserted in the body of the post/page and is not used in a <code>[gallery]</code> or <code>[mla_gallery]</code> shortcode on that post/page. There are some problems with the <code>post_parent</code> field; for example, if you change the "Featured Image" for a post the <code>post_parent</code> doesn't always get updated. There are some ways to use an item that MLA is not yet searching for. For example, some other plugin that uses the item in a shortcode other than [gallery] or [mla_gallery].
@@ -89,6 +89,8 @@ There are four where-used reporting categories and you can turn them on or off w
 <!-- template="sidebar" -->
 <p><strong>For more information:</strong></p>
 <p><a href="http://codex.wordpress.org/Media_Library_Screen" target="_blank">Codex documentation on Media Library</a></p>
-<p><a href="http://wordpress.org/support/plugin/media-library-assistant" target="_blank">MLA Support Forum</a></p><p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#terms_search" target="_blank">MLA Documentation for Terms Search</a></p>
+<p><a href="http://wordpress.org/support/plugin/media-library-assistant" target="_blank">MLA Support Forum</a></p>
+<p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#where_used_reporting" target="_blank">MLA Documentation for Where-used Reporting</a></p>
+<p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#terms_search" target="_blank">MLA Documentation for Terms Search</a></p>
 <p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#select_parent" target="_blank">MLA Documentation for the Select Parent popup window</a></p>
 <p><a href="[+settingsURL+]?page=mla-settings-menu-documentation&mla_tab=documentation#mla_template_parameters" target="_blank">MLA Documentation for Content Templates</a></p>

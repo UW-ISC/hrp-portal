@@ -83,6 +83,8 @@ function relevanssi_post_metabox() {
 	<label for="relevanssi_pin" class="screen-reader-text"><?php esc_html_e( 'Pinned keywords for this post', 'relevanssi' ); ?></label>
 	<textarea id="relevanssi_pin" name="relevanssi_pin" cols="30" rows="2" style="max-width: 100%"><?php echo esc_html( $pin ); ?></textarea/>
 
+	<p><?php esc_html_e( "You can add weights to pinned keywords like this: 'keyword (100)'. The post with the highest weight will be sorted first if there are multiple posts pinned to the same keyword.", 'relevanssi' ); ?></p>
+
 	<?php
 	if ( 0 === intval( get_option( 'relevanssi_content_boost' ) ) ) {
 		?>
@@ -153,17 +155,35 @@ function relevanssi_save_gutenberg_postdata( $post ) {
  * @param string $keywords The keywords.
  */
 function relevanssi_update_pin_fields( $post_id, $keywords ) {
+	$pin_weights = array();
 	if ( $keywords ) {
 		delete_post_meta( $post_id, '_relevanssi_pin' );
 		$pins = explode( ',', sanitize_text_field( wp_unslash( $keywords ) ) );
 		foreach ( $pins as $pin ) {
+			list( $pin, $weight ) = array_pad( explode( '(', $pin, 2 ), 2, '1' );
+
+			$weight = str_replace( ')', '', $weight );
+			$weight = intval( $weight );
+			if ( $weight < 1 ) {
+				$weight = 1;
+			}
 			$pin = trim( $pin );
+
+			if ( $weight > 1 ) {
+				$pin_weights[ $pin ] = $weight;
+			}
+
 			if ( ! empty( $pin ) ) {
 				add_post_meta( $post_id, '_relevanssi_pin', $pin );
 			}
 		}
 	} else {
 		delete_post_meta( $post_id, '_relevanssi_pin' );
+	}
+	if ( ! empty( $pin_weights ) ) {
+		update_post_meta( $post_id, '_relevanssi_pin_weights', $pin_weights );
+	} else {
+		delete_post_meta( $post_id, '_relevanssi_pin_weights' );
 	}
 }
 
@@ -274,14 +294,7 @@ function relevanssi_save_postdata( $post_id ) {
 	}
 
 	if ( isset( $post['relevanssi_pin'] ) ) {
-		delete_post_meta( $post_id, '_relevanssi_pin' );
-		$pins = explode( ',', sanitize_text_field( wp_unslash( $post['relevanssi_pin'] ) ) );
-		foreach ( $pins as $pin ) {
-			$pin = trim( $pin );
-			if ( ! empty( $pin ) ) {
-				add_post_meta( $post_id, '_relevanssi_pin', $pin );
-			}
-		}
+		relevanssi_update_pin_fields( $post_id, $post['relevanssi_pin'] );
 	} else {
 		delete_post_meta( $post_id, '_relevanssi_pin' );
 	}

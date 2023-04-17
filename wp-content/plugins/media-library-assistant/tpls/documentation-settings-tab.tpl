@@ -145,6 +145,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <a href="#mla_text_widget"><strong>The MLA Text Widget</strong></a>
 </li>
 <li>
+<a href="#where_used_reporting"><strong>Where-used Reporting</strong></a>
+</li>
+<li>
 <a href="#terms_search"><strong>Terms Search - filtering on taxonomy term names</strong></a>
 </li>
 <li>
@@ -1140,7 +1143,7 @@ The <code>[mla_gallery]</code> shortcode supports five parameters for filtering 
 </tr>
 <tr>
 <td class="mla-doc-table-label">w</td>
-<td>the week of the year (from 0 to 53) by which to filter the gallery. Uses the MySQL WEEK command. The mode is dependent on the “start_of_week” option.</td>
+<td>the week of the year (from 0 to 53) by which to filter the gallery. Uses the MySQL WEEK command. The mode is dependent on the "start_of_week" option.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">day</td>
@@ -1312,7 +1315,7 @@ Look for the "mla_debug attribute_errors" entry in the debug output; it will oft
 </p>
 <h4>MLA Gallery Filters and Actions (Hooks)</h4>
 <p>
-The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link">MLA Gallery Hooks Example</a>. To run the example:
+The <code>[mla_gallery]</code> shortcode supports a comprehensive set of filters and actions that give you complete control over gallery composition from PHP code in your theme or in another plugin. All of the hooks and their parameters are documented in a simple, stand-alone plugin that can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Gallery Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Gallery+Hooks+Example%22" class="mla-doc-bold-link" target="_blank">MLA Gallery Hooks Example</a>. You can use the rollover actions to view the code or download a copy or, to run the example:
 </p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
@@ -4468,7 +4471,7 @@ The next sections define each of the prefix and option/format values.
 </p>
 <h4>Prefix values</h4>
 <p>
-There are fourteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
+There are fifteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
 </p>
 <table>
 	<tr>
@@ -4574,6 +4577,14 @@ MLA adds three fields of its own to the XMP metadata information:
 &nbsp;<br />
 		The ALL_XMP value is altered in two ways. First, values of more than 256 characters are truncated to 256 characters. This prevents large fields such as image thumbnails from dominating the display. Second, array values are replaced by an "(ARRAY)" placeholder, e.g., <code>'History' => '(ARRAY)'</code>. You can explore array values individually by coding something like <code>[+xmp:History,export+]</code> to expand all levels within the array or <code>[+xmp:mwg-rs,unpack+]</code> to expand one level within the array. You can go deeper in the array hierarchy with compound names, e.g., <code>[+xmp:mwg-rs.RegionList,unpack+]</code> or <code>[+xmp:mwg-rs.RegionList.*.Description.Name+]</code>.
 		<br />&nbsp;</td>
+	</tr>
+	<tr>
+		<td class="mla-doc-table-label">png</td>
+		<td>
+		For PNG files, data defined by the <a href="https://www.w3.org/TR/png/" title="W3C Draft Standard" target="_blank">Portable Network Graphics (PNG) Specification (Third Edition)</a> is extracted. The IHDR (Image header) seven elements of general interest. These are available in their raw numeric form and in an enhanced textual form. Any tEXt chunks, if present, are parsed into their keyword and text value parts and made available. The <a title="Find the Diffusion Parameters Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Diffusion+Parameters+Example%22" class="mla-doc-bold-link">MLA Diffusion Parameters Example</a> plugin parses the <code>png:parameters</code> text and creates an array of individual <code>png:diffusion.</code> elements.<br />
+		&nbsp;<br />
+		Although the W3C standard provides for adding EXIF and XMP metadata chunks to PNG files I have never seen an actual example of either one, so MLA does not extract this data. If you find an example, open a support topic and I will investigate further.
+		<br />&nbsp;<br /></td>
 	</tr>
 	<tr>
 		<td class="mla-doc-table-label">mso</td>
@@ -5590,6 +5601,14 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-data.php</
 <td class="mla-doc-table-label">mla_apply_custom_format</td>
 <td class="mla-doc-hook-definition">called when a parameter's option/format value is not recognized by MLA, giving you an opportunity to apply your custom option/format to the data value. This filter is called after either of the two "expand_custom" filters above. It will also be called if you use a custom option/format with any other field-level substitution parameter.</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">mla_fetch_attachment_image_metadata_raw</td>
+<td class="mla-doc-hook-definition"><strong>for Attachment File Metadata processing</strong>, called after MLA has extracted the metadata but before MLA enhances the EXIF metadata with CAMERA and GPS values, giving you an opportunity to add or modify the "raw" metadata values.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_fetch_attachment_image_metadata_final</td>
+<td class="mla-doc-hook-definition"><strong>for Attachment File Metadata processing</strong>, called after MLA enhances the EXIF metadata with CAMERA and GPS values, giving you an opportunity to add or modify the "final" metadata values.</td>
+</tr>
 </table>
 <p>
 The following hook is defined in <code>/wp-admin/includes/class-mla-data-source.php</code>:
@@ -5642,7 +5661,7 @@ Conditional, choice and template elements can be nested as needed. For example, 
 This template has a String, "Terms: " and a Conditional, "(([+terms: ... none)". This Conditional separates the "Terms: " literal from the first alternative in the Choice. Within the Conditional is a Choice having four alternatives. The first alternative is a Conditional, which will be empty unless both categories and tags are present.  The second and third alternatives handle the cases where one of the two taxonomies has terms, and the final alternative is used when neither categories nor tags are present.
 </p>
 <p>
-In the Media/Assistant submenu table  Bulk Edit area and the IPTC/EXIF Standard Field mapping fields you can use the special <code>template:[+empty+]</code> value to support deleting the content of the Title, Caption, Description and ALT Text fields.
+In the Media/Assistant submenu table Bulk Edit area and the IPTC/EXIF Standard Field mapping fields you can use the special <code>template:[+empty+]</code> value to support deleting the content of the Title, Caption, Description and ALT Text fields. For a Custom Field mapping rule, set the Data Source to "-- Template (see below) --", and enter <code>[+empty+]</code> in the Meta/Template text box. Set Existing Text to "Replace" and check the Delete NULL Values box.
 </p>
 <h4>Special characters inside templates</h4>
 <p>
@@ -5781,6 +5800,158 @@ To open and edit the MLA Text Widget:
 </ol>
 <p>
 To add an <code>[mla_gallery]</code> or <code>[mla_tag_cloud]</code> shortcode to your widget, simply enter the shortcode name and parameters just as you would in the body of a post or page. Aside from the usually more limited area devoted to displaying the widget content, there are no differences in the way shortcodes are processed in the MLA Widget. Also, there is nothing special about the two MLA shortcodes; <strong>any</strong> shortcode can be added to the MLA Widget.
+<a name="where_used_reporting"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Where-used Reporting</h3>
+<p>The Media/Assistant "where-used" columns (Featured in, Inserted in, Gallery in, MLA Gallery in) are a powerful tool for managing your attachments. They help you identify Media Library items that are obsolete or, well, unused. These features were the original motivation for beginning work on this plugin years ago.</p>
+<h4>Unused Vs Unattached</h4>
+<p>WordPress notions of "attachments" and <a href="https://wordpress.org/documentation/article/use-image-and-file-attachments/#attachment-to-a-post" target="_blank">Attachment to a Post</a> are very, very old, going back to WP 2.0. In some ways attachments are the original custom post type. Because of the way WordPress has evolved in recent years "unattached" is unreliable in many sites and applications. It has a very precise definition; there is a "post_parent" field in the database and if this field contains zero the item is unattached. However, even WordPress itself has flaws in maintaining this field, to say nothing of plugins and themes. Also for cases like "Featured Image" where the same item can be used in multiple posts/pages, what's the proper "parent"? The original purpose of attaching an item to a post or page was tied to the <a href="https://wordpress.org/documentation/article/the-wordpress-gallery-classic-editor/#gallery-shortcode" target="_blank">WordPress <code>[gallery]</code> shortcode</a> (also very old). When WordPress 3.5 changed the way image galleries were composed the notion of "parent" fell into disuse.</p>
+<p>The only time WordPress "un-attaches" an item is when the parent post/page is deleted. Deleting an item block or other insertion in the post/page content will not affect the attached status. Attached items do not have to explicitly appear in the post/page content. Part of the original WordPress implementation was the [gallery] shortcode, which displays the attached images. I would guess that's why WordPress never added any automatic detaching features.</p>
+<p>MLA provides "Set Parent" elements for attaching and detaching Media Library items and some attaching tools in the "Attach Media Library items" section of the <a title="Find the Insert Fixit Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Insert+Fixit%22" class="mla-doc-bold-link" target="_blank">MLA Insert Fixit example plugin</a>. It does not have any logic to detect and detach items as they are removed from a post/page. The bottom line is that detaching items is a manual admin task in the current WordPress and MLA versions.</p>
+<h4>Activating the Categories</h4>
+<p>There are four where-used reporting categories and you can turn them on or off with options in the "Where-used database access tuning" section on the Settings/Media Library Assistant General tab. Here's a summary:</p>
+<table><tr>
+<td>Featured in</td>
+<td>Search database posts and pages for Featured Image attachments.</td>
+</tr><tr>
+<td>Inserted in</td>
+<td>Search database posts and pages for attachments embedded in content.<br />
+Enabled = report each intermediate and full size insertion separately.<br />
+Base = ignore intermediate size suffixes; use path, base name and extension only.</td>
+</tr><tr>
+<td>Gallery in</td>
+<td>Search database posts and pages for <code>[gallery]</code> shortcode results.<br />
+Dynamic = once every page load, Cached = once every login, Disabled = never.<br />
+Refresh = update references, then set to Cached.</td>
+</tr><tr>
+<td>MLA Gallery in</td>
+<td>Search database posts and pages for <code>[mla_gallery]</code> shortcode results.<br />
+Dynamic = once every page load, Cached = once every login, Disabled = never.<br />
+Refresh = update references, then set to Cached.</td>
+</tr></table>
+<p>Because the analysis requires significant processor, memory and database resources all four categories are Disabled by default. Use them when you need them and disable them when you don't. Once you have activated the categories you want, navigate to the Media/Assistant admin submenu, pull down the "Screen Options" in the upper-right corner of the screen and check the box next to the where-used columns you want to add to the submenu table.</p>
+<p>MLA's where-used reporting was actually the first feature I implemented and they were the original inspiration for the plugin. When you need them they are very useful but it takes a lot of database work to perform their analysis. The "Inserted in" feature must go through every post and page on the site and search the content for any IMG tags containing a Media Library item. The "Gallery in" and "MLA Gallery in" features must find every shortcode in every post/page and then execute the shortcodes to see which items they return.
+All of this processing can severely slow down the site, especially for sites with thousands of Media Library items. That's why there are switches to turn the features off and that's why the default settings are "Disabled".</p>
+<p>Because an item can be used in several places, the Media/Assistant table columns are not sortable. If you want to sort and filter the table based on where-used information you can create a custom field. This technique is explained in the "Sorting and Filtering on Where-used Status" subsection below.</p>
+<h4>Intrepreting The Results</h4>
+<p>The "(INVALID PARENT)" notation means that the item is attached (i.e., the post_parent database field is not zero), but either the parent ID is for a post or page which has been deleted or the parent ID exists but the attachment is not used as the Featured Image, not inserted in the body of the post/page and is not used in a <code>[gallery]</code> or <code>[mla_gallery]</code> shortcode on that post/page. There are some problems with the post_parent field; for example, if you change the "Featured Image" for a post the post_parent doesn't always get updated. There are some ways to use an item that MLA is not yet searching for. For example, some other plugin that uses the item in a shortcode other than <code>[gallery]</code> or <code>[mla_gallery]</code>.</p>
+<p>The "(UNUSED)" notation means that the MLA search found a valid parent for the item but the parent does not use the item as a Featured Image, it is not inserted in the body of the parent and it is not used in a [gallery] or [mla_gallery] shortcode in the parent.</p>
+<p>The "(ORPHAN)" notation means that the MLA search did not find any post or page which uses the item as a Featured Image, it is not inserted in the body of any post/page and is not used in any [gallery] or [mla_gallery] shortcode.</p>
+<p>If one or more of the categories is turned off, you will see "(UNUSED?)" or "(ORPHAN?)" in the where-used results. The question mark means that the item may be used in a way you are not testing for. If all of the categories are turned off you will see "(NO REFERENCE TESTS)" as a reminder.</p>
+<h4>Limitations and Warnings</h4>
+<p><strong>Before you rely on the "(UNUSED)" notation and start deleting items from the Media Library</strong> it is vital to understand the limitations of MLA's approach. The "Inserted in" category relies on finding image tags in post/page content by matching specific patterns within the HTML markup. Some plugins, blocks and page builders format their tags differently and may not be detected. You can always look for one or more items you know are used and see if they're flagged as "(UNUSED)".</p>
+<p>The "Gallery in" category reports only the results of executing any <code>[gallery]</code> shortcode found in post/page content. MLA actually runs every shortcode it finds and parses the results in much the same way as the "Inserted in" category. Many gallery and lightbox plugins work by taking over the <code>[gallery]</code> shortcode and they may or may not format their results in a way MLA looks for.</p>
+<p>The "MLA Gallery in" category reports the results of executing any <code>[mla_gallery]</code> shortcode found in post/page content. This works well if the items selected by the shortcode do not change based on selections made by the user when the post/page is processed. For example, selecting taxonomy terms from a <code>[mla_tag_cloud]</code> or <code>[mla_term_list]</code> shortcode or doing a keyword or term name search by entering text values cannot be analyzed in the admin mode.</p>
+<h4>The WordPress Media Trash Feature</h4>
+<p>You can make deleting items somewhat safer by enabling the WordPress "Trash" feature for Media Library items. To do that, add these two elements to your wp-config.php file:</p>
+<code>
+/**<br />
+&nbsp;* Days before trash items permanently deleted.<br />
+&nbsp;*<br />
+&nbsp;* Set this to 0 to disable trash and permanently delete items<br />
+&nbsp;* Set this > 0 to hold items in Trash state for 1 or more days <br />
+&nbsp;*/<br />
+define ('EMPTY_TRASH_DAYS', 360);<br />
+<br />
+/**<br />
+&nbsp;* Enable the Trash feature for attachments.<br />
+&nbsp;*<br />
+&nbsp;* Set this to true to enable the Trash<br />
+&nbsp;* Set this to false (the default) to disable the Trash <br />
+&nbsp;*/<br />
+define ('MEDIA_TRASH', true);
+</code>
+<p>With those additions you the "Permanently delete" operations become "Move to trash" and a new "Trash" view is available above the Media/Assistant submenu table. Selecting the Trash view gives you a list of the trashed items; you can restore them or permanently delete them as needed.</p>
+<h4>Where-used Substitution Parameter/Data Source Values</h4>
+<p>All four categories are available as <a href="#field_level_data_sources" target="_blank">Field-level data sources</a>. In that Documentation subsection scroll down to "parent_issues" and read through the list down to "mla_gallery_in_title". These values are available only when the corresponding category is active.</p>
+<p>You can, of course, use them directly, e.g., in an <code>[mla_gallery]</code> shortcode or custom markup template. If you do, be aware of the performance issues because the values will be computed each time the data source is used and the categories must remain enabled. A more common alternative is to use the values in an IPTC/EXIF or Custom Field mapping rule, storing the information as text in a custom field and then using the custom field value for display purposes. If you take that approach you can disable the categories once the custom field is populated, restoring performance. The next subsection is a detailed example of the mapping rule &amp; custom field approach.</p>
+<h4>Sorting and Filtering on Where-used Status</h4>
+<p>As noted above the four Media/Assistant where-used columns are not sortable, and they cannot be used to filter the table display. There is no explicit way to filter the Media/Assistant submenu table to display only where-used issues such as "orphans". There is, however, an approximate solution that may be useful. To get the best results you need to activate all four reporting categories in the Where-used Reporting section of the Settings/Media Library Assistant General tab. Try these settings:</p>
+<ul><ul class="mla_settings">
+<li>Featured in - Enabled</li>
+<li>Inserted in - Base</li>
+<li>Gallery in - Cached</li>
+<li>MLA Gallery in - Cached</li>
+</ul>
+<p>Once that's done you can proceed. Briefly, the solution has two parts: 1) create a custom field to record the where-used issues for your items, and 2) filter the Media/Assistant submenu table on the custom field values. For part 1), follow these steps:</p>
+<ol>
+<li>Navigate to the Settings/Media Library Assistant "Custom Fields" tab.</li>
+<li>Scroll down to the "Add New Custom Field Rule" area below the "Enable" checkboxes.</li>
+<li>Under the "Name" dropdown control, click "Enter new field" to create a new custom field.</li>
+<li>In the "Name" text box, give your field a name, e.g., "Ref Issues".</li>
+<li>From the Data Source dropdown list, select "reference_issues".</li>
+<li>Click the "MLA Column" check box to make the field available in the Media/Assistant submenu table. Leave the "Quick Edit" and "Bulk Edit" check boxes unchecked for this solution.</li>
+<li>In the "Existing Text" dropdown list, select "Replace".</li>
+<li>In the "Format" dropdown list, select "Native".</li>
+<li>In the "Option:" dropdown list, select "Text".</li>
+<li>Click the "Delete NULL Values" checkbox.</li>
+<li>Leave the "Status" set to "Active".</li>
+<li>Click the "Add Rule" button to save your work.</li>
+</ol>
+<p>Once the rule is created you must execute it to create the "Ref Issues" value for the items in your Media Library:</p>
+<ol>
+<li>Find the "Ref Issues" (or your chosen field name) in the table of rules on the right-hand side of the screen. If you don't see your new rule, type the name you gave it in the search box above the table and click "Search Rules".</li>
+<li>Hover your mouse in the "Name" column and click the "Execute" rollover action.</li>
+<li>Wait for the mapping process to complete.</li>
+</ol>
+<p>At this point you can, if you like, go back and disable the Where-used Reporting options to increase the performance of your system – you don't need to re-analyze the items once the custom field is populated. You can also set your new rule to "inactive" so it won't run when new items are added to the Media Library.</p>
+<p>To check your progress, navigate to the Media/Assistant admin screen and look for your new column. If you don't see the "Ref Issues" column in the Media/Assistant submenu table pull down the "Screen Options" area and make sure that "Ref Issues" is listed and the box next to it is checked.
+You can sort on this column to bring the items that have one or more issues to the front of the table. You can click on a value in the column to filter the table by that value. To make the filtering more convenient, there are two alternatives for part 2) of the solution. If you want to replace the "Att. Categories" Taxonomy List Filter dropdown, follow these steps:</p>
+<ol>
+<li>Navigate to the Settings/Media Library Assistant General tab.</li>
+<li>Scroll down to the "Taxonomy Support" section.</li>
+<li>At the bottom of the taxonomy table you will see a dropdown control. Select your "Ref Issues" custom field.</li>
+<li>Click the radio button in the "List Filter" column to filter the Media/Assistant submenu table by the custom field values.</li>
+<li>Scroll to the bottom of the page and click "Save Changes" to record your new settings.</li>
+</ol>
+<p>When you return to the Media/Assistant screen you should see something like "All Ref Issues" in the dropdown control above the table. Click on that to select one of the "issues" values, then click "Filter" to filter the table by that value.</p>
+<p>The alternative is to create a custom table view, leaving the Taxonomy List Filter dropdown intact. To create a custom view:</p>
+<ol>
+<li>Navigate to the Settings/Media Library Assistant "Views" tab.</li>
+<li>Scroll down to the Add New View area on the left side of the page.</li>
+<li>Enter something like "ref-issues" in the Slug field.</li>
+<li>Enter something like "Reference Issues" in the Singular and Plural Label fields.</li>
+<li>Enter <code>custom:Ref Issues=*</code> in the Specification field.</li>
+<li>Leave the Post MIME Type box unchecked, since this is not a MIME type.</li>
+<li>Check the Table View box, to add this as a Media/Assistant view.</li>
+<li>Leave the Menu Order blank, unless you want to position the column in a specific place. (unusual)</li>
+<li>Enter any notes you like in the Description box, or leave it blank.</li>
+<li>Click "Add View" to add your view to the custom views list.</li>
+</ol>
+<p>Return to the Media/Assistant admin page and you will see the new view above the submenu table. Click on it to eliminate items with no reference issues from the table.</p>
+<p>If this is a one-time or infrequent task you can 1) go back to the General tab and reset the taxonomy filter to Att. Categories or another taxonomy, or 2) go back to the Views tab and set the "Table View" option to "No" to hide the view. You can then go to the Custom Fields tab, use the "Purge Values" rollover action for your rule to delete the custom field values and set the rule to "Inactive" status for future use or delete it entirely.
+</p>
+<h4>Finding Duplicate Items Based on File Name</h4>
+<p>It is deceptively easy to upload the same image or document to the Media Library multiple times. Finding and removing duplicated items has two parts: 1) which items represent the same media file, and 2) where are these items used? Part 2 is addressed by the solutions already outlined in this section. MLA includes an Example Plugin to help with part 1.</p>
+<p>There is no specific MLA feature for analyzing the file names associated with Media Library items. You can approximate a solution by creating a Custom Field mapping rule to create a custom field populated from either the file_name or name_only data sources. Add this field to the Media/Assistant admin submenu table and then sort on that column to bring the duplicates close together for visual inspection. You can also display the Base File column to determine the year/month values for each file (if you divide your uploads that way).</p>
+</p>
+<p>This can be tedious for a site with thousands of files. The example plugin queries the database to get a list of all attached files, isolating the name_only portion to resolve the year/month issue and removing the suffix WordPress assigns (an imperfect process) if a duplicate file is uploaded to the same directory. Then, the list is sorted and processed to find the items that share a root file name. The results are summarized as a <code>filename_issues</code> custom data source. For unique names the value is empty; shared names display the root name and number of items that have it. You can map the values to a custom field as in the "Reference Issues" solution outlined above. Because <code>filename_issues</code> is a custom data source the settings to access it are somewhat different. Here are the steps to follow:</p>
+<ol>
+<li>Navigate to the Settings/Media Library Assistant "Custom Fields" tab.</li>
+<li>Scroll down to the "Add New Custom Field Rule" area below the "Enable" checkboxes.</li>
+<li>Under the "Name" dropdown control, click "Enter new field" to create a new custom field.</li>
+<strong><li>In the "Name" text box, give your field a name, e.g., "Filename Issues".</li>
+<li>From the Data Source dropdown list, select "-- Template (see below) --".</li>
+<li>In the Meta/Template text box, enter <code>[+filename_issues+]</code>.</li></strong>
+<li>Click the "MLA Column" check box to make the field available in the Media/Assistant submenu table. Leave the "Quick Edit" and "Bulk Edit" check boxes unchecked for this solution.</li>
+<li>In the "Existing Text" dropdown list, select "Replace".</li>
+<li>In the "Format" dropdown list, select "Native".</li>
+<li>In the "Option:" dropdown list, select "Text".</li>
+<li>Click the "Delete NULL Values" checkbox.</li>
+<li>Leave the "Status" set to "Active".</li>
+<li>Click the "Add Rule" button to save your work.</li>
+</ol>
+<p>Once the rule is created you must execute it to create the "Filename Issues" value for the items in your Media Library:</p>
+<ol>
+<li>Find the "Filename Issues" (or your chosen field name) in the table of rules on the right-hand side of the screen. If you don't see your new rule, type the name you gave it in the search box above the table and click "Search Rules".</li>
+<li>Hover your mouse in the "Name" column and click the "Execute" rollover action.</li>
+<li>Wait for the mapping process to complete.</li>
+</ol>
+<p>When you go back to the Media/Assistant screen you will see the new column. You can sort on it to bring the items with issues to the top of the list. You can click on a column value to limit the display to just the files sharing that name. Creating a custom view is similar to the earlier example. When you're done with the column you can disable or delete the example plugin, purge the custom field values and disable or delete the rule as in the earlier example.</p>
+<p>
 <a name="terms_search"></a>
 </p>
 <p>
@@ -6311,36 +6482,12 @@ Media Library Assistant adds several controls to the toolbar in the Media Manage
 <li>Click the "Add Media" button for a post or page to see the effect of your changes.</li>
 </ol>
 <p>
-The following hooks are defined in <code>/wp-admin/includes/class-mla-media-modal.php</code>:
+The following hooks are defined in <code>/wp-admin/includes/class-mla-media-modal-ajax.php</code>:
 </p>
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_form_fields</td>
 <td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window ATTACHMENT DETAILS fields</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_months_dropdown</td>
-<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Month &amp; Year Dropdown control</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_terms_options</td>
-<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Terms Dropdown control</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_initial_filters</td>
-<td class="mla-doc-hook-definition">Change  the initial values of the Media Manager Modal Window toolbar controls</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_settings</td>
-<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window toolbar controls</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_strings</td>
-<td class="mla-doc-hook-definition">Change the content of the string values passed Media Manager Modal Window toolbar controls</td>
-</tr>
-<tr>
-<td class="mla-doc-table-label">mla_media_modal_template_path</td>
-<td class="mla-doc-hook-definition">Change the path to the JavaScript template file or substitute your own template(s)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_begin_fill_compat_fields</td>
@@ -6369,6 +6516,35 @@ The following hooks are defined in <code>/wp-admin/includes/class-mla-media-moda
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_query_filtered_terms</td>
 <td class="mla-doc-hook-definition">Change the terms of the Media Manager Modal Window "Query Attachments" query after they are pre-processed by the AJAX handler</td>
+</tr>
+</table>
+<p>
+The following hooks are defined in <code>/wp-admin/includes/class-mla-media-modal.php</code>:
+</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_months_dropdown</td>
+<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Month &amp; Year Dropdown control</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_terms_options</td>
+<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window Terms Dropdown control</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_initial_filters</td>
+<td class="mla-doc-hook-definition">Change  the initial values of the Media Manager Modal Window toolbar controls</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_settings</td>
+<td class="mla-doc-hook-definition">Change the content of the Media Manager Modal Window toolbar controls</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_strings</td>
+<td class="mla-doc-hook-definition">Change the content of the string values passed Media Manager Modal Window toolbar controls</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">mla_media_modal_template_path</td>
+<td class="mla-doc-hook-definition">Change the path to the JavaScript template file or substitute your own template(s)</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_media_modal_query_items</td>
@@ -6860,6 +7036,9 @@ WordPress stores an array of information for image, audio and video items in the
 </p>
 <p>
 As explained elsewhere, you can access all of this data with the "meta:" <a href="#mla_variable_parameters">Field-level markup substitution parameter</a>. By coding the "meta:" prefix in the Field Title column of a field mapping rule you can add to or update this data as well, from any of the data sources listed below. You can use a <a href="#mla_template_parameters">Content Template</a> to compose a value from multiple substitution parameters and test for empty values, choosing among two or more alternatives or suppressing the mapping altogether for a given item.
+</p>
+<p>
+You can also use a special template <code>[+empty+]</code> value to delete the content of an element. Create a rule naming the metadata element, set the Data Source to "-- Template (see below) --", and enter <code>[+empty+]</code> in the Meta/Template text box. Set Existing Text to "Replace" and check the Delete NULL Values box.
 </p>
 <p>
 Let's say, for example, that you want to add GPS coordinates to the "image_meta" element of the Attachment Metadata.

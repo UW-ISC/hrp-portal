@@ -27,12 +27,16 @@
             <?php }
             if ($this->isClearFilters()) { ?>
                 <div class="wpDataTableFilterSection" id="wdt-clear-filters-button-block">
-                    <button class="button btn wdt-clear-filters-button" data-table_id = <?php echo esc_attr($this->getId()) ?>><?php esc_html_e('Clear filters', 'wpdatatables'); ?></button>
+                    <button class="button btn wdt-clear-filters-button" data-table_id = <?php echo esc_attr($this->getId()) ?>><?php $this->getTableSkin() === 'mojito' ? '' : esc_html_e('Clear filters', 'wpdatatables'); ?></button>
                 </div>
             <?php } ?>
             <?php
             if (isset($this->showSearchFiltersButton) && isset($this->disableSearchFiltersButton)) {
-                do_action('wpdatatables_filtering_form_search_button', $this->showSearchFiltersButton, $this->disableSearchFiltersButton);
+                if (defined('WDT_PF_VERSION') && version_compare(WDT_PF_VERSION, '1.4.2', '<')) {
+                    do_action('wpdatatables_filtering_form_search_button', $this->showSearchFiltersButton, $this->disableSearchFiltersButton);
+                } else {
+                    do_action('wpdatatables_filtering_form_search_button', $this->showSearchFiltersButton, $this->disableSearchFiltersButton, $this->getTableSkin());
+                }
             }
             ?>
         </div>

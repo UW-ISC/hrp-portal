@@ -118,8 +118,7 @@ class MLAEdit {
 				$taxonomies = array_keys( array_map( 'absint', wp_unslash( $_POST['tax_input'] ) ) );
 				foreach( $taxonomies as $key ) {
 					if ( isset( $_POST['tax_input'][ $key ] ) && is_array( $_POST['tax_input'][ $key ] ) ) {
-						$tax = get_taxonomy( sanitize_text_field( $key ) );
-						if ( $tax->hierarchical ) {
+						if ( !MLACore::mla_taxonomy_support( $key, 'flat-checklist' ) ) {
 							continue;
 						}
 			

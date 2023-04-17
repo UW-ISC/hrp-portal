@@ -14,7 +14,7 @@
  * Prints out the Premium attachments tab in Relevanssi settings.
  */
 function relevanssi_attachments_tab() {
-	$index_post_types = get_option( 'relevanssi_index_post_types' );
+	$index_post_types = get_option( 'relevanssi_index_post_types', array() );
 	$index_pdf_parent = get_option( 'relevanssi_index_pdf_parent' );
 
 	global $wpdb;
