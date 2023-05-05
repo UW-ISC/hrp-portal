@@ -91,10 +91,10 @@
 	            }
 
 	            li.mega-menu-item.mega-menu-flyout ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:hover,
-	            li.mega-menu-item.mega-menu-flyout ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:active,
+	            li.mega-menu-item.mega-menu-flyout ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:focus,
 	            li.mega-menu-item.mega-menu-flyout ul.mega-sub-menu li#mega-menu-item-#{$id}.mega-toggle-on > a.mega-menu-link,
 	            li.mega-menu-item.mega-menu-flyout li.mega-menu-item > ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:hover,
-	            li.mega-menu-item.mega-menu-flyout li.mega-menu-item > ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:active,
+	            li.mega-menu-item.mega-menu-flyout li.mega-menu-item > ul.mega-sub-menu li#mega-menu-item-#{$id} > a.mega-menu-link:focus,
 	            li.mega-menu-item.mega-menu-flyout li.mega-menu-item > ul.mega-sub-menu li#mega-menu-item-#{$id}.mega-toggle-on > a.mega-menu-link {
 	            	@if $custom_menu_item_background_hover_from != disabled and $custom_menu_item_background_hover_to != disabled {
 	            		@include background($custom_menu_item_background_hover_from, $custom_menu_item_background_hover_to);
@@ -292,7 +292,8 @@
 						}
 
 						@if $custom_menu_item_link_weight_hover != disabled {
-							&:hover {
+							&:hover,
+							&:focus {
 								font-weight: $custom_menu_item_link_weight_hover;
 							}
 						}
@@ -310,7 +311,8 @@
 						}
 
 						@if $custom_menu_item_link_text_decoration_hover != disabled {
-							&:hover {
+							&:hover,
+							&:focus {
 								text-decoration: $custom_menu_item_link_text_decoration_hover;
 							}
 						}

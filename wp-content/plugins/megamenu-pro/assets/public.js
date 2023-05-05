@@ -30,6 +30,10 @@
             });
         });
 
+        if ( ! $.isFunction($.fn.hoverIntent) ) {
+            return;
+        }
+        
         $('.mega-sub-menu [data-image-swap-url]').hoverIntent({
             over: function () {
                 var placeholder = $(this).closest(".mega-menu-megamenu").find(".widget_maxmegamenu_image_swap img.mega-placeholder");
@@ -94,13 +98,16 @@
         };
 
         plugin.close_search = function() {
+            $menu.triggerHandler("mmm:closeSearch");
             input.val("");
             input.attr('placeholder', '');
             form.removeClass('mega-search-open');
             form.addClass('mega-search-closed');
+            
         }
 
         plugin.open_search = function() {
+            $menu.triggerHandler("mmm:openSearch");
             input.attr('placeholder', input.attr('data-placeholder'));
             form.removeClass('mega-search-closed');
             form.addClass('mega-search-open');
@@ -137,13 +144,13 @@
 
             if ( $menu.data("view") === "desktop" ) {
                 input.on('focus', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') && $wrap.hasClass('mega-keyboard-navigation') ) {
+                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') ) {
                         plugin.open_search();
                     }
                 });
 
                 input.on('blur', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') && $wrap.hasClass('mega-keyboard-navigation') ) {
+                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
                         plugin.close_search();
                     }
                 });
