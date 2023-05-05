@@ -70,8 +70,8 @@ class Mega_Menu_Custom_Icon {
 
                         $id = isset( $settings['custom_icon']['id'] ) ? $settings['custom_icon']['id'] : false;
                         $id_hover = isset( $settings['custom_icon']['id_hover'] ) ? $settings['custom_icon']['id_hover'] : false;
-                        $width = $settings['custom_icon']['width'];
-                        $height = $settings['custom_icon']['height'];
+                        $width = intval( $settings['custom_icon']['width'] );
+                        $height = intval( $settings['custom_icon']['height'] );
                         $vertical_align = $settings['custom_icon']['vertical_align'];
 
                         $height_mobile = isset( $settings['custom_icon']['height_mobile'] ) ? $settings['custom_icon']['height_mobile'] : $height;

@@ -3,24 +3,28 @@ Contributors: Atlas_Gondal
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=YWT3BFURG6SGS&source=url
 Tags: extract urls, export urls, links, get links, get urls, custom post type urls, see links, extract title, export title, export post title, export title and url, export category, utilities, export, csv
 Requires at least: 3.1
-Tested up to: 6.0.1
-Stable tag: 4.4 
+Tested up to: 6.2
+Stable tag: 4.5
 Requires PHP: 5.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This plugin allows you to extract Title, URL and Categories of builtin post types (e.g post, page) or any other custom post type available on your site. You can write output in the dashboard or export as CSV file. It can be very useful during migration, seo analysis and security audit.
+This plugin enables you to extract information such as Title, URL, Categories, Tags, Author, as well as Published and Modified dates for built-in post types (e.g., post, page) or any other custom post types present on your site. You have the option to display the output in the dashboard or export it as a CSV file. This can be highly beneficial for tasks like migration, SEO analysis, and security audits.
 
 == Description ==
 
 This plugin will add a page called "Export All URLs" under Tools. You can navigate there and can extract data from your site. You can export Posts:
 
-* IDs
-* Titles
-* URLs
-* And Categories
+* ID
+* Title
+* URL
+* Categories
+* Tags
+* Author
+* Published Date
+* Modified Date
 
-The data can be categorized before extraction, by their post types.
+The data can be filtered by post type, post status, date range, and author before extraction, and the plugin also provides the option to export using a specific post range.
 
 == When we need this plugin? ==
 
@@ -46,7 +50,7 @@ The data can be categorized before extraction, by their post types.
 * Wordpress version 3.1.0 or higher
 
 
-If you found any bug then report me, I'll try to fix it as soon as possible!
+If you encounter any bugs, please report them to me, and I will strive to resolve them as quickly as possible!
 
 == Contact ==
 
@@ -71,7 +75,7 @@ For further information please send me an [email](https://AtlasGondal.com/contac
 
 1. Go to Tools > Export All URLs to export URLs of your website.
 2. Select Post Type
-3. Choose Data (e.g Post ID, Title, URLs, Categories)
+3. Choose Data (e.g Post ID, Title, URL, Categories, Tags, Author, Published Date, Modified Date)
 4. Apply Filters (e.g Post Status, Author, Post Range)
 5. Configure advance options (e.g exclude domain url, number of posts)
 5. Finally Select Export type and click on Export Now.
@@ -94,7 +98,7 @@ We couldn't find a plugin that would export all URLs, titles and categories in a
 
 = Why the file name is randomly generated?  =
 
-Exporting the file with static name can be easily found by malicious attacker, and may result in sensitive information leakage. So we decided to generate random name, which is harder to guess. However plugin provides complete control over file name.
+Exporting a file with a static name makes it easier for malicious attackers to discover, potentially leading to the leakage of sensitive information. Therefore, we chose to generate random names, which are more difficult to guess. Nonetheless, the plugin offers full control over the file name if needed.
 
 = Can I delete generated CSV file?  =
 
@@ -102,7 +106,7 @@ Yes, absolutely. It is highly recommended, once the file is generated, there is 
 
 = Does Export All URLs make changes to the database? =
 
-No. It has no settings/configurations to store so it does not touch the database.
+No, the plugin does not interact with the database, as it does not have any settings or configurations to store.
 
 = How can I check out if the plugin works for me? =
 
@@ -129,6 +133,13 @@ Yes. The plugin requires a PHP version 5.4 or higher and Wordpress version 3.1.0
 
 
 == Changelog ==
+
+= 4.5 = 
+* New - additional export fields added (tags, author, published, and modified date)
+* New - option to retain selected options (no reset to default upon exporting)
+* Improvement - backend code refinement
+* Compatibility - minor adjustments for PHP 8.1 compatibility
+* Compatibility - tested with WordPress 6.2
 
 = 4.4 = 
 * Added - additional verification for file removal to patch a security issue
@@ -210,6 +221,8 @@ Yes. The plugin requires a PHP version 5.4 or higher and Wordpress version 3.1.0
 == Upgrade Notice ==
 
 = 4.4 = 
-* Added - additional verification for file removal to patch a security issue
-* Compatibility - tested with wordpress 6.0.1
-
+* New - additional export fields added (tags, author, published, and modified date)
+* New - option to retain selected options (no reset to default upon exporting)
+* Improvement - backend code refinement
+* Compatibility - minor adjustments for PHP 8.1 compatibility
+* Compatibility - tested with WordPress 6.2
