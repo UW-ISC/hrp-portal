@@ -48,7 +48,7 @@ class Mega_Menu_Image_Swap {
 				$icon_alt = "";
 
 
-				if ( $icon_id ) {
+				if ( $icon_id && get_attached_file($icon_id) ) {
 					$icon = wp_get_attachment_image_src( $icon_id, $size );
 					$icon_url = $icon[0];
 					$icon_alt = trim(strip_tags( get_post_meta($icon_id, '_wp_attachment_image_alt', true) ));

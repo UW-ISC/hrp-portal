@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, megamenu, mega menu, navigation, mobile
 Requires at least: 5.0
-Tested up to: 6.1
-Stable tag: 3.1.1
+Tested up to: 6.2
+Stable tag: 3.2.1
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,15 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.2.2 =
+
+* Fix: Position of aria-expanded and aria-haspopup attributes
+* Fix: Do not use ':has' selector in CSS unless required
+
+= 3.2.1 =
+
+* Fix: Nested collapsed children CSS
 
 = 3.2 =
 

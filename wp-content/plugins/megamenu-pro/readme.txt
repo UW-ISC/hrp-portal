@@ -1,9 +1,19 @@
 === Max Mega Menu Pro ===
 Requires at least: 4.9
-Tested up to: 6.0
+Tested up to: 6.2
 Requires PHP: 5.6
 
 == Changelog ==
+
+= 2.2.8 =
+
+* Improvement: Trigger custom events (mmm:openSearch, mmm:closeSearch) when opening and closing the search box
+* Fix: Ensure custom icon width and height is an integer to avoid PHP error
+* Fix: Apply :focus styling to custom icons and certain custom item styling options
+* Fix: Image Swap - Check media file ID has not been deleted to avoid PHP warning
+* Fix: Apply CSS transitions to tab content
+* Fix: Search box does not automatically open using keyboard navigation
+* Improvement: Add 'Item Divider' theme option to menu tabs
 
 = 2.2.7 =
 

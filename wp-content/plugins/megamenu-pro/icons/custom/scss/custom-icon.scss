@@ -71,14 +71,16 @@
 
                         @if $custom_icon_url == 'false' {
                             @include desktop {
-                                &.mega-icon-top > a.mega-menu-link:hover:before {
+                                &.mega-icon-top > a.mega-menu-link:hover:before,
+                                &.mega-icon-top > a.mega-menu-link:focus:before {
                                     width: 100%;
                                     min-width: $custom_icon_width;
                                     background-position-x: center;
                                 }
                             }
 
-                            > a.mega-menu-link:hover:before {
+                            > a.mega-menu-link:hover:before,
+                            > a.mega-menu-link:focus:before {
                                 content: "";
                                 background-size: $custom_icon_width $custom_icon_height;
                                 background-repeat: no-repeat;
@@ -98,7 +100,7 @@
 
                         &.mega-toggle-on > a.mega-menu-link:before,
                         > a.mega-menu-link:hover:before,
-                        > a.mega-menu-link:active:before {
+                        > a.mega-menu-link:focus:before {
                             background-image: url($custom_icon_url_hover);
 
                             @media (-webkit-min-device-pixel-ratio: 2) {

@@ -82,6 +82,8 @@ class Mega_Menu_Tabbed {
         $theme['tabbed_link_text_decoration_hover'] = 'flyout_link_text_decoration_hover';
         $theme['tabbed_link_color_hover'] = 'flyout_link_color_hover';
         $theme['tabbed_link_vertical_divider'] = '#ccc';
+        $theme['tabbed_link_item_divider'] = 'off';
+        $theme['tabbed_link_item_divider_color'] = '#ccc';
 
         return $theme;
     }
@@ -264,8 +266,25 @@ class Mega_Menu_Tabbed {
                         'key' => 'tabbed_link_text_decoration_hover'
                     ),
                 )
-            )
-        );
+            ),
+            'tabbed_menu_item_divider' => array(
+                'priority'    => 320,
+                'title'       => __( 'Tab Item Divider', 'megamenu-pro' ),
+                'description' => __( 'Show a line divider below each menu item.', 'megamenu-pro' ),
+                'settings'    => array(
+                    array(
+                        'title' => __( 'Enabled', 'megamenu-pro' ),
+                        'type'  => 'checkbox',
+                        'key'   => 'tabbed_link_item_divider',
+                    ),
+                    array(
+                        'title' => __( 'Color', 'megamenu-pro' ),
+                        'type'  => 'color',
+                        'key'   => 'tabbed_link_item_divider_color',
+                    ),
+                ),
+            ),
+);
 
         $settings['mega_panels']['settings'] = array_merge($settings['mega_panels']['settings'], $new_settings);
 

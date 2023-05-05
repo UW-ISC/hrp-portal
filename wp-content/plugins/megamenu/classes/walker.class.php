@@ -133,6 +133,16 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 				}
 
 				if ( is_array( $classes ) && in_array( 'menu-item-has-children', $classes ) && $item->parent_submenu_type == 'flyout' ) {
+
+					if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
+						$atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
+						$atts['aria-expanded'] = 'false';
+
+						if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
+							$atts['aria-expanded'] = 'true';
+						}
+					}
+
 					if ( isset( $settings['disable_link'] ) && $settings['disable_link'] == 'true' ) {
 						$atts['role'] = 'button';
 					}
@@ -158,14 +168,7 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$atts['class'] = 'mega-menu-link';
 				}
 
-				if ( ! defined('MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW') || !MEGAMENU_EXPERIMENTAL_TABBABLE_ARROW ) {
-					$atts['aria-haspopup'] = 'true'; // required for Surface/Win10/Edge
-					$atts['aria-expanded'] = 'false';
 
-					if ( is_array( $mega_classes ) && in_array( 'mega-toggle-on', $mega_classes ) ) {
-						$atts['aria-expanded'] = 'true';
-					}
-				}
 
 				$attributes = '';
 
