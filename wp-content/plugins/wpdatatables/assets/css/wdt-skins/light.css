@@ -505,3 +505,9 @@
     padding-top: 0 !important;
     width: 100%;
 }
+.wpdt-c.wdt-skin-light .wpDataTablesWrapper .dataTables_paginate a {
+    box-shadow: none !important;
+}
+.wpdt-c.wdt-skin-light .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
+    border-right: none;
+}

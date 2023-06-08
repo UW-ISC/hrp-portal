@@ -268,19 +268,12 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Rotation settings for column headers - choose to rotate header for 90° or -90°.</li>
-                                <li><strong>Feature:</strong> A new light skin - Mojito.</li>
-                                <li><strong>Feature:</strong> Star rating now has a new customization option - Color Picker.</li>
-                                <li><strong>Feature:</strong> New responsive option - Pagination Layout on mobile.</li>
-                                <li><strong>Improvement:</strong> Added a new hook, wpdatatables_before_render_table_config_data.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with browse page not loading when using certain MySQL versions.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with editing single y-axis ApexCharts.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with vertical/horizontal axis and dropshadow on Apexcharts.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with charts when minified.js is turned on.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with Powerful Filters integration for multiselectbox filters.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with compatibility with the latest version of ApexCharts.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with gradient for Highcharts.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with translating the “Administrator” string to different languages.</li>
+                                <li><strong>Feature:</strong>  Fixed header - fix tables' header to the top of the scrolling window. </li>
+                                <li><strong>Feature:</strong> Fixed columns - fix tables' columns to the left or to the right. </li>
+                                <li><strong>Feature:</strong> New table skin - Dark Mojito. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with calculation functions shortcodes for sources with null/non-numeric fields. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with array_combine(). </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Highcharts - Pie with gradient. </li>
                                 <li>Other small bug fixes</li></ul>
                         </div>
 

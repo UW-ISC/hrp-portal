@@ -194,12 +194,60 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     color: #6B7280;
 }
 
+.wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader .outlined{
+    border:1px solid #F5DDEF !important;
+}
+
 .wpdt-c.wdt-skin-raspberry-cream .outlined {
     border: 2px solid #F5DDEF !important;
 }
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr td.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr td.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr td.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr td.outlined{
+    border-left:1px solid #F5DDEF !important;
+    border-top: none !important;
+    border-bottom: 1px solid #F5DDEF !important;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr th.outlined{
+    border-bottom: 1px solid #f5f7fa !important;
+}
 
-/*  Table Header  */
+.wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left.dtfc-has-right th.outlined,
+.wpdt-c.wdt-skin-raspberry-cream tfoot td.outlined{
+    border-left:1px solid #F5DDEF !important;
+    border-right:1px solid #F5DDEF !important;
+    border-bottom: transparent !important;
+}
+.wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-left.dtfc-has-right td.sorting_2,
+.wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-right td.sorting_2,
+.wpdt-c.wdt-skin-raspberry-cream table.wpDataTable.wpdt-has-grouping.dtfc-has-left td.sorting_2 {
+    border-left: 1px solid #F5DDEF !important;
+    border-right: 1px solid #F5DDEF !important;
+}
+.wpdt-c.wdt-skin-raspberry-cream table.wpFixedHeader td.sorting_1,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left.dtfc-has-right td.sorting_1,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right td.sorting_1,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left td.sorting_1{
+    border-left:1px solid #F5DDEF !important;
+    border-right:1px solid #F5DDEF !important;
+    border-bottom: transparent !important;
+}
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-right tr:last-child td.sorting_1,
+.wpdt-c.wdt-skin-raspberry-cream table.dtfc-has-left tr:last-child td.sorting_1{
+    border-bottom: 1px solid #ebeef5 !important;
+}
 
+/*  Table Header  *//* added Table Header for fixed header*/
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  > thead > tr > th,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  thead th.sorting,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable  .wdt-checkbox-filter.btn,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-checkbox-filter.btn,
@@ -221,6 +269,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     line-height: 3;
     letter-spacing: 0.05em;
 }
+.wpdt-c.wdt-skin-raspberry-cream .wdt-checkbox-filter.btn,
+#wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .wdt-checkbox-filter.btn,
 #wdt-filter-widget .wdt-skin-raspberry-cream .wdt-checkbox-filter.btn {
     text-align: center;
@@ -233,7 +283,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     top: 0;
     left: 0;
 }
-
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:first-child,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:last-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:first-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:last-child{
@@ -241,21 +293,22 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     border-color: #f5f7fa; /* th border color */
     color: #000000;
 }
-
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th {
     border-left: none;
     border-right: none;
 }
-
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:first-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:first-child {
     border-right: none;
     border-left: 1px solid #f5f7fa;
 }
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable > thead > tr:nth-child(2) > th:last-child,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable > thead > tr:nth-child(2) > th:last-child {
     border-left: none;
     border-right: 1px solid #f5f7fa;
 }
-
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead tr th,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead tr th {
     -o-transition:.5s;
     -ms-transition:.5s;
@@ -264,7 +317,9 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     transition:.5s;
 }
 
-
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead th.sorting_asc,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead th.sorting_desc,
+.wpdt-c.wdt-skin-raspberry-cream.wpDataTablesWrapper.wpDataTable thead th.sorting:hover,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc,
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting:hover {
@@ -274,21 +329,37 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
 }
 
 /*  Sorting icons  */
-
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_asc:after {
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f176';
     padding-left: 10px ;
+    opacity: 1;
 }
-
-.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc:after {
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_desc:after {
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f175';
     padding-left: 10px ;
+    opacity: 1;
 }
-
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:after,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after{
+    font-family: 'wpDataTablesIcons';
+    display: inline-block;
+    content: '\f176';
+    padding-left: 10px ;
+}
 /*  Table Body  */
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody td {
@@ -376,8 +447,8 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     margin-top: 6px;
     padding-top: 2px;
 }
-.wpdt-c .wdt-datatables-admin-wrap button.wdt-column-settings,
-.wpdt-c .wdt-datatables-admin-wrap button.wdt-delete-formula-column {
+.wpdt-c.wdt-skin-raspberry-cream .wdt-datatables-admin-wrap button.wdt-column-settings,
+.wpdt-c.wdt-skin-raspberry-cream .wdt-datatables-admin-wrap button.wdt-delete-formula-column {
     border: unset;
     background: #F9FAFB;
     color: #6B7280;
@@ -1173,10 +1244,6 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-raspberry
     width: 20px;
     height: 20px;
 
-}
-
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-raspberry-cream .modal-dialog .modal-content .modal-header button.close span{
-    display: none;
 }
 
 .wpdt-c.wdt-skin-raspberry-cream .fg-line:not([class*=has-]):after {
@@ -2522,4 +2589,20 @@ div.dt-button-collection.wdt-skin-raspberry-cream button.dt-button.buttons-colum
 
 .wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable thead .noUi-tooltip {
     font-size: 10px;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
+    border-right: none;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper .dataTables_paginate a {
+    box-shadow: none !important;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tr td:first-child,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead tr td:first-child,
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tfoot tr td:first-child{
+    /* table outer border color */
+    border-right: none;
+    border-left: none;
+}
+.wpdt-c.wdt-skin-raspberry-cream .wpDataTablesWrapper table.wpDataTable tfoot td{
+    border-top: transparent;
 }

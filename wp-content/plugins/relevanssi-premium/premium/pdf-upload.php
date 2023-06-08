@@ -691,7 +691,7 @@ function relevanssi_pdf_action_javascript() {
 	}
 
 	jQuery(document).ready(function($ ) {
-		$("#index").click(function( ) {
+		$("#index").on("click", function( ) {
 			$("#relevanssi-progress").show();
 			$("#relevanssi_results").show();
 			$("#relevanssi-timer").show();
@@ -722,7 +722,7 @@ function relevanssi_pdf_action_javascript() {
 				process_step(0, pdf_ids.length, 0);
 			});
 		});
-		$("#reset").click(function($ ) {
+		$("#reset").on("click", function($ ) {
 			if (confirm( relevanssi.pdf_reset_confirm ) ) {
 				var data = {
 					'action': 'relevanssi_wipe_pdfs',

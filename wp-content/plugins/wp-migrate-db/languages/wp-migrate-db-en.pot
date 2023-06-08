@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: wp-migrate-db-pro\n"
 "Report-Msgid-Bugs-To: nom@deliciousbrains.com\n"
-"POT-Creation-Date: 2023-04-25 09:43-0400\n"
+"POT-Creation-Date: 2023-06-01 12:17-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -140,9 +140,9 @@ msgstr ""
 msgid ""
 "We've detected that <code>WP_HTTP_BLOCK_EXTERNAL</code> is enabled and the "
 "host <strong>%1$s</strong> has not been added to <code>WP_ACCESSIBLE_HOSTS</"
-"code>. Please disable <code>WP_HTTP_BLOCK_EXTERNAL</code> or add <strong>"
-"%1$s</strong> to <code>WP_ACCESSIBLE_HOSTS</code> to continue. <a href=\"%2$s"
-"\" target=\"_blank\">More information</a>."
+"code>. Please disable <code>WP_HTTP_BLOCK_EXTERNAL</code> or add "
+"<strong>%1$s</strong> to <code>WP_ACCESSIBLE_HOSTS</code> to continue. <a "
+"href=\"%2$s\" target=\"_blank\">More information</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Api.php:189
@@ -376,8 +376,8 @@ msgid ""
 "<strong>License Not Found</strong> &mdash; The license key below cannot be "
 "found in our database. Please remove it and enter a valid license key.  <br /"
 "><br />Your license key can be found in <a href=\"%s\" target=\"_blank\">My "
-"Account</a> . If you don't have an account yet, <a href=\"%s\" target="
-"\"_blank\">purchase a new license</a>."
+"Account</a> . If you don't have an account yet, <a href=\"%s\" "
+"target=\"_blank\">purchase a new license</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:516
@@ -507,9 +507,9 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Pro/License.php:817
 #, php-format
 msgid ""
-"<strong>Activate Your License</strong> &mdash; Please <a href=\"%s\" class="
-"\"%s\">enter your license key</a> to enable push and pull functionality, "
-"priority support and plugin updates."
+"<strong>Activate Your License</strong> &mdash; Please <a href=\"%s\" "
+"class=\"%s\">enter your license key</a> to enable push and pull "
+"functionality, priority support and plugin updates."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:792
@@ -808,6 +808,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:823
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:824
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:829
+#: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:827
 #, php-format
 msgid "<h3>Output prevented download. </h3> %s"
 msgstr ""
@@ -820,6 +821,7 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:826
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:827
 #: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:832
+#: src/wp-migrate-db-pro/class/Common/Filesystem/Filesystem.php:830
 msgid "Could not find the file to download:"
 msgstr ""
 
@@ -847,9 +849,9 @@ msgstr ""
 msgid ""
 "We've detected that <code>WP_HTTP_BLOCK_EXTERNAL</code> is enabled and the "
 "host <strong>%1$s</strong> has not been added to <code>WP_ACCESSIBLE_HOSTS</"
-"code>. Please disable <code>WP_HTTP_BLOCK_EXTERNAL</code> or add <strong>"
-"%1$s</strong> to <code>WP_ACCESSIBLE_HOSTS</code> to continue. <a href=\"%2$s"
-"\" target=\"_blank\">More information</a>. (#147 - scope: %3$s)"
+"code>. Please disable <code>WP_HTTP_BLOCK_EXTERNAL</code> or add "
+"<strong>%1$s</strong> to <code>WP_ACCESSIBLE_HOSTS</code> to continue. <a "
+"href=\"%2$s\" target=\"_blank\">More information</a>. (#147 - scope: %3$s)"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Http/RemotePost.php:293
@@ -974,11 +976,13 @@ msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:147
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:164
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:170
 msgid "single site"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:148
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:163
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:169
 msgid "multisite"
 msgstr ""
 
@@ -987,15 +991,17 @@ msgid "Multisite tools addon"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:157
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:158
 #, php-format
 msgid ""
 "It looks like the file you are trying to import is from a multisite install "
 "and this install is a single site. To run this type of import you'll need to "
-"use the %s to export a subsite as a single site. <a href=\"%s\" target="
-"\"_blank\">Learn more »</a>"
+"use the %s to export a subsite as a single site. <a href=\"%s\" "
+"target=\"_blank\">Learn more »</a>"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:165
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:171
 #, php-format
 msgid ""
 "It looks like the file you are trying to import is from a single site "
@@ -1004,10 +1010,12 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:173
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:180
 msgid "Activate"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:175
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:182
 #, php-format
 msgid ""
 "It looks like the remote site is a %s install and this install is a %s. To "
@@ -1016,10 +1024,12 @@ msgid ""
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:189
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:196
 msgid "Install"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:192
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:199
 msgid "Upgrade your license"
 msgstr ""
 
@@ -1086,9 +1096,9 @@ msgstr ""
 msgid ""
 "Hey, this is the first time activating your license, nice! Your migrations "
 "are about to get awesome! If you haven’t already, you should check out our "
-"<a href=\"%1$s\" target=\"_blank\">Quick Start Guide</a> and <a href=\"%2$s"
-"\" target=\"_blank\">Videos</a>. If you run into any trouble at all, use the "
-"<strong>Help tab</strong> above to submit a support request."
+"<a href=\"%1$s\" target=\"_blank\">Quick Start Guide</a> and <a "
+"href=\"%2$s\" target=\"_blank\">Videos</a>. If you run into any trouble at "
+"all, use the <strong>Help tab</strong> above to submit a support request."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Common/Plugin/Assets.php:80
@@ -1446,8 +1456,8 @@ msgstr ""
 #: src/wp-migrate-db-pro/class/Common/Addon/Addon.php:157
 #, php-format
 msgid ""
-"%1$s %2$s is now available. You currently have %3$s installed. <a href=\"%4$s"
-"\">%5$s</a>"
+"%1$s %2$s is now available. You currently have %3$s installed. <a "
+"href=\"%4$s\">%5$s</a>"
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/Addon/Addon.php:153
@@ -1890,9 +1900,9 @@ msgstr ""
 #, php-format
 msgid ""
 "The version of the %1$s addon you have installed%2$s is out-of-date and will "
-"not work with this beta version WP Migrate. There may be a <a href=\"%3$s"
-"\">beta update available</a>, otherwise please <a href=\"%4$s\">deactivate "
-"this addon</a>."
+"not work with this beta version WP Migrate. There may be a <a "
+"href=\"%3$s\">beta update available</a>, otherwise please <a "
+"href=\"%4$s\">deactivate this addon</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/UI/Template.php:132
@@ -2667,9 +2677,9 @@ msgstr ""
 msgid ""
 "<strong>License Cancelled</strong> &mdash; The license key has been "
 "cancelled. Please <a href=\"%1$s\">remove it and enter a valid license key</"
-"a>. <br /><br /> Your license key can be found in <a href=\"%2$s\" target="
-"\"_blank\">My Account</a>. If you don't have an account yet, <a href=\"%3$s"
-"\" target=\"_blank\">purchase a new license</a>."
+"a>. <br /><br /> Your license key can be found in <a href=\"%2$s\" "
+"target=\"_blank\">My Account</a>. If you don't have an account yet, <a "
+"href=\"%3$s\" target=\"_blank\">purchase a new license</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:506
@@ -2678,8 +2688,8 @@ msgid ""
 "<strong>License Cancelled</strong> &mdash; The license key below has been "
 "cancelled. Please remove it and enter a valid license key. <br /><br /> Your "
 "license key can be found in <a href=\"%1$s\" target=\"_blank\">My Account</"
-"a>. If you don't have an account yet, <a href=\"%2$s\" target=\"_blank"
-"\">purchase a new license</a>."
+"a>. If you don't have an account yet, <a href=\"%2$s\" "
+"target=\"_blank\">purchase a new license</a>."
 msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:536
@@ -2696,4 +2706,22 @@ msgstr ""
 
 #: src/wp-migrate-db-pro/class/Pro/License.php:537
 msgid "Reactivate license"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:156
+msgid "Multisite Tools upgrade"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:164
+msgid "Learn more about replacing a single site with a multisite network"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:165
+msgid "Learn more about replacing a multisite network with a single site"
+msgstr ""
+
+#: src/wp-migrate-db-pro/class/Common/Multisite/Multisite.php:215
+#, php-format
+msgid ""
+"It looks like the remote site is a %s install and this install is a %s. %s"
 msgstr ""

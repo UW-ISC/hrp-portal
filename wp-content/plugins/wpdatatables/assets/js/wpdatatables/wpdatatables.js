@@ -8,7 +8,7 @@ var wpDataTablesUpdatingFlags = {};
 var wpDataTablesResponsiveHelpers = {};
 var wpDataTablesHooks = wpDataTablesHooks || {
     onRenderFilter: [],
-    onRenderDetails:[]
+    onRenderDetails: []
 };
 var wpDataTablesEditors = {};
 var wdtBreakpointDefinition = {
@@ -152,7 +152,7 @@ var singleClick = false;
                         var $inputElement = $('#' + tableDescription.tableId + '_edit_dialog .editDialogInput:not(.bootstrap-select):eq(' + index + ')');
 
                         if (el) {
-                            if($inputElement.data("key").toLowerCase() === 'wdt_id' && isDuplicate) {
+                            if ($inputElement.data("key").toLowerCase() === 'wdt_id' && isDuplicate) {
                                 val = "0"
                             } else {
                                 var val = el.toString();
@@ -260,7 +260,7 @@ var singleClick = false;
                             }
 
                             // Hide/Show search box in select/multiselect edit input
-                            if (searchInSelect === ''){
+                            if (searchInSelect === '') {
                                 $inputElement.closest('div.editDialogInput').find('.bs-searchbox').hide();
                             } else {
                                 $inputElement.closest('div.editDialogInput').find('.bs-searchbox').show();
@@ -520,7 +520,7 @@ var singleClick = false;
                                 var searchInSelect = column.searchInSelectBoxEditing ? ' wdt-search-in-select ' : '';
 
                                 // Recreate the selectbox element
-                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + searchInSelect +'" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
+                                $selectpickerBlock.html('<div class="fg-line"><select id="' + tableDescription.tableId + '_' + column.origHeader + '" data-input_type="' + column.editorInputType + '" data-key="' + column.origHeader + '" class="form-control editDialogInput selectpicker ' + mandatory + possibleValuesAjax + foreignKeyRule + searchInSelect + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '" data-column_header="' + column.displayHeader + '"></select></div>');
                                 if (column.editorInputType === 'multi-selectbox')
                                     $selectpickerBlock.find('select').attr('multiple', 'multiple');
 
@@ -582,7 +582,7 @@ var singleClick = false;
                                 });
                             }
                             // Hide/Show search box in select/multiselect edit input
-                            if (column.searchInSelectBoxEditing !== 1){
+                            if (column.searchInSelectBoxEditing !== 1) {
                                 $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('div.editDialogInput').find('.bs-searchbox').hide();
                             } else {
                                 $('select#' + tableDescription.tableId + '_' + column.origHeader).closest('div.editDialogInput').find('.bs-searchbox').show();
@@ -591,14 +591,14 @@ var singleClick = false;
 
                         if (column.defaultValue) {
                             let columnDefaultValue = column.defaultValue;
-                            if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1 ) {
+                            if ($.inArray(column.editorInputType, ['selectbox', 'multi-selectbox']) !== -1) {
                                 if (typeof columnDefaultValue === 'object') {
                                     defaultValuesArr = columnDefaultValue.value;
                                 } else {
                                     defaultValuesArr = column.editorInputType === 'multi-selectbox' && !Array.isArray(columnDefaultValue) ? columnDefaultValue.split('|') : column.defaultValue;
                                 }
                                 $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').selectpicker('val', defaultValuesArr).trigger('change.abs.preserveSelected');
-                            } else if($.inArray(column.editorInputType, ['attachment', 'image']) !== -1 && ($('.fileupload-' + tableDescription.tableId).length)) {
+                            } else if ($.inArray(column.editorInputType, ['attachment', 'image']) !== -1 && ($('.fileupload-' + tableDescription.tableId).length)) {
 
                                 //Reset attachment editor
                                 var $fileUploadEl = $('.fileupload-' + tableDescription.tableId);
@@ -615,7 +615,7 @@ var singleClick = false;
                                 });
                                 $('#wdt-frontend-modal .editDialogInput:not(.bootstrap-select):eq(' + i + ')').val(column.defaultValue);
 
-                            } else if(column.editorInputType === 'mce-editor') {
+                            } else if (column.editorInputType === 'mce-editor') {
                                 if (tinymce.activeEditor) {
                                     $inputElement = $('#' + tableDescription.tableId + '_edit_dialog .editDialogInput:not(.bootstrap-select):eq(' + i + ')');
                                     tinymce.execCommand('mceRemoveEditor', true, $inputElement.attr('id'));
@@ -707,13 +707,16 @@ var singleClick = false;
             if (tableDescription.hideBeforeLoad) {
                 dataTableOptions.fnInitComplete = function () {
                     $(tableDescription.selector).animateFadeIn();
+
+                    if (tableDescription.dataTableParams.fixedColumns) {
+                        addFixedColumnsHideBeforeLoad(tableDescription);
+                    }
                 }
             }
-
             /**
              * Add outline class to selected column col for initial table load
              */
-            if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito']) !== -1) {
+            if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito', 'dark-mojito']) !== -1) {
                 dataTableOptions.fnInitComplete = function () {
                     //  Find the column that the table is initially sorted by
                     let columnPos = tableDescription.dataTableParams.order[0][0];
@@ -724,7 +727,7 @@ var singleClick = false;
                     let tableId = tableDescription.tableId;
                     addOutlineBorder(tableId, columnTitle);
 
-                    if (tableDescription.tableSkin === 'mojito') {
+                    if (tableDescription.tableSkin === 'mojito' || tableDescription.tableSkin === 'dark-mojito') {
                         cubeLoaderMojito(tableId);
                         if (tableDescription.showRowsPerPage)
                             hideLabelShowXEntries(tableId);
@@ -732,6 +735,7 @@ var singleClick = false;
 
                     if (tableDescription.hideBeforeLoad) {
                         $(tableDescription.selector).animateFadeIn();
+                        addFixedColumnsHideBeforeLoad(tableDescription);
                     }
                 }
             }
@@ -745,7 +749,7 @@ var singleClick = false;
              * Remove pagination when "Default rows per page" is set to "All"
              */
             if (wpDataTables[tableDescription.tableId].fnSettings()._iDisplayLength >= wpDataTables[tableDescription.tableId].fnSettings().fnRecordsTotal() || dataTableOptions.iDisplayLength === -1) {
-                $('#' +  tableDescription.tableId + '_paginate').hide();
+                $('#' + tableDescription.tableId + '_paginate').hide();
             }
 
             $(tableDescription.selector + '_wrapper').addClass('wpDataTableID-' + tableDescription.tableWpId)
@@ -754,7 +758,7 @@ var singleClick = false;
              * Set pagination alignment classes
              */
             if (tableDescription.paginationAlign) {
-                switch (tableDescription.paginationAlign){
+                switch (tableDescription.paginationAlign) {
                     case "right":
                         $(tableDescription.selector + '_wrapper').addClass('wpdt-pagination-right');
                         $(tableDescription.selector + '_wrapper').removeClass('wpdt-pagination-left');
@@ -787,8 +791,8 @@ var singleClick = false;
             /**
              * Show "Show X entries" dropdown
              */
-            if (tableDescription.showRowsPerPage){
-                if ( !(jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.bootstrap-select').length))
+            if (tableDescription.showRowsPerPage) {
+                if (!(jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.bootstrap-select').length))
                     jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.wdt-selectpicker').selectpicker();
             }
 
@@ -801,24 +805,47 @@ var singleClick = false;
                 fn: function (oSettings) {
                     var api = oSettings.oInstance.api();
 
-                    if (typeof (api.page.info()) != 'undefined'){
+                    if (typeof (api.page.info()) != 'undefined') {
                         if (api.page.len() >= api.page.info().recordsDisplay || api.data().page.len() == -1) {
-                            $('#' +  tableDescription.tableId + '_paginate').hide();
+                            $('#' + tableDescription.tableId + '_paginate').hide();
                         } else {
-                            $('#' +  tableDescription.tableId + '_paginate').show();
+                            $('#' + tableDescription.tableId + '_paginate').show();
                         }
                     }
 
                 }
             });
-
+            /**
+             * Add fixed columns when a draw occurs
+             */
+            if (tableDescription.dataTableParams.fixedHeader || tableDescription.dataTableParams.fixedColumns || (tableDescription.hideBeforeLoad && tableDescription.dataTableParams.fixedColumns)) {
+                wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                    sName: 'addColumnFiltersFixedColumns',
+                    fn: function (oSettings) {
+                        if (tableDescription.dataTableParams.fixedColumns && tableDescription.filterInForm === false) {
+                            if (oSettings.oInstance.api().settings()[0]._fixedColumns != undefined) {
+                                oSettings.oInstance.api().fixedColumns().left(tableDescription.dataTableParams.fixedColumns.left);
+                                oSettings.oInstance.api().fixedColumns().right(tableDescription.dataTableParams.fixedColumns.right);
+                            }
+                        }
+                        if (tableDescription.dataTableParams.fixedHeader) {
+                            if (jQuery(tableDescription.selector).find('div.dtfh-floatingparent').length != 0) {
+                                if (oSettings.oInstance.api().settings()[0]._fixedHeader != undefined) {
+                                    oSettings.oInstance.api().fixedHeader.adjust();
+                                    //oSettings.oInstance.api().settings()[0]._fixedHeader.s.dt.fixedHeader.adjust();
+                                }
+                            }
+                        }
+                    }
+                });
+            }
             /**
              * Add outline class to selected column col when a draw occurs
              */
             wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
                 sName: 'addOutlineClass',
                 fn: function (oSettings) {
-                    if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito']) !== -1) {
+                    if ($.inArray(tableDescription.tableSkin, ['raspberry-cream', 'mojito', 'dark-mojito']) !== -1) {
                         //Find the column that the table is sorted by
                         let columnPos = oSettings.aaSorting[0][0];
                         let columnTitle = oSettings.aoColumns[columnPos].className.substring(
@@ -838,9 +865,10 @@ var singleClick = false;
                 if (columnTitle.indexOf(' ') !== -1) {
                     columnTitle = columnTitle.substring(0, columnTitle.indexOf(' '));
                 }
-                let colgroupList = document.getElementById(tableId).children[0];
+                let colgroupList = document.getElementById("colgrup-" + tableId);
                 colgroupList.replaceChildren();
                 let visibleColumns = document.getElementById(tableId).tHead.getElementsByClassName('wdtheader');
+                let fixedTable = document.getElementById(tableId);
 
                 for (column of visibleColumns) {
                     let newCol = document.createElement('col');
@@ -851,21 +879,35 @@ var singleClick = false;
                     newCol.setAttribute('id', tableId + '-column-' + colTitle + '-col');
                     colgroupList.append(newCol);
                 }
+                //Outline for fixed columns and fixed header
+                $('#' + tableId + '-column-' + columnTitle + '-col').addClass('outlined');
+                let indexColOutlined = $('#' + tableId + '-column-' + columnTitle + '-col').index() + 1;
 
-                $('#' +tableId + '-column-' + columnTitle + '-col').addClass('outlined');
+                jQuery(fixedTable).find('th:not(.wdtheader)').removeClass('outlined');
+                jQuery(fixedTable).find('tfoot tr td').removeClass('outlined');
+
+                if (tableDescription.dataTableParams.fixedHeader.header || tableDescription.dataTableParams.fixedColumns) {
+                    jQuery(fixedTable).find('th:not(.wdtheader):nth-child(' + indexColOutlined + ')').addClass('outlined');
+                    $('tfoot tr td.column-' + columnTitle).addClass('outlined');
+                }
             }
+
+            function addFixedColumnsHideBeforeLoad(tableDescription) {
+                jQuery(tableDescription.selector).DataTable().draw()
+            }
+
             /**
-             * Helper function for hiding label 'show entries' for mojito skin
+             * Helper function for hiding label show entries' for mojito/dark mojito skin
              */
 
-            function hideLabelShowXEntries(tableId){
-                let showEntriesText = $('#' + tableId +'_length')[0].firstChild;
+            function hideLabelShowXEntries(tableId) {
+                let showEntriesText = $('#' + tableId + '_length')[0].firstChild;
                 showEntriesText.removeChild(showEntriesText.firstChild);
                 showEntriesText.removeChild(showEntriesText.lastChild);
 
             }
 
-            function cubeLoaderMojito(tableId){
+            function cubeLoaderMojito(tableId) {
                 let cubesAnimation = '<div class="wdt_cubes">';
                 for (let i = 1; i <= 9; i++) {
                     cubesAnimation += '<div class="wdt_cube wdt_cube-' + i + '"></div>';
@@ -873,6 +915,7 @@ var singleClick = false;
                 cubesAnimation += ' </div>';
                 $('#' + tableId).append(cubesAnimation)
             }
+
             /**
              * Enable auto-refresh if defined
              */
@@ -1170,7 +1213,7 @@ var singleClick = false;
             /**
              * Init row grouping if enabled
              */
-            if ((tableDescription.columnsFixed == 0) && (tableDescription.groupingEnabled)) {
+            if (tableDescription.groupingEnabled) {
                 wpDataTables[tableDescription.tableId].rowGrouping({iGroupingColumnIndex: tableDescription.groupingColumnIndex});
             }
 
@@ -1279,6 +1322,7 @@ var singleClick = false;
                         $(tableDescription.selector + '_ok_edit_dialog').click();
                     }
                 });
+
 
                 /**
                  * Apply maskmoney for Float column types and apply thousands separator and decimal places
@@ -1389,7 +1433,7 @@ var singleClick = false;
                  */
                 $('.edit_table[aria-controls="' + tableDescription.tableId + '"]').click(function () {
                     var modal = $('#wdt-frontend-modal');
-                    var newSkins = ['dark', 'aqua','purple'];
+                    var newSkins = ['dark', 'aqua', 'purple'];
 
                     if ($(this).hasClass('disabled'))
                         return false;
@@ -1404,13 +1448,13 @@ var singleClick = false;
 
                     var row = $(tableDescription.selector + ' tr.selected').get(0);
 
-                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')) {
                         row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
                     }
 
                     if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
-                        if(typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function'){
-                            if (singleClick === false){
+                        if (typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function') {
+                            if (singleClick === false) {
                                 singleClick = true;
                                 wpDataTablesEditors[tableDescription.tableType]['edit'](tableDescription, false);
                             }
@@ -1422,24 +1466,24 @@ var singleClick = false;
                         modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
                         modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
 
-                        if (newSkins.includes(tableDescription.tableSkin)){
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        if (newSkins.includes(tableDescription.tableSkin)) {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-double-reg');
                         } else {
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-double-reg');
                         }
 
                         $('#wdt-frontend-modal .editDialogInput').each(function (index) {
@@ -1479,7 +1523,7 @@ var singleClick = false;
                  */
                 $('.new_table_entry[aria-controls="' + tableDescription.tableId + '"]').click(function () {
                     var modal = $('#wdt-frontend-modal');
-                    var newSkins = ['dark', 'aqua','purple'];
+                    var newSkins = ['dark', 'aqua', 'purple'];
 
                     $('.wpDataTablesPopover.editTools').hide();
 
@@ -1491,7 +1535,7 @@ var singleClick = false;
 
 
                     if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
-                        if(typeof wpDataTablesEditors[tableDescription.tableType]['new'] == 'function'){
+                        if (typeof wpDataTablesEditors[tableDescription.tableType]['new'] == 'function') {
                             if (singleClick === false) {
                                 singleClick = true;
                                 wpDataTablesEditors[tableDescription.tableType]['new'](tableDescription);
@@ -1501,24 +1545,24 @@ var singleClick = false;
                         modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
                         modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
 
-                        if (newSkins.includes(tableDescription.tableSkin)){
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        if (newSkins.includes(tableDescription.tableSkin)) {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-double-reg');
                         } else {
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-double-reg');
                         }
                         // Reset values in edit modal
                         $('#wdt-frontend-modal .editDialogInput').val('').css('border', '');
@@ -1561,7 +1605,6 @@ var singleClick = false;
                     }
 
 
-
                 });
 
                 /**
@@ -1569,11 +1612,11 @@ var singleClick = false;
                  */
                 $('.duplicate_table_entry[aria-controls="' + tableDescription.tableId + '"]').click(function () {
                     var modal = $('#wdt-frontend-modal');
-                    var newSkins = ['dark', 'aqua','purple'];
+                    var newSkins = ['dark', 'aqua', 'purple'];
 
                     var row = $(tableDescription.selector + ' tr.selected').get(0);
 
-                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                    if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')) {
                         row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
                     }
 
@@ -1587,7 +1630,7 @@ var singleClick = false;
 
 
                     if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
-                        if(typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function'){
+                        if (typeof wpDataTablesEditors[tableDescription.tableType]['edit'] == 'function') {
                             if (singleClick === false) {
                                 singleClick = true;
                                 wpDataTablesEditors[tableDescription.tableType]['edit'](tableDescription, true);
@@ -1600,24 +1643,24 @@ var singleClick = false;
                         modal.find('.modal-body').append($(tableDescription.selector + '_edit_dialog').show());
                         modal.find('.modal-footer').append($(tableDescription.selector + '_edit_dialog_buttons').show());
 
-                        if (newSkins.includes(tableDescription.tableSkin)){
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-double-reg');
+                        if (newSkins.includes(tableDescription.tableSkin)) {
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-double-reg');
                         } else {
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).removeClass('wpdt-icon-chevron-left');
-                            modal.find(tableDescription.selector + '_prev_edit_dialog i' ).addClass('wpdt-icon-step-backward');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).removeClass('wpdt-icon-chevron-right');
-                            modal.find(tableDescription.selector + '_next_edit_dialog i' ).addClass('wpdt-icon-step-forward');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).removeClass('wpdt-icon-check-circle-full');
-                            modal.find(tableDescription.selector + '_apply_edit_dialog i' ).addClass('wpdt-icon-check');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).removeClass('wpdt-icon-check-circle');
-                            modal.find(tableDescription.selector + '_ok_edit_dialog i' ).addClass('wpdt-icon-check-double-reg');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').removeClass('wpdt-icon-chevron-left');
+                            modal.find(tableDescription.selector + '_prev_edit_dialog i').addClass('wpdt-icon-step-backward');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').removeClass('wpdt-icon-chevron-right');
+                            modal.find(tableDescription.selector + '_next_edit_dialog i').addClass('wpdt-icon-step-forward');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').removeClass('wpdt-icon-check-circle-full');
+                            modal.find(tableDescription.selector + '_apply_edit_dialog i').addClass('wpdt-icon-check');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').removeClass('wpdt-icon-check-circle');
+                            modal.find(tableDescription.selector + '_ok_edit_dialog i').addClass('wpdt-icon-check-double-reg');
                         }
 
                         $('#wdt-frontend-modal .editDialogInput').each(function (index) {
@@ -1688,7 +1731,7 @@ var singleClick = false;
 
                     $('.wpDataTablesPopover.editTools').hide();
 
-                    var modal =  $('#wdt-delete-modal');
+                    var modal = $('#wdt-delete-modal');
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
 
@@ -1703,12 +1746,12 @@ var singleClick = false;
                         e.stopImmediatePropagation();
 
                         if (['manual', 'mysql'].indexOf(tableDescription.tableType) === -1) {
-                            if(typeof wpDataTablesEditors[tableDescription.tableType]['delete'] == 'function') {
+                            if (typeof wpDataTablesEditors[tableDescription.tableType]['delete'] == 'function') {
                                 wpDataTablesEditors[tableDescription.tableType]['delete'](tableDescription);
                             }
                         } else {
                             var row = $(tableDescription.selector + ' tr.selected').get(0);
-                            if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')){
+                            if (tableDescription.responsive == 1 && $(row).hasClass('row-detail')) {
                                 row = $(tableDescription.selector + ' tr.selected').prev('.detail-show').get(0);
                             }
                             var data = wpDataTables[tableDescription.tableId].fnGetData(row);
@@ -1830,16 +1873,15 @@ var singleClick = false;
             /**
              * Prevent bootstrap dialog from blocking focusin on Tinymce editor
              */
-            $(document).on('focusin', function(e) {
+            $(document).on('focusin', function (e) {
                 if ($(e.target).closest(".mce-window").length) {
                     e.stopImmediatePropagation();
                 }
             });
-
             /**
              * Add some JS hooks for Master-detail add-on
              */
-            if(tableDescription.masterDetail !== undefined && tableDescription.masterDetail){
+            if (tableDescription.masterDetail !== undefined && tableDescription.masterDetail) {
                 for (var i in wpDataTablesHooks.onRenderDetails) {
                     if (!isNaN(i))
                         wpDataTablesHooks.onRenderDetails[i](tableDescription);
@@ -1890,7 +1932,7 @@ function wdtApplyCellAction($cell, action, setVal) {
             $cell.attr('style', 'background-color: "" !important');
             break;
         case 'setCellContent':
-            if ($cell.children().hasClass('responsiveExpander')){
+            if ($cell.children().hasClass('responsiveExpander')) {
                 $cell.html(setVal).prepend('<span class="responsiveExpander"></span>');
             } else {
                 $cell.html(setVal);
@@ -1950,11 +1992,12 @@ function wdtDialog(str, title) {
 }
 
 function wdtAddOverlay(table_selector) {
-    jQuery(table_selector).addClass('overlayed');
+    jQuery(table_selector).not('.fixedHeader-floating').addClass('overlayed');
 }
 
 function wdtRemoveOverlay(table_selector) {
     jQuery(table_selector).removeClass('overlayed');
+    jQuery('table.fixedHeader-floating').removeClass('overlayed');
 }
 
 /**

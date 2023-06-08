@@ -164,7 +164,7 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
 
     if (!this.lastStateExists) {
         /** Generate breakpoints in the format we need. ***********************/
-        // First, we need to create a sorted array of the breakpoints given.
+            // First, we need to create a sorted array of the breakpoints given.
         var breakpointsSorted = [];
 
         for (var prop in this.origBreakpointsDefs) {
@@ -188,9 +188,9 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
 
         // Add the default breakpoint which shows all (has no upper limit).
         breakpointsSorted.push({
-            name         : 'always',
-            lowerLimit   : lowerLimit,
-            upperLimit   : Infinity,
+            name: 'always',
+            lowerLimit: lowerLimit,
+            upperLimit: Infinity,
             columnsToHide: []
         });
 
@@ -203,9 +203,9 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
         }
 
         /** Create range of visible columns and their indexes *****************/
-        // We need the range of all visible column indexes to calculate the
-        // columns to show:
-        //     Columns to show = all visible columns - columns to hide
+            // We need the range of all visible column indexes to calculate the
+            // columns to show:
+            //     Columns to show = all visible columns - columns to hide
         var columns = this.api.columns().header();
         var visibleColumnsHeadersTds = [];
         for (i = 0, l = columns.length; i < l; i++) {
@@ -259,7 +259,7 @@ ResponsiveDatatablesHelper.prototype.initBreakpoints = function () {
  *
  * @param {Boolean} bindFlag
  */
-ResponsiveDatatablesHelper.prototype.setWindowsResizeHandler = function(bindFlag) {
+ResponsiveDatatablesHelper.prototype.setWindowsResizeHandler = function (bindFlag) {
     if (bindFlag === undefined) {
         bindFlag = true;
     }
@@ -476,6 +476,7 @@ ResponsiveDatatablesHelper.prototype.showRowDetail = function (responsiveDatatab
     // Get column because we need their titles.
     var api = responsiveDatatablesHelperInstance.api;
     var columns = api.columns().header();
+    var rowGropuingTableDescription = JSON.parse(jQuery("#" + jQuery(responsiveDatatablesHelperInstance.tableElement[0]).data().describedBy).val());
 
     // Create the new tr.
     var newTr = jQuery(responsiveDatatablesHelperInstance.rowTemplate);
@@ -516,23 +517,44 @@ ResponsiveDatatablesHelper.prototype.showRowDetail = function (responsiveDatatab
             // Copy td class to new li.
             var tdClass = jQuery(td).attr('class');
             if (tdClass !== 'undefined' && tdClass !== false && tdClass !== '') {
-                      li.addClass(tdClass)
+                li.addClass(tdClass)
             }
 
             ul.append(li);
         }
     }
 
-    // Create tr colspan attribute.
+    // Create tr colspan attribute. And colspan for another td if fixed columns are on
     var colspan = responsiveDatatablesHelperInstance.columnIndexes.length - responsiveDatatablesHelperInstance.columnsHiddenIndexes.length;
+    var colSpan2 = 0;
+    if (rowGropuingTableDescription.dataTableParams.fixedColumns && rowGropuingTableDescription.dataTableParams.fixedColumns.left != 0) {
+        colSpan2 = colspan - rowGropuingTableDescription.dataTableParams.fixedColumns.left;
+        colspan = rowGropuingTableDescription.dataTableParams.fixedColumns.left;
+    }
     newTr.find('> td').attr('colspan', colspan);
+
+
+    var tdFC = '<td class="wdt_fixedColumns-responsive"><!--column item--></td>';
+    if (rowGropuingTableDescription.dataTableParams.fixedColumns && rowGropuingTableDescription.dataTableParams.fixedColumns.left != 0) {
+        newTr.find('> td:not(.wdt_fixedColumns-responsive)').css({'left': '0px', 'position': 'sticky'});
+        newTr.find('> td:not(.wdt_fixedColumns-responsive)').addClass('dtfc-fixed-left');
+        newTr.append(tdFC);
+        newTr.find('> td.wdt_fixedColumns-responsive').attr('colspan', colSpan2);
+    }
 
     // Append the new tr after the current tr.
     tr.after(newTr);
 
     // call the showDetail function if needbe
-    if (responsiveDatatablesHelperInstance.options.showDetail){
+    if (responsiveDatatablesHelperInstance.options.showDetail) {
         responsiveDatatablesHelperInstance.options.showDetail(newTr);
+        if (rowGropuingTableDescription.dataTableParams.fixedColumns && rowGropuingTableDescription.dataTableParams.fixedColumns.left != 0) {
+            responsiveDatatablesHelperInstance.api.fixedColumns().left(rowGropuingTableDescription.dataTableParams.fixedColumns.left)
+            responsiveDatatablesHelperInstance.api.fixedColumns().right(rowGropuingTableDescription.dataTableParams.fixedColumns.right)
+        }
+        if (rowGropuingTableDescription.dataTableParams.fixedHeader && jQuery(rowGropuingTableDescription.selector).find('div.dtfh-floatingparent').length != 0) {
+            api.fixedHeader.adjust();
+        }
     }
 };
 
@@ -546,7 +568,10 @@ ResponsiveDatatablesHelper.prototype.hideRowDetail = function (responsiveDatatab
     // If the value of an input has changed while in row detail, we need to copy its state back
     // to the DataTables object so that value will persist when the tr.row-detail is removed.
     var rowDetail = tr.next('.row-detail');
-    if (responsiveDatatablesHelperInstance.options.hideDetail){
+    var rowGropuingTableDescription = JSON.parse(jQuery("#" + jQuery(responsiveDatatablesHelperInstance.tableElement[0]).data().describedBy).val());
+    var api = responsiveDatatablesHelperInstance.api;
+
+    if (responsiveDatatablesHelperInstance.options.hideDetail) {
         responsiveDatatablesHelperInstance.options.hideDetail(rowDetail);
     }
     rowDetail.find('li').each(function () {
@@ -556,6 +581,13 @@ ResponsiveDatatablesHelper.prototype.hideRowDetail = function (responsiveDatatab
         jQuery(td).empty().append(tdContents);
     });
     rowDetail.remove();
+    if (rowGropuingTableDescription.dataTableParams.fixedColumns && rowGropuingTableDescription.dataTableParams.fixedColumns.left != 0) {
+        responsiveDatatablesHelperInstance.api.fixedColumns().left(rowGropuingTableDescription.dataTableParams.fixedColumns.left)
+        responsiveDatatablesHelperInstance.api.fixedColumns().right(rowGropuingTableDescription.dataTableParams.fixedColumns.right)
+    }
+    if (rowGropuingTableDescription.dataTableParams.fixedHeader && jQuery(rowGropuingTableDescription.selector).find('div.dtfh-floatingparent').length != 0) {
+        api.fixedHeader.adjust();
+    }
 };
 
 /**
@@ -595,7 +627,7 @@ ResponsiveDatatablesHelper.prototype.disable = function (disable) {
  * Get state from cookie.
  */
 ResponsiveDatatablesHelper.prototype.getState = function () {
-    if (typeof(Storage)) {
+    if (typeof (Storage)) {
         // Use local storage
         var value = JSON.parse(localStorage.getItem(this.cookieName));
         if (value) {
@@ -614,7 +646,7 @@ ResponsiveDatatablesHelper.prototype.getState = function () {
  * Saves state to cookie.
  */
 ResponsiveDatatablesHelper.prototype.setState = function () {
-    if (typeof(Storage)) {
+    if (typeof (Storage)) {
         // Use local storage
         var d1 = this.difference(this.lastColumnsHiddenIndexes, this.columnsHiddenIndexes).length;
         var d2 = this.difference(this.columnsHiddenIndexes, this.lastColumnsHiddenIndexes).length;

@@ -66,8 +66,16 @@ function relevanssi_post_metabox() {
 	$hide_content = checked( 'on', get_post_meta( $post->ID, '_relevanssi_hide_content', true ), false );
 	$pin_for_all  = checked( 'on', get_post_meta( $post->ID, '_relevanssi_pin_for_all', true ), false );
 
-	$pins = get_post_meta( $post->ID, '_relevanssi_pin', false );
-	$pin  = implode( ', ', $pins );
+	$pins          = get_post_meta( $post->ID, '_relevanssi_pin', false );
+	$pin_weights   = get_post_meta( $post->ID, '_relevanssi_pin_weights', true );
+	$weighted_pins = array();
+	foreach ( $pins as $pin ) {
+		if ( isset( $pin_weights[ $pin ] ) ) {
+			$pin .= ' (' . $pin_weights[ $pin ] . ')';
+		}
+		$weighted_pins[] = $pin;
+	}
+	$pin = implode( ', ', $weighted_pins );
 
 	$unpins = get_post_meta( $post->ID, '_relevanssi_unpin', false );
 	$unpin  = implode( ', ', $unpins );

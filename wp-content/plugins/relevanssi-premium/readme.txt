@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.2
-Stable tag: 2.21.0
+Stable tag: 2.23.0
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,22 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.23.0 =
+* New feature: Relevanssi can now create custom field specific excerpts that come from one custom field only and know which field that is.
+* New feature: You can see the list of indexed custom field names in the indexing and excerpt settings.
+* New feature: New filter hook `relevanssi_excerpt_specific_custom_field_content` filters the excerpt custom field content if `relevanssi_excerpt_specific_fields` is enabled.
+* Changed behaviour: The `relevanssi_get_custom_field_content()` function now returns an array instead of string. If `relevanssi_excerpt_specific_fields` is off, the previous string return value is returned as a single-item array with the string in index 0. If the setting is on, the array keys are the field names.
+* Changed behaviour: The `relevanssi_get_child_pdf_content()` function now returns an array.
+* Minor fix: The "none" value in category dropdowns from the searchform shortcode is changed from -1 to 0.
+* Minor fix: The stopword population during the multisite installation used the wrong database table, leading to failed population.
+* Minor fix: Multisite installation is moved from `wp_insert_site` (priority 10) to `wp_initialize_site` (priority 200) in order to avoid trouble.
+* Minor fix: Wildcard search now works in whole word matching, not only in partial matching.
+* Minor fix: The Gutenberg sidebar translations didn't show up. Now you should be able to see the sidebar in the right language.
+
+= 2.22.0 =
+* New feature: Logging now includes a session ID (based on user ID for logged-in users, HTTP user agent for others, and current time, stable for 10 minutes per user). This is used to remove duplicate searches from live searches, keeping only the final search query.
+* Minor fix: The pin weights did not appear in the classic editor Relevanssi metabox, despite being stored in the database.
+
 = 2.21.0 =
 * New feature: You can now add weights to pinned terms to control the order of the pinned posts.
 * New feature: New filter hook `relevanssi_add_attachment_scripts` lets you add the attachment javascripts to other post types than `attachment`.
@@ -342,19 +358,13 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Relevanssi now recursively runs `relevanssi_block_to_render` and the CSS `relevanssi_noindex` filtering for inner blocks.
 * Minor fix: Relevanssi redirects now work better with FacetWP searches. Thanks to Jan Willem Oostendorp.
 
-= 2.18.0 =
-* New feature: Oxygen compatibility has been upgraded to support JSON data from Oxygen 4. This is still in early stages, so feedback from Oxygen users is welcome.
-* New feature: New filter hook `relevanssi_oxygen_element` is used to filter Oxygen JSON elements. The earlier `relevanssi_oxygen_section_filters` and `relevanssi_oxygen_section_content` filters are no longer used with Oxygen 4; this hook is the only way to filter Oxygen elements.
-* Changed behaviour: Relevanssi now applies `remove_accents()` to all strings. This is because default database collations do not care for accents and having accents may cause missing information in indexing. If you use a database collation that doesn't ignore accents, make sure you disable this filter.
-* Minor fix: Stops drafts and pending posts from showing up in Relevanssi Live Ajax Searches.
-* Minor fix: Remove array_flip() warnings from related posts.
-* Minor fix: Relevanssi used `the_category` filter with too few parameters. The missing parameters have been added.
-* Minor fix: Language translations didn't update.
-* Minor fix: Phrases weren't used in some cases where a multiple-word phrase looked like a single-word phrase.
-* Minor fix: Prevents fatal errors from `relevanssi_extract_rt()`.
-* Minor fix: Prevents fatal errors from `relevanssi_strip_all_tags()`.
-
 == Upgrade notice ==
+= 2.23.0 =
+* Better method for handling custom fields in excerpts, bug fixes.
+
+= 2.22.0 =
+* Logs now include a session ID.
+
 = 2.21.0 =
 * You can now assign weights to pinned keywords.
 
