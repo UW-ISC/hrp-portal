@@ -199,9 +199,53 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-mojito .w
     margin-top: 14px;
     padding: 0;
 }
+.wpdt-c.wdt-skin-mojito table.wpFixedHeader .outlined{
+    border:1px solid #9DEDE4 !important;
+}
 
 .wpdt-c.wdt-skin-mojito .outlined {
     border:2px solid #9DEDE4 !important;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr td.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr td.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr td.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr td.outlined{
+    border-left:1px solid #9DEDE4 !important;
+    border-top: none !important;
+    border-bottom: 1px solid #9DEDE4 !important;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-right tr th.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-left tr th.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.dtfc-has-right.dtfc-has-left tr th.outlined,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable.wpFixedHeader tr th.outlined{
+    border-bottom: 1px solid #f5f7fa !important;
+}
+.wpdt-c.wdt-skin-mojito table.wpFixedHeader th.outlined,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-left th.outlined,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-right th.outlined,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-left.dtfc-has-right th.outlined,
+.wpdt-c.wdt-skin-mojito tfoot td.outlined{
+    border-left:1px solid #9DEDE4 !important;
+    border-right:1px solid #9DEDE4 !important;
+    border-bottom: transparent !important;
+}
+.wpdt-c.wdt-skin-mojito table.wpDataTable.wpdt-has-grouping.dtfc-has-left.dtfc-has-right td.sorting_2,
+.wpdt-c.wdt-skin-mojito table.wpDataTable.wpdt-has-grouping.dtfc-has-right td.sorting_2,
+.wpdt-c.wdt-skin-mojito table.wpDataTable.wpdt-has-grouping.dtfc-has-left td.sorting_2 {
+    border-left: 1px solid #9DEDE4 !important;
+    border-right: 1px solid #9DEDE4 !important;
+}
+.wpdt-c.wdt-skin-mojito table.wpFixedHeader td.sorting_1,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-left.dtfc-has-right td.sorting_1,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-right td.sorting_1,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-left td.sorting_1{
+    border-left:1px solid #9DEDE4 !important;
+    border-right:1px solid #9DEDE4 !important;
+    border-bottom: transparent !important;
+}
+.wpdt-c.wdt-skin-mojito table.dtfc-has-right tr:last-child td.sorting_1,
+.wpdt-c.wdt-skin-mojito table.dtfc-has-left tr:last-child td.sorting_1{
+    border-bottom: 1px solid #ebeef5 !important;
 }
 .wpdt-c.wdt-skin-mojito .colgroup #wdt-cubes{
     display: unset;
@@ -284,21 +328,37 @@ div#wpdatatable-preview-container.wpDataTablesWrapper .wpdt-c.wdt-skin-mojito .w
 }
 
 /*  Sorting icons  */
-
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after {
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_asc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_asc:after {
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f176';
     padding-left: 10px ;
+    opacity: 1;
 }
-
-.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc:after {
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting.sorting_desc:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable thead th.sorting.sorting_desc:after {
     font-family: 'wpDataTablesIcons', sans-serif;
     display: inline-block;
     content: '\f175';
     padding-left: 10px ;
+    opacity: 1;
 }
-
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead th.sorting:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left thead th.sorting:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-right thead th.sorting:after,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable.dtfc-has-left.dtfc-has-right thead th.sorting:after{
+    font-family: 'wpDataTablesIcons';
+    display: inline-block;
+    content: '\f176';
+    padding-left: 10px ;
+}
 /*  Table Body  */
 
 .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody td {
@@ -2425,4 +2485,20 @@ div.dt-button-collection.wdt-skin-mojito button.dt-button.buttons-columnVisibili
 }
 .wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito .modal-dialog .modal-content .modal-header button.close span{
     display: none;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
+    border-right: none;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tr td:first-child,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable thead tr td:first-child,
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpFixedHeader.wpDataTable tfoot tr td:first-child{
+    /* table outer border color */
+    border-right: none;
+    border-left: none;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper .dataTables_paginate a {
+    box-shadow: none !important;
+}
+.wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tfoot td{
+    border-top: transparent;
 }

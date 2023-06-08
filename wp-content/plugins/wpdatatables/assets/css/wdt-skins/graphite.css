@@ -82,9 +82,7 @@
     width: 0;
     vertical-align: 3px;
     margin: 0 0 0 10px;
-    opacity: .6;
 }
-
 
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc:after {
     border-top-width: 0;
@@ -631,4 +629,10 @@
 #wdt-filter-widget .wdt-skin-graphite .wpDataTableFilterSection#wdt-clear-filters-button-block {
     padding-top: 0 !important;
     width: 100%;
+}
+.wpdt-c.wdt-skin-graphite .wpDataTablesWrapper .dataTables_paginate a {
+    box-shadow: none !important;
+}
+.wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
+    border-right: none;
 }

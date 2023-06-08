@@ -58,7 +58,6 @@
                 }
 
                 th.addClass('column-' + aoColumn.origHeader.toString().toLowerCase().replace(/\ /g, '-'));
-
                 if (typeof aoColumn.sRangeFormat !== 'undefined')
                     sRangeFormat = aoColumn.sRangeFormat;
                 else
@@ -109,10 +108,9 @@
                         if (jQuery('#' + id).closest('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').hasClass('wdt-filter-number-range-slider')) {
                             return jQuery('#' + id).closest('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').find('#wdt-number-range-slider')[0].noUiSlider.get()[0] + properties.sRangeSeparator + jQuery('#' + id).closest('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').find('#wdt-number-range-slider')[0].noUiSlider.get()[1];
                         }
-                        if(jQuery('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').hasClass('wdt-filter-number-range-slider')){
+                        if (jQuery('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').hasClass('wdt-filter-number-range-slider')) {
                             return jQuery('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').find('#wdt-number-range-slider')[0].noUiSlider.get()[0] + properties.sRangeSeparator + jQuery('.wpdt-c').find('.filter_column[data-index=' + customSearchIndexes[j] + ']').find('#wdt-number-range-slider')[0].noUiSlider.get()[1];
-                        }
-                        else {
+                        } else {
                             return properties.sRangeSeparator;
                         }
                     }
@@ -169,7 +167,6 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
     var sCSSClass = aoColumn.type === 'number' ? 'number_filter' : 'text_filter';
 
     sColumnLabel = sColumnLabel.replace(/(^\s*)|(\s*$)/g, "");
-
     var placeholder = aoColumn.filterLabel ? aoColumn.filterLabel : sColumnLabel;
 
     var input = jQuery('<input type="' + aoColumn.type + '" class="form-control wdt-filter-control ' + sCSSClass + '" placeholder="' + _.escape(placeholder) + '" />');
@@ -181,9 +178,9 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
     else
         th.wrapInner('<span class="filter_column wdt-filter-text" data-filter_type="text" data-index="' + columnIndex + '"/>');
 
-    input.on('keyup input',_.debounce(function (e) {
-        inputSearch(this.value, e.keyCode);
-    }, serverSide ? 500 : 0)
+    input.on('keyup input', _.debounce(function (e) {
+            inputSearch(this.value, e.keyCode);
+        }, serverSide ? 500 : 0)
     )
 
     function inputSearch(value, keyCode) {
@@ -260,7 +257,7 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
     th.html('');
 
     if (aoColumn.rangeSlider) {
-        if( (tableDescription.tableType === 'gravity' && serverSide) || tableDescription.cascadeFiltering === 1 ) {
+        if ((tableDescription.tableType === 'gravity' && serverSide) || tableDescription.cascadeFiltering === 1) {
             var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
             var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
             th.append(from);
@@ -353,17 +350,17 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
             customSearchIndexes.push(columnIndex);
 
             var numberArray = oTable.api().column(columnIndex).data();
-            var formattedNumber = numberArray.map(function(numberArray) {
+            var formattedNumber = numberArray.map(function (numberArray) {
                 if (numberFormat === 1) {
                     return parseFloat(numberArray.replace(/\./g, '').replace(',', '.'));
                 }
                 return parseFloat(numberArray.replace(/,/g, ''))
-            }).filter(function(el) {
+            }).filter(function (el) {
                 return !isNaN(el);
             })
             var minValue = serverSide === false ? Math.min.apply(Math, formattedNumber) : aoColumn.minValue
             var maxValue = serverSide === false ? Math.max.apply(Math, formattedNumber) : aoColumn.maxValue
-            var sliderDecimals =  aoColumn.columnType === 'int' ? 0 : aoColumn.numberOfDecimalPlaces
+            var sliderDecimals = aoColumn.columnType === 'int' ? 0 : aoColumn.numberOfDecimalPlaces
 
             noUiSlider.create(slider, {
                 start: [fromDefaultValue ? fromDefaultValue : minValue, toDefaultValue ? toDefaultValue : maxValue],
@@ -380,7 +377,8 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
                 }),
                 tooltips: [
                     true,
-                    { to: function (value) {
+                    {
+                        to: function (value) {
                             if (value === maxValue && aoColumn.rangeMaxValueDisplay !== 'default') {
                                 switch (aoColumn.rangeMaxValueDisplay) {
                                     case 'unlimited_text':
@@ -397,7 +395,9 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
                             }
                             return value.toFixed(sliderDecimals);
                         },
-                        from: function (value) { return value }
+                        from: function (value) {
+                            return value
+                        }
                     }
                 ]
             });
@@ -561,10 +561,10 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     th.html('');
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
+    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />');
+    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />');
 
     th.append(from).append(to);
 
@@ -655,11 +655,11 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -749,11 +749,11 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -831,6 +831,7 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
  */
 function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serverSide) {
     var tableId = oTable.attr('id'), selected;
+    var tableDescription = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     // When server side is disabled, load the values with datatables api
     if (aoColumn.values === null)
@@ -912,9 +913,23 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
 
         // Load possible values on modal open
         select.on('show.bs.select', function (e) {
-            select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
-        });
 
+            select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
+            //Added for fixed columns and fixed headers (height for showing selectbox)
+            showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('hide.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (when closing selectbox)
+            hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+        });
+        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm){
+            select.closest('.wdtscroll').on('scroll', function (e) {
+                select.closest('.wdt-select-filter.open').removeClass('open');
+                hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+                if (!tableDescription.dataTableParams.fixedHeader.header && tableDescription.dataTableParams.fixedColumns) {
+                    wpDataTables[tableDescription.tableId].fnSettings().oInstance.api().draw();
+                }
+            })
+        }
         // Add AJAX to selectbox
         select.selectpicker('refresh')
             .ajaxSelectPicker({
@@ -957,7 +972,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             select.trigger('change').data('AjaxBootstrapSelect').list.cache = {};
         }
         // Hide/Show search box in filter
-        if (aoColumn.searchInSelectBox !== 1){
+        if (aoColumn.searchInSelectBox !== 1) {
             jQuery(th).find('.bs-searchbox').hide();
         } else {
             jQuery(th).find('.bs-searchbox').show();
@@ -966,13 +981,28 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
     } else {
         select.selectpicker('refresh');
         // Hide/Show search box in filter
-        if (aoColumn.searchInSelectBox !== 1){
+        if (aoColumn.searchInSelectBox !== 1) {
             // Hide search in selectbox if possibleValuesAjax is All
             jQuery(th).find('.bs-searchbox').hide();
         } else {
             jQuery(th).find('.bs-searchbox').show();
         }
-
+        select.on('show.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (height for showing selectbox)
+            showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('hide.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (when closing selectbox)
+            hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+        });
+        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+            select.closest('.wdtscroll').on('scroll', function (e) {
+                select.closest('.wdt-select-filter.open').removeClass('open');
+                hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+                if (!tableDescription.dataTableParams.fixedHeader.header && tableDescription.dataTableParams.fixedColumns) {
+                    wpDataTables[tableDescription.tableId].fnSettings().oInstance.api().draw();
+                }
+            })
+        }
         // Filter the table if default value is set
         if (aoColumn.defaultValue && !serverSide) {
             oTable.fnFilter(aoColumn.defaultValue, columnIndex);
@@ -1013,6 +1043,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
  */
 function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serverSide) {
     var tableId = oTable.attr('id'), selected;
+    var tableDescription = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     // When server side is disabled, load the values with datatables api
     if (aoColumn.values === null)
@@ -1024,7 +1055,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     // Label of the selectbox if "Filter label" option is set
 
-    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_frontend_strings.nothingSelected;;
+    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_frontend_strings.nothingSelected;
 
     // Create selectbox HTML with live search
     var select = '<select class="wdt-multiselect-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" multiple data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '">';
@@ -1086,7 +1117,21 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
         // Load possible values on modal open
         select.on('show.bs.select', function (e) {
             select.closest('.filter_column').find('.bs-searchbox .form-control').val('').trigger('keyup');
+            //Added for fixed columns and fixed headers (height for showing multiselectbox)
+            showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('hide.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (when closing multiselectbox)
+            hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
+        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+            select.closest('.wdtscroll').on('scroll', function (e) {
+                select.closest('.wdt-multiselect-filter.open').removeClass('open');
+                hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+                if (!tableDescription.dataTableParams.fixedHeader.header && tableDescription.dataTableParams.fixedColumns) {
+                    wpDataTables[tableDescription.tableId].fnSettings().oInstance.api().draw();
+                }
+            })
+        }
 
         // Add AJAX to selectbox
         select.selectpicker('refresh').ajaxSelectPicker({
@@ -1125,7 +1170,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             select.trigger('change').data('AjaxBootstrapSelect').list.cache = {};
         }
         // Hide/Show search box in filter
-        if (aoColumn.searchInSelectBox !== 1){
+        if (aoColumn.searchInSelectBox !== 1) {
             jQuery(th).find('.bs-searchbox').hide();
         } else {
             jQuery(th).find('.bs-searchbox').show();
@@ -1139,7 +1184,22 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
         } else {
             jQuery(th).find('.bs-searchbox').show();
         }
-
+        select.on('show.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (height for showing multiselectbox)
+            showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select);
+        }).on('hide.bs.select', function (e) {
+            //Added for fixed columns and fixed headers (when closing multiselectbox)
+            hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+        });
+        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+            select.closest('.wdtscroll').on('scroll', function (e) {
+                select.closest('.wdt-multiselect-filter.open').removeClass('open');
+                hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
+                if (!tableDescription.dataTableParams.fixedHeader.header && tableDescription.dataTableParams.fixedColumns) {
+                    wpDataTables[tableDescription.tableId].fnSettings().oInstance.api().draw();
+                }
+            })
+        }
         // Filter the table if default value is set
         if (aoColumn.defaultValue[0] && !serverSide) {
             var search = '';
@@ -1260,7 +1320,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             r += '<div class="wdt_checkbox_option checkbox">' +
                 '<label>' +
                 '<input type="checkbox" class="wdt-checkbox-filter wdt-filter-control" value="' + encodeURI(value) + '" ' + checked + '>' +
-                 '<span class="wdt-checkbox-label">' + label + '</span>' +
+                '<span class="wdt-checkbox-label">' + label + '</span>' +
                 '</label>' +
                 '</div>';
         }
@@ -1300,7 +1360,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
     if (dialogRender) {
         var dlg = jQuery('#' + checkboxesDivId).wrap('<div class="wdt-checkbox-modal-wrap ' + checkboxesDivId + '" />').hide();
         var $modal = jQuery('#wdt-frontend-modal');
-        var tableDesc =  JSON.parse(jQuery('#' + oTable.data('described-by')).val());
+        var tableDesc = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
         $modal.on('click', 'button.close', function (e) {
             $modal.fadeOut(300, function () {
@@ -1373,12 +1433,12 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         useAndLogic = aoColumn.andLogic && !serverSide;
 
         var checkedValue = jQuery(this).val();
-        if (!jQuery(this).is(':checked')){
-            orderCheckbox = orderCheckbox.filter(function(value){
+        if (!jQuery(this).is(':checked')) {
+            orderCheckbox = orderCheckbox.filter(function (value) {
                 return value !== checkedValue;
             });
         } else {
-            if (!orderCheckbox.includes(checkedValue)){
+            if (!orderCheckbox.includes(checkedValue)) {
                 orderCheckbox.push(checkedValue)
             }
         }
@@ -1413,6 +1473,89 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
         fnOnFiltered();
     }
 
+}
+
+//Showing selectbox or multiselectbox if fixed columns or/and fixed header is on and also if scroll is on
+function showSelectMultiSelectboxForFixedHeaderAndColumns(tableDescription, oTable, select) {
+    var leftPos = 'auto', topPos = 'auto', rightPos = 'auto', bottomPos = 'auto';
+    if (select.closest('.wdtscroll').length) {
+        if (select.parents('table').hasClass('fixedHeader-floating')) {
+            jQuery('.dtfh-floatingparenthead').css('height', oTable[0].offsetHeight);
+        }
+        if (tableDescription.renderFilter == "header") {
+            if (select.parents('table').hasClass('fixedHeader-floating') && (select.closest('th').hasClass('dtfc-fixed-left') || select.closest('th').hasClass('dtfc-fixed-right'))) {
+                if (select.closest('th').hasClass('dtfc-fixed-left')) {
+                    leftPos = parseFloat(select.closest('th')[0].style.left) + select.closest('.wdtscroll').scrollLeft() + 'px';
+                } else if (select.closest('th').hasClass('dtfc-fixed-right')) {
+                    rightPos = -(parseFloat(select.closest('th')[0].style.right) + select.closest('.wdtscroll').scrollLeft()) + 'px';
+                }
+                topPos = select.closest('th').height() - select.height() + 'px'
+            } else if (select.closest('th').hasClass('dtfc-fixed-left')) {
+                leftPos = parseFloat(select.closest('th')[0].style.left) + 15 + 'px';
+                topPos = select.closest('thead').height() + 'px'
+            } else if (select.closest('th').hasClass('dtfc-fixed-right')) {
+                rightPos = parseFloat(select.closest('th')[0].style.right) + 15 + 'px';
+                topPos = select.closest('thead').height() + 'px'
+            } else if (select.parents('table').hasClass('fixedHeader-floating')) {
+                leftPos = 'auto';
+            } else if (tableDescription.fixedColumns || tableDescription.fixedHeader) {
+                leftPos = 'auto';
+            } else {
+                leftPos = select.offset().left - select.closest('.wdtscroll').offset().left - select.closest('th').width() / 2 + 'px';
+            }
+            select.closest('div').find('.open').css('min-width', select.closest('th').width() + 45);
+            select.closest('th.dtfc-fixed-left').css('z-index', 5);
+            select.closest('th.dtfc-fixed-right').css('z-index', 5);
+            select.closest('th').css('position', '');
+        } else {
+            if (select.parents('table').hasClass('fixedHeader-floating') && (select.closest('td').hasClass('dtfc-fixed-left') || select.closest('td').hasClass('dtfc-fixed-right'))) {
+                if (select.closest('td').hasClass('dtfc-fixed-left')) {
+                    leftPos = parseFloat(select.closest('td')[0].style.left) + select.closest('.wdtscroll').scrollLeft() + 'px';
+                }
+                if (select.closest('td').hasClass('dtfc-fixed-right')) {
+                    rightPos = -(parseFloat(select.closest('td')[0].style.right) + select.closest('.wdtscroll').scrollLeft()) + 'px';
+                }
+                bottomPos = select.closest('td').height() - select.height() + 'px'
+            } else if (select.closest('td').hasClass('dtfc-fixed-left')) {
+                leftPos = parseFloat(select.closest('td')[0].style.left) + 15 + 'px';
+                bottomPos = select.closest('tfoot').height() + 'px'
+            } else if (select.closest('td').hasClass('dtfc-fixed-right')) {
+                rightPos = parseFloat(select.closest('td')[0].style.right) + 15 + 'px';
+                bottomPos = select.closest('tfoot').height() + 'px'
+            } else {
+                leftPos = select.offset().left - select.closest('.wdtscroll').offset().left - select.closest('td').width() / 2 + 'px';
+                //leftPos = 'auto';
+            }
+            select.closest('div').find('.open').css('min-width', select.closest('td').width() + 45);
+            select.closest('td.dtfc-fixed-left').css('z-index', 5);
+            select.closest('td.dtfc-fixed-right').css('z-index', 5);
+            select.closest('td').css('position', '');
+        }
+        select.closest('div').find('.open').css({
+            "left": leftPos,
+            "top": topPos,
+            "right": rightPos,
+            "bottom": bottomPos
+        });
+        select.closest('.btn-group').css('position', 'unset');
+    }
+}
+
+// hiding selectbox and multiselectbox if fixedheader and/or fixed columns is on and scroll
+function hideSelectMultiSelectboxForFixedHeaderAndColumns(select) {
+    select.closest('.btn-group').css('position', 'relative');
+    if (select.parents('table').hasClass('fixedHeader-floating')) {
+        jQuery('.dtfh-floatingparenthead').css({"height": "max-content"});
+        select.closest('th').css('z-index', 4);
+    }
+    if (select.closest('th').hasClass('dtfc-fixed-left') || select.closest('th').hasClass('dtfc-fixed-right')) {
+        select.closest('th').css('position', 'sticky');
+        select.closest('th').css('z-index', 4);
+    }
+    if (select.closest('td').hasClass('dtfc-fixed-left') || select.closest('td').hasClass('dtfc-fixed-right')) {
+        select.closest('td').css('position', 'sticky');
+        select.closest('td').css('z-index', 4);
+    }
 }
 
 /**
@@ -1495,7 +1638,7 @@ function wdtClearFilters() {
             jQuery('.filter_column select').val('').trigger('change');
             jQuery('.filter_column select').selectpicker('val', '');
             jQuery('.filter_column input:checkbox').removeAttr('checked');
-            jQuery('.noUi-target').each(function(columnIndex){
+            jQuery('.noUi-target').each(function (columnIndex) {
                 jQuery('.noUi-target')[columnIndex].noUiSlider.reset();
             });
 
@@ -1512,7 +1655,7 @@ function wdtClearFilters() {
             wpDataTableSelecter.find('.filter_column select').selectpicker('val', '');
             wpDataTableSelecter.find('.filter_column input:checkbox').removeAttr('checked');
 
-            wpDataTableSelecter.find('.noUi-target').each(function(columnIndex){
+            wpDataTableSelecter.find('.noUi-target').each(function (columnIndex) {
                 wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.reset();
             });
 

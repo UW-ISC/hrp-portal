@@ -108,7 +108,7 @@ jQuery(document).ready(function ($) {
         $.fn.dataTableExt.oApi.fnGetColumnIndex = function (oSettings, sCol) {
             var cols = oSettings.aoColumns;
             for (var x = 0, xLen = cols.length; x < xLen; x++) {
-                if ((typeof(cols[x].sTitle) == 'string') && ( cols[x].sTitle.toLowerCase() == sCol.toLowerCase() )) {
+                if ((typeof (cols[x].sTitle) == 'string') && (cols[x].sTitle.toLowerCase() == sCol.toLowerCase())) {
                     return x;
                 }
             }
@@ -148,6 +148,15 @@ jQuery(document).ready(function ($) {
      */
     // Datepicker
     $('body').on('focus', '.wdt-datepicker', function () {
+        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+        var filterElem = 'none';
+        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+            }
+        }
+
         $(this).datetimepicker(
             {
                 format: wdtDateFormat,
@@ -159,19 +168,28 @@ jQuery(document).ready(function ($) {
             .off('dp.show')
             .on('dp.show', function () {
                 $(this).parent().find('div.bootstrap-datetimepicker-widget').addClass('wdt-datetimepicker-modal');
-                if (!_.contains(['MM/Y','MMM Y','Y'], wdtDateFormat)) {
+                if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
                     wdtAddDatePlaceholders($(this));
                 }
-                if ($('.wdtscroll').length && $(this).parents('table').length != 0){
-                    var leftPos  = $(this).offset().left - $('.wdtscroll').offset().left
-                    var topPos   = $(this).offset().top
-                    $( ".bootstrap-datetimepicker-widget" ).css('inset', topPos + 'px auto auto ' + leftPos + 'px')
-                }
+                // If fixed header and/or fixed column is turned on call function
+                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0);
+            })//Added on hide for fixed columns and fixed headers
+            .on('dp.hide', function () {
+                hidePickerForFixedHeaderAndColumns($(this));
             });
     });
 
     // Timepicker
     $('body').on('focus', '.wdt-timepicker', function () {
+        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+        var filterElem = 'none';
+        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+            }
+        }
+
         $(this).datetimepicker(
             {
                 format: wdtTimeFormat,
@@ -183,16 +201,25 @@ jQuery(document).ready(function ($) {
             .off('dp.show')
             .on('dp.show', function () {
                 $(this).parent().find('div.bootstrap-datetimepicker-widget').addClass('wdt-datetimepicker-modal');
-                if ($('.wdtscroll').length && $(this).parents('table').length != 0){
-                    var leftPos  = $(this).offset().left - $('.wdtscroll').offset().left
-                    var topPos   = $(this).offset().top
-                    $( ".bootstrap-datetimepicker-widget" ).css('inset', topPos + 'px auto auto ' + leftPos + 'px')
-                }
+                // If fixed header and/or fixed column is turned on call function
+                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 1);
+            })//Added on hide for fixed columns and fixed headers
+            .on('dp.hide', function () {
+                hidePickerForFixedHeaderAndColumns($(this));
             });
     });
 
     // Datetimepicker
     $('body').on('focus', '.wdt-datetimepicker', function () {
+        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+        var filterElem = 'none';
+        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+            }
+        }
+
         $(this).datetimepicker(
             {
                 format: wdtDateFormat + ' ' + wdtTimeFormat,
@@ -204,18 +231,16 @@ jQuery(document).ready(function ($) {
             .off('dp.show')
             .on('dp.show', function () {
                 $(this).parent().find('div.bootstrap-datetimepicker-widget').addClass('wdt-datetimepicker-modal');
-              if (!_.contains(['MM/Y','MMM Y','Y'], wdtDateFormat)) {
-                wdtAddDatePlaceholders($(this));
-              }
-                if ($('.wdtscroll').length && $(this).parents('table').length != 0){
-                    var leftPos  = $(this).offset().left - $('.wdtscroll').offset().left
-                    var topPos   = $(this).offset().top
-                    $( ".bootstrap-datetimepicker-widget" ).css('inset', topPos + 'px auto auto ' + leftPos + 'px')
+                if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
+                    wdtAddDatePlaceholders($(this));
                 }
+                // If fixed header and/or fixed column is turned on call function
+                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0)
+            })//Added on hide for fixed columns and fixed headers
+            .on('dp.hide', function () {
+                hidePickerForFixedHeaderAndColumns($(this));
             });
-
     });
-
 });
 
 
@@ -305,20 +330,20 @@ function wdtCalculateColumnMin(columnData, thousandsSeparator) {
     if (columnData.length > 0) {
         var min = '';
         if (thousandsSeparator == '.') {
-            if (columnData.length == 1){
-                 min =  parseFloat(typeof(columnData[0]) == 'number' ? columnData[0] : columnData[0].replace(/\./g, '').replace(',', '.'))
+            if (columnData.length == 1) {
+                min = parseFloat(typeof (columnData[0]) == 'number' ? columnData[0] : columnData[0].replace(/\./g, '').replace(',', '.'))
             } else {
-                 min = columnData.reduce(function (a, b) {
-                    return parseInt(typeof(a) == 'number' ? a : a.replace(/\./g, '')) <= parseInt(b.replace(/\./g, '')) ?
-                        parseFloat(typeof(a) == 'number' ? a : a.replace(/\./g, '').replace(',', '.')) :
+                min = columnData.reduce(function (a, b) {
+                    return parseInt(typeof (a) == 'number' ? a : a.replace(/\./g, '')) <= parseInt(b.replace(/\./g, '')) ?
+                        parseFloat(typeof (a) == 'number' ? a : a.replace(/\./g, '').replace(',', '.')) :
                         parseFloat(b.replace(/\./g, '').replace(',', '.'));
                 });
             }
 
         } else {
             min = columnData.reduce(function (a, b) {
-                return parseInt(typeof(a) == 'number' ? a : a.replace(/\,/g, '')) <= parseInt(b.replace(/\,/g, '')) ?
-                    parseFloat(typeof(a) == 'number' ? a : a.replace(/\,/g, '')) :
+                return parseInt(typeof (a) == 'number' ? a : a.replace(/\,/g, '')) <= parseInt(b.replace(/\,/g, '')) ?
+                    parseFloat(typeof (a) == 'number' ? a : a.replace(/\,/g, '')) :
                     parseFloat(b.replace(/\,/g, ''));
             });
         }
@@ -333,20 +358,20 @@ function wdtCalculateColumnMax(columnData, thousandsSeparator) {
     if (columnData.length > 0) {
         var max = '';
         if (thousandsSeparator == '.') {
-            if (columnData.length == 1){
-                max =  parseFloat(typeof(columnData[0]) == 'number' ? columnData[0] : columnData[0].replace(/\./g, '').replace(',', '.'))
+            if (columnData.length == 1) {
+                max = parseFloat(typeof (columnData[0]) == 'number' ? columnData[0] : columnData[0].replace(/\./g, '').replace(',', '.'))
             } else {
                 max = columnData.reduce(function (a, b) {
-                    return parseInt(typeof(a) == 'number' ? a : a.replace(/\./g, '')) >= parseInt(b.replace(/\./g, '')) ?
-                        parseFloat(typeof(a) == 'number' ? a : a.replace(/\./g, '').replace(',', '.')) :
+                    return parseInt(typeof (a) == 'number' ? a : a.replace(/\./g, '')) >= parseInt(b.replace(/\./g, '')) ?
+                        parseFloat(typeof (a) == 'number' ? a : a.replace(/\./g, '').replace(',', '.')) :
                         parseFloat(b.replace(/\./g, '').replace(',', '.'));
                 });
             }
 
         } else {
             max = columnData.reduce(function (a, b) {
-                return parseInt(typeof(a) == 'number' ? a : a.replace(/\,/g, '')) >= parseInt(b.replace(/\,/g, '')) ?
-                    parseFloat(typeof(a) == 'number' ? a : a.replace(/\,/g, '')) :
+                return parseInt(typeof (a) == 'number' ? a : a.replace(/\,/g, '')) >= parseInt(b.replace(/\,/g, '')) ?
+                    parseFloat(typeof (a) == 'number' ? a : a.replace(/\,/g, '')) :
                     parseFloat(b.replace(/\,/g, ''));
             });
         }
@@ -466,10 +491,9 @@ function wdtAddDatePlaceholders(input) {
         })
 
 
-
         jQuery('.formatting-rule-cell-value.wdt-datepicker').on('dp.hide', function (e) {
             e.stopImmediatePropagation();
-            if(jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) === -1) {
+            if (jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%', '%THIS_WEEK%', '%NEXT_WEEK%', '%LAST_30_DAYS%', '%LAST_MONTH%', '%NEXT_MONTH%', '%THIS_MONTH%']) === -1) {
                 jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).selectpicker('val', 'lt');
             } else {
                 jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).selectpicker('val', '');
@@ -478,7 +502,7 @@ function wdtAddDatePlaceholders(input) {
 
         jQuery('.formatting-rule-cell-value.wdt-datetimepicker').on('dp.hide', function (e) {
             e.stopImmediatePropagation();
-            if(jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%','%THIS_WEEK%','%NEXT_WEEK%','%LAST_30_DAYS%','%LAST_MONTH%','%NEXT_MONTH%','%THIS_MONTH%']) === -1) {
+            if (jQuery.inArray(jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-cell-value').val(), ['%LAST_WEEK%', '%THIS_WEEK%', '%NEXT_WEEK%', '%LAST_30_DAYS%', '%LAST_MONTH%', '%NEXT_MONTH%', '%THIS_MONTH%']) === -1) {
                 jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', false).selectpicker('val', 'lt');
             } else {
                 jQuery(this).closest('.wdt-conditional-formatting-rule').find('.formatting-rule-if-clause').prop('disabled', true).selectpicker('val', '');
@@ -488,21 +512,106 @@ function wdtAddDatePlaceholders(input) {
     }
 }
 
-function getMomentWdtDateFormat () {
+//Fucntion for showing datepicker/timepicker with fixed columns and fixed headers - param TimePicker is 1/0
+function showDateTimePickerForFixedHeaderAndColumns(dateData, filterElem, timePicker) {
+    var topPos = 'auto', leftPos = 'auto', bottomPos = 'auto', rightPos = 'auto';
+    var leftOffset = 50; //calucating offset if timePicker or Date/DateTime picker
+    var leftOffset2 = 100;
+    if (dateData.closest('.wdtscroll').length && dateData.parents('table').length != 0) {
+        if (dateData.parents('table').hasClass('fixedHeader-floating')) {
+            jQuery('.dtfh-floatingparenthead').css('height', dateData.parents('table')[1].offsetHeight);
+            dateData.closest('th').css('z-index', 5);
+        }
+        if (filterElem == 'th') {
+            if (dateData.parents('table').hasClass('fixedHeader-floating') && (dateData.closest(filterElem).hasClass('dtfc-fixed-left') || dateData.closest(filterElem).hasClass('dtfc-fixed-right'))) {
+                if (timePicker) {
+                    leftOffset = 20;
+                    leftOffset2 = 55;
+                }
+                leftPos = dateData.closest('th').hasClass('dtfc-fixed-left') ? dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('th').css('padding-left'), 10) + dateData.closest('.wdtscroll').scrollLeft() + 'px'
+                    : dateData.closest('th').nextAll().length != 0 ?
+                        dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('th').css('padding-left'), 10) + dateData.closest('.wdtscroll').scrollLeft() - leftOffset + 'px'
+                        : dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('th').css('padding-left'), 10) + dateData.closest('.wdtscroll').scrollLeft() - leftOffset2 + 'px'
+                topPos = dateData.closest('th').height() - dateData.height() + parseInt(dateData.closest('th').css('padding-top'), 10) + 'px'
+                dateData.closest('th').css('position', '');
+                dateData.closest('th').css('z-index', 5);
+            } else if (dateData.closest('th').hasClass('dtfc-fixed-left') || dateData.closest('th').hasClass('dtfc-fixed-right')) {
+                leftPos = dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('th').css('padding-left'), 10) + 'px'
+                topPos = dateData.closest('th').height() + dateData.height() + parseInt(dateData.closest('th').css('padding-top'), 10) + 'px'
+                dateData.closest('th').css('position', '');
+                dateData.closest('th').css('z-index', 5);
+            } else {
+                leftPos = !dateData.parents('table').hasClass('fixedHeader-floating') ? dateData.offset().left - dateData.closest('.wdtscroll').offset().left + 'px' :
+                    dateData.closest('th').nextAll().length != 0 ? 'auto' :
+                        dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('th').css('padding-left'), 10)
+                        + dateData.closest('.wdtscroll').scrollLeft() - leftOffset2 + 'px';
+            }
+        } else if (filterElem == 'td') {
+            if (dateData.closest('td').hasClass('dtfc-fixed-left')) {
+                if (timePicker) {
+                    leftPos = dateData.closest('td').prevAll().length <= 1 ? 0 + 'px' : dateData.offset().left - dateData.closest('.wdtscroll').offset().left - 20 + 'px'
+                } else {
+                    leftPos = dateData.offset().left - dateData.closest('.wdtscroll').offset().left - parseInt(dateData.closest('td').css('padding-left'), 10) + 'px'
+                }
+                bottomPos = 0 + 'px'
+                dateData.closest('td').css('position', '');
+                dateData.closest('td').css('z-index', 5);
+            } else if (dateData.closest('td').hasClass('dtfc-fixed-right')) {
+                if (timePicker) {
+                    leftPos = dateData.closest('td').prevAll().length <= 1 ? 0 + 'px' : dateData.offset().left - dateData.closest('.wdtscroll').offset().left - 20 + 'px'
+                } else {
+                    rightPos = dateData.closest('td').nextAll().length <= 1 ? 5 + 'px' : dateData.closest('.wdtscroll').offset().left + 'px'
+                }
+                bottomPos = parseInt(jQuery(".bootstrap-datetimepicker-widget").css('bottom'), 10) - dateData.height() + 'px'
+                dateData.closest('td').css('position', '');
+                dateData.closest('td').css('z-index', 5);
+            } else {
+                leftPos = dateData.offset().left - dateData.closest('.wdtscroll').offset().left + 'px';
+                bottomPos = 'auto';
+            }
+        } else {
+            leftPos = dateData.offset().left - dateData.closest('.wdtscroll').offset().left + 'px';
+            topPos = 'auto'
+            bottomPos = 'auto';
+            rightPos = 'auto';
+        }
+        jQuery(".bootstrap-datetimepicker-widget").css('inset', topPos + ' ' + rightPos + ' ' + bottomPos + ' ' + leftPos);
+    } else {
+        jQuery(".bootstrap-datetimepicker-widget").css('inset', topPos + ' ' + rightPos + ' ' + bottomPos + ' ' + leftPos);
+    }
+}
+
+//Fucntion for showing datepicker with fixed columns and fixed headers
+function hidePickerForFixedHeaderAndColumns(dateData) {
+    if (dateData.parents('table').hasClass('fixedHeader-floating')) {
+        jQuery('.dtfh-floatingparenthead').css({"height": "max-content"});
+        dateData.closest('th').css('z-index', 4);
+    }
+    if (dateData.closest('th').hasClass('dtfc-fixed-left') || dateData.closest('th').hasClass('dtfc-fixed-right')) {
+        dateData.closest('th').css('position', 'sticky');
+        dateData.closest('th').css('z-index', 4);
+    }
+    if (dateData.closest('td').hasClass('dtfc-fixed-left') || dateData.closest('td').hasClass('dtfc-fixed-right')) {
+        dateData.closest('td').css('position', 'sticky');
+        dateData.closest('td').css('z-index', 4);
+    }
+}
+
+function getMomentWdtDateFormat() {
     return wpdatatables_settings.wdtDateFormat.replace('d', 'DD').replace('M', 'MMM').replace('m', 'MM').replace('y', 'YY').replace('F', 'MMMM').replace('j', 'DD');
 }
 
-function getMomentWdtTimeFormat () {
+function getMomentWdtTimeFormat() {
     return wpdatatables_settings.wdtTimeFormat.replace('H', 'HH').replace('i', 'mm');
 }
 
 function searchQueryString(key) {
     key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
-    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    var match = location.search.match(new RegExp("[?&]" + key + "=([^&]+)(&|$)"));
     return match && decodeURIComponent(match[1].replace(/\+/g, " "));
 }
 
-function removeURLParameter (url, parameter) {
+function removeURLParameter(url, parameter) {
     let urlParts = url.split('?')
     if (urlParts.length >= 2) {
         let prefix = encodeURIComponent(parameter) + '='
@@ -521,29 +630,29 @@ function removeURLParameter (url, parameter) {
     }
 }
 
-function createAceEditor(selector){
+function createAceEditor(selector) {
     if (jQuery('#' + selector).length) {
         var aceEditorGlobal;
         var aceEditorFunc = function (e) {
             if (aceEditorGlobal.getValue().length > 0) {
-                if (selector == 'wdt-custom-css'){
+                if (selector == 'wdt-custom-css') {
                     wpdatatable_plugin_config.setCustomCss(aceEditorGlobal.getValue());
-                } else if (selector == 'wdt-custom-js'){
+                } else if (selector == 'wdt-custom-js') {
                     wpdatatable_plugin_config.setCustomJs(aceEditorGlobal.getValue());
-                } else if (selector == 'wdt-table-custom-css'){
+                } else if (selector == 'wdt-table-custom-css') {
                     wpdatatable_config.setTableCustomCss(aceEditorGlobal.getValue());
-                } else if (selector == 'wdt-mysql-query'){
+                } else if (selector == 'wdt-mysql-query') {
                     wpdatatable_config.setContent(aceEditorGlobal.getValue());
                 }
 
             } else {
-                if (selector == 'wdt-custom-css'){
+                if (selector == 'wdt-custom-css') {
                     wpdatatable_plugin_config.setCustomCss('');
-                } else if (selector == 'wdt-custom-js'){
+                } else if (selector == 'wdt-custom-js') {
                     wpdatatable_plugin_config.setCustomJs('');
-                } else if (selector == 'wdt-table-custom-css'){
+                } else if (selector == 'wdt-table-custom-css') {
                     wpdatatable_config.setTableCustomCss('');
-                } else if (selector == 'wdt-mysql-query'){
+                } else if (selector == 'wdt-mysql-query') {
                     wpdatatable_config.setContent('');
                 }
             }
@@ -551,13 +660,13 @@ function createAceEditor(selector){
 
         aceEditorGlobal = ace.edit(selector);
         aceEditorGlobal.$blockScrolling = Infinity;
-        if (selector == 'wdt-custom-css' || selector == 'wdt-table-custom-css'){
+        if (selector == 'wdt-custom-css' || selector == 'wdt-table-custom-css') {
             aceEditorGlobal.getSession().setMode("ace/mode/css");
             aceEditorGlobal.setTheme("ace/theme/monokai");
-        } else if (selector == 'wdt-custom-js'){
+        } else if (selector == 'wdt-custom-js') {
             aceEditorGlobal.getSession().setMode("ace/mode/javascript");
             aceEditorGlobal.setTheme("ace/theme/monokai");
-        } else if (selector == 'wdt-mysql-query'){
+        } else if (selector == 'wdt-mysql-query') {
             aceEditorGlobal.getSession().setMode("ace/mode/sql");
             aceEditorGlobal.setTheme("ace/theme/idle_fingers");
         }

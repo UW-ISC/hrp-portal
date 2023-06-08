@@ -282,21 +282,20 @@ function relevanssi_get_non_post_post_types() {
  *
  * @param int $post_id The post ID of the parent post.
  *
- * @return string $pdf_content The PDF content of the child posts.
+ * @return array $pdf_content The PDF content of the child posts.
  */
-function relevanssi_get_child_pdf_content( $post_id ) {
+function relevanssi_get_child_pdf_content( $post_id ) : array {
 	global $wpdb;
 
 	$post_id     = intval( $post_id );
 	$pdf_content = '';
 
 	if ( $post_id > 0 ) {
-		$pdf_content = $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		return $wpdb->get_col( "SELECT meta_value FROM $wpdb->postmeta AS pm, $wpdb->posts AS p WHERE pm.post_id = p.ID AND p.post_parent = $post_id AND meta_key = '_relevanssi_pdf_content'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 		// Only user-provided variable is $post_id, and that's from Relevanssi and sanitized as an int.
-		return implode( ' ', $pdf_content );
 	}
 
-	return '';
+	return array();
 }
 
 /**
@@ -509,7 +508,7 @@ function relevanssi_premium_init() {
 
 	add_filter( 'relevanssi_remove_punctuation', 'relevanssi_wildcards_pre', 8 );
 	add_filter( 'relevanssi_remove_punctuation', 'relevanssi_wildcards_post', 12 );
-	add_filter( 'relevanssi_term_where', 'relevanssi_query_wildcards' );
+	add_filter( 'relevanssi_term_where', 'relevanssi_query_wildcards', 10, 2 );
 
 	add_filter( 'relevanssi_indexing_restriction', 'relevanssi_hide_post_restriction' );
 

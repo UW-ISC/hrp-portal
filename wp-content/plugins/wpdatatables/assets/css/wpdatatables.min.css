@@ -43,6 +43,15 @@
     overflow: auto;
     border: none;
 }
+.wpDataTablesWrapper table.wpDataTable.wpdt-has-grouping.dtfc-has-left.dtfc-has-right,
+.wpDataTablesWrapper table.wpDataTable.wpdt-has-grouping.dtfc-has-right,
+.wpDataTablesWrapper table.wpDataTable.wpdt-has-grouping.dtfc-has-left,
+.wpDataTablesWrapper table.wpDataTable.dtfc-has-left.dtfc-has-right,
+.wpDataTablesWrapper table.wpDataTable.dtfc-has-right,
+.wpDataTablesWrapper table.wpDataTable.dtfc-has-left{
+    border-collapse: separate;
+}
+
 .wpDataTablesWrapper table.wpDataTable > tbody > tr > td > ul {
     list-style: inherit;
 }

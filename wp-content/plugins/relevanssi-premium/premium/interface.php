@@ -130,7 +130,7 @@ function relevanssi_form_update_translations() {
 				<input type='checkbox' name='relevanssi_update_translations' id='relevanssi_update_translations' <?php echo esc_attr( $update_translations ); ?> />
 				<?php esc_html_e( 'Check for plugin translation updates', 'relevanssi' ); ?>
 			</label>
-		<p class="description"><?php esc_html_e( 'If you check this box, Relevanssi will check for updates to the plugin translations. At the moment, translations are available for: ', 'relevanssi' ); ?>
+		<p class="description"><?php esc_html_e( 'If you check this box, Relevanssi will check for updates to the plugin translations. At the moment, translations are available for:', 'relevanssi' ); ?>
 		Deutsch (de_DE), español (es_ES), français (fr_FR), suomi (fi)</p>
 		</td>
 		</td>

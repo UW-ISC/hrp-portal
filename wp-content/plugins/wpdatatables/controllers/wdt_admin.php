@@ -139,7 +139,8 @@ function wdtAdminEnqueue($hook)
         'admin_page_wpdatatables-welcome-page',
         'admin_page_wpdatatables-lite-vs-premium',
         'wpdatatables_page_wpdatatables-lite-vs-premium',
-        'wpdatatables_page_wpdatatables-add-ons'))) {
+        'wpdatatables_page_wpdatatables-add-ons'
+    ))) {
 
         add_filter('admin_body_class', 'wdtAddBodyClass');
 
@@ -161,8 +162,14 @@ function wdtAdminEnqueue($hook)
     wp_register_script('wdt-color-pickr', WDT_JS_PATH . 'color-pickr/pickr.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-color-pickr-init', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/wdt.color-picker-init.js', array(), WDT_CURRENT_VERSION, true);
     wp_register_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array(), WDT_CURRENT_VERSION, true);
-    wp_register_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
-    wp_register_script('wdt-doc-js', WDT_JS_PATH . 'wpdatatables/admin/doc.js', array('jquery', 'wdt-common'), WDT_CURRENT_VERSION, true);
+    wp_register_script('wdt-funcs-js', WDT_JS_PATH . 'wpdatatables/wdt.funcs.js', array(
+        'jquery',
+        'wdt-common'
+    ), WDT_CURRENT_VERSION, true);
+    wp_register_script('wdt-doc-js', WDT_JS_PATH . 'wpdatatables/admin/doc.js', array(
+        'jquery',
+        'wdt-common'
+    ), WDT_CURRENT_VERSION, true);
 
     wp_enqueue_script('wdt-rating', WDT_JS_PATH . 'wpdatatables/admin/wdtRating.js', array('jquery'), WDT_CURRENT_VERSION, true);
 
@@ -219,10 +226,12 @@ add_action('admin_enqueue_scripts', 'wdtAdminEnqueue');
 /**
  * Fix conflict with Gravity forms tooltips on back-end if our add-on is not used
  */
-function wdtDeregisterGravityTooltipScript(){
+function wdtDeregisterGravityTooltipScript()
+{
     if (!defined('WDT_GF_VERSION') && defined('GF_MIN_WP_VERSION') &&
-     isset($_GET['page']) && ((strpos($_GET['page'], 'wpdatatables') !== false) || (strpos($_GET['page'], 'wpdatareports') !== false)))
+        isset($_GET['page']) && ((strpos($_GET['page'], 'wpdatatables') !== false) || (strpos($_GET['page'], 'wpdatareports') !== false))) {
         wp_deregister_script('gform_tooltip_init');
+    }
 }
 
 add_action('wpdatatables_enqueue_on_admin_pages', 'wdtDeregisterGravityTooltipScript');
@@ -256,6 +265,8 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-handsontable-css', WDT_CSS_PATH . 'handsontable.full.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-table-tools', WDT_CSS_PATH . 'TableTools.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-datatables-responsive', WDT_CSS_PATH . 'datatables.responsive.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-datatables-fixedHeader', WDT_CSS_PATH . 'fixedHeader.dataTables.min.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-datatables-fixedColumn', WDT_CSS_PATH . 'fixedColumns.dataTables.min.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-dragula');
 
     wp_enqueue_style('wdt-skin-material', WDT_ASSETS_PATH . 'css/wdt-skins/material.css', array(), WDT_CURRENT_VERSION);
@@ -265,7 +276,8 @@ function wdtEditEnqueue()
     wp_enqueue_style('wdt-skin-purple', WDT_ASSETS_PATH . 'css/wdt-skins/purple.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-dark', WDT_ASSETS_PATH . 'css/wdt-skins/dark.css', array(), WDT_CURRENT_VERSION);
     wp_enqueue_style('wdt-skin-raspberry-cream', WDT_ASSETS_PATH . 'css/wdt-skins/raspberry-cream.css', array(), WDT_CURRENT_VERSION);
-	wp_enqueue_style('wdt-skin-mojito', WDT_ASSETS_PATH . 'css/wdt-skins/mojito.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-skin-mojito', WDT_ASSETS_PATH . 'css/wdt-skins/mojito.css', array(), WDT_CURRENT_VERSION);
+    wp_enqueue_style('wdt-skin-dark-mojito', WDT_ASSETS_PATH . 'css/wdt-skins/dark-mojito.css', array(), WDT_CURRENT_VERSION);
 
     wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
@@ -277,9 +289,14 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-vfs-fonts', WDT_JS_PATH . 'export-tools/vfs_fonts.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-button-print', WDT_JS_PATH . 'export-tools/buttons.print.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-button-vis', WDT_JS_PATH . 'export-tools/buttons.colVis.min.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-fixed-columns', WDT_JS_PATH . 'fixedcolumn/dataTables.fixedColumns.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-fixed-header', WDT_JS_PATH . 'fixedheader/dataTables.fixedHeader.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-funcs-js');
     wp_enqueue_script('wdt-inline-editing', WDT_JS_PATH . 'wpdatatables/wdt.inlineEditing.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wpdatatables.js', array(
+        'jquery',
+        'wdt-datatables'
+    ), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-responsive', WDT_JS_PATH . 'responsive/datatables.responsive.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-color-pickr');
@@ -372,10 +389,10 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-highcharts', '//code.highcharts.com/highcharts.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-more', '//code.highcharts.com/highcharts-more.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-3d', '//code.highcharts.com/highcharts-3d.js', array(), WDT_CURRENT_VERSION, true);
-	wp_enqueue_script('wdt-cylinder', '//code.highcharts.com/modules/cylinder.js', array(), WDT_CURRENT_VERSION, true);
-	wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
-	wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION, true);
-	wp_enqueue_script('wdt-funnel3d', '//code.highcharts.com/modules/funnel3d.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-cylinder', '//code.highcharts.com/modules/cylinder.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-funnel3d', '//code.highcharts.com/modules/funnel3d.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
@@ -416,7 +433,10 @@ function wdtSettingsEnqueue()
     wp_enqueue_script('wdt-funcs-js');
 
     wp_localize_script('wdt-plugin-config', 'wdt_current_config', WDTSettingsController::getCurrentPluginConfig());
-    wp_localize_script('wdt-plugin-config', 'wdtStore', ['url' => WDT_STORE_API_URL, 'redirectUrl' => get_site_url()]);
+    wp_localize_script('wdt-plugin-config', 'wdtStore', [
+        'url' => WDT_STORE_API_URL,
+        'redirectUrl' => get_site_url()
+    ]);
 
     wp_localize_script('wdt-settings-main-js', 'wpdatatablesSettingsStrings', WDTTools::getTranslationStrings());
 
@@ -578,6 +598,7 @@ function wdtEdit()
         }
         if (isset($tableData->error)) {
             echo WDTTools::wdtShowError($tableData->error);
+
             return;
         }
         WDTTools::exportJSVar('wpdatatable_init_config', $tableData->table);
@@ -719,7 +740,7 @@ function wdtChartWizard()
             $chartObj->loadFromDB();
             $chartObj->prepareData();
             $chartObj->shiftStringColumnUp();
-            switch ($chartObj->getEngine()){
+            switch ($chartObj->getEngine()) {
                 case 'google':
                     $chartObj->prepareGoogleChartsRender();
                     break;

@@ -9,7 +9,8 @@ var tableSettingsLinks = {
     'editing-settings': '#table-settings-editing',
     'table-tools-settings': '#table-settings-tools',
     'placeholders-settings': '#table-settings-placeholders',
-    'customize-table-settings': '#customize-table-settings'
+    'customize-table-settings': '#customize-table-settings',
+    'advanced-table-settings' : '#advanced-table-settings'
 };
 
 var columnSettingsLinks = {
@@ -58,7 +59,7 @@ jQuery('.wdt-documentation').click(function (e) {
     e.preventDefault();
     switch (jQuery(this).data('doc-page')) {
         case 'table_settings':
-            activeTab = jQuery('div.wdt-table-settings div.tab-content div.tab-pane.active').prop('id');
+            activeTab = jQuery('div.wdt-table-settings div.tab-content div.tab-pane.active:not(.main-customize-table-settings)').prop('id');
             if (activeTab == 'master-detail-settings') {
                 window.open(docsHomeUrl + '/documentation/addons/master-detail-tables/');
             } else if (activeTab == 'gravity-settings') {
