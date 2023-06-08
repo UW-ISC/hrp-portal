@@ -11,17 +11,21 @@ defined('ABSPATH') or die('Access denied.');
  * @since 2.0
  * @author Alexander Gilmanov
  */
-class WDTConfigController {
+class WDTConfigController
+{
 
     private static $_tableConfigCache = array();
     private static $_resetColumnPosition = false;
 
     /**
      * Validate and save the table config to DB
+     *
      * @param StdClass $tableData
+     *
      * @throws WDTException
      */
-    public static function saveTableConfig($tableData) {
+    public static function saveTableConfig($tableData)
+    {
         global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
         $tableData = self::sanitizeTableConfig($tableData);
 
@@ -46,7 +50,7 @@ class WDTConfigController {
             sanitize_text_field($tableData->var9) : '';
 
         //Add data source to table if a file was used
-        if( isset($tableData->file) && $tableData->file != 'http://0' && $tableData->file && $tableData->fileSourceAction) {
+        if (isset($tableData->file) && $tableData->file != 'http://0' && $tableData->file && $tableData->fileSourceAction) {
             $tableData = WDTConfigController::addDataSourceToTable($tableData);
         }
 
@@ -68,8 +72,9 @@ class WDTConfigController {
                 }
                 // Saving the columns
                 try {
-                    if(!(isset($tableData->replaceFileData) && $tableData->replaceFileData))
+                    if (!(isset($tableData->replaceFileData) && $tableData->replaceFileData)) {
                         self::saveColumns($tableData->columns, $res->table, $tableData->id);
+                    }
 
                     $wpDataTable = WPDataTable::loadWpDataTable($tableData->id);
                     $tableData = self::loadTableFromDB($tableData->id, false);
@@ -77,7 +82,7 @@ class WDTConfigController {
                     if (count($wpDataTable->getDataRows()) > 2000) {
                         $tableData->server_side = 1;
                         $wpdb->update(
-                            $wpdb->prefix .'wpdatatables',
+                            $wpdb->prefix . 'wpdatatables',
                             array(
                                 'server_side' => 1,
                             ),
@@ -122,10 +127,12 @@ class WDTConfigController {
      *
      * @param $tableId - ID of the table
      * @param $tableView - Standard or Excel-like table view
-     * @throws Exception
+     *
      * @return stdClass Object with the wpDataTable HTML and config
+     * @throws Exception
      */
-    public static function loadTableConfig($tableId, $tableView = null) {
+    public static function loadTableConfig($tableId, $tableView = null)
+    {
         $res = new stdClass();
 
         try {
@@ -156,17 +163,21 @@ class WDTConfigController {
         } catch (Exception $e) {
             $res->error = ltrim($e->getMessage(), '<br/><br/>');
         }
+
         return $res;
     }
 
 
     /**
      * Helper method that load table config data from DB
+     *
      * @param $tableId
+     *
      * @return array|null|bool|object|stdClass
      * @throws Exception
      */
-    public static function loadTableFromDB($tableId, $loadFromCache = true) {
+    public static function loadTableFromDB($tableId, $loadFromCache = true)
+    {
         global $wpdb;
 
         do_action('wpdatatables_before_get_table_metadata', $tableId);
@@ -222,15 +233,20 @@ class WDTConfigController {
             $table->editButtonsDisplayed = (isset($advancedSettings->editButtonsDisplayed)) ? $advancedSettings->editButtonsDisplayed : array('all');
             $table->enableDuplicateButton = (isset($advancedSettings->enableDuplicateButton)) ? $advancedSettings->enableDuplicateButton : false;
             $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
-            $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin)  ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
-            $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval)  ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
-            $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader)  ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
-            $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss)  ? $advancedSettings->tableCustomCss : '';
-            $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings)  ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
+            $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin) ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
+            $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval) ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
+            $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader) ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
+            $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss) ? $advancedSettings->tableCustomCss : '';
+            $table->tableFontColorSettings = isset($table->tableFontColorSettings) || isset($advancedSettings->tableFontColorSettings) ? $advancedSettings->tableFontColorSettings : get_option('wdtFontColorSettings');
             $table->pdfPaperSize = isset($advancedSettings->pdfPaperSize) ? $advancedSettings->pdfPaperSize : 'A4';
             $table->pdfPageOrientation = isset($advancedSettings->pdfPageOrientation) ? $advancedSettings->pdfPageOrientation : 'portrait';
 	        $table->show_table_description = isset($advancedSettings->show_table_description) ? $advancedSettings->show_table_description : false;
 	        $table->table_description = isset($advancedSettings->table_description) ? $advancedSettings->table_description : '';
+            $table->fixed_columns = isset($advancedSettings->fixed_columns) ? $advancedSettings->fixed_columns : false;
+            $table->fixed_left_columns_number = isset($advancedSettings->fixed_left_columns_number) ? $advancedSettings->fixed_left_columns_number : 0;
+            $table->fixed_right_columns_number = isset($advancedSettings->fixed_right_columns_number) ? $advancedSettings->fixed_right_columns_number : 0;
+            $table->fixed_header = isset($advancedSettings->fixed_header) ? $advancedSettings->fixed_header : false;
+            $table->fixed_header_offset = isset($advancedSettings->fixed_header_offset) ? $advancedSettings->fixed_header_offset : 0;
 
             $table = self::sanitizeTableConfig($table);
 
@@ -244,11 +260,14 @@ class WDTConfigController {
 
     /**
      * Helper method that load columns config data from DB
+     *
      * @param $tableId
      * @param array $columnNames
+     *
      * @return array|null|object
      */
-    public static function loadColumnsFromDB($tableId, $columnNames = array()) {
+    public static function loadColumnsFromDB($tableId, $columnNames = array())
+    {
         global $wpdb;
 
         do_action('wpdatatables_before_get_columns_metadata', $tableId);
@@ -278,14 +297,14 @@ class WDTConfigController {
         $columns = $wpdb->get_results($columnsQuery);
         $columns = apply_filters('wpdatatables_filter_columns_metadata', $columns, $tableId);
 
-        if (!defined('WDT_MD_VERSION')){
+        if (!defined('WDT_MD_VERSION')) {
             $columnPosition = -1;
-            foreach ($columns as $key=>$column){
+            foreach ($columns as $key => $column) {
                 if ($column->orig_header == 'masterdetail') {
                     $columnPosition = $column->pos;
                     unset($columns[$key]);
                 }
-                if ($columnPosition > -1){
+                if ($columnPosition > -1) {
                     $column->pos = $column->pos - 1;
                 }
             }
@@ -295,7 +314,8 @@ class WDTConfigController {
     }
 
 
-    public static function loadSingleColumnFromDB($columnId) {
+    public static function loadSingleColumnFromDB($columnId)
+    {
         global $wpdb;
 
         $columnQuery = $wpdb->prepare(
@@ -312,9 +332,11 @@ class WDTConfigController {
     /**
      * Helper method that formats table config data in a format for DB
      * and saves to DB
+     *
      * @param $table - stdObj with table dada
      */
-    public static function saveTableToDB($table) {
+    public static function saveTableToDB($table)
+    {
         global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
         // Fetching the 9 placeholders
@@ -337,7 +359,15 @@ class WDTConfigController {
         $wdtVar9 = isset($table->var9) ?
             sanitize_text_field($table->var9) : '';
 
-        $tableSkin = in_array($table->tableSkin, ['material','light','graphite','aqua','purple','dark', 'raspberry-cream','mojito']) ? $table->tableSkin : get_option('wdtBaseSkin');
+        $tableSkin = in_array($table->tableSkin, ['material',
+            'light',
+            'graphite',
+            'aqua',
+            'purple',
+            'dark',
+            'raspberry-cream',
+            'mojito',
+            'dark-mojito']) ? $table->tableSkin : get_option('wdtBaseSkin');
 
         // Preparing the config
         $tableConfig = array(
@@ -412,7 +442,12 @@ class WDTConfigController {
                     'pdfPaperSize' => $table->pdfPaperSize,
                     'pdfPageOrientation' => $table->pdfPageOrientation,
                     'table_description' => $table->table_description,
-                    'show_table_description' => $table->show_table_description
+                    'show_table_description' => $table->show_table_description,
+                    'fixed_columns' => $table->fixed_columns,
+                    'fixed_left_columns_number' => $table->fixed_left_columns_number,
+                    'fixed_right_columns_number' => $table->fixed_right_columns_number,
+                    'fixed_header' => $table->fixed_header,
+                    'fixed_header_offset' => $table->fixed_header_offset
                 )
             ),
         );
@@ -443,17 +478,20 @@ class WDTConfigController {
 
     /**
      * Helper method for sanitizing the user input in the table config
+     *
      * @param stdClass $table object with table config
+     *
      * @return stdClass object with sanitized table config
      */
-    public static function sanitizeTableConfig($table) {
+    public static function sanitizeTableConfig($table)
+    {
         if (isset($table->id)) {
             $table->id = (int)$table->id;
         }
         $table->title = sanitize_text_field($table->title);
         $table->show_title = (int)$table->show_title;
-	    $table->table_description = sanitize_textarea_field($table->table_description);
-	    $table->show_table_description = (int)$table->show_table_description;
+        $table->table_description = sanitize_textarea_field($table->table_description);
+        $table->show_table_description = (int)$table->show_table_description;
         $table->table_type = sanitize_text_field($table->table_type);
         $table->tools = (int)$table->tools;
         $table->showTableToolsIncludeHTML = (int)$table->showTableToolsIncludeHTML;
@@ -502,11 +540,16 @@ class WDTConfigController {
         $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
         $table->showAllRows = (int)$table->showAllRows;
         $table->pdfPaperSize = sanitize_text_field($table->pdfPaperSize);
+        $table->fixed_header = (int)$table->fixed_header;
+        $table->fixed_header_offset = (int)$table->fixed_header_offset;
+        $table->fixed_columns = (int)$table->fixed_columns;
+        $table->fixed_left_columns_number  = (int)$table->fixed_left_columns_number;
+        $table->fixed_right_columns_number  = (int)$table->fixed_right_columns_number;
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
-        if(!empty($table->editButtonsDisplayed)){
+        if (!empty($table->editButtonsDisplayed)) {
             $table->editButtonsDisplayed = (array)$table->editButtonsDisplayed;
             foreach ($table->editButtonsDisplayed as &$editButtonsDisplayed) {
                 $editButtonsDisplayed = sanitize_text_field($editButtonsDisplayed);
@@ -585,53 +628,56 @@ class WDTConfigController {
 
     /**
      * Helper method for sanitizing the user input in the table settings of Simple table
+     *
      * @param stdClass $table object with table config
+     *
      * @return stdClass object with sanitized table config
      */
-    public static function sanitizeTableSettingsSimpleTable($table) {
+    public static function sanitizeTableSettingsSimpleTable($table)
+    {
         $table->method = 'simple';
         $table->connection = '';
         $table->columnCount = 0;
         $table->columns = array();
 
-        if (isset($table->name)){
+        if (isset($table->name)) {
             $table->name = sanitize_text_field($table->name);
         } else {
             $table->name = '';
         }
-	    if (isset($table->table_description)){
-		    $table->table_description = sanitize_textarea_field($table->table_description);
-	    } else {
-		    $table->table_description = '';
-	    }
+        if (isset($table->table_description)) {
+            $table->table_description = sanitize_textarea_field($table->table_description);
+        } else {
+            $table->table_description = '';
+        }
 
-        if (isset($table->content)){
+        if (isset($table->content)) {
             $isContentObj = false;
-            if (!is_object($table->content)){
+            if (!is_object($table->content)) {
                 $isContentObj = true;
                 $table->content = json_decode($table->content);
             }
-            if (isset($table->content->colNumber)){
+            if (isset($table->content->colNumber)) {
                 $table->content->colNumber = (int)$table->content->colNumber;
             } else {
                 $table->content->colNumber = 5;
             }
 
-            if (isset($table->content->rowNumber)){
+            if (isset($table->content->rowNumber)) {
                 $table->content->rowNumber = (int)$table->content->rowNumber;
             } else {
                 $table->content->rowNumber = 5;
             }
 
-            if (isset($table->content->reloadCounter)){
+            if (isset($table->content->reloadCounter)) {
                 $table->content->reloadCounter = (int)$table->content->reloadCounter;
             } else {
                 $table->content->reloadCounter = 0;
             }
 
-            if (isset($table->content->mergedCells)){
-                if (!empty($table->content->mergedCells)){
-                    foreach ($table->content->mergedCells as $key => $mergedCell){
+            if (isset($table->content->mergedCells)) {
+                if (!empty($table->content->mergedCells)) {
+                    foreach ($table->content->mergedCells as $key => $mergedCell) {
                         $table->content->mergedCells[$key]->row = (int)$mergedCell->row;
                         $table->content->mergedCells[$key]->col = (int)$mergedCell->col;
                         $table->content->mergedCells[$key]->rowspan = (int)$mergedCell->rowspan;
@@ -642,75 +688,81 @@ class WDTConfigController {
                     $table->content->mergedCells = array();
                 }
             }
-            if (isset($table->content->colHeaders)){
-                if (!empty($table->content->colHeaders)){
-                    foreach ($table->content->colHeaders as $keyColHeader => $colHeader){
+            if (isset($table->content->colHeaders)) {
+                if (!empty($table->content->colHeaders)) {
+                    foreach ($table->content->colHeaders as $keyColHeader => $colHeader) {
                         $table->content->colHeaders[$keyColHeader] = sanitize_text_field($colHeader);
                     }
                 } else {
                     $table->content->colHeaders = array();
                 }
             }
-            if (isset($table->content->colWidths)){
-                foreach ($table->content->colWidths as $keyColWidth => $colWidth){
+            if (isset($table->content->colWidths)) {
+                foreach ($table->content->colWidths as $keyColWidth => $colWidth) {
                     $table->content->colWidths[$keyColWidth] = (int)$colWidth;
                 }
             }
-            if ($isContentObj){
+            if ($isContentObj) {
                 $table->content = json_encode($table->content);
             }
         }
+
         return $table;
     }
 
     /**
      * Helper method for sanitizing the user input for nested JSON params
+     *
      * @param stdClass $jsonParams object with nested JSON params
+     *
      * @return stdClass object with sanitized nested JSON params
      */
-    public static function sanitizeNestedJsonParams($jsonParams){
+    public static function sanitizeNestedJsonParams($jsonParams)
+    {
         $sanitizedParams = new stdClass();
 
-        if (isset($jsonParams->url)){
+        if (isset($jsonParams->url)) {
             $sanitizedParams->url = trim($jsonParams->url);
             $sanitizedParams->url = sanitize_url($sanitizedParams->url);
-            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+            if (is_admin() && !current_user_can('unfiltered_html')) {
                 $sanitizedParams->url = wp_kses_post($sanitizedParams->url);
             }
         } else {
             $sanitizedParams->url = '';
         }
 
-        if (isset($jsonParams->method)){
+        if (isset($jsonParams->method)) {
             $sanitizedParams->method = sanitize_text_field($jsonParams->method);
         } else {
             $sanitizedParams->method = 'get';
         }
 
-        if (isset($jsonParams->authOption)){
+        if (isset($jsonParams->authOption)) {
             $sanitizedParams->authOption = sanitize_text_field($jsonParams->authOption);
         } else {
             $sanitizedParams->authOption = '';
         }
-        if (isset($jsonParams->username)){
+        if (isset($jsonParams->username)) {
             $sanitizedParams->username = sanitize_text_field($jsonParams->username);
-            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
+            if (is_admin() && !current_user_can('unfiltered_html')) {
                 $sanitizedParams->username = sanitize_text_field(wp_kses_post($jsonParams->username));
+            }
         } else {
             $sanitizedParams->username = '';
         }
-        if (isset($jsonParams->password)){
+        if (isset($jsonParams->password)) {
             $sanitizedParams->password = sanitize_text_field($jsonParams->password);
-            if ( is_admin() && ! current_user_can( 'unfiltered_html' ) )
+            if (is_admin() && !current_user_can('unfiltered_html')) {
                 $sanitizedParams->password = sanitize_text_field(wp_kses_post($jsonParams->password));
+            }
         } else {
             $sanitizedParams->password = '';
         }
-        if (isset($jsonParams->customHeaders) && !empty($jsonParams->customHeaders)){
-            foreach ($jsonParams->customHeaders as &$customHeader){
+        if (isset($jsonParams->customHeaders) && !empty($jsonParams->customHeaders)) {
+            foreach ($jsonParams->customHeaders as &$customHeader) {
                 $customHeader->setKeyName = sanitize_text_field($customHeader->setKeyName);
                 $customHeader->setKeyValue = sanitize_textarea_field($customHeader->setKeyValue);
-                if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+                if (is_admin() && !current_user_can('unfiltered_html')) {
                     $customHeader->setKeyName = sanitize_text_field(wp_kses_post($customHeader->setKeyName));
                     $customHeader->setKeyValue = sanitize_textarea_field(wp_kses_post($customHeader->setKeyValue));
                 }
@@ -719,7 +771,7 @@ class WDTConfigController {
         } else {
             $sanitizedParams->customHeaders = [];
         }
-        if (isset($jsonParams->root)){
+        if (isset($jsonParams->root)) {
             $sanitizedParams->root = sanitize_text_field($jsonParams->root);
         } else {
             $sanitizedParams->root = '';
@@ -730,10 +782,13 @@ class WDTConfigController {
 
     /**
      * Helper method for sanitizing the user input for generated SQL based tables data
+     *
      * @param array $tableData Array with the tableData coming from SQL based constructor
+     *
      * @return array $sanitizedTableData Array with sanitized table data
      */
-    public static function sanitizeGeneratedSQLTableData($tableData) {
+    public static function sanitizeGeneratedSQLTableData($tableData)
+    {
         $sanitizedTableData = [];
 
         $sanitizedTableData['name'] = sanitize_text_field($tableData['name']);
@@ -741,35 +796,41 @@ class WDTConfigController {
         $sanitizedTableData['columnCount'] = sanitize_text_field($tableData['columnCount']);
         $sanitizedTableData['connection'] = sanitize_text_field($tableData['connection']);
 
-        if(isset($tableData['handlePostTypes']))
+        if (isset($tableData['handlePostTypes'])) {
             $sanitizedTableData['handlePostTypes'] = sanitize_text_field($tableData['handlePostTypes']);
+        }
 
-        if(isset($tableData['allMySqlColumns']))
+        if (isset($tableData['allMySqlColumns'])) {
             $sanitizedTableData['allMySqlColumns'] = array_map('sanitize_text_field', $tableData['allMySqlColumns']);
+        }
 
-        if(isset($tableData['mySqlColumns']))
+        if (isset($tableData['mySqlColumns'])) {
             $sanitizedTableData['mySqlColumns'] = array_map('sanitize_text_field', $tableData['mySqlColumns']);
+        }
 
-        if(isset($tableData['postTypes']))
+        if (isset($tableData['postTypes'])) {
             $sanitizedTableData['postTypes'] = array_map('sanitize_text_field', $tableData['postTypes']);
+        }
 
-        if(isset($tableData['postColumns']))
+        if (isset($tableData['postColumns'])) {
             $sanitizedTableData['postColumns'] = array_map('sanitize_text_field', $tableData['postColumns']);
+        }
 
-        if(isset($tableData['joinRules'])){
-            foreach ($tableData['joinRules'] as $ruleKey => $joinRule){
+        if (isset($tableData['joinRules'])) {
+            foreach ($tableData['joinRules'] as $ruleKey => $joinRule) {
                 $sanitizedTableData['joinRules'][$ruleKey] = array_map('sanitize_text_field', $joinRule);
             }
         }
 
-        if(isset($tableData['whereConditions'])){
-            foreach ($tableData['whereConditions'] as $whereKey => $whereCondition){
+        if (isset($tableData['whereConditions'])) {
+            foreach ($tableData['whereConditions'] as $whereKey => $whereCondition) {
                 $sanitizedTableData['whereConditions'][$whereKey] = array_map('sanitize_text_field', $whereCondition);
             }
         }
 
-        if(isset($tableData['groupingRules']))
+        if (isset($tableData['groupingRules'])) {
             $sanitizedTableData['groupingRules'] = array_map('sanitize_text_field', $tableData['groupingRules']);
+        }
 
         return $sanitizedTableData;
     }
@@ -777,13 +838,14 @@ class WDTConfigController {
     /**
      * Helper method for sanitizing the user input in the row data of Simple table
      */
-    public static function sanitizeRowDataSimpleTable($rowsData) {
+    public static function sanitizeRowDataSimpleTable($rowsData)
+    {
         $rowsDataSanitized = [];
-        foreach ($rowsData as $rowKey => $rowData){
+        foreach ($rowsData as $rowKey => $rowData) {
             $rowsDataSanitized[$rowKey] = $rowData;
-            foreach ($rowsDataSanitized[$rowKey]->cells as $cellKey => $cell){
-                if ($cell->data != '' ){
-                    if ( ! current_user_can( 'unfiltered_html' ) ) {
+            foreach ($rowsDataSanitized[$rowKey]->cells as $cellKey => $cell) {
+                if ($cell->data != '') {
+                    if (!current_user_can('unfiltered_html')) {
                         $rowsDataSanitized[$rowKey]->cells[$cellKey]->data = wp_kses_post($cell->data);
                     } else {
                         $rowsDataSanitized[$rowKey]->cells[$cellKey]->data = $cell->data;
@@ -799,10 +861,13 @@ class WDTConfigController {
 
     /**
      * Helper method for sanitizing the user input in the table config
+     *
      * @param array $columns Array with the columns coming from front-end form
+     *
      * @return array $columns Array with sanitized column data
      */
-    public static function sanitizeColumnsConfig($columns) {
+    public static function sanitizeColumnsConfig($columns)
+    {
         if (!empty($columns)) {
             foreach ($columns as &$column) {
                 $column->calculateAvg = (int)$column->calculateAvg;
@@ -848,30 +913,30 @@ class WDTConfigController {
                 $column->possibleValuesAddEmpty = (int)$column->possibleValuesAddEmpty;
                 $column->possibleValuesAjax = (int)$column->possibleValuesAjax;
                 $column->possibleValuesType = sanitize_text_field($column->possibleValuesType);
-	            $column->column_align_header = sanitize_text_field($column->column_align_header);
-	            $column->column_align_fields = sanitize_text_field($column->column_align_fields);
+                $column->column_align_header = sanitize_text_field($column->column_align_header);
+                $column->column_align_fields = sanitize_text_field($column->column_align_fields);
                 $column->rangeSlider = (int)$column->rangeSlider;
                 $column->rangeMaxValueDisplay = sanitize_text_field($column->rangeMaxValueDisplay);
                 $column->customMaxRangeValue = sanitize_text_field($column->customMaxRangeValue);
-	            $column->column_rotate_header_name = sanitize_text_field($column->column_rotate_header_name);
+                $column->column_rotate_header_name = sanitize_text_field($column->column_rotate_header_name);
                 $column->skip_thousands_separator = (int)$column->skip_thousands_separator;
                 $column->sorting = (int)$column->sorting;
-                if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+                if (is_admin() && !current_user_can('unfiltered_html')) {
                     $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
                     $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
                 } else {
-                    $column->text_after =(string)$column->text_after;
+                    $column->text_after = (string)$column->text_after;
                     $column->text_before = (string)$column->text_before;
                 }
                 $column->css_class = sanitize_text_field($column->css_class);
                 $column->type = sanitize_text_field($column->type);
                 $column->visible = (int)$column->visible;
                 $column->width = sanitize_text_field($column->width);
-                if (!empty($column->conditional_formatting)){
-                    foreach ($column->conditional_formatting as &$cond){
+                if (!empty($column->conditional_formatting)) {
+                    foreach ($column->conditional_formatting as &$cond) {
                         $cond->ifClause = sanitize_text_field($cond->ifClause);
                         $cond->action = sanitize_text_field($cond->action);
-                        if ( is_admin() && ! current_user_can( 'unfiltered_html' ) ) {
+                        if (is_admin() && !current_user_can('unfiltered_html')) {
                             $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
                             $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
                         }
@@ -889,6 +954,7 @@ class WDTConfigController {
                 }
             }
         }
+
         return $columns;
     }
 
@@ -899,9 +965,11 @@ class WDTConfigController {
      *
      * @param $type - Type of the table (mysql, excel, csv, google spreadsheet, serialized array)
      * @param $content - Content for creating the table (path to source or a MySQL query)
+     *
      * @return stdClass Object which has an 'error' property in case there were problems, or a 'table' on success
      */
-    public static function tryCreateTable($type, $content, $connection = null, $fileLocation = '') {
+    public static function tryCreateTable($type, $content, $connection = null, $fileLocation = '')
+    {
 
         global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
@@ -940,6 +1008,7 @@ class WDTConfigController {
             $result->table = $tbl;
         } catch (Exception $e) {
             $result->error = ltrim($e->getMessage(), '<br/><br/>');
+
             return $result;
         }
 
@@ -955,9 +1024,11 @@ class WDTConfigController {
      * @param $frontendColumns array of column config objects in front-end format
      * @param $table WPDataTable object that is generated from the data source
      * @param $tableId int ID of the table
+     *
      * @throws Exception
      */
-    public static function saveColumns($frontendColumns, $table, $tableId) {
+    public static function saveColumns($frontendColumns, $table, $tableId)
+    {
         global $wpdb;
 
         do_action('wpdatatables_before_create_columns', $table, $tableId, $frontendColumns);
@@ -990,8 +1061,11 @@ class WDTConfigController {
         }, $dataSourceColumns);
 
         try {
-            foreach ($dataSourceColumnsHeaders as $dataSourceColumnsHeader)
-                if ($dataSourceColumnsHeader === '') throw new WDTException(__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
+            foreach ($dataSourceColumnsHeaders as $dataSourceColumnsHeader) {
+                if ($dataSourceColumnsHeader === '') {
+                    throw new WDTException(__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
+                }
+            }
         } catch (WDTException $exception) {
             die($exception);
         }
@@ -1052,9 +1126,9 @@ class WDTConfigController {
                 $mysql_table_name = $table_config->mysql_table_name;
                 $alterQuery = "ALTER TABLE {$mysql_table_name} MODIFY COLUMN {$columnConfig['orig_header']} {$newType}";
                 $alterQueryNull = '';
-                if (in_array($newType ,['date','datetime','time'])
-                    && !in_array($columnsTypesArray[$column->getOriginalHeader()], ['date','datetime'])){
-                    $alterQueryNull= "UPDATE {$mysql_table_name} SET {$columnConfig['orig_header']} = null";
+                if (in_array($newType, ['date', 'datetime', 'time'])
+                    && !in_array($columnsTypesArray[$column->getOriginalHeader()], ['date', 'datetime'])) {
+                    $alterQueryNull = "UPDATE {$mysql_table_name} SET {$columnConfig['orig_header']} = null";
                 }
 
                 if ($isMySql) {
@@ -1092,9 +1166,9 @@ class WDTConfigController {
 
         }
         // Go through the Master Details Column and add it
-        do_action('wpdatatables_add_and_save_custom_column',$table, $tableId, $frontendColumns );
+        do_action('wpdatatables_add_and_save_custom_column', $table, $tableId, $frontendColumns);
         // Add columns that are not in source any more
-        $columnsNotInSource = apply_filters('wpdatatables_columns_not_in_source',$columnsNotInSource, $table, $tableId, $frontendColumns );
+        $columnsNotInSource = apply_filters('wpdatatables_columns_not_in_source', $columnsNotInSource, $table, $tableId, $frontendColumns);
         // Go through the formula columns and add / update them
         if ($frontendColumns != null) {
             foreach ($frontendColumns as $feColumn) {
@@ -1102,7 +1176,7 @@ class WDTConfigController {
                 if ($feColumn->type != 'formula') {
                     continue;
                 }
-                if (!self::$_resetColumnPosition){
+                if (!self::$_resetColumnPosition) {
                     // Removing this column from the array of marked for deletion
                     $columnsNotInSource = array_diff($columnsNotInSource, array($feColumn->orig_header));
 
@@ -1150,10 +1224,12 @@ class WDTConfigController {
      *
      * @param $frontendColumns
      * @param $columnOrigHeader
+     *
      * @return bool|StdClass FALSE if column not found, Object with column properties on success
      */
-    public static function getFrontEndColumnConfig($frontendColumns, $columnOrigHeader) {
-        $result = FALSE;
+    public static function getFrontEndColumnConfig($frontendColumns, $columnOrigHeader)
+    {
+        $result = false;
         if (!empty($frontendColumns)) {
             foreach ($frontendColumns as $feColumn) {
                 if ($feColumn->orig_header == $columnOrigHeader) {
@@ -1161,6 +1237,7 @@ class WDTConfigController {
                 }
             }
         }
+
         return $result;
     }
 
@@ -1172,9 +1249,11 @@ class WDTConfigController {
      * @param $frontendColumns - Array of objects describing config which was sent from front-end
      * @param $tableId - ID of the table
      * @param int $pos - Position of the column in the data source
+     *
      * @return array - Array with merged column config
      */
-    public static function prepareDBColumnConfig($column, $frontendColumns, $tableId, $pos = 0) {
+    public static function prepareDBColumnConfig($column, $frontendColumns, $tableId, $pos = 0)
+    {
         $feColumn = self::getFrontEndColumnConfig($frontendColumns, $column->getOriginalHeader());
 
         // Initializing config array for the column
@@ -1222,16 +1301,16 @@ class WDTConfigController {
             $feColumn ? $feColumn->possibleValuesAddEmpty : 0;
         $columnConfig['advanced_settings']['possibleValuesAjax'] =
             $feColumn ? $feColumn->possibleValuesAjax : 10;
-	    $columnConfig['advanced_settings']['column_align_fields'] =
-		    $feColumn ? $feColumn->column_align_fields : '';
+        $columnConfig['advanced_settings']['column_align_fields'] =
+            $feColumn ? $feColumn->column_align_fields : '';
         $columnConfig['advanced_settings']['calculateAvg'] =
             $feColumn ? $feColumn->calculateAvg : 0;
-	    $columnConfig['advanced_settings']['column_align_header'] =
-		    $feColumn ? $feColumn->column_align_header : '';
+        $columnConfig['advanced_settings']['column_align_header'] =
+            $feColumn ? $feColumn->column_align_header : '';
         $columnConfig['advanced_settings']['calculateMax'] =
             $feColumn ? $feColumn->calculateMax : 0;
-	    $columnConfig['advanced_settings']['column_rotate_header_name'] =
-		    $feColumn ? $feColumn->column_rotate_header_name : '';
+        $columnConfig['advanced_settings']['column_rotate_header_name'] =
+            $feColumn ? $feColumn->column_rotate_header_name : '';
         $columnConfig['advanced_settings']['calculateMin'] =
             $feColumn ? $feColumn->calculateMin : 0;
         $columnConfig['advanced_settings']['sorting'] =
@@ -1299,6 +1378,7 @@ class WDTConfigController {
         $columnConfig['advanced_settings'] = json_encode($columnConfig['advanced_settings']);
 
         $columnConfig = apply_filters('wpdt_filter_column_config_object', $columnConfig, $feColumn);
+
         //[<--/ Full version -->]//
 
         return $columnConfig;
@@ -1310,10 +1390,12 @@ class WDTConfigController {
      * Otherwise returns true
      *
      * @param stdClass $columnConfig Configuration for the column
+     *
      * @return bool True in case column saved successfully
      * @throws Exception
      */
-    public static function saveSingleColumn($columnConfig) {
+    public static function saveSingleColumn($columnConfig)
+    {
         global $wpdb;
 
         if (!empty($columnConfig['id'])) {
@@ -1351,6 +1433,7 @@ class WDTConfigController {
             throw new Exception($wpdb->last_error);
         } else {
             do_action('wpdatatables_after_insert_column', $columnConfig, $columnConfig['table_id']);
+
             return true;
         }
 
@@ -1358,10 +1441,13 @@ class WDTConfigController {
 
     /**
      * Method which returns an array of column config objects for front-end
+     *
      * @param $tableId
+     *
      * @return array Array of column config objects
      */
-    public static function getColumnsConfig($tableId) {
+    public static function getColumnsConfig($tableId)
+    {
 
         $dbColumns = self::loadColumnsFromDB($tableId);
 
@@ -1378,10 +1464,13 @@ class WDTConfigController {
 
     /**
      * Method which prepares a column description object to be returned to frontend JSON
+     *
      * @param $dbColumn - Array with the column config from DB
+     *
      * @return stdClass A class describing the column config for front-end
      */
-    public static function prepareFEColumnConfig($dbColumn) {
+    public static function prepareFEColumnConfig($dbColumn)
+    {
         $feColumn = new stdClass();
 
         $feColumn->calculateTotal = (int)$dbColumn->sum_column;
@@ -1419,16 +1508,16 @@ class WDTConfigController {
             $advancedSettings->possibleValuesAjax : 0;
         $feColumn->calculateAvg = isset($advancedSettings->calculateAvg) ?
             $advancedSettings->calculateAvg : 0;
-	    $feColumn->column_align_fields = isset($advancedSettings->column_align_fields) ?
-		    $advancedSettings->column_align_fields : '';
+        $feColumn->column_align_fields = isset($advancedSettings->column_align_fields) ?
+            $advancedSettings->column_align_fields : '';
         $feColumn->calculateMax = isset($advancedSettings->calculateMax) ?
             $advancedSettings->calculateMax : 0;
-	    $feColumn->column_align_header = isset($advancedSettings->column_align_header) ?
-		    $advancedSettings->column_align_header : '';
+        $feColumn->column_align_header = isset($advancedSettings->column_align_header) ?
+            $advancedSettings->column_align_header : '';
         $feColumn->calculateMin = isset($advancedSettings->calculateMin) ?
             $advancedSettings->calculateMin : 0;
-	    $feColumn->column_rotate_header_name = isset($advancedSettings->column_rotate_header_name) ?
-		    $advancedSettings->column_rotate_header_name : '';
+        $feColumn->column_rotate_header_name = isset($advancedSettings->column_rotate_header_name) ?
+            $advancedSettings->column_rotate_header_name : '';
         $feColumn->sorting = isset($advancedSettings->sorting) ?
             $advancedSettings->sorting : 1;
         $feColumn->exactFiltering = isset($advancedSettings->exactFiltering) ?
@@ -1482,10 +1571,10 @@ class WDTConfigController {
             $feColumn->foreignKeyRule->displayColumnName = $advancedSettings->foreignKeyRule->displayColumnName;
             $feColumn->foreignKeyRule->storeColumnId = $advancedSettings->foreignKeyRule->storeColumnId;
             $feColumn->foreignKeyRule->storeColumnName = $advancedSettings->foreignKeyRule->storeColumnName;
-            $feColumn->foreignKeyRule->allowAllPossibleValuesForeignKey =  $advancedSettings->foreignKeyRule->allowAllPossibleValuesForeignKey;
+            $feColumn->foreignKeyRule->allowAllPossibleValuesForeignKey = $advancedSettings->foreignKeyRule->allowAllPossibleValuesForeignKey;
         }
 
-        $feColumn = apply_filters('wpdt_filter_column_description_object', $feColumn, $dbColumn, $advancedSettings );
+        $feColumn = apply_filters('wpdt_filter_column_description_object', $feColumn, $dbColumn, $advancedSettings);
 
         return $feColumn;
 
@@ -1496,7 +1585,8 @@ class WDTConfigController {
      * @return stdClass with default settings for the table object
      * // TODO - allow changing/saving default settings from GUI
      */
-    public static function getConfigDefaults() {
+    public static function getConfigDefaults()
+    {
         $table = new \stdClass();
         $table->id = null;
         $table->title = '';
@@ -1560,15 +1650,22 @@ class WDTConfigController {
         $table->pdfPageOrientation = 'portrait';
 	    $table->table_description = '';
 	    $table->show_table_description = 0;
+        $table->fixed_columns = 0;
+        $table->fixed_left_columns_number = 0;
+        $table->fixed_right_columns_number = 0;
+        $table->fixed_header = 0;
+        $table->fixed_header_offset = 0;
 
         return $table;
     }
 
     /**
      * Helper method that load table config data for Simple table from DB
+     *
      * @param int $tableID
      */
-    public static function loadSimpleTableConfig($tableID){
+    public static function loadSimpleTableConfig($tableID)
+    {
         $res = new stdClass();
 
         try {
@@ -1579,13 +1676,17 @@ class WDTConfigController {
         } catch (Exception $e) {
             $res->error = ltrim($e->getMessage(), '<br/><br/>');
         }
+
         return $res;
     }
+
     /**
      * Helper method that load rows config data from DB
+     *
      * @param int $tableID
      */
-    public static function loadRowsDataFromDB($tableID){
+    public static function loadRowsDataFromDB($tableID)
+    {
         global $wpdb;
 
         do_action('wpdatatables_before_get_rows_metadata', $tableID);
@@ -1595,7 +1696,7 @@ class WDTConfigController {
 
         $rows = $wpdb->get_results($rowsQuery);
 
-        foreach ($rows as $key=> $row){
+        foreach ($rows as $key => $row) {
             $rows[$key] = json_decode($row->data);
         }
 
@@ -1607,6 +1708,7 @@ class WDTConfigController {
 
     /**
      * Save row data from Simple table in database
+     *
      * @param stdClass $rowData
      * @param int $tableID
      */
@@ -1629,19 +1731,24 @@ class WDTConfigController {
 
     /**
      * Adding data from source to the table columns
+     *
      * @param $tableData
+     *
      * @return mixed|string|void
      * @throws WDTException
      * @throws Exception
      */
-    public static function addDataSourceToTable($tableData) {
+    public static function addDataSourceToTable($tableData)
+    {
         $columnTypes = array();
         $columnDateInputFormat = array();
 
         $uploadedFile = $tableData->file;
         $fileSourceAction = $tableData->fileSourceAction;
 
-        if(!($file = wpDataTableConstructor::isUploadedFileEmpty($uploadedFile))) return __('Empty file', 'wpdatatables');
+        if (!($file = wpDataTableConstructor::isUploadedFileEmpty($uploadedFile))) {
+            return __('Empty file', 'wpdatatables');
+        }
 
         for ($i = 0; $i < count($tableData->columns); $i++) {
             $columnTypes[$tableData->columns[$i]->orig_header] = sanitize_text_field($tableData->columns[$i]->type);
@@ -1675,7 +1782,9 @@ class WDTConfigController {
             }
         }
         //Removes the WPDT table id from the array
-        $columnHeaders = array_values(array_filter($columnHeaders, function($el) { return $el != "wdt_id"; }));
+        $columnHeaders = array_values(array_filter($columnHeaders, function ($el) {
+            return $el != "wdt_id";
+        }));
 
         //Error handling
         try {
@@ -1703,23 +1812,26 @@ class WDTConfigController {
             $columnQuoteEnd
         );
 
-        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(),'upload');
+        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(), 'upload');
 
         return $objSourceFile->getTableData();
     }
 
     /**
      * Create insert statement beginning
+     *
      * @param $tableName
      * @param $columnHeaders
      * @param $columnQuoteStart
      * @param $columnQuoteEnd
+     *
      * @return string
      */
-    public static function createInsertStatement($tableName, $columnHeaders, $columnQuoteStart, $columnQuoteEnd) {
+    public static function createInsertStatement($tableName, $columnHeaders, $columnQuoteStart, $columnQuoteEnd)
+    {
         return "INSERT INTO "
             . $tableName . " ( "
-            .implode(
+            . implode(
                 ', ',
                 array_map(
                     function ($header) use ($columnQuoteStart, $columnQuoteEnd) {
@@ -1736,6 +1848,7 @@ class WDTConfigController {
      *
      * @param $builder
      * @param $type
+     *
      * @return array
      */
     public static function getAllTablesAndChartsForPageBuilders($builder, $type)
@@ -1750,12 +1863,12 @@ class WDTConfigController {
         $allItems = $wpdb->get_results($query, ARRAY_A);
 
         if ($builder === 'avada' || $builder === 'elementor' || $builder === 'divi') {
-            $returnData[0] = esc_attr__( 'Select a ' . $selectedType, 'wpdatatables' );
+            $returnData[0] = esc_attr__('Select a ' . $selectedType, 'wpdatatables');
         } else if ($builder === 'bakery') {
-            $returnData[__( 'Select a ' . $selectedType, 'wpdatatables' )] = '';
+            $returnData[__('Select a ' . $selectedType, 'wpdatatables')] = '';
         }
 
-        if ($allItems != null){
+        if ($allItems != null) {
             foreach ($allItems as $item) {
                 switch ($builder) {
                     case 'gutenberg':
@@ -1767,7 +1880,7 @@ class WDTConfigController {
                     case 'avada':
                     case 'elementor':
                     case 'divi':
-                        $returnData[$item['id']] = $item['title']  . ' (id: ' . $item['id'] . ')';
+                        $returnData[$item['id']] = $item['title'] . ' (id: ' . $item['id'] . ')';
                         break;
                     case 'bakery':
                         $returnData[$item['title']] = $item['id'];
@@ -1775,27 +1888,32 @@ class WDTConfigController {
                 }
             }
         }
+
         return $returnData;
     }
 
-    public static function wdt_create_chart_notice() {
+    public static function wdt_create_chart_notice()
+    {
 
         return 'Please create a wpDataChart first. You can check out how on this <a target="_blank" href="https://wpdatatables.com/documentation/wpdatacharts/creating-charts-wordpress-wpdatachart-wizard/">link</a>.';
 
     }
 
-    public static function wdt_select_chart_notice() {
+    public static function wdt_select_chart_notice()
+    {
 
         return 'Please select a wpDataChart.';
 
     }
 
-    public static function wdt_create_table_notice() {
+    public static function wdt_create_table_notice()
+    {
 
         return 'Please create a wpDataTable first. You can find detailed instructions in our docs on this <a target="_blank" href="https://wpdatatables.com/documentation/general/features-overview/">link</a>.';
     }
 
-    public static function wdt_select_table_notice() {
+    public static function wdt_select_table_notice()
+    {
 
         return 'Please select a wpDataTable.';
     }

@@ -128,7 +128,7 @@ class wpDataTableConstructor
             $columnDateTimeType = 'TIMESTAMP';
         }
 
-        $column_header = $columnQuoteStart . $column_header. $columnQuoteEnd;
+        $column_header = $columnQuoteStart . $column_header . $columnQuoteEnd;
 
         switch ($column['type']) {
             case 'input':
@@ -252,7 +252,7 @@ class wpDataTableConstructor
             'rangeMaxValueDisplay' => 'default',
             'customMaxRangeValue' => null,
             'filterLabel' => '',
-            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
+            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '' : sanitize_text_field($column['default_value']),
             'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
             'searchInSelectBox' => 1,
             'searchInSelectBoxEditing' => 1,
@@ -306,7 +306,11 @@ class wpDataTableConstructor
                 'advanced_settings' => json_encode(array(
 	                'show_table_description' => false,
 	                'table_description' => sanitize_textarea_field($this->_table_data['table_description']),
-					)),
+                    'fixed_columns' => false,
+                    'fixed_left_columns_number' => 0,
+                    'fixed_right_columns_number' => 0,
+                    'fixed_header' => false,
+                )),
             )
         );
 
@@ -410,7 +414,6 @@ class wpDataTableConstructor
         if ($isPostgreSql) {
             $create_statement .= " UNIQUE (wdt_ID))";
         }
-
 
 
         // Call the create statement on WPDB or on external DB if it is defined
@@ -967,6 +970,7 @@ class wpDataTableConstructor
         if (!empty($this->_group_arr)) {
             $query .= "\nGROUP BY " . implode(', ', $this->_group_arr);
         }
+
         return $query;
     }
 
@@ -1006,7 +1010,6 @@ class wpDataTableConstructor
             }
 
 
-
             $this->_where_arr[$connected_column_arr[0]][] = self::buildWhereCondition(
                 $join_rule['initiatorTable'] . '.' . $columnQuoteStart . $join_rule['initiatorColumn'] . $columnQuoteEnd,
                 'eq',
@@ -1017,9 +1020,11 @@ class wpDataTableConstructor
 
     }
 
-    private function _quouteColumnNames($columnNames, $columnQuoteStart, $columnQuoteEnd) {
+    private function _quouteColumnNames($columnNames, $columnQuoteStart, $columnQuoteEnd)
+    {
         return array_map(function ($value) use ($columnQuoteStart, $columnQuoteEnd) {
             $parts = explode('.', $value);
+
             return ($parts[0] . ".$columnQuoteStart" . $parts[1] . "$columnQuoteEnd");
         }, $columnNames);
     }
@@ -1076,6 +1081,7 @@ class wpDataTableConstructor
         if (!empty($this->_group_arr)) {
             $query .= "\nGROUP BY " . implode(', ', $this->_group_arr);
         }
+
         return $query;
 
     }
@@ -1269,7 +1275,7 @@ class wpDataTableConstructor
             return;
         }
 
-        foreach ($this->_table_data['groupingRules'] AS $grouping_rule) {
+        foreach ($this->_table_data['groupingRules'] as $grouping_rule) {
             if (empty($grouping_rule)) {
                 continue;
             }
@@ -1340,8 +1346,9 @@ class wpDataTableConstructor
             strpos($lowerSQLQuery, 'alter ') !== false ||
             strpos($lowerSQLQuery, 'alter--') !== false ||
             strpos($lowerSQLQuery, 'alter#') !== false ||
-            strpos($lowerSQLQuery, 'alter/*') !== false)
+            strpos($lowerSQLQuery, 'alter/*') !== false) {
             return __('<div class="alert alert-danger"><i class="wpdt-icon-exclamation-triangle"></i>No results found. Please check if this query is correct and DOES NOT contain SQL reserved words! Table Constructor needs a query that returns data to build a wpDataTable.', 'wpdatatables');
+        }
 
         if (Connection::isSeparate($connection)) {
             $sql = Connection::getInstance($connection);
@@ -1382,6 +1389,7 @@ class wpDataTableConstructor
                 $ret_val .= '<br>Error: ' . $wpdb->last_error . '</div>';
             }
         }
+
         return $ret_val;
     }
 
@@ -1405,7 +1413,7 @@ class wpDataTableConstructor
         $tableData['query'] = wdtSanitizeQuery(($tableData['query']));
 
         $table_array = array(
-            'title' =>  sanitize_text_field($tableData['name']),
+            'title' => sanitize_text_field($tableData['name']),
             'table_type' => 'mysql',
             'connection' => $tableData['connection'],
             'content' => '',
@@ -1435,6 +1443,10 @@ class wpDataTableConstructor
             'advanced_settings' => json_encode(array(
 	            'show_table_description' => false,
 	            'table_description' => sanitize_textarea_field($tableData['table_description']),
+                'fixed_columns' => false,
+                'fixed_left_columns_number' => 0,
+                'fixed_right_columns_number' => 0,
+                'fixed_header' => false,
             )),
         );
 
@@ -1580,16 +1592,18 @@ class wpDataTableConstructor
      * Generates a table based on the provided file and shows a preview
      *
      * @param $tableData
+     *
      * @return array
      * @throws WDTException
      */
     public function previewFileTable($tableData)
     {
         try {
-            if(!($file = self::isUploadedFileEmpty($tableData['file'])))
+            if (!($file = self::isUploadedFileEmpty($tableData['file']))) {
                 throw new Exception(__('Empty file', 'wpdatatables'));
+            }
 
-            $tableDataObject = json_decode(json_encode($tableData), FALSE);
+            $tableDataObject = json_decode(json_encode($tableData), false);
             $objSourceFile = new wpDataTableSourceFile($file, $tableDataObject);
 
             $objSourceFile->setIsPreview(1);
@@ -1609,9 +1623,9 @@ class wpDataTableConstructor
 
         $ret_val = '';
 
-        if ( ! current_user_can( 'unfiltered_html' ) ) {
-            foreach ($namedDataArray as $key => &$nameData){
-                foreach ($headingsArray as &$heading){
+        if (!current_user_can('unfiltered_html')) {
+            foreach ($namedDataArray as $key => &$nameData) {
+                foreach ($headingsArray as &$heading) {
                     $heading = wp_kses_post($heading);
                     $nameData[$heading] = wp_kses_post($nameData[$heading]);
                 }
@@ -1633,6 +1647,7 @@ class wpDataTableConstructor
      * Reads the data from file in the DB and generates a wpDataTable
      *
      * @param $tableData
+     *
      * @return mixed|string
      * @throws WDTException
      * @throws Exception
@@ -1643,8 +1658,9 @@ class wpDataTableConstructor
         $columnDateInputFormat = array();
         $columnHeadersTemp = array();
 
-        if(!($file = wpDataTableConstructor::isUploadedFileEmpty($tableData['file'])))
+        if (!($file = wpDataTableConstructor::isUploadedFileEmpty($tableData['file']))) {
             return __('Empty file', 'wpdatatables');
+        }
 
         for ($i = 0; $i < count($tableData['columns']); $i++) {
             if ($tableData['columns'][$i]['orig_header'] == '%%NEW_COLUMN%%') {
@@ -1656,7 +1672,7 @@ class wpDataTableConstructor
             $columnHeadersTemp[] = $columnHeader;
         }
 
-        $tableDataObject = json_decode(json_encode($tableData), FALSE);
+        $tableDataObject = json_decode(json_encode($tableData), false);
         $objSourceFile = new wpDataTableSourceFile(
             $file,
             $tableDataObject,
@@ -1694,10 +1710,13 @@ class wpDataTableConstructor
 
     /**
      * Helper function to determine if an uploaded file is empty and converts upload URL to Path
+     *
      * @param $file
+     *
      * @return mixed|string|string[]|void
      */
-    public static function isUploadedFileEmpty($file) {
+    public static function isUploadedFileEmpty($file)
+    {
         if (!empty($file)) {
             $xls_url = urldecode(esc_url($file));
             $uploads_dir = wp_upload_dir();
@@ -1706,6 +1725,7 @@ class wpDataTableConstructor
             } else {
                 $xls_url = str_replace($uploads_dir['baseurl'], $uploads_dir['basedir'], $xls_url);
             }
+
             return $xls_url;
         } else {
             return 0;
@@ -1717,6 +1737,7 @@ class wpDataTableConstructor
      *
      * @param $tableId
      * @param $columnName
+     *
      * @throws Exception
      */
     public static function deleteManualColumn($tableId, $columnName, $columnType = null)
@@ -1771,6 +1792,7 @@ class wpDataTableConstructor
         }
 
     }
+
     /**
      * Add a new column to manually generated table
      */

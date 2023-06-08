@@ -140,7 +140,7 @@ function wdtSaveGoogleSettings()
         exit();
     }
     $result = [];
-    $settings = json_decode(stripslashes_deep($_POST['settings']),true);
+    $settings = json_decode(stripslashes_deep($_POST['settings']), true);
     if (json_last_error() === JSON_ERROR_NONE) {
         WDTSettingsController::saveGoogleSettings($settings);
         $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
@@ -148,7 +148,7 @@ function wdtSaveGoogleSettings()
         exit();
     } else {
         $result['error'] = 'Data don\'t have valid JSON format';
-        echo json_encode($result) ;
+        echo json_encode($result);
         exit();
     }
 
@@ -535,6 +535,11 @@ function generateSimpleTableID($wpDataTableRows)
                     'verticalScrollHeight' => 600,
                     'show_table_description' => false,
                     'table_description' => sanitize_textarea_field($wpDataTableRows->getTableDescription()),
+                    'fixed_header' => 0,
+                    'fixed_header_offset' => 0,
+                    'fixed_columns' => 0,
+                    'fixed_left_columns_number' => 0,
+                    'fixed_right_columns_number' => 0
                 )
             ),
         )
@@ -562,10 +567,10 @@ function wdtSaveDataSimpleTable()
     $rowsData = WDTConfigController::sanitizeRowDataSimpleTable($rowsData);
     $result = new stdClass();
 
-    if ($tableSettings->content->mergedCells){
+    if ($tableSettings->content->mergedCells) {
         $mergedCells = $tableSettings->content->mergedCells;
-        foreach ($mergedCells as $mergedCell){
-            if($mergedCell->row == 0 && $mergedCell->rowspan > 1){
+        foreach ($mergedCells as $mergedCell) {
+            if ($mergedCell->row == 0 && $mergedCell->rowspan > 1) {
                 $turnOffSimpleHeader = 1;
             }
         }
@@ -607,11 +612,11 @@ function wdtSaveDataSimpleTable()
             if ($wpDataTableRows->checkIsExistTableID($tableID)) {
                 $wpDataTableRows->deleteRowsData($tableID);
             }
-            foreach ($rowsData as $rowData){
+            foreach ($rowsData as $rowData) {
                 WDTConfigController::saveRowData($rowData, $tableID);
             }
             $wpDataTableRows = WPDataTableRows::loadWpDataTableRows($tableID);
-            $result->reload =  $wpDataTableRows->getTableSettingsData()->content->reloadCounter;
+            $result->reload = $wpDataTableRows->getTableSettingsData()->content->reloadCounter;
             $result->tableHTML = $wpDataTableRows->generateTable($tableID);
         } catch (Exception $e) {
             $result->error = ltrim($e->getMessage(), '<br/><br/>');
@@ -812,8 +817,8 @@ function wdtConstructorReadFileData()
     $tableData['connection'] = sanitize_text_field($tableData['connection']);
     $tableData['file'] = sanitize_text_field($tableData['file']);
 
-    if(isset($tableData['columns'])){
-        foreach ($tableData['columns'] as $columnKey => $column){
+    if (isset($tableData['columns'])) {
+        foreach ($tableData['columns'] as $columnKey => $column) {
             $tableData['columns'][$columnKey] = array_map('sanitize_text_field', $column);
         }
     }
@@ -997,7 +1002,7 @@ function wdtReadDistinctValuesFromTable()
     $columnData = WDTConfigController::loadSingleColumnFromDB($columnId);
     $column = $wpDataTable->getColumn($columnData['orig_header']);
 
-    $distValues = WDTColumn::getPossibleValuesRead($column, false, $tableData );
+    $distValues = WDTColumn::getPossibleValuesRead($column, false, $tableData);
     echo json_encode($distValues);
     exit();
 }
@@ -1009,7 +1014,7 @@ add_action('wp_ajax_wpdatatable_get_column_distinct_values', 'wdtReadDistinctVal
  */
 function wdtGetNestedJsonRoots()
 {
-    if ( !current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtEditNonce') ) {
+    if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtEditNonce')) {
         exit();
     }
     global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
@@ -1033,16 +1038,16 @@ function wdtGetNestedJsonRoots()
     $response = $nestedJSON->getResponse($tableID);
 
     if (!is_array($response)) {
-        wp_send_json_error( array( 'msg' => $response ) );
+        wp_send_json_error(array('msg' => $response));
     }
 
-    $roots = $nestedJSON->prepareRoots( 'root', '', array(), $response);
+    $roots = $nestedJSON->prepareRoots('root', '', array(), $response);
 
-    if ( empty( $roots ) ) {
-        wp_send_json_error( array( 'msg' => esc_html__("Unable to retrieve data. Roots empty.", 'wpdatatables') ) );
+    if (empty($roots)) {
+        wp_send_json_error(array('msg' => esc_html__("Unable to retrieve data. Roots empty.", 'wpdatatables')));
     }
 
-    wp_send_json_success( array( 'url' => $nestedJSON->getUrl(), 'roots' => $roots ) );
+    wp_send_json_success(array('url' => $nestedJSON->getUrl(), 'roots' => $roots));
 }
 
 add_action('wp_ajax_wpdatatables_get_nested_json_roots', 'wdtGetNestedJsonRoots');
@@ -1144,7 +1149,7 @@ function wdtDeactivatePlugin()
     /** @var string $slug */
     $slug = filter_var($_POST['slug'], FILTER_SANITIZE_STRING);
 
-    switch ($slug){
+    switch ($slug) {
         case 'wpdatatables':
             $purchaseCode = get_option('wdtPurchaseCodeStore');
             break;

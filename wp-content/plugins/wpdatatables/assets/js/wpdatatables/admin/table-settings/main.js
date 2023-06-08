@@ -17,8 +17,9 @@
          */
         $('#wdt-add-data-source-input').attr('disabled', 'disabled');
         $('#wdt-add-data-browse-button').attr('disabled', 'disabled');
+
         function updateSourceFileDataSelected() {
-            if(sourceFileDataSelected()) {
+            if (sourceFileDataSelected()) {
                 $('#wdt-add-data-source-input').removeAttr('disabled');
                 $('#wdt-add-data-browse-button').removeAttr('disabled');
             } else {
@@ -26,9 +27,11 @@
                 $('#wdt-add-data-browse-button').attr('disabled', 'disabled');
             }
         }
+
         function sourceFileDataSelected() {
             return $('#wdt-source-file-data').val() !== '';
         }
+
         $('#wdt-source-file-data').change(updateSourceFileDataSelected);
 
         /**
@@ -43,6 +46,23 @@
          */
         $('#wdt-file-location').change(function (e) {
             wpdatatable_config.setFileLocation($(this).val());
+        });
+
+        $('#wdt-fixed-header').change(function (e) {
+            wpdatatable_config.setFixedHeader($(this).is(':checked') ? 1 : 0);
+        });
+        $('#wdt-fixed-header-offset').change(function (e) {
+            wpdatatable_config.setFixedHeaderOffset($(this).val());
+        });
+
+        $('#wdt-fixed-columns').change(function (e) {
+            wpdatatable_config.setFixedColumns($(this).is(':checked') ? 1 : 0);
+        });
+        $('#wdt-fixed-columns-left-number').change(function (e) {
+            wpdatatable_config.setLeftFixedColumnNumber($(this).val());
+        });
+        $('#wdt-fixed-columns-right-number').change(function (e) {
+            wpdatatable_config.setRightFixedColumnNumber($(this).val());
         });
 
         /**
@@ -365,7 +385,7 @@
         /**
          * Toggle duplicate button
          */
-        $('#wdt-enable-duplicate-button').on('change', function(e) {
+        $('#wdt-enable-duplicate-button').on('change', function (e) {
             wpdatatable_config.setEnableDuplicateButton($(this).is(':checked') ? 1 : 0);
             updateEditButtons($(this).is(':checked') ? 1 : 0);
         });
@@ -403,7 +423,7 @@
 
             // Show/hide PDF export options
             if (tableToolsSelection.includes('pdf')) {
-                if( !$('div.pdf-export-options').is(":visible")){
+                if (!$('div.pdf-export-options').is(":visible")) {
                     $('div.pdf-export-options').animateFadeIn();
                 }
             } else {
@@ -457,43 +477,43 @@
         /**
          * Set Placeholder VAR 4
          */
-        $('#wdt-var4-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar4( $(this).val() );
+        $('#wdt-var4-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar4($(this).val());
         });
 
         /**
          * Set Placeholder VAR 5
          */
-        $('#wdt-var5-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar5( $(this).val() );
+        $('#wdt-var5-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar5($(this).val());
         });
 
         /**
          * Set Placeholder VAR 6
          */
-        $('#wdt-var6-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar6( $(this).val() );
+        $('#wdt-var6-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar6($(this).val());
         });
 
         /**
          * Set Placeholder VAR 7
          */
-        $('#wdt-var7-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar7( $(this).val() );
+        $('#wdt-var7-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar7($(this).val());
         });
 
         /**
          * Set Placeholder VAR 8
          */
-        $('#wdt-var8-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar8( $(this).val() );
+        $('#wdt-var8-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar8($(this).val());
         });
 
         /**
          * Set Placeholder VAR 9
          */
-        $('#wdt-var9-placeholder').change(function(e){
-            wpdatatable_config.setPlaceholderVar9( $(this).val() );
+        $('#wdt-var9-placeholder').change(function (e) {
+            wpdatatable_config.setPlaceholderVar9($(this).val());
         });
 
         /**
@@ -680,7 +700,7 @@
         $('.wdt-reset-customize-options').click(function (e) {
             e.preventDefault();
             $('#customize-table-settings input.cp-value').val('').change();
-            $('#customize-table-settings .wpcolorpicker-icon i').css('background','#fff');
+            $('#customize-table-settings .wpcolorpicker-icon i').css('background', '#fff');
             wpdatatable_config.tableFontColorSettings = _.mapObject(
                 wpdatatable_config.tableFontColorSettings,
                 function (color) {
@@ -690,8 +710,8 @@
             wpdatatable_config.setTableCustomCss('');
             wpdatatable_config.setLanguage('');
             wpdatatable_config.setTableSkin('');
-            $('#wdt-table-remove-borders').prop( 'checked', false ).change();
-            $('#wdt-table-remove-borders-header').prop( 'checked', false ).change();
+            $('#wdt-table-remove-borders').prop('checked', false).change();
+            $('#wdt-table-remove-borders-header').prop('checked', false).change();
         });
 
         /**
@@ -753,7 +773,7 @@
             } else if ($(this).val() === 'foreignkey') {
                 if ($.inArray(wpdatatable_config.currentOpenColumn.filter_type, ['select', 'checkbox']) !== -1) {
                     $('#wdt-column-exact-filtering').prop('checked', 1).change();
-                    $('#wdt-column-range-slider').prop('checked',1).change();
+                    $('#wdt-column-range-slider').prop('checked', 1).change();
                 }
                 $('div.wdt-manual-list-enter-block').hide();
                 $('div.wdt-foreign-key-block').show();
@@ -761,7 +781,7 @@
                 $('.wdt-possible-values-ajax-block').hide();
                 $('.wdt-and-logic-block').hide();
                 $('#wdt-and-logic').prop('checked', false);
-                if(wpdatatable_config.edit_only_own_rows == 1) {
+                if (wpdatatable_config.edit_only_own_rows == 1) {
                     $('.wdt-possible-values-foreign-keys-block').show();
                 } else {
                     $('.wdt-possible-values-foreign-keys-block').hide();
@@ -908,7 +928,7 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
-                if ($('#wdt-column-filter-type').val() === 'number-range' ) {
+                if ($('#wdt-column-filter-type').val() === 'number-range') {
                     $('div.wdt-number-range-slider').show();
                 }
             } else if ($(this).val() == 'string') {
@@ -1040,7 +1060,7 @@
                 if ($filterInputTo.data('DateTimePicker') != undefined)
                     $filterInputTo.data('DateTimePicker').destroy();
 
-                if (filterType == 'number-range' && $.inArray(columnType, ['float', 'int']) !== -1){
+                if (filterType == 'number-range' && $.inArray(columnType, ['float', 'int']) !== -1) {
                     $('div.wdt-number-range-slider').show();
                     typeAttr = 'number';
 
@@ -1113,7 +1133,7 @@
 
                 if (wpdatatable_config.currentOpenColumn.possibleValuesType === 'foreignkey') {
                     $('#wdt-column-exact-filtering').prop('checked', 1).change();
-                    $('#wdt-column-range-slider').prop('checked',1).change();
+                    $('#wdt-column-range-slider').prop('checked', 1).change();
                 }
 
                 var options = '';
@@ -1460,10 +1480,10 @@
          */
         $(document).on('click', 'button.wdt-apply', function (e) {
 
-            if($('#wdt-add-data-source-input').val() && $('#wdt-source-file-data').val()) {
+            if ($('#wdt-add-data-source-input').val() && $('#wdt-source-file-data').val()) {
                 let selectedFileSourceOption = $('#wdt-source-file-data').val();
                 let alertSaveMessage;
-                switch(selectedFileSourceOption) {
+                switch (selectedFileSourceOption) {
                     case 'replaceTableData':
                         alertSaveMessage = wpdatatables_edit_strings.selected_replace_data_option;
                         break;
@@ -1487,7 +1507,7 @@
         function continueSaveChanges() {
 
             if (wpdatatable_config.table_type == 'gravity' ||
-                wpdatatable_config.table_type == 'formidable' ) return;
+                wpdatatable_config.table_type == 'formidable') return;
 
             // Validation for valid URL link of Google spreadsheet
             if (wpdatatable_config.table_type == 'google_spreadsheet' && wpdatatable_config.content.indexOf("2PACX") != -1) {
@@ -1530,7 +1550,7 @@
             let file_source_action = $('#wdt-source-file-data').val();
             let file = ($('#wdt-add-data-source-input').val() ? $('#wdt-add-data-source-input').val() : 0)
 
-            if (wpdatatable_config.table_type === 'nested_json'){
+            if (wpdatatable_config.table_type === 'nested_json') {
 
                 wpdatatable_config.jsonAuthParams = {
                     url: $('#wdt-nested-json-url').val(),
@@ -1542,18 +1562,18 @@
                     root: $('#wdt-nested-json-root').val(),
                 };
 
-                if (wpdatatable_config.jsonAuthParams.root === ''){
+                if (wpdatatable_config.jsonAuthParams.root === '') {
                     wdtNotify(wpdatatables_edit_strings.error, 'JSON roots can not be empty. Please set proper JSON roots or insert proper JSON params and click on Fetch JSON button again to get valid roots from JSON URL.', 'danger');
                     return;
                 }
-                if (wpdatatable_config.jsonAuthParams.url === ''){
+                if (wpdatatable_config.jsonAuthParams.url === '') {
                     $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                     $('.wdt-table-settings .nested-json-roots').addClass('hidden');
                     wdtNotify(wpdatatables_edit_strings.error, 'JSON URL can not be empty', 'danger');
                     return;
                 }
-                if ( wpdatatable_config.jsonAuthParams.authOption !== ''){
-                    if ( wpdatatable_config.jsonAuthParams.username === '' || wpdatatable_config.jsonAuthParams.password === ''){
+                if (wpdatatable_config.jsonAuthParams.authOption !== '') {
+                    if (wpdatatable_config.jsonAuthParams.username === '' || wpdatatable_config.jsonAuthParams.password === '') {
                         wdtNotify(wpdatatables_edit_strings.error, 'Credentials can not be empty', 'danger');
                         return;
                     }
@@ -1616,7 +1636,7 @@
                     }
 
                     $('#wdt-add-data-source-input').val('');
-                    $('#wdt-source-file-data').selectpicker('val','');
+                    $('#wdt-source-file-data').selectpicker('val', '');
                     $('#wdt-add-data-source-input').attr('disabled', 'disabled');
                     $('#wdt-add-data-browse-button').attr('disabled', 'disabled');
                 },
@@ -1625,7 +1645,7 @@
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
                     $('#wdt-add-data-source-input').val('');
-                    $('#wdt-source-file-data').selectpicker('val','');
+                    $('#wdt-source-file-data').selectpicker('val', '');
                     $('#wdt-add-data-source-input').attr('disabled', 'disabled');
                     $('#wdt-add-data-browse-button').attr('disabled', 'disabled');
                 }
@@ -1822,6 +1842,17 @@
             wpdatatable_config.dataTable = $('#wpdatatable-preview-container table.wpDataTable').DataTable();
             $('div.column-settings').removeClass('hidden');
             wpdatatable_config.drawColumnSettingsButtons($('#wpdatatable-preview-container table'));
+
+            if (wpdatatable_config.table_type !== "simple" && !wpdatatable_config.server_side) {
+                if (wpdatatable_config.fixed_header) {
+                    wpdatatable_config.dataTable.fixedHeader.enable();
+                    wpdatatable_config.dataTable.fixedHeader.adjust();
+                }
+                if (wpdatatable_config.fixed_columns && !wpdatatable_config.filtering_form) {
+                    wpdatatable_config.dataTable.fixedColumns().left(wpdatatable_config.fixed_left_columns_number);
+                    wpdatatable_config.dataTable.fixedColumns().right(wpdatatable_config.fixed_right_columns_number);
+                }
+            }
         }
 
         /**
@@ -1867,7 +1898,7 @@
          */
         $('#wdt-nested-json-auth-option').change(function (e) {
             let type = $(this).val();
-            switch( type ){
+            switch (type) {
                 case 'basic_auth':
                     jQuery('.wdt-table-settings .nested-json-basic-auth-inputs').removeClass('hidden');
                     break;
@@ -1877,7 +1908,7 @@
                     jQuery('#wdt-nested-json-password').val('');
                     break;
             }
-            jQuery('#wdt-nested-json-auth-option').val( type ).selectpicker('refresh');
+            jQuery('#wdt-nested-json-auth-option').val(type).selectpicker('refresh');
         });
 
         /**
@@ -1894,7 +1925,7 @@
                     method: $('#wdt-nested-json-get-type').selectpicker('val')
                 };
 
-            if (url === ''){
+            if (url === '') {
                 $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                 $('.wdt-table-settings .nested-json-roots').addClass('hidden');
                 wdtNotify(wpdatatables_edit_strings.error, 'JSON URL can not be empty', 'danger');
@@ -1902,9 +1933,9 @@
             }
             params.url = url;
             params.customHeaders = customHeaders;
-            if (authOption !== ''){
+            if (authOption !== '') {
                 params.authOption = authOption;
-                if (username === '' || password === ''){
+                if (username === '' || password === '') {
                     wdtNotify(wpdatatables_edit_strings.error, 'Credentials can not be empty', 'danger');
                     return;
                 }
@@ -1915,19 +1946,19 @@
             // Add custom loader
             let loader = document.createElement("div");
             loader.classList.add("nested-json-loader");
-            $('#main-table-settings').css('opacity','0.5').append(loader)
+            $('#main-table-settings').css('opacity', '0.5').append(loader)
 
             $.ajax({
                 url: ajaxurl,
                 method: 'POST',
                 data: {
                     action: 'wpdatatables_get_nested_json_roots',
-                    wdtNonce:  $('#wdtNonce').val(),
+                    wdtNonce: $('#wdtNonce').val(),
                     params: JSON.stringify(params),
                     tableConfig: JSON.stringify(wpdatatable_config.getJSON())
                 },
                 success: function (data) {
-                    if(data.success) {
+                    if (data.success) {
                         var options = '';
                         $.each(data.data.roots, function (i, name) {
                             options += '<option value="' + name + '">' + name + '</option>';
@@ -1935,8 +1966,8 @@
                         $('.wdt-table-settings #wdt-nested-json-root').html(options).selectpicker('refresh');
                         $('.wdt-table-settings .nested-json-roots').removeClass('hidden');
                         $('#main-table-settings .nested-json-loader').remove();
-                        $('#main-table-settings').css('opacity','1')
-                        jQuery('button.wdt-apply').prop( 'disabled', '' );
+                        $('#main-table-settings').css('opacity', '1')
+                        jQuery('button.wdt-apply').prop('disabled', '');
                         wdtNotify(
                             wpdatatables_edit_strings.success,
                             wpdatatables_edit_strings.getJsonRoots,
@@ -1946,8 +1977,8 @@
                         $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                         $('.wdt-table-settings .nested-json-roots').addClass('hidden');
                         $('#main-table-settings .nested-json-loader').remove();
-                        $('#main-table-settings').css('opacity','1')
-                        $('button.wdt-apply').prop( 'disabled', 'disabled' );
+                        $('#main-table-settings').css('opacity', '1')
+                        $('button.wdt-apply').prop('disabled', 'disabled');
                         wdtNotify('Error!', wpdatatables_edit_strings.errorText, 'danger');
                     }
                 },
@@ -1955,8 +1986,8 @@
                     $('.wdt-table-settings #wdt-nested-json-root').html('').selectpicker('refresh');
                     $('.wdt-table-settings .nested-json-roots').addClass('hidden');
                     $('#main-table-settings .nested-json-loader').remove();
-                    $('#main-table-settings').css('opacity','1')
-                    $('button.wdt-apply').prop( 'disabled', 'disabled' );
+                    $('#main-table-settings').css('opacity', '1')
+                    $('button.wdt-apply').prop('disabled', 'disabled');
                     let message = xhr.responseText;
                     wdtNotify('Error!', message, 'danger');
                 }

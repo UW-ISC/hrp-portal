@@ -383,8 +383,10 @@ class WDTTools
                     }
                 }
             }
-            $d = array_combine($keys, $arr[$j]);
-            $returnArray[$j] = $d;
+            if (count($keys) == count($arr[$j])) {
+                $d = array_combine($keys, $arr[$j]);
+                $returnArray[$j] = $d;
+            }
         }
         return $returnArray;
     }
