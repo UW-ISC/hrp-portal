@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.07';
+	const CURRENT_MLA_VERSION = '3.09';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -96,7 +96,7 @@ class MLACore {
 	const MLA_DEBUG_CATEGORY_THUMBNAIL = 0x00000008;
 
 	/**
-	 * Constant to log IPTC/EXIF/XMP/PDF metadata activity
+	 * Constant to log IPTC/EXIF/WP/XMP/PDF metadata activity
 	 *
 	 * @since 2.41
 	 *
@@ -195,7 +195,7 @@ class MLACore {
 	const MLA_ADMIN_SINGLE_CUSTOM_FIELD_PURGE = 'single_item_custom_field_purge';
 
 	/**
-	 * mla_admin_action value for mapping IPTC/EXIF metadata
+	 * mla_admin_action value for mapping IPTC/EXIF/WP metadata
 	 *
 	 * @since 1.00
 	 *
@@ -204,7 +204,7 @@ class MLACore {
 	const MLA_ADMIN_SINGLE_MAP = 'single_item_map';
 
 	/**
-	 * mla_admin_action value for purging IPTC/EXIF metadata
+	 * mla_admin_action value for purging IPTC/EXIF/WP metadata
 	 *
 	 * @since 2.60
 	 *
@@ -444,9 +444,17 @@ class MLACore {
 			MLACore::$process_mla_gallery_in = false;
 		}
 
-		// Look for Postie chron job
+		// Load mapping rule support for Postie chron job
 		if ( isset( $_REQUEST['doing_wp_cron'] ) && class_exists( 'Postie', false ) ) {
-			add_action( 'postie_session_start', 'MLACore::mla_postie_session_start' );
+			add_action( 'postie_session_start', 'MLACore::mla_cron_mapping_support' );
+		}
+
+		// Load mapping rule support for Bulk Media Register
+		if ( ( defined( 'DOING_CRON' ) && DOING_CRON ) && class_exists( 'BulkMediaRegister', false ) ) {
+			add_action( 'bmr_regist', 'MLACore::mla_cron_mapping_support', 9 );
+		} elseif ( class_exists( 'BulkMediaRegisterCron', false ) ) {
+			// Load mapping rule support for Bulk Media Register Add On Wp Cron
+			add_action( 'bmr_cron_cli', 'MLACore::mla_cron_mapping_support', 9 );
 		}
 
 		/*
@@ -502,8 +510,8 @@ class MLACore {
 						$cookie = http_build_query( $cookie_array, '', '&' );
 						$current = time();
 						$secure = ( 'https' === parse_url( admin_url(), PHP_URL_SCHEME ) );
-						setcookie( 'wp-settings-' . $user_id, $cookie, time() + YEAR_IN_SECONDS, SITECOOKIEPATH, null, $secure );
-						setcookie( 'wp-settings-time-' . $user_id, $current, $current + YEAR_IN_SECONDS, SITECOOKIEPATH, null, $secure );
+						setcookie( 'wp-settings-' . $user_id, $cookie, time() + YEAR_IN_SECONDS, SITECOOKIEPATH, '', $secure );
+						setcookie( 'wp-settings-time-' . $user_id, $current, $current + YEAR_IN_SECONDS, SITECOOKIEPATH, '', $secure );
 						$_COOKIE['wp-settings-' . $user_id] = $cookie;
 						$_COOKIE['wp-settings-time-' . $user_id] = $current;
 					}
@@ -523,23 +531,29 @@ class MLACore {
 	 *
 	 * @since 2.90
 	 */
-	public static function mla_postie_session_start() {
-		// Template file and database access functions.
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
-		MLAQuery::initialize();
-
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
-		MLAData::initialize();
-
-		// Shortcode shim functions
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
-		MLAShortcodes::initialize();
-
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
-
-		// Plugin settings management
-		require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
-		MLAOptions::initialize();
+	public static function mla_cron_mapping_support() {
+		static $first_call = true;
+		
+		if ( $first_call ) {
+			// Template file and database access functions.
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
+			MLAQuery::initialize();
+	
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
+			MLAData::initialize();
+	
+			// Shortcode shim functions
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
+			MLAShortcodes::initialize();
+	
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+	
+			// Plugin settings management
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
+			MLAOptions::initialize();
+			
+			$first_call = false;
+		}
 	}
 
 	/**
@@ -1255,7 +1269,6 @@ class MLACore {
 			}
 			
 			$slug = 'c_' . $index++; // sanitize_title( $key ); Didn't handle HTML in name, e.g., "R><B"
-//error_log( __LINE__ . " mla_custom_field_support( {$key}, {$slug} ) value = " . var_export( $value, true ), 0 );
 
 			switch( $support_type ) {
 				case 'custom_columns':

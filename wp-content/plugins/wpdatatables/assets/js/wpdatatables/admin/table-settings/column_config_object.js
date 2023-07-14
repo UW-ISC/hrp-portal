@@ -16,7 +16,11 @@ var WDTColumn = function (column, parent_table) {
      * @type {null|string}
      */
     this.type = null;
-
+    /**
+     * Predefined Type of column
+     * @type {null|string}
+     */
+    this.predefinedType = null;
     /**
      * Original header of column. Must be unique within the table
      * @type {null|string}
@@ -394,6 +398,7 @@ var WDTColumn = function (column, parent_table) {
         this.text_after = column.text_after || null;
         this.text_before = column.text_before || null;
         this.type = column.type || null;
+        this.predefinedType = column.predefinedType || null;
         this.valuesList = column.valuesList || null;
         this.visible = typeof column.visible !== 'undefined' ? column.visible : 1;
         this.width = column.width || null;

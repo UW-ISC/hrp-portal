@@ -233,7 +233,7 @@ add_action( 'admin_init', 'wck_cfc_create_boxes' );
 function wck_cfc_create_boxes_args(){
     $all_box_args = wp_cache_get( 'wck_all_box_args', 'wck' );
 
-    if ( $all_box_args !== false )
+    if ( $all_box_args !== false && !empty( $all_box_args ) )
         return $all_box_args;
 
     $all_box_args = array();

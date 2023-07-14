@@ -253,7 +253,6 @@ class ACP_Addon_MLA_Export_Strategy extends ACP_Export_Strategy {
 	 * @param WP_Query $request
 	 *
 	 * @since 2.71
-	 * @see   action:pre_get_posts
 	 */
 	public function mla_list_table_query_final_terms( $request ) {
 		$per_page = $this->get_num_items_per_iteration();
@@ -271,7 +270,6 @@ class ACP_Addon_MLA_Export_Strategy extends ACP_Export_Strategy {
 	 * @param WP_Query $query
 	 *
 	 * @since 2.71
-	 * @see   action:the_posts
 	 */
 	public function mla_list_table_prepare_items( $query ) {
 			$this->export( wp_list_pluck( $query->items, 'ID' ) );

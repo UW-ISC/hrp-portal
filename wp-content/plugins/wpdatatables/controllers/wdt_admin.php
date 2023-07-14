@@ -378,6 +378,21 @@ function wdtBrowseChartsEnqueue()
  */
 function wdtChartWizardEnqueue()
 {
+    $googleLibSource = get_option('wdtGoogleStableVersion') ? WDT_JS_PATH . 'wdtcharts/googlecharts/googlecharts.js' : '//www.gstatic.com/charts/loader.js';
+
+    $highChartLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts.js' : '//code.highcharts.com/highcharts.js';
+    $highChartMoreLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-more.js' : '//code.highcharts.com/highcharts-more.js';
+    $highChart3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-3D.js' : '//code.highcharts.com/highcharts-3d.js';
+    $highChartCylinderLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-cylinder.js' : '//code.highcharts.com/modules/cylinder.js';
+    $highChartHeatMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-heatmap.js' : '//code.highcharts.com/modules/heatmap.js';
+    $highChartFunnelLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel.js' : '//code.highcharts.com/modules/funnel.js';
+    $highChartFunnel3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel3D.js' : '//code.highcharts.com/modules/funnel3d.js';
+    $highChartTreeMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-treemap.js' : '//code.highcharts.com/modules/treemap.js';
+    $highChartExportingLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting.js' : '//code.highcharts.com/modules/exporting.js';
+    $highChartExportingDataLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting-data.js' : '//code.highcharts.com/modules/export-data.js';
+    $highChartAccessibilityLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-accessibility.js' : '//code.highcharts.com/modules/accessibility.js';
+
+    $apexChartLibSource = get_option('wdtApexStableVersion') ? WDT_JS_PATH . 'wdtcharts/apexcharts/apexcharts.js' : '//cdn.jsdelivr.net/npm/apexcharts';
     WDTTools::wdtUIKitEnqueue();
 
     wp_enqueue_style('wdt-dragula');
@@ -385,28 +400,28 @@ function wdtChartWizardEnqueue()
 
     wp_enqueue_script('wdt-jsrender');
     wp_enqueue_script('wdt-dragula');
-    wp_enqueue_script('wdt-google-charts', '//www.gstatic.com/charts/loader.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts', '//code.highcharts.com/highcharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-more', '//code.highcharts.com/highcharts-more.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-3d', '//code.highcharts.com/highcharts-3d.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-cylinder', '//code.highcharts.com/modules/cylinder.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-heatmap', '//code.highcharts.com/modules/heatmap.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-funnel', '//code.highcharts.com/modules/funnel.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-funnel3d', '//code.highcharts.com/modules/funnel3d.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-treemap', '//code.highcharts.com/modules/treemap.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-exporting', '//code.highcharts.com/modules/exporting.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-exporting-data', '//code.highcharts.com/modules/export-data.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-highcharts-accessibility', '//code.highcharts.com/modules/accessibility.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-apexcharts', '//cdn.jsdelivr.net/npm/apexcharts', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-google-charts', $googleLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-highcharts', $highChartLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-highcharts-more', $highChartMoreLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-highcharts-3d', $highChart3DLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-cylinder', $highChartCylinderLibSource , array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-heatmap', $highChartHeatMapLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-funnel', $highChartFunnelLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-funnel3d', $highChartFunnel3DLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-treemap', $highChartTreeMapLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-exporting', $highChartExportingLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-exporting-data', $highChartExportingDataLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-highcharts-accessibility', $highChartAccessibilityLibSource, array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-chart-js', WDT_JS_PATH . 'wdtcharts/chartjs/Chart.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-apexcharts', $apexChartLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-color-pickr');
     wp_enqueue_script('wdt-color-pickr-init');
-    wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wpdatatables/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wpdatatables/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-highcharts', WDT_JS_PATH . 'wpdatatables/wdt.highcharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-apexcharts', WDT_JS_PATH . 'wpdatatables/wdt.apexcharts.js', array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-wp-chart-js', WDT_JS_PATH . 'wpdatatables/wdt.chartJS.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-chart-wizard', WDT_JS_PATH . 'wdtcharts/wdt.chartWizard.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wp-google-chart', WDT_JS_PATH . 'wdtcharts/googlecharts/wdt.googleCharts.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wp-highcharts', WDT_JS_PATH . 'wdtcharts/highcharts/wdt.highcharts.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wp-apexcharts', WDT_JS_PATH . 'wdtcharts/apexcharts/wdt.apexcharts.js', array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-wp-chart-js', WDT_JS_PATH . 'wdtcharts/chartjs/wdt.chartJS.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
     wp_localize_script('wdt-chart-wizard', 'wpdatatablesEditStrings', WDTTools::getTranslationStrings());
@@ -530,6 +545,7 @@ function wdtAddOnsEnqueue()
 
 /**
  * Renders Browse Tables (wpDataTables) Page and handle wpDataTable delete
+ * @throws Exception
  */
 function wdtBrowseTables()
 {
@@ -562,7 +578,6 @@ function wdtBrowseTables()
 
     ob_start();
     $wdtBrowseTable->display();
-    /** @noinspection PhpUnusedLocalVariableInspection */
     $tableHTML = ob_get_contents();
     ob_end_clean();
 
@@ -580,6 +595,7 @@ function wdtBrowseTables()
 
 /**
  * Render Edit (Add from data source) Page
+ * @throws Exception
  */
 function wdtEdit()
 {
@@ -613,23 +629,21 @@ function wdtEdit()
     }
 
 
+    ob_start();
     if (isset($_GET['table_id']) && isset($_GET['simple'])) {
-        ob_start();
         include WDT_ROOT_PATH . 'templates/admin/table-settings/edit_simple_table.inc.php';
         $editPage = ob_get_contents();
         ob_end_clean();
 
         $editPage = apply_filters('wpdatatables_filter_edit_page_simple_table', $editPage);
-        echo $editPage;
     } else {
-        ob_start();
         include WDT_ROOT_PATH . 'templates/admin/table-settings/edit_table.inc.php';
         $editPage = ob_get_contents();
         ob_end_clean();
 
         $editPage = apply_filters('wpdatatables_filter_edit_page', $editPage);
-        echo $editPage;
     }
+    echo $editPage;
 }
 
 /**
@@ -654,6 +668,7 @@ function wdtMainDashboard()
 
 /**
  * Render Constructor (Create a Table) Page
+ * @throws Exception
  */
 function wdtConstructor()
 {
@@ -693,13 +708,13 @@ function wdtBrowseCharts()
     }
 
     if ($action === 'delete') {
-        $chartId = $_REQUEST['chart_id'];
+        $chartId = $_REQUEST["chart_id"];
 
         if (!is_array($chartId)) {
-            WPDataChart::deleteChart((int)$chartId);
+            WPDataChart::delete((int)$chartId);
         } else {
             foreach ($chartId as $singleChartId) {
-                WPDataChart::deleteChart((int)$singleChartId);
+                WPDataChart::delete((int)$singleChartId);
             }
         }
     }
@@ -709,7 +724,6 @@ function wdtBrowseCharts()
 
     ob_start();
     $wdtBrowseChartsTable->display();
-    /** @noinspection PhpUnusedLocalVariableInspection */
     $tableHTML = ob_get_contents();
     ob_end_clean();
 
@@ -725,6 +739,7 @@ function wdtBrowseCharts()
 
 /**
  * Render Chart Wizard (Create a Chart) Page
+ * @throws WDTException
  */
 function wdtChartWizard()
 {
@@ -733,27 +748,17 @@ function wdtChartWizard()
     }
 
     $chartId = isset($_GET['chart_id']) ? (int)$_GET['chart_id'] : false;
+    $chartEngine = isset($_GET['engine']) ? sanitize_text_field($_GET['engine']) : '';
     if (!empty($chartId)) {
         try {
-            $chartObj = new WPDataChart();
-            $chartObj->setId($chartId);
-            $chartObj->loadFromDB();
+            $chartData = [
+                'id' => $chartId,
+                'engine' => $chartEngine
+            ];
+            $chartObj = WPDataChart::build($chartData, true);
             $chartObj->prepareData();
-            $chartObj->shiftStringColumnUp();
-            switch ($chartObj->getEngine()) {
-                case 'google':
-                    $chartObj->prepareGoogleChartsRender();
-                    break;
-                case 'highcharts':
-                    $chartObj->prepareHighchartsRender();
-                    break;
-                case 'chartjs':
-                    $chartObj->prepareChartJSRender();
-                    break;
-                case 'apexcharts':
-                    $chartObj->prepareApexchartsRender();
-                    break;
-            }
+            $chartObj->shiftXAxisColumnUp();
+            $chartObj->prepareRender();
         } catch (Exception $e) {
             echo $e->getMessage();
             exit;

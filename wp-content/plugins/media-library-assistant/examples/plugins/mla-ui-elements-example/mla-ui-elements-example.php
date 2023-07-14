@@ -54,7 +54,7 @@
  * https://wordpress.org/support/topic/how-to-paginate-2-separate-gallery/
  *
  * @package MLA UI Elements Example
- * @version 2.04
+ * @version 2.05
  */
 
 /*
@@ -62,7 +62,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
 Author: David Lingren
-Version: 2.04
+Version: 2.05
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2022 David Lingren
@@ -96,7 +96,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.04';
+	const PLUGIN_VERSION = '2.05';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -161,15 +161,15 @@ class MLAUIElementsExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
 		}
 
 		// Add the run-time values to the arguments
 		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
 
 		// The remaining filters are only useful for front-end posts/pages; exit if in the admin section
 		if ( is_admin() )

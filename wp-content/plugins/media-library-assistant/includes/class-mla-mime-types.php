@@ -2054,10 +2054,12 @@ class MLAMime {
 
 		if ( is_array( $mla_upload_mimes ) ) {
 			$custom_types = $mla_upload_mimes['custom'];
+			$disabled_types = $mla_upload_mimes['disabled'];
 		} else {
 			$save_changes = true;
 			$mla_upload_mimes = array ( 'custom' => array(), 'disabled' => array(), 'description' => array(), 'icon_type' => array() );
 			$custom_types = array();
+			$disabled_types = false;
 		}
 
 		// separate out the non-core types
@@ -2123,6 +2125,7 @@ class MLAMime {
 				}
 
 				$key = strtolower( $array[0] );
+				$disabled = is_array( $disabled_types ) ? isset( $disabled_types[ $key ] ) : true;
 				self::$mla_upload_mime_descriptions[ $key ] = $array[4];
 				self::$mla_upload_mime_templates[ $key ] = array(
 					'post_ID' => ++self::$mla_upload_mime_highest_ID,
@@ -2131,7 +2134,7 @@ class MLAMime {
 					'mla_type' => $array[1],
 					'source' => 'mla',
 					'standard_source' => 'mla',
-					'disabled' => true,
+					'disabled' => $disabled,
 					'description' => $array[4],
 					'icon_type' => $array[2],
 					'wp_icon_type' => $array[2],
@@ -2148,6 +2151,7 @@ class MLAMime {
 		// Add the WordPress-standard (unfiltered) extensions, initialized to an active state
 		foreach ( $core_types as $key => $value ) {
 			$key = strtolower( $key );
+			$disabled = is_array( $disabled_types ) ? isset( $disabled_types[ $key ] ) : false;
 			if ( isset( self::$mla_upload_mime_templates[ $key ] ) ) {
 				$post_ID = self::$mla_upload_mime_templates[ $key ]['post_ID'];
 				$mla_type = self::$mla_upload_mime_templates[ $key ]['mla_type'];
@@ -2175,7 +2179,7 @@ class MLAMime {
 				'mla_type' => $mla_type,
 				'source' => 'core',
 				'standard_source' => 'core',
-				'disabled' => false,
+				'disabled' => $disabled,
 				'description' => $description ,
 				'icon_type' => $icon_type,
 				'wp_icon_type' => $wp_icon_type,
@@ -2529,7 +2533,7 @@ class MLAMime {
 		}
 
 		$new_type['standard_source'] = $original_type['standard_source'];
-		$new_type['disabled'] = isset( $request['disabled'] ) ? $request['disabled'] : $original_type['disabled'];
+		$new_type['disabled'] = isset( $request['disabled'] ) ? $request['disabled'] : false;
 		$new_type['description'] = isset( $request['description'] ) ? sanitize_text_field( $request['description'] ) : $original_type['description'];
 
 		if ( ( $slug == $original_slug ) && ( self::$mla_upload_mime_templates[ $slug ] == $new_type ) ) {

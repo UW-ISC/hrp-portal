@@ -1965,7 +1965,7 @@ class MLAShortcode_Support {
 	 *
 	 * @param array $attr Attributes of the shortcode.
 	 *
-	 * @return string HTML content to display the tag cloud.
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, tag cloud markup as a string or an array of links, depending on 'mla_output' attribute.
 	 */
 	public static function mla_tag_cloud( $attr ) {
 		global $post;
@@ -3456,7 +3456,7 @@ class MLAShortcode_Support {
 	 *
 	 * @param array $attr Attributes of the shortcode.
 	 *
-	 * @return string HTML content to display the term list, dropdown control or checklist.
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, term list markup as a string or an array of links, depending on 'mla_output' attribute.
 	 */
 	public static function mla_term_list( $attr ) {
 		global $post;
@@ -5364,7 +5364,7 @@ class MLAShortcode_Support {
 	 *
 	 * @since 2.20
 	 *
-	 * @param int Post ID of the parent
+	 * @param int ID of the post/page in which the shortcode appears; zero (0) if none
 	 * @param array Attributes of the shortcode
 	 * @param boolean Optional; true to calculate and return ['found_rows', 'max_num_pages'] as array elements
 	 * @param boolean Optional; true activate debug logging, false to suppress it.
@@ -5773,20 +5773,23 @@ class MLAShortcode_Support {
 				unset( $arguments[ $key ] );
 				break;
 			case 'paged':
-				if ( 'current' == strtolower( $value ) ) {
-					/*
-					 * Note: The query variable 'page' holds the pagenumber for a single paginated
-					 * Post or Page that includes the <!--nextpage--> Quicktag in the post content. 
-					 */
-					if ( get_query_var('page') ) {
-						$query_arguments[ $key ] = get_query_var('page');
-					} else {
-						$query_arguments[ $key ] = (get_query_var('paged')) ? get_query_var('paged') : 1;
+				// Avoid PHP deprecation warning about null strtolower argument
+				if ( NULL !== $value ) {
+					if ( 'current' == strtolower( $value ) ) {
+						/*
+						 * Note: The query variable 'page' holds the pagenumber for a single paginated
+						 * Post or Page that includes the <!--nextpage--> Quicktag in the post content. 
+						 */
+						if ( get_query_var('page') ) {
+							$query_arguments[ $key ] = get_query_var('page');
+						} else {
+							$query_arguments[ $key ] = (get_query_var('paged')) ? get_query_var('paged') : 1;
+						}
+					} elseif ( is_numeric( $value ) ) {
+						$query_arguments[ $key ] = (int) $value;
+					} elseif ( '' === $value ) {
+						$query_arguments[ $key ] = 1;
 					}
-				} elseif ( is_numeric( $value ) ) {
-					$query_arguments[ $key ] = (int) $value;
-				} elseif ( '' === $value ) {
-					$query_arguments[ $key ] = 1;
 				}
 
 				unset( $arguments[ $key ] );

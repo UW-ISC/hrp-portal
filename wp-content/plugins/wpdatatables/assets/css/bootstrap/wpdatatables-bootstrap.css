@@ -6983,7 +6983,7 @@ select.input-group-lg > .input-group-btn > .btn {
         width: 900px;
     }
 }
-
+.wdt-constructor-column-block .tooltip,
 .wpdt-c .tooltip {
     position: absolute;
     z-index: 1070;
@@ -7005,31 +7005,32 @@ select.input-group-lg > .input-group-btn > .btn {
     opacity: 0;
     filter: alpha(opacity=0);
 }
-
+.wdt-constructor-column-block .tooltip.in,
 .wpdt-c .tooltip.in {
     opacity: 1;
     filter: alpha(opacity=100);
 }
-
+.wdt-constructor-column-block .tooltip.top,
 .wpdt-c .tooltip.top {
     margin-top: -3px;
     padding: 5px 0;
 }
-
+.wdt-constructor-column-block .tooltip.right,
 .wpdt-c .tooltip.right {
     margin-left: 3px;
     padding: 0 5px;
 }
-
+.wdt-constructor-column-block .tooltip.bottom,
 .wpdt-c .tooltip.bottom {
     margin-top: 3px;
     padding: 5px 0;
 }
-
+.wdt-constructor-column-block .tooltip.left,
 .wpdt-c .tooltip.left {
     margin-left: -3px;
     padding: 0 5px;
 }
+.wdt-constructor-column-block .tooltip-inner,
 .wpdt-c .tooltip-inner {
     max-width: 200px;
     padding: 3px 8px;
@@ -7043,10 +7044,11 @@ select.input-group-lg > .input-group-btn > .btn {
     background-color: #061938;
     border-radius: 3px;
 }
+
 .wpdt-c #wdt-tour-actions .tooltip-inner {
     text-align: center;
 }
-
+.wdt-constructor-column-block .tooltip-arrow,
 .wpdt-c .tooltip-arrow {
     position: absolute;
     width: 0;
@@ -7054,7 +7056,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-color: transparent;
     border-style: solid;
 }
-
+.wdt-constructor-column-block .tooltip.top .tooltip-arrow,
 .wpdt-c .tooltip.top .tooltip-arrow {
     bottom: 0;
     left: 50%;
@@ -7062,7 +7064,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 5px 5px 0;
     border-top-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.top-left .tooltip-arrow,
 .wpdt-c .tooltip.top-left .tooltip-arrow {
     bottom: 0;
     right: 5px;
@@ -7070,7 +7072,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 5px 5px 0;
     border-top-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.top-right .tooltip-arrow,
 .wpdt-c .tooltip.top-right .tooltip-arrow {
     bottom: 0;
     left: 5px;
@@ -7078,7 +7080,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 5px 5px 0;
     border-top-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.right .tooltip-arrow,
 .wpdt-c .tooltip.right .tooltip-arrow {
     top: 50%;
     left: 0;
@@ -7086,7 +7088,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 5px 5px 5px 0;
     border-right-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.left .tooltip-arrow,
 .wpdt-c .tooltip.left .tooltip-arrow {
     top: 50%;
     right: 0;
@@ -7094,7 +7096,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 5px 0 5px 5px;
     border-left-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.bottom .tooltip-arrow,
 .wpdt-c .tooltip.bottom .tooltip-arrow {
     top: 0;
     left: 50%;
@@ -7102,7 +7104,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 0 5px 5px;
     border-bottom-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.bottom-left .tooltip-arrow,
 .wpdt-c .tooltip.bottom-left .tooltip-arrow {
     top: 0;
     right: 5px;
@@ -7110,7 +7112,7 @@ select.input-group-lg > .input-group-btn > .btn {
     border-width: 0 5px 5px;
     border-bottom-color: #061938;
 }
-
+.wdt-constructor-column-block .tooltip.bottom-right .tooltip-arrow,
 .wpdt-c .tooltip.bottom-right .tooltip-arrow {
     top: 0;
     left: 5px;

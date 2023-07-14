@@ -1,7 +1,7 @@
 ﻿<!-- template="documentation-tab" -->
 <h2>Plugin and Shortcode Documentation. In this tab, jump to:</h2>
 <div class="mla-display-settings-page" id="mla-display-settings-documentation-tab" style="width:710px">
-<p class="submit mla-settings-submit">
+<p class="submit mla-settings-submit" [+example_style+]>
 Browse and install: 
 <a href="[+example_url+]" class="button button-primary">Example Plugins</a><br />
 &nbsp;<br />
@@ -94,6 +94,9 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 </li>
 <li>
 <a href="#photonic_gallery"><strong>Support for the &#8220;Photonic Gallery&#8221; Plugin</strong></a>
+</li>
+<li>
+<a href="#justified_image_grid"><strong>Support for the &#8220;Justified Image Grid&#8221; Plugin</strong></a>
 </li>
 <li>
 <a href="#real_media_library"><strong>Support for the &#8220;Real Media Library&#8221; Plugin</strong></a>
@@ -190,14 +193,14 @@ For more information about the example plugins, jump to <a href="#mla_example_pl
 <a href="#mla_iptc_exif_mapping"><strong>IPTC &amp; EXIF Processing Options</strong></a>
 </li>
 <li style="list-style-type:none"><ul class="mla-doc-toc-list">
-<li><a href="#iptc_exif_mapping_example">IPTC/EXIF mapping example</a></li>
-<li><a href="#iptc_exif_mapping_tables">The IPTC/EXIF rule elements</a></li>
+<li><a href="#iptc_exif_mapping_example">IPTC/EXIF/WP mapping examples</a></li>
+<li><a href="#iptc_exif_mapping_tables">The IPTC/EXIF/WP rule elements</a></li>
 <li><a href="#iptc_exif_mapping_with_templates">EXIF/Template mapping with Content Templates</a></li>
-<li><a href="#date_iptc_exif_mapping">IPTC/EXIF Mapping and Bulk Editing for the "Uploaded on" Standard Field</a></li>
-<li><a href="#pdf_iptc_exif_mapping">IPTC/EXIF Mapping for PDF Documents</a></li>
+<li><a href="#date_iptc_exif_mapping">IPTC/EXIF/WP Mapping and Bulk Editing for the "Uploaded on" Standard Field</a></li>
+<li><a href="#pdf_iptc_exif_mapping">IPTC/EXIF/WP Mapping for PDF Documents</a></li>
 <li><a href="#wordpress_default_mapping">WordPress default title, slug and description mapping</a></li>
 </ul></li>
-<li><a href="#mla_mapping_hooks"><strong>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</strong></a></li>
+<li><a href="#mla_mapping_hooks"><strong>MLA Custom Field and IPTC/EXIF/WP Mapping Actions and Filters (Hooks)</strong></a></li>
 <li><a href="#mla_debug_tab"><strong>MLA Debug Tab</strong></a></li>
 <li><a href="#mla_language_tab"><strong>WPML &amp; Polylang Multilingual Support; the MLA Language Tab</strong></a></li>
 <li><a href="#mla_example_plugins"><strong>The Example Plugins</strong></a></li>
@@ -3906,6 +3909,25 @@ The <a href="http://wordpress.org/extend/plugins/photonic/" title="Photonic Gall
 </p>
 <p>
 You can use the "Photonic" screen of the Insert Media dialog to build the display portion of your shortcode parameters. After you click "Insert into post", change the shortcode name from "gallery" to "mla_gallery" and add the query parameters you need to select the attachments for the gallery. The <code>[mla_gallery]</code> code will compile the list of attachments for your gallery, then hand control over to Photonic to format the results. Note that MLA does not play any role in formatting the gallery display, so MLA-specific parameters such as <code>mla_caption</code> and <code>mla_link_href</code> are not processed.
+<a name="justified_image_grid"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Support for the &#8220;Justified Image Grid&#8221; Plugin</h3>
+<p>
+<a href="https://justifiedgrid.com/" title="Justified Image Grid site" target="_blank">Justified Image Grid</a> (JIG) is an inexpensive premium plugin that renders a spectacular horizontal masonry grid for a simple to browse and easy to use gallery. It includes several lightboxes for highlighting individual images. 
+</p>
+<p>
+This section should really be titled "JIG's support for MLA" because JIG includes explicit support for filtering a gallery by selecting terms from MLA's Att. Categories and Att. Tags taxonomies. Look for the <code>image_categories</code>, <code>image_tags</code> and <code>filterby</code> parameters of the <code>[justified_image_grid]</code> shortcode.
+</p>
+<p>
+You can also set a JIG option to "Use JIG as MLA display (automatically take over)". Activate that option if you wish to automatically use Justified Image Grid in place of your current Media Library Assistant galleries (<code>[mla_gallery]</code>). Useful for already established galleries. You can use or disable JIG display individually by adding just <code>mla_alt_shortcode=justified_image_grid</code> or <code>mla_alt_shortcode=no</code> to any MLA shortcode, respectively. 
+</p>
+<p>
+Of course, you can always use MLA's <code>[mla_tag_cloud}</code>, <code>[mla_term_list}</code> and <code>[mla_gallery}</code>, shortcodes for more complex item selection applications such as custom field or date queries, or multi-taxonomy queries. Adding <code>mla_alt_shortcode=justified_image_grid</code> to the <code>[mla_gallery}</code> shortcode will pass a list of the selected items to JIG for formatting and displaying the resulting gallery. You can add any JIG-specific parameters to the shortcode and they will be passed along as well.
+</p>
+<p>
 <a name="real_media_library"></a>
 </p>
 <p>
@@ -4444,7 +4466,7 @@ It's a bit of work, but you only have to do it once.
 </p>
 <h3>Field-level Substitution Parameters</h3>
 <p>
-Field-level substitution parameters let you access query arguments, custom fields, taxonomy terms and attachment metadata for display in an MLA gallery or in an MLA tag cloud. You can also use them in IPTC/EXIF or Custom Field mapping rules. For field-level parameters, the value you code within the surrounding the ('[+' and '+]' or '{+' and '+}') delimiters has three parts; the prefix, the field name (or template content) and, if desired, an option/format value.
+Field-level substitution parameters let you access query arguments, custom fields, taxonomy terms and attachment metadata for display in an MLA gallery or in an MLA tag cloud. You can also use them in IPTC/EXIF/WP or Custom Field mapping rules. For field-level parameters, the value you code within the surrounding the ('[+' and '+]' or '{+' and '+}') delimiters has three parts; the prefix, the field name (or template content) and, if desired, an option/format value.
 </p>
 <table>
 	<tr>
@@ -4484,7 +4506,7 @@ There are fifteen prefix values for field-level parameters. Prefix values must b
 	</tr>
 	<tr>
 		<td class="mla-doc-table-label">custom</td>
-		<td>WordPress Custom Fields, which you can define and populate on the Edit Media screen or map from various sources on the Settings/Media Library Assistant Custom and IPTC/EXIF tabs. The field name, or key, can contain spaces and some punctuation characters. You <strong><em>cannot use the plus sign ('+')</em></strong> in a field name you want to use with <code>[mla_gallery]</code>. Custom field names are case-sensitive; "client" and "Client" are not the same.
+		<td>WordPress Custom Fields, which you can define and populate on the Edit Media screen or map from various sources on the Settings/Media Library Assistant Custom and IPTC/EXIF/WP tabs. The field name, or key, can contain spaces and some punctuation characters. You <strong><em>cannot use the plus sign ('+')</em></strong> in a field name you want to use with <code>[mla_gallery]</code>. Custom field names are case-sensitive; "client" and "Client" are not the same.
 		<br />&nbsp;<br />
 		For custom fields only, the <strong>",raw" option</strong> bypasses the code to sanitize the returned value. Use this option to allow HTML tags to be returned from a custom field.
 		<br />&nbsp;<br />
@@ -4584,7 +4606,11 @@ MLA adds three fields of its own to the XMP metadata information:
 		For PNG files, data defined by the <a href="https://www.w3.org/TR/png/" title="W3C Draft Standard" target="_blank">Portable Network Graphics (PNG) Specification (Third Edition)</a> is extracted. The IHDR (Image header) seven elements of general interest. These are available in their raw numeric form and in an enhanced textual form. Any tEXt chunks, if present, are parsed into their keyword and text value parts and made available. The <a title="Find the Diffusion Parameters Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Diffusion+Parameters+Example%22" class="mla-doc-bold-link">MLA Diffusion Parameters Example</a> plugin parses the <code>png:parameters</code> text and creates an array of individual <code>png:diffusion.</code> elements.<br />
 		&nbsp;<br />
 		Although the W3C standard provides for adding EXIF and XMP metadata chunks to PNG files I have never seen an actual example of either one, so MLA does not extract this data. If you find an example, open a support topic and I will investigate further.
-		<br />&nbsp;<br /></td>
+		<br />&nbsp;<br />
+		A special png "pseudo-value" is available; <strong>ALL_PNG</strong> (<code>[+png:ALL_PNG+]</code>). It returns a string representation of all PNG metadata. You can use the pseudo-value to examine the metadata in an image, find field names and see what values are embedded in the image.
+		<br />&nbsp;<br />
+		The ALL_PNG value is altered in two ways. First, values of more than 256 characters are truncated to 256 characters. This prevents large fields such as keyword arrays from dominating the display. Second, array values are shown once, at their expanded level.
+		<br />&nbsp;</td>
 	</tr>
 	<tr>
 		<td class="mla-doc-table-label">mso</td>
@@ -4635,8 +4661,13 @@ MLA adds two fields of its own to the MS Office metadata information:
 		<td>The matches prefix is part of MLA&rsquo;s <a href="#mla_regular_expressions">Regular Expression Features</a>. It allows you to access data sources created by applying the <code>,match(p)</code> and <code>,extract(p)</code> format/option values.</td>
 	</tr>
 </table>
+<p>
+You can view an item's metadata values (pdf, iptc, exif, xmp, png, msp, and id3) in the "Attachment File Metadata" meta box on the Media/Edit Media screen for the item.
+</p>
+<p>
 <a name="field_level_formats"></a>
 &nbsp;<br />
+</p>
 <h4>Field-level option/format values</h4>
 <p>
 You can use a field-level option or format value to specify the treatment of fields with multiple values or to change the format of a field for display/mapping purposes. If no option/format value is present, fields with multiple values are formatted as a comma-delimited text list. The option/format value, if present, immediately follows the field name using a comma (,) separator and ends with the closing delimiter ('+]' or '+}'). There can be no spaces in this part of the parameter.
@@ -5661,7 +5692,7 @@ Conditional, choice and template elements can be nested as needed. For example, 
 This template has a String, "Terms: " and a Conditional, "(([+terms: ... none)". This Conditional separates the "Terms: " literal from the first alternative in the Choice. Within the Conditional is a Choice having four alternatives. The first alternative is a Conditional, which will be empty unless both categories and tags are present.  The second and third alternatives handle the cases where one of the two taxonomies has terms, and the final alternative is used when neither categories nor tags are present.
 </p>
 <p>
-In the Media/Assistant submenu table Bulk Edit area and the IPTC/EXIF Standard Field mapping fields you can use the special <code>template:[+empty+]</code> value to support deleting the content of the Title, Caption, Description and ALT Text fields. For a Custom Field mapping rule, set the Data Source to "-- Template (see below) --", and enter <code>[+empty+]</code> in the Meta/Template text box. Set Existing Text to "Replace" and check the Delete NULL Values box.
+In the Media/Assistant submenu table Bulk Edit area and the IPTC/EXIF/WP Standard Field mapping fields you can use the special <code>template:[+empty+]</code> value to support deleting the content of the Title, Caption, Description and ALT Text fields. For a Custom Field mapping rule, set the Data Source to "-- Template (see below) --", and enter <code>[+empty+]</code> in the Meta/Template text box. Set Existing Text to "Replace" and check the Delete NULL Values box.
 </p>
 <h4>Special characters inside templates</h4>
 <p>
@@ -5690,6 +5721,9 @@ The MLA regular expression features are simply a way to access a few of PHP's PC
 <h4>Patterns and subpatterns</h4>
 <p>
 Each regular expression defines a "pattern" that is applied to the subject, or data source. If the pattern is matched, that part of the data source is returned from the option/format value. Subpatterns allow you to take a portion of the overall pattern and return it separately. For example, you might construct a pattern that matches a date and include within the pattern subpatterns that return the year, month and day portions of the date. The pattern and subpattern matches are stored by MLA and become data sources you can access with the <code>matches:</code> field-level prefix. By default, the pattern match and any subpattern match(es) are assigned index numbers. The pattern is number zero and the subpatterns are numbered from one to the total number of subpatterns.
+</p>
+<p>
+When coding a pattern as a parameter for any of these option/format values remember to start and end with a delimiter, e.g., a slash, and to enclose the parameter in single quotes. For example, for a pattern that matches an "x", code the parameter as <code>'/x/'</code>.
 </p>
 <p>
 For example, consider the <code>post_date</code> data source, the "Uploaded on" date and time for a Media Library item. This date is stored as a string with a specific format: "YYYY-MM-DD HH:MM:SS", e.g., "2013-10-03 02:47:13". You can match this value in many ways:
@@ -5723,8 +5757,11 @@ The <code>,extract(p)</code> option/format value can be applied to any data sour
 <p>
 The <code>,replace(p,r)</code> option/format value matches a pattern (like <code>,match(p)</code>) but returns a modified version of the original data source value. The "p" argument is a regular expression pattern that is applied to the data source. The "r" argument is a replacement pattern. If a match is found the data source modified by the replacement pattern is returned. If the match is not found, the original data source value is returned unaltered. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3' )+]</code> would return "year: 2013, month: 10, day: 03 02:47:13". Note the double backslashes in the pattern argument! To specify an array argument enclose the argument in braces ( "{" and "}" ) and separate elements with <strong>spaces</strong>. For a simple example, <code>,replace( {'/,/' '/-/'}, {' ' '_'} )</code> will change commas to spaces and dashes to underscores, while <code>,replace( {'/,/' '/-/'}, ' ' )</code> will change both commas <strong>and</strong> dashes to spaces.
 </p>
-You can alter the value returned by adding the optional third "v" parameter set to "true". If you add this parameter the returned value will be just the matched portion of the original with the replacement modifications applied. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3', true )+]</code> would return "year: 2013, month: 10, day: 03". Note the double backslashes in the pattern argument!
 <p>
+If you enter an array of mutiple patterns, note that they are processed sequentially. In other words, the first pattern replacement is performed, creating a new value. Then, the second pattern replacement is performed on the new value that includes the results of the first pattern replacement, and so on.
+</p>
+<p>
+You can alter the value returned by adding the optional third "v" parameter set to "true". If you add this parameter the returned value will be just the matched portion of the original with the replacement modifications applied. For example, if a <code>post_date</code> data source contains "2013-10-03 02:47:13", then <code>[+post_date,replace( '/(\\d{4})-(\\d{2})-(\\d{2})/', 'year: $1, month: $2, day: $3', true )+]</code> would return "year: 2013, month: 10, day: 03". Note the double backslashes in the pattern argument!
 </p>
 <p>
 Note that, unlike match and extract, the replace format/option value does not store its pattern or subpattern(s) for later use with the matches: prefix.
@@ -5737,7 +5774,7 @@ The <code>matches:</code> field-level prefix lets you access the patterns and su
 </p>
 <h4>Application Examples</h4>
 <p>
-Imagine that you have a photo archive where all the files are named with the date on which the image was taken, for example "2010.06.14 Death Valley Landscape.jpg". You would like to extract the date from the file name and use it to update the post_date (Uploaded on) date in the database. You'd also like to preserve the time portion of the current post_date so the items will sort in the order they were uploaded. You can define an IPTC/EXIF mapping rule to do this or use the Media/Assistant Bulk Edit area. In either place you can compose a Content Template to do the job:
+Imagine that you have a photo archive where all the files are named with the date on which the image was taken, for example "2010.06.14 Death Valley Landscape.jpg". You would like to extract the date from the file name and use it to update the post_date (Uploaded on) date in the database. You'd also like to preserve the time portion of the current post_date so the items will sort in the order they were uploaded. You can define an IPTC/EXIF/WP mapping rule to do this or use the Media/Assistant Bulk Edit area. In either place you can compose a Content Template to do the job:
 </p>
 <p>
 <code>template:[+name_only,extract( '/(?&lt;year&gt;\\d{4}).(?&lt;month&gt;\\d{2}).(?&lt;day&gt;\\d{2})/' )+]([+matches:year+]-[+matches:month+]-[+matches:day+] [+post_date,date( 'H:i:s' )+])</code>
@@ -5867,7 +5904,7 @@ define ('MEDIA_TRASH', true);
 <p>With those additions you the "Permanently delete" operations become "Move to trash" and a new "Trash" view is available above the Media/Assistant submenu table. Selecting the Trash view gives you a list of the trashed items; you can restore them or permanently delete them as needed.</p>
 <h4>Where-used Substitution Parameter/Data Source Values</h4>
 <p>All four categories are available as <a href="#field_level_data_sources" target="_blank">Field-level data sources</a>. In that Documentation subsection scroll down to "parent_issues" and read through the list down to "mla_gallery_in_title". These values are available only when the corresponding category is active.</p>
-<p>You can, of course, use them directly, e.g., in an <code>[mla_gallery]</code> shortcode or custom markup template. If you do, be aware of the performance issues because the values will be computed each time the data source is used and the categories must remain enabled. A more common alternative is to use the values in an IPTC/EXIF or Custom Field mapping rule, storing the information as text in a custom field and then using the custom field value for display purposes. If you take that approach you can disable the categories once the custom field is populated, restoring performance. The next subsection is a detailed example of the mapping rule &amp; custom field approach.</p>
+<p>You can, of course, use them directly, e.g., in an <code>[mla_gallery]</code> shortcode or custom markup template. If you do, be aware of the performance issues because the values will be computed each time the data source is used and the categories must remain enabled. A more common alternative is to use the values in an IPTC/EXIF/WP or Custom Field mapping rule, storing the information as text in a custom field and then using the custom field value for display purposes. If you take that approach you can disable the categories once the custom field is populated, restoring performance. The next subsection is a detailed example of the mapping rule &amp; custom field approach.</p>
 <h4>Sorting and Filtering on Where-used Status</h4>
 <p>As noted above the four Media/Assistant where-used columns are not sortable, and they cannot be used to filter the table display. There is no explicit way to filter the Media/Assistant submenu table to display only where-used issues such as "orphans". There is, however, an approximate solution that may be useful. To get the best results you need to activate all four reporting categories in the Where-used Reporting section of the Settings/Media Library Assistant General tab. Try these settings:</p>
 <ul><ul class="mla_settings">
@@ -6818,8 +6855,8 @@ Three checkbox options control the custom field mapping when new items are added
 </p>
 <ul class="mla_settings">
 <li><strong>Enable custom field mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
-<li><strong>Enable custom field mapping when adding new media</strong> - Check this option to enable mapping when uploading new items (attachments) to the Media Library.</li>
-<li><strong>Enable custom field mapping when updating media metadata</strong> - Check this option to enable mapping when item (attachment) metadata is regenerated,
+<li><strong>Perform custom field mapping when adding new media</strong> - Check this option to perform mapping when uploading new items (attachments) to the Media Library.</li>
+<li><strong>Perform custom field mapping when updating media metadata</strong> - Check this option to perform mapping when WordPress regenerates the item (attachment) metadata array,
  e.g., when the Media/Edit Media "Edit Image" functions are used.</li>
 </ul>
 <p>
@@ -6850,7 +6887,7 @@ Here is a simple example of mapping the items' file size to a custom field, so y
 </p>
 <ol>
 <li>Navigate to the Settings/Media Library Assistant "Custom Fields" tab.</li>
-<li>Make sure the "Enable custom field mapping when adding new media" box is checked. If not, check the box, scroll down and click "Save Changes".</li>
+<li>Make sure the "Perform custom field mapping when adding new media" box is checked. If not, check the box, scroll down and click "Save Changes".</li>
 <li>Scroll down to the "Add New Rule" area on the left part of the screen.</li>
 <li>Click the "Enter new field" link to change the drop down list of existing fields to a text box.</li>
 <li>In the text box, give your field a name, e.g., "File Size".</li>
@@ -6913,7 +6950,7 @@ If you just want to add a custom field to the Media/Assistant submenu, the quick
 Most of the data elements are static, i.e., they do not change after the attachment is added to the Media Library.
 The parent/reference information (parent_type, parent_title, parent_issues, reference_issues) and the "where-used" information (featured in, inserted in, gallery in and MLA gallery in) is dynamic; it will change as you define galleries, insert images in posts, define Featured Images, etc. Because of the database processing required to update this information, <strong><em>parent, where-used and reference data are NOT automatically refreshed</em></strong>. If you use these elements, you must manually refresh them with the "map data" buttons on the Settings screen, the bulk edit area or the Edit Media screen.
 <br />&nbsp;<br />
-Several of the data elements are sourced from the WordPress "image_meta" array. The credit, caption, copyright and title elements are taken from the IPTC/EXIF metadata (if any), but they go through a number of filtering rules that are not easy to replicate with the MLA IPTC/EXIF processing rules. You may find these "image_meta" elements more useful than the raw IPTC/EXIF metadata.
+Several of the data elements are sourced from the WordPress "image_meta" array. The credit, caption, copyright and title elements are taken from the IPTC/EXIF/WP metadata (if any), but they go through a number of filtering rules that are not easy to replicate with the MLA IPTC/EXIF/WP processing rules. You may find these "image_meta" elements more useful than the raw IPTC/EXIF/WP metadata.
 </dd>
 <dt>Meta/Template text</dt>
 <dd>
@@ -7058,11 +7095,11 @@ Set the other parts of the rule as needed. You can select "Keep" if some of your
 </li>
 </ol>
 <p>
-If you are creating an IPTC/EXIF mapping rule the details are a bit different.
+If you are creating an IPTC/EXIF/WP mapping rule the details are a bit different.
 </p>
 <ol>
 <li>
-Open the Settings/Media Library Assistant submenu and select the IPTC/EXIF tab. Scroll down to the "Add a new Field and Mapping Rule" section.
+Open the Settings/Media Library Assistant submenu and select the IPTC/EXIF/WP tab. Scroll down to the "Add a new Field and Mapping Rule" section.
 </li>
 <li>
 In the Field Title text box, enter "meta:image_meta.latitude". The rule will store its results in the "latitude" element of the "image_meta" array within the Attachment Metadata field.
@@ -7114,7 +7151,7 @@ The Media Library Assistant has powerful tools for copying metadata to:
 <li>WordPress Custom Fields</li>
 </ul>
 <p>
-You can define the rules for mapping metadata on the "IPTC/EXIF" tab of the Settings page. You can choose to automatically apply the rules when new media are added to the Library (or not). You can click the "Map IPTC/EXIF metadata" button on the Edit Media/Edit Single Item screen or in the bulk edit area to selectively apply the rules to one or more items. You can use the "Execute" functions in the tab to apply the rules to one, some or <strong><em>ALL</em></strong> of the items in your library at one time.
+You can define the rules for mapping metadata on the "IPTC/EXIF/WP" tab of the Settings page. You can choose to automatically apply the rules when new media are added to the Library (or not). You can click the "Map IPTC/EXIF/WP metadata" button on the Edit Media/Edit Single Item screen or in the bulk edit area to selectively apply the rules to one or more items. You can use the "Execute" functions in the tab to apply the rules to one, some or <strong><em>ALL</em></strong> of the items in your library at one time.
 </p>
 <p>If you use any of the "Execute" functions, the selected rule(s) will be immediately applied to <strong>all</strong> of the attachments in your Media Library. THERE<strong> IS NO UNDO FOR THESE ACTIONS!</strong></p>
 <p>
@@ -7123,7 +7160,7 @@ If you just want to add a custom field to the Media/Assistant submenu, the quick
 <p>
 You can view and/or download this PDF document with more information: <a href="http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf" target="_blank">Mapping File Metadata to WordPress Fields with Media Library Assistant</a>
 </p>
-<p>In this tab there are three ways to execute one or more IPTC/EXIF mapping rules for <strong>ALL</strong> of your Media Library items:
+<p>In this tab there are three ways to execute one or more IPTC/EXIF/WP mapping rules for <strong>ALL</strong> of your Media Library items:
 </p>
 <ul class="mla_settings">
 <li><strong>Execute All Rules button</strong> - just below the "Enable" checkbox controls in the upper-left portion of the tab. Click this button to immediately run <strong>ALL</strong> of the active rules. Rules marked as inactive will not be executed.</li>
@@ -7132,18 +7169,18 @@ You can view and/or download this PDF document with more information: <a href="h
 </ul>
 <p>
 These commands process your items in "chunks" to prevent timeout errors. You can pause/resume or cancel the operation between chunks.</p>
-<p>There are two other ways you can perform IPTC/EXIF mapping for one or more existing attachments: 
+<p>There are two other ways you can perform IPTC/EXIF/WP mapping for one or more existing attachments: 
 </p>
 <ul class="mla_settings">
-<li><strong>Edit Media screen</strong> - You can click the "Map IPTC/EXIF metadata" link in the "Image Metadata" postbox to apply the existing mapping rules to a single attachment.</li>
-<li><strong>Bulk Action edit area</strong> - To perform mapping for a group of attachments you can use the Bulk Action facility on the Media/Assistant screen. Check the attachments you want to map, select "Edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map IPTC/EXIF metadata" button in the lower left corner of the area to apply the standing mapping rules to the attachments in the list.</li>
+<li><strong>Edit Media screen</strong> - You can click the "Map IPTC/EXIF/WP metadata" link in the "Image Metadata" postbox to apply the existing mapping rules to a single attachment.</li>
+<li><strong>Bulk Action edit area</strong> - To perform mapping for a group of attachments you can use the Bulk Action facility on the Media/Assistant screen. Check the attachments you want to map, select "Edit" from the Bulk Actions dropdown list and click "Apply". The bulk edit area will open with a list of the checked attachments in the left-hand column. You can click the "Map IPTC/EXIF/WP metadata" button in the lower left corner of the area to apply the standing mapping rules to the attachments in the list.</li>
 </ul>
-<p>Three checkbox options control the IPTC/EXIF mapping when new items are added to the Media Library:
+<p>Three checkbox options control the IPTC/EXIF/WP mapping when new items are added to the Media Library:
 </p>
 <ul class="mla_settings">
-<li><strong>Enable IPTC/EXIF Mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
-<li><strong>Enable IPTC/EXIF Mapping when adding new media</strong> - Check this option to enable mapping when uploading new items (attachments) to the Media Library.</li>
-<li><strong>Enable IPTC/EXIF Mapping when updating media metadata</strong> - Check this option to enable mapping when item (attachment) metadata is regenerated,
+<li><strong>Enable IPTC/EXIF/WP Mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
+<li><strong>Perform IPTC/EXIF/WP Mapping when adding new media</strong> - Check this option to perform mapping when uploading new items (attachments) to the Media Library.</li>
+<li><strong>Perform IPTC/EXIF/WP Mapping when updating media metadata</strong> - Check this option to perform mapping when WordPress regenerates the item (attachment) metadata array,
  e.g., when the Media/Edit Media "Edit Image" functions are used.</li>
 </ul>
 <p>
@@ -7165,9 +7202,22 @@ If you cannot identify the proper "action" value or if your uploader uses anothe
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h4>IPTC/EXIF mapping example</h4>
+<h4>IPTC/EXIF/WP mapping examples</h4>
 <p>
-Here is a simple example of mapping an image's creation date to a custom field, so you can use it to display a gallery of images sorted by the date on which they were taken. There are three common EXIF fields that are populated in most images. For example:
+Here is a simple example that uses a content template to populate the WordPress ALT Text standard field, when empty, from the Title field.
+</p>
+<ol>
+<li>Navigate to the Settings/Media Library Assistant IPTC/EXIF/WP tab.</li>
+<li>Find the "ALT Text" standard field rule in the submenu table.</li>
+<li>Leave the "IPTC Value" dropdown list set to the default "None (select a value)" setting.</li>
+<li>Enter "template:([+post_title+]}" in the EXIF/Template Value field.</li>
+<li>Set the Priority dropdown to "EXIF".</li>
+<li>Set the Existing Text dropdown to "Keep".</li>
+<li>Set the Status dropdown to "Active".</li>
+<li>Click "Add Rule" to save your rule.</li>
+</ol>
+<p>
+Here is another example; mapping an image's creation date to a custom field, so you can use it to display a gallery of images sorted by the date on which they were taken. There are three common EXIF fields that are populated in most images. For example:
 </p>
 <blockquote>
 DateTimeDigitized 2012:11:28 15:53:23<br />
@@ -7175,11 +7225,11 @@ DateTimeOriginal 2012:11:28 15:53:23<br />
 DateTime 2012:12:01 17:37:05<br />
 </blockquote>
 <p>
-You can go to the Settings/Media Library Assistant IPTC/EXIF tab and define a rule that maps any of these fields to a WordPress custom field. The steps required are:
+You can go to the Settings/Media Library Assistant IPTC/EXIF/WP tab and define a rule that maps any of these fields to a WordPress custom field. The steps required are:
 </p>
 <ol>
-<li>Navigate to the Settings/Media Library Assistant IPTC/EXIF tab.</li>
-<li>Make sure the "Enable IPTC/EXIF Mapping when adding new media" box is checked.  If not, check the box, scroll down and click "Save Changes".</li>
+<li>Navigate to the Settings/Media Library Assistant IPTC/EXIF/WP tab.</li>
+<li>Make sure the "Enable IPTC/EXIF/WP Mapping when adding new media" box is checked.  If not, check the box, scroll down and click "Save Changes".</li>
 <li>Scroll down to the "Add New Custom Field Rule" section.</li>
 <li>If you have already defined "Date Time Created" as a custom field, select the field name in the first dropdown. If the field does not yet exist, click the "Enter new field" link to change the drop down list of existing fields to a text box and enter, for example, "Date Time Created" in the text box.</li>
 <li>Leave the "IPTC Value" dropdown list set to the default "None (select a value)" setting.</li>
@@ -7192,7 +7242,7 @@ You can go to the Settings/Media Library Assistant IPTC/EXIF tab and define a ru
 <li>Click "Add Rule" to save your rule.</li>
 </ol>
 <p>
-If you want to test your work, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has a "DateTimeOriginal" value. Click the "Map IPTC/EXIF Metadata" link in the upper right "Save" area of the screen, then look down at the Custom Fields meta box and see if your "Date Time Created" value is present and correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Execute" rollover action for your rule to process all of your images.
+If you want to test your work, you can go to the Media/Assistant submenu table and click the "Edit" rollover action for an image you know has a "DateTimeOriginal" value. Click the "Map IPTC/EXIF/WP Metadata" link in the upper right "Save" area of the screen, then look down at the Custom Fields meta box and see if your "Date Time Created" value is present and correct. Once you've got your rule working you can update individual images, use the Bulk Edit area to update groups of images or use the "Execute" rollover action for your rule to process all of your images.
 </p>
 <p>
 You can use the meta_key, orderby and order parameters to sort an <code>[mla_gallery]</code> by your custom field. For example:<br />
@@ -7207,9 +7257,9 @@ The three parameters in the above example will select all of the images in your 
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h4>The IPTC/EXIF rule elements</h4>
+<h4>The IPTC/EXIF/WP rule elements</h4>
 <p>
-All types of IPTC/EXIF mapping rules have the following common elements:
+All types of IPTC/EXIF/WP mapping rules have the following common elements:
 </p>
 <dl>
 <dt>Field Title</dt>
@@ -7310,7 +7360,7 @@ Note that the <strong>,array</strong> formatting option is <strong>not</strong> 
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h4>IPTC/EXIF Mapping and Bulk Editing for the "Uploaded on" Standard Field</h4>
+<h4>IPTC/EXIF/WP Mapping and Bulk Editing for the "Uploaded on" Standard Field</h4>
 <p>
 The "Uploaded on" Standard Field is set by WordPress to the date and time the item is uploaded to the Media Library. You can use a mapping rule to replace this with a different value, such as the date and time the item was created. Many EXIF date and time values such as DateTimeOriginal and DateTimeDigitized are stored as strings with a format of "YYYY:MM:DD HH:MM:SS". You can parse this format and just about any English textual datetime description into a Unix timestamp, then convert the result to the appropriate format ('Y-m-d H:i:s', e.g., "2014-12-31 23:59:00", or just before midnight on new year's eve). The mapping rule first uses the PHP strtotime() function, then the date() function, to compose a valid date and time. The "Supported Date and Time Formats" that can be passed in to the rule are described at: <a href="http://php.net/manual/en/datetime.formats.php" title="PHP Supported Date and Time Formats" target="_blank">http://php.net/manual/en/datetime.formats.php</a>.<br />&nbsp;<br />You can use a Content Template to compose the starting value in many ways. For example:
 </p>
@@ -7334,7 +7384,7 @@ The first example above sets the date to a fixed value. The second example uses 
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h4>IPTC/EXIF Mapping for PDF Documents</h4>
+<h4>IPTC/EXIF/WP Mapping for PDF Documents</h4>
 <p>
 PDF documents contain a Document Information Dictionary (D.I.D.) and many also contain XMP metadata. For the <code>pdf:</code> prefix, you can code any of the nine D.I.D. entries:
 </p>
@@ -7459,7 +7509,7 @@ The WordPress rules are somewhat complex; consult the source code if you need ex
 <li>/wpadmin/includes/media.php, function media_handle_sideload()</li>
 </ol>
 <p>
-Roughly speaking, the priority order for mapping the post_title and post_name values from non-blank IPTC/EXIF metadata is:
+Roughly speaking, the priority order for mapping the post_title and post_name values from non-blank IPTC/EXIF/WP metadata is:
 </p>
 <ol>
 <li>EXIF "Title"</li>
@@ -7468,7 +7518,7 @@ Roughly speaking, the priority order for mapping the post_title and post_name va
 <li>IPTC 2#005 "object-name"</li>
 <li>IPTC 2#120 "caption-or-abstract" (if less than 80 characters)</li>
 </ol>
-The priority order for mapping the post_content value from non-blank IPTC/EXIF metadata is:
+The priority order for mapping the post_content value from non-blank IPTC/EXIF/WP metadata is:
 <ol>
 <li>EXIF "ImageDescription" (if different from post_title)</li>
 <li>IPTC 2#120 "caption-or-abstract" (if different from post_title)</li>
@@ -7477,9 +7527,9 @@ The priority order for mapping the post_content value from non-blank IPTC/EXIF m
 <p>
 <a href="#backtotop">Go to Top</a>
 </p>
-<h3>MLA Custom Field and IPTC/EXIF Mapping Actions and Filters (Hooks)</h3>
+<h3>MLA Custom Field and IPTC/EXIF/WP Mapping Actions and Filters (Hooks)</h3>
 <p>
-The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Mapping Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Mapping Hooks Example</a>. To run the example:
+The Custom Field and IPTC/EXIF/WP Mapping tools support a comprehensive set of filters and actions that give you complete control over rule execution and value creation from PHP code in your theme or in another plugin. An example of using the hooks from a simple, stand-alone plugin can be found in the Documentation/Example Plugins submenu. You can find the example plugin here: <a title="Find the Mapping Hooks Example" href="[+example_url+]&amp;mla-example-search=Search+Plugins&amp;s=%22MLA+Mapping+Hooks+Example%22" class="mla-doc-bold-link">MLA Mapping Hooks Example</a>. To run the example:
 </p>
 <ol>
 <li>Click on the link above or go to top of the Documentation tab and click on the "Example Plugins" button.</li>
@@ -7492,7 +7542,7 @@ The Custom Field and IPTC/EXIF Mapping tools support a comprehensive set of filt
 The example code documents each hook with comments in the filter/action function that intercepts each hook. There are hooks that run at the beginning and end of the overall mapping operation as well as hooks for each mapping rule. 
 </p>
 <p>
-In addition, there are hooks that run when attachments are uploaded to the Media Library and when the "attachment metadata" is altered, e.g., when the Media/Edit Media "Edit Image" function is used. Plugins and other image editing code can destroy the attachment metadata or the IPTC/EXIF metadata embedded in an image file. These hooks may give you an opportunity to preserve and repair the metadata you need in spite of such damage.
+In addition, there are hooks that run when attachments are uploaded to the Media Library and when the "attachment metadata" is altered, e.g., when the Media/Edit Media "Edit Image" function is used. Plugins and other image editing code can destroy the attachment metadata or the IPTC/EXIF/WP metadata embedded in an image file. These hooks may give you an opportunity to preserve and repair the metadata you need in spite of such damage.
 </p>
 <p>
 The current mapping hooks are:
@@ -7520,15 +7570,15 @@ The current mapping hooks are:
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_mapping_iptc_value</td>
-<td class="mla-doc-hook-definition">called once for each IPTC/EXIF mapping rule, after the IPTC portion of the rule is evaluated. You can change the new value produced by the rule.</td>
+<td class="mla-doc-hook-definition">called once for each IPTC/EXIF/WP mapping rule, after the IPTC portion of the rule is evaluated. You can change the new value produced by the rule.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_mapping_exif_value</td>
-<td class="mla-doc-hook-definition">called once for each IPTC/EXIF mapping rule, after the EXIF portion of the rule is evaluated. You can change the new value produced by the rule.</td>
+<td class="mla-doc-hook-definition">called once for each IPTC/EXIF/WP mapping rule, after the EXIF portion of the rule is evaluated. You can change the new value produced by the rule.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_mapping_new_text</td>
-<td class="mla-doc-hook-definition">called once for each IPTC/EXIF mapping rule, after the selection between the IPTC and EXIF values has been made. You can change the new value produced by the rule.</td>
+<td class="mla-doc-hook-definition">called once for each IPTC/EXIF/WP mapping rule, after the selection between the IPTC and EXIF values has been made. You can change the new value produced by the rule.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_mapping_updates</td>
@@ -7736,7 +7786,7 @@ MLA detects the presence of either plugin and automatically adds several feature
 <li><strong>Language-specific filtering</strong> of the <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> shortcodes.</li>
 <li><strong>Media/Assistant submenu table enhancements</strong> for displaying and managing item translations.</li>
 <li><strong>Term Assignment and Term Synchronization</strong>, to match terms to language-specific items and automatically keep all translations for an item in synch.</li>
-<li><strong>Term Mapping Replication</strong>, to manage the terms created when mapping taxonomy terms from IPTC/EXIF metadata.</li>
+<li><strong>Term Mapping Replication</strong>, to manage the terms created when mapping taxonomy terms from IPTC/EXIF/WP metadata.</li>
 </ul>
 <h4>Items, Translations and Terms</h4>
 <p>
@@ -7784,7 +7834,7 @@ Taxonomy terms are language-specific, and making sure the right terms are assign
 <li><strong>Media Manager Modal Window</strong> - this is the popup window provided by WordPress' "Add Media" and "Select Featured Image" features. Taxonomies are displayed and updated in the ATTACHMENT DETAILS meta boxes along the right side of the window. Whatever terms are selected/entered here are assigned to the item; they replace any old assignments.</li>
 <li><strong>Quick Edit</strong> - this is a row-level action on the Media/Assistant screen. When "Update" is clicked whatever terms have been selected/entered are assigned to the item; they replace any old assignments.</li>
 <li><strong>Bulk edit</strong> - this is a bulk action on the Media/Assistant screen, and is also available on the Media/Upload New Media screen. In the Bulk Edit area, terms can be added or removed or all terms can be replaced. The bulk edit can be applied to multiple item translations in one or more languages.</li>
-<li><strong>IPTC/EXIF Metadata Mapping</strong> - this is done by defining rules in the "Taxonomy term mapping" section of the <a href="#mla_iptc_exif_mapping">IPTC &amp; EXIF Processing Options</a>. The mapping rules can be run when new items are added to the Media Library, from the Settings/Media Library Assistant IPTC/EXIF tab, from the Media/Assistant Bulk Edit area or from the Media/Edit Media submenu screen.</li>
+<li><strong>IPTC/EXIF/WP Metadata Mapping</strong> - this is done by defining rules in the "Taxonomy term mapping" section of the <a href="#mla_iptc_exif_mapping">IPTC &amp; EXIF Processing Options</a>. The mapping rules can be run when new items are added to the Media Library, from the Settings/Media Library Assistant IPTC/EXIF/WP tab, from the Media/Assistant Bulk Edit area or from the Media/Edit Media submenu screen.</li>
 </ol>
 <p>
 When terms change in any of the above ways there are two tasks that require rules:
@@ -7794,7 +7844,7 @@ When terms change in any of the above ways there are two tasks that require rule
 <li>How should terms assigned to one translation of an item be used to update other translations of the same item? This is "Term Synchronization".</li>
 </ol>
 <p>
-When new terms are added during IPTC/EXIF taxonomy term mapping a third task is required; should new terms be added only to the current language or should they be made available in all languages? This is "Term Mapping Replication".
+When new terms are added during IPTC/EXIF/WP taxonomy term mapping a third task is required; should new terms be added only to the current language or should they be made available in all languages? This is "Term Mapping Replication".
 </p>
 <strong>Term Assignment</strong>
 <p>
@@ -7869,7 +7919,7 @@ Then synchronization handles common editing actions as follows:
 </ol>
 <strong>Term Mapping Replication</strong>
 <p>
-When rules are defined in the IPTC/EXIF "Taxonomy term mapping section" they extract values (e.g., "IPTC 2#025 Keywords") from image metadata and use them to assign terms to the Media Library item(s). If the metadata value matches an existing term in the item's language it is assigned to the item. If the term already exists for any other active language it is not assigned to the item. If the term does not exist in any of the active languages, i.e., it is an entirely new term, a decision is required. The "Term Mapping Replication" option controls the decision:
+When rules are defined in the IPTC/EXIF/WP "Taxonomy term mapping section" they extract values (e.g., "IPTC 2#025 Keywords") from image metadata and use them to assign terms to the Media Library item(s). If the metadata value matches an existing term in the item's language it is assigned to the item. If the term already exists for any other active language it is not assigned to the item. If the term does not exist in any of the active languages, i.e., it is an entirely new term, a decision is required. The "Term Mapping Replication" option controls the decision:
 </p>
 <ul class="mla_settings">
 <li>When Replication <strong>is active</strong>, the term is created in the current language and then copied to every other active language as a translation of the term in the current language.</li>

@@ -643,6 +643,9 @@ var wp, wpAjax, ajaxurl, jQuery, _,
 						inputs = $( '#mla-terms-search-form' ).serializeArray();
 						for( inputIndex = 0; inputIndex < inputs.length; inputIndex++ ) {
 							switch ( inputs[ inputIndex ].name ) {
+								case 'mla_terms_search[filter]':
+									termsSearch.filter = inputs[ inputIndex ].value;
+									break;
 								case 'mla_terms_search[phrases]':
 									termsSearch.phrases = inputs[ inputIndex ].value;
 									break;
@@ -1669,7 +1672,14 @@ this.listenTo( this, 'all', this.selectionEvent );
 				}
 
 				mlaModal.utility.supportCompatTaxonomies( data );
-				$( '.compat-field-' + data.currentTaxonomy + ' td', context ).show();
+				
+				if ( mlaModal.settings.enableTermsAutoopen ) {
+					for ( taxonomy in results ) {
+						$( '.compat-field-' + taxonomy + ' td', context ).show();
+					}
+				} else {
+					$( '.compat-field-' + data.currentTaxonomy + ' td', context ).show();
+				}
 			});
 		} // query.length
 	};

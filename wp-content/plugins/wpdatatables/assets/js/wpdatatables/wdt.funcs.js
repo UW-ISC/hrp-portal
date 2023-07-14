@@ -722,3 +722,144 @@ function createAceEditor(selector) {
         }), 100)
     }
 }
+/**
+ * Changing the filed type in DataBase (how to store in DB) when you change wpdatacolumn type from selectbox
+ * @param possibleValueInput->input,multiline-sting,select,multiselect..
+ * @param addRemoveColumn
+ */
+function typeNameInDatabaseForSelectedType(possibleValueInput){
+    let type;
+    switch(possibleValueInput) {
+        case 'input':
+            type = 'VARCHAR';
+            break;
+        case 'memo':
+            type = 'TEXT';
+            if (
+                (typeof constructedTableData !== 'undefined' &&
+                    constructedTableData.connection_type == 'mssql') ||
+                (jQuery('#wdt-table-connection').length &&
+                    jQuery('#wdt-table-connection').data('vendor') == 'mssql')
+            )
+            {
+                type = 'VARCHAR';
+            }
+            break;
+        case 'select':
+        case 'multiselect':
+        case 'link':
+        case 'image':
+        case 'email':
+        case 'file':
+            type = 'VARCHAR';
+            break;
+        case 'int':
+            type = 'INT';
+            break;
+        case 'float':
+            type = 'DECIMAL';
+            break;
+        case 'date':
+            type = 'DATE';
+            break;
+        case 'datetime':
+            type = 'DATETIME';
+            break;
+        case 'time':
+            type = 'TIME';
+            break;
+        default:
+            type = 'VARCHAR';
+            break;
+    }
+    return type;
+}
+/**
+ * Changing the filed type value (length in DB) when you change type in DB selectbox value
+ * Not depending of wpdatacolumn type change
+ * @param typeValue->VARCHAR,INT,DECIMAL..
+ */
+function typeValueInDBFromTypeInDB(typeValue){
+    let type;
+    switch(typeValue) {
+        case 'VARCHAR':
+            type = '255';
+            break;
+        case 'DECIMAL':
+            type = '16,4';
+            break;
+        case 'SMALLINT':
+        case 'TINYINT':
+            type = '1';
+            break;
+        case 'MEDIUMINT':
+        case 'BIGINT':
+        case 'INT':
+            type = '11';
+            break;
+        case 'DATE':
+            typeValue = '';
+            break;
+        case 'DATETIME':
+            typeValue = '';
+            break;
+        case 'TIME':
+            typeValue = '';
+            break;
+        default:
+            type = '';
+            break;
+    }
+    return type;
+}
+/**
+ * Changing the filed type value (length in DB) when you change wpdatacolumn type from selectbox
+ * @param possibleValueInput->input,multiline-sting,select,multiselect..
+ */
+function typeValueInDBFromWpcolumnType(possibleValueInput){
+    let typeValue;
+    switch(possibleValueInput) {
+        case 'input':
+            typeValue = '255';
+            break;
+        case 'memo':
+            typeValue = '';
+            if (
+                (typeof constructedTableData !== 'undefined' &&
+                    constructedTableData.connection_type == 'mssql') ||
+                (jQuery('#wdt-table-connection').length &&
+                    jQuery('#wdt-table-connection').data('vendor') == 'mssql')
+            )
+            {
+                typeValue = '8000'
+            }
+            break;
+        case 'select':
+        case 'multiselect':
+        case 'link':
+        case 'image':
+        case 'email':
+        case 'file':
+            typeValue = '2000';
+            break;
+        case 'int':
+            typeValue = '11';
+            break;
+        case 'float':
+            typeValue = '16,4';
+            break;
+        case 'date':
+            typeValue = '';
+            break;
+        case 'datetime':
+            typeValue = '';
+            break;
+        case 'time':
+            typeValue = '';
+            break;
+        default:
+            typeValue = '';
+            break;
+    }
+    return typeValue;
+}

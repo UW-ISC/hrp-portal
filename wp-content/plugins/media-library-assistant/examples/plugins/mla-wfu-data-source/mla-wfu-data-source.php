@@ -13,7 +13,7 @@
  * https://wordpress.org/support/topic/
  *
  * @package MLA WFU Data Source
- * @version 1.00
+ * @version 1.01
  */
 
 /*
@@ -21,7 +21,7 @@ Plugin Name: MLA WFU Data Source
 Plugin URI: http://davidlingren.com/
 Description: Enhanced MLA data sources for Windows File Uploads additional data fields
 Author: David Lingren
-Version: 1.00
+Version: 1.01
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -57,7 +57,7 @@ class MLAWFUDataSource {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.00';
+	const PLUGIN_VERSION = '1.01';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -80,7 +80,7 @@ class MLAWFUDataSource {
 	/**
 	 * Settings Management object
 	 *
-	 * @since 1.02
+	 * @since 1.00
 	 *
 	 * @var	array
 	 */
@@ -102,7 +102,7 @@ class MLAWFUDataSource {
 	/**
 	 * Configuration values for the Settings Management object
 	 *
-	 * @since 1.02
+	 * @since 1.00
 	 *
 	 * @var	array
 	 */
@@ -183,8 +183,8 @@ class MLAWFUDataSource {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -192,7 +192,7 @@ class MLAWFUDataSource {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
 		
 		// Defined in /media-library-assistant/includes/class-mla-data.php
 		add_filter( 'mla_expand_custom_prefix', 'MLAWFUDataSource::mla_expand_custom_prefix', 10, 8 );

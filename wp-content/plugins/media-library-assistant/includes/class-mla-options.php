@@ -223,7 +223,7 @@ class MLAOptions {
 	 * Render and manage taxonomy support options, e.g., Categories and Post Tags
  	 *
 	 * @since 0.30
-	 * @uses $mla_option_templates contains taxonomy-row and taxonomy-table templates
+	 * @uses self::$mla_option_templates contains taxonomy-row and taxonomy-table templates
 	 *
 	 * @param	string 	'render', 'update', 'delete', or 'reset'
 	 * @param	string 	option name, e.g., 'tax_support', or 'tax_flat_checklist'
@@ -439,7 +439,7 @@ class MLAOptions {
 	 * Render and manage Search box options, e.g., connector and search fields
  	 *
 	 * @since 1.90
-	 * @uses $mla_option_templates contains search-table template
+	 * @uses self::$mla_option_templates contains search-table template
 	 *
 	 * @param	string 	'render', 'update', 'delete', or 'reset'
 	 * @param	string 	option name; 'search_connector' or 'search_fields'
@@ -635,7 +635,7 @@ class MLAOptions {
 	/**
 	 * Attachment ID passed from mla_add_attachment_action to mla_update_attachment_metadata_filter
 	 *
-	 * Ensures that IPTC/EXIF and Custom Field mapping is only performed when the attachment is first
+	 * Ensures that IPTC/EXIF/WP and Custom Field mapping is only performed when the attachment is first
 	 * added to the Media Library.
 	 *
 	 * @since 1.70
@@ -647,7 +647,7 @@ class MLAOptions {
 	/**
 	 * Identifies when attachments are first added to the Media Library.
 	 *
-	 * Ensures that IPTC/EXIF and Custom Field mapping is only performed when the attachment is first
+	 * Ensures that IPTC/EXIF/WP and Custom Field mapping is only performed when the attachment is first
 	 * added to the Media Library, after intermediate sizes are generated (WP 5.3+).
 	 *
 	 * @since 1.70
@@ -733,7 +733,7 @@ class MLAOptions {
  	} // mla_generate_attachment_metadata_filter
 
 	/**
-	 * Perform IPTC/EXIF and Custom Field mapping on just-inserted attachment
+	 * Perform IPTC/EXIF/WP and Custom Field mapping on just-inserted attachment
  	 *
 	 * This filter tests the $add_attachment_id variable set by the mla_add_attachment_action
 	 * to ensure that mapping is only performed for new additions, not metadata updates.
@@ -839,7 +839,7 @@ class MLAOptions {
 	} // mla_update_attachment_metadata_filter
 
 	/**
-	 * Get IPTC/EXIF or custom field mapping data source; WP_ADMIN mode
+	 * Get IPTC/EXIF/WP or custom field mapping data source; WP_ADMIN mode
 	 *
 	 * Compatibility shim for MLAData_Source::mla_get_data_source.
 	 *
@@ -988,7 +988,7 @@ class MLAOptions {
 	 * Compose a Custom Field Options list with current selection
  	 *
 	 * @since 1.10
-	 * @uses $mla_option_templates contains row and table templates
+	 * @uses self::$mla_option_templates contains row and table templates
 	 *
 	 * @param	string 	current selection or 'none' (default)
 	 * @param	array 	optional list of terms to exclude from the list
@@ -1035,7 +1035,7 @@ class MLAOptions {
 	 * Compose a (Custom Field) Data Source Options list with current selection
  	 *
 	 * @since 1.10
-	 * @uses $mla_option_templates contains row and table templates
+	 * @uses self::$mla_option_templates contains row and table templates
 	 *
 	 * @param	string 	current selection or 'none' (default)
 	 *
@@ -1308,29 +1308,6 @@ class MLAOptions {
 	} // _update_custom_field_mapping
 
 	/**
-	 * Render and manage custom field mapping options
- 	 *
-	 * @since 1.10
-	 * @uses $mla_option_templates contains row and table templates
-	 *
-	 * @param	string 	'render', 'update', 'delete', or 'reset'
-	 * @param	string 	option name, e.g., 'custom_field_mapping'
-	 * @param	array 	option parameters
-	 * @param	array 	Optional. null (default) for 'render' else option data, e.g., $_REQUEST
-	 *
-	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
-	 */
-	public static function mla_custom_field_option_handler( $action, $key, $value, $args = NULL ) {
-		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_custom_field_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
-		return "MLAOptions::mla_custom_field_option_handler( $action, $key ) deprecated.";
-
-		// Added in 2.63
-		MLAOptions::_load_option_templates();
-
-		$current_values = MLACore::mla_get_option( 'custom_field_mapping' );
-	} // mla_custom_field_option_handler
-
-	/**
 	 * Term ID cache for (hierarchical) taxonomy mapping rules
 	 *
 	 * Locates term name within the hierarchy.
@@ -1411,7 +1388,7 @@ class MLAOptions {
 	} // _get_term_id
 
 	/**
-	 * Evaluate IPTC/EXIF mapping updates for a post
+	 * Evaluate IPTC/EXIF/WP mapping updates for a post
  	 *
 	 * @since 1.00
 	 *
@@ -1875,7 +1852,7 @@ class MLAOptions {
 	 * Compose an IPTC Options list with current selection
  	 *
 	 * @since 1.00
-	 * @uses $mla_option_templates contains row and table templates
+	 * @uses self::$mla_option_templates contains row and table templates
 	 *
 	 * @param	string 	current selection or 'none' (default)
 	 *
@@ -1909,7 +1886,7 @@ class MLAOptions {
 	 * Compose an hierarchical taxonomy Parent options list with current selection
  	 *
 	 * @since 1.00
-	 * @uses $mla_option_templates contains row and table templates
+	 * @uses self::$mla_option_templates contains row and table templates
 	 *
 	 * @param	string 	taxonomy slug
 	 * @param	integer	current selection or 0 (zero, default)
@@ -1959,7 +1936,7 @@ class MLAOptions {
 	} // mla_compose_parent_option_list
 
 	/**
-	 * Update Standard field portion of IPTC/EXIF mappings
+	 * Update Standard field portion of IPTC/EXIF/WP mappings
  	 *
 	 * @since 1.00
 	 *
@@ -2053,7 +2030,7 @@ class MLAOptions {
 	} // _update_iptc_exif_standard_mapping
 
 	/**
-	 * Update Taxonomy term portion of IPTC/EXIF mappings
+	 * Update Taxonomy term portion of IPTC/EXIF/WP mappings
  	 *
 	 * @since 1.00
 	 *
@@ -2169,7 +2146,7 @@ class MLAOptions {
 	} // _update_iptc_exif_taxonomy_mapping
 
 	/**
-	 * Update Custom field portion of IPTC/EXIF mappings
+	 * Update Custom field portion of IPTC/EXIF/WP mappings
  	 *
 	 * @since 1.00
 	 *
@@ -2339,7 +2316,7 @@ class MLAOptions {
 	/**
 	 * Generate a list of all (post) Custom Field names
 	 *
-	 * The list will include any Custom Field and IPTC/EXIF rules that
+	 * The list will include any Custom Field and IPTC/EXIF/WP rules that
 	 * haven't been mapped to any attachments, yet.
  	 *
 	 * @since 1.00
@@ -2383,10 +2360,43 @@ class MLAOptions {
 	} // _get_custom_field_names
 
 	/**
-	 * Render and manage iptc/exif support options
+	 * Render and manage custom field mapping options
+ 	 *
+	 * @since 1.10
+	 * @uses self::$mla_option_templates contains row and table templates
+	 *
+	 * @param	string 	'render', 'update', 'delete', or 'reset'
+	 * @param	string 	option name, e.g., 'custom_field_mapping'
+	 * @param	array 	option parameters
+	 * @param	array 	Optional. null (default) for 'render' else option data, e.g., $_REQUEST
+	 *
+	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
+	 */
+	public static function mla_custom_field_option_handler( $action, $key, $value, $args = NULL ) {
+		switch ( $action ) {
+			case 'render':
+				MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_custom_field_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return " MLAOptions::mla_custom_field_option_handler( $action, $key ) deprecated.";
+			case 'update':
+				MLACore::mla_update_option( $key, $args[ $key ] );
+				return '<br>update_option(' . $key . ")\r\n";
+			case 'delete':
+			case 'reset':
+				MLACore::mla_delete_option( $key );
+				return '<br>delete_option(' . $key . ")\r\n";
+			default:
+				// fallthru to default message
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_custom_field_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+		return "MLAOptions::mla_custom_field_option_handler( $action, $key ) deprecated.";
+	} // mla_custom_field_option_handler
+
+	/**
+	 * Render and manage IPTC/EXIF/WP support options
  	 *
 	 * @since 1.00
-	 * @uses $mla_option_templates contains row and table templates
+	 * @uses self::$mla_option_templates contains row and table templates
 	 *
 	 * @param	string 	'render', 'update', 'delete', or 'reset'
 	 * @param	string 	option name, e.g., 'iptc_exif_mapping'
@@ -2396,13 +2406,89 @@ class MLAOptions {
 	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
 	 */
 	public static function mla_iptc_exif_option_handler( $action, $key, $value, $args = NULL ) {
+		switch ( $action ) {
+			case 'render':
+				MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_iptc_exif_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return " MLAOptions::mla_iptc_exif_option_handler( $action, $key ) deprecated.";
+			case 'update':
+				MLACore::mla_update_option( $key, $args[ $key ] );
+				return '<br>update_option(' . $key . ")\r\n";
+			case 'delete':
+			case 'reset':
+				MLACore::mla_delete_option( $key );
+				return '<br>delete_option(' . $key . ")\r\n";
+			default:
+				// fallthru to default message
+		}
+
 		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_iptc_exif_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
 		return " MLAOptions::mla_iptc_exif_option_handler( $action, $key ) deprecated.";
-
-		// Added in 2.63
-		MLAOptions::_load_option_templates();
-
-		$current_values = MLACore::mla_get_option( 'iptc_exif_mapping' );
 	} // mla_iptc_exif_option_handler
+
+	/**
+	 * Render and manage custom field mapping options
+ 	 *
+	 * @since 1.10
+	 * @uses self::$mla_option_templates contains row and table templates
+	 *
+	 * @param	string 	'render', 'update', 'delete', or 'reset'
+	 * @param	string 	option name, e.g., 'custom_field_mapping'
+	 * @param	array 	option parameters
+	 * @param	array 	Optional. null (default) for 'render' else option data, e.g., $_REQUEST
+	 *
+	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
+	 */
+	public static function mla_post_mime_types_option_handler( $action, $key, $value, $args = NULL ) {
+		switch ( $action ) {
+			case 'render':
+				MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_post_mime_types_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return " MLAOptions::mla_post_mime_types_option_handler( $action, $key ) deprecated.";
+			case 'update':
+				MLACore::mla_update_option( $key, $args[ $key ] );
+				return '<br>update_option(' . $key . ")\r\n";
+			case 'delete':
+			case 'reset':
+				MLACore::mla_delete_option( $key );
+				return '<br>delete_option(' . $key . ")\r\n";
+			default:
+				// fallthru to default message
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_post_mime_types_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+		return "MLAOptions::mla_post_mime_types_option_handler( $action, $key ) deprecated.";
+	} // mla_post_mime_types_option_handler
+
+	/**
+	 * Manage File Extension and MIME Type Processing (Uploads) support options
+ 	 *
+	 * @since 3.08
+	 * @uses self::$mla_option_templates contains row and table templates
+	 *
+	 * @param	string 	'render', 'update', 'delete', or 'reset'
+	 * @param	string 	option name, e.g., 'iptc_exif_mapping'
+	 * @param	array 	option parameters
+	 * @param	array 	Optional. null (default) for 'render' else option data, e.g., $_REQUEST
+	 *
+	 * @return	string	HTML table row markup for 'render' else message(s) reflecting the results of the operation.
+	 */
+	public static function mla_upload_mimes_option_handler( $action, $key, $value, $args = NULL ) {
+		switch ( $action ) {
+			case 'render':
+				MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_upload_mimes_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+				return " MLAOptions::mla_upload_mimes_option_handler( $action, $key ) deprecated.";
+			case 'update':
+				MLACore::mla_update_option( $key, $args[ $key ] );
+				return '<br>update_option(' . $key . ")\r\n";
+			case 'delete':
+			case 'reset':
+				MLACore::mla_delete_option( $key );
+				return '<br>delete_option(' . $key . ")\r\n";
+			default:
+				// fallthru to default message
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAOptions::mla_upload_mimes_option_handler( $action, $key )", MLACore::MLA_DEBUG_CATEGORY_ANY );
+		return " MLAOptions::mla_upload_mimes_option_handler( $action, $key ) deprecated.";
+	} // mla_upload_mimes_option_handler
 } // class MLAOptions
 ?>

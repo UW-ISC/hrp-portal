@@ -752,7 +752,7 @@ var singleClick = false;
                 $('#' + tableDescription.tableId + '_paginate').hide();
             }
 
-            $(tableDescription.selector + '_wrapper').addClass('wpDataTableID-' + tableDescription.tableWpId)
+            $(tableDescription.selector + '_wrapper').addClass('wpDataTables wpDataTablesWrapper wpDataTableID-' + tableDescription.tableWpId)
 
             /**
              * Set pagination alignment classes
@@ -2201,6 +2201,6 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
     }
 }
 
-jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";
+// jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";
 jQuery.fn.dataTable.ext.classes.sLengthSelect = 'wdt-selectpicker length_menu';
 jQuery.fn.dataTable.ext.classes.sFilterInput = 'form-control';

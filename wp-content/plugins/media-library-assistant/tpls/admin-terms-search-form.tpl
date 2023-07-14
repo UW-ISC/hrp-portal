@@ -18,6 +18,11 @@
 			<div id="mla-terms-search-close-div"></div>
 		</div>
 		<div id="mla-terms-search-inside-div">
+			<div id="mla-terms-search-filter-div" [+filter_style+]>
+				<label class="screen-reader-text" for="mla-terms-search-filter">[+Filter+]</label>
+				[+filter_dropdown+]
+				<div class="clear"></div>
+			</div>
 			<div id="mla-terms-search-search-div">
 				<label class="screen-reader-text" for="mla-terms-search-input">[+Search+]</label>
 				<input name="mla_terms_search[phrases]" id="mla-terms-search-input" type="text" value="">

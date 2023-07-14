@@ -46,6 +46,7 @@ var wpdatatable_config = {
     popover_tools: 0,
     mysql_table_name: '',
     connection: '',
+    connection_type: '',
     edit_only_own_rows: 0,
     editButtonsDisplayed: ["all"],
     enableDuplicateButton: false,

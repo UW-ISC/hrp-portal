@@ -71,8 +71,6 @@ class MLASettings_View {
  	 *
 	 * @since 1.40
 	 *
-	 * @uses $_REQUEST
-	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
 	private static function _save_view_settings( ) {

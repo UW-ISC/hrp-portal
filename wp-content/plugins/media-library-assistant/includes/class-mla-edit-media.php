@@ -808,7 +808,7 @@ class MLAEdit {
 	/**
 	 * Attachment ID passed from mla_add_attachment_action to mla_update_attachment_metadata_filter
 	 *
-	 * Ensures that IPTC/EXIF and Custom Field mapping is only performed when the attachment is first
+	 * Ensures that IPTC/EXIF/WP and Custom Field mapping is only performed when the attachment is first
 	 * added to the Media Library.
 	 *
 	 * @since 2.96
@@ -821,7 +821,7 @@ class MLAEdit {
 	 * Set $add_attachment_id to just-inserted attachment
  	 *
 	 * All of the actual processing is done later, in mla_update_attachment_metadata_filter.
-	 * This function is called only if Custom FIeld AND IPTC/EXIF mapping on new attachments are disabled
+	 * This function is called only if Custom FIeld AND IPTC/EXIF/WP mapping on new attachments are disabled
 	 *
 	 * The filter is applied by function wp_insert_post() in /wp-includes/post.php
 	 *
@@ -845,7 +845,7 @@ class MLAEdit {
 	 * to ensure that mapping is only performed after the generation of all intermediate sizes is complete.
 	 *
 	 * The filter is applied by function wp_generate_attachment_metadata() in /wp-includes/image.php
-	 * This function is called only if Custom Field AND IPTC/EXIF mapping on new attachments are disabled
+	 * This function is called only if Custom Field AND IPTC/EXIF/WP mapping on new attachments are disabled
 	 *
 	 * @since 2.96
 	 *
@@ -959,9 +959,9 @@ class MLAEdit {
 	public static function mla_post_updated_messages_filter( $messages ) {
 	if ( isset( $messages['attachment'] ) ) {
 		$messages['attachment'][101] = __( 'Custom field mapping updated.', 'media-library-assistant' );
-		$messages['attachment'][102] = __('IPTC/EXIF mapping updated.', 'media-library-assistant' );
+		$messages['attachment'][102] = __('IPTC/EXIF/WP mapping updated.', 'media-library-assistant' );
 		$messages['attachment'][103] = __( 'Custom field mapping is disabled.', 'media-library-assistant' );
-		$messages['attachment'][104] = __('IPTC/EXIF mapping is disabled.', 'media-library-assistant' );
+		$messages['attachment'][104] = __('IPTC/EXIF/WP mapping is disabled.', 'media-library-assistant' );
 	}
 
 	return $messages;
@@ -1097,7 +1097,7 @@ class MLAEdit {
 		}
 
 		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_IPTC_EXIF_MAPPING ) ) {
-			echo '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( 'upload.php?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_MAP, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Map IPTC/EXIF metadata for this item', 'media-library-assistant' ) . '">' . __( 'Map IPTC/EXIF metadata', 'media-library-assistant' ) . '</a>'; // phpcs:ignore
+			echo '<a href="' . add_query_arg( $view_args, MLACore::mla_nonce_url( 'upload.php?mla_admin_action=' . MLACore::MLA_ADMIN_SINGLE_MAP, MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ) . '" title="' . __( 'Map IPTC/EXIF/WP metadata for this item', 'media-library-assistant' ) . '">' . __( 'Map IPTC/EXIF/WP metadata', 'media-library-assistant' ) . '</a>'; // phpcs:ignore
 		}
 
 		echo "</span>\n";

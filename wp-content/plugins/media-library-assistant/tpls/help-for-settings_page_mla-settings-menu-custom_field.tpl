@@ -12,8 +12,8 @@
 <p>Three checkbox options control the custom field mapping when new items are added to the Media Library:
 <ul>
 <li><strong>Enable custom field mapping</strong> - Check this option to enable the mapping rules and display the "Map" buttons on the Media/Edit Media and Media/Assistant Bulk Edit screens.</li>
-<li><strong>Enable custom field mapping when adding new media</strong> - Check this option to enable mapping when uploading new items (attachments) to the Media Library.</li>
-<li><strong>Enable custom field mapping when updating media metadata</strong> - Check this option to enable mapping when item (attachment) metadata is regenerated,
+<li><strong>Perform custom field mapping when adding new media</strong> - Check this option to perform mapping when uploading new items (attachments) to the Media Library.</li>
+<li><strong>Perform custom field mapping when updating media metadata</strong> - Check this option to perform mapping when WordPress regenerates the item (attachment) metadata array,
  e.g., when the Media/Edit Media "Edit Image" functions are used.</li>
 </ul>
 The "when adding" and "when updating" options do <strong>NOT</strong> affect the operation of the "Map" buttons on the bulk edit or single edit screens, nor do they affect any of the "Execute" mapping functions On this Settings screen.</p>

@@ -218,7 +218,6 @@ class MLASettings_CustomFields {
 	 * Add a custom field rule from values in $_REQUEST
  	 *
 	 * @since 2.50
-	 * @uses $_REQUEST for field-level values
 	 *
 	 * @return string Message(s) reflecting the results of the operation
 	 */
@@ -281,9 +280,8 @@ class MLASettings_CustomFields {
 	 * Update a custom field rule from full-screen Edit Rule values in $_REQUEST
  	 *
 	 * @since 2.50
-	 * @uses $_REQUEST for field-level values
 	 *
-	 * @param integer $post_id ID value of rule to update
+	 * @param	integer $post_id ID value of rule to update
 	 * @param	array	&$template Display templates.
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
@@ -383,7 +381,6 @@ class MLASettings_CustomFields {
 	 * Update a custom field rule from Bulk Edit action values in $_REQUEST
  	 *
 	 * @since 2.50
-	 * @uses $_REQUEST for field-level values
 	 *
 	 * @param integer $post_id ID value of rule to update
 	 * @return string status/error message

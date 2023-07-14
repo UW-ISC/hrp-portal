@@ -5,6 +5,7 @@ var constructedTableData = {
     columnCount: 0,
     columns: [],
     connection: '',
+    connection_type: '',
 };
 
 var defaultPostColumns = [
@@ -127,9 +128,33 @@ var aceEditor = null;
     function wdtApplyBootstrapElements() {
         $('.wdt-constructor-column-type').selectpicker();
         $('.wdt-constructor-date-input-format').selectpicker();
+        $('.wdt-constructor-default-column-db-type').selectpicker();
         $('.wdt-constructor-possible-values').tagsinput({
             tagClass: 'label label-primary'
         });
+
+        var elementsPicker = document.querySelectorAll('select.wdt-constructor-default-column-db-type');
+        var divPicker = document.querySelectorAll('.wdt-constructor-default-column-db-type div.open li a span.text');
+        if(constructedTableData.connection_type == 'postgresql'){
+            for(var i=0; i< elementsPicker.length; i++) {
+                elementsPicker[i][9].innerHTML = elementsPicker[i][9].innerHTML.replace('DATETIME', 'TIMESTAMP');
+                elementsPicker[i][9].innerText = elementsPicker[i][9].innerText.replace('DATETIME', 'TIMESTAMP');
+            }
+            for(var i=0; i< divPicker.length; i++){
+                divPicker[i].innerHTML = divPicker[i].innerHTML.replace('DATETIME', 'TIMESTAMP');
+                divPicker[i].innerText = divPicker[i].innerText.replace('DATETIME', 'TIMESTAMP');
+            }
+            $("select.wdt-constructor-default-column-db-type option[value='TINYINT']").hide();
+            $('.wdt-constructor-default-column-db-type div.open li[data-original-index="2"]').hide();
+            $("select.wdt-constructor-default-column-db-type option[value='MEDIUMINT']").hide();
+            $('.wdt-constructor-default-column-db-type div.open li[data-original-index="5"]').hide();
+        }
+        if(constructedTableData.connection_type == 'mssql'){
+            $("select.wdt-constructor-default-column-db-type option[value='TEXT']").hide();
+            $('.wdt-constructor-default-column-db-type div.open li[data-original-index="1"]').hide();
+            $("select.wdt-constructor-default-column-db-type option[value='MEDIUMINT']").hide();
+            $('.wdt-constructor-default-column-db-type div.open li[data-original-index="5"]').hide();
+        }
     }
 
     $('.wdt-constructor-type-selecter-block .card').on('click', function () {
@@ -350,6 +375,14 @@ var aceEditor = null;
         constructedTableData.table_description = $(this).val();
     });
 
+    $('.wdt-constructor-default-column-db-type-value').change(function (e) {
+        e.preventDefault();
+        $('.wdt-constructor-default-column-db-type-value').val(typeValueInDBFromWpcolumnType('input'));
+    });
+    $('.wdt-type-value-default').on('change', function (e) {
+        e.preventDefault();
+        $('.wdt-constructor-default-column-db-type-value').val(typeValueInDBFromWpcolumnType('input'));
+    });
     /**
      * Handler which creates the table
      */
@@ -383,6 +416,7 @@ var aceEditor = null;
             constructedTableData.table_type = constructedTableData.method;
             constructedTableData.advanced_settings = {};
             constructedTableData.advanced_settings.table_description = constructedTableData.table_description;
+            constructedTableData.advanced_settings.predefined_type_in_db = constructedTableData.predefined_type_in_db;
             constructedTableData.content = {};
             constructedTableData.content.rowNumber = parseInt(rows);
             constructedTableData.content.colNumber = parseInt(columns);
@@ -448,6 +482,7 @@ var aceEditor = null;
         e.preventDefault();
         constructedTableData.name = $(this).val();
     });
+
     /**
      * Change table description for manual, wp-query and mysql-query based tables
      */
@@ -485,6 +520,7 @@ var aceEditor = null;
         disableGroupingOptions(this);
 
         constructedTableData.connection = $(this).val();
+        constructedTableData.connection_type = $(this)[0].options[$(this)[0].selectedIndex].dataset.vendor;
 
         var inputMethod = $('.wdt-constructor-type-selecter-block .card.selected').data('value');
 
@@ -545,21 +581,93 @@ var aceEditor = null;
         return columnTemplate.render(columnData);
     };
 
+    $(document).on('change', 'select.wdt-constructor-default-column-db-type', function (e) {
+        var $columnBlock = $(this).closest('div.wdt-constructor-column-block');
+        var $typeValueInDatabase = typeValueInDBFromTypeInDB($(this).val());
+        var $dateInputBlock = $columnBlock.find('.wdt-constructor-date-input-format-block');
+        var $possibleValuesBlock = $columnBlock.find('.wdt-constructor-possible-values-block');
+
+        if($.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT' ,'TINYINT','MEDIUMINT' ,'VARCHAR']) != -1){
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'number';
+        } else {
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
+        }
+
+        if ($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1 && $.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1) {
+            $dateInputBlock.show();
+        } else {
+            $dateInputBlock.hide();
+        }
+
+        $possibleValuesBlock.hide();
+        $columnBlock.find('.wdt-constructor-default-value').selectpicker('destroy');
+        $columnBlock.find('.wdt-constructor-default-value')
+            .replaceWith('<input type="text" class="form-control input-sm wdt-constructor-default-value" value="">');
+        $columnBlock.find('.wdt-constructor-default-value')
+            .attr('type', 'text');
+
+        if ($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1) {
+            $columnBlock.find('.wdt-constructor-default-value')
+                .addClass('wdt-' + $(this).val().toLowerCase() + 'picker');
+        } else {
+            $columnBlock.find('.wdt-constructor-default-value')
+                .removeClass('wdt-datepicker wdt-datetimepicker wdt-timepicker');
+        }
+
+        if($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1 || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
+            $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1) ){
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
+            $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
+        } else {
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
+            $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
+        }
+
+        $columnBlock.find('.wdt-constructor-default-column-db-type-value').val($typeValueInDatabase);
+        $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('refresh');
+    });
     /**
      * Show the "Possible values" tagger for selectbox-type inputs
      */
     $(document).on('change', 'select.wdt-constructor-column-type', function (e) {
         var $columnBlock = $(this).closest('div.wdt-constructor-column-block');
         var $possibleValuesInput = $columnBlock.find('.wdt-constructor-possible-values');
+        var $possibleValueDB = $(this).val();
+        var $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
+        var $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
         var $possibleValuesBlock = $columnBlock.find('.wdt-constructor-possible-values-block');
         var $dateInputBlock = $columnBlock.find('.wdt-constructor-date-input-format-block');
+
+        if($(this).val() == 'float'){
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
+        } else {
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'number';
+        }
+
         if ($(this).val() == 'select' || $(this).val() == 'multiselect') {
             $dateInputBlock.hide();
             $possibleValuesBlock.show();
             $columnBlock.find('.wdt-constructor-default-value').selectpicker('destroy');
+            $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('val', $typeInDatabase);
+            $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
+            $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
+            if($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
+                $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
+                $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
+            } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
+                || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1)  || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
+                    $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+                $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
+                $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
+            } else {
+                $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
+                $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
+            }
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').val($typeValueInDatabase);
+            $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('refresh');
             $columnBlock.find('.wdt-constructor-default-value')
                 .replaceWith('<select class="selectpicker wdt-constructor-default-value"></select>');
-            if ($(this).val() == 'multiselect') {
+            if ($(this).val() == 'multiselect' && $columnBlock.find('select.wdt-constructor-default-column-db-type').val() == 'VARCHAR') {
                 $columnBlock.find('.wdt-constructor-default-value').attr('multiple', 'multiple');
             } else {
                 $columnBlock.find('.wdt-constructor-default-value').prepend('<option value=""></option>').removeAttr('multiple');
@@ -588,7 +696,7 @@ var aceEditor = null;
                 $columnBlock.find('.wdt-constructor-default-value').selectpicker('refresh');
             });
         } else {
-            if ($(this).val() == 'date' || $(this).val() == 'datetime') {
+            if ($(this).val() == 'date' || $(this).val() == 'datetime' || $.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME']) != -1 ) {
                 $dateInputBlock.show();
             } else {
                 $dateInputBlock.hide();
@@ -604,6 +712,9 @@ var aceEditor = null;
             if ($.inArray($(this).val(), ['date', 'datetime', 'time']) != -1) {
                 $columnBlock.find('.wdt-constructor-default-value')
                     .addClass('wdt-' + $(this).val() + 'picker');
+            } else {
+                $columnBlock.find('.wdt-constructor-default-value')
+                    .removeClass('wdt-datepicker wdt-datetimepicker wdt-timepicker');
             }
 
             if ($.inArray($(this).val(), ['int', 'float']) != -1) {
@@ -612,6 +723,25 @@ var aceEditor = null;
             }
 
         }
+
+        $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('val', $typeInDatabase);
+        $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
+        $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
+        if($(this).val() == 'memo' && constructedTableData.connection_type == 'mssql') {
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
+            $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
+        } else if(($.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME', 'TEXT']) != -1)
+            || ($.inArray($(this).val(), ['date', 'datetime', 'time', 'memo']) != -1) || ($.inArray(constructedTableData.connection_type,['mssql', 'postgresql']) != -1 &&
+                $.inArray($typeInDatabase,['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
+            $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
+        } else {
+            $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
+            $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
+        }
+
+        $columnBlock.find('.wdt-constructor-default-column-db-type-value').val($typeValueInDatabase);
+        $columnBlock.find('.wdt-constructor-default-column-db-type').selectpicker('refresh');
     });
 
     /**
@@ -718,10 +848,10 @@ var aceEditor = null;
             constructedTableData.columns = [];
             $('div.wdt-constructor-column-block').each(function () {
                 var columnType = $(this).find('.wdt-constructor-column-type').selectpicker('val');
-                var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 ?
+                var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR'?
                     $(this).find('.wdt-constructor-default-value').selectpicker('val') :
                     $(this).find('.wdt-constructor-default-value').val();
-                if (defaultValue != null && columnType == 'multiselect') {
+                if (defaultValue != null && columnType == 'multiselect' && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR') {
                     defaultValue.join('|');
                 }
 
@@ -729,6 +859,8 @@ var aceEditor = null;
                     name: $(this).find('.wdt-constructor-column-name').val(),
                     type: columnType,
                     possible_values: $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|'),
+                    predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
+                    predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
                     default_value: defaultValue
                 });
             });
@@ -745,7 +877,20 @@ var aceEditor = null;
                     window.location = link + tableView;
                 },
                 error: function (data) {
-                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    if(data.responseText.includes('Display width')){
+                        if(constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
+                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
+                                + data.statusText);
+                        }else{
+                            $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: br> <strong>VARCHAR </strong><br>'
+                                + data.statusText);
+                        }
+                    } else if(data.responseText.includes('error in your SQL syntax')){
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> Error in your SQL syntax! Empty type value or special characters are not allowed! <br>'
+                            + data.statusText);
+                    } else {
+                        $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    }
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
                 }
@@ -777,20 +922,31 @@ var aceEditor = null;
                         orig_header: $(this).find('.wdt-constructor-column-name').val(),
                         name: $(this).find('.wdt-constructor-column-name').val(),
                         type: $(this).find('.wdt-constructor-column-type').selectpicker('val'),
+                        predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
+                        predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
                         possible_values: $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|'),
                         default_value: $(this).find('.wdt-constructor-default-value').val(),
                         dateInputFormat: typeof $(this).find('.wdt-constructor-date-input-format').val() !== 'undefined' ?
                             $(this).find('.wdt-constructor-date-input-format').selectpicker('val') : ''
                     });
                 });
-
                 $('#wdt-constructor-file-table-name').change();
                 $('#wdt-constructor-file-table-description').change();
 
                 wdtReadFileDataAndEditTable(tableView);
             } else {
                 let index = emptyHeader > 0 ? emptyHeader - 1 : emptyHeader;
-                $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! The column header at position ' + emptyHeader  + ' is empty. Please edit your source file so none of your column headers are empty and try again.');
+                if(data.responseText.includes('Display width')){
+                    if (constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
+                            + data.statusText);
+                    }else{
+                        $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>VARCHAR</strong><br>'
+                            + data.statusText);
+                    }
+                } else {
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! The column header at position ' + emptyHeader + ' is empty. Please edit your source file so none of your column headers are empty and try again.');
+                }
                 $('#wdt-error-modal').modal('show');
                 $('.wdt-preload-layer').animateFadeOut();
                 $('.wdt-constructor-column-name:eq(' + index + ')').css('cssText', 'background: red!important');

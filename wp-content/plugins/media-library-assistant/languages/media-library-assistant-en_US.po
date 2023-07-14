@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2022-02-13 12:30-0800\n"
-"PO-Revision-Date: 2022-02-13 12:31-0800\n"
+"POT-Creation-Date: 2023-06-25 16:16-0700\n"
+"PO-Revision-Date: 2023-06-25 16:17-0700\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,6 +138,12 @@ msgstr ""
 msgid "Where-used Reporting"
 msgstr ""
 
+msgid "For complete documentation"
+msgstr ""
+
+msgid "click here"
+msgstr ""
+
 msgid "Exclude Revisions"
 msgstr ""
 
@@ -226,12 +232,6 @@ msgstr ""
 msgid ""
 "Check the \"<strong>Term Search</strong>\" box to add the taxonomy to the "
 "\"Search Media/Terms\" list."
-msgstr ""
-
-msgid "For complete documentation"
-msgstr ""
-
-msgid "click here"
 msgstr ""
 
 msgid ""
@@ -377,7 +377,7 @@ msgstr ""
 msgid "Check this option to store separate Bulk Edit presets for each user."
 msgstr ""
 
-msgid "Taxonomy Filter parameters"
+msgid "Media/Assistant Taxonomy Filter parameters"
 msgstr ""
 
 msgid "Maximum Depth"
@@ -394,6 +394,16 @@ msgstr ""
 msgid ""
 "Check/uncheck this option to include/exclude children for hierarchical "
 "taxonomies."
+msgstr ""
+
+msgid "Terms Search Taxonomy Filter parameters"
+msgstr ""
+
+msgid "Terms Search Filter Taxonomy"
+msgstr ""
+
+msgid ""
+"Select the (optional) taxonomy on which to filter the Terms Search results."
 msgstr ""
 
 msgid "Search Media Defaults"
@@ -550,6 +560,14 @@ msgstr ""
 msgid ""
 "Check this option to automatically fill MLA-enhanced meta boxes in the "
 "\"ATTACHMENT DETAILS\" pane<br>&nbsp;&nbsp;when the item is selected."
+msgstr ""
+
+msgid "Media Manager auto-open meta boxes"
+msgstr ""
+
+msgid ""
+"Check this option to automatically open all MLA-enhanced taxonomy meta boxes "
+"in the \"ATTACHMENT DETAILS\" pane<br>&nbsp;&nbsp;when the item is selected."
 msgstr ""
 
 msgid "Media Manager Order By"
@@ -752,10 +770,10 @@ msgstr ""
 msgid "See Help menu."
 msgstr ""
 
-msgid "Enable custom field mapping when adding new media"
+msgid "Perform custom field mapping when adding new media"
 msgstr ""
 
-msgid "Enable custom field mapping when updating media metadata"
+msgid "Perform custom field mapping when updating media metadata"
 msgstr ""
 
 msgid ""
@@ -765,25 +783,13 @@ msgid ""
 "saving any rule changes."
 msgstr ""
 
-msgid "Enable IPTC/EXIF Mapping"
+msgid "Enable IPTC/EXIF/WP Mapping"
 msgstr ""
 
-msgid "Enable IPTC/EXIF Mapping when adding new media"
+msgid "Perform IPTC/EXIF/WP Mapping when adding new media"
 msgstr ""
 
-msgid ""
-"Check this option to enable mapping when uploading new media (attachments)."
-"<br>&nbsp;&nbsp;Does NOT affect the operation of the \"Map\" buttons on the "
-"bulk edit, single edit and settings screens."
-msgstr ""
-
-msgid "Enable IPTC/EXIF Mapping when updating media metadata"
-msgstr ""
-
-msgid ""
-"Check this option to enable mapping when media (attachments) metadata is "
-"regenerated,<br>&nbsp;&nbsp;e.g., when the Media/Edit Media \"Edit Image\" "
-"functions are used."
+msgid "Perform IPTC/EXIF/WP Mapping when updating media metadata"
 msgstr ""
 
 msgid ""
@@ -809,7 +815,7 @@ msgid ""
 "changes."
 msgstr ""
 
-msgid "IPTC/EXIF Mapping help"
+msgid "IPTC/EXIF/WP Mapping help"
 msgstr ""
 
 msgid "Name/Slug"
@@ -1514,13 +1520,13 @@ msgstr ""
 msgid "Custom field mapping updated."
 msgstr ""
 
-msgid "IPTC/EXIF mapping updated."
+msgid "IPTC/EXIF/WP mapping updated."
 msgstr ""
 
 msgid "Custom field mapping is disabled."
 msgstr ""
 
-msgid "IPTC/EXIF mapping is disabled."
+msgid "IPTC/EXIF/WP mapping is disabled."
 msgstr ""
 
 msgid "Month"
@@ -1570,10 +1576,10 @@ msgstr ""
 msgid "Map Custom Field metadata"
 msgstr ""
 
-msgid "Map IPTC/EXIF metadata for this item"
+msgid "Map IPTC/EXIF/WP metadata for this item"
 msgstr ""
 
-msgid "Map IPTC/EXIF metadata"
+msgid "Map IPTC/EXIF/WP metadata"
 msgstr ""
 
 msgid "Parent Info"
@@ -2463,7 +2469,7 @@ msgid "Term Mapping Replication"
 msgstr ""
 
 msgid ""
-"When mapping IPTC/EXIF metadata to taxonomy terms, make them available in "
+"When mapping IPTC/EXIF/WP metadata to taxonomy terms, make them available in "
 "all languages."
 msgstr ""
 
@@ -2949,16 +2955,16 @@ msgctxt "table_view_plural"
 msgid "Uninstalled"
 msgstr ""
 
-msgid "IPTC/EXIF mapping settings updated."
+msgid "IPTC/EXIF/WP mapping settings updated."
 msgstr ""
 
-msgid "IPTC/EXIF no mapping changes detected."
+msgid "IPTC/EXIF/WP no mapping changes detected."
 msgstr ""
 
 msgid "updated."
 msgstr ""
 
-msgid "Notes for the IPTC/EXIF tab submenu table."
+msgid "Notes for the IPTC/EXIF/WP tab submenu table."
 msgstr ""
 
 msgid "EXIF/Template Value"
@@ -2991,7 +2997,7 @@ msgstr ""
 msgid "Edit IPTC EXIF Rule cancelled."
 msgstr ""
 
-msgid "IPTC/EXIF Mapping Support is disabled"
+msgid "IPTC/EXIF/WP Mapping Support is disabled"
 msgstr ""
 
 msgid "IPTC &amp; EXIF Mapping Progress"
@@ -3004,6 +3010,11 @@ msgid ""
 "In this tab you can define the rules for mapping IPTC (International Press "
 "Telecommunications Council) and EXIF (EXchangeable Image File) metadata to "
 "WordPress standard attachment fields, taxonomy terms and custom fields."
+msgstr ""
+
+msgid ""
+"You can also use a Content Template to compose a value from field-level data "
+"sources like Title, Author, ALT Text and File Name."
 msgstr ""
 
 msgctxt "list_table_column"
@@ -3521,7 +3532,7 @@ msgstr ""
 msgid "Custom Fields"
 msgstr ""
 
-msgid "IPTC/EXIF"
+msgid "IPTC/EXIF/WP"
 msgstr ""
 
 msgid "Documentation"
@@ -3661,10 +3672,10 @@ msgstr ""
 msgid "General settings reset to default values."
 msgstr ""
 
-msgid "select settings"
+msgid "Import ALL Settings"
 msgstr ""
 
-msgid "Import ALL Settings"
+msgid "select settings"
 msgstr ""
 
 msgctxt "message_list"
@@ -3703,6 +3714,14 @@ msgstr ""
 msgid "Settings exported; %1$s settings recorded in %2$s."
 msgstr ""
 
+msgctxt "message_list"
+msgid "updated"
+msgstr ""
+
+msgctxt "message_list"
+msgid "unchanged"
+msgstr ""
+
 msgid "No settings imported."
 msgstr ""
 
@@ -3719,14 +3738,6 @@ msgstr ""
 
 #, php-format
 msgid "%1$s: Reading the settings file ( %2$s ) \"%3$s\"."
-msgstr ""
-
-msgctxt "message_list"
-msgid "updated"
-msgstr ""
-
-msgctxt "message_list"
-msgid "unchanged"
 msgstr ""
 
 #, php-format

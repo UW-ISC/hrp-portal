@@ -141,6 +141,9 @@ class WDTSettingsController
             'wdtActivatedMasterDetail' => get_option('wdtActivatedMasterDetail'),
             'wdtPurchaseCodeStoreMasterDetail' => get_option('wdtPurchaseCodeStoreMasterDetail') != '' ? 1 : 0,
             'wdtAutoUpdateOption' => get_option('wdtAutoUpdateOption'),
+            'wdtGoogleStableVersion' => get_option('wdtGoogleStableVersion'),
+            'wdtHighChartStableVersion' => get_option('wdtHighChartStableVersion'),
+            'wdtApexStableVersion' => get_option('wdtApexStableVersion'),
         );
     }
 

@@ -14,21 +14,23 @@
     $wpRoles = new WP_Roles();
     $wdtUserRoles = $wpRoles->get_names();
     $globalAutoUpdateOption = get_option('wdtAutoUpdateOption');
+    $connection_type = '';
     // set connection if $connection is not set with GET parameter
     if ( $connection === null ) {
         if ( Connection::enabledSeparate() ) {
             foreach ( Connection::getAll() as $wdtSeparateConnection ) {
                 if ( $wdtSeparateConnection['default'] ) {
                     $connection = $wdtSeparateConnection['id'];
+                    $connection_type = $wdtSeparateConnection['vendor'];
                 }
             }
         } else {
-            $connection === '';
+            $connection = '';
         }
     }
     ?>
 
-    <input type="hidden" id="wdt-table-connection" value="<?php echo esc_attr( $connection ); ?>"/>
+    <input type="hidden" id="wdt-table-connection" data-vendor = "<?php echo esc_attr($connection_type); ?>" value="<?php echo esc_attr($connection); ?>"/>
 
     <!-- Preloader -->
     <?php include WDT_TEMPLATE_PATH . 'admin/common/preloader.inc.php'; ?>

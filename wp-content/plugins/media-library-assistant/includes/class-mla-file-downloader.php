@@ -166,7 +166,7 @@ class MLAFileDownloader {
 	 * @param	string	$message Error message.
 	 * @param	string	$line Optional. Line number in the caller.
 	 *
-	 * @return	 array( 'error' => message )
+	 * @return	 array	( 'error' => message )
 	 */
 	private static function _mla_error_return( $message, $line = '' ) {
 		self::_mla_debug_add( $line . " MLAFileDownloader::_mla_error_return '{$message}'" );
