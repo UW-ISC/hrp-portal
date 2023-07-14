@@ -122,7 +122,7 @@ mlaInlineEditSettings = {
 
 			switch ( fields[fIndex] ) {
 				case 'type':
-					// IPTC/EXIF rules differ by type
+					// IPTC/EXIF/WP rules differ by type
 					if ( 'taxonomy' == fText ) {
 						$('.inline-taxonomy-group', editRow).show();
 					} else {

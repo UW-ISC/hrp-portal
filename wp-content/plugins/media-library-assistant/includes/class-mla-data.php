@@ -22,6 +22,7 @@ class MLAData {
 	 * @since 0.1
 	 */
 	public static function initialize() {
+		// Moved to MLAQuery but retained here for example plugins.
 		self::$search_parameters =& MLAQuery::$search_parameters;
 		self::$query_parameters =& MLAQuery::$query_parameters;
 
@@ -740,7 +741,6 @@ class MLAData {
 	 * @return	array	individual arguments, e.g. array( 0 => 'd/m/Y H:i:s', 1 => 'arg, " two' )
 	 */
 	private static function _parse_arguments( $argument_string ) {
-//error_log( __LINE__ . ' _parse_arguments argument_string = ' . var_export( $argument_string, true ), 0 );
 		$argument_string = trim( $argument_string, " \n\t\r\0\x0B," );
 		$arguments = array();
 
@@ -820,14 +820,10 @@ class MLAData {
 				} // index < strlen
 			} // non-array
 
-//error_log( __LINE__ . ' _parse_arguments argument = ' . var_export( $argument, true ), 0 );
 			$arguments[] = $argument;
-//error_log( __LINE__ . " _parse_arguments( {$index} ) argument_string = " . var_export( $argument_string, true ), 0 );
-//			$argument_string = trim( substr( $argument_string, $index ), " \n\t\r\0\x0B" );  20210717
 			$argument_string = trim( substr( $argument_string, $index ), " \n\t\r\0\x0B," );
 		} // strlen( $argument_string )
 
-//error_log( __LINE__ . ' _parse_arguments arguments = ' . var_export( $arguments, true ), 0 );
 		return $arguments;
 	}
 
@@ -889,7 +885,6 @@ class MLAData {
 	 * @return	array	Parameter components: prefix, value, qualifier, option, format, args
 	 */
 	public static function mla_parse_substitution_parameter( $parameter, $default_option = 'text' ) {
-//error_log( __LINE__ . ' mla_parse_substitution_parameter parameter = ' . var_export( $parameter, true ), 0 );
 
 			// Strip optional enclosing delimiters
 			if ( 0 === strpos( $parameter, '[+' ) ) {
@@ -900,7 +895,6 @@ class MLAData {
 
 			// Split the prefix, name and qualifier from the format/option code
 			$match_count = preg_match( '/([^,]+),(.+)/', $parameter, $matches );
-//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
 			if ( 1 == $match_count ) {
 				$name = $matches[1];
 				$tail = $matches[2];
@@ -910,7 +904,6 @@ class MLAData {
 			}
 
 			$match_count = preg_match( '/([^:]+):(.+)/', $name, $matches );
-//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
 			if ( 1 == $match_count ) {
 				$result['prefix'] = $matches[1];
 				$result['value'] = $matches[2];
@@ -920,7 +913,6 @@ class MLAData {
 
 			if ( !empty( $tail ) ) {
 				$match_count = preg_match( '/((text|single|export|unpack|array|multi|commas|raw|attr|url|kbmb|timestamp|date|fraction|substr|str_replace|match|extract|replace))(\((.*)\)$)*/', $tail, $matches );
-//error_log( __LINE__ . ' mla_parse_substitution_parameter matches = ' . var_export( $matches, true ), 0 );
 				if ( 1 == $match_count ) {
 					if ( ! empty( $matches[4] ) ) {
 						$args = self::_parse_arguments( $matches[4] );
@@ -963,7 +955,6 @@ class MLAData {
 			$result['qualifier'] = $matches[2];
 		}
 
-//error_log( __LINE__ . ' mla_parse_substitution_parameter result = ' . var_export( $result, true ), 0 );
 		return $result;
 	}
 
@@ -1257,10 +1248,14 @@ class MLAData {
 
 				if ( ! empty( $args['args'] ) ) {
 					if ( is_array( $args['args'] ) ) {
-						$pattern = trim( $args['args'][0] );
+						if ( is_array( $args['args'][0] ) ) {
+							$pattern = array_map( 'trim', $args['args'][0] );
+						} else {
+							$pattern = trim( $args['args'][0] );
+						}
 
 						if ( 1 < count( $args['args'] ) ) {
-//							$replacement = trim( $args['args'][1] ); 20210717
+							// Don;t trim replacements - they may want the spaces
 							$replacement = $args['args'][1];
 						}
 
@@ -1603,6 +1598,17 @@ class MLAData {
 					}
 
 					break;
+				case 'png':
+					if ( is_null( $attachment_metadata ) ) {
+						if ( 0 < $post_id ) {
+							$attachment_metadata = self::mla_fetch_attachment_image_metadata( $post_id );
+						} else {
+							break;
+						}
+					}
+
+					$markup_values[ $key ] = self::mla_png_metadata_value( $value['value'], $attachment_metadata['mla_png_metadata'], $value['option'], $keep_existing );
+					break;
 				case 'mso':
 					if ( is_null( $attachment_metadata ) ) {
 						if ( 0 < $post_id ) {
@@ -1725,13 +1731,7 @@ class MLAData {
 	/**
 	 * WP_Query filter "parameters"
 	 *
-	 * This array defines parameters for the query's join, where and orderby filters.
-	 * The parameters are set up in the _prepare_list_table_query function, and
-	 * any further logic required to translate those values is contained in the filters.
-	 *
-	 * Array index values are: use_alt_text_view, use_postmeta_view, use_orderby_view,
-	 * alt_text_value, postmeta_key, postmeta_value, patterns, detached,
-	 * orderby, order, mla-metavalue, debug (also in search_parameters)
+	 * Moved to MLAQuery but retained here for example plugins.
 	 *
 	 * @since 0.30
 	 *
@@ -1742,25 +1742,7 @@ class MLAData {
 	/**
 	 * WP_Query 'posts_search' filter "parameters"
 	 *
-	 * This array defines parameters for the query's posts_search filter, which uses
-	 * 'search_string' to add a clause to the query's WHERE clause. It is shared between
-	 * the list_table-query functions here and the mla_get_shortcode_attachments function
-	 * in class-mla-shortcodes.php. This array passes the relevant parameters to the filter.
-	 *
-	 * Array index values are:
-	 * ['mla_terms_search']['phrases']
-	 * ['mla_terms_search']['taxonomies']
-	 * ['mla_terms_search']['radio_phrases'] => AND/OR
-	 * ['mla_terms_search']['radio_terms'] => AND/OR
-	 * ['s'] => numeric for ID/parent search
-	 * ['mla_search_fields'] => 'title', 'name', 'alt-text', 'excerpt', 'content', 'file' ,'terms'
-	 * Note: 'alt-text' and 'file' are not supported in [mla_gallery]
-	 * ['mla_search_connector'] => AND/OR
-	 * ['whole_word'] => each word must match as one "keyword", e.g. "man" won't match "woman"
-	 * ['sentence'] => entire string must match as one "keyword"
-	 * ['exact'] => entire string must match entire field value
-	 * ['debug'] => internal element, console/log/shortcode/none
-	 * ['tax_terms_count'] => internal element, shared with JOIN and GROUP BY filters
+	 * Moved to MLAQuery but retained here for example plugins.
 	 *
 	 * @since 2.00
 	 *
@@ -1809,7 +1791,6 @@ class MLAData {
 	 * the posts and postmeta tables, and all references to the attachment.
 	 * 
 	 * @since 0.1
-	 * @uses $post WordPress global variable
 	 * 
 	 * @param	integer	The ID of the attachment post
 	 * @param	boolean	True to add references, false to skip references
@@ -3343,6 +3324,41 @@ class MLAData {
 	}
 
 	/**
+	 * Parse one PNG image metadata field
+	 * 
+	 * Also handles the special pseudo-value 'ALL_PNG'.
+	 *
+	 * @since 3.08
+	 *
+	 * @param	string	field name
+	 * @param	array	PNG metadata array
+	 * @param	string	data option; 'text'|'single'|'export'|'array'|'multi'
+	 * @param	boolean	Optional: for option 'multi', retain existing values
+	 *
+	 * @return	mixed	string/array representation of metadata value or an empty string
+	 */
+	public static function mla_png_metadata_value( $png_key, $png_metadata, $option = 'text', $keep_existing = false ) {
+		if ( 'ALL_PNG' == $png_key ) {
+			$clean_data = array();
+			if ( is_array( $png_metadata ) ) {
+				foreach ( $png_metadata as $key => $value ) {
+					if ( is_array( $value ) ) {
+						$clean_data[ $key ] = '(ARRAY)';
+					} elseif ( is_string( $value ) ) {
+						$clean_data[ $key ] = self::_bin_to_utf8( substr( $value, 0, 256 ) );
+					} else {
+						$clean_data[ $key ] = $value;
+					}
+				}
+			}
+
+			return var_export( $clean_data, true);
+		}
+
+		return self::mla_find_array_element($png_key, $png_metadata, $option, $keep_existing );
+	}
+
+	/**
 	 * Parse one MS Office metadata field
 	 * 
 	 * Also handles the special pseudo-value 'ALL_MSO'.
@@ -3550,7 +3566,7 @@ class MLAData {
 	}
 
 	/**
-	 * Passes IPTC/EXIF parse errors between mla_metadata_error_handler
+	 * Passes IPTC/EXIF/WP parse errors between mla_metadata_error_handler
 	 * and mla_fetch_attachment_image_metadata
 	 *
 	 * @since 1.81

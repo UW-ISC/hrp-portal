@@ -498,7 +498,7 @@ class MLA_Polylang {
 	} // pll_translate_media
 
 	/**
-	 * Force "All languages" mode for IPTC/EXIF mapping, which uses mla_get_shortcode_attachments
+	 * Force "All languages" mode for IPTC/EXIF/WP mapping, which uses mla_get_shortcode_attachments
 	 *
 	 * @since 2.20
 	 *
@@ -511,7 +511,7 @@ class MLA_Polylang {
 	}
 
 	/**
-	 * Force "All languages" mode for IPTC/EXIF mapping, which uses mla_get_shortcode_attachments
+	 * Force "All languages" mode for IPTC/EXIF/WP mapping, which uses mla_get_shortcode_attachments
 	 *
 	 * @since 2.20
 	 *
@@ -2596,7 +2596,7 @@ class MLA_Polylang {
 					'name' => __( 'Term Mapping Replication', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => 'checked',
-					'help' => __( 'When mapping IPTC/EXIF metadata to taxonomy terms, make them available in all languages.'), 'media-library-assistant' ),
+					'help' => __( 'When mapping IPTC/EXIF/WP metadata to taxonomy terms, make them available in all languages.'), 'media-library-assistant' ),
 		);
 
 		/*
@@ -2677,8 +2677,6 @@ class MLA_Polylang {
 	 * Save Language settings to the options table
  	 *
 	 * @since 2.11
-	 *
-	 * @uses $_REQUEST
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */

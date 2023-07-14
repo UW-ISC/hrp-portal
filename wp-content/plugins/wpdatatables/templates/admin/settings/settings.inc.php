@@ -67,6 +67,10 @@
                                 <a href="#wdt-activation" aria-controls="wdt-activation" role="tab"
                                    data-toggle="tab"><?php esc_html_e('Activation', 'wpdatatables'); ?></a>
                             </li>
+                            <li class="wdt-charts-tab">
+                                <a href="#wdt-charts" aria-controls="wdt-charts" role="tab"
+                                   data-toggle="tab"><?php esc_html_e('Charts', 'wpdatatables'); ?></a>
+                            </li>
                         </ul>
 
                         <div class="tab-content">
@@ -97,6 +101,10 @@
                             <!-- Activation tab-->
                             <?php include 'tabs/activation.php' ?>
                             <!-- /Activation tab-->
+
+                            <!-- Charts tab-->
+                            <?php include 'tabs/charts.php' ?>
+                            <!-- /Charts tab-->
                         </div>
                     </div>
 

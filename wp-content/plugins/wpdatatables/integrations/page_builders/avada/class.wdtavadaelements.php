@@ -1,5 +1,7 @@
 <?php
 
+use WDTChart\ChartFactory;
+
 defined('ABSPATH') or die('Access denied.');
 
 class WPDataTables_Fusion_Elements
@@ -204,9 +206,12 @@ class WPDataTables_Fusion_Elements
                 if ($atts['var9'] != '') $shortcode .= ' var9=' . $atts['var9'];
                 if ($atts['export_file_name'] != '') $shortcode .= ' export_file_name=' . $atts['export_file_name'];
             } else if ($type == 'chart'){
-                $wpDataChart = new WPDataChart();
-                $wpDataChart->setId($ID);
-                $wpDataChart->loadFromDB();
+                $dbChartData = WPDataChart::getChartDataById($ID);
+                $chartData = [
+                    'id' => $ID,
+                    'engine' => $dbChartData->engine
+                ];
+                $wpDataChart = WPDataChart::build($chartData, true);
                 $title = __('Chart: ', 'wpdatatables') . $wpDataChart->getTitle() . ' (ID:' . $ID . ')';
                 $shortcode ='wpdatachart id=' . $ID;
             }

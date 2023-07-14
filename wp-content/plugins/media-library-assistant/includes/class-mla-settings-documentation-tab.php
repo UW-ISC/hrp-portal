@@ -232,7 +232,6 @@ class MLASettings_Documentation {
 	 * Compose the Documentation tab content for the Settings subpage
 	 *
 	 * @since 0.80
-	 * @uses $page_template_array contains tab content template(s)
  	 *
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
@@ -340,8 +339,9 @@ class MLASettings_Documentation {
 
 		// Display the Documentation tab
 		$page_values = array(
+			'example_style' => 'style="display:block"',
 			'example_url' => MLACore::mla_nonce_url( '?page=mla-settings-menu-documentation&mla_tab=documentation&mla-example-search=Search', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ),
-			'translate_url' => MLA_PLUGIN_URL . 'languages/MLA Internationalization Guide.pdf',
+			'translate_url' => MLA_PLUGIN_URL . 'languages/MLA%20Internationalization%20Guide.pdf',
 			'phpDocs_url' => 'http://davidlingren.com/assets/phpDocs/index.html',
 		);
 

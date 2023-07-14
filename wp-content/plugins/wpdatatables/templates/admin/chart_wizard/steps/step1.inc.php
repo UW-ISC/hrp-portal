@@ -23,14 +23,14 @@
     <!-- /.col-sm-4 -->
 
     <!-- .col-sm-4 -->
-    <div class="col-sm-6 col-md-6 render-engine">
+    <div class="col-sm-3 col-md-3 render-engine">
         <h4 class="c-title-color m-b-2">
             <?php esc_html_e('Chart render engine', 'wpdatatables'); ?>
 
             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                title="<?php esc_attr_e('Please choose the render engine.', 'wpdatatables'); ?> <?php esc_attr_e(' Please note that HighCharts license from verion 3.0.4 IS included with wpDataTables and you DON\'T NEED to purchase the license separately on', 'wpdatatables'); ?> https://highcharts.com"></i>
         </h4>
-        <div class="form-group col-sm-6 col-md-6">
+        <div class="form-group col-sm-12 col-md-12">
             <div class="fg-line">
                 <div class="select">
                     <select class="selectpicker" name="chart-render-engine" id="chart-render-engine">
@@ -55,6 +55,25 @@
                 </div>
             </div>
         </div>
+    </div>
+    <!-- /.col-sm-4 -->
+
+    <!-- .col-sm-4 -->
+    <div id="wdt-stable-tag" class="col-sm-3 col-md-3 stable-tag hidden">
+        <h4 class="c-title-color m-b-2">
+            <?php esc_html_e('Use stable version', 'wpdatatables'); ?>
+
+            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+               title="<?php esc_attr_e('Choose weather to use the chart engine library directly from the CDN (as they get updated, some features may break), or use the latest version wpDataTables has been tested with. Leaving this option unchecked means the code is pulled from the CDN.', 'wpdatatables'); ?>"></i>
+        </h4>
+            <div class="fg-line">
+                <div class="toggle-switch" data-ts-color="blue">
+                    <input id="wdt-use-stable-tag" type="checkbox">
+                    <label for="wdt-use-stable-tag"
+                           class="ts-label form-control"><?php esc_html_e('Use stable version', 'wpdatatables'); ?></label>
+                </div>
+            </div>
+
     </div>
     <!-- /.col-sm-4 -->
 

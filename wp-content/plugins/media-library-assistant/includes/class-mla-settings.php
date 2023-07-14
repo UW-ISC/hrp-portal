@@ -50,7 +50,7 @@ class MLASettings {
 	const JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG = 'mla-inline-mapping-custom-scripts';
 
 	/**
-	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF List Table
+	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF/WP List Table
 	 *
 	 * @since 2.60
 	 *
@@ -59,7 +59,7 @@ class MLASettings {
 	const JAVASCRIPT_INLINE_EDIT_IPTC_EXIF_SLUG = 'mla-inline-edit-iptc-exif-scripts';
 
 	/**
-	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF tab
+	 * Slug for localizing and enqueueing JavaScript - MLA IPTC/EXIF/WP tab
 	 *
 	 * @since 2.00
 	 *
@@ -68,7 +68,7 @@ class MLASettings {
 	const JAVASCRIPT_INLINE_MAPPING_IPTC_EXIF_SLUG = 'mla-inline-mapping-iptc-exif-scripts';
 
 	/**
-	 * Object name for localizing JavaScript - MLA Custom and IPTC/EXIF tabs
+	 * Object name for localizing JavaScript - MLA Custom and IPTC/EXIF/WP tabs
 	 *
 	 * @since 2.00
 	 *
@@ -97,7 +97,14 @@ class MLASettings {
 
 		//add_action( 'admin_page_access_denied', 'MLASettings::mla_admin_page_access_denied_action' );
 		add_action( 'admin_init', 'MLASettings::mla_admin_init_action' );
-		add_action( 'admin_menu', 'MLASettings::mla_admin_menu_action' );
+
+		// Run this action early for plugin "Nested Pages" support
+		if ( class_exists( 'NestedPages', false ) || ( defined( 'MLA_ADMIN_MENU_EARLY' ) && MLA_ADMIN_MENU_EARLY  ) ) {
+			add_action( 'admin_menu', 'MLASettings::mla_admin_menu_action', 9 );
+		} else {
+			add_action( 'admin_menu', 'MLASettings::mla_admin_menu_action' );
+		}
+		
 		add_action( 'admin_enqueue_scripts', 'MLASettings::mla_admin_enqueue_scripts_action' );
 		add_filter( 'set-screen-option', 'MLASettings::mla_set_screen_option_filter', 10, 3 ); // $status, $option, $value
 		add_filter( 'screen_options_show_screen', 'MLASettings::mla_screen_options_show_screen_filter', 10, 2 ); // $show_screen, $this
@@ -265,7 +272,7 @@ class MLASettings {
 		} // version is less than 1.72
 
 		if ( version_compare( '2.13', $current_version, '>' ) ) {
-			// Add format, option and no_null to IPTC/EXIF custom mapping rules
+			// Add format, option and no_null to IPTC/EXIF/WP custom mapping rules
 			$option_value = MLACore::mla_get_option( 'iptc_exif_mapping' );
 			
 			if ( !empty( $option_value['custom'] ) ) {
@@ -660,39 +667,61 @@ class MLASettings {
 	 * Update or delete a single MLA option value
 	 *
 	 * @since 0.80
-	 * @uses $_REQUEST
  	 *
 	 * @param	string	HTML id/name attribute and option database key (OMIT MLA_OPTION_PREFIX)
 	 * @param	array	Option parameters, e.g., 'type', 'std'
 	 * @param	array	Custom option definitions
+	 * @param	array	Source for updates; defaults to $_REQUEST
 	 *
-	 * @return	string	HTML markup for the option's table row
+	 * @return	string	Update result message, e.g. update_option or delete_option
 	 */
-	public static function mla_update_option_row( $key, $value, $option_table = NULL ) {
+	public static function mla_update_option_row( $key, $definition, $option_table = NULL, $update_source = NULL ) {
 		$default = MLACore::mla_get_option( $key, true, false, $option_table );
-
+//error_log( __LINE__ . " mla_update_option_row( {$key} ) definition = " . var_export( $definition, true ), 0 );
+//error_log( __LINE__ . " mla_update_option_row( {$key} ) default = " . var_export( $default, true ), 0 );
 		/*
 		 * Checkbox logic is done in the switch statements below,
 		 * custom logic is done in the handler.
 		 */
-		if ( ( 'checkbox' != $value['type'] ) && ( 'custom' != $value['type'] ) ) {
-			if ( isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ) {
-				$current = wp_kses( wp_unslash( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ), 'post' );
+		if ( ( 'checkbox' != $definition['type'] ) && ( 'custom' != $definition['type'] ) ) {
+			$current = $default;
+			if ( NULL === $update_source ) {
+				if ( isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ) {
+					$current = wp_kses( wp_unslash( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ), 'post' );
+				}
 			} else {
-				$current = $default;
+				if ( isset( $update_source[ $key ] ) ) {
+					$current = $update_source[ $key ];
+				}
 			}
 
-			if ( $current == $default ) {
-				unset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] );
+//error_log( __LINE__ . " mla_update_option_row( {$key} ) current = " . var_export( $current, true ), 0 );
+			if ( $current === $default ) {
+				$current = NULL;
 			}
+		} else {
+			// Need to set $current for the following if test
+			$current = NULL;
+			
+			if ( NULL === $update_source ) {
+				if ( isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ) {
+					$current = true;
+				}
+			} else { // checkbox and custom types
+				if ( 'checkbox' === $definition['type'] ) {
+					$current = 'checked' === $update_source[ $key ] ? true : NULL;
+				} else {
+					$current = isset( $update_source[ $key ] ) ? true : NULL;
+				}
+			}
+//error_log( __LINE__ . " mla_update_option_row( {$key} ) current = " . var_export( $current, true ), 0 );
 		}
 
-		if ( isset( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ) ) {
+		if ( NULL !== $current ) {
 			$message = '<br>update_option(' . $key . ")\r\n";
-			$current = wp_kses( wp_unslash( $_REQUEST[ MLA_OPTION_PREFIX . $key ] ), 'post' );
-			switch ( $value['type'] ) {
+			switch ( $definition['type'] ) {
 				case 'checkbox':
-					if ( 'checked' == $default ) {
+					if ( 'checked' === $default ) {
 						MLACore::mla_delete_option( $key, $option_table );
 					} else {
 						$message = '<br>check_option(' . $key . ')';
@@ -716,20 +745,25 @@ class MLASettings {
 					MLACore::mla_update_option( $key, trim( $current ), $option_table );
 					break;
 				case 'custom':
-					$message = call_user_func( array( 'MLAOptions', $value['update'] ), 'update', $key, $value, $_REQUEST );
+					if ( NULL === $update_source ) {
+						$message = call_user_func( array( 'MLAOptions', $definition['update'] ), 'update', $key, $definition, $_REQUEST );
+					} else {
+						$message = call_user_func( array( 'MLAOptions', $definition['update'] ), 'update', $key, $definition, $update_source );
+					}
 					break;
 				case 'hidden':
+					$message = '';
 					break;
 				default:
 					/* translators: 1: ERROR tag 2: function name 3: option type, e.g., radio, select, text */
-					MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s unknown type = "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), '_save_settings(1)', var_export( $value, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-			} // $value['type']
+					MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s unknown type = "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), '_save_settings(1)', var_export( $definition, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			} // $definition['type']
 		}  // isset $key
 		else {
-			$message = '<br>delete_option(' . $key . ')';
-			switch ( $value['type'] ) {
+			$message = '<br>delete_option(' . $key . ")\r\n";
+			switch ( $definition['type'] ) {
 				case 'checkbox':
-					if ( 'checked' == $default ) {
+					if ( 'checked' === $default ) {
 						$message = '<br>uncheck_option(' . $key . ')';
 						MLACore::mla_update_option( $key, 'unchecked', $option_table );
 					} else {
@@ -753,14 +787,18 @@ class MLASettings {
 					MLACore::mla_delete_option( $key, $option_table );
 					break;
 				case 'custom':
-					$message = call_user_func( array( 'MLAOptions', $value['delete'] ), 'delete', $key, $value, $_REQUEST );
+					if ( NULL === $update_source ) {
+						$message = call_user_func( array( 'MLAOptions', $definition['update'] ), 'delete', $key, $definition, $_REQUEST );
+					} else {
+						$message = call_user_func( array( 'MLAOptions', $definition['update'] ), 'delete', $key, $definition, $update_source );
+					}
 					break;
 				case 'hidden':
 					break;
 				default:
 					/* translators: 1: ERROR tag 2: function name 3: option type, e.g., radio, select, text */
-					MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s unknown type = "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), '_save_settings(2)', var_export( $value, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
-			} // $value['type']
+					MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s unknown type = "%3$s"', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), '_save_settings(2)', var_export( $definition, true ) ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			} // $definition['type']
 		}  // ! isset $key
 
 		return $message;
@@ -770,7 +808,7 @@ class MLASettings {
 	 * Compose the table row for a single MLA option
 	 *
 	 * @since 0.80
-	 * @uses $page_template_array contains option and option-item templates
+	 * @uses self::$page_template_array contains option and option-item templates
  	 *
 	 * @param	string	HTML id/name attribute and option database key (OMIT MLA_OPTION_PREFIX)
 	 * @param	array	Option parameters, e.g., 'type', 'std'
@@ -954,7 +992,7 @@ class MLASettings {
 			'upload' => array( 'title' => __ ( 'Uploads', 'media-library-assistant' ), 'render' => array( 'MLASettings_Upload', 'mla_compose_upload_tab' ) ),
 			'shortcodes' => array( 'title' => __ ( 'Shortcodes', 'media-library-assistant' ), 'render' => array( 'MLASettings_Shortcodes', 'mla_compose_shortcodes_tab' ) ),
 			'custom_field' => array( 'title' => __ ( 'Custom Fields', 'media-library-assistant' ), 'render' => array( 'MLASettings_CustomFields', 'mla_compose_custom_field_tab' ) ),
-			'iptc_exif' => array( 'title' => __ ( 'IPTC/EXIF', 'media-library-assistant' ), 'render' => array( 'MLASettings_IPTCEXIF', 'mla_compose_iptc_exif_tab' ) ),
+			'iptc_exif' => array( 'title' => __ ( 'IPTC/EXIF/WP', 'media-library-assistant' ), 'render' => array( 'MLASettings_IPTCEXIF', 'mla_compose_iptc_exif_tab' ) ),
 			'documentation' => array( 'title' => __ ( 'Documentation', 'media-library-assistant' ), 'render' => array( 'MLASettings_Documentation', 'mla_compose_documentation_tab' ) ),
 			'debug' => array( 'title' => __ ( 'Debug', 'media-library-assistant' ), 'render' => array( 'MLASettings', '_compose_debug_tab' ) ),
 		);
@@ -995,7 +1033,7 @@ class MLASettings {
 	 * Compose the navigation tabs for the Settings subpage
 	 *
 	 * @since 0.80
-	 * @uses $page_template_array contains tablist and tablist-item templates
+	 * @uses self::$page_template_array contains tablist and tablist-item templates
  	 *
 	 * @param	string	Optional data-tab-id value for the active tab, default 'general'
 	 *
@@ -1023,7 +1061,7 @@ class MLASettings {
 	 * Compose the General tab content for the Settings subpage
 	 *
 	 * @since 0.80
-	 * @uses $page_template_array contains tab content template(s)
+	 * @uses self::$page_template_array contains tab content template(s)
  	 *
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
@@ -1079,16 +1117,12 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			'import_settings' => '',
 		);
 
-		/*
-		 * $custom_fields documents the name and description of custom fields
-		 */
+		// $custom_fields documents the name and description of custom fields
 		$custom_fields = array( 
 			// array("name" => "field_name", "description" => "field description.")
 		);
 
-		/* 
-		 * $shortcodes documents the name and description of plugin shortcodes
-		 */
+		// $shortcodes documents the name and description of plugin shortcodes
 		$shortcodes = array( 
 			// array("name" => "shortcode", "description" => "This shortcode...")
 			array( 'name' => 'mla_gallery', 'description' => __( 'enhanced version of the WordPress [gallery] shortcode.', 'media-library-assistant' ) . sprintf( ' %1$s <a href="%2$s">%3$s</a>.',  __( 'For complete documentation', 'media-library-assistant' ), admin_url( 'options-general.php?page=' . MLACoreOptions::MLA_SETTINGS_SLUG . '-documentation&amp;mla_tab=documentation#mla_gallery' ), __( 'click here', 'media-library-assistant' ) ) ),
@@ -1139,9 +1173,28 @@ If you find the Media Library Assistant plugin useful and would like to support 
 			MLACore::mla_delete_option( MLACoreOptions::MLA_DEFAULT_ORDERBY );
 		}
 
-		/*
-		 * Validate the Media Manager sort order or revert to default
-		 */
+		// Valudate and initialize the Terms Search Filter Taxonomy selection(s)
+		$options = MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY ]['options'];
+		$texts = MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY ]['texts'];
+		$current = MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY );
+		$found_current = false;
+		foreach( get_object_taxonomies( 'attachment', 'objects' ) as $taxonomy ) {
+			if ( MLACore::mla_taxonomy_support( $taxonomy->name, 'support' ) ) {
+				$options[] = $taxonomy->name;
+				$texts[] = $taxonomy->label;
+				if ( $current === $taxonomy->name ) {
+					$found_current = true;
+				}
+			}
+		}
+		MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY ]['options'] = $options;
+		MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY ]['texts'] = $texts;
+
+		if ( ! $found_current ) {
+			MLACore::mla_delete_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY );
+		}
+
+		// Validate the Media Manager sort order or revert to default
 		$options = array_merge( array('&mdash; ' . __( 'Media Manager Default', 'media-library-assistant' ) . ' &mdash;' => 'default', 'None' => 'none'), $columns );
 		$current = MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_ORDERBY );
 		MLACoreOptions::$mla_option_definitions[ MLACoreOptions::MLA_MEDIA_MODAL_ORDERBY ]['options'] = array();
@@ -1206,8 +1259,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
  	 *
 	 * @since 2.10
 	 *
-	 * @uses $_REQUEST
-	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
 	private static function _save_debug_settings( ) {
@@ -1256,7 +1307,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	 * Compose the Debug tab content for the Settings subpage
 	 *
 	 * @since 2.10
-	 * @uses $page_template_array contains tab content template(s)
+	 * @uses self::$page_template_array contains tab content template(s)
  	 *
 	 * @return	array	'message' => status/error messages, 'body' => tab content
 	 */
@@ -1534,8 +1585,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
  	 *
 	 * @since 0.1
 	 *
-	 * @uses $_REQUEST
-	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
 	private static function _save_general_settings( ) {
@@ -1718,6 +1767,15 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	} // _compose_import_settings
 
 	/**
+	 * WordPress attachment display options
+	 *
+	 * @since 3.08
+	 *
+	 * @var	array
+	 */
+	private static $image_default_settings = array( 'image_default_align', 'image_default_link_type', 'image_default_size' );
+
+	/**
 	 * Generate an array of non-default option settings
  	 *
 	 * Options with a default value, i.e., not stored in the database are NOT added to the array.
@@ -1725,20 +1783,23 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	 *
 	 * @since 3.07
 	 *
+	 * @param	boolean	$export_defaults True to export ALL settings, even the default values
+	 *
 	 * @return	array	( 'settings' => array( $key => $value ), 'message_list' => status messages string )
 	 */
-	public static function mla_get_export_settings( ) {
+	public static function mla_get_export_settings( $export_defaults = false ) {
 		$message_list = '';
 		$settings = array();
+		$get_stored = !$export_defaults;
 
 		// These are WordPress options, not MLA options
-		foreach( array( 'image_default_align', 'image_default_link_type', 'image_default_size' ) as $key ) {
+		foreach( self::$image_default_settings as $key ) {
 			$stored_value = get_option( $key );
 			if ( empty( $stored_value ) ) {
 				$stored_value = 'default';
 			}
 
-			if ( 'default' !== $stored_value ) {
+			if ( $export_defaults || ( 'default' !== $stored_value ) ) {
 				$settings[ $key ] = $stored_value;
 				$message = "<br>{$key} " . _x( 'exported', 'message_list', 'media-library-assistant' );
 			} else {
@@ -1750,7 +1811,17 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 		// Accumulate the settings into an array, then serialize it for writing to the file.
 		foreach ( MLACoreOptions::$mla_option_definitions as $key => $value ) {
-			$stored_value = MLACore::mla_get_option( $key, false, true );
+			// These WordPress options have already been exported above
+			if ( in_array( $key, self::$image_default_settings ) ) {
+				continue;
+			}
+
+			// These option types never change
+			if ( in_array( $value['type'], array( 'hidden', 'header', 'subheader' ) ) ) {
+				continue;
+			}
+
+			$stored_value = MLACore::mla_get_option( $key, false, $get_stored );
 			if ( false !== $stored_value ) {
 				$settings[ $key ] = $stored_value;
 				$message = "<br>{$key} " . _x( 'exported', 'message_list', 'media-library-assistant' );
@@ -1770,8 +1841,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	 * Options with a default value, i.e., not stored in the database are NOT written to the file.
 	 *
 	 * @since 1.50
-	 *
-	 * @uses $_REQUEST
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
@@ -1852,7 +1921,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 		foreach ( $settings as $key => $value ) {
 
 			// These are WordPress options, not MLA options
-			if ( in_array( $key, array( 'image_default_align', 'image_default_link_type', 'image_default_size' ) ) ) {
+			if ( in_array( $key, self::$image_default_settings ) ) {
 				$stored_value = get_option( $key );
 				if ( empty( $stored_value ) ) {
 					$stored_value = 'default';
@@ -1874,7 +1943,12 @@ If you find the Media Library Assistant plugin useful and would like to support 
 				continue;
 			}
 
-			if ( MLACore::mla_update_option( $key, $value ) ) {
+			$definition = MLACoreOptions::$mla_option_definitions[ $key ];
+			$current_value = MLACore::mla_get_option( $key );
+			$result =  MLASettings::mla_update_option_row( $key, $definition, NULL, $settings );
+			$updated = ( $value === $current_value ) ? 'unchanged' : 'updated';
+
+			if ( 'updated' === $updated ) {
 				$updated_count++;
 				$message_list .= "<br>{$key} " . _x( 'updated', 'message_list', 'media-library-assistant' );
 			} else {
@@ -1890,8 +1964,6 @@ If you find the Media Library Assistant plugin useful and would like to support 
 	 * Read a serialized file of option settings and write them to the database
  	 *
 	 * @since 1.50
-	 *
-	 * @uses $_REQUEST
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */

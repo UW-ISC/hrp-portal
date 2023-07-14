@@ -8,7 +8,7 @@
 Displays Last Modified date and time
 </li>
 <li>
-Supports mapping of Custom Field and IPTC/EXIF metadata for this attachment
+Supports mapping of Custom Field and IPTC/EXIF/WP metadata for this attachment
 </li>
 <li>
 Supports Custom fields, which <code>[mla_gallery]</code> can use for query and display
@@ -44,5 +44,5 @@ Because the memory and processing required to populate this meta box can be sign
 </p>
 <!-- template="mla-mapping-actions" -->
 <!-- title="Metadata Mapping" order="50" -->
-<p>The &#8220;Map Custom Field Metadata&#8221; and &#8220;Map IPTC/EXIF Metadata&#8221; links let you create or update attachment values by applying the rules you define on the Media Library Assistant Settings page. The links are located in the &#8220;Save&#8221; meta box in the upper-right part of the screen, just below the Last Modified date and time.</p>
+<p>The &#8220;Map Custom Field Metadata&#8221; and &#8220;Map IPTC/EXIF/WP Metadata&#8221; links let you create or update attachment values by applying the rules you define on the Media Library Assistant Settings page. The links are located in the &#8220;Save&#8221; meta box in the upper-right part of the screen, just below the Last Modified date and time.</p>
 <p>When you click on one of the two links, all of the mapping rules for that type of metadata will be applied to the attachment you are editing. The updates are immediate; you do not need to click the &#8220;Update&#8221; button to make them permanent.</p>

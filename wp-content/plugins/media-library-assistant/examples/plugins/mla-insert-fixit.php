@@ -53,7 +53,7 @@
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
  * @package Insert Fixit
- * @version 1.24
+ * @version 1.25
  */
 
 /*
@@ -61,10 +61,10 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.24
+Version: 1.25
 Author URI: http://davidlingren.com/
 
-Copyright 2015-2021 David Lingren
+Copyright 2015-2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.24';
+	const CURRENT_VERSION = '1.25';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -203,26 +203,42 @@ class Insert_Fixit {
 		}
 
 		// Extract relevant query arguments - post/page and item restrictions
-		$old_post_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_lower' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_post_lower' ] : '';
-		$post_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] : '';
-		$old_post_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_post_upper' ] : '';
-		$post_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] : '';
-		$old_attachment_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_lower' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_lower' ] : '';
-		$attachment_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] : '';
-		$old_attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] : '';
-		$attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] : '';
+		$old_post_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_lower' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'old_post_lower' ] ) : '';
+		$old_post_lower = $old_post_lower ? $old_post_lower : '';
+
+		$post_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'post_lower' ] ) : '';
+		$post_lower = $post_lower ? $post_lower : '';
+
+		$old_post_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_upper' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'old_post_upper' ] ) : '';
+		$old_post_upper = $old_post_upper ? $old_post_upper : '';
+
+		$post_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'post_upper' ] ) : '';
+		$post_upper = $post_upper ? $post_upper : '';
+
+		$old_attachment_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_lower' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_lower' ] ) : '';
+		$old_attachment_lower = $old_attachment_lower ? $old_attachment_lower : '';
+
+		$attachment_lower = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'attachment_lower' ] ) : '';
+		$attachment_lower = $attachment_lower ? $attachment_lower : '';
+
+		$old_attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'old_attachment_upper' ] ) : '';
+		$old_attachment_upper = $old_attachment_upper ? $old_attachment_upper : '';
+
+		$attachment_upper = isset( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) ? absint( $_REQUEST[ self::SLUG_PREFIX . 'attachment_upper' ] ) : '';
+		$attachment_upper = $attachment_upper ? $attachment_upper : '';
+
 		// Copy ALT Text between Media Library items and Post/Page inserts
-		$old_post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) ? stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) : '';
-		$post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ? stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) : "'post', 'page'";
+		$old_post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ), 'post' ) ) : '';
+		$post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ), 'post' ) ) : "'post', 'page'";
 
 		// Post/Page Item Insert Modification
-		$old_data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] : '';
-		$data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] : '[+alt_text+]';
-		$old_attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] : '';
-		$attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] : 'data-pin-description';
+		$old_data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ), 'post' ) ) : '';
+		$data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ), 'post' ) ) : '[+alt_text+]';
+		$old_attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_attribute_name' ] ), 'post' ) ) : '';
+		$attribute_name = isset( $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'attribute_name' ] ), 'post' ) ) : 'data-pin-description';
 
-		$old_figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] : '';
-		$figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] : '([+post_excerpt+])';
+		$old_figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_figcaption_template' ] ), 'post' ) ) : '';
+		$figcaption_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'figcaption_template' ] ), 'post' ) ) : '([+post_excerpt+])';
 
 		// Attach Media Library items
 		self::$attach_all = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_ATTACH_ALL ] ) ? true : false;
@@ -231,26 +247,26 @@ class Insert_Fixit {
 		$lowest_attr = self::$reverse_sort ? ' ' : ' selected="selected" ';
 		$highest_attr = self::$reverse_sort ? ' selected="selected" ' : ' ';
 
-		$old_reference_shortcodes = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_shortcodes' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_reference_shortcodes' ] : '';
-		$reference_shortcodes = isset( $_REQUEST[ self::SLUG_PREFIX . 'reference_shortcodes' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'reference_shortcodes' ] : 'gallery,mla_gallery';
+		$old_reference_shortcodes = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_shortcodes' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_shortcodes' ] ), 'post' ) ) : '';
+		$reference_shortcodes = isset( $_REQUEST[ self::SLUG_PREFIX . 'reference_shortcodes' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'reference_shortcodes' ] ), 'post' ) ) : 'gallery,mla_gallery';
 
-		$old_reference_parameter = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_parameter' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'old_reference_parameter' ] : '';
-		$reference_parameter = isset( $_REQUEST[ self::SLUG_PREFIX . 'reference_parameter' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'reference_parameter' ] : 'ids';
+		$old_reference_parameter = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_parameter' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_reference_parameter' ] ), 'post' ) ) : '';
+		$reference_parameter = isset( $_REQUEST[ self::SLUG_PREFIX . 'reference_parameter' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'reference_parameter' ] ), 'post' ) ) : 'ids';
 
 		// Copy Post/Page values to inserted Media Library items
-		$page_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] : '([+page_terms:category,single+]: )([+page_title+] )[+index+]';
+		$page_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'page_library_template' ] ), 'post' ) ) : '([+page_terms:category,single+]: )([+page_title+] )[+index+]';
 
 		// Copy Parent values to attached Media Library items
-		$parent_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] : '([+parent_terms:category,single+]: )([+parent_title+] )[+index+]';
-		$from_parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] : 'category';
-		$to_item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] : 'attachment_category';
+		$parent_library_template = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'parent_library_template' ] ), 'post' ) ) : '([+parent_terms:category,single+]: )([+parent_title+] )[+index+]';
+		$from_parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'from_parent_taxonomy' ] ), 'post' ) ) : 'category';
+		$to_item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'to_item_taxonomy' ] ), 'post' ) ) : 'attachment_category';
 
 		// Copy attached Media Library item values to Parent Post/Page
-		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] : 'attachment_tag';
-		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] : 'post_tag';
+		$item_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'item_taxonomy' ] ), 'post' ) ) : 'attachment_tag';
+		$parent_taxonomy = isset( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'parent_taxonomy' ] ), 'post' ) ) : 'post_tag';
 
-		$item_fields = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] : '';
-		$fields_option = isset( $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] ) ? $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] : 'text';
+		$item_fields = isset( $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'item_fields' ] ), 'post' ) ) : '';
+		$fields_option = isset( $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'fields_option' ] ), 'post' ) ) : 'text';
 		$fields_option_text = ( 'text' === $fields_option ) ? 'selected="selected" ' : '';
 		$fields_option_single = ( 'single' === $fields_option ) ? 'selected="selected" ' : '';
 //		$fields_option_export = ( 'export' === $fields_option ) ? 'selected="selected" ' : '';
@@ -442,7 +458,7 @@ class Insert_Fixit {
 		echo "\t\t" . '<h2>Insert Fixit Tools v' . self::CURRENT_VERSION . '</h2>' . "\n";
 
 		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ) ) {
-			$label = $_REQUEST[ self::SLUG_PREFIX . 'action' ];
+			$label = trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'action' ] ), 'post' ) );
 			if( isset( $setting_actions[ $label ] ) ) {
 				$action = $setting_actions[ $label ]['handler'];
 				if ( ! empty( $action ) ) {

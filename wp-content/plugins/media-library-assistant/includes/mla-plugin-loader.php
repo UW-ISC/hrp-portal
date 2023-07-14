@@ -112,7 +112,7 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 
 		/*
 		 * Quick and Bulk Edit requires full support for content templates, etc.
-		 * IPTC/EXIF and Custom Field mapping require full support, too.
+		 * IPTC/EXIF/WP and Custom Field mapping require full support, too.
 		 * NOTE: AJAX upload_attachment is no longer used - see /wp-admin/asynch-upload.php
 		 */
 		$ajax_exceptions = array( MLACore::JAVASCRIPT_INLINE_EDIT_SLUG, 'mla-inline-mapping-iptc-exif-scripts', 'mla-inline-mapping-custom-scripts', 'mla-polylang-quick-translate', 'mla-inline-edit-upload-scripts', 'mla-inline-edit-view-scripts', 'mla-inline-edit-custom-scripts', 'mla-inline-edit-iptc-exif-scripts', 'upload-attachment', 'mla-export-presets' );
@@ -143,6 +143,8 @@ if ( ! empty( $mla_plugin_loader_error_messages ) ) {
 				if ( is_object( $sitepress ) ) {
 					$ajax_only = false;
 				}
+			} elseif ( 'image-editor' == $_REQUEST['action'] ) {
+				$ajax_only = false;
 			}
 		}
 

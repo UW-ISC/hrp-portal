@@ -1,14 +1,17 @@
 <?php defined('ABSPATH') or die('Access denied.'); ?>
-
 <div class="col p-0 wdt-constructor-step hidden bg-white" data-step="1-1">
 
     <div class="alert alert-info alert-dismissible" role="alert">
         <i class="wpdt-icon-info-circle-full"></i>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <span class="wdt-alert-title f-600"><?php esc_html_e('Please provide some initial structure metadata before the table will be created.', 'wpdatatables'); ?>
+        <span class="wdt-alert-title f-600 p-l-0"><?php esc_html_e('Please provide some initial structure metadata before the table will be created.', 'wpdatatables'); ?>
             <br></span>
-        <span class="wdt-alert-subtitle"><?php esc_html_e('This constructor will help you to create a table from scratch. You will be able to edit the table content and metadata later manually at any time.', 'wpdatatables'); ?></span>
+        <span class="wdt-alert-subtitle p-b-20"><?php esc_html_e('This constructor will help you to create a table from scratch. You will be able to edit the table content and metadata later manually at any time.', 'wpdatatables'); ?><br></span><br>
+        <span class="wdt-alert-title f-600 p-l-20"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
+        <ul class="wdt-alert-subtitle m-l-20" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+            <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
+        </ul>
     </div>
 
     <div class="row wdt-constructor-table-name-and-columns">
@@ -97,5 +100,6 @@
             </button>
         </div>
     </div>
+
 
 </div>

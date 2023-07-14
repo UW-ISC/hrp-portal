@@ -445,6 +445,19 @@
                                 </td>
                             </tr>
                             <tr>
+                                <td data-title="Features"><?php esc_html_e('Set the type in database for each column', 'wpdatatables'); ?>
+                                    <span style="color: #ea0b0b;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
                                 <td data-title="Features"><?php esc_html_e('Advanced filtering', 'wpdatatables'); ?>
                                     <hr>
                                 </td>

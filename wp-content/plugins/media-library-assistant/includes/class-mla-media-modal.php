@@ -315,6 +315,7 @@ class MLAModal {
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('support');
 		self::$mla_media_modal_settings['enableTermsDropdown'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS ) ) && ( ! empty( $supported_taxonomies ) );
 		self::$mla_media_modal_settings['enableTermsAutofill'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOFILL ) ) && ( ! empty( $supported_taxonomies ) );
+		self::$mla_media_modal_settings['enableTermsAutoopen'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_DETAILS_AUTOOPEN ) ) && ( ! empty( $supported_taxonomies ) );
 
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('term-search');
 		self::$mla_media_modal_settings['enableTermsSearch'] = ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_MEDIA_MODAL_TERMS_SEARCH ) ) && ( ! empty( $supported_taxonomies ) );
@@ -608,6 +609,55 @@ class MLAModal {
 	}
 
 	/**
+	 * Get dropdown box of terms to filter the Terms Search by, if available
+	 *
+	 * @since 3.08
+	 *
+	 * @param	integer	currently selected term_id || zero (default)
+	 * @param	array	additional wp_dropdown_categories options; default empty
+	 *
+	 * @return	string	HTML markup for dropdown box
+	 */
+	public static function mla_get_terms_search_filter_dropdown( $selected = 0, $dropdown_options = array() ) {
+		$dropdown = '';
+		$tax_filter = MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY );
+
+		if ( ( 'none' !== $tax_filter ) && ( is_object_in_taxonomy( 'attachment', $tax_filter ) ) ) {
+			$tax_object = get_taxonomy( $tax_filter );
+			$dropdown_options = array_merge( array(
+				'show_option_all' => __( 'All', 'media-library-assistant' ) . ' ' . $tax_object->labels->name,
+				'show_option_none' => _x( 'No', 'show_option_none', 'media-library-assistant' ) . ' ' . $tax_object->labels->name,
+				'orderby' => 'name',
+				'order' => 'ASC',
+				'show_count' => false,
+				'hide_empty' => false,
+				'child_of' => 0,
+				'exclude' => '',
+				// 'exclude_tree => '', 
+				'echo' => true,
+				'depth' => MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_DEPTH ),
+				'tab_index' => 0,
+				'name' => 'mla_terms_search[filter]',
+				'id' => 'mla-terms-search-filter',
+				'class' => 'postform',
+				'selected' => $selected,
+				'hierarchical' => true,
+				'pad_counts' => false,
+				'taxonomy' => $tax_filter,
+				'hide_if_empty' => false,
+				'update_term_meta_cache' => false,
+			), $dropdown_options );
+
+			ob_start();
+			wp_dropdown_categories( $dropdown_options );
+			$dropdown = ob_get_contents();
+			ob_end_clean();
+		}
+
+		return $dropdown;
+	}
+
+	/**
 	 * Build the hidden form for the "Search Terms" popup modal window
 	 *
 	 * @since 1.90
@@ -646,8 +696,13 @@ class MLAModal {
 				$taxonomy_list .= MLAData::mla_parse_template( $page_template_array['mla-terms-search-taxonomy'], $page_values );
 			}
 
+			$filter_dropdown = self::mla_get_terms_search_filter_dropdown();
+			$filter_style = ( !empty( $filter_dropdown ) ) ? 'style="display:block"' : 'style="display:none"';
+
 			$page_values = array(
 				'Search Terms' => __( 'Search Terms', 'media-library-assistant' ),
+				'filter_dropdown' => $filter_dropdown,
+				'filter_style' => $filter_style,
 				'Search' => __( 'Search', 'media-library-assistant' ),
 				'phrases_and_checked' => 'checked="checked"',
 				'All phrases' => __( 'All phrases', 'media-library-assistant' ),

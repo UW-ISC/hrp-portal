@@ -71,8 +71,6 @@ class MLASettings_Upload {
  	 *
 	 * @since 1.40
 	 *
-	 * @uses $_REQUEST
-	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
 	private static function _save_upload_settings( ) {
@@ -166,7 +164,6 @@ class MLASettings_Upload {
 			$item['description'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_upload_item']['description'] ) );
 		}
 
-//error_log( __LINE__ . ' _sanitize_upload_item item = ' . var_export( $item, true ), 0 );
 		return $item;
 	}
 
@@ -603,8 +600,10 @@ class MLASettings_Upload {
 		$request['slug'] = isset( $_REQUEST['slug'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['slug'] ) ) : '';
 		$request['mime_type'] = isset( $_REQUEST['mime_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mime_type'] ) ) : '';
 		$request['icon_type'] = isset( $_REQUEST['icon_type'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['icon_type'] ) ) : '.none.';
-		$request['disabled'] = isset( $_REQUEST['disabled'] );
-
+		if ( isset( $_REQUEST['disabled'] ) ) {
+			$request['disabled'] = '1';
+		}
+		
 		$results = MLAMime::mla_update_upload_mime( $request );
 		
 		if ( false === strpos( $results['message'], __( 'ERROR', 'media-library-assistant' ) ) ) {

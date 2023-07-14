@@ -1,20 +1,40 @@
 <?php
 /**
- * Maps taxonomy terms from "template:([+xmp:lr.hierarchicalSubject+])" in EXIF/Template rule.
+ * Maps taxonomy terms from "template:" values in EXIF/Template rule element, e.g.,
+ *
+ * "template:([+xmp:lr.hierarchicalSubject+])" containing:
+ *     xmp:lr.hierarchicalSubject.0 => Birds|Owls & Nightjars|Burrowing Owl
+ *     xmp:lr.hierarchicalSubject.1 => Location|California|Lower Klamath National Wildlife Refuge
+ *     xmp:lr.hierarchicalSubject.2 => Outings|2016.05.03 Lower Klamath *
+ *
+ * "template:[+iptc:2#101+](\|[+iptc:2#095+])(\|[+iptc:2#090+])"
+ *     iptc:2#090 => City (Core) (ref2022.1)
+ *     iptc:2#095 => Province/State(Core)(ref2022.1)
+ *     iptc:2#101 => Country (Core) (ref2022.1)
+ *
+ * In both cases a vertical bar separates the terms at each level
+ *
+ * Created for support topic "Lightroom Hierarchical Subject XMP"
+ * opened on  5/6/2016 by "dubloons":
+ * https://wordpress.org/support/topic/lightroom-hierarchical-subject-xmp/
+ *
+ * Enhanced for support topic "Can MLA create hierarchical location categories?"
+ * opened on 5/9/2023 by "pgill11"
+ * https://wordpress.org/support/topic/can-mla-create-hierarchical-location-categories/
  *
  * @package MLA Hierarchical Mapping Example
- * @version 1.01
+ * @version 1.02
  */
 
 /*
 Plugin Name: MLA Hierarchical Mapping Example
 Plugin URI: http://davidlingren.com/
-Description: Maps taxonomy terms from "template:([+xmp:lr.hierarchicalSubject+])" in EXIF/Template rule
+Description: Maps taxonomy terms from "template:" values in EXIF/Template rule element
 Author: David Lingren
-Version: 1.01
+Version: 1.02
 Author URI: http://davidlingren.com/
 
-Copyright 2016 David Lingren
+Copyright 2016 - 2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -89,14 +109,20 @@ class MLAHierarchicalMappingExample {
 	 * @return	array	updated mapping rules
 	 */
 	public static function mla_mapping_settings( $settings, $post_id, $category, $attachment_metadata ) {
-		/*
-		 * Go through taxonomy rules (once) looking for hierarchical term lists
-		 */
+		// Go through taxonomy rules (once) looking for hierarchical term lists
 		if ( is_null( self::$target_taxonomies ) && array_key_exists( 'taxonomy', $settings ) ) {
 			self::$target_taxonomies = array();
 			foreach( $settings['taxonomy'] as $slug => $rule ) {
 				if ( false !== strpos( $rule['exif_value'], '[+xmp:lr.hierarchicalSubject+]' ) ) {
 					self::$target_taxonomies[ $slug ] = $rule['parent'];
+					continue;
+				}
+
+				// "template:" containing vertical bar literals s ("\|") denotes hierarchical value
+				if ( 0 === strpos( $rule['exif_value'], 'template:' ) ) {
+					if ( false !== strpos( $rule['exif_value'], '\\|' ) ) {
+						self::$target_taxonomies[ $slug ] = $rule['parent'];
+					}
 				}
 			}
 		}
@@ -147,7 +173,7 @@ class MLAHierarchicalMappingExample {
 	 * @since 1.00
 	 *
 	 * @param	mixed 	EXIF/Template value returned by the rule
-	 * @param	array 	custom_field_mapping rule
+	 * @param	string 	custom_field_mapping rule name
 	 * @param	integer post ID to be evaluated
 	 * @param	string 	category/scope to evaluate against: iptc_exif_standard_mapping, iptc_exif_taxonomy_mapping or iptc_exif_custom_mapping
 	 * @param	array 	attachment_metadata, default NULL
@@ -155,9 +181,7 @@ class MLAHierarchicalMappingExample {
 	 * @return	array	updated rule EXIF/Template value
 	 */
 	public static function mla_mapping_exif_value( $exif_value, $setting_value, $post_id, $category, $attachment_metadata ) {
-		/*
-		 * Process the taxonomy rules that contain hierarchical term lists
-		 */
+		// Process the taxonomy rules that contain hierarchical term lists
 		if ( in_array( $category, array( 'iptc_exif_mapping', 'iptc_exif_taxonomy_mapping' ) ) && array_key_exists( $setting_value, self::$target_taxonomies ) ) {
 			// Convert single entries to an array for convenience
 			if ( is_string( $exif_value ) ) {
@@ -216,9 +240,7 @@ class MLAHierarchicalMappingExample {
 	 * @return	array	updated attachment's updates
 	 */
 	public static function mla_mapping_updates( $updates, $post_id, $category, $settings, $attachment_metadata ) {
-		/*
-		 * Replace the root terms with the full list.
-		 */
+		// Replace the root terms with the full list.
 		if ( isset( self::$all_terms[ $post_id ] ) ) {
 			foreach( self::$all_terms[ $post_id ] as $taxonomy => $terms ) {
 				$updates['taxonomy_updates']['inputs'][ $taxonomy ] = $terms;
@@ -231,8 +253,6 @@ class MLAHierarchicalMappingExample {
 	} // mla_mapping_updates_filter
 } //MLAHierarchicalMappingExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAHierarchicalMappingExample::initialize');
 ?>

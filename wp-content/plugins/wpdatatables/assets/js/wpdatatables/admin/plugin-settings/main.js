@@ -82,8 +82,8 @@
         /**
          * Change Table sorting direction on Browse pages
          */
-        $('#wdt-sorting-order-browse-tables').change(function(e){
-            wpdatatable_plugin_config.setSortingOrderBrowseTables( $(this).val() );
+        $('#wdt-sorting-order-browse-tables').change(function (e) {
+            wpdatatable_plugin_config.setSortingOrderBrowseTables($(this).val());
         });
 
         /**
@@ -285,6 +285,25 @@
         });
 
         /**
+         * Toggle HighCharts stable version
+         */
+        $('#wdt-use-highcharts-stable-version').on('change', function () {
+            wpdatatable_plugin_config.setHighChartStableVersion($(this).is(':checked') ? 1 : 0);
+        });
+
+        /**
+         * Toggle GoogleCharts stable version
+         */
+        $('#wdt-use-google-stable-version').on('change', function () {
+            wpdatatable_plugin_config.setGoogleStableVersion($(this).is(':checked') ? 1 : 0);
+        });
+        /**
+         * Toggle ApexCharts stable version
+         */
+        $('#wdt-use-apexcharts-stable-version').on('change', function () {
+            wpdatatable_plugin_config.setApexStableVersion($(this).is(':checked') ? 1 : 0);
+        });
+        /**
          * Load current config on load
          */
         wpdatatable_plugin_config.setSeparateConnection(wdt_current_config.wdtUseSeparateCon == 1 ? 1 : 0);
@@ -296,7 +315,7 @@
         wpdatatable_plugin_config.setBaseSkin(wdt_current_config.wdtBaseSkin);
         wpdatatable_plugin_config.setNumberFormat(wdt_current_config.wdtNumberFormat);
         wpdatatable_plugin_config.setCSVDelimiter(wdt_current_config.wdtCSVDelimiter);
-        wpdatatable_plugin_config.setSortingOrderBrowseTables( wdt_current_config.wdtSortingOrderBrowseTables );
+        wpdatatable_plugin_config.setSortingOrderBrowseTables(wdt_current_config.wdtSortingOrderBrowseTables);
         wpdatatable_plugin_config.setRenderPosition(wdt_current_config.wdtRenderFilter);
         wpdatatable_plugin_config.setDecimalPlaces(wdt_current_config.wdtDecimalPlaces);
         wpdatatable_plugin_config.setTabletWidth(wdt_current_config.wdtTabletWidth);
@@ -319,6 +338,9 @@
         wpdatatable_plugin_config.setBorderRemoval(wdt_current_config.wdtBorderRemoval == 1 ? 1 : 0);
         wpdatatable_plugin_config.setBorderRemovalHeader(wdt_current_config.wdtBorderRemovalHeader == 1 ? 1 : 0);
         wpdatatable_plugin_config.setPurchaseCodeStore(wdt_current_config.wdtPurchaseCodeStore);
+        wpdatatable_plugin_config.setGoogleStableVersion(wdt_current_config.wdtGoogleStableVersion == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setHighChartStableVersion(wdt_current_config.wdtHighChartStableVersion == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setApexStableVersion(wdt_current_config.wdtApexStableVersion == 1 ? 1 : 0);
 
         for (var value in wdt_current_config.wdtFontColorSettings) {
             wpdatatable_plugin_config.setColorFontSetting(value, wdt_current_config.wdtFontColorSettings[value]);
@@ -347,7 +369,7 @@
         });
 
         // Change tab on hashchange
-        window.addEventListener('hashchange', function() {
+        window.addEventListener('hashchange', function () {
             var changedHash = window.location.hash;
             changedHash && $('.wdt-datatables-admin-wrap .plugin-settings ul.tab-nav:not(.mysql-serverside-settings-block) a[href="' + changedHash + '"]').tab('show');
         }, false);
@@ -358,7 +380,7 @@
         $('.reset-color-settings').click(function (e) {
             e.preventDefault();
             $('#color-and-font-settings input.cp-value').val('').change();
-            $('#color-and-font-settings .wpcolorpicker-icon i').css('background','#fff');
+            $('#color-and-font-settings .wpcolorpicker-icon i').css('background', '#fff');
             wdt_current_config.wdtFontColorSettings = _.mapObject(
                 wdt_current_config.wdtFontColorSettings,
                 function (color) {
@@ -368,8 +390,8 @@
             $('#color-and-font-settings .selectpicker').selectpicker('val', '');
             $('input#wdt-border-input-radius').val('');
             $('input#wdt-font-size').val('');
-            $('#wdt-remove-borders').prop( 'checked', false ).change();
-            $('#wdt-remove-borders-header').prop( 'checked', false ).change();
+            $('#wdt-remove-borders').prop('checked', false).change();
+            $('#wdt-remove-borders-header').prop('checked', false).change();
         });
 
         /**
@@ -416,7 +438,7 @@
          * Save Google settings on Apply button
          */
         $(document).on('click', '#wdt-save-google-settings', function (e) {
-            var credentials =  $('#wdt-google-sheet-settings').val();
+            var credentials = $('#wdt-google-sheet-settings').val();
 
             if (credentials != '') {
                 $('.wdt-preload-layer').animateFadeIn();
@@ -541,11 +563,11 @@
             newConnectionContent.find(".select-vendor").find("select").selectpicker();
 
             newConnectionContent.find(".select-driver").html('<select class="selectpicker wdt-sql-driver" name="wdt-sql-driver">' +
-              '<option value="" disabled selected></option>' +
-              '<option value="dblib">DBLIB</option>' +
-              '<option value="sqlsrv">SQLSRV</option>' +
-              '<option value="odbc">ODBC</option>' +
-              '</select>');
+                '<option value="" disabled selected></option>' +
+                '<option value="dblib">DBLIB</option>' +
+                '<option value="sqlsrv">SQLSRV</option>' +
+                '<option value="odbc">ODBC</option>' +
+                '</select>');
 
             newConnectionContent.find(".select-driver").find("select").selectpicker();
 
@@ -779,7 +801,7 @@
                 },
                 success: function (data) {
                     data = JSON.parse(data);
-                    if (data.error){
+                    if (data.error) {
                         $('#wdt-error-modal .modal-body').html('There was an error while trying to save google settings!\n ' + data.error);
                         $('#wdt-error-modal').modal('show');
                         $('.wdt-preload-layer').animateFadeOut();
@@ -789,7 +811,7 @@
                     }
 
                 },
-                error: function (){
+                error: function () {
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to save google settings!');
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
@@ -809,7 +831,7 @@
                     window.location = link;
                     window.location.reload();
                 },
-                error: function (data){
+                error: function (data) {
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to delete google settings! ' + data.statusText + ' ' + data.responseText);
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
@@ -839,7 +861,7 @@
                         );
                     }
                 },
-                error: function (){
+                error: function () {
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to delete errors log in cache table!');
                     $('#wdt-error-modal').modal('show');
                     $('.wdt-preload-layer').animateFadeOut();
@@ -876,7 +898,7 @@
                     );
                     wdt_current_config = wdt_temp_config;
                 },
-                error: function (){
+                error: function () {
                     $('.wdt-preload-layer').animateFadeOut();
                     wdtNotify(
                         wpdatatablesSettingsStrings.error,
@@ -891,7 +913,7 @@
         function activatePlugin() {
             $('#wdt-activate-plugin').html('<i class="wpdt-icon-spinner9"></i>Loading...');
 
-            let domain    = location.hostname;
+            let domain = location.hostname;
             let subdomain = location.hostname;
 
             $.ajax({
@@ -938,7 +960,7 @@
             $('#wdt-activate-plugin').html('<i class="wpdt-icon-spinner9"></i>Loading...');
             $('#wdt-envato-deactivation-wpdatatables').html('<i class="fad fa-spinner"></i>Loading...');
 
-            let domain    = location.hostname;
+            let domain = location.hostname;
             let subdomain = location.hostname;
 
             let params = {
@@ -987,7 +1009,7 @@
         }
 
         function authenticateEnvatoOAuth() {
-            let domain    = location.hostname;
+            let domain = location.hostname;
             let subdomain = location.hostname;
             $.ajax({
                 url: ajaxurl,
