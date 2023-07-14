@@ -118,7 +118,14 @@ class MLA {
 
 		add_action( 'admin_init', 'MLA::mla_admin_init_action' );
 		add_action( 'admin_enqueue_scripts', 'MLA::mla_admin_enqueue_scripts_action' );
-		add_action( 'admin_menu', 'MLA::mla_admin_menu_action' );
+
+		// Run this action early for plugin "Nested Pages" support
+		if ( class_exists( 'NestedPages', false ) || ( defined( 'MLA_ADMIN_MENU_EARLY' ) && MLA_ADMIN_MENU_EARLY  ) ) {
+			add_action( 'admin_menu', 'MLA::mla_admin_menu_action', 9 );
+		} else {
+			add_action( 'admin_menu', 'MLA::mla_admin_menu_action' );
+		}
+		
 		add_filter( 'set-screen-option', 'MLA::mla_set_screen_option_filter', 10, 3 ); // $status, $option, $value
 		add_filter( 'set_screen_option_' . MLA_OPTION_PREFIX . 'entries_per_page', 'MLA::mla_set_screen_option_filter', 10, 3 );
 		add_filter( 'screen_options_show_screen', 'MLA::mla_screen_options_show_screen_filter', 10, 2 ); // $show_screen, $this
@@ -1675,25 +1682,24 @@ class MLA {
 						unset( $_REQUEST['mla-set-parent-submit'] );
 						break;
 					case MLACore::MLA_ADMIN_TERMS_SEARCH:
-						/*
-						 * This will be handled as a database query argument,
-						 * but validate the arguments here
-						 */
-						$mla_terms_search = array( 'phrases' => '', 'taxonomies' => array() );
+						// This will be handled as a database query argument, but validate the arguments here
+						unset( $_REQUEST['mla_terms_search']['submit'] );
+						$mla_terms_search = array( 'filter' => 0, 'phrases' => '', 'taxonomies' => array() );
+
 						if ( isset( $_REQUEST['mla_terms_search'] ) ) {
+							$mla_terms_search['filter'] = isset( $_REQUEST['mla_terms_search']['filter'] ) ? (int) $_REQUEST['mla_terms_search']['filter'] : 0;
 							$mla_terms_search['phrases'] = isset( $_REQUEST['mla_terms_search']['phrases'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ) )  : '';
 							$mla_terms_search['taxonomies'] = isset( $_REQUEST['mla_terms_search']['taxonomies'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_REQUEST['mla_terms_search']['taxonomies'] ) ) : array();
 						}
 
-						if ( ! is_array( $mla_terms_search ) || empty( $mla_terms_search['phrases'] ) || empty( $mla_terms_search['taxonomies'] ) ) {
+						if ( ( 0 === $mla_terms_search['filter'] ) && ( empty( $mla_terms_search['phrases'] ) || empty( $mla_terms_search['taxonomies'] ) ) ) {
 							unset( $_REQUEST['mla_terms_search'] );
 							$page_content = array(
 								'message' => __( 'Empty Terms Search; ignored', 'media-library-assistant' ),
 								'body' => '' 
 							);
-						} else {
-							unset( $_REQUEST['mla_terms_search']['submit'] );
 						}
+
 						break;
 					default:
 						$page_content = apply_filters( 'mla_list_table_custom_single_action', NULL, sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) ), $mla_item_id );
@@ -1745,7 +1751,38 @@ class MLA {
 			if ( !empty( $_REQUEST['heading_suffix'] ) ) {
 				echo ' - ' . esc_html( urldecode( wp_kses( wp_unslash( $_REQUEST['heading_suffix'] ), 'post' ) ) ) . wp_kses( $heading_tail, 'post' );
 			} elseif ( !empty( $_REQUEST['mla_terms_search'] ) && is_array( $_REQUEST['mla_terms_search'] ) ) {
-					echo ' - ' . esc_html__( 'term search results for', 'media-library-assistant' ) . ' "' . esc_html( trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) ) ). "\"" . wp_kses( $heading_tail, 'post' );
+				$tax_term_id = 0;
+				$tax_filter = 'none';
+				$term_text = '';
+				$phrase_text = trim( sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) );
+				
+				if ( isset( $_REQUEST['mla_terms_search']['filter'] ) ) {
+					$tax_term_id = (int) $_REQUEST['mla_terms_search']['filter'];
+					if (  0 !== $tax_term_id ) {
+						$tax_filter = MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY );
+					}
+				}
+
+				if ( ( 'none' !== $tax_filter ) && ( is_object_in_taxonomy( 'attachment', $tax_filter ) ) ) {
+					$tax_object = get_taxonomy( $tax_filter );
+					
+					if ( -1 === $tax_term_id ) {
+						$term_text = _x( 'No', 'show_option_none', 'media-library-assistant' ) . ' ' . $tax_object->labels->name;
+					} else {
+						$tax_term = get_term( $tax_term_id, $tax_filter );
+						$term_text = $tax_term->name;
+					}
+				}
+
+				if ( !empty( $phrase_text ) ) {
+					$phrase_text = ' "' . $phrase_text . '"';
+				}
+
+				if ( !empty( $term_text ) ) {
+					$phrase_text = ' "' . $term_text . '",' . $phrase_text;
+				}
+
+				echo ' - ' . esc_html__( 'term search results for', 'media-library-assistant' ) . esc_html( $phrase_text ) . wp_kses( $heading_tail, 'post' );
 			} elseif ( !empty( $_REQUEST['s'] ) ) {
 				if ( empty( $_REQUEST['mla_search_fields'] ) ) {
 					echo ' - ' . esc_html__( 'post/parent results for', 'media-library-assistant' ) . ' "' . esc_html( trim( wp_kses( wp_unslash( $_REQUEST['s'] ) , 'post' ) ) ) . "\"" . wp_kses( $heading_tail, 'post' );
@@ -1867,7 +1904,7 @@ class MLA {
 					$_REQUEST['bulk_custom_field_map'] = __( 'Map Custom Field metadata', 'media-library-assistant' );
 					break;
 				case 'bulk_map':
-					$_REQUEST['bulk_map'] = __( 'Map IPTC/EXIF metadata', 'media-library-assistant' );
+					$_REQUEST['bulk_map'] = __( 'Map IPTC/EXIF/WP metadata', 'media-library-assistant' );
 					break;
 				case 'bulk_edit':
 					$_REQUEST['bulk_edit'] = __( 'Update', 'media-library-assistant' );
@@ -2449,7 +2486,7 @@ class MLA {
 			'Import' => __( 'Import', 'media-library-assistant' ),
 			'Export' => __( 'Export', 'media-library-assistant' ),
 			'bulk_map_style' => '',
-			'Map IPTC/EXIF metadata' =>  __( 'Map IPTC/EXIF metadata', 'media-library-assistant' ),
+			'Map IPTC/EXIF/WP metadata' =>  __( 'Map IPTC/EXIF/WP metadata', 'media-library-assistant' ),
 			'bulk_custom_field_map_style' => '',
 			'Map Custom Field metadata' =>  __( 'Map Custom Field metadata', 'media-library-assistant' ),
 			'Bulk Waiting' =>  __( 'Waiting', 'media-library-assistant' ),

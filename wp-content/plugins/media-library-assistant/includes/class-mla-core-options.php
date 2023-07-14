@@ -144,14 +144,29 @@ class MLACoreOptions {
 	const MLA_BULK_CHUNK_SIZE = 'bulk_chunk_size';
 
 	/**
-	 * Provides a unique name for the taxonomy filter maximum depth option
+	 * Provides a unique name for the Media/Assistant taxonomy filter maximum depth option
 	 */
 	const MLA_TAXONOMY_FILTER_DEPTH = 'taxonomy_filter_depth';
 
 	/**
-	 * Provides a unique name for the taxonomy filter maximum depth option
+	 * Provides a unique name for the Media/Assistant taxonomy filter maximum depth option
 	 */
 	const MLA_TAXONOMY_FILTER_INCLUDE_CHILDREN = 'taxonomy_filter_include_children';
+
+	/**
+	 * Provides a unique name for the Terms Search taxonomy filter selection 
+	 */
+	const MLA_TERMS_SEARCH_FILTER_TAXONOMY = 'terms_search_filter_taxonomy';
+
+	/**
+	 * Provides a unique name for the Terms Search taxonomy filter maximum depth option
+	 */
+	const MLA_TERMS_SEARCH_FILTER_DEPTH = 'terms_search_filter_depth';
+
+	/**
+	 * Provides a unique name for the Terms Search taxonomy filter maximum depth option
+	 */
+	const MLA_TERMS_SEARCH_FILTER_INCLUDE_CHILDREN = 'terms_search_filter_include_children';
 
 	/**
 	 * Provides a unique name for the display Search Media controls option
@@ -268,6 +283,11 @@ class MLACoreOptions {
 	const MLA_MEDIA_MODAL_DETAILS_AUTOFILL = 'media_modal_details_autofill';
 
 	/**
+	 * Provides a unique name for the Media Manager Attachment Details taxonomy auto-open option
+	 */
+	const MLA_MEDIA_MODAL_DETAILS_AUTOOPEN = 'media_modal_details_autoopen';
+
+	/**
 	 * Provides a unique name for the Media Manager orderby option
 	 */
 	const MLA_MEDIA_MODAL_ORDERBY = 'media_modal_orderby';
@@ -333,7 +353,7 @@ class MLACoreOptions {
 	const MLA_ALLOW_CUSTOM_FIELD_MAPPING = 'allow_custom_field_mapping';
 
 	/**
-	 * Provides a unique name for the Enable IPTC/EXIF Mapping option
+	 * Provides a unique name for the Enable IPTC/EXIF/WP Mapping option
 	 */
 	const MLA_ALLOW_IPTC_EXIF_MAPPING = 'allow_iptc_exif_mapping';
 
@@ -719,7 +739,7 @@ class MLACoreOptions {
 
 			'taxonomy_filter_subheader' =>
 				array('tab' => 'general',
-					'name' => __( 'Taxonomy Filter parameters', 'media-library-assistant' ),
+					'name' => __( 'Media/Assistant Taxonomy Filter parameters', 'media-library-assistant' ),
 					'type' => 'subheader', 'help' => ''),
 
 			self::MLA_TAXONOMY_FILTER_DEPTH =>
@@ -732,6 +752,37 @@ class MLACoreOptions {
 					'help' => __( 'Enter the number of levels displayed for hierarchial taxonomies; enter zero for no limit.', 'media-library-assistant' )),
 
 			self::MLA_TAXONOMY_FILTER_INCLUDE_CHILDREN =>
+				array('tab' => 'general',
+					'name' => __( 'Include Children', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'autoload' => true,
+					'std' => '',
+					'help' => __( 'Check/uncheck this option to include/exclude children for hierarchical taxonomies.', 'media-library-assistant' )),
+
+			'terms_search_filter_subheader' =>
+				array('tab' => 'general',
+					'name' => __( 'Terms Search Taxonomy Filter parameters', 'media-library-assistant' ),
+					'type' => 'subheader', 'help' => ''),
+
+			self::MLA_TERMS_SEARCH_FILTER_TAXONOMY =>
+				array('tab' => 'general',
+					'name' => __( 'Terms Search Filter Taxonomy', 'media-library-assistant' ),
+					'type' => 'select',
+					'std' => 'none',
+					'options' => array( 'none' ),
+					'texts' => array(  '&mdash; None (Select a value) &mdash;' ),
+					'help' => __( 'Select the (optional) taxonomy on which to filter the Terms Search results.', 'media-library-assistant' )),
+
+			self::MLA_TERMS_SEARCH_FILTER_DEPTH =>
+				array('tab' => 'general',
+					'name' => __( 'Maximum Depth', 'media-library-assistant' ),
+					'type' => 'text',
+					'autoload' => true,
+					'std' => '3',
+					'size' => 2,
+					'help' => __( 'Enter the number of levels displayed for hierarchial taxonomies; enter zero for no limit.', 'media-library-assistant' )),
+
+			self::MLA_TERMS_SEARCH_FILTER_INCLUDE_CHILDREN =>
 				array('tab' => 'general',
 					'name' => __( 'Include Children', 'media-library-assistant' ),
 					'type' => 'checkbox',
@@ -914,6 +965,13 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to automatically fill MLA-enhanced meta boxes in the "ATTACHMENT DETAILS" pane<br>&nbsp;&nbsp;when the item is selected.', 'media-library-assistant' )),
+
+			self::MLA_MEDIA_MODAL_DETAILS_AUTOOPEN =>
+				array('tab' => 'general',
+					'name' => __( 'Media Manager auto-open meta boxes', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check this option to automatically open all MLA-enhanced taxonomy meta boxes in the "ATTACHMENT DETAILS" pane<br>&nbsp;&nbsp;when the item is selected.', 'media-library-assistant' )),
 
 			self::MLA_MEDIA_MODAL_ORDERBY =>
 				array('tab' => '',
@@ -1161,14 +1219,14 @@ class MLACoreOptions {
 
 			'enable_custom_field_mapping' =>
 				array('tab' => 'custom_field',
-					'name' => __( 'Enable custom field mapping when adding new media', 'media-library-assistant' ),
+					'name' => __( 'Perform custom field mapping when adding new media', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'See Help menu.', 'media-library-assistant' )),
 
 			'enable_custom_field_update' =>
 				array('tab' => 'custom_field',
-					'name' => __( 'Enable custom field mapping when updating media metadata', 'media-library-assistant' ),
+					'name' => __( 'Perform custom field mapping when updating media metadata', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'See Help menu.', 'media-library-assistant' )),
@@ -1185,30 +1243,30 @@ class MLACoreOptions {
 
 			self::MLA_ALLOW_IPTC_EXIF_MAPPING =>
 				array('tab' => 'iptc_exif',
-					'name' => __( 'Enable IPTC/EXIF Mapping', 'media-library-assistant' ),
+					'name' => __( 'Enable IPTC/EXIF/WP Mapping', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => 'checked',
 					'help' => __( 'See Help menu.', 'media-library-assistant' )),
 
 			'enable_iptc_exif_mapping' =>
 				array('tab' => 'iptc_exif',
-					'name' => __( 'Enable IPTC/EXIF Mapping when adding new media', 'media-library-assistant' ),
+					'name' => __( 'Perform IPTC/EXIF/WP Mapping when adding new media', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => '',
-					'help' => __( 'Check this option to enable mapping when uploading new media (attachments).<br>&nbsp;&nbsp;Does NOT affect the operation of the "Map" buttons on the bulk edit, single edit and settings screens.', 'media-library-assistant' )),
+					'help' => __( 'See Help menu.', 'media-library-assistant' )),
 
 			'enable_iptc_exif_update' =>
 				array('tab' => 'iptc_exif',
-					'name' => __( 'Enable IPTC/EXIF Mapping when updating media metadata', 'media-library-assistant' ),
+					'name' => __( 'Perform IPTC/EXIF/WP Mapping when updating media metadata', 'media-library-assistant' ),
 					'type' => 'checkbox',
 					'std' => '',
-					'help' => __( 'Check this option to enable mapping when media (attachments) metadata is regenerated,<br>&nbsp;&nbsp;e.g., when the Media/Edit Media "Edit Image" functions are used.', 'media-library-assistant' )),
+					'help' => __( 'See Help menu.', 'media-library-assistant' )),
 
 			'iptc_exif_standard_mapping' =>
 				array('tab' => '',
 					'help' => __( 'Update the standard field mapping values above, then click <strong>Save Changes</strong> to make the updates permanent.<br>You can also make temporary updates and click <strong>Map All Attachments, Standard Fields Now</strong> to apply the updates to all attachments without saving the rule changes.', 'media-library-assistant' ),
 					'std' =>  NULL, 
-					'type' => 'custom',
+					'type' => 'hidden',
 					'render' => 'mla_iptc_exif_option_handler',
 					'update' => 'mla_iptc_exif_option_handler',
 					'delete' => 'mla_iptc_exif_option_handler',
@@ -1218,7 +1276,7 @@ class MLACoreOptions {
 				array('tab' => '',
 					'help' => __( 'Update the taxonomy term mapping values above, then click <strong>Save Changes</strong> or <strong>Map All Attachments, Taxonomy Terms Now</strong>.', 'media-library-assistant' ),
 					'std' =>  NULL,
-					'type' => 'custom',
+					'type' => 'hidden',
 					'render' => 'mla_iptc_exif_option_handler',
 					'update' => 'mla_iptc_exif_option_handler',
 					'delete' => 'mla_iptc_exif_option_handler',
@@ -1228,7 +1286,7 @@ class MLACoreOptions {
 				array('tab' => '',
 					'help' => __( '<strong>Update</strong> individual custom field mapping values above, or make several updates and click <strong>Save Changes</strong> below to apply them all at once.<br>You can also <strong>add a new rule</strong> for an existing field or <strong>add a new field</strong> and rule.<br>You can make temporary updates and click <strong>Map All Attachments, Custom Fields Now</strong> to apply the updates to all attachments without saving the rule changes.', 'media-library-assistant' ),
 					'std' =>  NULL, 
-					'type' => 'custom',
+					'type' => 'hidden',
 					'render' => 'mla_iptc_exif_option_handler',
 					'update' => 'mla_iptc_exif_option_handler',
 					'delete' => 'mla_iptc_exif_option_handler',
@@ -1236,7 +1294,7 @@ class MLACoreOptions {
 
 			'iptc_exif_mapping' =>
 				array('tab' => '',
-					'help' => __( 'IPTC/EXIF Mapping help', 'media-library-assistant' ),
+					'help' => __( 'IPTC/EXIF/WP Mapping help', 'media-library-assistant' ),
 					'std' =>  array (
 						'standard' => array (
 							'post_title' => array (

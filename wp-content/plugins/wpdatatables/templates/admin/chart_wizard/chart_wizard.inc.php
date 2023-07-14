@@ -3,9 +3,9 @@
 <?php if (isset($chartObj)) { ?>
     <script type='text/javascript'>var editing_chart_data = {
             render_data: <?php echo json_encode($chartObj->getRenderData()); ?>,
-            highcharts_render_data: <?php echo json_encode($chartObj->getHighchartsRenderData()); ?>,
-            chartjs_render_data: <?php echo json_encode($chartObj->getChartJSRenderData()); ?>,
-            apexcharts_render_data: <?php echo json_encode($chartObj->getApexchartsRenderData()); ?>,
+            <?php if ($chartObj->getEngine() != 'google') {
+                echo $chartObj->getEngine() . '_render_data: ' . json_encode($chartObj->returnRenderData()) . ',';
+            };?>
             engine: "<?php echo esc_html($chartObj->getEngine());?>",
             type: "<?php echo esc_html($chartObj->getType()); ?>",
             selected_columns: <?php echo json_encode($chartObj->getSelectedColumns()) ?>,
@@ -13,9 +13,9 @@
             row_range: <?php echo json_encode($chartObj->getRowRange()); } ?>,
             title: "<?php echo esc_html($chartObj->getTitle()); ?>",
             follow_filtering: <?php echo (int)$chartObj->getFollowFiltering(); ?>,
-            wpdatatable_id: <?php echo (int)$chartObj->getwpDataTableId(); ?>  };</script>
+            wpdatatable_id: <?php echo (int)$chartObj->getwpDataTableId(); ?>  };
+    </script>
 <?php } ?>
-
 <div class="wrap wdt-datatables-admin-wrap">
 
     <!-- .container -->

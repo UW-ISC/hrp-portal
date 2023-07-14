@@ -104,6 +104,7 @@ class MLAModal_Ajax {
 				switch ( $key ) {
 					case 'mla_terms_search':
 						$value = array();
+						$value['filter'] = isset( $_POST['query']['s'][ $key ]['filter'] ) ? (int) $_POST['query']['s'][ $key ]['filter'] : 0;
 						$value['phrases'] = isset( $_POST['query']['s'][ $key ]['phrases'] ) ? wp_kses( wp_unslash( $_POST['query']['s'][ $key ]['phrases'] ), 'post' ) : '';
 						$value['taxonomies'] = isset( $_POST['query']['s'][ $key ]['taxonomies'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['query']['s'][ $key ]['taxonomies'] ) ) : array();
 						$value['radio_phrases'] = isset( $_POST['query']['s'][ $key ]['radio_phrases'] ) ? sanitize_text_field( wp_unslash( $_POST['query']['s'][ $key ]['radio_phrases'] ) ) : 'AND';
@@ -128,6 +129,7 @@ class MLAModal_Ajax {
 			unset( $_REQUEST['query']['s'] );
 			$_POST['action'] = MLACore::JAVASCRIPT_QUERY_ATTACHMENTS_ACTION;
 			$_REQUEST['action'] = MLACore::JAVASCRIPT_QUERY_ATTACHMENTS_ACTION;
+
 			return;
 		} // query-attachments
 

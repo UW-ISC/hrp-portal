@@ -9,7 +9,6 @@
 
         <!-- .modal-content -->
         <div class="modal-content">
-
             <!-- Preloader -->
             <?php include WDT_TEMPLATE_PATH . 'admin/common/preloader.inc.php'; ?>
             <!-- /Preloader -->
@@ -80,6 +79,51 @@
                             </div>
                         </div>
 
+                        <div class="col-xs-6">
+                            <h5 class="c-black m-b-10">
+                                <?php esc_html_e('Type in database', 'wpdatatables'); ?>
+                            </h5>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <div class="select">
+                                        <select class="selectpicker wdt-default-add-column-db-type">
+                                            <option value="VARCHAR"><?php esc_html_e('VARCHAR', 'wpdatatables'); ?></option>
+                                            <option value="TEXT"><?php esc_html_e('TEXT', 'wpdatatables'); ?></option>
+                                            <option value="TINYINT"><?php esc_html_e('TINYINT', 'wpdatatables'); ?></option>
+                                            <option value="SMALLINT"><?php esc_html_e('SMALLINT', 'wpdatatables'); ?></option>
+                                            <option value="INT"><?php esc_html_e('INT', 'wpdatatables'); ?></option>
+                                            <option value="MEDIUMINT"><?php esc_html_e('MEDIUMINT', 'wpdatatables'); ?></option>
+                                            <option value="BIGINT"><?php esc_html_e('BIGINT', 'wpdatatables'); ?></option>
+                                            <option value="DECIMAL"><?php esc_html_e('DECIMAL', 'wpdatatables'); ?></option>
+                                            <option value="DATE"><?php esc_html_e('DATE', 'wpdatatables'); ?></option>
+                                            <option value="DATETIME"><?php esc_html_e('DATETIME', 'wpdatatables'); ?></option>
+                                            <option value="TIME"><?php esc_html_e('TIME', 'wpdatatables'); ?></option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6" id="wdt-add-column-db-type-value">
+                            <h5 class="c-black m-b-10">
+                                <?php esc_html_e('Type value', 'wpdatatables'); ?>
+                            </h5>
+                            <div class="form-group">
+                                <div class="fg-line">
+                                    <input type="number" pattern = '/^[0-9,]+$'  onkeypress="return event.charCode >= 48 && event.charCode <= 57 || event.charCode == 44" class="form-control input-sm wdt-default-add-column-db-type-value" value="255" placeholder="<?php esc_attr_e('Enter type value','wpdatatables'); ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xs-12">
+                        <div class="alert alert-info alert-dismissible" role="alert">
+                            <i class="wpdt-icon-info-circle-full"></i>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                            </button>
+                            <span class="wdt-alert-title f-600"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
+                            <ul class="wdt-alert-subtitle" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+                                <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
+                            </ul>
+                        </div>
+                        </div>
                         <div class="col-xs-12 wdt-add-column-possible-values-block" style="display: none;">
                             <h5 class="c-black m-b-10">
                                 <?php esc_html_e('Possible values', 'wpdatatables'); ?>

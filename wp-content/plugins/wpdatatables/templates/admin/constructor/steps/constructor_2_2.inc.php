@@ -6,9 +6,12 @@
         <i class="wpdt-icon-info-circle-full"></i>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
         </button>
-        <span class="wdt-alert-title f-600"><?php esc_html_e('Please check which columns would you like to import and make sure that the column types were imported correctly.', 'wpdatatables'); ?></span>
+        <span class="wdt-alert-title f-600 p-l-00"><?php esc_html_e('Please check which columns would you like to import and make sure that the column types were imported correctly.', 'wpdatatables'); ?></span><br><br>
+        <span class="wdt-alert-title f-600 p-l-20"><?php esc_html_e('Options Type in database and Type value are enabling you to choose how to save your data in the DB.', 'wpdatatables'); ?><br></span>
+        <ul class="wdt-alert-subtitle m-l-20" style="list-style-type: disc;font-size: 13px;margin-top: 5px; color:red !important;">
+            <li> <?php esc_html_e('If you are not familiar with types in the database, just select the wpdatatables column type, like you did in previous versions, and it will be filled by default.', 'wpdatatables'); ?></li>
+        </ul>
     </div>
-
     <div class="row wdt-constructor-file-table-name-block">
 
         <div class="col-sm-6">

@@ -34,7 +34,7 @@
  * https://wordpress.org/support/topic/index-images-in-yoast-seo-sitemap/
  *
  * @package MLA Yoast SEO Example
- * @version 2.00
+ * @version 2.01
  */
 
 /*
@@ -42,7 +42,7 @@ Plugin Name: MLA Yoast SEO Example
 Plugin URI: http://davidlingren.com/
 Description: Supports WordPress SEO by Yoast Page Schema and XMP Sitemap generation
 Author: David Lingren
-Version: 2.00
+Version: 2.01
 Author URI: http://davidlingren.com/
 
 Copyright 2022 David Lingren
@@ -75,7 +75,7 @@ class MLAYoastSEOExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '2.00';
+	const PLUGIN_VERSION = '2.01';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -185,8 +185,8 @@ class MLAYoastSEOExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -194,7 +194,7 @@ class MLAYoastSEOExample {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
 
 		/*
 		 * Filter: 'wpseo_sitemap_urlimages' - Allows updates to the list of images in the page/post

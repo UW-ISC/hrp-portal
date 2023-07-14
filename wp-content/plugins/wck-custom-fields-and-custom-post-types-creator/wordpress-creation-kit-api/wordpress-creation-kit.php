@@ -1730,6 +1730,10 @@ class Wordpress_Creation_Kit{
      */
     function wck_sanitize_value( $value, $meta_name = false ){
 
+        if( apply_filters( 'wck_pre_sanitize_value', false, $meta_name ) ){
+            return apply_filters( 'wck_sanitize_value', $value, $meta_name );
+        }
+
         $is_wysiwyg_field  = false;
         $is_textarea_field = false;
 
@@ -1754,7 +1758,7 @@ class Wordpress_Creation_Kit{
                 if( $is_wysiwyg_field )
                     $sanitized_array[] =  wp_kses_post( $element );
                 elseif( $is_textarea_field )
-                    $sanitized_array[] = sanitize_textarea_field( $element );
+                    $sanitized_array[] = wp_kses_post( $element );
                 else
                     $sanitized_array[] = sanitize_text_field( $element );
             }
@@ -1765,7 +1769,7 @@ class Wordpress_Creation_Kit{
             if( $is_wysiwyg_field )
                 return wp_kses_post( $value );
             elseif( $is_textarea_field )
-                return sanitize_textarea_field( $value );
+                return wp_kses_post( $value );
             else
                 return sanitize_text_field( $value );
         }

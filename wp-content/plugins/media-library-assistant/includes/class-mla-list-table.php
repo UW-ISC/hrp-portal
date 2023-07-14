@@ -365,6 +365,34 @@ class MLA_List_Table extends WP_List_Table {
 			$submenu_arguments['m'] = absint( $_REQUEST['m'] ); 
 		}
 
+		// Terms Search popup, including an optional additional filter by taxonomy term
+		$filtered_term_search = false;
+		if ( isset( $_REQUEST['mla_terms_search'] ) && is_array( $_REQUEST['mla_terms_search'] ) ) {
+			$clean_request = array();
+			
+			if ( !empty( $_REQUEST['mla_terms_search']['filter'] ) ) {
+				$clean_request['filter'] = (int) $_REQUEST['mla_terms_search']['filter'];
+			} else {
+				$clean_request['filter'] = 0;
+			}
+
+			if ( isset( $_REQUEST['mla_terms_search_taxonomies'] ) ) {
+				$submenu_arguments['mla_terms_search_taxonomies'] = urlencode_deep( array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['mla_terms_search_taxonomies'] ) ) );
+			} else {
+				$submenu_arguments['mla_terms_search_taxonomies'] = urlencode_deep( array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['mla_terms_search']['taxonomies'] ) ) );
+			}
+
+			$clean_request['phrases'] = urlencode( wp_kses( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) );
+			$clean_request['radio_phrases'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_phrases'] ) );
+			$clean_request['radio_terms'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_terms'] ) );
+				
+			if ( $clean_request['filter'] !== 0 ) {
+				$filtered_term_search = true;
+			}
+
+			$submenu_arguments['mla_terms_search'] = $clean_request;
+		} // !empty( $clean_request['mla_terms_search']['filter'] )
+
 		// ['mla_filter_term'] - filter by taxonomy term ID (-1 allowed), or by custom field
 		if ( isset( $_REQUEST['mla_filter_term'] ) ) {
 			if ( MLACoreOptions::MLA_FILTER_METAKEY == MLACore::mla_taxonomy_support('', 'filter') ) {
@@ -423,6 +451,15 @@ class MLA_List_Table extends WP_List_Table {
 				$submenu_arguments['mla-metavalue'] = urlencode( wp_kses( wp_unslash( $_REQUEST['mla-metavalue'] ), 'post' ) );
 			}
 		}
+
+		if ( $filtered_term_search ) {
+			// A filtered Terms Search overrides the other taxonomy-related parameters
+			unset( $submenu_arguments['mla_filter_term'] );
+			unset( $submenu_arguments['mla-metakey'] );
+			unset( $submenu_arguments['mla-metavalue'] );
+			unset( $submenu_arguments['mla-tax'] );
+			unset( $submenu_arguments['mla-term'] );
+		} // non-zero $clean_request['mla_terms_search']['filter']
 
 		return $submenu_arguments = apply_filters( 'mla_list_table_submenu_arguments', $submenu_arguments, $include_filters );
 	}
@@ -2150,7 +2187,7 @@ class MLA_List_Table extends WP_List_Table {
 	/**
 	 * Generates (echoes) content for a single row of the table
 	 *
-	 * @since .20
+	 * @since 0.20
 	 *
 	 * @param object the current item
 	 *

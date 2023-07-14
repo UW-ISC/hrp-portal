@@ -31,6 +31,7 @@ class wpDataTableConstructor
     private $_column_aliases = array();
     private $_column_headers = array();
     private $_has_groups = false;
+    public $_predefined_type = '';
 
     /** Query text **/
     private $_query = '';
@@ -56,7 +57,6 @@ class wpDataTableConstructor
     {
         $this->_id = $id;
     }
-
     /**
      * Gets table ID
      */
@@ -70,13 +70,9 @@ class wpDataTableConstructor
      *
      * @param String $connection
      */
-    public function generateTableName($connection)
+    public function generateTableName($connection, $id)
     {
-
-        $this->_index = (int)get_option('wdtGeneratedTablesCount', 0);
-        $this->_index += 1;
-
-        $this->_name = 'wpdatatable_' . $this->_index;
+        $this->_name = 'wpdatatable_' . $id;
 
         if (!(Connection::isSeparate($connection))) {
             global $wpdb;
@@ -99,150 +95,57 @@ class wpDataTableConstructor
      */
     public static function defineColumnProperties($column_header, $column, $connection = null)
     {
-        $vendor = Connection::getVendor($connection);
-        $isMySql = $vendor === Connection::$MYSQL;
-        $isMSSql = $vendor === Connection::$MSSQL;
-        $isPostgreSql = $vendor === Connection::$POSTGRESQL;
+        $columnPropertiesConstruct = new stdClass();
 
-        $columnQuoteStart = Connection::getLeftColumnQuote($vendor);
-        $columnQuoteEnd = Connection::getRightColumnQuote($vendor);
-        $nullable = '';
-        $columnCollate = '';
-        $columnTextType = 'TEXT';
+        $allowed_types = array("VARCHAR", "INT", "BIGINT", "TINYINT", "SMALLINT", "MEDIUMINT", "DECIMAL", "TEXT", "DATE", "DATETIME", "TIME");
+        if(!isset($column['predefined_type_in_db']) || !in_array($column['predefined_type_in_db'], $allowed_types)){
+            $column['predefined_type_in_db'] = 'VARCHAR';
+            $column['predefined_type_value_in_db'] = 255;
+        }
+        if (!preg_match('/^[\d,]+$/', $column['predefined_type_value_in_db']) && $column['predefined_type_value_in_db'] !== ''){
+            $column['predefined_type_in_db'] = 'VARCHAR';
+            $column['predefined_type_value_in_db'] = 255;
+        }
+        $column['predefined_type_in_db'] = sanitize_text_field($column['predefined_type_in_db']);
+        $column['predefined_type_value_in_db'] = sanitize_text_field($column['predefined_type_value_in_db']);
 
-        if ($isMySql) {
-            $columnIntType = 'INT(11)';
-            $columnDateTimeType = 'DATETIME';
+        $columnPropertiesConstruct->vendor = Connection::getVendor($connection);
+        $columnPropertiesConstruct->isMySql =  $columnPropertiesConstruct->vendor === Connection::$MYSQL;
+        $columnPropertiesConstruct->isMSSql =  $columnPropertiesConstruct->vendor === Connection::$MSSQL;
+        $columnPropertiesConstruct->isPostgreSql =  $columnPropertiesConstruct->vendor === Connection::$POSTGRESQL;
+
+        $columnPropertiesConstruct->columnQuoteStart = Connection::getLeftColumnQuote($columnPropertiesConstruct->vendor);
+        $columnPropertiesConstruct->columnQuoteEnd = Connection::getRightColumnQuote($columnPropertiesConstruct->vendor);
+        $columnPropertiesConstruct->nullable = '';
+        $columnPropertiesConstruct->columnCollate = '';
+        $columnPropertiesConstruct->columnTextType = 'TEXT';
+        $columnPropertiesConstruct->columnPredefinedType =  $column['predefined_type_in_db'];
+        $columnPropertiesConstruct->columnPredefinedTypeValue = $column['predefined_type_value_in_db'];
+        $columnPropertiesConstruct->ValueForDB = $columnPropertiesConstruct->columnPredefinedType . '(' . $columnPropertiesConstruct->columnPredefinedTypeValue . ')';
+        if ($columnPropertiesConstruct->isMySql) {
+            $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->ValueForDB;
+            $columnPropertiesConstruct->columnDateTimeType = 'DATETIME';
+        }
+        if ( $columnPropertiesConstruct->isMSSql) {
+            $columnPropertiesConstruct->columnCollate = 'COLLATE Latin1_General_CS_AI';
+            $columnPropertiesConstruct->columnTextType =  $column['predefined_type_in_db'];
+            $columnPropertiesConstruct->columnIntType =$columnPropertiesConstruct->columnPredefinedType;
+            $columnPropertiesConstruct->columnDateTimeType = 'DATETIME';
+            $columnPropertiesConstruct->nullable = 'NULL';
+        }
+        if ($columnPropertiesConstruct->isPostgreSql ) {
+            $columnPropertiesConstruct->columnIntType = $columnPropertiesConstruct->columnPredefinedType;
+            $columnPropertiesConstruct->columnDateTimeType = 'TIMESTAMP';
+            if($columnPropertiesConstruct->columnPredefinedType == 'DATETIME'){
+                $columnPropertiesConstruct->columnPredefinedType = 'TIMESTAMP';
+            }
         }
 
-        if ($isMSSql) {
-            $columnCollate = 'COLLATE Latin1_General_CS_AI';
-            $columnTextType = 'VARCHAR(8000)';
-            $columnIntType = 'INT';
-            $columnDateTimeType = 'DATETIME';
-            $nullable = 'NULL';
-        }
-
-        if ($isPostgreSql) {
-            $columnIntType = 'INT';
-            $columnDateTimeType = 'TIMESTAMP';
-        }
-
-        $column_header = $columnQuoteStart . $column_header . $columnQuoteEnd;
-
-        switch ($column['type']) {
-            case 'input':
-                $columnProperties = array(
-                    'editor_type' => 'text',
-                    'column_type' => 'string',
-                    'filter_type' => 'text',
-                    'create_block' => "{$column_header} VARCHAR(255) $columnCollate "
-                );
-                break;
-            case 'int':
-                $columnProperties = array(
-                    'editor_type' => 'text',
-                    'column_type' => 'int',
-                    'filter_type' => 'number',
-                    'create_block' => "{$column_header} $columnIntType "
-                );
-                break;
-            case 'float':
-                $columnProperties = array(
-                    'editor_type' => 'text',
-                    'column_type' => 'float',
-                    'filter_type' => 'number',
-                    'create_block' => "{$column_header} DECIMAL(16,4) "
-                );
-                break;
-            case 'memo':
-                $columnProperties = array(
-                    'editor_type' => 'textarea',
-                    'column_type' => 'string',
-                    'filter_type' => 'text',
-                    'create_block' => "{$column_header} $columnTextType $columnCollate "
-                );
-                break;
-            case 'select':
-                $columnProperties = array(
-                    'editor_type' => 'selectbox',
-                    'column_type' => 'string',
-                    'filter_type' => 'select',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            case 'multiselect':
-                $columnProperties = array(
-                    'editor_type' => 'multi-selectbox',
-                    'column_type' => 'string',
-                    'filter_type' => 'multiselect',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            case 'date':
-                $columnProperties = array(
-                    'editor_type' => 'date',
-                    'column_type' => 'date',
-                    'filter_type' => 'date-range',
-                    'create_block' => "{$column_header} DATE "
-                );
-                break;
-            case 'datetime':
-                $columnProperties = array(
-                    'editor_type' => 'datetime',
-                    'column_type' => 'datetime',
-                    'filter_type' => 'datetime-range',
-                    'create_block' => "{$column_header} $columnDateTimeType "
-                );
-                break;
-            case 'time':
-                $columnProperties = array(
-                    'editor_type' => 'time',
-                    'column_type' => 'time',
-                    'filter_type' => 'time-range',
-                    'create_block' => "{$column_header} TIME "
-                );
-                break;
-            case 'email':
-                $columnProperties = array(
-                    'editor_type' => 'email',
-                    'column_type' => 'email',
-                    'filter_type' => 'text',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            case 'link':
-                $columnProperties = array(
-                    'editor_type' => 'link',
-                    'column_type' => 'link',
-                    'filter_type' => 'text',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            case 'file':
-                $columnProperties = array(
-                    'editor_type' => 'attachment',
-                    'column_type' => 'link',
-                    'filter_type' => 'none',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            case 'image':
-                $columnProperties = array(
-                    'editor_type' => 'attachment',
-                    'column_type' => 'image',
-                    'filter_type' => 'none',
-                    'create_block' => "{$column_header} VARCHAR(2000) $columnCollate "
-                );
-                break;
-            default:
-                $columnProperties = array(
-                    'editor_type' => 'text',
-                    'column_type' => 'string',
-                    'filter_type' => 'text',
-                    'create_block' => "{$column_header} $columnTextType $columnCollate "
-                );
-                break;
+        $column_header = $columnPropertiesConstruct->columnQuoteStart . $column_header. $columnPropertiesConstruct->columnQuoteEnd;
+        if($columnPropertiesConstruct->columnPredefinedType == 'VARCHAR') {
+            $columnProperties = self::columnPropertiesMapper( $columnPropertiesConstruct, $column_header )['VARCHAR'][$column['type']];
+        } else {
+            $columnProperties = self::columnPropertiesMapper( $columnPropertiesConstruct, $column_header )[$column['predefined_type_in_db']];
         }
 
         $columnProperties['advanced_settings'] = array(
@@ -252,15 +155,15 @@ class wpDataTableConstructor
             'rangeMaxValueDisplay' => 'default',
             'customMaxRangeValue' => null,
             'filterLabel' => '',
-            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '' : sanitize_text_field($column['default_value']),
-            'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
+            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
+            'possibleValuesAjax' =>  $columnProperties['column_type'] === 'string' ? 10 : -1,
             'searchInSelectBox' => 1,
             'searchInSelectBoxEditing' => 1,
             'globalSearchColumn' => 1,
             'andLogic' => 0,
         );
 
-        $columnProperties['create_block'] = $columnProperties['create_block'] . ' ' . $nullable;
+        $columnProperties['create_block'] = $columnProperties['create_block'] . ' ' . $columnPropertiesConstruct->nullable;
 
         if (!empty($column['possible_values'])) {
             $columnProperties['advanced_settings']['possibleValuesType'] = 'list';
@@ -268,6 +171,157 @@ class wpDataTableConstructor
 
         return $columnProperties;
 
+    }
+
+    public static function columnPropertiesMapper($columnPropertiesConstruct, $column_header){
+        return[
+            'VARCHAR' => [
+                'input' => [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'select' => [
+                    'editor_type' => 'selectbox',
+                    'filter_type' => 'select',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'memo' =>[
+                    'editor_type' => 'textarea',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
+                ],
+                'multiselect' => [
+                    'editor_type' => 'multi-selectbox',
+                    'filter_type' => 'multiselect',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'email' => [
+                    'editor_type' => 'email',
+                    'filter_type' => 'text',
+                    'column_type' => 'email',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'link' => [
+                    'editor_type' => 'link',
+                    'filter_type' => 'text',
+                    'column_type' => 'link',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'file' => [
+                    'editor_type' => 'attachment',
+                    'filter_type' => 'link',
+                    'column_type' => 'none',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'image' => [
+                    'editor_type' => 'attachment',
+                    'filter_type' => 'image',
+                    'column_type' => 'none',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'int' => [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'float' => [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'date'=> [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'datetime'=> [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'time'=> [
+                     'editor_type' => 'text',
+                     'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ]
+            ],
+            'INT' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'int',
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnIntType "
+            ],
+            'BIGINT' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'int',
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnIntType "
+            ],
+            'TINYINT' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'int',
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnIntType "
+            ],
+            'SMALLINT' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'int',
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnIntType "
+            ],
+            'MEDIUMINT' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'int',
+                'create_block' => "{$column_header} $columnPropertiesConstruct->columnIntType "
+            ],
+            'DECIMAL' => [
+                'editor_type' => 'text',
+                'filter_type' => 'number',
+                'column_type' => 'float',
+                'create_block' =>  "{$column_header} $columnPropertiesConstruct->ValueForDB "
+            ],
+            'TEXT' => [
+                'editor_type' => 'textarea',
+                'filter_type' => 'text',
+                'column_type' => 'string',
+                'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
+            ],
+            'DATE' => [
+                'editor_type' => 'date',
+                'filter_type' => 'date-range',
+                'column_type' => 'date',
+                'create_block' =>  "{$column_header} DATE "
+            ],
+            'DATETIME' => [
+                'editor_type' => 'datetime',
+                'filter_type' => 'datetime-range',
+                'column_type' => 'datetime',
+                'create_block' =>  "{$column_header} $columnPropertiesConstruct->columnDateTimeType "
+            ],
+            'TIME' => [
+                'editor_type' => 'time',
+                'filter_type' => 'time-range',
+                'column_type' => 'time',
+                'create_block' =>  "{$column_header} TIME "
+            ],
+            'default' => [
+                'editor_type' => 'text',
+                'filter_type' => 'text',
+                'column_type' => 'string',
+                'create_block' => "{$column_header}  $columnPropertiesConstruct->columnTextType $columnPropertiesConstruct->columnCollate "
+            ]
+        ];
     }
 
     /**
@@ -283,8 +337,8 @@ class wpDataTableConstructor
         $connection = $tableData['connection'];
 
         // Generate the MySQL table name
-        $this->generateTableName($connection);
-
+        $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1')+1;
+        $this->generateTableName($connection, $id);
         // Create the wpDataTable metadata
         $wpdb->insert(
             $wpdb->prefix . "wpdatatables",
@@ -316,7 +370,79 @@ class wpDataTableConstructor
 
         // Store the new table metadata ID
         $wpdatatable_id = $wpdb->insert_id;
-
+        $newNameGenerated = false;
+        $cnt = 1;
+        while (!$newNameGenerated) {
+            $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1');
+            $newName = 'wpdatatable_' . $id ;
+            $checkTableQuery = "SHOW TABLES LIKE '{$wpdb->prefix}{$newName}'";
+            if (!(Connection::isSeparate($connection))) {
+                $res = $wpdb->get_results($checkTableQuery);
+                if (!empty($res)) {
+                    $newName = 'wpdatatable_' . $id . '_' . $cnt;
+                    $wpdatatable_id = $id . '_' .$cnt;
+                    $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+                }
+                $res = $wpdb->get_results($checkTableQuery);
+            } else {
+                $sql = Connection::getInstance($connection);
+                $res = $sql->getRow($checkTableQuery);
+                if (!empty($res)){
+                    $newName = 'wp_wpdatatable_' . $id . '_' . $cnt;
+                    $wpdatatable_id = $id . '_' .$cnt;
+                    $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+                }
+                $res = $sql->getRow($checkTableQuery);
+            }
+            if (!empty($res)) {
+                $cnt++;
+            } else {
+                $newNameGenerated = true;
+            }
+        }
+        if(strpos($wpdatatable_id, '_') !== false ){
+            $wpdb->update(
+                $wpdb->prefix . "wpdatatables",
+                array(
+                    'mysql_table_name' => 'wp_wpdatatable_' . $wpdatatable_id,
+                ),
+                array(
+                    'mysql_table_name' => $this->_name,
+                )
+            );
+            $this->_name = 'wp_wpdatatable_' . $wpdatatable_id;
+            $wpdb->update(
+                $wpdb->prefix . "wpdatatables",
+                array(
+                    'content' => 'SELECT 
+                              * FROM ' . $this->_name,
+                ),
+                array(
+                    'mysql_table_name' => $this->_name,
+                )
+            );
+        }else if($wpdatatable_id - $id >= 1){
+            $wpdb->update(
+                $wpdb->prefix . "wpdatatables",
+                array(
+                    'mysql_table_name' => 'wp_wpdatatable_' . $wpdatatable_id,
+                ),
+                array(
+                    'mysql_table_name' => $this->_name,
+                )
+            );
+            $this->_name = 'wp_wpdatatable_' . $wpdatatable_id;
+            $wpdb->update(
+                $wpdb->prefix . "wpdatatables",
+                array(
+                    'content' => 'SELECT 
+                              * FROM ' . $this->_name,
+                ),
+                array(
+                    'mysql_table_name' => $this->_name,
+                )
+            );
+        }
         $vendor = Connection::getVendor($connection);
         $isMySql = $vendor === Connection::$MYSQL;
         $isMSSql = $vendor === Connection::$MSSQL;
@@ -341,7 +467,6 @@ class wpDataTableConstructor
             $origHeader = 'wdt_id';
         }
 
-
         $column_headers = array();
 
         $column_index = 0;
@@ -360,6 +485,7 @@ class wpDataTableConstructor
                 'id_column' => 1
             )
         );
+
         $column_index++;
 
         $additional_statement = '';
@@ -432,9 +558,6 @@ class wpDataTableConstructor
                 throw new Exception(__('There was an error when trying to create the table on MySQL side', 'wpdatatables') . ': ' . $db_error);
             }
         }
-
-        // Update the index in WPDB
-        update_option('wdtGeneratedTablesCount', $this->_index);
 
         return $wpdatatable_id;
 

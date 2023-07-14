@@ -59,7 +59,7 @@
  * https://wordpress.org/support/topic/import-export-to-csv-for-bulk-edit/
  *
  * @package MLA CSV Data Source Example
- * @version 1.03
+ * @version 1.04
  */
 
 /*
@@ -67,7 +67,7 @@ Plugin Name: MLA CSV Data Source Example
 Plugin URI: http://davidlingren.com/
 Description: Populates one or more data sources from a CSV file
 Author: David Lingren
-Version: 1.03
+Version: 1.04
 Author URI: http://davidlingren.com/
 
 Copyright 2020 David Lingren
@@ -103,7 +103,7 @@ class MLACSVDataSourceExample {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.03';
+	const PLUGIN_VERSION = '1.04';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -168,8 +168,8 @@ class MLACSVDataSourceExample {
 		}
 
 		// The plugin settings class is shared with other MLA example plugins
-		if ( ! class_exists( 'MLAExamplePluginSettings101' ) ) {
-			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-101.php' );
+		if ( ! class_exists( 'MLAExamplePluginSettings102' ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
 		}
 
 		// Add the run-time values to the arguments
@@ -177,7 +177,7 @@ class MLACSVDataSourceExample {
 		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
 
 		// Create our own settings object
-		self::$plugin_settings = new MLAExamplePluginSettings101( self::$settings_arguments );
+		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
 		
 		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_options_export'] ) ) {
 			// Match Keys download will be handled in the admin_init filter

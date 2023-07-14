@@ -202,7 +202,7 @@
                                 <p><?php esc_html_e('Created', 'wpdatatables'); ?></p>
                             </div>
                             <div class="wdt-chart-last-created">
-                                <a href="admin.php?page=wpdatatables-chart-wizard&chart_id=<?php echo (int)$lastChartData->id; ?>"
+                                <a href="admin.php?page=wpdatatables-chart-wizard&chart_id=<?php echo (int)$lastChartData->id; ?>&engine=<?php esc_attr_e($lastChartData->engine); ?>"
                                    class="wdt-chart-link">
                                     <?php echo esc_html($lastChartData->title) ?>
                                 </a>
@@ -263,18 +263,19 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            A new update with some features and bug fixes:
+                            A minor update with bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong>  Fixed header - fix tables' header to the top of the scrolling window. </li>
-                                <li><strong>Feature:</strong> Fixed columns - fix tables' columns to the left or to the right. </li>
-                                <li><strong>Feature:</strong> New table skin - Dark Mojito. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with calculation functions shortcodes for sources with null/non-numeric fields. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with array_combine(). </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Highcharts - Pie with gradient. </li>
-                                <li>Other small bug fixes</li></ul>
+                                <li><strong>BugFix:</strong> Fixed issues with errors after duplicating a table.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with table prefix when duplicating a table.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with fatal errors after creating formula columns.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with showing date pickers on the constructor page.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with input types for adding and removing column.</li>
+                                <li><strong>BugFix:</strong> Fixed issue with calculated functions for formula columns for server-side tables.</li>
+                                <li>Other small bug fixes</li>
+                            </ul>
                         </div>
 
                     </div>

@@ -349,7 +349,7 @@ class MLAQuery {
 	 * @param	mixed	single taxonomy (string) or taxonomy list (array of strings)
 	 * @param	array	arguments for taxonomy terms query
 	 *
-	 * @return	array|int|WP_Error) List of WP_Term instances and their children. Will return WP_Error, if any of $taxonomies do not exist.
+	 * @return	array|int|WP_Error List of WP_Term instances and their children. Will return WP_Error, if any of $taxonomies do not exist.
 	 */
 	public static function mla_wp_get_terms( $taxonomy, $args ) {
 		if ( version_compare( get_bloginfo('version'), '4.5.0', '>=' ) ) {
@@ -631,6 +631,7 @@ class MLAQuery {
 	 * in class-mla-shortcodes.php. This array passes the relevant parameters to the filter.
 	 *
 	 * Array index values are:
+	 * ['mla_terms_search']['filter']
 	 * ['mla_terms_search']['phrases']
 	 * ['mla_terms_search']['taxonomies']
 	 * ['mla_terms_search']['radio_phrases'] => AND/OR
@@ -882,6 +883,12 @@ class MLAQuery {
 			'mla_search_fields' => array()
 		);
 
+		// Restore nested taxonomies array from submenu argukments
+		if ( isset( $raw_request['mla_terms_search_taxonomies'] ) ) {
+			$raw_request['mla_terms_search']['taxonomies'] = $raw_request['mla_terms_search_taxonomies'];
+			unset( $raw_request['mla_terms_search_taxonomies'] );
+		}
+
 		foreach ( $raw_request as $key => $value ) {
 			switch ( $key ) {
 				/*
@@ -1023,6 +1030,16 @@ class MLAQuery {
 
 					break;
 				case 'mla_terms_search':
+					// MLA::mla_render_admin_page can have 'mla_terms_search' => 'Terms Search'
+					if ( is_string( $value ) ) {
+						break;
+					}
+					
+					// Search on filter term only is valid, so make sure filter is defined
+					if ( empty( $value['filter'] ) ) {
+						$value['filter'] = 0;
+					}
+
 					if ( ! empty( $value['phrases'] ) && ! empty( $value['taxonomies'] ) ) {
 						$value['phrases'] = stripslashes( trim( $value['phrases'] ) );
 						if ( ! empty( $value['phrases'] ) ) {
@@ -1043,7 +1060,10 @@ class MLAQuery {
 								$clean_request[ $key ] = $value;
 							}
 						}
+					} elseif ( 0 !== $value['filter'] ) {
+						$clean_request[ $key ] = $value;
 					}
+
 					break;
 				case 'mla_search_connector':
 				case 'mla_search_fields':
@@ -1113,6 +1133,12 @@ class MLAQuery {
 
 		// We will handle "Terms Search" in the mla_query_posts_search_filter.
 		if ( isset( $clean_request['mla_terms_search'] ) ) {
+			// MLA_List_Table submenu arguments breaks this out in URLs
+			if ( isset( $clean_request['mla_terms_search_taxonomies'] ) ) {
+				$clean_request['mla_terms_search']['taxonomies'] = $clean_request['mla_terms_search_taxonomies'];
+				unset( $clean_request['mla_terms_search_taxonomies'] );
+			}
+			
 			self::$search_parameters['mla_terms_search'] = $clean_request['mla_terms_search'];
 
 			// The Terms Search overrides any terms-based keyword search for now; too complicated.
@@ -1203,6 +1229,50 @@ class MLAQuery {
 		// Prepare to combine MLA's tax_query with any existing query
 		$mla_tax_query = NULL;
 		
+		/*
+		 * ['mla_terms_search']['filter'] - filter a Terms Search by taxonomy
+		 *
+		 * cat =  0 is "All Categories", i.e., no filtering
+		 * cat = -1 is "No Categories"
+		 */
+		if ( isset( $clean_request['mla_terms_search'] ) && !empty( $clean_request['mla_terms_search']['filter'] ) ) {
+			if ( $clean_request['mla_terms_search']['filter'] != 0 ) {
+				$tax_filter = MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_TAXONOMY );
+				if ( $clean_request['mla_terms_search']['filter'] == -1 ) {
+					$term_list = MLAQuery::mla_wp_get_terms( $tax_filter, array(
+						'fields' => 'ids',
+						'hide_empty' => false
+					) );
+					$mla_tax_query = array(
+						array(
+							'taxonomy' => $tax_filter,
+							'field' => 'id',
+							'terms' => $term_list,
+							'operator' => 'NOT IN' 
+						) 
+					);
+				} else { // ['mla_terms_search']['filter'] == -1
+					$mla_tax_query = array(
+						array(
+							'taxonomy' => $tax_filter,
+							'field' => 'id',
+							'terms' => array(
+								(int) $clean_request['mla_terms_search']['filter']
+							),
+							'include_children' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_TERMS_SEARCH_FILTER_INCLUDE_CHILDREN ) )
+						) 
+					);
+				} // ['mla_terms_search']['filter'] != -1
+	
+				// A filtered Terms Search overrides the other taxonomy-related parameters
+				unset( $clean_request['mla_filter_term'] );
+				unset( $clean_request['mla-metakey'] );
+				unset( $clean_request['mla-metavalue'] );
+				unset( $clean_request['mla-tax'] );
+				unset( $clean_request['mla-term'] );
+			} // non-zero $clean_request['mla_terms_search']['filter']
+		} // !empty( $clean_request['mla_terms_search']['filter'] )
+
 		/*
 		 * ['mla_filter_term'] - filter by taxonomy
 		 *
@@ -1773,8 +1843,15 @@ class MLAQuery {
 			self::$search_parameters['tax_terms_count'] = self::_generate_tax_clause( self::$search_parameters['mla_terms_search'], $tax_clause );
 //error_log( __LINE__ . " MLAQuery::mla_query_posts_search_filter tax_clause = " . var_export( $tax_clause, true ), 0 );
 			
-			if ( '1=0' === $tax_clause && !empty( self::$search_parameters['mla_terms_search']['exclude'] ) ) {
-				$tax_clause = '';
+			if ( '1=0' === $tax_clause ) {
+				if ( !empty( self::$search_parameters['mla_terms_search']['exclude'] ) ) {
+					$tax_clause = '';
+				}
+
+				// Search on filter term only, no phrases
+				if ( !empty( self::$search_parameters['mla_terms_search']['filter'] ) ) {
+					$tax_clause = '';
+				}
 			}
 		}
 

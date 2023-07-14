@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, gallery, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.2
-Stable tag: 3.07
+Tested up to: 6.2.2
+Stable tag: 3.09
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -23,7 +23,7 @@ The Media Library Assistant provides several enhancements for managing the Media
 
 * Support for **[WPML](https://wpml.org/)** and **Polylang** multi-language CMS plugins. MLA has earned a place on [WPML's List of Recommended Plugins](https://wpml.org/plugin/media-library-assistant/).
 
-* **Integrates with Photonic Gallery, Jetpack and other plugins**, so you can add slideshows, thumbnail strips and special effects to your `[mla_gallery]` galleries.
+* **Integrates with Photonic Gallery, Justified Image Grid, Jetpack and other plugins**, so you can add slideshows, thumbnail strips and special effects to your `[mla_gallery]` galleries.
 
 * Works with **[WordPress Real Media Library: Media Library Folder & File Manager](https://wordpress.org/plugins/real-media-library-lite/)** (Lite and Pro) to organize your files into folders, collections and galleries. This combination enhances both the Media/Assistant admin submenu and the `[mla_gallery]` shortcode.
 
@@ -58,6 +58,8 @@ The Media Library Assistant provides several enhancements for managing the Media
 * Works with the popular [Admin Columns](https://wordpress.org/plugins/codepress-admin-columns/) plugins for even more Media/Assistant screen customization.
 
 The Assistant is designed to work like the standard Media Library pages, so the learning curve is short and gentle. Contextual help is provided on every new screen to highlight new features.
+
+**NOTE:** Complete documentation is included in the Documentation tab on the Settings/Media Library Assistant admin screen and the drop-down "Help" content in the admin screens. You can find a stand-alone version of the Documentation on my web site: [Media Library Assistant Documentation](http://davidlingren.com/assets/mla-doc.html)
 
 **I do not solicit nor accept personal donations in support of the plugin.** WordPress and its global community means a lot to me and I am happy to give something back.
 
@@ -188,6 +190,30 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 9. The Media Manager popup modal window showing additional filters for date and taxonomy terms. Also shows the enhanced Search Media box and the full-function taxonomy support in the ATTACHMENT DETAILS area.
 
 == Changelog ==
+
+= 3.09 =
+* Fix: Corrected `[mla_gallery]` "posts_per_page" defect introduced in v3.08.
+
+= 3.08 =
+* New: A stand-alone version of the plugin Documentation has been added to my web site: [Media Library Assistant Documentation](http://davidlingren.com/assets/mla-doc.html).
+* New: The Terms Search popup window now includes an optional taxonomy filter dropdown that will filter the search by a specific term. See the "Terms Search Taxonomy Filter parameters" section of the Settings/Media LIbrary Assistant General tab.
+* New: The "MLA Multisite Extensions" example plugin has been significantly enhanced. A new tool lets you copy MLA settings or taxonomy term definitions from a source site to one or more destination sites, and a Documentation tab has been added to explain everything.
+* New: On the Settings/Media Library Assistant General tab, the new "Media Manager auto-open meta boxes" option, if checked, will open ALL of the taxonomy metaboxes in the ATTACHMENT DETAILS pane of the Media Manager Modal (popup) Window.
+* New: The Settings/Media Library Assistant Documentation tab "Support for the Justified Image Grid Plugin" section gives more information about this popular combination.
+* New: The Settings/Media Library Assistant Documentation tab "Accessing shortcodes and functions from PHP code" section outlines several MLA functions for working with shortcode or data source results.
+* New: The "MLA Hierarchical Mapping Example" plugin has been enhanced to process any taxonomy term mapping template containing vertical bar literals (the term separator).
+* New: The Settings/Media Library Assistant IPTC/EXIF tab has been renamed IPTC/EXIF/WP to emphasize its support for mapping from WordPress data sources using a Content Template. The new tab name is reflected throughout the MLA code and documentation and some updates have been made to the description of this feature as well.
+* Fix: phpDocs errors have been corrected at [Media Library Assistant phpDocs](http://davidlingren.com/assets/phpDocs/index.html)
+* Fix: PHP deprecation warnings for `setcookie()` parameters have been resolved.
+* Fix: Mapping rule support during cron jobs and command line scripts is now added for the "Bulk Media Replace On Wp Cron" plugin.
+* Fix: When the "Nested Pages" plugin is active, MLA calls the WordPress `add_submenu_page()` function at a higher priority so the MLA submenu items can be relocated by Nested Pages' "Admin Customization" feature.
+* Fix: For the "MLA Insert Fixit" example plugin, a Cross Site Scripting (XSS) security flaw has been corrected. Additional validation is now applied to all request variables.
+* Fix: The "Enable ... mapping when updating media metadata" options now work when the Media/Edit Media "Edit Image" functions are used.
+* Fix: For the `,replace(p,r,v)` option/format value, an array of patterns (p) is now handled properly.
+* Fix: Errors introduced in MLA v3.07 regarding active/inactive status changes of Core and MLA MIME Types have been corrected.
+* Fix: Several example plugins have been updated to share the latest version of the example plugin settings support class.
+* Fix: Complete the work required to make PNG metadata available in MLA shortcodes and mapping rules.
+* Fix: When WPML is active, some term assignment errors caused by changes in WPML 4.5+ have been resolved.
 
 = 3.07 =
 * New: Metadata found in the IHDR and tEXt chunks of a PNG image file is extracted and added to the Media/Edit Media "Attachment File Metadata" text area. It is available as field-level substitution parameter values with the new `png:` prefix. More information in the Settings/Media Library Assistant Documentation tab.
@@ -348,14 +374,12 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.07 =
-Metadata extraction for PNG files, "Set Featured Image" enhancements, extensive "Where-used Reporting" documentation, Modern Event Calendar fix and Example Plugin enhancements. Eight enhancements in all, seven fixes..
+= 3.09 =
+IMPORTANT: Corrects `[mla_gallery]` "posts_per_page" defect introduced in v3.08.
 
 == Other Notes ==
 
 In this section, scroll down to see highlights from the documentation, including new and unique plugin features
-
-**NOTE:** Complete documentation is included in the Documentation tab on the Settings/Media Library Assistant admin screen and the drop-down "Help" content in the admin screens.
 
 == Acknowledgements ==
 

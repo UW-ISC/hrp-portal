@@ -481,6 +481,7 @@ class WDTTools
             'close' => __('Close', 'wpdatatables'),
             'columnAdded' => __('Column has been added!', 'wpdatatables'),
             'columnHeaderEmpty' => __('Column header cannot be empty!', 'wpdatatables'),
+            'outOfRangeTypeValue' => __('Type value is out-of-range!', 'wpdatatables'),
             'columnRemoveConfirm' => __('Please confirm column deletion!', 'wpdatatables'),
             'columnRemoved' => __('Column has been removed!', 'wpdatatables'),
             'columnsEmpty' => __('Please select columns that you want to use in table', 'wpdatatables'),
@@ -2030,7 +2031,7 @@ class WDTTools
 
         if (!(Connection::isSeparate($tableData->connection))) {
             if ($idValCheck != '0'){
-                $res = $wpdb->query($wpdb->prepare( "SELECT {$idColumnName} FROM {$mySqlTableName} WHERE {$idColumnName} = %d AND {$userIDColumnName} = %s", $idValCheck, get_current_user_id() ));
+                $res = $wpdb->query($wpdb->prepare( "SELECT `{$idColumnName}` FROM {$mySqlTableName} WHERE `{$idColumnName}` = %d AND `{$userIDColumnName}` = %d", $idValCheck, get_current_user_id() ));
                 if ( !$res){
                     if ($action == 'delete'){
                         $returnResult['error'] = __('User do not have permissions to delete this row! ', 'wpdatatables');

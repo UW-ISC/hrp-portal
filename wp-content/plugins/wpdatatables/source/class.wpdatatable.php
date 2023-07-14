@@ -2031,13 +2031,13 @@ class WPDataTable
                         }
                     }
                 }
-        }
 
-        if (in_array($columnKey, $this->getAvgColumns())) {
-            $filteredRowsNumber = count(array_filter(array_column($this->getDataRows(), $columnKey)));
-            $notNullRowNumber = $filteredRowsNumber !== 0 ? $filteredRowsNumber : count($this->getDataRows());
-            $this->_aggregateFuncsRes['avg'][$columnKey] = $this->_aggregateFuncsRes['sum'][$columnKey] / $notNullRowNumber;
-        }
+            if (in_array($columnKey, $this->getAvgColumns())) {
+                $filteredRowsNumber = count(array_filter(array_column($this->getDataRows(),$columnKey)));
+                $notNullRowNumber = $filteredRowsNumber !== 0 ? $filteredRowsNumber : count($this->getDataRows());
+                $this->_aggregateFuncsRes['avg'][$columnKey] = $this->_aggregateFuncsRes['sum'][$columnKey] / $notNullRowNumber;
+            }
+         } //important
     }
 
     /**
@@ -2780,16 +2780,46 @@ class WPDataTable
                     $output['avgFooterColumns'] = $this->getAvgFooterColumns();
 
                     foreach ($output['sumAvgColumns'] as $key => $columnTitle) {
-                        array_unshift($functionsParsedQuery['SELECT'], array(
-                                'expr_type' => 'colref',
-                                'base_expr' => 'SUM(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                        if (isset($sumColumns[$key]) && $wdtParameters['data_types'][$columnTitle] == 'formula'){
+                            $formulaColumnTitle = $sumColumns[$key];
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(', '1/cos(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headers = WDTTools::sanitizeHeaders($headersInFormula);
+                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            foreach ($headers as $header_key=>$header_value){
+                                if (strpos($formula,$header_value) !== false){
+                                    $formula = str_replace($header_value, '  IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
+                                }
+                            }
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'SUM(' . $formula . ')
                                                  AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
-                                'delim' => ','
-                            )
-                        );
-                        if ($columnTitle === end($output['sumAvgColumns'])) {
-                            $functionsParsedQuery['SELECT'][$key]['delim'] = '';
+                                    'delim' => ','
+                                )
+                            );
+                        } else {
+                            if ($wdtParameters['data_types'][$columnTitle] != 'formula'){
+                                array_unshift($functionsParsedQuery['SELECT'], array(
+                                        'expr_type' => 'colref',
+                                        'base_expr' => 'SUM(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                                                     AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
+                                        'delim' => ','
+                                    )
+                                );
+                            }
                         }
+                    }
+                    $lastElementInSelect = end($functionsParsedQuery['SELECT']);
+                    foreach ($functionsParsedQuery['SELECT'] as $selectKeys=>$selectValues){
+                        $functionsParsedQuery['SELECT'][$selectKeys]['delim'] = ',';
+                        if ($selectValues == $lastElementInSelect)
+                            $functionsParsedQuery['SELECT'][$selectKeys]['delim'] = '';
                     }
 
                     $sumFunctionQuery = $creator->create($functionsParsedQuery);
@@ -2818,20 +2848,66 @@ class WPDataTable
                         $output['sumColumnsValues'][$columnTitle] = $colObjs[$columnTitle]->returnCellValue($sumRow[$columnTitle]);
                     }
                     foreach ($this->getAvgColumns() as $columnTitle) {
-                        require_once(WDT_ROOT_PATH . 'source/class.float.wpdatacolumn.php');
-                        $floatCol = new FloatWDTColumn();
-
-                        $floatCol->setDecimalPlaces($colObjs[$columnTitle]->getDecimalPlaces());
-                        $floatCol->setParentTable($this);
-                        $nonNullValues = (int)$output['recordsFiltered'];
-                        foreach ($main_res_dataRows as $row) {
-                            if ($row[$columnTitle] == null) {
-                                $nonNullValues--;
+                        if ($wdtParameters['data_types'][$columnTitle] == 'formula'){
+                            $functionsParsedQuery['SELECT'] = [];
+                            $formulaColumnTitle = $columnTitle;
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
-                        }
-                        $output['avgColumnsValues'][$columnTitle] = $nonNullValues != 0 ?
-                            $floatCol->returnCellValue(($sumRow[$columnTitle]) / $nonNullValues) : 0;
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headers = WDTTools::sanitizeHeaders($headersInFormula);
+                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            foreach ($headers as $header_key=>$header_value){
+                                if (strpos($formula,$header_value) !== false){
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                                }
+                            }
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'AVG(' . $formula . ')
+                                                 AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
+                                    'delim' => ''
+                                )
+                            );
+                            $avgFunctionQuery = $creator->create($functionsParsedQuery);
 
+                            if ($isPostgreSql) {
+                                $avgFunctionQuery .= ($postgreSqlParsedSearch ? ((strpos($avgFunctionQuery, 'WHERE') || $parsedOnlyOwnRows ? ' AND ' : ' WHERE ') . $postgreSqlParsedSearch) : '');
+                            }
+
+                            if ($isMSSql) {
+                                $avgFunctionQuery .= ($msSqlParsedSearch ? ((strpos($avgFunctionQuery, 'WHERE') || $parsedOnlyOwnRows ? ' AND ' : ' WHERE ') . $msSqlParsedSearch) : '');
+                            }
+
+                            // execute query
+                            if (Connection::isSeparate($this->connection)) {
+                                $sql = Connection::getInstance($this->connection);
+                                $avgRow = $sql->getRow($avgFunctionQuery);
+                                $sql = null;
+                            } else {
+                                // querying using the WP driver otherwise
+                                $avgRow = $wpdb->get_row($avgFunctionQuery, ARRAY_A);
+                            }
+
+                            $output['avgColumnsValues'][$columnTitle] = $colObjs[$columnTitle]->returnCellValue($avgRow[$columnTitle]);
+                        } else {
+                            require_once(WDT_ROOT_PATH . 'source/class.float.wpdatacolumn.php');
+                            $floatCol = new FloatWDTColumn();
+
+                            $floatCol->setDecimalPlaces($colObjs[$columnTitle]->getDecimalPlaces());
+                            $floatCol->setParentTable($this);
+                            $nonNullValues = (int)$output['recordsFiltered'];
+                            foreach ($main_res_dataRows as $row) {
+                                if ($row[$columnTitle] == null) {
+                                    $nonNullValues--;
+                                }
+                            }
+                            $output['avgColumnsValues'][$columnTitle] = $nonNullValues != 0 ?
+                                $floatCol->returnCellValue(($sumRow[$columnTitle]) / $nonNullValues) : 0;
+                        }
                     }
                     $output['sumAvgColumns'] = array_flip($output['sumAvgColumns']);
                     $output['sumFooterColumns'] = array_flip($output['sumFooterColumns']);
@@ -2842,13 +2918,39 @@ class WPDataTable
                     $output['minColumns'] = $this->getMinColumns();
                     $output['minFooterColumns'] = $this->getMinFooterColumns();
                     foreach ($output['minColumns'] as $key => $columnTitle) {
-                        array_unshift($functionsParsedQuery['SELECT'], array(
-                                'expr_type' => 'colref',
-                                'base_expr' => 'MIN(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                        if ($wdtParameters['data_types'][$columnTitle] == 'formula') {
+                            $formulaColumnTitle = $minColumns[$key];
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headers = WDTTools::sanitizeHeaders($headersInFormula);
+                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            foreach ($headers as $header_key=>$header_value){
+                                if (strpos($formula,$header_value) !== false){
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                                }
+                            }
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'MIN(' . $formula . ')
                                                  AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
-                                'delim' => ','
-                            )
-                        );
+                                    'delim' => ','
+                                )
+                            );
+                        } else {
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'MIN(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                                                 AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
+                                    'delim' => ','
+                                )
+                            );
+                      }
+
                         if ($columnTitle === end($output['minColumns'])) {
                             $functionsParsedQuery['SELECT'][$key]['delim'] = '';
                         }
@@ -2885,13 +2987,38 @@ class WPDataTable
                     $output['maxColumns'] = $this->getMaxColumns();
                     $output['maxFooterColumns'] = $this->getMaxFooterColumns();
                     foreach ($output['maxColumns'] as $key => $columnTitle) {
-                        array_unshift($functionsParsedQuery['SELECT'], array(
-                                'expr_type' => 'colref',
-                                'base_expr' => 'MAX(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                        if ($wdtParameters['data_types'][$columnTitle] == 'formula'){
+                            $formulaColumnTitle = $maxColumns[$key];
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                            }
+                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headers = WDTTools::sanitizeHeaders($headersInFormula);
+                            $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
+                            foreach ($headers as $header_key=>$header_value){
+                                if (strpos($formula,$header_value) !== false){
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                                }
+                            }
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'MAX(' . $formula . ')
                                                  AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
-                                'delim' => ','
-                            )
-                        );
+                                    'delim' => ','
+                                )
+                            );
+                        } else {
+                            array_unshift($functionsParsedQuery['SELECT'], array(
+                                    'expr_type' => 'colref',
+                                    'base_expr' => 'MAX(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
+                                                 AS ' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier,
+                                    'delim' => ','
+                                )
+                            );
+                        }
                         if ($columnTitle === end($output['maxColumns'])) {
                             $functionsParsedQuery['SELECT'][$key]['delim'] = '';
                         }
@@ -3074,12 +3201,13 @@ class WPDataTable
                                     $headers,
                                     $res_row
                                 );
-                            $row[$dataColumn_key] = apply_filters(
-                                'wpdatatables_filter_cell_output',
-                                $colObjs[$dataColumn_key]->returnCellValue($formulaVal),
-                                $this->_wpId,
-                                $dataColumn_key
-                            );
+                            if ($formulaVal == 0) $formulaVal = null;
+                                $row[$dataColumn_key] = apply_filters(
+                                    'wpdatatables_filter_cell_output',
+                                    $colObjs[$dataColumn_key]->returnCellValue($formulaVal),
+                                    $this->_wpId,
+                                    $dataColumn_key
+                                );
                         } catch (Exception $e) {
                             $row[$dataColumn_key] = 0;
                         }
@@ -3862,7 +3990,12 @@ class WPDataTable
 
         $parser = new Parser();
 
-        return $parser->solve($formula, $vars);
+        $res = $parser->solve($formula, $vars);
+        $err = error_get_last();
+        if(is_array($err) && strpos($err['message'], 'Undefined') !== false){
+            $res = __('Unable to calculate', 'wpdatatables');
+        }
+        return $res;
     }
 
     /**
@@ -3892,6 +4025,30 @@ class WPDataTable
             }
         }
 
+        return $result;
+    }
+    public function checkFormulaPreview($formula) {
+        $headers = array();
+        $headersInFormula = $this->detectHeadersInFormula($formula);
+        $headers = WDTTools::sanitizeHeaders($headersInFormula);
+
+        $count = count($this->_dataRows) > 5 ? 1 : count($this->_dataRows);
+        $result = __('Unable to calculate', 'wpdatatables');
+        if ($count > 0) {
+            $res_arr = array();
+            try {
+                for ($i = 0; $i < $count; $i++) {
+                    $res_arr[] = self::solveFormula($formula, $headers, $this->_dataRows[$i]);
+                }
+                if($res_arr[0] == 'Unable to calculate'){
+                    $result = __('Unable to calculate', 'wpdatatables');
+                } else {
+                    $result = __('Formula is good', 'wpdatatables');
+                }
+            } catch (Exception $e) {
+                $result = __('Unable to calculate, error message: ', 'wpdatatables') . $e->getMessage();
+            }
+        }
         return $result;
     }
     //[<--/ Full version -->]//

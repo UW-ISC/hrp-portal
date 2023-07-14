@@ -144,13 +144,11 @@ function wdtSaveGoogleSettings()
     if (json_last_error() === JSON_ERROR_NONE) {
         WDTSettingsController::saveGoogleSettings($settings);
         $result['link'] = admin_url('admin.php?page=wpdatatables-settings#google-sheet-api-settings');
-        echo json_encode($result);
-        exit();
     } else {
         $result['error'] = 'Data don\'t have valid JSON format';
-        echo json_encode($result);
-        exit();
     }
+    echo json_encode($result);
+    exit();
 
 }
 
@@ -200,6 +198,7 @@ add_action('wp_ajax_wpdatatables_delete_log_errors_cache', 'wdtDeleteLogErrorsCa
 
 /**
  * Duplicate the table
+ * @throws Exception
  */
 function wdtDuplicateTable()
 {
@@ -230,12 +229,23 @@ function wdtDuplicateTable()
             $cnt = 1;
             $newNameGenerated = false;
             while (!$newNameGenerated) {
-                $newName = $tableData->mysql_table_name . '_' . $cnt;
+                $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1') + 1;
+                $newName =  $wpdb->prefix . 'wpdatatable_' . $id;
                 $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                 if (!(Connection::isSeparate($tableData->connection))) {
                     $res = $wpdb->get_results($checkTableQuery);
+                    if (!empty($res)) {
+                        $newName =  $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
+                        $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+                    }
+                    $res = $wpdb->get_results($checkTableQuery);
                 } else {
                     $sql = Connection::getInstance($tableData->connection);
+                    $res = $sql->getRow($checkTableQuery);
+                    if (!empty($res)){
+                        $newName =  $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
+                        $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
+                    }
                     $res = $sql->getRow($checkTableQuery);
                 }
                 if (!empty($res)) {
@@ -633,6 +643,7 @@ add_action('wp_ajax_wpdatatables_save_simple_table_data', 'wdtSaveDataSimpleTabl
 
 /**
  * Create a manually built table and open in Edit Page
+ * @throws Exception
  */
 function wdtCreateManualTable()
 {
@@ -866,6 +877,7 @@ add_action('wp_ajax_wpdatatables_add_new_manual_column', 'wdtAddNewManualColumn'
 
 /**
  * Delete a column from a manually created table
+ * @throws Exception
  */
 function wdtDeleteManualColumn()
 {
@@ -904,6 +916,7 @@ add_action('wp_ajax_wpdatatables_get_columns_data_by_table_id', 'wdtGetColumnsDa
 
 /**
  * Returns the complete table for the range picker
+ * @throws WDTException
  */
 function wdtGetCompleteTableJSONById()
 {
@@ -921,6 +934,9 @@ function wdtGetCompleteTableJSONById()
 add_action('wp_ajax_wpdatatables_get_complete_table_json_by_id', 'wdtGetCompleteTableJSONById');
 
 
+/**
+ * @throws WDTException
+ */
 function wdtShowChartFromData()
 {
     if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtChartWizardNonce')) {
@@ -928,7 +944,7 @@ function wdtShowChartFromData()
     }
 
     $chartData = stripslashes_deep($_POST['chart_data']);
-    $wpDataChart = WPDataChart::factory($chartData, false);
+    $wpDataChart = WPDataChart::build($chartData);
 
     echo json_encode($wpDataChart->returnData());
     exit();
@@ -944,7 +960,7 @@ function wdtSaveChart()
     }
 
     $chartData = stripslashes_deep($_POST['chart_data']);
-    $wpDataChart = WPDataChart::factory($chartData, false);
+    $wpDataChart = WPDataChart::build($chartData);
     $wpDataChart->save();
 
     echo json_encode(array('id' => $wpDataChart->getId(), 'shortcode' => $wpDataChart->getShortCode()));
@@ -977,7 +993,7 @@ function wdtListAllCharts()
         exit();
     }
 
-    echo json_encode(WPDataChart::getAllCharts());
+    echo json_encode(WPDataChart::getAll());
     exit();
 }
 
@@ -1069,6 +1085,19 @@ function wdtPreviewFormulaResult()
 }
 
 add_action('wp_ajax_wpdatatables_preview_formula_result', 'wdtPreviewFormulaResult');
+
+function wdtCheckFormulaResult()
+{
+    $tableId = (int)$_POST['table_id'];
+    $formula = sanitize_text_field($_POST['formula']);
+
+    $wpDataTable = WPDataTable::loadWpDataTable($tableId);
+
+    echo $wpDataTable->checkFormulaPreview($formula);
+    exit();
+}
+
+add_action('wp_ajax_wpdatatables_check_formula_result', 'wdtCheckFormulaResult');
 
 /**
  * Validate purchase code

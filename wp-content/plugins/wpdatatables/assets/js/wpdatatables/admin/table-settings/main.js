@@ -898,7 +898,7 @@
                 $('div.wdt-possible-values-options-block').hide();
                 $('div.wdt-formula-column-block').show();
                 $('div.wdt-skip-thousands-separator-block').hide();
-                $('div.wdt-numeric-column-block').hide();
+                $('div.wdt-numeric-column-block').show();
                 $('div.wdt-float-column-block').show();
                 $('div.wdt-date-input-format-block').hide();
                 $('div.wdt-link-target-attribute-block').hide();
@@ -908,6 +908,7 @@
                 $('div.wdt-link-button-attribute-block').hide();
                 $('div.wdt-link-button-label-block').hide();
                 $('div.wdt-link-button-class-block').hide();
+                $('div.wdt-numeric-column-block.wdt-skip-thousands-separator-block').hide();
             } else if (['int', 'float'].indexOf($(this).val()) !== -1) {
                 $('div.wdt-possible-values-type-block').hide();
                 $('div.wdt-possible-values-options-block').hide();
@@ -1535,10 +1536,10 @@
                 for (var i in wpdatatable_config.columns) {
                     wpdatatable_config.columns[i].groupColumn = 0;
                     if (wpdatatable_config.columns[i].type == 'formula') {
-                        wpdatatable_config.columns[i].calculateTotal = 0;
-                        wpdatatable_config.columns[i].calculateAvg = 0;
-                        wpdatatable_config.columns[i].calculateMin = 0;
-                        wpdatatable_config.columns[i].calculateMax = 0;
+                        wpdatatable_config.columns[i].calculateTotal =  wpdatatable_config.columns[i].calculateTotal;
+                        wpdatatable_config.columns[i].calculateAvg = wpdatatable_config.columns[i].calculateAvg;
+                        wpdatatable_config.columns[i].calculateMin =  wpdatatable_config.columns[i].calculateMin;
+                        wpdatatable_config.columns[i].calculateMax = wpdatatable_config.columns[i].calculateMax;
                     }
                     if (wpdatatable_config.columns[i].possibleValuesType == 'foreignkey') {
                         wpdatatable_config.columns[i].possibleValuesAjax = -1;
@@ -1806,27 +1807,55 @@
          * Save formula
          */
         $('button.wdt-save-formula').click(function (e) {
-            if (wpdatatable_config.currentOpenColumn == null) {
-                // Adding a new column
-                var columnName = wpdatatable_config.generateFormulaName();
-                wpdatatable_config.addColumn(
-                    new WDTColumn(
-                        {
-                            type: 'formula',
-                            orig_header: columnName,
-                            display_header: columnName,
-                            pos: wpdatatable_config.columns.length,
-                            formula: $('#wdt-formula-editor-modal textarea').val(),
-                            parent_table: wpdatatable_config
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_check_formula_result',
+                    table_id: wpdatatable_config.id,
+                    formula: $('#wdt-formula-editor-modal textarea').val()
+                },
+                success: function (data) {
+                    if (data.includes("Unable to calculate")) {
+                        $('div.wdt-formula-result-preview').html(data);
+                        if (!$('div.wdt-formula-result-preview').is(':visible')) {
+                            $('div.wdt-formula-result-preview').fadeInDown();
                         }
-                    )
-                );
-                $('button.wdt-apply:eq(0)').click();
-            } else {
-                //Updating existing column
-                wpdatatable_config.currentOpenColumn.formula = $('#wdt-formula-editor-modal textarea').val();
-            }
-            $('#wdt-formula-editor-modal').modal('hide');
+                        $('#wdt-formula-editor-modal .wdt-preload-layer').animateFadeOut();
+                    }else {
+                        if (wpdatatable_config.currentOpenColumn == null) {
+                            // Adding a new column
+                            var columnName = wpdatatable_config.generateFormulaName();
+                            wpdatatable_config.addColumn(
+                                new WDTColumn(
+                                    {
+                                        type: 'formula',
+                                        orig_header: columnName,
+                                        display_header: columnName,
+                                        pos: wpdatatable_config.columns.length,
+                                        formula: $('#wdt-formula-editor-modal textarea').val(),
+                                        parent_table: wpdatatable_config
+                                    }
+                                )
+                            );
+                            $('button.wdt-apply:eq(0)').click();
+                            $('#wdt-formula-editor-modal').modal('hide');
+                        } else {
+                            //Updating existing column
+                            wpdatatable_config.currentOpenColumn.formula = $('#wdt-formula-editor-modal textarea').val();
+                        }
+                        $('#wdt-formula-editor-modal').modal('hide');
+                    }
+                },
+                error: function (data) {
+                    $('div.wdt-formula-result-preview').html(data);
+                    if (!$('div.wdt-formula-result-preview').is(':visible')) {
+                        $('div.wdt-formula-result-preview').fadeInDown();
+                    }
+                    $('#wdt-formula-editor-modal .wdt-preload-layer').animateFadeOut();
+                }
+            })
+
         });
 
         /**

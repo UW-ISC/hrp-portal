@@ -1839,7 +1839,7 @@
                                     <div class="row">
                                         <div class="col-sm-12">
                                             <input type="text" name="credits-href" id="credits-href"
-                                                   value="http://www.highcharts.com" class="form-control input-sm"/>
+                                                   value="https://www.highcharts.com" class="form-control input-sm"/>
                                         </div>
                                     </div>
                                 </div>

@@ -63,6 +63,7 @@ class MLAShortcodes {
 		if ( ! in_array( 'mla_gallery', $no_texturize_shortcodes ) ) {
 			$no_texturize_shortcodes[] = 'mla_gallery';
 			$no_texturize_shortcodes[] = 'mla_tag_cloud';
+			$no_texturize_shortcodes[] = 'mla_term_list';
 		}
 
 		return $no_texturize_shortcodes;
@@ -93,7 +94,7 @@ class MLAShortcodes {
 	 *
 	 * Compatibility shim for MLAShortcode_Support::mla_gallery_shortcode
 	 *
-	 * @since .50
+	 * @since 0.50
 	 *
 	 * @param array $attr Attributes of the shortcode
 	 * @param string $content Optional content for enclosing shortcodes; used with mla_alt_shortcode
@@ -129,6 +130,26 @@ class MLAShortcodes {
 	}
 
 	/**
+	 * The MLA Tag Cloud support function.
+	 *
+	 * This is an alternative to the WordPress wp_tag_cloud function, with additional
+	 * options to customize the hyperlink behind each term.
+	 *
+	 * @since 2.20
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 *
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, tag cloud markup as a string or an array of links, depending on 'mla_output' attribute.
+	 */
+	public static function mla_tag_cloud( $attr ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+		}
+
+		return MLAShortcode_Support::mla_tag_cloud( $attr );
+	}
+
+	/**
 	 * The MLA Term List shortcode.
 	 *
 	 * Compatibility shim for MLAShortcode_Support::mla_term_list_shortcode
@@ -149,6 +170,27 @@ class MLAShortcodes {
 	}
 
 	/**
+	 * The MLA Term List support function.
+	 *
+	 * This is an alternative to the WordPress wp_list_categories, wp_dropdown_categories
+	 * and wp_terms_checklist functions, with additional options to customize the hyperlink
+	 * behind each term.
+	 *
+	 * @since 2.25
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 *
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, term list markup as a string or an array of links, depending on 'mla_output' attribute.
+	 */
+	public static function mla_term_list( $attr ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+		}
+
+		return MLAShortcode_Support::mla_term_list( $attr );
+	}
+
+	/**
 	 * The WP_Query object used to select items for the gallery.
 	 *
 	 * Defined as a public, static variable so it can be inspected from the
@@ -165,14 +207,14 @@ class MLAShortcodes {
 	 *
 	 * Compatibility shim for MLAShortcode_Support::mla_get_shortcode_attachments
 	 *
-	 * @since .50
+	 * @since 0.50
 	 *
-	 * @param int Post ID of the parent
+	 * @param int ID of the post/page in which the shortcode appears; zero (0) if none
 	 * @param array Attributes of the shortcode
 	 * @param boolean Optional; true to calculate and return ['found_posts'] as an array element
 	 * @param boolean Optional; true activate debug logging, false to suppress it.
 	 *
-	 * @return array List of attachments returned from WP_Query
+	 * @return array WP_Post[]|int[] Array of post objects or post IDs.
 	 */
 	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL, $overide_debug = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
@@ -183,9 +225,57 @@ class MLAShortcodes {
 	}
 
 	/**
-	 * Retrieve the terms in one or more taxonomies.
+	 * Retrieve the terms in one or more taxonomies
 	 *
 	 * Compatibility shim for MLAShortcode_Support::mla_get_terms
+	 *
+	 * Alternative to WordPress /wp-includes/taxonomy.php function get_terms() that provides
+	 * an accurate count of attachments associated with each term.
+	 *
+	 * taxonomy - string containing one or more (comma-delimited) taxonomy names
+	 * or an array of taxonomy names. Default 'post_tag'.
+	 *
+	 * post_mime_type - MIME type(s) of the items to include in the term-specific counts. Default 'all'.
+	 *
+	 * post_type - The post type(s) of the items to include in the term-specific counts.
+	 * The default is "attachment". 
+	 *
+	 * post_status - The post status value(s) of the items to include in the term-specific counts.
+	 * The default is "inherit".
+	 *
+	 * ids - A comma-separated list of attachment ID values for an item-specific cloud.
+	 *
+	 * include - An array, comma- or space-delimited string of term ids to include
+	 * in the return array.
+	 *
+	 * exclude - An array, comma- or space-delimited string of term ids to exclude
+	 * from the return array. If 'include' is non-empty, 'exclude' is ignored.
+	 *
+	 * parent - term_id of the terms' immediate parent; 0 for top-level terms.
+	 *
+	 * minimum - minimum number of attachments a term must have to be included. Default 0.
+	 *
+	 * no_count - 'true', 'false' (default) to suppress term-specific attachment-counting process.
+	 *
+	 * number - maximum number of term objects to return. Terms are ordered by count,
+	 * descending and then by term_id before this value is applied. Default 0.
+	 *
+	 * orderby - 'count', 'id', 'name' (default), 'none', 'random', 'slug'
+	 *
+	 * order - 'ASC' (default), 'DESC'
+	 *
+	 * no_orderby - 'true', 'false' (default) to suppress ALL sorting clauses else false.
+	 *
+	 * preserve_case - 'true', 'false' (default) to make orderby case-sensitive.
+	 *
+	 * pad_counts - 'true', 'false' (default) to to include the count of all children in their parents' count.
+	 *
+	 * limit - final number of term objects to return, for pagination. Default 0.
+	 *
+	 * offset - number of term objects to skip, for pagination. Default 0.
+	 *
+	 * fields - string with fields for the SQL SELECT clause, e.g.,
+	 *          't.term_id, t.name, t.slug, COUNT(p.ID) AS `count`'
 	 *
 	 * @since 1.60
 	 *
@@ -202,7 +292,7 @@ class MLAShortcodes {
 	}
 
 	/**
-	 * Get IPTC/EXIF or custom field mapping data source; front end posts/pages mode
+	 * Get IPTC/EXIF/WP or custom field mapping data source; front end posts/pages mode
 	 *
 	 * Compatibility shim for MLAData_Source::mla_get_data_source.
 	 *
@@ -210,7 +300,7 @@ class MLAShortcodes {
 	 *
 	 * @param	integer	post->ID of attachment
 	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array	data source specification ( name, *data_source, *keep_existing, *format, mla_column, quick_edit, bulk_edit, *meta_name, *option, no_null )
+	 * @param	array	data source specification ( data_source, qualifier, meta_name, keep_existing, format, option )
 	 * @param	array 	(optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
 	 *
 	 * @return	string|array	data source value

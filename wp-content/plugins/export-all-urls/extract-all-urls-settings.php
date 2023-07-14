@@ -188,8 +188,8 @@ function eau_generate_html()
                                     <label><input type="radio" name="number-of-posts" value="range" required="required" onclick="showRangeFields()" /> Specify Range</label><br />
 
                                     <div id="postRange" style="display: none">
-                                        From: <input type="number" name="starting-point" placeholder="0" value="<?php echo isset($_POST['starting-point']) ? $_POST['starting-point'] : ''; ?>">
-                                        To: <input type="number" name="ending-point" placeholder="500" value="<?php echo isset($_POST['ending-point']) ? $_POST['ending-point'] : ''; ?>">
+                                        From: <input type="number" name="starting-point" placeholder="0" value="<?php echo isset($_POST['starting-point']) ? esc_attr($_POST['starting-point']) : ''; ?>">
+                                        To: <input type="number" name="ending-point" placeholder="500" value="<?php echo isset($_POST['ending-point']) ? esc_attr($_POST['ending-point']) : ''; ?>">
                                     </div>
 
                                 </td>

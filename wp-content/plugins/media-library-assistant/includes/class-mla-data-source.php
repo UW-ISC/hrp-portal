@@ -141,7 +141,7 @@ class MLAData_Source {
 	} // mla_is_data_source
 
 	/**
-	 * Get IPTC/EXIF or custom field mapping data source
+	 * Get IPTC/EXIF/WP or custom field mapping data source
 	 *
 	 * Defined as public so MLA Mapping Hooks clients can call it.
 	 * Isolates clients from changes to _evaluate_data_source().
@@ -150,7 +150,7 @@ class MLAData_Source {
 	 *
 	 * @param	integer	post->ID of attachment
 	 * @param	string 	category/scope to evaluate against: custom_field_mapping or single_attachment_mapping
-	 * @param	array	data source specification ( name, *data_source, *keep_existing, *format, mla_column, quick_edit, bulk_edit, *meta_name, *option, no_null )
+	 * @param	array	data source specification ( data_source, qualifier, meta_name, keep_existing, format, option )
 	 * @param	array 	(optional) _wp_attachment_metadata, default NULL (use current postmeta database value)
 	 *
 	 * @return	string|array	data source value
@@ -169,10 +169,10 @@ class MLAData_Source {
 		$default_arguments = array(
 			'data_source' => 'none',
 			'qualifier' => '',
-			'keep_existing' => true,
-			'format' => 'native',
 			'meta_name' => '',
+			'format' => 'native',
 			'option' => 'text',
+			'keep_existing' => true,
 		);
 		$data_value = shortcode_atts( $default_arguments, $data_value );
 

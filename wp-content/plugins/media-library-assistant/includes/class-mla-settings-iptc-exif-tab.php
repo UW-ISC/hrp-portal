@@ -129,11 +129,9 @@ class MLASettings_IPTCEXIF {
 	}
 
 	/**
-	 * Save IPTC/EXIF settings to the options table
+	 * Save IPTC/EXIF/WP settings to the options table
  	 *
 	 * @since 1.00
-	 *
-	 * @uses $_REQUEST
 	 *
 	 * @return	array	Message(s) reflecting the results of the operation
 	 */
@@ -161,9 +159,9 @@ class MLASettings_IPTCEXIF {
 		//$message_list = $option_messages . '<br>';
 
 		if ( $changed ) {
-			$message_list .= __( 'IPTC/EXIF mapping settings updated.', 'media-library-assistant' ) . "\r\n";
+			$message_list .= __( 'IPTC/EXIF/WP mapping settings updated.', 'media-library-assistant' ) . "\r\n";
 		} else {
-			$message_list .= __( 'IPTC/EXIF no mapping changes detected.', 'media-library-assistant' ) . "\r\n";
+			$message_list .= __( 'IPTC/EXIF/WP no mapping changes detected.', 'media-library-assistant' ) . "\r\n";
 		}
 
 		return array( 'message' => $message_list, 'body' => '' );
@@ -253,7 +251,6 @@ class MLASettings_IPTCEXIF {
 	 * Add a IPTC EXIF custom field rule from values in $_REQUEST
  	 *
 	 * @since 2.60
-	 * @uses $_REQUEST for field-level values
 	 *
 	 * @return string Message(s) reflecting the results of the operation
 	 */
@@ -318,7 +315,6 @@ class MLASettings_IPTCEXIF {
 	 * Update a IPTC EXIF rule from full-screen Edit Rule values in $_REQUEST
  	 *
 	 * @since 2.60
-	 * @uses $_REQUEST for field-level values
 	 *
 	 * @param integer $post_id ID value of rule to update
 	 * @param	array	&$template Display templates.
@@ -435,7 +431,6 @@ class MLASettings_IPTCEXIF {
 	 * Update a IPTC EXIF rule from Bulk Edit action values in $_REQUEST
  	 *
 	 * @since 2.60
-	 * @uses $_REQUEST for field-level values
 	 *
 	 * @param integer $post_id ID value of rule to update
 	 * @return string status/error message
@@ -533,7 +528,7 @@ class MLASettings_IPTCEXIF {
 			'Description' => __( 'Description', 'media-library-assistant' ),
 			'description' => $item['description'],
 			'description_rows' => 3,
-			'description_help' => __( 'Notes for the IPTC/EXIF tab submenu table.', 'media-library-assistant' ),
+			'description_help' => __( 'Notes for the IPTC/EXIF/WP tab submenu table.', 'media-library-assistant' ),
 			'IPTC Value' => __( 'IPTC Value', 'media-library-assistant' ),
 			'iptc_field_options' => MLAOptions::mla_compose_iptc_option_list( $item['iptc_value'] ),
 			'EXIF/Template Value' => __( 'EXIF/Template Value', 'media-library-assistant' ),
@@ -820,7 +815,7 @@ class MLASettings_IPTCEXIF {
 			}
 
 			$page_values = array(
-				'Support is disabled' => __( 'IPTC/EXIF Mapping Support is disabled', 'media-library-assistant' ),
+				'Support is disabled' => __( 'IPTC/EXIF/WP Mapping Support is disabled', 'media-library-assistant' ),
 				'form_url' => admin_url( 'options-general.php' ) . '?page=mla-settings-menu-iptc_exif&mla_tab=iptc_exif',
 				'options_list' => $options_list,
 				'Save Changes' => __( 'Save Changes', 'media-library-assistant' ),
@@ -909,7 +904,7 @@ class MLASettings_IPTCEXIF {
 			'mla-progress-div' => $progress_div,
 			'IPTC EXIF Options' => __( 'IPTC &amp; EXIF Processing Options', 'media-library-assistant' ),
 			/* translators: 1: Documentation hyperlink */
-			'In this tab' => __( 'In this tab you can define the rules for mapping IPTC (International Press Telecommunications Council) and EXIF (EXchangeable Image File) metadata to WordPress standard attachment fields, taxonomy terms and custom fields.', 'media-library-assistant' ),
+			'In this tab' => __( 'In this tab you can define the rules for mapping IPTC (International Press Telecommunications Council) and EXIF (EXchangeable Image File) metadata to WordPress standard attachment fields, taxonomy terms and custom fields.', 'media-library-assistant' ) . ' ' . __( 'You can also use a Content Template to compose a value from field-level data sources like Title, Author, ALT Text and File Name.', 'media-library-assistant' ),
 			/* translators: 1: Documentation hyperlink */
 			'You can find' => __( 'You can find more information about using the controls in this tab to define mapping rules and apply them by clicking the "Help" control in the upper-right corner of the screen.', 'media-library-assistant' ),
 			'settingsURL' => admin_url('options-general.php'),
@@ -2083,7 +2078,7 @@ class MLA_IPTC_EXIF_Query {
 	 *             @type string $key Field or taxonomy slug, custom field name the rule applies to.
 	 *             @type string $rule_name Rule name, to accomodate an old custom fields bug.
 	 *             @type string $name Field or taxonomy name the rule applies to.
-	 *             @type string $description Notes for the IPTC/EXIF tab submenu table.
+	 *             @type string $description Notes for the IPTC/EXIF/WP tab submenu table.
 	 *             @type boolean $hierarchical True if taxonomy is hierarchical.
 	 *             @type string $iptc_value IPTC tag, e.g., ‘2#025’ or 'none'.
 	 *             @type string $exif_value EXIF field name or Content Template begining "template:".
