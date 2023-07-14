@@ -1,0 +1,372 @@
+# Copyright (C) 2022 Gravity Wiz
+# This file is distributed under the GPL2.
+msgid ""
+msgstr ""
+"Project-Id-Version: GP Nested Forms 1.0.11\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cloned-perk-JbLrFQXA-\n"
+"POT-Creation-Date: 2022-04-05T20:25:37+00:00\n"
+"PO-Revision-Date: 2022-10-24 14:11-0400\n"
+"Last-Translator: Florian Rinnhofer\n"
+"Language-Team: Deutsch\n"
+"Language: de_DE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 3.2\n"
+"X-Domain: gp-nested-forms\n"
+"X-Loco-Version: 2.6.1; wp-5.9.3\n"
+
+#: includes/class-gpnf-merge-tags.php:28
+msgid "%s: Count"
+msgstr "%s: Anzahl"
+
+#: includes/class-gpnf-merge-tags.php:47
+msgid "%s: Set"
+msgstr "%s: gewählt"
+
+#: includes/class-gpnf-merge-tags.php:33
+msgid "%s: Sum"
+msgstr "%s: Summe"
+
+#: includes/class-gpnf-merge-tags.php:41
+msgid "%s: Total"
+msgstr "%s: Total"
+
+#: templates/nested-entries.php:27
+msgid "Actions"
+msgstr "Aktionen"
+
+#. Translators: %s is replaced by singular item label.
+#: class-gp-nested-forms.php:2177 class-gp-nested-forms.php:2200
+#: class-gp-nested-forms.php:2210 includes/class-gp-field-nested-form.php:87
+msgid "Add %s"
+msgstr "%s hinzufügen"
+
+#: class-gp-nested-forms.php:2184
+msgid "Are you sure?"
+msgstr "Bist du sicher?"
+
+#: class-gp-nested-forms.php:235
+msgid ""
+"By default, any Gravity Forms add-on feeds will be processed immediately when the "
+"nested form is submitted. Use this option to delay feed processing for entries "
+"submitted via the nested form until after the parent form is submitted. <br><br>For "
+"example, if you have a User Registration feed configured for the nested form, you "
+"may not want the users to actually be registered until the parent form is submitted."
+msgstr ""
+"Standardmäßig werden alle Gravity Forms Feeds unmittelbar nach dem Übermitteln des "
+"verschachtelten Formulares verarbeitet. Verwende diese Option, um die Verarbeitung "
+"der Einträge, die über das verschachtelte Formular übermittelt werden, zu "
+"verzögern, bis das Eltern-Formular übermittelt wird. <br><br> Wenn du zum Beispiel "
+"einen Nutzer-Registrierungs-Feed für das verschachtelte Formular konfiguriert hast, "
+"willst du vermutlich nicht, dass der Nutzende registriert ist, bis das Eltern-"
+"Formular übermittelt wurde."
+
+#: class-gp-nested-forms.php:2182
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: class-gp-nested-forms.php:888
+msgid "Child Form Field ID"
+msgstr "Kind-Formular-Feld-ID"
+
+#: class-gp-nested-forms.php:1138
+msgid ""
+"Child forms cannot contain nested forms. Please edit the child form and remove any "
+"nested form fields in it."
+msgstr ""
+"Kind-Formulare können keine verschachtelten Formulare enthalten. Bitte bearbeite "
+"das Kind-Formular und entferne alle darin enthaltenen Verschachteltes-Formular-"
+"Felder."
+
+#: class-gp-nested-forms.php:2185
+msgid "Close"
+msgstr "Schließen"
+
+#: class-gp-nested-forms.php:1137
+msgid "Configuration Error"
+msgstr "Konfigurationsfehler"
+
+#: includes/class-gp-field-nested-form.php:72
+msgid "Configuration Required"
+msgstr "Konfiguration erforderlich"
+
+#. Description of the plugin
+msgid "Create forms within forms for better management of complex forms. Formception!"
+msgstr ""
+"Erstelle Formulare innerhalb von Formularen für ein besseres Management von "
+"komplexen Formularen. "
+
+#: class-gp-nested-forms.php:2183 includes/class-gp-field-nested-form.php:119
+msgid "Delete"
+msgstr "Löschen"
+
+#. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
+#: includes/class-gp-field-nested-form.php:127
+msgid "Delete %1$s {0} where %2$s is {1}."
+msgstr "Lösche %1$s {0} wo %2$s ist {1}."
+
+#: includes/class-gp-field-nested-form.php:118
+msgid "Duplicate"
+msgstr "Duplizieren"
+
+#. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
+#: includes/class-gp-field-nested-form.php:125
+msgid "Duplicate %1$s {0} where %2$s is {1}."
+msgstr "Dupliziere %1$s {0} wo %2$s ist {1}."
+
+#: class-gp-nested-forms.php:709
+msgid "e.g. 2"
+msgstr "z. B. 2"
+
+#: class-gp-nested-forms.php:716
+msgid "e.g. 5"
+msgstr "z. B. 5"
+
+#: class-gp-nested-forms.php:665
+msgid "e.g. Entries"
+msgstr "z. B. Einträge"
+
+#: class-gp-nested-forms.php:659
+msgid "e.g. Entry"
+msgstr "z. B. Eintrag"
+
+#: includes/class-gp-field-nested-form.php:117
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#. Translators: %1$s is replaced with the singular label for a child entry. %2$s is replaced with the field label for the first column.
+#: includes/class-gp-field-nested-form.php:123
+msgid "Edit %1$s {0} where %2$s is {1}."
+msgstr "Bearbeite %1$s {0} wo %2$s ist {1}."
+
+#. Translators: %s is replaced by singular item label.
+#: class-gp-nested-forms.php:2179 class-gp-nested-forms.php:2201
+#: class-gp-nested-forms.php:2215
+msgid "Edit %s"
+msgstr "%s bearbeiten"
+
+#: includes/class-gp-field-nested-form.php:404
+msgid "Entries"
+msgstr "Einträge"
+
+#: includes/class-gp-field-nested-form.php:403
+msgid "Entry"
+msgstr "Eintrag"
+
+#: class-gp-nested-forms.php:233 class-gp-nested-forms.php:652
+msgid "Entry Labels"
+msgstr "Eintrags-Beschriftungen"
+
+#: class-gp-nested-forms.php:234 class-gp-nested-forms.php:701
+msgid "Entry Limits"
+msgstr "Eintrags-Limits"
+
+#: class-gp-nested-forms.php:235 class-gp-nested-forms.php:725
+msgid "Feed Processing"
+msgstr "Feed-Verarbeitung"
+
+#. Plugin Name of the plugin
+msgid "GP Nested Forms"
+msgstr "GP Nested Forms"
+
+#. Author of the plugin
+msgid "Gravity Wiz"
+msgstr "Gravity Wiz"
+
+#. Author URI of the plugin
+msgid "https://gravitywiz.com"
+msgstr "https://gravitywiz.com"
+
+#. Plugin URI of the plugin
+msgid "https://gravitywiz.com/documentation/gravity-forms-nested-forms/"
+msgstr "https://gravitywiz.com/documentation/gravity-forms-nested-forms/"
+
+#: class-gp-nested-forms.php:734
+msgid "is submitted."
+msgstr "wird übermittelt."
+
+#: class-gp-nested-forms.php:714
+msgid "Maximum"
+msgstr "Maximum"
+
+#: includes/class-gp-field-nested-form.php:207
+msgid "Maximum number of %s reached."
+msgstr "Maximale Anzahl an %s erreicht."
+
+#: class-gp-nested-forms.php:707
+msgid "Minimum"
+msgstr "Minimum"
+
+#: class-gp-nested-forms.php:236 class-gp-nested-forms.php:680
+msgid "Modal Color"
+msgstr "Pop-up-Farbe"
+
+#: class-gp-nested-forms.php:231 class-gp-nested-forms.php:615
+#: includes/class-gp-field-nested-form.php:8
+msgid "Nested Form"
+msgstr "Verschachteltes Formular"
+
+#: class-gp-nested-forms.php:732
+msgid "nested form"
+msgstr "verschachteltes Formular"
+
+#: includes/class-gp-field-nested-form.php:46
+msgid "Nested Form fields cannot be edited. Edit the child entry to make changes."
+msgstr ""
+"Verschachtelte Formular-Felder können nicht bearbeitet werden. Bearbeite die Kind-"
+"Einträge, um Änderungen vorzunehmen."
+
+#: class-gp-nested-forms.php:1036
+msgid "Oops! There was an error finding an entry. Did you pass a valid entry_id?"
+msgstr ""
+"Oops! Beim Finden eines Eintrags ist ein Fehler aufgetreten. Hast du eine gültige "
+"Eintrags-ID gewählt?"
+
+#: class-gp-nested-forms.php:1077
+msgid "Oops! We can't locate that entry."
+msgstr "Oops! Wir können diesen Eintrag nicht lokalisieren."
+
+#: class-gp-nested-forms.php:1029 class-gp-nested-forms.php:1040
+msgid "Oops! You don't have permission to delete this entry."
+msgstr "Oops! Du hast nicht die Berechtigung, um diesen Eintrag zu löschen."
+
+#: class-gp-nested-forms.php:1120
+msgid "Oops! You don't have permission to do this."
+msgstr "Oops! Du hast nicht die Berechtigung, um dies zu tun."
+
+#: class-gp-nested-forms.php:1189 class-gp-nested-forms.php:1209
+msgid "Oops! You don't have permission to duplicate this entry."
+msgstr "Oops! Du hast nicht die Berechtigung, um diesen Eintrag zu duplizieren."
+
+#: class-gp-nested-forms.php:1069 class-gp-nested-forms.php:1081
+msgid "Oops! You don't have permission to edit this entry."
+msgstr "Oops! Du hast nicht die Berechtigung, um diesen Eintrag zu bearbeiten."
+
+#: class-gp-nested-forms.php:1013
+msgid "Oops! You don't have permission to get fields for this form."
+msgstr "Uups! Du hast nicht die Berechtigung, um Felder dieses Formulars zu bekommen."
+
+#: class-gp-nested-forms.php:883
+msgid "Parent Entry Form ID"
+msgstr "Eltern-Eintrag Formular-ID"
+
+#: class-gp-nested-forms.php:525 class-gp-nested-forms.php:878
+msgid "Parent Entry ID"
+msgstr "Eltern-Eintrags-ID"
+
+#: class-gp-nested-forms.php:731
+msgid "parent form"
+msgstr "Eltern-Formular"
+
+#. Translators: %1$d is replaced with the maximum. %2$s is replaced with the label for an individual entry.
+#: includes/class-gp-field-nested-form.php:487
+msgid "Please enter a maximum of %1$d %2$s"
+msgstr "Bitte gib ein Maximum von %1$d %2$s ein."
+
+#. Translators: %1$d is replaced with the minimum. %2$s is replaced with the label for an individual entry.
+#: includes/class-gp-field-nested-form.php:469
+msgid "Please enter a minimum of %1$d %2$s"
+msgstr "Bitte gib ein Minimum von %1$d %2$s ein"
+
+#: class-gp-nested-forms.php:663
+msgid "Plural"
+msgstr "Mehrzahl"
+
+#: class-gp-nested-forms.php:729
+msgid "Process nested feeds when the"
+msgstr "Verarbeite verschachtelte Feeds wenn"
+
+#: class-gp-nested-forms.php:3293
+msgid "Row ID"
+msgstr "Zeilen-ID"
+
+#: class-gp-nested-forms.php:236
+msgid ""
+"Select a color which will be used to set the background color of the nested form "
+"modal header and navigational buttons."
+msgstr ""
+"Wähle eine Farbe aus, die als Hintergrundfarbe des Headers sowie der Buttons des "
+"verschachtelten Formulars verwendet wird."
+
+#: class-gp-nested-forms.php:621
+msgid "Select a Form"
+msgstr "Wähle ein Formular."
+
+#: class-gp-nested-forms.php:231
+msgid "Select the form that should be used to create nested entries for this form."
+msgstr ""
+"Wähle das Formular, das verwendet werden soll, um verschachtelte Einträge für "
+"dieses Formular zu erstellen."
+
+#: class-gp-nested-forms.php:232
+msgid ""
+"Select which fields from the nested entry will display in table on the current "
+"form. This does not affect which fields will appear in the modal."
+msgstr ""
+"Wähle, welche Felder des verschachtelten Eintrags in der Tabelle des aktuellen "
+"Formulars angezeigt werden sollen. Dies hat keinen Einfluss darauf, was in der Pop-"
+"up-Eingabe erscheinen wird."
+
+#: class-gp-nested-forms.php:641
+msgid "Select your fields"
+msgstr "Wähle deine Felder"
+
+#: class-gp-nested-forms.php:657
+msgid "Singular"
+msgstr "Einzahl"
+
+#: class-gp-nested-forms.php:1151
+msgid "Sorry. You must be logged in to view this form."
+msgstr "Sorry. Du musst eingeloggt sein, um dieses Formular zu sehen."
+
+#: class-gp-nested-forms.php:233
+msgid ""
+"Specify a singular and plural label with which entries submitted via this field "
+"will be labeled (i.e. \"employee\", \"employees\")."
+msgstr ""
+"Lege eine Einzahl- und eine Mehrzahl-Beschriftung fest, mit der Einträge, die über "
+"dieses Feld übermittelt werden, gekennzeichnet werden (z. B. \"Team\", \"Teams\")"
+
+#: class-gp-nested-forms.php:234
+msgid ""
+"Specify the minimum and maximum number of entries that can be submitted for this "
+"field."
+msgstr ""
+"Lege die minimale und maximale Anzahl an Einträgen fest, die für dieses Feld "
+"übermittelt werden können."
+
+#: class-gp-nested-forms.php:232 class-gp-nested-forms.php:637
+msgid "Summary Fields"
+msgstr "Zusammenfassungs-Felder"
+
+#. Translators: %1$s is replaced with a <span>. %2$s is replaced with the plural label for child entries. %3$s is replaced with a closing </span>.
+#: includes/class-gp-field-nested-form.php:115
+msgid "There are no %1$s%2$s.%3$s"
+msgstr "Es gibt keine %1$s%2$s.%3$s"
+
+#: class-gp-nested-forms.php:366
+msgid ""
+"There was an error retrieving the fields for this form. Please try again or contact "
+"support."
+msgstr ""
+"Beim Abrufen der Felder dieses Formulars ist ein Fehler aufgetreten. Bitte versuche "
+"es erneut oder kontaktiere uns."
+
+#: includes/class-gp-field-nested-form.php:73
+msgid ""
+"Use the Nested Form and Summary Fields settings to choose the form and fields to "
+"display in this Nested Form field."
+msgstr ""
+"Verwende das verschachtelte Formular und die Einstellungen für Zusammenfassungs-"
+"Felder, um das Formular und die Felder zu wählen, die in diesem verschachtelte-Form-"
+"Feld dargestellt werden."
+
+#: includes/class-gp-field-nested-form.php:313
+msgid "View Entry"
+msgstr "Eintrag anzeigen"
+
+#: includes/class-gp-field-nested-form.php:290
+msgid "View Expanded %s List"
+msgstr "Zeige erweiterte %s-Liste"
