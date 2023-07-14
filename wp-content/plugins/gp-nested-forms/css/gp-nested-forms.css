@@ -1,0 +1,562 @@
+/**
+ * Nested Form Field
+ */
+
+.gpnf-nested-entries-container {
+	overflow: auto;
+}
+
+.gpnf-nested-entries {
+	border: 1px solid rgba( 0, 0, 0, 0.1 );
+	border-radius: 3px;
+	min-width: min( 100%, 800px );
+	border-spacing: 0;
+	border-collapse: separate;
+}
+
+.gform-theme--framework .gpnf-nested-entries {
+	margin-bottom: var(--gform-theme-padding-block);
+}
+
+.gpnf-nested-entries th,
+.gpnf-nested-entries td {
+	border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
+	padding: 1rem;
+}
+
+.gpnf-nested-entries tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.gpnf-nested-entries th {
+	background-color: rgba( 0, 0, 0, 0.03 );
+	border-color: rgba( 0, 0, 0, 0.1 );
+	font-size: 0.9em;
+	text-align: left;
+}
+
+.gform-theme--framework .gpnf-nested-entries th,
+.gform-theme--framework .gpnf-nested-entries td {
+	font-size: var(--gform-theme-font-size-primary);
+	padding: var(--gform-theme-padding-block);
+}
+
+.gpnf-no-entries td {
+	text-align: center;
+	padding: 1rem;
+	border-bottom: 0;
+}
+
+.gpnf-no-entries td span {
+	text-transform: lowercase;
+	margin: 0 !important;
+}
+
+.gpnf-row-actions ul {
+	margin: 0;
+	padding: 0;
+}
+
+.gpnf-row-actions li {
+	display: inline;
+	position: relative;
+}
+
+.gpnf-row-actions {
+	text-align: right;
+	white-space: nowrap;
+}
+
+.gpnf-row-actions .gfspinner {
+	position: absolute;
+	top: 2px;
+	left: 50%;
+	margin-left: -8px; /* based on 16px width */
+}
+
+.gpnf-row-actions button {
+	background-color: transparent;
+	border: 0;
+	padding: 0;
+	font-size: inherit;
+	color: inherit;
+	text-decoration: underline;
+	cursor: pointer;
+	font-weight: normal;
+}
+
+.gpnf-row-actions .delete a,
+.gpnf-row-actions .delete-button {
+	color: #c00;
+}
+
+.gpnf-add-entry {
+	margin-top: 10px;
+}
+
+.gpnf-add-entry-max {
+	font-size: 0.8em;
+	display: inline-block;
+}
+
+.gform-theme--framework .gpnf-add-entry-max {
+	margin: var(--gform-theme-padding-block);
+}
+
+.gpnf-add-entry + .gfspinner {
+	margin-left: 5px;
+	vertical-align: middle;
+}
+
+.gpnf-view-related-entries {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/**
+ * Theme Framework integration
+ */
+.gform-theme--framework table.gpnf-nested-entries {
+	border-radius: var(--gform-theme-control-border-radius);
+	border-collapse: separate;
+}
+
+.gform-theme--framework .gpnf-row-actions ul {
+	display: flex;
+	text-align: inherit;
+	justify-content: right;
+}
+
+/* High-specificity needed here */
+.gform-theme--framework .gpnf-row-actions ul li.delete .delete-button.gform-theme-button--simple {
+	color: var(--gform-theme-color-danger);
+	transition: all var(--gform-theme-local-transition), visibility 1ms;
+}
+
+/* High-specificity needed here */
+.gform-theme--framework .gpnf-row-actions ul li.edit .edit-button.gform-theme-button--secondary {
+	transition: all var(--gform-theme-local-transition), visibility 1ms;
+}
+
+.gform-theme--framework .gpnf-row-actions .delete-button:hover {
+	filter: brightness( 0.8 );
+}
+
+.gform-theme--framework .gpnf-row-actions .gfspinner {
+	top: 50%;
+	margin-top: -8px; /* based on 16px height */
+}
+
+.gform-theme--framework .gpnf-add-entry + .gfspinner {
+	display: inline-block;
+	margin-top: calc(var(--gform-theme-control-button-padding-inline-md) - 8px);
+	margin-left: var(--gform-theme-control-button-padding-inline-sm);
+}
+
+@media only screen and (max-width: 760px), (min-device-width: 760px) and (max-device-width: 1024px) {
+
+	/* Force table to not be like tables anymore */
+	table.gpnf-nested-entries,
+	.gpnf-nested-entries thead,
+	.gpnf-nested-entries tbody,
+	.gpnf-nested-entries th,
+	.gpnf-nested-entries td,
+	.gpnf-nested-entries tr {
+		display: block;
+	}
+
+	table.gpnf-nested-entries {
+		width: 100%;
+		border: 0;
+	}
+
+	/* Hide table headers (but not display: none;, for accessibility) */
+	.gpnf-nested-entries thead tr {
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+
+	.gpnf-nested-entries tr {
+		border: 1px solid rgba( 0, 0, 0, 0.1 );
+		margin-bottom: 1rem;
+		border-radius: 3px;
+	}
+
+	.gpnf-nested-entries tbody tr:not(.gpnf-no-entries) td {
+		border: none;
+		border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
+		position: relative;
+		padding: 1rem 1rem 1rem 50%;
+	}
+
+	.gpnf-nested-entries:not(.gpnf-nested-entries-simple) tbody tr:last-child td {
+		border-bottom: 1px solid rgba( 0, 0, 0, 0.1 );
+	}
+
+	.gpnf-nested-entries tbody tr td:last-child,
+	.gpnf-nested-entries:not(.gpnf-nested-entries-simple) tbody tr:last-child td:last-child {
+		border: 0;
+	}
+
+	.gpnf-nested-entries td:before {
+		content: attr(data-heading);
+		position: absolute;
+		width: calc( 50% - 2rem );
+		left: 1rem;
+		white-space: nowrap;
+		font-weight: bold;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+
+	.gpnf-nested-entries:not(.gpnf-nested-entries-simple) td:last-child {
+		background-color: rgba( 0, 0, 0, 0.03 );
+	}
+
+	.gpnf-nested-entries:not(.gpnf-nested-entries-simple) tbody tr:not(.gpnf-no-entries) td:last-child {
+		padding-left: 0;
+	}
+
+	.gpnf-nested-entries td[data-value=""] {
+		display: none;
+	}
+
+	.gpnf-no-entries span {
+		display: inline !important;
+	}
+
+	/*
+	 * Below styles assist with responsiveness for this snippet:
+	 * https://gist.github.com/spivurno/3a3b92bf32824a414c87c23bbf5ca335#file-z-gp-nested-forms-display-child-entries-table-format-all-child-fields-php
+	 */
+	.gpnf-row-actions:before {
+		content: '' !important;
+	}
+
+	.gpnf-row-actions:empty {
+		display: none;
+	}
+
+	body .gform_wrapper div.gform_body ul.gform_fields li.gfield.gfield_html .gpnf-field ul,
+	body .gform_wrapper div.gform_body ul.gform_fields li.gfield.gfield_html .gpnf-field ul li,
+	body .gform_wrapper form div.gform_body ul.gform_fields li.gfield.gfield_html .gpnf-field ul li li {
+		margin: 0 !important;
+		list-style: none !important;
+		overflow: visible;
+	}
+
+}
+
+/**
+ * jQuery UI Dialog
+ */
+
+.gpnf-dialog.ui-widget-overlay {
+	background: none rgba( 0, 0, 0, 0.6 );
+	opacity: 1.0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 999999; /* Hate to set it so high but theme's be aggressive these days. */
+}
+
+.gpnf-dialog.ui-dialog {
+	position: absolute;
+	background: #f7f7f7;
+	padding: 0;
+	border: 0;
+	box-shadow: 0 0 10px rgba( 0, 0, 0, 0.5 );
+	font-family: inherit;
+	transition: all ease-in-out 0.25s;
+	border-radius: 4px;
+	outline: 0;
+	font-size: 18px;
+	z-index: 1000000; /* Hate to set it so high but theme's be aggressive these days. */
+}
+
+/* Again, our hand is forced by Gravity Forms' aggressive specificity. */
+html body div#ui-datepicker-div[style] {
+	z-index: 1000001 !important;
+}
+
+.gpnf-dialog .ui-dialog-titlebar {
+	background: #3498db;
+	border: 0;
+	border-radius: 3px 3px 0 0;
+	font-weight: normal;
+	padding: 0 2em;
+	height: 65px;
+}
+
+.gpnf-dialog .ui-dialog-title {
+	margin: 0;
+	line-height: 65px;
+	float: left;
+	text-overflow: ellipsis;
+	color: #fff;
+	font-size: 1.0em;
+}
+
+.gpnf-dialog .ui-button-icon-only .ui-button-text {
+	display: none;
+}
+
+.gpnf-dialog .ui-dialog-titlebar-close {
+	background: none;
+	border: 0;
+	margin: 0;
+	height: auto;
+	width: auto;
+	top: 0;
+	right: 2em;
+	padding: 0;
+	line-height: 65px;
+	outline: 0;
+	position: absolute;
+	font-size: 1em;
+	cursor: pointer;
+}
+
+.gpnf-dialog .ui-icon {
+	text-indent: 0;
+	height: auto;
+	width: auto;
+	padding: 0;
+	margin: 0;
+	position: static;
+}
+
+.gpnf-dialog .ui-icon:after {
+	content: '\2716\fe0e'; /* Safari iOS displays ✖ as emoji and does not honor the color style */
+	color: #fff;
+	opacity: 0.25;
+	transition: all ease-in-out 0.25s;
+}
+
+.gpnf-dialog .ui-icon:hover:after {
+	opacity: 1.0;
+}
+
+.gpnf-dialog .ui-dialog-content {
+	padding: 2.2em;
+	border-top: 5px solid rgba( 0, 0, 0, 0.05 );
+	background: none transparent;
+	overflow: auto;
+}
+
+body .gpnf-dialog .gform_wrapper ul li.gfield:first-child {
+	margin-top: 0;
+}
+
+.gpnf-dialog .gform_wrapper .gform_heading {
+	margin-bottom: 0;
+}
+
+.gpnf-dialog .gform_wrapper .gform_heading .gform_title {
+	display: none;
+}
+
+.gpnf-dialog .gform_wrapper .gform_heading .gform_description {
+	margin-bottom: 2em;
+}
+
+.gpnf-dialog .gform_wrapper .gform_heading .gform_description:empty {
+	margin-bottom: 0;
+}
+
+.gpnf-dialog .gform_wrapper {
+	margin: 0;
+}
+
+.gpnf-dialog .gform_wrapper .gform_footer {
+	padding-bottom: 0;
+}
+
+.gpnf-dialog .ui-icon,
+.gpnf-dialog .ui-widget-shadow,
+.gpnf-dialog .ui-widget-content {
+	background: none transparent;
+}
+
+.gpnf-dialog .ui-state-disabled,
+.gpnf-dialog .ui-widget-content .ui-state-disabled,
+.gpnf-dialog .ui-widget-header .ui-state-disabled {
+	opacity: 1.0;
+}
+
+
+
+/**
+ * Tingle Modal
+ */
+
+.gpnf-modal { }
+
+.gpnf-modal .tingle-modal-box {
+	width: clamp( 800px, 60%, 1000px );
+}
+
+.gpnf-modal .gform_title {
+	display: none;
+}
+
+.gpnf-modal .gpnf-modal-header {
+	height: 4.5rem;
+	display: block;
+	margin: -3rem -3rem 3rem;
+	padding: 0 3rem;
+	line-height: 4.5rem;
+	color: #fff;
+	border-radius: 3px 3px 0 0;
+	font-size: 1.2rem;
+}
+
+.gpnf-modal .gform_wrapper {
+	margin: 0;
+}
+
+.gpnf-modal .gform_wrapper .gform_footer,
+.gpnf-modal .gform_wrapper .gform_page_footer,
+.gpnf-modal .gform_wrapper .gfield--type-submit {
+	visibility: hidden;
+	position: absolute;
+	text-indent: -999rem;
+}
+
+.gpnf-modal.tingle-modal--overflow .tingle-modal-box__footer--sticky {
+	border-radius: 0;
+}
+
+.gpnf-modal .tingle-btn {
+	border-radius: 3px;
+}
+
+.gpnf-modal .tingle-btn:disabled {
+	filter: grayscale( 100% );
+}
+
+.tingle-modal-box__footer {
+	text-align: right;
+}
+
+.tingle-modal-box__footer .gpnf-btn-cancel-mobile {
+	display: none;
+}
+
+@-webkit-keyframes pulse {
+	0% { opacity: 0.6; }
+	50% { opacity: 0.1; }
+	100% { opacity: 0.6; }
+}
+
+@keyframes pulse {
+	0% { opacity: 0.6; }
+	50% { opacity: 0.25; }
+	100% { opacity: 0.6; }
+}
+
+@keyframes spinner {
+	to { transform: rotate( 360deg ); }
+}
+
+.gpnf-spinner {
+	position: relative;
+	width: 1rem;
+	min-height: 1rem;
+	display: inline-block;
+	text-indent: -999rem;
+}
+
+.gpnf-spinner:before {
+	content: '';
+	box-sizing: border-box;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 1rem;
+	height: 1rem;
+	margin-top: -0.5rem;
+	margin-left: -0.5rem;
+	border-radius: 50%;
+	border-top: 0.1rem solid #fff;
+	border-right: 0.1rem solid transparent;
+	animation: spinner .6s linear infinite;
+	cursor: wait;
+}
+
+.gpnf-btn-submit:disabled {
+	cursor: not-allowed;
+}
+
+/** Override WCGFPA styles that hides ALL submit buttons. */
+.tingle-modal-box .button[type=submit] {
+	display: inline-block !important;
+}
+
+
+@media only screen and (max-width: 1024px) {
+
+	.gpnf-modal .tingle-modal-box {
+		max-width: none;
+		width: clamp( 0px, 90%, 800px );
+	}
+
+}
+
+@media (max-width : 712px)/*, (any-hover:none)*/ {
+
+	.gpnf-modal .tingle-modal-box {
+		width: 100%;
+	}
+
+	.gpnf-modal.tingle-modal--noOverlayClose { }
+
+	.gpnf-modal .tingle-modal-box__content:before {
+		border-radius: 0;
+	}
+
+	.tingle-modal__close {
+		display: none;
+	}
+
+	.tingle-modal__closeIcon {
+		width: 1rem;
+	}
+
+	.tingle-modal__closeLabel {
+		font-size: 1rem;
+	}
+
+	.tingle-modal-box__footer {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.tingle-modal-box__footer .tingle-btn {
+		flex: 1;
+		padding: 1rem;
+	}
+
+	.tingle-modal-box__footer .gpnf-btn-cancel,
+	.tingle-modal-box__footer .gpnf-btn-delete {
+		display: none;
+	}
+
+	.tingle-modal-box__footer .gpnf-btn-cancel-mobile {
+		display: block;
+		margin-bottom: 0;
+		min-width: calc( 100% - 1rem );
+	}
+
+	.tingle-modal-box__footer .gpnf-btn-next {
+		float: right;
+	}
+
+	.tingle-modal-box__footer .gpnf-btn-previous {
+		float: left;
+	}
+
+}

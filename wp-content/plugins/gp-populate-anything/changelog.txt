@@ -1,0 +1,2123 @@
+# Changelog
+
+## 2.0.7
+
+	- Improved support for populating Date fields using the Date Drop Down input type with values from other Date fields.
+	- Fixed issue where animation name "pulse" conflicted with animation names included in other 3rd-party libraries.
+	- Fixed issue where value population of lazy-loaded Advanced Select multi-selects would not work in some cases.
+	- Fixed PHP error that could occur in some forms using Email fields with "Email Confirmation" enabled.
+	- Fixed a regression with the query cache hash for the GF Entry Object Type.
+	- Added `gppa_ajax_form_pre_render` PHP filter hook.
+
+## 2.0.6
+
+	- Added support for dynamically populating values for the Gravity Flow Multi-User field type.
+	- Improved the performance of refreshing fields in forms with complex conditional logic.
+	- Fixed issue where Paragraph Text fields with Rich Text Editor enabled would continuously lose focus when connected to another field via live merge tag.
+	- Fixed an issue where Custom fields in GravityView could cause GravityEdit Inline Edit's choices to not populate correctly.
+
+## 2.0.5
+
+	- Added new [`gppa_submitted_choice_label`](https://gravitywiz.com/documentation/gppa_submitted_choice_label) PHP filter hook.
+	- Fixed issue where a non-existent custom object type would cause a fatal error.
+	- Fixed a regression with the `{count}` merge tag.
+	- Fixed an issue with `GP_Populate_Anything::maybe_save_choice_label()` passing the wrong parameters to `GP_Populate_Anything::populate_field()` which could cause an issue with GP Advanced Select's lazy loading in some cases.
+	- Updated the GF Entry Object Type to have a less memory intensive query cache hash scheme.
+	- Updated `gppa_query_cache_hash` to pass in a default value of `false` instead of the value of `$object_type_instance->query_cache_hash()` to allow for more performant short-circuiting of the query cache hashing.
+	- Fixed an issue where Populate Anything would try to focus on previously-focused inputs that are hidden after a page change or conditional logic update. This fixes a compatibility issue with GP Page Transitions.
+
+## 2.0.4
+
+	- Updated references to `String.prototype.format()` to use `String.prototype.gformFormat()` as the former will be removed in Gravity Forms 2.8.
+	- Fixed PHP warning in the GravityFlow compatibility layer.
+	- Fixed issue where the `is in` and `is not in` operators would not work correctly with values containing `_` or `%`.
+
+## 2.0.3
+
+	- Fixed issue where Live Merge Tags would not show a value for Date Field's using the "Date Field" Date Input Type upon initial load of a form.
+
+## 2.0.2
+
+	- Fixed an issue where dynamic values and choices wouldn't be populated during asynchronous feed processing.
+
+## 2.0.1
+
+	- Updated "Only Show Unique Results" to be case-insensitive.
+	- Fixed an issue where using a choice-based Product field as the Filter Value for a choice-based Product field Filter Property would not return results.
+	- Fixed a potential memory issue when populating the Live Merge Tag whitelist.
+
+## 2.0
+
+	- Improved performance by skipping the loading of object type properties during query if an object type supports it.
+	- Improved performance of Field Value Objects.
+	- Improved performance of value population by only querying for one object. If you are needing to get all objects when populating values (e.g. comma-separated list inside a value), use [`gppa_query_all_value_objects`](https://gravitywiz.com/documentation/gppa_query_all_value_objects/).
+	- Improved performance when using Populate Anything with GravityView.
+	- Improved performance when using Populate Anything with Gravity Flow.
+	- Improved security of Live Merge Tags by running `wp_kses_post` on the output of Live Merge Tags. This can be removed by using `remove_filter( 'gppa_live_merge_tag_value', 'wp_kses_post' );`.
+	- Removed various methods that were duplicated logic in other methods.
+	- Refactored method names internally to drop the term `hydrate` in favor of `populate`. Existing methods were kept and deprecated for backwards compatibility.
+	- Added new `gppa_bypass_populate_form` PHP filter hook.
+	- Added new  [`gppa_query_all_value_objects`](https://gravitywiz.com/documentation/gppa_query_all_value_objects/) PHP filter hook.
+	- Fixed a variety of PHP warnings/notices.
+
+## 1.2.56
+
+	- Fixed an issue with live merge tags having a fallback with forward slash not working.
+
+## 1.2.55
+
+	- Fixed a JavaScript error that could occur with Live Merge Tags if using multiple Nested Form fields in a form pointing to the same child form.
+	- Fixed regression with Live Merge Tags in checkbox choices not working as expected in some cases.
+	- Added new [`gppa_submit_button`](https://gravitywiz.com/documentation/gppa_submit_button) JavaScript filter.
+	- Fixed a PHP warning that could be triggered in some situations when using GravityView.
+
+## 1.2.54
+
+	- Fixed a potential PHP warning during form render.
+	- Fixed a PHP 8.1 warning that could be encountered with the GF Entry Object Type.
+	- Fixed an issue where number comparisons with non-Number fields would not work as expected with the Gravity Forms Entry Object Type.
+
+## 1.2.53
+
+	- Fixed issue where inputs inside fields with array-based values would be converted incorrectly when used with Live Merge Tags.
+	- Fixed issue where Live Merge Tags would generate errors in Repeater fields that contained selects. Note: Repeater fields do not support Live Merge Tags yet.
+
+## 1.2.52
+
+	- Fixed issue where fields that use the Database Object Type could have their population settings reset if `GFFormsModel::update_form_meta()` was called during a request from a non-admin user.
+	- Added new `$entry` parameter to the `gppa_skip_field_value_during_hydration` hook.
+	- Fixed PHP error that could occur if BuddyPress was previously activated and then deactivated.
+
+## 1.2.51
+
+	- Fixed PHP warnings related to default field values.
+	- Fixed PHP errors present in PHP 8.2.5 and 8.1.18.
+
+## 1.2.50
+
+	- Fixed issue where Populate Anything would sometimes enqueue scripts if the `gform_pre_render` filter hook is used on a page but the form isn't actually displayed.
+	- Added "is in" and "is not in" operator when filtering by Post Title.
+	- Added additional accessibility improvements to the filters UI in the form editor.
+	- Improved user-experience of filters by focusing the property select in a newly added filter.
+
+## 1.2.49
+
+	- Fixed issue with `reset_gf_is_field_hidden_cache()` not clearing the `GFFormsModel::is_field_hidden` cache key for every field in the form for Live Merge Tags.
+	- Added support for "is in" and "is not in" operators when filtering by Post ID.
+	- Improved accessibility of Add/Remove Filter buttons in the Form Editor.
+
+## 1.2.48
+
+	- Fixed issue where dynamically populated values of inputs in multi-input fields could cause an error to be triggered if no objects are returned and the entry is being edited.
+	- Fixed potential PHP errors/warnings when using Live Merge Tags with multi-input fields.
+
+## 1.2.47
+
+	- Fixed issue where Live Merge Tags would not be replaced in field labels when printing entries.
+	- Updated how we clear Gravity Forms cache prior to using `GFFormsModel::is_field_hidden()` to address potential form rendering issues.
+
+## 1.2.46
+
+	- Added [`gppa_skip_hidden_field_values_during_hydration`](https://gravitywiz.com/documentation/gppa_skip_field_value_during_hydration) filter to enable hiding of field values during hydration.
+
+## 1.2.45
+
+	- Updated `is in` and `is not in` operators to decode any JSON values passed to it into a PHP array.
+
+## 1.2.44
+
+	- Fixed issue where values from hidden fields could show up in merge tags such as `@{order_summary}`.
+	- Fixed potential PHP warnings when using PHP 8 and the GW Manual Entries snippet.
+	- Fixed issue where Live Merge Tags referencing choice-based product fields with populated choices would not reflect the correct value.
+
+## 1.2.43
+
+	- Fixed an issue with Read Only inputs trigerring Dynamic Population when any input is attempted on them.
+
+## 1.2.42
+
+	- Improved Preview modal in the Form Editor to show a JSON representation of arrays rather than just "Array."
+	- Fixed an issue with the Post object type only returning a single meta value rather than all meta values.
+	- Fixed an improper runtime cache key that could cause value population to not check multiple results if a field also has choice population enabled.
+	- Fixed an issue where the `:price` modifier would not work for choice-based products when used in a Live Merge Tag.
+	- Fixed potential PHP warnings and error in preview AJAX request in the Form Editor.
+	- Fixed potential PHP warning when populating arrays.
+	- Fixed issue where zeros returned from certain object types would be replaced with an empty string.
+
+## 1.2.41
+
+	- Improved security with the Users Object Type. (Credit: GravityKit)
+	- Fixed issue where prices from values would be removed when rendering Live Merge Tags which could cause issues with `@{order_summary}`.
+	- Fixed issue where apostrophes could cause issues in queries in some situations and cause choices to not be populated correctly.
+
+## 1.2.40
+
+	- Fixed an issue where Post date filters wouldn't work if the filter relies on a value from a field populated with Easy Passthrough.
+
+## 1.2.39
+
+	- Added support for more operators such as "is in" and "is not in" for the User Object Type.
+
+## 1.2.38
+
+	- Fixed an issue with Live Merge Tags on conditionally hidden fields.
+
+## 1.2.37
+
+	- Fixed issue with `<` and `>` operators not behaving correctly with post date properties.
+	- Fixed potential JavaScript error when Populate Anything is used with GP Nested Forms and GP Reload Form.
+
+## 1.2.36
+
+	- Fixed potential memory issue for more complex forms that use value population with multi-select fields.
+	- Fixed potential PHP warning if populating List fields.
+
+## 1.2.35
+
+	- Fixed an issue where dynamically populating values into a multi-select field would not work if the value being populated was a comma-delimited list without spaces after commas.
+
+## 1.2.34
+
+	- Fixed issue where Populate Anything would prevent default-checked static choices from being checked on form render.
+	- Added [gppa_where_clause](https://gravitywiz.com/documentation/gppa_where_clause/) filter to allow modifying the where clause.
+	- Fixed issue where Live Merge Tags in HTML fields weren't always populated correctly in GravityView views.
+	- Fixed issue where dynamically populated choices wouldn't always populate correctly in GravityView search fields.
+	- Fixed issue where validation errors could be removed by Populate Anything in some contexts such as a Gravity Flow User Input Step. (Reintroduced fix after reverting it)
+	- Fixed warning for field value object choices.
+
+## 1.2.33
+
+	- Fixed regression in population caused by a fix for Gravity Flow.
+
+## 1.2.32
+
+	- Fixed issue where validation errors could be removed by Populate Anything in some contexts such as a Gravity Flow User Input Step.
+	- Fixed issue where forms submitted via AJAX that also had calculation
+	- Fixed an issue where Live Merge Tags wouldn't always be processed in some choice-based fields when a field is refreshed.
+	- Fixed issue where Quiz fields would show two sets of options in the "Choices" UI.
+
+## 1.2.31
+
+	- Fixed issues where backslashes in field labels could cause issues with Live Merge Tags.
+
+## 1.2.30
+
+	- Fixed issue where GT/GTE and LT/LTE operators did not work as expected with dates in the Gravity Forms Entry Object Type and Database Object Type.
+	- Fixed issue where `gpnf_get_nested_form` filter was not taking nested form entries into account properly.
+
+## 1.2.29
+
+	- Fixed issue where calculations could be processed before Live Merge Tag replacements rather than after.
+
+## 1.2.28
+
+	- Fixed issue where Radio Buttons using Live Merge Tags could display a warning message if there’s an empty value.
+
+## 1.2.27
+
+	- Fixed issue where calculations would not be reprocessed if only Live Merge Tag values are returned by Populate Anything's AJAX refresh request.
+	- Fixed issue where Live Merge Tags used as default values in Date fields using the Date Picker Date Input Type would not work and would result in a value of `//` on initial load.
+
+## 1.2.26
+
+	- Fixed issue where dynamically populated choices were not populated in selects when using Inline Edit with GravityView after a recent update of GravityView.
+	- Added support for dynamically populating the choices of Post Category fields.
+	- Added new `gppa_require_value_to_be_in_dynamic_choices` PHP filter hook.
+	- Fixed regression with multi selects not having their value populated in some setups that include Gravity Flow.
+
+## 1.2.25
+
+	- Fixed issue where values from multi selects with dynamically populated choices would not have their values JSON-decoded. This could cause issues with querying on subsequent pages with fields that are dependent on the multi select's value.
+	- Fixed issue where choice-based fields with dynamically populated choices and values could have a hydrated value that does not exist in the choices. This could then cause other fields or Live Merge Tags to not have the correct value.
+	- Fixed issue where empty array-based values (such as Multi Selects) were not used which could cause Live Merge Tag values to be incorrect in some cases.
+
+## 1.2.24
+
+	- Fixed an issue with dynamically populated values not being populated in Live Merge Tag values in certain fields such as Paragraph fields.
+	- Fixed integration with JetSloth Image Choices where Product Option fields would have their option labels reset after selecting/deselecting options.
+	- Fixed a PHP warning that could occur in certain scenarios with Product fields.
+	- Fixed issue where checkboxes using Live Merge Tags as values could become checked on multi-page forms if the depended-upon LMT has an empty value.
+	- Fixed a fatal PHP error that could occur for fields pointing to an Object Type that is no longer available.
+
+## 1.2.23
+
+	- Fixed issue where Live Merge Tags wouldn't update in some cases with multi select fields.
+	- Fixed issue where Live Merge Tags referencing fields that are dynamically populated would not work in some situations.
+
+## 1.2.22
+
+	- Fixed PHP notice.
+
+## 1.2.21
+
+	- Fixed issue with checkbox fields using Live Merge Tags causing them to become unchecked after failed validation or when navigating multi-page forms.
+
+## 1.2.20
+
+	- Added new `gppa_object_type_filter_after_processing` and `gppa_has_empty_field_filter_value` PHP filters.
+	- Fixed issue where numeric filters such as greater than were not working correctly with the Gravity Forms Entry Object Type.
+	- Fixed regression where property values would not show for the Database Object Type in the Form Editor.
+	- Fixed issue where Value population did not work correctly for Option fields using the Checkbox Field Type.
+	- Fixed a potential PHP warning on the Entry Details screen.
+	- Improved error handling during queries in the event that a `WP_Error` object gets returned for various reasons (missing taxonomy, etc).
+
+## 1.2.19
+
+	- Fixed issue where Live Merge Tags in List field column labels would not be replaced in the Entry Details screen.
+	- Fixed issue where a query limit was not being used when fetching values for a property in the Form Editor which could cause out-of-memory errors.
+	- Added IP, Payment Method, Payment Status, and Transaction ID as available properties under the Gravity Forms Entry Object Type.
+
+## 1.2.18
+
+	- Added support for viewing dynamically populated choices in add-on results pages such as the Survey Results.
+
+## 1.2.17
+
+	- Fixed an issue where field choices would be cached prior to hydration which could cause Live Merge Tags to use the value rather than the label.
+
+## 1.2.16
+
+	- Fixed an issue where the GF Entry object type wasn't always JSON decoding when filtering using a JSON value such as one from a multi select field.
+	- Fixed a scenario where a product/option's price would not be stripped from the submitted value during failed validation which would cause dependent fields to not be properly populated.
+
+## 1.2.15
+
+	- Fixed an issue where carriage returns (`\r`) would be inserted into field values when filtering by them which could cause data to not be matched for certain object types such as Gravity Forms entries.
+	- Improved compatibility with Easy Passthrough and populating chained choices/values.
+	- Added new [`gppa_prepopulate_field_values`](https://gravitywiz.com/documentation/gppa_prepopulate_field_values) PHP filter.
+	- Fixed a PHP warning that could occur in some cases with multiple input fields if there are some inputs without value templates specified.
+	- Improved compatibility with replacing Live Merge Tags inside merge tags parsed by GravityRevisions.
+
+## 1.2.14
+
+	- Fixed Live Merge Tags not being parsed in {all_fields} for nested entries.
+	- Added new [`gppa_field_objects_query_args`](https://gravitywiz.com/documentation/gppa_field_objects_query_args) filter.
+	- Added new [`gppa_value_specification`](https://gravitywiz.com/documentation/gppa_value_specification) filter.
+	- Improved behavior of filter selects/inputs when reloading field settings.
+
+## 1.2.13
+
+	- Fixed an issue where Live Merge Tags displaying time field values that are loaded in through Field Value Objects could result in the wrong time format being used.
+	- Fixed an issue where Live Merge Tags could show a number in the wrong format if the Number field is set to use a format outside of decimal dot.
+	- Fixed an issue where Live Merge Tags would not work as expected with textareas on multi-page forms where some lines have trailing whitespace.
+	- Improved performance if using Populate Anything with JetSloth Images Add-on.
+
+## 1.2.12
+
+	- Fixed issue where live merge tags were not parsed correctly in HTML fields when displayed in GravityView.
+
+## 1.2.11
+
+	- Fixed PHP notice generated when using a custom database due to incorrect database being used when attempting to convert date-like values.
+
+## 1.2.10
+
+	- Removed Page fields from list of available fields when populating from the Entry object type.
+
+## 1.2.9
+
+	- Fixed issue where products used for filter values would not provide consistent results due to the price not being removed from the value while filtering.
+	- Improved AJAX request handling on the frontend to abort previous requests if a new request is made.
+	- Fixed issue where Live Merge Tags would be immediately decoupled and not update when editing a Nested Forms child entry that uses Live Merge Tags.
+
+## 1.2.8
+
+	- Fixed issue where Populate Anything would conflict with certain field maps such as the Metadata field map for the Stripe Add-On and prevent fields from showing in the Value dropdown.
+
+## 1.2.7
+
+	- Improved compatibility with GP Entry Blocks’ Filter block.
+	- Updated `getFormElement()` to play nicer when the `is_submit_FORMID` hidden input isn't present (for GPEB)
+
+## 1.2.6
+
+	- Fixed styling of Gravity Forms merge tag buttons in custom filter/template inputs.
+	- Improved compatibility Gravity Forms 2.6's new AJAX saving.
+
+## 1.2.5
+
+	- Fixed issue where populated choices with a value and label of both "0" would be excluded from the choice list.
+	- Fixed an issue where radio fields in the Entry Details edit screen with populated choices dependent on other field values would show "Please fill out other fields." rather than the appropriate radio buttons.
+
+## 1.2.4
+
+	- Fixed issue where unchecking checkboxes in a field that's depended upon in downstream filters would not update downstream field values/choices.
+	- Added "is in" and "is not in" operators to all properties in the Taxonomy Term Object Type.
+
+## 1.2.3
+
+	- Fixed issue where field visibility would be cached when fetching Live Merge Tag values via AJAX and cause the incorrect value to be returned. This resolves a compatibility issue with GP Limit Submissions 1.1.
+	- Fixed issue where duplicate Gravity Forms Entry values in multi-input fields would be de-duplicated when populated into other inputs.
+	- Fixed issue where all value templates for Product fields could be converted to currency-formatted numbers instead of only the price value template.
+
+## 1.2.1
+
+	- Fixed issue where Drop Downs with choices using LMTs were not parsed correctly causing issues when replacing the LMTs.
+	- Fixed issue where zeroes would not be used as filter values in some situations like when a form fails validation and the form reloads.
+	- Fixed issue with Live Merge Tags not being able to pull Time field or Date Dropdown values on initial load.
+
+## 1.2.2
+
+	- Improved regular expression for Live Merge Tags on initial load to prevent issue where fields that are conditionally hidden would have their value shown.
+
+## 1.2
+
+	- Fixed issue where `GFFormsModel::get_field()` would not return the correctly hydrated choices of a field when refreshing Live Merge Tags if Field Value Objects are being used.
+	- Fixed issue where Live Merge Tag values could potentially be overwritten and shown the wrong value if a dynamically populated Multi Select is on the form.
+	- Improved compatibility with the upcoming Gravity Forms 2.6 release by hiding the toggle to open the new Choices UI if choices are dynamically populated.
+	- Added compatibility for populating image choices if using JetSloth's Image Choices plugin.
+	- Added "Featured Image URL" property to Post Object Type.
+	- Added support for adding Properties to Object Types that can only be used in Choice/Value Templates. This is useful for derived properties such as Featured Image URL for the Post Object Type.
+
+## 1.1.16
+
+	- Added new "NULL" Special Value to use when filtering. It’s currently supported by the Database Object Type and can be used with the “is” and “is not” filter operators.
+	- Added "Update URI" to plugin header to improve security.
+	- Fixed issue where the Database Object Type could not be ordered by columns with spaces in their names.
+
+## 1.1.15
+
+	- Fixed potential PHP error if ordering by a taxonomy and there are more than one of the taxonomy attached to the post.
+
+## 1.1.14
+
+	- Fixed issue where Live Merge Tags in Drop Down field choice values were not being updated in some situations such as when used with Nested Forms {Parent} merge tags.
+	- Fixed Live Merge Tags not always returning dates immediately.
+
+## 1.1.13
+
+	- Updated usages of GPPA_Object_Type::isRestricted() to GPPA_Object_Type::is_restricted().
+
+## 1.1.12
+
+	- Fixed issue where field choices could reload with the incorrect choices when editing entries using GravityView if calculations are used for filtering the returned choices.
+	- Fixed PHP warnings that could show in certain use-cases with the User object type.
+	- Fixed PHP notice that could show when adding a coupon for "Any Form" with the Gravity Forms Coupons Add-On.
+	- Fixed issue where Filters could be added in the field settings prior to the properties being loaded for the Object Type.
+	- Fixed regression with Live Merge Tags in radio values being reset when navigating multi-page forms.
+
+## 1.1.11
+
+	- Fixed issue where gform object was not available to Populate Anything in GravityView's list view.
+	- Improved consistency of Product fields with Choices to regular choice-based fields by showing the selected choice label rather than value when viewing the entry.
+
+## 1.1.10
+
+	- Fixed issue where custom template replacement of merge tags did not work for non-core object types such as `{google_sheet:Column}`.
+
+## 1.1.9
+
+	- Added `gppa_parse_OBJECTTYPE_filter_value_as_date_PROPERTY` filter to all object types and not just the Post object type.
+	- Fixed issue where dynamically populated values could be incorrect when using the Gravity Forms Product Add-ons WooCommerce Extension with a cart that's displayed on every page.
+
+## 1.1.8
+
+	- Fixed regression where unchecked radios/checkboxes could be included in form values when refreshing fields or Live Merge Tags.
+	- Fixed PHP AJAX notice/warning in Form Editor with GF Entry Object Type.
+	- Improved support for filtering Gravity Forms Entries' Created/Updated dates using date fields.
+
+## 1.1.7
+
+	- Added support for ordering by taxonomy term names to the Post Object Type.
+
+## 1.1.6
+
+	- Fixed issue where fields would be reloaded immediately after switching pages in a multi-page form.
+	- Fixed performance issue that could arise on forms with a large amount of conditional logic rules and Live Merge Tags.
+
+## 1.1.5
+
+	- Added new [`gppa_should_force_use_field_value`](https://gravitywiz.com/documentation/gppa_should_force_use_field_value) PHP filter.
+
+## 1.1.4
+
+	- Fixed PHP warning in Gravity Forms Entry Object Type.
+
+## 1.1.3
+
+	- Fixed a potential issue where multiple field populations using form entries may fail when filtering using a date field.
+	- Fixed issue where emptying out dynamically populated values on multi-page forms would cause the value to be restored when navigating pages.
+
+## 1.1.2
+
+	- Fixed issue where merge tags containing quotes failed the LMT whitelist validation.
+
+## 1.1.1
+
+	- Improved compatibility with dynamically populating [Survey](https://www.gravityforms.com/add-ons/survey/) fields.
+	- Fixed notice generated by passing method directly to array_map() rather than passing the object and method as an array.
+	- Added support for "is in" and "is not in" operators to the GF Entry Object Type.
+
+## 1.1
+
+	- Added support for populating List field values from other List fields.
+	- Updated the GF Entry Object Type to allow using List fields as properties.
+	- Added new [`gppa_is_supported_field`](https://gravitywiz.com/documentation/gppa_is_supported_field/) JavaScript filter.
+	- Fixed issue where Live Merge Tags could get improperly populated with values from unchecked checkboxes.
+	- Fixed issue where filtering by date fields would not work if the value coming from the database was in YYYY-MM-DD format.
+
+## 1.0.23
+
+	- Fixed an issue where choice based fields with LMT values failed validation on submit.
+
+## 1.0.22
+
+	- Fixed an issue where the Euro symbol did not render correctly in LMTs.
+
+## 1.0.21
+
+	- Added compatibility for Gravity Flow multi-user fields.
+
+## 1.0.20
+
+	- Added [gppa_query_cache_hash](https://gravitywiz.com/documentation/gppa_query_cache_hash/) filter.
+	- Improved support for hydrating checkboxes that are populated with Easy Passthrough.
+
+## 1.0.19
+
+	- Fixed issue where using the "is in" operator to compare against a comma-delimited list did not correctly remove excess whitespace between values.
+	- Fixed issue where the final determined field value (including preselected options) was not passed when fetching input html during hydration.
+
+## 1.0.18
+
+	- Fixed issue where editing an entry would not always merge in the labels of the newly selected choices. This could cause the choice value to display instead of the label when viewing the entry in the Entry List or Details screens.
+	- Fixed issue where dynamically populated values could get saved as the field's default value when saving form settings.
+
+## 1.0.17
+
+	- Added compatibility layer for WC Product Addons.
+
+## 1.0.16
+
+	- Added security enhancement.
+	- Improved compatibility with new state validation for Radio Buttons fields introduced in Gravity Forms 2.5.10.1.
+	- Improved compatibility with GP Read Only in cases where Filters are dependent on read only choice-based fields.
+	- Updated `gppa_hydrated_value` field property to be set earlier so other plugins using the `gform_pre_render` filter can access it.
+	- Fixed performance issue with query caching in the GF Entry Object Type.
+
+## 1.0.15
+
+	- Fixed a potential issue where caching resulted in stale results when multiple fields are populated via GPPA and depend on previous query results.
+
+## 1.0.14
+
+	- Fixed a potential issue where LMTs may cause some forms to continuously reload.
+	- Improved compatibility with GravityFlow by hydrating the form on every step type.
+
+## 1.0.13
+
+	- Fixed potential PHP fatal error introduced in 1.0.12.
+
+## 1.0.12
+
+	- Fixed issue where Live Merge Tags referencing checkbox fields with a default value could result in PHP warnings on initial load.
+	- Fixed issue where Conditional Logic relying on a field populated with Live Merge Tags would not work in some cases.
+	- Fixed issue where Live Merge Tags pointing to choice-based fields with populated choices would show "Fill Out Other Fields" as the Merge Tag value instead of an empty string.
+
+## 1.0.11
+
+	- Added support for replacing {count} template merge tag with `0` when there are no results.
+
+## 1.0.10
+
+	- Fixed issue where arrays populated into values would not be converted to strings for non-multi-selectable-choice fields.
+
+## 1.0.9
+
+	- Fixed an issue where filtering by a custom datatabase table date field may return empty results.
+
+## 1.0.8
+
+	- Fixed an issue where GPPA would not fetch results when ordering by 'Taxonomy' or 'Parent Term'.
+
+## 1.0.7
+
+	- Fixed issue with `gppa_live_merge_tag_value` filter not using the correct `$field_id` parameter if merge tag modifiers are used.
+	- Fixed issue where selected choices of dynamically populated fields could be lost when navigating between form pages.
+	- Updated AJAX request to send request data as JSON to prevent issues with Merge Tag modifiers from interfering with the form data format.
+	- Fixed issue where certain calculations would not work with Populate Anything if formula fields came after the field being calculated.
+
+## 1.0.6
+
+	- Fixed issue where Live Merge Tags in attributes such as `href` wouldn't update in some cases.
+	- Added [gppa_run_pre_render_in_ajax](https://gravitywiz.com/documentation/gppa_run_pre_render_in_ajax/) PHP filter.
+
+## 1.0.5
+
+	- Fixed a potential issue that can cause GPPA to fail to hydrate when some plugins or filters expect `GFFormDisplay` to be available during XHR.
+
+## 1.0.4
+
+	- Fixed issue where Live Merge Tags would not be populated in Order Summaries or in Notifications in some situations.
+
+## 1.0.3
+
+	- Fixed `gform_pre_render` filter parameters that are used during hydration of a field in XHR.
+
+## 1.0.2
+
+	- Fixed a potential issue where number fields may fire extraneous XHR requests when losing focus, causing a brief content flash.
+
+## 1.0.1
+
+	- Fixed an issue where the default population of name fields resulted in a comma separated list (i.e. "first, middle, last")
+
+## 1.0-beta-4.171
+
+	- Updated minimum Gravity Perks version to 2.2.3.
+	- Improved support for Gravity Forms 2.5.
+	- Fixed compatibility issue where Populate Anything would not work with the GravityView Search Widget.
+	- Fixed issue where multiple change events in quick succession would result in the previous request being discarded.
+
+## 1.0
+
+	- Updated version to 1.0. Populate Anything is officially out of beta!
+
+## 1.0-beta-5.23
+
+	- Fixed an issue where ordering taxonomy terms by Term ID returned an empty set.
+	- Fixed a potential PHP warning as `GF_Field_FileUpload->get_value_export()` expects passed values to be JSON encoded.
+
+## 1.0-beta-5.22
+
+	- Fixed issue where fetching meta from Taxonomy Terms was not consistent with the behavior of the Posts and Users Object Types. The expected behavior is to fetch meta with the `$single` parameter set to `true`.
+	- Fixed issue with Live Merge Tag values coming from conditionally hidden fields with inputs (such as Address field).
+
+## 1.0-beta-5.21
+
+	- Fixed a potential compatibility issue with GPLCD and confirmation redirect URL parameters when a field is populated using GPPA.
+
+## 1.0-beta-5.20
+
+	- Added [gppa_should_trigger_change](https://gravitywiz.com/documentation/gppa_should_trigger_change-js/) JavaScript filter.
+
+## 1.0-beta-5.19
+
+	- Fixed an issue where [gppa_missing_filter_text](https://gravitywiz.com/documentation/gppa_missing_filter_text/) was not applied to Radio Button fields.
+
+## 1.0-beta-5.18
+
+	- Fixed an issue where GPPA may generate a PHP warning when populating some Meta user values.
+
+## 1.0-beta-5.17
+
+	- Added Post Excerpt to the list of properties GPPA can populate with.
+
+## 1.0-beta-5.16
+
+	- Updated "Ordering" property dropdown in Field Settings to use option groups like the property dropdown for filters.
+	- Added support for ordering by user meta to the User Object Type.
+	- Fixed PHP notice in certain AJAX requests.
+
+## 1.0-beta-5.15
+
+	- Fixed issue where Live Merge Tags would not use the correct value if the field where the value is coming from has its value populated dynamically.
+
+## 1.0-beta-5.14
+
+	- Added support for the "does not contain" operator.
+	- Fixed formatting issue with Multi Select values in Live Merge Tags and addressed regression related to population of multi-choice values.
+	- Fixed issue where newlines in Live Merge Tag values from textareas would improperly include a "<br>" tag.
+	- Fixed issue where Live Merge Tags would return the wrong value when dependent fields were conditionally hidden by multi-select fields.
+	- Fixed issue where dynamically populated fields with Max Character limits would not have the JavaScript counter re-added after population.
+	- Improved performance of Post, Term, and User Object Types by utilizing runtime query caching.
+
+## 1.0-beta-5.13
+
+	- Fixed an issue where conditionally shown HTML fields may not refresh LMTs.
+
+## 1.0-beta-5.12
+
+	- Fixed an issue where required Time Fields used in LMTs are rendered incorrectly.
+	- Fixed PHP notices in Gravity Forms Coupons Add-On settings page.
+
+## 1.0-beta-5.11
+
+	- Improved support for running Gravity Forms pre_render hook during AJAX repopulation of fields. This improves compatibility with integrations such as GPPA + GPLC.
+
+## 1.0-beta-5.10
+
+	- Added updated field IDs to `gppa_updated_batch_fields`.
+
+## 1.0-beta-5.9
+
+	- Fixed an issue with date formatting when populating from a form entry.
+
+## 1.0-beta-5.8
+
+	- Fixed issue where merge tags of fields with dynamically populated choices would show the value instead of the label in GravityView Custom Content fields.
+
+## 1.0-beta-5.7
+
+	- Fixed a potential issue where filtering by a `post_date` may not work.
+
+## 1.0-beta-5.6
+
+	- Fixed a potential issue where FVO may return all entries.
+	- Fixed a potential issue when LMTs are used to copy Drop Down fields.
+
+## 1.0-beta-5.5
+
+	- Fixed a potential issue with numerically named DB table columns.
+
+## 1.0-beta-5.4
+
+	- Fixed issue where calculations field setting was incorrectly displayed for Quantity fields. (#181)
+
+## 1.0-beta-5.3
+
+	- Added [gppa_process_template_cache_key](https://gravitywiz.com/documentation/gppa_process_template_cache_key/) filter.
+	- Improved performance when querying a high number of Gravity Forms entries as choices or values.
+
+## 1.0-beta-5.2
+
+	- Fixed issue where Live Merge Tags for Date fields would show an empty value on initial page load in some situations.
+	- Fixed an issue where conditionally hidden fields may show up in LMTs.
+
+## 1.0-beta-5.1
+
+	- Fixed a compatibility issue with Gravity Flow Vacation Requests Extension.
+	- Fixed regression with compatibility layer for Gravity PDF.
+
+## 1.0-beta-5.0
+
+	- Updated minimum Gravity Perks version to 2.2.3.
+	- Improved support for Gravity Forms 2.5.
+	- Fixed compatibility issue where Populate Anything would not work with the GravityView Search Widget.
+	- Fixed issue where multiple change events in quick succession would result in the previous request being discarded.
+
+## 1.0-beta-4.170
+
+	- Improved reliability with checkboxes when used with Live Merge Tags.
+	- Improved behavior of Live Merge Tags using Date or Time field values.
+	- Fixed issue where textareas would not be detected as dependent inputs when Live Merge Tags are involved.
+	- Fixed issue where values would not be refetched in some cases.
+	- Fixed performance issue with value population where queries would be made for objects even when required field filter values are not filled out.
+
+## 1.0-beta-4.169
+
+	- Fixed issue where GravityView entry check overwrote the entry even when no GV entry was found. (#164)
+	- Fixed notices generated by usage of entry ID instead of an entry array. (#163)
+	- Fixed issue where ordering entries by non-field value would result in notices. (#162)
+	- Added [gppa_should_get_term_by_id](https://gravitywiz.com/documentation/gppa_should_get_term_by_id/) filter to better support filtering numeric taxonomies by numeric slugs. (#161)
+
+## 1.0-beta-4.168
+
+	- Fixed a potential compatibility issue with Gravity PDF. (#159)
+	- Fixed edge case where fields would use a field's Admin Label when GF Entries are queried on a form.
+	- Added inline documentation for the new [`gppa_hydrated_field`](https://gravitywiz.com/documentation/gppa_hydrated_field/) filter.
+
+## 1.0-beta-4.167
+
+	- Added `gppa_register_form` hook for internal use.
+
+## 1.0-beta-4.166
+
+	- Added new [`gppa_hydrated_field`](https://gravitywiz.com/documentation/gppa_hydrated_field/) filter.
+	- Improved AJAX loading of updated fields by passing them through gform_pre_render which improves compatibility with Perks such as GP Limit Choices.
+	- Fixed issue with Product Option fields not properly hydrating Field Value Objects.
+	- Fixed issue where Populate Anything would interfere with GravityView's sieve functionality in the Search Widget.
+	- Fixed issue where List fields in Nested Forms would cause the Edit entry functionality to freeze.
+	- Fixed potential PHP notice with date fields using Nested Forms {Parent} merge tag.
+	- Fixed issue where chains of populated inputs would sometimes not populate the last field's choices.
+	- Fixed performance issue where Gravity Forms calculation events could be bound multiple times.
+	- Fixed issue where Live Merge Tags would not work with multi-input fields such as Address fields in some cases.
+
+## 1.0-beta-4.165
+
+	- Fixed an issue where `Other` radio options were disabled when there are no results.
+
+## 1.0-beta-4.164
+
+	- Fixed a potential issue where empty option fields may cause a JS error.
+
+## 1.0-beta-4.163
+
+	- Fixed a potential PHP notice issue when populating alongside GPECF.
+
+## 1.0-beta-4.162
+
+	- Improved compatibility with GravityFlow by not hydrating forms unless a form uses dynamic population or Live Merge Tags.
+	- Improved performance of how entries are loaded when hydrating forms/fields.
+
+## 1.0-beta-4.161
+
+	- Fixed a potential issue where GPPA may generate a PHP notice.
+
+## 1.0-beta-4.160
+
+	- Fixed a potential JS error when using GPPA in conjunction with GPNF.
+
+## 1.0-beta-4.159
+
+	- Improved performance with Conditional Logic and Live Merge Tags by batching XHR/AJAX requests more efficiently.
+	- Improved logic behind when Populate Anything enqueues JS/CSS on the frontend.
+	- Fixed PHP notices related to wp_localize_script() after upgrade to WordPress 5.7.
+
+## 1.0-beta-4.158
+
+	- Added support for read-only Datepicker fields and GPLD.
+
+## 1.0-beta-4.157
+
+	- Fixed a potential issue when using LMTs on conditionally hidden address fields.
+	- Fixed a potential issue generating PHP notices.
+
+## 1.0-beta-4.156
+
+	- Added class to form element when navigation was disabled. (#137)
+	- Fixed issue where populating Prices would not work as expected with Gravity Forms 2.5.
+
+## 1.0-beta-4.155
+
+	- Fixed a potential issue where GPPA may not replace fields with altered markup.
+	- Fixed an issue where LMTs would not populated multi-select fields with enhanced UI enabled.
+
+## 1.0-beta-4.154
+
+	- Fixed issue where the Total field and fields from GP eCommerce Fields would not recalculated when a Product field dynamically populated with Populate Anything would have its price change.
+
+## 1.0-beta-4.153
+
+	- Fixed a potential issue where LMTs may not work with conditional fields.
+
+## 1.0-beta-4.152
+
+	- Fixed an issue where GPPA may generate notices while hydrating LMTs.
+
+## 1.0-beta-4.151
+
+	- Fixed a potential issue where LMTs may populate from conditionally hidden fields.
+
+## 1.0-beta-4.150
+
+	- Fixed an issue where multiple pre-selected checkboxes would only populate based on the first value.
+
+## 1.0-beta-4.149
+
+	- Fixed a potential issue where duplicate entries may show up in GPPA results.
+
+## 1.0-beta-4.148
+
+	- Added filtering support for the custom database snippet implementation.
+
+## 1.0-beta-4.147
+
+	- Fixed a potential issue where GPPA may fail to display or populate paragraph fields with HTML.
+	- Improved compatibility with Conditional Logic by showing a text input instead of a dropdown for the value of fields with dynamically-populated choices.
+
+## 1.0-beta-4.146
+
+	- Fixed issue where Database object type would always use the global $wpdb instance rather than the one provided in the object type's get_db() method.
+
+## 1.0-beta-4.145
+
+	- Removed an extraneous `wpdb::prepare()` parameter that generated PHP notices.
+
+## 1.0-beta-4.144
+
+	- Fixed an issue where Save and Continue feature may generate PHP warnings.
+
+## 1.0-beta-4.143
+
+	- Fixed an issue where decimal comma fields may not populate correctly in LMT calculations.
+
+## 1.0-beta-4.142
+
+	- Fixed an issue where string filters may be parsed as scientific numbers.
+
+## 1.0-beta-4.141
+
+	- Improved consistency between is/is not and is in/is not in operators when filtering by taxonomy terms.
+
+## 1.0-beta-4.140
+
+	- Improved AJAX handling of queued requests by aborting any previous requests.
+	- Fixed inconsistencies with Live Merge Tags during AJAX hydration.
+
+## 1.0-beta-4.139
+
+	- Fixed issue where choices selected as the default would not work correctly with Live Merge Tags.
+
+## 1.0-beta-4.138
+
+	- Fixed issue where first choices in a choice-based field with a value of 0 would not work correctly with Live Merge Tags.
+	- Fixed issue where input-specific merge tags did not pass correct field ID to `gppa_live_merge_tag_value` filter.
+
+## 1.0-beta-4.137
+
+	- Added the option to order populated results randomly.
+	- Added ability for reconnecting exported forms based on form titles if using the Gravity Forms Entries object type. Note: all pertinent forms need to be included in the same export.
+	- Fixed notices generated by checking for field properties when $source_field is not a GF_Field object. (#109)
+
+## 1.0-beta-4.136
+
+	- Added support for accessing any depth of keys in array-based properties in custom Choice/Value templates. Example: {post:meta_example:0:key}
+
+## 1.0-beta-4.135
+
+	- Added support for accessing keys from array-based properties in custom Choice/Value templates. Example: {post:meta_example:key}
+
+## 1.0-beta-4.134
+
+	- Added an internal GPPA property to access hydrated values.
+
+## 1.0-beta-4.133
+
+	- Added a custom DOM event to force reloading field values.
+
+## 1.0-beta-4.132
+
+	- Improved performance of Gravity Forms Entries object type when using the same filters and ordering across fields.
+
+## 1.0-beta-4.131
+
+	- Fixed an issue where GPPA did not update the basePrice of a dynamically populated product field.
+
+## 1.0-beta-4.130
+
+	- Fixed issue where {term} merge tags would not work in custom choice/value templates.
+
+## 1.0-beta-4.129
+
+	- Added new [`gppa_has_empty_field_value`](https://gravitywiz.com/documentation/gppa_has_empty_field_value/) and [`gppa_no_results_value`](https://gravitywiz.com/documentation/gppa_no_results_value/) PHP filters.
+
+## 1.0-beta-4.128
+
+	- Fixed issue where Live Merge Tags such as {all_fields} and {order_summary} would not update in some situations.
+
+## 1.0-beta-4.127
+
+	- Fixed an issue where multiple merge tag modifiers may cause fallback to fail.
+
+## 1.0-beta-4.126
+
+	- Fixed issue where Live Merge Tags depending on a field populated using a dynamic parameter would not contain the correct value in some cases.
+
+## 1.0-beta-4.125
+
+	- Fixed an issue where conditionally shown date fields may lose formatting.
+
+## 1.0-beta-4.124
+
+	- Fixed issue where Populate Anything's scripts/styles would not be enqueued in some cases. This adds compatibility for the Ultimate Dashboard plugin.
+
+## 1.0-beta-4.123
+
+	- Fixed an issue with dynamically populated values and GP Copy Cat.
+
+## 1.0-beta-4.122
+
+	- Fixed an issue where sticky posts may be displayed regardless of the filters set.
+
+## 1.0-beta-4.121
+
+	- Added GF Query hashing to improve entry population performance.
+
+## 1.0-beta-4.120
+
+	- Fixed an issue where GPPA may generate a PHP error when populating from an SQL table.
+
+## 1.0-beta-4.119
+
+	- Fixed an issue where GPPA may show unpublished posts on the front-end.
+	- Fixed an integration issue with WooCommerce post types.
+	- Added ability to deselect properties in Template Rows.
+	- Added new [`gppa_input_choice`](https://gravitywiz.com/documentation/gppa_input_choice/) PHP filter.
+	- Added new [`gppa_template_rows`](https://gravitywiz.com/documentation/gppa_template_rows/) JavaScript filter for adding or modifying choice/value templates in the Form Editor.
+
+## 1.0-beta-4.118
+
+	- Fixed an issue where GPPA may generate PHP warnings if a date's source input is a string.
+
+## 1.0-beta-4.117
+
+	- Fixed a caching issue when no primary property was set. (#93)
+
+## 1.0-beta-4.116
+
+	- Fixed a potential PHP warning when date fields are involved.
+
+## 1.0-beta-4.115
+
+	- Fixed an issue where LMTs may pick up the wrong values if the form is embedded in another's confirmation message.
+
+## 1.0-beta-4.114
+
+	- Fixed issue where Live Merge Tags would not work reliably in radio input values—especially when form pages are involved.
+
+## 1.0-beta-4.113
+
+	- Fixed an issue where numeric strings may be cast as a number causing population to fail.
+
+## 1.0-beta-4.112
+
+	- Fixed an issue where a conditionally shown field with LMT may not retain its value after being hidden.
+
+## 1.0-beta-4.111
+
+	- Fixed an issue where GPPA may generate notices if the filter value is empty.
+
+## 1.0-beta-4.110
+
+	- Fixed an issue where a conditional paragraph field may not show LMTs correctly.
+
+## 1.0-beta-4.109
+
+	- Fixed an issue where LMTs would not populate if the source field has a calculation that runs on page load.
+	- Fixed issue with time fields not being dynamically populated when using Gravity Forms 2.5 or newer.
+
+## 1.0-beta-4.108
+
+	- Fixed potential JavaScript error on the frontend when using date fields with non-US formats.
+
+## 1.0-beta-4.107
+
+	- Fixed a regression that caused ordering by meta fields to fail.
+	- Fixed close button in the input with custom component, improved layout of filters/filter groups, updated icons, and updated styling for results preview.
+
+## 1.0-beta-4.106
+
+	- Fixed parsing and population of Score fields' LMTs.
+
+## 1.0-beta-4.105
+
+	- Fixed notice caused by checking for variable that is only conditionally set.
+	- Fixed notices generated when fetching current merge tag values for field types that return an array for their default value.
+
+## 1.0-beta-4.104
+
+	- Added [`gppa_autoloaded_object_types`](https://gravitywiz.com/documentation/gppa_autoloaded_object_types/) filter to customize available object types.
+
+## 1.0-beta-4.103
+
+	- Fixed an issue with tables names that contained spaces.
+
+## 1.0-beta-4.102
+
+	- Fixed an issue where GPPA may generate notices when using LMTs.
+
+## 1.0-beta-4.101
+
+	- Added `is in` and `is not in` operators globally.
+
+## 1.0-beta-4.100
+
+	- Fixed an issue where populated entries may show out of order if they are ordered by a 12-Hour Time field.
+
+## 1.0-beta-4.99
+
+	- Fixed an issue where GPPA may return some non-active entries. Defaults to explicitly `active` entries now.
+
+## 1.0-beta-4.98
+
+	- Fixed an issue where GPPA may generate PHP notices when filtering using certain metadata.
+	- Added inline hook documentation for [gppa_object_type_col_rows_query](https://gravitywiz.com/documentation/gppa_object_type_col_rows_query/).
+	- Added inline hook documentation for [gppa_default_operators](https://gravitywiz.com/documentation/gppa_default_operators/).
+	- Added inline hook documentation for [gppa_process_value_as_date](https://gravitywiz.com/documentation/gppa_process_value_as_date/).
+	- Fixed typos (extra i in compatibility) in the following classnames: GPPA_Compatibility_GravityFlow, GPPA_Compatibility_GravityPDF, and GPPA_Compatibility_GravityView
+
+## 1.0-beta-4.97
+
+	- Fixed issue where the Gravity Forms Entry object type would add a where clause for any unrecognized operator. This fix will make it possible for snippets/plugins to add additional operators to the GF Entry object type.
+
+## 1.0-beta-4.96
+
+	- Fixed a compatibility issue with Gravity View's edit entry screens.
+
+## 1.0-beta-4.95
+
+	- Fixed an issue where pasting text wouldn't trigger the populate event until field loses focus.
+
+## 1.0-beta-4.94
+
+	- Fixed issue where Gravity Form's {user} merge tag would be parsed prior to GP Populate Anything's {user} object type merge tag in custom choice/value templates.
+	- Fixed an issue where `starts_with` and similar operators may not work with numeric values.
+	- Fixed a compatibility issue with conditional LMTs and WordPress 5.5.
+
+## 1.0-beta-4.93
+
+	- Fixed issue where Filter Values would be reset when switching between fields in the Form Editor in some situations.
+
+## 1.0-beta-4.92
+
+	- Added support for replacing Gravity Forms merge tags in templates when using the Gravity Forms Entry object type.
+
+## 1.0-beta-4.91
+
+	- Added new 'gppa_default_operators' filter for extending the default operators for all propertiesl (Note: this will impact the UI only, additional logic will be required when adding new operators)
+
+## 1.0-beta-4.90
+
+	- Added support for The Events Calendar in GPPA posts filtering.
+
+## 1.0-beta-4.89
+
+	- Fixed an issue where some filter query strings may be parsed as dates incorrectly.
+	- Fixed an issue where some filter query strings may be parsed as dates incorrectly.
+	- Added `gppa_process_value_as_date` filter.
+
+## 1.0-beta-4.88
+
+	- Added sort for ordering by meta properties with the Post object type.
+
+## 1.0-beta-4.87
+
+	- Fixed an issue where filtering GF entries by today's date may fail.
+
+## 1.0-beta-4.86
+
+	- Fixed a compatibility issue with ACF and checkboxes.
+
+## 1.0-beta-4.85
+
+	- Added new filters `gppa_ajax_merge_tag_value` and `gppa_get_batch_field_html_response`.
+
+## 1.0-beta-4.84
+
+	- Fixed compatibility issue with JetSloth's Image Choices plugin.
+
+## 1.0-beta-4.83
+
+	- Fixed potential PHP notice.
+
+## 1.0-beta-4.82
+
+	- Fixed issue where the {count} merge tag would return 1 instead of 0 if no results were found.
+	- Fixed issue where Live Merge Tags would not work in textareas in some situations such as multi-page forms or Nested Forms.
+	- Fixed issue where Live Merge Tags would not be properly coupled when editing nested entries with GF Nested Forms.
+
+## 1.0-beta-4.81
+
+	- Fixed an issue where empty dropdowns would not display the default message set by `gppa_missing_filter_text` on page load.
+
+## 1.0-beta-4.80
+
+	- Added support for filtering Gravity Forms entries by registered entry meta.
+
+## 1.0-beta-4.79
+
+	- Fixed an issue where filtered entries would fail to display if selector is a single character.
+
+## 1.0-beta-4.78
+
+	- Added support for using Field Value Objects from Multi Selects in text fields.
+
+## 1.0-beta-4.77
+
+	- Fixed issue where Live Merge Tags would not work on the GravityView edit screen in some cases.
+
+## 1.0-beta-4.76
+
+	- Fixed an issue where users lookup by role was not specific enough.
+
+## 1.0-beta-4.75
+
+	- Fixed a race condition when LMTs are used alongside GPPA in a nested form.
+
+## 1.0-beta-4.74
+
+	- Fixed an issue that prevented placeholders from showing on some dropdowns.
+
+## 1.0-beta-4.73
+
+	- Added support for "is in" and "is not in" operators to Meta properties in the Taxonomy Object Type.
+	- Fixed issue where "is in" and "is not in" operators would show for properties that do not support them.
+
+## 1.0-beta-4.72
+
+	- Added [gppa_loading_field_target_meta](https://gravitywiz.com/documentation/gppa_loading_field_target_meta/) filter to be applied when loading data for a GPPA-enabled field.
+
+## 1.0-beta-4.71
+
+	- Fixed an issue where Dropdowns with LMTs may not store the entered value.
+
+## 1.0-beta-4.70
+
+	- Fixed issue where date comparisons using formats like d/m/y would not work with the Gravity Forms Entry Object Type.
+
+## 1.0-beta-4.69
+
+	- Added "Date Created" and "Date Updated" as available properties in the Gravity Forms Entry object type.
+	- Fixed issue where date fields could not be used as Form Field Values in filters.
+	- Updated the filter property value select to not show property values if there are more than 1,000 property values. In most of these situations a form field value or a special value is likely to be used. To override the 1,000 max, the gppa_max_property_values_in_editor PHP filter can be utilized.
+	- Updated the "Special Values" option group to be at the top of the property value select for filters. In addition, "Add Custom Value" has been moved into the "Special Values" option group to reduce the need of scrolling.
+
+## 1.0-beta-4.68
+
+	- Fixed an issue where LMTs would not populate paragraph fields correctly.
+
+## 1.0-beta-4.67
+
+	- Added new "is in" and "is not in" operators that are available to properties in the "Post Taxonomies" group in the Post object type.
+
+## 1.0-beta-4.66
+
+	- Fixed an issue where LMTs would stop working if date format is missing. (#48)
+
+## 1.0-beta-4.65
+
+	- Added debug log entries via [Gravity Forms Logging](https://docs.gravityforms.com/logging-and-debugging/) if Live Merge Tags are not whitelisted.
+
+## 1.0-beta-4.64
+
+	- Fixed notice generated when fetching default values for Single and Calculated Products.
+
+## 1.0-beta-4.63
+
+	- Fixed an issue where a form could be submitted before GPPA AJAX request was completed.
+
+## 1.0-beta-4.62
+
+	- Fixed date picker initialization after GPPA AJAX population. (#46)
+	- Fixed notices generated by incomplete fake entry object when handling initial population of calculated values.
+
+## 1.0-beta-4.61
+
+	- Fixed issue where Live Merge Tags would become uncoupled when depended fields contained ampersands and other special HTML characters.
+
+## 1.0-beta-4.60
+
+	- Fixed issue where date comparisons in filters would not always work with the Gravity Forms Entry object type.
+
+## 1.0-beta-4.59
+
+	- Fixed issue where dynamically populated date fields would not always use the field's date format—particularly when used with conditional logic.
+
+## 1.0-beta-4.58
+
+	- Fixed issue where Live Merge Tags wouldn't work in Nested Forms when submitting multiple child entries.
+	- Fixed potential PHP warning when a Nested Form field is added to a form but does not have a Nested Form selected.
+
+## 1.0-beta-4.57
+
+	- Fixed autofill in Firefox not triggering Live Merge Tag updates.
+	- Added new notice at the top of results preview in Form Editor that will show if the query results are limited.
+
+## 1.0-beta-4.56
+
+	- Fixed issue where Live Merge Tags wouldn't work as intended if inside a Section using Conditional Logic
+
+## 1.0-beta-4.55
+
+	- Fixed issue where live merge tags in Consent field's checkbox label caused a validation error on submission.
+
+## 1.0-beta-4.54
+
+	- Fixed issue where Number and Product Calculations and Nested Forms' {Parent} merge tag changes were ignored.
+	- Added support for rendering {pricing_fields} merge tag on load. (#44)
+
+## 1.0-beta-4.53
+
+	- Fixed issue where the Media Library would not load in Beaver Builder when editing a page with a form using GP Populate Anything.
+
+## 1.0-beta-4.52
+
+	- Added [gppa_allow_all_lmts](http://gravitywiz.com/documentation/gppa_allow_all_lmts/) filter.
+
+## 1.0-beta-4.51
+
+	- Improved compatibility with WooCommerce Gravity Forms Product Add-Ons plugin.
+
+## 1.0-beta-4.50
+
+	- Fixed fatal error introduced in 1.0-beta-4.49.
+
+## 1.0-beta-4.49
+
+	- Fixed potential fatal error when non-form value was passed as $form object via gform_pre_render filter.
+	- Improved Entry Edit in WP Dashboard to include selected choice even if it isn't a valid option return from the Populate Anything results.
+	- Improved how labels are stored for dynamically populated choices. This improvement will reduce the amount of information being submitted from the frontend.
+
+## 1.0-beta-4.48
+
+	- Fixed issue where unnecessary queries for Object Type properties would be loaded in the Form Editor on load.
+
+## 1.0-beta-4.47
+
+	- Fixed issue when populating multiple values into a Checkbox field. (#42)
+	- Updated dynamic choice population visualizations (in the form editor).
+
+## 1.0-beta-4.46
+
+	- Fixed issue where switching from a dynamically populated choice field in the Form Editor to a static choice-based field would revert the static choices to the default.
+
+## 1.0-beta-4.45
+
+	- Improved security with Live Merge Tags and added accompanying [gppa_lmt_whitelist](http://gravitywiz.com/documentation/gppa_lmt_whitelist/) filter.
+
+## 1.0-beta-4.44
+
+	- Added FORMID/FIELDID support and a new $field parameter to [gppa_query_limit](http://gravitywiz.com/documentation/gppa_query_limit/).
+
+## 1.0-beta-4.43
+
+	- Fixed notice generated when GPPA passed fake entry without a currency property.
+
+## 1.0-beta-4.42
+
+	- Added support for populating Single Product fields. (#39)
+
+## 1.0-beta-4.41
+
+	- Fixed issue where filtering by taxonomy was inconsistent due to discrepancy between the term ID and the taxonomy term ID.
+
+## 1.0-beta-4.40
+
+	- Updated "No Results" and "Fill Out Other Fields" choices to not be selected by default.
+
+## 1.0-beta-4.39
+
+	- Fixed issue where population failed when page was loaded as HTTP but admin was forced to HTTPS.
+
+## 1.0-beta-4.38
+
+	- Fixed issue where Live Merge Tag loading indicators were not applied.
+
+## 1.0-beta-4.37
+
+	- Added support for MySQL views.
+	- Improved performance.
+	- Fixed issue caused by race conditional where tabbing quickly through a form could prevent some live merge tags from updating. (#29)
+
+## 1.0-beta-4.36
+
+	- Added additional integration requests from Gravity Flow.
+
+## 1.0-beta-4.35
+
+	- Added [gppa_live_merge_tag_value](https://gravitywiz.com/documentation/gppa_live_merge_tag_value/) filter to allow filtering the live merge tag value before it is replaced. (#34)
+
+## 1.0-beta-4.34
+
+	- Added caching to prevent duplicate queries. (#33)
+	- Added experimental change so that the usermeta join (added when filtering by user role) is always joined first. This dramatically improved the performance of complex queries which contained user role filtering.
+	- Fixed conflict with GP Conditional Pricing where Populate Anything expected a trigger field to always be passed after GPCP updated pricing.
+
+## 1.0-beta-4.33
+
+	- Added support for using Checkbox fields as a Form Field Value filter when populating entries (#32)
+	- Added support for using Checkbox fields as a Form Field Value filter.
+
+## 1.0-beta-4.32
+
+	- Added support for populating dynamic choices in PDFs generated for notifications via Gravity PDF.
+
+## 1.0-beta-4.31
+
+	- Fixed issue where Populate Anything exposed Choices setting for Post Category fields.
+	- Fixed issue where populating value of specific-input in multi-input field (e.g. Checkbox) failed.
+
+## 1.0-beta-4.30
+
+	- Fixed notice generated by invalid minimum requirement definition.
+
+## 1.0-beta-4.29
+
+	- Fixed issue where AJAX-enabled forms lost their event bindings once the form had been submitted (and reloaded).
+
+## 1.0-beta-4.28
+
+	- Fixed issued where zero-values were not populated.
+
+## 1.0-beta-4.27
+
+	- Fixed JS error introduced in 1.0-beta-4.25 where GPPA attempts to clear event handlers for child forms that had not been previously initialized.
+
+## 1.0-beta-4.26
+
+	- Fixed issue where custom inputs generated an error when keyup/change event was triggered.
+
+## 1.0-beta-4.25
+
+	- Fixed issue where dynamic population was not working after the nested form markup had been refreshed.
+
+## 1.0-beta-4.24
+
+	- Improved reliability when rapidly tabbing through a form with Live Merge Tags in textareas.
+
+## 1.0-beta-4.23
+
+	- Fixed potential PHP notice in AJAX requests while editing forms.
+
+## 1.0-beta-4.22
+
+	- Fixed issue where choices with empty processed value and text templates would result in empty choices being added to dynamically populated fields.
+	- Added support for using Term Meta as Filters and Templates for the Taxonomy Term Object Type.
+
+## 1.0-beta-4.21
+
+	- Fixed issue where the focus of inputs could change to the incorrect input when rapidly tabbing tabbing through a form that uses Live Merge Tags.
+
+## 1.0-beta-4.20
+
+	- Improved Live Merge Tag compatibility with GP Conditional Logic Pricing.
+
+## 1.0-beta-4.19
+
+	- Added support for triggering Live Merge Tag updates and population updates when a Nested Form is added/edited/deleted.
+	- Fixed issue with inconsistent Live Merge Tags population when used in conjunction with calculations.
+	- Fixed issue where Live Merge Tags used in locations such as HTML Fields wouldn't populate in some cases.
+
+## 1.0-beta-4.18
+
+	- Fixed issue where Live Merge Tags wouldn't work with certain inputs of fields such as the Product field's price input.
+
+## 1.0-beta-4.17
+
+	- Fixed case where fallback modifier in Live Merge Tags would not take effect.
+	- Fixed an issue where Live Merge Tags in the submit button wouldn't always populate.
+
+## 1.0-beta-4.16
+
+	- Added new 'gppa_get_input_values' WordPress filter to allow filtering the value of dynamically populated inputs and fields.
+
+## 1.0-beta-4.15
+
+	- Improved performance by caching result of merge tag values.
+	- Improved performance by removing extraneous merge tag value replacement function call.
+
+## 1.0-beta-4.14
+
+	- Fixed regression with using GP Populate Anything in GravityView search widgets.
+
+## 1.0-beta-4.13
+
+	- Fixed potential JavaScript errors with GravityView.
+
+## 1.0-beta-4.12
+
+	- Added support for Admin Field Labels when listing out fields/inputs as properties for filters, templates, and ordering.
+
+## 1.0-beta-4.11
+
+	- Updated GP Nested Forms compatibility layer to use gpnf_init_nested_form Gravity Forms JavaScript Hook rather than jQuery event.
+
+## 1.0-beta-4.10
+
+	- Added compatibility for using Live Merge tags in Nested Forms. Note: this requires GP Nested Forms 1.0-beta-8.24 or newer.
+
+## 1.0-beta-4.9
+
+	- Added support for using the label instead of the raw value when a field with dynamically populated choices has its entries exported.
+
+## 1.0-beta-4.8
+
+	- Fixed conflict when using using inputs in multi-input fields such as Address as filter values on a multi-page form.
+
+## 1.0-beta-4.7
+
+	- Added ability to use empty custom values as valid filter values. This allows for "is not blank" filters.
+
+## 1.0-beta-4.6
+
+	- Fixed issue where fields with dynamically populated choices would show the value instead of label in notifications/feeds when used with GP Nested Forms.
+	- Improved compatibility with dynamic choice population and Gravity PDF.
+
+## 1.0-beta-4.5
+
+	- Fixed an issue where Gutenberg and Elementor's editor would fail to load when editing a page containing a form dynamically populated with GP Populate Anything.
+	- Fixed issue where dynamic population wouldn't work in some cases when editing a submitted entry via the Entry Details » Edit screen.
+
+## 1.0-beta-4.4
+
+	- Improved handling of post date filter when used with >=, <=, >, and < operators.
+
+## 1.0-beta-4.3
+
+	- Fixed issue where Live Merge Tag fallback modifiers would not work in static usages such as the Entry Details view in the WordPress admin.
+
+## 1.0-beta-4.2
+
+	- Fixed issue where Live Merge Tags would use dropdown/choice values rather than labels. If you still wish to use the value of the choice, use the :value modifier provided by Gravity Forms.
+
+## 1.0-beta-4.1
+
+	- Fixed regression where inputs in fields such as the Address field wouldn't work as a filter.
+
+## 1.0-beta-3.47
+
+	- Removed opacity change for disabled form navigation.
+
+## 1.0-beta-4.0
+
+    - Improved performance of dynamic population of choices, values, and Live Merge Tags. The Wiz is confident you will enjoy these sorcerous optimizations!
+	- Removed opacity change for disabled form navigation.
+
+## 1.0-beta-3.46
+
+	- Fixed issue where Product dropdowns would not work as source fields for Field Value Objects.
+
+## 1.0-beta-3.45
+
+	- Fixed issue where Live Merge Tags would be replaced with <span>'s in textareas if the default value contained new lines.
+	- Fixed issue where newlines would be converted to <br /> in Live Merge Tag values.
+
+## 1.0-beta-3.44
+
+	- Added support for dynamically populating the Price template in [Product] Option fields.
+	- Fixed issue where wp_list_pluck() generated notices when specified key was not set for each list item.
+
+## 1.0-beta-3.43
+
+	- Added support for Gravity Forms Slider Field add-on (by Bhagwant Banger).
+
+## 1.0-beta-3.42
+
+	- Fixed potential conflict with GP eCommerce Fields.
+
+## 1.0-beta-3.41
+
+	- Fixed potential recursion with circular dependencies in dynamically populated fields.
+	- Fixed issue where Pricing fields would not show properly on multipage forms when used with the Partial Entries Add-on and GPPA.
+
+## 1.0-beta-3.40
+
+	- Added new 'gppa_merge_tag_values_replaced' jQuery event that's triggered after Live Merge Tags are replaced.
+
+## 1.0-beta-3.39
+
+	- Fixed regression with Field Value Objects in the Form Editor.
+	- Fixed regression with editing GPPA-powered fields in the admin entry view.
+
+## 1.0-beta-3.38
+
+	- Fixed issue where filtering by certain properties including the Role property with the User Object Type wouldn't work as expected on multisite.
+
+## 1.0-beta-3.37
+
+	- Added security enhancements with the "Users" object type on multisite. User object type queries are now limited to the current blog rather than the whole network. This behavior can be modified by using the “gppa_object_type_user_limit_to_current_site” filter.
+	- Updated “Database” object type to be a restricted object type. Restricted object types can only be set up in the Form Editor by a super admin. This can be overridden using the “gppa_object_type_restricted_database” filter.
+	- Added security enhancements.
+
+## 1.0-beta-3.36
+
+	- Fixed conflict with Post Object Type and Automattic's Advanced Post Caching plugin.
+
+## 1.0-beta-3.35
+
+	- Added new 'gppa_object_type_properties' and 'gppa_object_type_properties_OBJECTTYPE' filters.
+	- Added support for Gravity Flow's Form Connector add-on. (#25)
+	- Fixed issue where the "Range" setting would sometimes appear for the wrong field types in the Form Editor.
+
+## 1.0-beta-3.34
+
+	- Added support for populating Time fields and Date fields using the "Date Drop Down" Input Type.
+	- Removed deprecated modify_field_choices and modify_field_values methods.
+
+## 1.0-beta-3.33
+
+	- Updated hydrate_initial_load to run on gform_pre_render with a priority of 8 instead of 10 to improve compatibility with other perks such as GF Limit Choices.
+
+## 1.0-beta-3.32
+
+	- Fixed issue where GP Populate Anything would not populate a field if the returned value from an object is "0"
+
+## 1.0-beta-3.31
+
+	- Fixed issue with Live Merge Tags sometimes returning the wrong value on initial load if there are multiple (or nested) forms on a page.
+
+## 1.0-beta-3.30
+
+	- Added support for using Live Merge Tags in select fields/inputs.
+	- Fixed issue where initial load failed to populate GPPA-enabled fields filtered by GF-shortcode-populated field.
+
+## 1.0-beta-3.29
+
+	- Fixed issue where Live Merge Tags would not work in fields on multipage forms with certain setups.
+
+## 1.0-beta-3.28
+
+	- Fixed issue where GPPA-populated fields used in calculations failed to trigger a recalculation when changed manually.
+
+## 1.0-beta-3.27
+
+	- Fixed issue where using a Live Merge Tag inside a Product field's label would prevent the form from submitting.
+
+## 1.0-beta-3.26
+
+	- Fixed potential fatal PHP error with the Gravity Forms Entry Object Type.
+
+## 1.0-beta-3.25
+
+	- Fixed issue where dynamically populated Paragraph fields using the Rich Text Editor would lose the Rich Text Editor capabilities after being populated.
+
+## 1.0-beta-3.24
+
+	- Fixed potential PHP notice.
+	- Added support for dynamically populating the price of choices in the Shipping field when set to the "Drop Down" field type.
+	- Updated array-based values to be delimited with a comma and space instead of simply a comma.
+
+## 1.0-beta-3.23
+
+	- Fixed potential SQL errors related to grouping with the Database Object Type
+	- Fixed issue where the {database:PROPERTY} merge tag format would not work in the Custom Value option for the Database Object Type.
+
+## 1.0-beta-3.22
+
+	- Improved handling of array-based fields (such as Name) when populated as a value into a field or choice.
+	- Fixed issue where some array-based values would show as JSON in certain fields.
+
+## 1.0-beta-3.21
+
+	- Added explicit support for populating choices in Gravity Flow's User field.
+	- Fixed issue where GPPA would cause some choice-based fields to show an empty choice section in the Gravity Forms Form Editor.
+
+## 1.0-beta-3.20
+
+	- Fixed issue where "Only Show Unique Results" setting would not work for the Database Object Type.
+	- Added additional security enhancement.
+
+## 1.0-beta-3.19
+
+	- Fixed potential PHP notice.
+	- Fixed issue where thousand separators would cause issues with filters that compared numbers.
+
+## 1.0-beta-3.18
+
+	- Fixed issue where extraneous AJAX requests would be triggered in some cases.
+
+## 1.0-beta-3.17
+
+	- Improved compatibility with Gravity Flow's entry view.
+
+## 1.0-beta-3.16
+
+	- Fixed regression with the "Ordering" setting.
+
+## 1.0-beta-3.15
+
+	- Fixed breaking issues with Database Object Type that were related to the recent security enhancements.
+
+## 1.0-beta-3.14
+
+	- Fixed issue where selects chained with GPPA would not work when editing an entry from the entry detail view.
+	- Added security enhancements.
+
+## 1.0-beta-3.13
+
+	- Fixed issue where live merge tags in conditional logic default values were incorrectly replaced.
+
+## 1.0-beta-3.12
+
+	- Updated live merge tag escaping to ensure the escaped merge tag is not a merge tag. (#23)
+	- Fixed conflict where Preview Submission replaced live merge tags statically when the form was rendered.
+	- Fixed issue where inputs using Live Merge Tags would sometimes not have the loading flash removed.
+	- Fixed issue where certain values with Live Merge Tags wouldn't be correct. One specific example of this is when using the "Other" option on a Radio field.
+
+## 1.0-beta-3.11
+
+	- Added [gppa_disable_form_navigation_toggling](http://gravitywiz.com/documentation/gppa_disable_form_navigation_toggling/) filter to allow disabling toggling form navigation while data is being loaded.
+
+## 1.0-beta-3.10
+
+	- Added support for disabling the submit button when data is being loaded. (#20)
+
+## 1.0-beta-3.9
+
+	- Fixed issue where 'Fill Out Other Fields' message was shown incorrectly when populating a value filtered by another field.
+
+## 1.0-beta-3.8
+
+	- Fixed issue where in some cases Live Merge tags combined with conditional logic would cause JavaScript errors and prevent the form from loading correctly.
+	- Fixed issue where single quotes are escaped preventing field value filters from working correctly with values with single quotes. (#18)
+
+## 1.0-beta-3.7
+
+	- Fixed issue where [] or other JSON would show up in some cases when populating values from a complex field.
+
+## 1.0-beta-3.6
+
+	- Fixed issue where spaces in database and column names were not properly escaped. (#17)
+
+## 1.0-beta-3.5
+
+	- Fixed issue where only the first selected checkbox would be return when used as a target field of a Field Value Object.
+	- Fixed issue where array values were not correctly processed for population.
+
+## 1.0-beta-3.4
+
+	- Fixed potential issue where enabling GPPA for a field, not selecting an Object Type then trying to re-open the field settings would yield in the field settings not opening at all.
+	- Added new 'gppa_array_value_to_text' filter to facilitate converting array/JSON-stored data into strings for text-based fields.
+	- Fixed issue where checkbox fields would not work as a target field of a Field Value Object.
+
+## 1.0-beta-3.3
+
+	- Added $field as a new parameter to the gppa_replace_filter_value_variables_OBJECTYPEID filter.
+
+## 1.0-beta-3.2
+
+	- Fixed issue where the Ordering section wouldn't be visible on the checkbox and multiselect fields.
+
+## 1.0-beta-3.1
+
+	- Fixed conflict with WC GF Product Add-ons where form object was not correctly targeted causing events to fail to be bound.
+
+## 1.0-beta-3.0
+
+	- Added support for live merge tags in default values, placeholders, choices, and more!
+	- Added support for populating the value of multi-selectable choice fields such as checkboxes and multiselects.
+	- Added the [gppa_loading_target_meta](http://gravitywiz.com/documentation/gppa_loading_target_meta/) for modify how the loading indicator is handled and which element is replaced.
+	- Updated (and greatly improved) the loading experience for dynamically populated values, choices, and live merge tags!
+	- Fixed issue where certain tags that came before the field container in the DOM would cause the field to duplicate upon re-population with AJAX.
+
+## 1.0-beta-2.77
+
+	- Fixed issue where "contains" operator did not work with numeric filter values.
+
+## 1.0-beta-2.76
+
+	- Fixed issue where certain tags that came before the field container in the DOM would cause the field to duplicate upon re-population with AJAX.
+
+## 1.0-beta-2.75
+
+	- Fixed issue where GravityView search inputs would not have the correct choices/values after submission.
+	- Fixed notices generated when hydration is attempted on invalid form object.
+
+## 1.0-beta-2.74
+
+	- Fixed notices generated when populating via Easy Passthrough.
+
+## 1.0-beta-2.73
+
+	- Fixed issue where dynamically populated choices and values would not be correct on the initial load of a GravityView edit page.
+	- Fixed notices generated when 'object' property did not exist in "no_choices" choice.
+
+## 1.0-beta-2.72
+
+	- Fixed issue where radio inputs that had dynamically populated choices would have the first radio button selected.
+
+## 1.0-beta-2.71
+
+	- Fixed issue where non-query-based pre-populated values were ignored.
+	- Fixed a potential PHP warning when submitting a form with dynamically populated checkboxes.
+	- Fixed issue where certain field types would be populated with a single wrong choice instead of no choices on initial load.
+
+## 1.0-beta-2.70
+
+	- Fixed issue with field prepopulation when not using a GET query param.
+
+## 1.0-beta-2.69
+
+	- Fixed issue where values from query params weren’t being used.
+	- Fixed issue where some fields would show “Fill out other fields.” when the dependent fields were properly filled out.
+
+## 1.0-beta-2.68
+
+	- Fixed issue with multi-input fields not having their fields populated on initial load.
+
+## 1.0-beta-2.67
+
+	- Fixed issue where static choices were not displayed once GPPA setting had been disabled.
+
+## 1.0-beta-2.66
+
+	- Fixed issue where using GPPA in conjunction with the “Other choice” would result in the “Other choice” showing more than once.
+
+## 1.0-beta-2.65
+
+	- Fixed issue where numbers would be compared as strings with the GF Entry object type.
+
+## 1.0-beta-2.64
+
+	- Fixed issue where certain fields would have the improper default value set. This resolves the issue where the first checkbox or first radio button would be improperly selected.
+
+## 1.0-beta-2.63
+
+	- Fixed issue where conditional logic in certain setups could cause Live Merge tags to return with a blank value.
+	- Fixed issue where calculation setting was sometimes visible when it should not be.
+
+## 1.0-beta-2.62
+
+	- Improved the form loading experience! Choices and values are now populated on the initial page load without an AJAX request.
+	- Fixed notices generated when invalid form was passed via various GF filters.
+
+## 1.0-beta-2.61
+
+	- Added support for Gravity Forms Save and Continue
+
+## 1.0-beta-2.60
+
+	- Fixed issue where non-dynamic fields in GravityView’s search widget would be mistaken for dynamic GPPA fields.
+
+## 1.0-beta-2.59
+
+	- Fixed a regression where fields with empty values would not be used.
+	- Fixed issue where the results preview would show the incorrect results if populating both choices and value(s).
+
+## 1.0-beta-2.58
+
+	- Added support for BuddyPress extended profile fields as properties in the User object type.
+
+## 1.0-beta-2.57
+
+	- Added compatibility for GravityView’s search sidebar widget.
+	- Fixed a potential PHP notice which didn’t cause any harm other than getting a little chatty in log files.
+	- Added compatibility for dependent choice-based fields in the GravityView search widget.
+	- Fixed issue with fields that have dynamic choices wouldn’t have their value properly set when editing the entry through GravityView’s edit entry view.
+	- Fixed broken spinner URL.
+	- Fixed notice in GP_Populate_Anything::ajax_get_query_results() method.
+
+## 1.0-beta-2.56
+
+	- Fixed an issue with the ‘gppa_process_template’ filter where $template would be populated with the actual template value rather than the template name. gppa_process_template’s $template argument has been renamed to $template_name and you can expect values such as “value”, “label”, and “price”
+
+## 1.0-beta-2.55
+
+	- Added support for dynamically populated fields in the GravityView search widget.
+	- Fixed taxonomy term filter in Post Object type to search by ID and then slug.
+
+## 1.0-beta-2.54
+
+	- Added support for Live Merge tags to be used with multiple forms on the same page as well as GP Nested Forms!
+
+## 1.0-beta-2.53
+
+	- Added support for select fields with dynamically populated choices in GravityView’s Inline Edit
+
+## 1.0-beta-2.52
+
+	- Fixed conflict with Internet Explorer. Populate Anything will now work for IE 8 and newer. The Populate Anything settings in the Gravity Forms form editor requires IE 11 or greater.
+
+## 1.0-beta-2.51
+
+	- Fixed issue where GPPA was overriding inapplicable WP_Query queries.
+
+## 1.0-beta-2.50
+
+	- Fixed conflict with GF Copy Cat and fields that have dynamically populated choices.
+
+## 1.0-beta-2.49
+
+	- Fixed issue where editing GPPA-populated Checkbox fields in Gravity View resulted in validation error and failed to save new values.
+
+## 1.0-beta-2.48
+
+	- Fixed issue where inputs were not populated for Checkbox fields.
+
+## 1.0-beta-2.47
+
+	- Fixed issue where filtering by taxonomy term was not working.
+	- Fixed issue where user role was not populated correctly. (#8)
+	- Fixed an issue where Chained Select fields could be selected as a Form Field Values.
+	- Fixed potential error in form editor regarding form field values.
+
+## 1.0-beta-2.45
+
+	- Fixed issue where PA settings showed based on field type but did not account for input type.
+	- Added support for post_name property when filtering and populating posts.
+
+## 1.0-beta-2.44
+
+	- The wizards busted out their new spellbook and converted Populate Anything's JavaScript to TypeScript! This will allow them to deliver new delightful features and bug fixes more quickly.
+
+## 1.0-beta-2.43
+
+	- Fixed issue where calculation-enabled fields did not return correct value for live merge tag.
+
+## 1.0-beta-2.42
+
+	- Fixed regression introduced in 1.0-beta-2.40 where getFormId() no longer returned a form ID for non-WooCommerce-loaded forms.
+
+## 1.0-beta-2.41
+
+	- Fixed issue where Enhanced-UI-enabled fields were not reinitialized after being replaced.
+
+## 1.0-beta-2.40
+
+	- Fixed issue where id was not set on on <form> when rendering form via WC GF Product Add-ons plugin.
+
+## 1.0-beta-2.39
+
+	- Fixed issue with populating values dynamically.
+
+## 1.0-beta-2.38
+
+	- Fixed regression with dynamic value population.
+
+## 1.0-beta-2.37
+
+	- Added Object ID property to Taxonomy Object Type
+
+## 1.0-beta-2.36
+
+	- Fixed issue where field-filtered fields were not correctly populated when editing an entry.
+
+## 1.0-beta-2.35
+
+	- Updated GP_Populate_Anything::modify_field_values() to pass posted values when checking for input value.
+	- Fixed fatal error on PHP 7.2+ where incorrect parameter count was specified.
+
+## 1.0-beta-2.34
+
+	- Deprecated gppa_live_merge_tag_loading_text filter.
+	- Added gppa_strings filter.
+
+## 1.0-beta-2.32
+
+	- Fixed issue where Date field with dropdowns would not have its values properly populated.
+
+## 1.0-beta-2.31
+
+	- Fixed issue when populating choices based on field on previous page.
+	- Updated to use array_replace.
+	- Fixed issue when populating choices based on field on previous page.
+	- Added support for correctly populating when default dynamic population is used.
+
+## 1.0-beta-2.30
+
+	- Fixed inconsistent behavior on page load and input change with Live Merge Tags.
+	- Updated Live Merge Tags to use values from the field’s get_value_save_entry() method.
+
+## 1.0-beta-2.29
+
+	- Fixed >=, <=, <, and > filter operators with GF Entry Object Type
+
+## 1.0-beta-2.28
+
+	- Fixed issue where certain properties such as Post Date were not filtering with the correct value.
+
+## 1.0-beta-2.27
+
+	- Fixed issue where Hidden fields would not have their value properly populated.
+
+## 1.0-beta-2.26
+
+	- Fixed issue where dynamically populated fields would lose their value on multi-page forms.
+
+## 1.0-beta-2.25
+
+	- Added polyfill for Object.assign which is not natively supported by IE.
+
+## 1.0-beta-2.24
+
+	- Fixed parse error with older versions of PHP.
+
+## 1.0-beta-2.23
+
+	- Added support for form-specific script localization.
+
+## 1.0-beta-2.22
+
+	- Added support for populating Checkbox values.
+	- Fixed issue where Populate Anything’s frontend scripts would be localized multiple times.
+
+## 1.0-beta-2.21
+
+	- Added compatibility layer for fields such as the Time field that store a single value in the database but have multiple inputs. This addition includes a new filter named ‘gppa_interpreted_multi_input_field_types’.
+	- Fixed issue where fields that had multiple .ginput_container elements would not be loaded correctly if dependent on another field. This should resolve an issue where Time fields would show multiple times.
+
+## 1.0-beta-2.20
+
+	- Fixed issue where Post object type taxonomy filters would only search by ID instead of ID and slug.
+
+## 1.0-beta-2.19
+
+	- Fixed notice when attempting to replace live merge tags in non-string values.
+
+## 1.0-beta-2.18
+
+	- Fixed issue where results wouldn’t always be unique even with “Only Show Unique Results” checked.
+	- Fixed inconsistent behavior with numerous chained selects.
+
+## 1.0-beta-2.17
+
+	- Fixed issue where GF Populate Anything fields dependent on other fields would needlessly reload when using GF Nested Forms and cause issues with GF Nested Form’s {parent} merge tag.
+
+## 1.0-beta-2.16
+
+	- Fixed regression with field values introduced in 1.0-beta-2.14.
+
+## 1.0-beta-2.15
+
+	- Fixed issue where field dependency check wasn’t taking “OR” into account.
+
+## 1.0-beta-2.14
+
+	- Fixed issue where fields using a parameter value would not be populated correctly.
+	- Removed unused variable.
+	- Fixed potential performance issue with GP Populate Anything’s Live Merge tags.
+
+## 1.0-beta-2.13
+
+	- Fixed issue where plugin title did not show up correctly on Logging screen.
+
+## 1.0-beta-2.12
+
+	- Added ‘gppa_object_merge_tag_replacement_value’ filter.
+	- Added new {count} merge tag that can be used in Value and Choice templates. Tip: try this out with conditional logic and calculations!
+	- Fixed issue where dynamically populated fields with a default value that depended on another field would not use their default value.
+	- Fixed styling issue of custom template inputs in form editor.
+	- Added Post Date as an available property for the Post object type
+
+## 1.0-beta-2.11
+
+	- Added a new “Special Values” group to the Filter Value select containing “Current User ID” and “Current Post ID”
+
+## 1.0-beta-2.10
+
+	- Fixed issue where dynamic values would be populated with the first result even if dependent fields didn’t have a value.
+	- Fixed potential PHP notice.
+
+## 1.0-beta-2.9
+
+	- Fixed issue with dependent field detection when using another field value in a custom choice/value template.
+	- Fixed issue with GF Entry object type “starts with” and “ends with” operators
+	- Updated operators to force a custom input only when using the “is LIKE” operator instead of “is LIKE”, “starts with”, “ends with”, and “contains”
+	- Fixed issue where choice placeholders such as no results and fill out other fields were not properly selected.
+
+## 1.0-beta-2.8
+
+	- Added checkbox to toggle unique results.
+	- Fixed issue with unique label/detection when using custom choice/value templates.
+
+## 1.0-beta-2.7
+
+	- Fixed issue where dynamically populated values would not work with Gravity Forms Conditional Logic
+
+## 1.0-beta-2.6
+
+	- Fixed notice when provided form ID does not exist.
+
+## 1.0-beta-2.5
+
+	- Fixed issue where Checkbox field values were not saved correctly on submission.
+
+## 1.0-beta-2.4
+
+	- Fixed issue where Calculation-enabled fields which included a GPPA-populated field in its formula were not recalculated when GPPA re-populated the field.
+
+## 1.0-beta-2.3
+
+	- Fixed issue where GPPA prevented input toggles on fields such as the Address field from working.
+
+## 1.0-beta-2.2
+
+	- Fixed an issue where GP Populate Anything fields wouldn’t properly populate when used with GP Nested Forms.
+	- Fixed a potential PHP notice in the Gravity Forms form editor.
+	- Fixed conflicts with forms using both pages and AJAX.
+	- Fixed issue where the field value would be blank when using a Field Value Object field that’s pointed to a field using the Database object type.
+	- Updated Number field to hide GPPA settings if Enable Calculation is checked.
+
+## 1.0-beta-2.1
+
+	- Fixed issue where choice based Product fields wouldn’t properly use the price template.
+
+## 1.0-beta-2.0
+
+	- Updated Post, User, Term and GF Entry to return unique choices and values.
+	- Updated Database object type to return unique choices and values based off of the choice label and value templates.
+	- Removed unused method.
+
+## 1.0-beta-1.21
+
+	- Fixed issue when using Field Value Objects with fields that depend on other fields.
+
+## 1.0-beta-1.20
+
+	- Updated Vue to v2.5.21
+	- Fixed issue where Primary Property select would reset to the first option when switching fields in the Form Editor.
+	- Updated GP Populate Anything enabled icon placement in the field editor.
+	- Fixed issue with Post taxonomies not working in templates.
+	- Fixed notice where $field was not an object.
+
+## 1.0-beta-1.19
+
+	- Updated to populate choices when form is submitted; better aligns with developer expectation when interacting with fields during submission.
+
+## 1.0-beta-1.18
+
+	- Improved GF Entry Object Type to exclude trashed entries by default.
+	- Fixed formatting issue with custom value input in GPPA field settings.
+
+## 1.0-beta-1.17
+
+	- Fixed issue where preview results would be queried prior to completing filter/template changes.
+
+## 1.0-beta-1.16
+
+	- Fixed issue where GPPA settings would reload when re-opening the same field’s settings.
+
+## 1.0-beta-1.15
+
+	- Fixed issue where List field would show as a supported field type when multiple columns are enabled.
+
+## 1.0-beta-1.14
+
+	- Fixed issue where property values wouldn’t reload when re-opening a field’s settings.
+
+## 1.0-beta-1.13
+
+	- Fixed various issues with chained choice fields and placeholders.
+	- Fixed issue where properties of GF Entry and Database object types would not load in the admin when switching between fields that both use the same object type and primary property.
+	- Fixed issue with certain operators such as contains and starts with.
+
+## 1.0-beta-1.12
+
+	- Updated GP_Populate_Anything::process_template(); requires a list of all matching objects which are passed to the gppa_process_template filter. This allows 3rd party support for populating multiple results into a single input.
+	- Fixed fatal error when Gravity Forms was not active.
+	- Fixed issue with merge tag parsing in custom templates
+
+## 1.0-beta-1.11
+
+	- Fixed potential error with gppaTruncateStringMiddle
+	- Updated "Loading..." markup with container to allow better styling control.
+	- Fix issue where GPPA_FILTER_FIELD_MAP and GPPA_FIELD_VALUE_OBJECT_MAP localization did not occur when rendering form via gravity_forms() function.
+	- Updated documentation URL.
+
+## 1.0-beta-1.10
+
+	- Fixed issue with Field Value Objects not working when the target field was using an Object Type that used a Primary Property such as GF Entry or Database
+
+## 1.0-beta-1.9
+
+	- Fixed apply_filter typo that should be apply_filters
+	- Fixed PHP 5.3 compatibility issue with Posts object type
+	- Improved field value and field value object AJAX functionality
+
+## 1.0-beta-1.8
+
+	- Added default template for User object type
+	- Fixed PHP warning on older versions of PHP
+	- Added the following filters to the Database object type: gppa_object_type_database_column_value_query, gppa_object_type_database_pre_query_parts, gppa_object_type_database_query
+	- Fixed strict comparison with Field Value Objects
+
+## 1.0-beta-1.7
+
+	- Fixed issue where primary property select would show when using a field value object
+
+## 1.0-beta-1.6
+
+	- Fixed a few issues with Field Value Objects
+	- Fixed issue with ‘0’ in field filter values not working properly
+	- Added Entry ID property to GF Entry object type
+
+## 1.0-beta-1.5
+
+	- Fixed query limit for GF Entry object type
+
+## 1.0-beta-1.4
+
+	- Added post content property to Post object type
+	- Added support for Paragraph Text fields
+
+## 1.0-beta-1.3
+
+	- Fixed issue with ordering method
+	- Added ordering support for GF Entry object type
+	- Removed extra console.log’s
+
+## 1.0-beta-1.2
+
+	- Fixed operators with User » Role property
+
+## 1.0-beta-1.1
+
+	- Fixed property value selects to filter out duplicates
+	- Fixed prefixes on certain properties such as post meta and GF Entry Fields
+	- Fixed potential PHP warning/notice
+	- Fixed memory leak with GPPA_Object_Type_GF_Entry#get_forms()
+
+## 1.0-beta-1
+
+	- Hello World!
