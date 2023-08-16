@@ -228,7 +228,12 @@ export default Vue.extend({
 			return window.gform.applyFilters('gppa_is_supported_field', false, this.field, this.populate, this);
 		},
 		templateRows: function () {
-			var templateRows = [];
+			var templateRows: {
+				id: string,
+				label: string,
+				required?: boolean,
+				shouldShow?: (field: any, populate: string) => boolean
+			}[] = [];
 
 			if (!this.field) {
 				return templateRows;
@@ -274,7 +279,16 @@ export default Vue.extend({
 			 * @param {Object}   The current field shown in the Form Editor.
 			 * @param {String}   What's being populated. Either "choices" or "values"
 			 */
-			return window.gform.applyFilters( 'gppa_template_rows', templateRows, this.field, this.populate );
+			templateRows = window.gform.applyFilters( 'gppa_template_rows', templateRows, this.field, this.populate );
+
+			// Loops through all template rows, if they have a shouldShow function property set, evaluate it. If it returns false, remove the row.
+			return templateRows.filter((templateRow) => {
+				if (typeof templateRow?.shouldShow === 'function') {
+					return templateRow.shouldShow(this.field, this.populate);
+				}
+
+				return true;
+			});
 		},
 	},
 	methods: {

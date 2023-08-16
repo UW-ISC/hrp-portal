@@ -293,8 +293,8 @@ const ko = window.ko;
 
 			var $spinner = new AjaxSpinner( event.target, self.spinnerUrl, '' );
 
-			self.getFormHtml().done(function (html) {
-				self.setModalContent(html);
+			self.getFormHtml().done(function (response) {
+				self.setModalContent(response.formHtml);
 				self.openModal( $( event.target ) );
 			}).always(function() {
 				$spinner.destroy();
@@ -770,7 +770,7 @@ const ko = window.ko;
 				gpnf_nested_form_field_id: self.fieldId,
 				gpnf_context: self.ajaxContext
 			}, function( response ) {
-				self.formHtml = response;
+				self.formHtml = response.formHtml;
 			} );
 
 		};
@@ -792,7 +792,7 @@ const ko = window.ko;
 					$spinner.destroy();
 					$trigger.css( { visibility: 'visible' } );
 
-					self.setModalContent( response, 'edit' );
+					self.setModalContent( response.formHtml, 'edit' );
 					self.openModal( function() {
 						// This is the element to which the focus should be returned after the modal is closed.
 						return self.$parentFormContainer.find( '[data-entryid="' + entryId + '"]' ).find( '.edit' ).find( 'a, button' );

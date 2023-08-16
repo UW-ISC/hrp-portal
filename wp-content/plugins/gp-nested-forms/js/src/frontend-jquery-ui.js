@@ -251,7 +251,7 @@ const ko = window.ko;
 				gpnf_parent_form_id: self.formId,
 				gpnf_nested_form_field_id: self.fieldId
 			}, function( response ) {
-				self.formHtml = response;
+				self.formHtml = response.formHtml;
 			} );
 
 		};
@@ -276,7 +276,7 @@ const ko = window.ko;
 				self.scrollY = window.scrollY ? window.scrollY : window.pageYOffset;
 
                 self.editDialog
-	                .html( response )
+	                .html( response.formHtml )
 	                .dialog( 'open' );
 
                 self.initFormScripts();

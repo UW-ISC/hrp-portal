@@ -917,6 +917,11 @@ class GP_Populate_Anything extends GP_Plugin {
 			&& ! in_array( rgar( $field, 'inputType' ), self::get_multi_selectable_choice_field_types(), true )
 			&& ! $this->does_field_accept_json( $field )
 			&& ! $query_all_value_objects
+			&& ! $object_type_instance->uses_php_filtering()
+			&& ! (
+				strpos( rgar( $templates, 'value' ), 'gf_custom:' ) === 0
+				&& strpos( rgar( $templates, 'value' ), '{count}' ) !== false
+			)
 		) {
 			$limit = 1;
 		}
@@ -1759,6 +1764,16 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		return $choices;
 
+	}
+
+	/**
+	 * Clears runtime caches, useful for other perks such as GP Reload Form.
+	 *
+	 * @return void
+	 */
+	public function clear_runtime_caches() {
+		$this->_field_choices_cache = array();
+		$this->_field_objects_cache = array();
 	}
 
 	/**
@@ -4064,13 +4079,19 @@ class GP_Populate_Anything extends GP_Plugin {
 		return $form;
 	}
 
+	/**
+	 * Ensures that a user is a super admin if updating restricted Object Type settings.
+	 *
+	 * @param array $form_meta The form meta.
+	 */
 	public function check_gppa_settings_for_user( $form_meta, $form_id, $meta_name ) {
 
 		if ( empty( $form_meta['fields'] ) ) {
 			return $form_meta;
 		}
 
-		if ( is_super_admin() ) {
+		// Only allow super admins or WP-CLI to update restricted Object Type settings.
+		if ( is_super_admin() || ( defined( 'WP_CLI' ) && WP_CLI ) ) {
 			return $form_meta;
 		}
 

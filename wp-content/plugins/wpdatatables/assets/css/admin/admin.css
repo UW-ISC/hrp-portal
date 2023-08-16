@@ -1002,6 +1002,25 @@ div.mce-widget button i.mce-i-wpdatachart {
     min-height: 40px;
 }
 
+#wdt-googlechart-mapkey {
+    border: 1px solid #EBECF0;
+    box-sizing: border-box;
+    border-radius: 3px;
+    padding: 9px 45px 9px 12px;
+    width: 99%;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 20px;
+    color: #000;
+    min-height: 40px;
+}
+
+#wdt-googlechart-mapkey-tag {
+    margin-left: 15px;
+}
+
 .wpdt-c .wdt-datatables-admin-wrap div.toggle-switch input[type="checkbox"]:checked + label {
     border: 1px solid rgba(0, 140, 255, 0.5);
     background: rgba(0, 140, 255, 0.02);
@@ -1853,4 +1872,10 @@ wpdt-c button#wdt-add-data-browse-button {
 }
 .wpdt-c div.dtfh-floatingparent.dtfh-floatingparenthead table.wpFixedHeader.fixedHeader-floating thead tr th button.wdt-column-settings{
     display: none;
+}
+
+#google_geo_chart_option .card.disabled,
+#google_marker_geo_chart_option .card.disabled,
+#google_text_geo_chart_option .card.disabled{
+    pointer-events: none;
 }

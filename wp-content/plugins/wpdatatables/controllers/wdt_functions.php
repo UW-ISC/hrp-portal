@@ -327,6 +327,15 @@ function wdtActivationCreateTables()
     if (get_option('wdtApexStableVersion') === false) {
         update_option('wdtApexStableVersion', 1);
     }
+    if (get_option('wdtShowBundlesNotice') === false) {
+        update_option('wdtShowBundlesNotice', 'yes' );
+    }
+    if (!get_option('wdtGoogleApiMaps')) {
+        update_option('wdtGoogleApiMaps', '');
+    }
+    if (!get_option('wdtGoogleApiMapsValidated')) {
+        update_option('wdtGoogleApiMapsValidated', 0);
+    }
 
     delete_option('wdtGeneratedTablesCount');
 }
@@ -409,6 +418,9 @@ function wdtUninstallDelete()
         delete_option('wdtGoogleStableVersion');
         delete_option('wdtHighChartStableVersion');
         delete_option('wdtApexStableVersion');
+        delete_option('wdtShowBundlesNotice');
+        delete_option('wdtGoogleApiMaps');
+        delete_option('wdtGoogleApiMapsValidated');
 
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_columns");
@@ -517,6 +529,12 @@ function wdtAdminRatingMessages()
              <p class="wpdt-forminator-news"><strong style="color: #ff8c00">NEWS!</strong> wpDataTables just launched a new <strong style="color: #ff8c00">FREE</strong> addon - <strong style="color: #ff8c00">wpDataTables integration for Forminator Forms</strong>. You can download it and read more about it on wp.org on this <a class="wdt-forminator-link" href="https://wordpress.org/plugins/wpdatatables-forminator/" style="color: #ff8c00" target="_blank">link</a>.</p>
          </div>';
     }
+
+    if( is_admin() && strpos($wpdtPage,'wpdatatables') !== false && !($wpdtPage == 'wpdatatables-add-ons') &&
+        get_option( 'wdtShowBundlesNotice' ) == "yes") {
+        include WDT_TEMPLATE_PATH . 'admin/common/bundles_banner.inc.php';
+        wp_enqueue_style('wdt-bundles-css', WDT_CSS_PATH . 'admin/bundles.css');
+    }
 }
 
 add_action('admin_notices', 'wdtAdminRatingMessages');
@@ -544,6 +562,16 @@ function wdtRemoveForminatorNotice()
 }
 
 add_action('wp_ajax_wdt_remove_forminator_notice', 'wdtRemoveForminatorNotice');
+
+/**
+ * Remove Bundles notice message
+**/
+function wdtRemoveBundlesNotice() {
+    update_option( 'wdtShowBundlesNotice', 'no' );
+    echo json_encode( array("success") );
+    exit;
+}
+add_action( 'wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice' );
 
 /**
  * Remove Simple Table alert message

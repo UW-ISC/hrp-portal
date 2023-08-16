@@ -1132,8 +1132,16 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$markup = trim( ob_get_clean() );
-		wp_send_json( $markup );
 
+		/**
+		 * This previously just use to send the string using wp_send_json(), but when used with Weglot Translate, the
+		 * JSON string was malformed.
+		 *
+		 * Sending an object resolves the issue.
+		 */
+		wp_send_json( array(
+			'formHtml' => $markup,
+		) );
 	}
 
 	public function ajax_refresh_markup() {
@@ -1201,7 +1209,16 @@ class GP_Nested_Forms extends GP_Plugin {
 		$this->unload_nested_form_hooks( '', $nested_form_id );
 
 		$markup = trim( ob_get_clean() );
-		wp_send_json( $markup );
+
+		/**
+		 * This previously just use to send the string using wp_send_json(), but when used with Weglot Translate, the
+		 * JSON string was malformed.
+		 *
+		 * Sending an object resolves the issue.
+		 */
+		wp_send_json( array(
+			'formHtml' => $markup,
+		) );
 
 	}
 

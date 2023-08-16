@@ -259,6 +259,12 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-chart-type">' . esc_html__('Candlestick Chart', 'wpdatatables') . '</span>';
             case 'google_waterfall_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Waterfall Chart', 'wpdatatables') . '</span>';
+            case 'google_geo_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Region GeoChart', 'wpdatatables') . '</span>';
+            case 'google_marker_geo_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Marker GeoChart', 'wpdatatables') . '</span>';
+            case 'google_text_geo_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Text GeoChart', 'wpdatatables') . '</span>';
             case 'highcharts_polar_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Polar chart', 'wpdatatables') . '</span>';
             case 'highcharts_spiderweb_chart':

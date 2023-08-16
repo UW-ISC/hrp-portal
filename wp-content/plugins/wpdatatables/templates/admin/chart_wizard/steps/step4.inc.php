@@ -9,6 +9,8 @@
                     <li class="chart-container active"><a href="#chart-container-tabs-1"
                                                           data-toggle="tab"><?php esc_html_e('Chart', 'wpdatatables'); ?></a>
                     </li>
+                    <li class="chart-container region"><a href="#chart-container-tabs-10" data-toggle="tab"
+                                                          class=""><?php esc_html_e('Region', 'wpdatatables'); ?></a></li>
                     <li class="chart-container series"><a href="#chart-container-tabs-2" data-toggle="tab"
                                                           class=""><?php esc_html_e('Series', 'wpdatatables'); ?></a></li>
                     <li class="chart-container axes"><a href="#chart-container-tabs-3" data-toggle="tab"
@@ -1911,6 +1913,120 @@
                                             <input type="text" name="exporting-file-name" id="apex-exporting-file-name"
                                                    value="" class="form-control input-sm"/>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="chart-container-tabs-10"
+                     class="col-sm-9 col-md-9 col-lg-8 chart-container chart-options-container tab-pane">
+                    <div class="inside">
+                        <div id="google-region-geochart-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Continent', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Choose which region to show', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="select">
+                                <select class="form-control selectpicker"
+                                        id="region-google-charts">
+                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                    <option value="002" ><?php esc_html_e('Africa', 'wpdatatables'); ?></option>
+                                    <option value="150" ><?php esc_html_e('Europe', 'wpdatatables'); ?></option>
+                                    <option value="019" ><?php esc_html_e('Americas', 'wpdatatables'); ?></option>
+                                    <option value="142" ><?php esc_html_e('Asia', 'wpdatatables'); ?></option>
+                                    <option value="009" ><?php esc_html_e('Oceania', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inside">
+                        <div id="sub-continents-geochart-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Sub-continent', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Choose which region to show', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="select">
+                                <select class="form-control selectpicker disabled"
+                                        id="sub-continents-geo-chart" >
+                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                    <option value="015" class="wdt_africa" ><?php esc_html_e('Northern Africa', 'wpdatatables'); ?></option>
+                                    <option value="011" class="wdt_africa"><?php esc_html_e('Western Africa', 'wpdatatables'); ?></option>
+                                    <option value="017" class="wdt_africa"><?php esc_html_e('Middle Africa', 'wpdatatables'); ?></option>
+                                    <option value="014" class="wdt_africa"><?php esc_html_e('Eastern Africa', 'wpdatatables'); ?></option>
+                                    <option value="018" class="wdt_africa"><?php esc_html_e('Southern Africa', 'wpdatatables'); ?></option>
+                                    <option value="154" class="wdt_europe"><?php esc_html_e('Northern Europe', 'wpdatatables'); ?></option>
+                                    <option value="155" class="wdt_europe"><?php esc_html_e('Western Europe', 'wpdatatables'); ?></option>
+                                    <option value="151" class="wdt_europe"><?php esc_html_e('Eastern Europe', 'wpdatatables'); ?></option>
+                                    <option value="039" class="wdt_europe"><?php esc_html_e('Southern Europe', 'wpdatatables'); ?></option>
+                                    <option value="021" class="wdt_america"><?php esc_html_e('Northern America', 'wpdatatables'); ?></option>
+                                    <option value="029" class="wdt_america"><?php esc_html_e('Caribbean', 'wpdatatables'); ?></option>
+                                    <option value="013" class="wdt_america"><?php esc_html_e('Central America', 'wpdatatables'); ?></option>
+                                    <option value="005" class="wdt_america"><?php esc_html_e('South America', 'wpdatatables'); ?></option>
+                                    <option value="143" class="wdt_asia"><?php esc_html_e('Central Asia', 'wpdatatables'); ?></option>
+                                    <option value="030" class="wdt_asia"><?php esc_html_e('Eastern Asia', 'wpdatatables'); ?></option>
+                                    <option value="034" class="wdt_asia"><?php esc_html_e('Southern Asia', 'wpdatatables'); ?></option>
+                                    <option value="035" class="wdt_asia"><?php esc_html_e('South-Eastern Asia', 'wpdatatables'); ?></option>
+                                    <option value="145" class="wdt_asia"><?php esc_html_e('Western Asia', 'wpdatatables'); ?></option>
+                                    <option value="053" class="wdt_australia"><?php esc_html_e('Australia and New Zealand', 'wpdatatables'); ?></option>
+                                    <option value="054" class="wdt_australia"><?php esc_html_e('Melanesia', 'wpdatatables'); ?></option>
+                                    <option value="057" class="wdt_australia"><?php esc_html_e('Micronesia', 'wpdatatables'); ?></option>
+                                    <option value="061" class="wdt_australia"><?php esc_html_e('Polynesia', 'wpdatatables'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="inside">
+                        <div id="countries-geochart-container">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e('Countries', 'wpdatatables'); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e('Choose which country to show', 'wpdatatables'); ?>"></i>
+                            </h4>
+                            <div class="select">
+                                <select class="form-control selectpicker disabled"
+                                        id="countries-geo-chart" >
+                                    <option value="world" ><?php esc_html_e('Nothing selected', 'wpdatatables'); ?></option>
+                                    <?php include WDT_TEMPLATE_PATH . 'admin/chart_wizard/geochart_options.php'; ?>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="geochart-color-container" id="geochart-color-region-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php esc_html_e('Region color', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php esc_attr_e('The color for the region with data chart area.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="cp-container">
+                            <div class="form-group">
+                                <div class="fg-line dropdown">
+                                    <div id="cp"
+                                         class="input-group wdt-color-picker">
+                                        <input type="text" id="geochart-color-region" value="#267114"
+                                               class="form-control cp-value wdt-add-picker geochart-color-region"/>
+                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="geochart-color-container" id="geochart-color-container">
+                        <h4 class="c-title-color m-b-2">
+                            <?php esc_html_e('Dataless region color', 'wpdatatables'); ?>
+                            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                               title="<?php esc_attr_e('The color for the region without data chart area.', 'wpdatatables'); ?>"></i>
+                        </h4>
+                        <div class="cp-container">
+                            <div class="form-group">
+                                <div class="fg-line dropdown">
+                                    <div id="cp"
+                                         class="input-group wdt-color-picker">
+                                        <input type="text" id="geochart_color" value=""
+                                               class="form-control cp-value wdt-add-picker geochart_color"/>
+                                        <span class="input-group-addon wpcolorpicker-icon"><i></i></span>
                                     </div>
                                 </div>
                             </div>

@@ -1,6 +1,15 @@
 
 # Changelog
 
+## 1.1.33
+
+	- Updated child entry datetime format to match parent entry datetime format when exporting entries.
+
+## 1.1.32
+
+	- Fixed issue where the Add/Edit modal would fail to open due to malformed JSON when using Weglot Translate.
+	- Added new `duplicate_children()` method to `GPNF_Entry`.
+
 ## 1.1.31
 
 	- Added `gpnf_should_use_simple_details_template` PHP filter hook.
