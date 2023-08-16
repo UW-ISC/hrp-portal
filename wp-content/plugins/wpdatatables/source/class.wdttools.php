@@ -506,6 +506,8 @@ class WDTTools
             'merge' => __('Merge', 'wpdatatables'),
             'modalTitle' => __('Row details', 'wpdatatables'),
             'newColumnName' => __('New column', 'wpdatatables'),
+            'selectAll' => __('Select all', 'wpdatatables'),
+            'deselectAll' => __('Deselect all', 'wpdatatables'),
             'nothingSelected' => __('Nothing selected', 'wpdatatables'),
             'numberOfColumnsError' => __('Number of columns can not be empty or 0', 'wpdatatables'),
             'numberOfRowsError' => __('Number of rows can not be empty or 0', 'wpdatatables'),
@@ -598,6 +600,13 @@ class WDTTools
             'redo' => __('Redo', 'wpdatatables'),
             'text_wrapping' => __('Text wrapping', 'wpdatatables'),
             'merge_cells' => __('Merge cells', 'wpdatatables'),
+            'api_google_maps_ok' => __('Google Maps API key is valid!', 'wpdatatables'),
+            'api_google_maps_not_ok' => __('There was an error while trying to save Google Maps API key!', 'wpdatatables'),
+            'api_google_maps_removed' => __('Google Maps API key is removed!', 'wpdatatables'),
+            'api_google_key_contains' => __('API key is valid', 'wpdatatables'),
+            'validate_api' => __('Validate & Save', 'wpdatatables'),
+            'remove_api' => __('Remove', 'wpdatatables'),
+            'empty_api_google_key' => __('API key is not valid!', 'wpdatatables'),
             );
     }
 
@@ -611,6 +620,14 @@ class WDTTools
             'wdtDateFormat'   => get_option('wdtDateFormat'),
             'wdtTimeFormat'   => get_option('wdtTimeFormat'),
             'wdtNumberFormat' => get_option('wdtNumberFormat')
+        );
+    }
+
+    public static function getGoogleApiMapsKey()
+    {
+        return array(
+            'wdtGoogleApiMaps'   => get_option('wdtGoogleApiMaps'),
+            'wdtGoogleApiMapsValidated'   => get_option('wdtGoogleApiMapsValidated'),
         );
     }
 
@@ -1337,7 +1354,7 @@ class WDTTools
         if ((!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) && isset($request['body'])) {
             $body = json_decode($request['body']);
 
-            return $body && isset($body->info) ? unserialize($body->info) : false;
+            return $body && isset($body->info) ? unserialize($body->info, ["allowed_classes" => false]) : false;
         }
 
         return false;

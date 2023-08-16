@@ -1,4 +1,4 @@
-google.charts.load('current', {packages: ['corechart', 'bar', 'gauge', 'scatter']});
+google.charts.load('current', {packages: ['corechart', 'bar', 'gauge', 'scatter', 'geochart'], mapsApiKey: wpdatatables_mapsapikey.wdtGoogleApiMaps});
 
 var wpDataTablesGoogleChart = function () {
 
@@ -47,7 +47,11 @@ var wpDataTablesGoogleChart = function () {
             vAxis: {
                 direction: 1,
                 viewWindow: {}
-            }
+            },
+            region: null,
+            datalessRegionColor : null,
+            colors : null,
+            displayMode : '',
         },
         setRows: function (rows) {
             this.rows = rows;
@@ -116,6 +120,9 @@ var wpDataTablesGoogleChart = function () {
         },
         setGrouping: function (group_chart) {
             this.group_chart = group_chart;
+        },
+        setRegion : function (region_chart) {
+          this.region = region_chart;
         },
         setContainer: function (containerId) {
             this.containerId = containerId;
@@ -196,6 +203,18 @@ var wpDataTablesGoogleChart = function () {
                         };
                         this.chart = new google.visualization.CandlestickChart(document.getElementById(this.containerId));
                         break;
+                    case 'google_geo_chart':
+                        this.chart = new google.visualization.GeoChart(document.getElementById(this.containerId));
+                        this.options.displayMode = '';
+                        break;
+                    case 'google_marker_geo_chart':
+                        this.chart = new google.visualization.GeoChart(document.getElementById(this.containerId));
+                        this.options.displayMode = 'markers';
+                        break;
+                    case 'google_text_geo_chart':
+                        this.chart = new google.visualization.GeoChart(document.getElementById(this.containerId));
+                        this.options.displayMode = 'text';
+                        break;
                 }
                 if (this.renderCallback !== null) {
                     this.renderCallback(this);
@@ -248,6 +267,11 @@ var wpDataTablesGoogleChart = function () {
             chartConfig.font_name ? this.options.fontName = chartConfig.font_name : null;
             if (chartConfig.type == 'google_pie_chart') {
                 chartConfig.three_d == 1 ? this.options.is3D = true : this.options.is3D = false;
+            }
+            if (chartConfig.type == 'google_geo_chart' || chartConfig.type == 'google_marker_geo_chart'  || chartConfig.type == 'google_text_geo_chart' ) {
+                this.options.region = chartConfig.region;
+                this.options.datalessRegionColor = chartConfig.datalessRegionColor;
+                this.options.colors = chartConfig.colors;
             }
             // Series
             var j = 0;

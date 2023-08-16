@@ -260,7 +260,6 @@
         $('#wdt-custom-css').change(function (e) {
             wpdatatable_plugin_config.setCustomCss($(this).val());
         });
-
         /**
          * Toggle minified JS - "Use minified wpDataTables Javascript"
          */
@@ -341,6 +340,7 @@
         wpdatatable_plugin_config.setGoogleStableVersion(wdt_current_config.wdtGoogleStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setHighChartStableVersion(wdt_current_config.wdtHighChartStableVersion == 1 ? 1 : 0);
         wpdatatable_plugin_config.setApexStableVersion(wdt_current_config.wdtApexStableVersion == 1 ? 1 : 0);
+        wpdatatable_plugin_config.setGoogleApiMaps(wdt_current_config.wdtGoogleApiMapsValidated ==  1 ? 1 : 0);
 
         for (var value in wdt_current_config.wdtFontColorSettings) {
             wpdatatable_plugin_config.setColorFontSetting(value, wdt_current_config.wdtFontColorSettings[value]);
@@ -433,9 +433,8 @@
                 savePluginSettings(null);
             }
         });
-
         /**
-         * Save Google settings on Apply button
+         * Save Google Spreadsheet API settings on Apply button
          */
         $(document).on('click', '#wdt-save-google-settings', function (e) {
             var credentials = $('#wdt-google-sheet-settings').val();
@@ -451,6 +450,21 @@
             }
         });
 
+        $('.wdt-validate-googlegeochart-mapkey').on('click', function () {
+            if(wdt_current_config.wdtGoogleApiMapsValidated == 0) {
+                var mapsKey = $('#wdt-googlechart-mapkey').val().trim();
+            } else {
+                var mapsKey = wdt_current_config.wdtGoogleApiMaps;
+            }
+            if(mapsKey == ''){
+                wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.empty_api_google_key, 'danger');
+            } else if (wdt_current_config.wdtGoogleApiMapsValidated == 0) {
+                validateGoogleMapsApiKey(mapsKey);
+            } else {
+                removeGoogleMapsApiKey();
+                jQuery('#wdt-googlechart-mapkey').val('');
+            }
+        });
 
         /**
          * Delete Google settings
@@ -814,6 +828,59 @@
                 error: function () {
                     $('#wdt-error-modal .modal-body').html('There was an error while trying to save google settings!');
                     $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            });
+        }
+        function validateGoogleMapsApiKey(credentials) {
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_save_google_maps_api_key',
+                    apiKey: credentials,
+                    wdtNonce: $('#wdtNonce').val()
+                },
+                success: function (data) {
+                    if (!data.includes(wpdatatables_edit_strings.api_google_key_contains)) {
+                        wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.api_google_maps_not_ok + data + '', 'danger');
+                        $('.wdt-preload-layer').animateFadeOut();
+                        $('#wdt-googlechart-mapkey').val('');
+                    } else {
+                        wdtNotify(wpdatatables_edit_strings.success, wpdatatables_edit_strings.api_google_maps_ok , 'success');
+                        wdt_current_config.wdtGoogleApiMapsValidated = 1;
+                        wdt_current_config.wdtGoogleApiMaps = $('#wdt-googlechart-mapkey').val();
+                        jQuery('#wdt-googlechart-mapkey').hide();
+                        jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').removeClass('hidden');
+                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-primary').addClass('btn-danger').html(wpdatatables_edit_strings.remove_api);
+                    }
+                },
+                error: function () {
+                    wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.api_google_maps_not_ok + data + '', 'danger');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            });
+        }
+        function removeGoogleMapsApiKey() {
+            $.ajax({
+                url: ajaxurl,
+                method: 'POST',
+                data: {
+                    action: 'wpdatatables_save_google_maps_api_key',
+                    apiKey: '',
+                    wdtNonce: $('#wdtNonce').val()
+                },
+
+                success: function (data) {
+                    wdtNotify(wpdatatables_edit_strings.success, wpdatatables_edit_strings.api_google_maps_removed , 'success');
+                        wdt_current_config.wdtGoogleApiMapsValidated = 0;
+                        wdt_current_config.wdtGoogleApiMaps = '';
+                        jQuery('#wdt-googlechart-mapkey').show();
+                        jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').addClass('hidden');
+                        jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html(wpdatatables_edit_strings.validate_api);
+                },
+                error: function () {
+                    wdtNotify(wpdatatables_edit_strings.error, wpdatatables_edit_strings.api_google_maps_not_ok + data + '', 'danger');
                     $('.wdt-preload-layer').animateFadeOut();
                 }
             });

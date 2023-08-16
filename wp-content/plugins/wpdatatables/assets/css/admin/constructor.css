@@ -78,7 +78,10 @@
 }
 
 .wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block-file .card {
-    min-height: 650px;
+    min-height: 650px !important;
+}
+.wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block .card {
+    min-height: 440px;
 }
 
 .wpdt-c .wdt-constructor-column-block.gu-mirror .card, tr.gu-mirror {
@@ -438,15 +441,15 @@
     background: #F8F8FA !important;
 }
 .wpdt-c .wdt-constructor-mysql-tables-all .card-header h2,
-.wpdt-c .wdt-constructor-mysql-columns-all .card-header h2,
 .wpdt-c .wdt-constructor-mysql-tables-selected .card-header h2,
 .wpdt-c .wdt-constructor-mysql-columns-selected .card-header h2,
+.wpdt-c .wdt-constructor-mysql-columns-all .card-header h2,
 .wpdt-c .wdt-constructor-post-types-all .card-header h2,
 .wpdt-c .wdt-constructor-post-columns-all .card-header h2,
 .wpdt-c .wdt-constructor-post-columns-selected .card-header h2,
 .wpdt-c .wdt-constructor-post-types-selected .card-header h2{
     font-size: 17px;
-    text-align: center;
+    text-align: left;
 }
 
 .wpdt-c #wdt-constructor-previous-step {
@@ -791,3 +794,35 @@
     border-bottom: 3px solid transparent;
     border-top: 3px solid #091D70;
 }
+.wpdt-c .wdt-constructor-query-data-step .card .card-header .select-all-columns,
+.wpdt-c .wdt-constructor-query-data-step .card .card-header .deselect-all-columns,
+.wpdt-c .wdt-constructor-mysql-tables-all .select-all-columns,
+.wpdt-c .wdt-constructor-mysql-tables-all .deselect-all-columns,
+.wpdt-c .wdt-constructor-mysql-columns-all .select-all-columns,
+.wpdt-c .wdt-constructor-mysql-columns-all .deselect-all-columns,
+.wpdt-c .wdt-constructor-mysql-columns-selected .select-all-columns,
+.wpdt-c .wdt-constructor-mysql-columns-selected .deselect-all-columns,
+.wpdt-c .wdt-constructor-mysql-tables-selected  .select-all-columns,
+.wpdt-c .wdt-constructor-mysql-tables-selected  .deselect-all-columns
+.wpdt-c .wdt-constructor-post-types-all .select-all-columns,
+.wpdt-c .wdt-constructor-post-columns-all .select-all-columns,
+.wpdt-c .wdt-constructor-post-columns-selected .select-all-columns,
+.wpdt-c .wdt-constructor-post-types-selected .select-all-columns,
+.wpdt-c .wdt-constructor-post-types-all .deselect-all-columns,
+.wpdt-c .wdt-constructor-post-columns-all .deselect-all-columns,
+.wpdt-c .wdt-constructor-post-columns-selected .deselect-all-columns,
+.wpdt-c .wdt-constructor-post-types-selected .deselect-all-columns {
+    position: relative;
+    right: 6px;
+    top: 3px;
+    width: 100px;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    color: #008CFF;
+    background: #F8F8FA;
+    border: none;
+    padding: 0;
+    text-align: right;
+}
+

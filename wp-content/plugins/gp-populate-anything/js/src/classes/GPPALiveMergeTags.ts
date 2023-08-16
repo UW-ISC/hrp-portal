@@ -193,7 +193,8 @@ export default class GPPALiveMergeTags {
 				new RegExp( `:id=${ fieldId }(\\.\\d+)?[}:]`, 'g' )
 			) || // @{score:id=xx}
 			value.match( /{all_fields(:.*)?}/g ) ||
-			value.match( /{order_summary(:.*)?}/g )
+			value.match( /{order_summary(:.*)?}/g ) ||
+			value.match( /{pricing_fields(:.*)?}/g )
 		);
 	}
 

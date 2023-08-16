@@ -294,6 +294,17 @@ var wpdatatable_plugin_config = {
             jQuery('#wdt-sum-function-label').val(sumFunctionsLabel);
         }
     },
+    setGoogleApiMaps: function (googleApiMaps) {
+        if (googleApiMaps) {
+            jQuery('#wdt-googlechart-mapkey').hide();
+            jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').removeClass('hidden');
+            jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-primary').addClass('btn-danger').html('Remove');
+        } else {
+            jQuery('#wdt-googlechart-mapkey').show();
+            jQuery('#wdt-googlechart-mapkey-tag .wdt-security-massage-wrapper').addClass('hidden');
+            jQuery('#wdt-validate-googlechart-mapkey').removeClass('btn-danger').addClass('btn-primary').html('Validate & Save');
+        }
+    },
 
     setAvgFunctionsLabel: function (avgFunctionsLabel) {
         if (wdt_current_config.wdtAvgFunctionsLabel != avgFunctionsLabel) {

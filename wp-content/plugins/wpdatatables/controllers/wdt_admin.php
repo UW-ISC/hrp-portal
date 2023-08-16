@@ -175,6 +175,7 @@ function wdtAdminEnqueue($hook)
 
     wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
     wp_localize_script('wdt-common', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
+    wp_localize_script('wdt-common', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
     wp_localize_script('wdt-common', 'wdtWpDataTablesPage', WDTTools::getWpDataTablesAdminPages());
 
 
@@ -541,6 +542,7 @@ function wdtAddOnsEnqueue()
 
     wp_enqueue_script('wdt-common');
     wp_enqueue_script('wdt-doc-js');
+    wp_enqueue_style('wdt-bundles-css', WDT_CSS_PATH . 'admin/bundles.css');
 }
 
 /**

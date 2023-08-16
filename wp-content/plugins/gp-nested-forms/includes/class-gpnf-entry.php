@@ -60,6 +60,41 @@ class GPNF_Entry {
 		}
 	}
 
+	/**
+	 * Duplicates the children for the current parent entry. Note, it is expected that
+	 * the entry that GPNF_Entry is instantiated with is the already-duplicated parent entry.
+	 *
+	 * The child entries duplicated will remain unaffected on the original parent entry.
+	 */
+	public function duplicate_children() {
+		$child_entries = $this->get_child_entries();
+
+		/** @var array<int, int[]> */
+		$duplicated_child_entries = array();
+
+		foreach ( $child_entries as $child_entry ) {
+			$nested_form_field_id   = $child_entry[ GPNF_Entry::ENTRY_NESTED_FORM_FIELD_KEY ];
+			$duplicated_child_entry = GFAPI::add_entry( $child_entry );
+
+			gform_update_meta( $duplicated_child_entry, GPNF_Entry::ENTRY_PARENT_KEY, $this->_entry_id );
+
+			if ( ! isset( $duplicated_child_entries[ $nested_form_field_id ] ) ) {
+				$duplicated_child_entries[ $nested_form_field_id ] = array();
+			}
+
+			$duplicated_child_entries[ $nested_form_field_id ][] = $duplicated_child_entry;
+		}
+
+		/**
+		 * Update Nested Form Field values on parent form to use the newly duplicated child entries.
+		 */
+		foreach ( $duplicated_child_entries as $nested_form_field_id => $new_child_entries ) {
+			$this->_entry[ $nested_form_field_id ] = implode( ',', $new_child_entries );
+		}
+
+		GFAPI::update_entry( $this->_entry, $this->_entry_id );
+	}
+
 	public function update_status( $status, $entry_id = null ) {
 		if ( ! $entry_id ) {
 			$entry_id = $this->_entry_id;

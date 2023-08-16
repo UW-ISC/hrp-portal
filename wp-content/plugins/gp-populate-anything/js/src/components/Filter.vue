@@ -32,7 +32,8 @@
 			 v-model="filter.value"
 			 :operator="filter.operator"
 			 :object-type-instance="objectTypeInstance"
-			 :flattened-properties="flattenedProperties">
+			 :flattened-properties="flattenedProperties"
+			 @change="handleFilterValueChange">
 			<option v-if="!filter.value" value="" disabled selected="selected" hidden>&ndash; Value &ndash;</option>
 
 			<optgroup :label="i18nStrings.specialValues">
@@ -127,7 +128,25 @@
 			resetFilter: function() {
 				this.filter.value = '';
 				this.filter.operator = this.defaultOperator;
-			}
+			},
+			/**
+			 * Updates the selected operator. 
+			 *
+			 * This is currenty used by other Perks and as such functions as a public interface
+			 * and should not be removed.
+			 *
+			 * @param operator string
+			 */
+			updateSelectedOperator: function(operator: string) {
+				this.filter.operator = operator;
+			},
+			handleFilterValueChange: function (value: string) {
+				window.gform.doAction(
+					'gppa_filter_value_updated',
+					value,
+					this,
+				);
+			},
 		},
 		computed: {
 			/* Used so we can set it to an empty value while loading. */

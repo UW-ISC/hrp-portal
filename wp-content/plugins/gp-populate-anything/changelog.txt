@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.0.10
+
+	- Removed `GPPA_Object_Type_Database::$_primary_key_cache` to allow greater control of returned results via related filters.
+	- Fixed a regression with the `{count}` merge tag.
+
+## 2.0.9
+
+	- Added new `gp_populate_anything->clear_runtime_caches()` method to primarily be used by other perks and integrations.
+	- Fixed a potential PHP error with the GF Entry Object Type when fields don't exist.
+	- Added new `GPPA_Object_Type::uses_php_filtering()` method so Object Types that utilize PHP filter can tell Populate Anything to not reduce the query limit to `1` when populating values.
+	- Fixed issue where fields would sometimes incorrectly gain focus after GP Populate Anything updated field markup.
+
+## 2.0.8
+
+	- Fixed issue where importing/manipulating forms with WP-CLI containing restricted object types (e.g. Database) would not work.
+	- Improved Admin settings so that the Image Choice Template Row is hidden if "Use Image Choices" is off.
+	- Added new `gppa_field_property_set` Javascript action hook.
+	- Added `gppa_filter_operator_updated` action that fires every time the "filter operator"
+	- Fixed regression with conditional logic due to a recent performance improvement. The performance improvement is now disabled by default and can be enabled using [`gppa_defer_conditional_logic'](https://gravitywiz.com/documentation/gppa_defer_conditional_logic).
+	- Fixed issue where `{pricing_fields}` in Live Merge Tags wouldn't update when product fields change.
+
 ## 2.0.7
 
 	- Improved support for populating Date fields using the Date Drop Down input type with values from other Date fields.

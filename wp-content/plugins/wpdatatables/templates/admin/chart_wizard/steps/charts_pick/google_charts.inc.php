@@ -174,13 +174,55 @@
             <div class="card-header">
                 <div class="wdt-chart-wizard-overlay"></div>
                 <img class="img-responsive"
-                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google_waterfall_chart.jpg">
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google_waterfall_chart.png">
             </div>
             <div class="card-body">
                 <h4 class="f-14"><?php esc_html_e('Waterfall chart', 'wpdatatables'); ?></h4>
             </div>
         </div>
     </div>
-
-
+    <div id="google_geo_chart_option" class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+        <div class="card" data-type="google_geo_chart" data-min_columns="2" data-max_columns="3">
+            <div class="card-header">
+                <div class="wdt-chart-wizard-overlay"></div>
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google-geochart-region.png">
+            </div>
+            <div class="card-body">
+                <h4 class="f-14"><?php esc_html_e('Region Geochart', 'wpdatatables'); ?></h4>
+            </div>
+        </div>
+    </div>
+    <div id="google_marker_geo_chart_option" class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+        <div class="card" data-type="google_marker_geo_chart" data-min_columns="2" data-max_columns="3">
+            <div class="card-header">
+                <div class="wdt-chart-wizard-overlay"></div>
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google-geochart-markers.png">
+            </div>
+            <div class="card-body">
+                <h4 class="f-14"><?php esc_html_e('Marker Geochart', 'wpdatatables'); ?></h4>
+            </div>
+        </div>
+    </div>
+    <div id="google_text_geo_chart_option" class="wdt-chart-wizard-chart-selecter-block col-sm-2">
+        <div class="card" data-type="google_text_geo_chart" data-min_columns="2" data-max_columns="3">
+            <div class="card-header">
+                <div class="wdt-chart-wizard-overlay"></div>
+                <img class="img-responsive"
+                     src="<?php echo WDT_ASSETS_PATH ?>img/chart-thumbs/google-geochart-text.png">
+            </div>
+            <div class="card-body">
+                <h4 class="f-14"><?php esc_html_e('Text Geochart', 'wpdatatables'); ?></h4>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12" style="margin-left:2px">
+            <div class="alert alert-info alert-dismissible hidden" role="alert">
+                    <i class="wpdt-icon-info-circle-full"></i>
+                  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                  </button>
+                  <span class="wdt-alert-title f-600"><?php esc_html_e('Marker GeoChart and Text GeoChart are disabled without Google Maps API key! Region GeoChart can be used without Google Maps API key, but options for choosing continents, subcontinents and countries are disabled!', 'wpdatatables'); ?><br></span>
+            </div>
+    </div>
 </div>

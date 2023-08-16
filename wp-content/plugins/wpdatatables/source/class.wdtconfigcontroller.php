@@ -206,7 +206,7 @@ class WDTConfigController
             $globalLanguage = get_option('wdtInterfaceLanguage') != '' ? get_option('wdtInterfaceLanguage') : '';
             $advancedSettings = json_decode($table->advanced_settings);
 
-            $table->tabletools_config = unserialize($table->tabletools_config);
+            $table->tabletools_config = unserialize($table->tabletools_config, ["allowed_classes" => false]);
             $table->columns = self::getColumnsConfig($tableId);
             $table->info_block = (isset($advancedSettings->info_block)) ? $advancedSettings->info_block : 1;
             $table->showTableToolsIncludeHTML = (isset($advancedSettings->showTableToolsIncludeHTML)) ? $advancedSettings->showTableToolsIncludeHTML : 0;

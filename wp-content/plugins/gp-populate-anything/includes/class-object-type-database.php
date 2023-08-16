@@ -4,8 +4,6 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 
 	protected $_restricted = true;
 
-	protected $_primary_key_cache = array();
-
 	private static $blacklisted_columns = array( 'password', 'user_pass', 'user_activation_key' );
 
 	public $supports_null_filter_value = true;
@@ -33,12 +31,8 @@ class GPPA_Object_Type_Database extends GPPA_Object_Type {
 			return null;
 		}
 
-		if ( ! isset( $this->_primary_key_cache[ $primary_property_value ] ) ) {
-			$props = array_keys( $object );
-			$this->_primary_key_cache[ $primary_property_value ] = $props[0];
-		}
-
-		$key = $this->_primary_key_cache[ $primary_property_value ];
+		$props = array_keys( $object );
+		$key   = $props[0];
 
 		return $object[ $key ];
 	}

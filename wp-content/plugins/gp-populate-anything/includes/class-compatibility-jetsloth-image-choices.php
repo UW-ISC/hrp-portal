@@ -59,6 +59,13 @@ class GPPA_Compatibility_JetSloth_Image_Choices {
 						id: 'imageChoices_image',
 						label: '<?php echo esc_js( __( 'Image', 'gp-populate-anything' ) ); ?>',
 						required: false,
+						shouldShow: function( field, populate ) {
+							if ( populate !== 'choices' ) {
+								return false;
+							}
+
+							return ! ! field['imageChoices_enableImages'];
+						},
 					} );
 				}
 

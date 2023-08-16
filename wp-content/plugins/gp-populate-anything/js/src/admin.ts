@@ -46,6 +46,18 @@ class GPPopulateAnythingAdmin {
 			});
 		});
 
+		const SetFieldPropertyOrig = window.SetFieldProperty;
+
+		window.SetFieldProperty = (prop: string, val: any) => {
+			window.gform.doAction('gppa_field_property_set', prop, val, this);
+
+			if (this.vm.$data.field) {
+				Vue.set(this.vm.$data.field, prop, val);
+			}
+
+			return SetFieldPropertyOrig(prop, val);
+		};
+
 		this.addFilters();
 		this.initVueVM();
 	}

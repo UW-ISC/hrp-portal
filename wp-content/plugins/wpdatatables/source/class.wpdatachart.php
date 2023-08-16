@@ -1100,6 +1100,7 @@ class WPDataChart
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
         }
         wp_enqueue_script('wpdatatables-render-chart', WDT_JS_PATH . 'wdtcharts/wdt.chartsRender' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
+        wp_localize_script('wpdatatables-render-chart', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
         $this->setJsonChartRenderData($this->enqueueChartSpecificScripts($js_ext));
         return $this->enqueueScriptsAfterChartRender();
     }
@@ -1226,6 +1227,11 @@ class WPDataChart
     public function getDateFormat()
     {
         return get_option('wdtDateFormat');
+    }
+
+    public function getGoogleMapsApiKey()
+    {
+        return get_option('wdtGoogleApiMaps');
     }
 
     /**

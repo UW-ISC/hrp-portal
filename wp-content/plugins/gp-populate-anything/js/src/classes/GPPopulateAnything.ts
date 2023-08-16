@@ -633,7 +633,15 @@ export default class GPPopulateAnything {
 			this.currentBatchedAjaxRequest?.abort();
 		}
 
-		const focusBeforeAJAX = $(':focus').attr('id');
+		const $focusedSel = $(':focus');
+		let focusBeforeAJAX = $focusedSel.attr('id');
+
+		// stop "tracking" the focused element if the blur event occurs (e.g. user clicks away from it)
+		// to prevent the focus from erroneously being "restored" to the element after the AJAX request completes
+		$focusedSel.on('blur', () => {
+			focusBeforeAJAX = undefined;
+		});
+
 		const fieldIDs: fieldID[] = [];
 		const fields: fieldDetails[] = [];
 
@@ -868,14 +876,45 @@ export default class GPPopulateAnything {
 						}
 
 						$fieldContainer.find(':input').each((index, el) => {
+							/**
+							 * Filter whether conditional logic and input changes should be ran after all fields are
+							 * refreshed rather than after each field is refreshed.
+							 *
+							 * In most situations, this can improve performance. However, in complex conditional logic
+							 * setups, it can cause issues.
+							 *
+							 * @param {boolean} deferConditionalLogic Whether conditional logic and input change events should be deferred.
+							 * @param {number}  formId                The current form ID.
+							 *
+							 * @since 2.0.8
+							 */
 							if (
-								typeof fieldsToTriggerInputChange[fieldID] ===
-								'undefined'
+								window.gform.applyFilters(
+									'gppa_defer_conditional_logic',
+									false,
+									this.formId
+								)
 							) {
-								fieldsToTriggerInputChange[fieldID] = [];
-							}
+								if (
+									typeof fieldsToTriggerInputChange[
+										fieldID
+									] === 'undefined'
+								) {
+									fieldsToTriggerInputChange[fieldID] = [];
+								}
 
-							fieldsToTriggerInputChange[fieldID].push(el);
+								fieldsToTriggerInputChange[fieldID].push(el);
+							} else {
+								$(el).data('gppaDisableListener', true);
+								window.gform.doAction(
+									'gform_input_change',
+									el,
+									this.formId,
+									fieldID
+								);
+								$(el).trigger('change');
+								$(el).removeData('gppaDisableListener');
+							}
 						});
 
 						/**
@@ -928,10 +967,21 @@ export default class GPPopulateAnything {
 						($('.js-range-slider') as any).ionRangeSlider();
 					}
 
-					this.triggerInputChangesWithCLDeferred(
-						fieldsToTriggerInputChange,
-						updatedFieldIDs
-					);
+					/**
+					 * Filter documented above.
+					 */
+					if (
+						window.gform.applyFilters(
+							'gppa_defer_conditional_logic',
+							false,
+							this.formId
+						)
+					) {
+						this.triggerInputChangesWithCLDeferred(
+							fieldsToTriggerInputChange,
+							updatedFieldIDs
+						);
+					}
 
 					$(document).trigger('gppa_updated_batch_fields', [
 						this.formId,
@@ -950,10 +1000,13 @@ export default class GPPopulateAnything {
 				/**
 				 * Refocus input if current input was updated with AJAX
 				 */
-				const $focus = $('#' + focusBeforeAJAX);
+				let $focus = null;
+				if (focusBeforeAJAX) {
+					$focus = $('#' + focusBeforeAJAX);
+				}
 
 				if (
-					$focus.length &&
+					$focus?.length &&
 					!$(':focus').length &&
 					this.isVisible($focus)
 				) {

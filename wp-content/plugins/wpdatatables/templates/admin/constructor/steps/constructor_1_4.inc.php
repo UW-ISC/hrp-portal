@@ -51,6 +51,7 @@
                             <span><?php esc_html_e('All SQL tables', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                title="<?php esc_attr_e('Add or drag MySQL tables.', 'wpdatatables'); ?>"></i>
+                            <button class="btn select-all-columns pull-right"><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
                         </h2>
                     </div>
                 </div>
@@ -94,6 +95,7 @@
                     <div class="col-sm-12">
                         <h2>
                             <span><?php esc_html_e('Selected SQL tables', 'wpdatatables'); ?></span>
+                            <button class="btn select-all-columns pull-right" disabled="disabled"><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
                         </h2>
                     </div>
                 </div>
@@ -115,6 +117,7 @@
                             <span><?php esc_html_e('All SQL columns', 'wpdatatables'); ?></span>
                             <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
                                title="<?php esc_attr_e('Add or drag MySQL columns.', 'wpdatatables'); ?>"></i>
+                            <button class="btn select-all-columns pull-right" disabled="disabled"><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
                         </h2>
                     </div>
                 </div>
@@ -143,6 +146,7 @@
                     <div class="col-sm-12">
                         <h2>
                             <span><?php esc_html_e('Selected SQL columns', 'wpdatatables'); ?></span>
+                            <button class="btn select-all-columns pull-right" disabled="disabled"><?php esc_html_e('Select All', 'wpdatatables'); ?></button>
                         </h2>
                     </div>
                 </div>

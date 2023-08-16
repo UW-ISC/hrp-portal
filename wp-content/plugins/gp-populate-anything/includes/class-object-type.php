@@ -69,6 +69,18 @@ abstract class GPPA_Object_Type {
 		return apply_filters( 'gppa_object_type_restricted_' . $this->id, $this->_restricted );
 	}
 
+	/**
+	 * Determines if the current Object Type uses PHP filtering.
+	 *
+	 * Meaning, it takes a list of results and uses PHP to filter down the array to the results that match the filter.
+	 *
+	 * This is sometimes needed if an external API doesn't have the ability to filter results in a way that GPPA
+	 * expects.
+	 */
+	public function uses_php_filtering() {
+		return false;
+	}
+
 	public function __construct( $id ) {
 		$this->id = $id;
 
