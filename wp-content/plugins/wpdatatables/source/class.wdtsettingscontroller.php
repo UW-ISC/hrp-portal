@@ -54,6 +54,11 @@ class WDTSettingsController
             exit();
         }
     }
+    public static function saveGoogleApiMaps($settings)
+    {
+        $settings = sanitize_text_field($settings);
+        update_option('wdtGoogleApiMaps', $settings);
+    }
 
     public static function saveSettings($settings)
     {
@@ -144,6 +149,8 @@ class WDTSettingsController
             'wdtGoogleStableVersion' => get_option('wdtGoogleStableVersion'),
             'wdtHighChartStableVersion' => get_option('wdtHighChartStableVersion'),
             'wdtApexStableVersion' => get_option('wdtApexStableVersion'),
+            'wdtGoogleApiMaps' => get_option('wdtGoogleApiMaps'),
+            'wdtGoogleApiMapsValidated' => get_option('wdtGoogleApiMapsValidated'),
         );
     }
 

@@ -263,17 +263,12 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            A minor update with bug fixes:
+                            New update with some improvements, and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>BugFix:</strong> Fixed issues with errors after duplicating a table.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with table prefix when duplicating a table.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with fatal errors after creating formula columns.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with showing date pickers on the constructor page.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with input types for adding and removing column.</li>
-                                <li><strong>BugFix:</strong> Fixed issue with calculated functions for formula columns for server-side tables.</li>
+                                <li><strong>Improvement:</strong> CSS improvements for Geo GoogleCharts. </li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

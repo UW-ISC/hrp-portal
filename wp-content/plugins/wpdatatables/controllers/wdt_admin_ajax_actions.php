@@ -155,6 +155,60 @@ function wdtSaveGoogleSettings()
 add_action('wp_ajax_wpdatatables_save_google_settings', 'wdtSaveGoogleSettings');
 
 /**
+ * Save Google settings
+ */
+function wdtSaveGoogleMapsApiKey()
+{
+    $settings = $_POST['apiKey'];
+// Construct the API request URL
+    $url = 'https://maps.googleapis.com/maps/api/geocode/json?address=New+York&key=' . $settings;
+
+// Make the API request
+    $response = file_get_contents($url);
+
+    if ($response !== false) {
+        // Decode the JSON response
+        $data = json_decode($response, true);
+
+        // Check if the API key is valid
+        if ($data && isset($data['status']) && $data['status'] === 'OK') {
+            echo esc_html_e('API key is valid.', 'wpdatatables');
+            update_option('wdtGoogleApiMapsValidated', true);
+            update_option('wdtGoogleApiMaps', $settings);
+        } elseif ($data && isset($data['status'])) {
+            $settings = '';
+            update_option('wdtGoogleApiMapsValidated', false);
+            switch ($data['status']) {
+                case 'ZERO_RESULTS':
+                    echo esc_html_e('No results found. The Google Maps Geocoding API may not be enabled.', 'wpdatatables');
+                    break;
+                case 'OVER_QUERY_LIMIT':
+                    echo esc_html_e('The Google Maps API usage limit has been exceeded. Check your billing status.', 'wpdatatables');
+                    break;
+                case 'REQUEST_DENIED':
+                    echo esc_html_e('The Google Maps API request was denied. Check your API key and check your billing status.', 'wpdatatables');
+                    break;
+                case 'INVALID_REQUEST':
+                    echo esc_html_e('Invalid request. Check your API key and parameters.', 'wpdatatables');
+                    break;
+                default:
+                    echo esc_html_e('Unknown error occurred.', 'wpdatatables');
+            }
+        } else {
+            $settings = '';
+            update_option('wdtGoogleApiMapsValidated', false);
+            echo esc_html_e('API key is invalid or there was an error.', 'wpdatatables');
+        }
+    } else {
+        $settings = '';
+        update_option('wdtGoogleApiMapsValidated', false);
+        echo esc_html_e('An error occurred while making the API request.', 'wpdatatables');
+    }
+    WDTSettingsController::saveGoogleApiMaps($settings);
+}
+
+add_action('wp_ajax_wpdatatables_save_google_maps_api_key', 'wdtSaveGoogleMapsApiKey');
+/**
  * Delete Google settings
  */
 function wdtDeleteGoogleSettings()

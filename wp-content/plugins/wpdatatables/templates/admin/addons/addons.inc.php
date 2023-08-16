@@ -24,7 +24,19 @@
                     </h2>
 
                 </div>
-
+                <div class="notice notice-info wpdt-bundles-notice">
+                    <div id="wpdt-bundles-section">
+                        <div id="wpdt-first-section">
+                            <img class="wpdt-promo-logo" src="<?php echo WDT_ROOT_URL ?>assets/img/bundles/bundle_all_pricing.png" alt="">
+                        </div>
+                        <div id="wpdt-second-section">
+                            <h2><strong>SAVE UP TO 60%</strong>
+                                with our exclusive bundles!<br> Get more value for your money.<br>
+                                <button id="wpdt-grab-it" onclick="window.open('https://wpdatatables.com/bundles/?utm_source=wpdt-premium&utm_medium=addons&utm_content=wpdt&utm_campaign=wpdt', '_blank')"> Get discount now!</button>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
                 <p class="wdt-addons-intro"><?php esc_html_e('While wpDataTables itself provides quite a large amount of features and unlimited customisation flexibility, you can achieve even more with our premium addons(except Forminator Forms integrations add-on which is FREE). Each addon brings you some unique extension to the core functionality. There will be more addons developed over time by wpDataTables creators and 3rd party developers, so stay tuned.  Please note that addons requires Premium version of wpDataTables(except Forminator Froms integration which can be use with Lite version as well)', 'wpdatatables'); ?></p>
 
                 <div class="card-body card-padding wpdt-add-ons-card">

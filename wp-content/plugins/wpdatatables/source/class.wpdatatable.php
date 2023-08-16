@@ -3573,7 +3573,7 @@ class WPDataTable
     {
         $url = apply_filters('wpdatatables_filter_url_php_array', WDTTools::applyPlaceholders($url), $id);
         $serialized_content = apply_filters('wpdatatables_filter_serialized', WDTTools::curlGetData($url), $id);
-        return unserialize($serialized_content);
+        return unserialize($serialized_content, ["allowed_classes" => false]);
     }
 
     /**
@@ -3848,6 +3848,7 @@ class WPDataTable
         do_action('wdt_enqueue_on_frontend', $this);
         wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
+        wp_localize_script('wdt-wpdatatables', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
         wp_localize_script('wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
     }

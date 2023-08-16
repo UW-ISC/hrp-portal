@@ -34,6 +34,55 @@ class WdtGoogleChart extends WPDataChart
     //Legend
     protected $_legend_position = 'right';
     protected $_legend_vertical_align = 'bottom';
+    protected $_region = 'world';
+    protected $_colors = '#267114';
+    protected $_dataless_region_color = '#F5F5F5';
+
+    /**
+     * @return string
+     */
+    public function getRegion()
+    {
+        return $this->_region;
+    }
+
+    /**
+     * @param string $region
+     */
+    public function setRegion($region)
+    {
+        $this->_region = $region;
+    }
+    /**
+     * @return string
+     */
+    public function getRegionColors()
+    {
+        return $this->_colors;
+    }
+
+    /**
+     * @param string $colors
+     */
+    public function setRegionColors($colors)
+    {
+        $this->_colors = $colors;
+    }
+    /**
+     * @return string
+     */
+    public function getDatalessRegionColors()
+    {
+        return $this->_dataless_region_color;
+    }
+
+    /**
+     * @param string $dataless_colors
+     */
+    public function setDatalessRegionColors($dataless_colors)
+    {
+        $this->_dataless_region_color = $dataless_colors;
+    }
 
     /**
      * @return int
@@ -370,6 +419,11 @@ class WdtGoogleChart extends WPDataChart
             // Legend
             $this->setLegendPosition(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_position', 'right')));
             $this->setLegendVerticalAlign(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'legend_vertical_align', 'bottom')));
+
+            // Region
+            $this->setRegion(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'region', 'world')));
+            $this->setRegionColors(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'colors', '#267114')));
+            $this->setDatalessRegionColors(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'datalessRegionColor', '#F5F5F5')));
         }
     }
 
@@ -393,6 +447,12 @@ class WdtGoogleChart extends WPDataChart
         $this->_render_data['options']['fontName'] = $this->getFontName();
         if ($this->_type == 'google_pie_chart') {
             $this->_render_data['options']['is3D'] = $this->isThreeD();
+        }
+
+        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart'){
+            $this->_render_data['options']['region'] = $this->getRegion();
+            $this->_render_data['options']['colors'] = $this->getRegionColors();
+           $this->_render_data['options']['datalessRegionColor'] = $this->getDatalessRegionColors();
         }
 
         // Series
@@ -487,7 +547,11 @@ class WdtGoogleChart extends WPDataChart
         if ($this->_type == 'google_pie_chart') {
             $this->setThreeD(isset($renderData['render_data']['options']['is3D']) ? $renderData['render_data']['options']['is3D'] : false);
         }
-
+        if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart'){
+            $this->setRegion(isset($renderData['render_data']['options']['region']) ? $renderData['render_data']['options']['region'] : 'world');
+            $this->setRegionColors(isset($renderData['render_data']['options']['colors']) ? $renderData['render_data']['options']['colors'] : '#267114');
+            $this->setDatalessRegionColors(isset($renderData['render_data']['options']['datalessRegionColor']) ? $renderData['render_data']['options']['datalessRegionColor'] : '#F5F5F5');
+        }
         // Series
         if ($this->_type == 'google_line_chart') {
             $this->setCurveType(isset($renderData['render_data']['options']['curveType']) ? $renderData['render_data']['options']['curveType'] !== 'none' : false);

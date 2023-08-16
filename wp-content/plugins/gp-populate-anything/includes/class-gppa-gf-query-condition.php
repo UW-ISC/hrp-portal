@@ -13,7 +13,12 @@ class GPPA_GF_Query_Condition extends GF_Query_Condition {
 			return parent::sql( $query );
 		}
 
-		$field       = GFFormsModel::get_field( GFAPI::get_form( $this->left->source ), $this->left->field_id );
+		$field = GFFormsModel::get_field( GFAPI::get_form( $this->left->source ), $this->left->field_id );
+
+		if ( ! $field || ! method_exists( $field, 'get_entry_inputs' ) ) {
+			return parent::sql( $query );
+		}
+
 		$operator    = $this->operator;
 		$is_negative = in_array( $operator, array( self::NLIKE, self::NBETWEEN, self::NEQ ) );
 

@@ -19,6 +19,17 @@ var wdtChartColumnsData = {};
         nextStepButton.prop('disabled', false);
     });
 
+    $('.chart-container.region').on('click', function(e){
+        if($('#region-google-charts').val() === 'world'){
+            $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+            $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+        } else {
+            $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
+            if($('#sub-continents-geochart').val() === 'world') {
+                $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+            }
+        }
+    });
     /**
      * Steps switcher (Next)
      */
@@ -73,6 +84,7 @@ var wdtChartColumnsData = {};
                     $('.tooltip').show();
                     $('.legend').show();
                     $('#inverted-row').show();
+                    $('.region').hide();
 
                     switch (constructedChartData.type) {
                         case 'google_column_chart':
@@ -153,6 +165,43 @@ var wdtChartColumnsData = {};
                             $('#vertical-axis-crosshair-row').hide();
                             $('.legend').hide();
                             break;
+                        case 'google_geo_chart':
+                            $('.region').show();
+                            var googleKeyValidate = parseInt(wpdatatables_mapsapikey.wdtGoogleApiMapsValidated) || 0;
+                            if(googleKeyValidate != 1) {
+                                $('#google-region-geochart-container').hide();
+                                $('#sub-continents-geochart-container').hide();
+                                $('#countries-geochart-container').hide();
+                            }
+                            $('#plot_background_color_row').hide();
+                            $('#plot-border-width-row').hide();
+                            $('#plot_border_color_row').hide();
+                            $('.series').hide();
+                            $('#plot-background-color-container').hide();
+                            $('#plot-border-color-container').hide();
+                            $('.axes').hide();
+                            $('.title').hide();
+                            $('.tooltip').hide();
+                            $('#legend_vertical_align_row').hide();
+                            $('.legend').hide();
+                            $('#group-chart').prop('checked', 'checked');
+                            break;
+                        case 'google_marker_geo_chart':
+                        case 'google_text_geo_chart':
+                            $('.region').show();
+                            $('#plot_background_color_row').hide();
+                            $('#plot-border-width-row').hide();
+                            $('#plot_border_color_row').hide();
+                            $('.series').hide();
+                            $('#plot-background-color-container').hide();
+                            $('#plot-border-color-container').hide();
+                            $('.axes').hide();
+                            $('.title').hide();
+                            $('.tooltip').hide();
+                            $('#legend_vertical_align_row').hide();
+                            $('.legend').hide();
+                            $('#group-chart').prop('checked', 'checked');
+                            break;
                     }
                 } else if ($('#chart-render-engine').val() == 'highcharts') {
 
@@ -179,6 +228,7 @@ var wdtChartColumnsData = {};
                     $('.series').show();
                     $('.axes').show();
                     $('.legend').show();
+                    $('.region').hide();
 
                     if (constructedChartData.type == 'highcharts_basic_bar_chart' ||
                         constructedChartData.type == 'highcharts_stacked_bar_chart' ) {
@@ -225,6 +275,7 @@ var wdtChartColumnsData = {};
                     $(".highcharts").hide();
                     $(".apexcharts").hide();
                     $(".chartjs").show();
+                    $('.region').hide();
 
                     $('.apex-toolbar-container').hide();
                     $('.series').show();
@@ -277,6 +328,7 @@ var wdtChartColumnsData = {};
                     $('.series').show();
                     $('.axes').show();
                     $('.legend').show();
+                    $('.region').hide();
                     var legendPositionVal = $('#legend-position-cjs').val() ? $('#legend-position-cjs').val() : 'bottom';
                     $('#legend-position-cjs').val(legendPositionVal).change();
 
@@ -380,6 +432,8 @@ var wdtChartColumnsData = {};
                             }
                         }
                         $('#wdt-add-chart-columns').click();
+                        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');;
+                        $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
                         nextStepButton.show();
                     }
                 });
@@ -954,7 +1008,123 @@ var wdtChartColumnsData = {};
                 break;
         }
     });
+    $(document).on('change', 'select#region-google-charts', function (e) {
+        $('#sub-continents-geo-chart').selectpicker('val', 'world');
+        $('#sub-continents-geo-chart').selectpicker('refresh');
+        $('#countries-geo-chart').selectpicker('val', 'world');
+        $('#countries-geo-chart').selectpicker('refresh');
 
+        $('#sub-continents-geochart-container .wdt_america,' +
+            ' #sub-continents-geochart-container .wdt_asia,' +
+            ' #sub-continents-geochart-container .wdt_australia,' +
+            ' #sub-continents-geochart-container .wdt_europe,' +
+            ' #sub-continents-geochart-container .wdt_africa'
+        ).addClass('hidden');
+        $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
+        $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+
+        if($('#region-google-charts').val() === 'world'){
+            $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+            $('#countries-geochart-container').selectpicker('val', 'world');
+        }
+        if($('#region-google-charts').val() === '002'){
+            $('#sub-continents-geochart-container .wdt_africa').removeClass('hidden');
+        }
+        if($('#region-google-charts').val() === '150') {
+            $('#sub-continents-geochart-container .wdt_europe').removeClass('hidden');
+        }
+        if($('#region-google-charts').val() === '019') {
+            $('#sub-continents-geochart-container .wdt_america').removeClass('hidden');
+        }
+        if($('#region-google-charts').val() === '142') {
+            $('#sub-continents-geochart-container .wdt_asia').removeClass('hidden');
+        }
+        if($('#region-google-charts').val() === '009') {
+            $('#sub-continents-geochart-container .wdt_australia').removeClass('hidden');
+        }
+    });
+    $(document).on('change', 'select#sub-continents-geo-chart', function (e) {
+        $('#countries-geo-chart').selectpicker('val', 'world');
+        $('#countries-geo-chart').selectpicker('refresh');
+
+        $('#countries-geochart-container .wdt_africa_c, ' +
+            '#countries-geochart-container .wdt_europe_c, ' +
+            '#countries-geochart-container .wdt_america_c, ' +
+            '#countries-geochart-container .wdt_australia_c, ' +
+            '#countries-geochart-container .wdt_asia_c'
+        ).addClass('hidden');
+        $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
+
+        if($('#sub-continents-geo-chart').val() === 'world'){
+            $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
+        }
+        if($('#sub-continents-geo-chart').val() === '015'){
+            $('#countries-geochart-container .wdt_northern_africa').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '011') {
+            $('#countries-geochart-container .wdt_western_africa').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '017') {
+            $('#countries-geochart-container .wdt_middle_africa.wdt_africa_c').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '014') {
+            $('#countries-geochart-container .wdt_eastern_africa').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '018') {
+            $('#countries-geochart-container .wdt_southern_africa').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '154') {
+            $('#countries-geochart-container .wdt_northern_europe').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '155') {
+            $('#countries-geochart-container .wdt_western_europe').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '151') {
+            $('#countries-geochart-container .wdt_eastern_europe').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '039') {
+            $('#countries-geochart-container .wdt_southern_europe').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '021') {
+            $('#countries-geochart-container .wdt_northern_america').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '029') {
+            $('#countries-geochart-container .wdt_caribbean').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '013') {
+            $('#countries-geochart-container .wdt_central_america').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '005') {
+            $('#countries-geochart-container .wdt_south_america').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '143') {
+            $('#countries-geochart-container .wdt_central_asia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '030') {
+            $('#countries-geochart-container .wdt_eastern_asia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '034') {
+            $('#countries-geochart-container .wdt_southern_asia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '035') {
+            $('#countries-geochart-container .wdt_southern_eastern_asia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '145') {
+            $('#countries-geochart-container .wdt_western_asia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '053') {
+            $('#countries-geochart-container .wdt_australia_and_new_zealand').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '054') {
+            $('#countries-geochart-container .wdt_melanesia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '057') {
+            $('#countries-geochart-container .wdt_micronesia').removeClass('hidden');
+        }
+        if($('#sub-continents-geo-chart').val() === '061') {
+            $('#countries-geochart-container .wdt_polynesia').removeClass('hidden');
+        }
+    });
     function renderChart(reloadNeeded) {
         if (typeof reloadNeeded == 'undefined') {
             reloadNeeded = true;
@@ -1075,6 +1245,9 @@ var wdtChartColumnsData = {};
         constructedChartData.dropshadow_top = parseInt($('#dropshadow-top').val());
         constructedChartData.dropshadow_left = parseInt($('#dropshadow-left').val());
         constructedChartData.text_color = $('input#chart-text-color').val();
+        constructedChartData.region = $('#sub-continents-geo-chart').val() === 'world' || $('#region-google-charts').val() === 'world' ? $('#region-google-charts').val() : ($('#sub-continents-geo-chart').val() && $('#countries-geo-chart').val() === 'world' ? $('#sub-continents-geo-chart').val() : $('#countries-geo-chart').val());
+        constructedChartData.datalessRegionColor = $('input.geochart_color').val();
+         constructedChartData.colors = $('input.geochart-color-region').val();
         // Series
         if (typeof constructedChartData.series_data == 'undefined') {
             constructedChartData.series_data = {};
@@ -1206,6 +1379,10 @@ var wdtChartColumnsData = {};
         constructedChartData.show_toolbar = $('#show-toolbar').is(':checked') ? 1 : 0;
         constructedChartData.toolbar_buttons = $('#toolbar-buttons').val();
         constructedChartData.apex_exporting_file_name = $('#apex-exporting-file-name').val();
+
+        constructedChartData.datalessRegionColor = $('input.geochart_color').val();
+        constructedChartData.colors = $('input.geochart-color-region').val() == '' ? '#267114' : $('input.geochart-color-region').val();
+        constructedChartData.region = $('#sub-continents-geo-chart').val() === 'world' || $('#region-google-charts').val() === 'world' ? $('#region-google-charts').val() : ($('#sub-continents-geo-chart').val() && $('#countries-geo-chart').val() === 'world' ? $('#sub-continents-geo-chart').val() : $('#countries-geo-chart').val());
     }
 
     /**
@@ -1243,6 +1420,7 @@ var wdtChartColumnsData = {};
                 $('.wdt-preload-layer').animateFadeOut();
                 nextStepButton.removeClass('wdt-save-chart').html('Next ')
                 nextStepButton.prop('disabled', false);
+                $('#countries-geochart-container').selectpicker();
                 break;
             case 'step5':
                 $('div.chart-wizard-step.step4').show();
@@ -1277,6 +1455,14 @@ var wdtChartColumnsData = {};
             constructedChartData.engine = $(this).val();
             if ($(this).val() == 'google') {
                 $('div.google-charts-type').show();
+                var googleKeyValidate = parseInt(wpdatatables_mapsapikey.wdtGoogleApiMapsValidated) || 0;
+                if(googleKeyValidate != 1) {
+                    $('div[data-type="google_marker_geo_chart"]')[0].style.opacity = 0.4;
+                    $('div[data-type="google_marker_geo_chart"]')[0].classList += ' disabled'
+                    $('div[data-type="google_text_geo_chart"]')[0].style.opacity = 0.4;
+                    $('div[data-type="google_text_geo_chart"]')[0].classList += ' disabled';
+                    $('div.alert.alert-info.alert-dismissible').removeClass('hidden');
+                }
             } else if ($(this).val() == 'highcharts') {
                 $('div.highcharts-charts-type').show();
             } else if ($(this).val() == 'chartjs') {
@@ -1324,10 +1510,10 @@ var wdtChartColumnsData = {};
         e.stopImmediatePropagation();
         if ($(this).hasClass('select-all-columns')) {
             $(this).closest('.card').find('div.chart-column-block').addClass('selected');
-            $(this).text('Deselect All');
+            $(this).text(wpdatatablesEditStrings.deselectAll);
         } else {
             $(this).closest('.card').find('div.chart-column-block').removeClass('selected');
-            $(this).text('Select All');
+            $(this).text(wpdatatablesEditStrings.selectAll);
         }
         $(this).toggleClass('select-all-columns deselect-all-columns');
 
@@ -1404,8 +1590,26 @@ var wdtChartColumnsData = {};
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container div.chart-column-block.selected').each(function () {
-            $(this).appendTo('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container');
+            $(this).appendTo('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container').removeClass('selected');
         });
+
+        if ($('.wdt-chart-column-picker-container .existing-columns button').hasClass('deselect-all-columns')||
+            ($('.wdt-chart-wizart-existing-columns-container div.chart-column-block').length === 0
+                && $('.wdt-chart-column-picker-container .existing-columns button').hasClass('select-all-columns'))) {
+            $('.wdt-chart-wizart-existing-columns-container div.chart-column-block').removeClass('selected');
+            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').text(wpdatatablesEditStrings.selectAll);
+            $('.wdt-chart-column-picker-container .existing-columns button').toggleClass('select-all-columns deselect-all-columns');
+            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+            $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
+
+            if ($('.wdt-chart-wizart-existing-columns-container div.chart-column-block').length === 0) {
+                $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
+                $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
+            }
+        }
+        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+        $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
+
         checkColumnsLimit();
     });
 
@@ -1418,6 +1622,10 @@ var wdtChartColumnsData = {};
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container div.chart-column-block').addClass('selected');
         $('#wdt-add-chart-columns').click();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container div.chart-column-block').removeClass('selected');
+        $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
+        $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
+        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+        $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
         checkColumnsLimit();
     });
 
@@ -1428,8 +1636,25 @@ var wdtChartColumnsData = {};
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container div.chart-column-block.selected').each(function () {
-            $(this).appendTo('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container ');
+            $(this).appendTo('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container ').removeClass('selected');
         });
+
+        if ($('.wdt-chart-column-picker-container .chosen_columns button').hasClass('deselect-all-columns') ||
+            ($('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').length === 0 && $('.wdt-chart-column-picker-container .chosen_columns button').hasClass('select-all-columns'))) {
+            $('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').removeClass('selected');
+            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').text(wpdatatablesEditStrings.selectAll);
+            $('.wdt-chart-column-picker-container .chosen_columns button').toggleClass('select-all-columns deselect-all-columns');
+            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+            $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
+
+            if ($('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').length === 0) {
+                $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
+                $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
+            }
+        }
+        $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+        $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
+
         checkColumnsLimit();
     });
 
@@ -1442,6 +1667,10 @@ var wdtChartColumnsData = {};
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container div.chart-column-block').addClass('selected');
         $('#wdt-remove-chart-columns').click();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container div.chart-column-block').removeClass('selected');
+        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
+        $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
+        $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
+        $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
     });
 
     /**
@@ -1761,7 +1990,199 @@ var wdtChartColumnsData = {};
                     }
                     $('#border-radius').val(editing_chart_data.render_data.options.backgroundColor.rx);
                 }
+                if($.inArray(editing_chart_data.type, ['google_text_geo_chart', 'google_marker_geo_chart', 'google_geo_chart']) != -1) {
+                    if (editing_chart_data.render_data.options.datalessRegionColor == null) {
+                        $('input.geochart_color').val('');
+                    } else {
+                        $('input.geochart_color').val(editing_chart_data.render_data.options.datalessRegionColor);
+                    }
+                    if (editing_chart_data.render_data.options.colors == null) {
+                        $('input.geochart-color-region').val('');
+                    } else {
+                        $('input.geochart-color-region').val(editing_chart_data.render_data.options.colors);
+                    }
 
+                    $('#sub-continents-geochart-container .wdt_america, ' +
+                        '#sub-continents-geochart-container .wdt_asia,' +
+                        ' #sub-continents-geochart-container .wdt_australia,' +
+                        ' #sub-continents-geochart-container .wdt_europe,' +
+                        ' #sub-continents-geochart-container .wdt_africa'
+                    ).addClass('hidden');
+                    $('#countries-geochart-container .wdt_africa_c,' +
+                        ' #countries-geochart-container .wdt_europe_c,' +
+                        ' #countries-geochart-container .wdt_america_c,' +
+                        ' #countries-geochart-container .wdt_australia_c,' +
+                        ' #countries-geochart-container .wdt_asia_c'
+                    ).addClass('hidden');
+
+                    if (editing_chart_data.render_data.options.region == 'world') {
+                        $('#region-google-charts').val('world');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['002', '150', '019', '142', '009']) != -1) {
+                        $('#region-google-charts').val(editing_chart_data.render_data.options.region);
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['015', '011', '017', '014', '018']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                            $('#sub-continents-geo-chart .wdt_africa').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['154', '155', '151', '039']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '150');
+                            $('#region-google-charts').val('150');
+                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                            $('#sub-continents-geo-chart .wdt_europe').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['021', '029', '013', '005']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '019');
+                            $('#region-google-charts').val('019');
+                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                            $('#sub-continents-geo-chart .wdt_america').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['053', '054', '057', '061']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '009');
+                            $('#region-google-charts').val('009');
+                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                            $('#sub-continents-geo-chart .wdt_australia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['143', '030', '034', '035', '145']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#region-google-charts').val('142');
+                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                            $('#sub-continents-geo-chart .wdt_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['DZ', 'EG', 'EH', 'LY', 'MA', 'SD', 'SS', 'TN']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val('015');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_northern_africa').removeClass('hidden')
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BF', 'BJ', 'CI', 'CV', 'GH', 'GN', 'GW', 'LR', 'ML', 'MR', 'NE', 'NG', 'SH', 'SL', 'SN', 'TG']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val('011');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_western_africa').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AO', 'CD', 'ZR', 'CF', 'CG', 'CM', 'GA', 'GQ', 'ST', 'TD']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val('017');
+                            $('#countries-geochart-container').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_middle_africa').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BI', 'DJ', 'ER', 'ET', 'KE', 'KM', 'MG', 'MU', 'MW', 'MZ', 'RE', 'RW', 'SC', 'SO', 'TZ', 'UG', 'YT', 'ZM', 'ZW']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val('014');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_eastern_africa').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BW', 'LS', 'NA', 'SZ', 'ZA']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '002');
+                            $('#sub-continents-geo-chart').val('018');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_southern_africa').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['GG', 'JE', 'AX', 'DK', 'EE', 'FI', 'FO', 'GB', 'IE', 'IM', 'IS', 'LT', 'LV', 'NO', 'SE', 'SJ']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '150');
+                            $('#sub-continents-geo-chart').val('154');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_northern_europe').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AT', 'BE', 'CH', 'DE', 'DD', 'FR', 'FX', 'LI', 'LU', 'MC', 'NL']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '150');
+                            $('#sub-continents-geo-chart').val('155');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_western_europe').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BG', 'BY', 'CZ', 'HU', 'MD', 'PL', 'RO', 'RU', 'SU', 'SK', 'UA']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '150');
+                            $('#sub-continents-geo-chart').val('151');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_eastern_europe').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AD', 'AL', 'BA', 'ES', 'GI', 'GR', 'HR', 'IT', 'ME', 'MK', 'MT', 'RS', 'PT', 'SI', 'SM', 'VA', 'YU']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '150');
+                            $('#sub-continents-geo-chart').val('039');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_southern_europe').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BM', 'CA', 'GL', 'PM', 'US']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '019');
+                            $('#sub-continents-geo-chart').val('021');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_northern_america').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AG', 'AI', 'AN', 'AW', 'BB', 'BL', 'BS', 'CU', 'DM', 'DO', 'GD', 'GP', 'HT', 'JM', 'KN', 'KY', 'LC', 'MF', 'MQ', 'MS', 'PR', 'TC', 'TT', 'VC', 'VG', 'VI']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '019');
+                            $('#sub-continents-geo-chart').val('029');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);;
+                            $('#countries-geo-chart .wdt_caribbean').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BZ', 'CR', 'GT', 'HN', 'MX', 'NI', 'PA', 'SV']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '019');
+                            $('#sub-continents-geo-chart').val('013');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_central_america').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'FK', 'GF', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '019');
+                            $('#sub-continents-geo-chart').val('005');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_south_america').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['TM', 'TJ', 'KG', 'KZ', 'UZ']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#sub-continents-geo-chart').val('143');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_central_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['CN', 'HK', 'JP', 'KP', 'KR', 'MN', 'MO', 'TW']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#sub-continents-geo-chart').val('030');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_eastern_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AF', 'BD', 'BT', 'IN', 'IR', 'LK', 'MV', 'NP', 'PK']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#sub-continents-geo-chart').val('034');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_southern_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['BN', 'ID', 'KH', 'LA', 'MM', 'BU', 'MY', 'PH', 'SG', 'TH', 'TL', 'TP', 'VN']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#sub-continents-geo-chart').val('035');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_southern_eastern_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AE', 'AM', 'AZ', 'BH', 'CY', 'GE', 'IL', 'IQ', 'JO', 'KW', 'LB', 'OM', 'PS', 'QA', 'SA', 'NT', 'SY', 'TR', 'YE', 'YD']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '142');
+                            $('#sub-continents-geo-chart').val('145');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_western_asia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AU', 'NF', 'NZ']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '009');
+                            $('#sub-continents-geo-chart').val('053');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_australia_and_new_zealand').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['FJ', 'NC', 'PG', 'SB', 'VU']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '009');
+                            $('#sub-continents-geo-chart').val('054');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_melanesia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['FM', 'GU', 'KI', 'MH', 'MP', 'NR', 'PW']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '009');
+                            $('#sub-continents-geo-chart').val('057');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_micronesia').removeClass('hidden');
+                    }
+                    if ($.inArray(editing_chart_data.render_data.options.region, ['AS', 'CK', 'NU', 'PF', 'PN', 'TK', 'TO', 'TV', 'WF', 'WS']) != -1) {
+                            $('#region-google-charts').selectpicker('val', '009');
+                            $('#sub-continents-geo-chart').val('061');
+                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                            $('#countries-geo-chart .wdt_polynesia').removeClass('hidden');
+                    }
+                }
                 if (editing_chart_data.render_data.options.chartArea == null) {
                     $('input.plot-background-color').val('');
                     $('#plot-border-width').val('');
@@ -2452,8 +2873,27 @@ var wdtChartColumnsData = {};
                 }
             }
         });
-        drake.on('drop', function () {
+        drake.on('drop', function (el, container) {
             checkColumnsLimit();
+            $(container).parent().find('button').removeClass('disabled').removeAttr('disabled');
+            if($(container).parent().find('div.chart-column-block').length === 0) {
+                $(container).parent().find('button').addClass('disabled').attr('disabled', 'disabled');
+            }
+        });
+        drake.on('drag', function (el, container) {
+            checkColumnsLimit();
+            $(container).parent().find('button').removeClass('disabled').removeAttr('disabled');
+            if($(container).parent().find('div.chart-column-block').length - 1 === 0) {
+                $(container).parent().find('button').addClass('disabled').attr('disabled', 'disabled');
+            }
+        });
+
+        drake.on('dragend', function (el, container) {
+            checkColumnsLimit();
+            $(el).parent().parent().find('button').removeClass('disabled').removeAttr('disabled');
+            if($(el).parent().parent().find('div.chart-column-block').length === 0) {
+                $(el).parent().parent().find('button').addClass('disabled').attr('disabled', 'disabled');
+            }
         });
     }
 })(jQuery);
