@@ -353,14 +353,14 @@ function relevanssi_register_gutenberg_rest_routes() {
 			switch ( $type ) {
 				case 'metakey':
 					$args[ $name ] = array(
-						'validate_callback' => function( $param, $request, $key ) {
+						'validate_callback' => function ( $param ) {
 							return in_array( $param, array( '_relevanssi_related_keywords', '_relevanssi_related_include_ids' ), true );
 						},
 					);
 					break;
 				case 'urldecode':
 					$args[ $name ] = array(
-						'sanitize_callback' => function( $param, $request, $key ) {
+						'sanitize_callback' => function ( $param ) {
 							return urldecode( $param );
 						},
 					);
@@ -368,7 +368,7 @@ function relevanssi_register_gutenberg_rest_routes() {
 				case 'numeric':
 				default:
 					$args[ $name ] = array(
-						'validate_callback' => function( $param, $request, $key ) {
+						'validate_callback' => function ( $param ) {
 							return is_numeric( $param );
 						},
 					);

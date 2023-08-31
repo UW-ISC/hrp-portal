@@ -50,6 +50,8 @@ export default class GPPopulateAnything {
 		rounding: string;
 	}[] = [];
 
+	private lockoutChangeEvents: boolean = false;
+
 	private currentBatchedAjaxRequest: JQuery.jqXHR | undefined;
 
 	// eslint-disable-next-line no-shadow
@@ -67,6 +69,31 @@ export default class GPPopulateAnything {
 		jQuery(document).on('gform_post_render', this.postRenderSetCurrentPage);
 
 		jQuery(document).on('gform_post_render', this.postRender);
+
+		// Listen for gform/conditionalLogic/init/start and end to lockout change events on init.
+		document.addEventListener(
+			'gform/conditionalLogic/init/start',
+			(e: any) => {
+				// eslint-disable-next-line eqeqeq
+				if (e.detail.formId != formId || !e.detail.isInit) {
+					return;
+				}
+
+				this.lockoutChangeEvents = true;
+			}
+		);
+
+		document.addEventListener(
+			'gform/conditionalLogic/init/end',
+			(e: any) => {
+				// eslint-disable-next-line eqeqeq
+				if (e.detail.formId != formId || !e.detail.isInit) {
+					return;
+				}
+
+				this.lockoutChangeEvents = false;
+			}
+		);
 
 		// Update prices when fields are updated. By default, Gravity Forms does not trigger recalculations when
 		// hidden inputs in product fields are updated.
@@ -237,6 +264,11 @@ export default class GPPopulateAnything {
 			'keyup.gppa change.gppa DOMAutoComplete.gppa paste.gppa forceReload.gppa',
 			'[name^="' + inputPrefix + '"]',
 			(event) => {
+				// Prevent a ton of change events from firing when the form is first loaded due to conditional logic.
+				if (this.lockoutChangeEvents) {
+					return;
+				}
+
 				const $el = $(event.target);
 
 				const inputId = String($el.attr('name')).replace(
@@ -778,6 +810,9 @@ export default class GPPopulateAnything {
 				'current-merge-tag-values':
 					window.gppaLiveMergeTags[this.formId].currentMergeTagValues,
 				security: window.GPPA.NONCE,
+				show_admin_fields_in_ajax:
+					window[`GPPA_FORM_${this.formId}`]
+						.SHOW_ADMIN_FIELDS_IN_AJAX,
 			},
 			this.formId
 		);

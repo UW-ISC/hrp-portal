@@ -86,7 +86,12 @@ class MLAModal {
 			add_filter( 'media_view_strings', 'MLAModal::mla_media_view_strings_filter', 10, 2 );
 			add_action( 'wp_enqueue_media', 'MLAModal::mla_wp_enqueue_media_action', 10, 0 );
 			add_filter( 'media_library_months_with_files', 'MLAModal::mla_media_library_months_with_files_filter', 10, 1 );
+
+			// print_media_templates is called from wp-includes/media-template.php wp_print_media_templates
 			add_action( 'print_media_templates', 'MLAModal::mla_print_media_templates_action', 10, 0 );
+			// wp_print_footer_scripts is called from wp-includes/block-editor.php _wp_get_iframed_editor_assets()
+			add_action( 'wp_print_footer_scripts', 'MLAModal::mla_print_media_templates_action', 10, 0 );
+
 			add_action( 'admin_init', 'MLAModal::mla_admin_init_action' );
 		} // Media Modal support enabled
 	}
@@ -468,6 +473,8 @@ class MLAModal {
 	 * @return	void	echoes HTML script tags for the templates
 	 */
 	public static function mla_print_media_templates_action( ) {
+		static $template = NULL;
+		
 		// If we know what screen we're on we can test our enabling options
 		if ( function_exists( 'get_current_screen' ) ) {
 			$screen = get_current_screen();
@@ -485,12 +492,18 @@ class MLAModal {
 			$screen = NULL;
 		}
 
-		// Include mla javascript templates
-		$template_path = apply_filters( 'mla_media_modal_template_path', MLA_PLUGIN_PATH . 'includes/mla-media-modal-js-template.php', $screen);
+		if ( empty( $template ) ) {
+			// Include mla javascript templates
+			$template_path = apply_filters( 'mla_media_modal_template_path', MLA_PLUGIN_PATH . 'includes/mla-media-modal-js-template.php', $screen);
 
-		if ( ! empty( $template_path ) ) {
-			require_once $template_path;
+			if ( ! empty( $template_path ) ) {
+				ob_start();
+				require_once $template_path;
+				$template = ob_get_clean();
+			}
 		}
+
+		echo $template;  // phpcs:ignore
 	} // mla_print_media_templates_action
 
 	/**

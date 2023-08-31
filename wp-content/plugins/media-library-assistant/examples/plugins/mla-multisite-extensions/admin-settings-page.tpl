@@ -26,7 +26,7 @@
 		<option [+selected+] value="[+value+]">[+text+]</option>
 
 <!-- template="checklist-item" -->
-                 <li id="[+checklist_name+]_[+value+]"><label class="selectit"><input type="checkbox" name="MLAMultisiteExtensions_tools[[+checklist_name+]][]" id="box_[+checklist_name+]_[+value+]" [+checked+] value="[+value+]"> [+text+]</label></li>
+                 <li id="[+checklist_name+]_[+value+]"><label class="selectit"><input type="checkbox" name="[+checklist_name+][]" id="box_[+checklist_name+]_[+value+]" [+checked+] value="[+value+]"> [+text+]</label></li>
 
 <!-- template="page-level-options" -->
 <tr valign="top">
@@ -277,6 +277,8 @@ ul.mla_settings li {
 <li><a href="#processing"><strong>How the Plugin Works</strong></a></li>
 <li><a href="#general-options"><strong>General Plugin Options</strong></a></li>
 <li><a href="#general-tools"><strong>Plugin Tools</strong></a></li>
+<li><a href="#shortcodes"><strong>Plugin Shortcodes</strong></a></li>
+<li><a href="#api-functions"><strong>Plugin API Functions</strong></a></li>
 <li><a href="#site-id-parameter"><strong>The "site_id=id[,id...]|all" parameter</strong></a></li>
 <li><a href="#examples"><strong>Examples</strong></a></li>
 <li><a href="#debugging"><strong>Debugging and Troubleshooting</strong></a></li>
@@ -432,6 +434,184 @@ For each of the taxonomies you select, the tool compiles all the source site ter
 </p>
 <p>
 &nbsp;
+<a name="shortcodes"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Plugin Shortcodes</h3>
+<p>
+The plugin supports five shortcodes to make its features available for use on posts and pages. Three shortcodes generate lists of sites and taxonomies to be added to HTML forms for a user interface to configure the tools. Two shortcodes provide access to the tools provided by the plugin. You can find a complete examlpe using all five shortcodes in the <a href="#examples"><strong>Examples</strong></a> section.
+</p>
+<h4>The <code>[mme_source_site_options]</code> shortcode</h4>
+<p>
+This shortcode returns HTML markup with <code>&lt;option></code> tags for each site in the network. When surrounded by a <code>&lt;select></code> tag it provides a dropdown control for selecting a single source site. For example:
+</p>
+<p>
+<pre><code>&lt;select name="copy_options_source" id="mme_copy_options_source">
+[mme_source_site_options]
+&lt;/select></code></pre>
+The shortcode parameters are:
+</p>
+<ul class="mla_settings">
+<li><strong>current_site</strong> - Default '0'. ID value of the currently selected site.</li>
+<li><strong>select_name</strong> - Default 'copy_options_source'. Name attribute of the surrounding select control.</li>
+</ul>
+<h4>The <code>[mme_destination_sites_items]</code> shortcode</h4>
+<p>
+This shortcode returns HTML markup with <code>&lt;li></code> tags for each site in the network. When surrounded by a <code>&lt;ul></code> tag it provides a list of checkbox items for selecting one or more destination sites. For example:
+</p>
+<p>
+<pre><code>&lt;input type="hidden" name="copy_options_destinations[]" value="0">
+&lt;ul class="cat-checklist form-no-clear" id="mme_copy_options_destinations_ul">
+[mme_destination_sites_items]
+&lt;/ul></code></pre>
+The shortcode parameters are:
+</p>
+<ul class="mla_settings">
+<li><strong>current_sites</strong> - Default ''. Comma-separated list of ID value(s) of the currently selected site(s). If it is empty, the <code>$_REQUEST</code> array will be checked for an element with the checklist_name to make the list "sticky".</li>
+<li><strong>checklist_name</strong> - Default 'copy_options_destinations'. Name attribute of the li tags.</li>
+</ul>
+<h4>The <code>[mme_terms_source_taxonomies]</code> shortcode</h4>
+<p>
+This shortcode returns HTML markup with <code>&lt;li></code> tags for each taxonomy supported by MLA. When surrounded by a <code>&lt;ul></code> tag it provides a list of checkbox items for selecting one or more taxonomies from which to copy term definitions. For example:
+</p>
+<p>
+<pre><code>&lt;input type="hidden" name="copy_terms_taxonomies[]" value="0">
+&lt;ul class="cat-checklist attachment_categorychecklist form-no-clear" id="mme_copy_terms_taxonomies_ul">
+[mme_terms_source_taxonomies]
+&lt;/ul></code></pre>
+The shortcode parameters are:
+</p>
+<ul class="mla_settings">
+<li><strong>current_taxonomies</strong> - Default ''. Comma-separated list of ID value(s) of the currently selected site(s). If it is empty, the <code>$_REQUEST</code> array will be checked for an element with the checklist_name to make the list "sticky".</li>
+<li><strong>checklist_name</strong> - Default 'copy_terms_taxonomies'. Name attribute of the li tags.</li>
+</ul>
+<h4>The <code>[mme_copy_settings]</code> shortcode</h4>
+<p>
+</p>
+<p>
+<pre><code>[mme_copy_settings]
+source_site="{+template:({+request:copy_options_source+})+}"
+destination_sites="{+template:({+request:copy_options_destinations+})+}"
+copy_defaults="{+template:({+request:copy_defaults+}|false)+}"
+[/mme_copy_settings]</code></pre>
+The shortcode parameters are:
+</p>
+<ul class="mla_settings">
+<li><strong>enforce_capability</strong> - Default 'true'. This shortcode will perform a WordPress "current_user_can" test before starting its work. This means the shortcode will only work for a logged-in user with the appropriate caopability. To bypass this security check, add the <code>enforce_capability=false</code> parameter.</li>
+<li><strong>action</strong> - Default 'copy_settings'. This shortcode is often with an HTML form that populates its parameters and a "submit" button that runs the shortcode after parameters are selected (see, for example, the Examples section). If this parameter is not empty the shortcode will only run if the <code>$_REQUEST</code> array has an element with a matching key. To disable this check, add the <code>action=''</code> parameter.</li>
+<li><strong>no_action_text</strong> - Default ''. If not empty, the shortcode will return this string when the <code>$_REQUEST</code> array does not have an element with the action value as the key.</li>
+<li><strong>source_site</strong> - Default '0'. When not empty and not '0', this is the ID of the site from which to retrieve settings for the copy operation.</li>
+<li><strong>no_source_text</strong> - Default ''. If not empty, the shortcode will return this string when the <code>source_site</code> is empty or '0'.</li>
+<li><strong>destination_sites</strong> - Default ''. Comma-separated list of ID value(s) of the sites to which the settings are to be copied.</li>
+<li><strong>copy_defaults</strong> - Default 'false'. The shortcode does not copy any settings set to their default value. To unconditionally copy all settings, including default values, add the <code>copy_defaults=true</code> parameter.</li>
+</ul>
+<h4>The <code>[mme_copy_terms]</code> shortcode</h4>
+<p>
+</p>
+<p>
+<pre><code>[mme_copy_terms]
+source_site="{+template:({+request:copy_options_source+})+}"
+destination_sites="{+template:({+request:copy_options_destinations+})+}"
+taxonomy="{+template:({+request:copy_terms_taxonomies+})+}"
+[/mme_copy_terms]</code></pre>
+The shortcode parameters are:
+</p>
+<ul class="mla_settings">
+<li><strong>enforce_capability</strong> - Default 'true'. This shortcode will perform a WordPress "current_user_can" test before starting its work. This means the shortcode will only work for a logged-in user with the appropriate caopability. To bypass this security check, add the <code>enforce_capability=false</code> parameter.</li>
+<li><strong>action</strong> - Default 'copy_terms'. This shortcode is often with an HTML form that populates its parameters and a "submit" button that runs the shortcode after parameters are selected (see, for example, the Examples section). If this parameter is not empty the shortcode will only run if the <code>$_REQUEST</code> array has an element with a matching key. To disable this check, add the <code>action=''</code> parameter.</li>
+<li><strong>no_action_text</strong> - Default ''. If not empty, the shortcode will return this string when the <code>$_REQUEST</code> array does not have an element with the action value as the key.</li>
+<li><strong>source_site</strong> - Default '0'. When not empty and not '0', this is the ID of the site from which to retrieve term definitions for the copy operation.</li>
+<li><strong>no_source_text</strong> - Default ''. If not empty, the shortcode will return this string when the <code>source_site</code> is empty or '0'.</li>
+<li><strong>destination_sites</strong> - Default ''. Comma-separated list of ID value(s) of the sites to which the term definitions are to be copied.</li>
+<li><strong>taxonomy</strong> - Default ''. Comma-separated list of slug value(s) (e.g., attachment_category, attachment_tag) of the taxonomies for which the term definitions are to be copied. Only taxonomies with the "Support" box checked in the MLA General tab "Taxonomy Support" section (of the source site) will be acted on.</li>
+<li><strong>no_taxonomy_text</strong> - Default ''. If not empty, the shortcode will return this string when the <code>taxonomy</code> parameter is empty.</li>
+</ul>
+<p>
+&nbsp;
+<a name="api-functions"></a>
+</p>
+<p>
+<a href="#backtotop">Go to Top</a>
+</p>
+<h3>Plugin API Functions</h3>
+<p>
+The plugin supports five API functions to make its features available for use in application code. Three functions generate lists of sites and taxonomies to be added to HTML forms for sonfiguring the tools. Two functions provide access to the tools provided by the plugin. The calling program is responsible for ensuring that all parameters contain valid values. You can inspect the corresponding shortcode functions to see that validations they perform before calling these functions.
+</p>
+<h4>The <code>mme_source_site_options()</code> function</h4>
+<p>
+<pre><code>/**
+ * Compose HTML markup for Source Site select field options
+ *
+ * @since 1.13
+ *
+ * @param	string	$current_value Optional current selected value, default ''
+ *
+ * @return	string	HTML markup for the select field options
+ */</code></pre>
+MLAMultisiteExtensions::mme_source_site_options( $current_value = '' )
+</p>
+<h4>The <code>mme_destination_sites_items()</code> function</h4>
+<p>
+<pre><code>/**
+ * Compose HTML markup for Destination Sites checklist items
+ *
+ * @since 1.13
+ *
+ * @param	array	$current_value Optional current selected values, default array()
+ * @param	string	$checklist_name Optional HTML name attribute element, default 'copy_options_destinations'
+ *
+ * @return	string	HTML markup for the select field options
+ */</code></pre>
+MLAMultisiteExtensions::mme_destination_sites_items( $current_value = array(), $checklist_name = 'copy_options_destinations' )
+</p>
+<h4>The <code>mme_terms_source_taxonomies()</code> function</h4>
+<p>
+<pre><code>/**
+ * Compose HTML markup for copy terms taxonomies items
+	 *
+ * @since 1.13
+ *
+ * @param	string	Optional current selected values, default array()
+ * @param	string	Optional HTML name attribute element, default 'copy_terms_taxonomies'
+ *
+ * @return	string	HTML markup for the select field options
+ */</code></pre>
+MLAMultisiteExtensions::mme_terms_source_taxonomies( $current_value = array(), $checklist_name = 'copy_terms_taxonomies' )
+</p>
+<h4>The <code>mme_copy_settings_action()</code> function</h4>
+<p>
+<pre><code>/**
+ * Copy non-default (or ALL) MLA option settings from a source site to one or more destination sites.
+ *
+ * @since 1.10
+ *
+ * @param	string	$options_source Source site
+ * @param	array	$options_destinations Destination site(s)
+ * @param	boolean	$copy_defaults Optional, default false. True to copy ALL settings, not just non-defaults.
+ *
+ * @return	string	action-specific message(s), e.g., summary of results
+ */</code></pre>
+MLAMultisiteExtensions::mme_copy_settings_action( $options_source, $options_destinations, $copy_defaults = false )
+</p>
+<h4>The <code>mme_copy_terms()</code> function</h4>
+<p>
+<pre><code>/**
+ * Copy non-default MLA options from a source site to one or more destination sites.
+ *
+ * @since 1.12
+ *
+ * @param	string	$terms_source Source site
+ * @param	array	$terms_destinations Destination site(s)
+ * @param	array	$terms_taxonomies Source Site taxonomies
+ *
+ * @return	string	action-specific message(s), e.g., summary of results
+ */</code></pre>
+MLAMultisiteExtensions::mme_copy_terms_action( $terms_source, $terms_destinations, $terms_taxonomies )
+</p>
+<p>
+&nbsp;
 <a name="site-id-parameter"></a>
 </p>
 <p>
@@ -461,6 +641,76 @@ Here are some examples of the <code>site_id=</code> shortcode parameter.
 <li><strong>[mla_gallery parent=all site_id=all]</strong> - merges items from all of the sites in the network.</li>
 <li><strong>[mla_gallery parent=all site_id=0]</strong> - selects items from the "current" site.</li>
 </ol>
+<h4>Plugin shortcodes example</h4>
+<p>
+Here is an example that uses all five shortcodes made available by the plugin. It contains a simplified version of all of the controls in the Plugin Tool(s) section on the General tab. Below the CSS styles and HTML markup are some notes highlighting the important parts of the example.
+</p>
+<p>
+<pre><code>&lt;style type="text/css">
+ul.cat-checklist {
+list-style: none;
+max-width: fit-content;
+height: 10em;
+border: 1px solid #ddd;
+margin: 0 0 5px;
+padding: 0.2em 5px;
+overflow-y: scroll;
+}
+&lt;/style>
+&lt;form action="." method="post" class="mla-display-settings-page" id="mme-tools-form">
+&lt;h4>Source Site&lt;/h4>
+&lt;p>
+&lt;select name="copy_options_source" id="mme_copy_options_source">
+[mme_source_site_options]
+&lt;/select>
+&lt;/p>
+&lt;h4>Destination Site(s)&lt;/h4>
+&lt;input type="hidden" name="copy_options_destinations[]" value="0">
+&lt;ul class="cat-checklist" id="mme_copy_options_destinations_ul">
+[mme_destination_sites_items]
+&lt;/ul>
+&lt;h4>Copy Settings tool&lt;/h4>
+&lt;p>
+&lt;input name="copy_defaults" id="mme_copy_defaults" type="checkbox" value="true">
+&nbsp;Copy Defaults
+&lt;/p>
+&lt;p>
+&lt;span class="submit mla-settings-submit">
+&lt;input name="copy_settings" class="button-primary" id="mme_copy_settings" type="submit" value="Copy Settings">
+&lt;/span>
+&lt;/p>
+&lt;h4>Copy Terms tool&lt;/h4>
+&lt;input type="hidden" name="copy_terms_taxonomies[]" value="0">
+&lt;ul class="cat-checklist" id="mme_copy_terms_taxonomies_ul">
+[mme_terms_source_taxonomies]
+&lt;/ul>
+&lt;p>
+&lt;span class="submit mla-settings-submit">
+&lt;input name="copy_terms" class="button-primary" id="mme_copy_terms" type="submit" value="&nbsp;&nbsp;Copy Terms&nbsp;&nbsp;">
+&lt;/span>
+&lt;/p>
+&lt;/form>
+&lt;h3>Tool Results&lt;/h3>
+[mme_copy_settings]
+source_site="{+template:({+request:copy_options_source+})+}"
+destination_sites="{+template:({+request:copy_options_destinations+})+}"
+copy_defaults="{+template:({+request:copy_defaults+}|false)+}"
+[/mme_copy_settings]
+[mme_copy_terms]
+source_site="{+template:({+request:copy_options_source+})+}"
+destination_sites="{+template:({+request:copy_options_destinations+})+}"
+taxonomy="{+template:({+request:copy_terms_taxonomies+})+}"
+[/mme_copy_terms]</code></pre>
+</p>
+<p>
+The example begins with a CSS style definition that gives the destination site and taxonomy checklists a familiar appearance, with a limited height and scroll bar. Next is an HTML form that contains controls for setting all of the values to be used by the tools. Most of the controls are generated by MME shortcodes, but there are a few conventional HTML elements as well. The <code>name=</code> attributes of the HTML tags must match the name parameters of the shortcodes, e.g., <code>&lt;select name="copy_options_source"</code> matches the (default) value of the <code>[mme_source_site_options select_name=...]</code> parameter. Note the <code>&lt;input type="hidden" ...</code> tags in the checklists. These ensure that the checklist array will be added to the <code>$_REQUEST</code> array even if none of the checklist boxes are checked.
+</p>
+<p>
+The form includes two submit buttons, one for each of the tools. The <code>name=</code> attribute of each button matches the (default) <code>action=</code> value for the corresponding tool shortcode. This ensures that only one of the tool shortcodes will run, and only when the button is clicked.
+</p>
+<p>
+The example concludes with the two tool shortcodes, using the "enclosing shortcode" syntax to spread the parameters over several lines for readability. The important part of the example here is how the results of the form become the parameter values for the tool shortcodes. For example, the source site is passed from the <code>&lt;select name="copy_options_source" ...</code> element as <code>source_site="{+template:({+request:copy_options_source+})+}"</code>. When the post/page is first displayed the <code>$_REQUEST</code> array is empty; the parentheses in the template handle this case, leaving the parameter value empty. In a similar way, the <code>copy_defaults="{+template:({+request:copy_defaults+}|false)+}"</code> template substitutes "false" for a missing value.
+</p>
 <p>
 &nbsp;
 <a name="debugging"></a>

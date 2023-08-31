@@ -2580,7 +2580,7 @@ class GP_Nested_Forms extends GP_Plugin {
 		}
 
 		$incomplete_submission_info = GFFormsModel::get_draft_submission_values( $this->get_save_and_continue_token( $form['id'] ) );
-		if ( $incomplete_submission_info['form_id'] != $form['id'] ) {
+		if ( empty( $incomplete_submission_info ) || $incomplete_submission_info['form_id'] != $form['id'] ) {
 			return array();
 		}
 

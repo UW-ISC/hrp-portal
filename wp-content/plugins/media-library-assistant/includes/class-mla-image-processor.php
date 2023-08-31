@@ -293,9 +293,10 @@ class MLAImageProcessor {
 
 	 * @return	void	echos page content and calls exit();
 	 */
-	private static function _mla_die( $message, $title = '', $response = 500 ) {
-		self::_mla_debug_add( __LINE__ . " _mla_die( '{$message}', '{$title}', '{$response}' )" );
-		exit();
+	public static function mla_image_processor_die( $message, $title = '', $response = 500 ) {
+		$status =  __LINE__ . " mla_image_processor_die( '{$message}', '{$title}', '{$response}' )";
+		self::_mla_debug_add( $status );
+		exit( $status );
 	}
 
 	/**
@@ -336,7 +337,7 @@ class MLAImageProcessor {
 			ini_set( 'zlib.output_compression', 'Off' );
 		}
 
-		if ( ! is_file( $input_file ) ) {
+		if ( ! is_file( 'file://' . $input_file ) ) {
 			return self::_mla_error_return( 'File not found: ' . $input_file, __LINE__ );
 		}
 
@@ -396,7 +397,7 @@ class MLAImageProcessor {
 			}
 
 			if ( ! self::$image->valid() ) {
-				self::_mla_die( 'File not loaded', __LINE__, 404 );
+				self::mla_image_processor_die( 'File not loaded', __LINE__, 404 );
 			}
 		} catch ( Throwable $e ) { // PHP 7
 			return self::_mla_error_return( 'Image load Throwable: ' . $e->getMessage() . ' from step ' . $try_step, __LINE__ );
@@ -458,7 +459,7 @@ class MLAImageProcessor {
 	public static function mla_process_stream_image() {
 		self::_mla_debug_add( 'MLAImageProcessor::mla_process_stream_image REQUEST = ' . var_export( $_REQUEST, true ) );
 		if ( ! class_exists( 'Imagick' ) ) {
-			self::_mla_die( 'Imagick not installed', __LINE__, 500 );
+			self::mla_image_processor_die( 'Imagick not installed', __LINE__, 500 );
 		}
 
 		if( ini_get( 'zlib.output_compression' ) ) { 
@@ -466,8 +467,16 @@ class MLAImageProcessor {
 		}
 
 		$file = isset( $_REQUEST['mla_stream_file'] ) ? $_REQUEST['mla_stream_file'] : ''; // phpcs:ignore
-		if ( ! is_file( $file ) ) {
-			self::_mla_die( 'File not found', __LINE__, 404 );
+		if ( false !== strpos( $file, '://' ) ) {
+			self::mla_image_processor_die( 'Invalid file name', __LINE__, 404 );
+		}
+
+		if ( ! in_array( strtolower( pathinfo( $file, PATHINFO_EXTENSION ) ), array( 'ai', 'eps', 'pdf', 'ps' ) ) ) {
+			self::mla_image_processor_die( 'Unsupported file type', __LINE__, 404 );
+		}
+
+		if ( ! is_file( 'file://' . $file ) ) {
+			self::mla_image_processor_die( 'File not found', __LINE__, 404 );
 		}
 
 		$use_mutex = isset( $_REQUEST['mla_single_thread'] );
@@ -530,11 +539,11 @@ class MLAImageProcessor {
 			}
 
 			if ( ! self::$image->valid() ) {
-				self::_mla_die( 'File not loaded', __LINE__, 404 );
+				self::mla_image_processor_die( 'File not loaded', __LINE__, 404 );
 			}
 		}
 		catch ( Exception $e ) {
-			self::_mla_die( 'Image load exception: ' . $e->getMessage(), __LINE__, 404 );
+			self::mla_image_processor_die( 'Image load exception: ' . $e->getMessage(), __LINE__, 404 );
 		}
 
 		// Prepare the output image; resize and flatten, if necessary
@@ -548,7 +557,7 @@ class MLAImageProcessor {
 			self::_prepare_image( $width, $height, $best_fit, $type, $quality );
 			}
 		catch ( Exception $e ) {
-			self::_mla_die( '_prepare_image exception: ' . $e->getMessage(), __LINE__, 500 );
+			self::mla_image_processor_die( '_prepare_image exception: ' . $e->getMessage(), __LINE__, 500 );
 		}
 
 		// Stream the image back to the requestor
@@ -557,7 +566,7 @@ class MLAImageProcessor {
 			echo self::$image->getImageBlob(); // phpcs:ignore
 		}
 		catch ( Exception $e ) {
-			self::_mla_die( 'Image stream exception: ' . $e->getMessage(), __LINE__, 500 );
+			self::mla_image_processor_die( 'Image stream exception: ' . $e->getMessage(), __LINE__, 500 );
 		}
 
 		if ( $use_mutex ) {

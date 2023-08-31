@@ -736,6 +736,13 @@ class GP_Populate_Anything_Live_Merge_Tags {
 			$choice_markup = str_replace( $full_match, $full_match_replacement, $choice_markup );
 			// Remove empty values to default to innerHTML
 			$choice_markup = str_replace( " value=''", '', $choice_markup );
+
+			// Ensure that we reselect selected options using LMTs as their values.
+			$value_parsed = $this->get_live_merge_tag_value( $choice['value'], $form );
+
+			if ( $value_parsed == $value ) {
+				$choice_markup = str_replace( '<option ', '<option selected="selected" ', $choice_markup );
+			}
 		}
 
 		return $choice_markup;
