@@ -1945,7 +1945,13 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 			$definition = MLACoreOptions::$mla_option_definitions[ $key ];
 			$current_value = MLACore::mla_get_option( $key );
-			$result =  MLASettings::mla_update_option_row( $key, $definition, NULL, $settings );
+			if ( MLACoreOptions::MLA_TAXONOMY_SUPPORT === $key ) {
+				// Stored settings are diffferent from the $_REQUEST settings in the General tab
+				$result =  MLASettings::mla_update_option_row( $key, $definition, NULL, $settings[ MLACoreOptions::MLA_TAXONOMY_SUPPORT ] );
+			} else {
+				$result =  MLASettings::mla_update_option_row( $key, $definition, NULL, $settings );
+			}
+			
 			$updated = ( $value === $current_value ) ? 'unchanged' : 'updated';
 
 			if ( 'updated' === $updated ) {

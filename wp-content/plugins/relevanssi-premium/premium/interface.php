@@ -23,7 +23,7 @@ add_filter( 'manage_pages_columns', 'relevanssi_manage_columns', 10, 2 );
 add_action( 'admin_print_footer_scripts-edit.php', 'relevanssi_quick_edit_js' );
 add_filter( 'default_hidden_columns', 'relevanssi_hide_columns' );
 add_action( 'save_post', 'relevanssi_quick_edit_save' );
-add_filter( 'quick_edit_custom_box', 'relevanssi_quick_edit_custom_box', 10, 2 );
+add_filter( 'quick_edit_custom_box', 'relevanssi_quick_edit_custom_box', 10 );
 add_filter( 'manage_posts_custom_column', 'relevanssi_manage_custom_column', 10, 2 );
 add_filter( 'manage_pages_custom_column', 'relevanssi_manage_custom_column', 10, 2 );
 
@@ -1407,9 +1407,8 @@ function relevanssi_manage_custom_column( $column, $post_id ) {
  * Adds the Relevanssi custom fields to the quick edit box.
  *
  * @param string $column    The column name.
- * @param string $post_type The post type.
  */
-function relevanssi_quick_edit_custom_box( $column, $post_type ) {
+function relevanssi_quick_edit_custom_box( $column ) {
 	switch ( $column ) {
 		case 'pinned_keywords':
 			?>

@@ -1,6 +1,10 @@
 
 # Changelog
 
+## 1.1.34
+
+	- Fixed issue where loading a form with an invalid S&C token in the URL would cause an error.
+
 ## 1.1.33
 
 	- Updated child entry datetime format to match parent entry datetime format when exporting entries.

@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.0.12
+
+	- Fixed PHP 8 warnings.
+	- Fixed issue where administrative fields that are dynamically populated could show in certain situations if the field's choices and visibility are dependent on other fields.
+
+## 2.0.11
+
+	- Fixed issue where Select field choices could become unselected if the value uses a Live Merge Tag and the form is a multi-page form.
+	- Fixed an issue where Populate Anything could trigger field refreshes immediately after navigating pages in an AJAX form that uses conditional logic.
+	- Fixed issue where preselected values of `0` in choices wouldn't set the value on initial load for chained population.
+	- Fixed an issue where the choice label for Product Field could not be displayed on GP Preview Submissions.
+
 ## 2.0.10
 
 	- Removed `GPPA_Object_Type_Database::$_primary_key_cache` to allow greater control of returned results via related filters.

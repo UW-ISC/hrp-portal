@@ -210,10 +210,8 @@ function relevanssi_search_multi( $multi_args ) {
 				if ( $search_again ) {
 					// No hits even with partial matching.
 					$search_again = false;
-				} else {
-					if ( 'sometimes' === get_option( 'relevanssi_fuzzy' ) ) {
-						$search_again = true;
-					}
+				} elseif ( 'sometimes' === get_option( 'relevanssi_fuzzy' ) ) {
+					$search_again = true;
 				}
 			} else {
 				$search_again = false;
@@ -281,7 +279,7 @@ function relevanssi_search_multi( $multi_args ) {
 		$hit                                   = $post_objects[ $hit ];
 		$hits[ intval( $i ) ]                  = $hit;
 		$hits[ intval( $i ) ]->relevance_score = round( $weight, 2 );
-		$i++;
+		++$i;
 	}
 
 	if ( count( $hits ) < 1 ) {
@@ -409,7 +407,7 @@ function relevanssi_is_multisite_search( $query ) {
  *
  * @return bool True, if blog is public.
  */
-function relevanssi_is_blog_ok( $blogid ) : bool {
+function relevanssi_is_blog_ok( $blogid ): bool {
 	// Only search blogs that are publicly available (unless filter says otherwise).
 	$public_status = (bool) get_blog_status( $blogid, 'public' );
 	if ( null === $public_status ) {

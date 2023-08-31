@@ -39,7 +39,10 @@ declare global {
 			GF_BASEURL: string
 			NONCE: string
 			I18N: { [s: string]: string }
-		}
+		},
+		[gppaForm: `GPPA_FORM_${string}`]: {
+			SHOW_ADMIN_FIELDS_IN_AJAX: boolean
+		},
 		gf_global: any
 		gformInitChosenFields: any
 		GetSelectedField: any

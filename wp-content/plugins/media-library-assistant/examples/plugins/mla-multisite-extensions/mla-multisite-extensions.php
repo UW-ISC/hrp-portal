@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/save-and-import-settings-for-multisite/
  *
  * @package MLA Multisite Extensions
- * @version 1.12
+ * @version 1.13
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
 Description: Adds Multisite filters to MLA shortcodes, supports the "Multisite Global Media" plugin, copies MLA option settings between sites.
 Author: David Lingren
-Version: 1.12
+Version: 1.13
 Author URI: http://davidlingren.com/
 
 Copyright 2017-2023 David Lingren
@@ -62,7 +62,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.12';
+	const PLUGIN_VERSION = '1.13';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -188,6 +188,15 @@ class MLAMultisiteExtensions {
 			return;
 		}
 
+		// Post/Page UI elements
+		add_shortcode( 'mme_source_site_options', 'MLAMultisiteExtensions::mme_source_site_options_shortcode' );
+		add_shortcode( 'mme_destination_sites_items', 'MLAMultisiteExtensions::mme_destination_sites_items_shortcode' );
+		add_shortcode( 'mme_terms_source_taxonomies', 'MLAMultisiteExtensions::mme_terms_source_taxonomies_shortcode' );
+
+		// Tool actions
+		add_shortcode( 'mme_copy_settings', 'MLAMultisiteExtensions::mme_copy_settings_shortcode' );
+		add_shortcode( 'mme_copy_terms', 'MLAMultisiteExtensions::mme_copy_terms_shortcode' );
+
 		// The plugin settings class is shared with other MLA example plugins
 		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
 			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
@@ -207,14 +216,14 @@ class MLAMultisiteExtensions {
 			$current_options_source = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_options_source'];
 			$current_options_destinations = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_options_destinations'];
 			$current_copy_defaults = isset( $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_defaults'] );
-			self::$settings_arguments['messages'] = self::_copy_options_action( $current_options_source, $current_options_destinations, $current_copy_defaults );
+			self::$settings_arguments['messages'] = self::mme_copy_settings_action( $current_options_source, $current_options_destinations, $current_copy_defaults );
 		}
 		
 		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_tools_copy_terms'] ) ) {
 			$current_options_source = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_options_source'];
 			$current_options_destinations = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_options_destinations'];
 			$current_terms_taxonomies = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['copy_terms_taxonomies'];
-			self::$settings_arguments['messages'] = self::_copy_terms_action( $current_options_source, $current_options_destinations, $current_terms_taxonomies );
+			self::$settings_arguments['messages'] = self::mme_copy_terms_action( $current_options_source, $current_options_destinations, $current_terms_taxonomies );
 		}
 		
 		// Create our own settings object
@@ -230,34 +239,34 @@ class MLAMultisiteExtensions {
 		// Filter for detecting the Multisite Global Media plugin
 		add_action( 'mla_media_modal_query_filtered_terms', 'MLAMultisiteExtensions::mla_media_modal_query_filtered_terms', 10, 2 );
 
+		// Load template array for front-end shortcodes
+		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
+
 		// The remaining filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() ) {
 			return;
 		}
 
-		// Add the run-time values to the settings
-		// Load template array and initialize page-level values.
-		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
-
+		// Initialize page-level values andadd the run-time values to the settings
 		$general_tab_values = self::$plugin_settings->get_plugin_argument('general_tab_values');
-		$general_tab_values['copy_options_source'] = self::_compose_copy_options_source( $current_options_source );
-		$general_tab_values['copy_options_destinations'] = self::_compose_copy_options_destinations( $current_options_destinations );
+		$general_tab_values['copy_options_source'] = self::mme_source_site_options( $current_options_source );
+		$general_tab_values['copy_options_destinations'] = self::mme_destination_sites_items( $current_options_destinations, 'MLAMultisiteExtensions_tools[copy_options_destinations]' );
 		$general_tab_values['copy_defaults_checked'] = $current_copy_defaults ? 'checked="checked" ' : '';
-		$general_tab_values['copy_terms_taxonomies'] = self::_compose_copy_terms_taxonomies( $current_terms_taxonomies );
+		$general_tab_values['copy_terms_taxonomies'] = self::mme_terms_source_taxonomies( $current_terms_taxonomies, 'MLAMultisiteExtensions_tools[copy_terms_taxonomies]' );
 
 		self::$plugin_settings->update_plugin_argument('general_tab_values', $general_tab_values );
 	} // initialize
 
 	/**
-	 * Compose HTML markup for Sioource Site select field options
+	 * Compose HTML markup for Source Site select field options
  	 *
-	 * @since 1.10
+	 * @since 1.13
 	 *
-	 * @param	string	Optional current selected value, default ''
+	 * @param	string	$current_value Optional current selected value, default ''
 	 *
 	 * @return	string	HTML markup for the select field options
 	 */
-	private static function _compose_copy_options_source( $current_value = '' ) {
+	public static function mme_source_site_options( $current_value = '' ) {
 		// Avoid fatal errors, e.g., for some AJAX calls such as "heartbeat"
 		if ( ! class_exists( 'MLAData' ) ) {
 			return '';
@@ -273,10 +282,10 @@ class MLAMultisiteExtensions {
 
 		// Build an array of the dynamic options
 		foreach ( get_sites() as $site ) {
-//error_log( __LINE__ . " _compose_copy_options_source( {$current_value} ) get_sites[] = " . var_export( $site, true ), 0 );
+//error_log( __LINE__ . " mme_source_site_options( {$current_value} ) get_sites[] = " . var_export( $site, true ), 0 );
 
 			$details = get_blog_details( $site->blog_id );
-//error_log( __LINE__ . " _compose_copy_options_source( {$current_value} ) get_blog_details()= " . var_export( $details, true ), 0 );
+//error_log( __LINE__ . " mme_source_site_options( {$current_value} ) get_blog_details()= " . var_export( $details, true ), 0 );
 			
 			$option_values = array(
 				'value' => $details->blog_id,
@@ -287,21 +296,22 @@ class MLAMultisiteExtensions {
 			$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 		}
 
-//error_log( __LINE__ . " _compose_copy_options_source( {$current_value} ) select_options = " . var_export( $select_options, true ), 0 );
+//error_log( __LINE__ . " mme_source_site_options( {$current_value} ) select_options = " . var_export( $select_options, true ), 0 );
 		return $select_options;
-	} // _compose_copy_options_source
+	} // mme_source_site_options
 
 	/**
-	 * Compose HTML markup for Sioource Site select field options
+	 * Compose HTML markup for Destination Sites checklist items
  	 *
-	 * @since 1.10
+	 * @since 1.13
 	 *
-	 * @param	string	Optional current selected value, default ''
+	 * @param	array	$current_value Optional current selected values, default array()
+	 * @param	string	$checklist_name Optional HTML name attribute element, default 'copy_options_destinations'
 	 *
 	 * @return	string	HTML markup for the select field options
 	 */
-	private static function _compose_copy_options_destinations( $current_value = '' ) {
-//error_log( __LINE__ . " _compose_copy_options_destinations current_value = " . var_export( $current_value, true ), 0 );
+	public static function mme_destination_sites_items( $current_value = array(), $checklist_name = 'copy_options_destinations' ) {
+//error_log( __LINE__ . " mme_destination_sites_items current_value = " . var_export( $current_value, true ), 0 );
 
 		// Avoid fatal errors, e.g., for some AJAX calls such as "heartbeat"
 		if ( ! class_exists( 'MLAData' ) ) {
@@ -309,7 +319,7 @@ class MLAMultisiteExtensions {
 		}
 		
 		$option_values = array(
-			'checklist_name' => 'copy_options_destinations',
+			'checklist_name' => esc_attr( $checklist_name ),
 			'value' => 'all',
 			'text' => '<strong>&nbsp;' . esc_attr( '* - ALL Destination Sites' ) . '</strong>',
 			'checked' => in_array( 'all', $current_value ) ? 'checked=checked' : '',
@@ -319,13 +329,13 @@ class MLAMultisiteExtensions {
 
 		// Build an array of the sites
 		foreach ( get_sites() as $site ) {
-//error_log( __LINE__ . " _compose_copy_options_destinations() get_sites[] = " . var_export( $site, true ), 0 );
+//error_log( __LINE__ . " mme_destination_sites_items() get_sites[] = " . var_export( $site, true ), 0 );
 
 			$details = get_blog_details( $site->blog_id );
-//error_log( __LINE__ . " _compose_copy_options_destinations() get_blog_details()= " . var_export( $details, true ), 0 );
+//error_log( __LINE__ . " mme_destination_sites_items() get_blog_details()= " . var_export( $details, true ), 0 );
 
 			$option_values = array(
-				'checklist_name' => 'copy_options_destinations',
+				'checklist_name' => esc_attr( $checklist_name ),
 				'value' => $details->blog_id,
 				'text' => esc_attr( $details->blog_id . ' - ' . $details->blogname ),
 				'checked' => in_array( $details->blog_id, $current_value ) ? 'checked=checked' : '',
@@ -334,23 +344,23 @@ class MLAMultisiteExtensions {
 			$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
 		}
 
-//error_log( __LINE__ . " _compose_copy_options_destinations() checklist_items = " . var_export( $checklist_items, true ), 0 );
+//error_log( __LINE__ . " mme_destination_sites_items() checklist_items = " . var_export( $checklist_items, true ), 0 );
 		return $checklist_items;
-	} // _compose_copy_options_destinations
+	} // mme_destination_sites_items
 
 	/**
-	 * Copy non-default MLA options from a source site to one or more destination sites.
+	 * Copy non-default (or ALL) MLA option settings from a source site to one or more destination sites.
 	 *
 	 * @since 1.10
 	 *
 	 * @param	string	$options_source Source site
 	 * @param	array	$options_destinations Destination site(s)
-	 * @param	boolean	$copy_defaults True to copy ALL settings, not just non-defaults
+	 * @param	boolean	$copy_defaults Optional, default false. True to copy ALL settings, not just non-defaults.
 	 *
 	 * @return	string	action-specific message(s), e.g., summary of results
 	 */
-	private static function _copy_options_action( $options_source, $options_destinations, $copy_defaults ) {
-		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_options_action() MLAMultisiteExtensions_tools = " . var_export( $_REQUEST['MLAMultisiteExtensions_tools'], true ), self::MLA_DEBUG_CATEGORY );
+	public static function mme_copy_settings_action( $options_source, $options_destinations, $copy_defaults = false ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_settings_action( {$options_source}, {$copy_defaults} ) options_destinations = " . var_export( $options_destinations, true ), self::MLA_DEBUG_CATEGORY );
 
 		if ( '0' === $options_source ) {
 			$messages = 'No Source Site selected, nothing copied.';
@@ -365,8 +375,8 @@ class MLAMultisiteExtensions {
 				switch_to_blog( $blog_details->blog_id );
 				$source_settings = MLASettings::mla_get_export_settings( $copy_defaults );
 				restore_current_blog();
-				MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_options_action() source_settings = " . var_export( $source_settings, true ), self::MLA_DEBUG_CATEGORY );
-	//error_log( __LINE__ . " _copy_options_action() source_settings = " . var_export( $source_settings, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_settings_action() source_settings = " . var_export( $source_settings, true ), self::MLA_DEBUG_CATEGORY );
+	//error_log( __LINE__ . " mme_copy_settings_action() source_settings = " . var_export( $source_settings, true ), 0 );
 				$source_count = count( $source_settings );
 
 				if ( $copy_defaults ) {
@@ -389,12 +399,12 @@ class MLAMultisiteExtensions {
 					}
 					
 					$blog_details = get_blog_details( $site_id );
-//error_log( __LINE__ . " _copy_options_action() blog_details for {$site_id} = " . var_export( $blog_details, true ), 0 );
+//error_log( __LINE__ . " mme_copy_settings_action() blog_details for {$site_id} = " . var_export( $blog_details, true ), 0 );
 					if ( $blog_details ) {
 						switch_to_blog( $site_id );
 						$results = MLASettings::mla_put_export_settings( $source_settings['settings'] );
 						restore_current_blog();
-						MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_options_action() results for {$site_id} = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
+						MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_settings_action() results for {$site_id} = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
 
 						if ( $copy_defaults ) {
 							$messages .= sprintf( 'Destination %1$s - %2$s updated %3$d settings.<br />', $blog_details->blog_id, $blog_details->blogname, $results['updated'] );
@@ -410,9 +420,9 @@ class MLAMultisiteExtensions {
 			}
 		} // good $options_source
 
-		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_options_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_settings_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
 		return $messages;		
-	} // _copy_options_action
+	} // mme_copy_settings_action
 
 	/**
 	 * Fetch term definitions from an array of Source Site taxonomies.
@@ -528,16 +538,17 @@ class MLAMultisiteExtensions {
 	} // _put_destination_site_terms
 	
 	/**
-	 * Compose HTML markup for Sioource Site select field options
+	 * Compose HTML markup for copy terms taxonomies items
  	 *
-	 * @since 1.10
+	 * @since 1.13
 	 *
-	 * @param	string	Optional current selected value, default ''
+	 * @param	array	$current_value Optional current selected values, default array()
+	 * @param	string	$checklist_name Optional HTML name attribute element, default 'copy_terms_taxonomies'
 	 *
 	 * @return	string	HTML markup for the select field options
 	 */
-	private static function _compose_copy_terms_taxonomies( $current_value = '' ) {
-//error_log( __LINE__ . " _compose_copy_options_destinations current_value = " . var_export( $current_value, true ), 0 );
+	public static function mme_terms_source_taxonomies( $current_value = array(), $checklist_name = 'copy_terms_taxonomies' ) {
+//error_log( __LINE__ . " mme_destination_sites_items current_value = " . var_export( $current_value, true ), 0 );
 
 		// Avoid fatal errors, e.g., for some AJAX calls such as "heartbeat"
 		if ( ! class_exists( 'MLAData' ) ) {
@@ -550,10 +561,10 @@ class MLAMultisiteExtensions {
 		$supported_taxonomies = MLACore::mla_supported_taxonomies('support');
 		foreach ( $supported_taxonomies as $tax_name ) {
 			$tax_object = get_taxonomy( $tax_name );
-//error_log( __LINE__ . " _compose_copy_terms_taxonomies( {$tax_name} ) tax_object = " . var_export( $tax_object, true ), 0 );
+//error_log( __LINE__ . " mme_terms_source_taxonomies( {$tax_name} ) tax_object = " . var_export( $tax_object, true ), 0 );
 
 			$option_values = array(
-				'checklist_name' => 'copy_terms_taxonomies',
+				'checklist_name' => esc_attr( $checklist_name ),
 				'value' => $tax_name,
 				'text' => esc_attr( $tax_object->label ),
 				'checked' => in_array( $tax_name, $current_value ) ? 'checked=checked' : '',
@@ -562,9 +573,9 @@ class MLAMultisiteExtensions {
 			$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
 		}
 
-//error_log( __LINE__ . " _compose_copy_terms_taxonomies() checklist_items = " . var_export( $checklist_items, true ), 0 );
+//error_log( __LINE__ . " mme_terms_source_taxonomies() checklist_items = " . var_export( $checklist_items, true ), 0 );
 		return $checklist_items;
-	} // _compose_copy_terms_taxonomies
+	} // mme_terms_source_taxonomies
 
 	/**
 	 * Copy non-default MLA options from a source site to one or more destination sites.
@@ -577,8 +588,9 @@ class MLAMultisiteExtensions {
 	 *
 	 * @return	string	action-specific message(s), e.g., summary of results
 	 */
-	private static function _copy_terms_action( $terms_source, $terms_destinations, $terms_taxonomies ) {
-		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_terms_action() MLAMultisiteExtensions_tools = " . var_export( $_REQUEST['MLAMultisiteExtensions_tools'], true ), self::MLA_DEBUG_CATEGORY );
+	public static function mme_copy_terms_action( $terms_source, $terms_destinations, $terms_taxonomies ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_action( {$terms_source} ) terms_destinations = " . var_export( $terms_destinations, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_action( {$terms_source} ) terms_taxonomies = " . var_export( $terms_taxonomies, true ), self::MLA_DEBUG_CATEGORY );
 
 		if ( '0' === $terms_source ) {
 			$messages = 'No Source Site selected, nothing copied.';
@@ -593,7 +605,7 @@ class MLAMultisiteExtensions {
 				switch_to_blog( $blog_details->blog_id );
 				$source_count = self::_get_source_site_terms( $terms_taxonomies );
 				restore_current_blog();
-				MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_terms_action( {$source_count} ) source_terms = " . var_export( self::$source_terms, true ), self::MLA_DEBUG_CATEGORY );
+				MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_action( {$source_count} ) source_terms = " . var_export( self::$source_terms, true ), self::MLA_DEBUG_CATEGORY );
 
 				$messages .= sprintf( 'Source %1$s - %2$s gathered %3$d term definitions.<br />', $blog_details->blog_id, $blog_details->blogname, $source_count ) . "\r\n";
 
@@ -611,12 +623,12 @@ class MLAMultisiteExtensions {
 					}
 					
 					$blog_details = get_blog_details( $site_id );
-//error_log( __LINE__ . " _copy_terms_action() blog_details for {$site_id} = " . var_export( $blog_details, true ), 0 );
+//error_log( __LINE__ . " mme_copy_terms_action() blog_details for {$site_id} = " . var_export( $blog_details, true ), 0 );
 					if ( $blog_details ) {
 						switch_to_blog( $site_id );
 						$term_inserts = self::_put_destination_site_terms();
 						restore_current_blog();
-						MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_terms_action() term_inserts for {$site_id} = " . var_export( $term_inserts, true ), self::MLA_DEBUG_CATEGORY );
+						MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_action() term_inserts for {$site_id} = " . var_export( $term_inserts, true ), self::MLA_DEBUG_CATEGORY );
 
 						foreach ( $term_inserts as $taxonomy => $inserts ) {
 							$messages .= sprintf( 'Destination %1$s - %2$s inserted %3$d %4$s term definitions.<br />', $blog_details->blog_id, $blog_details->blogname, $inserts, $taxonomy ) . "\r\n";
@@ -631,9 +643,385 @@ class MLAMultisiteExtensions {
 			}
 		} // good $options_source
 
-		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::_copy_terms_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
 		return $messages;		
-	} // _copy_terms_action
+	} // mme_copy_terms_action
+
+	/**
+	 * Load MLA files on which this plugin depends
+	 *
+	 * @since 1.13
+	 *
+	 */
+	private static function _load_mla_classes() {
+		static $first_call = true;
+		
+		if ( $first_call ) {
+			// Template file and database access functions.
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-query.php' );
+			MLAQuery::initialize();
+	
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data.php' );
+			MLAData::initialize();
+	
+			// Shortcode shim functions
+			//require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcodes.php' );
+			//MLAShortcodes::initialize();
+	
+			//require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+	
+			// Plugin settings management
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-options.php' );
+			MLAOptions::initialize();
+			
+			// Plugin settings management page
+			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-settings.php' );
+			MLASettings::initialize();
+		
+			$first_call = false;
+		}
+	} // _load_mla_classes
+
+	/**
+	 * Shortcode; Generate HTML <option /> tags, e.g., for Source Site selection
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$attr Shortcode parameters; see defaults in function code
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	string	post/page content to replace the shortcode; HTML markup for the select field options
+	 */
+	public static function mme_source_site_options_shortcode( $attr, $content = NULL ) {
+		self::_load_mla_classes();
+		
+		$default_arguments = array(
+			'current_site' => '0',
+			'select_name' => 'copy_options_source',
+		);
+
+		/*
+		 * Make sure $attr is an array, even if it's empty,
+		 * and repair damage caused by link-breaks in the source text
+		 */
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+
+		// Look for 'request' substitution parameters, which can be added to any input parameter
+		foreach ( $attr as $attr_key => $attr_value ) {
+			// Only expand our own parameters
+			if ( array_key_exists( $attr_key, $default_arguments ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value );
+
+				if ( ! empty( $replacement_values ) ) {
+					$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
+				}
+			}
+		}
+
+		// Accept only the attributes we need and supply defaults
+		$arguments = shortcode_atts( $default_arguments, $attr );
+
+		// Make the control sticky
+		if ( ( '0' === $arguments['current_site'] ) && isset( $_REQUEST[ $arguments['select_name'] ] ) ) {
+			$arguments['current_site'] = $_REQUEST[ $arguments['select_name'] ];
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_source_site_options_shortcode() arguments = " . var_export( $arguments, true ), self::MLA_DEBUG_CATEGORY );
+
+		return self::mme_source_site_options( $arguments['current_site'] );
+	} // mme_source_site_options_shortcode
+
+	/**
+	 * Shortcode; Generate HTML <li /> tags, e.g., for Destination Sites selection
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$attr Shortcode parameters; see defaults in function code
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	string	post/page content to replace the shortcode
+	 */
+	public static function mme_destination_sites_items_shortcode( $attr, $content = NULL ) {
+		self::_load_mla_classes();
+		
+		$default_arguments = array(
+			'current_sites' => '',
+			'checklist_name' => 'copy_options_destinations',
+		);
+
+		/*
+		 * Make sure $attr is an array, even if it's empty,
+		 * and repair damage caused by link-breaks in the source text
+		 */
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+
+		// Look for 'request' substitution parameters, which can be added to any input parameter
+		foreach ( $attr as $attr_key => $attr_value ) {
+			// Only expand our own parameters
+			if ( array_key_exists( $attr_key, $default_arguments ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value );
+
+				if ( ! empty( $replacement_values ) ) {
+					$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
+				}
+			}
+		}
+
+		// Accept only the attributes we need and supply defaults
+		$arguments = shortcode_atts( $default_arguments, $attr );
+
+		// Make the control sticky
+		if ( ( '' === $arguments['current_sites'] ) && isset( $_REQUEST[ $arguments['checklist_name'] ] ) ) {
+			$arguments['current_sites'] = $_REQUEST[ $arguments['checklist_name'] ];
+		} else {
+			$arguments['current_sites'] = explode( ',', $arguments['current_sites'] );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_source_site_options_shortcode() arguments = " . var_export( $arguments, true ), self::MLA_DEBUG_CATEGORY );
+
+		return self::mme_destination_sites_items( $arguments['current_sites'], $arguments['checklist_name'] );
+	} // mme_destination_sites_items_shortcode
+
+	/**
+	 * Shortcode; Generate HTML <li /> tags, e.g., for Source Taxonomies selection
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$attr Shortcode parameters; see defaults in function code
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	string	post/page content to replace the shortcode
+	 */
+	public static function mme_terms_source_taxonomies_shortcode( $attr, $content = NULL ) {
+		self::_load_mla_classes();
+		
+		$default_arguments = array(
+			'current_taxonomies' => '',
+			'checklist_name' => 'copy_terms_taxonomies',
+		);
+
+		/*
+		 * Make sure $attr is an array, even if it's empty,
+		 * and repair damage caused by link-breaks in the source text
+		 */
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+
+		// Look for 'request' substitution parameters, which can be added to any input parameter
+		foreach ( $attr as $attr_key => $attr_value ) {
+			// Only expand our own parameters
+			if ( array_key_exists( $attr_key, $default_arguments ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value );
+
+				if ( ! empty( $replacement_values ) ) {
+					$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
+				}
+			}
+		}
+
+		// Accept only the attributes we need and supply defaults
+		$arguments = shortcode_atts( $default_arguments, $attr );
+
+		// Make the control sticky
+		if ( ( '' === $arguments['current_taxonomies'] ) && isset( $_REQUEST[ $arguments['checklist_name'] ] ) ) {
+			$arguments['current_taxonomies'] = $_REQUEST[ $arguments['checklist_name'] ];
+		} else {
+			$arguments['current_taxonomies'] = explode( ',', $arguments['current_taxonomies'] );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_terms_source_taxonomies_shortcode() arguments = " . var_export( $arguments, true ), self::MLA_DEBUG_CATEGORY );
+
+		return self::mme_terms_source_taxonomies( $arguments['current_taxonomies'], $arguments['checklist_name'] );
+	} // mme_terms_source_taxonomies_shortcode
+
+	/**
+	 * Shortcode; Copy option settings from a Source Site to one or more Destination Sites
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$attr Shortcode parameters; see defaults in function code
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	string	post/page content to replace the shortcode
+	 */
+	public static function mme_copy_settings_shortcode( $attr, $content = NULL ) {
+		self::_load_mla_classes();
+		
+		$default_arguments = array(
+			'enforce_capability' => 'true',
+			'action' => 'copy_settings',
+			'no_action_text' => '',
+			'source_site' => '0',
+			'no_source_text' => '',
+			'destination_sites' => '',
+			'copy_defaults' => 'false',
+		);
+
+		/*
+		 * Make sure $attr is an array, even if it's empty,
+		 * and repair damage caused by link-breaks in the source text
+		 */
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+
+		/*/ Make sure $attr is an array, even if it's empty
+		if ( empty( $attr ) ) {
+			$attr = array();
+		} elseif ( is_string( $attr ) ) {
+			$attr = shortcode_parse_atts( $attr );
+		} // */
+
+		// Look for 'request' substitution parameters, which can be added to any input parameter
+		foreach ( $attr as $attr_key => $attr_value ) {
+			// Only expand our own parameters
+			if ( array_key_exists( $attr_key, $default_arguments ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value );
+
+				if ( ! empty( $replacement_values ) ) {
+					$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
+				}
+			}
+		}
+
+		// Accept only the attributes we need and supply defaults
+		$arguments = shortcode_atts( $default_arguments, $attr );
+		if ( empty( $arguments['destination_sites'] ) ) {
+			$arguments['destination_sites'] = array();
+		} else {
+			$arguments['destination_sites'] = explode( ',', $arguments['destination_sites'] );
+		}
+		
+		$arguments['copy_defaults'] = ( 'true' === strtolower( $arguments['copy_defaults'] ) );
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_settings_shortcode() arguments = " . var_export( $arguments, true ), self::MLA_DEBUG_CATEGORY );
+
+		if ( !empty( $arguments['action'] ) && ( false === isset( $_REQUEST[ $arguments['action'] ] ) ) ) {
+			return $arguments['no_action_text'];
+		}
+		
+		if ( '' === $arguments['source_site'] ) {
+			$arguments['source_site'] = '0'; 
+		}
+
+		if ( !empty( $arguments['no_source_text'] ) && ( '0' === $arguments['source_site'] ) ) {
+			return $arguments['no_source_text'];
+		}
+		
+		if ( 'false' !== strtolower( $arguments['enforce_capability'] ) ) {
+			// Check if logged-in user can manage options
+			$current_user = wp_get_current_user();
+			if ( $current_user->ID ) {
+				if ( !current_user_can('manage_options') ) {
+					$arguments['source_site'] = '0';
+				}
+			} else {
+				$arguments['source_site'] = '0';
+			}
+		} // enforce_capability
+		
+		return self::mme_copy_settings_action( $arguments['source_site'], $arguments['destination_sites'], $arguments['copy_defaults'] );
+	} //mme_copy_settings_shortcode
+
+	/**
+	 * Shortcode; Copy term definitions from a Source Site to one or more Destination Sites
+	 *
+	 * @since 1.13
+	 *
+	 * @param	array	$attr Shortcode parameters; see defaults in function code
+	 * @param	string	$content Optional content for enclosing shortcodes
+	 *
+	 * @return	string	post/page content to replace the shortcode
+	 */
+	public static function mme_copy_terms_shortcode( $attr, $content = NULL ) {
+		self::_load_mla_classes();
+		
+		$default_arguments = array(
+			'enforce_capability' => 'true',
+			'action' => 'copy_terms',
+			'no_action_text' => '',
+			'source_site' => 0,
+			'no_source_text' => '',
+			'destination_sites' => '',
+			'taxonomy' => '',
+			'no_taxonomy_text' => '',
+		);
+
+		/*
+		 * Make sure $attr is an array, even if it's empty,
+		 * and repair damage caused by link-breaks in the source text
+		 */
+		$attr = MLAShortcodes::mla_validate_attributes( $attr, $content );
+
+		// Look for 'request' substitution parameters, which can be added to any input parameter
+		foreach ( $attr as $attr_key => $attr_value ) {
+			// Only expand our own parameters
+			if ( array_key_exists( $attr_key, $default_arguments ) ) {
+				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $attr_value ) );
+				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value );
+
+				if ( ! empty( $replacement_values ) ) {
+					$attr[ $attr_key ] = MLAData::mla_parse_template( $attr_value, $replacement_values );
+				}
+			}
+		}
+
+		// Accept only the attributes we need and supply defaults
+		$arguments = shortcode_atts( $default_arguments, $attr );
+		if ( empty( $arguments['destination_sites'] ) ) {
+			$arguments['destination_sites'] = array();
+		} else {
+			$arguments['destination_sites'] = explode( ',', $arguments['destination_sites'] );
+		}
+		
+		if ( empty( $arguments['taxonomy'] ) ) {
+			$arguments['taxonomy'] = array();
+		} else {
+			$arguments['taxonomy'] = explode( ',', $arguments['taxonomy'] );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shortcode() arguments = " . var_export( $arguments, true ), self::MLA_DEBUG_CATEGORY );
+
+		if ( !empty( $arguments['action'] ) && ( false === isset( $_REQUEST[ $arguments['action'] ] ) ) ) {
+			return $arguments['no_action_text'];
+		}
+		
+		if ( '' === $arguments['source_site'] ) {
+			$arguments['source_site'] = '0'; 
+		}
+
+		if ( !empty( $arguments['no_source_text'] ) && ( '0' === $arguments['source_site'] ) ) {
+			return $arguments['no_source_text'];
+		}
+		
+		if ( !empty( $arguments['no_taxonomy_text'] ) && empty( $arguments['taxonomy'] ) ) {
+			return $arguments['no_taxonomy_text'];
+		}
+		
+		if ( 'false' !== strtolower( $arguments['enforce_capability'] ) ) {
+			// Check if logged-in user can assign terms
+			$current_user = wp_get_current_user();
+			if ( $current_user->ID ) {
+				foreach ( $arguments['taxonomy'] as $index => $taxonomy ) {
+					if ( '0' === $taxonomy ) {
+						continue;
+					}
+					
+					$taxonomy_obj = get_taxonomy( $taxonomy );
+MLACore::mla_debug_add( __LINE__ . " MLAMultisiteExtensions::mme_copy_terms_shortcode( $taxonomy ) taxonomy_obj = " . var_export( $taxonomy_obj, true ), self::MLA_DEBUG_CATEGORY );
+
+					if ( !current_user_can( $taxonomy_obj->cap->assign_terms ) ) {
+						unset( $arguments['taxonomy'][ $index ] );
+					}
+				} // foreach taxonomy
+			} else {
+				$arguments['taxonomy'] = array();
+			}
+		} // enforce_capability
+		
+		return self::mme_copy_terms_action( $arguments['source_site'], $arguments['destination_sites'], $arguments['taxonomy'] );
+	} //mme_copy_terms_shortcode
 
 	/**
 	 * Save the shortcode attributes

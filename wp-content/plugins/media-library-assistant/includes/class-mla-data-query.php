@@ -543,6 +543,7 @@ class MLAQuery {
 		}
 
 		$attached_file = NULL;
+		$previous_key = '';
 		$results = array();
 		$post_meta = get_metadata( 'post', $post_id );
 
@@ -560,10 +561,24 @@ class MLAQuery {
 						$key = 'mla_wp_attachment_metadata';
 					} elseif ( stripos( $post_meta_key, '_wp_attachment_image_alt' ) === 0 ) {
 						$key = 'mla_wp_attachment_image_alt';
+					} elseif ( stripos( $post_meta_key, '_thumbnail_id' ) === 0 ) {
+						$key = 'mla_thumbnail_id';
 					} else {
-						continue;
+						// Look for and preserve ACF field references
+						if ( !empty( $previous_key ) && !empty( $post_meta_value[0] ) ) {
+							if ( ( stripos( $post_meta_key, $previous_key ) === 1 ) && ( stripos( $post_meta_value[0], 'field_' ) === 0 ) ) {
+								$key = 'mla_item_' . $post_meta_key;
+							}
+						} else {
+							$previous_key = '';
+							continue;
+						}
 					}
+					
+					$previous_key = '';
 				} else {
+					$previous_key = $post_meta_key;
+
 					if ( stripos( $post_meta_key, 'mla_' ) === 0 ) {
 						$key = $post_meta_key;
 					} else {
