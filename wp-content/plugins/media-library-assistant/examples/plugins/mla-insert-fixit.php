@@ -52,8 +52,12 @@
  * opened on 5/20/2021 by "ellabtz"
  * https://wordpress.org/support/topic/post-parent-link-images/
  *
+ * Enhanced for support topic "Insert Fixit Tool – "no-clobber" option?"
+ * opened on 7/22/2023 by "dan-kirshner"
+ * https://wordpress.org/support/topic/insert-fixit-tool-no-clobber-option/
+ *
  * @package Insert Fixit
- * @version 1.25
+ * @version 1.27
  */
 
 /*
@@ -61,7 +65,7 @@ Plugin Name: MLA Insert Fixit
 Plugin URI: http://davidlingren.com/
 Description: Synchronizes Media Library values to and from post/page inserted/featured/attached images
 Author: David Lingren
-Version: 1.25
+Version: 1.27
 Author URI: http://davidlingren.com/
 
 Copyright 2015-2023 David Lingren
@@ -94,7 +98,7 @@ class Insert_Fixit {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.25';
+	const CURRENT_VERSION = '1.27';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -113,6 +117,16 @@ class Insert_Fixit {
 	 * @var	string
 	 */
 	const SLUG_PREFIX = 'insertfixit-';
+
+	/**
+	 * Make "Attach" tools unconditional, i.e., overwrite existing parent values
+	 *
+	 * @since 1.06
+	 *
+	 * @var	boolean
+	 */
+	private static $replace_existing_alt_text = true;
+	const INPUT_REPLACE_EXISTING_ALT_TEXT = 'replace-existing-alt-text';
 
 	/**
 	 * Make "Attach" tools unconditional, i.e., overwrite existing parent values
@@ -230,7 +244,17 @@ class Insert_Fixit {
 		// Copy ALT Text between Media Library items and Post/Page inserts
 		$old_post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_post_types' ] ), 'post' ) ) : '';
 		$post_types = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ), 'post' ) ) : "'post', 'page'";
+		$old_post_status = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_post_status' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_post_status' ] ), 'post' ) ) : '';
+		$post_status = isset( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] ), 'post' ) ) : "'publish'";
 
+		// Copy ALT Text tools - replace non-empty (existing) text - default is true
+		if ( isset( $_REQUEST[ self::SLUG_PREFIX . 'post_types' ] ) ) {
+			self::$replace_existing_alt_text = isset( $_REQUEST[ self::SLUG_PREFIX . self::INPUT_REPLACE_EXISTING_ALT_TEXT ] ) ? true : false;
+		} else {
+			self::$replace_existing_alt_text = true;
+		}
+		$replace_existing_alt_text_attr = self::$replace_existing_alt_text ? ' checked="checked" ' : ' ';
+		
 		// Post/Page Item Insert Modification
 		$old_data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'old_data_source' ] ), 'post' ) ) : '';
 		$data_source = isset( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ) ? trim( wp_kses( wp_unslash( $_REQUEST[ self::SLUG_PREFIX . 'data_source' ] ), 'post' ) ) : '[+alt_text+]';
@@ -274,17 +298,27 @@ class Insert_Fixit {
 
 		$setting_actions = array(
 			'help' => array( 'handler' => '', 'comment' => '<strong>Enter first and (optional) last ID values above to restrict tool application range</strong>. To operate on one ID, enter just the "First ID". The default is to perform the operation on <strong>all posts/pages</strong> and <strong>all Media Library items (attachments)</strong>.<br />&nbsp;<br />You can find post/page ID values by hovering over the post/page title in the "Title" column of the All Posts/All Pages submenu tables; look for the number following <code>post=</code>.<br />' ),
-			'c01' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The tools in this plugin use the post type values in the text box below. Single quotes and commas are required.' ),
+			'c01' => array( 'handler' => '', 'comment' => '<strong>NOTE:</strong> The tools in this plugin use the post type and post status values in the text boxes below. Single quotes and commas are required.' ),
 			't1501' => array( 'open' => '<table><tr>' ),
 			't1502' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle">Post Type(s)</td>' ),
 			't1503' => array( 'continue' => '  <td style="text-align: left">' ),
 			't1504' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'old_post_types" type="hidden" value="' . $post_types . '">' ),
 			't1505' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'post_types" type="text" size="30" value="' . $post_types . '">' ),
-			't1506' => array( 'continue' => '  </td>' ),
-			't1507' => array( 'close' => '</tr></table>' ),
+			't1506' => array( 'continue' => '  </td></tr>' ),
+			't1507' => array( 'continue' => '<tr><td style="text-align: right; padding-right: 5px" valign="middle">Post Status(es)</td>' ),
+			't1508' => array( 'continue' => '  <td style="text-align: left">' ),
+			't1509' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'old_post_status" type="hidden" value="' . $post_status . '">' ),
+			't1510' => array( 'continue' => '    <input name="' . self::SLUG_PREFIX . 'post_status" type="text" size="30" value="' . $post_status . '">' ),
+			't1511' => array( 'continue' => '  </td>' ),
+			't1512' => array( 'close' => '</tr></table>' ),
 			'warning' => array( 'handler' => '', 'comment' => '<strong>These tools make permanent updates to your database.</strong> Make a backup before you use the tools so you can restore your old values if you don&rsquo;t like the results.' ),
 
 			'c00' => array( 'handler' => '', 'comment' => '<h3>Copy ALT Text between Media Library items and Post/Page inserts</h3>' ),
+			't1701' => array( 'open' => '<table><tr>' ),
+			't1702' => array( 'continue' => '  <td style="text-align: right; padding-right: 5px" valign="middle"><input name="' . self::SLUG_PREFIX . self::INPUT_REPLACE_EXISTING_ALT_TEXT . '" type="checkbox"' . $replace_existing_alt_text_attr . 'value="' . self::INPUT_REPLACE_EXISTING_ALT_TEXT . '"></td>' ),
+			't1703' => array( 'continue' => '  <td style="text-align: left; padding-right: 5px" valign="middle">Replace existing ALT Text values</td>' ),
+			't1704' => array( 'continue' => '</tr><tr>' ),
+			't1732' => array( 'close' => '</tr></table>&nbsp;<br>' ),
 			'ALT from Item' => array( 'handler' => '_copy_alt_from_media_library',
 				'comment' => 'Copy ALT Text from Media Library item to Post/Page inserts.' ),
 			'ALT to Item' => array( 'handler' => '_copy_alt_to_media_library',
@@ -477,7 +511,7 @@ class Insert_Fixit {
 		}
 
 		// Invalidate the caches if anything has changed
-		if ( $old_post_lower !== $post_lower || $old_post_upper !== $post_upper || $old_attachment_lower !== $attachment_lower || $old_attachment_upper !== $attachment_upper || $old_post_types !== $post_types || $old_data_source !== $data_source || $old_attribute_name !== $attribute_name || $old_figcaption_template !== $figcaption_template ) {
+		if ( $old_post_lower !== $post_lower || $old_post_upper !== $post_upper || $old_attachment_lower !== $attachment_lower || $old_attachment_upper !== $attachment_upper || $old_post_types !== $post_types || $old_post_status !== $post_status || $old_data_source !== $data_source || $old_attribute_name !== $attribute_name || $old_figcaption_template !== $figcaption_template ) {
 			delete_transient( self::SLUG_PREFIX . 'figure_inserts' );
 			delete_transient( self::SLUG_PREFIX . 'image_inserts' );
 			delete_transient( self::SLUG_PREFIX . 'image_objects' );
@@ -584,6 +618,36 @@ class Insert_Fixit {
 			return implode( ',', $output_post_types );
 		} else {
 			return "'post', 'page'";
+		}
+	}
+	
+	/**
+	 * Validate Post Status(es) user input text to prevent SQL injectioin attacks
+ 	 *
+	 * @since 1.27
+	 *
+	 * @param	string	$post_status Input text; should have comma-separated, single-quoted post status names
+	 *
+	 * @return	string	Sanitized post type(s) string
+	 */
+	private static function _validate_post_status( $post_status ) {
+		$post_status_array = explode( ',', $post_status );
+		
+		$valid_post_status = get_post_statuses();
+		
+		$output_post_status = array();
+		foreach ( $post_status_array as $post_status ) {
+			$post_status = trim( $post_status, " '" );
+			
+			if ( array_key_exists( $post_status, $valid_post_status ) ) {
+				$output_post_status[] = "'" . $post_status . "'";
+			}
+		}
+
+		if ( count( $output_post_status ) ) {
+			return implode( ',', $output_post_status );
+		} else {
+			return "'publish'";
 		}
 	}
 	
@@ -714,7 +778,15 @@ class Insert_Fixit {
 
 		$post_types = self::_validate_post_types( $post_types );
 		
-		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<img%' );
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] ) ) {
+			$post_status = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] );
+		} else {
+			$post_status = "'publish'";
+		}
+
+		$post_status = self::_validate_post_status( $post_status );
+		
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status IN ( %3$s ) ) AND ( ID >= %4$d ) AND ( ID <= %5$d ) AND ( post_content LIKE \'%6$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $post_status, $lower_bound, $upper_bound, '%<img%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
 		$results = $wpdb->get_results( $query );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_image_inserts_cache() $results = ' . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
@@ -851,7 +923,15 @@ class Insert_Fixit {
 		
 		$post_types = self::_validate_post_types( $post_types );
 
-		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( post_content LIKE \'%5$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%<figcaption%' );
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] ) ) {
+			$post_status = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] );
+		} else {
+			$post_status = "'publish'";
+		}
+
+		$post_status = self::_validate_post_status( $post_status );
+		
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status IN ( %3$s ) ) AND ( ID >= %4$d ) AND ( ID <= %5$d ) AND ( post_content LIKE \'%6$s\' ) ) ORDER BY ID', $wpdb->posts, $post_types, $post_status, $lower_bound, $upper_bound, '%<figcaption%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_figcaption_inserts_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
 		$results = $wpdb->get_results( $query );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_figcaption_inserts_cache() $results = ' . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
@@ -1055,7 +1135,15 @@ class Insert_Fixit {
 
 		$post_types = self::_validate_post_types( $post_types );
 
-		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status = \'publish\' ) AND ( ID >= %3$d ) AND ( ID <= %4$d ) AND ( ( post_content LIKE \'%5$s\' ) OR ( post_content LIKE \'%6$s\' ) ) ) ORDER BY ID', $wpdb->posts, $post_types, $lower_bound, $upper_bound, '%wp-image-%', '%ids=%' );
+		if ( ! empty( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] ) ) {
+			$post_status = stripslashes( $_REQUEST[ self::SLUG_PREFIX . 'post_status' ] );
+		} else {
+			$post_status = "'publish'";
+		}
+
+		$post_status = self::_validate_post_status( $post_status );
+		
+		$query = sprintf( 'SELECT ID, post_content FROM %1$s WHERE ( post_type IN ( %2$s ) AND ( post_status IN ( %3$s ) ) AND ( ID >= %4$d ) AND ( ID <= %5$d ) AND ( ( post_content LIKE \'%6$s\' ) OR ( post_content LIKE \'%7$s\' ) ) ) ORDER BY ID', $wpdb->posts, $post_types, $post_status, $lower_bound, $upper_bound, '%wp-image-%', '%ids=%' );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $query = ' . var_export( $query, true ), self::MLA_DEBUG_CATEGORY );
 		$results = $wpdb->get_results( $query );
 		MLACore::mla_debug_add( __LINE__ . ' Insert_Fixit::_build_item_references_cache() $results = ' . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
@@ -1504,7 +1592,9 @@ class Insert_Fixit {
 						}
 
 						// Queue replacement
-						self::$image_inserts[ $post_id ]['replacements'][ $insert['alt_offset'] ] = array( 'length' => strlen( $insert['alt'] ), 'text' => $alt_text );
+						if ( ( $alt_text !== $insert['alt'] ) && ( self::$replace_existing_alt_text || ( 0 === strlen( $insert['alt'] ) ) ) ) {
+							self::$image_inserts[ $post_id ]['replacements'][ $insert['alt_offset'] ] = array( 'length' => strlen( $insert['alt'] ), 'text' => $alt_text );
+						}
 					} // foreach file
 				} // foreach reference
 			} // foreach insert
@@ -1534,9 +1624,7 @@ class Insert_Fixit {
 			} // no replacements
 		} // foreach post/page
 
-		/*
-		 * Invalidate the image_inserts cache, since post/page content has changed.
-		 */
+		// Invalidate the image_inserts cache, since post/page content has changed.
 		if ( $updated_posts ) {		
 			delete_transient( self::SLUG_PREFIX . 'image_inserts' );
 		}
@@ -1552,14 +1640,10 @@ class Insert_Fixit {
 	 * @return	string	HTML markup for results/messages
 	 */
 	private static function _copy_alt_to_media_library() {
-		/*
-		 * Load the image_inserts array
-		 */
+		// Load the image_inserts array
 		self::_build_image_inserts_cache( true );
 
-		/*
-		 * Load the image_objects array
-		 */
+		// Load the image_objects array
 		self::_build_image_objects_cache( true );
 
 		$image_inserts = count( self::$image_inserts );
@@ -1582,25 +1666,27 @@ class Insert_Fixit {
 				$inserts = self::$image_inserts[ $post_id ];
 				foreach ( $files as $file ) {
 					foreach ( $inserts['inserts'] as $insert ) {
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library file test '{$file}' == " . var_export( $insert['src'], true ), 0 );
-						if ( $file != $insert['src'] || ! isset( $insert['alt'] ) ) {
+						MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library file test '{$file}' = " . var_export( $insert['src'], true ), self::MLA_DEBUG_CATEGORY );
+						if ( $file !== $insert['src'] || ! isset( $insert['alt'] ) ) {
 							continue;
 						}
 
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library ALT text test '{$alt_text}' ==  " . var_export( $insert['alt'], true ), 0 );
-						if ( $alt_text == $insert['alt'] ) {
+						MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library ALT text test '{$alt_text}' = " . var_export( $insert['alt'], true ), self::MLA_DEBUG_CATEGORY );
+						if ( $alt_text === $insert['alt'] ) {
 							continue;
 						}
 
 						// Queue replacement
-						$replacement = $insert['alt'];
+						if ( self::$replace_existing_alt_text || ( 0 === strlen( $alt_text ) ) ) {
+							$replacement = $insert['alt'];
+						}
 					} // foreach file
 				} // foreach reference
 			} // foreach insert
 
 			// Apply replacement
 			if ( ! is_null( $replacement ) ) {
-//error_log( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library( {$attachment_id} ) replacement =  " . var_export( $replacement, true ), 0 );
+				MLACore::mla_debug_add( __LINE__ . " Insert_Fixit::_copy_alt_to_media_library( {$attachment_id} ) replacement = " . var_export( $replacement, true ), self::MLA_DEBUG_CATEGORY );
 				if ( update_metadata( 'post', $attachment_id, '_wp_attachment_image_alt', $replacement ) ) {
 					$updated_attachments++;
 				} else {
@@ -1609,9 +1695,7 @@ class Insert_Fixit {
 			}
 		} // foreach attachment
 
-		/*
-		 * Invalidate the image_objects cache, since Media Library item content has changed.
-		 */
+		// Invalidate the image_objects cache, since Media Library item content has changed.
 		if ( $updated_attachments ) {		
 			delete_transient( self::SLUG_PREFIX . 'image_objects' );
 		}

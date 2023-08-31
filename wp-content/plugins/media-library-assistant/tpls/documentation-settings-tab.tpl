@@ -644,7 +644,7 @@ The Size parameter specifies the image size to use for the thumbnail display; "t
 <table>
 <tr>
 <td class="mla-doc-table-label">thumbnail,&nbsp;medium,<br />large,&nbsp;full</td>
-<td valign="top">For image types, the size of the image you want to display. For non-image types the title of the item will be displayed.</td>
+<td valign="top">For image types, the size of the image you want to display. If the specific size is not available for an image an existing size will be substituted. For non-image types the title of the item will be displayed.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label" style="font-style:italic">(other registered size)</td>
@@ -1936,6 +1936,9 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 </tr>
 </table>
 <p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
+</p>
+<p>
 Style and Markup templates give you great flexibility for the content and format of each [mla_tag_cloud] when you use the "list" and "grid" output formats. You can define as many templates as you need. 
 </p>
 <p>
@@ -3055,6 +3058,9 @@ To use a substitution parameter in your shortcode, simply add "{+" before the su
 </tr>
 </table>
 <p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are documented in the <a href="#gallery_specific">Gallery-specific substitution parameters</a> subsection.</p>
+</p>
+<p>
 Style and Markup templates give you great flexibility for the content and format of each <code>[mla_term_list]</code> when you use the "list", "dropdown" and "checklist" output formats. You can define as many templates as you need. 
 </p>
 <p>
@@ -4095,6 +4101,40 @@ Gallery-specific substitution parameters are known at the beginning of shortcode
 <td>absolute URL to the page or post on which the gallery appears, if any, with trailing slash</td>
 </tr>
 </table>
+<p>
+If the shortcode is executed when there is no current post, an artificial "empty post" is used to supply reasonable default values. One special case is the "Author Archive" page when the author has no posts. In this case, an atrificial "author post" supplies a few values based on the author's user information. The available values are:</p>
+<table>
+<tr>
+<td class="mla-doc-table-label">page_ID,<br />id</td>
+<td style="vertical-align: top">the author's user <code>ID</code> value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_author</td>
+<td>the author's user <code>ID</code> value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_content</td>
+<td>the author's <code>description</code> value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_title</td>
+<td>the author's <code>display_name</code> value</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">page_excerpt</td>
+<td>the author's <code>nickname</code> value</td>
+</tr>
+<tr>
+<tr>
+<td class="mla-doc-table-label">page_name</td>
+<td>the author's <code>user_nicename</code> value</td>
+</tr>
+<tr>
+<tr>
+<td class="mla-doc-table-label">page_type</td>
+<td>"author"</td>
+</tr>
+</table>
 <a name="mla_style_parameters"></a>&nbsp;
 <p>
 <a href="#backtotop">Go to Top</a>
@@ -4436,22 +4476,27 @@ The Item markup section shows how to use the "terms", "custom", "iptc" and "exif
 To create the custom templates, follow the steps below. To define the custom style template:
 </p>
 <ol>
-<li>Navigate to the Settings/Media Library Assistant MLA Gallery tab.</li>
-<li>Scroll down to the bottom of the "Style Templates" section where you can see a blank "Name:" text box. Give your template a name, such as "table-style".</li>
-<li>Copy the template above and paste it into the "Styles:" text box.</li>
+<li>Navigate to the Settings/Media Library Assistant Shortcodes tab.</li>
+<li>Click on the "Style" view just above the templates table.</li>
+<li>Hover over the "default (default)" Style entry (for the Gallery shortcode) and click the "Copy" action link.</li>
+<li>When the page refreshes, the "Edit Template" screen will appear.</li>
+<li>Change the template Name to (for example) "cat-styles".</li>
+<li>Copy the template above and paste it into the "Styles" text box.</li>
 <li>Review the content to make sure all the HTML and CSS markup is valid and not corrupted by the copy process.</li>
-<li>Scroll to the bottom of the page and click "Save Changes" to save your new style template.</li>
+<li>Scroll to the bottom and click "Update" to save your template.</li>
 </ol>
 <p>
 Markup templates are a bit more complicated because they have five parts, but the process is similar. 
 To define the custom markup template:
 </p>
 <ol>
-<li>Navigate to the Settings/Media Library Assistant MLA Gallery tab.</li>
-<li>Scroll down to the bottom of the "Markup Templates" section where you can see a blank "Name:" text box. Give your template a name, such as "table-markup".</li>
+<li>Navigate to the Settings/Media Library Assistant Shortcodes tab.</li>
+<li>Click the "Add New Template" button to the left of the table views.</li>
+<li>Change the "select template type" dropdown control to "Markup".</li>
+<li>Change the "select template shortcode" dropdown control to "Gallery".</li>
 <li>Copy the template parts from the above example and paste them into the corresponding part text boxes.</li>
 <li>Review the content to make sure all the HTML and CSS markup is valid and not corrupted by the copy process.</li>
-<li>Scroll to the bottom of the page and click "Save Changes" to save your new markup template.</li>
+<li>Scroll to the bottom and click "Add Template".</li>
 </ol>
 <p>
 Once you have defined and saved your custom templates you can change your shortcode to use the templates:<br />
@@ -5907,7 +5952,7 @@ define ('MEDIA_TRASH', true);
 <p>You can, of course, use them directly, e.g., in an <code>[mla_gallery]</code> shortcode or custom markup template. If you do, be aware of the performance issues because the values will be computed each time the data source is used and the categories must remain enabled. A more common alternative is to use the values in an IPTC/EXIF/WP or Custom Field mapping rule, storing the information as text in a custom field and then using the custom field value for display purposes. If you take that approach you can disable the categories once the custom field is populated, restoring performance. The next subsection is a detailed example of the mapping rule &amp; custom field approach.</p>
 <h4>Sorting and Filtering on Where-used Status</h4>
 <p>As noted above the four Media/Assistant where-used columns are not sortable, and they cannot be used to filter the table display. There is no explicit way to filter the Media/Assistant submenu table to display only where-used issues such as "orphans". There is, however, an approximate solution that may be useful. To get the best results you need to activate all four reporting categories in the Where-used Reporting section of the Settings/Media Library Assistant General tab. Try these settings:</p>
-<ul><ul class="mla_settings">
+<ul class="mla_settings">
 <li>Featured in - Enabled</li>
 <li>Inserted in - Base</li>
 <li>Gallery in - Cached</li>

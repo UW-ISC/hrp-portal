@@ -13,6 +13,7 @@ add_action( 'add_meta_boxes_attachment', 'relevanssi_add_pdf_metaboxes' );
 add_filter( 'relevanssi_hits_to_show', 'relevanssi_prime_pdf_content', 10, 2 );
 add_filter( 'relevanssi_index_custom_fields', 'relevanssi_add_pdf_customfield' );
 add_filter( 'relevanssi_pre_excerpt_content', 'relevanssi_add_pdf_content_to_excerpt', 10, 2 );
+add_filter( 'wp_media_attach_action', 'relevanssi_media_attach_action', 10, 3 );
 
 define( 'RELEVANSSI_ERROR_01', 'R_ERR01: ' . __( 'Post excluded from the index by the user.', 'relevanssi' ) );
 define( 'RELEVANSSI_ERROR_02', 'R_ERR02: ' . __( 'Relevanssi is in privacy mode and not allowed to contact Relevanssiservices.com.', 'relevanssi' ) );
@@ -332,10 +333,8 @@ function relevanssi_index_pdf( $post_id, $ajax = false, $send_file = null ) {
 
 	if ( is_null( $send_file ) ) {
 		$send_file = get_option( 'relevanssi_send_pdf_files' );
-	} else {
-		if ( $send_file ) {
-			$send_file = 'on';
-		}
+	} elseif ( $send_file ) {
+		$send_file = 'on';
 	}
 
 	/**
@@ -488,64 +487,62 @@ function relevanssi_process_server_response( $response, $post_id ) {
 		delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
 		update_post_meta( $post_id, '_relevanssi_pdf_error', $error_message );
 		$success = false;
-	} else {
-		if ( isset( $response['body'] ) ) {
-			$content = $response['body'];
-			$content = json_decode( $content );
+	} elseif ( isset( $response['body'] ) ) {
+		$content = $response['body'];
+		$content = json_decode( $content );
 
-			$content_error = '';
+		$content_error = '';
 
-			if ( 413 === $response['response']['code'] ) {
-				$content_error = RELEVANSSI_ERROR_04;
-			}
+		if ( 413 === $response['response']['code'] ) {
+			$content_error = RELEVANSSI_ERROR_04;
+		}
 
-			if ( isset( $content->error ) ) {
-				$content_error = $content->error;
-				$content       = $content->error;
-			}
+		if ( isset( $content->error ) ) {
+			$content_error = $content->error;
+			$content       = $content->error;
+		}
 
-			if ( stristr( $content, 'java.lang.OutOfMemoryError' ) ) {
-				$content_error = RELEVANSSI_ERROR_04;
-			}
+		if ( stristr( $content, 'java.lang.OutOfMemoryError' ) ) {
+			$content_error = RELEVANSSI_ERROR_04;
+		}
 
-			if ( empty( $content ) ) {
-				$content_error = RELEVANSSI_ERROR_06;
-			}
+		if ( empty( $content ) ) {
+			$content_error = RELEVANSSI_ERROR_06;
+		}
 
-			if ( ! empty( $content_error ) ) {
-				delete_post_meta( $post_id, '_relevanssi_pdf_content' );
-				delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
-				update_post_meta( $post_id, '_relevanssi_pdf_error', $content_error );
+		if ( ! empty( $content_error ) ) {
+			delete_post_meta( $post_id, '_relevanssi_pdf_content' );
+			delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
+			update_post_meta( $post_id, '_relevanssi_pdf_error', $content_error );
 
-				$response_error .= $content_error;
-				$success         = false;
-			} else {
-				delete_post_meta( $post_id, '_relevanssi_pdf_error' );
-				delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
-				/**
-				 * Filters the read file content before it is saved.
-				 *
-				 * @param string $content The file content as a string.
-				 * @param int    $post_id The post ID of the attachment post.
-				 */
-				$success = update_post_meta( $post_id, '_relevanssi_pdf_content', apply_filters( 'relevanssi_file_content', $content, $post_id ) );
-				relevanssi_index_doc( $post_id, false, relevanssi_get_custom_fields(), true );
-				if ( 'on' === get_option( 'relevanssi_index_pdf_parent' ) ) {
-					if ( function_exists( 'get_post_parent' ) ) {
-						$parent = get_post_parent( $post_id );
-					} else {
-						// For WP < 5.7 compatibility, remove eventually.
-						$_post  = get_post( $post_id );
-						$parent = ! empty( $_post->post_parent ) ? get_post( $_post->post_parent ) : null;
-					}
-					if ( $parent ) {
-						relevanssi_index_doc( $parent->ID, true, relevanssi_get_custom_fields(), true );
-					}
+			$response_error .= $content_error;
+			$success         = false;
+		} else {
+			delete_post_meta( $post_id, '_relevanssi_pdf_error' );
+			delete_post_meta( $post_id, '_relevanssi_pdf_modified' );
+			/**
+			 * Filters the read file content before it is saved.
+			 *
+			 * @param string $content The file content as a string.
+			 * @param int    $post_id The post ID of the attachment post.
+			 */
+			$success = update_post_meta( $post_id, '_relevanssi_pdf_content', apply_filters( 'relevanssi_file_content', $content, $post_id ) );
+			relevanssi_index_doc( $post_id, false, relevanssi_get_custom_fields(), true );
+			if ( 'on' === get_option( 'relevanssi_index_pdf_parent' ) ) {
+				if ( function_exists( 'get_post_parent' ) ) {
+					$parent = get_post_parent( $post_id );
+				} else {
+					// For WP < 5.7 compatibility, remove eventually.
+					$_post  = get_post( $post_id );
+					$parent = ! empty( $_post->post_parent ) ? get_post( $_post->post_parent ) : null;
 				}
-
-				if ( ! $success ) {
-					$response_error = __( 'Could not save the file content to the custom field.', 'relevanssi' );
+				if ( $parent ) {
+					relevanssi_index_doc( $parent->ID, true, relevanssi_get_custom_fields(), true );
 				}
+			}
+
+			if ( ! $success ) {
+				$response_error = __( 'Could not save the file content to the custom field.', 'relevanssi' );
 			}
 		}
 	}
@@ -861,5 +858,22 @@ function relevanssi_save_pdf_postdata( $post_id ) {
 				'_relevanssi_pdf_modified'
 			);
 		}
+	}
+}
+
+/**
+ * If attachments are indexed for the parent post, reindex the parent post.
+ *
+ * When attachments are attached or detached, this triggers a reindexing of the
+ * parent post.
+ *
+ * @param string $action        The attachment action.
+ * @param int    $attachment_id The attachment post ID.
+ * @param int    $parent_id     The parent post ID.
+ */
+function relevanssi_media_attach_action( $action, $attachment_id, $parent_id ) {
+	$index_pdf_parent = get_option( 'relevanssi_index_pdf_parent' );
+	if ( 'on' === $index_pdf_parent ) {
+		relevanssi_publish( $parent_id );
 	}
 }

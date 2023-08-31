@@ -2807,6 +2807,52 @@ class MLAData {
 	}
 
 	/**
+	 * Parse a Windows Unicode (16-bit Little Endian) string to UTF-8
+	 * From https://stackoverflow.com/questions/1805802/php-convert-unicode-codepoint-to-utf-8
+	 * 
+	 * @since 3.10
+	 *
+	 * @param	string	string of probable 16-bit characters
+	 *
+	 * @return	string	UTF-8 encoded string
+	 */
+	private static function _parse_UTF16LE( &$source_string ) {
+		$output = '';
+		$null_bytes = 0;
+		
+		for ($index = 0; $index < strlen( $source_string ); ) {
+			$value = ord( $source_string[ $index++ ] );
+
+			// non-Unicode strings may not be an een number of characters.
+			if ( isset( $source_string[ $index ] ) ) {
+				$null_bytes += ( 0 === ord( $source_string[ $index ] ) ) ? 1 : 0;
+				$value += ( ord( $source_string[ $index++ ] ) << 8 );
+			}
+			
+ 			if ( $value === 0x00 ) {
+				continue;
+ 			} elseif ( $value < 0x80 ) {
+				$output .= chr( $value );
+			} elseif ( $value < 0x800 ) {
+				$output .= chr(($value>>6)+192).chr(($value&63)+128);
+			} elseif ( $value < 0x10000 ) {
+				$output .= chr(($value>>12)+224).chr((($value>>6)&63)+128).chr(($value&63)+128);
+			} elseif ( $value < 0x200000 ) {
+				$output .= chr(($value>>18)+240).chr((($value>>12)&63)+128).chr((($value>>6)&63)+128).chr(($value&63)+128);
+			} else {
+				$output .= '.';
+			}
+		}
+
+		// Assume that Unicode strings will have one or more plain text characters, i.e., null upper bytes.
+		if ( 0 < $null_bytes ) {
+			return $output;
+		} else {
+			return $source_string;
+		}
+	}
+
+	/**
 	 * UTF-8 replacements for invalid SQL characters
 	 *
 	 * @since 1.41
@@ -4096,9 +4142,9 @@ class MLAData {
 								$element_value = (string) ord( $element_value );
 							}
 
-							// Problem with values edited through Windows right-click properties. 
-							if ( in_array( $element_name, array( 'Title', 'Keywords', 'Subject' ) ) ) {
-								$element_value = str_replace( "\000", '', $element_value );
+							// Problem with Unicode values edited through Windows right-click properties. 
+							if ( in_array( $element_name, array( 'Title', 'Keywords', 'Subject', 'Comments', 'Author' ) ) ) {
+								$element_value =  self::_parse_UTF16LE( $element_value );
 							}
 						}
 

@@ -25,7 +25,7 @@ css,text/css,code,stylesheet,Cascading Style Sheets (CSS)
 csv,text/csv,text,text,Microsoft's format for import/export to Excel Word and Access.
 dat,application/octet-stream,default,binary,Various Data formats
 divx,video/divx,video,video,DivX LLC Video Format
-dll,application/x-msdownload,code,exe_wine,Microsoft Windows Dynamic Link Library
+dll,application/x-msdownload,code,exec_wine,Microsoft Windows Dynamic Link Library
 doc,application/msword,document,document,Microsoft Word document formatted
 docm,application/vnd.ms-word.document.macroEnabled.12,document,document,Micosoft Word - Macro-Enabled Document
 docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,document,document,Microsoft Office - OOXML - Word Document
@@ -34,7 +34,7 @@ dotm,application/vnd.ms-word.template.macroEnabled.12,document,document,Micosoft
 dotx,application/vnd.openxmlformats-officedocument.wordprocessingml.template,document,document,Microsoft Office - OOXML - Word Document Template
 dtd,application/xml-dtd,code,code,Document Type Definition
 eps,application/postscript,default,postscript,Encapsulated Adobe PostScript
-exe,application/x-msdownload,code,exe_wine,Windows executable program. Refered to as an application type in the associations editor.
+exe,application/x-msdownload,code,exec_wine,Windows executable program. Refered to as an application type in the associations editor.
 flv,video/x-flv,video,video,Flash Video
 gif,image/gif,default,image,Graphics Interchange Format
 gtar,application/x-gtar,archive,archive,GNU Tar Files

@@ -539,10 +539,10 @@ class GP_Populate_Anything extends GP_Plugin {
 		}
 
 		wp_localize_script( 'gp-populate-anything', 'GPPA', array(
-			'AJAXURL'    => admin_url( 'admin-ajax.php', null ),
-			'GF_BASEURL' => GFCommon::get_base_url(),
-			'NONCE'      => wp_create_nonce( 'gppa' ),
-			'I18N'       => $this->get_js_strings(),
+			'AJAXURL'           => admin_url( 'admin-ajax.php', null ),
+			'GF_BASEURL'        => GFCommon::get_base_url(),
+			'NONCE'             => wp_create_nonce( 'gppa' ),
+			'I18N'              => $this->get_js_strings(),
 		) );
 
 		$this->_localized[] = 'frontend-scripts';
@@ -777,6 +777,19 @@ class GP_Populate_Anything extends GP_Plugin {
 		if ( $has_gppa_field_value ) {
 			$this->add_js_variable( "GPPA_FILTER_FIELD_MAP_{$form['id']}", $gppa_field_value_map );
 		}
+
+		$show_admin_fields_in_ajax = apply_filters( 'gppa_show_administrative_fields_in_ajax', $this->should_show_administrative_fields() );
+
+		/**
+		 * Since we don't have a good way to securely determine if a request is from the entry details or other admin
+		 * views the next best way is to use a nonce that we pass to AJAX request.
+		 *
+		 * This nonce helps us determine if we should render dynamically populated administrative fields or leave them
+		 * as hidden.
+		 */
+		$this->add_js_variable( "GPPA_FORM_{$form['id']}", array(
+			'SHOW_ADMIN_FIELDS_IN_AJAX' => $show_admin_fields_in_ajax ? wp_create_nonce( 'show_admin_fields_in_ajax_' . $form['id'] ) : '',
+		) );
 
 		return $form;
 
@@ -2527,6 +2540,27 @@ class GP_Populate_Anything extends GP_Plugin {
 		 */
 		if ( $include_html ) {
 			/**
+			 * When administrative fields have allowPopulation enabled on them (we do this now in GPPA 2.0 as does
+			 * GPNF and GPEP), Gravity Forms will show the field but make it a hidden field.
+			 *
+			 * When we're in the context of AJAX, the logic that hides these fields is not run as we use GFCommon::get_field_input()
+			 * and not GFCommon::get_field() for various reasons.
+			 *
+			 * We need to essentially re-apply this logic, but do it in a way that's secure as administrative fields
+			 * can contain sensitive data.
+			 */
+			$should_show_admin_fields = $this->should_show_administrative_fields()
+				|| wp_verify_nonce( rgar( $_POST, 'show_admin_fields_in_ajax' ), 'show_admin_fields_in_ajax_' . $form_id );
+
+			if (
+				! $should_show_admin_fields
+				&& $field->visibility == 'administrative'
+				&& ( gp_populate_anything()->is_field_dynamically_populated( $field ) || rgar( $field, 'allowsPrepopulate' ) )
+			) {
+				$field->inputType = 'adminonly_hidden';
+			}
+
+			/**
 			 * gppa_hydrate_input_html is here to provide a filter with the same signature as gform_field_content as
 			 * there isn't a comparable filter for inputs.
 			 */
@@ -2558,6 +2592,19 @@ class GP_Populate_Anything extends GP_Plugin {
 	}
 
 	/**
+	 * Determines if administrative fields should be shown. This is a duplication of Gravity Forms logic but put
+	 * into a method for re-use.
+	 *
+	 * @return boolean
+	 */
+	public function should_show_administrative_fields() {
+		$is_form_editor  = GFCommon::is_form_editor();
+		$is_entry_detail = GFCommon::is_entry_detail();
+
+		return $is_form_editor || $is_entry_detail;
+	}
+
+	/**
 	 * Handles getting the choice value from a choice and concatenating the price on if it's a choice-based
 	 * product or option field.
 	 *
@@ -2567,7 +2614,7 @@ class GP_Populate_Anything extends GP_Plugin {
 	 * @return string | null
 	 */
 	public function get_preselected_choice_value( $choice, $field ) {
-		if ( ! rgar( $choice, 'value' ) ) {
+		if ( rgblank( rgar( $choice, 'value' ) ) ) {
 			return null;
 		}
 
@@ -3042,8 +3089,19 @@ class GP_Populate_Anything extends GP_Plugin {
 
 		$meta    = gform_get_meta( $entry_id, 'gppa_choices' );
 		$choices = rgar( $meta, $field['id'], array() );
-
-		$label = rgar( $choices, $value, $value );
+		if ( ! empty( $choices ) ) {
+			$label = rgar( $choices, $value, $value );
+		} else {
+			// If no match found, label can just fall back to the value.
+			$label = $value;
+			// If meta or choices value is empty, i.e. entry not yet created. Read the choices label from the field choices.
+			// Issue relevant to GP Preview Submissions.
+			foreach ( $field->choices as $choice ) {
+				if ( rgar( $choice, 'value' ) === $value ) {
+					$label = rgar( $choice, 'text' );
+				}
+			}
+		}
 
 		/**
 		 * Filter the submitted choice label.

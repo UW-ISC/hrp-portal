@@ -581,7 +581,7 @@ AND {$wpdb->term_relationships}.object_id = {$wpdb->posts}.ID
 			$meta_key = preg_replace( '/^meta_/', '', $prop );
 
 			// We explicitly do not set "single" to true here. This is the default behavior if we were to use $object->{$prop}
-			$meta = get_post_meta( $object->ID, $meta_key );
+			$meta = $object ? get_post_meta( $object->ID, $meta_key ) : null;
 
 			// If it's a single item in the array, turn it back into a scalar value.
 			if ( is_array( $meta ) && count( $meta ) === 1 ) {

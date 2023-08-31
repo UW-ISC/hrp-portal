@@ -167,7 +167,7 @@ function relevanssi_index_pdfs_action() {
 			}
 
 			$index_response = relevanssi_index_pdf( $post_id, $echo_and_die, $send_files );
-			$completed++;
+			++$completed;
 
 			if ( $index_response['success'] ) {
 				// translators: placeholder is the post ID.

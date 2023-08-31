@@ -1085,9 +1085,7 @@ class MLAMime {
 			return true;
 		}
 
-		/*
-		 * Start with MLA standard types
-		 */
+		// Start with MLA standard types
 		$mla_types = MLACore::mla_get_option( MLACoreOptions::MLA_POST_MIME_TYPES, true );
 		if ( ! is_array( $mla_types ) ) {
 			$mla_types = array ();
@@ -1103,9 +1101,7 @@ class MLAMime {
 		if ( is_array( $custom_types ) ) {
 			$mla_types = array_merge( $mla_types, $custom_types );
 		} else {
-			/*
-			 * Add existing types that are not already in the MLA list
-			 */
+			// Add existing types that are not already in the MLA list
 			self::$disable_mla_filtering = true;
 			$post_mime_types = get_post_mime_types();
 			self::$disable_mla_filtering = false;
@@ -1127,9 +1123,7 @@ class MLAMime {
 		self::$mla_post_mime_templates = array();
 		self::$mla_post_mime_highest_ID = 0;
 
-		/*
-		 * Load and number the entries
-		 */
+		// Load and number the entries
 		foreach ( $mla_types as $slug => $value ) {
 			self::$mla_post_mime_templates[ $slug ] = $value;
 			self::$mla_post_mime_templates[ $slug ]['post_ID'] = ++self::$mla_post_mime_highest_ID;
@@ -1828,6 +1822,7 @@ class MLAMime {
 				$standard_types[ $extension ] = $key;
 		ksort( $standard_types );
 		self::$mla_core_icon_types = $standard_types;
+
 		return true;
 	}
 
@@ -2055,6 +2050,17 @@ class MLAMime {
 		if ( is_array( $mla_upload_mimes ) ) {
 			$custom_types = $mla_upload_mimes['custom'];
 			$disabled_types = $mla_upload_mimes['disabled'];
+			
+			// Patch for typo, since corrected in v3.10, in mla-default-mime-types.tpl
+			if ( 'exe_wine' === $mla_upload_mimes['icon_type']['dll'] ) {
+				$mla_upload_mimes['icon_type']['dll'] = 'exec_wine';
+				$save_changes = true;
+			}
+			
+			if ( 'exe_wine' === $mla_upload_mimes['icon_type']['exe'] ) {
+				$mla_upload_mimes['icon_type']['exe'] = 'exec_wine';
+				$save_changes = true;
+			}
 		} else {
 			$save_changes = true;
 			$mla_upload_mimes = array ( 'custom' => array(), 'disabled' => array(), 'description' => array(), 'icon_type' => array() );
@@ -2064,19 +2070,8 @@ class MLAMime {
 
 		// separate out the non-core types
 		foreach( $filtered_types as $key => $value ) {
-			if ( isset( $core_types[ $key ] ) || isset( $custom_types[ $key ] ) ) {
+			if ( isset( $core_types[ $key ] ) ) {
 				unset( $filtered_types[ $key ] );
-			}
-		}
-
-		// Add any as-yet undiscovered types
-		if ( !empty( $filtered_types ) ) {
-			$save_changes = true;
-			$custom_types = array_merge( $mla_upload_mimes['custom'], $filtered_types );
-			$mla_upload_mimes['custom'] = $custom_types;
-
-			if ( self::$mla_debug_active ) {
-				MLACore::mla_debug_add( __LINE__ . " MLAMime::_get_upload_mime_templates new custom type(s) = " . var_export( $filtered_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 			}
 		}
 
@@ -2145,6 +2140,10 @@ class MLAMime {
 				if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
 					self::$mla_upload_mime_templates[ $key ]['icon_type'] = self::$mla_upload_mime_templates[ $key ]['mla_icon_type'];
 				}
+
+				if ( !empty( $mla_upload_mimes['icon_type'][ $key ] ) ) {
+					self::$mla_upload_mime_templates[ $key ]['icon_type'] = $mla_upload_mimes['icon_type'][ $key ];
+				}
 			}
 		}
 
@@ -2190,6 +2189,28 @@ class MLAMime {
 			if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
 				self::$mla_upload_mime_templates[ $key ]['icon_type'] = self::$mla_upload_mime_templates[ $key ]['mla_icon_type'];
 			}
+
+			if ( !empty( $mla_upload_mimes['icon_type'][ $key ] ) ) {
+				self::$mla_upload_mime_templates[ $key ]['icon_type'] = $mla_upload_mimes['icon_type'][ $key ];
+			}
+		} // foreach core type
+
+		// Remove existing core, mla and custom types
+		foreach( $filtered_types as $key => $value ) {
+			if ( isset( self::$mla_upload_mime_templates[ $key ] ) || isset( $custom_types[ $key ] ) ) {
+				unset( $filtered_types[ $key ] );
+			}
+		}
+
+		// Add any as-yet undiscovered types
+		if ( !empty( $filtered_types ) ) {
+			$save_changes = true;
+			$custom_types = array_merge( $mla_upload_mimes['custom'], $filtered_types );
+			$mla_upload_mimes['custom'] = $custom_types;
+
+			if ( self::$mla_debug_active ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAMime::_get_upload_mime_templates new custom type(s) = " . var_export( $filtered_types, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+			}
 		}
 
 		// Add the user-defined custom types
@@ -2208,7 +2229,9 @@ class MLAMime {
 				$standard_source = '';
 			} // brand new type
 
-			if ( NULL == $icon_type = wp_ext2type( $key ) ) {
+			if ( !empty( $mla_upload_mimes['icon_type'][ $key ] ) ) {
+				$icon_type = $mla_upload_mimes['icon_type'][ $key ];
+			} elseif ( NULL === $icon_type = wp_ext2type( $key ) ) {
 				$icon_type = 'default';
 			}
 			
@@ -2230,6 +2253,7 @@ class MLAMime {
 				'core_icon_type' => self::mla_get_core_icon_type( $key )
 			);
 		}
+		MLACore::mla_debug_add( __LINE__ . " _get_upload_mime_templates( {$save_changes} ) mla_upload_mimes[icon_type] = " . var_export( $mla_upload_mimes['icon_type'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 
 		if ( $save_changes ) {
 			self::_put_upload_mime_templates();
@@ -2241,8 +2265,12 @@ class MLAMime {
 			$default_description = isset( self::$mla_upload_mime_descriptions[ $key ] ) ? self::$mla_upload_mime_descriptions[ $key ] : '';
 			self::$mla_upload_mime_templates[ $key ]['disabled'] = isset( $mla_upload_mimes['disabled'][ $key ] );
 			self::$mla_upload_mime_templates[ $key ]['description'] = isset( $mla_upload_mimes['description'][ $key ] ) ? $mla_upload_mimes['description'][ $key ] : $default_description;
-			if ( isset( $mla_upload_mimes['icon_type'][ $key ] ) ) {
+			
+			// As of v3.10 this should no longer be possible
+			if ( isset( $mla_upload_mimes['icon_type'][ $key ] ) && ( $value['icon_type'] !== $mla_upload_mimes['icon_type'][ $key ] ) ) {
+				MLACore::mla_debug_add( __LINE__ . " _get_upload_mime_templates( {$key} ) old icon_type = " . var_export( self::$mla_upload_mime_templates[ $key ]['icon_type'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 				self::$mla_upload_mime_templates[ $key ]['icon_type'] = $mla_upload_mimes['icon_type'][ $key ];
+				MLACore::mla_debug_add( __LINE__ . " _get_upload_mime_templates( {$key} ) new icon_type = " . var_export( self::$mla_upload_mime_templates[ $key ]['icon_type'], true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
 			}
 		}
 
@@ -2536,6 +2564,9 @@ class MLAMime {
 		$new_type['disabled'] = isset( $request['disabled'] ) ? $request['disabled'] : false;
 		$new_type['description'] = isset( $request['description'] ) ? sanitize_text_field( $request['description'] ) : $original_type['description'];
 
+		MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_update_upload_mime( {$original_slug} ) original_type = " . var_export( $original_type, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+		MLACore::mla_debug_add( __LINE__ . " MLAMime::mla_update_upload_mime( {$slug} ) new_type = " . var_export( $new_type, true ), MLACore::MLA_DEBUG_CATEGORY_MIME_TYPE );
+
 		if ( ( $slug == $original_slug ) && ( self::$mla_upload_mime_templates[ $slug ] == $new_type ) ) {
 			return array(
 				/* translators: 1: slug */
@@ -2546,7 +2577,7 @@ class MLAMime {
 
 		self::$mla_upload_mime_templates[ $slug ] = $new_type;
 
-		if ( $slug != $original_slug ) {
+		if ( $slug !== $original_slug ) {
 			unset( self::$mla_upload_mime_templates[ $original_slug ] );
 		}
 

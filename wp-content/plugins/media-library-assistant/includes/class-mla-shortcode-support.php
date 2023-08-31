@@ -407,6 +407,31 @@ class MLAShortcode_Support {
 			);
 
 	/**
+	 * Default post object generator
+	 *
+	 * @since 3.10
+	 *
+	 * @return object Post objct with default  or "quthor" information
+	 */
+	private static function _get_default_post() {
+		if ( is_author() ) {
+			$author_post = (object) self::$empty_post;
+
+			$author_post->ID = get_the_author_meta( 'ID' );
+			$author_post->post_author = get_the_author_meta( 'ID' );
+			$author_post->post_title = get_the_author_meta( 'display_name' );
+			$author_post->post_excerpt = get_the_author_meta( 'nickname' );
+			$author_post->post_name = get_the_author_meta( 'user_nicename' );
+			$author_post->post_content = get_the_author_meta( 'description' );
+			$author_post->post_type = 'author';
+
+			return $author_post;
+		}
+
+		return (object) self::$empty_post;
+	}
+
+	/**
 	 * The MLA Gallery shortcode.
 	 *
 	 * This is a superset of the WordPress Gallery shortcode for displaying images on a post,
@@ -428,7 +453,7 @@ class MLAShortcode_Support {
 
 		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
-			$post = (object) self::$empty_post;
+			$post = self::_get_default_post();
 		}
 
 		// $instance supports multiple galleries in one page/post	
@@ -1754,8 +1779,7 @@ class MLAShortcode_Support {
 						$icon_url = wp_mime_type_icon( $attachment->ID );
 						$upload_dir = wp_upload_dir();
 						$args = array(
-							'page' => MLACore::ADMIN_PAGE_SLUG,
-							'mla_stream_file' => urlencode( $upload_dir['basedir'] . '/' . $item_values['base_file'] ),
+							'mla_stream_file' => urlencode( 'file://' . $upload_dir['basedir'] . '/' . $item_values['base_file'] ),
 						);
 
 						if ( 'log' == $arguments['mla_debug'] ) {
@@ -1820,7 +1844,7 @@ class MLAShortcode_Support {
 								}
 
 								// For efficiency, image streaming is done outside WordPress
-								$icon_url = add_query_arg( $args, MLACore::mla_nonce_url( MLA_PLUGIN_URL . 'includes/mla-stream-image.php', MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) );
+								$icon_url = add_query_arg( $args, MLA_PLUGIN_URL . 'includes/mla-stream-image.php' );
 							}
 						}
 
@@ -1972,7 +1996,7 @@ class MLAShortcode_Support {
 
 		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
-			$post = (object) self::$empty_post;
+			$post = self::_get_default_post();
 		}
 
 		// $instance supports multiple clouds in one page/post	
@@ -3463,7 +3487,7 @@ class MLAShortcode_Support {
 
 		// Some do_shortcode callers may not have a specific post in mind
 		if ( ! is_object( $post ) ) {
-			$post = (object) self::$empty_post;
+			$post = self::_get_default_post();
 		}
 
 		// $instance supports multiple lists in one page/post	

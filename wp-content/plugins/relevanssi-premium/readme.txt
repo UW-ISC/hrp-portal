@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 6.2
-Stable tag: 2.23.0
+Tested up to: 6.3
+Stable tag: 2.24.0
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,24 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.24.0 =
+* New feature: New filter hook `relevanssi_highlight_regex` makes it possible to adjust the regex used for highlighting.
+* New feature: New filter hook `relevanssi_excerpt_custom_fields` filters the list of custom fields used for creating the excerpt.
+* New feature: New filter hook `relevanssi_phrase_custom_fields` filters the list of custom fields used for phrase matching. Return an empty array to disable phrase matching in custom fields.
+* New feature: New filter hook `relevanssi_phrase_taxonomies` filters the list of taxonomies used for phrase matching. Return an empty array to disable phrase matching in taxonomies.
+* New feature: If RELEVANSSI_DEBUG, WP_DEBUG and WP_DEBUG_DISPLAY are all true, Relevanssi will print out indexing debugging messages to the error log (PHP error log or whatever is defined in WP_DEBUG_LOG).
+* Changed behaviour: If the `relevanssi_accents_replacement_arrays` returns an empty array, the accent variation feature is disabled.
+* Minor fix: Term indexing with WPML only indexed the terms in the current admin language. Now the terms are indexed in all languages.
+* Minor fix: Some ACF fields change the global $post, leading to indexing problems. Relevanssi tries to prevent that now.
+* Minor fix: Relevanssi couldn't create the click tracking table on subsites during the multisite installation.
+* Minor fix: Safety features for post-part targeting to avoid fatal errors from wrong variable types.
+* Minor fix: Pinning failed in multisite if the search site didn't have any pinned posts.
+* Minor fix: The `relevanssi_custom_field_value` filter hook is now applied to `_relevanssi_pdf_content` field when the PDF content is indexed for the parent post.
+* Minor fix: The `relevanssi_premium_get_post()` now returns a `WP_Error` when the post is not found.
+* Minor fix: The "Did you mean" feature now makes less suggestions for words that are already correct.
+* Minor fix: Trigger reindexing of the parent post when an attachment is attached or detached from the Media Library.
+* Minor fix: Click tracking now works much better in multisite searches and counts the clicks for the correct subsite.
+
 = 2.23.0 =
 * New feature: Relevanssi can now create custom field specific excerpts that come from one custom field only and know which field that is.
 * New feature: You can see the list of indexed custom field names in the indexing and excerpt settings.
