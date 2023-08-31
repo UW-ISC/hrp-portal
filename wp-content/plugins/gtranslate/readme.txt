@@ -3,8 +3,8 @@ Contributors: edo888
 Author: Translate AI Multilingual Solutions
 Tags: translate, translate wordpress, multilingual, translation, translate language, bilingual, localization, translation proxy, localisation, multilanguage, google translate
 Requires at least: 2.8.1
-Tested up to: 6.1
-Stable tag: 2.9.15
+Tested up to: 6.3
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Donate link: https://gtranslate.io/?xyz=998#pricing
@@ -27,10 +27,7 @@ Please check our [FAQ](https://gtranslate.io/?xyz=998#faq) to get quick answers.
 **Features**
 
 * Free Google automatic machine translation
-* Hides "Suggest better translation" pop-up
 * Hides Google top frame after translation
-* Mouse over effect
-* Google Analytics integration
 * Translate website on the fly
 * Translate posts and pages
 * Translate categories and tags
@@ -39,15 +36,13 @@ Please check our [FAQ](https://gtranslate.io/?xyz=998#faq) to get quick answers.
 * Right to left language support
 * Google language translator widget
 * Auto-switch language based on browser defined language
-* Available styles Dropdown, Flags, Flags with dropdown, Nice dropdown with flags, Flags with language names, Flags with language codes, Language names, Language codes, Globe, Popup
+* Available styles Float, Dropdown, Flags, Flags with dropdown, Nice dropdown with flags, Flags with language names, Flags with language codes, Language names, Language codes, Globe, Popup
 * Floating language selector
-* Language bar with flags in menu
 * WooCommerce shop translation
-* Multilanguage
 * Multilingual language names in native alphabet
-* Multilingual interface
 * Alternative flags for Quebec, Canada, USA, Brazil, Mexico, Argentina, Colombia
-* Lazy loading for language flags to boost performance
+* Lazy loading for language flags and js libraries to boost performance
+* Lightweight vanilla javascript without dependencies
 * Forum Support
 
 **Paid Features**
@@ -92,7 +87,7 @@ Please check our [FAQ](https://gtranslate.io/?xyz=998#faq) to get quick answers.
 1. Upload the plugin files to the `/wp-content/plugins/gtranslate` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Use the Settings &rarr; GTranslate screen to configure the plugin
-1. There are 4 ways you can use to publish the language selector on your website
+1. There are 6 ways you can place the language selector on your website
 
 **1. Floating Language Selector**
 You can turn on Floating language selector option from Settings &rarr; GTranslate screen and it will show the language selector in appropriate location (Top Right, Bottom Right, Top Left or Bottom Left).
@@ -100,20 +95,22 @@ You can turn on Floating language selector option from Settings &rarr; GTranslat
 **2. Showing in Menu**
 You can select from the list of available menus in which menu the language selector should appear.
 
-**2.1 Showing in Menu as sub-menu dropdown**
-In addition you can create a new Custom Link menu item with URL = #, Link Text = Global and add CSS Classes = gtranslate-parent to the newly created menu item.
-After that you can configure GTranslate and set Widget look = (Flags with language name/Flags with language code/Language names/Language codes) and it will appear as a dropdown when you hover on the newly created menu item.
+**3. Shortcode in Menu**
+You can create a new Custom Link menu item with URL = #, Link Text = English and add the following shortcode in the Description:
+`[gt-link lang="en" label="English" widget_look="flags_name"]`
+Where widget_look can be one of the following: `flags`, `flags_code`, `flags_name`, `lang_codes`, `lang_names`
 
-**3. Use GTranslate shortcode**
+**4. Use GTranslate shortcode**
 You can use `[gtranslate]` shortcode anywhere on your website including posts, pages, text widgets.
 You can edit your template files and use `<?php echo do_shortcode('[gtranslate]'); ?>` in HTML which will render the language selector.
 
-**4. Use GTranslate Widget**
+**5. Use GTranslate Widget**
 You can use Appearence &rarr; Widgets screen to publish GTranslate widget inside a sidebar of your template.
 
-Please NOTE: If you are using any cache plugin, do not forget to clear your cache.
+**6. Wrapper CSS Selector**
+You can use a CSS selector and the language selector will appear inside the matching elements.
 
-If you have any issues, please do not hesitate to use our [Support Forum](https://wordpress.org/support/plugin/gtranslate) or [Live Chat](https://gtranslate.io/?xyz=998#contact)
+If you have any issues, please do not hesitate to use our [Support Forum](https://wordpress.org/support/plugin/gtranslate) for free version or [Live Chat](https://gtranslate.io/?xyz=998#contact) for paid version.
 
 == Frequently Asked Questions ==
 
@@ -241,16 +238,41 @@ You need to go to the language you want to edit, for instance, French: http://do
 If you want us to translate your website professionally or provide you a proofreading service for automatic translated content, you can get an instant estimate from [Website Translation Quote](https://gtranslate.io/website-translation-quote), where you will get a detailed document with the list of pages, unique word count and prices to translate them.
 
 == Screenshots ==
-1. Dropdown with flags
+1. Float
 2. Nice dropdown with flags (closed)
 3. Nice dropdown with flags (open)
 4. Globe with language flags
 5. Flags with language names
 6. Flags with language codes
 7. Settings page
-8. User Dashboard
+8. User Dashboard (paid)
 
 == Changelog ==
+= 3.0.4 =
+* Added protection against XSS by bad acting admins
+* Added flag size option for Globe widget look
+
+= 3.0.3 =
+* Fix mobile touch-no-click issue for float look in horizontal open direction mode
+* Fix for invalid input in Custom CSS section which can break the settings interface
+* Removed translated text highlight on hover
+* Added more litespeed cache related excludes
+
+= 3.0.2 =
+* Fix for multiple appearance of the language selector in menus for some themes which call the render menu more than once
+* Removed unused CSS code and additional query string
+
+= 3.0.1 =
+* Ground up rebuild with breaking changes to the language switcher
+* Performance upgrades: all unnecessary assets are being lazy loaded, lightweight vanilla js without dependencies
+* New CDN option for assets available
+* New widget look: Float
+* Popup widget look optimized and out of beta
+* Dropdown widget look optimized, Select Language label customization option added
+* Globe widget look optimized, globe size and color configuration options added
+* Easy positioning into website menu
+* Tested with the following caching plugins: Autoptimize, LiteSpeed Cache, W3 Total Cache, WP Fastest Cache, WP Rocket, WP Super Cache, WP Optimize, SG Optimizer
+
 = 2.9.15 =
 * Google Translate Toolbar CSS updated
 * Added main language validity check for config.php file before modifying it
@@ -815,6 +837,9 @@ An attacker can generate a malicious link and if followed by a victim then javas
 * Initial version for WordPress
 
 == Upgrade Notice ==
+= 3.0.1 =
+Ground up rebuild with major changes and performance upgrades, new widget look. If you are updating from older versions make sure to reconfigure.
+
 = 2.8.9 =
 Major changes, new flags added, optimized for HTTP/2 (SPDY).
 
