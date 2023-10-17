@@ -932,6 +932,32 @@ function relevanssi_mb_strcasecmp( $str1, $str2, $encoding = '' ): int {
 }
 
 /**
+ * Multibyte friendly case-insensitive string search.
+ *
+ * If multibyte string functions are available, do mb_stristr(). Otherwise,
+ * do stristr().
+ *
+ * @see stristr()     Falls back to this if multibyte functions are not
+ * available.
+ *
+ * @param string $haystack The string to search in.
+ * @param string $needle   The string to search for.
+ * @param string $encoding The encoding to use, default mb_internal_encoding().
+ *
+ * @return bool True if the needle was found in the haystack, false otherwise.
+ */
+function relevanssi_mb_stristr( $haystack, $needle, $encoding = '' ): bool {
+	if ( ! function_exists( 'mb_internal_encoding' ) ) {
+		return stristr( $haystack, $needle );
+	} else {
+		if ( empty( $encoding ) ) {
+			$encoding = mb_internal_encoding();
+		}
+		return mb_stristr( $haystack, $needle, false, $encoding );
+	}
+}
+
+/**
  * Trims multibyte strings.
  *
  * Removes the 194+160 non-breakable spaces, removes null bytes and removes
@@ -1066,6 +1092,15 @@ function relevanssi_return_id_type( $post_object ) {
  */
 function relevanssi_return_off() {
 	return 'off';
+}
+
+/**
+ * Returns "OR".
+ *
+ * @return string A string with value "OR".
+ */
+function relevanssi_return_or() {
+	return 'OR';
 }
 
 /**
@@ -1623,4 +1658,19 @@ function relevanssi_user_agent_is_bot(): bool {
 		}
 	}
 	return false;
+}
+
+/**
+ * Validates that the parameter is a valid taxonomy type.
+ *
+ * @parameter string $taxonomy The taxonomy to validate.
+ *
+ * @return string The validated taxonomy, empty string if invalid.
+ */
+function relevanssi_validate_taxonomy( $taxonomy ) {
+	$taxonomy = sanitize_text_field( $taxonomy );
+	if ( taxonomy_exists( $taxonomy ) ) {
+		return $taxonomy;
+	}
+	return '';
 }

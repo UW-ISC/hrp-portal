@@ -97,20 +97,28 @@
             }
         };
 
-        plugin.close_search = function() {
+        plugin.close_search = function(moveFocus = true) {
             $menu.triggerHandler("mmm:closeSearch");
             input.val("");
             input.attr('placeholder', '');
+            input.attr('tabindex', '-1');
             form.removeClass('mega-search-open');
             form.addClass('mega-search-closed');
-            
+            icon.attr('aria-expanded', 'false');
+
+            if (moveFocus) {
+                icon.trigger("focus");
+            }
         }
 
         plugin.open_search = function() {
             $menu.triggerHandler("mmm:openSearch");
             input.attr('placeholder', input.attr('data-placeholder'));
+            input.attr('tabindex', '0');
             form.removeClass('mega-search-closed');
             form.addClass('mega-search-open');
+            icon.attr('aria-expanded', 'true');
+            input.trigger("focus");
         }
 
         plugin.detect_background_click = function() {
@@ -126,48 +134,65 @@
                     return;
                 }
                 if ( ! dragging && ! $(e.target).closest(".max-mega-menu li").length && ! $(e.target).closest(".mega-menu-toggle").length ) {
-                    plugin.close_search();
+                    plugin.close_search(false);
                 }
                 dragging = false;
             });
         }
 
         plugin.init_replacements_search = function() {
-
-            input.val("");
-
             if ( $menu.data("view") === "mobile" ) {
+                input.attr('tabindex', '0');
+
                 $(".search-icon", $menu).on('click', function(e) {
                     $(this).parents(".mega-search").submit();
                 });
             }
 
             if ( $menu.data("view") === "desktop" ) {
-                input.on('focus', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-closed') ) {
-                        plugin.open_search();
-                    }
-                });
-
                 input.on('blur', function(e) {
-                    if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
+                    if ( $menu.parent().hasClass("mega-keyboard-navigation") && input.val() == '' && ! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
                         plugin.close_search();
                     }
                 });
 
-                icon.on('click', function(e) {
-                    if (form.parent().hasClass('mega-static') ) {
-                        form.submit();
-                        return;
+                icon.on('keypress click', function(e) {
+                    var enter_key = 13;
+                    var space_key = 32;
+
+                    if (e.which === enter_key || e.which === space_key || e.type === 'click') {
+                        e.preventDefault();
+
+                        if (form.parent().hasClass('mega-static') ) {
+                            form.submit();
+                            return;
+                        }
+
+                        if ( input.val() != '' ) {
+                            form.submit();
+                            return;
+                        }
+
+                        if ( form.hasClass('mega-search-open') ) {
+                            plugin.close_search();
+                            return;
+                        }
+
+                        if ( form.hasClass('mega-search-closed') ) {
+                            plugin.open_search();
+                            return;
+                        }
                     }
-                    
-                    if (form.hasClass('mega-search-closed')) {
-                        plugin.open_search();
-                        input.focus();
-                    } else if ( input.val() == '' ) {
-                        plugin.close_search();
-                    } else {
-                        form.submit();
+                });
+
+                $menu.on('keydown', function(e) {
+                    var escape_key = 27;
+
+                    if (e.which === escape_key) {
+                        if (! form.parent().hasClass('mega-static') && form.hasClass('mega-search-open') ) {
+                            plugin.close_search();
+                            return;
+                        }
                     }
                 });
             }
@@ -187,8 +212,8 @@
         });
     };
 
-    $(function() {
-        $(".max-mega-menu .mega-search").maxmegamenu_searchbox();
+    $(".max-mega-menu").on("after_mega_menu_init", function() {
+        $(".mega-search", this).maxmegamenu_searchbox();
     });
 })(jQuery);
 

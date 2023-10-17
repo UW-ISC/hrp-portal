@@ -337,7 +337,9 @@
             var escape_key = 27;
             var enter_key = 13;
             var left_arrow_key = 37;
+            var up_arrow_key = 38;
             var right_arrow_key = 39;
+            var down_arrow_key = 40;
             var space_key = 32;
 
             $menu.parent().on("keyup.megamenu", function(e) {
@@ -393,6 +395,18 @@
                     }
                 }
 
+                if ( keyCode === space_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
+                    e.preventDefault();
+
+                    if ( active_link.is(".mega-menu-toggle-block, .mega-menu-toggle-animated-block button") ) {
+                        if ( $toggle_bar.hasClass("mega-menu-open") ) {
+                            plugin.hideMobileMenu();
+                        } else {
+                            plugin.showMobileMenu();
+                        }
+                    }
+                }
+
                 if ( keyCode === enter_key && $menu.parent().hasClass("mega-keyboard-navigation") ) {
                     if ( active_link.hasClass("mega-menu-toggle-block") ) {
                         if ( $toggle_bar.hasClass("mega-menu-open") ) {
@@ -441,34 +455,34 @@
                     }
                 }
 
-                if ( keyCode === right_arrow_key && plugin.isDesktopView() && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
+                if ( ( ( keyCode === right_arrow_key && plugin.isDesktopView() ) || ( keyCode === down_arrow_key && plugin.isMobileView() ) ) && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
                     e.preventDefault();
 
-                    var next_top_level_item = $("> .mega-toggle-on", $menu).nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
+                    var next_top_level_item = $("> .mega-toggle-on", $menu).nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").first();
 
                     if (next_top_level_item.length === 0) {
-                        next_top_level_item = $(":focus", $menu).parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
+                        next_top_level_item = $(":focus", $menu).parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").first();
                     }
 
                     if (next_top_level_item.length === 0) {
-                        next_top_level_item = $(":focus", $menu).parent().parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").first();
+                        next_top_level_item = $(":focus", $menu).parent().parent().parent().nextAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").first();
                     }
 
                     plugin.hideAllPanels();
                     next_top_level_item.focus();
                 }
 
-                if ( keyCode === left_arrow_key && plugin.isDesktopView() && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
+                if ( ( ( keyCode === left_arrow_key && plugin.isDesktopView() ) || ( keyCode === up_arrow_key && plugin.isMobileView() ) ) && $menu.parent().hasClass("mega-keyboard-navigation") && $menu.hasClass("mega-menu-horizontal") ) {
                     e.preventDefault();
 
-                    var prev_top_level_item = $("> .mega-toggle-on", $menu).prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").last();
+                    var prev_top_level_item = $("> .mega-toggle-on", $menu).prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").last();
 
                     if (prev_top_level_item.length === 0) {
-                        prev_top_level_item = $(":focus", $menu).parent().prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search input[type=text]").last();
+                        prev_top_level_item = $(":focus", $menu).parent().prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").last();
                     }
 
                     if (prev_top_level_item.length === 0) {
-                        prev_top_level_item = $(":focus", $menu).parent();
+                        prev_top_level_item = $(":focus", $menu).parent().parent().parent().prevAll("li.mega-menu-item:visible").find("> a.mega-menu-link, .mega-search span[role=button]").last();
                     }
 
                     plugin.hideAllPanels();
@@ -679,7 +693,9 @@
             $(".mega-toggle-label, .mega-toggle-animated", $toggle_bar).attr("aria-expanded", "true");
 
             if (plugin.settings.effect_mobile === "slide") {
-                $menu.animate({"height":"show"}, plugin.settings.effect_speed_mobile);
+                $menu.animate({"height":"show"}, plugin.settings.effect_speed_mobile, function() {
+                    $(this).css("display", "");
+                });
             }
 
             $toggle_bar.addClass("mega-menu-open");

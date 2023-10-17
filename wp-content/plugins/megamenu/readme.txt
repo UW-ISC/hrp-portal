@@ -1,9 +1,9 @@
 === Max Mega Menu ===
 Contributors: megamenu
-Tags: menu, megamenu, mega menu, navigation, mobile
+Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
-Tested up to: 6.2
-Stable tag: 3.2.1
+Tested up to: 6.3
+Stable tag: 3.2.3
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,23 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.2.4 =
+
+* Change: Remove "visibility: visible;" rule from menu UL
+* Fix: Warning with Ninja Popups plugin
+* Accessibility improvement: Space bar can now be used to toggle visibility of mobile sub menu
+* Accessibility improvement: Up/down keys can be used to navigate top level menu items in mobile sub menu
+* Accessibility improvement: Add 'Keyboard Highlight Outline' styling option to theme editor
+* Accessibility improvement: Add outline to entire search form when using keyboard navigation
+* Fix: Using left/right arrow keys to navigate top level menu items when a search box is in the menu
+* Improvement: Remove 'display' inline CSS attribute when mobile menu is opened/closed
+
+= 3.2.3 =
+
+* Fix: Check the walker property exists before adding menu toggle to HTML output
+* Fix: PHP 8.1 warning
+* Fix: Conflict with The Bluehost Plugin
 
 = 3.2.2 =
 

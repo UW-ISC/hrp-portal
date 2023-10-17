@@ -420,8 +420,10 @@ class MLAMime {
 
 		if ( empty( $unfiltered ) ) {
 			unset( $items['htm|html'] );
+			unset( $items['html|htm'] );
 			unset( $items['htm'] );
 			unset( $items['html'] );
+			unset( $items['js'] );
 		}
 
 		if ( self::$mla_debug_active && $first_call ) {

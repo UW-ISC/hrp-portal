@@ -161,7 +161,7 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 		);
 
 		$found_posts = count( $all_indexed_posts );
-		$progress    = this::relevanssi_generate_progress_bar( 'Indexing posts', $found_posts );
+		$progress    = $this->relevanssi_generate_progress_bar( 'Indexing posts', $found_posts );
 
 		WP_CLI::log( 'Found ' . $found_posts . ' posts to refresh.' );
 		foreach ( $all_indexed_posts as $post_id ) {
@@ -440,7 +440,7 @@ class Relevanssi_WP_CLI_Command extends WP_CLI_Command {
 		$count     = count( $posts );
 		WP_CLI::log( 'Regenerating related posts for post types ' . implode( ', ', $post_types ) . ", total $count posts." );
 
-		$progress = this::relevanssi_generate_progress_bar( 'Regenerating', $count );
+		$progress = $this->relevanssi_generate_progress_bar( 'Regenerating', $count );
 
 		foreach ( $posts as $post_id ) {
 			relevanssi_related_posts( $post_id, $post_objects );

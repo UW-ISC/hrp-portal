@@ -168,8 +168,6 @@ if ( ! class_exists( 'Mega_Menu_Walker' ) ) :
 					$atts['class'] = 'mega-menu-link';
 				}
 
-
-
 				$attributes = '';
 
 				foreach ( $atts as $attr => $value ) {

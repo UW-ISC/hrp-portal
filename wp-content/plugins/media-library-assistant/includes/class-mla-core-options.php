@@ -348,6 +348,11 @@ class MLACoreOptions {
 	const MLA_FORCE_MLA_MIME_TYPE = 'force_mla_mime_type';
 
 	/**
+	 * Provides a unique name for the Custom Icon Directory option
+	 */
+	const MLA_CUSTOM_ICON_PATH = 'custom_icon_path';
+
+	/**
 	 * Provides a unique name for the Enable Custom Field Mapping option
 	 */
 	const MLA_ALLOW_CUSTOM_FIELD_MAPPING = 'allow_custom_field_mapping';
@@ -1489,6 +1494,14 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to override WordPress MIME Type security checks, then click <strong>Save Changes</strong> to record the new setting.', 'media-library-assistant' )),
+
+			self::MLA_CUSTOM_ICON_PATH =>
+				array('tab' => 'upload',
+					'name' => __( 'Custom Icons', 'media-library-assistant' ),
+					'type' => 'text',
+					'std' => '',
+					'size' => 30,
+					'help' => __( 'Enter the path (relative to .../wp-content/) of your custom icon directory.', 'media-library-assistant' )),
 
 			self::MLA_DEBUG_DISPLAY_LIMIT =>
 				array('tab' => 'debug',
