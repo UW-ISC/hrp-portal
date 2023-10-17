@@ -962,7 +962,7 @@ post_mime_type=all<br />
 The first example is equivalent to the simple query <code>attachment_tag=artisan</code>. The second example matches items of all MIME types, attached to the current post, having an attachment_category ID of 11 or 12. Both examples use the <strong>"enclosing shortcode"</strong> format to avoid problems WordPress has in parsing parameters with special characters such as <code>=&gt;</code>.
 </p>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding the tax_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+When embedding the shortcode in the body of a post, be very careful when coding the tax_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
 Three special "terms" values, "ignore.terms.assigned", "no.terms.assigned" and "any.terms.assigned",  let you find all items, items that have no assigned terms in the taxonomy or any (one or more) assigned terms. For example, to find items that have no Att. Tags you can code:</p>
@@ -1172,7 +1172,7 @@ The <code>[mla_gallery]</code> shortcode supports the "<a href="https://develope
 As the <a href="https://developer.wordpress.org/reference/classes/wp_query/#date-parameters" title="WordPress Codex Documentation for date_query" target="_blank">Codex date_query documentation</a> suggests, "before" and "after" values can use any of the <a href="http://php.net/strtotime" title="PHP Date and Time Formats">PHP strtotime()-compatible string values</a>, which are quite powerful. For example, you can use relative values such as <code>'after' => 'second tuesday of last month'</code>. Careful study of the PHP documentation can be most rewarding. You can use <code>mla_debug=true</code> to see how PHP and WordPress translate your query to specific date-time values.
 </p>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+When embedding the shortcode in the body of a post, be very careful when coding the date_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
 You can use the <code>current_timestamp</code>, <code>current_datetime</code> and <code>current_getdate</code> field-level data sources to, for example, return items uploaded in the current month. Code something like:
@@ -1226,7 +1226,7 @@ Remember to use <code>post_parent=current</code> if you want to restrict your qu
 The <code>[mla_gallery]</code> shortcode supports the more powerful <a href="https://developer.wordpress.org/reference/classes/wp_query/#custom-field-post-meta-parameters" title="WordPress Codex documentation for meta_query" target="_blank">"WP_Query meta_query"</a> parameters made available as of WordPress 3.1.
 </p>
 <p>
-When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
+When embedding the shortcode in the body of a post, be very careful when coding the meta_query; it must be a valid PHP array specification. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your query easier to enter and understand.  Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want.
 </p>
 <p>
 Remember to use <code>post_parent=current</code> if you want to restrict your query to items attached to the current post.
@@ -1434,7 +1434,7 @@ The <code>[mla_tag_cloud]</code> shortcode function displays a list of taxonomy 
 </li>
 </ul>
 <p>
-The <code>[mla_tag_cloud]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+The <code>[mla_tag_cloud]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
 </p>
 <p>
 Many of the <code>[mla_tag_cloud]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> shortcode, so the learning curve is short. Differences and parameters unique to the cloud are given in the sections below.
@@ -2432,7 +2432,7 @@ The <code>[mla_term_list]</code> shortcode function displays hierarchical taxono
 </li>
 </ul>
 <p>
-The <code>[mla_term_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
+The <code>[mla_term_list]</code> shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. You can use the alternative "enclosing shortcode" syntax to avoid many problems and make your shortcode easier to enter and understand. Read and follow the rules and guidelines in the "<a href="#complex_shortcodes">Entering Long/Complex Shortcodes</a>" Documentation section to get the results you want. 
 </p>
 <p>
 Many of the <code>[mla_term_list]</code> concepts and shortcode parameters are modeled after the <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> shortcodes, so the learning curve is shorter. Differences and parameters unique to the list are given in the sections below.
@@ -6784,6 +6784,7 @@ When a file is uploaded to your Media Library the MIME type associated with that
 <h4>Icons and Icon Types</h4>
 <p>WordPress maintains a list of "file types" which associate file extensions with type names used to select an icon image. For example, an "audio" file type is associated with an image of musical notes. There are nine of these types: archive, audio, code, default, document, interactive, spreadsheet, text and video. MLA has a much longer list; 112 icon types/images in all. If the "Enable MLA File Type Icons Support" checkbox at the bottom of the Settings screen, Uploads tab  is checked, the enhanced icon images will be used in place of the WordPress images.</p>
 <p>The MLA icon images are slightly larger than the default images and square; 64x64 pixels. The images are drawn (with permission) from the <a href="http://www.softicons.com/free-icons/system-icons/crystal-project-icons-by-everaldo-coelho" target="_blank">Crystal Project Icons</a>, created by <a href="http://www.everaldo.com" target="_blank">Everaldo Coelho</a>, founder of <a href="http://www.yellowicon.com/" target="_blank">Yellowicon</a>. You can find the images in the <code>/plugins/media-library-assistant/images/crystal</code> directory.</p>
+<p>You can add icon images of your own to the MLA set. Place your icon image file(s) (<code>.png</code> format only, 64x64 pixels) in a directory anywhere within the <code>.../wp-content/</code> directory tree, e.g., <code>.../wp-content/my-icons/</code>. Then, enter the direstory name (relative to <code>.../wp-content/</code>) in the "Custom Icons" text box on the Uploads tab, e.g., <code>my-icons</code>. MLA will copy your files to the <code>crystal</code> directory whenever you click "Save Changes". MLA will also copy the files again each time the MLA version number changes, because the plugin update process deletes the existing plugin directories before installing the new version.</p>
 <p>You can change the icon image associated with any file extension by selecting a new value from the dropdown list on the Edit Upload MIME Type screen or in the Quick Edit area. You can change the icon image for several extensions at once using the Bulk Edit action.</p>
 <p>If you have some other plugin or mechanism for handling the Upload MIME Type items, you can disable MLA support entirely. Clear the checkbox at the bottom-left corner of the screen and click "Save Changes".</p>
 <h4>Source and Status</h4>

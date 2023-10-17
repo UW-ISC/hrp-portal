@@ -105,6 +105,7 @@ function relevanssi_search_multi( $multi_args ) {
 
 		if ( count( $terms ) < 1 ) {
 			// Tokenizer killed all the search terms.
+			restore_current_blog();
 			continue;
 		}
 		$terms = array_keys( $terms ); // Don't care about tf in query.
@@ -301,7 +302,6 @@ function relevanssi_search_multi( $multi_args ) {
 			$match_arrays['excerpt']     = $return['excerpt_matches'];
 			$term_hits                   = $return['term_hits'];
 			$query                       = $return['query'];
-			$doc_weight                  = $return['doc_weights'];
 		}
 	}
 
@@ -323,7 +323,6 @@ function relevanssi_search_multi( $multi_args ) {
 		'term_hits'           => $term_hits,
 		'query'               => $q,
 		'query_no_synonyms'   => $q_no_synonyms,
-		'doc_weights'         => $doc_weight,
 	);
 
 	return $return;

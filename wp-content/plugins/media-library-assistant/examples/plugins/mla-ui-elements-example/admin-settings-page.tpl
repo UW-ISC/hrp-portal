@@ -708,7 +708,7 @@ The following parameters customize content and markup for each control/list item
 </tr>
 </table>
 <p>
-For the "list", "flat" and "array" archive_output types, each item in the list comprises an archive value and a hyperlink surrounding the value. The following parameters customize link content and markup:
+For all archive_output types except "dropdown", each item in the list or pagination control(s) comprises an archive value and a hyperlink surrounding the value. The following parameters customize link content and markup:
 </p>
 <table>
 <tr>
@@ -743,12 +743,16 @@ For the "list", "flat" and "array" archive_output types, each item in the list c
 <td class="mla-doc-table-label">link_href</td>
 <td>The href attribute of the hyperlink tags; <strong>default empty, no value</strong>. When present, this value replaces the <code>link=</code> values (current, view, span or none)</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">append_current_item</td>
+<td>If true (the default), adds the <code>muie_current_archive</code> as a query argument to the hyperlink tags. If set to false (unusual), you must use the <code>link_href</code> parameter and explicitly add the current item value to the hyperlink tags.</td>
+</tr>
 </table>
 <p>
-The item and link parameters are an easy way to customize the content and markup for each control/list item. They support the Archive List Substitution Parameters and Content Template substitution parameters. For example, if you code "<code>rollover_text='{+current_label+} ({+items+})'</code>, the rollover text will contain the item value's label followed by the number of items having that value in parentheses. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
+The item and link parameters are an easy way to customize the content and markup for each list item or pagination control. They support the Archive List Substitution Parameters and Content Template substitution parameters. For example, if you code "<code>rollover_text='{+current_label+} ({+items+})'</code>, the rollover text will contain the item value's label followed by the number of items having that value in parentheses. Simply add "{+" before the substitution parameter name and add "+}" after the name. Note that the enclosing delimiters are different than those used in the templates, since the WordPress shortcode parser reserves square brackets ("[" and "]") for its own use.
 </p>
 <p>
-The "link_href" parameter is a great way to change the destination your list item links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink" and "viewlink" are not modified.
+The "link_href" parameter is a great way to change the destination your list item or pagination links to and/or add arguments to the link for later processing. For example, to make a gallery item link back to the current page/post you can code: <code>link_href='{+page_url+}'</code>. You can also add arguments to the link, e.g., <code>mla_link_href='{+page_url+}?firstarg=value1&amp;amp;myarg=myvalue'</code>. Note the use of the HTML entity name "&amp;amp;" to put an ampersand in the value; the WordPress "visual" post editor will replace "&amp;", "&lt;" and ">" with "&amp;amp;", "&amp;lt;" and "&amp;gt;" whether you like it not. The <strong>only</strong> markup parameters modified by this parameter are "link_url" and "thelink". The markup parameters "currentlink" and "viewlink" are not modified.
 </p>
 <p>
 The "link_attributes" parameter accepts any value and adds it to the "&lt;a&gt;" or "&lt;span&gt;" tags for the item. For example, you can add an HTML "target" attribute to the hyperlink. If you code <code>link_attributes='target="_blank"'</code> the item will open in a new window or tab. You can also use "_self", "_parent", "_top" or the "<em>framename</em>" of a named frame. Note the use of single quotes around the parameter value and the double quotes within the parameter. <strong>IMPORTANT:</strong> since the shortcode parser reserves square brackets ("[" and "]") for its own use, <strong>you must substitute curly braces for square brackets</strong> if your attributes require brackets. If you must code a curly brace in your attribute value, preface it with <strong>two backslash characters</strong>, e.g., "\\{" or "\\}". If you code an attribute already present in the tag, your value will override the existing value.

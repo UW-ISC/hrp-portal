@@ -343,9 +343,9 @@ function relevanssi_build_index( $extend_offset = false, $verbose = null, $post_
 	do_action( 'relevanssi_pre_indexing_query' );
 
 	$content = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-	if ( defined( 'WP_CLI' ) && WP_CLI && function_exists( 'relevanssi_generate_progress_bar' ) ) {
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
 		// @codeCoverageIgnoreStart
-		$progress = relevanssi_generate_progress_bar( 'Indexing posts', count( $content ) );
+		$progress = WP_CLI\Utils\make_progress_bar( 'Indexing posts', count( $content ) );
 		// @codeCoverageIgnoreEnd
 	}
 
@@ -443,10 +443,6 @@ function relevanssi_index_doc( $index_post, $remove_first = false, $custom_field
 		$debug = true;
 	}
 
-	if ( $debug ) {
-		relevanssi_debug_echo( 'Indexing post ID ' . $index_post . '...' );
-	}
-
 	// Check if this is a Jetpack Contact Form entry.
 	if ( isset( $_REQUEST['contact-form-id'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
 		return -1;
@@ -471,6 +467,10 @@ function relevanssi_index_doc( $index_post, $remove_first = false, $custom_field
 			$post = $previous_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 		}
 		return -1;
+	}
+
+	if ( $debug ) {
+		relevanssi_debug_echo( 'Indexing post ID ' . $post->ID . '...' );
 	}
 
 	// Post exclusion feature from Relevanssi Premium.
@@ -1388,25 +1388,27 @@ function relevanssi_index_excerpt( &$insert_data, $excerpt, $min_word_length, $d
  * Creates indexing queries for post title.
  *
  * @param array   $insert_data     The INSERT query data. Modified here.
- * @param object  $post            The post object.
+ * @param object  $post_object     The post object.
  * @param int     $min_word_length The minimum word length.
  * @param boolean $debug           If true, print out debug notices.
  *
  * @return int The number of tokens added to the data.
  */
-function relevanssi_index_title( &$insert_data, $post, $min_word_length, $debug ) {
+function relevanssi_index_title( &$insert_data, $post_object, $min_word_length, $debug ) {
 	$n = 0;
 
-	if ( empty( $post->post_title ) ) {
+	if ( empty( $post_object->post_title ) ) {
 		return 0;
 	}
 
 	/**
 	 * If this filter returns false, titles are not indexed at all.
 	 *
-	 * @param boolean Return false to prevent titles from being indexed. Default true.
+	 * @param boolean Return false to prevent titles from being indexed. Default
+	 * true.
+	 * @param object  $post_object The post object.
 	 */
-	if ( ! apply_filters( 'relevanssi_index_titles', true ) ) {
+	if ( ! apply_filters( 'relevanssi_index_titles', true, $post_object ) ) {
 		return 0;
 	}
 
@@ -1414,14 +1416,22 @@ function relevanssi_index_title( &$insert_data, $post, $min_word_length, $debug 
 		relevanssi_debug_echo( 'Indexing post title.' );
 	}
 	/** This filter is documented in wp-includes/post-template.php */
-	$filtered_title = apply_filters( 'the_title', $post->post_title, $post->ID );
+	$filtered_title = apply_filters(
+		'the_title',
+		$post_object->post_title,
+		$post_object->ID
+	);
 	/**
 	 * Filters the title before tokenizing and indexing.
 	 *
-	 * @param string $post->post_title The title.
-	 * @param object $post             The full post object.
+	 * @param string $post_object->post_title The title.
+	 * @param object $post_object             The full post object.
 	 */
-	$filtered_title = apply_filters( 'relevanssi_post_title_before_tokenize', $filtered_title, $post );
+	$filtered_title = apply_filters(
+		'relevanssi_post_title_before_tokenize',
+		$filtered_title,
+		$post_object
+	);
 	$title_tokens   = relevanssi_tokenize(
 		$filtered_title,
 		/**
@@ -1467,9 +1477,11 @@ function relevanssi_index_content( &$insert_data, $post_object, $min_word_length
 	/**
 	 * If this filter returns false, post content is not indexed at all.
 	 *
-	 * @param boolean Return false to prevent post content from being indexed. Default true.
+	 * @param boolean Return false to prevent post content from being indexed.
+	 * Default true.
+	 * @param object  $post_object The post object.
 	 */
-	if ( ! apply_filters( 'relevanssi_index_content', true ) ) {
+	if ( ! apply_filters( 'relevanssi_index_content', true, $post_object ) ) {
 		return $n;
 	}
 

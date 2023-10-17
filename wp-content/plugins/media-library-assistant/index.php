@@ -9,14 +9,14 @@
  * @author    David Lingren
  * @copyright 2023 David Lingren
  * @license   GPL-2.0-or-later
- * @version   3.10
+ * @version   3.12
  */
 
 /*
 Plugin Name: Media Library Assistant
 Plugin URI: http://davidlingren.com/#two
 Description: Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
-Version: 3.10
+Version: 3.12
 Requires at least: 4.1
 Requires PHP: 5.3
 Author: David Lingren

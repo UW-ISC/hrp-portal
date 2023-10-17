@@ -1262,8 +1262,38 @@ EOH;
 		}
 	}
 
+	$words = get_option( 'relevanssi_words', false );
+	if ( ! $words ) {
+		$word_text = sprintf(
+			// Translators: %1$s is <code>relevanssi_words</code>.
+			esc_html__( 'The %1$s option doesn\'t exist. You can\'t reset it; it should be regenerated when you search for something.', 'relevanssi' ),
+			'<code>relevanssi_words</code>'
+		);
+	} elseif ( isset( $words['words'] ) && isset( $words['expire'] ) ) {
+		$word_count = count( $words['words'] );
+		$word_text  = sprintf(
+			// Translators: %1$s is <code>relevanssi_words</code>, %2$d is the number of words in the option, %3$s is the expiration date of the option.
+			esc_html__( 'The %1$s option has %2$d words in it and the cache expires on %3$s.', 'relevanssi' ),
+			'<code>relevanssi_words</code>',
+			$word_count,
+			date_i18n( get_option( 'date_format' ), $words['expire'] )
+		);
+	} else {
+		$word_text = sprintf(
+			// Translators: %1$s is <code>relevanssi_words</code>.
+			esc_html__( 'The %1$s option is empty.', 'relevanssi' ),
+			'<code>relevanssi_words</code>'
+		);
+	}
+
 	?>
 	<h2><?php esc_html_e( 'Reset the relevanssi_words option', 'relevanssi' ); ?></h2>
+
+	<p>
+	<?php
+		echo $word_text; // phpcs:ignore WordPress.Security.EscapeOutput
+	?>
+	</p>
 
 	<p>
 	<?php

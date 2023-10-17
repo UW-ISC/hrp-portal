@@ -35,8 +35,8 @@ class Mega_Menu_Replacements {
 		add_shortcode( 'maxmegamenu_edd_cart_total', array($this, 'shortcode_edd_cart_total') );
 
 		add_filter( 'woocommerce_add_to_cart_fragments', array($this, 'woocommerce_header_add_to_cart_fragment' ) );
-
 	}
+
 
 	/**
 	 * Update cart total/count via AJAX
@@ -685,7 +685,7 @@ class Mega_Menu_Replacements {
 
 		$woocommerce = isset($item->megamenu_settings['replacements']['search']['woocommerce']) ? $item->megamenu_settings['replacements']['search']['woocommerce'] : "false";
 
-		$name = apply_filters("megamenu_search_var", "s");
+		$search_var = apply_filters("megamenu_search_var", "s");
 		$action = apply_filters("megamenu_search_action", trailingslashit( home_url() ) );
 
 		$inputs = "";
@@ -694,57 +694,97 @@ class Mega_Menu_Replacements {
 			$inputs = "<input type='hidden' name='post_type' value='product' />";
 		}
 
-		$search_icon_html = "<span class='dashicons dashicons-search search-icon'></span>";
+		$search_icon_html = "<span tabindex='0' type='button' class='dashicons dashicons-search search-icon'></span>";
+
+		$search_icon_attributes = array(
+			'tabindex' => '0',
+			'role' => 'button',
+			'class' => 'dashicons dashicons-search search-icon',
+			'aria-controls' => 'mega-search-' . $item->ID
+		);
+
+		if ( $type != 'static' ) {
+			$search_icon_attributes['aria-expanded'] = 'false';
+			$search_icon_attributes['aria-haspopup'] = 'true';
+		}
 
 		if ( $search_icon_type == 'custom' && isset( $item->megamenu_settings['icon'] ) ) {
 
 			if ( strpos( $item->megamenu_settings['icon'], 'dashicons-' ) !== FALSE ) {
-				$search_icon_html = "<span class='dashicons {$item->megamenu_settings['icon']} search-icon'></span>";
+				$search_icon_attributes['class'] = "dashicons {$item->megamenu_settings['icon']} search-icon";
 			}
 
 			$icon_prefix = substr( $item->megamenu_settings['icon'], 0, 3 );
 
 			if ( $icon_prefix == 'fa-' ) {
-				$search_icon_html = "<span class='fa {$item->megamenu_settings['icon']} search-icon'></span>";
+				$search_icon_attributes['class'] = "fa {$item->megamenu_settings['icon']} search-icon";
 			}
 
 			if ( in_array( $icon_prefix, array( 'fab', 'fas', 'far' ) ) ) {
-				$search_icon_html = "<span class='{$item->megamenu_settings['icon']} search-icon'></span>";
+				$search_icon_attributes['class'] = "{$item->megamenu_settings['icon']} search-icon";
 			}
 
 			if ( strpos( $item->megamenu_settings['icon'], 'genericon-' ) !== FALSE ) {
-				$search_icon_html = "<span class='genericon {$item->megamenu_settings['icon']} search-icon'></span>";
+				$search_icon_attributes['class'] = "genericon {$item->megamenu_settings['icon']} search-icon";
 			}
 
 			if ( $item->megamenu_settings['icon'] == 'custom') {
-				$search_icon_html = "<span class='search-icon'></span>";
+				$search_icon_attributes['class'] = "search-icon";
 			}
-
 		}
 
+		$search_icon_attributes = apply_filters("megamenu_search_icon_attributes", $search_icon_attributes, $item);
+
+		$search_icon_html = "<span";
+
+		foreach ( $search_icon_attributes as $name => $val ) {
+			if ( strlen( $val ) ) {
+				$search_icon_html .= " " . $name ."='" . esc_attr( $val ) . "'";
+			}
+		}
+
+		$search_icon_html .= "></span>";
+
+
+		$submit_html = "<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>";
+		$input_html = "<input tabindex='-1' type='text' role='searchbox' id='mega-search-" . $item->ID . "' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$search_var}'>";
+
+		$css_version = get_option("megamenu_pro_css_version");
+
 		if ( $type == 'expand_to_left' ) {
-			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-left mega-search-closed' role='search' action='" .  $action . "'>
-						" . $search_icon_html . "
-						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
-						" . apply_filters("megamenu_search_inputs", $inputs) . "
-					</form></div>";
+			$html  = "<div class='mega-search-wrap'>";
+			$html .= "    <form class='mega-search expand-to-left mega-search-closed' role='search' action='" .  $action . "'>";
+
+			if ( version_compare( $css_version, "2.2.8.5", "<" ) ) {
+				$html .= $search_icon_html;
+				$html .= $input_html;
+			} else {
+				$html .= $input_html;
+				$html .= $search_icon_html;
+			}
+
+			$html .= $submit_html;
+			$html .= apply_filters("megamenu_search_inputs", $inputs);
+			$html .= "    </form>";
+			$html .= "</div>";
 		}
 
 		if ( $type == 'expand_to_right' ) {
-			$html = "<div class='mega-search-wrap'><form class='mega-search expand-to-right mega-search-closed' role='search' action='" .  $action . "'>
-						" . $search_icon_html . "
-						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
-						" . apply_filters("megamenu_search_inputs", $inputs) . "
-					</form></div>";
+			$html  = "<div class='mega-search-wrap'>";
+			$html .="    <form class='mega-search expand-to-right mega-search-closed' role='search' action='" .  $action . "'>";
+			$html .= $search_icon_html;
+			$html .= $input_html;
+			$html .= $submit_html;
+			$html .= apply_filters("megamenu_search_inputs", $inputs);
+			$html .= "    </form>";
+			$html .= "</div>";
 		}
 
 		if ( $type == 'static' ) {
 			$html = "<div class='mega-search-wrap mega-static'><form class='mega-search mega-search-open' role='search' action='" .  $action . "'>
-						" . $search_icon_html . "
 						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-						<input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
+						<input type='text' role='searchbox' id='mega-search-" . $item->ID . "' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$search_var}'>
+						" . $search_icon_html . "
 						" . apply_filters("megamenu_search_inputs", $inputs) . "
 					</form></div>";
 		}

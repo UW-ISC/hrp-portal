@@ -36,8 +36,13 @@ class Mega_Menu_Font_Awesome_5 {
 			return MEGAMENU_PRO_USE_FONTAWESOME5_PRO;
 		}
 
-		if ( function_exists( 'FortAwesome\fa' ) && fa()->pro() ) {
-			return true;
+		if ( function_exists( 'FortAwesome\fa' ) ) {
+			$version = fa()->version();
+			$version_is_v5 = is_string( $version ) && 1 === preg_match( '/^5\./', $version );
+
+			if ( fa()->pro() && $version_is_v5 ) {
+				return true;
+			}
 		}
 
 		return false;
@@ -64,9 +69,9 @@ class Mega_Menu_Font_Awesome_5 {
      */
     public function add_fa5_scss_vars( $vars, $location, $theme, $menu_id ) {
     	if ( $this->use_pro() ) {
-        	$vars['font_awesome_family'] = "'Font Awesome 5 Pro'";
+        	$vars['font_awesome_5_family'] = "'Font Awesome 5 Pro'";
     	} else {
-        	$vars['font_awesome_family'] = "'Font Awesome 5 Free'";
+        	$vars['font_awesome_5_family'] = "'Font Awesome 5 Free'";
     	}
 
         return $vars;

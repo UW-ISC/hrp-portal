@@ -497,13 +497,21 @@ function relevanssi_process_server_response( $response, $post_id ) {
 			$content_error = RELEVANSSI_ERROR_04;
 		}
 
+		if ( 504 === $response['response']['code'] ) {
+			$content_error = RELEVANSSI_ERROR_06;
+		}
+
 		if ( isset( $content->error ) ) {
 			$content_error = $content->error;
 			$content       = $content->error;
 		}
 
-		if ( stristr( $content, 'java.lang.OutOfMemoryError' ) ) {
+		if ( $content && stristr( $content, 'java.lang.OutOfMemoryError' ) ) {
 			$content_error = RELEVANSSI_ERROR_04;
+		}
+
+		if ( $content && stristr( $content, 'Tika server returned error code' ) ) {
+			$content_error = RELEVANSSI_ERROR_06;
 		}
 
 		if ( empty( $content ) ) {
@@ -594,11 +602,6 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 			array(
 				'key'     => '_relevanssi_pdf_error',
 				'compare' => 'LIKE',
-				'value'   => 'R_ERR06:',
-			),
-			array(
-				'key'     => '_relevanssi_pdf_error',
-				'compare' => 'LIKE',
 				'value'   => 'cURL error 7:',
 			),
 			array(
@@ -660,6 +663,15 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
 			'application/%'
 		);
 	}
+	/**
+	 * Filters the final SQL query that fetches posts with attachments.
+	 *
+	 * @param string $query      The SQL query.
+	 * @param int    $limit      The number of posts to fetch.
+	 * @param string $meta_join  The SQL query join clause.
+	 * @param string $meta_where The SQL query where clause.
+	 */
+	$query = apply_filters( 'relevanssi_get_attachment_posts_query_final', $query, $limit, $meta_join, $meta_where );
 	// phpcs:enable WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 	$posts = $wpdb->get_col( $query ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared,WordPress.DB.PreparedSQL.NotPrepared
 
@@ -672,9 +684,12 @@ function relevanssi_get_posts_with_attachments( $limit = 1 ) {
  * @since 2.0.0
  */
 function relevanssi_pdf_action_javascript() {
-	$list_pdfs_nonce  = wp_create_nonce( 'relevanssi-list-pdfs' );
-	$wipe_pdfs_nonce  = wp_create_nonce( 'relevanssi-wipe-pdfs' );
-	$index_pdfs_nonce = wp_create_nonce( 'relevanssi-index-pdfs' );
+	$list_pdfs_nonce   = wp_create_nonce( 'relevanssi-list-pdfs' );
+	$wipe_pdfs_nonce   = wp_create_nonce( 'relevanssi-wipe-pdfs' );
+	$wipe_errors_nonce = wp_create_nonce( 'relevanssi-wipe-errors' );
+	$index_pdfs_nonce  = wp_create_nonce( 'relevanssi-index-pdfs' );
+
+	$server_error = __( 'Server error', 'relevanssi' );
 
 	?>
 	<script type="text/javascript" >
@@ -717,6 +732,11 @@ function relevanssi_pdf_action_javascript() {
 				relevanssi_results.value += pdf_ids.length + ' ' + relevanssi.attachments_found + "\n";
 				relevanssi_results.value += relevanssi.indexing_attachments + "\n";
 				process_step(0, pdf_ids.length, 0);
+			})
+			.fail(function(response ) {
+				console.log("Error: " + response);
+				relevanssi_results.value += relevanssi.error + "\n";
+				relevanssi_results.value += response.responseText;
 			});
 		});
 		$("#reset").on("click", function($ ) {
@@ -738,6 +758,21 @@ function relevanssi_pdf_action_javascript() {
 			else {
 				return false;
 			}
+		});
+		$("#clearservererrors").on("click", function($ ) {
+			var data = {
+				'action': 'relevanssi_wipe_server_errors',
+				'security': '<?php echo esc_html( $wipe_errors_nonce ); ?>'
+			}
+			jQuery.post(ajaxurl, data, function(response ) {
+				var delete_response = JSON.parse(response);
+				if ( ! delete_response.deleted_rows ) {
+					alert( relevanssi.error_reset_problems );
+				} else {
+					alert( relevanssi.error_reset_done );
+				}
+				jQuery("#stateofthepdfindex").html(relevanssi.reload_state);
+			});
 		});
 	});
 
@@ -785,6 +820,12 @@ function relevanssi_pdf_action_javascript() {
 					console.log("Heading into step " + response.completed);
 					process_step(parseInt(response.completed), total, total_seconds);
 				}
+			},
+			error: function(response ) {
+				console.log("Error: ", response.status);
+				var relevanssi_results = document.getElementById("relevanssi_results");
+				relevanssi_results.value += "<?php echo esc_html( $server_error ); ?>: " + response.status + " " + response.statusText + "\n";
+				relevanssi_results.scrollTop = relevanssi_results.scrollHeight;
 			}
 		})
 	}

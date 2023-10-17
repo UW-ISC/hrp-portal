@@ -920,6 +920,30 @@ if ( ! class_exists( 'Mega_Menu_Themes' ) ) :
 											),
 										),
 									),
+									'keyboard_highlight'      => array(
+										'priority'    => 55,
+										'title'       => __( 'Keyboard Highlight Outline', 'megamenu' ),
+										'description' => __( 'Set the outline style for menu items when they recieve focus using keyboard navigation.', 'megamenu' ),
+										'settings'    => array(
+											array(
+												'title' => __( 'Color', 'megamenu' ),
+												'type'  => 'color',
+												'key'   => 'keyboard_highlight_color',
+											),
+											array(
+												'title' => __( 'Width', 'megamenu' ),
+												'type'  => 'freetext',
+												'key'   => 'keyboard_highlight_width',
+												'validation' => 'px',
+											),
+											array(
+												'title' => __( 'Offset', 'megamenu' ),
+												'type'  => 'freetext',
+												'key'   => 'keyboard_highlight_offset',
+												'validation' => 'px',
+											),
+										),
+									),
 									'transitions' => array(
 										'priority'    => 60,
 										'title'       => __( 'Hover Transitions', 'megamenu' ),

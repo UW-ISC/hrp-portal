@@ -106,7 +106,13 @@ function relevanssi_delete_user( int $user ) {
  */
 function relevanssi_delete_taxonomy_term( $term, $term_taxonomy_id, $taxonomy ) {
 	global $wpdb, $relevanssi_variables;
-	$wpdb->query( 'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . " WHERE item = $term AND type = '$taxonomy'" ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+	$wpdb->query(
+		$wpdb->prepare(
+			'DELETE FROM ' . $relevanssi_variables['relevanssi_table'] . ' WHERE item = %d AND type = %s', // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared,WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+			$term,
+			$taxonomy
+		)
+	);
 }
 
 /**
@@ -374,6 +380,7 @@ function relevanssi_apply_thousands_separator( $str ) {
  * @return string $str The string after stemming.
  */
 function relevanssi_enable_stemmer( $str ) {
+	add_filter( 'pre_option_relevanssi_implicit_operator', 'relevanssi_return_or' );
 	/**
 	 * Applies stemmer to document content and search terms.
 	 *
@@ -382,6 +389,7 @@ function relevanssi_enable_stemmer( $str ) {
 	 * @return string $str The string after stemming.
 	 */
 	$str = apply_filters( 'relevanssi_stemmer', $str );
+	remove_filter( 'pre_option_relevanssi_implicit_operator', 'relevanssi_return_or' );
 	return $str;
 }
 

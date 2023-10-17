@@ -81,9 +81,12 @@
         #{$menu} a:focus,
         #{$menu} span:focus,
         #{$menu} input:focus,
-        #{$menu} li.mega-menu-item a.mega-menu-link:focus {
-            outline: 3px solid #109cde;
-            outline-offset: -3px;
+        #{$menu} li.mega-menu-item a.mega-menu-link:focus,
+        #{$menu} form.mega-search-open:has(input[type=text]:focus) {
+            outline-style: solid;
+            outline-width: $keyboard_highlight_width;
+            outline-color: $keyboard_highlight_color;
+            outline-offset: $keyboard_highlight_offset;
         }
 
         .mega-toggle-block button.mega-toggle-animated:focus {
@@ -105,7 +108,6 @@
     }
 
     #{$menu} {
-        visibility: visible;
         text-align: $menu_item_align;
         padding: $container_padding_top $container_padding_right $container_padding_bottom $container_padding_left;
 

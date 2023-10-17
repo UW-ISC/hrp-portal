@@ -77,6 +77,10 @@ class Mega_Menu_Roles {
 						if ( current_user_can( $role ) ) {
 							$user_has_a_valid_role = true;
 						}
+
+						if ( $role == 'logged_out' && ! is_user_logged_in() ) {
+							$user_has_a_valid_role = true;
+						}
 					}
 
 					if ( ! $user_has_a_valid_role ) {
@@ -171,6 +175,8 @@ class Mega_Menu_Roles {
 				$html .= "<li><label><input name='settings[roles][roles][]' type='checkbox' value='" . $key . "' " . checked( in_array( $key, $checked_roles ), true, false ) . " " . $disabled . "/>" . $value['name'] . "</label></li>";
 			}
 		}
+
+		$html .= "<li><label><input type='checkbox' value='logged_out' name='settings[roles][roles][]' " . checked( in_array( 'logged_out', $checked_roles ), true, false ) . " " . $disabled .  ">" . __("Logged Out Users", "megamenu-pro") . "</label></li>";
 
 		$html .= "                </ul>";
 		$html .= "            </td>";

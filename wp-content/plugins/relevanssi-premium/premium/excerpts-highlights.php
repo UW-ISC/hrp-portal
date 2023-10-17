@@ -187,6 +187,17 @@ function relevanssi_combine_excerpts( $post_id, ...$excerpt_sources ) {
 	);
 	$number_of_excerpts = get_option( 'relevanssi_max_excerpts', 1 );
 
+	$excerpts_with_hits = array_filter(
+		$excerpts,
+		function ( $excerpt ) {
+			return $excerpt['hits'] > 0;
+		}
+	);
+
+	if ( count( $excerpts_with_hits ) > 0 ) {
+		$excerpts = $excerpts_with_hits;
+	}
+
 	$excerpts = array_slice(
 		/**
 		 * Filters the excerpt.

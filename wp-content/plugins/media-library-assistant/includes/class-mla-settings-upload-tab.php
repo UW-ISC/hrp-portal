@@ -85,6 +85,9 @@ class MLASettings_Upload {
 			} // upload option
 		} // foreach mla_options
 
+		// Custom MIME type icons must be copied after each option change.
+		MLASettings::mla_copy_custom_icons();
+
 		$page_content = array(
 			'message' => __( 'Upload MIME Type settings saved.', 'media-library-assistant' ) . "\r\n",
 			'body' => '' 
