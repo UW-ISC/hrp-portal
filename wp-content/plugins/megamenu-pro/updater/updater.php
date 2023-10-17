@@ -120,19 +120,22 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 				);
 			}
 
-			if ( defined( "MEGAMENU_LICENCE_DEBUG" ) && MEGAMENU_LICENCE_DEBUG === true ) {
-				var_dump( $api_params );
-				var_dump( $response );
-				die();
-			}
 
 			// make sure the response came back okay
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-				echo "<h3>Error activating licence. Response details below.</h3>";
-				echo "<pre>";
-				var_dump( $api_params );
-				var_dump( $response );
-				echo "</pre>";
+			if ( ( defined( "MEGAMENU_LICENCE_DEBUG" ) && MEGAMENU_LICENCE_DEBUG === true ) || is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
+				$real_ip = file_get_contents("http://ipecho.net/plain");
+				echo "<h3>Oops, something went wrong.</h3>";
+				echo "<p>There was a problem connecting to megamenu.com.</p>";
+				echo "<p>If this is the first time you have seen this message, please wait 24 hours and try again.</p>";
+				echo "<p>Check your server IP has not been blacklisted <a href='https://www.blacklistmaster.com/check?t={$real_ip}'>here</a>. If it has been blacklisted, please inform your host and ask them to assign you a new (clean) IP address.</p>";
+				echo "<p>Our host (Kinsta) also maintains a private IP blacklist, which your servers IP address may be on. Usually this is because a website sharing your IP servers address has made hacking attempts on sites hosted by Kinsta. In some cases our host will be able to temporarily unblock the IP at our request. Please contact support and include the error message below.</p>";
+				echo "<p>Please note that activating your licence simply enables Automatic Updates. All Pro functionality is available even with the licence deactivated.</p>";
+
+				echo "<textarea rows='10' cols='100'>";
+				print_r($real_ip);
+				print_r( $api_params );
+				print_r( $response );
+				echo "</textarea>";
 				die();
 			}
 

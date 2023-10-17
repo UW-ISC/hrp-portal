@@ -164,6 +164,56 @@ class MLASettings {
 	}
 
 	/**
+	 * Intercept custom icon file copy errors
+	 * 
+	 * @since 3.11
+	 *
+	 * @param	int		the level of the error raised
+	 * @param	string	the error message
+	 * @param	string	the filename that the error was raised in
+	 * @param	int		the line number the error was raised at
+	 *
+	 * @return	boolean	true, to bypass PHP error handler
+	 */
+	public static function mla_icon_copy_error_handler( $type, $string, $file, $line ) {
+		MLACore::mla_debug_add( sprintf( '%1$s: %2$s: "%3$s"', __( 'ERROR', 'media-library-assistant' ), 'mla_copy_custom_icons', $string ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+
+		/* Don't execute PHP internal error handler */
+		return true;
+	}
+
+	/**
+	 * Copy custom MIME Type icons, if any,  to the MLA icon directory
+	 *
+	 * @since 3.11
+	 *
+	 * @return	void
+	 */
+	public static function mla_copy_custom_icons( ) {
+		$custom_icon_path = trim( MLACore::mla_get_option( MLACoreOptions::MLA_CUSTOM_ICON_PATH ) );
+
+		if ( !empty( $custom_icon_path ) ) {
+			$content_dir = ( defined('WP_CONTENT_DIR') ) ? WP_CONTENT_DIR : ABSPATH . 'wp-content';
+			$icon_dir = apply_filters( 'icon_dir', ABSPATH . WPINC . '/images/crystal' );
+			$custom_icon_path =  $content_dir . '/' . $custom_icon_path;
+
+			if ( is_dir( $custom_icon_path ) ) {
+				$files = scandir( $custom_icon_path );
+
+				foreach ( $files as $file ) {
+					if ( 'png' === strtolower( pathinfo( $file, PATHINFO_EXTENSION ) ) ) {
+						set_error_handler( 'MLASettings::mla_icon_copy_error_handler' );
+						copy( $custom_icon_path . '/' . $file, $icon_dir . '/' . $file );
+						restore_error_handler();
+					}
+				}
+			} else {
+				MLACore::mla_debug_add( sprintf( _x( '%1$s: %2$s: "%3$s" not a directory', 'error_log', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), 'mla_copy_custom_icons', $custom_icon_path ), MLACore::MLA_DEBUG_CATEGORY_ANY );
+			}
+		} // !empty path
+	}
+
+	/**
 	 * Database and option update check, for installing new versions
 	 *
 	 * @since 0.30
@@ -173,6 +223,13 @@ class MLASettings {
 	private static function _version_upgrade( ) {
 		$current_version = MLACore::mla_get_option( MLACoreOptions::MLA_VERSION_OPTION );
 
+		if ( $current_version === MLACore::CURRENT_MLA_VERSION ) {
+			return;
+		}
+
+		// Custom MIME type icons must be copied after each version change.
+		MLASettings::mla_copy_custom_icons();
+		
 		if ( version_compare( '.30', $current_version, '>' ) ) {
 			/*
 			 * Convert attachment_category and _tag to taxonomy_support;

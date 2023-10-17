@@ -54,7 +54,7 @@
  * https://wordpress.org/support/topic/how-to-paginate-2-separate-gallery/
  *
  * @package MLA UI Elements Example
- * @version 2.05
+ * @version 2.06
  */
 
 /*
@@ -62,7 +62,7 @@ Plugin Name: MLA UI Elements Example
 Plugin URI: http://davidlingren.com/
 Description: Provides shortcodes to improve user experience for [mla_term_list], [mla_tag_cloud] and [mla_gallery] shortcodes. Adds [muie_archive_list] for date-based archive lists.
 Author: David Lingren
-Version: 2.05
+Version: 2.06
 Author URI: http://davidlingren.com/
 
 Copyright 2016-2022 David Lingren
@@ -96,7 +96,7 @@ class MLAUIElementsExample {
 	 *
 	 * @var	integer
 	 */
-	const PLUGIN_VERSION = '2.05';
+	const PLUGIN_VERSION = '2.06';
 
 	/**
 	 * Constant to log this plugin's debug activity
@@ -827,7 +827,7 @@ class MLAUIElementsExample {
 		$added_attributes = array_merge( array( 'type' => 'text', 'size' => '20' ), $muie_attributes );
 		$attributes = ' ';
 		foreach ( $added_attributes as $key => $value ) {
-			$attributes .= $key . '="' . $value . '" ';
+			$attributes .= $key . '="' . esc_attr( $value ) . '" ';
 		}
 		
 		if ( empty( $qualifier ) ) {
@@ -924,7 +924,7 @@ class MLAUIElementsExample {
 		$added_attributes = array_merge( array( 'type' => 'text', 'size' => '20' ), $muie_attributes );
 		$attributes = ' ';
 		foreach ( $added_attributes as $key => $value ) {
-			$attributes .= $key . '="' . $value . '" ';
+			$attributes .= $key . '="' . esc_attr( $value ) . '" ';
 		}
 		
 		if ( empty( $qualifier ) ) {
@@ -945,10 +945,10 @@ class MLAUIElementsExample {
 				}
 				
 				if ( empty( $qualifier ) ) {
-					$return_value .= sprintf( '<input name="muie_keyword_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );
+					$return_value .= sprintf( '<input name="muie_keyword_search[%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', esc_attr( $key ), esc_attr( $id_value ), esc_attr( $value ), "\n" );
 				} else {
 					$id_value .= '-' . $qualifier;
-					$return_value .= sprintf( '<input name="muie_keyword_search[' . $qualifier . '][%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', $key, $id_value, $value, "\n" );	
+					$return_value .= sprintf( '<input name="muie_keyword_search[' . $qualifier . '][%1$s]" id="muie-%2$s" type="hidden" value="%3$s" />%4$s', esc_attr( $key ), esc_attr( $id_value ), esc_attr( $value ), "\n" );	
 				}
 			}
 		}
@@ -979,7 +979,7 @@ class MLAUIElementsExample {
 			$posts_per_page = isset( $attr['posts_per_page'] ) ? $attr['posts_per_page'] : 6;
 		}
 
-		return '<input name="muie_per_page" id="muie-per-page" type="text" size="2" value="' . $posts_per_page . '" />';
+		return '<input name="muie_per_page" id="muie-per-page" type="text" size="2" value="' . esc_attr( $posts_per_page ) . '" />';
 	} // muie_per_page
 
 	/**
@@ -1351,13 +1351,13 @@ class MLAUIElementsExample {
 		// Assemble the standard control attributes
 		$attributes = array();
 		foreach ( $arguments as $key => $value ) {
-			$attributes[] = $key . '="' . $value . '"';
+			$attributes[] = $key . '="' . esc_attr( $value ) . '"';
 			unset( $attr[ $key ] );
 		}
 
 		// Add the optional control attributes
 		foreach ( $attr as $key => $value ) {
-			$attributes[] = $key . '="' . $value . '"';
+			$attributes[] = $key . '="' . esc_attr( $value ) . '"';
 		}
 
 		// Convert the attributes to a string string
@@ -1650,28 +1650,28 @@ class MLAUIElementsExample {
 		$mid_size = absint( $markup_values['mid_size'] );
 		$archive_parameter_name = $markup_values['archive_parameter_name'];
 
-//		$mla_page_parameter = $arguments['mla_page_parameter'];
-//		$current_page = $markup_values['current_page'];
-//		$last_page = $markup_values['last_page'];
-//		$posts_per_page = $markup_values['posts_per_page'];
-
-//		$new_target = ( ! empty( $arguments['mla_target'] ) ) ? 'target="' . $arguments['mla_target'] . '" ' : '';
-
-		// these will add to the default classes
-		$new_class = ( ! empty( $arguments['link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $arguments['link_class'], $markup_values ) ) : '';
-
-		$new_attributes = ( ! empty( $arguments['link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $arguments['link_attributes'], $markup_values ) ) . ' ' : '';
-
-		$new_base =  ( ! empty( $arguments['link_href'] ) ) ? self::_process_shortcode_parameter( $arguments['link_href'], $markup_values ) : $markup_values['page_url'];
-
 		// Build the array of page links
 		$page_links = array();
 		$dots = false;
 
 		if ( $prev_next && $target_key ) {
 			$item_values = array_merge( $markup_values, (array) $items[ $target_key - 1 ] );
+
+			// these will add to the default classes
+			$new_class = ( ! empty( $item_values['link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $item_values['link_class'], $item_values ) ) : '';
+	
+			$new_attributes = ( ! empty( $item_values['link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['link_attributes'], $item_values ) ) . ' ' : '';
+	
+			$new_base =  ( ! empty( $item_values['link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['link_href'], $item_values ) ) : $item_values['page_url'];
+
 			$new_title = ( ! empty( $item_values['rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['rollover_text'], $item_values ) ) . '" ' : '';
-			$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+
+			if ( $item_values['append_current_item'] ) {
+				$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+			} else {
+				$new_url = $new_base;
+			}
+
 			$prev_text = ( ! empty( $item_values['prev_text'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['prev_text'], $item_values ) ) : '&laquo; ' . __( 'Previous', 'media-library-assistant' );
 			$page_links[] = sprintf( '<a class="prev paginate-archive%1$s" %2$s%3$shref="%4$s">%5$s</a>',
 				/* %1$s */ $new_class,
@@ -1681,9 +1681,16 @@ class MLAUIElementsExample {
 				/* %5$s */ $prev_text );
 		}
 
-//		for ( $new_page = 1; $new_page <= $last_page; $new_page++ ) {
 		foreach ( $items as $key => $item ) {
 			$item_values = array_merge( $markup_values, (array) $item );
+
+			// these will add to the default classes
+			$new_class = ( ! empty( $item_values['link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $item_values['link_class'], $item_values ) ) : '';
+	
+			$new_attributes = ( ! empty( $item_values['link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['link_attributes'], $item_values ) ) . ' ' : '';
+	
+			$new_base =  ( ! empty( $item_values['link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['link_href'], $item_values ) ) : $item_values['page_url'];
+
 			$new_title = ( ! empty( $item_values['rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['rollover_text'], $item_values ) ) . '" ' : '';
 
 			if ( $key === $target_key ) {
@@ -1695,7 +1702,12 @@ class MLAUIElementsExample {
 			} else {
 				if ( $show_all || ( $key < $end_size || ( $key >= $target_key - $mid_size && $key <= $target_key + $mid_size ) || $key > $last_key - $end_size ) ) {
 					// build link
-					$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+					if ( $item_values['append_current_item'] ) {
+						$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+					} else {
+						$new_url = $new_base;
+					}
+		
 					$page_links[] = sprintf( '<a class="paginate-archive%1$s" %2$s%3$shref="%4$s">%5$s</a>',
 						/* %1$s */ $new_class,
 						/* %2$s */ $new_attributes,
@@ -1715,8 +1727,21 @@ class MLAUIElementsExample {
 		if ( $prev_next && ( 0 <= $target_key ) && ( $target_key < $last_key ) ) {
 			// build next link
 			$item_values = array_merge( $markup_values, (array) $items[ $target_key + 1 ] );
+
+			// these will add to the default classes
+			$new_class = ( ! empty( $item_values['link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $item_values['link_class'], $item_values ) ) : '';
+	
+			$new_attributes = ( ! empty( $item_values['link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['link_attributes'], $item_values ) ) . ' ' : '';
+	
+			$new_base =  ( ! empty( $item_values['link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $item_values['link_href'], $item_values ) ) : $item_values['page_url'];
+
 			$new_title = ( ! empty( $item_values['rollover_text'] ) ) ? 'title="' . esc_attr( self::_process_shortcode_parameter( $item_values['rollover_text'], $item_values ) ) . '" ' : '';
-			$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+			if ( $item_values['append_current_item'] ) {
+				$new_url = self::_replace_query_parameter( $archive_parameter_name, $item_values['current_value'], $new_base );
+			} else {
+				$new_url = $new_base;
+			}
+		
 			$next_text = ( ! empty( $item_values['next_text'] ) ) ? esc_attr( self::_process_shortcode_parameter( $item_values['next_text'], $item_values ) ) : __( 'Next', 'media-library-assistant' ) . ' &raquo;';
 			$page_links[] = sprintf( '<a class="next paginate-archive%1$s" %2$s%3$shref="%4$s">%5$s</a>',
 				/* %1$s */ $new_class,
@@ -1884,21 +1909,21 @@ class MLAUIElementsExample {
 			$attributes = array();
 			
 			if ( !empty( $item_default_values['itemtag_id'] ) ) {
-				$item_default_values['item_id'] = self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values );
+				$item_default_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
 				$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
 			}
 
 			if ( !empty( $item_default_values['itemtag_class'] ) ) {
-				$item_default_values['item_class'] = self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values );
+				$item_default_values['item_class'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
 				if ( !empty( $item_default_values['item_selected'] ) ) {
-					$item_default_values['item_class'] .= ' ' . $item_default_values['current_archive_class'];
+					$item_default_values['item_class'] .= ' ' . esc_attr( $item_default_values['current_archive_class'] );
 				}
 				
 				$attributes[] = 'class="' . $item_default_values['item_class'] . '"';
 			}
 
 			if ( !empty( $item_default_values['itemtag_attributes'] ) ) {
-				$attributes[] = self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values );
+				$attributes[] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
 			}
 
 			if ( !empty( $attributes ) ) {
@@ -1906,13 +1931,13 @@ class MLAUIElementsExample {
 			}
 
 			if ( !empty( $item_default_values['option_none_value'] ) ) {
-				$item_default_values['item_value'] = self::_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values );
+				$item_default_values['item_value'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_none_value'], $item_default_values ) );
 			} else {
 				$item_default_values['item_value'] = 'no-archives';
 			}
 
 			if ( !empty( $item_default_values['option_none_label'] ) ) {
-				$item_default_values['item_label'] = self::_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values );
+				$item_default_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_none_label'], $item_default_values ) );
 			} else {
 				$item_default_values['item_label'] = 'No archives';
 			}
@@ -1935,12 +1960,12 @@ class MLAUIElementsExample {
 				$attributes = array();
 				
 				if ( !empty( $item_default_values['itemtag_id'] ) ) {
-					$item_default_values['item_id'] = self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values );
+					$item_default_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_id'], $item_default_values ) );
 					$attributes[] = 'id="' . $item_default_values['item_id'] . '"';
 				}
 	
 				if ( !empty( $item_default_values['itemtag_class'] ) ) {
-					$item_default_values['item_class'] = self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values );
+					$item_default_values['item_class'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_class'], $item_default_values ) );
 					if ( !empty( $item_default_values['item_selected'] ) ) {
 						$item_default_values['item_class'] .= ' ' . $item_default_values['current_archive_class'];
 					}
@@ -1949,7 +1974,7 @@ class MLAUIElementsExample {
 				}
 	
 				if ( !empty( $item_default_values['itemtag_attributes'] ) ) {
-					$attributes[] = self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values );
+					$attributes[] = esc_attr( self::_process_shortcode_parameter( $item_default_values['itemtag_attributes'], $item_default_values ) );
 				}
 	
 				if ( !empty( $attributes ) ) {
@@ -1957,13 +1982,13 @@ class MLAUIElementsExample {
 				}
 	
 				if ( !empty( $item_default_values['option_all_value'] ) ) {
-					$item_default_values['item_value'] = self::_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values );
+					$item_default_values['item_value'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_all_value'], $item_default_values ) );
 				} else {
 					$item_default_values['item_value'] = '';
 				}
 	
 				if ( !empty( $item_default_values['option_all_label'] ) ) {
-					$item_default_values['item_label'] = self::_process_shortcode_parameter( $item_default_values['option_all_label'], $item_default_values );
+					$item_default_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_default_values['option_all_label'], $item_default_values ) );
 				} else {
 					$item_default_values['item_label'] = 'Select archive';
 				}
@@ -2122,70 +2147,6 @@ class MLAUIElementsExample {
 			$item_values = array_merge( $item_default_values, (array) $item );
 //error_log( __LINE__ . " compose_archive_list( {$key} ) item_values = " . var_export( $item_values, true ), 0 );
 
-/*			$month_stamp = 0;
-			if ( !empty( $item_values['month'] ) ) {
-				$item_values['m'] = sprintf( '%1$04d%2$02d', (integer) $item_values['year'], (integer) $item_values['month'] );
-				
-				if ( !empty( $item_values['day'] ) ) {
-					$item_values['yyyymmdd'] = sprintf( '%1$04d-%2$02d-%3$02d', (integer) $item_values['year'], (integer) $item_values['month'], (integer) $item_values['day'] );
-					$month_stamp = strtotime( $item_values['yyyymmdd'] );
-				} else {
-					$month_stamp = strtotime( $item_values['m'] . '01' );
-				}
-			} elseif ( !empty( $item_values['week_start_short'] ) ) {
-				$month_stamp = strtotime( $item_values['week_start_short'] );
-			}
-			
-			if ( $month_stamp ) {
-				$item_values['month_long'] = date( 'F', $month_stamp );
-				$item_values['month_short'] = date( 'M', $month_stamp );
-			}
-
-			// Compute the current_value and current_labels based on the archive type
-			switch ( $item_values['archive_type'] ) {
-				case 'daily':
-					$item_values['current_value'] = sprintf( 'D(%1$04d%2$02d%3$02d)', (integer) $item_values['year'], (integer) $item_values['month'], (integer) $item_values['day'] );
-					$item_values['current_label_short'] = sprintf( '%1$04d/%2$02d/%3$02d', (integer) $item_values['year'], (integer) $item_values['month'], (integer) $item_values['day'] );
-					$item_values['current_label_long'] = sprintf( '%1$s %2$02d, %3$04d', $item_values['month_long'], (integer) $item_values['day'], (integer) $item_values['year'] );
-					$item_values['viewlink_url'] = get_day_link( (integer) $item_values['year'], (integer) $item_values['month'], (integer) $item_values['day'] );
-					break;
-				case 'weekly':
-					$item_values['current_value'] = sprintf( 'W(%1$04d%2$02d)', (integer) $item_values['year'], (integer) $item_values['week'] );
-					$item_values['current_label_short'] = $item_values['week_start_short'];
-					$item_values['current_label_long'] = $item_values['week_start'];
-					$item_values['viewlink_url'] = add_query_arg(
-						array(
-							'm' => $item_values['year'],
-							'w' => $item_values['week'],
-						),
-						home_url( '/' )
-					);
-					break;
-				case 'monthly':
-					$item_values['current_value'] = sprintf( 'M(%1$04d%2$02d)', (integer) $item_values['year'], (integer) $item_values['month'] );
-					$item_values['current_label_short'] = sprintf( '%1$s %2$s', $item_values['month_short'], $item_values['year'] );
-					$item_values['current_label_long'] = sprintf( '%1$s %2$s', $item_values['month_long'], $item_values['year'] );
-					$item_values['viewlink_url'] = get_month_link( (integer) $item_values['year'], (integer) $item_values['month'] );
-					break;
-				case 'yearly':
-				default:
-					$item_values['current_value'] = sprintf( 'Y(%1$04d)', (integer) $item_values['year'] );
-					$item_values['current_label_short'] = sprintf( '%1$04d', (integer) $item_values['year'] );
-					$item_values['current_label_long'] = sprintf( '%1$04d', (integer) $item_values['year'] );
-					$item_values['viewlink_url'] = get_year_link( (integer) $item_values['year'] );
-			}
-
-			// Add the archive source to the current value
-			$current_args = ',' . $item_values['current_value'];
-			if ( 'custom' === $item_values['archive_source'] ) {
-				$item_values['current_value'] = 'custom:' . $item_values['archive_key'] . $current_args;
-			} else {
-				$item_values['current_value'] = $item_values['archive_source'] . $current_args;
-			}
-
-			$item_values['current_label'] = ( 'short' === $item_values['archive_label'] ) ? $item_values['current_label_short'] : $item_values['current_label_long'];
-			$item_values['currentlink_url'] = sprintf( '%1$s%2$s%3$s=%4$s', $item_values['page_url'], $current_item_delimiter, $archive_parameter_name, urlencode( $item_values['current_value'] ) ); // */
-
 			if ( !empty( $item_default_values['itemtag_id'] ) ) {
 				$item_values['itemtag_id'] = esc_attr( $item_default_values['itemtag_id'] );
 			} else {
@@ -2213,12 +2174,12 @@ class MLAUIElementsExample {
 			$attributes = array();
 			
 			if ( !empty( $item_values['itemtag_id'] ) ) {
-				$item_values['item_id'] = self::_process_shortcode_parameter( $item_values['itemtag_id'], $item_values );
+				$item_values['item_id'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_id'], $item_values ) );
 				$attributes[] = 'id="' . $item_values['item_id'] . '"';
 			}
 
 			if ( !empty( $item_values['itemtag_class'] ) ) {
-				$item_values['item_class'] = self::_process_shortcode_parameter( $item_values['itemtag_class'], $item_values );
+				$item_values['item_class'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_class'], $item_values ) );
 				if ( !empty( $item_values['item_selected'] ) ) {
 					$item_values['item_class'] .= ' ' . $item_values['current_archive_class'];
 				}
@@ -2227,7 +2188,7 @@ class MLAUIElementsExample {
 			}
 
 			if ( !empty( $item_values['itemtag_attributes'] ) ) {
-				$attributes[] = self::_process_shortcode_parameter( $item_values['itemtag_attributes'], $item_values );
+				$attributes[] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_attributes'], $item_values ) );
 			}
 
 			if ( !empty( $attributes ) ) {
@@ -2235,13 +2196,13 @@ class MLAUIElementsExample {
 			}
 
 			if ( !empty( $item_values['itemtag_value'] ) ) {
-				$item_values['item_value'] = self::_process_shortcode_parameter( $item_values['itemtag_value'], $item_values );
+				$item_values['item_value'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_value'], $item_values ) );
 			} else {
 				$item_values['item_value'] = $item_values['current_value'];
 			}
 
 			if ( !empty( $item_values['itemtag_label'] ) ) {
-				$item_values['item_label'] = self::_process_shortcode_parameter( $item_values['itemtag_label'], $item_values );
+				$item_values['item_label'] = esc_attr( self::_process_shortcode_parameter( $item_values['itemtag_label'], $item_values ) );
 			} else {
 				$item_values['item_label'] = $item_values['current_label'];
 			}
@@ -2250,22 +2211,22 @@ class MLAUIElementsExample {
 			$attributes = array();
 
 			if ( !empty( $item_values['link_id'] ) ) {
-				$item_values['item_link_id'] = self::_process_shortcode_parameter( $item_values['link_id'], $item_values );
+				$item_values['item_link_id'] = esc_attr( self::_process_shortcode_parameter( $item_values['link_id'], $item_values ) );
 				$attributes[] = 'id="' . $item_values['item_link_id'] . '"';
 			}
 
 			if ( !empty( $item_values['link_class'] ) ) {
-				$item_values['item_link_class'] = self::_process_shortcode_parameter( $item_values['link_class'], $item_values );
+				$item_values['item_link_class'] = esc_attr( self::_process_shortcode_parameter( $item_values['link_class'], $item_values ) );
 				$attributes[] = 'class="' . $item_values['item_link_class'] . '"';
 			}
 
 			if ( !empty( $item_values['rollover_text'] ) ) {
-				$item_values['item_link_rollover'] = self::_process_shortcode_parameter( $item_values['rollover_text'], $item_values );
+				$item_values['item_link_rollover'] = esc_attr( self::_process_shortcode_parameter( $item_values['rollover_text'], $item_values ) );
 				$attributes[] = 'title="' . $item_values['item_link_rollover'] . '"';
 			}
 
 			if ( !empty( $item_values['link_attributes'] ) ) {
-				$attributes[] = self::_process_shortcode_parameter( $item_values['link_attributes'], $item_values );
+				$attributes[] = esc_attr( self::_process_shortcode_parameter( $item_values['link_attributes'], $item_values ) );
 			}
 
 			if ( !empty( $attributes ) ) {
@@ -2287,7 +2248,7 @@ class MLAUIElementsExample {
 			}
 
 			if ( !empty( $item_values['link_href'] ) ) {
-				$link_href = self::_process_shortcode_parameter( $item_values['link_href'], $item_values );
+				$link_href = esc_url( self::_process_shortcode_parameter( $item_values['link_href'], $item_values ) );
 				$item_values['link_url'] = $link_href;
 			} else {
 				$link_href = '';
@@ -2331,7 +2292,7 @@ class MLAUIElementsExample {
 				break;
 			case 'flat' :
 			default :
-				$list .= join( $markup_values['separator'], $links );
+				$list .= join( wp_kses( $markup_values['separator'], 'post' ), $links );
 				break;
 			} // switch format
 		}
@@ -2739,6 +2700,7 @@ class MLAUIElementsExample {
 			'archive_qualifier' => '',
 
 			'archive_parameter_name' => 'muie_current_archive',
+			'append_current_item' => 'true',
 			'archive_order' => 'DESC',
 			'archive_limit' => '0',
 			'archive_label' => '', // 'short', 'long'
@@ -2811,6 +2773,8 @@ class MLAUIElementsExample {
 			} else {
 				$arguments['listtag'] = 'select';
 			}
+		} else {
+			$arguments['listtag'] = esc_attr( $arguments['listtag'] );
 		}
 		
 		if ( empty( $arguments['itemtag'] ) ) {
@@ -2819,6 +2783,8 @@ class MLAUIElementsExample {
 			} else {
 				$arguments['itemtag'] = 'option';
 			}
+		} else {
+			$arguments['itemtag'] = esc_attr( $arguments['itemtag'] );
 		}
 		
 		$value = trim( strtolower( $arguments['hide_if_empty'] ) );
@@ -2881,6 +2847,9 @@ class MLAUIElementsExample {
 			$arguments['archive_key'] = '';
 		}
 
+		$value = trim( strtolower( $arguments['append_current_item'] ) );
+		$arguments['append_current_item'] = 'true' === $value;
+		
 		$value = trim( strtoupper( $arguments['archive_order'] ) );
 		if ( in_array( $value, array( 'ASC', 'DESC', ) ) ) {
 			$arguments['archive_order'] = $value;
@@ -2980,10 +2949,10 @@ class MLAUIElementsExample {
 //error_log( __LINE__ . " muie_archive_list() list_values = " . var_export( $list_values, true ), 0 );
 
 		// Expand list-level parameters
-		$list_values['listtag_name'] = self::_process_shortcode_parameter( $list_values['listtag_name'], $list_values );
-		$list_values['listtag_id'] = self::_process_shortcode_parameter( $list_values['listtag_id'], $list_values );
-		$list_values['listtag_class'] = self::_process_shortcode_parameter( $list_values['listtag_class'], $list_values );
-		$list_values['listtag_attributes'] = self::_process_shortcode_parameter( $list_values['listtag_attributes'], $list_values );
+		$list_values['listtag_name'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_name'], $list_values ) );
+		$list_values['listtag_id'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_id'], $list_values ) );
+		$list_values['listtag_class'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_class'], $list_values ) );
+		$list_values['listtag_attributes'] = esc_attr( self::_process_shortcode_parameter( $list_values['listtag_attributes'], $list_values ) );
 
 		// Load template array and initialize page-level values.
 		if ( empty( self::$muie_archive_templates ) ) {

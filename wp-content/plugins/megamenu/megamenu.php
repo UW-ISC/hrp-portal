@@ -3,7 +3,7 @@
  * Plugin Name: Max Mega Menu
  * Plugin URI:  https://www.megamenu.com
  * Description: An easy to use mega menu plugin. Written the WordPress way.
- * Version:     3.2.2
+ * Version:     3.2.4
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * License:     GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 		 *
 		 * @var string
 		 */
-		public $version = '3.2.2';
+		public $version = '3.2.4';
 
 
 		/**
@@ -166,7 +166,6 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 				if ( in_array( $hook, array( 'nav-menus.php', 'gutenberg_page_gutenberg-navigation' ), true ) ) {
 					// load widget scripts and styles first to allow us to dequeue conflicting colorbox scripts from other plugins.
 					do_action( 'sidebar_admin_setup' );
-					do_action( 'admin_enqueue_scripts', 'widgets.php' );
 					do_action( 'megamenu_nav_menus_scripts', $hook );
 				}
 
@@ -518,7 +517,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 			$args = (object) $args;
 
 			// make sure we're working with a Mega Menu.
-			if ( ! $args->walker || ! is_a( $args->walker, 'Mega_Menu_Walker' ) ) {
+			if ( ! property_exists( $args, 'walker' ) || ! $args->walker || ! is_a( $args->walker, 'Mega_Menu_Walker' ) ) {
 				return $nav_menu;
 			}
 
@@ -598,6 +597,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 								'content'             => $widget_manager->show_widget( $widget['id'] ),
 								'menu_item_parent'    => $item->ID,
 								'db_id'               => 0,
+								'url'                 => '',
 								'ID'                  => $widget['id'],
 								'menu_order'          => $next_order - $total_widgets_in_menu + $widget_position,
 								'megamenu_order'      => $widget['order'],
@@ -655,6 +655,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 								'ID'                  => "{$item->ID}-{$row}",
 								'megamenu_settings'   => Mega_Menu_Nav_Menus::get_menu_item_defaults(),
 								'db_id'               => $rolling_dummy_id,
+								'url'                 => '',
 								'classes'             => $classes,
 							);
 
@@ -701,6 +702,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 									'ID'                  => "{$item->ID}-{$row}-{$col}",
 									'megamenu_settings'   => Mega_Menu_Nav_Menus::get_menu_item_defaults(),
 									'db_id'               => $rolling_dummy_id,
+									'url'                 => '',
 									'classes'             => $classes,
 								);
 
@@ -717,18 +719,19 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 											$widget_settings = array_merge( Mega_Menu_Nav_Menus::get_menu_item_defaults() );
 
 											$menu_item = array(
-												'type'    => 'widget',
-												'parent_submenu_type' => '',
-												'title'   => $block['id'],
-												'content' => $widget_manager->show_widget( $block['id'] ),
-												'menu_item_parent' => $rolling_dummy_id,
-												'db_id'   => 0,
-												'ID'      => $block['id'],
-												'menu_order' => $next_order,
-												'megamenu_order' => 0,
-												'megamenu_settings' => $widget_settings,
-												'depth'   => 1,
-												'classes' => array(
+												'type'					=> 'widget',
+												'parent_submenu_type'	=> '',
+												'title'					=> $block['id'],
+												'content'				=> $widget_manager->show_widget( $block['id'] ),
+												'menu_item_parent'		=> $rolling_dummy_id,
+												'db_id'					=> 0,
+												'url'					=> '',
+												'ID'					=> $block['id'],
+												'menu_order'			=> $next_order,
+												'megamenu_order'		=> 0,
+												'megamenu_settings'		=> $widget_settings,
+												'depth'					=> 1,
+												'classes'				=> array(
 													'menu-item',
 													'menu-item-type-widget',
 													'menu-widget-class-' . $widget_manager->get_widget_class( $block['id'] ),
@@ -945,7 +948,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 
 			if ( 'enabled' === $descriptions ) {
 				foreach ( $items as $item ) {
-					if ( property_exists( $item, 'description' ) && strlen( $item->description ) ) {
+					if ( property_exists( $item, 'description' ) && is_string( $item->description ) && strlen( $item->description ) ) {
 						$item->mega_description = $item->description;
 						$item->classes[]        = 'has-description';
 					}
@@ -1219,7 +1222,7 @@ if ( ! class_exists( 'Mega_Menu' ) ) :
 						'data-unbind'                => 'disabled' === $unbind ? 'false' : 'true',
 						'data-mobile-state'          => $mobile_state,
 						'data-hover-intent-timeout'  => absint( $hover_intent_params['timeout'] ),
-						'data-hover-intent-interval' => absint( $hover_intent_params['interval'] ),
+						'data-hover-intent-interval' => absint( $hover_intent_params['interval'] )
 					),
 					$menu_id,
 					$menu_settings,

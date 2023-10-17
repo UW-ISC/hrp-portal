@@ -318,10 +318,8 @@ class MLAShortcode_Support {
 					$new_attr .= $key . '=' . $delimiter . $value . $delimiter . ' ';
 				}
 			}
-//error_log( __LINE__ . " mla_validate_attributes() new_attr = " . var_export( $new_attr, true ), 0 );
 
 			$attr = shortcode_parse_atts( $new_attr );
-//error_log( __LINE__ . " mla_validate_attributes() attr = " . var_export( $attr, true ), 0 );
 
 			// Remove empty values and still-invalid parameters
 			$new_attr = array();
@@ -814,6 +812,7 @@ class MLAShortcode_Support {
 			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
 				$attr_value = str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments['mla_nolink_text'] ) );
 				$replacement_values = MLAData::mla_expand_field_level_parameters( $attr_value, $attr, $page_values );
+				$attr_value = wp_kses( $attr_value, 'post' );;
 				$output .= MLAData::mla_parse_template( $attr_value, $replacement_values );
 			}
 
@@ -1274,7 +1273,7 @@ class MLAShortcode_Support {
 			if ( isset( $target ) ) {
 				$attachments = array( $target );			
 			} elseif ( ! empty( $arguments['mla_nolink_text'] ) ) {
-				return self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values ) . '</a>';
+				return wp_kses( self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values ), 'post');
 			} else {
 				return '';
 			}
@@ -1417,7 +1416,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_text'] ) ) {
-				$link_text = self::_process_shortcode_parameter( $arguments['mla_link_text'], $item_values );
+				$link_text = esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_text'], $item_values ) );
 			} else {
 				$link_text = false;
 			}
@@ -1504,22 +1503,20 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_target'] ) ) {
-				$link_attributes .= 'target="' . $arguments['mla_target'] . '" ';
+				$link_attributes .= 'target="' . esc_attr( $arguments['mla_target'] ) . '" ';
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) . ' ';
+				$link_attributes .= esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$link_attributes .= 'class="' . self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) . '" ';
+				$link_attributes .= 'class="' . esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
 			}
 
 			if ( ! empty( $link_attributes ) ) {
 				$item_values['pagelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['pagelink'] );
 				$item_values['filelink'] = preg_replace( '#<a( .*)href=#', '<a$1' . $link_attributes . 'href=', $item_values['filelink'] );
-//				$item_values['pagelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['pagelink'] );
-//				$item_values['filelink'] = str_replace( '<a href=', '<a ' . $link_attributes . 'href=', $item_values['filelink'] );
 			}
 
 			/*
@@ -1528,7 +1525,7 @@ class MLAShortcode_Support {
 			 * are used in the Google Viewer code below
 			 */
 			if ( ! empty( $arguments['mla_image_attributes'] ) ) {
-				$image_attributes = self::_process_shortcode_parameter( $arguments['mla_image_attributes'], $item_values ) . ' ';
+				$image_attributes = esc_attr( self::_process_shortcode_parameter( $arguments['mla_image_attributes'], $item_values ) ) . ' ';
 			} else {
 				$image_attributes = '';
 			}
@@ -1703,7 +1700,7 @@ class MLAShortcode_Support {
 			 * Note that $link_href is used in the Google Viewer code below
 			 */
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
-				$link_href = self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values );
+				$link_href = esc_url( self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values ) );
 
 				// Replace single- and double-quote delimited values
 				$item_values['link'] = preg_replace('# href=\'([^\']*)\'#', " href='{$link_href}'", $item_values['link'] );
@@ -2368,7 +2365,7 @@ class MLAShortcode_Support {
 				$cloud = '';
 			}
 
-			$cloud .= $arguments['mla_nolink_text'];
+			$cloud .= wp_kses( $arguments['mla_nolink_text'], 'post' );
 			if ( 'array' == $arguments['mla_output'] ) {
 				if ( empty( $cloud ) ) {
 					return array();
@@ -2790,7 +2787,7 @@ class MLAShortcode_Support {
 			if ( isset( $target ) ) {
 				$tags = array( $target );
 			} elseif ( ! empty( $arguments['mla_nolink_text'] ) ) {
-				return self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values ) . '</a>';
+				return wp_kses( self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values ), 'post' );
 			} else {
 				return '';
 			}
@@ -2884,13 +2881,13 @@ class MLAShortcode_Support {
 
 			// Apply the Display Content parameters.
 			if ( ! empty( $arguments['mla_target'] ) ) {
-				$link_attributes = 'target="' . $arguments['mla_target'] . '" ';
+				$link_attributes = 'target="' . esc_attr( $arguments['mla_target'] ) . '" ';
 			} else {
 				$link_attributes = '';
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) . ' ';
+				$link_attributes .= esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $item_values['current_item_class'] ) ) {
@@ -2900,7 +2897,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$class_attributes .= ' ' . self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values );
+				$class_attributes .= ' ' . esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) );
 			}
 
 			if ( ! empty( $class_attributes ) ) {
@@ -2919,7 +2916,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
-				$link_href = self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values );
+				$link_href = esc_url( self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values ) );
 				$item_values['link_url'] = $link_href;
 			} else {
 				$link_href = '';
@@ -3276,17 +3273,17 @@ class MLAShortcode_Support {
 
 			// Apply the Display Content parameters.
 			if ( ! empty( $arguments['mla_target'] ) ) {
-				$link_attributes = 'target="' . $arguments['mla_target'] . '" ';
+				$link_attributes = 'target="' . esc_attr( $arguments['mla_target'] ) . '" ';
 			} else {
 				$link_attributes = '';
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) . ' ';
+				$link_attributes .= esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
-				$link_attributes .= 'class="' . self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) . '" ';
+				$link_attributes .= 'class="' . esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_class'], $item_values ) ) . '" ';
 			}
 
 			$item_values['link_attributes'] = $link_attributes;
@@ -3302,7 +3299,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_href'] ) ) {
-				$link_href = self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values );
+				$link_href = esc_url( self::_process_shortcode_parameter( $arguments['mla_link_href'], $item_values ) );
 				$item_values['link_url'] = $link_href;
 			} else {
 				$link_href = '';
@@ -3915,7 +3912,7 @@ class MLAShortcode_Support {
 				$is_hierarchical = false;
 				$found_rows = 1;
 			} else {
-				$list .= $arguments['mla_nolink_text'];
+				$list .= wp_kses( $arguments['mla_nolink_text'], 'post' );
 
 				if ( empty($arguments['echo']) ) {
 					return $list;
@@ -4466,7 +4463,7 @@ class MLAShortcode_Support {
 	private static function _paginate_links( $output_parameters, $markup_values, $arguments, $found_rows, $output = '' ) {
 		if ( 2 > $markup_values['last_page'] ) {
 			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
-				return self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values );
+				return wp_kses( self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values ), 'post' );
 			} else {
 				return '';
 			}
@@ -4491,14 +4488,14 @@ class MLAShortcode_Support {
 		$mid_size = absint( $arguments['mla_mid_size'] );
 		$posts_per_page = $markup_values['posts_per_page'];
 
-		$new_target = ( ! empty( $arguments['mla_target'] ) ) ? 'target="' . $arguments['mla_target'] . '" ' : '';
+		$new_target = ( ! empty( $arguments['mla_target'] ) ) ? 'target="' . esc_attr( $arguments['mla_target'] ) . '" ' : '';
 
 		// these will add to the default classes
 		$new_class = ( ! empty( $arguments['mla_link_class'] ) ) ? ' ' . esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_class'], $markup_values ) ) : '';
 
 		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ' : '';
 
-		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? self::_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) : $markup_values['new_url'];
+		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? esc_url( self::_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) : $markup_values['new_url'];
 
 		// Build the array of page links
 		$page_links = array();
@@ -4787,7 +4784,7 @@ class MLAShortcode_Support {
 
 		if ( 0 == $new_page ) {
 			if ( ! empty( $arguments['mla_nolink_text'] ) ) {
-				return self::_process_shortcode_parameter( $arguments['mla_nolink_text'], $markup_values );
+				return wp_kses( self::_process_shortcode_parameter( $arguments['mla_nolink_text'] . 'page', $markup_values ), 'post' );
 			} else {
 				return '';
 			}
@@ -4796,7 +4793,7 @@ class MLAShortcode_Support {
 		$new_link = '<a ';
 
 		if ( ! empty( $arguments['mla_target'] ) ) {
-			$new_link .= 'target="' . $arguments['mla_target'] . '" ';
+			$new_link .= 'target="' . esc_attr( $arguments['mla_target'] ) . '" ';
 		}
 
 		if ( ! empty( $arguments['mla_link_class'] ) ) {
@@ -4812,13 +4809,13 @@ class MLAShortcode_Support {
 		}
 
 		if ( ! empty( $arguments['mla_link_href'] ) ) {
-			$new_link .= 'href="' . self::_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) . '" >';
+			$new_link .= 'href="' . esc_url( self::_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) . '" >';
 		} else {
 			$new_link .= 'href="' . $markup_values['new_url'] . '" >';
 		}
 
 		if ( ! empty( $arguments['mla_link_text'] ) ) {
-			$new_link .= self::_process_shortcode_parameter( $arguments['mla_link_text'], $markup_values ) . '</a>';
+			$new_link .= esc_attr( self::_process_shortcode_parameter( $arguments['mla_link_text'], $markup_values ) ) . '</a>';
 		} else {
 			if ( 'previous_page' == $output_parameters[0] ) {
 				if ( isset( $arguments['mla_prev_text'] ) ) {

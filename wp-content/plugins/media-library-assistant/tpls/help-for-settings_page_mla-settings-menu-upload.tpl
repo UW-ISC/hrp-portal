@@ -10,6 +10,7 @@
 <!-- template="mla-icon-types" -->
 <!-- title="Icons and Icon Types" order="20" -->
 <p>WordPress maintains a list of "file types" which associate file extensions with type names used to select an icon image. For example, an "audio" file type is associated with an image of musical notes. There are nine of these types: archive, audio, code, default, document, interactive, spreadsheet, text and video. MLA has a much longer list; 112 icon types/images in all. If the "Enable MLA File Type Icons Support" checkbox at the bottom of the screen is checked, the enhanced icon images will be used in place of the WordPress images.</p>
+<p>You can add icon images of your own to the MLA set. Place your icon image file(s) in a directory anywhere within the <code>.../wp-content/</code> directory tree, e.g., <code>.../wp-content/my-icons/</code>. Then, enter the direstory name (relative to <code>.../wp-content/</code>) in the "Custom Icons" text box on the Uploads tab, e.g., <code>my-icons</code> and click "Save Changes".</p>
 <p>You can change the icon image associated with any file extension by selecting a new value from the dropdown list on the Edit Upload MIME Type screen or in the Quick Edit area. You can change the icon image for several extensions at once using the Bulk Edit action.</p>
 <p>If you have some other plugin or mechanism for handling the Upload MIME Type items, you can disable MLA support entirely. Clear the checkbox at the bottom-left corner of the screen and click "Save Changes".</p>
 <!-- template="mla-source-status" -->

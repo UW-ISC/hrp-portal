@@ -122,8 +122,8 @@ function relevanssi_add_tracking( string $permalink, $link_post = null ): string
 		$link_post = $post;
 	}
 	$id = relevanssi_get_post_identifier( $link_post );
-	if ( ! $link_post->blog_id || $link_post->blog_id === get_current_blog_id() ) {
-		if ( relevanssi_is_front_page_id ( $link_post->ID ) ) {
+	if ( ! isset( $link_post->blog_id ) || get_current_blog_id() === $link_post->blog_id ) {
+		if ( relevanssi_is_front_page_id( $link_post->ID ) ) {
 			return $permalink;
 		}
 	}

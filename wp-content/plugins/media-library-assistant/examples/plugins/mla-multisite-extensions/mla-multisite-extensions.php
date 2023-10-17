@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/save-and-import-settings-for-multisite/
  *
  * @package MLA Multisite Extensions
- * @version 1.13
+ * @version 1.14
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
 Description: Adds Multisite filters to MLA shortcodes, supports the "Multisite Global Media" plugin, copies MLA option settings between sites.
 Author: David Lingren
-Version: 1.13
+Version: 1.14
 Author URI: http://davidlingren.com/
 
 Copyright 2017-2023 David Lingren
@@ -62,7 +62,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.13';
+	const PLUGIN_VERSION = '1.14';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -450,7 +450,9 @@ class MLAMultisiteExtensions {
 			}
 
 			// Sort by term id within each taxonomy
-			ksort( self::$source_terms[ $tax_name ] );
+			if ( !empty( $terms ) ) {
+				ksort( self::$source_terms[ $tax_name ] );
+			}
 		}
 	
 		return $source_count;	

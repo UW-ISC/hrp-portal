@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, gallery, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.3
-Stable tag: 3.10
+Tested up to: 6.3.1
+Stable tag: 3.12
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -191,6 +191,16 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.12 =
+* Fix: IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
+
+= 3.11 =
+* New: You can add custom file type icons to the set MLA provides in the crystal directory. See the "Icons and Icon Types" subsection in the Settings/Media Library Assistant Documentation tab for details.
+* Fix: IMPORTANT: Cross-site scripting security risks for certain `[mla_gallery]`, `[mla_tag_cloud]` and `[mla_term_list]` parameters have been eliminated.
+* Fix: IMPORTANT: For the "MLA UI Elements Example" plugin, cross-site scripting security risks for many shortcode parameters have been eliminated.
+* Fix: For the "MLA UI Elements Example" plugin, `link_href` defects fixed and new `append_current_item` parameter added.
+* Fix: For the "MLA Multisite Extensions" example plugin, a defect processing taxonomies with no terms has been corrected.
+
 = 3.10 =
 * New: The "MLA Insert Fixit" example plugin has an option to copy ALT Text values only when the existing destination value is empty.
 * New: The new "MLA Duplicate Item" example plugin adds a "Duplicate" element to the Media/Assistant rollover actions. It duplicates an item, including terms and custom fields.
@@ -362,8 +372,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.10 =
-IMPORTANT: WP 6.3 Gutenberg/Media Manager fix and a security risk fix. File Extension and MIME Type Processing fixes. "MLA Multisite Extensions" example plugin enhancements. Four enhancements in all, nine fixes.
+= 3.12 =
+IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
 
 == Other Notes ==
 

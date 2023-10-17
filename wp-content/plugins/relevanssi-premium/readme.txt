@@ -5,7 +5,7 @@ Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
 Tested up to: 6.3
-Stable tag: 2.24.0
+Stable tag: 2.24.3
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,29 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.24.3 =
+* Security fix: Relevanssi had a vulnerability for SQL injections. Exploiting the vulnerability does require WP admin access. This vulnerability is now fixed.
+* Security fix: Relevanssi had a vulnerability for error log injections. Exploiting this vulnerability requires file upload access to the site. This vulnerability is now fixed.
+* New feature: New filter hook 'relevanssi_get_attachment_posts_query_final' filters the final SQL query for attachment post fetching.
+* Changed behaviour: Relevanssi now skips attachments with 'Server did not respond' errors when reading attachments. This should help with problems coming from attachments that are too big read.
+* Minor fix: Improved server timeout error handling for attachment reading.
+* Minor fix: Relevanssi didn't strip tags from custom field specific excerpts, and could show zero-hit excerpts for the content.
+* Minor fix: Multisite search failed when the search term resolved to nothing in the tokenizer.
+
+= 2.24.2 =
+* Minor fix: Fixes broken WP CLI progress bars.
+* Minor fix: Meta query boolean to array conversion.
+* Minor fix: For indexing, stemmer is always in OR mode so that both stemmed word and the original word is indexed.
+
+= 2.24.1 =
+* New feature: The debugging tab now shows the status of the 'relevanssi_words' option.
+* Changed behaviour: The 'relevanssi_index_content' and 'relevanssi_index_titles' filter hooks now get the post object as a second parameter.
+* Minor fix: Stop Relevanssi from blocking the feed searches.
+* Minor fix: Remove warning from missing blog_id parameter.
+* Minor fix: Improve exact match boosts with accented letters.
+* Minor fix: Entering synonyms in Polylang all languages mode was possible; it shouldn't be.
+* Minor fix: Relevanssi is now blocked in the reusable content block search.
+
 = 2.24.0 =
 * New feature: New filter hook `relevanssi_highlight_regex` makes it possible to adjust the regex used for highlighting.
 * New feature: New filter hook `relevanssi_excerpt_custom_fields` filters the list of custom fields used for creating the excerpt.
@@ -377,6 +400,18 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Relevanssi redirects now work better with FacetWP searches. Thanks to Jan Willem Oostendorp.
 
 == Upgrade notice ==
+= 2.24.3 =
+* Security hardening, attachment handling improvements.
+
+= 2.24.2 =
+* Meta query errors, WP CLI progress bars, stemmer indexing.
+
+= 2.24.1 =
+* Fix for the blog_id bug, small improvements.
+
+= 2.24.0 =
+* Improved debugging, bug fixes and new filter hooks.
+
 = 2.23.0 =
 * Better method for handling custom fields in excerpts, bug fixes.
 

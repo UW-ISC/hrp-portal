@@ -5,6 +5,18 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.2.9.1 =
+
+* Fix: Do not capture focus on search box when clicking on other page elements
+
+= 2.2.9 =
+
+* Fix: PHP 8.2 warning
+* Fix: Search form does not submit when icon is clicked
+* Improvement: Add "Logged out users" to list of selectable role restrictions
+* Fix: Improved backwards compatibility when Font Awesome Kit is being used on site and v6 (Pro) is selected
+* Improvement: Refactor expanding search box code for improved keyboard interaction
+
 = 2.2.8 =
 
 * Improvement: Trigger custom events (mmm:openSearch, mmm:closeSearch) when opening and closing the search box
