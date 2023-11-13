@@ -892,7 +892,7 @@ class MLA_Template_List_Table extends WP_List_Table {
 		// View arguments - see also mla_tabulate_template_items
 		if ( isset( $_REQUEST['mla_template_view'] ) ) {
 			$field = sanitize_text_field( wp_unslash( $_REQUEST['mla_template_view'] ) );
-			if ( in_array( $field, array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list' ) ) ) {
+			if ( in_array( $field, array( 'all', 'style', 'markup', 'gallery', 'tag-cloud', 'term-list', 'custom-list' ) ) ) {
 				$submenu_arguments['mla_template_view'] = $field;
 			}
 		}
@@ -1754,6 +1754,9 @@ class MLA_Template_Query {
 				case 'term-list':
 					$found = 'term-list' === $value['shortcode'];
 					break;
+				case 'custom-list':
+					$found = 'custom-list' === $value['shortcode'];
+					break;
 				default:
 					$found = true;
 			}// $view
@@ -2002,6 +2005,10 @@ class MLA_Template_Query {
 				'singular' => _x( 'Term List', 'table_view_singular', 'media_library-assistant' ),
 				'plural' => _x( 'Term List', 'table_view_plural', 'media_library-assistant' ),
 				'count' => 0 ),
+			'custom-list' => array(
+				'singular' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
+				'plural' => _x( 'Custom Field List', 'table_view_plural', 'media_library-assistant' ),
+				'count' => 0 ),
 		);
 
 		foreach ( $items as $value ) {
@@ -2027,6 +2034,9 @@ class MLA_Template_Query {
 					break;
 				case 'term-list':
 					$template_items[ 'term-list' ]['count']++;
+					break;
+				case 'custom-list':
+					$template_items[ 'custom-list' ]['count']++;
 					break;
 				default:
 					break;

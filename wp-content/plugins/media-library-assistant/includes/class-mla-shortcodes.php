@@ -29,41 +29,41 @@ class MLAShortcodes {
 		 * then immediately initialize it since we're already in the "init" action.
 		 */
 		if ( is_object( $sitepress ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-wpml-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-wpml-shortcode-support.php';
 			MLA_WPML_Shortcodes::initialize();
 		} elseif ( is_object( $polylang ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-polylang-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-polylang-shortcode-support.php';
 			MLA_Polylang_Shortcodes::initialize();
 		}
 
 		add_shortcode( 'mla_gallery', 'MLAShortcodes::mla_gallery_shortcode' );
 		add_shortcode( 'mla_tag_cloud', 'MLAShortcodes::mla_tag_cloud_shortcode' );
 		add_shortcode( 'mla_term_list', 'MLAShortcodes::mla_term_list_shortcode' );
+		add_shortcode( 'mla_custom_list', 'MLAShortcodes::mla_custom_list_shortcode' );
 
-		/*
-		 * Avoid wptexturize defect
-		 */
-		if ( version_compare( get_bloginfo('version'), '4.0', '>=' ) ) {
+		// Avoid wptexturize defect.
+		if ( version_compare( get_bloginfo( 'version' ), '4.0', '>=' ) ) {
 			add_filter( 'no_texturize_shortcodes', 'MLAShortcodes::mla_no_texturize_shortcodes_filter', 10, 1 );
 		}
 	}
 
 	/**
 	 * Prevents wptexturizing of the [mla_gallery] shortcode, avoiding a bug in WP 4.0.
-	 * 
+	 *
 	 * Defined as public because it's a filter.
 	 *
 	 * @since 1.94
 	 *
-	 * @param	array	list of "do not texturize" shortcodes
+	 * @param	array	$no_texturize_shortcodes list of "do not texturize" shortcodes
 	 *
 	 * @return	array	updated list of "do not texturize" shortcodes
 	 */
 	public static function mla_no_texturize_shortcodes_filter( $no_texturize_shortcodes ) {
-		if ( ! in_array( 'mla_gallery', $no_texturize_shortcodes ) ) {
+		if ( ! in_array( 'mla_gallery', $no_texturize_shortcodes, true ) ) {
 			$no_texturize_shortcodes[] = 'mla_gallery';
 			$no_texturize_shortcodes[] = 'mla_tag_cloud';
 			$no_texturize_shortcodes[] = 'mla_term_list';
+			$no_texturize_shortcodes[] = 'mla_custom_list';
 		}
 
 		return $no_texturize_shortcodes;
@@ -76,14 +76,14 @@ class MLAShortcodes {
 	 *
 	 * @since 2.95
 	 *
-	 * @param	mixed	$attr Array or string containing shortcode attributes
-	 * @param	string	$content Optional content for enclosing shortcodes
+	 * @param	mixed  $attr Array or string containing shortcode attributes.
+	 * @param	string $content Optional content for enclosing shortcodes.
 	 *
 	 * @return	array	clean attributes array
 	 */
 	public static function mla_validate_attributes( $attr, $content = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 		
 		return MLAShortcode_Support::mla_validate_attributes( $attr, $content );
@@ -103,7 +103,7 @@ class MLAShortcodes {
 	 */
 	public static function mla_gallery_shortcode( $attr, $content = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 		
 		return MLAShortcode_Support::mla_gallery_shortcode( $attr, $content );
@@ -123,10 +123,16 @@ class MLAShortcodes {
 	 */
 	public static function mla_tag_cloud_shortcode( $attr, $content = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
-		return MLAShortcode_Support::mla_tag_cloud_shortcode( $attr, $content );
+		//return MLAShortcode_Support::mla_tag_cloud_shortcode( $attr, $content );
+
+		if ( !class_exists( 'MLATagCloud' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-tag-cloud.php';
+		}
+
+		return MLATagCloud::mla_tag_cloud_shortcode( $attr, $content );
 	}
 
 	/**
@@ -143,10 +149,16 @@ class MLAShortcodes {
 	 */
 	public static function mla_tag_cloud( $attr ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
-		return MLAShortcode_Support::mla_tag_cloud( $attr );
+		//return MLAShortcode_Support::mla_tag_cloud( $attr );
+
+		if ( !class_exists( 'MLATagCloud' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-tag-cloud.php';
+		}
+
+		return MLATagCloud::mla_tag_cloud( $attr );
 	}
 
 	/**
@@ -159,14 +171,18 @@ class MLAShortcodes {
 	 * @param array $attr Attributes of the shortcode.
 	 * @param string $content Optional content for enclosing shortcodes
 	 *
-	 * @return string HTML content to display the tag cloud.
+	 * @return string HTML content to display the term list.
 	 */
 	public static function mla_term_list_shortcode( $attr, $content = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
-		return MLAShortcode_Support::mla_term_list_shortcode( $attr, $content );
+		if ( !class_exists( 'MLATermList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-term-list.php';
+		}
+
+		return MLATermList::mla_term_list_shortcode( $attr, $content );
 	}
 
 	/**
@@ -184,10 +200,62 @@ class MLAShortcodes {
 	 */
 	public static function mla_term_list( $attr ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
-		return MLAShortcode_Support::mla_term_list( $attr );
+		if ( !class_exists( 'MLATermList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-term-list.php';
+		}
+
+		return MLATermList::mla_term_list( $attr );
+	}
+
+	/**
+	 * The MLA Custom Field List shortcode.
+	 *
+	 * Compatibility shim for MLACustomList::mla_custom_list_shortcode
+	 *
+	 * @since 3.11
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 * @param string $content Optional content for enclosing shortcodes
+	 *
+	 * @return string HTML content to display the custom fiekd list.
+	 */
+	public static function mla_custom_list_shortcode( $attr, $content = NULL ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+
+		if ( !class_exists( 'MLACustomList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-custom-list.php';
+		}
+
+		return MLACustomList::mla_custom_list_shortcode( $attr, $content );
+	}
+
+	/**
+	 * The MLA Custom Field List support function.
+	 *
+	 * This is a variation on the [mla_tag_cloud] and [mla_term_list] shortcodes, composing
+	 * a cloud, list or dropdown ontrol based on custom field values.
+	 *
+	 * @since 3.11
+	 *
+	 * @param array $attr Attributes of the shortcode.
+	 *
+	 * @return void|string|string[] Void if 'echo' attribute is true, or on failure. Otherwise, term list markup as a string or an array of links, depending on 'mla_output' attribute.
+	 */
+	public static function mla_custom_list( $attr ) {
+		if ( !class_exists( 'MLAShortcode_Support' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
+		}
+
+		if ( !class_exists( 'MLACustomList' ) ) {
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-custom-list.php';
+		}
+
+		return MLACustomList::mla_custom_list( $attr );
 	}
 
 	/**
@@ -218,7 +286,7 @@ class MLAShortcodes {
 	 */
 	public static function mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows = NULL, $overide_debug = NULL ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
 		return MLAShortcode_Support::mla_get_shortcode_attachments( $post_parent, $attr, $return_found_rows, $overide_debug );
@@ -285,7 +353,7 @@ class MLAShortcodes {
 	 */
 	public static function mla_get_terms( $attr ) {
 		if ( !class_exists( 'MLAShortcode_Support' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-shortcode-support.php';
 		}
 
 		return MLAShortcode_Support::mla_get_terms( $attr );
@@ -307,7 +375,7 @@ class MLAShortcodes {
 	 */
 	public static function mla_get_data_source( $post_id, $category, $data_value, $attachment_metadata = NULL ) {
 		if ( !class_exists( 'MLAData_Source' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-source.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-data-source.php';
 		}
 
 		return MLAData_Source::mla_get_data_source( $post_id, $category, $data_value, $attachment_metadata );
@@ -326,7 +394,7 @@ class MLAShortcodes {
 	 */
 	public static function mla_is_data_source( $candidate_name ) {
 		if ( !class_exists( 'MLAData_Source' ) ) {
-			require_once( MLA_PLUGIN_PATH . 'includes/class-mla-data-source.php' );
+			require_once MLA_PLUGIN_PATH . 'includes/class-mla-data-source.php';
 		}
 
 		return MLAData_Source::mla_is_data_source( $candidate_name );

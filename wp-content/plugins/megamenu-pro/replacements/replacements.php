@@ -124,6 +124,7 @@ class Mega_Menu_Replacements {
 
 						$custom_search_icon_is_fa5 = 'false';
 						$custom_search_icon_fa5_family = "'Font Awesome 5 Free'";
+						$custom_search_icon_is_fa6 = 'false';
 
 						if ( $use_menu_item_icon ) {
 							$icon_prefix = substr( $settings['icon'], 0, 3 );
@@ -131,11 +132,16 @@ class Mega_Menu_Replacements {
 							if ( in_array( $icon_prefix, array( 'fab', 'fas', 'far' ) ) ) {
 								$custom_search_icon_is_fa5 = 'true';
 
-								$fa5 = new Mega_Menu_Font_Awesome_5();
-
-								if ( $fa5->use_pro() ) {
-									$custom_search_icon_fa5_family = "'Font Awesome 5 Pro'";
+								if ( class_exists('Mega_Menu_Font_Awesome_5') ) {
+									if ( Mega_Menu_Font_Awesome_5::use_pro() ) {
+										$custom_search_icon_fa5_family = "'Font Awesome 5 Pro'";
+									}
 								}
+							}
+
+							if ( str_contains( $settings['icon'], 'fa6') ) {
+								$custom_search_icon_is_fa5 = 'false';
+								$custom_search_icon_is_fa6 = 'true';
 							}
 						}
 
@@ -157,7 +163,8 @@ class Mega_Menu_Replacements {
 							'search_custom_icon_height' => $custom_search_icon_height,
 							'custom_menu_item_link_icon_size' => isset($settings['styles']['enabled']['menu_item_icon_size']) ? $settings['styles']['enabled']['menu_item_icon_size'] : 'inherit',
 							'custom_search_icon_is_fa5' => $custom_search_icon_is_fa5,
-							'custom_search_icon_fa5_family' => $custom_search_icon_fa5_family
+							'custom_search_icon_fa5_family' => $custom_search_icon_fa5_family,
+							'custom_search_icon_is_fa6' => $custom_search_icon_is_fa6
 						);
 
 						$custom_vars[ $item->ID ] = $styles;
@@ -282,11 +289,12 @@ class Mega_Menu_Replacements {
 	public function shortcode_user_gravatar( $atts ) {
 		$atts = shortcode_atts( array(
 			'size' => '25',
+			'default' => 'mp'
 		), $atts, 'maxmegamenu_user_gravatar' );
 
 		$current_user = wp_get_current_user();
 
-		return "<img class='mmm_gravatar' src='https://www.gravatar.com/avatar/" . md5($current_user->user_email) . "?s=" . $atts['size'] . "' />";
+		return "<img class='mmm_gravatar' alt='Gravatar icon' src='https://www.gravatar.com/avatar/" . md5($current_user->user_email) . "?s=" . $atts['size'] . "&d=" . urlencode( $atts['default'] ) . "' />";
 
 	}
 
@@ -571,7 +579,19 @@ class Mega_Menu_Replacements {
 
 		if ( $item->megamenu_settings['replacements']['html']['mode'] == 'inner' ) {
 			// ensure we only replace the menu item text
-			return str_replace( ">" . strip_tags($item_output) . "<", ">" . $replacement . "<", $item_output );
+			// when menu item text is hidden, only replace the first instance found of "><"
+			//return str_replace( ">" . strip_tags($item_output) . "<", ">" . $replacement . "<", $item_output );
+			$haystack = $item_output;
+			$needle = ">" . strip_tags( $item_output ) . "<";
+			$replace = ">" . $replacement . "<";
+			$pos = strpos( $haystack, $needle );
+
+			if ( $pos !== false ) {
+			     return substr_replace( $haystack, $replace, $pos, strlen( $needle ) );
+			}
+
+			return $replacement;
+
 		} elseif ( $item->megamenu_settings['replacements']['html']['mode'] == 'href' ) {
 
 			return str_replace( $item->url, $replacement, $item_output );
@@ -678,29 +698,32 @@ class Mega_Menu_Replacements {
 	private function do_search_replacement( $item, $item_output ) {
 
 		$placeholder = isset($item->megamenu_settings['replacements']['search']['placeholder_text']) ? $item->megamenu_settings['replacements']['search']['placeholder_text'] : "Search...";
+		$placeholder = do_shortcode( $placeholder );
 
 		$type = isset($item->megamenu_settings['replacements']['search']['type']) ? $item->megamenu_settings['replacements']['search']['type'] : "expand_to_left";
 
 		$search_icon_type = isset($item->megamenu_settings['replacements']['search']['search_icon_type']) ? $item->megamenu_settings['replacements']['search']['search_icon_type'] : "dashicons-search";
+
+		$search_icon_label = isset($item->megamenu_settings['replacements']['search']['search_icon_label']) ? $item->megamenu_settings['replacements']['search']['search_icon_label'] : "Search";
 
 		$woocommerce = isset($item->megamenu_settings['replacements']['search']['woocommerce']) ? $item->megamenu_settings['replacements']['search']['woocommerce'] : "false";
 
 		$search_var = apply_filters("megamenu_search_var", "s");
 		$action = apply_filters("megamenu_search_action", trailingslashit( home_url() ) );
 
-		$inputs = "";
+
+		$extra_inputs = apply_filters("megamenu_search_inputs", "");
 
 		if ($woocommerce === 'true') {
 			$inputs = "<input type='hidden' name='post_type' value='product' />";
 		}
 
-		$search_icon_html = "<span tabindex='0' type='button' class='dashicons dashicons-search search-icon'></span>";
-
 		$search_icon_attributes = array(
 			'tabindex' => '0',
 			'role' => 'button',
 			'class' => 'dashicons dashicons-search search-icon',
-			'aria-controls' => 'mega-search-' . $item->ID
+			'aria-controls' => 'mega-search-' . $item->ID,
+			'aria-label' => do_shortcode( $search_icon_label )
 		);
 
 		if ( $type != 'static' ) {
@@ -733,7 +756,7 @@ class Mega_Menu_Replacements {
 			}
 		}
 
-		$search_icon_attributes = apply_filters("megamenu_search_icon_attributes", $search_icon_attributes, $item);
+		$search_icon_attributes = apply_filters( "megamenu_search_icon_attributes", $search_icon_attributes, $item );
 
 		$search_icon_html = "<span";
 
@@ -745,15 +768,39 @@ class Mega_Menu_Replacements {
 
 		$search_icon_html .= "></span>";
 
+        $search_input_attributes = apply_filters( "megamenu_search_input_attributes", array(
+            'type' => 'text',
+            'tabindex' => '-1',
+            'role' => 'searchbox',
+            'id' => 'mega-search-' . $item->ID,
+            'aria-label' => $placeholder,
+            'data-placeholder' => $placeholder,
+            'name' => $search_var
+        ), $item );
+
+        if ( $type == 'static'  && isset( $search_input_attributes['data-placeholder'] ) ) {
+            $search_input_attributes['placeholder'] = $search_input_attributes['data-placeholder'];
+            unset( $search_input_attributes['data-placeholder'] );
+            unset( $search_input_attributes['tabindex'] );
+        }
+
+        $input_html = "<input ";
+
+        foreach ( $search_input_attributes as $name => $val ) {
+            if ( strlen( $val ) ) {
+                $input_html .= " " . $name ."='" . esc_attr( $val ) . "'";
+            }
+        }
+
+        $input_html .= " />";
 
 		$submit_html = "<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>";
-		$input_html = "<input tabindex='-1' type='text' role='searchbox' id='mega-search-" . $item->ID . "' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$search_var}'>";
-
-		$css_version = get_option("megamenu_pro_css_version");
 
 		if ( $type == 'expand_to_left' ) {
 			$html  = "<div class='mega-search-wrap'>";
 			$html .= "    <form class='mega-search expand-to-left mega-search-closed' role='search' action='" .  $action . "'>";
+
+			$css_version = get_option("megamenu_pro_css_version");
 
 			if ( version_compare( $css_version, "2.2.8.5", "<" ) ) {
 				$html .= $search_icon_html;
@@ -764,7 +811,7 @@ class Mega_Menu_Replacements {
 			}
 
 			$html .= $submit_html;
-			$html .= apply_filters("megamenu_search_inputs", $inputs);
+			$html .= $extra_inputs;
 			$html .= "    </form>";
 			$html .= "</div>";
 		}
@@ -775,18 +822,20 @@ class Mega_Menu_Replacements {
 			$html .= $search_icon_html;
 			$html .= $input_html;
 			$html .= $submit_html;
-			$html .= apply_filters("megamenu_search_inputs", $inputs);
+			$html .= $extra_inputs;
 			$html .= "    </form>";
 			$html .= "</div>";
 		}
 
 		if ( $type == 'static' ) {
-			$html = "<div class='mega-search-wrap mega-static'><form class='mega-search mega-search-open' role='search' action='" .  $action . "'>
-						<input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-						<input type='text' role='searchbox' id='mega-search-" . $item->ID . "' aria-label='{$placeholder}' data-placeholder='{$placeholder}' placeholder='{$placeholder}' name='{$search_var}'>
-						" . $search_icon_html . "
-						" . apply_filters("megamenu_search_inputs", $inputs) . "
-					</form></div>";
+			$html  = "<div class='mega-search-wrap mega-static'>";
+			$html .= "    <form class='mega-search mega-search-open' role='search' action='" .  $action . "'>";
+			$html .= $submit_html;
+			$html .= $input_html;
+			$html .= $search_icon_html;
+			$html .= $extra_inputs;
+			$html .= "    </form>";
+			$html .= "</div>";
 		}
 
 		if ( function_exists("wpml_get_language_input_field") ) {
@@ -829,6 +878,7 @@ class Mega_Menu_Replacements {
 		$search_icon_color_closed = isset( $menu_item_meta['replacements']['search']['icon_color_closed'] ) ? $menu_item_meta['replacements']['search']['icon_color_closed'] : '#fff';
 		$search_icon_color_open = isset( $menu_item_meta['replacements']['search']['icon_color_open'] ) ? $menu_item_meta['replacements']['search']['icon_color_open'] : '#333';
 		$search_icon_type = isset( $menu_item_meta['replacements']['search']['search_icon_type'] ) ? $menu_item_meta['replacements']['search']['search_icon_type'] : 'dashicons-search';
+		$search_icon_label = isset( $menu_item_meta['replacements']['search']['search_icon_label'] ) ? $menu_item_meta['replacements']['search']['search_icon_label'] : 'Search';
 
 		$search_background_color_closed = isset( $menu_item_meta['replacements']['search']['background_color_closed'] ) ? $menu_item_meta['replacements']['search']['background_color_closed'] : 'transparent';
 		$search_background_color_open = isset( $menu_item_meta['replacements']['search']['background_color_open'] ) ? $menu_item_meta['replacements']['search']['background_color_open'] : '#fff';
@@ -987,6 +1037,15 @@ class Mega_Menu_Replacements {
 		$html .= "                    <option value='dashicons-search' " . selected( $search_icon_type, 'dashicons-search', false ) . ">" . __("Dashicons Search", "megamenu-pro") . "</option>";
 		$html .= "                    <option value='custom' " . selected( $search_icon_type, 'custom', false ) . ">" . __("Use Menu Item Icon", "megamenu-pro") . "</option>";
 		$html .= "                </select>";
+		$html .= "            </td>";
+		$html .= "        </tr>";
+		$html .= "        <tr class='search' style='display: {$search_display}'>";
+		$html .= "            <td class='mega-name'>";
+		$html .=                  __("Search Icon Label", "megamenu-pro");
+		$html .= "                <div class='mega-description'>" . __("aria-label text for the icon", "megamenu-pro") . "</div>";
+		$html .=              "</td>";
+		$html .= "            <td class='mega-value'>";
+		$html .= "                <input type='text' name='settings[replacements][search][search_icon_label]' value='{$search_icon_label}' />";
 		$html .= "            </td>";
 		$html .= "        </tr>";
 		$html .= "        <tr class='search' style='display: {$search_display}'>";

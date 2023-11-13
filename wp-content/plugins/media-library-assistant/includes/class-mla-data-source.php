@@ -314,9 +314,9 @@ class MLAData_Source {
 
 			if ( NULL == $post_info ) {
 				if ( 'custom_field_mapping' == $category ) {
-					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE post_type = 'attachment'", OBJECT_K );
+					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE post_type = 'attachment'", OBJECT_K ); // phpcs:ignore
 				} else {
-					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE ID = '{$post_id}'", OBJECT_K );
+					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE ID = '{$post_id}'", OBJECT_K ); // phpcs:ignore
 				}
 			}
 
@@ -418,8 +418,8 @@ class MLAData_Source {
 					$wp_attached_files = array();
 					$wp_attachment_metadata = array();
 				} else {
-					$wp_attachment_metadata = $wpdb->get_results( "SELECT post_id, meta_value FROM {$table} WHERE meta_key = '_wp_attachment_metadata'", OBJECT_K );
-					$wp_attached_files = $wpdb->get_results( "SELECT post_id, meta_value FROM {$table} WHERE meta_key = '_wp_attached_file'", OBJECT_K );
+					$wp_attachment_metadata = $wpdb->get_results( "SELECT post_id, meta_value FROM {$table} WHERE meta_key = '_wp_attachment_metadata'", OBJECT_K ); // phpcs:ignore
+					$wp_attached_files = $wpdb->get_results( "SELECT post_id, meta_value FROM {$table} WHERE meta_key = '_wp_attached_file'", OBJECT_K ); // phpcs:ignore
 				}
 			} // custom_field_mapping, i.e., mapping all attachments
 		} // first call after page load

@@ -69,7 +69,7 @@ class MLASettings_IPTCEXIF {
 		if ( isset( $posts['found_rows'] ) ) {
 			$total_items = $posts['found_rows'];
 		} else {
-			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment' AND `post_status` = 'inherit' AND ( `post_mime_type` LIKE 'image/%' OR `post_mime_type` LIKE 'application/%pdf%' )" );
+			$total_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment' AND `post_status` = 'inherit' AND ( `post_mime_type` LIKE 'image/%' OR `post_mime_type` LIKE 'application/%pdf%' )" ); // phpcs:ignore
 		}
 
 		// Initialize variables for mapping scripts

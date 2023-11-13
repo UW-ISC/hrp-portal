@@ -2054,12 +2054,12 @@ class MLAMime {
 			$disabled_types = $mla_upload_mimes['disabled'];
 			
 			// Patch for typo, since corrected in v3.10, in mla-default-mime-types.tpl
-			if ( 'exe_wine' === $mla_upload_mimes['icon_type']['dll'] ) {
+			if ( isset( $mla_upload_mimes['icon_type']['dll'] ) && 'exe_wine' === $mla_upload_mimes['icon_type']['dll'] ) {
 				$mla_upload_mimes['icon_type']['dll'] = 'exec_wine';
 				$save_changes = true;
 			}
 			
-			if ( 'exe_wine' === $mla_upload_mimes['icon_type']['exe'] ) {
+			if ( isset( $mla_upload_mimes['icon_type']['exe'] ) && 'exe_wine' === $mla_upload_mimes['icon_type']['exe'] ) {
 				$mla_upload_mimes['icon_type']['exe'] = 'exec_wine';
 				$save_changes = true;
 			}

@@ -64,7 +64,13 @@ if ( ! class_exists( 'Mega_Menu_Widget_Image_Swap' ) ) :
 				}
 			}
 
-			echo "<img class='mega-placeholder' data-default-src='" . esc_attr( $icon_url ) . "' src='" . esc_attr( $icon_url ) . "' data-default-alt='" . esc_attr( $icon_alt ) . "' alt='" . esc_attr( $icon_alt ) . "' />";
+			$class = 'mega-placeholder';
+
+			if ( defined( 'IMAGIFY_VERSION' ) ) {
+				$class .= ' imagify-no-webp'; // disable webp markup conversion if imagify is active
+			}
+
+			echo "<img class='{$class}' data-default-src='" . esc_attr( $icon_url ) . "' src='" . esc_attr( $icon_url ) . "' data-default-alt='" . esc_attr( $icon_alt ) . "' alt='" . esc_attr( $icon_alt ) . "' />";
 
 			echo $after_widget;
 		}

@@ -179,3 +179,150 @@ mla_shortcode_slug="term-list"
 
 <!-- template="term-list-checklist-close-markup" -->
 </[+itemtag+]>
+
+<!-- template="custom-list-style" -->
+<!-- mla_shortcode_slug="custom-list" -->
+<style type='text/css'>
+	#[+selector+] {
+		margin: auto;
+		width: 100%;
+	}
+	#[+selector+] .custom-list-item {
+		float: [+float+];
+		margin: [+margin+];
+		text-align: center;
+		width: [+itemwidth+];
+	}
+	#[+selector+] .custom-list-caption {
+		margin-left: 0;
+		vertical-align: top;
+	}
+</style>
+
+<!-- template="custom-list-flat-div-style" -->
+<!-- mla_shortcode_slug="custom-list" -->
+<!-- mla_description="CSS Styles for the 'flat,div' output format" -->
+<style type='text/css'>
+	#[+selector+] a.mla_current_item,
+	#[+selector+] a.mla_current_item:visited {
+		color:#FF0000;
+		font-weight:bold
+	}
+</style>
+
+<!-- template="custom-list-checklist-div-style" -->
+<!-- mla_description="CSS Styles for the 'checklist,div' output format" -->
+<!-- mla_shortcode_slug="custom-list" -->
+<style type='text/css'>
+	#[+selector+] {
+		height: 14em;
+		border: 1px solid #ddd;
+		overflow-y: scroll;
+		list-style: none;
+		margin: auto;
+		width: 100%;
+	}
+	#[+selector+] .custom-list-item {
+		float: [+float+];
+		margin: [+margin+];
+		text-align: center;
+		width: [+itemwidth+];
+	}
+	#[+selector+] .custom-list-caption {
+		margin-left: 0;
+		vertical-align: top;
+	}
+</style>
+
+<!-- template="custom-list-flat-div-description-markup" -->
+For the "flat,div" output format, this template wraps the list/cloud in a DIV tag to enable CSS styling.<!-- template="custom-list-flat-div-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-flat-div-open-markup" -->
+<div id='[+selector+]' class='custom-list custom-list-key-[+meta_key+]'>
+
+<!-- template="custom-list-flat-div-close-markup" -->
+</div>
+
+<!-- template="custom-list-grid-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-grid-open-markup" -->
+<div id='[+selector+]' class='custom-list custom-list-key-[+meta_key+] custom-list-columns-[+columns+]'>
+
+<!-- template="custom-list-grid-row-open-markup" -->
+<!-- row-open -->
+
+<!-- template="custom-list-grid-item-markup" -->
+<[+itemtag+] class='custom-list-item [+last_in_row+]'>
+	<[+valuetag+] class='custom-list-value'>
+		[+thelink+]
+	</[+valuetag+]>
+	<[+captiontag+] class='wp-caption-text custom-list-caption'>
+		[+caption+]
+	</[+captiontag+]>
+</[+itemtag+]>
+
+<!-- template="custom-list-grid-row-close-markup" -->
+<br style="clear: both" />
+
+<!-- template="custom-list-grid-close-markup" -->
+</div>
+
+<!-- template="custom-list-ul-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-ul-open-markup" -->
+<[+itemtag+] [+itemtag_attributes+] class="[+itemtag_class+]" id="[+itemtag_id+]">
+
+<!-- template="custom-list-ul-item-markup" -->
+	<[+valuetag+] class='custom-list-value'>[+thelink+]</[+valuetag+]>
+
+<!-- template="custom-list-ul-close-markup" -->
+</[+itemtag+]>
+
+<!-- template="custom-list-dl-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-dl-open-markup" -->
+<[+itemtag+] [+itemtag_attributes+] class="[+itemtag_class+]" id="[+itemtag_id+]">
+
+<!-- template="custom-list-dl-item-markup" -->
+	<[+valuetag+] class='custom-list-value'>[+thelink+]</[+valuetag+]>
+	<[+captiontag+] class='wp-caption-text custom-list-caption'>[+caption+]</[+captiontag+]>
+
+<!-- template="custom-list-dl-close-markup" -->
+</[+itemtag+]>
+
+<!-- template="custom-list-dropdown-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-dropdown-open-markup" -->
+<[+itemtag+] [+multiple+] name='[+thename+]' class='custom-list custom-list-dropdown custom-list-key-[+meta_key+]' id='[+selector+]'>
+
+<!-- template="custom-list-dropdown-item-markup" -->
+	<[+valuetag+] class='custom-list-value custom-list-dropdown-value' value='[+thevalue+]' [+selected+]>[+thelabel+]</[+valuetag+]>
+
+<!-- template="custom-list-dropdown-close-markup" -->
+</[+itemtag+]>
+
+<!-- template="custom-list-checklist-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-checklist-open-markup" -->
+<[+itemtag+] id='[+selector+]' class='custom-list custom-list-checklist custom-list-key-[+meta_key+]'>
+
+<!-- template="custom-list-checklist-item-markup" -->
+	<[+valuetag+] class='custom-list-value custom-list-checklist-value [+popular+]' id='[+valuetag_id+]'><label class='selectit'><input name='[+thename+]' id='in-[+valuetag_id+]' type='checkbox' value='[+thevalue+]' [+selected+]>[+thelabel+]</label></[+valuetag+]>
+
+<!-- template="custom-list-checklist-close-markup" -->
+</[+itemtag+]>
+
+<!-- template="custom-list-checklist-div-description-markup" -->
+For the "checklist,div" output format, this template wraps the list in a DIV tag to enable CSS styling.
+<!-- template="custom-list-checklist-div-arguments-markup" -->
+mla_shortcode_slug="custom-list"
+<!-- template="custom-list-checklist-div-open-markup" -->
+<div id='[+selector+]-div' class='custom-list custom-list-key-[+meta_key+]'>
+<[+itemtag+] id='[+selector+]' class='custom-list custom-list-checklist custom-list-key-[+meta_key+]'>
+
+<!-- template="custom-list-checklist-div-item-markup" -->
+	<[+valuetag+] class='custom-list-value custom-list-checklist-value [+popular+]' id='[+valuetag_id+]'><label class='selectit'><input name='[+thename+]' id='in-[+valuetag_id+]' type='checkbox' value='[+thevalue+]' [+selected+]>[+thelabel+]</label></[+valuetag+]>
+
+<!-- template="custom-list-checklist-div-close-markup" -->
+</[+itemtag+]>
+</div>

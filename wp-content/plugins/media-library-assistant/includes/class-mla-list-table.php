@@ -153,14 +153,14 @@ class MLA_List_Table extends WP_List_Table {
 		}
 
 		$and   = wp_post_mime_type_where( $mime_type );
-		$count = $wpdb->get_results( "SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and $author GROUP BY post_mime_type", ARRAY_A );
+		$count = $wpdb->get_results( "SELECT post_mime_type, COUNT( * ) AS num_posts FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and $author GROUP BY post_mime_type", ARRAY_A ); // phpcs:ignore
 		
 		$counts = array();
 		foreach ( (array) $count as $row ) {
 			$counts[ $row['post_mime_type'] ] = $row['num_posts'];
 		}
-		$counts['mine'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and AND post_author = " . get_current_user_id() );
-		$counts['trash'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'trash' $and $author" );
+		$counts['mine'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status != 'trash' $and AND post_author = " . get_current_user_id() ); // phpcs:ignore
+		$counts['trash'] = $wpdb->get_var( "SELECT COUNT( * ) FROM $wpdb->posts WHERE post_type = 'attachment' AND post_status = 'trash' $and $author" ); // phpcs:ignore
 
 		// Modify returned attachment counts by mime type.
 		return apply_filters( 'wp_count_attachments', (object) $counts, $mime_type );
@@ -210,12 +210,7 @@ class MLA_List_Table extends WP_List_Table {
 		}
 
 		$tax_metakey_sort =  MLACore::mla_taxonomy_support('', 'metakey_sort');
-		$values = $wpdb->get_col( $wpdb->prepare( "
-			SELECT DISTINCT meta_value
-			FROM $wpdb->postmeta
-			WHERE meta_key = %s
-			ORDER BY meta_value
-		", $tax_metakey ) . $tax_metakey_sort );
+		$values = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT meta_value FROM $wpdb->postmeta WHERE meta_key = %s ORDER BY meta_value ", $tax_metakey ) . $tax_metakey_sort ); // phpcs:ignore
 
 		if ( empty( $values ) ) {
 			return $dropdown;
@@ -379,12 +374,22 @@ class MLA_List_Table extends WP_List_Table {
 			if ( isset( $_REQUEST['mla_terms_search_taxonomies'] ) ) {
 				$submenu_arguments['mla_terms_search_taxonomies'] = urlencode_deep( array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['mla_terms_search_taxonomies'] ) ) );
 			} else {
-				$submenu_arguments['mla_terms_search_taxonomies'] = urlencode_deep( array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['mla_terms_search']['taxonomies'] ) ) );
+				if ( isset( $_REQUEST['mla_terms_search']['taxonomies'] ) ) {
+					$submenu_arguments['mla_terms_search_taxonomies'] = urlencode_deep( array_map( 'sanitize_text_field', wp_unslash ( $_REQUEST['mla_terms_search']['taxonomies'] ) ) );
+				}
 			}
 
-			$clean_request['phrases'] = urlencode( wp_kses( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) );
-			$clean_request['radio_phrases'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_phrases'] ) );
-			$clean_request['radio_terms'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_terms'] ) );
+			if ( isset( $_REQUEST['mla_terms_search']['phrases'] ) ) {
+				$clean_request['phrases'] = urlencode( wp_kses( wp_unslash( $_REQUEST['mla_terms_search']['phrases'] ), 'post' ) );
+			}
+			
+			if ( isset( $_REQUEST['mla_terms_search']['radio_phrases'] ) ) {
+				$clean_request['radio_phrases'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_phrases'] ) );
+			}
+			
+			if ( isset( $_REQUEST['mla_terms_search']['radio_terms'] ) ) {
+				$clean_request['radio_terms'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_terms_search']['radio_terms'] ) );
+			}
 				
 			if ( $clean_request['filter'] !== 0 ) {
 				$filtered_term_search = true;
@@ -1094,32 +1099,31 @@ class MLA_List_Table extends WP_List_Table {
 		if ( MLATest::$wp_4dot3_plus ) {
 			static $primary_column = NULL;
 
-			if ( NULL == $primary_column ) {
+			if ( NULL === $primary_column ) {
 				$primary_column = $this->get_default_primary_column_name();
 			}
 
-			if ( $primary_column != $column_name ) {
+			if ( $primary_column !== $column_name ) {
 				return $column_content;
 			}
 
-			$add_link = ( !$this->is_trash ) && current_user_can( 'edit_post', $item->ID );
+			$add_link = apply_filters( 'mla_list_table_primary_column_link', ( ! $this->is_trash ) && current_user_can( 'edit_post', $item->ID ), $item, $this->is_trash );
+
 			list( $mime ) = explode( '/', $item->post_mime_type );
 			$thumb = self::_build_item_thumbnail( $item );
 			$title = _draft_or_post_title( $item );
 
 			$final_content  = "<strong class=\"has-media-icon\">\n";
 
+			// Use the WordPress Edit Media screen
+			$view_args = self::mla_submenu_arguments();
+			if ( isset( $view_args['lang'] ) ) {
+				$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit&lang=' . $view_args['lang'];
+			} else {
+				$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit';
+			}
+
 			if ( $add_link ) {
-				// Use the WordPress Edit Media screen
-				$view_args = self::mla_submenu_arguments();
-				if ( isset( $view_args['lang'] ) ) {
-					$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit&lang=' . $view_args['lang'];
-				} else {
-					$edit_url = 'post.php?post=' . $item->ID . '&action=edit&mla_source=edit';
-				}
-
-				//$final_content .= sprintf( '<a href="%1$s" title="%2$s &#8220;%3$s&#8221;" aria-label="&#8220;%3$s&#8221; (%2$s)">', admin_url( $edit_url ), __( 'Edit', 'media-library-assistant' ), $title ) . "\n"; 
-
 				$final_content .= sprintf( '<a href="%1$s" aria-label="&#8220;%3$s&#8221; (%2$s)">', admin_url( $edit_url ), __( 'Edit', 'media-library-assistant' ), $title ) . "\n"; 
 			}
 
@@ -1127,7 +1131,6 @@ class MLA_List_Table extends WP_List_Table {
 			$final_content .= $thumb;
 			$final_content .= "</span>\n";
 			$final_content .= '<span aria-hidden="true">' . $column_content . "</span>\n";
-			//$final_content .= '<span class="screen-reader-text">' . __( 'Edit', 'media-library-assistant' ) . ' ' . $title . "</span>\n";
 
 			if ( $add_link ) {
 				$final_content .= "</a>\n";
@@ -1135,10 +1138,11 @@ class MLA_List_Table extends WP_List_Table {
 
 			$final_content .= "</strong>\n";
 
-			if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_SHOW_FILE_NAME ) ) {
+			if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_SHOW_FILE_NAME ) ) {
 				$final_content .= '<p style="clear: both" class="filename"> <span class="screen-reader-text">' . __( 'File name' ) . ': </span>' . $item->mla_wp_attached_filename . " </p>\n";
 			}
-			return $final_content;
+
+			return apply_filters( 'mla_list_table_primary_column_content', $final_content, $item, $add_link, $thumb, $title, admin_url( $edit_url ), $column_content );
 		}
 
 		$actions = $this->row_actions( $this->_build_rollover_actions( $item, $column_name ) );
@@ -1817,7 +1821,7 @@ class MLA_List_Table extends WP_List_Table {
 				}
 			}
 
-			$detached_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'attachment' AND post_status != 'trash' AND post_parent < 1" );
+			$detached_items = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type = 'attachment' AND post_status != 'trash' AND post_parent < 1" ); // phpcs:ignore
 		}
 
 		$class = ( $view_slug == $current_view ) ? ' class="current"' : '';
@@ -1837,7 +1841,7 @@ class MLA_List_Table extends WP_List_Table {
 				if ( isset( $_REQUEST['orderby'] ) ) {
 					$orderby = sanitize_text_field( wp_unslash( $_REQUEST['orderby'] ) );
 					if ( 'rml' === $orderby ) {
-						$order = isset( $_REQUEST['orderby'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
+						$order = isset( $_REQUEST['order'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['order'] ) ) : 'asc';
 
 						$base_url .= '&orderby=' . $orderby . '&order=' . $order;
 					}

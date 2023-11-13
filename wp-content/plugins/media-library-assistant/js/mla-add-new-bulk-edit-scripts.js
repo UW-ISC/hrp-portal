@@ -201,6 +201,10 @@ var jQuery,
 				mla.addNewBulkEdit.formToggle();
 			};
 
+			if ( mla.settings.areaAutofill ) {
+				mla.addNewBulkEdit.doImport();
+			};
+
 			//auto-complete/suggested matches for flat taxonomies
 			$( 'textarea.mla_tags', uploadDiv ).each(function(){
 				var taxname = $(this).attr('name').replace(']', '').replace('tax_input[', '');

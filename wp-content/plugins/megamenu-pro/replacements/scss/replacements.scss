@@ -6,6 +6,7 @@
 		position: relative;
 		top: -1px;
 		display: inline-block;
+		max-height: 100%;
 
 		@include mobile {
 			max-height: 90%;
@@ -99,6 +100,7 @@
 		$search_custom_icon_size: nth($item, 16);
 		$search_custom_icon_is_fa5: nth($item, 17);
 		$search_custom_icon_fa5_family: nth($item, 18);
+		$search_custom_icon_is_fa6: nth($item, 19);
 
 	  	@if type-of($id) == number {
 
@@ -253,6 +255,41 @@
 								&.fal:before {
 									font-family: $search_custom_icon_fa5_family;
 									font-weight: 300;
+								}
+							}
+
+							@if $search_custom_icon_is_fa6 == true {
+								&.far:before,
+								&.fa-regular:before {
+								    font: var(--fa-font-regular);
+								}
+								&.fas:before,
+								&.fa-solid:before {
+								    font: var(--fa-font-solid);
+								}
+								&.fal:before,
+								&.fa-light:before {
+								    font: var(--fa-font-light);
+								}
+								&.fa-kit:before {
+								    font-family: "Font Awesome Kit";
+								}
+								&.fab:before {
+								    font: var(--fa-font-brands);
+								}
+								&.far:before,
+								&.fa-regular:before,
+								&.fas:before,
+								&.fa-solid:before,
+								&.fal:before,
+								&.fa-light:before,
+								&.fa-kit:before,
+								&.fab:before {
+								    line-height: $search_height;
+
+									@if $search_custom_icon_size != inherit {
+										font-size: $search_custom_icon_size;
+									}
 								}
 							}
 

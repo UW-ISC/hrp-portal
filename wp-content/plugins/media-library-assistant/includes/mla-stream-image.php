@@ -12,7 +12,7 @@ require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-image-process
 MLAImageProcessor::$mla_debug = isset( $_REQUEST['mla_debug'] ) && 'log' == $_REQUEST['mla_debug'];
 
 if ( isset( $_REQUEST['mla_stream_file'] ) ) {
-	$file = $_REQUEST['mla_stream_file'];
+	$file = $_REQUEST['mla_stream_file']; // phpcs:ignore
 
 	if ( 0 === strpos( $file, 'file://' ) ) {
 		$file = substr( $file, 7 );

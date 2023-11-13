@@ -237,7 +237,7 @@ class MLA {
 						}
 
 						$view_args = isset( $_REQUEST['mla_source'] ) ? array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ) : array();
-						wp_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?post=' . $mla_item_id . '&action=edit&message=' . $message ), 302 );
+						wp_safe_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?post=' . $mla_item_id . '&action=edit&message=' . $message ), 302 );
 						exit;
 					case MLACore::MLA_ADMIN_SINGLE_MAP:
 						if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ALLOW_IPTC_EXIF_MAPPING ) ) {
@@ -252,7 +252,7 @@ class MLA {
 						}
 
 						$view_args = isset( $_REQUEST['mla_source'] ) ? array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ) : array();
-						wp_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?post=' . $mla_item_id . '&action=edit&message=' . $message ), 302 );
+						wp_safe_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?post=' . $mla_item_id . '&action=edit&message=' . $message ), 302 );
 						exit;
 					default:
 						do_action( 'mla_list_table_custom_admin_action', sanitize_text_field( wp_unslash( $_REQUEST['mla_admin_action'] ) ), $mla_item_id );
@@ -613,7 +613,7 @@ class MLA {
 				$query_args .= '&mla_admin_message=' . urlencode( sprintf( __( 'Item %1$d moved to Trash.', 'media-library-assistant' ), isset( $_GET['ids'] ) ? absint( $_GET['ids'] ) : 0 ) );
 			}
 
-			wp_redirect( admin_url( 'upload.php' ) . $query_args, 302 );
+			wp_safe_redirect( admin_url( 'upload.php' ) . $query_args, 302 );
 			exit;
 		}
 	}
@@ -961,7 +961,7 @@ class MLA {
 
 		$download_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_download_file' => urlencode( $archive_name ), 'mla_download_type' => 'application/zip', 'mla_download_disposition' => 'delete' );
 
-		wp_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_DOWNLOAD_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
+		wp_safe_redirect( add_query_arg( $download_args, wp_nonce_url( 'upload.php', MLACore::MLA_DOWNLOAD_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME ) ), 302 );
 		exit;
 	}
 
@@ -1620,7 +1620,7 @@ class MLA {
 		if ( isset( $_REQUEST['delete_all'] ) ) {
 			global $wpdb;
 
-			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type=%s AND post_status = %s", 'attachment', 'trash' ) );
+			$ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM $wpdb->posts WHERE post_type=%s AND post_status = %s", 'attachment', 'trash' ) ); // phpcs:ignore
 			$delete_count = 0;
 			foreach ( $ids as $post_id ) {
 				$item_content = self::_delete_single_item( $post_id );
@@ -2050,7 +2050,7 @@ class MLA {
 			}
 
 //			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $tax_output );
-			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $_REQUEST['tax_input'] );
+			$results = MLAData::mla_update_single_item( $post_id, $_REQUEST, $_REQUEST['tax_input'] ); // phpcs:ignore
 			MLACore::mla_debug_add( __LINE__ . " MLA::mla_inline_edit_ajax_action( {$post_id} ) results = " . var_export( $results, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
 		}
 

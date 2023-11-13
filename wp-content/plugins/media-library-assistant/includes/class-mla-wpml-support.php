@@ -428,7 +428,7 @@ class MLA_WPML {
 			}
 
 			$view_args = isset( $_REQUEST['mla_source'] ) ? array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ) : array();
-			wp_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?action=edit&post=' . $new_item . '&message=201' ), 302 );
+			wp_safe_redirect( add_query_arg( $view_args, admin_url( 'post.php' ) . '?action=edit&post=' . $new_item . '&message=201' ), 302 );
 			exit;
 		}
 	} // mla_list_table_custom_admin_action
@@ -2278,11 +2278,12 @@ class MLA_WPML_Table {
 					}
 				}
 
-				$results = $wpdb->get_results( $wpdb->prepare("
+				$query = $wpdb->prepare("
 					SELECT f.lang_code, f.flag, f.from_template, l.name
 					FROM {$wpdb->prefix}icl_flags f
 						JOIN {$wpdb->prefix}icl_languages_translations l ON f.lang_code = l.language_code
-					WHERE l.display_language_code = %s AND f.lang_code IN(" . wpml_prepare_in( $language_codes ) . ")", $sitepress->get_admin_language() ) );
+					WHERE l.display_language_code = %s AND f.lang_code IN( %s )", $sitepress->get_admin_language(), wpml_prepare_in( $language_codes ) );
+				$results = $wpdb->get_results( $query ); // phpcs:ignore
 
 				$wp_upload_dir = wp_upload_dir();
 				foreach ( $results as $result ) {

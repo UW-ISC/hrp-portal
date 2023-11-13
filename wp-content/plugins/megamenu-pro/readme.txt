@@ -5,6 +5,23 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.3.1 =
+
+* Fix: Do not load Font Awesome 6 (Free) on nav-menus.php if the Font Awesome plugin is installed and configured to load Font Awesome 6 (Pro)
+* Fix: Compatibility with scssphp 1.11.1/Max Mega Menu v3.3
+
+= 2.3 =
+
+* New: Font Awesome 6 support
+* Improvement: Add 'default' parameter to [maxmegamenu_user_gravatar] shortcode
+* Accessibility: Remove aria-label attribute when badge text is specified/available instead
+* Accessibility: Add aria-label option for search icon
+* Accessibility: Add alt text to gravatar icon
+* Fix: "Replace the menu item text" replacement option does not work correctly when the menu item text is hidden
+* New: Add 'megamenu_search_icon_attributes', ''megamenu_toggle_search_input_attributes' and 'megamenu_search_input_attributes' filters
+* Fix: Only submit static toggle block search form if the form is not empty
+* Fix: Compatibility with Imagify and Image Swap widget (do not convert placeholder image to webp)
+
 = 2.2.9.1 =
 
 * Fix: Do not capture focus on search box when clicking on other page elements

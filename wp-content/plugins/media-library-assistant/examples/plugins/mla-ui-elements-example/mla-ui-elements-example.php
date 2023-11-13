@@ -53,6 +53,10 @@
  * opened on 6/12/2022 by "jejela19".
  * https://wordpress.org/support/topic/how-to-paginate-2-separate-gallery/
  *
+ * Enhanced (append_current_item parameter) for support topic "Cleaning up URL queries in paginated gallery pages"
+ * opened on 8/28/2023  by "1ore".
+ * https://wordpress.org/support/topic/cleaning-up-url-queries-in-paginated-gallery-pages/
+ *
  * @package MLA UI Elements Example
  * @version 2.06
  */

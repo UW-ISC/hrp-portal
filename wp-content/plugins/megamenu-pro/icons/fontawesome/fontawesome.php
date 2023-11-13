@@ -104,7 +104,7 @@ class Mega_Menu_Font_Awesome {
 
 		$tabs['fontawesome'] = array(
 			'title' => __("Font Awesome 4", "megamenu-pro"),
-			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("fa-") ) === "fa-",
+			'active' => isset( $menu_item_meta['icon'] ) && substr( $menu_item_meta['icon'], 0, strlen("fa-") ) === "fa-" && !str_contains($menu_item_meta['icon'], 'fa6' ),
 			'content' => $html
 		);
 

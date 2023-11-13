@@ -134,7 +134,7 @@
 					}
 				}
 
-				@if unit($custom_panel_width) == 'px' {
+				@if $custom_panel_width != disabled and unit($custom_panel_width) == 'px' {
 					li#mega-menu-item-#{$id} {
 						position: relative;
 					}
@@ -142,7 +142,7 @@
 					&.mega-menu-horizontal li#mega-menu-item-#{$id}.mega-menu-megamenu > ul.mega-sub-menu {
 					    left: auto !important;
 					}
-				} @else if unit($custom_panel_width) == '%' {
+				} @else if $custom_panel_width != disabled and unit($custom_panel_width) == '%' {
 					li#mega-menu-item-#{$id} {
 						position: static;
 					}
