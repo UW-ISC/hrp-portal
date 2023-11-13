@@ -588,6 +588,28 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
         $inputs = "";
 
+        $search_input_attributes = apply_filters( "megamenu_toggle_search_input_attributes", array(
+            'type' => 'text',
+            'aria-label' => $placeholder,
+            'data-placeholder' => $placeholder,
+            'name' => $name
+        ), $html, $settings );
+
+        if ( $settings['search_type'] == 'static'  && isset( $search_input_attributes['data-placeholder'] ) ) {
+            $search_input_attributes['placeholder'] = $search_input_attributes['data-placeholder'];
+            unset( $search_input_attributes['data-placeholder'] );
+        }
+
+        $search_input = "<input ";
+
+        foreach ( $search_input_attributes as $name => $val ) {
+            if ( strlen( $val ) ) {
+                $search_input .= " " . $name ."='" . esc_attr( $val ) . "'";
+            }
+        }
+
+        $search_input .= " />";
+
         if ($settings['woocommerce'] === 'true') {
             $inputs = "<input type='hidden' name='post_type' value='product' />";
         }
@@ -596,7 +618,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
             $html = "<div class='mega-search-wrap'><form class='mega-search expand-to-left mega-search-closed' action='" . $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
                         <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-                        <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
+                        {$search_input}
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
         }
@@ -605,7 +627,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
             $html = "<div class='mega-search-wrap'><form class='mega-search expand-to-right mega-search-closed' action='" .  $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
                         <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-                        <input type='text' aria-label='{$placeholder}' data-placeholder='{$placeholder}' name='{$name}'>
+                        {$search_input}
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
         }
@@ -614,7 +636,7 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
             $html = "<div class='mega-search-wrap mega-static'><form class='mega-search static mega-search-open' action='" . $action . "'>
                         <span class='dashicons dashicons-search search-icon'></span>
                         <input type='submit' value='" . __( "Search" , "megamenu-pro" ) . "'>
-                        <input type='text' aria-label='{$placeholder}' placeholder='{$placeholder}' name='{$name}'>
+                        {$search_input}
                         " . apply_filters("megamenu_search_inputs", $inputs) . "
                     </form></div>";
         }
@@ -909,15 +931,28 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
                     $weight = 'normal';
 
                     if ( isset( $settings['icon'] ) ) {
-                        $icon_full = $settings['icon'];
-                        $icon_parts = explode( '-', $settings['icon'] );
 
-                        // e.g. f006
-                        $icon_code = end( $icon_parts );
-                        $icon_type = reset( $icon_parts );
-                        $icon_type_parts = explode( " ", $icon_type);
-                        // e.g. dashicons / fa / fab / fas
-                        $icon_type = reset( $icon_type_parts);
+                        $icon_full = $settings['icon'];
+                        $icon_classes = explode( ' ', $settings['icon'] );
+                        
+                        // dashicons or FA4
+                        if ( count( $icon_classes ) == 1 ) {
+                            $icon_code_parts = explode('-', $icon_classes[0]);
+                            $icon_type = $icon_code_parts[0];
+                            $icon_code = $icon_code_parts[1];
+                        }
+
+                        // fa5
+                        if ( isset( $icon_classes[2] ) ) {
+                            $icon_code_parts = explode('-', $icon_classes[2]);
+                            $icon_type = $icon_classes[0];
+                            $icon_code = $icon_code_parts[1];
+                        }
+
+                        // fa6
+                        if ( isset( $icon_classes[3] ) ) {
+                            $icon_type .= " fa6";
+                        }
 
                         if ($icon_type == 'fa') {
                             $font = 'FontAwesome';
@@ -935,6 +970,21 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
                         if ($icon_type == 'fas') {
                             $font = "'Font Awesome 5 Free'";
+                            $weight = '900';
+                        }
+
+                        if ($icon_type == 'fab fa6') {
+                            $font = "var(--fa-style-family-brands)";
+                            $weight = '400';
+                        }
+
+                        if ($icon_type == 'far fa6') {
+                            $font = "var(--fa-font-regular)";
+                            $weight = '400';
+                        }
+
+                        if ($icon_type == 'fas fa6') {
+                            $font = "var(--fa-style-family-classic)";
                             $weight = '900';
                         }
 
@@ -1063,17 +1113,27 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
         $icon_type = "dashicons";
 
         if ( isset( $settings['icon'] ) ) {
+
             $icon_full = $settings['icon'];
-            $icon_parts = explode( '-', $settings['icon'] );
+            $icon_classes = explode( ' ', $settings['icon'] );
+
+            if ( isset( $icon_classes[2] ) ) {
+                $icon_code_class = $icon_classes[2]; // fontawesome
+            } else {
+                $icon_code_class = $icon_classes[0]; // genericon
+            }
+
+            $icon_code_parts = explode('-', $icon_code_class);
 
             // e.g. f006
-            $icon_code = end( $icon_parts );
-
+            $icon_code = end($icon_code_parts);
             $icon_code_attr = "&#x" . $icon_code . "";
-            $icon_type = reset( $icon_parts );
-            $icon_type_parts = explode( " ", $icon_type);
-            // e.g. dashicons / fa / fab / fas
-            $icon_type = reset( $icon_type_parts);
+
+            $icon_type = $icon_classes[0];
+
+            if ( isset( $icon_classes[3] ) ) {
+                $icon_type .= " " . $icon_classes[3]; // fa6
+            }
         }
 
         ?>
@@ -1174,6 +1234,21 @@ class Mega_Menu_Pro_Toggle_Blocks extends Mega_Menu_Toggle_Blocks {
 
                         foreach ($fa5_icons as $code => $class) {
                             echo "<option data-class='{$class}' value='{$class} {$code}'" . selected( $value, $class . " " . $code, false ) . ">{$class} {$code}</option>";
+                        }
+
+                        echo "</optgroup>";
+                    }
+
+                    if ( class_exists( 'Mega_Menu_Font_Awesome_6') && method_exists( 'Mega_Menu_Font_Awesome_6', 'icons' ) ) {
+
+                        echo "<optgroup label='Font Awesome 6'>";
+
+                        $fontawesome6 = new Mega_Menu_Font_Awesome_6();
+                        $fa6_icons = $fontawesome6->icons();
+
+                        foreach ($fa6_icons as $code => $class) {
+                            $value_attr = esc_attr($class . " " . $code . " fa6");
+                            echo "<option data-class='{$class} fa6' value='{$value_attr}'" . selected( $value, $value_attr, false ) . ">{$class} {$code}</option>";
                         }
 
                         echo "</optgroup>";

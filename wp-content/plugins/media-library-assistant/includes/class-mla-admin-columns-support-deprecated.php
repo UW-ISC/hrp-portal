@@ -103,7 +103,7 @@ class CPAC_Deprecated_Storage_Model_MLA extends CPAC_Storage_Model {
 		/*
 		 * Find all of the custom field names assigned to Media Library items
 		 */
-		$meta = $wpdb->get_results( "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON pm.post_id = p.ID WHERE p.post_type = 'attachment' ORDER BY 1", ARRAY_N );
+		$meta = $wpdb->get_results( "SELECT DISTINCT meta_key FROM {$wpdb->postmeta} pm JOIN {$wpdb->posts} p ON pm.post_id = p.ID WHERE p.post_type = 'attachment' ORDER BY 1", ARRAY_N ); // phpcs:ignore
 //error_log( __LINE__ . ' CPAC_Deprecated_Storage_Model_MLA::get_meta meta = ' . var_export( $meta, true ), 0 );
 
 		/*

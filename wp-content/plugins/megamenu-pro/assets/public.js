@@ -262,7 +262,11 @@
 
             icon.on('click', function(e) {
                 if (form.hasClass('static') ) {
-                    form.submit();
+                    if ( input.attr('required') == 'required' && input.val() == "" ) {
+                        return;
+                    } else {
+                        form.submit();
+                    }
                 } else if (form.hasClass('mega-search-closed')) {
                     input.focus();
                     plugin.open_search();

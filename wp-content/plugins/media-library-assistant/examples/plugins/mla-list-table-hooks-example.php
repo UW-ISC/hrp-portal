@@ -3,7 +3,7 @@
  * Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
  *
  * @package MLA List Table Hooks Example
- * @version 1.13
+ * @version 1.14
  */
 
 /*
@@ -11,7 +11,7 @@ Plugin Name: MLA List Table Hooks Example
 Plugin URI: http://davidlingren.com/
 Description: Provides an example of hooking all actions and filters provided for the Media/Assistant Submenu Screen
 Author: David Lingren
-Version: 1.13
+Version: 1.14
 Author URI: http://davidlingren.com/
 
 Copyright 2014 - 2022 David Lingren
@@ -102,7 +102,7 @@ class MLAListTableHooksExample {
 		add_filter( 'mla_list_table_new_instance', 'MLAListTableHooksExample::mla_list_table_new_instance', 10, 1 );
 
 		add_filter( 'mla_list_table_inline_values', 'MLAListTableHooksExample::mla_list_table_inline_values', 10, 1 );
-		add_filter( 'mla_list_table_inline_template', 'MLAListTableHooksExample::mla_list_table_bulk_template', 10, 1 );
+		add_filter( 'mla_list_table_inline_template', 'MLAListTableHooksExample::mla_list_table_inline_template', 10, 1 );
 		add_filter( 'mla_list_table_inline_parse', 'MLAListTableHooksExample::mla_list_table_inline_parse', 10, 3 );
 
 		add_filter( 'mla_list_table_inline_blank_fieldset_values', 'MLAListTableHooksExample::mla_list_table_inline_bulk_fieldset_values', 10, 2 );
@@ -135,6 +135,8 @@ class MLAListTableHooksExample {
 
 		add_filter( 'mla_list_table_build_rollover_actions', 'MLAListTableHooksExample::mla_list_table_build_rollover_actions', 10, 3 );
 		add_filter( 'mla_list_table_build_inline_data', 'MLAListTableHooksExample::mla_list_table_build_inline_data', 10, 2 );
+		add_filter( 'mla_list_table_primary_column_link', 'MLAListTableHooksExample::mla_list_table_primary_column_link', 10, 3 );
+		add_filter( 'mla_list_table_primary_column_content', 'MLAListTableHooksExample::mla_list_table_primary_column_content', 10, 7 );
 
 		// 'views_upload' is only applied when WPML is active
 		add_filter( 'views_upload', 'MLAListTableHooksExample::views_upload', 10, 1 );
@@ -870,7 +872,7 @@ class MLAListTableHooksExample {
 	 * @param	array	$item_values [ parameter_name => parameter_value ] pairs
 	 */
 	public static function mla_list_table_inline_bulk_values( $item_values ) {
-		//error_log( 'MLAListTableHooksExample::mla_list_table_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
+		//error_log( 'MLAListTableHooksExample::mla_list_table_inline_bulk_values $item_values = ' . var_export( $item_values, true ), 0 );
 
 		/*
 		 * You can use the 'filter_root' element to distinguish among :
@@ -881,10 +883,10 @@ class MLAListTableHooksExample {
 		 *     'mla_list_table_inline_initial',
 		 *     'mla_list_table_inline_preset'
 		 */
-		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_values filter_root = {$item_values['filter_root']}", 0 );
+		//error_log( "MLAListTableHooksExample::mla_list_table_inline_bulk_values filter_root = {$item_values['filter_root']}", 0 );
 
 		return $item_values;
-	} // mla_list_table_bulk_values
+	} // mla_list_table_inline_bulk_values
 
 	/**
 	 * MLA_List_Table item bulk edit fieldset template
@@ -910,10 +912,10 @@ class MLAListTableHooksExample {
 		 *     'mla_list_table_inline_initial',
 		 *     'mla_list_table_inline_preset'
 		 */
-		//error_log( "MLAListTableHooksExample::mla_list_table_bulk_template filter_root = {$item_values['filter_root']}", 0 );
+		//error_log( "MLAListTableHooksExample::mla_list_table_inline_bulk_template filter_root = {$item_values['filter_root']}", 0 );
 
 		return $item_template;
-	} // mla_list_table_bulk_template
+	} // mla_list_table_inline_bulk_template
 
 	/**
 	 * Filter the MLA_List_Table columns
@@ -1161,6 +1163,45 @@ class MLAListTableHooksExample {
 		//error_log( 'MLAListTableHooksExample::mla_list_table_build_inline_data $item = ' . var_export( $item, true ), 0 );
 		return $inline_data;
 	} // mla_list_table_build_inline_data
+
+	/**
+	 * Filter the primary column thumbnail hyperlink permission
+	 *
+	 * This filter gives you an opportunity to include or omit the Media/Edit Media hyperlink
+	 * behind the item thumbnail image.
+	 *
+	 * @since 1.14
+	 *
+	 * @param	boolean	$add_link	True to add hyperlink, false to omit it.
+	 * @param	object	$item		The current Media Library item.
+	 * @param	boolean	$is_trash	True if the current view is of the Media Trash.
+	 */
+	public static function mla_list_table_primary_column_link( $add_link, $item, $is_trash ) {
+		//error_log( "MLAListTableHooksExample::mla_list_table_primary_column_link( add: {$add_link}, trash: {$is_trash} ) \$item = " . var_export( $item, true ), 0 );
+		return $add_link;
+	} // mla_list_table_primary_column_link
+
+	/**
+	 * Filter the primary column content
+	 *
+	 * This filter gives you an opportunity to modify or replace the content of the primary column.
+	 *
+	 * @since 1.14
+	 *
+	 * @param	boolean	$final_content True to add hyperlink, false to omit it.
+	 * @param	object	$item		The current Media Library item.
+	 * @param	boolean	$add_link	True to add hyperlink, false to omit it.
+	 * @param	string	$thumb		IMG tag for the item thumbnail image.
+	 * @param	string	$title		Item "draft or post" title.
+	 * @param	string	$edit_url	URL for the Media/Edit Media page with view arguments.
+	 * @param	string	$column_content Original content for the column, without MLA additions.
+	 */
+	public static function mla_list_table_primary_column_content( $final_content, $item, $add_link, $thumb, $title, $edit_url, $column_content ) {
+		//error_log( "MLAListTableHooksExample::mla_list_table_primary_column_content( add: {$add_link}, {$title}, {$edit_url} ) \$item = " . var_export( $item, true ), 0 );
+		//error_log( "MLAListTableHooksExample::mla_list_table_primary_column_content( add: {$add_link}, {$title}, {$edit_url} ) \$column_content = " . var_export( $column_content, true ), 0 );
+		//error_log( "MLAListTableHooksExample::mla_list_table_primary_column_content( add: {$add_link}, {$title}, {$edit_url} ) \$final_content = " . var_export( $final_content, true ), 0 );
+		return $final_content;
+	} // mla_list_table_primary_column_content
 
 	/**
 	 * Views for the "upload" page when WPML is active

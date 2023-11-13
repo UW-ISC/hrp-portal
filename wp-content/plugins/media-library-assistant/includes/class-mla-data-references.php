@@ -146,23 +146,17 @@ class MLAReferences {
 		// Look for the "Featured Image(s)", if enabled
 		if ( MLACore::$process_featured_in ) {
 			$reference_tests++;
-			$features = $wpdb->get_results( 
-					"
+			$features = $wpdb->get_results(  // phpcs:ignore
+					$wpdb->prepare( "
 					SELECT post_id
 					FROM {$wpdb->postmeta}
-					WHERE meta_key = '_thumbnail_id' AND meta_value = {$ID}
-					"
+					WHERE meta_key = '_thumbnail_id' AND meta_value = %d
+					", $ID )
 			);
 
 			if ( ! empty( $features ) ) {
 				foreach ( $features as $feature ) {
-					$feature_results = $wpdb->get_results(
-							"
-							SELECT ID, post_type, post_status, post_title
-							FROM {$wpdb->posts}
-							WHERE {$exclude_revisions}(ID = {$feature->post_id})
-							"
-					);
+					$feature_results = $wpdb->get_results( "SELECT ID, post_type, post_status, post_title FROM {$wpdb->posts} WHERE {$exclude_revisions}(ID = {$feature->post_id}) " ); // phpcs:ignore
 
 					if ( ! empty( $feature_results ) ) {
 						$references['found_reference'] = true;
@@ -213,9 +207,7 @@ class MLAReferences {
 				MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$parent}, {$add_references} ) inserts base query = " . var_export( $query, true ), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
 				MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$parent}, {$add_references} ) inserts base parms = " . var_export( $query_parameters, true ), MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
 
-				$inserts = $wpdb->get_results(
-					$wpdb->prepare( $query, $query_parameters )
-				);
+				$inserts = $wpdb->get_results( $wpdb->prepare( $query, $query_parameters ) ); // phpcs:ignore
 
 				if ( ! empty( $inserts ) ) {
 					$references['found_reference'] = true;
@@ -242,12 +234,14 @@ class MLAReferences {
 
 					MLACore::mla_debug_add( __LINE__ . " MLAReferences::mla_fetch_attachment_references_handler( {$ID}, {$file}, {$like} ) inserts enabled", MLACore::MLA_DEBUG_CATEGORY_WHERE_USED );
 					
+					// phpcs:disable
 					$inserts = $wpdb->get_results(
 						$wpdb->prepare(
 							"SELECT ID, post_type, post_status, post_title FROM {$wpdb->posts}
-							WHERE {$exclude_revisions}(CONVERT(`post_content` USING utf8 ) LIKE %s)", "%{$like}%"
+							WHERE " . $exclude_revisions . " (CONVERT(`post_content` USING utf8 ) LIKE %s)", "%{$like}%"
 						)
 					);
+					// phpcs:enable
 
 					if ( ! empty( $inserts ) ) {
 						$references['found_reference'] = true;
@@ -446,7 +440,8 @@ class MLAReferences {
 		$features = array();
 		if ( MLACore::$process_featured_in && ! empty( $attachment_ids ) ) {
 			$attachment_ids = implode( ',', $attachment_ids );
-			$results = $wpdb->get_results( 
+			// phpcs:disable
+			$results = $wpdb->get_results(
 					"
 					SELECT m.meta_value, p.ID, p.post_type, p.post_status, p.post_title
 					FROM {$wpdb->postmeta} AS m INNER JOIN {$wpdb->posts} AS p ON m.post_id = p.ID
@@ -454,6 +449,7 @@ class MLAReferences {
 					AND ( m.meta_value IN ( {$attachment_ids} ) ){$exclude_revisions}
 					"
 			);
+			// phpcs:enable
 
 			foreach ( $results as $result ) {
 				$features[ $result->meta_value ][ $result->ID ] = (object) array( 'ID' => $result->ID, 'post_title' => $result->post_title, 'post_type' => $result->post_type, 'post_status' => $result->post_status );
@@ -487,9 +483,7 @@ class MLAReferences {
 			$query[] = "){$exclude_revisions}";
 			$query = join(' ', $query);
 
-			$results = $wpdb->get_results(
-				$wpdb->prepare( $query, $query_parameters )
-			);
+			$results = $wpdb->get_results( $wpdb->prepare( $query, $query_parameters ) ); // phpcs:ignore
 
 			// Match each post with inserts back to the attachments
 			$inserts = array();
@@ -778,17 +772,19 @@ class MLAReferences {
 			$like = like_escape( $shortcode );
 		}
 
+		// phpcs:disable
 		$results = $wpdb->get_results(
 			$wpdb->prepare(
 				"
 				SELECT ID, post_type, post_status, post_title, post_content
 				FROM {$wpdb->posts}
-				WHERE {$exclude_revisions}(
+				WHERE " . $exclude_revisions . " (
 					CONVERT(`post_content` USING utf8 )
 					LIKE %s)
 				", "%{$like}%"
 			)
 		);
+		// phpcs:enable
 
 		if ( empty( $results ) ) {
 			return false;

@@ -33,7 +33,13 @@ class MLAOptions {
 
 			add_action( 'add_attachment', 'MLAOptions::mla_add_attachment_action', 0x7FFFFFFF, 1 );
 			add_filter( 'wp_generate_attachment_metadata', 'MLAOptions::mla_generate_attachment_metadata_filter', 0x7FFFFFFF, 2 );
-			add_filter( 'wp_update_attachment_metadata', 'MLAOptions::mla_update_attachment_metadata_filter', 0x7FFFFFFF, 2 );
+
+			// The Smush thumbnail_regenerate_handler() must run AFTER MLA's filter, or MLA's filter isn't always run.
+			if ( defined( 'WP_SMUSH_VERSION' ) ) {
+				add_filter( 'wp_update_attachment_metadata', 'MLAOptions::mla_update_attachment_metadata_filter', 9999, 2 );
+			} else {
+				add_filter( 'wp_update_attachment_metadata', 'MLAOptions::mla_update_attachment_metadata_filter', 0x7FFFFFFF, 2 );
+			}
 
 			MLACore::mla_debug_add( __LINE__ . " MLAOptions::initialize( " . $_SERVER['REQUEST_URI'] . " ) hooks set", MLACore::MLA_DEBUG_CATEGORY_REST ); // phpcs:ignore
 		}
@@ -2331,13 +2337,7 @@ class MLAOptions {
 		$iptc_exif_mapping = !empty( $iptc_exif_mapping['custom'] ) ? $iptc_exif_mapping['custom'] : array();
 
 		$limit = (int) apply_filters( 'postmeta_form_limit', 100 );
-		$keys = $wpdb->get_col( "
-			SELECT meta_key
-			FROM $wpdb->postmeta
-			GROUP BY meta_key
-			HAVING meta_key NOT LIKE '\_%'
-			ORDER BY meta_key
-			LIMIT $limit" );
+		$keys = $wpdb->get_col( "SELECT meta_key FROM $wpdb->postmeta GROUP BY meta_key HAVING meta_key NOT LIKE '\_%' ORDER BY meta_key LIMIT $limit" ); // phpcs:ignore
 
 		// Add any names in mapping rules that don't exist in the database
 		if ( $keys ) {

@@ -72,7 +72,7 @@ class MLASettings_CustomFields {
 			'screen' => 'settings_page_mla-settings-menu-custom_field',
 			'ajax_action' => MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG,
 			'fieldsId' => '#mla-display-settings-custom-field-tab',
-			'totalItems' => $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment'" )
+			'totalItems' => $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE `post_type` = 'attachment'" ) // phpcs:ignore
 		);
 
 		wp_enqueue_script( MLASettings::JAVASCRIPT_INLINE_MAPPING_CUSTOM_SLUG,
@@ -182,7 +182,7 @@ class MLASettings_CustomFields {
 
 		$examine_count = 0;
 		$update_count = 0;
-		$post_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE `post_type` = 'attachment' {$limits}" );
+		$post_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE `post_type` = 'attachment' {$limits}" ); // phpcs:ignore
 
 		do_action( 'mla_begin_mapping', $source, NULL );
 		foreach ( $post_ids as $key => $post_id ) {

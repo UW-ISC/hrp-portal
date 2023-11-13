@@ -1863,7 +1863,7 @@ class MLA_Polylang {
 		// Language dropdown in Bulk Edit area
 		if ( isset( $_POST['inline_lang_choice'] ) && ( '-1' != $_POST['inline_lang_choice'] ) ) {
 			if ( self::$polylang_1dot8_plus ) {
-				$lang = PLL()->model->get_language( $_POST['inline_lang_choice'] );
+				$lang = PLL()->model->get_language( sanitize_text_field( wp_unslash( $_POST['inline_lang_choice'] ) ) );
 				PLL()->model->post->update_language( $post_id, $lang );
 			} else {
 				$post = get_post( $post_id );

@@ -337,8 +337,8 @@ function relevanssi_index_taxonomies_ajax_wrapper() {
 	$completed = absint( $post_data['completed'] );
 	$total     = absint( $post_data['total'] );
 	$taxonomy  = relevanssi_validate_taxonomy( $post_data['taxonomy'] );
-	$offset    = int_val( $post_data['offset'] );
-	$limit     = int_val( $post_data['limit'] );
+	$offset    = intval( $post_data['offset'] );
+	$limit     = intval( $post_data['limit'] );
 
 	if ( empty( $taxonomy ) ) {
 		// Non-valid taxonomy.

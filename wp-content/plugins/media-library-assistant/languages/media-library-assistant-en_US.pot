@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Media Library Assistant\n"
-"POT-Creation-Date: 2023-06-25 16:16-0700\n"
+"POT-Creation-Date: 2023-11-12 17:59-0800\n"
 "PO-Revision-Date: 2015-08-21 21:38-0800\n"
 "Last-Translator: David Lingren <david@fairtradejudaica.org>\n"
 "Language-Team: David Lingren <david@davidlingren.com>\n"
@@ -481,6 +481,14 @@ msgstr ""
 msgid ""
 "Check this option to automatically open the \"Bulk Edit area\" when the "
 "Media/Add New screen is displayed."
+msgstr ""
+
+msgid "&quot;bulk edit&quot; area auto-fill presets"
+msgstr ""
+
+msgid ""
+"Check this option to automatically import the \"Bulk Edit area\" preset "
+"values when the Media/Add New screen is displayed."
 msgstr ""
 
 msgid "Media Manager/Media Grid Enhancements"
@@ -970,6 +978,13 @@ msgstr ""
 msgid ""
 "Check this option to override WordPress MIME Type security checks, then "
 "click <strong>Save Changes</strong> to record the new setting."
+msgstr ""
+
+msgid "Custom Icons"
+msgstr ""
+
+msgid ""
+"Enter the path (relative to .../wp-content/) of your custom icon directory."
 msgstr ""
 
 msgid "Display Limit"
@@ -3277,6 +3292,14 @@ msgctxt "table_view_plural"
 msgid "Term List"
 msgstr ""
 
+msgctxt "table_view_singular"
+msgid "Custom Field List"
+msgstr ""
+
+msgctxt "table_view_plural"
+msgid "Custom Field List"
+msgstr ""
+
 msgid "Upload MIME Type settings saved."
 msgstr ""
 
@@ -3487,6 +3510,11 @@ msgid "Add View"
 msgstr ""
 
 msgid "No view slug found"
+msgstr ""
+
+#, php-format
+msgctxt "error_log"
+msgid "%1$s: %2$s: \"%3$s\" not a directory"
 msgstr ""
 
 msgid "Settings"
@@ -3745,25 +3773,70 @@ msgstr ""
 msgid "Settings imported; %1$s updated, %2$s unchanged."
 msgstr ""
 
+msgid "mla_debug attributes"
+msgstr ""
+
+msgid "mla_debug arguments"
+msgstr ""
+
+msgid "mla_debug query"
+msgstr ""
+
+msgid "mla_debug results"
+msgstr ""
+
 msgid "Previous"
 msgstr ""
 
 msgid "Next"
 msgstr ""
 
+msgid "mla_custom_list REQUEST"
+msgstr ""
+
+msgid "mla_custom_list attributes"
+msgstr ""
+
+msgid "mla_custom_list arguments"
+msgstr ""
+
 msgid "not found"
+msgstr ""
+
+msgid "mla_debug empty list"
+msgstr ""
+
+msgid "no-values"
+msgstr ""
+
+msgid "mla_debug adding ANY valuess"
+msgstr ""
+
+msgid "mla_debug adding NO valuess"
+msgstr ""
+
+msgid "mla_debug adding ALL valuess"
+msgstr ""
+
+msgid "mla_debug query arguments"
+msgstr ""
+
+msgid "mla_debug last_query"
+msgstr ""
+
+msgid "mla_debug last_error"
+msgstr ""
+
+msgid "mla_debug num_rows"
+msgstr ""
+
+msgid "mla_debug found_rows"
 msgstr ""
 
 msgid "mla_debug REQUEST"
 msgstr ""
 
 msgid "mla_debug attributes_errors"
-msgstr ""
-
-msgid "mla_debug attributes"
-msgstr ""
-
-msgid "mla_debug arguments"
 msgstr ""
 
 msgid "mla_debug empty gallery"
@@ -3777,28 +3850,7 @@ msgstr ""
 msgid "unknown"
 msgstr ""
 
-msgid "mla_debug empty cloud"
-msgstr ""
-
-msgid "mla_debug adding ANY terms"
-msgstr ""
-
-msgid "mla_debug adding NO terms"
-msgstr ""
-
-msgid "mla_debug adding IGNORE terms"
-msgstr ""
-
-msgid "mla_debug empty list"
-msgstr ""
-
-msgid "no-terms"
-msgstr ""
-
 msgid "Invalid mla_gallery"
-msgstr ""
-
-msgid "mla_debug query"
 msgstr ""
 
 msgid "mla_debug request"
@@ -3837,25 +3889,22 @@ msgstr ""
 msgid "mla_debug posts_clauses_request filter"
 msgstr ""
 
-msgid "mla_debug results"
-msgstr ""
-
 msgid "Invalid taxonomy"
 msgstr ""
 
-msgid "mla_debug query arguments"
+msgid "mla_debug empty cloud"
 msgstr ""
 
-msgid "mla_debug last_query"
+msgid "mla_debug adding ANY terms"
 msgstr ""
 
-msgid "mla_debug last_error"
+msgid "mla_debug adding NO terms"
 msgstr ""
 
-msgid "mla_debug num_rows"
+msgid "mla_debug adding IGNORE terms"
 msgstr ""
 
-msgid "mla_debug found_rows"
+msgid "no-terms"
 msgstr ""
 
 msgid "Notes for the Shortcodes tab submenu table."
@@ -3939,6 +3988,15 @@ msgid "Markup for each item/cell in the list."
 msgstr ""
 
 msgid "Markup for the end of the list."
+msgstr ""
+
+msgid "Markup for the beginning of each row in the list; grid format only."
+msgstr ""
+
+msgid "Markup for each item/cell of the list."
+msgstr ""
+
+msgid "Markup for the end of each row in the list; grid format only."
 msgstr ""
 
 msgid "error loading tpls/mla-custom-templates.tpl"

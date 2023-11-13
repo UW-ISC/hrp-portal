@@ -23,6 +23,27 @@ class Mega_Menu_Badge {
         add_filter( 'megamenu_tabs', array( $this, 'add_badge_tab'), 10, 5 );
         add_filter( 'megamenu_walker_nav_menu_start_el', array( $this, 'output_badge'), 10, 4 );
         add_action( 'megamenu_menu_item_submitted_settings', array( $this, 'handle_badge_item_checkboxes'), 10, 2 );
+        add_action( 'megamenu_nav_menu_link_attributes', array( $this, 'remove_aria_label_attribute_for_items_with_badge'), 10, 3 );
+    }
+
+
+    /**
+     * Pagespeed insights does not like it when the link text does not match the aria-label (which is set to the menu item title when the text is hidden)
+     * 
+     * Remove the aria-label attribute when a badge is present. Screen readers will read the badge text instead.
+     * 
+     * @since 2.3
+     * @param array $atts
+     * @param object $item
+     * @param array $args
+     * @return string
+     */
+    public function remove_aria_label_attribute_for_items_with_badge( $atts, $item, $args ) {
+        if ( isset( $item->megamenu_settings['badge'] ) && $item->megamenu_settings['badge']['style'] != 'disabled' && isset( $atts['aria-label'] ) ) {
+            unset( $atts["aria-label"] );
+        }
+
+        return $atts;
     }
 
 
