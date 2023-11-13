@@ -117,12 +117,7 @@ class MLAModal {
 			return $library_months_with_files;
 		}
 
-		$library_months_with_files = $wpdb->get_results( $wpdb->prepare( "
-			SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month
-			FROM $wpdb->posts
-			WHERE post_type = %s
-			ORDER BY post_date DESC
-		", 'attachment' ) );
+		$library_months_with_files = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month FROM $wpdb->posts WHERE post_type = %s ORDER BY post_date DESC ", 'attachment' ) ); // phpcs:ignore
 
 		return $library_months_with_files;
 	}
@@ -148,14 +143,16 @@ class MLAModal {
 			return $month_array;
 		}
 
-		foreach ( $months as $arc_row ) {
+		foreach ( $months as $index => $arc_row ) {
 			if ( 0 == $arc_row->year ) {
 				continue;
 			}
 
+			$prefix = zeroise( $index, 3 );
 			$month = zeroise( $arc_row->month, 2 );
 			$year = $arc_row->year;
-			$month_array[ esc_attr( $arc_row->year . $month ) ] = 
+//			$month_array[ esc_attr( $prefix . $arc_row->year . $month ) ] = 
+			$month_array[ 'M' . $prefix . $arc_row->year . $month ] = 
 				/* translators: 1: month name, 2: 4-digit year */
 				sprintf( __( '%1$s %2$d', 'media-library-assistant' ), $wp_locale->get_month( $month ), $year );
 		}

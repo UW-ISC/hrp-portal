@@ -27,7 +27,7 @@ class MLATemplate_Support {
 	 *     Definitions by type. Key $$type is 'markup' or 'style'.
 	 *
 	 *     @type array $$type {
-	 *         Definitions by shortcode. Key $$shortcode_slug is 'gallery', 'tag-cloud' or 'term-list'
+	 *         Definitions by shortcode. Key $$shortcode_slug is 'gallery', 'tag-cloud', 'term-list' or 'custom-list'
 	 *
 	 *         @type array $$shortcode_slug {
 	 *             Templates by name. Key $$template_name is the template name/slug.
@@ -105,6 +105,24 @@ class MLATemplate_Support {
 				'term-list' => array(
 					'label' => _x( 'Term List', 'table_view_singular', 'media_library-assistant' ),
 					'default_names' => array( 'term-list' ),
+					'sections' => array(
+						'description' => array(
+							'label' => __( 'Description', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Notes for the Shortcodes tab submenu table.', 'media-library-assistant' ),
+							'order' => 0,
+						),
+						'styles' => array(
+							'label' => __( 'Styles', 'media-library-assistant' ),
+							'rows' => 10,
+							'help' => __( 'List of substitution parameters, e.g., [+selector+], on Documentation tab.', 'media-library-assistant' ),
+							'order' => 1,
+						),
+					),
+				),
+				'custom-list' => array(
+					'label' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
+					'default_names' => array( 'custom-list', 'custom-list-flat-div', 'custom-list-checklist-div' ),
 					'sections' => array(
 						'description' => array(
 							'label' => __( 'Description', 'media-library-assistant' ),
@@ -272,6 +290,54 @@ class MLATemplate_Support {
 						),
 					),
 				),
+				'custom-list' => array(
+					'label' => _x( 'Custom Field List', 'table_view_singular', 'media_library-assistant' ),
+					'default_names' => array( 'custom-list-flat-div', 'custom-list-grid', 'custom-list-ul', 'custom-list-dl', 'custom-list-dropdown', 'custom-list-checklist', 'custom-list-checklist-div' ),
+					'sections' => array(
+						'description' => array(
+							'label' => __( 'Description', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Notes for the Shortcodes tab submenu table.', 'media-library-assistant' ),
+							'order' => 0,
+						),
+						'arguments' => array(
+							'label' => __( 'Arguments', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' =>  __( 'Default shortcode parameter values.', 'media-library-assistant' ),
+							'order' => 2,
+						),
+						'row-open' => array(
+							'label' => __( 'Row', 'media-library-assistant' ) . '&nbsp;' . __( 'Open', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Markup for the beginning of each row in the list; grid format only.', 'media-library-assistant' ),
+							'order' => 4,
+						),
+						'open' => array(
+							'label' => __( 'Open', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Markup for the beginning of the list. List of parameters, e.g., [+selector+], on Documentation tab.', 'media-library-assistant' ),
+							'order' => 3,
+						),
+						'item' => array(
+							'label' => __( 'Item', 'media-library-assistant' ),
+							'rows' => 6,
+							'help' => __( 'Markup for each item/cell of the list.', 'media-library-assistant' ),
+							'order' => 5,
+						),
+						'row-close' => array(
+							'label' => __( 'Row', 'media-library-assistant' ) . '&nbsp;' . __( 'Close', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Markup for the end of each row in the list; grid format only.', 'media-library-assistant' ),
+							'order' => 9,
+						),
+						'close' => array(
+							'label' => __( 'Close', 'media-library-assistant' ),
+							'rows' => 3,
+							'help' => __( 'Markup for the end of the list.', 'media-library-assistant' ),
+							'order' => 10,
+						),
+					),
+				),
 			),
 		);
 //error_log( __LINE__ . ' mla_localize_template_definitions MLATemplate_Support::$mla_template_definitions = ' . var_export( MLATemplate_Support::$mla_template_definitions, true ), 0 );
@@ -286,7 +352,7 @@ class MLATemplate_Support {
 	 *     Templates by type. Key $$type is 'markup' or 'style'.
 	 *
 	 *     @type array $$type {
-	 *         Templates by shortcode. Key $$shortcode_slug is 'gallery', 'tag-cloud' or 'term-list'
+	 *         Templates by shortcode. Key $$shortcode_slug is 'gallery', 'tag-cloud', 'term-list' or 'custom-list'
 	 *
 	 *         @type array $$shortcode_slug {
 	 *             Templates by name. Key $$template_name is the template name/slug, which must be unique within type.
@@ -558,7 +624,7 @@ class MLATemplate_Support {
 	 * @since 2.30
 	 *
 	 * @param string $key Template name.
-	 * @param string $shortcode Optional. Shortcode slug; 'gallery', 'tag-cloud' or 'term-list'. Default 'gallery'.
+	 * @param string $shortcode Optional. Shortcode slug; 'gallery', 'tag-cloud', 'term-list' or 'custom-list'. Default 'gallery'.
 	 * @param string $type Optional. Template type; 'style' or 'markup'. Default 'style'.
 	 * @param string $section Optional. Template section. Default '[not supplied]'.
 	 * @return string Requested template section, if it exists.

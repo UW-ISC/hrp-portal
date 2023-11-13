@@ -2247,7 +2247,8 @@ class MLAData {
 					break;
 				case 'complete':
 					if ( 'x-default' != $language ) {
-						break;
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$current_level}, {$index}, {$language} ) value = " . var_export( $value, true ), 0 );
+						//break;
 					}
 
 //error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': node_attributes = " . var_export( $node_attributes, true ), 0 );
@@ -2270,13 +2271,27 @@ class MLAData {
 //error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': complete_value = " . var_export( $complete_value, true ), 0 );
 //error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index} ) case 'complete': (array) complete_value = " . var_export( (array) $complete_value, true ), 0 );
 					if ( 'rdf:li' == $value['tag'] ) {
-						$levels[ $current_level ]['values'][] = $complete_value;
-					} else {
-						if ( isset( $levels[ $current_level ]['values'][ $value['tag'] ] ) ) {
-							$new_value = (array) $levels[ $current_level ]['values'][ $value['tag'] ];
-							$levels[ $current_level ]['values'][ $value['tag'] ] = array_merge( $new_value, (array) $complete_value );
+						if ( 'x-default' === $language ) {
+							$levels[ $current_level ]['values'][] = $complete_value;
 						} else {
-							$levels[ $current_level ]['values'][ $value['tag'] ] = $complete_value;
+							$levels[ $current_level ]['values'][$language][] = $complete_value;
+						}
+					} else {
+						if ( 'x-default' === $language ) {
+							if ( isset( $levels[ $current_level ]['values'][ $value['tag'] ] ) ) {
+								$new_value = (array) $levels[ $current_level ]['values'][ $value['tag'] ];
+								$levels[ $current_level ]['values'][ $value['tag'] ] = array_merge( $new_value, (array) $complete_value );
+							} else {
+								$levels[ $current_level ]['values'][ $value['tag'] ] = $complete_value;
+							}
+						} else {
+							if ( isset( $levels[ $current_level ]['values'][ $value['tag'] ][$language] ) ) {
+								$new_value = (array) $levels[ $current_level ]['values'][ $value['tag'] ][$language];
+								$levels[ $current_level ]['values'][ $value['tag'] ][$language] = array_merge( $new_value, (array) $complete_value );
+							} else {
+								$levels[ $current_level ]['values'][ $value['tag'] ][$language] = $complete_value;
+							}
+//error_log( __LINE__ . " MLAData::mla_parse_xml_string xml_values( {$index}, {$current_level} ) case 'complete': language tag values = " . var_export( $levels[ $current_level ]['values'], true ), 0 );
 						}
 					}
 

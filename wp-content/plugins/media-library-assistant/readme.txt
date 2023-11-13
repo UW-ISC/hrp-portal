@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, gallery, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.3.1
-Stable tag: 3.12
+Tested up to: 6.4.1
+Stable tag: 3.13
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -191,6 +191,18 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.13 =
+* New: The new **"MLA Custom Field List" shortcode**, `[mla_custom_list]`,  lets you display custom field values in a variety of cloud, list, dropdown and checklist formats for use with the `[mla_gallery]` simple custom field query parameters.
+* New: The new "bulk edit area auto-fill presets" option on the General tab lets you automatically import preset values when the Media/Add New admin screen is loaded.
+* New: Two new filters for the Media/Assistant admin submenu allow you to modify or replace the content of the primary table column.
+* New: Code for the `[mla_term_list]` and `[mla_tag_cloud]` shortcodes is now loaded only when needed, reducing the load time and memory required for the `[mla_gallery]` shortcode.
+* Fix: IMPORTANT: A defect introduced in MLA 3.10 that corrupts quote marks in `mla_link_attributes` and `mla_image_attributes`  and HTML in `mla_link_text` shortcode parameters has been corrected.
+* Fix: When the "Smush – Optimize, Compress and Lazy Load Images" plugin is active among other active plugins such as "Elementor Website Builder", MLA's mapping rules are more reliably run during image uploads.
+* Fix: For XMP metadata, nodes with a 'xml:lang' attribute value other than 'x-default' are now added to the parsed results, keyed by the language value.
+* Fix: Some security risks identified by the PHP Code Sniffer have been eliminated.
+* Fix: PHP warning messages for a problem with missing "dll" or "exe" MIME Type icons have been resolved.
+* Fix: For the Media Manager Modal (popup) Window and Media/Library grid mode, the year/month dropdown control now sorts properly, in descending order.
+
 = 3.12 =
 * Fix: IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
 
@@ -216,31 +228,9 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: Instructions for creating custom templates in the "A Table-based Style and Markup Template Example" section of the Settings/Media Library Assistant DOcumentation tab have been updated to reflect the current UI.
 * Fix: A defect in importing & saving taxonomy support option settings has been corrected.
 
-= 3.09 =
-* Fix: Corrected `[mla_gallery]` "posts_per_page" defect introduced in v3.08.
-
-= 3.08 =
-* New: A stand-alone version of the plugin Documentation has been added to my web site: [Media Library Assistant Documentation](http://davidlingren.com/assets/mla-doc.html).
-* New: The Terms Search popup window now includes an optional taxonomy filter dropdown that will filter the search by a specific term. See the "Terms Search Taxonomy Filter parameters" section of the Settings/Media Library Assistant General tab.
-* New: The "MLA Multisite Extensions" example plugin has been significantly enhanced. A new tool lets you copy MLA settings or taxonomy term definitions from a source site to one or more destination sites, and a Documentation tab has been added to explain everything.
-* New: On the Settings/Media Library Assistant General tab, the new "Media Manager auto-open meta boxes" option, if checked, will open ALL of the taxonomy metaboxes in the ATTACHMENT DETAILS pane of the Media Manager Modal (popup) Window.
-* New: The Settings/Media Library Assistant Documentation tab "Support for the Justified Image Grid Plugin" section gives more information about this popular combination.
-* New: The Settings/Media Library Assistant Documentation tab "Accessing shortcodes and functions from PHP code" section outlines several MLA functions for working with shortcode or data source results.
-* New: The "MLA Hierarchical Mapping Example" plugin has been enhanced to process any taxonomy term mapping template containing vertical bar literals (the term separator).
-* New: The Settings/Media Library Assistant IPTC/EXIF tab has been renamed IPTC/EXIF/WP to emphasize its support for mapping from WordPress data sources using a Content Template. The new tab name is reflected throughout the MLA code and documentation and some updates have been made to the description of this feature as well.
-* Fix: phpDocs errors have been corrected at [Media Library Assistant phpDocs](http://davidlingren.com/assets/phpDocs/index.html)
-* Fix: PHP deprecation warnings for `setcookie()` parameters have been resolved.
-* Fix: Mapping rule support during cron jobs and command line scripts is now added for the "Bulk Media Replace On Wp Cron" plugin.
-* Fix: When the "Nested Pages" plugin is active, MLA calls the WordPress `add_submenu_page()` function at a higher priority so the MLA submenu items can be relocated by Nested Pages' "Admin Customization" feature.
-* Fix: For the "MLA Insert Fixit" example plugin, a Cross Site Scripting (XSS) security flaw has been corrected. Additional validation is now applied to all request variables.
-* Fix: The "Enable ... mapping when updating media metadata" options now work when the Media/Edit Media "Edit Image" functions are used.
-* Fix: For the `,replace(p,r,v)` option/format value, an array of patterns (p) is now handled properly.
-* Fix: Errors introduced in MLA v3.07 regarding active/inactive status changes of Core and MLA MIME Types have been corrected.
-* Fix: Several example plugins have been updated to share the latest version of the example plugin settings support class.
-* Fix: Complete the work required to make PNG metadata available in MLA shortcodes and mapping rules.
-* Fix: When WPML is active, some term assignment errors caused by changes in WPML 4.5+ have been resolved.
-
-= 3.00 - 3.07 =
+= 3.00 - 3.09 =
+* 3.09 - IMPORTANT: security risk fixes for shortcode parameters and example plugin. Custom file icon support for Uploads file types. One enhancement, four fixes.
+* 3.08 - PNG metadata fixes, terms search enhancements, example plugin enhancements, MLA Insert Fixit security fix, Documentation updates and additions. Eight enhancements in all, eleven fixes.
 * 3.07 - Metadata extraction for PNG files, "Set Featured Image" enhancements, extensive "Where-used Reporting" documentation, Modern Event Calendar fix and Example Plugin enhancements. Eight enhancements in all, seven fixes.
 * 3.06 - IMPORTANT: SECURITY FIX for the MLA Insert Fixit example plugin removes an SQL injection risk. New mapping rules tutorial available, some PDF parsing improvements and documentation improvements. One enhancement, eight fixes in all.
 * 3.05- IMPORTANT: Admin Columns Pro v6.0+ support. Support for the "CatFolders - WP Media Folders" plugin. The "MLA Yoast SEO Example" plugin has been completely rewritten. New "MLA Content Items Example" plugin. Three enhancements in all, two fixes.
@@ -372,8 +362,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.12 =
-IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
+= 3.13 =
+IMPORTANT: `[mla_gallery]` parameters containing HTML are once again processed correctly. New "MLA Custom Field List" shortcode. Code refactor reduces load time and memory required for the `[mla_gallery]` shortcode. Four enhancements in all, six fixes.
 
 == Other Notes ==
 

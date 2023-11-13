@@ -699,10 +699,10 @@ class MLAModal_Ajax {
 			}
 		}
 		
-		// Convert mla_filter_month back to the WordPress "m" parameter
+		// Convert mla_filter_month back to the WordPress "m" parameter, stripping the prefix
 		if ( isset( $query['mla_filter_month'] ) ) {
 			if ( '0' != $query['mla_filter_month'] ) {
-				$query['m'] = absint( $query['mla_filter_month'] );
+				$query['m'] = absint( substr( $query['mla_filter_month'], 4 ) );
 			}
 
 			unset( $query['mla_filter_month'] );

@@ -296,7 +296,7 @@ class MLAImageProcessor {
 	public static function mla_image_processor_die( $message, $title = '', $response = 500 ) {
 		$status =  __LINE__ . " mla_image_processor_die( '{$message}', '{$title}', '{$response}' )";
 		self::_mla_debug_add( $status );
-		exit( $status );
+		exit( $status ); // phpcs:ignore
 	}
 
 	/**

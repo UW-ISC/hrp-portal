@@ -6,6 +6,12 @@
  *
  * @package  simple-embed-code
  */
+
+/**
+ * Initialisation
+ *
+ * All initial processes.
+ */
 function ce_initialisation() {
 
 	// Add exerpt filter, if required.
@@ -37,7 +43,7 @@ function ce_initialisation() {
 			'opening_ident' => '{{',
 			'keyword_ident' => 'CODE',
 			'closing_ident' => '}}',
-			'excerpts'      => '',
+			'excerpt'       => '',
 		);
 
 		// Merge existing and default options - any missing from existing will take the default settings.

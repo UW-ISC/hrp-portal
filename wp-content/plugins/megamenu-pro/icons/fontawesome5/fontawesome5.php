@@ -31,7 +31,7 @@ class Mega_Menu_Font_Awesome_5 {
 	/**
 	 * Returns true when FontAwesome 5 Pro is installed/enabled
 	 */
-	public function use_pro() {
+	public static function use_pro() {
 		if ( defined( "MEGAMENU_PRO_USE_FONTAWESOME5_PRO" ) ) {
 			return MEGAMENU_PRO_USE_FONTAWESOME5_PRO;
 		}
@@ -159,14 +159,28 @@ class Mega_Menu_Font_Awesome_5 {
 
 		$insert['fontawesome5'] = array(
 			'title' => $title,
-			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far', 'fal' ) ),
+			'active' => isset( $menu_item_meta['icon'] ) && in_array( $icon_prefix, array( 'fab', 'fas', 'far', 'fal' ) ) && ! str_contains($menu_item_meta['icon'], 'fa6' ),
 			'content' => $html
 		);
 
-		array_splice( $tabs, 2, 0, $insert );
-		
+		$this->array_splice_assoc( $tabs, 2, 0, $insert );
 		return $tabs;
+	}
 
+
+	public function array_splice_assoc(&$input, $offset, $length, $replacement = array()) {
+	    $replacement = (array) $replacement;
+	    $key_indices = array_flip(array_keys($input));
+	    if (isset($input[$offset]) && is_string($offset)) {
+	            $offset = $key_indices[$offset];
+	    }
+	    if (isset($input[$length]) && is_string($length)) {
+	            $length = $key_indices[$length] - $offset;
+	    }
+
+	    $input = array_slice($input, 0, $offset, TRUE)
+	            + $replacement
+	            + array_slice($input, $offset + $length, NULL, TRUE); 
 	}
 
 	/**

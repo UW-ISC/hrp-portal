@@ -124,18 +124,23 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 			// make sure the response came back okay
 			if ( ( defined( "MEGAMENU_LICENCE_DEBUG" ) && MEGAMENU_LICENCE_DEBUG === true ) || is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
 				$real_ip = file_get_contents("http://ipecho.net/plain");
-				echo "<h3>Oops, something went wrong.</h3>";
+				echo "<h2>Oops, something went wrong.</h2>";
 				echo "<p>There was a problem connecting to megamenu.com.</p>";
 				echo "<p>If this is the first time you have seen this message, please wait 24 hours and try again.</p>";
 				echo "<p>Check your server IP has not been blacklisted <a href='https://www.blacklistmaster.com/check?t={$real_ip}'>here</a>. If it has been blacklisted, please inform your host and ask them to assign you a new (clean) IP address.</p>";
 				echo "<p>Our host (Kinsta) also maintains a private IP blacklist, which your servers IP address may be on. Usually this is because a website sharing your IP servers address has made hacking attempts on sites hosted by Kinsta. In some cases our host will be able to temporarily unblock the IP at our request. Please contact support and include the error message below.</p>";
 				echo "<p>Please note that activating your licence simply enables Automatic Updates. All Pro functionality is available even with the licence deactivated.</p>";
 
-				echo "<textarea rows='10' cols='100'>";
+				echo "<h3>Debug information</h3>";
+				echo "<textarea style='width: 100%; height: 200px;'>";
 				print_r($real_ip);
 				print_r( $api_params );
 				print_r( $response );
-				echo "</textarea>";
+				
+				echo "</textarea><br />";
+
+				echo "<h3>Server Response</h3>";
+				echo "<iframe style='width: 100vw; height: 200px;' srcdoc=" . wp_remote_retrieve_body($response) . "></iframe>";
 				die();
 			}
 
@@ -302,7 +307,7 @@ if ( ! class_exists('Mega_Menu_Updater') ) :
 
 									<div class='licence_info'>
 										<p><b><?php _e('Did you know?', "megamenu-pro"); ?></b></p>
-										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.maxmegamenu.com/client-area/">Client Area</a>.', "megamenu-pro"); ?></p>
+										<p><?php _e('You can also manage your active licenses and download updates in your <a href="https://www.megamenu.com/client-area/">Client Area</a>.', "megamenu-pro"); ?></p>
 									</div>
 
 									<?php

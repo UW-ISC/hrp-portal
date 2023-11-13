@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 6.3
-Stable tag: 2.24.3
+Tested up to: 6.4
+Stable tag: 2.24.4
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,9 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.24.4 =
+* Minor fix: Fixes broken taxonomy indexing.
+
 = 2.24.3 =
 * Security fix: Relevanssi had a vulnerability for SQL injections. Exploiting the vulnerability does require WP admin access. This vulnerability is now fixed.
 * Security fix: Relevanssi had a vulnerability for error log injections. Exploiting this vulnerability requires file upload access to the site. This vulnerability is now fixed.
@@ -400,6 +403,9 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Relevanssi redirects now work better with FacetWP searches. Thanks to Jan Willem Oostendorp.
 
 == Upgrade notice ==
+= 2.24.4 =
+* Fix broken taxonomy indexing.
+
 = 2.24.3 =
 * Security hardening, attachment handling improvements.
 

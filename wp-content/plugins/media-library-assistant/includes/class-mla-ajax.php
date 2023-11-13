@@ -388,7 +388,7 @@ class MLA_Ajax {
 //error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action args = ' . var_export( $args, true ), 0 );
 
 		// Get a "blank" presets array we can fill in with current settings
-		$presets = MLAEdit::mla_get_bulk_edit_form_presets( $_REQUEST['mla_preset_option'], true );
+		$presets = MLAEdit::mla_get_bulk_edit_form_presets( sanitize_text_field( wp_unslash( $_REQUEST['mla_preset_option'] ) ), true );
 //error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action presets = ' . var_export( $presets, true ), 0 );
 
 		foreach ( $presets as $key => $value ) {
@@ -398,7 +398,7 @@ class MLA_Ajax {
 		}
 //error_log( __LINE__ . ' MLA_Ajax::mla_bulk_edit_form_presets_action presets = ' . var_export( $presets, true ), 0 );
 
-		if ( false === MLAEdit::mla_update_bulk_edit_form_presets( $_REQUEST['mla_preset_option'], $presets ) ) {
+		if ( false === MLAEdit::mla_update_bulk_edit_form_presets( sanitize_text_field( wp_unslash( $_REQUEST['mla_preset_option'] ) ), $presets ) ) {
 			// false may simply mean that the value didn't change, so ignore it
 			// wp_send_json_error( 'ERROR: Presets update failed' );
 		}

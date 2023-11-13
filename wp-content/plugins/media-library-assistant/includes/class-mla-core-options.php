@@ -224,6 +224,11 @@ class MLACoreOptions {
 	const MLA_ADD_NEW_BULK_EDIT_AUTO_OPEN = 'add_new_bulk_edit_auto_open';
 
 	/**
+	 * Provides a unique name for the Media/Add New bulk edit "Open Automatically" option
+	 */
+	const MLA_ADD_NEW_BULK_EDIT_AUTOFILL_PRESETS = 'add_new_bulk_edit_autofill_presets';
+
+	/**
 	 * Provides a unique name for the Media Grid toolbar option, which
 	 * also controls the ATTACHMENT DETAILS enhancements
 	 */
@@ -881,6 +886,13 @@ class MLACoreOptions {
 					'type' => 'checkbox',
 					'std' => '',
 					'help' => __( 'Check this option to automatically open the "Bulk Edit area" when the Media/Add New screen is displayed.', 'media-library-assistant' )),
+
+			self::MLA_ADD_NEW_BULK_EDIT_AUTOFILL_PRESETS =>
+				array('tab' => 'general',
+					'name' => __( '&quot;bulk edit&quot; area auto-fill presets', 'media-library-assistant' ),
+					'type' => 'checkbox',
+					'std' => '',
+					'help' => __( 'Check this option to automatically import the "Bulk Edit area" preset values when the Media/Add New screen is displayed.', 'media-library-assistant' )),
 
 			self::MLA_UPLOAD_BULK_EDIT_PRESETS_PER_USER =>
 				array('tab' => 'general',

@@ -1,0 +1,54 @@
+/** Use FA6 for icons **/
+#{$wrap} #{$menu} li.mega-menu-item {
+	> a.fa6 {
+		&.far:before,
+		&.fa-regular:before {
+			font: var(--fa-font-regular);
+		}
+
+		&.fas:before,
+		&.fa-solid:before {
+			font: var(--fa-font-solid);
+		}
+
+		&.fal:before,
+		&.fa-light:before {
+			font: var(--fa-font-light);
+		}
+
+		&.fa-sharp.fa-regular:before {
+			font: var(--fa-font-sharp-regular);
+		}
+
+		&.fa-sharp.fa-solid:before {
+			font: var(--fa-font-sharp-solid);
+		}
+
+		&.fa-sharp.fa-light:before {
+			font: var(--fa-font-sharp-light);
+		}
+
+		&.fa-kit:before {
+			font-family: "Font Awesome Kit";
+		}
+
+		&.fab:before {
+			font: var(--fa-font-brands);
+		}
+
+		&:before {
+			vertical-align: unset;
+		}
+
+	}
+
+	&.mega-icon-left {
+		a.fas.fa6:before,
+		a.fab.fa6:before,
+		a.far.fa6:before,
+		a.fal.fa6:before {
+			width: 1.25em;
+			text-align: center;
+		}
+	}
+}

@@ -181,6 +181,7 @@ class MLAEdit {
 				'toggleClose' => __( 'Close Bulk Edit area', 'media-library-assistant' ),
 				'areaOnTop' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT_ON_TOP ) ),
 				'areaOpen' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT_AUTO_OPEN ) ),
+				'areaAutofill' => ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ADD_NEW_BULK_EDIT_AUTOFILL_PRESETS ) ),
 				'comma' => _x( ',', 'tag_delimiter', 'media-library-assistant' ),
 				'ajaxFailError' => __( 'An ajax.fail error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
 				'ajaxDoneError' => __( 'An ajax.done error has occurred. Please reload the page and try again.', 'media-library-assistant' ),
