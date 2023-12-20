@@ -14,7 +14,7 @@
         }
     </script>
 
-<?php if (in_array($this->getEngine(), ['google', 'highcharts', 'apexcharts'])) : ?>
+<?php if (in_array($this->getEngine(), ['google', 'highcharts', 'apexcharts', 'highstock'])) : ?>
     <div id="wpDataChart_<?php echo (int)$id ?>" class="<?php echo esc_attr($this->_type) ?>" style="width: 100%"></div>
 <?php elseif ($this->getEngine() == 'chartjs') : ?>
     <div id="chartJSContainer_<?php echo (int)$id ?>">

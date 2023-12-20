@@ -1,5 +1,5 @@
 /*
- Highcharts JS v11.0.1 (2023-05-08)
+ Highcharts JS v11.1.0 (2023-06-05)
 
  Exporting module
 
@@ -7,7 +7,7 @@
 
  License: www.highcharts.com/license
 */
-'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/exporting",["wp-content/plugins/wpdatatables/assets/js/wdtcharts/highcharts/highcharts"],function(e){a(e);a.Highcharts=e;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function e(a, l, y, F){a.hasOwnProperty(l)||(a[l]=F.apply(null,y),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",{detail:{path:l,module:a[l]}})))}a=a?a._modules:
+'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/exporting",["highcharts"],function(e){a(e);a.Highcharts=e;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function e(a,l,y,F){a.hasOwnProperty(l)||(a[l]=F.apply(null,y),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",{detail:{path:l,module:a[l]}})))}a=a?a._modules:
     {};e(a,"Core/Chart/ChartNavigationComposition.js",[],function(){var a;(function(a){a.compose=function(a){a.navigation||(a.navigation=new b(a));return a};class b{constructor(a){this.updates=[];this.chart=a}addUpdate(a){this.chart.navigation.updates.push(a)}update(a,b){this.updates.forEach(A=>{A.call(this.chart,a,b)})}}a.Additions=b})(a||(a={}));return a});e(a,"Extensions/Exporting/ExportingDefaults.js",[a["Core/Globals.js"]],function(a){({isTouchDevice:a}=a);return{exporting:{allowTableSorting:!0,
         type:"image/png",url:"https://export.highcharts.com/",pdfFont:{normal:void 0,bold:void 0,bolditalic:void 0,italic:void 0},printMaxWidth:780,scale:2,buttons:{contextButton:{className:"highcharts-contextbutton",menuClassName:"highcharts-contextmenu",symbol:"menu",titleKey:"contextButtonTitle",menuItems:"viewFullscreen printChart separator downloadPNG downloadJPEG downloadPDF downloadSVG".split(" ")}},menuItemDefinitions:{viewFullscreen:{textKey:"viewFullscreen",onclick:function(){this.fullscreen&&this.fullscreen.toggle()}},
             printChart:{textKey:"printChart",onclick:function(){this.print()}},separator:{separator:!0},downloadPNG:{textKey:"downloadPNG",onclick:function(){this.exportChart()}},downloadJPEG:{textKey:"downloadJPEG",onclick:function(){this.exportChart({type:"image/jpeg"})}},downloadPDF:{textKey:"downloadPDF",onclick:function(){this.exportChart({type:"application/pdf"})}},downloadSVG:{textKey:"downloadSVG",onclick:function(){this.exportChart({type:"image/svg+xml"})}}}},lang:{viewFullscreen:"View in full screen",

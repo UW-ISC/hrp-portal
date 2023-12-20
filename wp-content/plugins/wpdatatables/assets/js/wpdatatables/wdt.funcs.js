@@ -8,20 +8,20 @@ jQuery(document).ready(function ($) {
      */
     jQuery('.wdt-preload-layer').animateFadeOut();
 
-    if (typeof wpdatatables_frontend_strings !== 'undefined') {
-        $.fn.DataTable.defaults.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
-        $.fn.DataTable.defaults.oLanguage.sSearch = wpdatatables_frontend_strings.sSearch;
-        $.fn.DataTable.defaults.oLanguage.lengthMenu = wpdatatables_frontend_strings.lengthMenu;
-        $.fn.DataTable.defaults.oLanguage.sEmptyTable = wpdatatables_frontend_strings.sEmptyTable;
-        $.fn.DataTable.defaults.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
-        $.fn.DataTable.defaults.oLanguage.sInfoFiltered = wpdatatables_frontend_strings.sInfoFiltered;
-        $.fn.DataTable.defaults.oLanguage.sInfoPostFix = wpdatatables_frontend_strings.sInfoPostFix;
-        $.fn.DataTable.defaults.oLanguage.sInfoThousands = wpdatatables_frontend_strings.sInfoThousands;
-        $.fn.DataTable.defaults.oLanguage.sLengthMenu = wpdatatables_frontend_strings.sLengthMenu;
-        $.fn.DataTable.defaults.oLanguage.sProcessing = wpdatatables_frontend_strings.sProcessing;
-        $.fn.DataTable.defaults.oLanguage.sZeroRecords = wpdatatables_frontend_strings.sZeroRecords;
-        $.fn.DataTable.defaults.oLanguage.oPaginate = wpdatatables_frontend_strings.oPaginate;
-        $.fn.DataTable.defaults.oLanguage.oAria = wpdatatables_frontend_strings.oAria;
+    if (typeof wpdatatables_functions_strings !== 'undefined') {
+        $.fn.DataTable.defaults.oLanguage.sInfo = wpdatatables_functions_strings.sInfo;
+        $.fn.DataTable.defaults.oLanguage.sSearch = wpdatatables_functions_strings.sSearch;
+        $.fn.DataTable.defaults.oLanguage.lengthMenu = wpdatatables_functions_strings.lengthMenu;
+        $.fn.DataTable.defaults.oLanguage.sEmptyTable = wpdatatables_functions_strings.sEmptyTable;
+        $.fn.DataTable.defaults.oLanguage.sInfoEmpty = wpdatatables_functions_strings.sInfoEmpty;
+        $.fn.DataTable.defaults.oLanguage.sInfoFiltered = wpdatatables_functions_strings.sInfoFiltered;
+        $.fn.DataTable.defaults.oLanguage.sInfoPostFix = wpdatatables_functions_strings.sInfoPostFix;
+        $.fn.DataTable.defaults.oLanguage.sInfoThousands = wpdatatables_functions_strings.sInfoThousands;
+        $.fn.DataTable.defaults.oLanguage.sLengthMenu = wpdatatables_functions_strings.sLengthMenu;
+        $.fn.DataTable.defaults.oLanguage.sProcessing = wpdatatables_functions_strings.sProcessing;
+        $.fn.DataTable.defaults.oLanguage.sZeroRecords = wpdatatables_functions_strings.sZeroRecords;
+        $.fn.DataTable.defaults.oLanguage.oPaginate = wpdatatables_functions_strings.oPaginate;
+        $.fn.DataTable.defaults.oLanguage.oAria = wpdatatables_functions_strings.oAria;
     }
 
 
@@ -148,12 +148,15 @@ jQuery(document).ready(function ($) {
      */
     // Datepicker
     $('body').on('focus', '.wdt-datepicker', function () {
-        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
-            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
-        var filterElem = 'none';
-        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
-            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
-                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+        var isHandsonTable = $(this).parent('.handsontableInputHolder').length
+        if(!isHandsonTable){
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+                ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+            var filterElem = 'none';
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+                if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                    filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+                }
             }
         }
 
@@ -171,22 +174,29 @@ jQuery(document).ready(function ($) {
                 if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
                     wdtAddDatePlaceholders($(this));
                 }
-                // If fixed header and/or fixed column is turned on call function
-                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0);
+                if(!isHandsonTable) {
+                    // If fixed header and/or fixed column is turned on call function
+                    showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0);
+                }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                hidePickerForFixedHeaderAndColumns($(this));
+                if(!isHandsonTable) {
+                    hidePickerForFixedHeaderAndColumns($(this));
+                }
             });
     });
 
     // Timepicker
     $('body').on('focus', '.wdt-timepicker', function () {
-        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
-            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
-        var filterElem = 'none';
-        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
-            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
-                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+        var isHandsonTable = $(this).parent('.handsontableInputHolder').length
+        if(!isHandsonTable) {
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+                ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+            var filterElem = 'none';
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+                if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                    filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+                }
             }
         }
 
@@ -201,22 +211,29 @@ jQuery(document).ready(function ($) {
             .off('dp.show')
             .on('dp.show', function () {
                 $(this).parent().find('div.bootstrap-datetimepicker-widget').addClass('wdt-datetimepicker-modal');
-                // If fixed header and/or fixed column is turned on call function
-                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 1);
+                if(!isHandsonTable) {
+                    // If fixed header and/or fixed column is turned on call function
+                    showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 1);
+                }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                hidePickerForFixedHeaderAndColumns($(this));
+                if(!isHandsonTable) {
+                    hidePickerForFixedHeaderAndColumns($(this));
+                }
             });
     });
 
     // Datetimepicker
     $('body').on('focus', '.wdt-datetimepicker', function () {
-        var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
-            ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
-        var filterElem = 'none';
-        if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
-            if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
-                filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+        var isHandsonTable = $(this).parent('.handsontableInputHolder').length
+        if (!isHandsonTable) {
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+                ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
+            var filterElem = 'none';
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+                if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
+                    filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
+                }
             }
         }
 
@@ -234,11 +251,15 @@ jQuery(document).ready(function ($) {
                 if (!_.contains(['MM/Y', 'MMM Y', 'Y'], wdtDateFormat)) {
                     wdtAddDatePlaceholders($(this));
                 }
-                // If fixed header and/or fixed column is turned on call function
-                showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0)
+                if(!isHandsonTable) {
+                    // If fixed header and/or fixed column is turned on call function
+                    showDateTimePickerForFixedHeaderAndColumns($(this), filterElem, 0)
+                }
             })//Added on hide for fixed columns and fixed headers
             .on('dp.hide', function () {
-                hidePickerForFixedHeaderAndColumns($(this));
+                if(!isHandsonTable) {
+                    hidePickerForFixedHeaderAndColumns($(this));
+                }
             });
     });
 });

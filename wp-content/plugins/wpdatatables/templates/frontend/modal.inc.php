@@ -4,7 +4,7 @@
 <div class="wpdt-c">
     <!-- .wdt-frontend-modal -->
     <div id="wdt-frontend-modal" class="modal fade wdt-frontend-modal" style="display: none" data-backdrop="static"
-         data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+         data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true" aria-modal="true">
 
         <!-- .modal-dialog -->
         <div class="modal-dialog">

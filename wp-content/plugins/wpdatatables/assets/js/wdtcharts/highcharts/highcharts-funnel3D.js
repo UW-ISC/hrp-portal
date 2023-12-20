@@ -1,5 +1,5 @@
 /*
- Highcharts JS v11.0.1 (2023-05-08)
+ Highcharts JS v11.1.0 (2023-06-05)
 
  Highcharts funnel module
 
@@ -7,7 +7,7 @@
 
  License: www.highcharts.com/license
 */
-'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/funnel3d",["wp-content/plugins/wpdatatables/assets/js/wdtcharts/highcharts/highcharts","highcharts/highcharts-3d","highcharts/modules/cylinder"],function(d){a(d);a.Highcharts=d;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function d(a, k, m, d){a.hasOwnProperty(k)||(a[k]=d.apply(null,m),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",
+'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/funnel3d",["highcharts","highcharts/highcharts-3d","highcharts/modules/cylinder"],function(d){a(d);a.Highcharts=d;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function d(a,k,m,d){a.hasOwnProperty(k)||(a[k]=d.apply(null,m),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",
     {detail:{path:k,module:a[k]}})))}a=a?a._modules:{};d(a,"Series/Funnel3D/Funnel3DComposition.js",[a["Core/Color/Color.js"],a["Core/Globals.js"],a["Core/Renderer/SVG/SVGRenderer3D.js"],a["Core/Utilities.js"]],function(a,k,m,d){const {parse:p}=a,{charts:D}=k,{error:N,extend:O,merge:h}=d;var x;(function(a){function d(a){a.funnel3d=h(a.cuboid,{parts:"top bottom frontUpper backUpper frontLower backLower rightUpper rightLower".split(" "),mainParts:["top","bottom"],sideGroups:["upperGroup","lowerGroup"],
     sideParts:{upperGroup:["frontUpper","backUpper","rightUpper"],lowerGroup:["frontLower","backLower","rightLower"]},pathType:"funnel3d",opacitySetter:function(a){const c=this,b=c.parts,e=k.charts[c.renderer.chartIndex],f="group-opacity-"+a+"-"+e.index;c.parts=c.mainParts;c.singleSetterForParts("opacity",a);c.parts=b;e.renderer.filterId||(e.renderer.definition({tagName:"filter",attributes:{id:f},children:[{tagName:"feComponentTransfer",children:[{tagName:"feFuncA",attributes:{type:"table",tableValues:"0 "+
                         a}}]}]}),c.sideGroups.forEach(function(b){c[b].attr({filter:"url(#"+f+")"})}),c.renderer.styledMode&&(e.renderer.definition({tagName:"style",textContent:".highcharts-"+f+" {filter:url(#"+f+")}"}),c.sideGroups.forEach(function(c){c.addClass("highcharts-"+f)})));return c},fillSetter:function(a){let c=this,b=p(a),e=b.rgba[3],f={top:p(a).brighten(.1).get(),bottom:p(a).brighten(-.2).get()};1>e?(b.rgba[3]=1,b=b.get("rgb"),c.attr({opacity:e})):b=a;b.linearGradient||b.radialGradient||!c.gradientForSides||

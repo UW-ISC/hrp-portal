@@ -263,12 +263,16 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with some improvements, and bug fixes:
+                            New update with new features, improvements, and bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Improvement:</strong> CSS improvements for Geo GoogleCharts. </li>
+                                <li><strong>Feature:</strong> New chart type – Highstock (14 new awesome stock chart types). </li>
+                                <li><strong>Feature:</strong> Transform cell values. </li>
+                                <li><strong>Improvement:</strong> Added 'select/deselect all' checkbox on Column List. </li>
+                                <li><strong>Improvement:</strong> SEO improvement- Reduced unused css and js. </li>
+                                <li><strong>Improvement:</strong> Added option that allows partial Frontend WCAG compliance. </li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>
@@ -323,7 +327,7 @@
                         </p>
                         <ul class="m-b-0">
                             <li><span><?php esc_html_e('PHP', 'wpdatatables'); ?></span>
-                                <?php if (version_compare('phpversion()', '5.6.0', '>')) { ?>
+                                <?php if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '>=' ) ) { ?>
                                     <i class="wpdt-icon-check-circle-full"></i>
                                 <?php } else { ?>
                                     <i class="wpdt-icon-times-circle-full"></i>

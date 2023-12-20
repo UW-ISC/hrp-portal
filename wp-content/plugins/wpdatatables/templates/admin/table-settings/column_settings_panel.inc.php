@@ -59,6 +59,11 @@
                            aria-controls="column-conditional-formatting-settings" role="tab"
                            data-toggle="tab"><?php esc_html_e('Conditional formatting', 'wpdatatables'); ?></a>
                     </li>
+                    <li class="column-transform-value-tab">
+                        <a href="#column-transform-value"
+                           aria-controls="column-transform-value" role="tab"
+                           data-toggle="tab"><?php esc_html_e('Transform value', 'wpdatatables'); ?></a>
+                    </li>
                 </ul>
                 <!-- /ul .tab-nav -->
 
@@ -518,7 +523,7 @@
                                                 <option value="d.m">15.07 (d.m)</option>
                                                 <option value="d-m-y"> 15-07-05 (d-m-y)</option>
                                                 <option value="m-d-y"> 07-15-05 (m-d-y)</option>
-                                                <option value="d M Y"> 15 July 2005 (d Mon Y)</option>
+                                                <option value="d M Y"> 15 Jul 2005 (d Mon Y)</option>
                                                 <option value="m/Y"> 07/2005 (m/Y)</option>
                                                 <option value="M Y"> Jul 2005 (Mon Y)</option>
                                                 <option value="F Y"> July 2005 (F Y)</option>
@@ -1282,6 +1287,71 @@
                     </div>
                     <!--/#column-conditional-formatting-settings -->
 
+                    <!-- Column transform value settings -->
+                    <div role="tabpanel" class="tab-pane" id="column-transform-value">
+                        <div class="wdt-column-transform-value-container"> </div>
+                        <div class="row">
+                            <div class="col-sm-12 column-tranform-vaule-textarea">
+                                <h4 class="c-title-color m-b-2">
+                                    <?php esc_html_e('Transform value of any column into valid html code ', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-popover-content="#column-transform-value-hint"
+                                       data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                                </h4>
+                                <!-- Hidden popover with image hint -->
+                                <div class="hidden" id="column-transform-value-hint">
+                                    <div class="popover-heading">
+                                        <?php esc_html_e('Transform value', 'wpdatatables'); ?>
+                                    </div>
+
+                                    <div class="popover-body">
+                                        <?php esc_html_e('You can transform column cells value into an email, link, image, or any specific table column.', 'wpdatatables'); ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="fg-line">
+                                        <textarea type="text" class="form-control input-sm"
+                                                  id="wdt-column-transform-value" value=""></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="alert alert-info alert-dismissible hidden" role="alert" style="margin-top: 40px;margin-bottom: 0px;width: 97%;margin-left: 15px;">
+                                <i class="wpdt-icon-info-circle-full"></i>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span>
+                                </button>
+                                <span class="wdt-alert-title f-600" style="font-size: 14px"><?php esc_html_e('Column types such as email, link, image, and attachment are already HTML links and will be added like that when you are using them as a transform value column. ', 'wpdatatables'); ?></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-7 transform-value-columns">
+                                <p class="title"><?php esc_html_e('Column name :', 'wpdatatables'); ?></p>
+                                <div class="transform-value-container">
+                                    <!-- Columns will be added here -->
+                                </div>
+                            </div>
+                            <div class="col-sm-5 transform-value-shortcodes">
+                                <p class="title"><?php esc_html_e('Generate shortcodes :', 'wpdatatables'); ?>
+                                    <i class=" wpdt-icon-info-circle-thin" data-popover-content="#column-transform-value-generate-shortcodes-hint"
+                                       data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                                </p>
+                                <div class="hidden" id="column-transform-value-generate-shortcodes-hint">
+                                    <div class="popover-heading">
+                                        <?php esc_html_e('Generate shortcodes', 'wpdatatables'); ?>
+                                    </div>
+
+                                    <div class="popover-body">
+                                        <?php esc_html_e('Fields are clickable, just click on the column that you want to generate as a transform value.', 'wpdatatables'); ?>
+                                    </div>
+                                </div>
+                                <div class="transform-value-shortcodes-container">
+                                    <!-- Columns will be added here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/#column-transform-value -->
+
                 </div>
                 <!-- /.tab-content -->
             </div>
@@ -1311,7 +1381,6 @@
             <!-- /.col-md-12.p-l-20.p-r-20 -->
         </div>
         <!-- /.row -->
-
     </div>
     <!-- /.card-body -->
 

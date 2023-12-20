@@ -2502,3 +2502,46 @@ div.dt-button-collection.wdt-skin-mojito button.dt-button.buttons-columnVisibili
 .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tfoot td{
     border-top: transparent;
 }
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .dataTables_filter:focus-within,
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .dataTables_length:focus-within,
+.wpdt-c.wdt-skin-mojito.wpTableWCAG dt-button:focus{
+    border: 1px solid #198C7F !important;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG th:focus{
+    border: 2px solid #198C7F !important;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG *:focus{
+    box-shadow: #198C7F;
+    border: 1px solid #198C7F !important;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-apply-duplicate-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-apply-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-next-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-prev-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-cancel-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-edit-dialog-button-block:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG input.editDialogInput:focus,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-cancel-delete-button:focus,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-mojito.wpTableWCAG .modal-footer .wdt-browse-delete-button:focus{
+    border: 2px solid #198C7F !important;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito.wpTableWCAG .wdt-ok-edit-button:focus{
+    border: 2px solid #198C7F !important;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .dataTables_length button:hover:focus{
+    border: none !important;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper tr a,
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper .master_detail_column_btn{
+    color: #1772ba;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc,
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc{
+    color: #116b60;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper .filter_column button{
+    color: #747474;
+}
+.wpdt-c.wdt-skin-mojito.wpTableWCAG .wpDataTablesWrapper .dataTables_paginate .paginate_button.disabled{
+    color: #747474;
+}

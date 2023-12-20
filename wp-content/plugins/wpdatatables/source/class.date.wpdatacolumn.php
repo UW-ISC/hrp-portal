@@ -43,8 +43,12 @@ class DateWDTColumn extends WDTColumn
                 $formattedValue = '';
             }
         } else {
-            $content['value'] = str_replace('/', '-', $content['value']);
-            $formattedValue = date(get_option('wdtDateFormat'), strtotime($content['value']));
+            if (!is_null($content['value'])) {
+                $content['value'] = str_replace('/', '-', $content['value']);
+                $formattedValue = date(get_option('wdtDateFormat'), strtotime($content['value']));
+            } else {
+                $formattedValue = '';
+            }
         }
         return apply_filters('wpdatatables_filter_date_cell', $formattedValue, $this->getParentTable()->getWpId());
     }

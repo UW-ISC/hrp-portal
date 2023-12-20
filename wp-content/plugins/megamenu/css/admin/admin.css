@@ -1271,6 +1271,10 @@ body.toplevel_page_maxmegamenu .mega-tooltip[data-tooltip-disabled],
   height: auto; }
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box .inside {
   margin: 0; }
+.nav-menus-php #nav-menu-meta .mega_menu_meta_box .accordion-section-content,
+.nav-menus-php #nav-menu-meta .mega_menu_meta_box .accordion-section-title,
+.nav-menus-php #nav-menu-meta .mega_menu_meta_box .postbox {
+  opacity: 1; }
 .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content {
   padding: 0; }
   .nav-menus-php #nav-menu-meta .mega_menu_meta_box div.accordion-section-content .mega-accordion {

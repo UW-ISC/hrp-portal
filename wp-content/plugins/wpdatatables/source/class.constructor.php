@@ -16,6 +16,7 @@ class wpDataTableConstructor
     private $_name;
     private $_index;
     private $_db;
+    private $_table_data ;
     private $_id = false;
 
     /*** For the WP DB type query ***/
@@ -176,6 +177,12 @@ class wpDataTableConstructor
     public static function columnPropertiesMapper($columnPropertiesConstruct, $column_header){
         return[
             'VARCHAR' => [
+                'string' => [
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
+                    'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
                 'input' => [
                     'editor_type' => 'text',
                     'filter_type' => 'text',
@@ -1749,8 +1756,8 @@ class wpDataTableConstructor
         if (!current_user_can('unfiltered_html')) {
             foreach ($namedDataArray as $key => &$nameData) {
                 foreach ($headingsArray as &$heading) {
-                    $heading = wp_kses_post($heading);
-                    $nameData[$heading] = wp_kses_post($nameData[$heading]);
+                    $heading = is_null($heading) ? sanitize_text_field($heading) : wp_kses_post($heading);
+                    $nameData[$heading] = is_null($nameData[$heading]) ? sanitize_text_field($nameData[$heading]) : wp_kses_post($nameData[$heading]);
                 }
             }
         }
@@ -1877,7 +1884,21 @@ class wpDataTableConstructor
             if ($existing_column->orig_header == $columnName) {
                 $delete_column_index = $existing_column->pos;
                 $delete_column_id = $existing_column->id;
+                $delete_column_header = $existing_column->orig_header;
                 break;
+            }
+        }
+        foreach ($existing_columns as $existing_column) {
+            $advancedSettings = json_decode($existing_column->advanced_settings);
+            if ($advancedSettings->transformValueText !== "") {
+                $advancedSettings->transformValueText = str_ireplace("{" . $delete_column_header . '.value}', "", $advancedSettings->transformValueText);
+
+                $updated_data = json_encode($advancedSettings);
+                $wpdb->update(
+                    $wpdb->prefix . 'wpdatatables_columns',
+                    array('advanced_settings' => $updated_data),
+                    array('table_id' => $tableId, 'id' => $existing_column->id)
+                );
             }
         }
 
