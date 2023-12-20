@@ -179,33 +179,22 @@
                             </td>
                         </tr>
                         <?php
-                        $php_version = null;
-                        if (defined('PHP_VERSION')) {
-                            $php_version = PHP_VERSION;
-                        } elseif (function_exists('phpversion')) {
-                            $php_version = phpversion();
-                        }
-                        if (null === $php_version) {
-                            $message = esc_attr__('PHP Version could not be detected.', 'wpdatatables');
+                        if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' ) ) {
+                            $message = sprintf(
+                            /* translators: %1$s: Minimum PHP version for wpdt. %2$s: Current PHP version. %3$s: Recommended PHP version. %4$s: "WordPress Requirements" link. */
+                                esc_attr__('Our plugin require %1$s PHP Version or higher. Your Version: %2$s. WordPress recommendation: %3$s or above. See %4$s for details.', 'wpdatatables'),
+                                WDT_REQUIRED_PHP_VERSION,
+                                WDT_PHP_SERVER_VERSION,
+                                '7.4',
+                                '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__('WordPress Requirements', 'wpdatatables') . '</a>'
+                            );
                         } else {
-                            if (version_compare($php_version, '7.0') >= 0) {
-                                $message = $php_version;
-                            } else {
-                                $message = sprintf(
-                                /* translators: %1$s: Minimum PHP version for wpdt. %2$s: Current PHP version. %3$s: Recommended PHP version. %4$s: "WordPress Requirements" link. */
-                                    esc_attr__('Our plugin require %1$s PHP Version or higher. Your Version: %2$s. WordPress recommendation: %3$s or above. See %4$s for details.', 'wpdatatables'),
-                                    '5.6',
-                                    $php_version,
-                                    '7.3',
-                                    '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__('WordPress Requirements', 'wpdatatables') . '</a>'
-                                );
-                            }
+                            $message = WDT_PHP_SERVER_VERSION;
                         }
-
                         ?>
-                        <tr <?php if (version_compare($php_version, '7.0') < 0) echo 'class="wpdt-warning-bg"' ?>>
+                        <tr <?php if (version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' )) echo 'class="wpdt-warning-bg"' ?>>
                             <td data-export-label="PHP Version"><?php esc_attr_e('PHP Version:', 'wpdatatables'); ?>
-                                <?php if (version_compare($php_version, '7.0') >= 0) : ?>
+                                <?php if (version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '>=' )) : ?>
                             </td>
                             <td>
                                 <?php echo $message; // WPCS: XSS ok. ?>

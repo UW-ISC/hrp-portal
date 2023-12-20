@@ -250,6 +250,9 @@ if ( ! class_exists( 'Mega_Menu_Page' ) ) :
 			wp_deregister_style( 'select2' );
 			wp_deregister_script( 'select2' );
 
+			wp_deregister_style( 'spectrum' );
+			wp_deregister_script( 'spectrum' );
+			
 			wp_enqueue_style( 'select2', MEGAMENU_BASE_URL . 'js/select2/select2.css', false, MEGAMENU_VERSION );
 			wp_enqueue_script( 'mega-menu-select2', MEGAMENU_BASE_URL . 'js/select2/select2.min.js', array(), MEGAMENU_VERSION );
 

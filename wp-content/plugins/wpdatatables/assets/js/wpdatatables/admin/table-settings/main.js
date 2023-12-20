@@ -596,7 +596,9 @@
         $('#wdt-table-base-skin').change(function (e) {
             wpdatatable_config.setTableSkin($(this).val());
         });
-
+        $('#wdt-wcag').change(function (e) {
+            wpdatatable_config.setWCAG($(this).is(':checked') ? 1 : 0);
+        });
         /**
          * Change table font
          */
@@ -835,7 +837,7 @@
          */
         dragula([$('div.wdt-columns-container').get(0)])
             .on('dragend', function (el) {
-                $('#wdt-columns-list-modal div.wdt-column-block').each(function () {
+                $('#wdt-columns-list-modal div.wdt-column-block:not(.select-all)').each(function () {
                     wpdatatable_config
                         .getColumnByHeader($(this).data('orig_header'))
                         .setPos($(this).index())
@@ -1762,8 +1764,8 @@
          * Apply the changes to column in the quickaccess modal
          */
         $('#wdt-apply-columns-list').click(function (e) {
-            $('#wdt-columns-list-modal').modal('hide');
-            $('button.wdt-apply:eq(0)').click();
+                $('#wdt-columns-list-modal').modal('hide');
+                $('button.wdt-apply:eq(0)').click();
         });
 
         /**
@@ -1771,6 +1773,10 @@
          */
         $(document).on('click', '#wdt-formula-editor-modal div.wdt-column-block', function (e) {
             $('#wdt-formula-editor-modal textarea').insertAtCaret($(this).data('orig_header'));
+        });
+
+        $(document).on('click', '.transform-value-shortcodes-container div.wdt-column-block', function (e) {
+            $('#wdt-column-transform-value').insertAtCaret('{' + $(this).data('orig_header') + '.value}');
         });
 
         /**

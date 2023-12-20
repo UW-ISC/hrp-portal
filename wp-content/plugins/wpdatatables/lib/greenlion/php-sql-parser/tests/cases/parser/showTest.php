@@ -42,7 +42,7 @@ namespace PHPSQLParser\Test\Parser;
 use PHPSQLParser\PHPSQLParser;
 use PHPSQLParser\PHPSQLCreator;
 
-class showTest extends \PHPUnit_Framework_TestCase {
+class showTest extends \PHPUnit\Framework\TestCase {
 	
     public function testShow() {
         $sql = "show columns from `foo.bar`";
@@ -58,12 +58,23 @@ class showTest extends \PHPUnit_Framework_TestCase {
         $expected = getExpectedValue(dirname(__FILE__), 'show2.serialized');
         $this->assertEquals($expected, $p, 'show create database');
 
+        $sql = "show CREATE SCHEMA `foo`";
+        $parser = new PHPSQLParser($sql);
+        $p = $parser->parsed;
+        $expected = getExpectedValue(dirname(__FILE__), 'show7.serialized');
+        $this->assertEquals($expected, $p, 'show create schema');
 
         $sql = "show DATABASES LIKE '%bar%'";
         $parser = new PHPSQLParser($sql, true);
         $p = $parser->parsed;
         $expected = getExpectedValue(dirname(__FILE__), 'show3.serialized');
         $this->assertEquals($expected, $p, 'show databases like');
+        
+        $sql = "show SCHEMAS LIKE '%bar%'";
+        $parser = new PHPSQLParser($sql, true);
+        $p = $parser->parsed;
+        $expected = getExpectedValue(dirname(__FILE__), 'show6.serialized');
+        $this->assertEquals($expected, $p, 'show schemas like');
 
 
         $sql = "SHOW ENGINE foo STATUS";

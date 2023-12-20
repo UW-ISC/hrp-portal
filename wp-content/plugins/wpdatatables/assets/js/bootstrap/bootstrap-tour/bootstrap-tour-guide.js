@@ -63,20 +63,23 @@
                     var HighCharts = $('.charts-type.highcharts-charts-type');
                     var ChartsJS = $('.charts-type.chartjs-charts-type');
                     var ApexCharts = $('.charts-type.apex-charts-type');
+                    var HighStock = $('.charts-type.highstock-charts-type');
 
                     if ((!selectedChartType.length && disabledNextButton.is(":disabled") && googleCharts.is(":visible") && currentStep === 7) ||
                         (!selectedChartType.length && disabledNextButton.is(":disabled") && HighCharts.is(":visible") && currentStep === 8) ||
                         (!selectedChartType.length && disabledNextButton.is(":disabled") && ApexCharts.is(":visible") && currentStep === 9) ||
+                        (!selectedChartType.length && disabledNextButton.is(":disabled") && HighStock.is(":visible") && currentStep === 11) ||
                         (!selectedChartType.length && disabledNextButton.is(":disabled") && ChartsJS.is(":visible") && currentStep === 10)) {
                         invalidStep = tour.getCurrentStep();
                     }
                     if (!selectedChartType.length && !disabledNextButton.is(":disabled") && googleCharts.is(":visible") ||
                         !selectedChartType.length && !disabledNextButton.is(":disabled") && HighCharts.is(":visible") ||
                         !selectedChartType.length && !disabledNextButton.is(":disabled") && ChartsJS.is(":visible") ||
+                        !selectedChartType.length && !disabledNextButton.is(":disabled") && HighStock.is(":visible") ||
                         !selectedChartType.length && !disabledNextButton.is(":disabled") && ApexCharts.is(":visible")) {
                         invalidStep = tour.getCurrentStep();
                     }
-                    if (disabledNextButton.is(":disabled") && currentStep === 16) {
+                    if (disabledNextButton.is(":disabled") && currentStep === 17) {
                         invalidStep = tour.getCurrentStep();
                     }
                     break;
@@ -100,11 +103,11 @@
                 tour.goTo(tempStep);
                 switch (stepName) {
                     case 'create-chart':
-                        if (currentStep === 11) {
+                        if (currentStep === 12) {
                             errorMessage = wpdtTutorialStrings.cannot_be_empty_chart_type;
-                        } else if (currentStep === 14) {
+                        } else if (currentStep === 15) {
                             errorMessage = wpdtTutorialStrings.cannot_be_empty_chart_table;
-                        } else if (currentStep === 17) {
+                        } else if (currentStep === 18) {
                             errorMessage = wpdtTutorialStrings.cannot_be_empty_chart_table_columns;
                         }
                         break;
@@ -362,7 +365,7 @@
                     showButtons = "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button><button class='btn btn-primary float-right' data-role='next'>" + wpdtTutorialStrings.start_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "</div></div>"
                 } else if (jQuery.inArray(tour0.getCurrentStep(), tour0NextButtonSteps) !== -1) {
                     showButtons = "<button class='btn btn-primary' data-role='next'>" + wpdtTutorialStrings.next_button + " <i class='wpdt-icon-chevron-right'></i></button>" + "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
-                } else if (tour0.getCurrentStep() === 15) {
+                } else if (tour0.getCurrentStep() === 16) {
                     showButtons = "<button class='btn btn-primary float-right' data-role='end'><i class='wpdt-icon-trophy m-r-5'></i> " + wpdtTutorialStrings.finish_button + " </button>" + "</div></div>";
                 } else {
                     showButtons = "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
@@ -1391,7 +1394,7 @@
                     showButtons = "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button><button class='btn btn-primary float-right' data-role='next'>" + wpdtTutorialStrings.start_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "</div></div>"
                 } else if (jQuery.inArray(tour4.getCurrentStep(), tour4NextButtonSteps) !== -1) {
                     showButtons = "<button class='btn btn-primary' data-role='next'>" + wpdtTutorialStrings.next_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
-                } else if (tour4.getCurrentStep() === 14) {
+                } else if (tour4.getCurrentStep() === 15) {
                     showButtons = "<button class='btn btn-primary float-right' data-role='end'><i class='wpdt-icon-trophy m-r-5'></i> " + wpdtTutorialStrings.finish_button + " </button>" + "</div></div>";
                 } else {
                     showButtons = "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
@@ -1696,7 +1699,7 @@
                     showButtons = "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button><button class='btn btn-primary float-right' data-role='next'>" + wpdtTutorialStrings.start_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "</div></div>"
                 } else if (jQuery.inArray(tour5.getCurrentStep(), tour5NextButtonSteps) !== -1) {
                     showButtons = "<button class='btn btn-primary' data-role='next'>" + wpdtTutorialStrings.next_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
-                } else if (tour5.getCurrentStep() === 13) {
+                } else if (tour5.getCurrentStep() === 14) {
                     showButtons = "<button class='btn btn-primary float-right' data-role='end'><i class='wpdt-icon-trophy m-r-5'></i> " + wpdtTutorialStrings.finish_button + "</button>" + "</div></div>";
                 } else {
                     showButtons = "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
@@ -1838,6 +1841,7 @@
                         $('.charts-type.chartjs-charts-type:hidden').addClass('disabled');
                         $('.charts-type.highcharts-charts-type:hidden').addClass('disabled');
                         $('.charts-type.apexcharts-charts-type:hidden').addClass('disabled');
+                        $('.charts-type.highstock-charts-type:hidden').addClass('disabled');
                     },
                     onHidden: function () {
                         $('.tour-step-background').css("background-color", "inherit");
@@ -1930,8 +1934,30 @@
                     onNext: function (tour) {
                         validateStepInput(tour);
                     }
-                }, {
+                },{
                     // step 11
+                    element: ".charts-type.highstock-charts-type",
+                    placement: "top",
+                    title: wpdtTutorialStrings.tour6.step7.title,
+                    content: wpdtTutorialStrings.tour6.step7.content,
+                    backdrop: true,
+                    backdropContainer: 'body',
+                    backdropPadding: 5,
+                    onShown: function () {
+                        $('.tour-step-background').css("background-color", "rgba(248, 143, 32, 0.5)");
+                        $('#wdt-chart-wizard-next-step').prop('disabled', true);
+                        $('#chart-render-engine').prop('disabled', true);
+                        $('[data-id="chart-render-engine"]').prop('disabled', true);
+                        $('.charts-type.chartjs-charts-type').removeClass('disabled');
+                    },
+                    onHidden: function () {
+                        $('.tour-step-background').css("background-color", "inherit");
+                    },
+                    onNext: function (tour) {
+                        validateStepInput(tour);
+                    }
+                }, {
+                    // step 12
                     element: "#wdt-chart-wizard-next-step",
                     placement: "left",
                     title: wpdtTutorialStrings.tour6.step10.title,
@@ -1955,7 +1981,7 @@
                         $("html, body").animate({scrollTop: 0}, "slow");
                     },
                 }, {
-                    // step 12
+                    // step 13
                     element: ".data-source",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step11.title,
@@ -1972,7 +1998,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 13
+                    // step 14
                     element: "#wpdatatables-chart-source",
                     placement: "top",
                     title: wpdtTutorialStrings.tour6.step12.title,
@@ -1988,7 +2014,7 @@
                         validateStepInput(tour);
                     }
                 }, {
-                    // step 14
+                    // step 15
                     element: "#wdt-chart-wizard-next-step",
                     placement: "left",
                     title: wpdtTutorialStrings.tour6.step13.title,
@@ -2006,7 +2032,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 15
+                    // step 16
                     orphan: true,
                     placement: "bottom",
                     title: wpdtTutorialStrings.tour6.step14.title,
@@ -2018,7 +2044,7 @@
                         $('#wdt-chart-wizard-previous-step').prop('disabled', true)
                     }
                 }, {
-                    // step 16
+                    // step 17
                     element: ".wdt-chart-column-picker-container",
                     placement: "bottom",
                     title: wpdtTutorialStrings.tour6.step15.title,
@@ -2039,7 +2065,7 @@
                         validateStepInput(tour);
                     }
                 }, {
-                    // step 17
+                    // step 18
                     element: "#wdt-chart-wizard-next-step",
                     placement: "left",
                     title: wpdtTutorialStrings.tour6.step13.title,
@@ -2057,7 +2083,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 18
+                    // step 19
                     orphan: true,
                     placement: "top",
                     title: wpdtTutorialStrings.tour6.step17.title,
@@ -2074,7 +2100,7 @@
                         $('.popover[class*="tour-"]').css("z-index", "1102");
                     }
                 }, {
-                    // step 19
+                    // step 20
                     element: ".tab-nav.settings",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step18.title,
@@ -2093,7 +2119,7 @@
                         $('.popover[class*="tour-"]').css("z-index", "1102");
                     }
                 }, {
-                    // step 20
+                    // step 21
                     element: "#chart-container-tabs-1",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2112,7 +2138,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 21
+                    // step 22
                     element: "#chart-container-tabs-2",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2131,7 +2157,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 22
+                    // step 23
                     element: "#chart-container-tabs-3",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2150,7 +2176,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 23
+                    // step 24
                     element: "#chart-container-tabs-4",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2169,7 +2195,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 24
+                    // step 25
                     element: "#chart-container-tabs-5",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2188,7 +2214,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 25
+                    // step 26
                     element: "#chart-container-tabs-6",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2207,7 +2233,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 26
+                    // step 27
                     element: "#chart-container-tabs-7",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2226,7 +2252,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 27
+                    // step 28
                     element: "#chart-container-tabs-8",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2245,7 +2271,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 28
+                    // step 29
                     element: "#chart-container-tabs-9",
                     placement: "right",
                     title: wpdtTutorialStrings.tour6.step19.title,
@@ -2264,7 +2290,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 29
+                    // step 30
                     element: ".chart-preview-container",
                     placement: "left",
                     title: wpdtTutorialStrings.tour6.step27.title,
@@ -2284,7 +2310,7 @@
                         $('#wdt-chart-wizard-next-step').prop('disabled', false)
                     }
                 }, {
-                    // step 30
+                    // step 31
                     element: "#wdt-chart-wizard-next-step",
                     placement: "left",
                     title: wpdtTutorialStrings.tour6.step28.title,
@@ -2304,7 +2330,7 @@
                         $('.tour-step-background').css("background-color", "inherit");
                     }
                 }, {
-                    // step 31
+                    // step 32
                     orphan: true,
                     placement: "top",
                     title: wpdtTutorialStrings.tour6.step29.title,
@@ -2336,7 +2362,7 @@
                     showButtons = "<button class='btn btn-warning float-left' data-role='end'>" + wpdtTutorialStrings.cancel_button + "</button><button class='btn btn-primary float-right' data-role='next'>" + wpdtTutorialStrings.start_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "</div></div>"
                 } else if (jQuery.inArray(tour6.getCurrentStep(), tour6NextButtonSteps) !== -1) {
                     showButtons = "<button class='btn btn-primary' data-role='next'>" + wpdtTutorialStrings.next_button + " <i class='wpdt-icon-chevron-right m-l-5'></i></button>" + "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";
-                } else if (tour6.getCurrentStep() === 30) {
+                } else if (tour6.getCurrentStep() === 31) {
                     showButtons = "<button class='btn btn-primary float-right' data-role='end'><i class='wpdt-icon-trophy m-r-5'></i> " + wpdtTutorialStrings.finish_button + " </button>" + "</div></div>";
                 } else {
                     showButtons = "<button class='btn btn-warning' data-role='end'> " + wpdtTutorialStrings.skip_button + " </button>" + "</div></div>";

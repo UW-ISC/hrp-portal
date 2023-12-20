@@ -60,11 +60,96 @@
                             <th><?php esc_html_e('Lite', 'wpdatatables'); ?>
                                 <hr>
                             </th>
-                            <th><i class="wpdt-icon-star-full"></i><?php esc_html_e('Premium', 'wpdatatables'); ?>
+                            <th colspan="3" class="text-center"><i class="wpdt-icon-star-full"></i><?php esc_html_e('Premium', 'wpdatatables'); ?>
                                 <hr>
                             </th>
                             </thead>
                             <tbody>
+                            <tr>
+                                <td data-title="Features"><?php esc_html_e('Licence', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center" style="font-size: 18px;">
+                                    <?php esc_html_e('Free', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center" style="font-size: 18px;padding: 12px;">
+                                    <?php esc_html_e('Basic', 'wpdatatables'); ?>
+
+                                </td>
+                                <td data-title="Premium" class="text-center" style="font-size: 18px;padding: 12px;">
+                                    <?php esc_html_e('Pro', 'wpdatatables'); ?>
+
+                                </td>
+                                <td data-title="Premium" class="text-center" style="font-size: 16px;padding: 12px;">
+                                    <?php esc_html_e('Dev', 'wpdatatables'); ?>
+
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php esc_html_e('Domain', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey">
+                                    <i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic">
+                                    <?php esc_html_e('1 domain', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro">
+                                    <?php esc_html_e('3 domains', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue">
+                                    <?php esc_html_e('Unlimited domains', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php esc_html_e('Support', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite"
+                                    class="text-center bg-grey"><?php esc_html_e('Limited', 'wpdatatables'); ?>
+                                    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="top"
+                                       title="<?php esc_attr_e('Response time is slow and can be up to 3 business days.', 'wpdatatables'); ?>"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic">
+                                    <?php esc_html_e('Premium', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro">
+                                    <?php esc_html_e('Premium', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue">
+                                    <?php esc_html_e('Premium', 'wpdatatables'); ?>
+                                    <hr>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td data-title="Features"><?php esc_html_e('Creating charts with Highstock', 'wpdatatables'); ?>
+                                    <span style="color: #ea0b0b;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
+                                    <hr>
+                                </td>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                            </tr>
                             <tr>
                                 <td data-title="Features"><?php esc_html_e('Creating tables from Excel files', 'wpdatatables'); ?>
                                     <hr>
@@ -72,7 +157,15 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
-                                <td data-title="Premium" class="text-center bg-blue"><i
+                                <td data-title="Premium" class="text-center bg-blue-basic" ><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro" ><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue" ><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
@@ -82,6 +175,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -96,6 +197,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -106,6 +215,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -121,6 +238,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -131,6 +256,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -145,6 +278,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -157,6 +298,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -167,6 +316,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -182,6 +339,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -193,6 +358,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -207,6 +380,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -217,6 +398,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -231,6 +420,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -241,6 +438,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -255,6 +460,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -265,6 +478,14 @@
                                     <hr>
                                 </td>
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -279,6 +500,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -291,6 +520,14 @@
                                 <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
                                             class="wpdt-icon-check-full"></i>
                                     <hr>
@@ -301,7 +538,15 @@
                                     <span style="color: #ea0b0b;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -314,7 +559,15 @@
                                     <span style="color: #ea0b0b;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -326,7 +579,15 @@
                                 <td data-title="Features"><?php esc_html_e('Table Customization', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full" ></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -338,7 +599,15 @@
                                 <td data-title="Features"><?php esc_html_e('Create a data table manually', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -351,7 +620,15 @@
                                     <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -363,7 +640,15 @@
                                 <td data-title="Features"><?php esc_html_e('Creating data tables from Google Spreadsheet', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -375,7 +660,15 @@
                                 <td data-title="Features"><?php esc_html_e('Creating tables via Google Sheet API', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -388,7 +681,15 @@
                                     <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -400,7 +701,15 @@
                                 <td data-title="Features"><?php esc_html_e('Creating MySQL-based data tables from database', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -412,7 +721,15 @@
                                 <td data-title="Features"><?php esc_html_e('Creating MySQL-based data tables from Wordpress post types', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -424,7 +741,15 @@
                                 <td data-title="Features"><?php esc_html_e('Server-side processing', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -436,7 +761,15 @@
                                 <td data-title="Features"><?php esc_html_e('Multiple databases support (MySQL, MS SQL and PostgreSQL)', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -449,7 +782,15 @@
                                     <span style="color: #ea0b0b;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -461,7 +802,15 @@
                                 <td data-title="Features"><?php esc_html_e('Advanced filtering', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -473,7 +822,15 @@
                                 <td data-title="Features"><?php esc_html_e('Front-end table editing', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -485,7 +842,15 @@
                                 <td data-title="Features"><?php esc_html_e('Excel-like editing', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -497,7 +862,15 @@
                                 <td data-title="Features"><?php esc_html_e('Creating charts with Highcharts', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -510,7 +883,15 @@
                                     <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -522,7 +903,15 @@
                                 <td data-title="Features"><?php esc_html_e('Responsive', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -534,7 +923,15 @@
                                 <td data-title="Features"><?php esc_html_e('Conditional formatting', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -546,7 +943,15 @@
                                 <td data-title="Features"><?php esc_html_e('Calculating Tools', 'wpdatatables'); ?>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -559,7 +964,15 @@
                                     <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -569,10 +982,17 @@
                             </tr>
                             <tr>
                                 <td data-title="Features"><?php esc_html_e('Rotate column headers', 'wpdatatables'); ?>
-                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-minus"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
@@ -581,17 +1001,23 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td data-title="Features"><?php esc_html_e('Support', 'wpdatatables'); ?>
+                                <td data-title="Features"><?php esc_html_e('Transform value', 'wpdatatables'); ?>
+                                    <span style="color: #ef8137;font-weight: bold;float: right;"><?php esc_html_e('NEW!', 'wpdatatables'); ?></span>
                                     <hr>
                                 </td>
-                                <td data-title="Lite"
-                                    class="text-center bg-grey"><?php esc_html_e('Limited', 'wpdatatables'); ?>
-                                    <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="top"
-                                       title="<?php esc_attr_e('Response time is slow and can be up to 3 business days.', 'wpdatatables'); ?>"></i>
+                                <td data-title="Lite" class="text-center bg-grey"><i class="wpdt-icon-times-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-basic"><i
+                                            class="wpdt-icon-check-full"></i>
+                                    <hr>
+                                </td>
+                                <td data-title="Premium" class="text-center bg-blue-pro"><i
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                                 <td data-title="Premium" class="text-center bg-blue"><i
-                                            class="wpdt-icon-check-full m-r-5"></i><?php esc_html_e('Premium', 'wpdatatables'); ?>
+                                            class="wpdt-icon-check-full"></i>
                                     <hr>
                                 </td>
                             </tr>

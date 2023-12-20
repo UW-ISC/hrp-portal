@@ -782,12 +782,24 @@ var singleClick = false;
                 }
 
             }
+            if(tableDescription.pagination && tableDescription.table_wcag){
+                $(tableDescription.selector + '_paginate').addClass('wcag_paginate');
+            }
+
             if (tableDescription.tableSkin) {
                 $(tableDescription.selector + '_wrapper .dt-buttons .DTTT_button_export').on('click', function () {
                     $('.dt-button-collection').addClass('wdt-skin-' + tableDescription.tableSkin)
                 });
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_colvis').attr('aria-label', wpdatatables_frontend_strings.columnVisibilityWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_spacer').attr('aria-label', wpdatatables_frontend_strings.spacerWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_print').attr('aria-label', wpdatatables_frontend_strings.printTableWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_export').attr('aria-label', wpdatatables_frontend_strings.exportTableWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_new').attr('aria-label', wpdatatables_frontend_strings.newEntryWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_delete').attr('aria-label', wpdatatables_frontend_strings.deleteRowWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_edit').attr('aria-label', wpdatatables_frontend_strings.editRowWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_duplicate').attr('aria-label', wpdatatables_frontend_strings.duplicateRowWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_clear_filters').attr('aria-label', wpdatatables_frontend_strings.clearFiltersWCAG).attr('role', 'button');
             }
-
             /**
              * Show "Show X entries" dropdown
              */
@@ -812,9 +824,21 @@ var singleClick = false;
                             $('#' + tableDescription.tableId + '_paginate').show();
                         }
                     }
-
+                    if(tableDescription.table_wcag){
+                        this.fnSettings().oLanguage.oPaginate.sFirst = wpdatatables_frontend_strings.firstPageWCAG;
+                        this.fnSettings().oLanguage.oPaginate.sLast = wpdatatables_frontend_strings.lastPageWCAG;
+                        this.fnSettings().oLanguage.oPaginate.sNext = wpdatatables_frontend_strings.nextPageWCAG;
+                        this.fnSettings().oLanguage.oPaginate.sPrevious = wpdatatables_frontend_strings.previousPageWCAG;
+                        $(document).ready(function () {
+                            $('#' + tableDescription.tableId + '_paginate').find('span .paginate_button').each(function (index) {
+                                $(this).attr('aria-label', wpdatatables_frontend_strings.pageWCAG + this.text);
+                            });
+                        });
+                    }
                 }
+
             });
+
             /**
              * Add fixed columns when a draw occurs
              */
@@ -1188,7 +1212,57 @@ var singleClick = false;
                     wpDataTables[tableDescription.tableId].fnDraw();
                 }
             }
-
+            /**
+             * Transform Value of column
+             */
+            if (tableDescription.transform_value_columns) {
+                wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                    sName: 'updateTransformColumnValue',
+                    fn: function (oSettings) {
+                        var columnNamesArray = [];
+                        for(var k =0; k < oSettings.aoColumns.length; k++){
+                            var columnName = oSettings.aoColumns[k].name;
+                            columnNamesArray.push(columnName);
+                        }
+                        for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
+                            var params = {};
+                            var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
+                            var transformValueRules = {};
+                            transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
+                            for(var k =0; k < oSettings.aoColumns.length; k++){
+                                var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
+                                var nodes = column.nodes();
+                                column.nodes().to$().each(function () {
+                                        if(transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
+                                            for (var m = 0; m < col.data().length; m++) {
+                                                if (m != 0) {
+                                                    if(transformValueRules[m + 1] != null){
+                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
+                                                    }else {
+                                                        wdtTransformValue(transformValueRules[m].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]);
+                                                    }
+                                                } else {
+                                                    if (transformValueRules[m + 1] != null) {
+                                                        wdtTransformValue(transformValueRules[m+1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m+1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
+                                                    } else {
+                                                        wdtTransformValue(transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                });
+                            }
+                        }
+                    }
+                });
+                if (!tableDescription.serverSide) {
+                    wpDataTables[tableDescription.tableId].fnDraw();
+                }
+            }
             /**
              * Init the callback for checking if the selected row is first/last in the dataset
              */
@@ -1441,7 +1515,9 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-
+                    if(tableDescription.table_wcag){
+                        modal.addClass('wpTableWCAG');
+                    }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.edit_entry);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
@@ -1528,7 +1604,9 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-
+                    if(tableDescription.table_wcag){
+                        modal.addClass('wpTableWCAG');
+                    }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.add_new_entry);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
@@ -1623,7 +1701,9 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-
+                    if(tableDescription.table_wcag){
+                        modal.addClass('wpTableWCAG');
+                    }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.duplicate_entry);
                     modal.find('.modal-body').html('');
                     modal.find('.modal-footer').html('');
@@ -1699,6 +1779,7 @@ var singleClick = false;
                     e.stopImmediatePropagation();
                     if (e.which == 27) {
                         $('#wdt-frontend-modal').modal('hide').removeClass('wdt-skin-' + tableDescription.tableSkin)
+                        $('#wdt-frontend-modal').modal('hide').removeClass('wpTableWCAG')
                     }
                 });
 
@@ -1709,6 +1790,7 @@ var singleClick = false;
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_edit_dialog').hide());
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_edit_dialog_buttons').hide());
                     $(this).removeClass('wdt-skin-' + tableDescription.tableSkin);
+                    $(this).removeClass('wpTableWCAG');
                 });
 
                 /**
@@ -1717,6 +1799,7 @@ var singleClick = false;
                 $('#wdt-delete-modal').on('hidden.bs.modal', function (e) {
                     $(tableDescription.selector + '_wrapper').append($(tableDescription.selector + '_delete_dialog_buttons').hide());
                     $(this).removeClass('wdt-skin-' + tableDescription.tableSkin);
+                    $(this).removeClass('wpTableWCAG');
                 });
 
                 /**
@@ -1734,7 +1817,9 @@ var singleClick = false;
                     var modal = $('#wdt-delete-modal');
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-
+                    if(tableDescription.table_wcag){
+                        modal.addClass('wpTableWCAG');
+                    }
                     modal.find('.modal-footer').html('');
                     modal.find('.modal-footer').append($(tableDescription.selector + '_delete_dialog_buttons').show());
 
@@ -2199,6 +2284,10 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
     if (ruleMatched) {
         wdtApplyCellAction(element, conditionalFormattingRules.action, conditionalFormattingRules.setVal);
     }
+}
+function wdtTransformValue(trasnsformValue, params, element, m, tableID) {
+    let index = element.index() + 1;
+    jQuery(element.closest('table#' + tableID + '.wpDataTable').find('tbody td:nth-child(' + index + ')')[m]).html(trasnsformValue);
 }
 
 // jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";

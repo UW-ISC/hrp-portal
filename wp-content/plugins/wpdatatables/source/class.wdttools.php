@@ -460,7 +460,323 @@ class WDTTools
 
         return array();
     }
-
+    public static function getTranslationStringsBrowse()
+    {
+        return array(
+            'deleteSelected' => __('Delete selected', 'wpdatatables'),
+            'delete' => __('Delete', 'wpdatatables'),
+            'copy' => __('Copy', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsCommon()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'settings_saved_error' => __('Unable to save settings of plugin. Please try again or contact us over Support page.', 'wpdatatables'),
+            'close' => __('Close', 'wpdatatables'),
+            'tableNameEmpty' => __('Table name can not be empty! Please provide a name for your table.', 'wpdatatables'),
+            'tableSaved' => __('Table saved successfully!', 'wpdatatables'),
+            'selectExcelCsv' => __('Select an Excel or CSV file', 'wpdatatables'),
+            'choose_file' => __('Use selected file', 'wpdatatables'),
+            'chooseFile' => __('Choose file', 'wpdatatables'),
+            'shortcodeSaved' => __('Shortcode has been copied to the clipboard.', 'wpdatatables'),
+            'dataSaved' => __('Data has been saved!', 'wpdatatables'),
+            'databaseInsertError' => __('There was an error trying to insert a new row!', 'wpdatatables'),
+            'databaseDeleteError' => __('There was an error trying to delete a row!', 'wpdatatables'),
+            'rowDeleted' => __('Row has been deleted!', 'wpdatatables'),
+            'systemInfoSaved' => __('System info data has been copied to the clipboard. You can now paste it in file or in support ticket.', 'wpdatatables'),
+            'selected_replace_data_option' => __("<small>You've selected the <strong>'Replace rows with source data'</strong> option. This means that you're about to <strong>delete all the data</strong> you currently have in your table and replace it with data from your source file.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
+            'selected_add_data_option' => __("<small>You've selected the <strong>'Add data to current table data'</strong> option. This means that you're about to <strong>add data</strong> from the file source to your table.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small>", "wpdatatables"),
+            'selected_replace_table_option' => __("<small>You've selected the <strong>'Replace entire table data'</strong> option. This means that you're about to <strong>delete your entire table data and current column settings</strong> and replace it with data from your source file with default settings for columns.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first. <br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
+            'clear_table_data' => __('Clear table data', 'wpdatatables'),
+            'delete' => __('Delete', 'wpdatatables'),
+            'deleteSelected' => __('Delete selected', 'wpdatatables'),
+            'getJsonRoots' => __('JSON roots are found!', 'wpdatatables'),
+            'errorText' => __('Unable to retrieve results', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsConstructor()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'fileUploadEmptyFile' => __('Please upload or choose a file from Media Library!', 'wpdatatables'),
+            'columnsEmpty' => __('Please select columns that you want to use in table', 'wpdatatables'),
+            'tableNameEmpty' => __('Table name can not be empty! Please provide a name for your table.', 'wpdatatables'),
+            'numberOfColumnsError' => __('Number of columns can not be empty or 0', 'wpdatatables'),
+            'numberOfRowsError' => __('Number of rows can not be empty or 0', 'wpdatatables'),
+            'newColumnName' => __('New column', 'wpdatatables'),
+            'selectAll' => __('Select all', 'wpdatatables'),
+            'deselectAll' => __('Deselect all', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsSimpleTable()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'tableSaved' => __('Table saved successfully!', 'wpdatatables'),
+            'clear_table_data' => __('Clear table data', 'wpdatatables'),
+            'star_rating' => __('Star rating', 'wpdatatables'),
+            'shortcode' => __('Shortcode', 'wpdatatables'),
+            'html_code' => __('HTML code', 'wpdatatables'),
+            'media' => __('Media', 'wpdatatables'),
+            'link' => __('Link', 'wpdatatables'),
+            'clip' => __('Clip', 'wpdatatables'),
+            'overflow' => __('Overflow', 'wpdatatables'),
+            'wrap' => __('Wrap', 'wpdatatables'),
+            'left' => __('Left', 'wpdatatables'),
+            'center' => __('Center', 'wpdatatables'),
+            'right' => __('Right', 'wpdatatables'),
+            'justify' => __('Justify', 'wpdatatables'),
+            'top' => __('Top', 'wpdatatables'),
+            'middle' => __('Middle', 'wpdatatables'),
+            'bottom' => __('Bottom', 'wpdatatables'),
+            'insert_row_above' => __('Insert row above', 'wpdatatables'),
+            'insert_row_below' => __('Insert row below', 'wpdatatables'),
+            'remove_row' => __('Remove row', 'wpdatatables'),
+            'insert_col_left' => __('Insert column left', 'wpdatatables'),
+            'insert_col_right' => __('Insert column right', 'wpdatatables'),
+            'remove_column' => __('Remove column', 'wpdatatables'),
+            'alignment' => __('Alignment', 'wpdatatables'),
+            'cut' => __('Cut', 'wpdatatables'),
+            'insert_custom' => __('Insert custom', 'wpdatatables'),
+            'undo' => __('Undo', 'wpdatatables'),
+            'redo' => __('Redo', 'wpdatatables'),
+            'text_wrapping' => __('Text wrapping', 'wpdatatables'),
+            'merge_cells' => __('Merge cells', 'wpdatatables'),
+            'copy' => __('Copy', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsTableSettingsMain()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'selected_replace_data_option' => __("<small>You've selected the <strong>'Replace rows with source data'</strong> option. This means that you're about to <strong>delete all the data</strong> you currently have in your table and replace it with data from your source file.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
+            'selected_add_data_option' => __("<small>You've selected the <strong>'Add data to current table data'</strong> option. This means that you're about to <strong>add data</strong> from the file source to your table.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first.<br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small>", "wpdatatables"),
+            'selected_replace_table_option' => __("<small>You've selected the <strong>'Replace entire table data'</strong> option. This means that you're about to <strong>delete your entire table data and current column settings</strong> and replace it with data from your source file with default settings for columns.<br><br> If you have any <strong>date type columns</strong> in your file, please make sure you set the <strong>date input format in Main settings of plugin</strong> to the one you're using in your source file first. <br><br>Please consider <strong>duplicating your table first</strong>, before updating.<br><br><strong>There is no undo.</strong></small> ", "wpdatatables"),
+            'tableNameEmpty' => __('Table name can not be empty! Please provide a name for your table.', 'wpdatatables'),
+            'tableSaved' => __('Table saved successfully!', 'wpdatatables'),
+            'selectExcelCsv' => __('Select an Excel or CSV file', 'wpdatatables'),
+            'chooseFile' => __('Choose file', 'wpdatatables'),
+            'selectAll' => __('Select all', 'wpdatatables'),
+            'deselectAll' => __('Deselect all', 'wpdatatables'),
+            'getJsonRoots' => __('JSON roots are found!', 'wpdatatables'),
+            'errorText' => __('Unable to retrieve results', 'wpdatatables'),
+            'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'currentlySelected' => __('Currently selected', 'wpdatatables'),
+            'search' => __('Search...', 'wpdatatables'),
+            'statusInitialized' => __('Start typing a search query', 'wpdatatables'),
+            'statusNoResults' => __('No Results', 'wpdatatables'),
+            'statusTooShort' => __('Please enter more characters', 'wpdatatables'),
+            'api_google_maps_ok' => __('Google Maps API key is valid!', 'wpdatatables'),
+            'api_google_maps_not_ok' => __('There was an error while trying to save Google Maps API key!', 'wpdatatables'),
+            'api_google_maps_removed' => __('Google Maps API key is removed!', 'wpdatatables'),
+            'api_google_key_contains' => __('API key is valid', 'wpdatatables'),
+            'validate_api' => __('Validate & Save', 'wpdatatables'),
+            'remove_api' => __('Remove', 'wpdatatables'),
+            'empty_api_google_key' => __('API key is not valid!', 'wpdatatables'),
+            'settings_saved_successful' => __('Plugin settings saved successfully', 'wpdatatables'),
+            'settings_saved_error' => __('Unable to save settings of plugin. Please try again or contact us over Support page.', 'wpdatatables'),
+            'purchaseCodeInvalid' => __('The purchase code is invalid or it has expired', 'wpdatatables'),
+            'activation_domains_limit' => __('You have reached maximum number of registered domains', 'wpdatatables'),
+            'activation_envato_failed' => __('It seems you don\'t have a valid purchase of wpDataTables', 'wpdatatables'),
+            'envato_failed_powerful' => __('It seems you don\'t have a valid purchase of Powerful Filters for wpDataTables', 'wpdatatables'), //*
+            'envato_failed_report' => __('It seems you don\'t have a valid purchase of Report Builder for wpDataTables', 'wpdatatables'), //*
+            'envato_failed_gravity' => __('It seems you don\'t have a valid purchase of Gravity Forms integration for wpDataTables', 'wpdatatables'), //*
+            'envato_failed_formidable' => __('It seems you don\'t have a valid purchase of Formidable Forms integration for wpDataTables', 'wpdatatables'), //*
+            'pluginActivated' => __('Plugin has been activated', 'wpdatatables'),
+            'pluginDeactivated' => __('Plugin has been deactivated', 'wpdatatables'), //*
+            'envato_api_activated' => __('Activated with Envato', 'wpdatatables'),
+            'activateWithEnvato' => __('Activate with Envato', 'wpdatatables'),
+            'unable_to_deactivate_plugin' => __('Unable to deactivate plugin. Please try again later.', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsWpDataTables()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'dataSaved' => __('Data has been saved!', 'wpdatatables'),
+            'databaseInsertError' => __('There was an error trying to insert a new row!', 'wpdatatables'),
+            'databaseDeleteError' => __('There was an error trying to delete a row!', 'wpdatatables'),
+            'rowDeleted' => __('Row has been deleted!', 'wpdatatables'),
+            'errorText' => __('Unable to retrieve results', 'wpdatatables'),
+            'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'currentlySelected' => __('Currently selected', 'wpdatatables'),
+            'search' => __('Search...', 'wpdatatables'),
+            'statusInitialized' => __('Start typing a search query', 'wpdatatables'),
+            'statusNoResults' => __('No Results', 'wpdatatables'),
+            'statusTooShort' => __('Please enter more characters', 'wpdatatables'),
+            'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
+            'choose_file' => __('Use selected file', 'wpdatatables'),
+            'chooseFile' => __('Choose file', 'wpdatatables'),
+            'add_new_entry' => __('Add new entry', 'wpdatatables'),
+            'duplicate_entry' => __('Duplicate entry', 'wpdatatables'),
+            'edit_entry' => __('Edit entry', 'wpdatatables'),
+            'invalid_email' => __('Please provide a valid e-mail address for field', 'wpdatatables'),
+            'invalid_link' => __('Please provide a valid URL link for field', 'wpdatatables'),
+            'cannot_be_empty' => __(' field cannot be empty!', 'wpdatatables'),
+            'sInfo' => __('Showing _START_ to _END_ of _TOTAL_ entries', 'wpdatatables'),
+            'sInfoEmpty' => __('Showing 0 to 0 of 0 entries', 'wpdatatables'),
+            'sInfoFiltered' => __('(filtered from _MAX_ total entries)', 'wpdatatables'),
+            'sInfoPostFix' => '',
+            'sInfoThousands' => __(',', 'wpdatatables'),
+            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'sProcessing' => __('Processing...', 'wpdatatables'),
+            'sSearch' => __('Search: ', 'wpdatatables'),
+            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'lengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'sEmptyTable' => __('No data available in table', 'wpdatatables'),
+            'sZeroRecords' => __('No matching records found', 'wpdatatables'),
+            'oAria' => array(
+                'sSortAscending' => __(': activate to sort column ascending', 'wpdatatables'),
+                'sSortDescending' => __(': activate to sort column descending', 'wpdatatables')
+            ),
+            'oPaginate' => array(
+                'sFirst' => __('First', 'wpdatatables'),
+                'sLast' => __('Last', 'wpdatatables'),
+                'sNext' => __('Next', 'wpdatatables'),
+                'sPrevious' => __('Previous', 'wpdatatables')
+            ),
+            'from' => __('From', 'wpdatatables'),
+            'to' => __('To', 'wpdatatables'),
+            'sortingError' => __('At least one show/hide sorting icon must be enabled!','wpdatatables'),
+            'firstPageWCAG' => __('First page', 'wpdatatables'),
+            'lastPageWCAG' => __('Last page', 'wpdatatables'),
+            'nextPageWCAG' => __('Next page', 'wpdatatables'),
+            'previousPageWCAG' => __('Previous page', 'wpdatatables'),
+            'pageWCAG' => __('wpDataTable Page ', 'wpdatatables'),
+            'spacerWCAG' => __('Spacer', 'wpdatatables'),
+            'printTableWCAG' => __('Print table', 'wpdatatables'),
+            'exportTableWCAG' => __('Export table', 'wpdatatables'),
+            'newEntryWCAG' => __('New entry', 'wpdatatables'),
+            'deleteRowWCAG' => __('Delete row', 'wpdatatables'),
+            'editRowWCAG' => __('Edit row', 'wpdatatables'),
+            'duplicateRowWCAG' => __('Duplicate row', 'wpdatatables'),
+            'clearFiltersWCAG' => __('Clear filters', 'wpdatatables'),
+            'columnVisibilityWCAG' => __('Column visibility', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsColumnFilter()
+    {
+        return array(
+            'errorText' => __('Unable to retrieve results', 'wpdatatables'),
+            'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'currentlySelected' => __('Currently selected', 'wpdatatables'),
+            'search' => __('Search...', 'wpdatatables'),
+            'statusInitialized' => __('Start typing a search query', 'wpdatatables'),
+            'statusNoResults' => __('No Results', 'wpdatatables'),
+            'statusTooShort' => __('Please enter more characters', 'wpdatatables'),
+            'from' => __('From', 'wpdatatables'),
+            'to' => __('To', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsExcel()
+    {
+        return array(
+            'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
+            'choose_file' => __('Use selected file', 'wpdatatables'),
+            'chooseFile' => __('Choose file', 'wpdatatables'),
+            'browse_file' => __('Browse', 'wpdatatables'),
+            'detach_file' => __('detach', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsExcelPlugin()
+    {
+        return array(
+            'invalid_value' => __('You have entered invalid value. Press ESC to cancel.', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsPlugin()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'modalTitle' => __('Row details', 'wpdatatables'),
+            'previousFilter' => __('Choose an option in previous filters', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsFunctions()
+    {
+        return array(
+            'sInfo' => __('Showing _START_ to _END_ of _TOTAL_ entries', 'wpdatatables'),
+            'sInfoEmpty' => __('Showing 0 to 0 of 0 entries', 'wpdatatables'),
+            'sInfoFiltered' => __('(filtered from _MAX_ total entries)', 'wpdatatables'),
+            'sInfoPostFix' => '',
+            'sInfoThousands' => __(',', 'wpdatatables'),
+            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'sProcessing' => __('Processing...', 'wpdatatables'),
+            'sSearch' => __('Search: ', 'wpdatatables'),
+            'sLengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'lengthMenu' => __('Show _MENU_ entries', 'wpdatatables'),
+            'sEmptyTable' => __('No data available in table', 'wpdatatables'),
+            'sZeroRecords' => __('No matching records found', 'wpdatatables'),
+            'oAria' => array(
+                'sSortAscending' => __(': activate to sort column ascending', 'wpdatatables'),
+                'sSortDescending' => __(': activate to sort column descending', 'wpdatatables')
+            ),
+            'oPaginate' => array(
+                'sFirst' => __('First', 'wpdatatables'),
+                'sLast' => __('Last', 'wpdatatables'),
+                'sNext' => __('Next', 'wpdatatables'),
+                'sPrevious' => __('Previous', 'wpdatatables')
+            ),
+            'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsInlineEditing()
+    {
+        return array(
+            'invalid_email' => __('Please provide a valid e-mail address for field', 'wpdatatables'),
+            'invalid_link' => __('Please provide a valid URL link for field', 'wpdatatables'),
+            'cannot_be_empty' => __(' field cannot be empty!', 'wpdatatables'),
+            'cannot_be_edit' => __('You can\'t edit this field', 'wpdatatables'),
+            'errorText' => __('Unable to retrieve results', 'wpdatatables'),
+            'nothingSelected' => __('Nothing selected', 'wpdatatables'),
+            'sLoadingRecords' => __('Loading...', 'wpdatatables'),
+            'currentlySelected' => __('Currently selected', 'wpdatatables'),
+            'search' => __('Search...', 'wpdatatables'),
+            'statusInitialized' => __('Start typing a search query', 'wpdatatables'),
+            'statusNoResults' => __('No Results', 'wpdatatables'),
+            'statusTooShort' => __('Please enter more characters', 'wpdatatables'),
+            'selectFileAttachment' => __('Select file', 'wpdatatables'),
+            'changeFileAttachment' => __('Change', 'wpdatatables'),
+            'saveFileAttachment' => __('Save', 'wpdatatables'),
+            'removeFileAttachment' => __('Remove', 'wpdatatables'),
+            'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
+            'choose_file' => __('Use selected file', 'wpdatatables'),
+            'chooseFile' => __('Choose file', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsAddRemoveColumn()
+    {
+        return array(
+            'success' => __('Success!', 'wpdatatables'),
+            'error' => __('Error!', 'wpdatatables'),
+            'columnAdded' => __('Column has been added!', 'wpdatatables'),
+            'columnHeaderEmpty' => __('Column header cannot be empty!', 'wpdatatables'),
+            'outOfRangeTypeValue' => __('Type value is out-of-range!', 'wpdatatables'),
+            'columnRemoveConfirm' => __('Please confirm column deletion!', 'wpdatatables'),
+            'columnRemoved' => __('Column has been removed!', 'wpdatatables'),
+            'columnsEmpty' => __('Please select columns that you want to use in table', 'wpdatatables'),
+        );
+    }
+    public static function getTranslationStringsChartWizard()
+    {
+        return array(
+            'selectAll' => __('Select all', 'wpdatatables'),
+            'deselectAll' => __('Deselect all', 'wpdatatables'),
+            'saveChart' => __('Save chart', 'wpdatatables'),
+        );
+    }
     /**
      * Helper function that returns array of translation strings used for localization of JavaScript files
      * @return array
@@ -607,6 +923,20 @@ class WDTTools
             'validate_api' => __('Validate & Save', 'wpdatatables'),
             'remove_api' => __('Remove', 'wpdatatables'),
             'empty_api_google_key' => __('API key is not valid!', 'wpdatatables'),
+            'sortingError' => __('At least one show/hide sorting icon must be enabled!','wpdatatables'),
+            'firstPageWCAG' => __('First page', 'wpdatatables'),
+            'lastPageWCAG' => __('Last page', 'wpdatatables'),
+            'nextPageWCAG' => __('Next page', 'wpdatatables'),
+            'previousPageWCAG' => __('Previous page', 'wpdatatables'),
+            'pageWCAG' => __('wpDataTable Page ', 'wpdatatables'),
+            'spacerWCAG' => __('Spacer', 'wpdatatables'),
+            'printTableWCAG' => __('Print table', 'wpdatatables'),
+            'exportTableWCAG' => __('Export table', 'wpdatatables'),
+            'newEntryWCAG' => __('New entry', 'wpdatatables'),
+            'deleteRowWCAG' => __('Delete row', 'wpdatatables'),
+            'editRowWCAG' => __('Edit row', 'wpdatatables'),
+            'duplicateRowWCAG' => __('Duplicate row', 'wpdatatables'),
+            'clearFiltersWCAG' => __('Clear filters', 'wpdatatables'),
             );
     }
 
@@ -1189,10 +1519,10 @@ class WDTTools
             return 'string';
         } else {
 
-            if (self::_detect($values, 'self::wdtIsIP')) {
+            if (self::_detect($values, 'WDTTools::wdtIsIP')) {
                 return 'string';
             }
-            if (self::_detect($values, 'self::wdtIsInteger')) {
+            if (self::_detect($values, 'WDTTools::wdtIsInteger')) {
                 return 'int';
             }
             if (self::_detect($values, 'preg_match', WDT_TIME_12H_REGEX)
@@ -1200,10 +1530,10 @@ class WDTTools
                 || self::_detect($values, 'preg_match', WDT_TIME_WITH_SECONDS_REGEX)) {
                 return 'time';
             }
-            if (self::_detect($values, 'self::wdtIsDateTime')) {
+            if (self::_detect($values, 'WDTTools::wdtIsDateTime')) {
                 return 'datetime';
             }
-            if (self::_detect($values, 'self::wdtIsDate')) {
+            if (self::_detect($values, 'WDTTools::wdtIsDate')) {
                 return 'date';
             }
             if (self::_detect($values, 'preg_match', WDT_CURRENCY_REGEX) || self::wdtIsFloat($values)) {
@@ -1246,6 +1576,7 @@ class WDTTools
     {
         $count = 0;
         for ($i = 0; $i < count($values); $i++) {
+            if (is_null($values[$i])) continue;
             if (is_numeric(str_replace(array('.', ','), '', $values[$i]))) {
                 $count++;
             }
@@ -1303,13 +1634,13 @@ class WDTTools
         $count = 0;
         for ($i = 0; $i < count($valuesArray); $i++) {
             if ($regularExpression != '') {
-                if (call_user_func($checkFunction, $regularExpression, $valuesArray[$i]) || $valuesArray[$i] == null) {
+                if ($valuesArray[$i] == null || call_user_func($checkFunction, $regularExpression, $valuesArray[$i])) {
                     $count++;
                 } else {
                     return false;
                 }
             } else {
-                if (call_user_func($checkFunction, $valuesArray[$i]) || $valuesArray[$i] == null) {
+                if ($valuesArray[$i] == null || call_user_func($checkFunction, $valuesArray[$i])) {
                     $count++;
                 } else {
                     return false;
@@ -1354,7 +1685,7 @@ class WDTTools
         if ((!is_wp_error($request) || wp_remote_retrieve_response_code($request) === 200) && isset($request['body'])) {
             $body = json_decode($request['body']);
 
-            return $body && isset($body->info) ? unserialize($body->info, ["allowed_classes" => false]) : false;
+            return $body && isset($body->info) ? unserialize($body->info, ["allowed_classes" => [stdClass::class]]) : false;
         }
 
         return false;
@@ -1647,6 +1978,28 @@ class WDTTools
         wp_enqueue_script('wdt-wNumb', WDT_JS_PATH . 'bootstrap/bootstrap-nouislider/wNumb.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-colorpicker', WDT_JS_PATH . 'bootstrap/bootstrap-colorpicker/bootstrap-colorpicker.min.js', array(), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-bootstrap-growl', WDT_JS_PATH . 'bootstrap/bootstrap-growl/bootstrap-growl.min.js', array(), WDT_CURRENT_VERSION, true);
+    }
+
+    public static function wdtUIKitEnqueueNotEdit()
+    {
+        if (get_option('wdtIncludeGoogleFonts'))
+            wp_enqueue_style( 'wdt-include-inter-google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap',  array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-bootstrap', WDT_CSS_PATH . 'bootstrap/wpdatatables-bootstrap.css', array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-bootstrap-select', WDT_CSS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.css', array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-animate', WDT_CSS_PATH . 'animate/animate.min.css', array(), WDT_CURRENT_VERSION);
+        wp_enqueue_style('wdt-uikit', WDT_CSS_PATH . 'uikit/uikit.css', array(), WDT_CURRENT_VERSION);
+
+        if (!is_admin() && get_option('wdtIncludeBootstrap') == 1) {
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+        } else if (is_admin() && get_option('wdtIncludeBootstrapBackEnd') == 1) {
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+        } else {
+            wp_enqueue_script('wdt-bootstrap', WDT_JS_PATH . 'bootstrap/noconf.bootstrap.min.js', array('jquery', 'wdt-bootstrap-select'), WDT_CURRENT_VERSION, true);
+        }
+
+        wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-bootstrap-ajax-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/ajax-bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
+        wp_enqueue_script('wdt-moment', WDT_JS_PATH . 'moment/moment.js', array(), WDT_CURRENT_VERSION, true);
     }
 
     /**

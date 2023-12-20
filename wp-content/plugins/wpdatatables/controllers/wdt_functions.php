@@ -102,7 +102,7 @@ function wdtActivationCreateTables()
                                   id bigint(20) NOT NULL AUTO_INCREMENT,
                                   wpdatatable_id bigint(20) NOT NULL,
                                   title varchar(255) NOT NULL,
-                                  engine enum('google','highcharts','chartjs','apexcharts') NOT NULL,
+                                  engine enum('google','highcharts','chartjs','apexcharts','highstock') NOT NULL,
                                   type varchar(255) NOT NULL,
                                   json_render_data text NOT NULL,
                                   UNIQUE KEY id (id)
@@ -328,7 +328,7 @@ function wdtActivationCreateTables()
         update_option('wdtApexStableVersion', 1);
     }
     if (get_option('wdtShowBundlesNotice') === false) {
-        update_option('wdtShowBundlesNotice', 'yes' );
+        update_option('wdtShowBundlesNotice', 'yes');
     }
     if (!get_option('wdtGoogleApiMaps')) {
         update_option('wdtGoogleApiMaps', '');
@@ -438,15 +438,7 @@ function wdtActivation($networkWide)
 {
     global $wpdb;
 
-    // Check PHP version
-    if (!defined('PHP_VERSION_ID') || PHP_VERSION_ID < 50600) {
-        deactivate_plugins(WDT_BASENAME);
-        wp_die(
-            '<p>The <strong>wpDataTables</strong> plugin requires PHP version 5.6 or greater.</p>',
-            'Plugin Activation Error',
-            array('response' => 200, 'back_link' => TRUE)
-        );
-    }
+
 
     if (function_exists('is_multisite') && is_multisite()) {
         //check if it is network activation if so run the activation function for each id
@@ -510,6 +502,7 @@ function wdtAdminRatingMessages()
     $datetimeInstallDate = new DateTime($installDate);
     $datetimeCurrentDate = new DateTime($currentDate);
     $diffIntrval = round(($datetimeCurrentDate->format('U') - $datetimeInstallDate->format('U')) / (60 * 60 * 24));
+    $systemInfoPage = get_site_url() . '/wp-admin/admin.php?page=wpdatatables-system-info';
 
     if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false &&
         $diffIntrval >= 14 && get_option('wdtRatingDiv') == "no" && $tempIgnore && isset($allTables) && $allTables > 5) {
@@ -518,7 +511,7 @@ function wdtAdminRatingMessages()
 
     if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false && get_option('wdtMDNewsDiv') == "no") {
         echo '<div class="notice notice-info is-dismissible wpdt-md-news-notice">
-             <p class="wpdt-md-news">NEWS! wpDataTables just launched a new addon - Master-Detail Tables. You can find it in the <a href="' . $urlAddonsPage . '">Addons page</a>, read more about it in our docs on this <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/">link</a>.</p>
+             <p class="wpdt-md-news">NEWS! wpDataTables just launched a new addon - Master-Detail Tables. You can find it in the <a href="' . esc_url($urlAddonsPage) . '">Addons page</a>, read more about it in our docs on this <a href="https://wpdatatables.com/documentation/addons/master-detail-tables/">link</a>.</p>
          </div>';
     }
 
@@ -530,11 +523,12 @@ function wdtAdminRatingMessages()
          </div>';
     }
 
-    if( is_admin() && strpos($wpdtPage,'wpdatatables') !== false && !($wpdtPage == 'wpdatatables-add-ons') &&
-        get_option( 'wdtShowBundlesNotice' ) == "yes") {
+    if (is_admin() && strpos($wpdtPage, 'wpdatatables') !== false && !($wpdtPage == 'wpdatatables-add-ons') &&
+        get_option('wdtShowBundlesNotice') == "yes") {
         include WDT_TEMPLATE_PATH . 'admin/common/bundles_banner.inc.php';
         wp_enqueue_style('wdt-bundles-css', WDT_CSS_PATH . 'admin/bundles.css');
     }
+
 }
 
 add_action('admin_notices', 'wdtAdminRatingMessages');
@@ -565,13 +559,15 @@ add_action('wp_ajax_wdt_remove_forminator_notice', 'wdtRemoveForminatorNotice');
 
 /**
  * Remove Bundles notice message
-**/
-function wdtRemoveBundlesNotice() {
-    update_option( 'wdtShowBundlesNotice', 'no' );
-    echo json_encode( array("success") );
+ **/
+function wdtRemoveBundlesNotice()
+{
+    update_option('wdtShowBundlesNotice', 'no');
+    echo json_encode(array("success"));
     exit;
 }
-add_action( 'wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice' );
+
+add_action('wp_ajax_wdt_remove_bundles_notice', 'wdtRemoveBundlesNotice');
 
 /**
  * Remove Simple Table alert message
@@ -692,6 +688,9 @@ function wdtWpDataChartShortcodeHandler($atts, $content = null)
     }
     try {
         $dbChartData = WPDataChart::getChartDataById($id);
+        if (!$dbChartData) {
+            return esc_html__('wpDataChart with provided ID not found!', 'wpdatatables');
+        }
         $chartData = [
             'id' => $id,
             'engine' => $dbChartData->engine
@@ -1261,7 +1260,7 @@ function wdtWpDataTableShortcodeHandler($atts, $content = null)
 
             $output = '';
             if ($tableData->show_title && $tableData->title) {
-                $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h3 class="wpdt-c" id="wdt-table-title-' . $id . '">' . $tableData->title . '</h3>'), $id);
+                $output .= apply_filters('wpdatatables_filter_table_title', (empty($tableData->title) ? '' : '<h2 class="wpdt-c" id="wdt-table-title-' . $id . '">' . $tableData->title . '</h2>'), $id);
             }
             if ($tableData->show_table_description && $tableData->table_description) {
                 $output .= apply_filters('wpdatatables_filter_table_description_text', (empty($tableData->table_description) ? '' : '<p class="wpdt-c" id="wdt-table-description-' . $id . '">' . $tableData->table_description . '</p>'), $id);
@@ -1743,6 +1742,17 @@ function welcome_page_activation_redirect($plugin)
 
 add_action('activated_plugin', 'welcome_page_activation_redirect');
 
+function addChartPickerStepNotice()
+{
+    ob_start();
+    include WDT_ROOT_PATH . 'templates/admin/chart_wizard/steps/charts_pick/highstock.inc.php';
+    $highStockChartsNotice = ob_get_contents();
+    ob_end_clean();
+    echo $highStockChartsNotice;
+
+}
+
+add_action('wpdatatables_add_chart_picker', 'addChartPickerStepNotice');
 
 /**
  *  Add plugin action links Plugins page

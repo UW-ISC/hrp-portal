@@ -94,8 +94,8 @@ class WhereBracketExpressionBuilder implements Builder {
     }
 
     protected function buildReserved($parsed) {
-        $builder = new ReservedBuilder();
-        return $builder->build($parsed);
+      $builder = new ReservedBuilder();
+      return $builder->build($parsed);
     }
 
     public function build(array $parsed) {
@@ -113,9 +113,10 @@ class WhereBracketExpressionBuilder implements Builder {
             $sql .= $this->buildWhereExpression($v);
             $sql .= $this->build($v);
             $sql .= $this->buildUserVariable($v);
+           // $sql .= $this->buildSubQuery($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildSubQuery($v);
-
+            
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('WHERE expression subtree', $k, $v, 'expr_type');
             }

@@ -38,6 +38,18 @@
                  style="display:none"><i
                         class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Please do not add more then one string-type (date/time, image, email, URL) column since only one can be used as a label', 'wpdatatables'); ?>
             </div>
+            <div class="datetime-only-error alert alert-danger m-b-10"
+                 style="display:none"><i
+                        class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Please do not add any string-type columns that are not a Date or Datetime column', 'wpdatatables'); ?>
+            </div>
+            <div class="datetime-error alert alert-danger m-b-10"
+                 style="display:none"><i
+                        class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Please do not add more then one Date/DateTime column since only one can be used as a label', 'wpdatatables'); ?>
+            </div>
+            <div class="datetime-needed-error alert alert-danger m-b-10"
+                 style="display:none"><i
+                        class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Please provide a Date or Datetime column to be able to use HighCharts Stock charts', 'wpdatatables'); ?>
+            </div>
             <div class="min-columns-error alert alert-danger m-b-10"
                  style="display:none"><i
                         class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e('Minimum count of columns for this chart type is ', 'wpdatatables'); ?>
@@ -64,6 +76,10 @@
             <label for="follow-table-filtering"><?php esc_html_e('Follow table filtering', 'wpdatatables'); ?></label>
         </div>
     </div>
+</div>
+<div class="datetime-format-error alert alert-danger alert-medium m-b-10 col-sm-5-5"
+     style="display:none"><i
+            class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e(' Follow table filtering is not possible for these Date formats: "d Mon Y", "Mon Y", "F Y", "F j, Y", "j. F Y.", "Y". If you want to enable follow table filtering, lease change your Date format in wpDataTables settings and try again.', 'wpdatatables'); ?>
 </div>
 <div class="col-sm-12 p-0">
     <div class="col-sm-5-5 p-l-0 p-r-0">

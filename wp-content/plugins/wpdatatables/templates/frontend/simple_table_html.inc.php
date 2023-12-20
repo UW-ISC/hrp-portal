@@ -21,11 +21,12 @@
     $isBorderSeparate = $this->getTableSettingsData()->borderCollapse == 'separate';
     $isStripe = $this->getTableSettingsData()->stripeTable;
     $header = $this->getTableSettingsData()->simpleHeader;
+    $tableHTMLClasses = ["wpdtSimpleTable", "wpDataTable"];
     ?>
     <table id="wpdtSimpleTable-<?php echo (int)$this->getTableID() ?>"
            style="border-collapse:<?php echo esc_attr($this->getTableSettingsData()->borderCollapse); ?>;
                    border-spacing:<?php echo esc_attr($this->getTableSettingsData()->borderSpacing); ?>px;"
-           class="wpdtSimpleTable wpDataTable"
+           class="<?php echo esc_attr($this->getTableCssClasses($tableHTMLClasses)) ?>"
            data-column="<?php echo esc_attr($this->getColNumber()) ?>"
            data-rows="<?php echo esc_attr($this->getRowNumber()) ?>"
            data-wpID="<?php echo (int)$this->getTableID() ?>"

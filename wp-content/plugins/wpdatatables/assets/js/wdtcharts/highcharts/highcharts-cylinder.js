@@ -1,5 +1,5 @@
 /*
- Highcharts JS v11.0.1 (2023-05-08)
+ Highcharts JS v11.1.0 (2023-06-05)
 
  Highcharts cylinder module
 
@@ -7,7 +7,7 @@
 
  License: www.highcharts.com/license
 */
-'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/cylinder",["wp-content/plugins/wpdatatables/assets/js/wdtcharts/highcharts/highcharts","highcharts/highcharts-3d"],function(f){a(f);a.Highcharts=f;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function f(a, e, m, f){a.hasOwnProperty(e)||(a[e]=f.apply(null,m),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",{detail:{path:e,
+'use strict';(function(a){"object"===typeof module&&module.exports?(a["default"]=a,module.exports=a):"function"===typeof define&&define.amd?define("highcharts/modules/cylinder",["highcharts","highcharts/highcharts-3d"],function(f){a(f);a.Highcharts=f;return a}):a("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(a){function f(a,e,m,f){a.hasOwnProperty(e)||(a[e]=f.apply(null,m),"function"===typeof CustomEvent&&window.dispatchEvent(new CustomEvent("HighchartsModuleLoaded",{detail:{path:e,
         module:a[e]}})))}a=a?a._modules:{};f(a,"Series/Cylinder/CylinderPoint.js",[a["Core/Series/SeriesRegistry.js"],a["Core/Utilities.js"]],function(a,e){({seriesTypes:{column:{prototype:{pointClass:a}}}}=a);({extend:e}=e);class h extends a{constructor(){super(...arguments);this.series=this.options=void 0}}e(h.prototype,{shapeType:"cylinder"});return h});f(a,"Series/Cylinder/CylinderComposition.js",[a["Core/Color/Color.js"],a["Core/Globals.js"],a["Core/Math3D.js"],a["Core/Renderer/RendererRegistry.js"],
     a["Core/Utilities.js"]],function(a,e,f,q,n){const {parse:h}=a,{charts:k,deg2rad:m}=e,{perspective:x}=f,{merge:y,pick:z}=n;a=q.getRendererType().prototype;const A=a.cuboidPath,p=b=>!b.some(b=>"C"===b[0]);e=y(a.elements3d.cuboid,{parts:["top","bottom","front","back"],pathType:"cylinder",fillSetter:function(b){this.singleSetterForParts("fill",null,{front:b,back:b,top:h(b).brighten(.1).get(),bottom:h(b).brighten(-.1).get()});this.color=this.fill=b;return this}});a.elements3d.cylinder=e;a.cylinder=function(b){return this.element3d("cylinder",
     b)};a.cylinderPath=function(b){const a=k[this.chartIndex],c=A.call(this,b),d=!c.isTop,e=!c.isFront,f=this.getCylinderEnd(a,b);b=this.getCylinderEnd(a,b,!0);return{front:this.getCylinderFront(f,b),back:this.getCylinderBack(f,b),top:f,bottom:b,zIndexes:{top:d?3:0,bottom:d?0:3,front:e?2:1,back:e?1:2,group:c.zIndexes.group}}};a.getCylinderFront=function(b,a){b=b.slice(0,3);if(p(a)){var c=a[0];"M"===c[0]&&(b.push(a[2]),b.push(a[1]),b.push(["L",c[1],c[2]]))}else{c=a[0];const d=a[1];a=a[2];"M"===c[0]&&"C"===

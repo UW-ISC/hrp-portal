@@ -662,7 +662,7 @@
         if( !$parent_element.next('div.tooltip:visible ').length ) {
             $parent_element.attr('title', '');
             $parent_element.tooltip({
-                title: wpdatatables_frontend_strings.invalid_value
+                title: wpdatatables_excel_strings.invalid_value
             });
         }
 

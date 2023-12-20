@@ -3,7 +3,8 @@ if (typeof constructedChartData == 'undefined') {
 }
 
 var wdtChartColumnsData = {};
-
+let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_area_spline_range_chart',
+    'highstock_column_range_chart', 'highstock_candlestick_chart', 'highstock_hlc_chart', 'highstock_ohlc_chart'];
 
 (function ($) {
     var wdtChartPickerDragStart = 0;
@@ -19,13 +20,13 @@ var wdtChartColumnsData = {};
         nextStepButton.prop('disabled', false);
     });
 
-    $('.chart-container.region').on('click', function(e){
-        if($('#region-google-charts').val() === 'world'){
+    $('.chart-container.region').on('click', function (e) {
+        if ($('#region-google-charts').val() === 'world') {
             $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
             $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
         } else {
             $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
-            if($('#sub-continents-geochart').val() === 'world') {
+            if ($('#sub-continents-geochart').val() === 'world') {
                 $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
             }
         }
@@ -33,7 +34,7 @@ var wdtChartColumnsData = {};
     /**
      * Steps switcher (Next)
      */
-    nextStepButton.click(function (e) {
+    nextStepButton.on('click', function (e) {
         e.preventDefault();
 
         var curStep = $('div.chart-wizard-step:visible').data('step');
@@ -58,6 +59,7 @@ var wdtChartColumnsData = {};
                     $("#google-chart-container").show();
 
                     $(".highcharts").hide();
+                    $(".highstock").hide();
                     $(".chartjs").hide();
                     $(".apexcharts").hide();
                     $(".google").show();
@@ -168,7 +170,7 @@ var wdtChartColumnsData = {};
                         case 'google_geo_chart':
                             $('.region').show();
                             var googleKeyValidate = parseInt(wpdatatables_mapsapikey.wdtGoogleApiMapsValidated) || 0;
-                            if(googleKeyValidate != 1) {
+                            if (googleKeyValidate != 1) {
                                 $('#google-region-geochart-container').hide();
                                 $('#sub-continents-geochart-container').hide();
                                 $('#countries-geochart-container').hide();
@@ -212,6 +214,7 @@ var wdtChartColumnsData = {};
                     $(".google").hide();
                     $(".chartjs").hide();
                     $(".apexcharts").hide();
+                    $(".highstock").hide();
                     $(".highcharts").show();
 
                     $('.apex-toolbar-container').hide();
@@ -219,8 +222,11 @@ var wdtChartColumnsData = {};
                     $('#border_color_row').show();
                     $('#border_radius_row').show();
                     $('#zoom-type-row').show();
-                    $("#zoom-type").append('<option value="y">Y</option>');
-                    $("#zoom-type").append('<option value="xy">XY</option>');
+                    if ($("#zoom-type")[0].options.length === 2) {
+                        $("#zoom-type").append('<option value="y">Y</option>');
+                        $("#zoom-type").append('<option value="xy">XY</option>');
+                    }
+
                     $('#panning-row').show();
                     $('#pan-key-row').show();
                     $('#plot-border-width-row').show();
@@ -231,7 +237,7 @@ var wdtChartColumnsData = {};
                     $('.region').hide();
 
                     if (constructedChartData.type == 'highcharts_basic_bar_chart' ||
-                        constructedChartData.type == 'highcharts_stacked_bar_chart' ) {
+                        constructedChartData.type == 'highcharts_stacked_bar_chart') {
                         $('#inverted-row').hide();
                     } else if (constructedChartData.type == 'highcharts_pie_chart' ||
                         constructedChartData.type == 'highcharts_pie_with_gradient_chart' ||
@@ -253,7 +259,7 @@ var wdtChartColumnsData = {};
                         $('.axes').hide();
                         $('.legend').hide();
                         $('.series').hide();
-                    }else if (constructedChartData.type == 'highcharts_spiderweb_chart' ||
+                    } else if (constructedChartData.type == 'highcharts_spiderweb_chart' ||
                         constructedChartData.type == 'highcharts_polar_chart') {
                         $('.axes').hide();
                         $('#border_width_row').hide();
@@ -274,6 +280,7 @@ var wdtChartColumnsData = {};
                     $(".google").hide();
                     $(".highcharts").hide();
                     $(".apexcharts").hide();
+                    $(".highstock").hide();
                     $(".chartjs").show();
                     $('.region').hide();
 
@@ -318,6 +325,7 @@ var wdtChartColumnsData = {};
 
                     $('.google').hide();
                     $('.highcharts').hide();
+                    $('.highstock').hide();
                     $('.chartjs').hide();
                     $('.apexcharts').show();
 
@@ -390,6 +398,36 @@ var wdtChartColumnsData = {};
                     } else {
                         $('.apexcharts-pie').hide();
                     }
+                } else if ($('#chart-render-engine').val() == 'highstock') {
+                    $("#chart-js-container").hide();
+                    $("#apexcharts-chart-container").hide();
+                    $("#google-chart-container").show();
+
+                    $(".google").hide();
+                    $(".chartjs").hide();
+                    $(".apexcharts").hide();
+                    $(".highcharts").show();
+                    $(".highstock").show();
+
+                    $('.group-chart').hide();
+                    $('.apex-toolbar-container').hide();
+                    $('#border_width_row').show();
+                    $('#border_color_row').show();
+                    $('#border_radius_row').show();
+                    $('#zoom-type-row').show();
+                    if ($("#zoom-type")[0].options.length === 2) {
+                        $("#zoom-type").append('<option value="y">Y</option>');
+                        $("#zoom-type").append('<option value="xy">XY</option>');
+                    }
+                    $('#panning-row').show();
+                    $('#pan-key-row').show();
+                    $('#plot-border-width-row').show();
+                    $('#plot_border_color_row').show();
+                    $('.series').show();
+                    $('.chart-show-yaxis').hide();
+                    $('.axes').show();
+                    $('.legend').show();
+                    $('.region').hide();
                 }
 
                 previousStepButton.prop('disabled', false);
@@ -432,7 +470,8 @@ var wdtChartColumnsData = {};
                             }
                         }
                         $('#wdt-add-chart-columns').click();
-                        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');;
+                        $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').addClass('disabled').attr('disabled', 'disabled');
+                        ;
                         $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').addClass('disabled').attr('disabled', 'disabled');
                         nextStepButton.show();
                     }
@@ -527,8 +566,7 @@ var wdtChartColumnsData = {};
                             if (typeof editing_chart_data != 'undefined' &&
                                 editing_chart_data.highcharts_render_data != null &&
                                 constructedChartData.type != 'highcharts_treemap_chart' &&
-                                constructedChartData.type != 'highcharts_treemap_level_chart')
-                            {
+                                constructedChartData.type != 'highcharts_treemap_level_chart') {
                                 for (i = 0; i < data.options.series.length; i++) {
                                     for (j = 0; j < editing_chart_data.highcharts_render_data.options.series.length; j++) {
                                         if (data.options.series[i].orig_header === editing_chart_data.highcharts_render_data.options.series[j].orig_header) {
@@ -571,6 +609,18 @@ var wdtChartColumnsData = {};
                             }
                             seriesBlockTemplateHtml = seriesBlockTemplate.render({series: data.options.series});
 
+                        } else if (constructedChartData.engine == 'highstock') {
+                            if (typeof editing_chart_data != 'undefined' &&
+                                editing_chart_data.highstock_render_data) {
+                                for (i = 0; i < data.options.series.length; i++) {
+                                    for (j = 0; j < editing_chart_data.highstock_render_data.options.series.length; j++) {
+                                        if (data.options.series[i].orig_header === editing_chart_data.highstock_render_data.options.series[j].orig_header) {
+                                            data.options.series[i].label = editing_chart_data.highstock_render_data.options.series[j].label;
+                                        }
+                                    }
+                                }
+                            }
+                            seriesBlockTemplateHtml = seriesBlockTemplate.render({series: data.options.series});
                         }
 
                         $('#series-settings-container').html(seriesBlockTemplateHtml);
@@ -598,8 +648,7 @@ var wdtChartColumnsData = {};
                                 constructedChartData.type != 'highcharts_treemap_chart' &&
                                 constructedChartData.type != 'highcharts_treemap_level_chart' &&
                                 constructedChartData.type != 'highcharts_funnel_chart' &&
-                                constructedChartData.type != 'highcharts_funnel3d_chart')
-                            {
+                                constructedChartData.type != 'highcharts_funnel3d_chart') {
                                 for (i in data.options.series) {
                                     for (j in editing_chart_data.highcharts_render_data.options.series) {
                                         if (data.options.series[i].orig_header === editing_chart_data.highcharts_render_data.options.series[j].orig_header) {
@@ -609,8 +658,7 @@ var wdtChartColumnsData = {};
                                                 constructedChartData.type == 'highcharts_basic_area_chart' ||
                                                 constructedChartData.type == 'highcharts_basic_bar_chart' ||
                                                 constructedChartData.type == 'highcharts_polar_chart' ||
-                                                constructedChartData.type == 'highcharts_spiderweb_chart')
-                                            {
+                                                constructedChartData.type == 'highcharts_spiderweb_chart') {
                                                 $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.highcharts_render_data.options.series[j].color);
                                                 data.options.series[i].color = editing_chart_data.highcharts_render_data.options.series[j].color;
                                                 $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-type select').val(editing_chart_data.highcharts_render_data.options.series[j].type);
@@ -649,7 +697,7 @@ var wdtChartColumnsData = {};
                             }
                         } else if (constructedChartData.engine == 'apexcharts') {
                             $.each(data.options.series, function (key, val) {
-                                $('#series-image-' + key).change(function () {
+                                $('#series-image-' + key).on('change', function () {
                                     switchClearButton($('#series-image-' + key).val(), $('#wdt-upload-chart-image-' + key));
                                     toggleBackgroundImageContainer();
                                     renderChart(false);
@@ -659,7 +707,7 @@ var wdtChartColumnsData = {};
                                     renderChart(false);
                                 });
 
-                                $('#apex-series-type-' + key).change(function (e) {
+                                $('#apex-series-type-' + key).on('change', function (e) {
                                     if ($(this).val() === 'bar' || $(this).val() === 'area') {
                                         $('#series-image-' + key + '-container').show();
                                     } else {
@@ -678,11 +726,9 @@ var wdtChartColumnsData = {};
                                                 constructedChartData.type == 'apexcharts_column_chart' ||
                                                 constructedChartData.type == 'apexcharts_basic_area_chart' ||
                                                 constructedChartData.type == 'apexcharts_stepline_area_chart' ||
-                                                constructedChartData.type == 'apexcharts_spline_area_chart')
-                                            {
+                                                constructedChartData.type == 'apexcharts_spline_area_chart') {
                                                 if (editing_chart_data.apexcharts_render_data.options.series[j].type === 'bar' ||
-                                                    editing_chart_data.apexcharts_render_data.options.series[j].type === 'area')
-                                                {
+                                                    editing_chart_data.apexcharts_render_data.options.series[j].type === 'area') {
                                                     $('#series-image-' + i + '-container').show();
                                                 } else {
                                                     $('#series-image-' + i + '-container').hide();
@@ -725,6 +771,27 @@ var wdtChartColumnsData = {};
                                     $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(data.options.series[i].color);
                                     $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-type select').val(data.options.series[i].type);
                                     $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-show-yaxis input').val(data.options.series[i].yAxis);
+                                }
+                            }
+                        } else if (constructedChartData.engine == 'highstock') {
+                            if (typeof editing_chart_data != 'undefined' && editing_chart_data.highstock_render_data != null) {
+                                for (i in data.options.series) {
+                                    for (j in editing_chart_data.highstock_render_data.options.series) {
+                                        if (singleSeriesFromMultipleTypes.includes(constructedChartData.type)) {
+                                            $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.highstock_render_data.options.series[j].color);
+                                            $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-label input').val(editing_chart_data.highstock_render_data.options.series[j].name);
+                                            data.options.series[i].color = editing_chart_data.highstock_render_data.options.series[j].color;
+                                            data.options.series[i].label = editing_chart_data.highstock_render_data.options.series[j].name;
+                                        } else if (data.options.series[i].orig_header === editing_chart_data.highstock_render_data.options.series[j].orig_header) {
+                                            $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(editing_chart_data.highstock_render_data.options.series[j].color);
+                                            data.options.series[i].color = editing_chart_data.highstock_render_data.options.series[j].color;
+                                            data.options.series[i].label = editing_chart_data.highstock_render_data.options.series[j].name;
+                                        }
+                                    }
+                                }
+                            } else {
+                                for (i in data.options.series) {
+                                    $('#series-settings-container div.chart-series-block:eq(' + i + ')').find('div.chart-series-color input').val(data.options.series[i].color);
                                 }
                             }
                         }
@@ -781,6 +848,16 @@ var wdtChartColumnsData = {};
                             wdtChart.setSeriesAndAxis(data.options);
                             wdtChart.setStartEndAngles(data.options);
                             wdtChart.setColumnIndexes(data.column_indexes);
+                        } else if (constructedChartData.engine === 'highstock') {
+                            wdtChart = new wpDataTablesHighStock();
+                            wdtChart.setNumberFormat(data.wdtNumberFormat);
+                            wdtChart.setOptions(data.options);
+                            wdtChart.setMultipleYaxis(data);
+                            wdtChart.setType(data.type);
+                            wdtChart.setWidth(data.width);
+                            wdtChart.setHeight(data.height);
+                            wdtChart.setColumnIndexes(data.column_indexes);
+                            wdtChart.setContainer('google-chart-container');
                         }
                         wdtChart.render();
                         if (constructedChartData.type == 'google_bubble_chart') {
@@ -792,6 +869,7 @@ var wdtChartColumnsData = {};
                         $('div.chart-series-image').hide();
 
                         if (constructedChartData.engine == 'google' || constructedChartData.engine == 'chartjs'
+                            || constructedChartData.engine == 'highstock'
                             || constructedChartData.type == 'highcharts_stacked_area_chart'
                             || constructedChartData.type == 'highcharts_scatter_plot'
                             || constructedChartData.type == 'highcharts_stacked_bar_chart'
@@ -848,7 +926,7 @@ var wdtChartColumnsData = {};
                         var eTop = $('.chart-preview-container').offset().top;
                         var eWidth = $('.chart-preview-container').width();
 
-                        $(window).scroll(function () {
+                        $(window).on('scroll', function () {
                             if (eTop - $(window).scrollTop() <= 30) {
                                 $('.chart-preview-container').css('position', 'fixed').css('right', 48).css('top', 30).css('width', eWidth);
                             } else {
@@ -943,7 +1021,7 @@ var wdtChartColumnsData = {};
                             });
 
                         var backgroundImageInput = $('#line-background-image');
-                        backgroundImageInput.change(function () {
+                        backgroundImageInput.on('change', function () {
                             if (backgroundImageInput.val() == '') {
                                 $('#wdt-line-image-clear-button').html('<span class="wpdt-icon-image"></span>');
                                 $('.chart-series-image').show();
@@ -976,7 +1054,7 @@ var wdtChartColumnsData = {};
                             renderChart(false);
                         });
 
-                        nextStepButton.show().addClass('wdt-save-chart').html('<i class="wpdt-icon-save"></i>' + wpdatatablesEditStrings.saveChart)
+                        nextStepButton.show().addClass('wdt-save-chart').html('<i class="wpdt-icon-save"></i>' + wpdatatables_chart_wizard_strings.saveChart)
                         $('.wdt-preload-layer').animateFadeOut();
                     }
                 });
@@ -1023,23 +1101,23 @@ var wdtChartColumnsData = {};
         $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
         $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
 
-        if($('#region-google-charts').val() === 'world'){
+        if ($('#region-google-charts').val() === 'world') {
             $('#sub-continents-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
             $('#countries-geochart-container').selectpicker('val', 'world');
         }
-        if($('#region-google-charts').val() === '002'){
+        if ($('#region-google-charts').val() === '002') {
             $('#sub-continents-geochart-container .wdt_africa').removeClass('hidden');
         }
-        if($('#region-google-charts').val() === '150') {
+        if ($('#region-google-charts').val() === '150') {
             $('#sub-continents-geochart-container .wdt_europe').removeClass('hidden');
         }
-        if($('#region-google-charts').val() === '019') {
+        if ($('#region-google-charts').val() === '019') {
             $('#sub-continents-geochart-container .wdt_america').removeClass('hidden');
         }
-        if($('#region-google-charts').val() === '142') {
+        if ($('#region-google-charts').val() === '142') {
             $('#sub-continents-geochart-container .wdt_asia').removeClass('hidden');
         }
-        if($('#region-google-charts').val() === '009') {
+        if ($('#region-google-charts').val() === '009') {
             $('#sub-continents-geochart-container .wdt_australia').removeClass('hidden');
         }
     });
@@ -1055,76 +1133,77 @@ var wdtChartColumnsData = {};
         ).addClass('hidden');
         $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').removeClass('disabled');
 
-        if($('#sub-continents-geo-chart').val() === 'world'){
+        if ($('#sub-continents-geo-chart').val() === 'world') {
             $('#countries-geochart-container button.btn.dropdown-toggle.btn-default').addClass('disabled');
         }
-        if($('#sub-continents-geo-chart').val() === '015'){
+        if ($('#sub-continents-geo-chart').val() === '015') {
             $('#countries-geochart-container .wdt_northern_africa').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '011') {
+        if ($('#sub-continents-geo-chart').val() === '011') {
             $('#countries-geochart-container .wdt_western_africa').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '017') {
+        if ($('#sub-continents-geo-chart').val() === '017') {
             $('#countries-geochart-container .wdt_middle_africa.wdt_africa_c').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '014') {
+        if ($('#sub-continents-geo-chart').val() === '014') {
             $('#countries-geochart-container .wdt_eastern_africa').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '018') {
+        if ($('#sub-continents-geo-chart').val() === '018') {
             $('#countries-geochart-container .wdt_southern_africa').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '154') {
+        if ($('#sub-continents-geo-chart').val() === '154') {
             $('#countries-geochart-container .wdt_northern_europe').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '155') {
+        if ($('#sub-continents-geo-chart').val() === '155') {
             $('#countries-geochart-container .wdt_western_europe').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '151') {
+        if ($('#sub-continents-geo-chart').val() === '151') {
             $('#countries-geochart-container .wdt_eastern_europe').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '039') {
+        if ($('#sub-continents-geo-chart').val() === '039') {
             $('#countries-geochart-container .wdt_southern_europe').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '021') {
+        if ($('#sub-continents-geo-chart').val() === '021') {
             $('#countries-geochart-container .wdt_northern_america').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '029') {
+        if ($('#sub-continents-geo-chart').val() === '029') {
             $('#countries-geochart-container .wdt_caribbean').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '013') {
+        if ($('#sub-continents-geo-chart').val() === '013') {
             $('#countries-geochart-container .wdt_central_america').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '005') {
+        if ($('#sub-continents-geo-chart').val() === '005') {
             $('#countries-geochart-container .wdt_south_america').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '143') {
+        if ($('#sub-continents-geo-chart').val() === '143') {
             $('#countries-geochart-container .wdt_central_asia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '030') {
+        if ($('#sub-continents-geo-chart').val() === '030') {
             $('#countries-geochart-container .wdt_eastern_asia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '034') {
+        if ($('#sub-continents-geo-chart').val() === '034') {
             $('#countries-geochart-container .wdt_southern_asia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '035') {
+        if ($('#sub-continents-geo-chart').val() === '035') {
             $('#countries-geochart-container .wdt_southern_eastern_asia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '145') {
+        if ($('#sub-continents-geo-chart').val() === '145') {
             $('#countries-geochart-container .wdt_western_asia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '053') {
+        if ($('#sub-continents-geo-chart').val() === '053') {
             $('#countries-geochart-container .wdt_australia_and_new_zealand').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '054') {
+        if ($('#sub-continents-geo-chart').val() === '054') {
             $('#countries-geochart-container .wdt_melanesia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '057') {
+        if ($('#sub-continents-geo-chart').val() === '057') {
             $('#countries-geochart-container .wdt_micronesia').removeClass('hidden');
         }
-        if($('#sub-continents-geo-chart').val() === '061') {
+        if ($('#sub-continents-geo-chart').val() === '061') {
             $('#countries-geochart-container .wdt_polynesia').removeClass('hidden');
         }
     });
+
     function renderChart(reloadNeeded) {
         if (typeof reloadNeeded == 'undefined') {
             reloadNeeded = true;
@@ -1184,6 +1263,16 @@ var wdtChartColumnsData = {};
                         wdtChart.setAxisTitles();
                         wdtChart.setColumnIndexes(data.column_indexes);
                         wdtChart.setContainer('#apex-chart-container');
+                    } else if (constructedChartData.engine === 'highstock') {
+                        wdtChart = new wpDataTablesHighStock();
+                        wdtChart.setNumberFormat(data.wdtNumberFormat);
+                        wdtChart.setOptions(data.options);
+                        wdtChart.setMultipleYaxis(data);
+                        wdtChart.setType(data.type);
+                        wdtChart.setWidth(data.width);
+                        wdtChart.setHeight(data.height);
+                        wdtChart.setColumnIndexes(data.column_indexes);
+                        wdtChart.setContainer('google-chart-container');
                     }
                     wdtChart.render();
 
@@ -1247,7 +1336,7 @@ var wdtChartColumnsData = {};
         constructedChartData.text_color = $('input#chart-text-color').val();
         constructedChartData.region = $('#sub-continents-geo-chart').val() === 'world' || $('#region-google-charts').val() === 'world' ? $('#region-google-charts').val() : ($('#sub-continents-geo-chart').val() && $('#countries-geo-chart').val() === 'world' ? $('#sub-continents-geo-chart').val() : $('#countries-geo-chart').val());
         constructedChartData.datalessRegionColor = $('input.geochart_color').val();
-         constructedChartData.colors = $('input.geochart-color-region').val();
+        constructedChartData.colors = $('input.geochart-color-region').val();
         // Series
         if (typeof constructedChartData.series_data == 'undefined') {
             constructedChartData.series_data = {};
@@ -1294,6 +1383,21 @@ var wdtChartColumnsData = {};
                     }
                 }
             });
+        } else if (constructedChartData.engine === 'highstock') {
+            let chartSeriesBlock = $('div.chart-series-block');
+            if (singleSeriesFromMultipleTypes.includes(constructedChartData.type)) {
+                constructedChartData.series_data["series_data"] = {
+                    label: chartSeriesBlock.find('input.series-label').val(),
+                    color: chartSeriesBlock.find('input.series-color').val()
+                }
+            } else {
+                chartSeriesBlock.each(function (e) {
+                    constructedChartData.series_data[$(this).data('orig_header')] = {
+                        label: $(this).find('input.series-label').val(),
+                        color: $(this).find('input.series-color').val()
+                    }
+                });
+            }
         } else {
             $('div.chart-series-block').each(function (e) {
                 constructedChartData.series_data[$(this).data('orig_header')] = {
@@ -1388,7 +1492,7 @@ var wdtChartColumnsData = {};
     /**
      * Steps switcher (Prev)
      */
-    previousStepButton.click(function (e) {
+    previousStepButton.on('click', function (e) {
         e.preventDefault();
 
         $('.wdt-preload-layer').animateFadeIn();
@@ -1438,7 +1542,7 @@ var wdtChartColumnsData = {};
     /**
      * Open chart browser on finish
      */
-    $('#finishButton').click(function (e) {
+    $('#finishButton').on('click', function (e) {
         e.preventDefault();
         window.location = $('#wdt-browse-charts-url').val();
     });
@@ -1446,29 +1550,31 @@ var wdtChartColumnsData = {};
     /**
      * Pick the chart type
      */
-    $('#chart-render-engine').change(function (e) {
+    $('#chart-render-engine').on('change', function (e) {
         e.preventDefault();
         nextStepButton.prop('disabled', true);
         $('.wdt-chart-wizard-chart-selecter-block .card').removeClass('selected').removeClass('not-selected');
         $('div.charts-type').hide();
         if ($(this).val() != '') {
             constructedChartData.engine = $(this).val();
-            if ($(this).val() == 'google') {
+            if (constructedChartData.engine === 'google') {
                 $('div.google-charts-type').show();
                 var googleKeyValidate = parseInt(wpdatatables_mapsapikey.wdtGoogleApiMapsValidated) || 0;
-                if(googleKeyValidate != 1) {
+                if (googleKeyValidate != 1) {
                     $('div[data-type="google_marker_geo_chart"]')[0].style.opacity = 0.4;
                     $('div[data-type="google_marker_geo_chart"]')[0].classList += ' disabled'
                     $('div[data-type="google_text_geo_chart"]')[0].style.opacity = 0.4;
                     $('div[data-type="google_text_geo_chart"]')[0].classList += ' disabled';
                     $('div.alert.alert-info.alert-dismissible').removeClass('hidden');
                 }
-            } else if ($(this).val() == 'highcharts') {
+            } else if (constructedChartData.engine === 'highcharts') {
                 $('div.highcharts-charts-type').show();
-            } else if ($(this).val() == 'chartjs') {
+            } else if (constructedChartData.engine === 'chartjs') {
                 $('div.chartjs-charts-type').show();
-            } else if ($(this).val() == 'apexcharts') {
+            } else if (constructedChartData.engine === 'apexcharts') {
                 $('div.apexcharts-charts-type').show();
+            } else if (constructedChartData.engine === 'highstock') {
+                $('div.highstock-charts-type').show();
             }
         }
     });
@@ -1476,7 +1582,7 @@ var wdtChartColumnsData = {};
     /**
      * Pick the data type
      */
-    $('#wpdatatables-chart-source').change(function (e) {
+    $('#wpdatatables-chart-source').on('change', function (e) {
         e.preventDefault();
         if ($(this).val() == '') {
             nextStepButton.prop('disabled', true);
@@ -1488,7 +1594,7 @@ var wdtChartColumnsData = {};
     /**
      * Responsive width checkbox
      */
-    $('#chart-responsive-width').change(function (e) {
+    $('#chart-responsive-width').on('change', function (e) {
         if ($(this).is(':checked')) {
             $('#chart-width').val('0');
             $('#btn-plus-chart-width').prop('disabled', true);
@@ -1505,15 +1611,15 @@ var wdtChartColumnsData = {};
     /**
      * Select all columns in the column selecter
      */
-    $('button.select-all-columns, button.deselect-all-columns').click(function (e) {
+    $('button.select-all-columns, button.deselect-all-columns').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         if ($(this).hasClass('select-all-columns')) {
             $(this).closest('.card').find('div.chart-column-block').addClass('selected');
-            $(this).text(wpdatatablesEditStrings.deselectAll);
+            $(this).text(wpdatatables_chart_wizard_strings.deselectAll);
         } else {
             $(this).closest('.card').find('div.chart-column-block').removeClass('selected');
-            $(this).text(wpdatatablesEditStrings.selectAll);
+            $(this).text(wpdatatables_chart_wizard_strings.selectAll);
         }
         $(this).toggleClass('select-all-columns deselect-all-columns');
 
@@ -1537,8 +1643,9 @@ var wdtChartColumnsData = {};
      */
     function checkColumnsLimit() {
         // 1 - Checking for string columns
-        var string_columns = 0;
-        var valid = true;
+        let string_columns = 0;
+        let valid = true;
+        let date_columns = 0;
         $('div.wdt-chart-wizard-chosen-columns-container div.chart-column-block').each(function () {
             if (
                 $(this).hasClass('string')
@@ -1551,9 +1658,43 @@ var wdtChartColumnsData = {};
                 || $(this).hasClass('masterdetail')
             ) {
                 string_columns++;
+                if ($(this).hasClass('date') || $(this).hasClass('datetime')) {
+                    date_columns++;
+                }
             }
         });
-        if (string_columns > 1) {
+        if (this.constructedChartData.engine === 'highstock') {
+            // Disable follow filtering for Highstock for certain date formats
+            var invalidFormats = ["d Mon Y", "d M Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y"];
+            if (invalidFormats.includes(wpdatatables_settings.wdtDateFormat)) {
+                $('label[for=follow-table-filtering]').addClass('disabled');
+                $('input#follow-table-filtering').attr('disabled', 'disabled');
+                $('div.datetime-format-error').show();
+            } else {
+                $('label[for=follow-table-filtering]').removeClass('disabled');
+                $('input#follow-table-filtering').removeAttr('disabled');
+                $('div.datetime-format-error').hide();
+            }
+
+            if (string_columns > date_columns) {
+                $('div.chosen_columns div.datetime-only-error').show();
+                valid = false;
+            } else {
+                $('div.chosen_columns div.datetime-only-error').hide();
+            }
+            if (date_columns > 1) {
+                $('div.chosen_columns div.datetime-error').show();
+                valid = false;
+            } else {
+                $('div.chosen_columns div.datetime-error').hide();
+            }
+            if (date_columns === 0) {
+                $('div.chosen_columns div.datetime-needed-error').show();
+                valid = false;
+            } else {
+                $('div.chosen_columns div.datetime-needed-error').hide();
+            }
+        } else if (string_columns > 1) {
             $('div.chosen_columns div.strings-error').show();
             valid = false;
         } else {
@@ -1586,18 +1727,18 @@ var wdtChartColumnsData = {};
     /**
      * Add columns to chart
      */
-    $('#wdt-add-chart-columns').click(function (e) {
+    $('#wdt-add-chart-columns').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container div.chart-column-block.selected').each(function () {
             $(this).appendTo('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container').removeClass('selected');
         });
 
-        if ($('.wdt-chart-column-picker-container .existing-columns button').hasClass('deselect-all-columns')||
+        if ($('.wdt-chart-column-picker-container .existing-columns button').hasClass('deselect-all-columns') ||
             ($('.wdt-chart-wizart-existing-columns-container div.chart-column-block').length === 0
                 && $('.wdt-chart-column-picker-container .existing-columns button').hasClass('select-all-columns'))) {
             $('.wdt-chart-wizart-existing-columns-container div.chart-column-block').removeClass('selected');
-            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').text(wpdatatablesEditStrings.selectAll);
+            $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAll);
             $('.wdt-chart-column-picker-container .existing-columns button').toggleClass('select-all-columns deselect-all-columns');
             $('.wdt-chart-column-picker-container .existing-columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-chart-column-picker-container .existing-columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
@@ -1616,7 +1757,7 @@ var wdtChartColumnsData = {};
     /**
      * Add all columns to chart
      */
-    $('#wdt-add-all-chart-columns').click(function (e) {
+    $('#wdt-add-all-chart-columns').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizart-existing-columns-container div.chart-column-block').addClass('selected');
@@ -1632,7 +1773,7 @@ var wdtChartColumnsData = {};
     /**
      * Remove columns from chart series
      */
-    $('#wdt-remove-chart-columns').click(function (e) {
+    $('#wdt-remove-chart-columns').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container div.chart-column-block.selected').each(function () {
@@ -1642,7 +1783,7 @@ var wdtChartColumnsData = {};
         if ($('.wdt-chart-column-picker-container .chosen_columns button').hasClass('deselect-all-columns') ||
             ($('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').length === 0 && $('.wdt-chart-column-picker-container .chosen_columns button').hasClass('select-all-columns'))) {
             $('.wdt-chart-wizard-chosen-columns-container div.chart-column-block').removeClass('selected');
-            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').text(wpdatatablesEditStrings.selectAll);
+            $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').text(wpdatatables_chart_wizard_strings.selectAll);
             $('.wdt-chart-column-picker-container .chosen_columns button').toggleClass('select-all-columns deselect-all-columns');
             $('.wdt-chart-column-picker-container .chosen_columns button.deselect-all-columns').removeClass('disabled').removeAttr('disabled');
             $('.wdt-chart-column-picker-container .chosen_columns button.select-all-columns').removeClass('disabled').removeAttr('disabled');
@@ -1661,7 +1802,7 @@ var wdtChartColumnsData = {};
     /**
      * Remove all columns from chart
      */
-    $('#wdt-remove-all-chart-columns').click(function (e) {
+    $('#wdt-remove-all-chart-columns').on('click', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         $('div.wdt-chart-column-picker-container div.wdt-chart-wizard-chosen-columns-container div.chart-column-block').addClass('selected');
@@ -1676,7 +1817,7 @@ var wdtChartColumnsData = {};
     /**
      * Change the range type
      */
-    $('#wdt-chart-row-range-type').change(function (e) {
+    $('#wdt-chart-row-range-type').on('change', function (e) {
         e.preventDefault();
         //e.stopImmediatePropagation();
         if ($(this).val() == 'all_rows') {
@@ -1717,7 +1858,7 @@ var wdtChartColumnsData = {};
     /**
      * Open the range picker
      */
-    $('#open-range-picker-btn').click(function (e) {
+    $('#open-range-picker-btn').on('click', function (e) {
         e.preventDefault();
         if (typeof constructedChartData.selected_columns == 'undefined') {
             constructedChartData.selected_columns = {};
@@ -1881,7 +2022,7 @@ var wdtChartColumnsData = {};
     /**
      * Submit the pick range
      */
-    $('#submit-pick-range').click(function (e) {
+    $('#submit-pick-range').on('click', function (e) {
         e.preventDefault();
         // First update the picked columns range
         // Remove all columns
@@ -1990,7 +2131,7 @@ var wdtChartColumnsData = {};
                     }
                     $('#border-radius').val(editing_chart_data.render_data.options.backgroundColor.rx);
                 }
-                if($.inArray(editing_chart_data.type, ['google_text_geo_chart', 'google_marker_geo_chart', 'google_geo_chart']) != -1) {
+                if ($.inArray(editing_chart_data.type, ['google_text_geo_chart', 'google_marker_geo_chart', 'google_geo_chart']) != -1) {
                     if (editing_chart_data.render_data.options.datalessRegionColor == null) {
                         $('input.geochart_color').val('');
                     } else {
@@ -2022,165 +2163,166 @@ var wdtChartColumnsData = {};
                         $('#region-google-charts').val(editing_chart_data.render_data.options.region);
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['015', '011', '017', '014', '018']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
-                            $('#sub-continents-geo-chart .wdt_africa').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                        $('#sub-continents-geo-chart .wdt_africa').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['154', '155', '151', '039']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '150');
-                            $('#region-google-charts').val('150');
-                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
-                            $('#sub-continents-geo-chart .wdt_europe').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '150');
+                        $('#region-google-charts').val('150');
+                        $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                        $('#sub-continents-geo-chart .wdt_europe').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['021', '029', '013', '005']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '019');
-                            $('#region-google-charts').val('019');
-                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
-                            $('#sub-continents-geo-chart .wdt_america').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '019');
+                        $('#region-google-charts').val('019');
+                        $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                        $('#sub-continents-geo-chart .wdt_america').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['053', '054', '057', '061']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '009');
-                            $('#region-google-charts').val('009');
-                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
-                            $('#sub-continents-geo-chart .wdt_australia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '009');
+                        $('#region-google-charts').val('009');
+                        $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                        $('#sub-continents-geo-chart .wdt_australia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['143', '030', '034', '035', '145']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#region-google-charts').val('142');
-                            $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
-                            $('#sub-continents-geo-chart .wdt_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#region-google-charts').val('142');
+                        $('#sub-continents-geo-chart').val(editing_chart_data.render_data.options.region)
+                        $('#sub-continents-geo-chart .wdt_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['DZ', 'EG', 'EH', 'LY', 'MA', 'SD', 'SS', 'TN']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val('015');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_northern_africa').removeClass('hidden')
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val('015');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_northern_africa').removeClass('hidden')
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BF', 'BJ', 'CI', 'CV', 'GH', 'GN', 'GW', 'LR', 'ML', 'MR', 'NE', 'NG', 'SH', 'SL', 'SN', 'TG']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val('011');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_western_africa').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val('011');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_western_africa').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AO', 'CD', 'ZR', 'CF', 'CG', 'CM', 'GA', 'GQ', 'ST', 'TD']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val('017');
-                            $('#countries-geochart-container').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_middle_africa').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val('017');
+                        $('#countries-geochart-container').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_middle_africa').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BI', 'DJ', 'ER', 'ET', 'KE', 'KM', 'MG', 'MU', 'MW', 'MZ', 'RE', 'RW', 'SC', 'SO', 'TZ', 'UG', 'YT', 'ZM', 'ZW']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val('014');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_eastern_africa').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val('014');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_eastern_africa').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BW', 'LS', 'NA', 'SZ', 'ZA']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '002');
-                            $('#sub-continents-geo-chart').val('018');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_southern_africa').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '002');
+                        $('#sub-continents-geo-chart').val('018');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_southern_africa').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['GG', 'JE', 'AX', 'DK', 'EE', 'FI', 'FO', 'GB', 'IE', 'IM', 'IS', 'LT', 'LV', 'NO', 'SE', 'SJ']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '150');
-                            $('#sub-continents-geo-chart').val('154');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_northern_europe').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '150');
+                        $('#sub-continents-geo-chart').val('154');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_northern_europe').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AT', 'BE', 'CH', 'DE', 'DD', 'FR', 'FX', 'LI', 'LU', 'MC', 'NL']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '150');
-                            $('#sub-continents-geo-chart').val('155');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_western_europe').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '150');
+                        $('#sub-continents-geo-chart').val('155');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_western_europe').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BG', 'BY', 'CZ', 'HU', 'MD', 'PL', 'RO', 'RU', 'SU', 'SK', 'UA']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '150');
-                            $('#sub-continents-geo-chart').val('151');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_eastern_europe').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '150');
+                        $('#sub-continents-geo-chart').val('151');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_eastern_europe').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AD', 'AL', 'BA', 'ES', 'GI', 'GR', 'HR', 'IT', 'ME', 'MK', 'MT', 'RS', 'PT', 'SI', 'SM', 'VA', 'YU']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '150');
-                            $('#sub-continents-geo-chart').val('039');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_southern_europe').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '150');
+                        $('#sub-continents-geo-chart').val('039');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_southern_europe').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BM', 'CA', 'GL', 'PM', 'US']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '019');
-                            $('#sub-continents-geo-chart').val('021');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_northern_america').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '019');
+                        $('#sub-continents-geo-chart').val('021');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_northern_america').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AG', 'AI', 'AN', 'AW', 'BB', 'BL', 'BS', 'CU', 'DM', 'DO', 'GD', 'GP', 'HT', 'JM', 'KN', 'KY', 'LC', 'MF', 'MQ', 'MS', 'PR', 'TC', 'TT', 'VC', 'VG', 'VI']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '019');
-                            $('#sub-continents-geo-chart').val('029');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);;
-                            $('#countries-geo-chart .wdt_caribbean').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '019');
+                        $('#sub-continents-geo-chart').val('029');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        ;
+                        $('#countries-geo-chart .wdt_caribbean').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BZ', 'CR', 'GT', 'HN', 'MX', 'NI', 'PA', 'SV']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '019');
-                            $('#sub-continents-geo-chart').val('013');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_central_america').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '019');
+                        $('#sub-continents-geo-chart').val('013');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_central_america').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AR', 'BO', 'BR', 'CL', 'CO', 'EC', 'FK', 'GF', 'GY', 'PE', 'PY', 'SR', 'UY', 'VE']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '019');
-                            $('#sub-continents-geo-chart').val('005');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_south_america').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '019');
+                        $('#sub-continents-geo-chart').val('005');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_south_america').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['TM', 'TJ', 'KG', 'KZ', 'UZ']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#sub-continents-geo-chart').val('143');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_central_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#sub-continents-geo-chart').val('143');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_central_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['CN', 'HK', 'JP', 'KP', 'KR', 'MN', 'MO', 'TW']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#sub-continents-geo-chart').val('030');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_eastern_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#sub-continents-geo-chart').val('030');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_eastern_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AF', 'BD', 'BT', 'IN', 'IR', 'LK', 'MV', 'NP', 'PK']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#sub-continents-geo-chart').val('034');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_southern_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#sub-continents-geo-chart').val('034');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_southern_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['BN', 'ID', 'KH', 'LA', 'MM', 'BU', 'MY', 'PH', 'SG', 'TH', 'TL', 'TP', 'VN']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#sub-continents-geo-chart').val('035');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_southern_eastern_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#sub-continents-geo-chart').val('035');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_southern_eastern_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AE', 'AM', 'AZ', 'BH', 'CY', 'GE', 'IL', 'IQ', 'JO', 'KW', 'LB', 'OM', 'PS', 'QA', 'SA', 'NT', 'SY', 'TR', 'YE', 'YD']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '142');
-                            $('#sub-continents-geo-chart').val('145');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_western_asia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '142');
+                        $('#sub-continents-geo-chart').val('145');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_western_asia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AU', 'NF', 'NZ']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '009');
-                            $('#sub-continents-geo-chart').val('053');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_australia_and_new_zealand').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '009');
+                        $('#sub-continents-geo-chart').val('053');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_australia_and_new_zealand').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['FJ', 'NC', 'PG', 'SB', 'VU']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '009');
-                            $('#sub-continents-geo-chart').val('054');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_melanesia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '009');
+                        $('#sub-continents-geo-chart').val('054');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_melanesia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['FM', 'GU', 'KI', 'MH', 'MP', 'NR', 'PW']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '009');
-                            $('#sub-continents-geo-chart').val('057');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_micronesia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '009');
+                        $('#sub-continents-geo-chart').val('057');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_micronesia').removeClass('hidden');
                     }
                     if ($.inArray(editing_chart_data.render_data.options.region, ['AS', 'CK', 'NU', 'PF', 'PN', 'TK', 'TO', 'TV', 'WF', 'WS']) != -1) {
-                            $('#region-google-charts').selectpicker('val', '009');
-                            $('#sub-continents-geo-chart').val('061');
-                            $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
-                            $('#countries-geo-chart .wdt_polynesia').removeClass('hidden');
+                        $('#region-google-charts').selectpicker('val', '009');
+                        $('#sub-continents-geo-chart').val('061');
+                        $('#countries-geo-chart').val(editing_chart_data.render_data.options.region);
+                        $('#countries-geo-chart .wdt_polynesia').removeClass('hidden');
                     }
                 }
                 if (editing_chart_data.render_data.options.chartArea == null) {
@@ -2860,8 +3002,229 @@ var wdtChartColumnsData = {};
                     $('#apex-exporting-file-name').val(editing_chart_data.apexcharts_render_data.options.chart.toolbar.export.png.filename);
                 }
 
-            }
+            } else if (editing_chart_data.engine == 'highstock') {
 
+                if (editing_chart_data.highstock_render_data == null) {
+                    // Chart
+                    $('input.background-color').val('');
+                    $('#border-width').val(0);
+                    $('input.border_color').val('');
+                    $('#border-radius').val(0);
+                    $('#zoom-type').val('none');
+                    $('#panning').prop('checked', '');
+                    $('#pan-key').val('shift');
+                    $('input.plot-background-color').val('');
+                    $('#plot-background-image').val('');
+                    $('#plot-border-width').val(0);
+                    $('input.plot-border-color').val('');
+
+
+                    // Axes
+                    $('#highcharts-line-dash-style').val('solid');
+                    $('#horizontal-axis-crosshair').prop('checked', '');
+                    $('#vertical-axis-crosshair').prop('checked', '');
+                    $('#vertical-axis-min').val('');
+                    $('#vertical-axis-max').val('');
+                    $('#inverted').prop('checked', '');
+
+
+                    // Title
+                    $('#title-floating').prop('checked', '');
+                    $('#title-align').val('center');
+                    $('#subtitle').val('');
+                    $('#subtitle-align').val('center');
+
+
+                    // Tooltip
+                    $('#tooltip-enabled').prop('checked', 'checked');
+                    $('input.tooltip-background-color').val('');
+                    $('#tooltip-border-width').val(1);
+                    $('input.tooltip-border-color').val('');
+                    $('#tooltip-border-radius').val(3);
+                    $('#tooltip-shared').prop('checked', '');
+                    $('#tooltip-value-prefix').val('');
+                    $('#tooltip-value-suffix').val('');
+
+
+                    // Legend
+                    $('#show-legend').prop('checked', 'checked');
+                    $('input.legend_background_color').val('');
+                    $('#legend_title').val('');
+                    $('#legend_layout').val('horizontal');
+                    $('#legend_align').val('center');
+                    $('#legend_vertical_align').val('bottom');
+                    $('#legend_border_width').val(0);
+                    $('input.legend_border_color').val('');
+                    $('#legend_border_radius').val(0);
+
+
+                    // Exporting
+                    $('#exporting').prop('checked', 'checked');
+                    $('#exporting-data-labels').prop('checked', '');
+                    $('#exporting-file-name').val('');
+                    $('#exporting-width').val('');
+                    $('#exporting-button-align').val('right');
+                    $('#exporting-button-vertical-align').val('top');
+                    $('#exporting-button-color').val('');
+                    $('#exporting-button-text').val('');
+
+
+                    // Credits
+                    $('#credits').prop('checked', 'checked');
+                    $('#credits-href').val('https://www.highcharts.com');
+                    $('#credits-text').val('Highcharts.com');
+
+
+                } else {
+                    // Chart
+                    if (editing_chart_data.highstock_render_data.options.chart.backgroundColor) {
+                        $('#background-color').val(editing_chart_data.highstock_render_data.options.chart.backgroundColor);
+                    }
+                    $('#border-width').val(editing_chart_data.highstock_render_data.options.chart.borderWidth);
+                    if (editing_chart_data.highstock_render_data.options.chart.borderColor) {
+                        $('#border_color').val(editing_chart_data.highstock_render_data.options.chart.borderColor);
+                    }
+                    $('#border-radius').val(editing_chart_data.highstock_render_data.options.chart.borderRadius);
+                    $("#zoom-type").append('<option value="y">Y</option>');
+                    $("#zoom-type").append('<option value="xy">XY</option>');
+                    $('#zoom-type').val(editing_chart_data.highstock_render_data.options.chart.zoomType);
+                    if (editing_chart_data.highstock_render_data.options.chart.panning) {
+                        $('#panning').prop('checked', 'checked');
+                    } else {
+                        $('#panning').prop('checked', '');
+                    }
+                    $('#pan-key').val(editing_chart_data.highstock_render_data.options.chart.panKey);
+                    if (editing_chart_data.highstock_render_data.options.chart.plotBackgroundColor) {
+                        $('#plot-background-color').val(editing_chart_data.highstock_render_data.options.chart.plotBackgroundColor);
+                    }
+                    $('#plot-background-image').val(editing_chart_data.highstock_render_data.options.chart.plotBackgroundImage);
+                    if (editing_chart_data.highstock_render_data.options.chart.plotBackgroundImage) {
+                        $('#wdt-plot-image-clear-button').html("Clear");
+                    } else {
+                        $('#wdt-line-image-clear-button').html('<span class="wpdt-icon-image"></span>');
+                    }
+
+                    $('#plot-border-width').val(editing_chart_data.highstock_render_data.options.chart.plotBorderWidth);
+                    if (editing_chart_data.highstock_render_data.options.chart.plotBorderColor) {
+                        $('#plot-border-color').val(editing_chart_data.highstock_render_data.options.chart.plotBorderColor);
+                    }
+                    if (editing_chart_data.highstock_render_data.options.credits.enabled) {
+                        $('#credits').prop('checked', 'checked');
+                    } else {
+                        $('#credits').prop('checked', '');
+                    }
+
+                    // Axes
+                    if (Array.isArray(editing_chart_data.highstock_render_data.options.yAxis)) {
+                        $('#highcharts-line-dash-style').val(editing_chart_data.highstock_render_data.options.yAxis[0].gridLineDashStyle);
+                    } else {
+                        $('#highcharts-line-dash-style').val(editing_chart_data.highstock_render_data.options.yAxis.gridLineDashStyle);
+                    }
+                    if (editing_chart_data.highstock_render_data.options.xAxis.crosshair) {
+                        $('#horizontal-axis-crosshair').prop('checked', 'checked');
+                    } else {
+                        $('#horizontal-axis-crosshair').prop('checked', '');
+                    }
+                    if (Array.isArray(editing_chart_data.highstock_render_data.options.yAxis)) {
+                        if (editing_chart_data.highstock_render_data.options.yAxis[0].crosshair) {
+                            $('#vertical-axis-crosshair').prop('checked', 'checked');
+                        } else {
+                            $('#vertical-axis-crosshair').prop('checked', '');
+                        }
+                        $('#vertical-axis-min').val(editing_chart_data.highstock_render_data.options.yAxis[0].min);
+                        $('#vertical-axis-max').val(editing_chart_data.highstock_render_data.options.yAxis[0].max);
+                    } else {
+                        if (editing_chart_data.highstock_render_data.options.yAxis.crosshair) {
+                            $('#vertical-axis-crosshair').prop('checked', 'checked');
+                        } else {
+                            $('#vertical-axis-crosshair').prop('checked', '');
+                        }
+                        $('#vertical-axis-min').val(editing_chart_data.highstock_render_data.options.yAxis.min);
+                        $('#vertical-axis-max').val(editing_chart_data.highstock_render_data.options.yAxis.max);
+                    }
+                    if (editing_chart_data.highstock_render_data.options.chart.inverted) {
+                        $('#inverted').prop('checked', 'checked');
+                    } else {
+                        $('#inverted').prop('checked', '');
+                    }
+                    // Title
+                    if (editing_chart_data.highstock_render_data.options.title.floating) {
+                        $('#title-floating').prop('checked', 'checked');
+                    } else {
+                        $('#title-floating').prop('checked', '');
+                    }
+                    $('#title-align').val(editing_chart_data.highstock_render_data.options.title.align);
+                    $('#subtitle').val(editing_chart_data.highstock_render_data.options.subtitle.text);
+                    $('#subtitle-align').val(editing_chart_data.highstock_render_data.options.subtitle.align);
+
+                    // Tooltip
+                    if (editing_chart_data.highstock_render_data.options.tooltip.enabled) {
+                        $('#tooltip-enabled').prop('checked', 'checked');
+                    } else {
+                        $('#tooltip-enabled').prop('checked', '');
+                    }
+                    if (editing_chart_data.highstock_render_data.options.tooltip.backgroundColor) {
+                        $('#tooltip-background-color').val(editing_chart_data.highstock_render_data.options.tooltip.backgroundColor);
+                    }
+                    $('#tooltip-border-width').val(editing_chart_data.highstock_render_data.options.tooltip.borderWidth);
+                    if (editing_chart_data.highstock_render_data.options.tooltip.borderColor) {
+                        $('#tooltip-border-color').val(editing_chart_data.highstock_render_data.options.tooltip.borderColor);
+                    }
+                    $('#tooltip-border-radius').val(editing_chart_data.highstock_render_data.options.tooltip.borderRadius);
+                    if (editing_chart_data.highstock_render_data.options.tooltip.shared) {
+                        $('#tooltip-shared').prop('checked', 'checked');
+                    } else {
+                        $('#tooltip-shared').prop('checked', '');
+                    }
+                    $('#tooltip-value-prefix').val(editing_chart_data.highstock_render_data.options.tooltip.valuePrefix);
+                    $('#tooltip-value-suffix').val(editing_chart_data.highstock_render_data.options.tooltip.valueSuffix);
+
+
+                    // Legend
+                    if (editing_chart_data.highstock_render_data.options.legend.enabled) {
+                        $('#show-legend').prop('checked', 'checked');
+                    } else {
+                        $('#show-legend').prop('checked', '');
+                    }
+                    $('input.legend_background_color').val(editing_chart_data.highstock_render_data.options.legend.backgroundColor);
+                    $('#legend_title').val(editing_chart_data.highstock_render_data.options.legend.title.text);
+                    $('#legend_layout').val(editing_chart_data.highstock_render_data.options.legend.layout);
+                    $('#legend_align').val(editing_chart_data.highstock_render_data.options.legend.align);
+                    $('#legend_vertical_align').val(editing_chart_data.highstock_render_data.options.legend.verticalAlign);
+                    $('#legend_border_width').val(editing_chart_data.highstock_render_data.options.legend.borderWidth);
+                    $('input.legend_border_color').val(editing_chart_data.highstock_render_data.options.legend.borderColor);
+                    $('#legend_border_radius').val(editing_chart_data.highstock_render_data.options.legend.borderRadius);
+
+
+                    // Exporting
+                    if (editing_chart_data.highstock_render_data.options.exporting.enabled) {
+                        $('#exporting').prop('checked', 'checked');
+                    } else {
+                        $('#exporting').prop('checked', '');
+                    }
+                    if (editing_chart_data.highstock_render_data.options.exporting.chartOptions.plotOptions.series.dataLabels.enabled) {
+                        $('#exporting-data-labels').prop('checked', 'checked');
+                    } else {
+                        $('#exporting-data-labels').prop('checked', '');
+                    }
+                    $('#exporting-file-name').val(editing_chart_data.highstock_render_data.options.exporting.filename);
+                    $('#exporting-width').val(editing_chart_data.highstock_render_data.options.exporting.width);
+                    $('#exporting-button-align').val(editing_chart_data.highstock_render_data.options.exporting.buttons.contextButton.align);
+                    $('#exporting-button-vertical-align').val(editing_chart_data.highstock_render_data.options.exporting.buttons.contextButton.verticalAlign);
+                    $('#exporting-button-color').val(editing_chart_data.highstock_render_data.options.exporting.buttons.contextButton.symbolStroke);
+                    $('#exporting-button-text').val(editing_chart_data.highstock_render_data.options.exporting.buttons.contextButton.text);
+
+
+                    // Credits
+                    if (editing_chart_data.highstock_render_data.options.credits.enabled) {
+                        $('#credits').prop('checked', 'checked');
+                    } else {
+                        $('#credits').prop('checked', '');
+                    }
+                    $('#credits-href').val(editing_chart_data.highstock_render_data.options.credits.href);
+                    $('#credits-text').val(editing_chart_data.highstock_render_data.options.credits.text);
+                }
+            }
         }
     });
 
@@ -2876,14 +3239,14 @@ var wdtChartColumnsData = {};
         drake.on('drop', function (el, container) {
             checkColumnsLimit();
             $(container).parent().find('button').removeClass('disabled').removeAttr('disabled');
-            if($(container).parent().find('div.chart-column-block').length === 0) {
+            if ($(container).parent().find('div.chart-column-block').length === 0) {
                 $(container).parent().find('button').addClass('disabled').attr('disabled', 'disabled');
             }
         });
         drake.on('drag', function (el, container) {
             checkColumnsLimit();
             $(container).parent().find('button').removeClass('disabled').removeAttr('disabled');
-            if($(container).parent().find('div.chart-column-block').length - 1 === 0) {
+            if ($(container).parent().find('div.chart-column-block').length - 1 === 0) {
                 $(container).parent().find('button').addClass('disabled').attr('disabled', 'disabled');
             }
         });
@@ -2891,7 +3254,7 @@ var wdtChartColumnsData = {};
         drake.on('dragend', function (el, container) {
             checkColumnsLimit();
             $(el).parent().parent().find('button').removeClass('disabled').removeAttr('disabled');
-            if($(el).parent().parent().find('div.chart-column-block').length === 0) {
+            if ($(el).parent().parent().find('div.chart-column-block').length === 0) {
                 $(el).parent().parent().find('button').addClass('disabled').attr('disabled', 'disabled');
             }
         });

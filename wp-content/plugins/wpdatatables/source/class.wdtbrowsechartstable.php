@@ -217,6 +217,7 @@ class WDTBrowseChartsTable extends WP_List_Table
     {
         switch ($item['type']) {
             case 'chartjs_column_chart':
+            case 'highstock_column_chart':
             case 'google_column_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Column Chart', 'wpdatatables') . '</span>';
             case 'google_histogram':
@@ -231,12 +232,14 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-chart-type">' . esc_html__('Stacked Bar Chart', 'wpdatatables') . '</span>';
             case 'chartjs_area_chart':
             case 'google_area_chart':
+            case 'highstock_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Area Chart', 'wpdatatables') . '</span>';
             case 'google_stepped_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Stepped Area Chart', 'wpdatatables') . '</span>';
             case 'highcharts_line_chart':
             case 'chartjs_line_chart':
             case 'apexcharts_straight_line_chart':
+            case 'highstock_line_chart':
             case 'google_line_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Line Chart', 'wpdatatables') . '</span>';
             case 'highcharts_pie_chart':
@@ -256,6 +259,7 @@ class WDTBrowseChartsTable extends WP_List_Table
             case 'google_scatter_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Scatter Chart', 'wpdatatables') . '</span>';
             case 'google_candlestick_chart':
+            case 'highstock_candlestick_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Candlestick Chart', 'wpdatatables') . '</span>';
             case 'google_waterfall_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Waterfall Chart', 'wpdatatables') . '</span>';
@@ -271,6 +275,7 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-chart-type">' . esc_html__('Spiderweb chart', 'wpdatatables') . '</span>';
             case 'apexcharts_spline_chart':
             case 'highcharts_spline_chart':
+            case 'highstock_spline_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Spline Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_basic_area_chart':
             case 'highcharts_basic_area_chart':
@@ -314,12 +319,14 @@ class WDTBrowseChartsTable extends WP_List_Table
             case 'chartjs_doughnut_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Doughnut Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_stepline_chart':
+            case 'highstock_stepline_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Step Line Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_100_stacked_bar_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('100% Stacked Bar Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_100_stacked_column_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('100% Stacked Column Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_spline_area_chart':
+            case 'highstock_area_spline_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Spline Area Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_stepline_area_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Stepline Chart', 'wpdatatables') . '</span>';
@@ -331,6 +338,20 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-chart-type">' . esc_html__('Radialbar Chart', 'wpdatatables') . '</span>';
             case 'apexcharts_radialbar_gauge_chart':
                 return '<span class="wdt-chart-type">' . esc_html__('Radialbar Chart With Gauge', 'wpdatatables') . '</span>';
+            case 'highstock_line_with_markers_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Line with markers', 'wpdatatables') . '</span>';
+            case 'highstock_point_markers_only_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Point markers only', 'wpdatatables') . '</span>';
+            case 'highstock_area_range_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Area range Chart', 'wpdatatables') . '</span>';
+            case 'highstock_area_spline_range_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Area spline range Chart', 'wpdatatables') . '</span>';
+            case 'highstock_column_range_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('Column range Chart', 'wpdatatables') . '</span>';
+            case 'highstock_hlc_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('HLC Chart', 'wpdatatables') . '</span>';
+            case 'highstock_ohlc_chart':
+                return '<span class="wdt-chart-type">' . esc_html__('OHLC Chart', 'wpdatatables') . '</span>';
             default:
                 return $item;
         }
@@ -348,6 +369,8 @@ class WDTBrowseChartsTable extends WP_List_Table
                 return '<span class="wdt-render-engine">' . esc_html__('Chart.js', 'wpdatatables') . '</span>';
             case 'apexcharts':
                 return '<span class="wdt-render-engine">' . esc_html__('Apexcharts', 'wpdatatables') . '</span>';
+            case 'highstock':
+                return '<span class="wdt-render-engine">' . esc_html__('Highcharts Stock', 'wpdatatables') . '</span>';
             default:
                 return $item;
         }

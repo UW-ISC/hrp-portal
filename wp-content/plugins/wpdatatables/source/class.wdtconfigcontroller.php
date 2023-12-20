@@ -234,6 +234,7 @@ class WDTConfigController
             $table->enableDuplicateButton = (isset($advancedSettings->enableDuplicateButton)) ? $advancedSettings->enableDuplicateButton : false;
             $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
             $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin) ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
+            $table->table_wcag = isset($table->table_wcag) || isset($advancedSettings->table_wcag) ? $advancedSettings->table_wcag : 0;
             $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval) ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
             $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader) ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
             $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss) ? $advancedSettings->tableCustomCss : '';
@@ -435,6 +436,7 @@ class WDTConfigController
                     'enableDuplicateButton' => $table->enableDuplicateButton,
                     'language' => $table->language,
                     'tableSkin' => $tableSkin,
+                    'table_wcag' =>  $table->table_wcag,
                     'tableBorderRemoval' => $table->tableBorderRemoval,
                     'tableBorderRemovalHeader' => $table->tableBorderRemovalHeader,
                     'tableCustomCss' => $table->tableCustomCss,
@@ -535,6 +537,7 @@ class WDTConfigController
         $table->showRowsPerPage = (int)$table->showRowsPerPage;
         $table->language = sanitize_text_field($table->language);
         $table->tableSkin = sanitize_text_field($table->tableSkin);
+        $table->table_wcag = (int)($table->table_wcag);
         $table->tableBorderRemoval = (int)$table->tableBorderRemoval;
         $table->tableBorderRemovalHeader = (int)$table->tableBorderRemovalHeader;
         $table->tableCustomCss = sanitize_textarea_field($table->tableCustomCss);
@@ -887,13 +890,30 @@ class WDTConfigController
                     $column->editingDefaultValue = sanitize_text_field($column->editingDefaultValue);
                 }
                 if (is_object($column->filterDefaultValue)) {
-                    $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue->value);
+                    if (is_null($column->filterDefaultValue->value)){
+                        $column->filterDefaultValue = sanitize_text_field($column->filterDefaultValue->value);
+                    } else {
+                        $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue->value);
+                    }
                 } else {
-                    $column->filterDefaultValue = is_array($column->filterDefaultValue) ? array_map('wp_kses_post', $column->filterDefaultValue) : wp_kses_post($column->filterDefaultValue);
+                    if ( is_array($column->filterDefaultValue)){
+                        $column->filterDefaultValue = array_map('wp_kses_post', $column->filterDefaultValue);
+                    } else {
+                        if (is_null($column->filterDefaultValue)){
+                            $column->filterDefaultValue = sanitize_text_field($column->filterDefaultValue);
+                        } else {
+                            $column->filterDefaultValue = wp_kses_post($column->filterDefaultValue);
+                        }
+                    }
+
                 }
                 $column->exactFiltering = (int)$column->exactFiltering;
                 $column->globalSearchColumn = (int)($column->globalSearchColumn);
-                $column->filterLabel = wp_kses_post($column->filterLabel);
+                if(is_null($column->filterLabel)){
+                    $column->filterLabel = '';
+                } else {
+                    $column->filterLabel = wp_kses_post($column->filterLabel);
+                }
                 $column->searchInSelectBox = (int)$column->searchInSelectBox;
                 $column->searchInSelectBoxEditing = (int)$column->searchInSelectBoxEditing;
                 $column->formula = sanitize_text_field($column->formula);
@@ -922,11 +942,25 @@ class WDTConfigController
                 $column->skip_thousands_separator = (int)$column->skip_thousands_separator;
                 $column->sorting = (int)$column->sorting;
                 if (is_admin() && !current_user_can('unfiltered_html')) {
-                    $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
-                    $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
+                    if (is_null($column->text_after)){
+                        $column->text_after = sanitize_text_field($column->text_after);
+                    } else {
+                        $column->text_after = sanitize_text_field(wp_kses_post($column->text_after));
+                    }
+                    if (is_null($column->text_before)){
+                        $column->text_before = sanitize_text_field($column->text_before);
+                    } else {
+                        $column->text_before = sanitize_text_field(wp_kses_post($column->text_before));
+                    }
+                    if (is_null($column->transformValueText)){
+                        $column->transformValueText = sanitize_textarea_field($column->transformValueText);
+                    } else {
+                        $column->transformValueText = sanitize_textarea_field(wp_kses_post($column->transformValueText));
+                    }
                 } else {
                     $column->text_after = (string)$column->text_after;
                     $column->text_before = (string)$column->text_before;
+                    $column->transformValueText = (string)$column->transformValueText;
                 }
                 $column->css_class = sanitize_text_field($column->css_class);
                 $column->type = sanitize_text_field($column->type);
@@ -937,8 +971,16 @@ class WDTConfigController
                         $cond->ifClause = sanitize_text_field($cond->ifClause);
                         $cond->action = sanitize_text_field($cond->action);
                         if (is_admin() && !current_user_can('unfiltered_html')) {
-                            $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
-                            $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
+                            if (is_null($cond->cellVal)){
+                                $cond->cellVal = sanitize_text_field($cond->cellVal);
+                            } else {
+                                $cond->cellVal = sanitize_text_field(wp_kses_post($cond->cellVal));
+                            }
+                            if (is_null($cond->setVal)){
+                                $cond->setVal = sanitize_text_field($cond->setVal);
+                            } else {
+                                $cond->setVal = sanitize_text_field(wp_kses_post($cond->setVal));
+                            }
                         }
                     }
                 }
@@ -1297,6 +1339,8 @@ class WDTConfigController
 
         $columnConfig['advanced_settings']['decimalPlaces'] =
             $feColumn ? $feColumn->decimalPlaces : -1;
+        $columnConfig['advanced_settings']['transformValueText'] =
+            $feColumn ? $feColumn->transformValueText : '';
         $columnConfig['advanced_settings']['possibleValuesAddEmpty'] =
             $feColumn ? $feColumn->possibleValuesAddEmpty : 0;
         $columnConfig['advanced_settings']['possibleValuesAjax'] =
@@ -1500,6 +1544,7 @@ class WDTConfigController
         $feColumn->width = $dbColumn->width;
 
         $advancedSettings = json_decode($dbColumn->advanced_settings);
+        $feColumn->transformValueText = isset($advancedSettings->transformValueText) ? $advancedSettings->transformValueText : '';
         $feColumn->decimalPlaces = isset($advancedSettings->decimalPlaces) ?
             $advancedSettings->decimalPlaces : -1;
         $feColumn->possibleValuesAddEmpty = isset($advancedSettings->possibleValuesAddEmpty) ?
@@ -1655,6 +1700,7 @@ class WDTConfigController
         $table->fixed_right_columns_number = 0;
         $table->fixed_header = 0;
         $table->fixed_header_offset = 0;
+        $table->table_wcag = 0;
 
         return $table;
     }

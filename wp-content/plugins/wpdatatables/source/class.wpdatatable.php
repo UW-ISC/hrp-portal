@@ -18,6 +18,22 @@ defined('ABSPATH') or die('Access denied.');
  */
 class WPDataTable
 {
+    // Properties for MD
+    public $masterDetail;
+    public $masterDetailLogic;
+    public $masterDetailRender;
+    public $masterDetailRenderPage;
+    public $masterDetailRenderPost;
+    public $masterDetailPopupTitle;
+    public $masterDetailLinkTargetAttribute;
+
+    // Properties for PF
+    public $cascadeFiltering;
+    public $cascadeFilteringLogic;
+    public $hideFiltersOnDependent;
+    public $hideTableBeforeFiltering;
+    public $showSearchFiltersButton;
+    public $disableSearchFiltersButton;
 
     protected static $_columnClass = 'WDTColumn';
     protected $_wdtIndexedColumns = array();
@@ -37,6 +53,7 @@ class WPDataTable
     private $_inlineEditing = false;
     private $_popoverTools = false;
     private $_tableSkin = '';
+    private $_table_wcag = 0;
     private $_tableFontColorSettings;
     private $_tableBorderRemoval = 0;
     private $_tableBorderRemovalHeader = 0;
@@ -108,6 +125,8 @@ class WPDataTable
     private $_aggregateFuncsRes = array();
     private $_ajaxReturn = false;
     private $_clearFilters = false;
+    public $column_id;
+
     public $connection;
     public static $allowedTableTypes = array(
         'xls',
@@ -130,6 +149,7 @@ class WPDataTable
     private $_fixedRightColumnsNumber = 0;
     private $_fixedHeaders = false;
     private $_fixedHeadersOffset = 0;
+    protected $_transformValueColumns = array();
 
     /**
      * @return bool
@@ -1148,6 +1168,15 @@ class WPDataTable
         return $this->_db;
     }
 
+    public function isTableWCAG()
+    {
+        return $this->_table_wcag;
+    }
+
+    public function setTableWCAG($tableWCAG)
+    {
+        $this->_table_wcag = $tableWCAG;
+    }
     public function __construct($connection = null)
     {
         //[<-- Full version -->]//
@@ -1490,6 +1519,13 @@ class WPDataTable
     public function addConditionalFormattingColumn($column)
     {
         $this->_conditionalFormattingColumns[] = $column;
+    }
+    public function addTransformValueColumn($column){
+        $this->_transformValueColumns[] = $column;
+    }
+    public function getTransformValueColumn()
+    {
+        return $this->_transformValueColumns;
     }
 
     public function getConditionalFormattingColumns()
@@ -3724,14 +3760,18 @@ class WPDataTable
     protected function enqueueJSAndStyles()
     {
 
-        WDTTools::wdtUIKitEnqueue();
+        WDTTools::wdtUIKitEnqueueNotEdit();
 
         wp_enqueue_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array(), WDT_CURRENT_VERSION, true);
         if (get_option('wdtMinifiedJs')) {
+            WDTTools::wdtUIKitEnqueue();
             wp_enqueue_style('wdt-wpdatatables', WDT_CSS_PATH . 'wdt.frontend.min.css', array(), WDT_CURRENT_VERSION);
-
             wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wdt.frontend.min.js', array('wdt-common'), WDT_CURRENT_VERSION, true);
             wp_localize_script('wdt-wpdatatables', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_inline_strings', WDTTools::getTranslationStringsInlineEditing());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
+            wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStringsCommon());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_functions_strings', WDTTools::getTranslationStringsFunctions());
         } else {
             wp_enqueue_style('wdt-wpdatatables', WDT_CSS_PATH . 'wpdatatables.min.css', array(), WDT_CURRENT_VERSION);
             wp_enqueue_style('wdt-table-tools', WDT_CSS_PATH . 'TableTools.css', array(), WDT_CURRENT_VERSION);
@@ -3740,9 +3780,11 @@ class WPDataTable
             if (WDT_INCLUDE_DATATABLES_CORE) {
                 wp_enqueue_script('wdt-datatables', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.min.js', array(), WDT_CURRENT_VERSION, true);
             }
-            if ($this->filterEnabled()) {
+            if ($this->filterEnabled() && $this->advancedFilterEnabled()) {
+                WDTTools::wdtUIKitEnqueue();
                 wp_enqueue_script('wdt-advanced-filter', WDT_JS_PATH . 'wpdatatables/wdt.columnFilter.js', array(), WDT_CURRENT_VERSION, true);
                 wp_localize_script('wdt-advanced-filter', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
+                wp_localize_script('wdt-advanced-filter', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
             }
             if ($this->groupingEnabled()) {
                 wp_enqueue_script('wdt-row-grouping', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.rowGrouping.js', array('jquery',
@@ -3771,9 +3813,12 @@ class WPDataTable
                         'wdt-datatables'), WDT_CURRENT_VERSION, true) : null;
                 }
                 if ($this->isEditable()) {
+                    WDTTools::wdtUIKitEnqueue();
+                    wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStringsCommon());
                     wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
                     if ($this->inlineEditingEnabled()) {
                         wp_enqueue_script('wdt-inline-editing', WDT_JS_PATH . 'wpdatatables/wdt.inlineEditing.js', array(), WDT_CURRENT_VERSION, true);
+                        wp_localize_script('wdt-inline-editing', 'wpdatatables_inline_strings', WDTTools::getTranslationStringsInlineEditing());
                     }
                 }
             }
@@ -3845,12 +3890,10 @@ class WPDataTable
             wp_enqueue_media();
         }
 
-        do_action('wdt_enqueue_on_frontend', $this);
-        wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
-        wp_localize_script('wdt-wpdatatables', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
-        wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
-        wp_localize_script('wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
+        wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
+
+        do_action('wdt_enqueue_on_frontend', $this);
     }
 
     /**
@@ -4365,6 +4408,7 @@ class WPDataTable
             isset($advancedSettings->enableDuplicateButton) ? $this->setEnableDuplicateButton($advancedSettings->enableDuplicateButton) : $this->setEnableDuplicateButton(false);
             (isset($advancedSettings->language) && $advancedSettings->language != '' ? $this->setInterfaceLanguage($advancedSettings->language) : get_option('wdtInterfaceLanguage') != '') ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             isset($advancedSettings->tableSkin) ? $this->setTableSkin($advancedSettings->tableSkin) : $this->setTableSkin(get_option('wdtBaseSkin'));
+            isset($advancedSettings->table_wcag) ? $this->setTableWCAG($advancedSettings->table_wcag) : $this->setTableWCAG(0);
             isset($advancedSettings->tableFontColorSettings) ? $this->setTableFontColorSettings($advancedSettings->tableFontColorSettings) : $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
             isset($advancedSettings->tableBorderRemoval) ? $this->setTableBorderRemoval($advancedSettings->tableBorderRemoval) : $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             isset($advancedSettings->tableBorderRemovalHeader) ? $this->setTableBorderRemovalHeader($advancedSettings->tableBorderRemovalHeader) : $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
@@ -4401,6 +4445,7 @@ class WPDataTable
             $this->setEditButtonsDisplayed(array('all'));
             $this->setEnableDuplicateButton(false);
             $this->setTableSkin(get_option('wdtBaseSkin'));
+            $this->setTableWCAG(0);
             get_option('wdtInterfaceLanguage') != '' ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
             $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
@@ -4435,7 +4480,6 @@ class WPDataTable
         do_action('wdt_extend_wpdatatable_object', $this, $tableData);
 
     }
-
     /**
      * Helper method that prepares the rendering rules
      *
@@ -4448,7 +4492,6 @@ class WPDataTable
         if (isset($_GET['wdt_search'])) {
             $this->setDefaultSearchValue($_GET['wdt_search']);
         }
-
         // Define all column-dependent rendering rules
         foreach ($columnData as $key => $column) {
 
@@ -4468,6 +4511,11 @@ class WPDataTable
                 $this->getColumn($column->orig_header)
                     ->setConditionalFormattingData($column->conditional_formatting);
                 $this->addConditionalFormattingColumn($column->orig_header);
+            }
+
+            if(isset($column->transformValueText) && $column->transformValueText != ''){
+                $this->getColumn($column->orig_header)->setTransformValueText($column->transformValueText);
+                $this->addTransformValueColumn($column->orig_header);
             }
             //[<-- Full version -->]//
             // Set SUM columns
@@ -4553,6 +4601,7 @@ class WPDataTable
                                        \n#{$this->getId()} > tbody > tr.row-detail ul li.{$cssColumnHeader} span.columnValue:after
                                             { content: '{$column->text_after}' }";
             }
+
             if ($column->color != '') {
                 $this->_columnsCSS .= "\n#{$this->getId()} > tbody > tr > td.{$cssColumnHeader}, "
                     . "#{$this->getId()} > tbody > tr.row-detail ul li.{$cssColumnHeader}, "
@@ -4653,6 +4702,7 @@ class WPDataTable
         $obj->paginationLayoutMobile = $this->getPaginationLayoutMobile();
         $obj->file_location = $this->getFileLocation();
         $obj->tableSkin = $this->getTableSkin();
+        $obj->table_wcag = $this->isTableWCAG();
         $obj->scrollable = $this->isScrollable();
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
@@ -4727,7 +4777,7 @@ class WPDataTable
         if (!is_null($this->getDefaultSortColumn())) {
             $obj->dataTableParams->order = json_decode('[[' . $this->getDefaultSortColumn() . ', "' . strtolower($this->getDefaultSortDirection()) . '" ]]');
         } else {
-            $orderColumn = '';
+            $orderColumn = 0;
             foreach ($obj->dataTableParams->columnDefs as $columnKey => $column) {
                 if ($column->orderable === true) {
                     $orderColumn = $columnKey;
@@ -5176,6 +5226,9 @@ class WPDataTable
 
         if (!empty($this->_conditionalFormattingColumns)) {
             $obj->conditional_formatting_columns = $this->_conditionalFormattingColumns;
+        }
+        if (!empty($this->_transformValueColumns)) {
+            $obj->transform_value_columns = $this->_transformValueColumns;
         }
         //[<--/ Full version -->]//
         $init_format = get_option('wdtDateFormat');

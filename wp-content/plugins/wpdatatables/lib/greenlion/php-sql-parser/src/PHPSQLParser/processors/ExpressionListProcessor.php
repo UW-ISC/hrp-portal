@@ -109,14 +109,14 @@ class ExpressionListProcessor extends AbstractProcessor {
 
                         $tmpToken = new ExpressionToken($k, $v);
                         switch ($tmpToken->getUpper()) {
-                            case 'WITH':
-                                $match_mode = 'WITH QUERY EXPANSION';
-                                break;
-                            case 'IN':
-                                $match_mode = 'IN BOOLEAN MODE';
-                                break;
+                        case 'WITH':
+                            $match_mode = 'WITH QUERY EXPANSION';
+                            break;
+                        case 'IN':
+                            $match_mode = 'IN BOOLEAN MODE';
+                            break;
 
-                            default:
+                        default:
                         }
 
                         if ($match_mode !== false) {
@@ -208,8 +208,7 @@ class ExpressionListProcessor extends AbstractProcessor {
                         } else {
                             $prev->setTokenType(ExpressionType::SIMPLE_FUNCTION);
                         }
-                        // Replaced
-                        $prev->setNoQuotes(null,  $this->options, null);
+                        $prev->setNoQuotes(null, null, $this->options);
                     }
 
                     array_pop($resultList);
@@ -218,44 +217,7 @@ class ExpressionListProcessor extends AbstractProcessor {
 
                 // we have parenthesis, but it seems to be an expression
                 if ($curr->isUnspecified()) {
-
-                    $localExpr = new ExpressionToken();
-                    $tmpExprList = array();
-
-                    foreach ($localTokenList as $k => $v) {
-                        $tmpToken = new ExpressionToken($k, $v);
-                        if (!$tmpToken->isCommaToken()) {
-                            $localExpr->addToken($v);
-                            $tmpExprList[] = $v;
-                        } else {
-                            // an expression could have multiple parts split by operands
-                            // if we have a comma, it is a split-point for expressions
-                            $tmpExprList = array_values($tmpExprList);
-                            $localExprList = $this->process($tmpExprList);
-
-                            if (count($localExprList) > 1) {
-                                $localExpr->setSubTree($localExprList);
-                                $localExpr->setTokenType(ExpressionType::EXPRESSION);
-                                $localExprList = $localExpr->toArray();
-                                $localExprList['alias'] = false;
-                                $localExprList = array($localExprList);
-                            }
-
-                            if (!$curr->getSubTree()) {
-                                if (!empty($localExprList)) {
-                                    $curr->setSubTree($localExprList);
-                                }
-                            } else {
-                                $tmpExprList = $curr->getSubTree();
-                                $curr->setSubTree(array_merge($tmpExprList, $localExprList));
-                            }
-
-                            $tmpExprList = array();
-                            $localExpr = new ExpressionToken();
-                        }
-                    }
-
-                    $tmpExprList = array_values($tmpExprList);
+                    $tmpExprList = array_values($localTokenList);
                     $localExprList = $this->process($tmpExprList);
 
                     $curr->setTokenType(ExpressionType::BRACKET_EXPRESSION);
@@ -276,130 +238,139 @@ class ExpressionListProcessor extends AbstractProcessor {
 
                 $curr->setTokenType($this->getVariableType($curr->getUpper()));
                 $curr->setSubTree(false);
-                // Replaced
-                $curr->setNoQuotes(trim(trim($curr->getToken()), '@'), $this->options,"`'\"" );
+                $curr->setNoQuotes(trim(trim($curr->getToken()), '@'), "`'\"", $this->options);
 
             } else {
                 /* it is either an operator, a colref or a constant */
                 switch ($curr->getUpper()) {
 
-                    case '*':
-                        $curr->setSubTree(false); // o subtree
+                case '*':
+                    $curr->setSubTree(false); // o subtree
 
-                        // single or first element of expression list -> all-column-alias
-                        if (empty($resultList)) {
-                            $curr->setTokenType(ExpressionType::COLREF);
-                            break;
-                        }
-
-                        // if the last token is colref, const or expression
-                        // then * is an operator
-                        // but if the previous colref ends with a dot, the * is the all-columns-alias
-                        if (!$prev->isColumnReference() && !$prev->isConstant() && !$prev->isExpression()
-                            && !$prev->isBracketExpression() && !$prev->isAggregateFunction() && !$prev->isVariable()) {
-                            $curr->setTokenType(ExpressionType::COLREF);
-                            break;
-                        }
-
-                        if ($prev->isColumnReference() && $prev->endsWith(".")) {
-                            $prev->addToken('*'); // tablealias dot *
-                            continue 2; // skip the current token
-                        }
-
-                        $curr->setTokenType(ExpressionType::OPERATOR);
+                    // single or first element of expression list -> all-column-alias
+                    if (empty($resultList)) {
+                        $curr->setTokenType(ExpressionType::COLREF);
                         break;
+                    }
 
-                    case ':=':
-                    case 'AND':
-                    case '&&':
-                    case 'BETWEEN':
-                    case 'AND':
-                    case 'BINARY':
-                    case '&':
-                    case '~':
-                    case '|':
-                    case '^':
-                    case 'DIV':
-                    case '/':
-                    case '<=>':
-                    case '=':
-                    case '>=':
-                    case '>':
-                    case 'IS':
-                    case 'NOT':
-                    case '<<':
-                    case '<=':
-                    case '<':
-                    case 'LIKE':
-                    case '%':
-                    case '!=':
-                    case '<>':
-                    case 'REGEXP':
-                    case '!':
-                    case '||':
-                    case 'OR':
-                    case '>>':
-                    case 'RLIKE':
-                    case 'SOUNDS':
-                    case 'XOR':
-                    case 'IN':
-                        $curr->setSubTree(false);
-                        $curr->setTokenType(ExpressionType::OPERATOR);
+                    // if the last token is colref, const or expression
+                    // then * is an operator
+                    // but if the previous colref ends with a dot, the * is the all-columns-alias
+                    if (
+                        !$prev->isColumnReference()
+                        && !$prev->isConstant()
+                        && !$prev->isExpression()
+                        && !$prev->isBracketExpression()
+                        && !$prev->isAggregateFunction()
+                        && !$prev->isVariable()
+                        && !$prev->isFunction()
+                    ) {
+                        $curr->setTokenType(ExpressionType::COLREF);
                         break;
+                    }
 
-                    case 'NULL':
-                        $curr->setSubTree(false);
+                    if ($prev->isColumnReference() && $prev->endsWith(".")) {
+                        $prev->addToken('*'); // tablealias dot *
+                        continue 2; // skip the current token
+                    }
+
+                    $curr->setTokenType(ExpressionType::OPERATOR);
+                    break;
+
+                case ':=':
+                case 'AND':
+                case '&&':
+                case 'BETWEEN':
+                case 'BINARY':
+                case '&':
+                case '~':
+                case '|':
+                case '^':
+                case 'DIV':
+                case '/':
+                case '<=>':
+                case '=':
+                case '>=':
+                case '>':
+                case 'IS':
+                case 'NOT':
+                case '<<':
+                case '<=':
+                case '<':
+                case 'LIKE':
+                case '%':
+                case '!=':
+                case '<>':
+                case 'REGEXP':
+                case '!':
+                case '||':
+                case 'OR':
+                case '>>':
+                case 'RLIKE':
+                case 'SOUNDS':
+                case 'XOR':
+                case 'IN':
+                    $curr->setSubTree(false);
+                    $curr->setTokenType(ExpressionType::OPERATOR);
+                    break;
+
+                case 'NULL':
+                    $curr->setSubTree(false);
+                    $curr->setTokenType(ExpressionType::CONSTANT);
+                    break;
+
+                case '-':
+                case '+':
+                // differ between preceding sign and operator
+                    $curr->setSubTree(false);
+
+                    if ($prev->isColumnReference() || $prev->isFunction() || $prev->isAggregateFunction()
+                        || $prev->isConstant() || $prev->isSubQuery() || $prev->isExpression()
+                        || $prev->isBracketExpression() || $prev->isVariable() || $prev->isCustomFunction()) {
+                        $curr->setTokenType(ExpressionType::OPERATOR);
+                    } else {
+                        $curr->setTokenType(ExpressionType::SIGN);
+                    }
+                    break;
+
+                default:
+                    $curr->setSubTree(false);
+
+                    switch ($curr->getToken(0)) {
+                    case "'":
+                    // it is a string literal
                         $curr->setTokenType(ExpressionType::CONSTANT);
                         break;
-
-                    case '-':
-                    case '+':
-                        // differ between preceding sign and operator
-                        $curr->setSubTree(false);
-
-                        if ($prev->isColumnReference() || $prev->isFunction() || $prev->isAggregateFunction()
-                            || $prev->isConstant() || $prev->isSubQuery() || $prev->isExpression()
-                            || $prev->isBracketExpression() || $prev->isVariable() || $prev->isCustomFunction()) {
-                            $curr->setTokenType(ExpressionType::OPERATOR);
-                        } else {
-                            $curr->setTokenType(ExpressionType::SIGN);
+                    case '"':
+                        if (!$this->options->getANSIQuotes()) {
+                        // If we're not using ANSI quotes, this is a string literal.
+                            $curr->setTokenType(ExpressionType::CONSTANT);
+                            break;
                         }
+                        // Otherwise continue to the next case
+                    case '`':
+                    // it is an escaped colum name
+                        $curr->setTokenType(ExpressionType::COLREF);
+                        $curr->setNoQuotes($curr->getToken(), null, $this->options);
                         break;
 
                     default:
-                        $curr->setSubTree(false);
+                        if (is_numeric($curr->getToken())) {
 
-                        switch ($curr->getToken(0)) {
-                            case "'":
-                            case '"':
-                                // it is a string literal
+                            if ($prev->isSign()) {
+                                $prev->addToken($curr->getToken()); // it is a negative numeric constant
+                                $prev->setTokenType(ExpressionType::CONSTANT);
+                                continue 3;
+                                // skip current token
+                            } else {
                                 $curr->setTokenType(ExpressionType::CONSTANT);
-                                break;
-                            case '`':
-                                // it is an escaped colum name
-                                $curr->setTokenType(ExpressionType::COLREF);
-                                // Replaced
-                                $curr->setNoQuotes($curr->getToken(), $this->options,null);
-                                break;
-
-                            default:
-                                if (is_numeric($curr->getToken())) {
-
-                                    if ($prev->isSign()) {
-                                        $prev->addToken($curr->getToken()); // it is a negative numeric constant
-                                        $prev->setTokenType(ExpressionType::CONSTANT);
-                                        continue 3;
-                                        // skip current token
-                                    } else {
-                                        $curr->setTokenType(ExpressionType::CONSTANT);
-                                    }
-                                } else {
-                                    $curr->setTokenType(ExpressionType::COLREF);
-                                    // Replaced
-                                    $curr->setNoQuotes($curr->getToken(),  $this->options, null);
-                                }
-                                break;
+                            }
+                        } else {
+                            $curr->setTokenType(ExpressionType::COLREF);
+                            $curr->setNoQuotes($curr->getToken(), null, $this->options);
                         }
+                        break;
+                    }
                 }
             }
 
@@ -407,36 +378,37 @@ class ExpressionListProcessor extends AbstractProcessor {
             if (!$curr->isOperator() && !$curr->isInList() && !$curr->isFunction() && !$curr->isAggregateFunction()
                 && !$curr->isCustomFunction() && PHPSQLParserConstants::getInstance()->isReserved($curr->getUpper())) {
 
-                if (PHPSQLParserConstants::getInstance()->isCustomFunction($curr->getUpper())) {
+	            $next = isset( $tokens[ $k + 1 ] ) ? new ExpressionToken( $k + 1, $tokens[ $k + 1 ] ) : new ExpressionToken();
+                $isEnclosedWithinParenthesis = $next->isEnclosedWithinParenthesis();
+	            if ($isEnclosedWithinParenthesis && PHPSQLParserConstants::getInstance()->isCustomFunction($curr->getUpper())) {
                     $curr->setTokenType(ExpressionType::CUSTOM_FUNCTION);
-                    // Replaced
-                    $curr->setNoQuotes(null, $this->options,null);
+                    $curr->setNoQuotes(null, null, $this->options);
 
-                } elseif (PHPSQLParserConstants::getInstance()->isAggregateFunction($curr->getUpper())) {
+                } elseif ($isEnclosedWithinParenthesis && PHPSQLParserConstants::getInstance()->isAggregateFunction($curr->getUpper())) {
                     $curr->setTokenType(ExpressionType::AGGREGATE_FUNCTION);
-                    // Replaced
-                    $curr->setNoQuotes(null, $this->options,null );
+                    $curr->setNoQuotes(null, null, $this->options);
 
                 } elseif ($curr->getUpper() === 'NULL') {
                     // it is a reserved word, but we would like to set it as constant
                     $curr->setTokenType(ExpressionType::CONSTANT);
 
                 } else {
-                    if (PHPSQLParserConstants::getInstance()->isParameterizedFunction($curr->getUpper())) {
+                    if ($isEnclosedWithinParenthesis && PHPSQLParserConstants::getInstance()->isParameterizedFunction($curr->getUpper())) {
                         // issue 60: check functions with parameters
                         // -> colref (we check parameters later)
                         // -> if there is no parameter, we leave the colref
                         $curr->setTokenType(ExpressionType::COLREF);
 
-                    } elseif (PHPSQLParserConstants::getInstance()->isFunction($curr->getUpper())) {
+                    } elseif ($isEnclosedWithinParenthesis && PHPSQLParserConstants::getInstance()->isFunction($curr->getUpper())) {
                         $curr->setTokenType(ExpressionType::SIMPLE_FUNCTION);
-                        // Replaced
-                        $curr->setNoQuotes(null, $this->options, null);
+                        $curr->setNoQuotes(null, null, $this->options);
 
+                    }  elseif (!$isEnclosedWithinParenthesis && PHPSQLParserConstants::getInstance()->isFunction($curr->getUpper())) {
+	                    // Colname using function name.
+                    	$curr->setTokenType(ExpressionType::COLREF);
                     } else {
                         $curr->setTokenType(ExpressionType::RESERVED);
-                        // Replaced
-                        $curr->setNoQuotes(null, $this->options, null);
+                        $curr->setNoQuotes(null, null, $this->options);
                     }
                 }
             }
@@ -444,20 +416,17 @@ class ExpressionListProcessor extends AbstractProcessor {
             // issue 94, INTERVAL 1 MONTH
             if ($curr->isConstant() && PHPSQLParserConstants::getInstance()->isParameterizedFunction($prev->getUpper())) {
                 $prev->setTokenType(ExpressionType::RESERVED);
-                // Replaced
-                $prev->setNoQuotes(null, $this->options, null);
+                $prev->setNoQuotes(null, null, $this->options);
             }
 
             if ($prev->isConstant() && PHPSQLParserConstants::getInstance()->isParameterizedFunction($curr->getUpper())) {
                 $curr->setTokenType(ExpressionType::RESERVED);
-                // Replaced
-                $curr->setNoQuotes(null, $this->options, null);
+                $curr->setNoQuotes(null, null, $this->options);
             }
 
             if ($curr->isUnspecified()) {
                 $curr->setTokenType(ExpressionType::EXPRESSION);
-                // Replaced
-                $curr->setNoQuotes(null, $this->options, null);
+                $curr->setNoQuotes(null, null, $this->options);
                 $curr->setSubTree($this->process($this->splitSQLIntoTokens($curr->getTrim())));
             }
 

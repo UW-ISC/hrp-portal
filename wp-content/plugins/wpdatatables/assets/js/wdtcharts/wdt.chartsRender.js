@@ -76,6 +76,22 @@
                         if (wpDataCharts[id].follow_filtering != 1) {
                             wdtChart.render();
                         }
+                    } else if (wpDataCharts[id].engine === 'highstock') {
+                        var wdtChart = new wpDataTablesHighStock();
+                        wdtChart.setNumberFormat(wpDataCharts[id].render_data.wdtNumberFormat);
+                        wdtChart.setOptions(wpDataCharts[id].render_data.options);
+                        wdtChart.setType(wpDataCharts[id].render_data.type);
+                        wdtChart.setMultipleYaxis(wpDataCharts[id].render_data);
+                        wdtChart.setWidth(wpDataCharts[id].render_data.width);
+                        wdtChart.setHeight(wpDataCharts[id].render_data.height);
+                        wdtChart.setColumnIndexes(wpDataCharts[id].render_data.column_indexes);
+                        wdtChart.setContainer(wpDataCharts[id].container);
+                        if (typeof wpDataChartsCallbacks !== 'undefined' && typeof wpDataChartsCallbacks[id] !== 'undefined') {
+                            wdtChart.setRenderCallback(wpDataChartsCallbacks[id]);
+                        }
+                        if (wpDataCharts[id].follow_filtering != 1) {
+                            wdtChart.render();
+                        }
                     }
 
                     if (wpDataCharts[id].follow_filtering == 1) {

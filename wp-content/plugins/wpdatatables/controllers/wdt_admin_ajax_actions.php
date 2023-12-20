@@ -428,7 +428,7 @@ function wdtDuplicateTable()
                     'calc_formula' => $column->calc_formula,
                     'color' => $column->color,
                     'pos' => $column->pos,
-                    'advanced_settings' => $column->advanced_settings
+                    'advanced_settings' => $column->advanced_settings,
                 )
             );
 
@@ -1163,17 +1163,17 @@ function wdtActivatePlugin()
     }
 
     /** @var string $slug */
-    $slug = filter_var($_POST['slug'], FILTER_SANITIZE_STRING);
+    $slug = sanitize_text_field($_POST['slug']);
 
     /** @var string $purchaseCode */
-    $purchaseCode = filter_var($_POST['purchaseCodeStore'], FILTER_SANITIZE_STRING);
+    $purchaseCode = sanitize_text_field($_POST['purchaseCodeStore']);
 
     /** @var string $domain */
-    $domain = filter_var($_POST['domain'], FILTER_SANITIZE_STRING);
+    $domain = sanitize_text_field($_POST['domain']);
     $domain = WDTTools::getDomain($domain);
 
     /** @var string $subdomain */
-    $subdomain = filter_var($_POST['subdomain'], FILTER_SANITIZE_STRING);
+    $subdomain = sanitize_text_field($_POST['subdomain']);
     $subdomain = WDTTools::getSubDomain($subdomain);
 
     $ch = curl_init(
@@ -1181,6 +1181,8 @@ function wdtActivatePlugin()
         '&domain=' . $domain . '&subdomain=' . $subdomain
     );
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters( 'wpdatatables_curlopt_ssl_verifypeer', 1 ));
 
     // Response from the TMS Store
     $response = json_decode(curl_exec($ch));
@@ -1230,7 +1232,7 @@ function wdtDeactivatePlugin()
     }
 
     /** @var string $slug */
-    $slug = filter_var($_POST['slug'], FILTER_SANITIZE_STRING);
+    $slug = sanitize_text_field($_POST['slug']);
 
     switch ($slug) {
         case 'wpdatatables':
@@ -1257,18 +1259,18 @@ function wdtDeactivatePlugin()
     }
 
     /** @var string $envatoTokenEmail */
-    $envatoTokenEmail = filter_var($_POST['envatoTokenEmail'], FILTER_SANITIZE_STRING);
+    $envatoTokenEmail = sanitize_text_field($_POST['envatoTokenEmail']);
 
     /** @var string $domain */
-    $domain = filter_var($_POST['domain'], FILTER_SANITIZE_STRING);
+    $domain = sanitize_text_field($_POST['domain']);
     $domain = WDTTools::getDomain($domain);
 
     /** @var string $subdomain */
-    $subdomain = filter_var($_POST['subdomain'], FILTER_SANITIZE_STRING);
+    $subdomain = sanitize_text_field($_POST['subdomain']);
     $subdomain = WDTTools::getSubDomain($subdomain);
 
     /** @var string $type */
-    $type = filter_var($_POST['type'], FILTER_SANITIZE_STRING);
+    $type = sanitize_text_field($_POST['type']);
 
     if ($type === 'code') {
         $ch = curl_init(
@@ -1307,9 +1309,9 @@ function wdtParseServerName()
         exit();
     }
     /** @var array $serverName */
-    $serverName['domain'] = filter_var($_POST['domain'], FILTER_SANITIZE_STRING);
+    $serverName['domain'] = sanitize_text_field($_POST['domain']);
     $serverName['domain'] = WDTTools::getDomain($serverName['domain']);
-    $serverName['subdomain'] = filter_var($_POST['subdomain'], FILTER_SANITIZE_STRING);
+    $serverName['subdomain'] = sanitize_text_field($_POST['subdomain']);
     $serverName['subdomain'] = WDTTools::getSubDomain($serverName['subdomain']);
 
     echo json_encode($serverName);

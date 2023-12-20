@@ -72,7 +72,7 @@ function wdtAdminMenu()
         'wdtSystemInfo'
     );
     add_submenu_page(
-        get_option('wdtGettingStartedPageStatus') ? null : 'wpdatatables-dashboard',
+        get_option('wdtGettingStartedPageStatus') ? '' : 'wpdatatables-dashboard',
         __('Getting Started', 'wpdatatables'),
         __('Getting Started', 'wpdatatables'),
         'manage_options',
@@ -88,7 +88,7 @@ function wdtAdminMenu()
         'wdtSupport'
     );
     add_submenu_page(
-        get_option('wdtLiteVSPremiumPageStatus') ? null : 'wpdatatables-dashboard',
+        get_option('wdtLiteVSPremiumPageStatus') ? '' : 'wpdatatables-dashboard',
         __('Lite vs Premium', 'wpdatatables'),
         __('Lite vs Premium', 'wpdatatables'),
         'manage_options',
@@ -104,7 +104,7 @@ function wdtAdminMenu()
         'wdtAddOns'
     );
     add_submenu_page(
-        null,
+        'wpdatatables-welcome-page',
         __('Welcome page', 'wpdatatables'),
         __('Welcome page', 'wpdatatables'),
         'manage_options',
@@ -173,7 +173,7 @@ function wdtAdminEnqueue($hook)
 
     wp_enqueue_script('wdt-rating', WDT_JS_PATH . 'wpdatatables/admin/wdtRating.js', array('jquery'), WDT_CURRENT_VERSION, true);
 
-    wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStringsCommon());
     wp_localize_script('wdt-common', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
     wp_localize_script('wdt-common', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());
     wp_localize_script('wdt-common', 'wdtWpDataTablesPage', WDTTools::getWpDataTablesAdminPages());
@@ -208,6 +208,7 @@ function wdtAdminEnqueue($hook)
         case 'wpdatatables_page_wpdatatables-getting-started':
             wdtGettingStartedEnqueue();
             break;
+        case 'wpdatatables_page_wpdatatables-welcome-page':
         case 'admin_page_wpdatatables-welcome-page':
             wdtWelcomePageEnqueue();
             break;
@@ -250,7 +251,7 @@ function wdtBrowseTablesEnqueue()
     wp_enqueue_script('wdt-browse-js', WDT_JS_PATH . 'wpdatatables/admin/browse/wdt.browse.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
-    wp_localize_script('wdt-browse-js', 'wpdatatablesStrings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-browse-js', 'wpdatatables_browse_strings', WDTTools::getTranslationStringsBrowse());
 }
 
 /**
@@ -315,6 +316,7 @@ function wdtEditEnqueue()
         wp_enqueue_script('wdt-simple-table-responsive-min-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.min.js', array('jquery'), WDT_CURRENT_VERSION, true);
         wp_enqueue_script('wdt-simple-table-responsive-js', WDT_JS_PATH . 'responsive/wdt.simpleTable.responsive.init.js', array('jquery'), WDT_CURRENT_VERSION, true);
         wp_dequeue_style('wdt-skin');
+        wp_localize_script('wdt-wpdatatables', 'wpdatatables_admin_simple_table_strings', WDTTools::getTranslationStringsSimpleTable());
     } else {
         wp_register_script('handsontable', WDT_JS_PATH . 'handsontable/handsontable.full' . $jsExt, array('jquery'), WDT_CURRENT_VERSION);
         wp_enqueue_script('handsontable');
@@ -327,9 +329,10 @@ function wdtEditEnqueue()
     wp_enqueue_script('wdt-ace');
     wp_enqueue_script('wdt-doc-js');
     wp_localize_script('wdt-advanced-filter', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
-    wp_localize_script('wdt-add-remove-column', 'wdtFrontendStrings', WDTTools::getTranslationStrings());
-    wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
-    wp_localize_script('wdt-advanced-filter', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-add-remove-column', 'wpdatatables_add_remove_column_strings', WDTTools::getTranslationStringsAddRemoveColumn());
+    wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
+    wp_localize_script('wdt-wpdatatables', 'wpdatatables_functions_strings', WDTTools::getTranslationStringsFunctions());
+    wp_localize_script('wdt-advanced-filter', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
 
     do_action('wdt_enqueue_on_edit_page');
 }
@@ -355,7 +358,7 @@ function wdtConstructorEnqueue()
     wp_enqueue_script('wdt-constructor-main-js', WDT_JS_PATH . 'wpdatatables/admin/constructor/wdt.constructor.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
-    wp_localize_script('wdt-constructor-main-js', 'wdtConstructorStrings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-constructor-main-js', 'wpdatatables_constructor_strings', WDTTools::getTranslationStringsConstructor());
 }
 
 /**
@@ -371,7 +374,7 @@ function wdtBrowseChartsEnqueue()
     wp_enqueue_script('wdt-browse-js', WDT_JS_PATH . 'wpdatatables/admin/browse/wdt.browse.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
-    wp_localize_script('wdt-browse-js', 'wpdatatablesStrings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-browse-js', 'wpdatatables_browse_strings', WDTTools::getTranslationStringsBrowse());
 }
 
 /**
@@ -405,7 +408,7 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-highcharts', $highChartLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-more', $highChartMoreLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-highcharts-3d', $highChart3DLibSource, array(), WDT_CURRENT_VERSION, true);
-    wp_enqueue_script('wdt-cylinder', $highChartCylinderLibSource , array(), WDT_CURRENT_VERSION, true);
+    wp_enqueue_script('wdt-cylinder', $highChartCylinderLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-heatmap', $highChartHeatMapLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-funnel', $highChartFunnelLibSource, array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-funnel3d', $highChartFunnel3DLibSource, array(), WDT_CURRENT_VERSION, true);
@@ -425,7 +428,9 @@ function wdtChartWizardEnqueue()
     wp_enqueue_script('wdt-wp-chart-js', WDT_JS_PATH . 'wdtcharts/chartjs/wdt.chartJS.js', array(), WDT_CURRENT_VERSION, true);
     wp_enqueue_script('wdt-doc-js');
 
-    wp_localize_script('wdt-chart-wizard', 'wpdatatablesEditStrings', WDTTools::getTranslationStrings());
+    do_action('wpdatatables_enqueue_chart_wizard_scripts');
+
+    wp_localize_script('wdt-chart-wizard', 'wpdatatables_chart_wizard_strings', WDTTools::getTranslationStringsChartWizard());
 
 }
 
@@ -454,7 +459,7 @@ function wdtSettingsEnqueue()
         'redirectUrl' => get_site_url()
     ]);
 
-    wp_localize_script('wdt-settings-main-js', 'wpdatatablesSettingsStrings', WDTTools::getTranslationStrings());
+    wp_localize_script('wdt-settings-main-js', 'wpdatatables_settings_strings', WDTTools::getTranslationStringsTableSettingsMain());
 
     do_action('wdt_enqueue_on_settings_page');
 }

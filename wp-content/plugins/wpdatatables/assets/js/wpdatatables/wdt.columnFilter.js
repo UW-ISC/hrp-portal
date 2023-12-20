@@ -150,7 +150,7 @@
 
 })(jQuery);
 
-var sRangeFormat = wpdatatables_frontend_strings.from + " {from} " + wpdatatables_frontend_strings.to + " {to}";
+var sRangeFormat = wpdatatables_filter_strings.from + " {from} " + wpdatatables_filter_strings.to + " {to}";
 var fnOnFiltered = function () {
 };
 
@@ -259,11 +259,11 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
     if (aoColumn.rangeSlider) {
         if ((tableDescription.tableType === 'gravity' && serverSide) || tableDescription.cascadeFiltering === 1) {
             var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-            var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
+            var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
             th.append(from);
 
             var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-            var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />');
+            var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
             th.append(to);
 
             th.wrapInner('<span class="filter_column wdt-filter-number-range" data-filter_type="number range" data-index="' + columnIndex + '"/>');
@@ -454,11 +454,11 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
         }
     } else {
         var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-        var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
+        var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
         th.append(from);
 
         var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-        var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />');
+        var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
         th.append(to);
 
         th.wrapInner('<span class="filter_column wdt-filter-number-range" data-filter_type="number range" data-index="' + columnIndex + '"/>');
@@ -561,10 +561,10 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     th.html('');
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />');
+    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />');
+    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
 
     th.append(from).append(to);
 
@@ -655,11 +655,11 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -749,11 +749,11 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_frontend_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -850,10 +850,10 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
     }
 
     // Label of the selectbox if "Filter label" option is set
-    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_frontend_strings.nothingSelected;
+    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_filter_strings.nothingSelected;
 
     // Create selectbox HTML with live search
-    var select = '<select class="wdt-select-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '">';
+    var select = '<select class="wdt-select-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" data-live-search="true" data-live-search-placeholder="' + wpdatatables_filter_strings.search + '">';
 
     // Create selectbox based on "Number of possible values to load" option
     if (aoColumn.possibleValuesAjax !== -1) {
@@ -955,14 +955,14 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
                 emptyRequest: true,
                 preserveSelectedPosition: 'before',
                 locale: {
-                    emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                    statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                    currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                    errorText: wpdatatables_frontend_strings.errorText,
-                    searchPlaceholder: wpdatatables_frontend_strings.search,
-                    statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                    statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                    statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                    emptyTitle: wpdatatables_filter_strings.nothingSelected,
+                    statusSearching: wpdatatables_filter_strings.sLoadingRecords,
+                    currentlySelected: wpdatatables_filter_strings.currentlySelected,
+                    errorText: wpdatatables_filter_strings.errorText,
+                    searchPlaceholder: wpdatatables_filter_strings.search,
+                    statusInitialized: wpdatatables_filter_strings.statusInitialized,
+                    statusNoResults: wpdatatables_filter_strings.statusNoResults,
+                    statusTooShort: wpdatatables_filter_strings.statusTooShort
                 }
             });
 
@@ -1055,10 +1055,10 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     // Label of the selectbox if "Filter label" option is set
 
-    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_frontend_strings.nothingSelected;
+    var selectTitle = aoColumn.filterLabel ? _.escape(aoColumn.filterLabel) : wpdatatables_filter_strings.nothingSelected;
 
     // Create selectbox HTML with live search
-    var select = '<select class="wdt-multiselect-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" multiple data-live-search="true" data-live-search-placeholder="' + wpdatatables_frontend_strings.search + '">';
+    var select = '<select class="wdt-multiselect-filter wdt-filter-control selectpicker" title="' + selectTitle + '" data-index="' + columnIndex + '" multiple data-live-search="true" data-live-search-placeholder="' + wpdatatables_filter_strings.search + '">';
 
     // Create selectbox based on "Number of possible values to load" option
     if (aoColumn.possibleValuesAjax !== -1) {
@@ -1153,14 +1153,14 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             emptyRequest: true,
             preserveSelectedPosition: 'before',
             locale: {
-                emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                errorText: wpdatatables_frontend_strings.errorText,
-                searchPlaceholder: wpdatatables_frontend_strings.search,
-                statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                emptyTitle: wpdatatables_filter_strings.nothingSelected,
+                statusSearching: wpdatatables_filter_strings.sLoadingRecords,
+                currentlySelected: wpdatatables_filter_strings.currentlySelected,
+                errorText: wpdatatables_filter_strings.errorText,
+                searchPlaceholder: wpdatatables_filter_strings.search,
+                statusInitialized: wpdatatables_filter_strings.statusInitialized,
+                statusNoResults: wpdatatables_filter_strings.statusNoResults,
+                statusTooShort: wpdatatables_filter_strings.statusTooShort
             }
         });
 
@@ -1366,6 +1366,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             $modal.fadeOut(300, function () {
                 jQuery(this).find('#' + checkboxesDivId).remove();
                 $modal.removeClass('wdt-skin-' + tableDesc.tableSkin);
+                $modal.removeClass('wpTableWCAG');
             });
         });
 
@@ -1374,6 +1375,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
                 $modal.fadeOut(300, function () {
                     jQuery(this).find('#' + checkboxesDivId).remove();
                     $modal.removeClass('wdt-skin-' + tableDesc.tableSkin);
+                    $modal.removeClass('wpTableWCAG');
                 });
             }
         });
@@ -1396,6 +1398,9 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             }
             $modal.attr('data-current-checkbox-dialog', dlg.attr('id'));
             $modal.addClass('wdt-skin-' + tableDesc.tableSkin);
+            if(tableDesc.table_wcag){
+                $modal.addClass('wpTableWCAG');
+            }
             $modal.modal('show');
         });
 

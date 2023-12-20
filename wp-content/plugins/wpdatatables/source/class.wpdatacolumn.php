@@ -46,8 +46,11 @@ class WDTColumn {
     protected $_parentTable = null;
     protected $_linkButtonLabel;
 	protected $_column_align_header = '';
+    protected $_transformValueText = array();
 
 	protected $_column_rotate_header_name = '';
+
+    public $masterDetailColumnOption;
     /**
      * WDTColumn constructor.
      *
@@ -57,6 +60,7 @@ class WDTColumn {
         $this->_cssClassArray = WDTTools::defineDefaultValue($properties, 'classes', array());
         $this->_textBefore = WDTTools::defineDefaultValue($properties, 'text_before', '');
         $this->_textAfter = WDTTools::defineDefaultValue($properties, 'text_after', '');
+        $this->_transformValueText = WDTTools::defineDefaultValue($properties, 'transformValueText','');
         $this->setSorting(WDTTools::defineDefaultValue($properties, 'sorting', 1));
         $this->_title = WDTTools::defineDefaultValue($properties, 'title', '');
         $this->_isVisible = WDTTools::defineDefaultValue($properties, 'visible', true);
@@ -376,6 +380,20 @@ class WDTColumn {
      */
     public function setTextBefore($textBefore) {
         $this->_textBefore = $textBefore;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTransformValueText() {
+        return $this->_transformValueText;
+    }
+
+    /**
+     * @param string $textvalue
+     */
+    public function setTransformValueText($textvalue) {
+        $this->_transformValueText = $textvalue;
     }
 
     /**
@@ -920,6 +938,7 @@ class WDTColumn {
         $colJsDefinition->origHeader = $this->_orig_header;
         $colJsDefinition->notNull = $this->_notNull;
         $colJsDefinition->conditionalFormattingRules = $this->getConditionalFormattingData();
+        $colJsDefinition->transformValueRules = $this->getTransformValueText();
         if (sanitize_html_class(strtolower(str_replace(' ', '-', $this->_orig_header)))) {
             $colJsDefinition->className = $this->getCSSClasses() . ' column-' . sanitize_html_class(strtolower(str_replace(' ', '-', $this->_orig_header)));
         } else {

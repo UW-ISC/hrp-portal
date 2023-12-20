@@ -629,6 +629,11 @@ function wdtSaveTableCellsFrontend() {
                         );
                     }
                     $cellData[$columnName] = WDTTools::prepareStringCell($cellData[$columnName], $tableData->connection);
+                    if ($cellData[$columnName] == ''){
+                        if (in_array($allColumnsTypes[$columnName], array('int', 'float', 'date', 'time', 'datetime'))) {
+                            $cellData[$columnName] = (!$tableData->connection) ? NULL : "NULL";
+                        }
+                    }
                 }
 
                 if (empty($cellIdValue)) {
