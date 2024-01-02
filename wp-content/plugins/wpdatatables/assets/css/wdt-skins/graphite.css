@@ -636,3 +636,53 @@
 .wpdt-c.wdt-skin-graphite .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
     border-right: none;
 }
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .dataTables_filter:focus-within,
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .dataTables_length:focus-within,
+.wpdt-c.wdt-skin-graphite.wpTableWCAG dt-button:focus{
+    border: 2px solid #000000 !important;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG th:focus{
+    border: 2px solid #f5f5f5 !important;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG *:focus{
+    box-shadow: #000000;
+    border: 2px solid #000000 !important;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-apply-duplicate-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-apply-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-next-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-prev-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-cancel-edit-button:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-edit-dialog-button-block:focus,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG input.editDialogInput:focus,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-graphite.wpTableWCAG .wdt-cancel-delete-button:focus,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-graphite.wpTableWCAG .wdt-browse-delete-button:focus{
+    border: 2px solid #000000 !important;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-graphite.wpTableWCAG .wdt-ok-edit-button:focus{
+    border: 2px solid #000000 !important;
+}
+.wpdt-c .modal-header.wpTableWCAG button:focus{
+    border: 5px solid #000000 !important;
+    line-height: 18px !important;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .dataTables_length button:focus{
+    border: none !important;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper .DTTT_button.disabled {
+    opacity: 1;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper tr a{
+    color: #1366a7;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper .master_detail_column_btn{
+    color: #1366a7;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG #wdt-pf-search-filters-button-block .wdt-pf-search-filters-button,
+.wpdt-c.wdt-skin-graphite.wpTableWCAG #wdt-clear-filters-button-block .wdt-clear-filters-button{
+    background-color: #04b9ff;
+    color: #3e4249;
+}
+.wpdt-c.wdt-skin-graphite.wpTableWCAG .wpDataTablesWrapper .filter_column button{
+    color: #747474;
+}

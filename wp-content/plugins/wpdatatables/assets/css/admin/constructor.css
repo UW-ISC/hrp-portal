@@ -76,14 +76,13 @@
     box-shadow: 0px 2px 5px rgba(23, 43, 77, 0.1), 0px 0px 1px rgba(23, 43, 77, 0.32);
     border-radius: 3px;
 }
-
-.wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block-file .card {
-    min-height: 650px !important;
-}
 .wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block .card {
     min-height: 440px;
 }
-
+.wpdt-c .wdt-constructor-column-block.wdt-constructor-column-block-file .card,
+.wpdt-c .wdt-constructor-step.bg-white[data-step="2-2"] .wdt-constructor-column-block.wdt-constructor-column-block .card{
+    min-height: 650px !important;
+}
 .wpdt-c .wdt-constructor-column-block.gu-mirror .card, tr.gu-mirror {
     cursor: grabbing;
     cursor: -moz-grabbing;

@@ -9,13 +9,13 @@ defined('ABSPATH') or die('Access denied.');
 
 // Current version
 //[<-- Full version -->]//
-define('WDT_CURRENT_VERSION', '5.8.1');
+define('WDT_CURRENT_VERSION', '6.0');
 //[<--/ Full version -->]//
 //[<-- Full version insertion #15 -->]//
 // Number of active plugin installs for Amelia
-define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '50,000+');
+define('AMELIA_NUMBER_OF_ACTIVE_INSTALLS', '60,000+');
 // Number of appointments for Amelia
-define('AMELIA_NUMBER_OF_APPOINTMENTS', '500,000+');
+define('AMELIA_NUMBER_OF_APPOINTMENTS', '700,000+');
 /**
  * Regular Expressions
  */
@@ -70,5 +70,16 @@ $wdtAllowTypes = array(
     'datetime',
     'time'
 );
+/**
+ * Required PHP version and get actual server PHP version
+ */
+define('WDT_REQUIRED_PHP_VERSION', '7.4');
+if (defined('PHP_VERSION')) {
+    define('WDT_PHP_SERVER_VERSION', PHP_VERSION) ;
+} elseif (function_exists('phpversion')) {
+    define('WDT_PHP_SERVER_VERSION', phpversion());
+} else {
+    define('WDT_PHP_SERVER_VERSION', 0) ;
+}
 
 

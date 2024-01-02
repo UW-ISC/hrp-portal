@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 5.8.1
+ * @version 6.0
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 5.8.1
+Version: 6.0
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -35,6 +35,44 @@ if (!defined('WDT_BASENAME')) {
 // Config file
 require_once(WDT_ROOT_PATH . 'config/config.inc.php');
 
+// Check PHP version
+if ( version_compare( WDT_PHP_SERVER_VERSION, WDT_REQUIRED_PHP_VERSION, '<' ) ) {
+
+    if ( is_plugin_active( WDT_BASENAME ) ) {
+        include_once ABSPATH . 'wp-admin/includes/plugin.php';
+        deactivate_plugins(WDT_BASENAME);
+    }
+    add_action( 'admin_notices',
+        function ()
+        {
+            $message = sprintf(
+                esc_attr__('Our plugin requires %1$s PHP Version or higher. Your Version: %2$s. See %3$s for details.', 'wpdatatables'),
+                WDT_REQUIRED_PHP_VERSION,
+                WDT_PHP_SERVER_VERSION,
+                '<a href="https://wordpress.org/about/requirements/" target="_blank">' . esc_html__('WordPress Requirements', 'wpdatatables') . '</a>'
+            );
+            ?>
+            <div class="notice notice-error">
+                <p>
+                    <strong> <?php esc_html_e( 'Warning:', 'wpdatatables' ) ?></strong>
+                    <?php
+                    esc_html_e( 'Your site is running an insecure version of PHP that is no longer supported.', 'wpdatatables' )
+                    ?>
+                    <br><br>
+                    <?php
+                    echo $message;
+                    ?>
+                    <br><br><strong> <?php esc_html_e( 'Note:', 'wpdatatables' ) ?></strong>
+                    <?php
+                    esc_html_e( 'The wpDataTables plugin is disabled on your site until you fix the issue.', 'wpdatatables' )
+                    ?>
+                </p>
+            </div>
+            <?php
+        });
+    return;
+}
+
 //[<-- Full version -->]//
 // AJAX actions handlers
 require_once(WDT_ROOT_PATH . 'controllers/wdt_ajax_actions.php');
@@ -43,9 +81,9 @@ require_once(WDT_ROOT_PATH . 'controllers/wdt_ajax_actions.php');
 // Plugin functions
 require_once(WDT_ROOT_PATH . 'controllers/wdt_functions.php');
 
-if (defined('PHP_VERSION_ID') && PHP_VERSION_ID >= 50600) {
-    require_once WDT_ROOT_PATH . 'lib/autoload.php';
-}
+// Load dependencies
+require_once WDT_ROOT_PATH . 'lib/autoload.php';
+
 
 function wpdatatables_load()
 {
@@ -89,6 +127,9 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/divi-wpdt/divi-wpdt.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/avada/class.wdtavadaelements.php');
     require_once(WDT_ROOT_PATH . 'integrations/page_builders/wpbakery/wdtBakeryBlock.php');
+    if (is_file(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php')) {
+        require_once(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php');
+    }
 
     add_action('plugins_loaded', 'wdtLoadTextdomain');
 

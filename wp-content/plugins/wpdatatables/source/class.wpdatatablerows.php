@@ -223,6 +223,12 @@ class WPDataTableRows
         return false;
     }
 
+    public function getTableCssClasses($classesArr)
+    {
+        $classesStr = apply_filters('wpdatatables_filter_table_cssClassArray', $classesArr, $this->getTableID());
+        return implode(' ', $classesStr);
+    }
+
     /**
      * @return string
      */

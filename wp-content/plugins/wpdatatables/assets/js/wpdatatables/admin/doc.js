@@ -19,7 +19,8 @@ var columnSettingsLinks = {
     'column-sorting-settings': '#columns-settings-sorting',
     'column-filtering-settings': '#columns-settings-filtering',
     'column-editing-settings': '#columns-settings-editing',
-    'column-conditional-formatting-settings': '#columns-settings-conditional-formatting'
+    'column-conditional-formatting-settings': '#columns-settings-conditional-formatting',
+    'column-transform-value': '#column-transform-value'
 };
 
 var browsePageLinks = {
@@ -56,7 +57,7 @@ var chartWizardLinks = {
     'step5': '#save-and-get-shortcode'
 };
 
-jQuery('.wdt-documentation').click(function (e) {
+jQuery('.wdt-documentation').on('click', function (e) {
     e.preventDefault();
     switch (jQuery(this).data('doc-page')) {
         case 'table_settings':

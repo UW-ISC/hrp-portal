@@ -51,29 +51,14 @@
                                 <?php if (!empty($chartId) && ($chartObj->getEngine() == 'apexcharts')){ ?>selected="selected"<?php } ?> >
                             ApexCharts
                         </option>
+                        <option value="highstock"
+                                <?php if (!empty($chartId) && ($chartObj->getEngine() == 'highstock')){ ?>selected="selected"<?php } ?> >
+                            HighCharts Stock
+                        </option>
                     </select>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- /.col-sm-4 -->
-
-    <!-- .col-sm-4 -->
-    <div id="wdt-stable-tag" class="col-sm-3 col-md-3 stable-tag hidden">
-        <h4 class="c-title-color m-b-2">
-            <?php esc_html_e('Use stable version', 'wpdatatables'); ?>
-
-            <i class=" wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-               title="<?php esc_attr_e('Choose weather to use the chart engine library directly from the CDN (as they get updated, some features may break), or use the latest version wpDataTables has been tested with. Leaving this option unchecked means the code is pulled from the CDN.', 'wpdatatables'); ?>"></i>
-        </h4>
-            <div class="fg-line">
-                <div class="toggle-switch" data-ts-color="blue">
-                    <input id="wdt-use-stable-tag" type="checkbox">
-                    <label for="wdt-use-stable-tag"
-                           class="ts-label form-control"><?php esc_html_e('Use stable version', 'wpdatatables'); ?></label>
-                </div>
-            </div>
-
     </div>
     <!-- /.col-sm-4 -->
 
@@ -114,6 +99,12 @@
 
     </div>
     <!-- /div.apexcharts-charts-type -->
+
+    <!-- div.highstock-charts-type -->
+    <div class="charts-type highstock-charts-type col-sm-12 col-md-12">
+        <?php do_action('wpdatatables_add_chart_picker') ?>
+    </div>
+    <!-- /div.highstock-charts-type -->
 
 </div>
 <!--/.row -->

@@ -235,21 +235,21 @@ jQuery.fn.extend({
                 if (type == 'minus') {
 
                     if (currentVal > input.attr('min')) {
-                        input.val(currentVal - 1).change();
+                        input.val(currentVal - 1).trigger("change");
                     }
                     if (parseInt(input.val()) == input.attr('min')) {
                         $(this).attr('disabled', true);
                     }
 
                 } else if (type == 'plus') {
-                    input.val(currentVal + 1).change();
+                    input.val(currentVal + 1).trigger("change");
                     $('.wdt-button-minus').attr('disabled', false);
                 }
             } else {
                 if (fontSizesArr.includes(fieldName)){
                     input.val(parseInt(input.attr('min')));
                 } else {
-                    input.val(1).change();
+                    input.val(1).trigger("change");
                 }
 
             }

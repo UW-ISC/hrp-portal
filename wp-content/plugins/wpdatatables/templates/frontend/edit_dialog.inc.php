@@ -64,7 +64,7 @@
                     <select id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
                             data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
                             data-key="<?php echo esc_attr($dataColumn_key) ?>"
-                            title="<?php echo esc_attr(WDTTools::getTranslationStrings()['nothingSelected']) ?>"
+                            title="<?php echo esc_attr(WDTTools::getTranslationStringsColumnFilter()['nothingSelected']) ?>"
                             class="form-control editDialogInput selectpicker <?php if ($dataColumn->isNotNull()) { ?>mandatory <?php }
                             if ($dataColumn->getForeignKeyRule() != null) { ?> wdt-foreign-key-select <?php };
                             if ($dataColumn->getSearchInSelectBoxEditing() === 1) { ?> wdt-search-in-select <?php };

@@ -101,6 +101,7 @@ var wpdatatable_config = {
     fixed_columns: 0,
     fixed_left_columns_number: 0,
     fixed_right_columns_number: 0,
+    table_wcag: 0,
     /**
      * Method to set the data source type - hides all dependent controls
      * @param type mysql, google_spreadsheet, xml, json, nested_json, serialized, csv, excel
@@ -1269,6 +1270,10 @@ var wpdatatable_config = {
             jQuery('#wdt-table-base-skin').selectpicker('val', tableSkin);
         }
     },
+    setWCAG: function (tableWCAG) {
+        wpdatatable_config.table_wcag = tableWCAG;
+        jQuery('#wdt-wcag').prop('checked', tableWCAG);
+    },
     /**
      * Set table colors
      */
@@ -1353,10 +1358,22 @@ var wpdatatable_config = {
      * @param columnIndex
      */
     showColumn: function (columnIndex) {
+        var hasLinkType = 0;
         wpdatatable_config.columns[columnIndex].show();
         wpdatatable_config.currentOpenColumn = wpdatatable_config.columns[columnIndex];
         jQuery('#wdt-filter-default-value-selectpicker').selectpicker('refresh');
         jQuery('#wdt-editing-default-value-selectpicker').selectpicker('refresh');
+        for (var i=0; i< wpdatatable_config.columns.length;i++){
+            if(jQuery.inArray(wpdatatable_config.columns[i].type,['email', 'image','link']) != -1){
+                hasLinkType++;
+                break;
+            }
+        }
+        if(hasLinkType > 0){
+            jQuery('#column-transform-value .alert').removeClass('hidden');
+        }else {
+            jQuery('#column-transform-value .alert').addClass('hidden');
+        }
     },
     /**
      * Returns the column by given index
@@ -1522,6 +1539,7 @@ var wpdatatable_config = {
         wpdatatable_config.setPlaceholderVar9(tableJSON.var9);
         wpdatatable_config.setLanguage(tableJSON.language);
         wpdatatable_config.setTableSkin(tableJSON.tableSkin);
+        wpdatatable_config.setWCAG(tableJSON.table_wcag);
         wpdatatable_config.setTableBorderRemoval(tableJSON.tableBorderRemoval);
         wpdatatable_config.setTableBorderRemovalHeader(tableJSON.tableBorderRemovalHeader);
         wpdatatable_config.setTableCustomCss(tableJSON.tableCustomCss);
@@ -1622,6 +1640,8 @@ var wpdatatable_config = {
         jQuery('#wdt-formula-editor-modal div.formula-columns-container').html('');
         jQuery('#editing-settings #wdt-id-editing-column').html('');
         jQuery('#editing-settings #wdt-user-id-column').html('');
+        jQuery('#column-transform-value div.transform-value-container').html('');
+        jQuery('#column-transform-value div.transform-value-shortcodes-container').html('');
         for (var i in wpdatatable_config.columns) {
             wpdatatable_config.columns[i].renderSmallColumnBlock(i);
             if (wpdatatable_config.table_type == 'mysql' || wpdatatable_config.table_type == 'manual') {

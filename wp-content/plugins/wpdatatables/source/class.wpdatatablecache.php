@@ -63,7 +63,7 @@ class WPDataTableCache
             $sourceData = [];
             foreach ($tempSourceData as $index => $tempData) {
                 foreach ($tempData as $key => $data) {
-                    $sourceData[$index][wp_kses_post($key)] = wp_kses_post($data);
+                    $sourceData[$index][wp_kses_post($key)] = is_null($data) ? sanitize_text_field($data) : wp_kses_post($data);
                 }
             }
             return $sourceData;

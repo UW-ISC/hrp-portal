@@ -3,7 +3,7 @@ Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
 Tested up to: 6.3
-Stable tag: 3.2.3
+Stable tag: 3.2.4
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,16 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.3 =
+
+* Fix: PHP 8.2 compatibility (update scssphp library to v1.11.1)
+* Notes: If you have problems with CSS Compilation (menu appears unstyled) add the following to your wp-config.php file:
+`define('MEGAMENU_SCSS_COMPILER_COMPAT', true);`
+* Fix: Conflict with Salient when enabled on Multisite
+* Fix: Improve efficiency of key press detection
+* Accessibility Improvement: Using keyboard navigation on mobile, respect the 'Mobile sub menu behaviour' setting (do not auto close sub menus)
+* Accessibility Improvement: Fix issue with NVDA/screen readers not able to open sub menus using Enter key
 
 = 3.2.4 =
 

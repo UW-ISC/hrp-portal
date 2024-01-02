@@ -1427,6 +1427,13 @@ body.toplevel_page_maxmegamenu,
 		.inside {
 			margin: 0;
 		}
+
+		.accordion-section-content,
+		.accordion-section-title,
+		.postbox {
+		    opacity: 1;
+		}
+
 		div.accordion-section-content {
 			padding: 0;
 

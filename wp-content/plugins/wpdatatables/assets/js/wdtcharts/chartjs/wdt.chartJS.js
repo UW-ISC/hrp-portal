@@ -116,7 +116,6 @@ var wpDataTablesChartJS = function () {
             for (var property in this.globalOptions) {
                 Chart.defaults[property] = this.globalOptions[property];
             }
-            console.log(this.options)
             this.chart = new Chart(this.canvas, this.options);
         },
         setType: function (type) {

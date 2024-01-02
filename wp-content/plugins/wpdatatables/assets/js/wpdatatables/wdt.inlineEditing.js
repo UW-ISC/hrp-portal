@@ -91,10 +91,10 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
             if (obj.params.value != '') {
                 if (type == 'email') {
                     var field_valid = wdtValidateEmail(obj.params.value);
-                    var message = wpdatatables_frontend_strings.invalid_email;
+                    var message = wpdatatables_inline_strings.invalid_email;
                 } else if (type == 'link') {
                     var field_valid = wdtValidateURL(obj.params.value);
-                    var message = wpdatatables_frontend_strings.invalid_link;
+                    var message = wpdatatables_inline_strings.invalid_link;
                 }
                 if (!field_valid) {
                     if (!element.closest('td').hasClass('error')) {
@@ -131,7 +131,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 if (!element.closest('td').hasClass('error')) {
                     element.closest('td').addClass('error');
                     $('body').prepend(obj.params.validationPopover);
-                    $('.wpDataTablesPopover.editError').html(wpdatatables_frontend_strings.cannot_be_empty);
+                    $('.wpDataTablesPopover.editError').html(wpdatatables_inline_strings.cannot_be_empty);
                     var popoverSize = {
                         "width": $('.wpDataTablesPopover.editError').outerWidth(),
                         "height": $('.wpDataTablesPopover.editError').outerHeight() + 7
@@ -175,7 +175,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 obj.params.currentCell.removeClass('editing');
                 var $this = obj.params.currentCell;
                 var $value = obj.params.currentCell.html();
-                obj.params.currentCell.empty().html(wpdatatables_frontend_strings.cannot_be_edit);
+                obj.params.currentCell.empty().html(wpdatatables_inline_strings.cannot_be_edit);
 
                 $(document).click(function () {
                     $this.html($value);
@@ -406,14 +406,14 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                         emptyRequest: true,
                         preserveSelectedPosition: 'before',
                         locale: {
-                            emptyTitle: wpdatatables_frontend_strings.nothingSelected,
-                            statusSearching: wpdatatables_frontend_strings.sLoadingRecords,
-                            currentlySelected: wpdatatables_frontend_strings.currentlySelected,
-                            errorText: wpdatatables_frontend_strings.errorText,
-                            searchPlaceholder: wpdatatables_frontend_strings.search,
-                            statusInitialized: wpdatatables_frontend_strings.statusInitialized,
-                            statusNoResults: wpdatatables_frontend_strings.statusNoResults,
-                            statusTooShort: wpdatatables_frontend_strings.statusTooShort
+                            emptyTitle: wpdatatables_inline_strings.nothingSelected,
+                            statusSearching: wpdatatables_inline_strings.sLoadingRecords,
+                            currentlySelected: wpdatatables_inline_strings.currentlySelected,
+                            errorText: wpdatatables_inline_strings.errorText,
+                            searchPlaceholder: wpdatatables_inline_strings.search,
+                            statusInitialized: wpdatatables_inline_strings.statusInitialized,
+                            statusNoResults: wpdatatables_inline_strings.statusNoResults,
+                            statusTooShort: wpdatatables_inline_strings.statusTooShort
                         }
                     });
 
@@ -498,8 +498,8 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                     'id="row_edit_' + tableDescription.tableId + '_sets_button" ' +
                     'data-column_type="icon" ' +
                     'data-rel_input="row_edit_' + tableDescription.tableId + '_sets">' +
-                    '<span class="fileinput-new">' + wpdatatables_frontend_strings.selectFileAttachment + '</span>' +
-                    '<span class="fileinput-exists">' + wpdatatables_frontend_strings.changeFileAttachment + '</span>' +
+                    '<span class="fileinput-new">' + wpdatatables_inline_strings.selectFileAttachment + '</span>' +
+                    '<span class="fileinput-exists">' + wpdatatables_inline_strings.changeFileAttachment + '</span>' +
                     '<input type="hidden" ' +
                     'id="row_edit_' + tableDescription.tableId + '_sets" ' +
                     'data-key="sets" ' +
@@ -508,8 +508,8 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                     'class="editDialogInput" ' +
                     '/>' +
                     '</span>' +
-                    '<button class="btn btn-primary fileinput-save m-r-10">' + wpdatatables_frontend_strings.saveFileAttachment + '</button>' +
-                    '<button class="btn btn-danger fileinput-exists wdt-detach-attachment-file-inline m-r-10" data-dismiss="fileinput">' + wpdatatables_frontend_strings.removeFileAttachment + '</button>' +
+                    '<button class="btn btn-primary fileinput-save m-r-10">' + wpdatatables_inline_strings.saveFileAttachment + '</button>' +
+                    '<button class="btn btn-danger fileinput-exists wdt-detach-attachment-file-inline m-r-10" data-dismiss="fileinput">' + wpdatatables_inline_strings.removeFileAttachment + '</button>' +
                     '<span class="fileinput-filename"></span>';
 
                 // Append a created container to a current cell
@@ -543,9 +543,9 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                 var attachment = null;
                 // Extend the wp.media object
                 wdtCustomUploader = wp.media({
-                    title: wpdatatables_frontend_strings.select_upload_file,
+                    title: wpdatatables_inline_strings.select_upload_file,
                     button: {
-                        text: wpdatatables_frontend_strings.choose_file
+                        text: wpdatatables_inline_strings.choose_file
                     },
                     multiple: false
                 });
@@ -556,9 +556,9 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                     var $relInput = $('#' + $button.data('rel_input'));
                     if (obj.params.columnType == 'icon') {
                         wdtCustomUploader = wp.media({
-                            title: wpdatatables_frontend_strings.select_upload_file,
+                            title: wpdatatables_inline_strings.select_upload_file,
                             button: {
-                                text: wpdatatables_frontend_strings.choose_file
+                                text: wpdatatables_inline_strings.choose_file
                             },
                             multiple: false,
                             library: {

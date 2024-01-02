@@ -630,7 +630,11 @@ class wpDataTableSourceFile
                     if (!in_array($columnHeader, array_values($column_headers))) {
                         continue;
                     }
-                    $insertArray[$columnHeader] = wp_kses_post($insertArray[$columnHeader]);
+                    if (is_null($insertArray[$columnHeader])){
+                        $insertArray[$columnHeader] = sanitize_text_field($insertArray[$columnHeader]);
+                    } else {
+                        $insertArray[$columnHeader] = wp_kses_post($insertArray[$columnHeader]);
+                    }
                     $columnHeaderTempArr[] = $columnHeader;
                 }
             }

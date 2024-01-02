@@ -72,7 +72,28 @@ class ColumnTypeBuilder implements Builder {
         $builder = new DefaultValueBuilder();
         return $builder->build($parsed);
     }
-    
+
+    protected function buildCharacterSet($parsed) {
+        if ($parsed['expr_type'] !== ExpressionType::CHARSET) {
+            return "";
+        }
+        return $parsed['base_expr'];
+    }
+
+    protected function buildCollation($parsed) {
+        if ($parsed['expr_type'] !== ExpressionType::COLLATE) {
+            return "";
+        }
+        return $parsed['base_expr'];
+    }
+
+    protected function buildComment($parsed) {
+        if ($parsed['expr_type'] !== ExpressionType::COMMENT) {
+            return "";
+        }
+        return $parsed['base_expr'];
+    }
+
     public function build(array $parsed) {
         if ($parsed['expr_type'] !== ExpressionType::COLUMN_TYPE) {
             return "";
@@ -84,7 +105,10 @@ class ColumnTypeBuilder implements Builder {
             $sql .= $this->buildColumnTypeBracketExpression($v);
             $sql .= $this->buildReserved($v);
             $sql .= $this->buildDefaultValue($v);
-            
+            $sql .= $this->buildCharacterSet($v);
+            $sql .= $this->buildCollation($v);
+            $sql .= $this->buildComment($v);
+
             if ($len == strlen($sql)) {
                 throw new UnableToCreateSQLException('CREATE TABLE column-type subtree', $k, $v, 'expr_type');
             }

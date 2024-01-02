@@ -6022,6 +6022,11 @@ select.input-group-lg > .input-group-btn > .btn {
     color: #F03E3E;
     border-color: transparent;
 }
+.wpdt-c .alert-danger.alert-medium {
+    background: rgba(243, 216, 0, 0.08);
+    color: #756033;
+    border-radius: 10px;
+}
 
 .wpdt-c.alert-danger hr,
 .wpdt-c .alert-danger hr {
@@ -13710,8 +13715,7 @@ input:focus {
 }
 table.wpDataTable.wpFixedHeader .bootstrap-select.btn-group .dropdown-menu,
 table.wpDataTable.dtfc-has-left .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable.dtfc-has-right .bootstrap-select.btn-group .dropdown-menu,
-table.wpDataTable .bootstrap-select.btn-group .dropdown-menu{
+table.wpDataTable.dtfc-has-right .bootstrap-select.btn-group .dropdown-menu {
     min-width: auto !important;
 }
 table.wpDataTable.wpFixedHeader th.integer .bootstrap-select.btn-group .dropdown-menu,
@@ -13727,6 +13731,9 @@ table.wpDataTable th.integer .bootstrap-select.btn-group .dropdown-menu{
 .dtfh-floatingparent.dtfh-floatingparenthead .wpdt_fixedheader.fixedHeader-floating{
     display: table-row;
     position:absolute !important;
+}
+h2.wpdt-c{
+    font-size: 2.25rem;
 }
 #wdt-validate-googlechart-mapkey.btn-primary{
     margin-top: 33px;

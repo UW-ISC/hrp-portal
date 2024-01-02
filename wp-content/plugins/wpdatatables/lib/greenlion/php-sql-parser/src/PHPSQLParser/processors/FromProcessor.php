@@ -76,13 +76,17 @@ class FromProcessor extends AbstractProcessor {
         }
         // loop init
         return array('expression' => "", 'token_count' => 0, 'table' => "", 'no_quotes' => "", 'alias' => false,
-                     'hints' => false, 'join_type' => "", 'next_join_type' => "",
+                     'hints' => array(), 'join_type' => "", 'next_join_type' => "",
                      'saved_join_type' => $parseInfo['saved_join_type'], 'ref_type' => false, 'ref_expr' => false,
                      'base_expr' => false, 'sub_tree' => false, 'subquery' => "");
     }
 
     protected function processFromExpression(&$parseInfo) {
         $res = array();
+
+        if ($parseInfo['hints'] === array()) {
+            $parseInfo['hints'] = false;
+        }
 
         // exchange the join types (join_type is save now, saved_join_type holds the next one)
         $parseInfo['join_type'] = $parseInfo['saved_join_type']; // initialized with JOIN
@@ -99,9 +103,9 @@ class FromProcessor extends AbstractProcessor {
                 }
             }
             if ($parseInfo['ref_type'] === 'USING') {
-                // unparsed has only one entry, the column list
-                $ref = $this->processColumnList($this->removeParenthesisFromStart($unparsed[0]));
-                $ref = array(array('expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $unparsed[0], 'sub_tree' => $ref));
+            	// unparsed has only one entry, the column list
+            	$ref = $this->processColumnList($this->removeParenthesisFromStart($unparsed[0]));
+            	$ref = array(array('expr_type' => ExpressionType::COLUMN_LIST, 'base_expr' => $unparsed[0], 'sub_tree' => $ref));
             } else {
                 $ref = $this->processExpressionList($unparsed);
             }
@@ -112,7 +116,7 @@ class FromProcessor extends AbstractProcessor {
         if (substr(trim($parseInfo['table']), 0, 1) == '(') {
             $parseInfo['expression'] = $this->removeParenthesisFromStart($parseInfo['table']);
 
-            if (preg_match("/^\\s*select/i", $parseInfo['expression'])) {
+            if (preg_match("/^\\s*(-- [\\w\\s]+\\n)?\\s*SELECT/i", $parseInfo['expression'])) {
                 $parseInfo['sub_tree'] = $this->processSQLDefault($parseInfo['expression']);
                 $res['expr_type'] = ExpressionType::SUBQUERY;
             } else {
@@ -186,6 +190,11 @@ class FromProcessor extends AbstractProcessor {
                 if ($token_category === 'LEFT' || $token_category === 'RIGHT' || $token_category === 'NATURAL') {
                     $token_category = '';
                     $parseInfo['next_join_type'] = strtoupper(trim($prevToken)); // it seems to be a join
+                } elseif ($token_category === 'IDX_HINT') {
+                    $parseInfo['expression'] .= $token;
+                    if ($parseInfo['ref_type'] !== false) { // all after ON / USING
+                        $parseInfo['ref_expr'] .= $token;
+                    }
                 }
                 break;
 
@@ -272,6 +281,12 @@ class FromProcessor extends AbstractProcessor {
                 break;
 
             case 'FOR':
+                if ($token_category === 'IDX_HINT') {
+                    $cur_hint = (count($parseInfo['hints']) - 1);
+                    $parseInfo['hints'][$cur_hint]['hint_type'] .= " " . $upper;
+                    continue 2;
+                }
+
                 $parseInfo['token_count']++;
                 $skip_next = true;
                 break;
@@ -291,6 +306,12 @@ class FromProcessor extends AbstractProcessor {
                 $parseInfo['next_join_type'] = 'CROSS';
 
             case 'JOIN':
+                if ($token_category === 'IDX_HINT') {
+                    $cur_hint = (count($parseInfo['hints']) - 1);
+                    $parseInfo['hints'][$cur_hint]['hint_type'] .= " " . $upper;
+                    continue 2;
+                }
+
                 if ($parseInfo['subquery']) {
                     $parseInfo['sub_tree'] = $this->parse($this->removeParenthesisFromStart($parseInfo['subquery']));
                     $parseInfo['expression'] = $parseInfo['subquery'];
@@ -299,6 +320,13 @@ class FromProcessor extends AbstractProcessor {
                 $expr[] = $this->processFromExpression($parseInfo);
                 $parseInfo = $this->initParseInfo($parseInfo);
                 break;
+
+            case 'GROUP BY':
+                if ($token_category === 'IDX_HINT') {
+                    $cur_hint = (count($parseInfo['hints']) - 1);
+                    $parseInfo['hints'][$cur_hint]['hint_type'] .= " " . $upper;
+                    continue 2;
+                }
 
             default:
                 // TODO: enhance it, so we can have base_expr to calculate the position of the keywords

@@ -338,6 +338,13 @@ var WDTColumn = function (column, parent_table) {
      */
     this.linkButtonClass = null;
 
+    /**
+     * Text to transform content of cells
+     * @type {string}
+     */
+    this.transformValueText = '';
+
+
 
 
     /**
@@ -403,6 +410,7 @@ var WDTColumn = function (column, parent_table) {
         this.visible = typeof column.visible !== 'undefined' ? column.visible : 1;
         this.width = column.width || null;
         this.column_rotate_header_name = column.column_rotate_header_name || '';
+        this.transformValueText = column.transformValueText || '';
 
         if ( typeof callbackExtendColumnObject !== 'undefined' ) {
             callbackExtendColumnObject(column, this);
@@ -488,6 +496,21 @@ WDTColumn.prototype.setTextAfter = function (text_after) {
  */
 WDTColumn.prototype.getTextAfter = function () {
     return this.text_after;
+};
+/**
+ * Set text transform value
+ * @param {string} transformValue_text
+ */
+WDTColumn.prototype.setTransformValueText = function (transformValue_text) {
+    this.transformValueText = transformValue_text;
+};
+
+/**
+ * Get text transform value
+ * @returns {string|*|null}
+ */
+WDTColumn.prototype.getTransformValueText = function () {
+    return this.transformValueText;
 };
 
 /**
@@ -1030,7 +1053,7 @@ WDTColumn.prototype.renderConditionalFormattingBlock = function (formattingRule)
             .remove();
     }
 
-    $block.find('select.formatting-rule-action').change(function (e) {
+    $block.find('select.formatting-rule-action').on('change', function (e) {
         e.preventDefault();
         e.stopImmediatePropagation();
         if (['setCellColor', 'setRowColor', 'setColumnColor'].indexOf(jQuery(this).val()) !== -1) {
@@ -1081,6 +1104,28 @@ WDTColumn.prototype.compileConditionalFormattingRules = function () {
     this.conditional_formatting = formattingRules;
 };
 
+WDTColumn.prototype.columnTransformValue = function () {
+    var column = this;
+    var transformValueRules = [[]];
+    var k = 0;
+    var cellVal = '';
+    jQuery('#column-transform-value div.transform-value-container').each(function () {
+        if ( column.transformValueText != '' ) {
+            cellVal = column.transformValueText;
+            jQuery('table tbody tr td.column-'+ column.orig_header).each(function () {
+                this.innerHTML = cellVal;
+                transformValueRules[0].push({
+                    setVal: cellVal
+                });
+            });
+        } else {
+            transformValueRules[0].push({
+                setVal: cellVal
+            });
+        }
+    });
+};
+
 /**
  * Fill in the visible inputs with data
  */
@@ -1090,6 +1135,7 @@ WDTColumn.prototype.fillInputs = function () {
     jQuery('#wdt-column-position').val(this.pos);
     jQuery('#wdt-column-display-text-before').val(this.text_before);
     jQuery('#wdt-column-display-text-after').val(this.text_after);
+    jQuery('#wdt-column-transform-value').val(this.transformValueText);
 
     if (this.parent_table.responsive) {
         jQuery('div.wdt-columns-responsive-block').show();
@@ -1412,6 +1458,7 @@ WDTColumn.prototype.applyChanges = function () {
     this.linkButtonAttribute = jQuery('#wdt-link-button-attribute').is(':checked') ? 1 : 0;
     this.linkButtonLabel = jQuery('#wdt-link-button-label').val();
     this.linkButtonClass = jQuery('#wdt-link-button-class').val();
+    this.transformValueText = jQuery('#wdt-column-transform-value').val();
 
 
     // If group is checked ungroup all other columns
@@ -1514,6 +1561,7 @@ WDTColumn.prototype.applyChanges = function () {
         this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
     }
     this.compileConditionalFormattingRules();
+    this.columnTransformValue();
 
     this.hide();
 };
@@ -1581,7 +1629,8 @@ WDTColumn.prototype.getJSON = function () {
         valuesList: this.valuesList,
         visible: this.visible,
         width: this.width,
-        column_rotate_header_name: this.column_rotate_header_name
+        column_rotate_header_name: this.column_rotate_header_name,
+        transformValueText: this.transformValueText
     };
 
     if ( typeof callbackExtendOptionInObjectFormat !== 'undefined' ) {
@@ -1591,6 +1640,16 @@ WDTColumn.prototype.getJSON = function () {
     return allColumnSettings;
 
 };
+jQuery(document).on('click',
+    '#wdt-select-all-column-tablet-visibility, ' +
+    '#wdt-select-all-column-mobile-visibility, ' +
+    '#wdt-select-all-column-visibility, ' +
+    '#wdt-select-all-column-sorting, ' +
+    '#wdt-select-all-column-filters, ' +
+    '#wdt-select-all-column-global-search, ' +
+    '#wdt-select-all-column-editing', function (e) {
+        jQuery(this).toggleClass('select-all-columns deselect-all-columns');
+    });
 
 /**
  * Renders a small block for this column in the list (in the columns quickaccess modal, and in the formula editor)
@@ -1605,6 +1664,102 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
         $columnBlock.find('div.fg-line input').val(this.orig_header);
     $columnBlock.attr('data-orig_header', this.orig_header);
     var column = this;
+
+    var checkbox = jQuery('#wdt-select-all-column-tablet-visibility');
+
+    jQuery('#wdt-select-all-column-tablet-visibility').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.hide_on_tablets = 0;
+            jQuery('i.wdt-toggle-show-on-tablet').removeClass('inactive');
+        } else {
+            column.hide_on_tablets = 1;
+            jQuery('i.wdt-toggle-show-on-tablet').addClass('inactive')
+        }
+    });
+
+    jQuery('#wdt-select-all-column-mobile-visibility').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.hide_on_mobiles = 0;
+            jQuery('i.wdt-toggle-show-on-mobile').removeClass('inactive')
+        } else {
+            column.hide_on_mobiles = 1;
+            jQuery('i.wdt-toggle-show-on-mobile').addClass('inactive')
+        }
+    });
+
+    jQuery('#wdt-select-all-column-visibility').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.visible = 0;
+            jQuery('i.toggle-visibility').addClass('inactive')
+        } else {
+            column.visible = 1;
+            jQuery('i.toggle-visibility').removeClass('inactive')
+        }
+    });
+
+    jQuery('#wdt-select-all-column-sorting').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.sorting = 0;
+            jQuery('i.wdt-toggle-show-sorting').addClass('inactive')
+        } else {
+            column.sorting = 1;
+            jQuery('i.wdt-toggle-show-sorting').removeClass('inactive')
+        }
+    });
+
+    jQuery('#wdt-select-all-column-filters').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.filter_type = 'text';
+            jQuery('i.wdt-toggle-show-filters').removeClass('inactive')
+            if(!column.globalSearchColumn) {
+                column.globalSearchColumn = 1;
+                jQuery('i.wdt-toggle-global-search').removeClass('inactive');
+            }
+        } else {
+            column.filter_type = 'none';
+            jQuery('i.wdt-toggle-show-filters').addClass('inactive')
+        }
+    });
+
+    jQuery('#wdt-select-all-column-global-search').click(function (e) {
+        if (jQuery(this).hasClass('select-all-columns')) {
+            column.globalSearchColumn = 0;
+            jQuery('i.wdt-toggle-global-search').addClass('inactive')
+            jQuery('i.wdt-toggle-show-filters')
+                .addClass('inactive');
+            column.filter_type = "none";
+        } else {
+            column.globalSearchColumn = 1;
+            jQuery('i.wdt-toggle-global-search').removeClass('inactive')
+            jQuery('i.wdt-toggle-show-filters')
+                .removeClass('inactive');
+            column.filter_type = "text";
+        }
+    });
+
+    jQuery('#wdt-select-all-column-editing').click(function (e) {
+        if (jQuery(this).hasClass('deselect-all-columns')) {
+            column.editor_type = 'text';
+            jQuery('i.wdt-toggle-enable-editing')
+                .removeClass('inactive');
+        } else {
+            column.editor_type = 'none';
+            jQuery('i.wdt-toggle-enable-editing')
+                .addClass('inactive');
+        }
+    });
+
+    if(parseInt(columnIndex) === column.parent_table.columns.length-1) {
+        jQuery('#wdt-select-all-column-global-search',
+            '#wdt-select-all-column-filters',
+            '#wdt-select-all-column-sorting',
+            '#wdt-select-all-column-visibility',
+            '#wdt-select-all-column-mobile-visibility',
+            '#wdt-select-all-column-tablet-visibility',
+            '#wdt-select-all-column-editing'
+        ).removeAttr('checked');
+    }
+
     /**
      * Quick visibility toggle
      */
@@ -1778,6 +1933,16 @@ WDTColumn.prototype.renderSmallColumnBlock = function (columnIndex) {
         $columnBlock.find('div.fg-line input').replaceWith('<span>' + this.display_header + '</span>');
         $columnBlock.attr('data-orig_header', this.orig_header);
         $columnBlock.find('i.column-control').remove();
+    }
+
+    if (this.type != '') {
+
+        $columnBlock = jQuery(columnHtml).appendTo('#column-transform-value div.transform-value-container');
+        $columnBlock.find('div.fg-line input').replaceWith('<span style="width: 30%">' + this.display_header + ':' + '</span>');
+        $columnBlock.attr('data-orig_header', this.display_header);
+        $columnBlock = jQuery(columnHtml).appendTo('#column-transform-value div.transform-value-shortcodes-container');
+        $columnBlock.find('div.fg-line input').replaceWith('<span>' + '{' + this.orig_header + '.value}' + '</span>');
+        $columnBlock.attr('data-orig_header', this.orig_header);
     }
 
     if (this.type == 'formula') {

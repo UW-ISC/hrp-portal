@@ -23,7 +23,7 @@ class WDTExcelColumn {
      * @param $arguments
      */
     public function __call($name, $arguments) {
-        call_user_func_array(
+        return call_user_func_array(
             array($this->wdtColumn, $name),
             $arguments
         );

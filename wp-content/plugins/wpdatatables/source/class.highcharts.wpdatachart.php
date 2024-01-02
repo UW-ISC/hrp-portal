@@ -33,7 +33,6 @@ class WdtHighchartsChart extends WPDataChart
     protected $_subtitle_align = 'center';
 
     // Tooltip
-    protected $_tooltip_enabled = true;
     protected $_tooltip_background_color = 'rgba(255, 255, 255, 0.85)';
     protected $_tooltip_border_width = 1;
     protected $_tooltip_border_color = null;
@@ -70,6 +69,20 @@ class WdtHighchartsChart extends WPDataChart
 
     //Render data
     protected $_highcharts_render_data = NULL;
+
+    // Paths depending on "stable version"
+    protected $_libSource = '//code.highcharts.com/highcharts.js';
+    protected $_moreLibSource = '//code.highcharts.com/highcharts-more.js';
+    protected $_threeDLibSource = '//code.highcharts.com/highcharts-3d.js';
+    protected $_exportingDataLibSource = '//code.highcharts.com/modules/export-data.js';
+    protected $_accessibilityLibSource = '//code.highcharts.com/modules/accessibility.js';
+    protected $_exportingLibSource = '//code.highcharts.com/modules/exporting.js';
+    protected $_cylinderLibSource = '//code.highcharts.com/modules/cylinder.js';
+    protected $_heatMapLibSource = '//code.highcharts.com/modules/heatmap.js';
+    protected $_funnelLibSource = '//code.highcharts.com/modules/funnel.js';
+    protected $_funnel3DLibSource = '//code.highcharts.com/modules/funnel3d.js';
+    protected $_treeMapLibSource = '//code.highcharts.com/modules/treemap.js';
+
 
     /**
      * @return int
@@ -792,6 +805,183 @@ class WdtHighchartsChart extends WPDataChart
     }
 
     /**
+     * @return string
+     */
+    public function getLibSource()
+    {
+        return $this->_libSource;
+    }
+
+    /**
+     * @param string $libSource
+     */
+    public function setLibSource($libSource)
+    {
+        $this->_libSource = $libSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getMoreLibSource()
+    {
+        return $this->_moreLibSource;
+    }
+
+    /**
+     * @param string $moreLibSource
+     */
+    public function setMoreLibSource($moreLibSource)
+    {
+        $this->_moreLibSource = $moreLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getThreeDLibSource()
+    {
+        return $this->_threeDLibSource;
+    }
+
+    /**
+     * @param string $threeDLibSource
+     */
+    public function setThreeDLibSource($threeDLibSource)
+    {
+        $this->_threeDLibSource = $threeDLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExportingDataLibSource()
+    {
+        return $this->_exportingDataLibSource;
+    }
+
+    /**
+     * @param string $exportingDataLibSource
+     */
+    public function setExportingDataLibSource($exportingDataLibSource)
+    {
+        $this->_exportingDataLibSource = $exportingDataLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessibilityLibSource()
+    {
+        return $this->_accessibilityLibSource;
+    }
+
+    /**
+     * @param string $accessibilityLibSource
+     */
+    public function setAccessibilityLibSource($accessibilityLibSource)
+    {
+        $this->_accessibilityLibSource = $accessibilityLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExportingLibSource()
+    {
+        return $this->_exportingLibSource;
+    }
+
+    /**
+     * @param string $exportingLibSource
+     */
+    public function setExportingLibSource($exportingLibSource)
+    {
+        $this->_exportingLibSource = $exportingLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCylinderLibSource()
+    {
+        return $this->_cylinderLibSource;
+    }
+
+    /**
+     * @param string $cylinderLibSource
+     */
+    public function setCylinderLibSource($cylinderLibSource)
+    {
+        $this->_cylinderLibSource = $cylinderLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHeatMapLibSource()
+    {
+        return $this->_heatMapLibSource;
+    }
+
+    /**
+     * @param string $heatMapLibSource
+     */
+    public function setHeatMapLibSource($heatMapLibSource)
+    {
+        $this->_heatMapLibSource = $heatMapLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFunnelLibSource()
+    {
+        return $this->_funnelLibSource;
+    }
+
+    /**
+     * @param string $funnelLibSource
+     */
+    public function setFunnelLibSource($funnelLibSource)
+    {
+        $this->_funnelLibSource = $funnelLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFunnel3DLibSource()
+    {
+        return $this->_funnel3DLibSource;
+    }
+
+    /**
+     * @param string $funnel3DLibSource
+     */
+    public function setFunnel3DLibSource($funnel3DLibSource)
+    {
+        $this->_funnel3DLibSource = $funnel3DLibSource;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTreeMapLibSource()
+    {
+        return $this->_treeMapLibSource;
+    }
+
+    /**
+     * @param string $treeMapLibSource
+     */
+    public function setTreeMapLibSource($treeMapLibSource)
+    {
+        $this->_treeMapLibSource = $treeMapLibSource;
+    }
+
+
+    /**
      * WPDT Highcharts constructor.
      *
      * @param array $constructedChartData
@@ -870,6 +1060,21 @@ class WdtHighchartsChart extends WPDataChart
             $this->setCredits((bool)(WDTTools::defineDefaultValue($constructedChartData, 'credits', true)));
             $this->setCreditsHref(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_href', 'https://www.highcharts.com')));
             $this->setCreditsText(sanitize_text_field(WDTTools::defineDefaultValue($constructedChartData, 'credits_text', 'Highcharts.com')));
+
+            // Script paths depending on "stable version"
+            if (get_option('wdtHighChartStableVersion')) {
+                $this->setLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts.js');
+                $this->setMoreLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-more.js');
+                $this->setThreeDLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-3D.js');
+                $this->setCylinderLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-cylinder.js');
+                $this->setHeatMapLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-heatmap.js');
+                $this->setFunnelLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel.js');
+                $this->setFunnel3DLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel3D.js');
+                $this->setTreeMapLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-treemap.js');
+                $this->setExportingLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting.js');
+                $this->setExportingDataLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting-data.js');
+                $this->setAccessibilityLibSource(WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-accessibility.js');
+            }
         }
 
     }
@@ -885,7 +1090,8 @@ class WdtHighchartsChart extends WPDataChart
             $this->_type == 'highcharts_spline_chart' ||
             $this->_type == 'highcharts_basic_area_chart' ||
             $this->_type == 'highcharts_polar_chart' ||
-            $this->_type == 'highcharts_spiderweb_chart') {
+            $this->_type == 'highcharts_spiderweb_chart'
+        ) {
 
             if (!empty($this->_user_defined_series_data)) {
                 $seriesIndex = 0;
@@ -914,6 +1120,168 @@ class WdtHighchartsChart extends WPDataChart
      */
     public function prepareRender()
     {
+        $renderData = '_' . $this->getEngine() . '_render_data';
+        $this->{$renderData}['wdtNumberFormat'] = get_option('wdtNumberFormat');
+        $this->{$renderData}['options'] = $this->prepareRenderOptions();
+        $this->{$renderData}['type'] = $this->getType();
+        if ($this->_follow_filtering) {
+            if (isset($this->_render_data['column_indexes'])) {
+                $this->{$renderData}['column_indexes'] = $this->_render_data['column_indexes'];
+            }
+        }
+
+        // Chart
+        if (!$this->_responsiveWidth) {
+            $this->{$renderData}['width'] = $this->getWidth();
+        }
+        $this->{$renderData}['height'] = $this->getHeight();
+        $this->{$renderData}['options']['chart']['backgroundColor'] = $this->getBackgroundColor();
+        $this->{$renderData}['options']['chart']['borderWidth'] = $this->getBorderWidth();
+        $this->{$renderData}['options']['chart']['borderColor'] = $this->getBorderColor();
+        $this->{$renderData}['options']['chart']['borderRadius'] = $this->getBorderRadius();
+        $this->{$renderData}['options']['chart']['zoomType'] = $this->getZoomType();
+        $this->{$renderData}['options']['chart']['panning'] = $this->isPanning();
+        $this->{$renderData}['options']['chart']['panKey'] = $this->getPanKey();
+        $this->{$renderData}['options']['chart']['plotBackgroundColor'] = $this->getPlotBackgroundColor();
+        $this->{$renderData}['options']['chart']['plotBackgroundImage'] = $this->getPlotBackgroundImage();
+        $this->{$renderData}['options']['chart']['plotBorderColor'] = $this->getPlotBorderColor();
+        $this->{$renderData}['options']['chart']['plotBorderWidth'] = $this->getPlotBorderWidth();
+
+        // Axes
+        if ($this->_type == 'highcharts_spiderweb_chart') {
+            $this->{$renderData}['options']['xAxis']['tickmarkPlacement'] = 'on';
+            $this->{$renderData}['options']['xAxis']['lineWidth'] = 0;
+        }
+
+        if (!$this->_show_grid) {
+            $this->{$renderData}['options']['xAxis']['lineWidth'] = 0;
+            $this->{$renderData}['options']['xAxis']['minorGridLineWidth'] = 0;
+            $this->{$renderData}['options']['xAxis']['lineColor'] = 'transparent';
+            $this->{$renderData}['options']['xAxis']['minorTickLength'] = 0;
+            $this->{$renderData}['options']['xAxis']['tickLength'] = 0;
+            if ($this->getSeriesType() != '') {
+                $this->{$renderData}['options']['yAxis'][0]['lineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis'][0]['gridLineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis'][0]['minorGridLineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis'][0]['lineColor'] = 'transparent';
+                $this->{$renderData}['options']['yAxis'][0]['labels'] = array('enabled' => false);
+                $this->{$renderData}['options']['yAxis'][0]['minorTickLength'] = 0;
+                $this->{$renderData}['options']['yAxis'][0]['tickLength'] = 0;
+            } else {
+                $this->{$renderData}['options']['yAxis']['lineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis']['gridLineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis']['minorGridLineWidth'] = 0;
+                $this->{$renderData}['options']['yAxis']['lineColor'] = 'transparent';
+                $this->{$renderData}['options']['yAxis']['labels'] = array('enabled' => false);
+                $this->{$renderData}['options']['yAxis']['minorTickLength'] = 0;
+                $this->{$renderData}['options']['yAxis']['tickLength'] = 0;
+            }
+        }
+        if ($this->getSeriesType() != '') {
+            $this->{$renderData}['options']['yAxis'][0]['gridLineDashStyle'] = $this->getHighchartsLineDashStyle();
+        } else {
+            $this->{$renderData}['options']['yAxis']['gridLineDashStyle'] = $this->getHighchartsLineDashStyle();
+        }
+        if (!empty($this->_render_data['options']['hAxis']['title'])) {
+            $this->{$renderData}['options']['xAxis']['title']['text'] = $this->_render_data['options']['hAxis']['title'];
+        }
+        $this->{$renderData}['options']['xAxis']['crosshair'] = $this->isHorizontalAxisCrosshair();
+        if (!empty($this->_render_data['options']['vAxis']['title'])) {
+            if ($this->getSeriesType() != '') {
+                $this->{$renderData}['options']['yAxis'][0]['title']['text'] = $this->_render_data['options']['vAxis']['title'];
+            } else {
+                $this->{$renderData}['options']['yAxis']['title']['text'] = $this->_render_data['options']['vAxis']['title'];
+            }
+        }
+        if ($this->getSeriesType() != '') {
+            $this->{$renderData}['options']['yAxis'][0]['crosshair'] = $this->isVerticalAxisCrosshair();
+        } else {
+            $this->{$renderData}['options']['yAxis']['crosshair'] = $this->isVerticalAxisCrosshair();
+        }
+
+        if ($this->getVerticalAxisMin() != '') {
+            if ($this->getSeriesType() != '') {
+                $this->{$renderData}['options']['yAxis'][0]['min'] = (float)$this->getVerticalAxisMin();
+            } else {
+                $this->{$renderData}['options']['yAxis']['min'] = (float)$this->getVerticalAxisMin();
+            }
+        }
+        if ($this->getVerticalAxisMax() != '') {
+            if ($this->getSeriesType() != '') {
+                $this->{$renderData}['options']['yAxis'][0]['max'] = (float)$this->getVerticalAxisMax();
+            } else {
+                $this->{$renderData}['options']['yAxis']['max'] = (float)$this->getVerticalAxisMax();
+            }
+        }
+        $this->{$renderData}['options']['chart']['inverted'] = $this->isInverted();
+
+        // Title
+        if ($this->isShowTitle()) {
+            $this->{$renderData}['options']['title']['text'] = $this->getTitle();
+        } else {
+            $this->{$renderData}['options']['title']['text'] = '';
+        }
+        $this->{$renderData}['options']['title']['floating'] = $this->isTitleFloating();
+        $this->{$renderData}['options']['title']['align'] = $this->getTitleAlign();
+        $this->{$renderData}['options']['subtitle']['text'] = $this->getSubtitle();
+        $this->{$renderData}['options']['subtitle']['align'] = $this->getSubtitleAlign();
+
+        // Tooltip
+        $this->{$renderData}['options']['tooltip']['enabled'] = $this->isTooltipEnabled();
+        $this->{$renderData}['options']['tooltip']['backgroundColor'] = ($this->getTooltipBackgroundColor() != '') ? $this->getTooltipBackgroundColor() : 'rgba(255, 255, 255, 0.85)';
+        $this->{$renderData}['options']['tooltip']['borderWidth'] = $this->getTooltipBorderWidth();
+        $this->{$renderData}['options']['tooltip']['borderColor'] = $this->getTooltipBorderColor();
+        $this->{$renderData}['options']['tooltip']['borderRadius'] = $this->getTooltipBorderRadius();
+        $this->{$renderData}['options']['tooltip']['shared'] = $this->isTooltipShared();
+        $this->{$renderData}['options']['tooltip']['valuePrefix'] = $this->getTooltipValuePrefix();
+        $this->{$renderData}['options']['tooltip']['valueSuffix'] = $this->getTooltipValueSuffix();
+
+        // Legend
+        if ($this->{$renderData}['type'] == 'highcharts_treemap_level_chart') {
+            $this->{$renderData}['options']['legend']['enabled'] = false;
+        } else {
+            $this->{$renderData}['options']['legend']['enabled'] = $this->isShowLegend();
+        }
+        $this->{$renderData}['options']['legend']['backgroundColor'] = $this->getLegendBackgroundColor();
+        $this->{$renderData}['options']['legend']['title']['text'] = $this->getLegendTitle();
+        $this->{$renderData}['options']['legend']['layout'] = $this->getLegendLayout();
+        $this->{$renderData}['options']['legend']['align'] = $this->getLegendAlign();
+        $this->{$renderData}['options']['legend']['verticalAlign'] = $this->getLegendVerticalAlign();
+        $this->{$renderData}['options']['legend']['borderWidth'] = $this->getLegendBorderWidth();
+        $this->{$renderData}['options']['legend']['borderColor'] = $this->getLegendBorderColor();
+        $this->{$renderData}['options']['legend']['borderRadius'] = $this->getLegendBorderRadius();
+
+        // Exporting
+        $this->{$renderData}['options']['exporting']['enabled'] = $this->isExporting();
+        $this->{$renderData}['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled'] = $this->isExportingDataLabels();
+        $this->{$renderData}['options']['exporting']['filename'] = $this->getExportingFileName();
+        $this->{$renderData}['options']['exporting']['width'] = $this->getExportingWidth();
+        $this->{$renderData}['options']['exporting']['buttons']['contextButton']['align'] = $this->getExportingButtonAlign();
+        $this->{$renderData}['options']['exporting']['buttons']['contextButton']['verticalAlign'] = $this->getExportingButtonVerticalAlign();
+        if ($this->getExportingButtonColor() == '') {
+            $this->{$renderData}['options']['exporting']['buttons']['contextButton']['symbolStroke'] = '#666';
+        } else {
+            $this->{$renderData}['options']['exporting']['buttons']['contextButton']['symbolStroke'] = $this->getExportingButtonColor();
+        }
+        $this->{$renderData}['options']['exporting']['buttons']['contextButton']['text'] = $this->getExportingButtonText();
+        if ($this->isExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
+            $this->{$renderData}['options']['exporting']['buttons']['contextButton']['menuItems'] = ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'];
+        }
+
+        // Credits
+        $this->{$renderData}['options']['credits']['enabled'] = $this->isCredits();
+        $this->{$renderData}['options']['credits']['href'] = $this->getCreditsHref();
+        $this->{$renderData}['options']['credits']['text'] = $this->getCreditsText();
+
+        $this->{$renderData} = apply_filters('wpdatatables_filter_' . $this->getEngine() . '_render_data', $this->{$renderData}, $this->getId(), $this);
+
+    }
+
+    /**
+     * @return array
+     */
+    public function prepareRenderOptions()
+    {
         $highchartsRender = array(
             'title' => array(
                 'text' => $this->_show_title ? $this->getTitle() : ''
@@ -932,113 +1300,6 @@ class WdtHighchartsChart extends WPDataChart
             $this->setSeriesType('spline');
         } else if ($this->_type == 'highcharts_basic_area_chart') {
             $this->setSeriesType('area');
-        }
-
-        if ($this->_type == 'highcharts_treemap_chart') {
-            $data = [];
-            foreach ($this->_render_data['rows'] as $row) {
-                $data[] = [
-                    'name' => $row[0],
-                    'value' => $row[1],
-                    'colorValue' => $row[1]
-                ];
-            }
-            $highchartsRender['series'] = array(
-                array(
-                    'type' => 'treemap',
-                    'layoutAlgorithm' => 'squarified',
-                    'name' => $this->_render_data['columns'][1]['label'],
-                    'data' => $data
-                )
-            );
-            unset($highchartsRender['xAxis']);
-            $highchartsRender['colorAxis'] = array(
-
-                'minColor' => '#FFFFBF',
-                'maxColor' => '#006837'
-            );
-        }
-        if ($this->_type == 'highcharts_treemap_level_chart') {
-            $data = [];
-
-            for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
-                if (!empty($this->_render_data['rows'])){
-                    foreach ($this->_render_data['rows'] as $row) {
-                        if ($i > 0) {
-                            if ($this->_render_data['columns'][$i]['type'] == 'number') {
-                                $column_name[$i - 1] = $this->_render_data['columns'][$i]['label'];
-                            }
-
-                        } else {
-                            $helperArr[] = $row[$i];
-                        }
-                    }
-
-                    foreach ($helperArr as $helperKey => $helperValue) {
-                        if ($i == 0) {
-                            $data[] = [
-                                'id' => 'id_' . $helperKey,
-                                'name' => $helperValue,
-                                'color' => '#006837'
-                            ];
-                        }
-                    }
-                }
-            }
-            $row_numbers = $this->_render_data['rows'];
-            for ($y = 0; $y < count($row_numbers); $y++) {
-                for ($z = 0; $z < count($row_numbers[$y]) - 1; $z++) {
-
-                    $data[] = [
-                        'id' => 'id_' . $y . '_' . $z,
-                        'name' => $column_name[$z],
-                        'parent' => 'id_' . $y,
-                        'value' => $this->_render_data['rows'][$y][$z + 1],
-                        'colorValue' => $this->_render_data['rows'][$y][$z + 1],
-                    ];
-
-                }
-            }
-
-            $highchartsRender['colorAxis'] = array(
-                'minColor' => '#FFFFBF',
-                'maxColor' => '#006837'
-
-            );
-
-            $highchartsRender['series'] = array(
-                array(
-                    'type' => 'treemap',
-                    'layoutAlgorithm' => 'squarified',
-                    'allowDrillToNode' => true,
-                    'animationLimit' => 1000,
-                    'dataLabels' => [
-                        'enabled' => false
-                    ],
-                    'drillUpButton' => [
-                        'text' => '< Back'
-                    ],
-                    'levelIsConstant' => false,
-                    'levels' => [
-                        [
-                            'level' => 1,
-                            'dataLabels' => [
-                                'enabled' => true
-                            ],
-                            'borderWidth' => 0,
-                            'states' => [
-                                'hover' => [
-                                    'brightness' => 0.1
-                                ]
-                            ]
-                        ],
-
-                    ],
-                    'data' => $data,
-                )
-            );
-
-            unset($highchartsRender['xAxis']);
         }
 
         if (!in_array(
@@ -1127,162 +1388,113 @@ class WdtHighchartsChart extends WPDataChart
                     )
                 );
                 unset($highchartsRender['xAxis']);
+            } else if ($this->_type == 'highcharts_treemap_chart') {
+                $data = [];
+                foreach ($this->_render_data['rows'] as $row) {
+                    $data[] = [
+                        'name' => $row[0],
+                        'value' => $row[1],
+                        'colorValue' => $row[1]
+                    ];
+                }
+                $highchartsRender['series'] = array(
+                    array(
+                        'type' => 'treemap',
+                        'layoutAlgorithm' => 'squarified',
+                        'name' => $this->_render_data['columns'][1]['label'],
+                        'data' => $data
+                    )
+                );
+                unset($highchartsRender['xAxis']);
+                $highchartsRender['colorAxis'] = array(
+
+                    'minColor' => '#FFFFBF',
+                    'maxColor' => '#006837'
+                );
+            } else if ($this->_type == 'highcharts_treemap_level_chart') {
+                $data = [];
+
+                for ($i = 0; $i < count($this->_render_data['columns']); $i++) {
+                    if (!empty($this->_render_data['rows'])) {
+                        foreach ($this->_render_data['rows'] as $row) {
+                            if ($i > 0) {
+                                if ($this->_render_data['columns'][$i]['type'] == 'number') {
+                                    $column_name[$i - 1] = $this->_render_data['columns'][$i]['label'];
+                                }
+
+                            } else {
+                                $helperArr[] = $row[$i];
+                            }
+                        }
+
+                        foreach ($helperArr as $helperKey => $helperValue) {
+                            if ($i == 0) {
+                                $data[] = [
+                                    'id' => 'id_' . $helperKey,
+                                    'name' => $helperValue,
+                                    'color' => '#006837'
+                                ];
+                            }
+                        }
+                    }
+                }
+                $row_numbers = $this->_render_data['rows'];
+                for ($y = 0; $y < count($row_numbers); $y++) {
+                    for ($z = 0; $z < count($row_numbers[$y]) - 1; $z++) {
+
+                        $data[] = [
+                            'id' => 'id_' . $y . '_' . $z,
+                            'name' => $column_name[$z],
+                            'parent' => 'id_' . $y,
+                            'value' => $this->_render_data['rows'][$y][$z + 1],
+                            'colorValue' => $this->_render_data['rows'][$y][$z + 1],
+                        ];
+
+                    }
+                }
+
+                $highchartsRender['colorAxis'] = array(
+                    'minColor' => '#FFFFBF',
+                    'maxColor' => '#006837'
+
+                );
+
+                $highchartsRender['series'] = array(
+                    array(
+                        'type' => 'treemap',
+                        'layoutAlgorithm' => 'squarified',
+                        'allowDrillToNode' => true,
+                        'animationLimit' => 1000,
+                        'dataLabels' => [
+                            'enabled' => false
+                        ],
+                        'drillUpButton' => [
+                            'text' => '< Back'
+                        ],
+                        'levelIsConstant' => false,
+                        'levels' => [
+                            [
+                                'level' => 1,
+                                'dataLabels' => [
+                                    'enabled' => true
+                                ],
+                                'borderWidth' => 0,
+                                'states' => [
+                                    'hover' => [
+                                        'brightness' => 0.1
+                                    ]
+                                ]
+                            ],
+
+                        ],
+                        'data' => $data,
+                    )
+                );
+
+                unset($highchartsRender['xAxis']);
             }
         }
-        $this->_highcharts_render_data['wdtNumberFormat'] = get_option('wdtNumberFormat');
-        $this->_highcharts_render_data['options'] = $highchartsRender;
-        $this->_highcharts_render_data['type'] = $this->getType();
-        if ($this->_follow_filtering) {
-            if (isset($this->_render_data['column_indexes'])) {
-                $this->_highcharts_render_data['column_indexes'] = $this->_render_data['column_indexes'];
-            }
-        }
-
-        // Chart
-        if (!$this->_responsiveWidth) {
-            $this->_highcharts_render_data['width'] = $this->getWidth();
-        }
-        $this->_highcharts_render_data['height'] = $this->getHeight();
-        $this->_highcharts_render_data['options']['chart']['backgroundColor'] = $this->getBackgroundColor();
-        $this->_highcharts_render_data['options']['chart']['borderWidth'] = $this->getBorderWidth();
-        $this->_highcharts_render_data['options']['chart']['borderColor'] = $this->getBorderColor();
-        $this->_highcharts_render_data['options']['chart']['borderRadius'] = $this->getBorderRadius();
-        $this->_highcharts_render_data['options']['chart']['zoomType'] = $this->getZoomType();
-        $this->_highcharts_render_data['options']['chart']['panning'] = $this->isPanning();
-        $this->_highcharts_render_data['options']['chart']['panKey'] = $this->getPanKey();
-        $this->_highcharts_render_data['options']['chart']['plotBackgroundColor'] = $this->getPlotBackgroundColor();
-        $this->_highcharts_render_data['options']['chart']['plotBackgroundImage'] = $this->getPlotBackgroundImage();
-        $this->_highcharts_render_data['options']['chart']['plotBorderColor'] = $this->getPlotBorderColor();
-        $this->_highcharts_render_data['options']['chart']['plotBorderWidth'] = $this->getPlotBorderWidth();
-
-        // Axes
-        if ($this->_type == 'highcharts_spiderweb_chart') {
-            $this->_highcharts_render_data['options']['xAxis']['tickmarkPlacement'] = 'on';
-            $this->_highcharts_render_data['options']['xAxis']['lineWidth'] = 0;
-        }
-
-        if (!$this->_show_grid) {
-            $this->_highcharts_render_data['options']['xAxis']['lineWidth'] = 0;
-            $this->_highcharts_render_data['options']['xAxis']['minorGridLineWidth'] = 0;
-            $this->_highcharts_render_data['options']['xAxis']['lineColor'] = 'transparent';
-            $this->_highcharts_render_data['options']['xAxis']['minorTickLength'] = 0;
-            $this->_highcharts_render_data['options']['xAxis']['tickLength'] = 0;
-            if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['lineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis'][0]['gridLineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis'][0]['minorGridLineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis'][0]['lineColor'] = 'transparent';
-                $this->_highcharts_render_data['options']['yAxis'][0]['labels'] = array('enabled' => false);
-                $this->_highcharts_render_data['options']['yAxis'][0]['minorTickLength'] = 0;
-                $this->_highcharts_render_data['options']['yAxis'][0]['tickLength'] = 0;
-            } else {
-                $this->_highcharts_render_data['options']['yAxis']['lineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis']['gridLineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis']['minorGridLineWidth'] = 0;
-                $this->_highcharts_render_data['options']['yAxis']['lineColor'] = 'transparent';
-                $this->_highcharts_render_data['options']['yAxis']['labels'] = array('enabled' => false);
-                $this->_highcharts_render_data['options']['yAxis']['minorTickLength'] = 0;
-                $this->_highcharts_render_data['options']['yAxis']['tickLength'] = 0;
-            }
-        }
-        if ($this->getSeriesType() != '') {
-            $this->_highcharts_render_data['options']['yAxis'][0]['gridLineDashStyle'] = $this->getHighchartsLineDashStyle();
-        } else {
-            $this->_highcharts_render_data['options']['yAxis']['gridLineDashStyle'] = $this->getHighchartsLineDashStyle();
-        }
-        if (!empty($this->_render_data['options']['hAxis']['title'])) {
-            $this->_highcharts_render_data['options']['xAxis']['title']['text'] = $this->_render_data['options']['hAxis']['title'];
-        }
-        $this->_highcharts_render_data['options']['xAxis']['crosshair'] = $this->isHorizontalAxisCrosshair();
-        if (!empty($this->_render_data['options']['vAxis']['title'])) {
-            if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['title']['text'] = $this->_render_data['options']['vAxis']['title'];
-            } else {
-                $this->_highcharts_render_data['options']['yAxis']['title']['text'] = $this->_render_data['options']['vAxis']['title'];
-            }
-        }
-        if ($this->getSeriesType() != '') {
-            $this->_highcharts_render_data['options']['yAxis'][0]['crosshair'] = $this->isVerticalAxisCrosshair();
-        } else {
-            $this->_highcharts_render_data['options']['yAxis']['crosshair'] = $this->isVerticalAxisCrosshair();
-        }
-
-        if ($this->getVerticalAxisMin() != '') {
-            if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['min'] = (float)$this->getVerticalAxisMin();
-            } else {
-                $this->_highcharts_render_data['options']['yAxis']['min'] = (float)$this->getVerticalAxisMin();
-            }
-        }
-        if ($this->getVerticalAxisMax() != '') {
-            if ($this->getSeriesType() != '') {
-                $this->_highcharts_render_data['options']['yAxis'][0]['max'] = (float)$this->getVerticalAxisMax();
-            } else {
-                $this->_highcharts_render_data['options']['yAxis']['max'] = (float)$this->getVerticalAxisMax();
-            }
-        }
-        $this->_highcharts_render_data['options']['chart']['inverted'] = $this->isInverted();
-
-        // Title
-        if ($this->isShowTitle()) {
-            $this->_highcharts_render_data['options']['title']['text'] = $this->getTitle();
-        } else {
-            $this->_highcharts_render_data['options']['title']['text'] = '';
-        }
-        $this->_highcharts_render_data['options']['title']['floating'] = $this->isTitleFloating();
-        $this->_highcharts_render_data['options']['title']['align'] = $this->getTitleAlign();
-        $this->_highcharts_render_data['options']['subtitle']['text'] = $this->getSubtitle();
-        $this->_highcharts_render_data['options']['subtitle']['align'] = $this->getSubtitleAlign();
-
-        // Tooltip
-        $this->_highcharts_render_data['options']['tooltip']['enabled'] = $this->isTooltipEnabled();
-        $this->_highcharts_render_data['options']['tooltip']['backgroundColor'] = ($this->getTooltipBackgroundColor() != '') ? $this->getTooltipBackgroundColor() : 'rgba(255, 255, 255, 0.85)';
-        $this->_highcharts_render_data['options']['tooltip']['borderWidth'] = $this->getTooltipBorderWidth();
-        $this->_highcharts_render_data['options']['tooltip']['borderColor'] = $this->getTooltipBorderColor();
-        $this->_highcharts_render_data['options']['tooltip']['borderRadius'] = $this->getTooltipBorderRadius();
-        $this->_highcharts_render_data['options']['tooltip']['shared'] = $this->isTooltipShared();
-        $this->_highcharts_render_data['options']['tooltip']['valuePrefix'] = $this->getTooltipValuePrefix();
-        $this->_highcharts_render_data['options']['tooltip']['valueSuffix'] = $this->getTooltipValueSuffix();
-
-        // Legend
-        if ($this->_highcharts_render_data['type'] == 'highcharts_treemap_level_chart') {
-            $this->_highcharts_render_data['options']['legend']['enabled'] = false;
-        } else {
-            $this->_highcharts_render_data['options']['legend']['enabled'] = $this->isShowLegend();
-        }
-        $this->_highcharts_render_data['options']['legend']['backgroundColor'] = $this->getLegendBackgroundColor();
-        $this->_highcharts_render_data['options']['legend']['title']['text'] = $this->getLegendTitle();
-        $this->_highcharts_render_data['options']['legend']['layout'] = $this->getLegendLayout();
-        $this->_highcharts_render_data['options']['legend']['align'] = $this->getLegendAlign();
-        $this->_highcharts_render_data['options']['legend']['verticalAlign'] = $this->getLegendVerticalAlign();
-        $this->_highcharts_render_data['options']['legend']['borderWidth'] = $this->getLegendBorderWidth();
-        $this->_highcharts_render_data['options']['legend']['borderColor'] = $this->getLegendBorderColor();
-        $this->_highcharts_render_data['options']['legend']['borderRadius'] = $this->getLegendBorderRadius();
-
-        // Exporting
-        $this->_highcharts_render_data['options']['exporting']['enabled'] = $this->isExporting();
-        $this->_highcharts_render_data['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled'] = $this->isExportingDataLabels();
-        $this->_highcharts_render_data['options']['exporting']['filename'] = $this->getExportingFileName();
-        $this->_highcharts_render_data['options']['exporting']['width'] = $this->getExportingWidth();
-        $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['align'] = $this->getExportingButtonAlign();
-        $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['verticalAlign'] = $this->getExportingButtonVerticalAlign();
-        if ($this->getExportingButtonColor() == '') {
-            $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['symbolStroke'] = '#666';
-        } else {
-            $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['symbolStroke'] = $this->getExportingButtonColor();
-        }
-        $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['text'] = $this->getExportingButtonText();
-        if ($this->isExporting() && in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
-            $this->_highcharts_render_data['options']['exporting']['buttons']['contextButton']['menuItems'] = ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG'];
-        }
-
-        // Credits
-        $this->_highcharts_render_data['options']['credits']['enabled'] = $this->isCredits();
-        $this->_highcharts_render_data['options']['credits']['href'] = $this->getCreditsHref();
-        $this->_highcharts_render_data['options']['credits']['text'] = $this->getCreditsText();
-
-        $this->_highcharts_render_data = apply_filters('wpdatatables_filter_highcharts_render_data', $this->_highcharts_render_data, $this->getId(), $this);
-
+        return $highchartsRender;
     }
 
     /**
@@ -1292,41 +1504,29 @@ class WdtHighchartsChart extends WPDataChart
     public function enqueueChartSpecificScripts($js_ext)
     {
         $this->prepareRender();
-        // Highchart JS
-        $highChartLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts.js' : '//code.highcharts.com/highcharts.js';
-        $highChartMoreLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-more.js' : '//code.highcharts.com/highcharts-more.js';
-        $highChart3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-3D.js' : '//code.highcharts.com/highcharts-3d.js';
-        $highChartCylinderLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-cylinder.js' : '//code.highcharts.com/modules/cylinder.js';
-        $highChartHeatMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-heatmap.js' : '//code.highcharts.com/modules/heatmap.js';
-        $highChartFunnelLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel.js' : '//code.highcharts.com/modules/funnel.js';
-        $highChartFunnel3DLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-funnel3D.js' : '//code.highcharts.com/modules/funnel3d.js';
-        $highChartTreeMapLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-treemap.js' : '//code.highcharts.com/modules/treemap.js';
-        $highChartExportingLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting.js' : '//code.highcharts.com/modules/exporting.js';
-        $highChartExportingDataLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-exporting-data.js' : '//code.highcharts.com/modules/export-data.js';
-        $highChartAccessibilityLibSource = get_option('wdtHighChartStableVersion') ? WDT_JS_PATH . 'wdtcharts/highcharts/highcharts-accessibility.js' : '//code.highcharts.com/modules/accessibility.js';
 
-        wp_enqueue_script('wdt-highcharts', $highChartLibSource, array(), WDT_CURRENT_VERSION);
-        wp_enqueue_script('wdt-highcharts-more', $highChartMoreLibSource, array(), WDT_CURRENT_VERSION);
-        wp_enqueue_script('wdt-highcharts3d', $highChart3DLibSource, array(), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wdt-highcharts', $this->getLibSource(), array(), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wdt-highcharts-more', $this->getMoreLibSource(), array(), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wdt-highcharts3d', $this->getThreeDLibSource(), array(), WDT_CURRENT_VERSION);
         if (in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
-            wp_enqueue_script('wdt-heatmap', $highChartHeatMapLibSource, array(), WDT_CURRENT_VERSION);
-            wp_enqueue_script('wdt-treemap', $highChartTreeMapLibSource, array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-heatmap', $this->getHeatMapLibSource(), array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-treemap', $this->getTreeMapLibSource(), array(), WDT_CURRENT_VERSION);
         }
         if ($this->getType() == 'highcharts_funnel3d_chart') {
-            wp_enqueue_script('wdt-cylinder', $highChartCylinderLibSource, array(), WDT_CURRENT_VERSION);
-            wp_enqueue_script('wdt-funnel', $highChartFunnelLibSource, array(), WDT_CURRENT_VERSION);
-            wp_enqueue_script('wdt-funnel3d', $highChartFunnel3DLibSource, array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-cylinder', $this->getCylinderLibSource(), array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-funnel', $this->getFunnelLibSource(), array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-funnel3d', $this->getFunnel3DLibSource(), array(), WDT_CURRENT_VERSION);
         }
         if ($this->getType() == 'highcharts_funnel_chart') {
-            wp_enqueue_script('wdt-funnel', $highChartFunnelLibSource, array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-funnel', $this->getFunnelLibSource(), array(), WDT_CURRENT_VERSION);
         }
         if ($this->isExporting()) {
-            wp_enqueue_script('wdt-exporting', $highChartExportingLibSource, array(), WDT_CURRENT_VERSION);
+            wp_enqueue_script('wdt-exporting', $this->getExportingLibSource(), array(), WDT_CURRENT_VERSION);
             if (!in_array($this->getType(), ['highcharts_treemap_level_chart', 'highcharts_treemap_chart'])) {
-                wp_enqueue_script('wdt-export-data', $highChartExportingDataLibSource, array(), WDT_CURRENT_VERSION);
+                wp_enqueue_script('wdt-export-data', $this->getExportingDataLibSource(), array(), WDT_CURRENT_VERSION);
             }
         }
-        wp_enqueue_script('wdt-highcharts-accessibility', $highChartAccessibilityLibSource, array(), WDT_CURRENT_VERSION);
+        wp_enqueue_script('wdt-highcharts-accessibility', $this->getAccessibilityLibSource(), array(), WDT_CURRENT_VERSION);
         // Highchart wpDataTable JS library
         wp_enqueue_script('wpdatatables-highcharts', WDT_JS_PATH . 'wdtcharts/highcharts/wdt.highcharts' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
 
@@ -1339,69 +1539,70 @@ class WdtHighchartsChart extends WPDataChart
      */
     public function setSpecificChartProperties($renderData)
     {
+        $renderChartData = $this->getEngine() . '_render_data';
         // Chart
-        $this->setBackgroundColor(isset($renderData['highcharts_render_data']['options']['chart']['backgroundColor']) ? $renderData['highcharts_render_data']['options']['chart']['backgroundColor'] : '#FFFFFF');
-        $this->setBorderWidth(isset($renderData['highcharts_render_data']['options']['chart']['borderWidth']) ? $renderData['highcharts_render_data']['options']['chart']['borderWidth'] : 0);
-        $this->setBorderColor(isset($renderData['highcharts_render_data']['options']['chart']['borderColor']) ? $renderData['highcharts_render_data']['options']['chart']['borderColor'] : '#4572A7');
-        $this->setBorderRadius(isset($renderData['highcharts_render_data']['options']['chart']['borderRadius']) ? $renderData['highcharts_render_data']['options']['chart']['borderRadius'] : 0);
-        $this->setZoomType(isset($renderData['highcharts_render_data']['options']['chart']['zoomType']) ? $renderData['highcharts_render_data']['options']['chart']['zoomType'] : 'undefined');
-        $this->setPanning(isset($renderData['highcharts_render_data']['options']['chart']['panning']) ? $renderData['highcharts_render_data']['options']['chart']['panning'] : false);
-        $this->setPanKey(isset($renderData['highcharts_render_data']['options']['chart']['panKey']) ? $renderData['highcharts_render_data']['options']['chart']['panKey'] : 'shift');
-        $this->setPlotBackgroundColor(isset($renderData['highcharts_render_data']['options']['chart']['plotBackgroundColor']) ? $renderData['highcharts_render_data']['options']['chart']['plotBackgroundColor'] : '');
-        $this->setPlotBackgroundImage(isset($renderData['highcharts_render_data']['options']['chart']['plotBackgroundImage']) ? $renderData['highcharts_render_data']['options']['chart']['plotBackgroundImage'] : '');
-        $this->setPlotBorderWidth(isset($renderData['highcharts_render_data']['options']['chart']['plotBorderWidth']) ? $renderData['highcharts_render_data']['options']['chart']['plotBorderWidth'] : 0);
-        $this->setPlotBorderColor(isset($renderData['highcharts_render_data']['options']['chart']['plotBorderColor']) ? $renderData['highcharts_render_data']['options']['chart']['plotBorderColor'] : '#C0C0C0');
+        $this->setBackgroundColor(isset($renderData[$renderChartData]['options']['chart']['backgroundColor']) ? $renderData[$renderChartData]['options']['chart']['backgroundColor'] : '#FFFFFF');
+        $this->setBorderWidth(isset($renderData[$renderChartData]['options']['chart']['borderWidth']) ? $renderData[$renderChartData]['options']['chart']['borderWidth'] : 0);
+        $this->setBorderColor(isset($renderData[$renderChartData]['options']['chart']['borderColor']) ? $renderData[$renderChartData]['options']['chart']['borderColor'] : '#4572A7');
+        $this->setBorderRadius(isset($renderData[$renderChartData]['options']['chart']['borderRadius']) ? $renderData[$renderChartData]['options']['chart']['borderRadius'] : 0);
+        $this->setZoomType(isset($renderData[$renderChartData]['options']['chart']['zoomType']) ? $renderData[$renderChartData]['options']['chart']['zoomType'] : 'undefined');
+        $this->setPanning(isset($renderData[$renderChartData]['options']['chart']['panning']) ? $renderData[$renderChartData]['options']['chart']['panning'] : false);
+        $this->setPanKey(isset($renderData[$renderChartData]['options']['chart']['panKey']) ? $renderData[$renderChartData]['options']['chart']['panKey'] : 'shift');
+        $this->setPlotBackgroundColor(isset($renderData[$renderChartData]['options']['chart']['plotBackgroundColor']) ? $renderData[$renderChartData]['options']['chart']['plotBackgroundColor'] : '');
+        $this->setPlotBackgroundImage(isset($renderData[$renderChartData]['options']['chart']['plotBackgroundImage']) ? $renderData[$renderChartData]['options']['chart']['plotBackgroundImage'] : '');
+        $this->setPlotBorderWidth(isset($renderData[$renderChartData]['options']['chart']['plotBorderWidth']) ? $renderData[$renderChartData]['options']['chart']['plotBorderWidth'] : 0);
+        $this->setPlotBorderColor(isset($renderData[$renderChartData]['options']['chart']['plotBorderColor']) ? $renderData[$renderChartData]['options']['chart']['plotBorderColor'] : '#C0C0C0');
         // Axes
         if ($this->getSeriesType() != '') {
-            $this->setHighchartsLineDashStyle(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['gridLineDashStyle']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['gridLineDashStyle'] : 'Solid');
-            $this->setVerticalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['crosshair']) ? $renderData['highcharts_render_data']['options']['yAxis'][0]['crosshair'] : false);
-            $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['min']) ? (float)$renderData['highcharts_render_data']['options']['yAxis'][0]['min'] : '');
-            $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis'][0]['max']) ? (float)$renderData['highcharts_render_data']['options']['yAxis'][0]['max'] : '');
+            $this->setHighchartsLineDashStyle(isset($renderData[$renderChartData]['options']['yAxis'][0]['gridLineDashStyle']) ? $renderData[$renderChartData]['options']['yAxis'][0]['gridLineDashStyle'] : 'Solid');
+            $this->setVerticalAxisCrosshair(isset($renderData[$renderChartData]['options']['yAxis'][0]['crosshair']) ? $renderData[$renderChartData]['options']['yAxis'][0]['crosshair'] : false);
+            $this->setVerticalAxisMin(isset($renderData[$renderChartData]['options']['yAxis'][0]['min']) ? (float)$renderData[$renderChartData]['options']['yAxis'][0]['min'] : '');
+            $this->setVerticalAxisMax(isset($renderData[$renderChartData]['options']['yAxis'][0]['max']) ? (float)$renderData[$renderChartData]['options']['yAxis'][0]['max'] : '');
         } else {
-            $this->setHighchartsLineDashStyle(isset($renderData['highcharts_render_data']['options']['yAxis']['gridLineDashStyle']) ? $renderData['highcharts_render_data']['options']['yAxis']['gridLineDashStyle'] : 'Solid');
-            $this->setVerticalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['yAxis']['crosshair']) ? $renderData['highcharts_render_data']['options']['yAxis']['crosshair'] : false);
-            $this->setVerticalAxisMin(isset($renderData['highcharts_render_data']['options']['yAxis']['min']) ? (float)$renderData['highcharts_render_data']['options']['yAxis']['min'] : '');
-            $this->setVerticalAxisMax(isset($renderData['highcharts_render_data']['options']['yAxis']['max']) ? (float)$renderData['highcharts_render_data']['options']['yAxis']['max'] : '');
+            $this->setHighchartsLineDashStyle(isset($renderData[$renderChartData]['options']['yAxis']['gridLineDashStyle']) ? $renderData[$renderChartData]['options']['yAxis']['gridLineDashStyle'] : 'Solid');
+            $this->setVerticalAxisCrosshair(isset($renderData[$renderChartData]['options']['yAxis']['crosshair']) ? $renderData[$renderChartData]['options']['yAxis']['crosshair'] : false);
+            $this->setVerticalAxisMin(isset($renderData[$renderChartData]['options']['yAxis']['min']) ? (float)$renderData[$renderChartData]['options']['yAxis']['min'] : '');
+            $this->setVerticalAxisMax(isset($renderData[$renderChartData]['options']['yAxis']['max']) ? (float)$renderData[$renderChartData]['options']['yAxis']['max'] : '');
         }
-        $this->setHorizontalAxisCrosshair(isset($renderData['highcharts_render_data']['options']['xAxis']['crosshair']) ? $renderData['highcharts_render_data']['options']['xAxis']['crosshair'] : false);
-        $this->setInverted(isset($renderData['highcharts_render_data']['options']['chart']['inverted']) ? $renderData['highcharts_render_data']['options']['chart']['inverted'] : false);
+        $this->setHorizontalAxisCrosshair(isset($renderData[$renderChartData]['options']['xAxis']['crosshair']) ? $renderData[$renderChartData]['options']['xAxis']['crosshair'] : false);
+        $this->setInverted(isset($renderData[$renderChartData]['options']['chart']['inverted']) ? $renderData[$renderChartData]['options']['chart']['inverted'] : false);
         // Title
-        $this->setTitleFloating(isset($renderData['highcharts_render_data']['options']['title']['floating']) ? $renderData['highcharts_render_data']['options']['title']['floating'] : false);
-        $this->setTitleAlign(isset($renderData['highcharts_render_data']['options']['title']['align']) ? $renderData['highcharts_render_data']['options']['title']['align'] : 'center');
-        $this->setSubtitle(isset($renderData['highcharts_render_data']['options']['subtitle']['text']) ? $renderData['highcharts_render_data']['options']['subtitle']['text'] : '');
-        $this->setSubtitleAlign(isset($renderData['highcharts_render_data']['options']['subtitle']['align']) ? $renderData['highcharts_render_data']['options']['subtitle']['align'] : 'center');
+        $this->setTitleFloating(isset($renderData[$renderChartData]['options']['title']['floating']) ? $renderData[$renderChartData]['options']['title']['floating'] : false);
+        $this->setTitleAlign(isset($renderData[$renderChartData]['options']['title']['align']) ? $renderData[$renderChartData]['options']['title']['align'] : 'center');
+        $this->setSubtitle(isset($renderData[$renderChartData]['options']['subtitle']['text']) ? $renderData[$renderChartData]['options']['subtitle']['text'] : '');
+        $this->setSubtitleAlign(isset($renderData[$renderChartData]['options']['subtitle']['align']) ? $renderData[$renderChartData]['options']['subtitle']['align'] : 'center');
         // Tooltip
-        $this->setTooltipEnabled(isset($renderData['highcharts_render_data']['options']['tooltip']['enabled']) ? $renderData['highcharts_render_data']['options']['tooltip']['enabled'] : true);
-        $this->setTooltipBackgroundColor(!empty($renderData['highcharts_render_data']['options']['tooltip']['backgroundColor']) ? $renderData['highcharts_render_data']['options']['tooltip']['backgroundColor'] : 'rgba(255, 255, 255, 0.85)');
-        $this->setTooltipBorderWidth(isset($renderData['highcharts_render_data']['options']['tooltip']['borderWidth']) ? $renderData['highcharts_render_data']['options']['tooltip']['borderWidth'] : 1);
-        $this->setTooltipBorderColor(isset($renderData['highcharts_render_data']['options']['tooltip']['borderColor']) ? $renderData['highcharts_render_data']['options']['tooltip']['borderColor'] : null);
-        $this->setTooltipBorderRadius(isset($renderData['highcharts_render_data']['options']['tooltip']['borderRadius']) ? $renderData['highcharts_render_data']['options']['tooltip']['borderRadius'] : 3);
-        $this->setTooltipShared(isset($renderData['highcharts_render_data']['options']['tooltip']['shared']) ? $renderData['highcharts_render_data']['options']['tooltip']['shared'] : false);
-        $this->setTooltipValuePrefix(isset($renderData['highcharts_render_data']['options']['tooltip']['valuePrefix']) ? $renderData['highcharts_render_data']['options']['tooltip']['valuePrefix'] : '');
-        $this->setTooltipValueSuffix(isset($renderData['highcharts_render_data']['options']['tooltip']['valueSuffix']) ? $renderData['highcharts_render_data']['options']['tooltip']['valueSuffix'] : '');
+        $this->setTooltipEnabled(isset($renderData[$renderChartData]['options']['tooltip']['enabled']) ? $renderData[$renderChartData]['options']['tooltip']['enabled'] : true);
+        $this->setTooltipBackgroundColor(!empty($renderData[$renderChartData]['options']['tooltip']['backgroundColor']) ? $renderData[$renderChartData]['options']['tooltip']['backgroundColor'] : 'rgba(255, 255, 255, 0.85)');
+        $this->setTooltipBorderWidth(isset($renderData[$renderChartData]['options']['tooltip']['borderWidth']) ? $renderData[$renderChartData]['options']['tooltip']['borderWidth'] : 1);
+        $this->setTooltipBorderColor(isset($renderData[$renderChartData]['options']['tooltip']['borderColor']) ? $renderData[$renderChartData]['options']['tooltip']['borderColor'] : null);
+        $this->setTooltipBorderRadius(isset($renderData[$renderChartData]['options']['tooltip']['borderRadius']) ? $renderData[$renderChartData]['options']['tooltip']['borderRadius'] : 3);
+        $this->setTooltipShared(isset($renderData[$renderChartData]['options']['tooltip']['shared']) ? $renderData[$renderChartData]['options']['tooltip']['shared'] : false);
+        $this->setTooltipValuePrefix(isset($renderData[$renderChartData]['options']['tooltip']['valuePrefix']) ? $renderData[$renderChartData]['options']['tooltip']['valuePrefix'] : '');
+        $this->setTooltipValueSuffix(isset($renderData[$renderChartData]['options']['tooltip']['valueSuffix']) ? $renderData[$renderChartData]['options']['tooltip']['valueSuffix'] : '');
         // Legend
-        $this->setShowLegend(isset($renderData['highcharts_render_data']['options']['legend']['enabled']) ? $renderData['highcharts_render_data']['options']['legend']['enabled'] : true);
-        $this->setLegendBackgroundColor(isset($renderData['highcharts_render_data']['options']['legend']['backgroundColor']) ? $renderData['highcharts_render_data']['options']['legend']['backgroundColor'] : '#FFFFFF');
-        $this->setLegendTitle(isset($renderData['highcharts_render_data']['options']['legend']['title']['text']) ? $renderData['highcharts_render_data']['options']['legend']['title']['text'] : '');
-        $this->setLegendLayout(isset($renderData['highcharts_render_data']['options']['legend']['layout']) ? $renderData['highcharts_render_data']['options']['legend']['layout'] : 'horizontal');
-        $this->setLegendAlign(isset($renderData['highcharts_render_data']['options']['legend']['align']) ? $renderData['highcharts_render_data']['options']['legend']['align'] : 'right');
-        $this->setLegendVerticalAlign(isset($renderData['highcharts_render_data']['options']['legend']['verticalAlign']) ? $renderData['highcharts_render_data']['options']['legend']['verticalAlign'] : 'bottom');
-        $this->setLegendBorderWidth(isset($renderData['highcharts_render_data']['options']['legend']['borderWidth']) ? $renderData['highcharts_render_data']['options']['legend']['borderWidth'] : 0);
-        $this->setLegendBorderColor(isset($renderData['highcharts_render_data']['options']['legend']['borderColor']) ? $renderData['highcharts_render_data']['options']['legend']['borderColor'] : '#909090');
-        $this->setLegendBorderRadius(isset($renderData['highcharts_render_data']['options']['legend']['borderRadius']) ? $renderData['highcharts_render_data']['options']['legend']['borderRadius'] : 0);
+        $this->setShowLegend(isset($renderData[$renderChartData]['options']['legend']['enabled']) ? $renderData[$renderChartData]['options']['legend']['enabled'] : true);
+        $this->setLegendBackgroundColor(isset($renderData[$renderChartData]['options']['legend']['backgroundColor']) ? $renderData[$renderChartData]['options']['legend']['backgroundColor'] : '#FFFFFF');
+        $this->setLegendTitle(isset($renderData[$renderChartData]['options']['legend']['title']['text']) ? $renderData[$renderChartData]['options']['legend']['title']['text'] : '');
+        $this->setLegendLayout(isset($renderData[$renderChartData]['options']['legend']['layout']) ? $renderData[$renderChartData]['options']['legend']['layout'] : 'horizontal');
+        $this->setLegendAlign(isset($renderData[$renderChartData]['options']['legend']['align']) ? $renderData[$renderChartData]['options']['legend']['align'] : 'right');
+        $this->setLegendVerticalAlign(isset($renderData[$renderChartData]['options']['legend']['verticalAlign']) ? $renderData[$renderChartData]['options']['legend']['verticalAlign'] : 'bottom');
+        $this->setLegendBorderWidth(isset($renderData[$renderChartData]['options']['legend']['borderWidth']) ? $renderData[$renderChartData]['options']['legend']['borderWidth'] : 0);
+        $this->setLegendBorderColor(isset($renderData[$renderChartData]['options']['legend']['borderColor']) ? $renderData[$renderChartData]['options']['legend']['borderColor'] : '#909090');
+        $this->setLegendBorderRadius(isset($renderData[$renderChartData]['options']['legend']['borderRadius']) ? $renderData[$renderChartData]['options']['legend']['borderRadius'] : 0);
         // Exporting
-        $this->setExporting(isset($renderData['highcharts_render_data']['options']['exporting']['enabled']) ? $renderData['highcharts_render_data']['options']['exporting']['enabled'] : true);
-        $this->setExportingDataLabels(isset($renderData['highcharts_render_data']['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled']) ? $renderData['highcharts_render_data']['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled'] : false);
-        $this->setExportingFileName(isset($renderData['highcharts_render_data']['options']['exporting']['filename']) ? $renderData['highcharts_render_data']['options']['exporting']['filename'] : 'Chart');
-        $this->setExportingWidth(isset($renderData['highcharts_render_data']['options']['exporting']['width']) ? $renderData['highcharts_render_data']['options']['exporting']['width'] : 'undefined');
-        $this->setExportingButtonAlign(isset($renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['align']) ? $renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['align'] : 'right');
-        $this->setExportingButtonVerticalAlign(isset($renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['verticalAlign']) ? $renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['verticalAlign'] : 'top');
-        $this->setExportingButtonColor(isset($renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['symbolStroke']) ? $renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['symbolStroke'] : '#666');
-        $this->setExportingButtonText(isset($renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['text']) ? $renderData['highcharts_render_data']['options']['exporting']['buttons']['contextButton']['text'] : null);
+        $this->setExporting(isset($renderData[$renderChartData]['options']['exporting']['enabled']) ? $renderData[$renderChartData]['options']['exporting']['enabled'] : true);
+        $this->setExportingDataLabels(isset($renderData[$renderChartData]['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled']) ? $renderData[$renderChartData]['options']['exporting']['chartOptions']['plotOptions']['series']['dataLabels']['enabled'] : false);
+        $this->setExportingFileName(isset($renderData[$renderChartData]['options']['exporting']['filename']) ? $renderData[$renderChartData]['options']['exporting']['filename'] : 'Chart');
+        $this->setExportingWidth(isset($renderData[$renderChartData]['options']['exporting']['width']) ? $renderData[$renderChartData]['options']['exporting']['width'] : 'undefined');
+        $this->setExportingButtonAlign(isset($renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['align']) ? $renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['align'] : 'right');
+        $this->setExportingButtonVerticalAlign(isset($renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['verticalAlign']) ? $renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['verticalAlign'] : 'top');
+        $this->setExportingButtonColor(isset($renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['symbolStroke']) ? $renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['symbolStroke'] : '#666');
+        $this->setExportingButtonText(isset($renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['text']) ? $renderData[$renderChartData]['options']['exporting']['buttons']['contextButton']['text'] : null);
         // Credits
-        $this->setCredits(isset($renderData['highcharts_render_data']['options']['credits']['enabled']) ? $renderData['highcharts_render_data']['options']['credits']['enabled'] : true);
-        $this->setCreditsHref(isset($renderData['highcharts_render_data']['options']['credits']['href']) ? $renderData['highcharts_render_data']['options']['credits']['href'] : 'https://www.highcharts.com');
-        $this->setCreditsText(isset($renderData['highcharts_render_data']['options']['credits']['text']) ? $renderData['highcharts_render_data']['options']['credits']['text'] : 'Highcharts.com');
+        $this->setCredits(isset($renderData[$renderChartData]['options']['credits']['enabled']) ? $renderData[$renderChartData]['options']['credits']['enabled'] : true);
+        $this->setCreditsHref(isset($renderData[$renderChartData]['options']['credits']['href']) ? $renderData[$renderChartData]['options']['credits']['href'] : 'https://www.highcharts.com');
+        $this->setCreditsText(isset($renderData[$renderChartData]['options']['credits']['text']) ? $renderData[$renderChartData]['options']['credits']['text'] : 'Highcharts.com');
     }
 
     /**

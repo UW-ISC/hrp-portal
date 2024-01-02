@@ -480,7 +480,7 @@ class WPDataChart
     {
         $wdtChart = 'Wdt' . ucfirst($constructedChartData['engine']) . 'Chart' . '\Wdt' . ucfirst($constructedChartData['engine']) . 'Chart';
         $chartClassFileName = 'class.' . $constructedChartData['engine'] . '.wpdatachart.php';
-        require_once($chartClassFileName);
+        require_once(WDT_ROOT_PATH . 'source/' . $chartClassFileName);
         return new $wdtChart($constructedChartData, $loadFromDB);
     }
 
@@ -519,25 +519,35 @@ class WPDataChart
             }
 
             if ($shiftNeeded) {
-                // Shift columns
-                $strColumn = $this->_render_data['columns'][$shiftIndex];
-                unset($this->_render_data['columns'][$shiftIndex]);
-                array_unshift($this->_render_data['columns'], $strColumn);
-                // Shift rows
-                for ($j = 0; $j < count($this->_render_data['rows']); $j++) {
-                    $strCell = $this->_render_data['rows'][$j][$shiftIndex];
-                    unset($this->_render_data['rows'][$j][$shiftIndex]);
-                    array_unshift($this->_render_data['rows'][$j], $strCell);
-                }
-                // Shift column indexes
-                if (isset($this->_render_data['column_indexes'])) {
-                    $shiftedIndex = $this->_render_data['column_indexes'][$shiftIndex];
-                    unset($this->_render_data['column_indexes'][$shiftIndex]);
-                    array_unshift($this->_render_data['column_indexes'], $shiftedIndex);
-                }
+                $this->shiftColumns($shiftIndex);
             }
         }
 
+        $this->formatShiftedAxes();
+    }
+
+    public function shiftColumns($shiftIndex)
+    {
+        // Shift columns
+        $strColumn = $this->_render_data['columns'][$shiftIndex];
+        unset($this->_render_data['columns'][$shiftIndex]);
+        array_unshift($this->_render_data['columns'], $strColumn);
+        // Shift rows
+        for ($j = 0; $j < count($this->_render_data['rows']); $j++) {
+            $strCell = $this->_render_data['rows'][$j][$shiftIndex];
+            unset($this->_render_data['rows'][$j][$shiftIndex]);
+            array_unshift($this->_render_data['rows'][$j], $strCell);
+        }
+        // Shift column indexes
+        if (isset($this->_render_data['column_indexes'])) {
+            $shiftedIndex = $this->_render_data['column_indexes'][$shiftIndex];
+            unset($this->_render_data['column_indexes'][$shiftIndex]);
+            array_unshift($this->_render_data['column_indexes'], $shiftedIndex);
+        }
+    }
+
+    public function formatShiftedAxes()
+    {
         // Format axes
         $this->_render_data['axes']['major'] = array(
             'type' => $this->_render_data['columns'][0]['type'],
@@ -932,6 +942,7 @@ class WPDataChart
 
     /**
      * @return mixed|null
+     * @throws WDTException
      */
     public function returnData()
     {
@@ -1062,6 +1073,7 @@ class WPDataChart
 
     /**
      * Render Chart
+     * @throws WDTException
      */
     public function render()
     {
@@ -1097,7 +1109,7 @@ class WPDataChart
             wp_enqueue_script('wdt-bootstrap-select', WDT_JS_PATH . 'bootstrap/bootstrap-select/bootstrap-select.min.js', array(), WDT_CURRENT_VERSION, true);
             wp_enqueue_script('underscore');
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
-            wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
+            wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
         }
         wp_enqueue_script('wpdatatables-render-chart', WDT_JS_PATH . 'wdtcharts/wdt.chartsRender' . $js_ext, array('jquery'), WDT_CURRENT_VERSION);
         wp_localize_script('wpdatatables-render-chart', 'wpdatatables_mapsapikey', WDTTools::getGoogleApiMapsKey());

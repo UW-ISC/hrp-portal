@@ -33,8 +33,8 @@ class WPExcelDataTable extends WPDataTable {
         wp_enqueue_script('wpdatatables_excel');
 
         // Localization
-        wp_localize_script('wpdatatables_excel', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
-        wp_localize_script('wpdatatables_excel_plugin', 'wpdatatables_frontend_strings', WDTTools::getTranslationStrings());
+        wp_localize_script('wpdatatables_excel', 'wpdatatables_excel_strings', WDTTools::getTranslationStringsExcel());
+        wp_localize_script('wpdatatables_excel_plugin', 'wpdatatables_excel_strings', WDTTools::getTranslationStringsExcelPlugin());
 
         $this->addCSSClass('data-t');
 

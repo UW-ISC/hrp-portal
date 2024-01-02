@@ -11,7 +11,7 @@
 /** @var WDTColumn $dataColumn */
 ?>
 <?php do_action('wpdatatables_before_filtering_form', $this->getWpId()); ?>
-    <div class="wpDataTables wpDataTablesFilter wpDataTablesWrapper wdt-skin-<?php echo esc_attr($this->getTableSkin()); ?> <?php echo apply_filters('wdt_add_class_to_filter_in_form_element', esc_attr($this->getCSSClasses()), $this->getWpId()) ?>"
+    <div class="wpDataTables <?php if ($this->isTableWCAG()) { ?>wpTableWCAG <?php } ?>wpDataTablesFilter wpDataTablesWrapper wdt-skin-<?php echo esc_attr($this->getTableSkin()); ?> <?php echo apply_filters('wdt_add_class_to_filter_in_form_element', esc_attr($this->getCSSClasses()), $this->getWpId()) ?>"
          data-wpdatatable_id="<?php echo esc_attr($this->getWpId()); ?>">
         <div id="filterBox_<?php echo esc_attr($this->getId()) ?>" class="wpDataTableFilterBox">
             <?php foreach ($this->getColumns() as $key => $dataColumn) { ?>
@@ -27,7 +27,7 @@
             <?php }
             if ($this->isClearFilters()) { ?>
                 <div class="wpDataTableFilterSection" id="wdt-clear-filters-button-block">
-                    <button class="button btn wdt-clear-filters-button" data-table_id = <?php echo esc_attr($this->getId()) ?>><?php $this->getTableSkin() === 'mojito' || $this->getTableSkin() === 'dark-mojito' ? '' : esc_html_e('Clear filters', 'wpdatatables'); ?></button>
+                    <button class="button btn wdt-clear-filters-button" aria-label="<?php echo esc_attr('Clear filters') ?>" role="button" data-table_id = <?php echo esc_attr($this->getId()) ?>><?php $this->getTableSkin() === 'mojito' || $this->getTableSkin() === 'dark-mojito' ? '' : esc_html_e('Clear filters', 'wpdatatables'); ?></button>
                 </div>
             <?php } ?>
             <?php

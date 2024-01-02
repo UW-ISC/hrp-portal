@@ -1438,11 +1438,20 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c #adminmenuback {
     z-index: 100;
 }
-
+.wpdt-c .wpdt-php-version{
+    margin: 10px 0 !important;
+    font-size: 14px;
+}
 .wpdt-c .wpdt-forminator-news,
 .wpdt-c .wpdt-md-news {
     margin: 10px 0 !important;
     font-size: 15px;
+}
+.wpdt-c .wpdt-php-version-notice a,
+.wpdt-c .wpdt-php-version-notice a:hover,
+.wpdt-c .wpdt-php-version .wdt-php-version-link{
+    text-decoration: none;
+    color: #091D70;
 }
 
 .wpdt-c .wpdt-forminator-news .wdt-forminator-link {
@@ -1455,6 +1464,10 @@ wpdt-c button#wdt-add-data-browse-button {
 
 .wpdt-c .wpdt-forminator-news-notice {
     background: #091D70;
+    color: #ffffff;
+}
+.wpdt-c .wpdt-php-version-notice {
+    background: #ec8508;
     color: #ffffff;
 }
 
@@ -1470,6 +1483,9 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .notice-info.wpdt-forminator-news-notice {
     border-left-color: #ff8c00 !important;
 }
+.wpdt-c .notice-info.wpdt-php-version-notice {
+    border-left-color: #091D70 !important;
+}
 
 .wpdt-c .wpdt-forminator-news-notice a,
 .wpdt-c .wpdt-forminator-news-notice a:hover,
@@ -1478,7 +1494,10 @@ wpdt-c button#wdt-add-data-browse-button {
     color: #ffffff;
     text-decoration: underline;
 }
-
+.wpdt-c .wpdt-php-version-notice .notice-dismiss{
+    top : -5px;
+}
+.wpdt-c .wpdt-php-version-notice .notice-dismiss:before,
 .wpdt-c .wpdt-forminator-news-notice .notice-dismiss:before,
 .wpdt-c .wpdt-md-news-notice .notice-dismiss:before {
     color: #ffffff;

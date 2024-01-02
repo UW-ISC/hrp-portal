@@ -33,7 +33,7 @@ class ExpressionToken {
     }
 
     public function isEnclosedWithinParenthesis() {
-        return ($this->upper[0] === '(' && substr($this->upper, -1) === ')');
+        return (!empty( $this->upper ) && $this->upper[0] === '(' && substr($this->upper, -1) === ')');
     }
 
     public function setSubTree($tree) {
@@ -56,7 +56,7 @@ class ExpressionToken {
         return $idx !== false ? $this->token[$idx] : $this->token;
     }
 
-    public function setNoQuotes($token, Options $options, $qchars = null) {
+    public function setNoQuotes($token, $qchars, Options $options) {
         $this->noQuotes = ($token === null) ? null : $this->revokeQuotation($token, $options);
     }
 
@@ -87,7 +87,7 @@ class ExpressionToken {
     }
 
     public function isSubQueryToken() {
-        return preg_match("/^\\(\\s*SELECT/i", $this->trim);
+        return preg_match("/^\\(\\s*(-- [\\w\\s]+\\n)?\\s*SELECT/i", $this->trim);
     }
 
     public function isExpression() {

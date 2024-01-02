@@ -42,7 +42,7 @@ namespace PHPSQLParser\Test\Parser;
 use PHPSQLParser\PHPSQLParser;
 use PHPSQLParser\PHPSQLCreator;
 
-class issue50Test extends \PHPUnit_Framework_TestCase {
+class issue50Test extends \PHPUnit\Framework\TestCase {
 	
     public function testIssue50() {
 
@@ -53,6 +53,7 @@ class issue50Test extends \PHPUnit_Framework_TestCase {
         $sql = "SELECT _utf8'hi'";
         $parser->parse($sql, false);
         $p = $parser->parsed;
+        #setExpectedValue(dirname(__FILE__), 'issue50.serialized', $p);
         $expected = getExpectedValue(dirname(__FILE__), 'issue50.serialized');
         $this->assertEquals($expected, $p, 'does not die if query contains _utf8');
 
