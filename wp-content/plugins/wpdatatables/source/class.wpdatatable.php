@@ -82,6 +82,10 @@ class WPDataTable
     private $_editable = false;
     private $_id;
     private $_idColumnKey = '';
+    private $_userColumnKey = '';
+    private $_datecreatedColumnKey = '';
+    private $_userEditColumnKey = '';
+    private $_datecreatedEditColumnKey = '';
     private $_db;
     private $_wpId = '';
     private $_onlyOwnRows = false;
@@ -149,6 +153,7 @@ class WPDataTable
     private $_fixedRightColumnsNumber = 0;
     private $_fixedHeaders = false;
     private $_fixedHeadersOffset = 0;
+    private $_simple_template_id = 0;
     protected $_transformValueColumns = array();
 
     /**
@@ -776,9 +781,8 @@ class WPDataTable
 
     public function getIdColumnKey()
     {
-        return $this->_idColumnKey;
+        return $this->_idColumnKey ;
     }
-
     /**
      * @return boolean
      */
@@ -786,7 +790,42 @@ class WPDataTable
     {
         return $this->_infoBlock;
     }
+    public function setUserColumnKey($key)
+    {
+        $this->_userColumnKey = $key;
+    }
 
+    public function getUserColumnKey()
+    {
+        return $this->_userColumnKey ;
+    }
+    public function setUserEditColumnKey($key)
+    {
+        $this->_userEditColumnKey = $key;
+    }
+
+    public function getUserEditColumnKey()
+    {
+        return $this->_userEditColumnKey ;
+    }
+    public function setDatecreatedColumnKey($key)
+    {
+        $this->_datecreatedColumnKey = $key;
+    }
+
+    public function getDatecreatedColumnKey()
+    {
+        return $this->_datecreatedColumnKey ;
+    }
+    public function setDatecreatedEditColumnKey($key)
+    {
+        $this->_datecreatedEditColumnKey = $key;
+    }
+
+    public function getDatecreatedEditColumnKey()
+    {
+        return $this->_datecreatedEditColumnKey ;
+    }
     /**
      * @param boolean $infoBlock
      */
@@ -1176,6 +1215,16 @@ class WPDataTable
     public function setTableWCAG($tableWCAG)
     {
         $this->_table_wcag = $tableWCAG;
+    }
+
+    public function getSimpleTemplateId()
+    {
+        return $this->_simple_template_id;
+    }
+
+    public function setSimpleTemplateId($simple_template_id)
+    {
+        $this->_simple_template_id = $simple_template_id;
     }
     public function __construct($connection = null)
     {
@@ -3438,7 +3487,7 @@ class WPDataTable
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
             foreach ($headingsArray[1] as $heading) {
-                if ($heading === '')
+                if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
             $headingsArray = array_map('trim', $headingsArray[1]);
@@ -4409,6 +4458,7 @@ class WPDataTable
             (isset($advancedSettings->language) && $advancedSettings->language != '' ? $this->setInterfaceLanguage($advancedSettings->language) : get_option('wdtInterfaceLanguage') != '') ? $this->setInterfaceLanguage(get_option('wdtInterfaceLanguage')) : '';
             isset($advancedSettings->tableSkin) ? $this->setTableSkin($advancedSettings->tableSkin) : $this->setTableSkin(get_option('wdtBaseSkin'));
             isset($advancedSettings->table_wcag) ? $this->setTableWCAG($advancedSettings->table_wcag) : $this->setTableWCAG(0);
+            isset($advancedSettings->simple_template_id) ? $this->setSimpleTemplateId($advancedSettings->simple_template_id) : $this->setSimpleTemplateId(0);
             isset($advancedSettings->tableFontColorSettings) ? $this->setTableFontColorSettings($advancedSettings->tableFontColorSettings) : $this->setTableFontColorSettings(get_option('wdtFontColorSettings'));
             isset($advancedSettings->tableBorderRemoval) ? $this->setTableBorderRemoval($advancedSettings->tableBorderRemoval) : $this->setTableBorderRemoval(get_option('wdtBorderRemoval'));
             isset($advancedSettings->tableBorderRemovalHeader) ? $this->setTableBorderRemovalHeader($advancedSettings->tableBorderRemovalHeader) : $this->setTableBorderRemovalHeader(get_option('wdtBorderRemovalHeader'));
@@ -4578,6 +4628,18 @@ class WPDataTable
             if ($column->id_column) {
                 $this->setIdColumnKey($column->orig_header);
             }
+            if ($column->orig_header == 'wdt_created_by') {
+                $this->setUserColumnKey($column->orig_header);
+            }
+            if ($column->orig_header == 'wdt_created_at') {
+                $this->setDatecreatedColumnKey($column->orig_header);
+            }
+            if ($column->orig_header == 'wdt_last_edited_by') {
+                $this->setUserEditColumnKey($column->orig_header);
+            }
+            if ($column->orig_header == 'wdt_last_edited_at') {
+                $this->setDatecreatedEditColumnKey($column->orig_header);
+            }
             // Set front-end editor input type
             $this->getColumn($column->orig_header)
                 ->setInputType($column->editor_type);
@@ -4703,6 +4765,7 @@ class WPDataTable
         $obj->file_location = $this->getFileLocation();
         $obj->tableSkin = $this->getTableSkin();
         $obj->table_wcag = $this->isTableWCAG();
+        $obj->simple_template_id = $this->getSimpleTemplateId();
         $obj->scrollable = $this->isScrollable();
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();

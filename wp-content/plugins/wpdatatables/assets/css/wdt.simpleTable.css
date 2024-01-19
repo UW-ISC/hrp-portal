@@ -380,4 +380,14 @@ table.wpdtSimpleTable.bt[data-has-header='1'] td.wpdt-header-classes {
 .wpdt-c table.wpdtSimpleTable th.remove-borders {
     border: none !important;
 }
-
+.wpdt-c table.wpdtTemplatePricing1 tr:last-child td:first-child{
+    border-left-color: #FFFFFF !important;
+    border-bottom-color: #FFFFFF !important;
+}
+.wpdt-c table.wpdtTemplatePricing1 tr:first-child td:first-child {
+    border-left-color: #FFFFFF !important;
+    border-top-color: #FFFFFF !important;
+}
+.wpdt-c table.wpdtTemplatePedigree1 td {
+    border: 1px solid #000000 !important;
+}

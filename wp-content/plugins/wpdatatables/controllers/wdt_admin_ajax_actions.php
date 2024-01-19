@@ -510,6 +510,10 @@ function wdtCreateSimpleTable()
     if (!current_user_can('manage_options') || !wp_verify_nonce($_POST['wdtNonce'], 'wdtConstructorNonce')) {
         exit();
     }
+    $tableTemplateID = 0;
+    if($_POST['templateId']){
+        $tableTemplateID = (int)$_POST['templateId'];
+    }
     $tableData = apply_filters(
         'wpdatatables_before_create_simple_table',
         json_decode(
@@ -518,16 +522,26 @@ function wdtCreateSimpleTable()
             )
         )
     );
-
-    $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
-
+    if($tableTemplateID){
+        $wpDataTableRowsAll = WDTConfigController::loadRowsDataFromDBTemplateAll($tableTemplateID);
+        $tableData->content = $wpDataTableRowsAll[0]->content;
+        $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
+    } else {
+        $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
+    }
     $wpDataTableRows = new WPDataTableRows($tableData);
 
     // Generate new id and save settings in wpdatatables table in DB
-    $newTableId = generateSimpleTableID($wpDataTableRows);
-
-    // Save table with empty data
-    $wpDataTableRows->saveTableWithEmptyData($newTableId);
+    if($tableTemplateID){
+        $newTableId = generateSimpleTableID($wpDataTableRows, $wpDataTableRowsAll[0]->settings, $tableTemplateID);
+        for ($i = 0; $i < count($wpDataTableRowsAll); $i++) {
+            WDTConfigController::saveRowData($wpDataTableRowsAll[$i]->data, $newTableId);
+        }
+    } else {
+        $newTableId = generateSimpleTableID($wpDataTableRows);
+        // Save table with empty data
+        $wpDataTableRows->saveTableWithEmptyData($newTableId);
+    }
 
     // Generate a link for new table
     echo admin_url('admin.php?page=wpdatatables-constructor&source&simple&table_id=' . $newTableId);
@@ -559,7 +573,7 @@ function wdtGetHandsontableData()
 
 add_action('wp_ajax_wpdatatables_get_handsontable_data', 'wdtGetHandsontableData');
 
-function generateSimpleTableID($wpDataTableRows)
+function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null, $tableTemplateID = 0)
 {
     global $wpdb;
     $tableContent = new stdClass();
@@ -569,12 +583,14 @@ function generateSimpleTableID($wpDataTableRows)
     $tableContent->colHeaders = $wpDataTableRows->getColHeaders();
     $tableContent->reloadCounter = $wpDataTableRows->getReloadCounter();
     $tableContent->mergedCells = $wpDataTableRows->getMergeCells();
-
+    if($wpDataTableRowsSettings !== null) {
+        $tableContent->settings = $wpDataTableRowsSettings;
+    }
     // Create the wpDataTable metadata
     $wpdb->insert(
         $wpdb->prefix . "wpdatatables",
         array(
-            'title' => sanitize_text_field($wpDataTableRows->getTableName()),
+            'title' => ($tableTemplateID === 0) ? sanitize_text_field($wpDataTableRows->getTableName()) : $wpDataTableRowsSettings->name,
             'table_type' => $wpDataTableRows->getTableType(),
             'connection' => '',
             'content' => json_encode($tableContent),
@@ -588,22 +604,23 @@ function generateSimpleTableID($wpDataTableRows)
                 'pdf' => 0
             )),
             'advanced_settings' => json_encode(array(
-                    'simpleResponsive' => 0,
-                    'simpleHeader' => 0,
-                    'stripeTable' => 0,
-                    'cellPadding' => 10,
-                    'removeBorders' => 0,
-                    'borderCollapse' => 'collapse',
-                    'borderSpacing' => 0,
-                    'verticalScroll' => 0,
-                    'verticalScrollHeight' => 600,
+                    'simpleResponsive' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->simpleResponsive,
+                    'simpleHeader' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->simpleHeader,
+                    'stripeTable' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->stripeTable,
+                    'cellPadding' => ($tableTemplateID === 0) ? 10 : $wpDataTableRowsSettings->cellPadding,
+                    'removeBorders' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->removeBorders,
+                    'borderCollapse' => ($tableTemplateID === 0) ? 'collapse' : $wpDataTableRowsSettings->borderCollapse,
+                    'borderSpacing' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->borderSpacing,
+                    'verticalScroll' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->verticalScroll,
+                    'verticalScrollHeight' => ($tableTemplateID === 0) ? 600 : $wpDataTableRowsSettings->verticalScrollHeight,
                     'show_table_description' => false,
-                    'table_description' => sanitize_textarea_field($wpDataTableRows->getTableDescription()),
+                    'table_description' => '',
                     'fixed_header' => 0,
                     'fixed_header_offset' => 0,
                     'fixed_columns' => 0,
                     'fixed_left_columns_number' => 0,
-                    'fixed_right_columns_number' => 0
+                    'fixed_right_columns_number' => 0,
+                    'simple_template_id' => $tableTemplateID
                 )
             ),
         )
@@ -612,7 +629,6 @@ function generateSimpleTableID($wpDataTableRows)
     // Store the new table metadata ID
     return $wpdb->insert_id;
 }
-
 /**
  * Save data in database for Simple table
  */
@@ -661,7 +677,8 @@ function wdtSaveDataSimpleTable()
                     'verticalScroll' => $tableSettings->verticalScroll,
                     'verticalScrollHeight' => $tableSettings->verticalScrollHeight,
                     'show_table_description' => $tableSettings->show_table_description,
-                    'table_description' => $tableSettings->table_description
+                    'table_description' => $tableSettings->table_description,
+                    'simple_template_id' => $tableSettings->simple_template_id
                 )
             ),
 

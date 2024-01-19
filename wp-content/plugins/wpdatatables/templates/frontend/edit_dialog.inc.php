@@ -28,9 +28,21 @@
                 <?php if ($dataColumn_key == $this->getIdColumnKey()) { ?>
                     class="idRow"
                 <?php } ?>
+            <?php } else if($dataColumn_key == $this->getUserColumnKey()){ ?>
+                style="display: none"
+                class="userRow"
+            <?php } else if($dataColumn_key == $this->getDatecreatedColumnKey()){ ?>
+                style="display: none"
+                class="dateRow"
+            <?php } else if($dataColumn_key == $this->getUserEditColumnKey()){ ?>
+                style="display: none"
+                class="userEditRow"
+            <?php } else if($dataColumn_key == $this->getDatecreatedEditColumnKey()){ ?>
+                style="display: none"
+                class="dateEditRow"
             <?php } else { ?>
                 class="form-group col-xs-12"
-        <?php } ?>>
+            <?php } ?>>
 
         <!-- .control-label -->
         <label for="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>" class="col-sm-3 control-label">

@@ -2,9 +2,9 @@
   font-family: 'wpDataTablesIcons';
   src:  url('../fonts/wpDataTablesIcons.eot');
   src:  url('../fonts/wpDataTablesIcons.eot#iefix') format('embedded-opentype'),
-    url('../fonts/wpDataTablesIcons.ttf') format('truetype'),
-    url('../fonts/wpDataTablesIcons.woff') format('woff'),
-    url('../fonts/wpDataTablesIcons.svg#wpDataTablesIcons') format('svg');
+  url('../fonts/wpDataTablesIcons.ttf') format('truetype'),
+  url('../fonts/wpDataTablesIcons.woff') format('woff'),
+  url('../fonts/wpDataTablesIcons.svg#wpDataTablesIcons') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
@@ -1009,4 +1009,19 @@
 }
 .wpdt-icon-spinner9:before {
   content: "\e982";
+}
+.wpdt-icon-move:before {
+  content: "\e92d";
+}
+.wpdt-icon-folder-open1:before {
+  content: "\e92e";
+}
+.wpdt-icon-folder-open2:before {
+  content: "\e931";
+}
+.wpdt-icon-folder-close1:before {
+  content: "\e92f";
+}
+.wpdt-icon-folder-close2:before {
+  content: "\e930";
 }

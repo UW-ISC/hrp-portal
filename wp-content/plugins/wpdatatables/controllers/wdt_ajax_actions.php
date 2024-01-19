@@ -299,6 +299,10 @@ function wdtSaveTableFrontend() {
     $idVal = '';
     $dateFormat = get_option('wdtDateFormat');
     $timeFormat = get_option('wdtTimeFormat');
+    $currentTimeZone = get_option('timezone_string') !== "" ? get_option('timezone_string') : date_default_timezone_get();
+    $timezone = new DateTimeZone($currentTimeZone);
+    $currentDateTime = new DateTime('now', $timezone);
+    $formattedDateTime = $currentDateTime->format($dateFormat . ' ' . $timeFormat);
 
     // NULL value for different wordpress versions
     $nullValue = (!$tableData->connection) ? NULL : "NULL";
@@ -319,6 +323,14 @@ function wdtSaveTableFrontend() {
             $idKey = $column->orig_header;
             $idVal = $isDuplicate == 'true' ? 0 : (int)$formData[$idKey];
             unset($formData[$idKey]);
+        } else if ($column->orig_header == "wdt_created_by") {
+            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? (is_user_logged_in() ? WDTTools::wrapQuotes(sanitize_text_field(wp_get_current_user()->data->user_login),$tableData->connection) : 'anonymous_user') : WDTTools::wrapQuotes(sanitize_text_field($formData[$column->orig_header]), $tableData->connection);
+        } else if ($column->orig_header == "wdt_created_at") {
+            $formData[$column->orig_header] = $formData[$column->orig_header] == "" ? DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s') : DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formData[$column->orig_header])->format('Y-m-d H:i:s');
+        } else if ($column->orig_header == "wdt_last_edited_by") {
+            $formData[$column->orig_header] = is_user_logged_in() ? WDTTools::wrapQuotes(sanitize_text_field(wp_get_current_user()->data->user_login), $tableData->connection) : 'anonymous_user';
+        } else if ($column->orig_header == "wdt_last_edited_at") {
+            $formData[$column->orig_header] =  DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s');
         } else {
             // Defining the values for User ID columns and for "none" input types
             if ($column->id == $tableData->userid_column_id) {
@@ -467,7 +479,8 @@ function wdtSaveTableFrontend() {
         } else {
             $returnResult['is_new'] = true;
             $res = $wpdb->insert($mySqlTableName,
-                $formData);
+                $formData
+            );
             if (!$res) {
                 $returnResult['error'] = __('There was an error trying to insert a new row! Error: ', 'wpdatatables') . $wpdb->last_error;
             } else {
@@ -518,7 +531,6 @@ function wdtSaveTableFrontend() {
             $query = 'INSERT INTO ' . $mySqlTableName . ' ';
             $columns = array();
             $values = array();
-
             foreach ($formData AS $columnKey => $columnValue) {
                 if ($columnValue == "''") {
                     $columnValue = $nullValue;
@@ -1038,6 +1050,5 @@ function wdtGetColumnPossibleValues() {
     echo json_encode($result);
     exit();
 }
-
 add_action('wp_ajax_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');
 add_action('wp_ajax_nopriv_wpdatatables_get_column_possible_values', 'wdtGetColumnPossibleValues');

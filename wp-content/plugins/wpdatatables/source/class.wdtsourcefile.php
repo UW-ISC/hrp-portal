@@ -433,7 +433,7 @@ class wpDataTableSourceFile
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $this->getHighestColumn() . '1', null, true, true, true);
             foreach($headingsArray[1] as $heading){
-                if ($heading === '')
+                if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
             }
             $headingsArray = array_map('trim', $headingsArray[1]);
@@ -457,7 +457,7 @@ class wpDataTableSourceFile
                     ++$r;
                     foreach ($columnOrigHeaders as $dataColumnIndex => $dataColumnHeading) {
                         $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
-                        $namedDataArray[$r][$dataColumnHeading] = trim($dataRows[$row][$dataColumnIndex]);
+                        $namedDataArray[$r][$dataColumnHeading] = trim(isset($dataRows[$row][$dataColumnIndex]) ? $dataRows[$row][$dataColumnIndex] : '');
                     }
                 }
             }
@@ -476,7 +476,7 @@ class wpDataTableSourceFile
      * Creates insert array to be used in SQL statement
      * @throws Exception
      */
-    public function prepareInsertBlocks($insert_statement_beginning, $column_headers, $insertType)
+    public function prepareInsertBlocks($insert_statement_beginning, $column_headers, $tableDBName, $insertType)
     {
         $isGoogle = $this->getTableType() == 'google';
         $numberFormat = get_option('wdtNumberFormat') ? get_option('wdtNumberFormat') : 1;
@@ -646,13 +646,13 @@ class wpDataTableSourceFile
             }
 
             if ($row % $this->getInsertLimiter() == 0) {
-                $this->insertRowsChunk($insert_statement_beginning, $insertBlocks);
+                $this->insertRowsChunk($insert_statement_beginning, $insertBlocks, $tableDBName);
                 $insertBlocks = array();
             }
         }
 
         //Insert the rest of the data
-        $this->insertRowsChunk($insert_statement_beginning, $insertBlocks);
+        $this->insertRowsChunk($insert_statement_beginning, $insertBlocks, $tableDBName);
     }
 
     /**
@@ -667,6 +667,7 @@ class wpDataTableSourceFile
         $tableId = $this->getTableData()->id;
         $tableData = $this->getTableData();
         $column_index = $column_data['column_index'];
+        $column_position = $column_data['position'];
         $columnProperties = wpDataTableConstructor::defineColumnProperties($column_data['orig_header'], $column_data, $tableData->connection);
 
         $vendor = Connection::getVendor($tableData->connection);
@@ -693,7 +694,7 @@ class wpDataTableSourceFile
         }
 
         $update_statement = "UPDATE " . $wpdb->prefix . "wpdatatables_columns 
-                                        SET pos = pos + 1 
+                                        SET pos = {$column_position}
                                         WHERE table_id = {$tableId}
                                         AND pos >= " . (int)$column_index;
         $wpdb->query($update_statement);
@@ -793,17 +794,227 @@ class wpDataTableSourceFile
      *
      * @throws Exception
      */
-    public function insertRowsChunk($insert_statement_beginning, $insert_blocks)
+    public function insertRowsChunk($insert_statement_beginning, $insert_blocks, $tableName)
     {
         global $wpdb;
+        $dateFormat = get_option('wdtDateFormat');
+        $timeFormat = get_option('wdtTimeFormat');
+        $currentTimeZone = get_option('timezone_string') !== "" ? get_option('timezone_string') : date_default_timezone_get();
+        $timezone = new DateTimeZone($currentTimeZone);
+        $currentDateTime = new DateTime('now', $timezone);
+        $formattedDateTime = $currentDateTime->format($dateFormat . ' ' . $timeFormat);
 
         if (count($insert_blocks) > 0) {
             $insert_statement = $insert_statement_beginning . " VALUES " . implode(', ', $insert_blocks);
             if (Connection::isSeparate($this->getTableData()->connection)) {
                 // External DB
                 $this->_db->doQuery($insert_statement, array());
+                $last =  (int)$this->_db->getLastInsertId() - $this->getInsertLimiter() + 1;
+                if ($this->getFileSourceAction() == 'replaceTable' || $this->getFileSourceAction() == 'addDataToTable' || $this->getFileSourceAction() == 'replaceTableData') {
+                    $dbName = $wpdb->prefix . 'wpdatatables_columns';
+                    $checkColumnsQuery = "
+                        SELECT COUNT(*) AS column_count
+                        FROM {$dbName}
+                        WHERE table_id = {$this->getTableData()->id}
+                        AND orig_header IN ('wdt_created_by', 'wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at')
+                    ";
+                    $wpdb->query($checkColumnsQuery);
+
+                    $result = $wpdb->last_result[0];
+                    $resultArray = (array)$result;
+                    $countAsString = (int)$resultArray['column_count'];
+
+                    $vendor = Connection::getVendor($this->getTableData()->connection);
+                    $isMSSql = $vendor === Connection::$MSSQL;
+                    $isPostgreSql = $vendor === Connection::$POSTGRESQL;
+
+                    if ($countAsString == 0) {
+                        if ($isPostgreSql) {
+                            $addColumnQuery = "ALTER TABLE {$tableName}
+                                    ADD COLUMN wdt_created_by VARCHAR(100),
+                                    ADD COLUMN wdt_created_at TIMESTAMP,
+                                    ADD COLUMN wdt_last_edited_by VARCHAR(100),
+                                    ADD COLUMN wdt_last_edited_at TIMESTAMP;";
+                        } else if ($isMSSql) {
+                            $addColumnQuery = "ALTER TABLE {$tableName}
+                                    ADD wdt_created_by VARCHAR(100) NULL,
+                                        wdt_created_at DATETIME NULL,
+                                        wdt_last_edited_by VARCHAR(100) NULL,
+                                        wdt_last_edited_at DATETIME NULL;";
+                        } else {
+                            $addColumnQuery = "ALTER TABLE {$tableName}
+                                    ADD COLUMN wdt_created_by VARCHAR(100),
+                                    ADD COLUMN wdt_created_at DATETIME,
+                                    ADD COLUMN wdt_last_edited_by VARCHAR(100),
+                                    ADD COLUMN wdt_last_edited_at DATETIME;";
+                        }
+                        $this->_db->doQuery($addColumnQuery, array());
+
+                        $wpdb->insert(
+                            $wpdb->prefix . "wpdatatables_columns",
+                            array(
+                                'table_id' => $this->getTableData()->id,
+                                'orig_header' => 'wdt_created_by',
+                                'display_header' => 'wdt_created_by',
+                                'filter_type' => 'none',
+                                'column_type' => 'string',
+                                'visible' => 0,
+                                'pos' => 1
+                            )
+                        );
+                        $wpdb->insert(
+                            $wpdb->prefix . "wpdatatables_columns",
+                            array(
+                                'table_id' => $this->getTableData()->id,
+                                'orig_header' => 'wdt_created_at',
+                                'display_header' => 'wdt_created_at',
+                                'filter_type' => 'none',
+                                'column_type' => 'datetime',
+                                'input_type' => 'datetime',
+                                'visible' => 0,
+                                'pos' => 2
+                            )
+                        );
+                        $wpdb->insert(
+                            $wpdb->prefix . "wpdatatables_columns",
+                            array(
+                                'table_id' => $this->getTableData()->id,
+                                'orig_header' => 'wdt_last_edited_by',
+                                'display_header' => 'wdt_last_edited_by',
+                                'filter_type' => 'none',
+                                'column_type' => 'string',
+                                'visible' => 0,
+                                'pos' => 3
+                            )
+                        );
+                        $wpdb->insert(
+                            $wpdb->prefix . "wpdatatables_columns",
+                            array(
+                                'table_id' => $this->getTableData()->id,
+                                'orig_header' => 'wdt_last_edited_at',
+                                'display_header' => 'wdt_last_edited_at',
+                                'filter_type' => 'none',
+                                'column_type' => 'datetime',
+                                'input_type' => 'datetime',
+                                'visible' => 0,
+                                'pos' => 4
+                            )
+                        );
+                    }
+                }
+                    if ($this->getFileSourceAction() == 'addDataToTable') {
+                        $update_fill_default = "UPDATE {$tableName} 
+                        SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
+                            wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
+                     WHERE wdt_ID > {$last};";
+                        $this->_db->doQuery($update_fill_default, array());
+                    } else {
+                        $update_fill_default = "UPDATE {$tableName} 
+                        SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
+                            wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
+                    WHERE 1=1";
+                        $this->_db->doQuery($update_fill_default, array());
+                    }
             } else {
+                if ($this->getFileSourceAction() == 'addDataToTable') {
+                    $last_wdt_id = $wpdb->get_row("SELECT wdt_ID FROM {$tableName} ORDER BY wdt_ID DESC LIMIT 1");
+                    $resultLastWdtId = (array)$last_wdt_id;
+                    $lastWdtId = (int)$resultLastWdtId['wdt_ID'];
+                }
+
                 $wpdb->query($insert_statement);
+
+                $checkColumnsQuery = "
+                    SELECT COUNT(*) AS column_count
+                    FROM information_schema.columns
+                    WHERE table_name = '{$tableName}' 
+                    AND column_name IN ('wdt_created_by', 'wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at')
+                ";
+                $wpdb->query($checkColumnsQuery);
+
+                $result = $wpdb->last_result[0];
+                $resultArray = (array)$result;
+                $countAsString = (int)$resultArray['column_count'];
+                if ($countAsString == 0) {
+                    $position = count($this->getTableData()->columns);
+                    $addColumnQuery = "ALTER TABLE {$tableName}
+                                    ADD COLUMN wdt_created_by VARCHAR(100),
+                                    ADD COLUMN wdt_created_at DATETIME,
+                                    ADD COLUMN wdt_last_edited_by VARCHAR(100),
+                                    ADD COLUMN wdt_last_edited_at DATETIME;";
+                    $wpdb->query($addColumnQuery);
+                    $wpdb->insert(
+                        $wpdb->prefix . "wpdatatables_columns",
+                        array(
+                            'table_id' => $this->getTableData()->id,
+                            'orig_header' => 'wdt_created_by',
+                            'display_header' => 'wdt_created_by',
+                            'filter_type' => 'none',
+                            'column_type' => 'string',
+                            'visible' => 0,
+                            'pos' => 1
+                        )
+                    );
+                    $wpdb->insert(
+                        $wpdb->prefix . "wpdatatables_columns",
+                        array(
+                            'table_id' => $this->getTableData()->id,
+                            'orig_header' => 'wdt_created_at',
+                            'display_header' => 'wdt_created_at',
+                            'filter_type' => 'none',
+                            'column_type' => 'datetime',
+                            'input_type' => 'datetime',
+                            'visible' => 0,
+                            'pos' => 2
+                        )
+                    );
+                    $wpdb->insert(
+                        $wpdb->prefix . "wpdatatables_columns",
+                        array(
+                            'table_id' => $this->getTableData()->id,
+                            'orig_header' => 'wdt_last_edited_by',
+                            'display_header' => 'wdt_last_edited_by',
+                            'filter_type' => 'none',
+                            'column_type' => 'string',
+                            'visible' => 0,
+                            'pos' => 3
+                        )
+                    );
+                    $wpdb->insert(
+                        $wpdb->prefix . "wpdatatables_columns",
+                        array(
+                            'table_id' => $this->getTableData()->id,
+                            'orig_header' => 'wdt_last_edited_at',
+                            'display_header' => 'wdt_last_edited_at',
+                            'filter_type' => 'none',
+                            'column_type' => 'datetime',
+                            'input_type' => 'datetime',
+                            'visible' => 0,
+                            'pos' => 4
+                        )
+                    );
+                }
+                if ($this->getFileSourceAction() == 'addDataToTable'){
+                    $update_fill_default = "UPDATE {$tableName} 
+                        SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
+                            wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
+                        WHERE wdt_ID > {$lastWdtId};";
+                    $wpdb->query($update_fill_default);
+                } else {
+                    $update_fill_default = "UPDATE {$tableName} 
+                        SET wdt_created_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_created_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "',
+                            wdt_last_edited_by = '" . esc_sql(wp_get_current_user()->data->user_login) . "',
+                            wdt_last_edited_at = '" . esc_sql(DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $formattedDateTime)->format('Y-m-d H:i:s')) . "'
+                        WHERE 1;";
+                    $wpdb->query($update_fill_default);
+                }
             }
         }
     }
@@ -892,8 +1103,10 @@ class wpDataTableSourceFile
      */
     private function deleteAllColumnsExceptId($columnTypes)
     {
+        $specifiedValues = ['wdt_ID', 'wdt_created_by', 'wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at'];
         foreach ($this->getTableData()->columns as $index => $column) {
-            if (strcasecmp($column->orig_header, 'wdt_ID')) {
+
+            if (!in_array(strtolower($column->orig_header), array_map('strtolower', $specifiedValues))) {
                 wpDataTableConstructor::deleteManualColumn(
                     $this->getTableData()->id,
                     $column->orig_header,
@@ -957,7 +1170,8 @@ class wpDataTableSourceFile
     private function createNewColumns($columnTypes)
     {
         $headingsArray = $this->getHeadingsArray();
-        $i = 1;
+        $i = 5;
+        $p = 5;
         $headingTempArr = [];
         $columnHeaders = array();
 
@@ -970,6 +1184,7 @@ class wpDataTableSourceFile
             $newColumnData['display_header'] = $heading;
             $newColumnData['type'] = $columnTypes[$dbHeading];
             $newColumnData['default_value'] = '';
+            $newColumnData['position'] = $p++;
 
             $this->addNewColumn($newColumnData);
             $this->getTableData()->columns[] = $this->createColumnObject($newColumnData, $this->getTableData()->id);

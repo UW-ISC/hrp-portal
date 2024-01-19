@@ -434,9 +434,6 @@ div.wpDataTablesFilter span.filter_column .number-range-filter:first-child {
     float: left;
     padding: 15px;
 }
-.wpDataTableFilterBox .wpDataTableFilterSection div:first-child{
-    margin-top: 5px;
-}
 .wpDataTablesFilter .wpDataTableFilterSection:not(#wdt-clear-filters-button-block):not(#wdt-pf-search-filters-button-block) {
     float: left;
     margin-bottom: 10px;

@@ -93,5 +93,41 @@
         }
       });
     })
+
+    $('.wpdt-promote-amelia-notice .notice-dismiss').on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+          'action': 'wdt_remove_promo_amelia_notice'
+        },
+        dataType: "json",
+        async: !0,
+        success: function (e) {
+          if (e == "success") {
+            $('.wpdt-promote-amelia-notice').slideUp('fast');
+          }
+        }
+      });
+    })
+
+    $('.wpdt-bootstrap-update-notice .notice-dismiss').on('click', function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: ajaxurl,
+        method: "POST",
+        data: {
+          'action': 'wdt_remove_bootstrap_update_notice'
+        },
+        dataType: "json",
+        async: !0,
+        success: function (e) {
+          if (e == "success") {
+            $('.wpdt-bootstrap-update-notice').slideUp('fast');
+          }
+        }
+      });
+    })
   });
 })(jQuery);

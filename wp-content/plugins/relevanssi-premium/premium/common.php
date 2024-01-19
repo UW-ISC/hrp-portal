@@ -674,7 +674,7 @@ function relevanssi_premium_install() {
 	add_option( 'relevanssi_index_users', 'off' );
 	add_option( 'relevanssi_internal_links', 'noindex' );
 	add_option( 'relevanssi_link_boost', $relevanssi_variables['link_boost_default'] );
-	add_option( 'relevanssi_link_pdf_files', 'off' );
+	add_option( 'relevanssi_link_pdf_files', 'on' );
 	add_option( 'relevanssi_max_excerpts', 1 );
 	add_option( 'relevanssi_mysql_columns', '' );
 	add_option( 'relevanssi_post_type_weights', '' );
@@ -835,7 +835,7 @@ function relevanssi_target_matches( $match_object ) {
 				$no_matches = false;
 				break;
 			}
-			if ( ! is_object( $match_object->customfield_detail ) ) {
+			if ( $match_object->customfield_detail && ! is_object( $match_object->customfield_detail ) ) {
 				$match_object->customfield_detail = json_decode( $match_object->customfield_detail );
 			}
 			if (

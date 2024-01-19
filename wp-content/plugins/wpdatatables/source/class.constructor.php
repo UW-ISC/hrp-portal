@@ -395,7 +395,7 @@ class wpDataTableConstructor
                 $sql = Connection::getInstance($connection);
                 $res = $sql->getRow($checkTableQuery);
                 if (!empty($res)){
-                    $newName = 'wp_wpdatatable_' . $id . '_' . $cnt;
+                    $newName = $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
                     $wpdatatable_id = $id . '_' .$cnt;
                     $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                 }
@@ -411,13 +411,13 @@ class wpDataTableConstructor
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
-                    'mysql_table_name' => 'wp_wpdatatable_' . $wpdatatable_id,
+                    'mysql_table_name' =>$wpdb->prefix . 'wpdatatable_' . $wpdatatable_id,
                 ),
                 array(
                     'mysql_table_name' => $this->_name,
                 )
             );
-            $this->_name = 'wp_wpdatatable_' . $wpdatatable_id;
+            $this->_name = $wpdb->prefix . 'wpdatatable_' . $wpdatatable_id;
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
@@ -432,13 +432,13 @@ class wpDataTableConstructor
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
-                    'mysql_table_name' => 'wp_wpdatatable_' . $wpdatatable_id,
+                    'mysql_table_name' => $wpdb->prefix . 'wpdatatable_' . $wpdatatable_id,
                 ),
                 array(
                     'mysql_table_name' => $this->_name,
                 )
             );
-            $this->_name = 'wp_wpdatatable_' . $wpdatatable_id;
+            $this->_name = $wpdb->prefix . 'wpdatatable_' . $wpdatatable_id;
             $wpdb->update(
                 $wpdb->prefix . "wpdatatables",
                 array(
@@ -460,17 +460,29 @@ class wpDataTableConstructor
         // Prepare the create statement for the table itself
         if ($isMySql) {
             $create_statement = "CREATE TABLE " . $this->_name . " (
- 	 							wdt_ID INT( 11 ) NOT NULL AUTO_INCREMENT,";
+ 	 							wdt_ID INT( 11 ) NOT NULL AUTO_INCREMENT,
+ 	 							wdt_created_by VARCHAR(100),
+ 	 							wdt_created_at DATETIME,
+ 	 							wdt_last_edited_by VARCHAR(100),
+ 	 							wdt_last_edited_at DATETIME,";
         }
 
         if ($isMSSql) {
             $create_statement = "CREATE TABLE " . $this->_name . " (
- 	 							wdt_ID INT NOT NULL IDENTITY(1,1),";
+ 	 							wdt_ID INT NOT NULL IDENTITY(1,1),
+ 	 							wdt_created_by VARCHAR(100) NULL,
+ 	 							wdt_created_at DATETIME NULL,
+ 	 							wdt_last_edited_by VARCHAR(100) NULL,
+ 	 							wdt_last_edited_at DATETIME NULL,";
         }
 
         if ($isPostgreSql) {
             $create_statement = "CREATE TABLE " . $this->_name . " (
- 	 							wdt_ID SERIAL,";
+ 	 							wdt_ID SERIAL,
+ 	 							wdt_created_by VARCHAR(100),
+ 	 							wdt_created_at TIMESTAMP,
+ 	 							wdt_last_edited_by VARCHAR(100),
+ 	 							wdt_last_edited_at TIMESTAMP,";
             $origHeader = 'wdt_id';
         }
 
@@ -490,6 +502,56 @@ class wpDataTableConstructor
                 'visible' => 0,
                 'pos' => $column_index,
                 'id_column' => 1
+            )
+        );
+        $wpdb->insert(
+            $wpdb->prefix . "wpdatatables_columns",
+            array(
+                'table_id' => $wpdatatable_id,
+                'orig_header' => 'wdt_created_by',
+                'display_header' => 'wdt_created_by',
+                'filter_type' => 'none',
+                'column_type' => 'string',
+                'visible' => 0,
+                'pos' => ++$column_index
+            )
+        );
+        $wpdb->insert(
+            $wpdb->prefix . "wpdatatables_columns",
+            array(
+                'table_id' => $wpdatatable_id,
+                'orig_header' => 'wdt_created_at',
+                'display_header' => 'wdt_created_at',
+                'filter_type' => 'none',
+                'column_type' => 'datetime',
+                'input_type' => 'datetime',
+                'visible' => 0,
+                'pos' => ++$column_index
+            )
+        );
+        $wpdb->insert(
+            $wpdb->prefix . "wpdatatables_columns",
+            array(
+                'table_id' => $wpdatatable_id,
+                'orig_header' => 'wdt_last_edited_by',
+                'display_header' => 'wdt_last_edited_by',
+                'filter_type' => 'none',
+                'column_type' => 'string',
+                'visible' => 0,
+                'pos' => ++$column_index
+            )
+        );
+        $wpdb->insert(
+            $wpdb->prefix . "wpdatatables_columns",
+            array(
+                'table_id' => $wpdatatable_id,
+                'orig_header' => 'wdt_last_edited_at',
+                'display_header' => 'wdt_last_edited_at',
+                'filter_type' => 'none',
+                'column_type' => 'datetime',
+                'input_type' => 'datetime',
+                'visible' => 0,
+                'pos' => ++$column_index
             )
         );
 
@@ -1835,7 +1897,7 @@ class wpDataTableConstructor
             $columnQuoteEnd
         );
 
-        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $this->_column_headers, 'import');
+        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $this->_column_headers, $this->_name, 'import');
     }
 
     /**
@@ -1890,15 +1952,15 @@ class wpDataTableConstructor
         }
         foreach ($existing_columns as $existing_column) {
             $advancedSettings = json_decode($existing_column->advanced_settings);
-            if ($advancedSettings->transformValueText !== "") {
-                $advancedSettings->transformValueText = str_ireplace("{" . $delete_column_header . '.value}', "", $advancedSettings->transformValueText);
+            if (isset($advancedSettings->transformValueText) && $advancedSettings->transformValueText !== "") {
+                    $advancedSettings->transformValueText = str_ireplace("{" . $delete_column_header . '.value}', "", $advancedSettings->transformValueText);
 
-                $updated_data = json_encode($advancedSettings);
-                $wpdb->update(
-                    $wpdb->prefix . 'wpdatatables_columns',
-                    array('advanced_settings' => $updated_data),
-                    array('table_id' => $tableId, 'id' => $existing_column->id)
-                );
+                    $updated_data = json_encode($advancedSettings);
+                    $wpdb->update(
+                        $wpdb->prefix . 'wpdatatables_columns',
+                        array('advanced_settings' => $updated_data),
+                        array('table_id' => $tableId, 'id' => $existing_column->id)
+                    );
             }
         }
 

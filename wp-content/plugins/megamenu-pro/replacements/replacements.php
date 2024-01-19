@@ -707,15 +707,14 @@ class Mega_Menu_Replacements {
 		$search_icon_label = isset($item->megamenu_settings['replacements']['search']['search_icon_label']) ? $item->megamenu_settings['replacements']['search']['search_icon_label'] : "Search";
 
 		$woocommerce = isset($item->megamenu_settings['replacements']['search']['woocommerce']) ? $item->megamenu_settings['replacements']['search']['woocommerce'] : "false";
-
+		
 		$search_var = apply_filters("megamenu_search_var", "s");
 		$action = apply_filters("megamenu_search_action", trailingslashit( home_url() ) );
-
 
 		$extra_inputs = apply_filters("megamenu_search_inputs", "");
 
 		if ($woocommerce === 'true') {
-			$inputs = "<input type='hidden' name='post_type' value='product' />";
+			$extra_inputs .= "<input type='hidden' name='post_type' value='product' />";
 		}
 
 		$search_icon_attributes = array(

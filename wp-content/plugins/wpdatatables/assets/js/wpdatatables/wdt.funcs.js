@@ -150,10 +150,10 @@ jQuery(document).ready(function ($) {
     $('body').on('focus', '.wdt-datepicker', function () {
         var isHandsonTable = $(this).parent('.handsontableInputHolder').length
         if(!isHandsonTable){
-            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length || $(this).closest('.wdt-conditional-formatting-rule').length
                 ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
             var filterElem = 'none';
-            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0 && $(this).closest('.wdt-conditional-formatting-rule').length == 0) {
                 if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
                     filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
                 }
@@ -190,10 +190,10 @@ jQuery(document).ready(function ($) {
     $('body').on('focus', '.wdt-timepicker', function () {
         var isHandsonTable = $(this).parent('.handsontableInputHolder').length
         if(!isHandsonTable) {
-            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length || $(this).closest('.wdt-conditional-formatting-rule').length
                 ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
             var filterElem = 'none';
-            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0 && $(this).closest('.wdt-conditional-formatting-rule').length == 0) {
                 if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
                     filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
                 }
@@ -227,10 +227,10 @@ jQuery(document).ready(function ($) {
     $('body').on('focus', '.wdt-datetimepicker', function () {
         var isHandsonTable = $(this).parent('.handsontableInputHolder').length
         if (!isHandsonTable) {
-            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length
+            var wpTableDescription = $(this).closest('.wdt-constructor-default-value').length || $(this).closest('.wpDataTableFilterSection').length || $(this).closest('.modal-body').length || $(this).closest('.wdt-editing-enabled-block').length || $(this).closest('.wdt-filter-default-value-from-block').length || $(this).closest('.wdt-filter-default-value-to-block').length || $(this).closest('.wdt-conditional-formatting-rule').length
                 ? '' : JSON.parse(jQuery('#' + $(this).parents('table').data().describedBy).val());
             var filterElem = 'none';
-            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0) {
+            if ($(this).closest('.wpDataTableFilterSection').length == 0 && $(this).closest('.modal-body').length == 0 && $(this).closest('.wdt-constructor-default-value').length == 0 && $(this).closest('.wdt-editing-enabled-block').length == 0 && $(this).closest('.wdt-filter-default-value-from-block').length == 0 && $(this).closest('.wdt-filter-default-value-to-block').length == 0 && $(this).closest('.wdt-conditional-formatting-rule').length == 0) {
                 if (wpTableDescription.dataTableParams.fixedColumns || wpTableDescription.dataTableParams.fixedHeader.header) {
                     filterElem = wpTableDescription.renderFilter === "header" ? 'th' : 'td';
                 }
