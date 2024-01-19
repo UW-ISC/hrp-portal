@@ -726,6 +726,7 @@
 .wpdt-c .wdt-constructor-create-buttons button {
     text-transform: uppercase;
 }
+.wpdt-c .wdt-simple-table-constructor,
 .wpdt-c #wdt-simple-table-constructor{
     background: #008CFF;
     border: none;
@@ -824,4 +825,202 @@
     padding: 0;
     text-align: right;
 }
+.wpdt-c .wdt-simple-table-template {
+    margin-left: 21px;
+    position: relative;
+   min-width: 22%;
+    width: 22%;
+    left: 49px;
+    top: 12px;
+}
+.wpdt-c .wdt-simple-table-template .f-14{
+    text-align: left;
+    position: relative;
+    bottom: 7px;
+    left: 40px;
+    color: #091D70;
+}
+.wpdt-c .wdt-simple-table-template .card{
+    box-sizing: border-box;
+}
+.wpdt-c .wdt-simple-table-template .card-body{
+    border-color: #c0bebe;
+}
+.wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor {
+    position: absolute;
+    left: 12%;
+    bottom: 86px;
+    border: 1px solid #1246D6;
+    border-radius: 8px;
+}
+.wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase {
+    position: absolute;
+    left: 54%;
+    bottom: 86px;
+    background-color: white !important;
+    color: #1246D6;
+    border: 1px solid #D1D5D7;
+    border-radius: 8px;
+}
+.wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase i.wpdt-icon-external-link {
+    left: 4px;
+    position: relative;
+}
+.wpdt-c .wdt-simple-table-template .card .card-header{
+    height: 255px;
+}
 
+.wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor:hover:hover{
+    background: linear-gradient(0deg, #ffffff, #ffffff),
+    linear-gradient(0deg, #ffffff, #ffffff) !important;
+    color: #1246D6;
+}
+.wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase:hover:hover{
+    background-color: #1246D6 !important;
+    color: white;
+}
+.wpdt-c .wdt-simple-table-template.selected {
+    border: none;
+    box-shadow: 0 0 17px 0px rgba(200, 215, 225, 0.5), 0 0px 0px #c7d3db;
+}
+.wpdt-c .wdt-simple-table-template.selected .wdt-simple-table-constructor-showcase,
+.wpdt-c .wdt-simple-table-template.selected .wdt-simple-table-constructor{
+    display: block;
+    width: fit-content;
+}
+.wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor-showcase,
+.wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor{
+    display: none;
+}
+.wpdt-c .wdt-simple-table-template.selected .img-responsive{
+    opacity: 0.5;
+}
+.wpdt-c .wdt-simple-table-template .img-responsive{
+    opacity: 1;
+}
+
+@media (max-width: 440px) {
+    .wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase {
+        left: 9% !important;
+        bottom: 35px !important;
+    }
+    .wpdt-c .wdt-simple-table-template {
+        left: -12px !important;
+        margin-left: 20px;
+        min-width: 78% !important;
+    }
+    .wpdt-c .wdt-simple-table-template .f-14 {
+        bottom: 3px !important;
+    }
+    .wpdt-c .wdt-simple-table-template.selected .wdt-simple-table-constructor-showcase, .wpdt-c .wdt-simple-table-template.selected .wdt-simple-table-constructor{
+        width: 80% !important;
+    }
+    .wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor{
+        bottom: 90px !important;
+    }
+}
+@media (max-width: 768px) and (min-width: 440px) {
+    .wpdt-c .wdt-simple-table-template {
+        margin-left: 21px;
+        position: relative;
+        min-width: 12%;
+        width: 43%;
+    }
+    .wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor{
+        bottom: 52px !important;
+    }
+    .wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase{
+        bottom: 52px !important;
+    }
+}
+.wpdt-c .category {
+    background: #F9FAFB;
+    position: relative;
+    padding: 17px 19px 1px 19px;
+    width: 100%;
+}
+.wpdt-c .category .wdt-category-heading{
+    font-family: Inter;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 27px;
+    letter-spacing: -0.01em;
+    text-align: center;
+    color: #091D70;
+}
+@media (min-width: 2440px) {
+    .wpdt-c .wdt-simple-table-template {
+        height: 390px;
+    }
+    .wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor {
+        left: 14%;
+        bottom: 75px;
+    }
+    .wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase {
+        bottom: 75px;
+    }
+    .wpdt-c .wdt-simple-table-template .f-14 {
+        bottom: -100px;
+        left: 40px;
+    }
+}
+.wpdt-c .wdt-simple-table-constructor{
+    background: linear-gradient(0deg, #1246D6, #1246D6),
+    linear-gradient(0deg, #265CF2, #265CF2);
+}
+@media (max-width: 1024px) {
+    .wpdt-c .wdt-simple-table-template .card .card-header {
+        height: 190px;
+    }
+
+    .wpdt-c .wdt-simple-table-template .card {
+        min-width: 200px;
+    }
+
+    .wpdt-c .wdt-simple-table-template {
+        padding-left: 0px;
+        left: -24px;
+        min-width: 36%;
+    }
+
+    .wpdt-c .wdt-simple-table-template .f-14 {
+        left: 26px;
+        bottom: -5px;
+    }
+    .wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor{
+        left: 8%;
+        bottom: 120px;
+    }
+    .wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase{
+        left: 56%;
+        bottom: 120px;
+    }
+}
+@media (max-width: 1440px) and (min-width: 1024px) {
+    .wpdt-c .wdt-simple-table-template .card .card-header {
+        height: 255px;
+    }
+    .wpdt-c .wdt-simple-table-template .f-14 {
+        bottom: 49px;
+    }
+    .wpdt-c .wdt-simple-table-template .wdt-simple-table-constructor{
+        left: 3%;
+        bottom: 120px;
+    }
+    .wpdt-c .wdt-simple-table-template .showcase.wdt-simple-table-constructor-showcase{
+        left: 53%;
+        bottom: 120px;
+    }
+    .wpdt-c .wdt-simple-table-template {
+        margin-left: 9px;
+        height: 265px;
+    }
+}
+@media (max-width: 2439px) and (min-width: 2200px) {
+    .wpdt-c .wdt-simple-table-template .card .card-header {
+        height: 320px;
+    }
+    .wpdt-c .wdt-simple-table-template .f-14 {
+        bottom: -5px;
+    }
+}

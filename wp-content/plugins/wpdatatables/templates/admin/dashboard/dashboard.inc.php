@@ -268,11 +268,14 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> New chart type – Highstock (14 new awesome stock chart types). </li>
-                                <li><strong>Feature:</strong> Transform cell values. </li>
-                                <li><strong>Improvement:</strong> Added 'select/deselect all' checkbox on Column List. </li>
-                                <li><strong>Improvement:</strong> SEO improvement- Reduced unused css and js. </li>
-                                <li><strong>Improvement:</strong> Added option that allows partial Frontend WCAG compliance. </li>
+                                <li><strong>Feature:</strong> New standard columns for manual tables (wdt_created_by, wdt_created_at, wdt_last_edited_by and wdt_last_edited_at). </li>
+                                <li><strong>Feature:</strong> Templates for Simple tables. </li>
+                                <li><strong>Improvement:</strong> Range slider unlimited improvement. </li>
+                                <li><strong>Improvement:</strong> Update libraries (minimum version of php is now 7.4). </li>
+                                <li><strong>BugFix:</strong> Fixed issue with selectbox in Inline editor. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with column visibility and checkbox on front-end. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with labels on Highstock charts. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Transform Value on collapsed column for non-SS tables.</li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

@@ -939,6 +939,55 @@ class WDTTools
             'clearFiltersWCAG' => __('Clear filters', 'wpdatatables'),
             );
     }
+    /**
+     * Helper function that returns all update info
+     * TODO (Update before new versions)
+     * @return array
+     */
+    public static function getUpdateInfo()
+    {
+        return array(
+            'version'  => get_option('wdtVersion'),
+            'features' => [
+                0 => [
+                    'text' => 'New standard columns for manual tables (wdt_created_by, wdt_created_at, wdt_last_edited_by and wdt_last_edited_at)',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Templates for Simple tables',
+                    'link' => ''
+                ],
+            ],
+            'improvements' => [
+                0 => [
+                    'text' => 'Range slider unlimited improvement',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Update libraries (minimum version of php is now 7.4)',
+                    'link' => ''
+                ],
+            ],
+            'bugfixes'=> [
+                0 => [
+                    'text' => 'Fixed issue with selectbox in Inline editor.',
+                    'link' => ''
+                ],
+                1 => [
+                    'text' => 'Fixed issue with column visibility and checkbox on front-end.',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Fixed issue with labels on Highstock charts.',
+                    'link' => ''
+                ],
+                3 => [
+                    'text' => 'Fixed issue with Transform Value on collapsed column for non-SS tables.',
+                    'link' => ''
+                ],
+            ]
+        );
+    }
 
     /**
      * Helper function that returns an array with date and time settings from wp_options

@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.0
+ * @version 6.1
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.0
+Version: 6.1
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -112,6 +112,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wdtgooglesheets.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatablecache.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtnestedjson.php');
+    require_once(WDT_ROOT_PATH . 'source/class.wpdatatablestemplates.php');
     //[<-- Full version -->]//
     require_once(WDT_ROOT_PATH . 'source/class.wpexceldatatable.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpexcelcolumn.php');

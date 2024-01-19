@@ -1222,7 +1222,7 @@ class WPDataChart
         if (!empty($this->getUserDefinedSeriesData())) {
             $seriesIndex = 0;
             foreach ($this->_user_defined_series_data as $series_data) {
-                if (!empty($series_data['color']) || !empty($series_data['type'])) {
+                if (!empty($series_data['color']) || !empty($series_data['type']) || !empty($series_data['label'])) {
                     $this->_render_data['options']['series'][$seriesIndex] = array(
                         'color' => $series_data['color'],
                         'label' => $series_data['label']

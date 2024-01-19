@@ -1889,7 +1889,6 @@
                 }
             }
         }
-
         /**
          * Open WordPress media uploader
          */

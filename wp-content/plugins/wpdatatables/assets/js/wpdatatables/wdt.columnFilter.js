@@ -23,8 +23,13 @@
 
             // If "Render advanced filter" is "In the header"
             if (properties.sPlaceHolder === 'head:before') {
-                tr = $("tr:first", oTable.fnSettings().nTHead).detach();
-                tr.appendTo($(oTable.fnSettings().nTHead));
+                if($("tr:first th")[0].classList.contains('wdtheader') === false) {
+                    tr = $("tr:first", oTable.fnSettings().nTHead).detach();
+                    tr.appendTo($(oTable.fnSettings().nTHead));
+                }else{
+                    tr = $("tr:last", oTable.fnSettings().nTHead).detach();
+                    tr.appendTo($(oTable.fnSettings().nTHead));
+                }
                 aoFilterCells = oTable.fnSettings().aoHeader[0];
             } else {
                 aoFilterCells = oTable.fnSettings().aoFooter[0];
@@ -43,7 +48,7 @@
                     iFilterLength: 0
                 };
 
-                sColumnLabel = $($(this)[0].cell).text();
+                sColumnLabel = oTable.fnSettings().aoColumns[columnIndex].sTitle
 
                 if (properties.aoColumns !== null) {
                     if (properties.aoColumns.length < columnIndex || properties.aoColumns[columnIndex] === null)
@@ -52,7 +57,9 @@
                 }
 
                 if (typeof aoColumn.sSelector === 'undefined') {
-                    th = $($(this)[0].cell);
+                    if($(this)[0].cell.classList.contains('wdtheader') === false || $(this)[0].cell.localName == 'td'){
+                        th = $($(this)[0].cell);
+                    }
                 } else {
                     th = $(aoColumn.sSelector);
                 }
@@ -403,8 +410,8 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
             });
 
             slider.noUiSlider.on('end', function () {
-                    slider.value = slider.noUiSlider.get();
-                    numberRangeSliderSearch();
+                slider.value = slider.noUiSlider.get();
+                numberRangeSliderSearch();
                 }
             );
 
@@ -413,6 +420,15 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
                     numberRangeSliderSearch();
                 }
             );
+
+            slider.noUiSlider.on('update', function () {
+                var lowerValue = slider.noUiSlider.get()[0]
+                var maxValue = slider.noUiSlider.get()[1];
+
+                //Update the slider lower value while dragging, but match to Unlimited value if it's set
+                slider.querySelector('.noUi-tooltip').innerHTML =
+                    (lowerValue === maxValue) ? slider.noUiSlider.options.tooltips[1].to(slider.noUiSlider.options.range.max) : lowerValue;
+            });
 
             function numberRangeSliderSearch() {
                 if (typeof wpDataTables[tableId].drawTable === 'undefined' || wpDataTables[tableId].drawTable === true) {
@@ -921,7 +937,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             //Added for fixed columns and fixed headers (when closing selectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
-        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm){
+        if ((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
             select.closest('.wdtscroll').on('scroll', function (e) {
                 select.closest('.wdt-select-filter.open').removeClass('open');
                 hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
@@ -994,7 +1010,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             //Added for fixed columns and fixed headers (when closing selectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
-        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+        if ((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
             select.closest('.wdtscroll').on('scroll', function (e) {
                 select.closest('.wdt-select-filter.open').removeClass('open');
                 hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
@@ -1123,7 +1139,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             //Added for fixed columns and fixed headers (when closing multiselectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
-        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+        if ((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
             select.closest('.wdtscroll').on('scroll', function (e) {
                 select.closest('.wdt-multiselect-filter.open').removeClass('open');
                 hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
@@ -1191,7 +1207,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
             //Added for fixed columns and fixed headers (when closing multiselectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
-        if((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
+        if ((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
             select.closest('.wdtscroll').on('scroll', function (e) {
                 select.closest('.wdt-multiselect-filter.open').removeClass('open');
                 hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
@@ -1398,7 +1414,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             }
             $modal.attr('data-current-checkbox-dialog', dlg.attr('id'));
             $modal.addClass('wdt-skin-' + tableDesc.tableSkin);
-            if(tableDesc.table_wcag){
+            if (tableDesc.table_wcag) {
                 $modal.addClass('wpTableWCAG');
             }
             $modal.modal('show');
@@ -1644,7 +1660,9 @@ function wdtClearFilters() {
             jQuery('.filter_column select').selectpicker('val', '');
             jQuery('.filter_column input:checkbox').removeAttr('checked');
             jQuery('.noUi-target').each(function (columnIndex) {
-                jQuery('.noUi-target')[columnIndex].noUiSlider.reset();
+                var columnMin = jQuery('.noUi-target')[columnIndex].noUiSlider.options.range['min'];
+                var columnMax = jQuery('.noUi-target')[columnIndex].noUiSlider.options.range['min'];
+                jQuery('.noUi-target')[columnIndex].noUiSlider.set([columnMin, columnMax]);
             });
 
             for (var i in wpDataTables) {
@@ -1661,7 +1679,9 @@ function wdtClearFilters() {
             wpDataTableSelecter.find('.filter_column input:checkbox').removeAttr('checked');
 
             wpDataTableSelecter.find('.noUi-target').each(function (columnIndex) {
-                wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.reset();
+                var columnMin = wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.options.range['min'];
+                var columnMax = wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.options.range['max'];
+                wpDataTableSelecter.find('.noUi-target')[columnIndex].noUiSlider.set([columnMin, columnMax]);
             });
 
             var tableId = '';

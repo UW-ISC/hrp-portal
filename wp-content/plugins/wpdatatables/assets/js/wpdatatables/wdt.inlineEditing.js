@@ -79,12 +79,19 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
         },
         // Save a cell value function
         saveData: function (val, rowId, columnId) {
-            $(tableDescription.selector).addClass('overlayed');
-            wpDataTables[obj.params.tableId].fnUpdate(val, rowId, columnId, 0, 0);
-            var data = wpDataTables[obj.params.tableId].fnGetData(rowId);
-            wpDataTablesFunctions[obj.params.tableId].applyData(data);
-            wpDataTablesFunctions[obj.params.tableId].saveTableData(true, false, false);
-            $(tableDescription.selector).find('td').removeClass('editing');
+            if($.inArray(obj.params.columnHeader, ['wdt_created_by','wdt_created_at', 'wdt_last_edited_by', 'wdt_last_edited_at']) !== -1 ){
+                obj.params.currentCell.empty().html(wpdatatables_frontend_strings.cannot_be_edit);
+                $(document).click(function () {
+                    $this.html($value);
+                });
+            } else {
+                $(tableDescription.selector).addClass('overlayed');
+                wpDataTables[obj.params.tableId].fnUpdate(val, rowId, columnId, 0, 0);
+                var data = wpDataTables[obj.params.tableId].fnGetData(rowId);
+                wpDataTablesFunctions[obj.params.tableId].applyData(data);
+                wpDataTablesFunctions[obj.params.tableId].saveTableData(true, false, false);
+                $(tableDescription.selector).find('td').removeClass('editing');
+            }
         },
         // Validate email and url fields
         fieldValidation: function (type, element) {
@@ -360,6 +367,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                     }
                 })
             },
+
             selectboxCell: function () {
                 // Clone a selectbox from appropriate edit modal's field
                 obj.params.code = $('#' + tableDescription.tableId + '_' + obj.params.columnHeader).clone();
@@ -376,16 +384,19 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                     }
                 }
 
-                // Initialize and open selectpicker
+                // Initialize selectpicker
                 $(obj.params.editSelector).selectpicker();
 
                 // Add AJAX to selectbox
                 if (obj.params.possibleValuesAjax !== -1) {
-
+                    // Initialize selectpicker with empty data (for now)
                     $(obj.params.editSelector).html('');
+                    $(obj.params.editSelector).selectpicker('val', '').selectpicker('refresh');
 
-                    $(obj.params.editSelector).selectpicker('refresh').ajaxSelectPicker({
-                        ajax: {
+                    // Define a function to fetch and load all possible values
+                    function loadAllPossibleValues() {
+                        // Perform an AJAX request to fetch all possible values
+                        $.ajax({
                             url: tableDescription.adminAjaxBaseUrl,
                             method: 'POST',
                             data: {
@@ -393,59 +404,61 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
                                 action: 'wpdatatables_get_column_possible_values',
                                 tableId: tableDescription.tableWpId,
                                 originalHeader: obj.params.columnHeader
-                            }
-                        },
-                        cache: false,
-                        preprocessData: function (data) {
-                            if (obj.params.inputType === 'selectbox') {
-                                data.unshift({value: ''});
-                            }
-                            return data
-                        },
-                        preserveSelected: true,
-                        emptyRequest: true,
-                        preserveSelectedPosition: 'before',
-                        locale: {
-                            emptyTitle: wpdatatables_inline_strings.nothingSelected,
-                            statusSearching: wpdatatables_inline_strings.sLoadingRecords,
-                            currentlySelected: wpdatatables_inline_strings.currentlySelected,
-                            errorText: wpdatatables_inline_strings.errorText,
-                            searchPlaceholder: wpdatatables_inline_strings.search,
-                            statusInitialized: wpdatatables_inline_strings.statusInitialized,
-                            statusNoResults: wpdatatables_inline_strings.statusNoResults,
-                            statusTooShort: wpdatatables_inline_strings.statusTooShort
-                        }
-                    });
+                            },
+                            success: function (data) {
+                                data = JSON.parse(data);
+                                if(obj.params.inputType === 'multi-selectbox') {
+                                    var uniqueValues = [...new Set(data.map(item => item.value.split(', ').map(val => val.trim())).flat())];
+                                }
+                                // Populate the selectpicker with the fetched data
+                                $(obj.params.editSelector).empty();
 
-                    // Load possible values on modal open
+                                if(obj.params.inputType === 'multi-selectbox'){
+                                    $.each(uniqueValues, function (index, item) {
+                                        var selected = obj.params.value !== null && obj.params.value.includes(item);
+                                        $(obj.params.editSelector).append('<option value="' + item + '"' + (selected ? ' selected' : '') + '>' + item + '</option>');
+                                    });
+                                } else {
+                                    $.each(data, function (index, item) {
+                                            $(obj.params.editSelector).append('<option value="' + item.value + '">' + item.value + '</option>');
+                                    });
+                                }
+
+                                // Add the selected option if obj.params.value is not null
+                                if (obj.params.value !== null && obj.params.inputType === 'selectbox' ) {
+                                    $(obj.params.editSelector).append('<option selected value="' + obj.params.value + '">' + obj.params.value + '</option>');
+                                }
+                                $(obj.params.editSelector).on('changed.bs.select', function () {
+                                    if (obj.params.inputType === 'selectbox') {
+                                        $(obj.params.editSelector).data('changed', true);
+                                        obj.params.value = $(this).val();
+                                        if ($.type(obj.params.value) === 'array') {
+                                            obj.params.value = obj.params.value.join(', ');
+                                        }
+
+                                        obj.validateAndSave($(this));
+                                    }
+                                });
+                                // Refresh the selectpicker to display the new data
+                                $(obj.params.editSelector).selectpicker('refresh');
+                            }
+                        });
+                    }
+
+                    // Load all possible values when the selectpicker is shown
                     $(obj.params.editSelector).on('show.bs.select', function (e) {
+                        if(!tableDescription.advancedFilterOptions.aoColumns[obj.params.columnId].searchInSelectBoxEditing && $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox').length){
+                            $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox')[0].style.display = 'none';
+                        }
                         setTimeout(function () {
-                            $(obj.params.editSelector).trigger('change').data('AjaxBootstrapSelect').list.cache = {};
                             $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox .form-control').val('').trigger('keyup');
                         }, 500);
 
-                        // If value is set, append options to selectbox HTML
-                        if (obj.params.value !== null) {
-                            if (obj.params.inputType === 'multi-selectbox') {
-                                var selectedValues = !Array.isArray(obj.params.value) ? obj.params.value.split(', ') : obj.params.value;
-
-                                $.each(selectedValues, function (index, value) {
-                                    if (value) {
-                                        $(obj.params.editSelector).append('<option selected value="' + value + '">' + value + '</option>');
-                                    }
-                                });
-                            } else {
-                                $(obj.params.editSelector).append('<option selected value="' + obj.params.value + '">' + obj.params.value + '</option>');
-                            }
-
-                            $(obj.params.editSelector).selectpicker('refresh');
-                        }
+                            loadAllPossibleValues();
                     });
                 }
-
                 obj.params.currentCell.css({'overflow': 'initial'});
                 $(obj.params.editSelector).selectpicker('toggle');
-
                 // Saving event
                 if (obj.params.possibleValuesAjax === -1) {
                     if (obj.params.inputType === 'selectbox') {

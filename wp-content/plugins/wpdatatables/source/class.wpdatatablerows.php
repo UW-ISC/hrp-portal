@@ -372,7 +372,6 @@ class WPDataTableRows
 
         return $wpDataTableRows;
     }
-
     /**
      * Save rows data from init Simple table with empty data in database
      * @param int $tableID
