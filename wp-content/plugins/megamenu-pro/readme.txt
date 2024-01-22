@@ -5,10 +5,16 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.3.1.1 =
+
+* Fix: WooCommerce store search option
+* Fix: Window width detection when using browser zoom function in Chrome
+
 = 2.3.1 =
 
 * Fix: Do not load Font Awesome 6 (Free) on nav-menus.php if the Font Awesome plugin is installed and configured to load Font Awesome 6 (Pro)
 * Fix: Compatibility with scssphp 1.11.1/Max Mega Menu v3.3
+* Fix: Restore "WooCommerce" store search option
 
 = 2.3 =
 

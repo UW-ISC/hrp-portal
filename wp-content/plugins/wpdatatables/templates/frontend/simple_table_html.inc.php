@@ -22,6 +22,12 @@
     $isStripe = $this->getTableSettingsData()->stripeTable;
     $header = $this->getTableSettingsData()->simpleHeader;
     $tableHTMLClasses = ["wpdtSimpleTable", "wpDataTable"];
+    if ($this->getTableSettingsData()->simple_template_id == '3') {
+        $tableHTMLClasses[] = 'wpdtTemplatePricing1';
+    }
+    if ($this->getTableSettingsData()->simple_template_id == '6') {
+        $tableHTMLClasses[] = 'wpdtTemplatePedigree1';
+    }
     ?>
     <table id="wpdtSimpleTable-<?php echo (int)$this->getTableID() ?>"
            style="border-collapse:<?php echo esc_attr($this->getTableSettingsData()->borderCollapse); ?>;

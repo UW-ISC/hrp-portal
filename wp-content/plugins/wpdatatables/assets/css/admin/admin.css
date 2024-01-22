@@ -1438,20 +1438,10 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c #adminmenuback {
     z-index: 100;
 }
-.wpdt-c .wpdt-php-version{
-    margin: 10px 0 !important;
-    font-size: 14px;
-}
 .wpdt-c .wpdt-forminator-news,
 .wpdt-c .wpdt-md-news {
     margin: 10px 0 !important;
     font-size: 15px;
-}
-.wpdt-c .wpdt-php-version-notice a,
-.wpdt-c .wpdt-php-version-notice a:hover,
-.wpdt-c .wpdt-php-version .wdt-php-version-link{
-    text-decoration: none;
-    color: #091D70;
 }
 
 .wpdt-c .wpdt-forminator-news .wdt-forminator-link {
@@ -1464,10 +1454,6 @@ wpdt-c button#wdt-add-data-browse-button {
 
 .wpdt-c .wpdt-forminator-news-notice {
     background: #091D70;
-    color: #ffffff;
-}
-.wpdt-c .wpdt-php-version-notice {
-    background: #ec8508;
     color: #ffffff;
 }
 
@@ -1483,9 +1469,6 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .notice-info.wpdt-forminator-news-notice {
     border-left-color: #ff8c00 !important;
 }
-.wpdt-c .notice-info.wpdt-php-version-notice {
-    border-left-color: #091D70 !important;
-}
 
 .wpdt-c .wpdt-forminator-news-notice a,
 .wpdt-c .wpdt-forminator-news-notice a:hover,
@@ -1494,10 +1477,8 @@ wpdt-c button#wdt-add-data-browse-button {
     color: #ffffff;
     text-decoration: underline;
 }
-.wpdt-c .wpdt-php-version-notice .notice-dismiss{
-    top : -5px;
-}
-.wpdt-c .wpdt-php-version-notice .notice-dismiss:before,
+
+.wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss:before,
 .wpdt-c .wpdt-forminator-news-notice .notice-dismiss:before,
 .wpdt-c .wpdt-md-news-notice .notice-dismiss:before {
     color: #ffffff;
@@ -1897,4 +1878,134 @@ wpdt-c button#wdt-add-data-browse-button {
 #google_marker_geo_chart_option .card.disabled,
 #google_text_geo_chart_option .card.disabled{
     pointer-events: none;
+}
+
+.wdt-update-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* Style for the modal */
+#wdt-update-modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px 40px 40px 40px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    width: 100%;
+    z-index: 1000;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+/* Style for the close button */
+.wdt-update-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.wdt-update-modal-close i {
+    font-size: 20px;
+}
+
+.wdt-update-modal-title{
+    text-align: center;
+    margin-top: 0 !important;
+    margin-bottom: 20px !important;
+}
+
+.wdt-update-modal-slides {
+    display: none;
+    text-align: left;
+    padding-left: 20px;
+}
+.wdt-update-modal-slides strong{
+    font-size: 18px;
+    display: inline-block;
+    padding-bottom: 10px;
+}
+.wdt-update-modal-slides ul{
+    margin-top: 5px !important;
+    list-style-type: disc;
+}
+.wdt-update-modal-slides li{
+    margin-left: 10px;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.wdt-update-modal-next, .wdt-update-modal-prev {
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -30px;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.wdt-update-modal-next {
+    right: 0;
+}
+.wdt-update-modal-prev{
+    left: 0;
+}
+
+.wdt-update-modal-prev i:before,
+.wdt-update-modal-next i:before,
+.wdt-update-modal-prev:hover i:before,
+.wdt-update-modal-next:hover i:before {
+    position: absolute;
+    transition: all .4s;
+}
+.wdt-update-modal-prev i:before {
+    left: 15px;
+}
+.wdt-update-modal-next i:before {
+    right: 15px;
+}
+.wdt-update-modal-prev:hover i:before {
+    left: 10px;
+}
+
+.wdt-update-modal-next:hover i:before {
+   right: 10px;
+}
+.wpdt-update-modal-logo{
+    width: 300px;
+    background-image: url(../../img/logo.svg);
+    background-repeat: no-repeat;
+    height: 50px;
+    background-size: 150px 50px;
+    background-position: center;
+    margin: 0 auto;
+}
+.wdt-remove {
+    display: none;
+}
+.wpdt-c .wpdt-bootstrap-update{
+    margin: 10px 0 !important;
+    font-size: 14px;
+}
+.wpdt-c .wpdt-bootstrap-update-notice {
+    background: #ec8508;
+    color: #ffffff;
+    border-left-color: #091D70 !important;
+}
+.wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss{
+    top : -5px;
 }

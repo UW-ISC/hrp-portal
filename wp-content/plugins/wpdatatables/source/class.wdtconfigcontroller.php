@@ -235,6 +235,7 @@ class WDTConfigController
             $table->language = isset($advancedSettings->language) ? $advancedSettings->language : $globalLanguage;
             $table->tableSkin = isset($table->tableSkin) || isset($advancedSettings->tableSkin) ? $advancedSettings->tableSkin : get_option('wdtBaseSkin');
             $table->table_wcag = isset($table->table_wcag) || isset($advancedSettings->table_wcag) ? $advancedSettings->table_wcag : 0;
+            $table->simple_template_id = isset($table->simple_template_id) || isset($advancedSettings->simple_template_id) ? $advancedSettings->simple_template_id : 0;
             $table->tableBorderRemoval = isset($table->tableBorderRemoval) || isset($advancedSettings->tableBorderRemoval) ? $advancedSettings->tableBorderRemoval : get_option('wdtBorderRemoval');
             $table->tableBorderRemovalHeader = isset($table->tableBorderRemovalHeader) || isset($advancedSettings->tableBorderRemovalHeader) ? $advancedSettings->tableBorderRemovalHeader : get_option('wdtBorderRemovalHeader');
             $table->tableCustomCss = isset($table->tableCustomCss) || isset($advancedSettings->tableCustomCss) ? $advancedSettings->tableCustomCss : '';
@@ -258,7 +259,6 @@ class WDTConfigController
 
         return self::$_tableConfigCache[$tableId];
     }
-
     /**
      * Helper method that load columns config data from DB
      *
@@ -449,7 +449,8 @@ class WDTConfigController
                     'fixed_left_columns_number' => $table->fixed_left_columns_number,
                     'fixed_right_columns_number' => $table->fixed_right_columns_number,
                     'fixed_header' => $table->fixed_header,
-                    'fixed_header_offset' => $table->fixed_header_offset
+                    'fixed_header_offset' => $table->fixed_header_offset,
+                    'simple_template_id' =>  $table->simple_template_id,
                 )
             ),
         );
@@ -537,6 +538,7 @@ class WDTConfigController
         $table->showRowsPerPage = (int)$table->showRowsPerPage;
         $table->language = sanitize_text_field($table->language);
         $table->tableSkin = sanitize_text_field($table->tableSkin);
+        $table->simple_template_id = (int)$table->simple_template_id;
         $table->table_wcag = (int)($table->table_wcag);
         $table->tableBorderRemoval = (int)$table->tableBorderRemoval;
         $table->tableBorderRemovalHeader = (int)$table->tableBorderRemovalHeader;
@@ -1701,7 +1703,7 @@ class WDTConfigController
         $table->fixed_header = 0;
         $table->fixed_header_offset = 0;
         $table->table_wcag = 0;
-
+        $table->simple_template_id = 0;
         return $table;
     }
 
@@ -1725,7 +1727,6 @@ class WDTConfigController
 
         return $res;
     }
-
     /**
      * Helper method that load rows config data from DB
      *
@@ -1750,8 +1751,28 @@ class WDTConfigController
 
         return $rows;
     }
+    /**
+     *  Helper method that load rows config data from DB for simple templates (data, content and settings from wpdatatables_templates)
+     *
+     * @param int $tableID
+     */
+    public static function loadRowsDataFromDBTemplateAll($tableID)
+    {
+        global $wpdb;
 
+        $rowsQuery = $wpdb->prepare(
+            "SELECT data, content, settings FROM " . $wpdb->prefix . "wpdatatables_templates WHERE table_id = %d ORDER BY id ASC", $tableID);
 
+        $rows = $wpdb->get_results($rowsQuery);
+
+        foreach ($rows as $key => $row) {
+            $rows[$key]->data = json_decode($row->data);
+            $rows[$key]->content = json_decode($row->content);
+            $rows[$key]->settings = json_decode($row->settings);
+        }
+
+        return $rows;
+    }
     /**
      * Save row data from Simple table in database
      *
@@ -1829,7 +1850,8 @@ class WDTConfigController
         }
         //Removes the WPDT table id from the array
         $columnHeaders = array_values(array_filter($columnHeaders, function ($el) {
-            return $el != "wdt_id";
+            $standardColumnHeaders = ["wdt_id", "wdt_created_by", "wdt_created_at", "wdt_last_edited_by", "wdt_last_edited_at"];
+            return !in_array($el, $standardColumnHeaders);
         }));
 
         //Error handling
@@ -1858,7 +1880,7 @@ class WDTConfigController
             $columnQuoteEnd
         );
 
-        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(), 'upload');
+        $objSourceFile->prepareInsertBlocks($insert_statement_beginning, $objSourceFile->getColumnOrigHeaders(), $objSourceFile->getTableData()->mysql_table_name, 'upload');
 
         return $objSourceFile->getTableData();
     }

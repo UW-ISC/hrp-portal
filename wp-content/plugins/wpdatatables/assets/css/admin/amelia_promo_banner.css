@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;700&family=Kaushan+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;500;700&display=swap');
+#wpdt-promote-amelia-section {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width:100%;
+}
+.wpdt-promote-amelia-section img{
+    width: 57%;
+}
+img.wpdt-amelia-logo{
+    position: relative;
+    left: 10px;
+}
+.wpdt-promote-amelia-notice {
+    border: none !important;
+    padding: 0 !important;
+    background-image: url("../../img/amelia_promo_banner/Amelia_banner1.png");
+    background-repeat-x: no-repeat;
+    background-repeat-y: no-repeat;
+    background-size: cover;
+}
+.wpdt-promote-amelia-notice {
+    height: 150px;
+    display: flex;
+    overflow: hidden;
+}
+#wpdt-first-section p{
+    color: #ffffff;
+    align-content: center;
+    font-weight: 500;
+    font-size: 26px;
+    line-height: 26px;
+    margin-left: 10px;
+    margin-top: 6px;
+}
+#wpdt-first-section {
+    margin-left: 5px;
+}
+.wpdt-promote-amelia-close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+}
+button#wpdt-download-it {
+    padding: 7px 0px;
+    background: linear-gradient(351.76deg, #FFD601 -8.07%, #FCFF7D 123.41%);
+    border-radius: 7px;
+    border: none;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 600;
+    margin: -5px 0 0 8px;
+    text-align: center;
+    color: #1A2C37;
+    width: 200px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+button#wpdt-download-it:hover,
+.tms-store-card-plan-buy-now-button:hover {
+    background: #fbff21;
+    color: #1A2C37 !important;
+    transition: none !important;
+}
+
+.wpdt-icon-times-thin{
+    margin-left: 10px;
+    opacity: 0.8;
+    cursor: pointer;
+    color: #005AEE;
+    font-size: 15px;
+}
+.wpdt-promote-amelia-notice .notice-dismiss:before{
+    color: #ffffff;
+}
+
+#wpdt-promote-amelia-section #wpdt-second-section img.wpdt-amelia-pic-1{
+    position: relative;
+    top : -2px;
+    border-radius: 8px;
+    flex:1;
+}
+
+#wpdt-promote-amelia-section #wpdt-second-section h2 {
+    color: #005AEE;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-left: -20px;
+    float: left;
+}
+#wpdt-promote-amelia-section #wpdt-second-section{
+    display: flex;
+}
+@media(max-width: 426px) {
+    #wpdt-first-section p{
+        margin-top: 8px;
+        margin-left: 5px;
+        font-size: 24px;
+    }
+    button#wpdt-download-it {
+        margin-bottom: 10px;
+    }
+    #wpdt-second-section{
+        display: none !important;
+    }
+    #wpdt-third-section{
+        display: none !important;
+    }
+    img.wpdt-amelia-logo{
+        left: 0px;
+        top: 0px;
+    }
+}
+@media(max-width: 1025px) {
+    #wpdt-first-section p{
+        margin-top: 8px;
+        margin-left: 5px;
+        font-size: 24px;
+    }
+    button#wpdt-download-it {
+        margin-bottom: 10px;
+    }
+    #wpdt-second-section{
+        display: none !important;
+    }
+    img.wpdt-amelia-logo{
+        left: 0px;
+        top: 0px;
+    }
+}

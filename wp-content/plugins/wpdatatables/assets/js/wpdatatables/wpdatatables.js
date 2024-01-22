@@ -85,6 +85,37 @@ var singleClick = false;
                                         }
                                     }
                                 }
+                                if (tableDescription.transform_value_columns) {
+                                    var responsive_rows = detailsRow.find('li');
+                                    var oSettings = wpDataTables[tableDescription.tableId].fnSettings();
+                                    for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
+                                        var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
+                                        var transformValueRules = {};
+                                        transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
+                                        var heleprTransformValue = 0;
+                                        for (var k = 0; k < oSettings.aoColumns.length; k++) {
+                                            var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
+                                            responsive_rows.each(function () {
+                                                $(this).find('.columnValue').contents().filter(function () {
+                                                    if (this.nodeType === 8) {
+                                                        $(this).remove();
+                                                    }
+                                                });
+                                                var column_index = $(this).data('column');
+                                                if (column_index == column.index()) {
+                                                    if (transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
+                                                        var array = oSettings.aiDisplay;
+                                                        var valueToFind = $(this).parent().parent().parent()[0].previousSibling._DT_RowIndex;
+                                                        var position = array.indexOf(valueToFind);
+                                                        wdtTransformValueResponsive(transformValueRules[heleprTransformValue].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), 0, oSettings.sTableId);
+                                                        transformValueRules[1] = transformValueRules[heleprTransformValue].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
+                                                        heleprTransformValue= 1;
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }
+                                }
                             }
                         });
                     }
@@ -1302,6 +1333,9 @@ var singleClick = false;
                         wpDataTablesHooks.onRenderFilter[i](tableDescription);
                 }
             }
+            $(document).on('click', '.wpdt-c .dt-button-collection .buttons-columnVisibility', function (e) {
+                $('#' + tableDescription.tableId).dataTable().columnFilter(tableDescription.advancedFilterOptions);
+            });
 
             if (tableDescription.editable) {
 
@@ -2288,6 +2322,10 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
 function wdtTransformValue(trasnsformValue, params, element, m, tableID) {
     let index = element.index() + 1;
     jQuery(element.closest('table#' + tableID + '.wpDataTable').find('tbody td:nth-child(' + index + ')')[m]).html(trasnsformValue);
+}
+function wdtTransformValueResponsive(trasnsformValue, params, element, m, tableID) {
+    let index = element.index() + 1;
+    jQuery(element.find('.columnValue')[m]).html(trasnsformValue);
 }
 
 // jQuery.fn.dataTableExt.oStdClasses.sWrapper = "wpDataTables wpDataTablesWrapper";

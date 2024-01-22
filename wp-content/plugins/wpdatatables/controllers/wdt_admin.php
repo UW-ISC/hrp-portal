@@ -148,6 +148,9 @@ function wdtAdminEnqueue($hook)
 
         wp_enqueue_script('media-upload');
         wp_enqueue_media();
+
+        if (!in_array($hook, array('toplevel_page_wpdatareports', 'report-builder_page_wpdatareports-wizard')))
+            wdtUpdateNoticeModal();
     }
 
     wp_register_style('wdt-dragula', WDT_CSS_PATH . 'dragula/dragula.min.css', array(), WDT_CURRENT_VERSION);
@@ -651,6 +654,18 @@ function wdtEdit()
         $editPage = apply_filters('wpdatatables_filter_edit_page', $editPage);
     }
     echo $editPage;
+}
+/**
+ * Render Plugin Update details Modal
+ */
+function wdtUpdateNoticeModal()
+{
+    $hideUpdateModal = get_option('wdtHideUpdateModal');
+    if ($hideUpdateModal === "0"){
+        wp_enqueue_script('wdt-update-info-js', WDT_ROOT_URL . 'assets/js/update/info.js', array(), WDT_CURRENT_VERSION, true);
+        wp_localize_script('wdt-update-info-js', 'wpdatatables_update_info', WDTTools::getUpdateInfo());
+    }
+
 }
 
 /**

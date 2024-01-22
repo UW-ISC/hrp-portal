@@ -495,6 +495,49 @@ var aceEditor = null;
                 data: {
                     action: 'wpdatatables_create_simple_table',
                     tableData: JSON.stringify(constructedTableData),
+                    templateId : 0,
+                    wdtNonce: wdtNonce
+                },
+                success: function (link) {
+                    window.location = link;
+                },
+                error: function (data) {
+                    $('#wdt-error-modal .modal-body').html('There was an error while trying to generate the table! ' + data.statusText + ' ' + data.responseText);
+                    $('#wdt-error-modal').modal('show');
+                    $('.wdt-preload-layer').animateFadeOut();
+                }
+            })
+
+        }
+
+    });
+    $('.wdt-simple-table-template').hover(function (e) {
+        $('.wdt-simple-table-template').removeClass('selected')
+        $(this).addClass('selected')
+    });
+    $('.wdt-simple-table-template .wdt-simple-table-constructor').click(function (e) {
+        e.preventDefault();
+        $('.wdt-preload-layer').animateFadeIn();
+        if (constructedTableData.method == 'simple'){
+
+            $('#wdt-constructor-simple-table-name').change();
+            $('#wdt-constructor-simple-table-description').change();
+
+            constructedTableData.advanced_settings = {};
+            constructedTableData.advanced_settings.table_description = constructedTableData.table_description;
+            constructedTableData.advanced_settings.predefined_type_in_db = constructedTableData.predefined_type_in_db;
+            constructedTableData.content = {};
+            constructedTableData.title = constructedTableData.name;
+            constructedTableData.table_type = constructedTableData.method;
+            constructedTableData.templateId = $(this).parent().parent().data('template_id')
+
+            $.ajax({
+                url: ajaxurl,
+                type: 'POST',
+                data: {
+                    action: 'wpdatatables_create_simple_table',
+                    tableData: JSON.stringify(constructedTableData),
+                    templateId: constructedTableData.templateId,
                     wdtNonce: wdtNonce
                 },
                 success: function (link) {
@@ -1045,7 +1088,7 @@ var aceEditor = null;
                     window.location = link + tableView;
                 },
                 error: function (data) {
-                    if(data.responseText.includes('Display width')){
+                    if(typeof data !== 'undefined' && data.responseText.includes('Display width')){
                         if(constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
                             $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
                                 + data.statusText);
@@ -1104,7 +1147,7 @@ var aceEditor = null;
                 wdtReadFileDataAndEditTable(tableView);
             } else {
                 let index = emptyHeader > 0 ? emptyHeader - 1 : emptyHeader;
-                if(data.responseText.includes('Display width')){
+                if(typeof data !== 'undefined' && data.responseText.includes('Display width')){
                     if (constructedTableData.connection_type == 'mysql' || constructedTableData.connection_type=="") {
                         $('#wdt-error-modal .modal-body').html('There was an error with default value of type in DataBase! <br> 0ut-of-range value! Check: <br> <strong>INT ,BIGINT, TINYINT, SMALLINT, MEDIUMINT </strong> or <strong>VARCHAR </strong><br>'
                             + data.statusText);

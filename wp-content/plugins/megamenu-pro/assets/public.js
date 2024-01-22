@@ -330,7 +330,8 @@
         var is_vertical = $menu.hasClass('mega-menu-vertical') || $menu.hasClass('mega-menu-accordion');
 
         plugin.isDesktopView = function() {
-            return Math.max(window.outerWidth, $(window).width()) >= breakpoint; // account for scrollbars
+            var width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            return width > breakpoint;
         };
 
         var sticky_hide_until_scroll_up_enabled = function() {
