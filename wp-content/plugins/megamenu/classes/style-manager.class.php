@@ -59,6 +59,22 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			}
 
 			add_filter( 'megamenu_scripts_in_footer', array( $this, 'scripts_in_footer' ) );
+			add_filter( "filesystem_method", array( $this, "use_direct_filesystem_method" ), 10, 4 );
+
+		}
+
+
+		/**
+		 * Always use the 'direct' filesystem method when creating/removing the style.css file
+		 * 
+		 * @since 3.0.1
+		 */
+		public function use_direct_filesystem_method( $method, $args, $context, $allow_relaxed_file_ownership ) { 
+			if ( $method != 'direct' && str_contains( $context, "/maxmegamenu" ) ) {
+				return 'direct';
+			}
+
+		    return $method; 
 		}
 
 
@@ -543,7 +559,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 
 			$dir = trailingslashit( $upload_dir['basedir'] ) . 'maxmegamenu/';
 
-			WP_Filesystem( false, $upload_dir['basedir'], true );
+			WP_Filesystem( false, $dir, true );
 
 			if ( ! $wp_filesystem->is_dir( $dir ) ) {
 				$wp_filesystem->mkdir( $dir );
@@ -758,7 +774,11 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			}
 
 			try {
-				return $scssc->compileString( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) )->getCss();
+				if ( method_exists( $scssc, "compileString" ) ) {
+					return $scssc->compileString( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) )->getCss();
+				} else if ( method_exists( $scssc, "compile" ) ) { // using an older version of scssphp from a different plugin
+					return $scssc->compile( $this->get_complete_scss_for_location( $location, $theme, $menu_id ) );
+				}
 			} catch ( Exception $e ) {
 				$message = __( 'Warning: CSS compilation failed. Please check your changes or revert the theme.', 'megamenu' );
 
@@ -1106,7 +1126,7 @@ if ( ! class_exists( 'Mega_Menu_Style_Manager' ) ) :
 			$filename   = $this->get_css_filename();
 			$dir        = trailingslashit( $upload_dir['basedir'] ) . 'maxmegamenu/';
 
-			WP_Filesystem( false, $upload_dir['basedir'], true );
+			WP_Filesystem( false, $dir, true );
 			$wp_filesystem->rmdir( $dir, true );
 
 			delete_transient( $this->get_transient_key() );

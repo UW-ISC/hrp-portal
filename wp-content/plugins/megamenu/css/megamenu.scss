@@ -1237,10 +1237,15 @@
                     max-height: 100vh;
                     top: 0;
                     box-sizing: border-box;
-                    transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out;
+                    transition: left $effect_speed_mobile ease-in-out, right $effect_speed_mobile ease-in-out, visibility $effect_speed_mobile ease-in-out;
                     overflow: auto;
                     z-index: 9999999999;
                     overscroll-behavior: contain;
+                    visibility: hidden;
+                }
+
+                &.mega-menu-open + #{$menu} {
+                    visibility: visible;
                 }
 
                 @if ($effect_mobile == slide_right ) {

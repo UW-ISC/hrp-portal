@@ -379,8 +379,11 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 						</svg>
 						<ul class='mega-ellipsis-content'>
 							<li><?php echo $this->assigned_menu_link( $location ); ?></li>
-							<li><?php echo $this->sandbox_link( $location ); ?></li>
 							<?php
+							if ( max_mega_menu_is_enabled( $location ) ) {
+								echo '<li>' . $this->sandbox_link( $location ) . '</li>';
+							}
+
 							if ( strpos( $location, 'max_mega_menu_' ) !== false ) {
 								echo '<li>' . $this->delete_location_link( $location ) . '</li>';
 							}
@@ -487,7 +490,17 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 		 * @since 2.8
 		 */
 		public function sandbox_link( $location ) {
-			return "<a target='megamenu_sandbox' href='" . admin_url( "admin-post.php?action=megamenu_sandbox&location={$location}" ) . "'><span class='dashicons dashicons-external'></span>" . esc_html__( 'View in Sandbox', 'megamenu' ) . '</a>';
+			$sandbox_url = esc_url(
+				add_query_arg(
+					array(
+						'action'   => 'megamenu_sandbox',
+						'location' => $location,
+					),
+					wp_nonce_url( admin_url( 'admin-post.php' ), "megamenu_sandbox_" . $location )
+				)
+			);
+
+			return "<a target='megamenu_sandbox' href='{$sandbox_url}'><span class='dashicons dashicons-external'></span>" . esc_html__( 'View in Sandbox', 'megamenu' ) . '</a>';
 		}
 
 
@@ -550,56 +563,72 @@ if ( ! class_exists( 'Mega_Menu_Locations' ) ) :
 		 * @since 2.9
 		 */
 		public function sandbox() {
-			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
-			remove_action( 'wp_head', '_admin_bar_bump_cb' );
+
+			$location = "";
 
 			if ( isset( $_GET['location'] ) ) {
 				$location = esc_attr( $_GET['location'] );
-
-				?>
-				<!DOCTYPE html>
-				<html>
-					<head>
-						<title>Sandbox: <?php echo $location; ?></title>
-						<style type='text/css'>
-							body, html {
-								margin: 0;
-								padding: 0;
-								min-height: 200vh;
-							}
-							body {
-								font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
-								background-image:
-									linear-gradient(45deg, #eee 25%, transparent 25%), 
-									linear-gradient(135deg, #eee 25%, transparent 25%),
-									linear-gradient(45deg, transparent 75%, #eee 75%),
-									linear-gradient(135deg, transparent 75%, #eee 75%);
-								background-size:25px 25px;
-								background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px;
-							}
-							#query-monitor-main {
-								display: none;
-							}
-							.menu_wrapper {
-								max-width: 1280px; 
-								margin: 0 auto;
-								margin-top: 20px;
-							}
-						</style>
-						<?php wp_head(); ?>
-					</head>
-					<body>
-						<div class='menu_wrapper'>
-							<?php echo do_shortcode( "[maxmegamenu location={$location}]" ); ?>
-						</div>
-						<?php wp_footer(); ?>
-					</body>
-				</html>
-				<?php
+			} else {
+				die();
 			}
+
+			check_admin_referer( 'megamenu_sandbox_' . $location );
+
+			if ( ! has_nav_menu( $location ) ) {
+				die();
+			}
+
+			if ( ! max_mega_menu_is_enabled( $location ) ) {
+				die();
+			}
+
+			remove_action( 'wp_footer', 'wp_admin_bar_render', 1000 );
+			remove_action( 'wp_head', '_admin_bar_bump_cb' );
+
+			?>
+			<!DOCTYPE html>
+			<html>
+				<head>
+					<title>Sandbox</title>
+					<style type='text/css'>
+						body, html {
+							margin: 0;
+							padding: 0;
+							min-height: 200vh;
+						}
+						body {
+							font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+							background-image:
+								linear-gradient(45deg, #eee 25%, transparent 25%), 
+								linear-gradient(135deg, #eee 25%, transparent 25%),
+								linear-gradient(45deg, transparent 75%, #eee 75%),
+								linear-gradient(135deg, transparent 75%, #eee 75%);
+							background-size:25px 25px;
+							background-position:0 0, 12.5px 0, 12.5px -12.5px, 0px 12.5px;
+						}
+						#query-monitor-main {
+							display: none;
+						}
+						.menu_wrapper {
+							max-width: 1280px; 
+							margin: 0 auto;
+							margin-top: 20px;
+						}
+					</style>
+					<?php wp_head(); ?>
+				</head>
+				<body>
+					<div class='menu_wrapper'>
+						<?php wp_nav_menu( array( 'theme_location' => $location ) ); ?>
+					</div>
+					<?php wp_footer(); ?>
+				</body>
+			</html>
+			<?php
 
 			die();
 		}
+
 
 		/**
 		 * Content for Menu Location options
