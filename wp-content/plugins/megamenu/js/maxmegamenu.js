@@ -91,7 +91,8 @@
         };
 
         plugin.isDesktopView = function() {
-            return Math.max(window.outerWidth, $(window).width()) > plugin.settings.breakpoint; // account for scrollbars
+            var width = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+            return width > plugin.settings.breakpoint;
         };
 
         plugin.isMobileView = function() {
@@ -502,7 +503,7 @@
         };
 
         plugin.unbindAllEvents = function() {
-            $("ul.mega-sub-menu, li.mega-menu-item, li.mega-menu-row, li.mega-menu-column, a.mega-menu-link, .mega-indicator", menu).off().unbind();
+            $("ul.mega-sub-menu, li.mega-menu-item, li.mega-menu-row, li.mega-menu-column, a.mega-menu-link, .mega-indicator", menu).off();
         };
 
         plugin.unbindClickEvents = function() {
@@ -735,7 +736,7 @@
                 plugin.initMobile();
             }
 
-            $(window).resize(function() {
+            $(window).on("resize", function() {
                 plugin.checkWidth();
             });
 
