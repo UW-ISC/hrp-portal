@@ -2,8 +2,8 @@
 Contributors: megamenu
 Tags: menu, responsive menu, mega menu, navigation, mobile menu
 Requires at least: 5.0
-Tested up to: 6.3
-Stable tag: 3.2.4
+Tested up to: 6.4
+Stable tag: 3.3
 Requires PHP: 5.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -131,6 +131,15 @@ See https://www.megamenu.com for more screenshots
 5. Back end: Use the theme editor to change the appearance of your menus
 
 == Changelog ==
+
+= 3.3.1 =
+
+* Accessibility Improvement: Ensure items within hidden off canvas menu cannot be focused using keyboard
+* Fix: 'Desktop' mode detection when using browser zoom
+* Fix: Conflict with Darklup Pro (and possibly other plugins which use scssphp library)
+* Fix: Always use 'direct' filesystem method to generate style.css file
+* Fix: jQuery migrate warnings
+* Security fix: Add nonce check to sandbox URL. Thanks to patchstack for reporting.
 
 = 3.3 =
 

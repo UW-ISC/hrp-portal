@@ -34,7 +34,7 @@ function relevanssi_spamblock() {
 			$query = urldecode( str_replace( $url_prefix, '', $_SERVER['REQUEST_URI'] ) );
 		}
 	}
-	if ( ! isset( $query ) ) {
+	if ( ! isset( $query ) || is_string( $query ) === false ) {
 		return;
 	}
 
