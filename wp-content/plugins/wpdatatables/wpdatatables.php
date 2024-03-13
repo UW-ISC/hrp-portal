@@ -1,14 +1,14 @@
 <?php
 /**
  * @package wpDataTables
- * @version 6.1
+ * @version 6.2.1
  */
 /*
 Plugin Name: wpDataTables
 Plugin URI: https://wpdatatables.com/
 Description: Add interactive tables easily from any input source
 //[<-- Full version -->]//
-Version: 6.1
+Version: 6.2.1
 //[<--/ Full version -->]//
 //[<-- Full version insertion #27 -->]//
 Author: TMS-Plugins
@@ -104,6 +104,7 @@ function wpdatatables_load()
     require_once(WDT_ROOT_PATH . 'source/class.wdtsettingscontroller.php');
     require_once(WDT_ROOT_PATH . 'source/class.wdtexception.php');
     require_once(WDT_ROOT_PATH . 'source/class.connection.php');
+    require_once(WDT_ROOT_PATH . 'source/class.pgsql.connection.php');
     require_once(WDT_ROOT_PATH . 'source/class.sql.php');
     require_once(WDT_ROOT_PATH . 'source/class.sql.pdo.php');
     require_once(WDT_ROOT_PATH . 'source/class.wpdatatable.php');
@@ -131,6 +132,16 @@ function wpdatatables_load()
     if (is_file(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php')) {
         require_once(WDT_ROOT_PATH . 'integrations/highstock/wdt-highstock-integration.php');
     }
+    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.wpdatafolders.php'))
+        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.wpdatafolders.php');
+    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.factory.wpdatafolders.php'))
+        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.factory.wpdatafolders.php');
+    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.tables.wpdatafolders.php'))
+        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.tables.wpdatafolders.php');
+    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.charts.wpdatafolders.php'))
+        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.charts.wpdatafolders.php');
+    if (is_file(WDT_ROOT_PATH . 'integrations/folders/src/class.reports.wpdatafolders.php'))
+        require_once(WDT_ROOT_PATH . 'integrations/folders/src/class.reports.wpdatafolders.php');
 
     add_action('plugins_loaded', 'wdtLoadTextdomain');
 

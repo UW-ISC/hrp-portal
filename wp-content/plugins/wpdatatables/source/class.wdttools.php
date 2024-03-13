@@ -647,11 +647,11 @@ class WDTTools
             'from' => __('From', 'wpdatatables'),
             'to' => __('To', 'wpdatatables'),
             'sortingError' => __('At least one show/hide sorting icon must be enabled!','wpdatatables'),
-            'firstPageWCAG' => __('First page', 'wpdatatables'),
-            'lastPageWCAG' => __('Last page', 'wpdatatables'),
-            'nextPageWCAG' => __('Next page', 'wpdatatables'),
-            'previousPageWCAG' => __('Previous page', 'wpdatatables'),
-            'pageWCAG' => __('wpDataTable Page ', 'wpdatatables'),
+            'firstPageWCAG' => __('Navigate to First page', 'wpdatatables'),
+            'lastPageWCAG' => __('Navigate to Last page', 'wpdatatables'),
+            'nextPageWCAG' => __('Navigate to Next page', 'wpdatatables'),
+            'previousPageWCAG' => __('Navigate to Previous page', 'wpdatatables'),
+            'pageWCAG' => __('Navigate to wpDataTable Page ', 'wpdatatables'),
             'spacerWCAG' => __('Spacer', 'wpdatatables'),
             'printTableWCAG' => __('Print table', 'wpdatatables'),
             'exportTableWCAG' => __('Export table', 'wpdatatables'),
@@ -661,6 +661,22 @@ class WDTTools
             'duplicateRowWCAG' => __('Duplicate row', 'wpdatatables'),
             'clearFiltersWCAG' => __('Clear filters', 'wpdatatables'),
             'columnVisibilityWCAG' => __('Column visibility', 'wpdatatables'),
+            'sInfoEmptyWCAG' => __('Showing 0 to 0 of 0 entries _COLUMN_ _DATA_', 'wpdatatables'),
+            'sInfoWCAG' => __('Showing _START_ to _END_ of _TOTAL_ entries _COLUMN_ _DATA_', 'wpdatatables'),
+            'masterDetailWCAG' => __('Master Detail', 'wpdatatables'),
+            'globalSearchWCAG' => __('Global Search Table Input Field', 'wpdatatables'),
+            'chooseExportWCAG' => __('Choose how to export table', 'wpdatatables'),
+            'optionHideWCAG' => __('Option to either display or hide columns', 'wpdatatables'),
+            'rowsPerPageWCAG' => __('Open dropdown menu for show rows per page', 'wpdatatables'),
+            'forWCAG' => __('for ', 'wpdatatables'),
+            'columnSearchWCAG' => __(' column searching for ', 'wpdatatables'),
+            'valueFromWCAG' => __('value from ', 'wpdatatables'),
+            'valueToWCAG' => __(' value to ', 'wpdatatables'),
+            'andforWCAG' => __( ' and for ', 'wpdatatables'),
+            'andforGloablWCAG' => __( ' and for Global search of value ', 'wpdatatables'),
+            'forGloablWCAG' => __( 'for Global search of value ', 'wpdatatables'),
+            'lenghtMenuWCAG' => __( 'Length menu:', 'wpdatatables'),
+            'searchTableWCAG' => __( 'Search table:', 'wpdatatables'),
         );
     }
     public static function getTranslationStringsColumnFilter()
@@ -676,6 +692,23 @@ class WDTTools
             'statusTooShort' => __('Please enter more characters', 'wpdatatables'),
             'from' => __('From', 'wpdatatables'),
             'to' => __('To', 'wpdatatables'),
+            'fromDate' => __('Date from', 'wpdatatables'),
+            'toDate' => __('Date to', 'wpdatatables'),
+            'fromDateTime' => __('DateTime from', 'wpdatatables'),
+            'toDateTime' => __('DateTime to', 'wpdatatables'),
+            'fromTime' => __('Time from', 'wpdatatables'),
+            'toTime' => __('Time to', 'wpdatatables'),
+            'filterInputString' => __('Filter input for ', 'wpdatatables'),
+            'filterInputNumber' => __('Filter input for number range filter ', 'wpdatatables'),
+            'filterInputDate' => __('Filter input for date picker ', 'wpdatatables'),
+            'filterInputDateTime' => __('Filter input for datetime picker ', 'wpdatatables'),
+            'filterInputTime' => __('Filter input for time picker ', 'wpdatatables'),
+            'filterCheckbox' => __('Filter checkbox for ', 'wpdatatables'),
+            'minValue' => __('Minimum Value: ', 'wpdatatables'),
+            'maxValue' => __('Maximum Value: ', 'wpdatatables'),
+            'multiSelectBoxOption' => __('MultiSelectBox option', 'wpdatatables'),
+            'selectBoxOption' => __('SelectBox option', 'wpdatatables'),
+            'dividerSearchBox' => __('This is divider between searchbox input and options to select', 'wpdatatables'),
         );
     }
     public static function getTranslationStringsExcel()
@@ -754,6 +787,7 @@ class WDTTools
             'select_upload_file' => __('Select a file to use in table', 'wpdatatables'),
             'choose_file' => __('Use selected file', 'wpdatatables'),
             'chooseFile' => __('Choose file', 'wpdatatables'),
+            'inlineEditing' => __('Inline editing of the cell ', 'wpdatatables'),
         );
     }
     public static function getTranslationStringsAddRemoveColumn()
@@ -950,39 +984,67 @@ class WDTTools
             'version'  => get_option('wdtVersion'),
             'features' => [
                 0 => [
-                    'text' => 'New standard columns for manual tables (wdt_created_by, wdt_created_at, wdt_last_edited_by and wdt_last_edited_at)',
-                    'link' => ''
+                    'text' => 'Added Folders/Categories for tables',
+                    'link' => 'https://wpdatatables.com/documentation/table-features/folders-for-tables-and-charts/'
                 ],
                 1 => [
-                    'text' => 'Templates for Simple tables',
+                    'text' => 'Added Folders/Categories for charts',
+                    'link' => 'https://wpdatatables.com/documentation/table-features/folders-for-tables-and-charts/'
+                ],
+                2 => [
+                    'text' => 'New date formats',
+                    'link' => ''
+                ],
+                3 => [
+                    'text' => 'New time format with seconds',
+                    'link' => ''
+                ],
+                4 => [
+                    'text' => 'Full WCAG compatibility',
                     'link' => ''
                 ],
             ],
             'improvements' => [
                 0 => [
-                    'text' => 'Range slider unlimited improvement',
+                    'text' => 'Updated french translation language',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Update libraries (minimum version of php is now 7.4)',
+                    'text' => 'Simple table templates improvements',
+                    'link' => ''
+                ],
+                2 => [
+                    'text' => 'Refactoring source files',
                     'link' => ''
                 ],
             ],
             'bugfixes'=> [
                 0 => [
-                    'text' => 'Fixed issue with selectbox in Inline editor.',
+                    'text' => 'Fixed issue with image and attachment column types.',
                     'link' => ''
                 ],
                 1 => [
-                    'text' => 'Fixed issue with column visibility and checkbox on front-end.',
+                    'text' => 'Fixed issue with creating manual tables with separate connection.',
                     'link' => ''
                 ],
                 2 => [
-                    'text' => 'Fixed issue with labels on Highstock charts.',
+                    'text' => 'Fixed issue with Date input Format (Date, Time and DateTime).',
                     'link' => ''
                 ],
                 3 => [
-                    'text' => 'Fixed issue with Transform Value on collapsed column for non-SS tables.',
+                    'text' => 'Fixed conflict with Royal Elementor Addons and Templates plugin.',
+                    'link' => ''
+                ],
+                4 => [
+                    'text' => 'Fixed issue with colors in Google charts.',
+                    'link' => ''
+                ],
+                5 => [
+                    'text' => 'Fixed issue with HighCharts Stock Datetime and Time axis not rendering properly.',
+                    'link' => ''
+                ],
+                6 => [
+                    'text' => 'Fixed issue with WCAG when filters are turned off.',
                     'link' => ''
                 ],
             ]
@@ -1928,8 +1990,14 @@ class WDTTools
             $isPostgreSql = $vendor === Connection::$POSTGRESQL;
 
             if ($isPostgreSql) {
-                $string = pg_escape_string($string);
-                $string = stripslashes($string);
+                if (version_compare(WDT_PHP_SERVER_VERSION, '8.1', '>')){
+                    $connectionPostgreSql = PgSqlConnection::getInstance($connection);
+                    $string = pg_escape_string($connectionPostgreSql, $string);
+                    $string = stripslashes($string);
+                } else {
+                    $string = pg_escape_string($string);
+                    $string = stripslashes($string);
+                }
             }
             if ($isMSSql) {
                 $string = str_replace("'", "''", $string);

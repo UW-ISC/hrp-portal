@@ -24,7 +24,7 @@ class WDTBrowseChartsTable extends WP_List_Table
      */
     public function get_columns()
     {
-        return array(
+        $allColumns = array(
             'cb' => '<input type="checkbox" />',
             'id' => __('ID', 'wpdatatables'),
             'title' => __('Title', 'wpdatatables'),
@@ -33,6 +33,8 @@ class WDTBrowseChartsTable extends WP_List_Table
             'shortcode' => __('Shortcode', 'wpdatatables'),
             'functions' => '',
         );
+
+        return apply_filters('wpdatatables_filter_browse_charts_all_columns', $allColumns, 'chart');
     }
 
     /**
@@ -76,6 +78,8 @@ class WDTBrowseChartsTable extends WP_List_Table
                 $query .= " WHERE title LIKE '%" . sanitize_text_field($_REQUEST['s']) . "%'";
             }
         }
+
+        $query = apply_filters('wpdatatables_filter_browse_charts_count_query', $query, 'chart');
 
         return $wpdb->get_var($query);
     }
@@ -132,7 +136,7 @@ class WDTBrowseChartsTable extends WP_List_Table
         $tables_per_page = get_option('wdtTablesPerPage') ? get_option('wdtTablesPerPage') : 10;
 
         $query .= " LIMIT " . ($paged - 1) * $tables_per_page . ", " . $tables_per_page;
-
+        $query = apply_filters('wpdatatables_filter_browse_charts_query', $query, 'chart');
         return apply_filters('wpdatatables_filter_browse_charts', $wpdb->get_results($query, ARRAY_A));
     }
 
@@ -157,21 +161,28 @@ class WDTBrowseChartsTable extends WP_List_Table
 	                                     href="#"><i class="wpdt-icon-clone"></i></a>';
                 $return_string .= ' <a type="button" 
                                          class="wdt-configure" 
-                                         data-table_id="' . esc_attr($item['id']) . '" 
-                                         data-table_name="' . esc_attr($item['title']) . '" 
+                                         data-chart_id="' . esc_attr($item['id']) . '" 
+                                         data-chart_name="' . esc_attr($item['title']) . '" 
                                          data-toggle="tooltip" title="' . esc_attr__('Configure', 'wpdatatables') . '" 
                                          href="admin.php?page=wpdatatables-chart-wizard&chart_id=' . (int)$item['id'] . '&engine=' . esc_attr($item['engine']) . '"><i class="wpdt-icon-cog"></i></a>';
                 $return_string .= ' <a type="button" 
                                          class="wdt-submit-delete" 
-                                         data-table_id="' . esc_attr($item['id']) . '" 
-                                         data-table_name="' . esc_attr($item['title']) . '" 
+                                         data-chart_id="' . esc_attr($item['id']) . '" 
+                                         data-chart_name="' . esc_attr($item['title']) . '" 
                                          data-toggle="tooltip" title="' . esc_attr__('Delete', 'wpdatatables') . '" 
                                          href="' . wp_nonce_url('admin.php?page=wpdatatables-charts&action=delete&chart_id=' . (int)$item['id'] . '', 'wdtDeleteChartNonce', 'wdtNonce') . '"><i class="wpdt-icon-trash"></i></a></div>';
                 return $return_string;
             case 'id':
             case 'title':
             default:
+            if (has_filter('wpdatatables_browse_tables_column_name_' . $column_name)) {
+                return apply_filters(
+                    'wpdatatables_browse_tables_column_name_' . $column_name,
+                    $item[$column_name], $item, 'chart'
+                );
+            } else {
                 return $item[$column_name];
+            }
         }
     }
 
@@ -420,6 +431,7 @@ class WDTBrowseChartsTable extends WP_List_Table
         $defaultSortingOrder = get_option('wdtSortingOrderBrowseTables');
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
+        $current_url = apply_filters('wpdatatables_filter_browse_charts_order_current_url', $current_url, 'chart');
 
         if (isset($_GET['orderby'])) {
             $current_orderby = $_GET['orderby'];
@@ -439,6 +451,8 @@ class WDTBrowseChartsTable extends WP_List_Table
                 . '<div class="checkbox"><input id="cb-select-all-' . $cb_counter . '" type="checkbox" /></div>';
             $cb_counter++;
         }
+
+        $columns = apply_filters('wpdatatables_filter_browse_charts_column_headers', $columns, 'chart');
 
         foreach ($columns as $column_key => $column_display_name) {
             $class = array('manage-column', "column-$column_key");
@@ -529,6 +543,7 @@ class WDTBrowseChartsTable extends WP_List_Table
         $removable_query_args = wp_removable_query_args();
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg($removable_query_args, $current_url);
+        $current_url = apply_filters('wpdatatables_filter_browse_charts_pagination_page_current_url', $current_url, 'chart');
         $search_term = '';
         if (isset($_REQUEST['s'])) {
             $search_term = sanitize_text_field($_REQUEST['s']);

@@ -700,8 +700,11 @@ var aceEditor = null;
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
         }
 
-        if ($.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1 && $.inArray($(this).val(),['DATE', 'DATETIME', 'TIME']) != -1) {
+        if ($.inArray($(this).val(),['DATE', 'DATETIME']) != -1 && $.inArray($(this).val(),['DATE', 'DATETIME']) != -1) {
             $dateInputBlock.show();
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
         } else {
             $dateInputBlock.hide();
         }
@@ -848,6 +851,13 @@ var aceEditor = null;
         var $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
         var $possibleValuesBlock = $columnBlock.find('.wdt-constructor-possible-values-block');
         var $dateInputBlock = $columnBlock.find('.wdt-constructor-date-input-format-block');
+        var $defaultValuesBlock = $columnBlock.find('.wdt-constructor-default-value-block');
+        var $dataPreviewBlock = $columnBlock.find('.wdt-constructor-data-preview');
+
+        $possibleValuesBlock.show()
+        $defaultValuesBlock.show()
+        $dataPreviewBlock.show()
+        $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled','')
 
         if($(this).val() == 'float'){
             $columnBlock.find('.wdt-constructor-default-column-db-type-value')[0].type = 'text';
@@ -870,6 +880,8 @@ var aceEditor = null;
                     $.inArray($(this).val(),['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
                 $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
                 $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
+                $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
+                $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
             } else {
                 $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
                 $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
@@ -907,8 +919,11 @@ var aceEditor = null;
                 $columnBlock.find('.wdt-constructor-default-value').selectpicker('refresh');
             });
         } else {
-            if ($(this).val() == 'date' || $(this).val() == 'datetime' || $.inArray($typeInDatabase,['DATE', 'DATETIME', 'TIME']) != -1 ) {
+            if ($(this).val() == 'date' || $(this).val() == 'datetime' || $.inArray($typeInDatabase,['DATE', 'DATETIME']) != -1 ) {
                 $dateInputBlock.show();
+                $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
+                $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
+                $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
             } else {
                 $dateInputBlock.hide();
             }
@@ -919,6 +934,7 @@ var aceEditor = null;
                 .replaceWith('<input type="text" class="form-control input-sm wdt-constructor-default-value" value="">');
             $columnBlock.find('.wdt-constructor-default-value')
                 .attr('type', 'text');
+
 
             if ($.inArray($(this).val(), ['date', 'datetime', 'time']) != -1) {
                 $columnBlock.find('.wdt-constructor-default-value')
@@ -946,6 +962,9 @@ var aceEditor = null;
                 $.inArray($typeInDatabase,['INT', 'BIGINT', 'SMALLINT', 'TINYINT']) != -1)){
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').addClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').addClass('hidden')
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').val(wpdatatables_settings.wdtDateFormat);
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').addClass('disabled').attr('disabled', true);
+            $dateInputBlock.find('select.wdt-constructor-date-input-format').selectpicker('refresh');
         } else {
             $columnBlock.find('.wdt-constructor-default-column-db-type-value').removeClass('hidden')
             $columnBlock.find('#wdt-default-column-db-type-value').removeClass('hidden')
@@ -1135,8 +1154,8 @@ var aceEditor = null;
                         type: $(this).find('.wdt-constructor-column-type').selectpicker('val'),
                         predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
                         predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
-                        possible_values: $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|'),
-                        default_value: $(this).find('.wdt-constructor-default-value').val(),
+                        possible_values: $.inArray($(this).find('select.wdt-constructor-default-column-db-type').val(),['TIME', 'DATETIME']) != -1 && $(this).find('.wdt-constructor-possible-values').val() != '' ? $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|') : null,
+                        default_value: null,
                         dateInputFormat: typeof $(this).find('.wdt-constructor-date-input-format').val() !== 'undefined' ?
                             $(this).find('.wdt-constructor-date-input-format').selectpicker('val') : ''
                     });

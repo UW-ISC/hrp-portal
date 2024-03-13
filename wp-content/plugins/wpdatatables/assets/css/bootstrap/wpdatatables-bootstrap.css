@@ -1648,7 +1648,6 @@
 .wpdt-c .text-success {
     color: #67bd6a;
 }
-
 .wpdt-c a.text-success:hover,
 .wpdt-c a.text-success:focus {
     color: #49a84d;
@@ -3830,7 +3829,9 @@
     background-color: #4CAF50;
     border-color: #449d48;
 }
-
+.wpdt-c .wpTableWCAG .btn-success {
+    background-color: #39853c;
+}
 .wpdt-c .btn-success:focus, .wpdt-c .btn-success.focus {
     color: #fff;
     background-color: #3d8b40;
@@ -6026,6 +6027,7 @@ select.input-group-lg > .input-group-btn > .btn {
     background: rgba(243, 216, 0, 0.08);
     color: #756033;
     border-radius: 10px;
+    font-weight: 400;
 }
 
 .wpdt-c.alert-danger hr,
@@ -13757,4 +13759,7 @@ h2.wpdt-c{
 
 .wpDataTableFilterSection .filter_column .text_filter{
     text-overflow: ellipsis !important;
+}
+.wpdt-c.wpTableWCAG .dropdown-header {
+    color: #727272;
 }

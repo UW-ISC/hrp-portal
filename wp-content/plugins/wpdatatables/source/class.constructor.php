@@ -222,13 +222,13 @@ class wpDataTableConstructor
                 'file' => [
                     'editor_type' => 'attachment',
                     'filter_type' => 'link',
-                    'column_type' => 'none',
+                    'column_type' => 'link',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
                 'image' => [
                     'editor_type' => 'attachment',
                     'filter_type' => 'image',
-                    'column_type' => 'none',
+                    'column_type' => 'image',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
                 'int' => [
@@ -256,8 +256,8 @@ class wpDataTableConstructor
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
                 'time'=> [
-                     'editor_type' => 'text',
-                     'filter_type' => 'text',
+                    'editor_type' => 'text',
+                    'filter_type' => 'text',
                     'column_type' => 'string',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ]

@@ -109,7 +109,7 @@ var singleClick = false;
                                                         var position = array.indexOf(valueToFind);
                                                         wdtTransformValueResponsive(transformValueRules[heleprTransformValue].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), 0, oSettings.sTableId);
                                                         transformValueRules[1] = transformValueRules[heleprTransformValue].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
-                                                        heleprTransformValue= 1;
+                                                        heleprTransformValue = 1;
                                                     }
                                                 }
                                             });
@@ -445,6 +445,13 @@ var singleClick = false;
                         }
                         if ($(this).hasClass('datepicker')) {
                             formdata[$(this).data('key')] = $.datepicker.formatDate(tableDescription.datepickFormat, $.datepicker.parseDate(tableDescription.datepickFormat, $(this).val()));
+                        } else if ($(this).hasClass('wdt-timepicker') || $(this).hasClass('wdt-datetimepicker')) {
+                            let pattern = /^.*:[0-9]{2}:[0-9]{1}$/;
+                            if (pattern.test($(this).val())) {
+                                formdata[$(this).data('key')] = $(this).val().replace(/:(\d)$/, ':0$1');
+                            } else {
+                                formdata[$(this).data('key')] = $(this).val();
+                            }
                         } else if ($(this).data('input_type') == 'multi-selectbox') {
                             if ($(this).val()) {
                                 formdata[$(this).data('key')] = $(this).val().join(', ');
@@ -813,23 +820,51 @@ var singleClick = false;
                 }
 
             }
-            if(tableDescription.pagination && tableDescription.table_wcag){
+            if (tableDescription.pagination && tableDescription.table_wcag) {
                 $(tableDescription.selector + '_paginate').addClass('wcag_paginate');
             }
+            if (tableDescription.table_wcag) {
+                $(tableDescription.selector + '_length label').attr('for', tableDescription.tableId + ' length_menu');
+                $(tableDescription.selector + '_length label').prepend('<span class="wpdt-c wpdt-visually-hidden">wpdatatables_frontend_strings.lenghtMenuWCAG</span>')
+                $(tableDescription.selector + '_filter input[type="search"]').attr('aria-label', wpdatatables_frontend_strings.globalSearchWCAG);
+                $(tableDescription.selector + '_filter label').attr('for', tableDescription.tableId + ' search');
+                $(tableDescription.selector + '_filter label').prepend('<span class="wpdt-c wpdt-visually-hidden">wpdatatables_frontend_strings.searchTableWCAG</span>');
 
+            }
             if (tableDescription.tableSkin) {
                 $(tableDescription.selector + '_wrapper .dt-buttons .DTTT_button_export').on('click', function () {
                     $('.dt-button-collection').addClass('wdt-skin-' + tableDescription.tableSkin)
+                    if (tableDescription.table_wcag) {
+                        $('.dt-button-collection.wdt-skin-' + tableDescription.tableSkin).attr('aria-label', wpdatatables_frontend_strings.chooseExportWCAG);
+                        $('.dt-button-collection.wdt-skin-' + tableDescription.tableSkin + ' div').attr('role', 'listbox').attr('aria-label', wpdatatables_frontend_strings.chooseExportWCAG).removeAttr('aria-busy');
+                        $('.dt-button-collection .buttons-excel').attr('role', 'option').removeAttr('aria-controls').removeAttr('tabindex');
+                        $('.dt-button-collection .buttons-csv').attr('role', 'option').removeAttr('aria-controls').removeAttr('tabindex');
+                        $('.dt-button-collection .buttons-copy').attr('role', 'option').removeAttr('aria-controls').removeAttr('tabindex');
+                        $('.dt-button-collection .buttons-pdf').attr('role', 'option').removeAttr('aria-controls').removeAttr('tabindex');
+                    }
                 });
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_colvis').attr('aria-label', wpdatatables_frontend_strings.columnVisibilityWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_spacer').attr('aria-label', wpdatatables_frontend_strings.spacerWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_print').attr('aria-label', wpdatatables_frontend_strings.printTableWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_export').attr('aria-label', wpdatatables_frontend_strings.exportTableWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_new').attr('aria-label', wpdatatables_frontend_strings.newEntryWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_delete').attr('aria-label', wpdatatables_frontend_strings.deleteRowWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_edit').attr('aria-label', wpdatatables_frontend_strings.editRowWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_duplicate').attr('aria-label', wpdatatables_frontend_strings.duplicateRowWCAG).attr('role', 'button');
-                $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_clear_filters').attr('aria-label', wpdatatables_frontend_strings.clearFiltersWCAG).attr('role', 'button');
+                $(tableDescription.selector + '_wrapper .dt-buttons .DTTT_button_colvis').on('click', function () {
+                    $('.dt-button-collection').addClass('wdt-skin-' + tableDescription.tableSkin)
+                    if (tableDescription.table_wcag) {
+                        $('.dt-button-collection.wdt-skin-' + tableDescription.tableSkin).attr('aria-label', wpdatatables_frontend_strings.optionHideWCAG);
+                        $('.dt-button-collection.wdt-skin-' + tableDescription.tableSkin + ' div').attr('role', 'listbox').attr('aria-label', wpdatatables_frontend_strings.optionHideWCAG).removeAttr('aria-busy');
+                        $('.dt-button-collection .buttons-columnVisibility').attr('role', 'option').removeAttr('aria-controls').removeAttr('tabindex');
+                    }
+                });
+                if (tableDescription.table_wcag) {
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_colvis').attr('aria-label', wpdatatables_frontend_strings.columnVisibilityWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_spacer').attr('aria-label', wpdatatables_frontend_strings.spacerWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_print').attr('aria-label', wpdatatables_frontend_strings.printTableWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_export').attr('aria-label', wpdatatables_frontend_strings.exportTableWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_new').attr('aria-label', wpdatatables_frontend_strings.newEntryWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_delete').attr('aria-label', wpdatatables_frontend_strings.deleteRowWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_edit').attr('aria-label', wpdatatables_frontend_strings.editRowWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_duplicate').attr('aria-label', wpdatatables_frontend_strings.duplicateRowWCAG).attr('role', 'button');
+                    $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.DTTT_button_clear_filters').attr('aria-label', wpdatatables_frontend_strings.clearFiltersWCAG).attr('role', 'button');
+                    if (tableDescription.masterDetail) {
+                        $(tableDescription.selector + '_wrapper .dt-buttons .dt-button.master_detail').attr('aria-label', wpdatatables_frontend_strings.masterDetailWCAG).attr('role', 'button');
+                    }
+                }
             }
             /**
              * Show "Show X entries" dropdown
@@ -837,6 +872,18 @@ var singleClick = false;
             if (tableDescription.showRowsPerPage) {
                 if (!(jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.bootstrap-select').length))
                     jQuery(tableDescription.selector + '_wrapper .dataTables_length .length_menu.wdt-selectpicker').selectpicker();
+                if (tableDescription.table_wcag) {
+                    jQuery(tableDescription.selector + '_length .dropdown-menu.open ul').attr('role', 'listbox');
+                    jQuery(tableDescription.selector + '_length .dropdown-menu.open').attr('aria-label', wpdatatables_frontend_strings.rowsPerPageWCAG).attr('aria-controls', tableDescription.tableId).attr('aria-expanded', 'false');
+                    jQuery(tableDescription.selector + '_length .dropdown-menu.open ul li').attr('role', 'option');
+                    jQuery(tableDescription.selector + '_length .dropdown-menu.open ul li a').removeAttr('tabindex').removeAttr('aria-selected').removeAttr('role');
+                    jQuery(tableDescription.selector + ' .dataTables_length .dropdown-menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
+
+                    if (tableDescription.filterInForm) {
+                        jQuery('.wpDataTableFilterSection .filter_column .dropdown-menu.open ul li').attr('role', 'option').attr('aria-required-parent', 'listbox');
+                    }
+                }
+
             }
 
             /**
@@ -855,14 +902,18 @@ var singleClick = false;
                             $('#' + tableDescription.tableId + '_paginate').show();
                         }
                     }
-                    if(tableDescription.table_wcag){
+                    if (tableDescription.table_wcag) {
                         this.fnSettings().oLanguage.oPaginate.sFirst = wpdatatables_frontend_strings.firstPageWCAG;
                         this.fnSettings().oLanguage.oPaginate.sLast = wpdatatables_frontend_strings.lastPageWCAG;
                         this.fnSettings().oLanguage.oPaginate.sNext = wpdatatables_frontend_strings.nextPageWCAG;
                         this.fnSettings().oLanguage.oPaginate.sPrevious = wpdatatables_frontend_strings.previousPageWCAG;
                         $(document).ready(function () {
+                            $('.paginate_button.first').attr('aria-label',  wpdatatables_frontend_strings.firstPageWCAG).attr('role', 'link');
+                            $('.paginate_button.last').attr('aria-label',  + wpdatatables_frontend_strings.lastPageWCAG).attr('role', 'link');
+                            $('.paginate_button.next').attr('aria-label',  + wpdatatables_frontend_strings.nextPageWCAG).attr('role', 'link');
+                            $('.paginate_button.previous').attr('aria-label',  + wpdatatables_frontend_strings.previousPageWCAG).attr('role', 'link');
                             $('#' + tableDescription.tableId + '_paginate').find('span .paginate_button').each(function (index) {
-                                $(this).attr('aria-label', wpdatatables_frontend_strings.pageWCAG + this.text);
+                                $(this).attr('aria-label', wpdatatables_frontend_strings.pageWCAG + this.text).attr('role', 'link');
                             });
                         });
                     }
@@ -912,6 +963,136 @@ var singleClick = false;
                     }
                 }
             });
+            if (tableDescription.table_wcag) {
+                    wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                        sName: 'addFilteredValues',
+                        fn: function (oSettings) {
+                            if (tableDescription.advancedFilterEnabled) {
+                                var arrayofSearchedColumns = [];
+                                var numberOfSearchedColumn = 0;
+                                var numberOfSearchedDateTimeColumn = 0;
+                                var i = 0;
+                                for (i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                                    if (oSettings.aoPreSearchCols[i].sSearch != '') {
+                                        arrayofSearchedColumns.push(i);
+                                        numberOfSearchedColumn++;
+                                    } else if (($(oSettings.aoColumns[i].nTf).attr('data-value-to') != undefined && $(oSettings.aoColumns[i].nTf).attr('data-value-to') != '')
+                                        || ($(oSettings.aoColumns[i].nTf).attr('data-value-from') != '' && $(oSettings.aoColumns[i].nTf).attr('data-value-from') != undefined)) {
+                                        arrayofSearchedColumns.push(i);
+                                        numberOfSearchedColumn++;
+                                        numberOfSearchedDateTimeColumn++;
+                                    } else if ($.inArray(tableDescription.advancedFilterOptions.aoColumns[i].type, ['time-range', 'date-range', 'datetime-range']) !== -1
+                                        && tableDescription.advancedFilterOptions.aoColumns[i].defaultValue !== '') {
+                                        arrayofSearchedColumns.push(i);
+                                        numberOfSearchedColumn++;
+                                        numberOfSearchedDateTimeColumn++;
+                                    } else if (($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != undefined && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != '')
+                                        || ($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != '' && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != undefined)) {
+                                        arrayofSearchedColumns.push(i);
+                                        numberOfSearchedColumn++;
+                                        numberOfSearchedDateTimeColumn++;
+                                    } else if (($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != undefined && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != '')
+                                        || ($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != '' && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != undefined)) {
+                                        arrayofSearchedColumns.push(i);
+                                        numberOfSearchedColumn++;
+                                        numberOfSearchedDateTimeColumn++;
+                                    }
+                                }
+                                oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
+                                oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
+                                if (tableDescription.globalSearch) {
+                                    if ($('.dataTables_filter input[type="search"]').val() != '') {
+                                        oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
+                                        oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
+                                        oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                        oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                                        oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                        oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                                    }
+                                }
+                                if (tableDescription.renderFilter == "header" && !tableDescription.filterInForm) {
+                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'tr th.wpdt_using_wcag_filter span');
+                                } else if (tableDescription.renderFilter == "footer" && !tableDescription.filterInForm) {
+                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, '');
+                                } else if (tableDescription.filterInForm) {
+                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'div.wpDataTableFilterSection div span');
+                                }
+                                $(tableDescription.selector + ' .filter_column .wdt-select-filter .length_menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
+                                $(tableDescription.selector + ' .dataTables_length .dropdown-menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
+                            } else if (tableDescription.globalSearch) {
+                                oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
+                                oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
+                                if ($('.dataTables_filter input[type="search"]').val() != '') {
+                                    oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
+                                    oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
+                                    oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                    oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                                    oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                    oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                                }
+                            }
+                        }
+                    });
+            }
+
+            function addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, thisTable, numberOfSearchedColumn, selector1) {
+                var selector;
+                if (arrayofSearchedColumns.length > 0) {
+                    oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
+                    oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
+
+                    if (numberOfSearchedColumn => 1) {
+                        for (var i = 0; i < numberOfSearchedColumn; i++) {
+                            if (tableDescription.renderFilter == "header" && !tableDescription.filterInForm) {
+                                selector = getElementDataValueTH(selector1 + '[data-index=' + arrayofSearchedColumns[i] + ']');
+                            } else if (tableDescription.filterInForm) {
+                                selector = getElementDataValueParent(selector1 + '[data-index=' + arrayofSearchedColumns[i] + ']');
+                            } else if (tableDescription.renderFilter == "footer" && !tableDescription.filterInForm) {
+                                selector = $(oSettings.aoColumns[arrayofSearchedColumns[i]].nTf);
+                            }
+                            if (i == 0) {
+                                oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_COLUMN_', wpdatatables_frontend_strings.forWCAG + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[0]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG);
+                                oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_DATA_',
+                                    selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
+                                        thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[0]].sSearch + ' ' :
+                                        ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
+                                        + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ');
+                                oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_COLUMN_', wpdatatables_frontend_strings.forWCAG + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[0]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG);
+                                oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_',
+                                    selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
+                                        thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[0]].sSearch + ' ' :
+                                        ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
+                                        + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ');
+                            } else {
+                                oSettings.oLanguage.sInfo += wpdatatables_frontend_strings.andforWCAG + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[i]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG;
+                                oSettings.oLanguage.sInfo += selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
+                                    thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[i]].sSearch + ' ' :
+                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
+                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ';
+                                oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforWCAG + thisTable.fnSettings().aoColumns[arrayofSearchedColumns[i]].sTitle + wpdatatables_frontend_strings.columnSearchWCAG;
+                                oSettings.oLanguage.sInfoEmpty += selector.attr('data-value-to') == undefined && selector.attr('data-value-from') == undefined ?
+                                    thisTable.fnSettings().aoPreSearchCols[arrayofSearchedColumns[i]].sSearch + ' ' :
+                                    ($.inArray(selector.attr('data-value-from'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueFromWCAG + selector.attr('data-value-from') : '')
+                                    + ($.inArray(selector.attr('data-value-to'), ['', undefined]) === -1 ? wpdatatables_frontend_strings.valueToWCAG + selector.attr('data-value-to') : '') + ' ';
+                            }
+                        }
+                        if ($('.dataTables_filter input[type="search"]').val() != '') {
+                            oSettings.oLanguage.sInfo += wpdatatables_frontend_strings.andforGloablWCAG + $('.dataTables_filter input[type="search"]').val();
+                            oSettings.oLanguage.sInfoEmpty += wpdatatables_frontend_strings.andforGloablWCAG + $('.dataTables_filter input[type="search"]').val();
+                        }
+                    }
+                }
+            }
+
+            function getElementDataValueTH(selector) {
+                var closestElement = $(selector).closest('th');
+                return closestElement;
+            }
+
+            function getElementDataValueParent(selector) {
+                var closestElement = $(selector).parent();
+                return closestElement;
+            }
 
             /**
              * Helper function for adding a border around the selected column
@@ -1243,53 +1424,72 @@ var singleClick = false;
                     wpDataTables[tableDescription.tableId].fnDraw();
                 }
             }
+
             /**
              * Transform Value of column
              */
             if (tableDescription.transform_value_columns) {
-                wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
-                    sName: 'updateTransformColumnValue',
-                    fn: function (oSettings) {
-                        var columnNamesArray = [];
-                        for(var k =0; k < oSettings.aoColumns.length; k++){
-                            var columnName = oSettings.aoColumns[k].name;
-                            columnNamesArray.push(columnName);
-                        }
-                        for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
-                            var params = {};
-                            var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
-                            var transformValueRules = {};
-                            transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
-                            for(var k =0; k < oSettings.aoColumns.length; k++){
-                                var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
-                                var nodes = column.nodes();
-                                column.nodes().to$().each(function () {
-                                        if(transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
+                    wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                        sName: 'updateTransformColumnValue',
+                        fn: function (oSettings) {
+                            var columnNamesArray = [];
+                            for (var k = 0; k < oSettings.aoColumns.length; k++) {
+                                var columnName = oSettings.aoColumns[k].name;
+                                columnNamesArray.push(columnName);
+                            }
+                            for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
+                                var params = {};
+                                var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
+                                var transformValueRules = {};
+                                var position = 0;
+                                var checkPosition = false;
+                                transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
+                                for (var k = 0; k < oSettings.aoColumns.length; k++) {
+                                    var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
+                                    var nodes = column.nodes();
+                                    if (!tableDescription.serverSide && oSettings.aiDisplay.length >= oSettings._iDisplayLength && !tableDescription.groupingEnabled) {
+                                        position = parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value) === undefined ? 0 : oSettings.aiDisplayMaster.indexOf(parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value));
+                                        checkPosition = true;
+                                    }
+                                    if(oSettings.aaSorting[0][1] === 'desc' && transformValueRules[0].includes('{' + oSettings.aoColumns[oSettings.aaSorting[0][0]].name + '.value}') && checkPosition && !tableDescription.serverSide) {
+                                        if (position + 1 === oSettings.aiDisplay.length) {
+                                            position = 0;
+                                        }
+                                    };
+                                    column.nodes().to$().each(function () {
+                                        if (transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
                                             for (var m = 0; m < col.data().length; m++) {
+                                                if(tableDescription.serverSide) {
+                                                    position = m;
+                                                }
+                                                if(!tableDescription.serverSide && m === 0 && position >= oSettings.aiDisplay.length) {
+                                                    position = m;
+                                                }
                                                 if (m != 0) {
-                                                    if(transformValueRules[m + 1] != null){
-                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
-                                                    }else {
-                                                        wdtTransformValue(transformValueRules[m].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[m - 1], col.data()[m] === null ? '' : col.data()[m]);
+                                                    if (transformValueRules[m + 1] != null) {
+                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
+                                                    } else {
+                                                        wdtTransformValue(transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]);
                                                     }
                                                 } else {
                                                     if (transformValueRules[m + 1] != null) {
-                                                        wdtTransformValue(transformValueRules[m+1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m+1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
+                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
                                                     } else {
-                                                        wdtTransformValue(transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[m] === null ? '' : col.data()[m]);
+                                                        wdtTransformValue(transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
                                                     }
                                                 }
+                                                position++;
                                             }
                                         }
-                                });
+                                    });
+                                }
                             }
                         }
-                    }
-                });
+                    });
                 if (!tableDescription.serverSide) {
                     wpDataTables[tableDescription.tableId].fnDraw();
                 }
@@ -1549,7 +1749,7 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-                    if(tableDescription.table_wcag){
+                    if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.edit_entry);
@@ -1638,7 +1838,7 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-                    if(tableDescription.table_wcag){
+                    if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.add_new_entry);
@@ -1735,7 +1935,7 @@ var singleClick = false;
                     $('.wpDataTablesPopover.editTools').hide();
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-                    if(tableDescription.table_wcag){
+                    if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
                     modal.find('.modal-title').html(wpdatatables_frontend_strings.duplicate_entry);
@@ -1851,7 +2051,7 @@ var singleClick = false;
                     var modal = $('#wdt-delete-modal');
 
                     modal.addClass('wdt-skin-' + tableDescription.tableSkin);
-                    if(tableDescription.table_wcag){
+                    if (tableDescription.table_wcag) {
                         modal.addClass('wpTableWCAG');
                     }
                     modal.find('.modal-footer').html('');
@@ -2319,10 +2519,12 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
         wdtApplyCellAction(element, conditionalFormattingRules.action, conditionalFormattingRules.setVal);
     }
 }
+
 function wdtTransformValue(trasnsformValue, params, element, m, tableID) {
     let index = element.index() + 1;
     jQuery(element.closest('table#' + tableID + '.wpDataTable').find('tbody td:nth-child(' + index + ')')[m]).html(trasnsformValue);
 }
+
 function wdtTransformValueResponsive(trasnsformValue, params, element, m, tableID) {
     let index = element.index() + 1;
     jQuery(element.find('.columnValue')[m]).html(trasnsformValue);

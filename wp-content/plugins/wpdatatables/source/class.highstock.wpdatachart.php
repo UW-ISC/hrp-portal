@@ -100,7 +100,7 @@ class WdtHighstockChart extends WdtHighchartsChart
                         // Format for datetime-type axis
                         $formattedDate = DateTime::createFromFormat(
                             get_option('wdtDateFormat') . ' ' . get_option('wdtTimeFormat'),
-                            $row[0])->format('d-m-Y');
+                            $row[0])->format('d-m-Y H:i:s');
                         $seriesEntry['data'][] = array(strtotime($formattedDate) * 1000, $row[$i]);
                     }
                 }
