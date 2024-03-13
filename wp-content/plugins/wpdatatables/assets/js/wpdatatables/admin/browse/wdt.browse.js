@@ -6,7 +6,7 @@ var duplicate_table_id = '';
         /**
          * Delete item action alert
          */
-        $('.wdt-submit-delete').click(function(e) {
+        $(document).on('click','.wdt-submit-delete', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -22,7 +22,7 @@ var duplicate_table_id = '';
         /**
          * Search tables and charts in backend
          */
-        $("input#search_id-search-input").on("keyup input", _.debounce(function() {
+        $(document).on("keyup input","input#search_id-search-input", _.debounce(function() {
                 $("button#search-submit").click();
             }, 800)
         );
@@ -30,7 +30,7 @@ var duplicate_table_id = '';
         /**
          * Bulk action alert
          */
-        $('#doaction, #doaction2').click( function(e) {
+        $(document).on('click','#doaction, #doaction2',function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -54,7 +54,7 @@ var duplicate_table_id = '';
         /**
          * Display a duplicate table modal
          */
-        $('.wdt-duplicate-table').click(function(e) {
+        $(document).on('click','.wdt-duplicate-table', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 
@@ -104,7 +104,7 @@ var duplicate_table_id = '';
         /**
          * Display a duplicate chart modal
          */
-        $('.wdt-duplicate-chart').click(function(e) {
+        $(document).on('click','.wdt-duplicate-chart', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
 

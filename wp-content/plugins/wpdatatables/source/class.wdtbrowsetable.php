@@ -91,7 +91,7 @@ class WDTBrowseTable extends WP_List_Table
                 array_slice($allColumns, 3, count($allColumns) - 1, true);
         }
 
-        return $allColumns;
+        return apply_filters('wpdatatables_filter_browse_tables_all_columns', $allColumns, 'table');
     }
 
     /**
@@ -162,6 +162,9 @@ class WDTBrowseTable extends WP_List_Table
                     $query .= " OR t.table_description LIKE '%" . sanitize_textarea_field($_REQUEST['s']) . "%'";
             }
         }
+
+        $query = apply_filters('wpdatatables_filter_browse_tables_count_query', $query, 'table');
+
         $count = $wpdb->get_var($query);
         return $count;
     }
@@ -224,6 +227,7 @@ class WDTBrowseTable extends WP_List_Table
 
         $tablesPerPage = get_option('wdtTablesPerPage') ? get_option('wdtTablesPerPage') : 10;
         $query .= " LIMIT " . ($paged - 1) * $tablesPerPage . ", " . $tablesPerPage;
+        $query = apply_filters('wpdatatables_filter_browse_tables_query', $query, 'table');
         $allTables = $wpdb->get_results($query, ARRAY_A);
         $allTables = apply_filters('wpdatatables_filter_browse_tables', $allTables);
 
@@ -323,7 +327,15 @@ class WDTBrowseTable extends WP_List_Table
             case 'title':
             case 'table_description':
             default:
-                return $item[$column_name];
+                if (has_filter('wpdatatables_browse_tables_column_name_' . $column_name)) {
+                    return apply_filters(
+                        'wpdatatables_browse_tables_column_name_' . $column_name,
+                        $item[$column_name], $item, 'table'
+                    );
+                } else {
+                    return $item[$column_name];
+                }
+
                 break;
         }
     }
@@ -429,6 +441,7 @@ class WDTBrowseTable extends WP_List_Table
         $defaultSortingOrder = get_option('wdtSortingOrderBrowseTables');
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
+        $current_url = apply_filters('wpdatatables_filter_browse_tables_order_current_url', $current_url, 'table');
 
         if (isset($_GET['orderby'])) {
             $current_orderby = $_GET['orderby'];
@@ -448,6 +461,8 @@ class WDTBrowseTable extends WP_List_Table
                 . '<div class="checkbox"><input id="cb-select-all-' . $cb_counter . '" type="checkbox" /></div>';
             $cb_counter++;
         }
+
+        $columns = apply_filters('wpdatatables_filter_browse_tables_column_headers', $columns, 'table');
 
         foreach ($columns as $column_key => $column_display_name) {
             $class = array('manage-column', "column-$column_key");
@@ -563,6 +578,7 @@ class WDTBrowseTable extends WP_List_Table
         $removable_query_args = wp_removable_query_args();
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg($removable_query_args, $current_url);
+        $current_url = apply_filters('wpdatatables_filter_browse_tables_pagination_page_current_url', $current_url, 'table');
         $search_term = '';
         if( isset($_REQUEST['s'] ) ){
             $search_term = sanitize_text_field($_REQUEST['s']);

@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'tmsplugins/wpdatatables',
-        'pretty_version' => '6.1',
-        'version' => '6.1.0.0',
-        'reference' => 'cb5c245a522efc976dee98f591a7e204f731f91c',
+        'pretty_version' => '6.2.1',
+        'version' => '6.2.1.0',
+        'reference' => 'bed900613899e61135199ec151d35793274d8f81',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -137,9 +137,9 @@
             'dev_requirement' => false,
         ),
         'tmsplugins/wpdatatables' => array(
-            'pretty_version' => '6.1',
-            'version' => '6.1.0.0',
-            'reference' => 'cb5c245a522efc976dee98f591a7e204f731f91c',
+            'pretty_version' => '6.2.1',
+            'version' => '6.2.1.0',
+            'reference' => 'bed900613899e61135199ec151d35793274d8f81',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

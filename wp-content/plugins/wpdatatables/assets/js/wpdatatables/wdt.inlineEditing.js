@@ -447,7 +447,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
 
                     // Load all possible values when the selectpicker is shown
                     $(obj.params.editSelector).on('show.bs.select', function (e) {
-                        if(!tableDescription.advancedFilterOptions.aoColumns[obj.params.columnId].searchInSelectBoxEditing && $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox').length){
+                        if(!tableDescription.advancedEditingOptions.aoColumns[obj.params.columnId].searchInSelectBoxEditing && $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox').length){
                             $(obj.params.editSelector).closest('.bootstrap-select').find('.bs-searchbox')[0].style.display = 'none';
                         }
                         setTimeout(function () {
@@ -646,7 +646,7 @@ var inlineEditClass = function (tableDescription, dataTableOptions, $) {
 
                 // Add editing class
                 if (!$(this).hasClass("dataTables_empty")) {
-                    $(this).addClass('editing');
+                    $(this).addClass('editing').attr('aria-label', wpdatatables_inline_strings.inlineEditing + $(this)[0].innerText);
                 }
 
                 // Set variables

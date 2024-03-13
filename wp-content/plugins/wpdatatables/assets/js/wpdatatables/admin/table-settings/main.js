@@ -1538,9 +1538,9 @@
                 for (var i in wpdatatable_config.columns) {
                     wpdatatable_config.columns[i].groupColumn = 0;
                     if (wpdatatable_config.columns[i].type == 'formula') {
-                        wpdatatable_config.columns[i].calculateTotal =  wpdatatable_config.columns[i].calculateTotal;
+                        wpdatatable_config.columns[i].calculateTotal = wpdatatable_config.columns[i].calculateTotal;
                         wpdatatable_config.columns[i].calculateAvg = wpdatatable_config.columns[i].calculateAvg;
-                        wpdatatable_config.columns[i].calculateMin =  wpdatatable_config.columns[i].calculateMin;
+                        wpdatatable_config.columns[i].calculateMin = wpdatatable_config.columns[i].calculateMin;
                         wpdatatable_config.columns[i].calculateMax = wpdatatable_config.columns[i].calculateMax;
                     }
                     if (wpdatatable_config.columns[i].possibleValuesType == 'foreignkey') {
@@ -1764,8 +1764,8 @@
          * Apply the changes to column in the quickaccess modal
          */
         $('#wdt-apply-columns-list').click(function (e) {
-                $('#wdt-columns-list-modal').modal('hide');
-                $('button.wdt-apply:eq(0)').click();
+            $('#wdt-columns-list-modal').modal('hide');
+            $('button.wdt-apply:eq(0)').click();
         });
 
         /**
@@ -1828,7 +1828,7 @@
                             $('div.wdt-formula-result-preview').fadeInDown();
                         }
                         $('#wdt-formula-editor-modal .wdt-preload-layer').animateFadeOut();
-                    }else {
+                    } else {
                         if (wpdatatable_config.currentOpenColumn == null) {
                             // Adding a new column
                             var columnName = wpdatatable_config.generateFormulaName();

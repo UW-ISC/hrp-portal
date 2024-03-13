@@ -149,9 +149,9 @@ class WDTNestedJson
     public function prepareEndPointArgs($tableID)
     {
         $endPointArgs = array(
-            'method'    => strtoupper($this->getMethod()),
+            'method' => strtoupper($this->getMethod()),
             'sslverify' => false,
-            'timeout'   => 100
+            'timeout' => 100
         );
 
         if ($this->getUsername() !== '' && $this->getPassword() !== '') {
@@ -159,10 +159,10 @@ class WDTNestedJson
         }
 
         if ($this->getCustomHeaders() !== []) {
-            $customHeaders =  $this->getCustomHeaders();
+            $customHeaders = $this->getCustomHeaders();
             if (!empty($customHeaders)) {
                 foreach ($customHeaders as $customHeader) {
-                    $headerKey   = $customHeader->setKeyName;
+                    $headerKey = $customHeader->setKeyName;
                     $headerValue = $customHeader->setKeyValue;
                     $endPointArgs['headers'][$headerKey] = $headerValue;
                 }
@@ -214,7 +214,7 @@ class WDTNestedJson
     public function getResponse($tableID)
     {
         $endPointArgs = $this->prepareEndPointArgs($tableID);
-        $response = wp_remote_request($this->getUrl(), $endPointArgs);;
+        $response = wp_remote_request($this->getUrl(), $endPointArgs);
         if (is_wp_error($response) || !in_array(intval($response['response']['code']), array(200, 201), true)) {
             return wp_remote_retrieve_response_message($response);
         }
@@ -298,7 +298,7 @@ class WDTNestedJson
                 }
                 $tempData[$filteredDataKey] = $value;
             }
-            if(!empty($tempData))
+            if (!empty($tempData))
                 $data[] = $tempData;
         } else {
             foreach ($filteredDataByChosenRoot as $filteredData) {
@@ -322,7 +322,7 @@ class WDTNestedJson
                     }
                     $tempData[$key] = $value;
                 }
-                if(!empty($tempData))
+                if (!empty($tempData))
                     $data[] = $tempData;
             }
         }

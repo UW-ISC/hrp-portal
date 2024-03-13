@@ -213,25 +213,33 @@ class WPDataTable
         $this->_wordWrap = $wordWrap;
     }
 
-    public function isFixedColumns() {
+    public function isFixedColumns()
+    {
         return $this->_fixedColumns;
     }
 
-    public function setFixedColumns($fixedcolumns) {
+    public function setFixedColumns($fixedcolumns)
+    {
         $this->_fixedColumns = $fixedcolumns;
     }
-    public function getLeftFixedColumnsNumber() {
+
+    public function getLeftFixedColumnsNumber()
+    {
         return $this->_fixedLeftColumnsNumber;
     }
 
-    public function setLeftFixedColumnsNumber($fixedleftcolumns) {
+    public function setLeftFixedColumnsNumber($fixedleftcolumns)
+    {
         $this->_fixedLeftColumnsNumber = $fixedleftcolumns;
     }
-    public function getRightFixedColumnsNumber() {
+
+    public function getRightFixedColumnsNumber()
+    {
         return $this->_fixedRightColumnsNumber;
     }
 
-    public function setRightFixedColumnsNumber($fixedrightcolumns) {
+    public function setRightFixedColumnsNumber($fixedrightcolumns)
+    {
         $this->_fixedRightColumnsNumber = $fixedrightcolumns;
     }
 
@@ -781,8 +789,9 @@ class WPDataTable
 
     public function getIdColumnKey()
     {
-        return $this->_idColumnKey ;
+        return $this->_idColumnKey;
     }
+
     /**
      * @return boolean
      */
@@ -1226,6 +1235,7 @@ class WPDataTable
     {
         $this->_simple_template_id = $simple_template_id;
     }
+
     public function __construct($connection = null)
     {
         //[<-- Full version -->]//
@@ -1569,9 +1579,12 @@ class WPDataTable
     {
         $this->_conditionalFormattingColumns[] = $column;
     }
-    public function addTransformValueColumn($column){
+
+    public function addTransformValueColumn($column)
+    {
         $this->_transformValueColumns[] = $column;
     }
+
     public function getTransformValueColumn()
     {
         return $this->_transformValueColumns;
@@ -2118,11 +2131,11 @@ class WPDataTable
                 }
 
             if (in_array($columnKey, $this->getAvgColumns())) {
-                $filteredRowsNumber = count(array_filter(array_column($this->getDataRows(),$columnKey)));
+                $filteredRowsNumber = count(array_filter(array_column($this->getDataRows(), $columnKey)));
                 $notNullRowNumber = $filteredRowsNumber !== 0 ? $filteredRowsNumber : count($this->getDataRows());
                 $this->_aggregateFuncsRes['avg'][$columnKey] = $this->_aggregateFuncsRes['sum'][$columnKey] / $notNullRowNumber;
             }
-         } //important
+        } //important
     }
 
     /**
@@ -2175,6 +2188,7 @@ class WPDataTable
                 $date_format = str_replace('d', '%d', $date_format);
                 $date_format = str_replace('F', '%M', $date_format);
                 $date_format = str_replace('j', '%d', $date_format);
+                $date_format = str_replace('D', '%W', $date_format);
             }
             if ($filterType == 'datetime-range'
                 || $filterType == 'time-range'
@@ -2218,6 +2232,14 @@ class WPDataTable
                     return "CONVERT($type, '$value', 10)";
                 case ('d M Y'):
                     return "CONVERT($type, '$value', 106)";
+                case ('M d, Y'):
+                    return "CONVERT($type, '$value', 107)";
+                case ('j F Y'):
+                    return "CONVERT($type, '$value', 106)";
+                case ('D, F j, Y'):
+                    return "CONVERT($type, '$value', 107)";
+                case ('D, M j, Y'):
+                    return "CONVERT($type, '$value', 107)";
                 case ('M Y'):
                     return "CONVERT($type, '$value', 23)";
                 case ('F Y'):
@@ -2242,6 +2264,7 @@ class WPDataTable
                 $date_format = str_replace('d', 'DD', $date_format);
                 $date_format = str_replace('F', 'Month', $date_format);
                 $date_format = str_replace('j', 'DD', $date_format);
+                $date_format = str_replace('D', 'Day', $date_format);
             }
 
             if ($filterType == 'datetime-range'
@@ -2251,6 +2274,7 @@ class WPDataTable
                 $date_format = str_replace('H', 'HH24', $date_format);
                 $date_format = str_replace('h:', 'HH12:', $date_format);
                 $date_format = str_replace('i', 'MI', $date_format);
+                $date_format = str_replace('s', 'SS', $date_format);
 
                 if (substr($value, -2) === 'AM') {
                     $date_format = str_replace('A', 'AM', $date_format);
@@ -2865,19 +2889,19 @@ class WPDataTable
                     $output['avgFooterColumns'] = $this->getAvgFooterColumns();
 
                     foreach ($output['sumAvgColumns'] as $key => $columnTitle) {
-                        if (isset($sumColumns[$key]) && $wdtParameters['data_types'][$columnTitle] == 'formula'){
+                        if (isset($sumColumns[$key]) && $wdtParameters['data_types'][$columnTitle] == 'formula') {
                             $formulaColumnTitle = $sumColumns[$key];
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
                                 $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(', '1/cos(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(', '1/sin(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
-                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
                             $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
-                            foreach ($headers as $header_key=>$header_value){
-                                if (strpos($formula,$header_value) !== false){
+                            foreach ($headers as $header_key => $header_value) {
+                                if (strpos($formula, $header_value) !== false) {
                                     $formula = str_replace($header_value, '  IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
                                 }
                             }
@@ -2889,7 +2913,7 @@ class WPDataTable
                                 )
                             );
                         } else {
-                            if ($wdtParameters['data_types'][$columnTitle] != 'formula'){
+                            if ($wdtParameters['data_types'][$columnTitle] != 'formula') {
                                 array_unshift($functionsParsedQuery['SELECT'], array(
                                         'expr_type' => 'colref',
                                         'base_expr' => 'SUM(' . $leftSysIdentifier . $columnTitle . $rightSysIdentifier . ') 
@@ -2901,7 +2925,7 @@ class WPDataTable
                         }
                     }
                     $lastElementInSelect = end($functionsParsedQuery['SELECT']);
-                    foreach ($functionsParsedQuery['SELECT'] as $selectKeys=>$selectValues){
+                    foreach ($functionsParsedQuery['SELECT'] as $selectKeys => $selectValues) {
                         $functionsParsedQuery['SELECT'][$selectKeys]['delim'] = ',';
                         if ($selectValues == $lastElementInSelect)
                             $functionsParsedQuery['SELECT'][$selectKeys]['delim'] = '';
@@ -2933,21 +2957,21 @@ class WPDataTable
                         $output['sumColumnsValues'][$columnTitle] = $colObjs[$columnTitle]->returnCellValue($sumRow[$columnTitle]);
                     }
                     foreach ($this->getAvgColumns() as $columnTitle) {
-                        if ($wdtParameters['data_types'][$columnTitle] == 'formula'){
+                        if ($wdtParameters['data_types'][$columnTitle] == 'formula') {
                             $functionsParsedQuery['SELECT'] = [];
                             $formulaColumnTitle = $columnTitle;
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(', '1/cos(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(', '1/sin(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
-                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
                             $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
-                            foreach ($headers as $header_key=>$header_value){
-                                if (strpos($formula,$header_value) !== false){
-                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                            foreach ($headers as $header_key => $header_value) {
+                                if (strpos($formula, $header_value) !== false) {
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
                                 }
                             }
                             array_unshift($functionsParsedQuery['SELECT'], array(
@@ -3006,17 +3030,17 @@ class WPDataTable
                         if ($wdtParameters['data_types'][$columnTitle] == 'formula') {
                             $formulaColumnTitle = $minColumns[$key];
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(', '1/cos(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(', '1/sin(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
-                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
                             $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
-                            foreach ($headers as $header_key=>$header_value){
-                                if (strpos($formula,$header_value) !== false){
-                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                            foreach ($headers as $header_key => $header_value) {
+                                if (strpos($formula, $header_value) !== false) {
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
                                 }
                             }
                             array_unshift($functionsParsedQuery['SELECT'], array(
@@ -3034,7 +3058,7 @@ class WPDataTable
                                     'delim' => ','
                                 )
                             );
-                      }
+                        }
 
                         if ($columnTitle === end($output['minColumns'])) {
                             $functionsParsedQuery['SELECT'][$key]['delim'] = '';
@@ -3072,20 +3096,20 @@ class WPDataTable
                     $output['maxColumns'] = $this->getMaxColumns();
                     $output['maxFooterColumns'] = $this->getMaxFooterColumns();
                     foreach ($output['maxColumns'] as $key => $columnTitle) {
-                        if ($wdtParameters['data_types'][$columnTitle] == 'formula'){
+                        if ($wdtParameters['data_types'][$columnTitle] == 'formula') {
                             $formulaColumnTitle = $maxColumns[$key];
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'sec(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(','1/cos(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('sec(', '1/cos(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
                             if (strpos($wdtParameters['columnFormulas'][$formulaColumnTitle], 'csc(') !== false) {
-                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(','1/sin(',$wdtParameters['columnFormulas'][$formulaColumnTitle]);
+                                $wdtParameters['columnFormulas'][$formulaColumnTitle] = str_replace('csc(', '1/sin(', $wdtParameters['columnFormulas'][$formulaColumnTitle]);
                             }
-                            $headersInFormula = WDTTools::getColHeadersInFormula( $wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
+                            $headersInFormula = WDTTools::getColHeadersInFormula($wdtParameters['columnFormulas'][$formulaColumnTitle], array_keys($colObjs));
                             $headers = WDTTools::sanitizeHeaders($headersInFormula);
                             $formula = str_replace(array('$', '_', '&'), '', strtr($wdtParameters['columnFormulas'][$formulaColumnTitle], $headers));
-                            foreach ($headers as $header_key=>$header_value){
-                                if (strpos($formula,$header_value) !== false){
-                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ',$formula);
+                            foreach ($headers as $header_key => $header_value) {
+                                if (strpos($formula, $header_value) !== false) {
+                                    $formula = str_replace($header_value, ' IF(' . $header_key . ' IS NULL, 0,' . $header_key . ') ', $formula);
                                 }
                             }
                             array_unshift($functionsParsedQuery['SELECT'], array(
@@ -3287,12 +3311,12 @@ class WPDataTable
                                     $res_row
                                 );
                             if ($formulaVal == 0) $formulaVal = null;
-                                $row[$dataColumn_key] = apply_filters(
-                                    'wpdatatables_filter_cell_output',
-                                    $colObjs[$dataColumn_key]->returnCellValue($formulaVal),
-                                    $this->_wpId,
-                                    $dataColumn_key
-                                );
+                            $row[$dataColumn_key] = apply_filters(
+                                'wpdatatables_filter_cell_output',
+                                $colObjs[$dataColumn_key]->returnCellValue($formulaVal),
+                                $this->_wpId,
+                                $dataColumn_key
+                            );
                         } catch (Exception $e) {
                             $row[$dataColumn_key] = 0;
                         }
@@ -4085,7 +4109,7 @@ class WPDataTable
 
         $res = $parser->solve($formula, $vars);
         $err = error_get_last();
-        if(is_array($err) && strpos($err['message'], 'Undefined') !== false){
+        if (is_array($err) && strpos($err['message'], 'Undefined') !== false) {
             $res = __('Unable to calculate', 'wpdatatables');
         }
         return $res;
@@ -4120,7 +4144,9 @@ class WPDataTable
 
         return $result;
     }
-    public function checkFormulaPreview($formula) {
+
+    public function checkFormulaPreview($formula)
+    {
         $headers = array();
         $headersInFormula = $this->detectHeadersInFormula($formula);
         $headers = WDTTools::sanitizeHeaders($headersInFormula);
@@ -4133,7 +4159,7 @@ class WPDataTable
                 for ($i = 0; $i < $count; $i++) {
                     $res_arr[] = self::solveFormula($formula, $headers, $this->_dataRows[$i]);
                 }
-                if($res_arr[0] == 'Unable to calculate'){
+                if ($res_arr[0] == 'Unable to calculate') {
                     $result = __('Unable to calculate', 'wpdatatables');
                 } else {
                     $result = __('Formula is good', 'wpdatatables');
@@ -4467,8 +4493,8 @@ class WPDataTable
             isset($advancedSettings->pdfPageOrientation) ? $this->setPdfPageOrientation($advancedSettings->pdfPageOrientation) : $this->setPdfPageOrientation('portrait');
             isset($advancedSettings->showTableToolsIncludeHTML) ? $this->setTableToolsIncludeHTML($advancedSettings->showTableToolsIncludeHTML) : $this->setTableToolsIncludeHTML(false);
             isset($advancedSettings->showTableToolsIncludeTitle) ? $this->setTableToolsIncludeTitle($advancedSettings->showTableToolsIncludeTitle) : $this->setTableToolsIncludeTitle(false);
-	        isset($advancedSettings->show_table_description) ? $this->setShowDescription($advancedSettings->show_table_description) : $this->setShowDescription(false);
-	        isset($advancedSettings->table_description) ? $this->setDescription($advancedSettings->table_description) : $this->setDescription('');
+            isset($advancedSettings->show_table_description) ? $this->setShowDescription($advancedSettings->show_table_description) : $this->setShowDescription(false);
+            isset($advancedSettings->table_description) ? $this->setDescription($advancedSettings->table_description) : $this->setDescription('');
             isset($advancedSettings->fixed_columns) ? $this->setFixedColumns($advancedSettings->fixed_columns) : $this->setFixedColumns(false);
             isset($advancedSettings->fixed_left_columns_number) ? $this->setLeftFixedColumnsNumber($advancedSettings->fixed_left_columns_number) : $this->setLeftFixedColumnsNumber(0);
             isset($advancedSettings->fixed_right_columns_number) ? $this->setRightFixedColumnsNumber($advancedSettings->fixed_right_columns_number) : $this->setRightFixedColumnsNumber(0);
@@ -4505,8 +4531,8 @@ class WPDataTable
             $this->setPdfPageOrientation('portrait');
             $this->setTableToolsIncludeHTML(false);
             $this->setTableToolsIncludeTitle(false);
-	        $this->setShowDescription(false);
-	        $this->setDescription('');
+            $this->setShowDescription(false);
+            $this->setDescription('');
             $this->setFixedColumns(false);
             $this->setLeftFixedColumnsNumber(0);
             $this->setRightFixedColumnsNumber(0);
@@ -4530,6 +4556,7 @@ class WPDataTable
         do_action('wdt_extend_wpdatatable_object', $this, $tableData);
 
     }
+
     /**
      * Helper method that prepares the rendering rules
      *
@@ -4563,7 +4590,7 @@ class WPDataTable
                 $this->addConditionalFormattingColumn($column->orig_header);
             }
 
-            if(isset($column->transformValueText) && $column->transformValueText != ''){
+            if (isset($column->transformValueText) && $column->transformValueText != '') {
                 $this->getColumn($column->orig_header)->setTransformValueText($column->transformValueText);
                 $this->addTransformValueColumn($column->orig_header);
             }
@@ -4869,15 +4896,15 @@ class WPDataTable
                 );
         }
         $obj->dataTableParams->fixedColumns = false;
-        if($this->isFixedColumns()){
+        if ($this->isFixedColumns()) {
             $obj->dataTableParams->fixedColumns = new stdClass();
             $obj->dataTableParams->fixedColumns->left = 1;
-            if ($this->getLeftFixedColumnsNumber() !== 1 )
-                if($this->getLeftFixedColumnsNumber() === 0 && $this->getRightFixedColumnsNumber() === 0) $obj->dataTableParams->fixedColumns->left=1;
+            if ($this->getLeftFixedColumnsNumber() !== 1)
+                if ($this->getLeftFixedColumnsNumber() === 0 && $this->getRightFixedColumnsNumber() === 0) $obj->dataTableParams->fixedColumns->left = 1;
                 else $obj->dataTableParams->fixedColumns->left = $this->getLeftFixedColumnsNumber();
             if ($this->getRightFixedColumnsNumber() !== 0)
-                if($this->getLeftFixedColumnsNumber() === 0) $obj->dataTableParams->fixedColumns->left=0;
-                $obj->dataTableParams->fixedColumns->right = $this->getRightFixedColumnsNumber();
+                if ($this->getLeftFixedColumnsNumber() === 0) $obj->dataTableParams->fixedColumns->left = 0;
+            $obj->dataTableParams->fixedColumns->right = $this->getRightFixedColumnsNumber();
         }
 
         if ($this->getInterfaceLanguage()) {
@@ -5460,12 +5487,15 @@ class WPDataTable
                 }
             }
         }
+        $tableId =(int)$tableId;
 
-        $wpdb->delete("{$wpdb->prefix}wpdatatables", array('id' => (int)$tableId));
-        $wpdb->delete("{$wpdb->prefix}wpdatatables_columns", array('table_id' => (int)$tableId));
-        $wpdb->delete("{$wpdb->prefix}wpdatatables_rows", array('table_id' => (int)$tableId));
-        $wpdb->delete("{$wpdb->prefix}wpdatatables_cache", array('table_id' => (int)$tableId));
-        $wpdb->delete("{$wpdb->prefix}wpdatacharts", array('wpdatatable_id' => (int)$tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatatables", array('id' => $tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatatables_columns", array('table_id' => $tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatatables_rows", array('table_id' => $tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatatables_cache", array('table_id' => $tableId));
+        $wpdb->delete("{$wpdb->prefix}wpdatacharts", array('wpdatatable_id' => $tableId));
+
+        do_action('wpdatatables_after_delete_tables', $tableId, 'table');
 
         return true;
     }

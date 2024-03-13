@@ -2643,7 +2643,7 @@ div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-columnVis
 }
 .wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper tr a,
 .wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper .master_detail_column_btn{
-    color: #25d0ff;
+    color: #13809d;
 }
 .wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable thead th.sorting_asc,
 .wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable thead th.sorting_desc{
@@ -2657,4 +2657,35 @@ div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-columnVis
 }
 .wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .bootstrap-select>.dropdown-toggle.bs-placeholder{
     color: #6e6e6e;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .modal-content .modal-footer #wdt-checkbox-filter-close{
+    color: #116b60 !important;
+}
+.wpdt-c #wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .wdt_checkbox_option label {
+    color: #ffffff;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li.selected a span.text{
+    color: #20c2ae;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-ok-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-ok-edit-button{
+    color: #116b60;
+}
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito a.dt-button.buttons-excel span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito a.dt-button.buttons-csv span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito a.dt-button.buttons-copy span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito a.dt-button.buttons-pdf span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-excel span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-csv span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-copy span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG div.dt-button-collection.wdt-skin-dark-mojito button.dt-button.buttons-pdf span{
+    color: #8c95a9;
+}
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-menu li.selected span,
+#wdt-filter-widget .wdt-skin-dark-mojito.wpTableWCAG .wpDataTableFilterBox .wpDataTableFilterSection .bootstrap-select .dropdown-menu li.selected span,
+.wpdt-c.wdt-skin-dark-mojito.wpTableWCAG .wpDataTablesWrapper table.wpDataTable .bootstrap-select .dropdown-menu li.selected span,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark-mojito.wpTableWCAG .bootstrap-select .dropdown-menu li.selected span {
+    color: #507b77;
 }

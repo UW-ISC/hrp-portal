@@ -7,7 +7,9 @@
     <div class="container">
 
         <!-- .row -->
-        <div class="row">
+        <div class="row" style="display: flex">
+
+            <?php do_action('wpdatatables_add_browse_table_card'); ?>
 
             <!-- .card .wdt-browse-table -->
             <div class="card wdt-browse-table">

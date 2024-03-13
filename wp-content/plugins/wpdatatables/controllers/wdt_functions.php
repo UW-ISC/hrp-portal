@@ -362,6 +362,8 @@ function wdtActivationCreateTables()
         update_option('wdtBootstrapUpdateNotice', 'yes' );
     }
     delete_option('wdtGeneratedTablesCount');
+
+    do_action('wpdatatables_after_activation_method');
 }
 
 function wdtDeactivation()
@@ -454,6 +456,8 @@ function wdtUninstallDelete()
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatacharts");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_rows");
         $wpdb->query("DROP TABLE IF EXISTS {$wpdb->prefix}wpdatatables_cache");
+
+        do_action('wpdatatables_after_uninstall_method');
     }
 }
 
@@ -595,7 +599,7 @@ function wdtHideUpdateModal()
 }
 
 add_action('wp_ajax_wdtHideUpdateModal', 'wdtHideUpdateModal');
-function is_plugin_installed($plugin_path) {
+function wdtIsPluginInstalled($plugin_path) {
     $plugins_dir = WP_PLUGIN_DIR;
     $plugin_file = $plugins_dir . '/' . $plugin_path;
 
@@ -623,7 +627,7 @@ function wdtInstalledPluginsAmeliaPromotion()
         if (is_plugin_active($plugin)) {
             $installed_plugins[] = $plugin;
         }
-        if(is_plugin_installed($plugin)){
+        if(wdtIsPluginInstalled($plugin)){
             $installed_plugins_not_active[] = $plugin;
         }
     }
@@ -633,7 +637,7 @@ function wdtInstalledPluginsAmeliaPromotion()
             return true;
     }
     if (!empty($installed_plugins_not_active)) {
-        if(!is_plugin_installed("ameliabooking/ameliabooking.php"))
+        if(!wdtIsPluginInstalled("ameliabooking/ameliabooking.php"))
             return true;
     }
 

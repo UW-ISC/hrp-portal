@@ -835,3 +835,21 @@ div.wdt-checkbox-modal-wrap div.wdt-checkbox-option label {
 .google_waterfall_chart g.google-visualization-tooltip g:nth-child(3) text:first-child{
     display:none !important;
 }
+.wpdt-c.wpdt-visually-hidden{
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    margin: -1px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+}
+.wpdt-c .wpTableWCAG .btn-danger {
+    background-color: #d0382d;
+}
+.wpdt-c .wpTableWCAG .btn-success {
+    background-color: #39853c;
+}
+.wpdt-c .wpTableWCAG .bgm-gray{
+    background-color: #727272;
+}
+

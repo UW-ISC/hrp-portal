@@ -74,7 +74,7 @@
                 data.forEach(function (item, index) {
                     listHtml += '<li>' + item.text ;
                     if (item.link !== '') {
-                        listHtml += ' <a href="' + item.link + '">More in docs.</a>';
+                        listHtml += ' <a href="' + item.link + '" target="_blank" rel="nofollow">More in docs.</a>';
                     }
                     listHtml += '</li>';
 

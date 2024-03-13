@@ -56,11 +56,15 @@
                             <option value="d-m-y"> 15-07-05 (d-m-y)</option>
                             <option value="m-d-y"> 07-15-05 (m-d-y)</option>
                             <option value="d M Y"> 15 Jul 2005 (d Mon Y)</option>
-                            <option value="m/Y"> 07/2005 (m/Y)</option>
+                            <option value="M d, Y"> Jul 15,2005 (Mon d, Y)</option>
                             <option value="M Y"> Jul 2005 (Mon Y)</option>
                             <option value="F Y"> July 2005 (F Y)</option>
                             <option value="F j, Y"> July 15, 2005 (F j, Y)</option>
                             <option value="j. F Y."> 15. July 2005. (j. F Y.)</option>
+                            <option value="j F Y"> 15 July 2005 (j F Y)</option>
+                            <option value="D, F j, Y"> Fri, July 15, 2005 (D, F j, Y)</option>
+                            <option value="D, M j, Y"> Fri, Jul 15, 2005 (D, M j, Y)</option>
+                            <option value="m/Y"> 07/2005 (m/Y)</option>
                             <option value="Y">2005 (Y)</option>
                         </select>
                     </div>
@@ -79,8 +83,9 @@
                 <div class="fg-line">
                     <div class="select">
                         <select class="selectpicker" name="wdt-time-format" id="wdt-time-format">
-                            <option value="h:i A">1:25 PM (12h)</option>
+                            <option value="h:i A">01:25 PM (12h)</option>
                             <option value="H:i">13:25 (24h)</option>
+                            <option value="H:i:s">13:25:45 (24h with seconds)</option>
                         </select>
                     </div>
                 </div>

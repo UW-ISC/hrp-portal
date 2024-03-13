@@ -2486,3 +2486,11 @@ div.dt-button-collection.wdt-skin-purple button.dt-button.buttons-columnVisibili
 #wdt-filter-widget .wdt-skin-purple.wpTableWCAG  .wdt-checkbox-filter.btn{
     color: #fffdfd;
 }
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple.wpTableWCAG .modal-content .modal-footer .wdt-gf-edit-dialog-button-block button.wdt-cancel-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-cancel-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-purple.wpTableWCAG .modal-content .modal-footer #wdt-checkbox-filter-reset,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-purple.wpTableWCAG .modal-content .modal-footer .wdt-browse-delete-button,
+.wpdt-c.wdt-skin-purple.wpTableWCAG .wpDataTablesWrapper .DTTT_button.DTTT_button_delete:before,
+.wpdt-c .modal#wdt-delete-modal.wdt-skin-purple.wpTableWCAG .modal-dialog .modal-content .modal-footer button.wdt-browse-delete-button:before{
+    color: #d83737 !important;
+}

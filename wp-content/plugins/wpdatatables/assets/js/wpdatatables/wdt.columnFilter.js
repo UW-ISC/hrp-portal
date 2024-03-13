@@ -23,10 +23,10 @@
 
             // If "Render advanced filter" is "In the header"
             if (properties.sPlaceHolder === 'head:before') {
-                if($("tr:first th")[0].classList.contains('wdtheader') === false) {
+                if ($("tr:first th")[0].classList.contains('wdtheader') === false) {
                     tr = $("tr:first", oTable.fnSettings().nTHead).detach();
                     tr.appendTo($(oTable.fnSettings().nTHead));
-                }else{
+                } else {
                     tr = $("tr:last", oTable.fnSettings().nTHead).detach();
                     tr.appendTo($(oTable.fnSettings().nTHead));
                 }
@@ -57,7 +57,7 @@
                 }
 
                 if (typeof aoColumn.sSelector === 'undefined') {
-                    if($(this)[0].cell.classList.contains('wdtheader') === false || $(this)[0].cell.localName == 'td'){
+                    if ($(this)[0].cell.classList.contains('wdtheader') === false || $(this)[0].cell.localName == 'td') {
                         th = $($(this)[0].cell);
                     }
                 } else {
@@ -176,7 +176,7 @@ function wdtCreateInput(oTable, aoColumn, columnIndex, sColumnLabel, th, serverS
     sColumnLabel = sColumnLabel.replace(/(^\s*)|(\s*$)/g, "");
     var placeholder = aoColumn.filterLabel ? aoColumn.filterLabel : sColumnLabel;
 
-    var input = jQuery('<input type="' + aoColumn.type + '" class="form-control wdt-filter-control ' + sCSSClass + '" placeholder="' + _.escape(placeholder) + '" />');
+    var input = jQuery('<input type="' + aoColumn.type + '" class="form-control wdt-filter-control ' + sCSSClass + '" placeholder="' + _.escape(placeholder) + '" aria-label="' + wpdatatables_filter_strings.filterInputString + _.escape(placeholder) + '"/>');
 
     th.html(input);
 
@@ -266,11 +266,11 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
     if (aoColumn.rangeSlider) {
         if ((tableDescription.tableType === 'gravity' && serverSide) || tableDescription.cascadeFiltering === 1) {
             var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-            var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
+            var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" aria-label="' + wpdatatables_filter_strings.filterInputNumber + wpdatatables_filter_strings.from + '"/>');
             th.append(from);
 
             var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-            var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
+            var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" aria-label="' + wpdatatables_filter_strings.filterInputNumber + wpdatatables_filter_strings.to + '"/>');
             th.append(to);
 
             th.wrapInner('<span class="filter_column wdt-filter-number-range" data-filter_type="number range" data-index="' + columnIndex + '"/>');
@@ -408,10 +408,14 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
                     }
                 ]
             });
-
+            if (tableDescription.table_wcag) {
+                var handles = slider.querySelectorAll('.noUi-handle');
+                handles[0].setAttribute('aria-label', wpdatatables_filter_strings.minValue + minValue);
+                handles[1].setAttribute('aria-label', wpdatatables_filter_strings.maxValue + maxValue);
+            }
             slider.noUiSlider.on('end', function () {
-                slider.value = slider.noUiSlider.get();
-                numberRangeSliderSearch();
+                    slider.value = slider.noUiSlider.get();
+                    numberRangeSliderSearch();
                 }
             );
 
@@ -470,11 +474,11 @@ function wdtCreateNumberRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, 
         }
     } else {
         var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-        var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
+        var from = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" aria-label="' + wpdatatables_filter_strings.filterInputNumber + wpdatatables_filter_strings.from + '"/>');
         th.append(from);
 
         var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-        var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
+        var to = jQuery('<input type="number" class="form-control wdt-filter-control number-range-filter" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" aria-label="' + wpdatatables_filter_strings.filterInputNumber + wpdatatables_filter_strings.to + '"/>');
         th.append(to);
 
         th.wrapInner('<span class="filter_column wdt-filter-number-range" data-filter_type="number range" data-index="' + columnIndex + '"/>');
@@ -569,6 +573,7 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
     var tableId = oTable.attr('id');
     var fromDefaultValue = '', toDefaultValue = '', defaultValue = aoColumn.defaultValue;
     var dateFormat = getMomentWdtDateFormat();
+    var tableDescription = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     if (defaultValue !== '') {
         fromDefaultValue = defaultValue[0];
@@ -577,10 +582,10 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     th.html('');
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />');
+    var from = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" aria-label="' + wpdatatables_filter_strings.filterInputDate + wpdatatables_filter_strings.fromDate + '"/>');
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />');
+    var to = jQuery('<input type="text" class="form-control wdt-filter-control date-range-filter wdt-datepicker wdt-datepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" aria-label="' + wpdatatables_filter_strings.filterInputDate + wpdatatables_filter_strings.toDate + '"/>');
 
     th.append(from).append(to);
 
@@ -625,12 +630,17 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
         if ((typeof wpDataTables[tableId].drawTable === 'undefined') || wpDataTables[tableId].drawTable === true) {
             oTable.api().draw();
         }
-
+        if (tableDescription.table_wcag) {
+            wdtAddAttributesForDateTime(this, e, 'wdt-datepicker-from');
+        }
         fnOnFiltered();
     });
 
     if (fromDefaultValue) {
         jQuery(from).val(fromDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(from).parent().parent().attr('data-value-from', fromDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(from).trigger('blur');
@@ -640,6 +650,9 @@ function wdtCreateDateRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     if (toDefaultValue) {
         jQuery(to).val(toDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(to).parent().parent().attr('data-value-to', toDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(to).trigger('blur');
@@ -662,6 +675,7 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
     var fromDefaultValue = '', toDefaultValue = '', defaultValue = aoColumn.defaultValue;
     var dateFormat = getMomentWdtDateFormat();
     var timeFormat = getMomentWdtTimeFormat();
+    var tableDescription = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     if (defaultValue !== '') {
         fromDefaultValue = defaultValue[0];
@@ -671,11 +685,11 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" aria-label="' + wpdatatables_filter_strings.filterInputDateTime + wpdatatables_filter_strings.fromDateTime + '"/>';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control date-time-range-filter wdt-datetimepicker wdt-datetimepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" aria-label="' + wpdatatables_filter_strings.filterInputDateTime + wpdatatables_filter_strings.toDateTime + '"/>';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -720,12 +734,17 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
         if (((typeof wpDataTables[tableId].drawTable === 'undefined') || wpDataTables[tableId].drawTable === true) && e.oldDate !== null) {
             oTable.api().draw();
         }
-
+        if (tableDescription.table_wcag) {
+            wdtAddAttributesForDateTime(this, e, 'wdt-datetimepicker-from');
+        }
         fnOnFiltered();
     });
 
     if (fromDefaultValue) {
         jQuery(from).val(fromDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(from).parent().parent().attr('data-value-from', fromDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(to).trigger('blur');
@@ -735,6 +754,9 @@ function wdtCreateDateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel
 
     if (toDefaultValue) {
         jQuery(to).val(toDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(to).parent().parent().attr('data-value-from', toDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(to).trigger('blur');
@@ -756,6 +778,7 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
     var tableId = oTable.attr('id');
     var fromDefaultValue = '', toDefaultValue = '', defaultValue = aoColumn.defaultValue;
     var timeFormat = getMomentWdtTimeFormat();
+    var tableDescription = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     if (defaultValue !== '') {
         fromDefaultValue = defaultValue[0];
@@ -765,11 +788,11 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
     th.html('');
 
     var sFromId = oTable.attr("id") + '_range_from_' + columnIndex;
-    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" />';
+    var fromHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-from" id="' + sFromId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.from + '" aria-label="' + wpdatatables_filter_strings.filterInputTime + wpdatatables_filter_strings.fromTime + '"/>';
     var from = jQuery(fromHTML);
 
     var sToId = oTable.attr("id") + '_range_to_' + columnIndex;
-    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" />';
+    var toHTML = '<input type="text" class="form-control wdt-filter-control time-range-filter wdt-timepicker wdt-timepicker-to" id="' + sToId + '" rel="' + columnIndex + '" placeholder="' + wpdatatables_filter_strings.to + '" aria-label="' + wpdatatables_filter_strings.filterInputTime + wpdatatables_filter_strings.toTime + '"/>';
     var to = jQuery(toHTML);
 
     th.append(from).append(to);
@@ -813,12 +836,17 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
         if (((typeof wpDataTables[tableId].drawTable === 'undefined') || wpDataTables[tableId].drawTable === true) && e.oldDate !== null) {
             oTable.api().draw();
         }
-
+        if (tableDescription.table_wcag) {
+            wdtAddAttributesForDateTime(this, e, 'wdt-timepicker-from');
+        }
         fnOnFiltered();
     });
 
     if (fromDefaultValue) {
         jQuery(from).val(fromDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(from).parent().parent().attr('data-value-from', fromDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(to).trigger('blur');
@@ -828,6 +856,9 @@ function wdtCreateTimeRangeInput(oTable, aoColumn, columnIndex, sColumnLabel, th
 
     if (toDefaultValue) {
         jQuery(to).val(toDefaultValue);
+        if (tableDescription.table_wcag) {
+            jQuery(to).parent().parent().attr('data-value-from', toDefaultValue);
+        }
         if (!serverSide) {
             jQuery(document).ready(function () {
                 jQuery(to).trigger('blur');
@@ -946,6 +977,7 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
                 }
             })
         }
+
         // Add AJAX to selectbox
         select.selectpicker('refresh')
             .ajaxSelectPicker({
@@ -994,6 +1026,8 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             jQuery(th).find('.bs-searchbox').show();
         }
 
+        wdtAddAttributesForWCAGSelectBox(select, 'wdt-select-filter', tableDescription);
+
     } else {
         select.selectpicker('refresh');
         // Hide/Show search box in filter
@@ -1010,6 +1044,9 @@ function wdtCreateSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th, ser
             //Added for fixed columns and fixed headers (when closing selectbox)
             hideSelectMultiSelectboxForFixedHeaderAndColumns(select);
         });
+
+        wdtAddAttributesForWCAGSelectBox(select, 'wdt-select-filter', tableDescription);
+
         if ((!tableDescription.groupingEnabled && select.closest('th').index() != tableDescription.groupingColumnIndex) || !tableDescription.filterInForm) {
             select.closest('.wdtscroll').on('scroll', function (e) {
                 select.closest('.wdt-select-filter.open').removeClass('open');
@@ -1191,7 +1228,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
         } else {
             jQuery(th).find('.bs-searchbox').show();
         }
-
+        wdtAddAttributesForWCAGSelectBox(select, 'wdt-multiselect-filter', tableDescription);
     } else {
         select.selectpicker('refresh');
         if (aoColumn.searchInSelectBox !== 1) {
@@ -1216,6 +1253,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
                 }
             })
         }
+        wdtAddAttributesForWCAGSelectBox(select, 'wdt-multiselect-filter', tableDescription);
         // Filter the table if default value is set
         if (aoColumn.defaultValue[0] && !serverSide) {
             var search = '';
@@ -1335,7 +1373,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
 
             r += '<div class="wdt_checkbox_option checkbox">' +
                 '<label>' +
-                '<input type="checkbox" class="wdt-checkbox-filter wdt-filter-control" value="' + encodeURI(value) + '" ' + checked + '>' +
+                '<input type="checkbox" class="wdt-checkbox-filter wdt-filter-control" value="' + encodeURI(value) + '" ' + checked + ' aria-label="' + wpdatatables_filter_strings.filterCheckbox + label + '">' +
                 '<span class="wdt-checkbox-label">' + label + '</span>' +
                 '</label>' +
                 '</div>';
@@ -1696,4 +1734,40 @@ function wdtClearFilters() {
             wpDataTableSelecter.find('.wdt-filter-control').eq(0).change();
         }
     });
+}
+
+function wdtAddAttributesForWCAGSelectBox(select, selector, tableDescription) {
+    if (tableDescription.table_wcag) {
+        select.on('shown.bs.select', function () {
+            select.selectpicker('refresh');
+            jQuery('div.' + selector + '.open .dropdown-menu.open')
+                .attr('aria-controls', tableDescription.tableId)
+                .attr('aria-expanded', 'false');
+
+            jQuery('div.' + selector + '.open .dropdown-menu.open ul')
+                .attr('aria-controls', tableDescription.tableId)
+                .attr('role', 'listbox');
+
+            jQuery('div.' + selector + '.open .dropdown-menu.open ul li')
+                .attr('role', 'list')
+                .attr('aria-required-parent', 'listbox');
+        });
+        select.on('refreshed.bs.select', function () {
+            jQuery('div.' + selector + '.open').find('.dropdown-menu.open ul li')
+                .attr('role', 'option').attr('aria-label', selector === 'wdt-multiselect-filter' ? wpdatatables_filter_strings.multiSelectBoxOption : wpdatatables_filter_strings.selectBoxOption);
+            jQuery('div.' + selector + '.open').find('.dropdown-menu.open ul li.divider')
+                .attr('aria-label', wpdatatables_filter_strings.dividerSearchBox);
+
+            jQuery('div.' + selector + '.open').find('.dropdown-menu.open ul li a').removeAttr('tabindex').removeAttr('aria-selected').removeAttr('role');
+        });
+    }
+}
+
+function wdtAddAttributesForDateTime(selector, element, selectorPicker) {
+    jQuery(selector).parent().parent().addClass('wpdt_using_wcag_filter');
+    if (element.target.classList.contains(selectorPicker)) {
+        jQuery(selector).parent().parent().attr('data-value-from', jQuery(selector).val());
+    } else {
+        jQuery(selector).parent().parent().attr('data-value-to', jQuery(selector).val());
+    }
 }

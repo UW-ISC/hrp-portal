@@ -25,13 +25,13 @@ class ImageWDTColumn extends WDTColumn
     public function prepareCellOutput($content)
     {
         $content = apply_filters('wpdatatables_filter_image_cell_before_formatting', $content, $this->getParentTable()->getWpId());
-        $imageName = pathinfo($content)['basename'];
+        $imageName = pathinfo(isset($content) ? $content : '')['basename'];
         if (empty($content)) {
             return '';
         }
         if (FALSE !== strpos($content, '||')) {
             list($image, $link) = explode('||', $content);
-            $image_name = pathinfo($image)['basename'];
+            $image_name = pathinfo(isset($image) ? $image : '')['basename'];
             $formattedValue = "<a href='{$link}' target='_blank' rel='lightbox[-1]'><img src='{$image}' alt='{$image_name}'/></a>";
         } else {
             $formattedValue = "<img src='{$content}' alt='{$imageName}'/>";

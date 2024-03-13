@@ -79,7 +79,7 @@
 </div>
 <div class="datetime-format-error alert alert-danger alert-medium m-b-10 col-sm-5-5"
      style="display:none"><i
-            class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e(' Follow table filtering is not possible for these Date formats: "d Mon Y", "Mon Y", "F Y", "F j, Y", "j. F Y.", "Y". If you want to enable follow table filtering, lease change your Date format in wpDataTables settings and try again.', 'wpdatatables'); ?>
+            class="wpdt-icon-exclamation-triangle"></i><?php esc_html_e(' Follow table filtering is not possible for these Date formats: "d Mon Y", "d M Y", "Mon d, Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y","D, F j, Y", "j F Y". If you want to enable follow table filtering, please change your Date format in wpDataTables settings and try again.', 'wpdatatables'); ?>
 </div>
 <div class="col-sm-12 p-0">
     <div class="col-sm-5-5 p-l-0 p-r-0">

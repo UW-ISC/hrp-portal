@@ -558,6 +558,9 @@ class wpDataTableSourceFile
                         // Set all cells in the row to their defaults
                         foreach ($this->getTableData()->columns as $column) {
                             $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                            if (in_array($column->predefined_type_in_db, array('DATE', 'DATETIME', 'TIME', 'INT', 'DECIMAL', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT'))) {
+                                $insertArray[$column_headers[$column->orig_header]] = ("'" . sanitize_text_field($column->default_value) . "'") == "''" ? 'NULL' : "'" . sanitize_text_field($column->default_value) . "'";
+                            }
                         }
                     }
 
@@ -614,6 +617,7 @@ class wpDataTableSourceFile
                                 $insertArray[$dataColumnHeading] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'" : 'NULL';
                             } else {
                                 $insertArray[$dataColumnHeading] = "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'";
+                                $insertArray[$dataColumnHeading] = $insertArray[$dataColumnHeading] == "''" ? 'NULL' : $insertArray[$dataColumnHeading];
                             }
                         }
 

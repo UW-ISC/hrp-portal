@@ -1109,10 +1109,11 @@ WDTColumn.prototype.columnTransformValue = function () {
     var transformValueRules = [[]];
     var k = 0;
     var cellVal = '';
+    var columnOrigHeaderString = column.orig_header.replace(/\s|\(|\)/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
     jQuery('#column-transform-value div.transform-value-container').each(function () {
         if ( column.transformValueText != '' ) {
             cellVal = column.transformValueText;
-            jQuery('table tbody tr td.column-'+ column.orig_header).each(function () {
+            jQuery('table tbody tr td.column-'+ columnOrigHeaderString).each(function () {
                 this.innerHTML = cellVal;
                 transformValueRules[0].push({
                     setVal: cellVal

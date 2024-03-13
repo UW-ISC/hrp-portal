@@ -190,6 +190,12 @@
         if (defaultValue != null && columnType == 'multiselect' && $(document).find('.wdt-default-add-column-db-type').selectpicker('val')=='VARCHAR') {
             defaultValue.join('|');
         }
+        if (defaultValue != null && (columnType === 'time' || columnType === 'datetime')) {
+            let pattern = /^.*:[0-9]{2}:[0-9]{1}$/;
+            if (pattern.test(defaultValue)) {
+                defaultValue = defaultValue.replace(/:(\d)$/, ':0$1');
+            }
+        }
 
         var newColumnData = {
             name: $('#wdt-add-column-column-header').val(),
