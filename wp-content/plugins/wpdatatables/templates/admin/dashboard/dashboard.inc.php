@@ -268,14 +268,21 @@
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> New standard columns for manual tables (wdt_created_by, wdt_created_at, wdt_last_edited_by and wdt_last_edited_at). </li>
-                                <li><strong>Feature:</strong> Templates for Simple tables. </li>
-                                <li><strong>Improvement:</strong> Range slider unlimited improvement. </li>
-                                <li><strong>Improvement:</strong> Update libraries (minimum version of php is now 7.4). </li>
-                                <li><strong>BugFix:</strong> Fixed issue with selectbox in Inline editor. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with column visibility and checkbox on front-end. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with labels on Highstock charts. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Transform Value on collapsed column for non-SS tables.</li>
+                                <li><strong>Feature:</strong> Added Folders/Categories for tables.</li>
+                                <li><strong>Feature:</strong> Added Folders/Categories for charts.</li>
+                                <li><strong>Feature:</strong> New global date formats. </li>
+                                <li><strong>Feature:</strong> New global time format with seconds. </li>
+                                <li><strong>Feature:</strong> Full WCAG compatibility. </li>
+                                <li><strong>Improvement:</strong> Updated French translation language. </li>
+                                <li><strong>Improvement:</strong> Simple table templates improvements. </li>
+                                <li><strong>Improvement:</strong> Refactoring source files. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with image and attachment column types. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with Date input format (Date, Time and DateTime). </li>
+                                <li><strong>BugFix:</strong> Fixed issue with creating manual tables with separate connection. </li>
+                                <li><strong>BugFix:</strong> Fixed conflict with Royal Elementor Addons and Templates plugin. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with colors in Google charts. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with HighCharts Stock Datetime and Time axis not rendering properly. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with WCAG when filters are turned off. </li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

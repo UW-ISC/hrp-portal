@@ -432,9 +432,37 @@ class WdtGoogleChart extends WPDataChart
      */
     public function prepareRender()
     {
+
+        $colors = array(
+            '#3366CC',
+            '#DC3912',
+            '#FF9900',
+            '#109618',
+            '#990099',
+            '#3B3EAC',
+            '#0099C6',
+            '#DD4477',
+            '#66AA00',
+            '#B82E2E',
+            '#316395',
+            '#994499',
+            '#22AA99',
+            '#AAAA11',
+            '#6633CC',
+            '#E67300',
+            '#8B0707',
+            '#329262',
+            '#5574A6',
+            '#3B3EAC',
+        );
+
         // Chart
         if (!$this->_responsiveWidth) {
             $this->_render_data['width'] = $this->getWidth();
+        }
+        foreach ($this->_render_data['series'] as $key=>$series){
+            if ($series['color']== '')
+                $this->_render_data['series'][$key]['color'] = $colors[$key];
         }
         $this->_render_data['options']['backgroundColor']['fill'] = $this->getBackgroundColor();
         $this->_render_data['options']['backgroundColor']['strokeWidth'] = $this->getBorderWidth();
@@ -452,7 +480,9 @@ class WdtGoogleChart extends WPDataChart
         if ($this->_type == 'google_geo_chart' || $this->_type == 'google_marker_geo_chart' || $this->_type == 'google_text_geo_chart'){
             $this->_render_data['options']['region'] = $this->getRegion();
             $this->_render_data['options']['colors'] = $this->getRegionColors();
-           $this->_render_data['options']['datalessRegionColor'] = $this->getDatalessRegionColors();
+            $this->_render_data['options']['datalessRegionColor'] = $this->getDatalessRegionColors();
+        } else {
+            $this->_render_data['options']['colors'] = $colors;
         }
 
         // Series

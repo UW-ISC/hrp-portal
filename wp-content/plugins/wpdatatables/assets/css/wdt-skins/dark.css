@@ -2695,3 +2695,23 @@ div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-columnVisibility
 .wpdt-c.wdt-skin-dark.wpTableWCAG .wpDataTablesWrapper tr a{
     color: #23a4ff;
 }
+.wpdt-c #wdt-frontend-modal.wdt-skin-dark.wpTableWCAG .wdt_checkbox_option label {
+    color: #ffffff;
+}
+.wpdt-c.wdt-skin-dark.wpTableWCAG .wpDataTablesWrapper .dataTables_length .bootstrap-select.length_menu ul.dropdown-menu li.selected a span.text{
+    color: #6e7fe4;
+}
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-excel span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-csv span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-copy span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark a.dt-button.buttons-pdf span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-excel span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-csv span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-copy span,
+.wpdt-c.wdt-skin-dark.wpTableWCAG div.dt-button-collection.wdt-skin-dark button.dt-button.buttons-pdf span{
+    color: #8c95a9;
+}
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-edit-button,
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-dark.wpTableWCAG .modal-content .modal-footer .wdt-edit-dialog-button-block button.wdt-apply-duplicate-button{
+    color: #6e7fe4;
+}

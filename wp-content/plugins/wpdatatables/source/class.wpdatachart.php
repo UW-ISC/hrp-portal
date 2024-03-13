@@ -1162,6 +1162,8 @@ class WPDataChart
             )
         );
 
+        do_action('wpdatatables_after_delete_charts', (int)$chartId, 'chart');
+
         return true;
 
     }

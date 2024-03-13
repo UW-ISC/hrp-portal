@@ -29,7 +29,7 @@
     </tr>
     </thead>
 
-    <tbody id="the-list"<?php if ($singular) {
+    <tbody id="wpdt-the-list"<?php if ($singular) {
         echo " data-wp-lists='list:$singular'";
     } ?>>
     <?php $this->display_rows_or_placeholder(); ?>

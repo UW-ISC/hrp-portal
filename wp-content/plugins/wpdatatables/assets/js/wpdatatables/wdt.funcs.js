@@ -619,7 +619,7 @@ function hidePickerForFixedHeaderAndColumns(dateData) {
 }
 
 function getMomentWdtDateFormat() {
-    return wpdatatables_settings.wdtDateFormat.replace('d', 'DD').replace('M', 'MMM').replace('m', 'MM').replace('y', 'YY').replace('F', 'MMMM').replace('j', 'DD');
+    return wpdatatables_settings.wdtDateFormat.replace('D', 'dddd').replace('d.', 'DD.').replace('d-', 'DD-').replace('d/', 'DD/').replace('d\s\ ', 'DD ').replace('M', 'MMM').replace('m', 'MM').replace('y', 'YY').replace('F', 'MMMM').replace('j', 'DD');
 }
 
 function getMomentWdtTimeFormat() {

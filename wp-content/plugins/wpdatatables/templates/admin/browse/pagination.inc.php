@@ -38,7 +38,10 @@
             $search_term_temp = '';
             $class = $paged == $link ? ' class="active"' : '';
             $search_term_temp = $search_term != '' ? '&s=' . $search_term : '';
-            printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url(get_pagenum_link($link)) . $search_term_temp, $link);
+            $url = esc_url(get_pagenum_link($link)) . $search_term_temp;
+            $url = apply_filters('wpdatatables_filter_browse_tables_pagination_page_url', $url, $link, $search_term_temp, $current_url);
+            printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, $url, $link);
+            //printf('<li%s><a href="%s">%s</a></li>' . "\n", $class, esc_url(add_query_arg("paged", $link . $search_term_temp, $current_url)), $link);
         }
 
         // Ellipse sign on right side

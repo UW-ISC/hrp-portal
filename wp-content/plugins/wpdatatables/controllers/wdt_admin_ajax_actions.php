@@ -283,21 +283,21 @@ function wdtDuplicateTable()
             $cnt = 1;
             $newNameGenerated = false;
             while (!$newNameGenerated) {
-                $id = $wpdb->get_var( 'SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1') + 1;
-                $newName =  $wpdb->prefix . 'wpdatatable_' . $id;
+                $id = $wpdb->get_var('SELECT id FROM ' . $wpdb->prefix . 'wpdatatables' . ' ORDER BY id DESC LIMIT 1') + 1;
+                $newName = $wpdb->prefix . 'wpdatatable_' . $id;
                 $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                 if (!(Connection::isSeparate($tableData->connection))) {
                     $res = $wpdb->get_results($checkTableQuery);
                     if (!empty($res)) {
-                        $newName =  $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
+                        $newName = $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
                         $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                     }
                     $res = $wpdb->get_results($checkTableQuery);
                 } else {
                     $sql = Connection::getInstance($tableData->connection);
                     $res = $sql->getRow($checkTableQuery);
-                    if (!empty($res)){
-                        $newName =  $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
+                    if (!empty($res)) {
+                        $newName = $wpdb->prefix . 'wpdatatable_' . $id . '_' . $cnt;
                         $checkTableQuery = "SHOW TABLES LIKE '{$newName}'";
                     }
                     $res = $sql->getRow($checkTableQuery);
@@ -1199,7 +1199,7 @@ function wdtActivatePlugin()
     );
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters( 'wpdatatables_curlopt_ssl_verifypeer', 1 ));
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, apply_filters('wpdatatables_curlopt_ssl_verifypeer', 1));
 
     // Response from the TMS Store
     $response = json_decode(curl_exec($ch));

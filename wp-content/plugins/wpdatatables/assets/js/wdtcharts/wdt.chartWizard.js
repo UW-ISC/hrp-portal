@@ -1665,7 +1665,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         });
         if (this.constructedChartData.engine === 'highstock') {
             // Disable follow filtering for Highstock for certain date formats
-            var invalidFormats = ["d Mon Y", "d M Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y"];
+            var invalidFormats = ["d Mon Y", "d M Y", "Mon d, Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y","D, F j, Y", "j F Y"];
             if (invalidFormats.includes(wpdatatables_settings.wdtDateFormat)) {
                 $('label[for=follow-table-filtering]').addClass('disabled');
                 $('input#follow-table-filtering').attr('disabled', 'disabled');
