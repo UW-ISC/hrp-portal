@@ -50,7 +50,7 @@ class MLAMime {
 		// Handle WP 4.6.2, 4.7.x SVG bug
 		add_filter( 'getimagesize_mimes_to_exts', 'MLAMime::mla_getimagesize_mimes_to_exts_filter', 0x7FFFFFFF, 1 );
 
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_UPLOAD_MIMES ) ) {
+		if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_UPLOAD_MIMES ) ) {
 			if ( function_exists('wp_get_mime_types') ) {
 				add_filter( 'mime_types', 'MLAMime::mla_mime_types_filter', 0x7FFFFFFF, 1 );
 			}
@@ -63,14 +63,16 @@ class MLAMime {
 			}
 		}
 
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_POST_MIME_TYPES ) ) {
+		if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_POST_MIME_TYPES ) ) {
 			add_filter( 'post_mime_types', 'MLAMime::mla_post_mime_types_filter', 0x7FFFFFFF, 1 );
 		}
 
-		add_filter( 'icon_dir', 'MLAMime::mla_icon_dir_filter', 0x7FFFFFFF, 1 );
-		add_filter( 'icon_dir_uri', 'MLAMime::mla_icon_dir_uri_filter', 0x7FFFFFFF, 1 );
-		add_filter( 'icon_dirs', 'MLAMime::mla_icon_dirs_filter', 0x7FFFFFFF, 1 );
-		//add_filter( 'wp_mime_type_icon', 'MLAMime::mla_wp_mime_type_icon_filter', 0x7FFFFFFF, 3 );
+		if ( 'checked' === MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
+			add_filter( 'icon_dir', 'MLAMime::mla_icon_dir_filter', 0x7FFFFFFF, 1 );
+			add_filter( 'icon_dir_uri', 'MLAMime::mla_icon_dir_uri_filter', 0x7FFFFFFF, 1 );
+			add_filter( 'icon_dirs', 'MLAMime::mla_icon_dirs_filter', 0x7FFFFFFF, 1 );
+			add_filter( 'wp_mime_type_icon', 'MLAMime::mla_wp_mime_type_icon_filter', 0x7FFFFFFF, 3 );
+		}
 	}
 
 	/**
@@ -522,11 +524,7 @@ class MLAMime {
 	 * @return	string	Updated path to the icon directory, no trailing slash
 	 */
 	public static function mla_icon_dir_filter( $path ) {
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
-			return MLA_PLUGIN_PATH . 'images/crystal';
-		}
-		 
-		return $path;
+		return MLA_PLUGIN_PATH . 'images/crystal';
 	} // mla_icon_dir_filter
 
 	/**
@@ -542,11 +540,7 @@ class MLAMime {
 	 * @return	string	Updated path to the icon directory URL, no trailing slash
 	 */
 	public static function mla_icon_dir_uri_filter( $uri ) {
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
-			return MLA_PLUGIN_URL . 'images/crystal';
-		}
-
-		return $uri;
+		return MLA_PLUGIN_URL . 'images/crystal';
 	} // mla_icon_dir_uri_filter
 
 	/**
@@ -562,10 +556,7 @@ class MLAMime {
 	 * @return	array	Updated (path => URI) array
 	 */
 	public static function mla_icon_dirs_filter( $path_uri_array ) {
-		if ( 'checked' == MLACore::mla_get_option( MLACoreOptions::MLA_ENABLE_MLA_ICONS ) ) {
-			$path_uri_array [ MLA_PLUGIN_PATH . 'images/crystal' ] = MLA_PLUGIN_URL . 'images/crystal';
-		}
-
+		$path_uri_array [ MLA_PLUGIN_PATH . 'images/crystal' ] = MLA_PLUGIN_URL . 'images/crystal';
 		return $path_uri_array;
 	} // mla_icon_dirs_filter
 
@@ -584,6 +575,17 @@ class MLAMime {
 	 * @return	array	Updated URI to the MIME type icon
 	 */
 	public static function mla_wp_mime_type_icon_filter( $icon, $mime, $post_id ) {
+		if ( is_null( $icon ) ) {
+			$icon_files = wp_cache_get( 'icon_files' );
+
+			// WP 6.5+ requires .svg icons and caches an empty array when MLA icons are enabled
+			if ( is_array( $icon_files) && empty( $icon_files ) ) {
+				wp_cache_delete( 'icon_files', 'default' );
+			}
+			
+			$icon = wp_mime_type_icon( $mime, '.png' );
+		}
+		
 		return $icon;
 	} // mla_wp_mime_type_icon_filter
 

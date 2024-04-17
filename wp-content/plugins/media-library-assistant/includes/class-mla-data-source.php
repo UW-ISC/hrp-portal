@@ -302,25 +302,23 @@ class MLAData_Source {
 		global $wpdb;
 		static $post_info = NULL;
 
-		if ( 0 == $post_id ) {
+		if ( 0 === $post_id ) {
 			$value = NULL;
 		} else {
-			/*
-			 * Check for $post_id match
-			 */
-			if ( 'single_attachment_mapping' == $category && ! isset( $post_info[$post_id] ) ) {
+			// Check for $post_id match
+			if ( 'single_attachment_mapping' === $category && ! isset( $post_info[$post_id] ) ) {
 				$post_info = NULL;
 			}
 
-			if ( NULL == $post_info ) {
-				if ( 'custom_field_mapping' == $category ) {
+			if ( NULL === $post_info ) {
+				if ( 'custom_field_mapping' === $category ) {
 					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE post_type = 'attachment'", OBJECT_K ); // phpcs:ignore
 				} else {
 					$post_info = $wpdb->get_results( "SELECT * FROM {$wpdb->posts} WHERE ID = '{$post_id}'", OBJECT_K ); // phpcs:ignore
 				}
 			}
 
-			if ( 'post_id' == $data_source ) {
+			if ( 'post_id' === $data_source ) {
 				$data_source = 'ID';
 			}
 
@@ -482,6 +480,11 @@ class MLAData_Source {
 
 				// Go through the template and expand the non-prefixed elements as Data Sources
 				$item_values = array();
+				
+				// For page_ and parent_ prefixes
+				$item_values['page_ID'] = 0;
+				$item_values['parent'] = absint( MLAData_Source::_evaluate_post_information( $post_id, $category, 'post_parent' ) );
+
 				$placeholders = MLAData::mla_get_template_placeholders( $data_value['meta_name'], $default_option );
 				foreach ( $placeholders as $key => $placeholder ) {
 					if ( empty( $placeholder['prefix'] ) ) {
@@ -505,7 +508,7 @@ class MLAData_Source {
 				$template = '[+template:' . $data_value['meta_name'] . '+]';
 				$item_values = MLAData::mla_expand_field_level_parameters( $template, NULL, $item_values, $post_id, $data_value['keep_existing'], $default_option, $attachment_metadata );
 
-				if ( 'array' ==  $default_option ) {
+				if ( 'array' ===  $default_option ) {
 					$result = MLAData::mla_parse_array_template( $template, $item_values, $data_value['option'] );
 					$result = MLAData_Source::_evaluate_array_result( $result, $data_value['option'], $data_value['keep_existing'] );
 				} else {

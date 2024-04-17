@@ -1,15 +1,15 @@
 ﻿=== Media Library Assistant ===
 Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
-Tags: categories, gallery, images, media, media library, tags
+Tags: categories, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.4.1
-Stable tag: 3.13
+Tested up to: 6.5
+Stable tag: 3.15
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Enhances the Media Library; powerful [mla_gallery] [mla_tag_cloud] [mla_term_list], taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
+Enhances the Media Library; powerful gallery and list shortcodes, full taxonomy support, IPTC/EXIF/XMP/PDF processing, bulk/quick edit.
 
 == Description ==
 
@@ -20,6 +20,8 @@ The Media Library Assistant provides several enhancements for managing the Media
 * The **`[mla_tag_cloud]` shortcode**, used in a post, page, custom post type or widget to display the "most used" terms in your Media Library where the size of each term is determined by how many times that particular term has been assigned to Media Library items. **Twenty-five hooks** are provided for complete cloud customization from your theme or plugin code.
 
 * The **`[mla_term_list]` shortcode**, used in a post, page, custom post type or widget to display hierarchical (and flat) taxonomy terms in list, dropdown control or checklist formats. **Twenty hooks** are provided for complete list customization from your theme or plugin code.
+
+* The **`[mla_custom_list]` shortcode**, used in a post, page, custom post type or widget to display flat lists, dropdown controls and checkbox lists of custom field values. **Twenty-seven hooks** are provided for complete list customization from your theme or plugin code.
 
 * Support for **[WPML](https://wpml.org/)** and **Polylang** multi-language CMS plugins. MLA has earned a place on [WPML's List of Recommended Plugins](https://wpml.org/plugin/media-library-assistant/).
 
@@ -33,25 +35,19 @@ The Media Library Assistant provides several enhancements for managing the Media
 
 * **Attachment metadata** such as file size, image dimensions and where-used information can be assigned to WordPress custom fields. You can then use the custom fields in your `[mla_gallery]` display and you can add custom fields as sortable, searchable columns in the Media/Assistant submenu table. You can also **modify the WordPress `_wp_attachment_metadata` contents** to suit your needs.
 
-* **IPTC**, **EXIF (including GPS)**, **XMP** and **PDF** metadata can be assigned to standard WordPress fields, taxonomy terms and custom fields. You can update all existing attachments from the Settings page IPTC/EXIF tab, groups of existing attachments with a Bulk Action or one existing attachment from the Edit Media/Edit Single Item screen. Display **IPTC**, **EXIF**, **XMP** and **PDF** metadata with `[mla_gallery]` custom templates. **Twelve hooks** provided for complete mapping customization from your theme or plugin code. You can view and/or download this PDF document with more information: [Mapping File Metadata to WordPress Fields with Media Library Assistant](http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf)
+* **IPTC**, **EXIF (including GPS)**, **XMP** and **PDF** metadata can be assigned to standard WordPress fields, taxonomy terms and custom fields. You can update all existing attachments from the Settings page IPTC/EXIF tab, groups of existing attachments with a Bulk Action or one existing attachment from the Edit Media/Edit Single Item screen. **Twelve hooks** provided for complete mapping customization from your theme or plugin code. You can view and/or download this PDF document with more information: [Mapping File Metadata to WordPress Fields with Media Library Assistant](http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf)
 
 * Complete control over **Post MIME Types, File Upload extensions/MIME Types and file type icon images**. Fifty four (54) additional upload types, 112 file type icon images and a searchable list of over 1,500 file extension/MIME type associations.
 
 * **Enhanced Search Media box**. Search can be extended to the name/slug, ALT text and caption fields. The connector between search terms can be "and" or "or". Search by attachment ID or Parent ID is supported, and you can search on keywords in the taxonomy terms assigned to Media Library items. Works in the Media Manager Modal Window, too.
 
-* **Where-used reporting** shows which posts use a media item as the "featured image", an inserted image or link, an entry in a `[gallery]` and/or an entry in an `[mla_gallery]`.
-
 * **Complete support for ALL taxonomies**, including the standard Categories and Tags, your custom taxonomies and the Assistant's pre-defined Att. Categories and Att. Tags. You can add taxonomy columns to the Assistant listing, filter on any taxonomy, assign terms and list the attachments for a term.
 
 * Taxonomy and custom field support in the ATTACHMENT DETAILS pane of the Media Manager Modal Window and Media/Library Grid view.
 
-* An inline **"Bulk Edit"** area; update author, parent and custom fields, add, remove or replace taxonomy terms for several attachments at once. Works on the Media/Add New screen as well.
-
-* An inline **"Quick Edit"** action for many common fields and for custom fields
+* Inline **"Bulk Edit"** and **"Quick Edit"** areas; update author, parent and custom fields, add, remove or replace taxonomy terms for several attachments at once. Works on the Media/Add New screen as well.
 
 * Displays more attachment information such as parent information, file URL and image metadata. Provides many more listing columns (more than 20) to choose from.
-
-* Allows you to edit the post_parent, the menu_order and to "unattach" items
 
 * Provides additional view filters for MIME types and taxonomies, and features to cmpose custom views of your own.
 
@@ -63,7 +59,7 @@ The Assistant is designed to work like the standard Media Library pages, so the 
 
 **I do not solicit nor accept personal donations in support of the plugin.** WordPress and its global community means a lot to me and I am happy to give something back.
 
-If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a [tax-deductible donation](http://secure.alsagoldenwest.org/goto/Chateau_Seaview_Fund) to our [Chateau Seaview Fund](http://secure.alsagoldenwest.org/goto/Chateau_Seaview_Fund) at the Golden West Chapter of the ALS Association. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!
+If you find the Media Library Assistant plugin useful and would like to support a great cause, consider a [tax-deductible donation](http://secure.alsnetwork.org/goto/Chateau_Seaview_Fund) to our [Chateau Seaview Fund](http://secure.alsnetwork.org/goto/Chateau_Seaview_Fund) at the ALS Network. Every dollar of the fund goes to make the lives of people with ALS, their families and caregivers easier. Thank you!
 
 == Installation ==
 
@@ -83,7 +79,7 @@ If you find the Media Library Assistant plugin useful and would like to support 
 
 1. Use the `[mla_gallery]` shortcode to add galleries of images, documents and more to your posts and pages
 
-1. Use the `[mla_tagcloud]` and `[mla_term_list]` shortcodes to add clickable lists of taxonomy terms to your posts and pages
+1. Use the `[mla_tag_cloud]`, `[mla_term_list]` and `[mla_custom_list]` shortcodes to add clickable lists of taxonomy terms and custom field values to your posts and pages
 
 == Frequently Asked Questions ==
 
@@ -191,6 +187,29 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.15 =
+* Fix: Eliminate PHP Fatal Error when accessing Example Plugins from the Settings/Media Library Assistant Documentation tab.
+
+= 3.14 =
+* New: Four new field-level prefix values provide access to the custom fields and taxonomy terms of an item's parent or the post/page in which the `[mla_gallery]` shortcode occurs.
+* New: For the `[mla_gallery]` shortcode, four new "item-level substitution parameters" provide links, tags and urls for the MIME type icon associated with each gallery item.
+* New: For the `[mla_gallery]` shortcode, a new value for the "link" parameter, "link=original", provides access to the original image for scaled items.
+* New: The new **"MLA Media Library Folders Support" example plugin** adds support for the "Block Direct Access" feature of the "Media Library Folders" plugin.
+* New: For the "MLA Gallery Download Archive" example plugin, archive files are now deleted from the server after download completes. A shortcode parameter has been added to allow keeping them.
+* New: For the "MLA Path Mapping Example" plugin, tools for copying term definitions and term assignments from one taxonomy to another have been added. The plugin's Documentation tab has more information.
+* New: The AVIF image format has been added to MLA's table of known MIME types.
+* Fix: **IMPORTANT: An SQL Injection security risk in the `[mla_custom_list]` shortcode has been mitigated.
+* Fix: **IMPORTANT: Attribute Injection security risks in all four shortcodes have been mitigated.** HTML Event attributes are no longer allowed in the `mla_link_attributes` and `mla_image_attributes` parameters.
+* Fix: **IMPORTANT: For WP 6.5, MLA custom file type icon support has been ensured.**
+* Fix: For the `[mla_gallery]` shortcode, some PHP 8.2 "Deprecated" warnings have been eliminated.
+* Fix: For the `[mla_term_list]` shortcode, a defect that caused the `child_of=` parameter to fail has been corrected.
+* Fix: For the `class-mla_objects.php` file, a PHP 8.2 "Deprecated" message has been eliminated.
+* Fix: For the `mla-define-ajaxurl-scripts.js` file, console messages reflecting harmless error conditions have been disabled.
+* Fix: For the "MLA Multisite Extensions" example plugin, activating the plugin in a non-multisite site does not cause PHP errors or warnings.
+* Fix: The `mla_list_table_begin_bulk_action` filter has been added to the Media/Assistant Download bulk action handler.
+* Fix: A PHP Warning message sometimes generated by handling custom Media/Assistant bulk actions has been eliminated.
+* Fix: The destination of the Donate link has been updated to reflect changes in the charity's web site.
+
 = 3.13 =
 * New: The new **"MLA Custom Field List" shortcode**, `[mla_custom_list]`,  lets you display custom field values in a variety of cloud, list, dropdown and checklist formats for use with the `[mla_gallery]` simple custom field query parameters.
 * New: The new "bulk edit area auto-fill presets" option on the General tab lets you automatically import preset values when the Media/Add New admin screen is loaded.
@@ -203,32 +222,10 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 * Fix: PHP warning messages for a problem with missing "dll" or "exe" MIME Type icons have been resolved.
 * Fix: For the Media Manager Modal (popup) Window and Media/Library grid mode, the year/month dropdown control now sorts properly, in descending order.
 
-= 3.12 =
-* Fix: IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
-
-= 3.11 =
-* New: You can add custom file type icons to the set MLA provides in the crystal directory. See the "Icons and Icon Types" subsection in the Settings/Media Library Assistant Documentation tab for details.
-* Fix: IMPORTANT: Cross-site scripting security risks for certain `[mla_gallery]`, `[mla_tag_cloud]` and `[mla_term_list]` parameters have been eliminated.
-* Fix: IMPORTANT: For the "MLA UI Elements Example" plugin, cross-site scripting security risks for many shortcode parameters have been eliminated.
-* Fix: For the "MLA UI Elements Example" plugin, `link_href` defects fixed and new `append_current_item` parameter added.
-* Fix: For the "MLA Multisite Extensions" example plugin, a defect processing taxonomies with no terms has been corrected.
-
-= 3.10 =
-* New: The "MLA Insert Fixit" example plugin has an option to copy ALT Text values only when the existing destination value is empty.
-* New: The new "MLA Duplicate Item" example plugin adds a "Duplicate" element to the Media/Assistant rollover actions. It duplicates an item, including terms and custom fields.
-* New: The "MLA Multisite Extensions" example plugin has been significantly enhanced. Five shortcodes have been added to make the plugin UI elements and tools available to posts/pages. Five API functions have been added  to make the plugin UI elements and tools available to PHP code applications.
-* New: A few updates have been made to version 1.10 of: [Mapping File Metadata to WordPress Fields with Media Library Assistant](http://davidlingren.com/assets/MLA-Metadata-Mapping.pdf).
-* Fix: IMPORTANT: A security risk when mla-stream-image is used outside the mla_viewer context has been eliminated.
-* Fix: IMPORTANT: Media Manager MLA enhancement failures when Gutenberg is loaded in an iFrame have been corrected.
-* Fix: On the Settings/Media Library Assistant Uploads tab, failure to retain custom Icon Type settings has been corrected.
-* Fix: Invalid default icon_type values for the "dll" and "exe" file extensions have been corrected, e.g., on the Settings/Media Library Assistant Uploads tab.
-* Fix: 16-bit Unicode values added to the `exif:Comments` and `exif:Author` values by the Windows File Explorer are now converted to UTF-8.
-* Fix: For Author Archive pages when the author has no posts, an artificial post object is generated to populate some of the gallery/cloud/list substitution parameters, e.g. `page_author`.
-* Fix: The WordPress `_thumbnail_id` value and hidden values for the Advanced Custom Fields plugin have been added to `MLAQuery::mla_fetch_attachment_metadata()`.
-* Fix: Instructions for creating custom templates in the "A Table-based Style and Markup Template Example" section of the Settings/Media Library Assistant DOcumentation tab have been updated to reflect the current UI.
-* Fix: A defect in importing & saving taxonomy support option settings has been corrected.
-
-= 3.00 - 3.09 =
+= 3.00 - 3.12 =
+* 3.12 - IMPORTANT: Cross-site scripting security risk for authenticated users with the "Author" role has been eliminated.
+* 3.11 - IMPORTANT: security risk fixes for shortcode parameters and example plugin. Custom file icon support for Uploads file types. One enhancement, four fixes.
+* 3.10 - IMPORTANT: WP 6.3 Gutenberg/Media Manager fix and a security risk fix. File Extension and MIME Type Processing fixes. "MLA Multisite Extensions" example plugin enhancements. Four enhancements in all, nine fixes.
 * 3.09 - IMPORTANT: security risk fixes for shortcode parameters and example plugin. Custom file icon support for Uploads file types. One enhancement, four fixes.
 * 3.08 - PNG metadata fixes, terms search enhancements, example plugin enhancements, MLA Insert Fixit security fix, Documentation updates and additions. Eight enhancements in all, eleven fixes.
 * 3.07 - Metadata extraction for PNG files, "Set Featured Image" enhancements, extensive "Where-used Reporting" documentation, Modern Event Calendar fix and Example Plugin enhancements. Eight enhancements in all, seven fixes.
@@ -362,12 +359,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.13 =
-IMPORTANT: `[mla_gallery]` parameters containing HTML are once again processed correctly. New "MLA Custom Field List" shortcode. Code refactor reduces load time and memory required for the `[mla_gallery]` shortcode. Four enhancements in all, six fixes.
-
-== Other Notes ==
-
-In this section, scroll down to see highlights from the documentation, including new and unique plugin features
+= 3.15 =
+IMPORTANT: Eliminate PHP Fatal Error when accessing Example Plugins from the Settings/Media Library Assistant Documentation tab.
 
 == Acknowledgements ==
 
@@ -395,88 +388,3 @@ You can use the "Download" rollover action to download a plugin to your local sy
 
 If you do make changes to the example plugin code the best practice is to save the modified file(s) under a different name, so your changes won't be lost in a future update. If you want to retain the file name, consider changing the version number, e.g. adding 100 to the MLA value, so you can more easily identify the plugins you have modified. 
 
-<h4>MLA Term List Shortcode</h4>
-
-The `[mla_term_list]` shortcode function displays hierarchical taxonomy terms in a variety of formats; link lists, dropdown controls and checkbox lists. The list works with both flat (e.g., Att. Tags) and hierarchical taxonomies (e.g., Att. Categories) MLA Term List enhancements for lists and controls include: 
-
-* Full support for WordPress categories, tags and custom taxonomies. You can select from any taxonomy or list of taxonomies defined in your site.
-* Several display formats, including "flat", "list", "dropdown" and "checklist".
-* Control over the styles, markup and content of each list using Style and Markup Templates. You can customize the "list" formats to suit any need.
-* Access to a wide range of content using the term-specific and Field-level Substitution parameters. A powerful Content Template facility lets you assemble content from multiple sources and vary the results depending on which data elements contain non-empty values for a given term.
-* Display Style and Display Content parameters for easy customization of the list display and the destination/value behind each term. 
-* A comprehensive set of filters gives you access to each step of the list generation process from PHP code in your theme or other plugins. 
-
-The `[mla_term_list]` shortcode has many parameters and some of them have a complex syntax; it can be a challenge to build a correct shortcode. The WordPress Shortcode API has a number of limitations that make techniques such as entering HTML or splitting shortcode parameters across multiple lines difficult. Read and follow the rules and guidelines in the "Entering Long/Complex Shortcodes" Documentation section to get the results you want. 
-
-Many of the `[mla_term_list]` concepts and shortcode parameters are modeled after the [mla_gallery] and [mla_tag_cloud] shortcodes, so the learning curve is shorter. Differences and parameters unique to the list are given in the sections below. 
-
-<h4>Support for the "Admin Columns" Plugin</h4>
-
-The [Admin Columns plugin](https://wordpress.org/plugins/codepress-admin-columns/ "Admin Columns free version") allows you to customize columns on several admin-mode screens, including the MLA Media/Assistant submenu screen. All you have to do is install the plugin; MLA will detect its presence and automatically register the Media/Assistant submenu screen for support. With Admin Columns, you can:
-
-* Reorder columns with a simple drag & drop interface.
-* Re-size columns to give more or less space to a column.
-* Remove (not just hide) columns from the submenu table.
-* Add new columns for custom fields and additional information.
-* The Admin Columns "Pro" version adds support for ACF fields and other capabilities.
-
-When Admin Columns is present you will see a new "Edit Columns" button just above the Media/Assistant submenu table. Click the button to go to the Settings/Admin Columns configuration screen. There you will see "Media Library Assistant" added to the "Others:" list. Click on it to see the configuration of the Media/Assistant submenu screen. 
-
-You can find detailed configuration instructions at the [Admin Columns web site Documentation page](http://admincolumns.com/documentation/ "Admin Columns Documentation"). 
-
-When you have completed your configuration changes, click "Update Media Library Assistant" in the Store Settings metabox at the top-right of the screen. You can also click "Restore Media Library Assistant columns" to remove your changes and go back to the MLA default settings. Click the "View" button at the right of the Media Library Assistant heading to return to the Media/Assistant submenu screen and see your changes. 
-
-<h4>WPML &amp; Polylang Multilingual Support; the MLA Language Tab</h4>
-
-Media Library Assistant provides integrates support for two popular "Multilanguage/ Multilingual/ Internationalization" plugins; [WPML](https://wpml.org/ "WPML - The WordPress Multilingual Plugin") and [Polylang](https://wordpress.org/plugins/polylang/ "Polylang - Making WordPress multilingual"). These plugins let you write posts and pages in multiple languages and make it easy for a visitor to select the language in which to view your site. MLA works with the plugins to make language-specific Media library items easy to create and manage.
-
-MLA detects the presence of either plugin and automatically adds several features that work with them:
-
-* <strong>Language-specific filtering</strong> of the <code>[mla_gallery]</code> and <code>[mla_tag_cloud]</code> shortcodes.
-* <strong>Media/Assistant submenu table enhancements</strong> for displaying and managing item translations.
-* <strong>Term Assignment and Term Synchronization</strong>, to match terms to language-specific items and automatically keep all translations for an item in synch.
-* <strong>Term Mapping Replication</strong>, to manage the terms created when mapping taxonomy terms from IPTC/EXIF metadata.
-
-<strong>Items, Translations and Terms</strong>
-
-Each Media Library item can have one or more "translations". The item translations are linked and they use the same file in the Media Library. The linkage lets us know that "&iexcl;Hola Mundo!" (Spanish), "Bonjour Monde" (French) and "Hello world!" (English) are all translations of the same post/page. Post/page translation is optional; some posts/pages may not be defined for all languages. The language of the first translation entered for a post/page is noted as the "source language".
-
-Taxonomy terms can also have one or more translations, which are also linked. The linkage lets us know that "Accesorio Categor&iacute;a" (Spanish), "Cat&eacute;gorie Attachement" (French) and "Attachment Category" (English) are all translations of the same term. Term translation is optional; some terms may not be defined for all languages. The language of the first translation entered for a term is noted as the "source language".
-
-When an item is uploaded to the Media Library it is assigned to the current language (note: <strong>avoid uploading items when you are in "All Languages"/"Show all languages" mode</strong>; bad things happen). WPML provides an option to duplicate the new item in all active languages; Polylang does not. MLA makes it easy to add translations to additional languages with the Translations column on the Media/Assistant submenu table. For Polylang, MLA provides Quick Translate and Bulk Translate actions as well.
-
-Assigning language-specific terms to items with multiple translations can be complex. MLA's <strong>Term Assignment</strong> logic assures that every term you assign on any of the editing screens (Media/Add New Bulk Edit, Media/Edit, Media/Assistant Quick Edit and Bulk Edit, Media Manager ATTACHMENT DETAILS pane) will be matched to the language of each item and translation. MLA's <strong>Term Synchronization</strong> logic ensures that changes made in one translation are replicated to all other translations that have an equivalent language-specific term.
-<strong>Shortcode Support</strong>
-
-The <code>[mla_gallery]</code> shortcode selects items using the WordPress <code>WP_Query</code> class. Both WPML and Polylang use the hooks provided by <code>WP_Query</code> to return items in the current language. If you use taxonomy parameters in your shortcode you must make sure that the term name, slug or other value is in the same language as the post/page in which it is embedded. This is easily done when the post/page content is translated from one language to another.
-
-The <code>[mla_tag_cloud]</code> shortcode selects terms using the WordPress <code>wpdb</code> class. MLA adds language qualifiers to the database queries that compose the cloud so all terms displated are appropriate for the current language. No special coding or shortcode modification is required.
-
-<strong>Media/Assistant submenu table</strong>
-
-Two columns are added to the table when WPML or Polylang is active:
-
-* <strong>Language</strong> - displays the language of the item. This column is only present when "All languages/Show all languages" is selected in the admin toolbar at the top of the screen.
-* <strong>"Translations"</strong> - displays the translation status of the item in all active languages. The column header displays the flag icon for the language. The column content will have a checkmark icon for the item's language, a pencil icon for an existing translation or a plus icon for a translation that does not exist. You can click any icon to go directly to the Media/Edit Media screen for that translation. If you click a plus icon, a new translation will be created and initialized with content and terms from the current item and you will go to the Media/Edit Media screen for the new translation.
-
-When Polylang is active, several additional features are available:
-
-* <strong>A Language dropdown control</strong> is added to the Quick Edit and Bulk Edit areas. You can change the language of one or more items by selecting a new value in the dropdown and clicking Update. The new language must not have an exising translation; if a translation already exists the change will be ignored.
-* <strong>Translation status links</strong> are added to the Quick Edit area, just below the Language dropdown control. If you click one of the pencil/plus translation status links, a new Quick Edit area will open for the translation you selected. A new translation is created if you click a plus status icon.
-* <strong>A Quick Translate rollover action</strong> can be added to each item (the default option setting is "unchecked"). If you activate this option, when you click the "Quick Translate" rollover action for an item the Quick Translate area opens, showing the Language dropdown control and the translation status links. From there, click "Set Language" to change the language assigned to the item or click one of the pencil/plus translation status links. A new Quick Edit area will open for the translation you selected. A new translation is created if you click a plus status icon.
-* <strong>A Translate action</strong> is added to the Bulk Actions dropdown control. If you click the box next to one or more items, select Translate in the Bulk Actions dropdown and click Apply, the Bulk Translate area will open. The center column contains a checkbox for each active language and an "All Languages" checkbox. Check the box(es) for the languages you want and then click "Bulk Translate". The Media/Assistant submenu table will be refreshed to display only the items you selected in the language(s) you selected. Existing translations will be displayed, and <strong>new translations will be created</strong> as needed so every item has a translation in every language selected.
-
-<strong>Term Management</strong>
-
-Taxonomy terms are language-specific, and making sure the right terms are assigned to all items and translations can be a challenge. Terms can change when an item is updated in any of five ways:
-
-1. <strong>Individual edit</strong> - this is the full-screen Media/Edit Media submenu provided by WordPress. Taxonomies are displayed and updated in meta boxes along the right side of the screen. When "Update" is clicked whatever terms have been selected/entered are assigned to the item; they replace any old assignments.
-1. <strong>Media Manager Modal Window</strong> - this is the popup window provided by WordPress' "Add Media" and "Select Featured Image" features. Taxonomies are displayed and updated in the ATTACHMENT DETAILS meta boxes along the right side of the window. Whatever terms are selected/entered here are assigned to the item; they replace any old assignments.
-1. <strong>Quick Edit</strong> - this is a row-level action on the Media/Assistant screen. When "Update" is clicked whatever terms have been selected/entered are assigned to the item; they replace any old assignments.
-1. <strong>Bulk edit</strong> - this is a bulk action on the Media/Assistant screen, and is also available on the Media/Upload New Media screen. In the Bulk Edit area, terms can be added or removed or all terms can be replaced. The bulk edit can be applied to multiple item translations in one or more languages.
-1. <strong>IPTC/EXIF Metadata Mapping</strong> - this is done by defining rules in the "Taxonomy term mapping" section of the IPTC &amp; EXIF Processing Options. The mapping rules can be run when new items are added to the Media Library, from the Settings/Media Library Assistant IPTC/EXIF tab, from the Media/Assistant Bulk Edit area or from the Media/Edit Media submenu screen.
-
-When terms change in any of the above ways there are two tasks that require rules:
-
-1. How should language-specific terms be assigned to items selected? This is "Term Assignment".
-1. How should terms assigned to one translation of an item be used to update other translations of the same item? This is "Term Synchronization".

@@ -434,7 +434,7 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below.</td>
+<td>adds one or more HTML attributes to the hyperlink for each gallery item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -450,7 +450,7 @@ Twelve <code>[mla_gallery]</code> parameters provide an easy way to control the 
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_image_attributes</td>
-<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value.</td>
+<td>adds one or more HTML attributes to the "img" tag of the thumbnail image or icon displayed for each gallery item. Note that if you include an "alt" or "class" attribute in this parameter it will override and replace the corresponding attribute already present in the tag, including any "mla_image_class" or "mla_image_alt" value. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_image_class</td>
@@ -698,6 +698,10 @@ The Link parameter specifies the target and type of link from the gallery item t
 <tr>
 <td class="mla-doc-table-label">permalink, post</td>
 <td>Link to the attachment's "media page". This is the default value.</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">original</td>
+<td>Link directly to the original, full-size, image file for scaled images or to the attachment file for unscaled images.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">file, full</td>
@@ -1674,7 +1678,7 @@ Nine parameters provide an easy way to control the contents of tag cloud items w
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -2743,7 +2747,7 @@ Nine parameters provide an easy way to control the contents of list items withou
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -3721,7 +3725,7 @@ Ten parameters provide an easy way to control the contents of tag cloud items wi
 <table>
 <tr>
 <td class="mla-doc-table-label">mla_link_attributes</td>
-<td>adds one or more HTML attributes to the hyperlink for each item; see below</td>
+<td>adds one or more HTML attributes to the hyperlink for each item; see below. For security reasons, HTML vent Attributes are not allowed; any attribute name that begins with "on" will invalidate the parameter.</td>
 </tr>
 <tr>
 <td class="mla-doc-table-label">mla_link_class</td>
@@ -5673,6 +5677,22 @@ The item-level substitution parameter names are:
 <td class="mla-doc-table-label">thumbnail_url</td>
 <td>for image/icon items, URL of the gallery image/icon</td>
 </tr>
+<tr>
+<td class="mla-doc-table-label">icon_pagelink</td>
+<td>contains a hyperlink to the attachment page with the item's MIME type icon in place of the thumbnail image</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_filelink</td>
+<td>contains a hyperlink to the attachment file with the item's MIME type icon in place of the thumbnail image</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_img</td>
+<td>contains an IMG tag with the item's MIME type icon</td>
+</tr>
+<tr>
+<td class="mla-doc-table-label">icon_src</td>
+<td>contains the SRC portion of <em>icon_img</em></td>
+</tr>
 </table>
 <h4>Field-level substitution parameters for the markup template Item part</h4>
 <p>
@@ -5816,7 +5836,7 @@ The next sections define each of the prefix and option/format values.
 </p>
 <h4>Prefix values</h4>
 <p>
-There are fifteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
+There are eighteen prefix values for field-level parameters. Prefix values must be coded as shown; all lowercase letters.
 </p>
 <table>
 	<tr>
@@ -5828,8 +5848,10 @@ There are fifteen prefix values for field-level parameters. Prefix values must b
 		<td>The parameters defined in the <code>[mla_gallery]</code> shortcode. For example, if your shortcode is <code>[mla_gallery attachment_tag=my-tag div-class=some_class]</code> you can access the parameters as <code>[+query:attachment_tag+]</code> and <code>[+query:div-class+]</code> respectively. Only the parameters actually present in the shortcode are accessible; default values for parameters not actually present are not available. You can define your own parameters, e.g., "div-class"; they will be accessible as field-level data but will otherwise be ignored.</td>
 	</tr>
 	<tr>
-		<td class="mla-doc-table-label">custom</td>
-		<td>WordPress Custom Fields, which you can define and populate on the Edit Media screen or map from various sources on the Settings/Media Library Assistant Custom and IPTC/EXIF/WP tabs. The field name, or key, can contain spaces and some punctuation characters. You <strong><em>cannot use the plus sign ('+')</em></strong> in a field name you want to use with <code>[mla_gallery]</code>. Custom field names are case-sensitive; "client" and "Client" are not the same.
+		<td class="mla-doc-table-label">custom,<br />page_custom,<br />parent_custom</td>
+		<td>WordPress Custom Fields, which you can define and populate on the Edit Media screen or map from various sources on the Settings/Media Library Assistant Custom and IPTC/EXIF/WP tabs. The "custom" prefix acts on the attachment itself, "page_custom" acts on the post/page in which the shortcode occurs, and "parent_custom" acts on the attachment's parent, if any. Note that "page_custom" is useful only for shortcodes; it has no values in mapping rules.
+		<br />&nbsp;<br />
+		The field name, or key, can contain spaces and some punctuation characters. You <strong><em>cannot use the plus sign ('+')</em></strong> in a field name you want to use with <code>[mla_gallery]</code>. Custom field names are case-sensitive; "client" and "Client" are not the same.
 		<br />&nbsp;<br />
 		For custom fields only, the <strong>",raw" option</strong> bypasses the code to sanitize the returned value. Use this option to allow HTML tags to be returned from a custom field.
 		<br />&nbsp;<br />
@@ -5838,8 +5860,10 @@ There are fifteen prefix values for field-level parameters. Prefix values must b
 		The ALL_CUSTOM value is altered in two ways. First, values of more than 256 characters are truncated to 256 characters. This prevents large fields from dominating the display. Second, array values are shown '(ARRAY)'.</td>
 	</tr>
 	<tr>
-		<td class="mla-doc-table-label">terms</td>
-		<td>WordPress Category, tag or custom taxonomy terms. For this category, you code the name of the taxonomy as the field name. The term(s) associated with the attachment will be displayed in the <code>[mla_gallery]</code>. Note that you must use the name/slug string for taxonomy, not the "title" string. For example, use "attachment_category" or "attachment_tag", not "Att. Category" or "Attachment Category".
+		<td class="mla-doc-table-label">terms,<br />page_terms,<br />parent_terms</td>
+		<td>WordPress Category, tag or custom taxonomy terms. The "terms" prefix acts on the attachment itself, "page_terms" acts on the post/page in which the shortcode occurs, and "parent_terms" acts on the attachment's parent, if any. Note that "page_terms" is useful only for shortcodes; it has no values in mapping rules.
+		<br />&nbsp;<br />
+		For these prefixes, you code the name of the taxonomy as the field name. The term(s) associated with the attachment will be displayed in the <code>[mla_gallery]</code>. Note that you must use the name/slug string for taxonomy, not the "title" string. For example, use "attachment_category" or "attachment_tag", not "Att. Category" or "Attachment Category".
 		<br />&nbsp;<br />
 		You can change the term field by adding the field name in parentheses after the taxonomy name. For example, <code>[+terms:attachment_category(slug)+]</code> or <code>[+terms:attachment_category(term_id)+]</code>.
 		<br />&nbsp;<br />

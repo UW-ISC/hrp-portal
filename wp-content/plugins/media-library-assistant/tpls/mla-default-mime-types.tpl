@@ -11,6 +11,7 @@ asf,video/x-ms-asf,video,video,Microsoft Advanced Systems Format (ASF)
 asx,video/x-ms-asf,video,video,Microsoft video playlist. XML with entries giving URL for each file to play in order.
 au,audio/basic,audio,audio,AU audio files
 avi,video/msvideo,video,video,Audio Video Interleave (AVI) - earlier Microsoft video format
+avif,image/avif,default,image,A modern image format based on the AV1 video format
 bin,application/octet-stream,default,binary,Binary Data/executable program
 bmp,image/bmp,default,image,Bitmap Image File
 c,text/plain,code,source_c,C Source File
@@ -250,7 +251,7 @@ avi,application/x-troff-msvideo,Audio Video Interleave (AVI) - earlier Microsoft
 avi,video/avi,Audio Video Interleave (AVI) - earlier Microsoft video format
 avi,video/msvideo,Audio Video Interleave (AVI) - earlier Microsoft video format
 avi,video/x-msvideo,Audio Video Interleave (AVI) - earlier Microsoft video format
-avs,video/avs-video,Animation
+avif,image/avif,A modern image format based on the AV1 video formatavs,video/avs-video,Animation
 aw,application/applixware,Applixware
 axa,audio/annodex,Annodex Audio Profile
 axs,application/olescript,

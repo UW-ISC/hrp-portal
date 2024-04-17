@@ -21,15 +21,21 @@
  *
  * allow_empty_archive - 'true' to allow download of an empty ZIP archive, 'false' to display nolink_text; default 'true'.
  *
+ * disposition - 'delete' (default) to delete the archive file from the server after transfer, 'keep' to retain it (unusual).
+ *
  * nolink_text - replaces the hyperlink with a text message for an empty "gallery".
  *
  * 
  * Created for support topic "Download of a Gallery"
  * opened on 6/7/2020 by "ernstwg"
  * https://wordpress.org/support/topic/download-of-a-gallery/
+ * 
+ * Enhanced for support topic "DOWNLOAD FILTERED IMAGES"
+ * opened on 2/21/2024 by "fargeud2"
+ * https://wordpress.org/support/topic/download-filtered-images/
  *
  * @package MLA Gallery Download Archive
- * @version 1.02
+ * @version 1.03
  */
 
 /*
@@ -37,10 +43,10 @@ Plugin Name: MLA Gallery Download Archive
 Plugin URI: http://davidlingren.com/
 Description: Downloads gallery items as a ZIP archive
 Author: David Lingren
-Version: 1.02
+Version: 1.03
 Author URI: http://davidlingren.com/
 
-Copyright 2020 David Lingren
+Copyright 2020-2024 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -139,7 +145,7 @@ class MLAGalleryDownloadArchive {
 
 		return $attr;
 	}
-	
+
 	/**
 	 * Ajax handler to download an archie of Media Library items
 	 *
@@ -149,18 +155,20 @@ class MLAGalleryDownloadArchive {
 	 */
 	public static function mla_download_archive_action() {
 		global $post;
-		
+
 		$default_arguments = array(
 			'mla_post' => 0,
 			'mla_index' => 0,
+			'disposition' => 'delete',
 		);
-		
+
 		$arguments = shortcode_atts( $default_arguments, $_REQUEST );
 
 		$mla_post = absint( $arguments['mla_post'] );
 		$mla_index = absint( $arguments['mla_index'] );
+		$disposition = ( 'keep' === trim( strtolower( $arguments['disposition'] ) ) ) ? 'keep' : 'delete';
 		$post = get_post( $mla_post );
-		
+
 		if ( is_null( $post ) ) {
 			exit;
 		}
@@ -234,13 +242,13 @@ class MLAGalleryDownloadArchive {
 				$filemtime = time();
 				$filesize = 0;
 			}
-			
+
 			header('Pragma: public'); 	// required
 			header('Expires: 0');		// no cache
 			header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 			header('Last-Modified: '.gmdate ( 'D, d M Y H:i:s', $filemtime ).' GMT');
 			header('Cache-Control: private',false);
-			header('Content-Type: '.$request['mla_download_type']);
+			header('Content-Type: application/zip');
 			header('Content-Disposition: attachment; filename="'.basename( $archive_name ).'"');
 			header('Content-Transfer-Encoding: binary');
 			header('Content-Length: '.$filesize);	// provide file size
@@ -250,7 +258,7 @@ class MLAGalleryDownloadArchive {
 				readfile( $archive_name );
 			}
 
-			if ( isset( $request['mla_download_disposition'] ) && 'delete' == $request['mla_download_disposition'] ) {
+			if ( 'delete' === $disposition ) {
 				@unlink( $archive_name );
 			}
 		} else {
@@ -281,16 +289,17 @@ class MLAGalleryDownloadArchive {
 	 */
 	public static function mla_download_archive( $attr, $content = NULL ) {
 		global $post;
-		
+
 		$default_arguments = array(
 			'archive_name' => '',
 			'link_attributes' => '',
 			'link_class' => '',
 			'link_text' => '',
 			'allow_empty_archive' => 'true',
+			'disposition' => 'delete',
 			'nolink_text' => '',
 		);
-		
+
 		// Create a clean array of shortcode parameters
 		$attr = self::_prepare_attributes( $attr, $content );
 
@@ -301,7 +310,7 @@ class MLAGalleryDownloadArchive {
 		if ( empty( $arguments['archive_name'] ) ) {
 			return '';
 		}
-		
+
 		$archive_title = $arguments['archive_name'];
 		$archive_name = sanitize_title_with_dashes( trim( $archive_title ) );
 
@@ -309,7 +318,7 @@ class MLAGalleryDownloadArchive {
 		if ( !empty( $link_attributes ) ) {
 			$link_attributes .= ' ';
 		}
-		
+
 		$link_class = trim( $arguments['link_class'] );
 		if ( !empty( $link_class ) ) {
 			$link_class .= ' ';
@@ -321,7 +330,9 @@ class MLAGalleryDownloadArchive {
 		}
 
 		$allow_empty_archive = 'true' === strtolower( trim( $arguments['allow_empty_archive'] ) );
-		
+
+		$disposition = ( 'keep' === trim( strtolower( $arguments['disposition'] ) ) ) ? 'keep' : 'delete';
+
 		// Find all of the shortcodes in the post/page content
 		$shortcode_regex = get_shortcode_regex( array( MLAGalleryDownloadArchive::SHORTCODE_NAME ) );
 		if ( preg_match_all( '/'. $shortcode_regex .'/s', $post->post_content, $matches )
@@ -343,7 +354,7 @@ class MLAGalleryDownloadArchive {
 						if ( empty( $link_text ) ) {
 							return '';
 						}
-						
+
 						return $nolink_text;
 					} // found empty archive
 				} // Prevent empty archive
@@ -354,6 +365,10 @@ class MLAGalleryDownloadArchive {
 					'mla_post' => $post->ID,
 					'mla_index' => $index,
 				) );
+
+				if ( 'keep' === $disposition ) {
+					$args['disposition'] = 'keep';
+				}
 
 				$url = add_query_arg( $args, admin_url( 'admin-ajax.php' ) );
 				return sprintf( '<a %1$s%2$shref="%3$s">%4$s</a>', $link_class, $link_attributes, $url, $link_text );

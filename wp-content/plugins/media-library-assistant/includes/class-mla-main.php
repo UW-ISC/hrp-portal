@@ -896,7 +896,7 @@ class MLA {
 	 *
  	 * @param	array Form elements, e.g., from $_REQUEST
 	 *
-	 * @return	array success/failure message and NULL content
+	 * @return	array success/failure message and NULL content, or simply redirects and dies
 	 */
 	private static function _process_zip_archive_download( $request ) {
 		// Make sure we have ZIP support
@@ -904,9 +904,31 @@ class MLA {
 			return __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'no ZipArchive support.', 'media-library-assistant' );
 		}
 
+		$request = apply_filters( 'mla_list_table_bulk_action_initial_request', $request, 'download-zip', NULL );
+		MLACore::mla_debug_add( __LINE__ . " MLA::_process_zip_archive_download( download-zip ) request = " . var_export( $request, true ), MLACore::MLA_DEBUG_CATEGORY_AJAX );
+
 		// Make sure we have attachments to process
 		if ( empty( $request['cb_attachment'] ) ) {
 			return __( 'ERROR', 'media-library-assistant' ) . ': ' . __( 'Could not retrieve Attachment.', 'media-library-assistant' );
+		}
+
+		$item_content = apply_filters( 'mla_list_table_begin_bulk_action', NULL, 'download-zip' );
+		if ( is_null( $item_content ) ) {
+			$prevent_default = false;
+		} else {
+			$prevent_default = isset( $item_content['prevent_default'] ) ? $item_content['prevent_default'] : false;
+		}
+
+		if ( $prevent_default ) {
+			if ( isset( $item_content['message'] ) ) {
+				$page_content['message'] = $item_content['message'];
+			}
+
+			if ( isset( $item_content['body'] ) ) {
+				$page_content['body'] = $item_content['body'];
+			}
+
+			return $page_content;
 		}
 
 		// Create unique local names in case the same file name appears in multiple year/month/ directories.
@@ -1410,6 +1432,7 @@ class MLA {
 							$item_content = apply_filters( 'mla_list_table_custom_bulk_action', NULL, $bulk_action, $post_id );
 
 							if ( is_null( $item_content ) ) {
+								$item_content = array( 'message' => '', 'body' => '', );
 								$prevent_default = false;
 								/* translators: 1: ERROR tag 2: bulk action */
 								$custom_message = sprintf( __( '%1$s: Unknown bulk action %2$s', 'media-library-assistant' ), __( 'ERROR', 'media-library-assistant' ), $bulk_action );
