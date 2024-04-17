@@ -1316,6 +1316,137 @@ class MLAData {
 	}
 
 	/**
+	 * Expand an entry for the custom field prefixes
+	 *
+	 * @since 3.14
+	 *
+	 * @param	array	$value Field definition with
+	 * 					['prefix'] => string, ['value'] => string, ['option'] => string 'text'|'single'|'export'|'array'|'multi'
+	 * @param	integer	Attachment or post ID
+	 *
+	 * @return	mixed	Text representation of term(s) value or false on failure
+	 */
+	private static function _expand_terms( $value, $post_id ) {
+		$taxonomy = $value['value'];
+		$field = !empty( $value['qualifier'] ) ? $value['qualifier'] : 'name';
+
+		// Look for compound taxonomy.slug notation
+		$matches = explode( '.', $taxonomy );
+		if ( 2 === count( $matches ) ) {
+			$slug = str_replace( '{+', '[+', str_replace( '+}', '+]', stripslashes( $matches[1] ) ) );
+			$replacement_values = MLAData::mla_expand_field_level_parameters( $slug, $query, $markup_values );
+			$slug = MLAData::mla_parse_template( $slug, $replacement_values );
+			$term = get_term_by( 'slug', $slug, $matches[0] );
+			if ( false === $term ) {
+				return false;
+			}
+
+			$terms = array( $term );
+		} else {
+			if ( 0 < $post_id ) {
+				$terms = get_object_term_cache( $post_id, $taxonomy );
+				if ( false === $terms ) {
+					$terms = wp_get_object_terms( $post_id, $taxonomy );
+					wp_cache_add( $post_id, $terms, $taxonomy . '_relationships' );
+				}
+			} else {
+				return false;
+			}
+		}
+
+		$text = '';
+		if ( is_wp_error( $terms ) ) {
+			$text = implode( ',', $terms->get_error_messages() );
+		} elseif ( ! empty( $terms ) ) {
+			if ( 'single' === $value['option'] || 1 == count( $terms ) ) {
+				reset( $terms );
+				$term = current( $terms );
+				$fields = get_object_vars( $term );
+				$text = isset( $fields[ $field ] ) ? $fields[ $field ] : $fields['name'];
+				$text = sanitize_term_field( $field, $text, $term->term_id, $taxonomy, 'display' );
+			} elseif ( ( 'export' === $value['option'] ) || ( 'unpack' == $value['option'] ) ) {
+				$text = sanitize_text_field( var_export( $terms, true ) );
+			} else {
+				foreach ( $terms as $term ) {
+					$fields = get_object_vars( $term );
+					$field_value = isset( $fields[ $field ] ) ? $fields[ $field ] : $fields['name'];
+					$field_value = sanitize_term_field( $field, $field_value, $term->term_id, $taxonomy, 'display' );
+					$text .= strlen( $text ) ? ', ' . $field_value : $field_value;
+				}
+			}
+		}
+
+		return $text;
+	}
+
+	/**
+	 * Expand an entry for the custom field prefixes
+	 *
+	 * @since 3.14
+	 *
+	 * @param	array	$value Field definition with
+	 * 					['prefix'] => string, ['value'] => string, ['option'] => string 'text'|'single'|'export'|'array'|'multi'
+	 * @param	integer	Attachment or post ID
+	 *
+	 * @return	string	Text representation of custom field value
+	 */
+	public static function _expand_custom_field( $value, $post_id ) {
+		if ( 0 < $post_id ) {
+			$record = get_metadata( 'post', $post_id, $value['value'], 'single' == $value['option'] );
+			if ( empty( $record ) && 'ALL_CUSTOM' == $value['value'] ) {
+				$meta_values = MLAQuery::mla_fetch_attachment_metadata( $post_id );
+				$clean_data = array();
+				foreach( $meta_values as $meta_key => $meta_value ) {
+					if ( 0 !== strpos( $meta_key, 'mla_item_' ) ) {
+						continue;
+					}
+
+					$meta_key = substr( $meta_key, 9 );
+					if ( is_array( $meta_value ) ) {
+						$clean_data[ $meta_key ] = '(ARRAY)';
+					} elseif ( is_string( $meta_value ) ) {
+						$clean_data[ $meta_key ] = self::_bin_to_utf8( substr( $meta_value, 0, 256 ) );
+					} else {
+						$clean_data[ $meta_key ] = $meta_value;
+					}
+				} // foreach value
+
+				/*
+				 * Convert the array to text, strip the outer "array( ... ,)" literal,
+				 * the interior linefeed/space/space separators and backslashes.
+				 */
+				$record = var_export( $clean_data, true);
+				$record = substr( $record, 7, strlen( $record ) - 10 );
+				$record = str_replace( chr(0x0A).'  ', ' ', $record );
+				$record = str_replace( '\\', '', $record );
+			} // ALL_CUSTOM
+		} else {
+			return '';
+		}
+
+		$text = '';
+		if ( is_wp_error( $record ) ) {
+			$text = implode( ',', $record->get_error_messages() );
+		} elseif ( ! empty( $record ) ) {
+			if ( is_scalar( $record ) ) {
+				$text = ( 'raw' === $value['format'] ) ? (string) $record : sanitize_text_field( (string) $record );
+			} elseif ( is_array( $record ) ) {
+				if ( 'export' === $value['option'] ) {
+					$text = ( 'raw' === $value['format'] ) ? var_export( $record, true ) : sanitize_text_field( var_export( $record, true ) );
+				} else {
+					$text = '';
+					foreach ( $record as $term ) {
+						$term_name = ( 'raw' === $value['format'] ) ? $term : sanitize_text_field( $term );
+						$text .= strlen( $text ) ? ', ' . $term_name : $term_name;
+					}
+				}
+			} // is_array
+		} // ! empty
+
+		return $text;
+	}
+
+	/**
 	 * Analyze a template, expanding Field-level Markup Substitution Parameters
 	 *
 	 * Field-level parameters must have one of the following prefix values:
@@ -1425,111 +1556,60 @@ class MLAData {
 					$markup_values[ $key ] = $text;
 					break;
 				case 'terms':
-					$taxonomy = $value['value'];
-					$field = !empty( $value['qualifier'] ) ? $value['qualifier'] : 'name';
-
-					// Look for compound taxonomy.slug notation
-					$matches = explode( '.', $taxonomy );
-					if ( 2 === count( $matches ) ) {
-						$slug = str_replace( '{+', '[+', str_replace( '+}', '+]', stripslashes( $matches[1] ) ) );
-						$replacement_values = MLAData::mla_expand_field_level_parameters( $slug, $query, $markup_values );
-						$slug = MLAData::mla_parse_template( $slug, $replacement_values );
-						$term = get_term_by( 'slug', $slug, $matches[0] );
-						if ( false === $term ) {
-							break;
-						}
-
-						$terms = array( $term );
-					} else {
-						if ( 0 < $post_id ) {
-							$terms = get_object_term_cache( $post_id, $taxonomy );
-							if ( false === $terms ) {
-								$terms = wp_get_object_terms( $post_id, $taxonomy );
-								wp_cache_add( $post_id, $terms, $taxonomy . '_relationships' );
-							}
-						} else {
-							break;
+					if ( 0 < $post_id ) {
+						$text = self::_expand_terms( $value, $post_id );
+						
+						if ( false !== $text ) {
+							$markup_values[ $key ] = $text;
 						}
 					}
 
-					$text = '';
-					if ( is_wp_error( $terms ) ) {
-						$text = implode( ',', $terms->get_error_messages() );
-					} elseif ( ! empty( $terms ) ) {
-						if ( 'single' == $value['option'] || 1 == count( $terms ) ) {
-							reset( $terms );
-							$term = current( $terms );
-							$fields = get_object_vars( $term );
-							$text = isset( $fields[ $field ] ) ? $fields[ $field ] : $fields['name'];
-							$text = sanitize_term_field( $field, $text, $term->term_id, $taxonomy, 'display' );
-						} elseif ( ( 'export' == $value['option'] ) || ( 'unpack' == $value['option'] ) ) {
-							$text = sanitize_text_field( var_export( $terms, true ) );
-						} else {
-							foreach ( $terms as $term ) {
-								$fields = get_object_vars( $term );
-								$field_value = isset( $fields[ $field ] ) ? $fields[ $field ] : $fields['name'];
-								$field_value = sanitize_term_field( $field, $field_value, $term->term_id, $taxonomy, 'display' );
-								$text .= strlen( $text ) ? ', ' . $field_value : $field_value;
-							}
+					break;
+				case 'page_terms':
+					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (integer) $markup_values[ 'page_ID' ] : 0;
+					
+					if ( 0 < $page_id ) {
+						$text = self::_expand_terms( $value, $page_id );
+						
+						if ( false !== $text ) {
+							$markup_values[ $key ] = $text;
 						}
 					}
 
-					$markup_values[ $key ] = $text;
+					break;
+				case 'parent_terms':
+					$parent_id = isset( $markup_values[ 'parent' ] ) ? (integer) $markup_values[ 'parent' ] : 0;
+					
+					if ( 0 < $parent_id ) {
+						$text = self::_expand_terms( $value, $parent_id );
+						
+						if ( false !== $text ) {
+							$markup_values[ $key ] = $text;
+						}
+					}
+
 					break;
 				case 'custom':
 					if ( 0 < $post_id ) {
-						$record = get_metadata( 'post', $post_id, $value['value'], 'single' == $value['option'] );
-						if ( empty( $record ) && 'ALL_CUSTOM' == $value['value'] ) {
-							$meta_values = MLAQuery::mla_fetch_attachment_metadata( $post_id );
-							$clean_data = array();
-							foreach( $meta_values as $meta_key => $meta_value ) {
-								if ( 0 !== strpos( $meta_key, 'mla_item_' ) ) {
-									continue;
-								}
-
-								$meta_key = substr( $meta_key, 9 );
-								if ( is_array( $meta_value ) ) {
-									$clean_data[ $meta_key ] = '(ARRAY)';
-								} elseif ( is_string( $meta_value ) ) {
-									$clean_data[ $meta_key ] = self::_bin_to_utf8( substr( $meta_value, 0, 256 ) );
-								} else {
-									$clean_data[ $meta_key ] = $meta_value;
-								}
-							} // foreach value
-
-							/*
-							 * Convert the array to text, strip the outer "array( ... ,)" literal,
-							 * the interior linefeed/space/space separators and backslashes.
-							 */
-							$record = var_export( $clean_data, true);
-							$record = substr( $record, 7, strlen( $record ) - 10 );
-							$record = str_replace( chr(0x0A).'  ', ' ', $record );
-							$record = str_replace( '\\', '', $record );
-						} // ALL_CUSTOM
-					} else {
-						break;
+						$markup_values[ $key ] = self::_expand_custom_field( $value, $post_id );
 					}
 
-					$text = '';
-					if ( is_wp_error( $record ) ) {
-						$text = implode( ',', $record->get_error_messages() );
-					} elseif ( ! empty( $record ) ) {
-						if ( is_scalar( $record ) ) {
-							$text = ( 'raw' == $value['format'] ) ? (string) $record : sanitize_text_field( (string) $record );
-						} elseif ( is_array( $record ) ) {
-							if ( 'export' == $value['option'] ) {
-								$text = ( 'raw' == $value['format'] ) ? var_export( $record, true ) : sanitize_text_field( var_export( $record, true ) );
-							} else {
-								$text = '';
-								foreach ( $record as $term ) {
-									$term_name = ( 'raw' == $value['format'] ) ? $term : sanitize_text_field( $term );
-									$text .= strlen( $text ) ? ', ' . $term_name : $term_name;
-								}
-							}
-						} // is_array
-					} // ! empty
+					break;
+				case 'page_custom':
+					$page_id = isset( $markup_values[ 'page_ID' ] ) ? (integer) $markup_values[ 'page_ID' ] : 0;
+					
+					if ( 0 < $page_id ) {
+						$markup_values[ $key ] = self::_expand_custom_field( $value, $page_id );
+					}
 
-					$markup_values[ $key ] = $text;
+					break;
+				case 'parent_custom':
+					$parent_id = isset( $markup_values[ 'parent' ] ) ? (integer) $markup_values[ 'parent' ] : 0;
+					
+					if ( 0 < $parent_id ) {
+						$markup_values[ $key ] = self::_expand_custom_field( $value, $parent_id );
+					}
+
 					break;
 				case 'iptc':
 					if ( is_null( $attachment_metadata ) ) {
@@ -1674,7 +1754,7 @@ class MLAData {
 	 * @param	string	Optional: default option value
 	 *
 	 * @return	array	Placeholder information: each entry is an array with
-	 * 					['prefix'] => string, ['value'] => string, ['option'] => string 'text'|single'|'export'|'array'|'multi'
+	 * 					['prefix'] => string, ['value'] => string, ['option'] => string 'text'|'single'|'export'|'array'|'multi'
 	 */
 	public static function mla_get_template_placeholders( $tpl, $default_option = 'text' ) {
 		$results = array();

@@ -1128,9 +1128,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 			return true;
 		}
 
-		/*
-		 * Begin code adapted from /wp-admin/includes/plugin.php function get_plugins()
-		 */
+		// Begin code adapted from /wp-admin/includes/plugin.php function get_plugins()
 		$wp_plugins = array ();
 		$plugin_root = MLA_PLUGIN_PATH . 'examples/plugins';
 
@@ -1186,15 +1184,11 @@ class MLA_Example_List_Table extends WP_List_Table {
 			$wp_plugins[plugin_basename( $plugin_file )] = $plugin_data;
 		}
 
-		uasort( $wp_plugins, 'self::_sort_uname_callback' );
+		uasort( $wp_plugins, 'MLA_Example_List_Table::_sort_uname_callback' );
 
-		/*
-		 * End code adapted from /wp-admin/includes/plugin.php function get_plugins()
-		 */
+		// End code adapted from /wp-admin/includes/plugin.php function get_plugins()
 
-		/*
-		 * Compose the array
-		 */
+		// Compose the array
 		$example_plugins = array();
 		foreach( $wp_plugins as $file => $metadata ) {
 			$plugin_status = validate_plugin( $file );
@@ -1246,9 +1240,7 @@ class MLA_Example_List_Table extends WP_List_Table {
 		self::$_example_plugin_items = array();
 		self::$_example_plugin_highest_ID = 0;
 
-		/*
-		 * Load and number the entries
-		 */
+		// Load and number the entries
 		foreach ( $example_plugins as $slug => $value ) {
 			self::$_example_plugin_items[ $slug ] = $value;
 			self::$_example_plugin_items[ $slug ]['post_ID'] = ++self::$_example_plugin_highest_ID;

@@ -4,7 +4,7 @@
 <div class="wrap">
 <div id="icon-options-general" class="icon32"><br/></div>
 <div id="donate-button-div" class="alignright clear">
-	<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://secure.alsagoldenwest.org/goto/Chateau_Seaview_Fund" target="_blank">[+Donate+]</a>
+	<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://secure.alsnetwork.org/goto/Chateau_Seaview_Fund" target="_blank">[+Donate+]</a>
 </div><h1>[+Media Library Assistant+] [+version+][+development+] [+Settings+]</h1>
 [+messages+]
 [+tablist+]
@@ -121,7 +121,7 @@
 <table width="700" border="0" cellpadding="10">
 	<tr>
 		<td valign="top">
-			<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://secure.alsagoldenwest.org/goto/Chateau_Seaview_Fund" target="_blank">[+Donate+]</a>
+			<a title="[+Donate to our fund+]" class="button button-large button-primary" href="http://secure.alsnetwork.org/goto/Chateau_Seaview_Fund" target="_blank">[+Donate+]</a>
 		</td>
 		<td>[+Donate Text+]</td>
 	</tr>

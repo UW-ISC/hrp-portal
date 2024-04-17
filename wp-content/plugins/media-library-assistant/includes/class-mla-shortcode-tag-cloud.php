@@ -997,7 +997,7 @@ class MLATagCloud {
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ), 'post' ) . ' ';
+				$link_attributes .= MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $item_values['current_item_class'] ) ) {
