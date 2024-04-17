@@ -148,7 +148,12 @@ class MLACustomList {
 		$clause[] = 'FROM ' . $wpdb->posts . ' AS p';
 		$clause[] = 'LEFT JOIN ( ';
 		$clause[] = 'SELECT DISTINCT pm.post_id FROM ' . $wpdb->postmeta . ' as pm';
-		$clause[] = 'WHERE pm.meta_key = \'' . $arguments['meta_key'] . '\'';
+
+		$placeholders = array( '%s' );
+		$clause_parameters = array( $arguments['meta_key'] );
+		$clause[] = $wpdb->prepare( 'WHERE pm.meta_key = \'' . join( ',', $placeholders ) . '\'', $clause_parameters ); // phpcs:ignore
+
+//		$clause[] = 'WHERE pm.meta_key = \'' . $arguments['meta_key'] . '\'';
 		$clause[] = ') AS sq';
 		$clause[] = 'ON p.ID = sq.post_id';
 		$clause[] = 'WHERE 1=1';
@@ -336,7 +341,7 @@ class MLACustomList {
 		}
 
 		if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-			$link_attributes .= wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ), 'post' ) . ' ';
+			$link_attributes .= MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 		}
 
 		if ( ! empty( $item_values['current_item_class'] ) ) {
@@ -1791,11 +1796,14 @@ class MLACustomList {
 			$clauses['join'] = $clause;
 		}
 
+		// Start WHERE clause with a taxonomy constraint
+		$placeholders = array( '%s' );
+		$clause_parameters = array( $arguments['meta_key'] );
+		$clause = array ( $wpdb->prepare( 'm.meta_key = \'' . join( ',', $placeholders ) . '\'', $clause_parameters ) ); // phpcs:ignore
+//		$clause = array( "m.meta_key = '" . $arguments['meta_key'] . "'" );
+
 		$clause_parameters = array();
 		$placeholders = array();
-
-		// Start WHERE clause with a taxonomy constraint
-		$clause = array( "m.meta_key = '" . $arguments['meta_key'] . "'" );
 
 		/*
 		 * The "ids" parameter can build an item-specific cloud.

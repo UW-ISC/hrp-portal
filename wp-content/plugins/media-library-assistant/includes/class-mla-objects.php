@@ -245,6 +245,7 @@ class MLAObjects {
 					) );
 
 					unset( $cloud['found_rows'] );
+					$terms = array();
 					foreach( $cloud as $term ) {
 						$terms[ $term->term_id ] = $term;
 					}

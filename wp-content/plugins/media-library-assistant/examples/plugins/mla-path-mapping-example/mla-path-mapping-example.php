@@ -1,6 +1,7 @@
 <?php
 /**
- * Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features
+ * Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features,
+ * and has tools to copy term definitions and assignments between taxonomies.
  *
  * For example, "/Root/Parent/Child" creates or locates:
  *  - A root term named "Root"
@@ -13,19 +14,23 @@
  * opened on 11/25/2017 by "wesm".
  * https://wordpress.org/support/topic/help-with-custom-taxonomy/
  *
+ * Enhanced (tools) for support topic "Taxonomy in the Assistant listing"
+ * opened on 10/29/2023 by "ratamatcat".
+ * https://wordpress.org/support/topic/taxonomy-in-the-assistant-listing/
+ *
  * @package MLA Path Mapping Example
- * @version 1.02
+ * @version 1.10
  */
 
 /*
 Plugin Name: MLA Path Mapping Example
 Plugin URI: http://davidlingren.com/
-Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features
+Description: Adds hierarchical path specification to the IPTC/EXIF taxonomy mapping features, and has tools to copy term definitions and assignments between taxonomies.
 Author: David Lingren
-Version: 1.02
+Version: 1.10
 Author URI: http://davidlingren.com/
 
-Copyright 2018 David Lingren
+Copyright 2018-2023 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -42,10 +47,8 @@ Copyright 2018 David Lingren
 */
 
 /**
- * Class MLA Path Mapping Example hooks one of the filters provided by the IPTC/EXIF and Custom Field mapping features
- *
- * Call it anything you want, but give it an unlikely and hopefully unique name. Hiding everything
- * else inside a class means this is the only name you have to worry about.
+ * Class MLA Path Mapping Example Adds hierarchical path specification to the IPTC/EXIF taxonomy
+ * mapping features, and has tools to copy term definitions and assignments between taxonomies.
  *
  * @package MLA Path Mapping Example
  * @since 1.00
@@ -58,7 +61,7 @@ class MLAPathMappingExample {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_VERSION = '1.02';
+	const PLUGIN_VERSION = '1.10';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -70,6 +73,89 @@ class MLAPathMappingExample {
 	const SLUG_PREFIX = 'mlapathmap';
 
 	/**
+	 * Constant to log this plugin's debug activity
+	 *
+	 * @since 1.10
+	 *
+	 * @var	integer
+	 */
+	const MLA_DEBUG_CATEGORY = 0x00008000;
+
+	/**
+	 * Settings Management object
+	 *
+	 * @since 1.10
+	 *
+	 * @var	array
+	 */
+	private static $plugin_settings = NULL;
+
+	/**
+	 * In-memory representation of the option settings
+	 *
+	 * @since 1.10
+	 *
+	 * @var array $_settings {
+	 *     @see $_default_settings
+	 *     }
+	 */
+	private static $_settings = NULL;
+
+	/**
+	 * Configuration values for the Settings Management object
+	 *
+	 * @since 1.10
+	 *
+	 * @var	array
+	 */
+	private static $settings_arguments = array(
+				'slug_prefix' => self::SLUG_PREFIX,
+				'plugin_title' => 'MLA Path Mapping Example',
+				'menu_title' => 'MLA Path Mapping',
+				'plugin_file_name_only' => 'mla-path-mapping-example',
+				'plugin_version' => self::PLUGIN_VERSION,
+				'template_file' => '/admin-settings-page.tpl', // Add the path at runtime, in initialize()
+				'options' => array(
+					// 'slug' => array( 'type' => 'checkbox|text|select|textarea', 'default' => 'text|boolean(0|1)' )
+					// See the default values in $_default_settings below
+					'assign_parents' => array( 'type' => 'checkbox', 'default' => false, ),
+					'assign_rule_parent' => array( 'type' => 'checkbox', 'default' => false, ),
+					'path_delimiter' => array( 'type' => 'text', 'default' => '/', ),
+				),
+				'general_tab_values' => array(), // additional page_values for 'page-level-options' template
+				'documentation_tab_values' => array(
+					'plugin_title' => 'MLA Path Mapping Example',
+					'settingsURL' => '', // Set at runtime in initialize()
+				), // page_values for 'documentation-tab' template
+			);
+
+	/**
+	 * Default processing options
+	 *
+	 * @since 1.10
+	 *
+	 * @var array $_default_settings {
+	 *     }
+	 */
+	private static $_default_settings = array (
+		'assign_parents' => false,
+		'assign_rule_parent' => false,
+		'path_delimiter' => '/',
+		);
+
+	/**
+	 * Template file for the Settings page(s) and parts
+	 *
+	 * This array contains all of the template parts for the Settings page(s). The array is built once
+	 * each page load and cached for subsequent use.
+	 *
+	 * @since 1.10
+	 *
+	 * @var	array
+	 */
+	public static $page_template_array = NULL;
+
+	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * Installs filters and actions that handle the MLA hooks for uploading and mapping.
@@ -79,397 +165,409 @@ class MLAPathMappingExample {
 	 * @return	void
 	 */
 	public static function initialize() {
-		/*
-		 * The filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
-		 */
+		// This plugin requires MLA
+		if ( ! class_exists( 'MLACore', false ) ) {
+			return;
+		}
+
+		// The filters are only useful in the admin section; exit if in the "front-end" posts/pages. 
 		if ( ! is_admin() )
 			return;
-		
-		// Add submenu page in the "Settings" section
-		add_action( 'admin_menu', 'MLAPathMappingExample::admin_menu' );
+
+		if ( ! ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] === 'heartbeat' ) ) {
+			MLACore::mla_debug_add( __LINE__ . ' MLAPathMappingExample::initialize() request = ' . var_export( $_REQUEST, true ), self::MLA_DEBUG_CATEGORY );
+		}
 
 		// add filters for IPTC/EXIF mapping rule execution
 		add_filter( 'mla_mapping_rule', 'MLAPathMappingExample::mla_mapping_rule', 10, 4 );
 		add_filter( 'mla_mapping_new_text', 'MLAPathMappingExample::mla_mapping_new_text', 10, 5 );
 		add_filter( 'mla_mapping_updates', 'MLAPathMappingExample::mla_mapping_updates', 10, 5 );
+
+		// The plugin settings class is shared with other MLA example plugins
+		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
+			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
+		}
+
+		// Add the run-time values to the arguments
+		self::$settings_arguments['template_file'] = dirname( __FILE__ ) . self::$settings_arguments['template_file'];
+		self::$settings_arguments['documentation_tab_values']['settingsURL'] = admin_url('options-general.php');
+
+		// Look for plugin-specific "tools" action 
+		$current_source_taxonomy = '0';
+		$current_destination_taxonomy = '0';
+
+		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_tools_copy_definitions'] ) ) {
+			$current_source_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['source_taxonomy'];
+			$current_destination_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['destination_taxonomy'];
+			self::$settings_arguments['messages'] = self::mpm_copy_definitions_action( $current_source_taxonomy, $current_destination_taxonomy );
+		}
+
+		if ( !empty( $_REQUEST[ self::SLUG_PREFIX . '_tools_copy_assignments'] ) ) {
+			$current_source_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['source_taxonomy'];
+			$current_destination_taxonomy = $_REQUEST[ self::SLUG_PREFIX . '_tools' ]['destination_taxonomy'];
+			self::$settings_arguments['messages'] = self::mpm_copy_assignments_action( $current_source_taxonomy, $current_destination_taxonomy );
+		}
+
+		// Create our own settings object
+		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
+
+		// Load template array for front-end shortcodes
+		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
+
+		// Initialize page-level values and add the run-time values to the settings
+		$general_tab_values = self::$plugin_settings->get_plugin_argument('general_tab_values');
+
+		$general_tab_values['source_taxonomy'] = self::mpm_taxonomy_options( $current_source_taxonomy );
+		$general_tab_values['destination_taxonomy'] = self::mpm_taxonomy_options( $current_destination_taxonomy );
+		$general_tab_values['path_delimiter'] = self::$plugin_settings->get_plugin_option('path_delimiter');
+
+		self::$plugin_settings->update_plugin_argument('general_tab_values', $general_tab_values );
 	}
 
 	/**
-	 * Add submenu page in the "Settings" section
-	 *
-	 * @since 1.00
-	 */
-	public static function admin_menu( ) {
-		/*
-		 * We need a tab-specific page ID to manage the screen options on the General tab.
-		 * Use the URL suffix, if present. If the URL doesn't have a tab suffix, use '-general'.
-		 * This hack is required to pass the WordPress "referer" validation.
-		 */
-		 if ( isset( $_REQUEST['page'] ) && is_string( $_REQUEST['page'] ) && ( self::SLUG_PREFIX . '-settings-' == substr( $_REQUEST['page'], 0, strlen( self::SLUG_PREFIX . '-settings-' ) ) ) ) {
-			$tab = substr( $_REQUEST['page'], strlen( self::SLUG_PREFIX . '-settings-' ) );
-		 } else {
-			$tab = 'general';
-		 }
-
-		$tab = self::_get_options_tablist( $tab ) ? '-' . $tab : '-general';
-		add_submenu_page( 'options-general.php', 'MLA Path Mapping Example', 'MLA Path Mapping', 'manage_options', self::SLUG_PREFIX . '-settings' . $tab, 'MLAPathMappingExample::add_submenu_page' );
-		add_filter( 'plugin_action_links', 'MLAPathMappingExample::plugin_action_links', 10, 2 );
-	}
-
-	/**
-	 * Add the "Settings" and "Guide" links to the Plugins section entry
-	 *
-	 * @since 1.00
-	 *
-	 * @param	array 	array of links for the Plugin, e.g., "Activate"
-	 * @param	string 	Directory and name of the plugin Index file
-	 *
-	 * @return	array	Updated array of links for the Plugin
-	 */
-	public static function plugin_action_links( $links, $file ) {
-		if ( $file == 'mla-path-mapping-example/mla-path-mapping-example.php' ) {
-			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . self::SLUG_PREFIX . '-settings-documentation&mla_tab=documentation' ), 'Guide' );
-			array_unshift( $links, $settings_link );
-			$settings_link = sprintf( '<a href="%s">%s</a>', admin_url( 'options-general.php?page=' . self::SLUG_PREFIX . '-settings-general' ), 'Settings' );
-			array_unshift( $links, $settings_link );
-		}
-
-		return $links;
-	}
-
-	/**
-	 * Render (echo) the "MLA Path Mapping" submenu in the Settings section
-	 *
-	 * @since 1.00
-	 *
-	 * @return	void Echoes HTML markup for the submenu page
-	 */
-	public static function add_submenu_page() {
-//error_log( __LINE__ . " MLAPathMappingExample:add_submenu_page _REQUEST = " . var_export( $_REQUEST, true ), 0 );
-
-		if ( !current_user_can( 'manage_options' ) ) {
-			echo "<h2>MLA Path Mapping Example - Error</h2>\n";
-			wp_die( 'You do not have permission to manage plugin settings.' );
-		}
-
-		// Load template array and initialize page-level values.
-		self::$page_template_array = MLACore::mla_load_template( dirname( __FILE__ ) . '/admin-settings-page.tpl', 'path' );
-		$current_tab_slug = isset( $_REQUEST['mla_tab'] ) ? $_REQUEST['mla_tab']: 'general';
-		$current_tab = self::_get_options_tablist( $current_tab_slug );
-		$page_values = array(
-			'version' => 'v' . self::CURRENT_VERSION,
-			'messages' => '',
-			'tablist' => self::_compose_settings_tabs( $current_tab_slug ),
-			'tab_content' => '',
-		);
-
-		// Compose tab content
-		if ( $current_tab ) {
-			if ( isset( $current_tab['render'] ) ) {
-				$handler = $current_tab['render'];
-				$page_content = call_user_func( $handler );
-			} else {
-				$page_content = array( 'message' => 'ERROR: Cannot render content tab', 'body' => '' );
-			}
-		} else {
-			$page_content = array( 'message' => 'ERROR: Unknown content tab', 'body' => '' );
-		}
-
-		if ( ! empty( $page_content['message'] ) ) {
-			if ( false !== strpos( $page_content['message'], 'ERROR' ) ) {
-				$messages_class = 'updated error';
-				$dismiss_button = '';
-			} else {
-				$messages_class = 'updated notice is-dismissible';
-				$dismiss_button = "  <button class=\"notice-dismiss\" type=\"button\"><span class=\"screen-reader-text\">[+dismiss_text+].</span></button>\n";
-			}
-
-			$page_values['messages'] = MLAData::mla_parse_template( self::$page_template_array['messages'], array(
-				 'mla_messages_class' => $messages_class ,
-				 'messages' => $page_content['message'],
-				 'dismiss_button' => $dismiss_button,
-				 'dismiss_text' => 'Dismiss this notice',
-			) );
-		}
-
-		$page_values['tab_content'] = $page_content['body'];
-		echo MLAData::mla_parse_template( self::$page_template_array['page'], $page_values );
-	}
-
-	/**
-	 * Template file for the Settings page(s) and parts
-	 *
-	 * This array contains all of the template parts for the Settings page(s). The array is built once
-	 * each page load and cached for subsequent use.
-	 *
-	 * @since 1.00
-	 *
-	 * @var	array
-	 */
-	public static $page_template_array = NULL;
-
-	/**
-	 * Definitions for Settings page tab ids, titles and handlers
-	 * Each tab is defined by an array with the following elements:
-	 *
-	 * array key => HTML id/name attribute and option database key (OMIT MLA_OPTION_PREFIX)
-	 *
-	 * title => tab label / heading text
-	 * render => rendering function for tab messages and content. Usage:
-	 *     $tab_content = ['render']( );
-	 *
-	 * @since 1.00
-	 *
-	 * @var	array
-	 */
-	private static $mla_tablist = array(
-		'general' => array( 'title' => 'General', 'render' => array( 'MLAPathMappingExample', '_compose_general_tab' ) ),
-		'documentation' => array( 'title' => 'Documentation', 'render' => array( 'MLAPathMappingExample', '_compose_documentation_tab' ) ),
-		);
-
-	/**
-	 * Retrieve the list of options tabs or a specific tab value
-	 *
-	 * @since 1.00
-	 *
-	 * @param	string	Tab slug, to retrieve a single entry
-	 *
-	 * @return	array|false	The entire tablist ( $tab = NULL ), a single tab entry or false if not found/not allowed
-	 */
-	private static function _get_options_tablist( $tab = NULL ) {
-		if ( is_string( $tab ) ) {
-			if ( isset( self::$mla_tablist[ $tab ] ) ) {
-				$results = self::$mla_tablist[ $tab ];
-			} else {
-				$results = false;
-			}
-		} else {
-			$results = self::$mla_tablist;
-		}
-
-		return $results;
-	}
-
-	/**
-	 * Compose the navigation tabs for the Settings subpage
-	 *
-	 * @since 1.00
-	 * @uses $page_template_array contains tablist and tablist-item templates
+	 * Compose HTML markup for taxonomy select field options
  	 *
-	 * @param	string	Optional data-tab-id value for the active tab, default 'general'
+	 * @since 1.10
 	 *
-	 * @return	string	HTML markup for the Settings subpage navigation tabs
-	 */
-	private static function _compose_settings_tabs( $active_tab = 'general' ) {
-		$tablist_item = self::$page_template_array['tablist-item'];
-		$tabs = '';
-		foreach ( self::_get_options_tablist() as $key => $item ) {
-			$item_values = array(
-				'data-tab-id' => $key,
-				'nav-tab-active' => ( $active_tab == $key ) ? 'nav-tab-active' : '',
-				'settings-page' => self::SLUG_PREFIX . '-settings-' . $key,
-				'title' => $item['title']
-			);
-
-			$tabs .= MLAData::mla_parse_template( $tablist_item, $item_values );
-		} // foreach $item
-
-		$tablist_values = array( 'tablist' => $tabs );
-		return MLAData::mla_parse_template( self::$page_template_array['tablist'], $tablist_values );
-	}
-
-	/**
-	 * Compose the General tab content for the Settings subpage
+	 * @param	string	$current_value Optional current selected value, default ''
 	 *
-	 * @since 1.00
-	 * @uses $page_template_array contains tab content template(s)
- 	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
+	 * @return	string	HTML markup for the select field options
 	 */
-	private static function _compose_general_tab( ) {
-		$page_content = array( 'message' => '', 'body' => '' );
-
-		// Initialize page messages and content, check for page-level Save Changes
-		if ( !empty( $_REQUEST['mla-path-mapping-options-save'] ) ) {
-			check_admin_referer( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME );
-			$page_content = self::_save_setting_changes( );
+	public static function mpm_taxonomy_options( $current_value = '' ) {
+		// Avoid fatal errors, e.g., for some AJAX calls such as "heartbeat"
+		if ( ! class_exists( 'MLAData' ) ) {
+			return '';
 		}
 
-		if ( !empty( $page_content['body'] ) ) {
-			return $page_content;
-		}
-
-		// Display the General tab
-		$_SERVER['REQUEST_URI'] = remove_query_arg( array(
-			'mla_path_mapping_options',
-			'_wpnonce',
-			'_wp_http_referer',
-			'mla-path-mapping-options-save',
-		), $_SERVER['REQUEST_URI'] );
-
-		// Compose page-level options
-		$page_values = array(
-			'assign_parents_checked' => self::_get_plugin_option('assign_parents') ? 'checked="checked" ' : '',
-			'assign_rule_parent_checked' => self::_get_plugin_option('assign_rule_parent') ? 'checked="checked" ' : '',
-			'path_delimiter' => self::_get_plugin_option('path_delimiter'),
+		// Default option if no taxonomies exist or there is no current selection
+		$option_values = array(
+			'value' => '0',
+			'text' => '&mdash; Pick a taxonomy &mdash;',
+			'selected' => '',
 		);
-		$options_list = MLAData::mla_parse_template( self::$page_template_array['page-level-options'], $page_values );
+		$select_options = MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 
-		$form_arguments = '?page=' . self::SLUG_PREFIX . '-settings-general&mla_tab=general';
+		// Build an array of the supported taxonomies
+		$supported_taxonomies = MLACore::mla_supported_taxonomies('support');
+		foreach ( $supported_taxonomies as $tax_name ) {
+			$tax_object = get_taxonomy( $tax_name );
 
-		$page_values = array(
-			'form_url' => admin_url( 'options-general.php' ) . $form_arguments,
-			'_wpnonce' => wp_nonce_field( MLACore::MLA_ADMIN_NONCE_ACTION, MLACore::MLA_ADMIN_NONCE_NAME, true, false ),
-			'options_list' => $options_list,
-		);
+			if ( false !== $tax_object ) {
+				$option_values = array(
+					'value' => $tax_name,
+					'text' => esc_attr( $tax_object->label ),
+					'selected' => $current_value === $tax_name ? 'selected=selected' : '',
+				);
 
-		$page_content['body'] .= MLAData::mla_parse_template( self::$page_template_array['general-tab'], $page_values );
-
-		return $page_content;
-	}
-
-	/**
-	 * Compose the General tab content for the Settings subpage
-	 *
-	 * @since 1.00
-	 * @uses $page_template_array contains tab content template(s)
- 	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
-	 */
-	private static function _compose_documentation_tab( ) {
-		$page_content = array( 'message' => '', 'body' => '' );
-		$page_values = array(
-		);
-
-		$page_content['body'] = MLAData::mla_parse_template( self::$page_template_array['documentation-tab'], $page_values );
-		return $page_content;
-	}
-
-	/**
-	 * Save settings as a WordPress wp_options entry
-	 *
-	 * @since 1.00
-	 *
-	 * @return	array	'message' => status/error messages, 'body' => tab content
-	 */
-	private static function _save_setting_changes() {
-		$page_content = array( 'message' => 'Settings unchanged.', 'body' => '' );
-		
-		$changed  = self::_update_plugin_option( 'assign_parents', isset( $_REQUEST[ 'mla_path_mapping_options' ]['assign_parents'] ) );
-		$changed |= self::_update_plugin_option( 'assign_rule_parent', isset( $_REQUEST[ 'mla_path_mapping_options' ]['assign_rule_parent'] ) );
-		$changed |= self::_update_plugin_option( 'path_delimiter', stripslashes( $_REQUEST[ 'mla_path_mapping_options' ]['path_delimiter'] ) );
-		
-		if ( $changed ) {
-			// No reason to save defaults in the database
-			if ( self::$_settings === self::$_default_settings ) {
-				delete_option( self::SLUG_PREFIX . '-settings' ); 
-			} else {
-				$changed = update_option( self::SLUG_PREFIX . '-settings', self::$_settings, false );
-			}
-
-			if ( $changed ) {
-				$page_content['message'] = "Settings have been updated.";
-			} else {
-				$page_content['message'] = "Settings updated failed.";
+				$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 			}
 		}
 
-		return $page_content;		
-	} // _save_setting_changes
+		return $select_options;
+	} // mpm_taxonomy_options
 
 	/**
-	 * Assemble the in-memory representation of the custom feed settings
+	 * Assemble the full path name for a term ID, currently unused
 	 *
-	 * @since 1.00
+	 * @since 1.10
 	 *
-	 * @param boolean $force_refresh Optional. Force a reload of rules. Default false.
-	 * @return boolean Success (true) or failure (false) of the operation
+	 * @param	integer	$term_id ID of the lowest-level term
+	 * @param	string	$delimiter Delimiter between path components
+	 *
+	 * @return	string	Full path from lowest-level term up to the root
 	 */
-	private static function _get_custom_feed_settings( $force_refresh = false ) {
-		if ( false == $force_refresh && NULL != self::$_settings ) {
-			return true;
+	private static function _get_term_path( $term_id, $delimiter ) {
+
+		$current_term = self::$source_terms[ $term_id ];
+		$term_path = $delimiter . $current_term['name'];
+
+		while ( 0 !== $current_term['parent'] ) {
+			$current_term = self::$source_terms[ $current_term['parent'] ];
+			$term_path = $delimiter . $current_term['name'] . $term_path;
 		}
 
-		// Update the plugin options from the wp_options table or set defaults
-		self::$_settings = get_option( self::SLUG_PREFIX . '-settings' );
-		if ( !is_array( self::$_settings ) ) {
-			self::$_settings = self::$_default_settings;
-		}
-
-		return true;
-	}
+		return $term_path;	
+	} // _get_term_path
 
 	/**
-	 * In-memory representation of the option settings
+	 * Fetch term definitions from a source taxonomy.
 	 *
-	 * @since 1.00
+	 * @since 1.10
 	 *
-	 * @var array $_settings {
-	 *     @type boolean $assign_parents Assign all terms in path, not just the last (leaf) term
-	 *     @type boolean $assign_rule_parent Assign the Rule Parent (if any) in addition to terms in path
-	 *     @type string  $path_delimiter The delimiter that separates path components
+	 * @param	string	$source_taxonomy Name/slug value for selected source taxonomy
+	 *
+	 * @return	integer	Count of source terms
+	 */
+	private static function _get_source_terms( $source_taxonomy ) {
+
+		self::$source_terms = array();
+		$source_count = 0;
+
+		$terms = get_terms( array( 'taxonomy' => $source_taxonomy, 'hide_empty' => false, ) );
+		if ( is_wp_error( $terms ) ) {
+			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_get_source_terms( {$source_taxonomy} ) bad taxonomy error = " . var_export( $terms ), self::MLA_DEBUG_CATEGORY );
+
+			return $source_count;	
+		}
+
+		foreach( $terms as $term ) {
+			self::$source_terms[ $term->term_id ] = array( 'name' => $term->name, 'slug' => $term->slug, 'description' => $term->description, 'parent' => $term->parent, );
+			$source_count++;
+		}
+
+		// Sort by term id
+		if ( ! empty( $terms ) ) {
+			ksort( self::$source_terms );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " _get_source_terms( {$source_count} ) source_terms = " . var_export( self::$source_terms, true ), self::MLA_DEBUG_CATEGORY );
+		return $source_count;	
+	} // _get_source_terms
+
+	/**
+	 * Source taxonomy term definitions to facilitate parent term creation
+	 *
+	 * @since 1.10
+	 *
+	 * @var array $_term_slugs ( term_id => array( 'slug' -> slug, 'parent' => parent, 'description' => description )
 	 *     }
 	 */
-	private static $_settings = NULL;
+	private static $source_terms = array();	
 
 	/**
-	 * Default processing options
+	 * Insert a destination taxonomy term and its parent(s) if they do not already exist
 	 *
-	 * @since 1.00
+	 * @since 1.10
 	 *
-	 * @var	array
+	 * @param	string	$destination_taxonomy taxonomy slug for this term
+	 * @param	integer	$term_id ID/index for self::$source_terms
+	 * @param	boolean	$return_object True to retirn entire term object, false (default) to return term_id.
+	 *
+	 * @return	integer/array	Destination term ID for this term or array( 'term_id' => $destination_term->term_id, 'term_taxonomy_id' => $destination_term->term_taxonomy_id, )
 	 */
-	private static $_default_settings = array (
-						'assign_parents' => false,
-						'assign_rule_parent' => false,
-						'path_delimiter' => '/',
-					);
+	private static function _maybe_insert_destination_term( $destination_taxonomy, $term_id, $return_array = false ) {
+		$term = self::$source_terms[ $term_id ];
+
+		$destination_term = get_term_by( 'slug', $term['slug'], $destination_taxonomy, $output = OBJECT, $filter = 'raw' );
+		if( $destination_term ) {
+			if ( $return_array ) {
+				return array( 'term_id' => $destination_term->term_id, 'term_taxonomy_id' => $destination_term->term_taxonomy_id, );
+			}
+
+			return $destination_term->term_id;
+		}
+
+		// Make sure the full path to this term exists
+		if ( 0 < $term['parent'] ) {
+			$parent = self::_maybe_insert_destination_term( $destination_taxonomy, $term['parent'] );
+		} else {
+			$parent = 0;
+		}
+
+		// Insert the term
+		$args = array(
+			'description' => $term['description'],
+			'slug' => $term['slug'],
+			'parent' => $parent,
+		);
+
+		$results = wp_insert_term( $term['name'], $destination_taxonomy, $args );
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_maybe_insert_destination_term( {$destination_taxonomy}, {$term_id}, {$return_array} ) wp_insert_term() results = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
+
+		if ( is_wp_error( $results ) ) {
+			if ( $return_array ) {
+				return array( 'term_id' => 0, 'term_taxonomy_id' => 0, );
+			}
+
+			return 0;
+		}
+
+		if ( $return_array ) {
+			return $results;
+		}
+
+		return $results['term_id'];
+	} // _maybe_insert_destination_term
 
 	/**
-	 * Get a custom feed option setting
+	 * Store term definitions from an array of Source taxonomy terms.
 	 *
-	 * @since 1.00
+	 * @since 1.10
 	 *
-	 * @param string	$name Option name
+	 * @param	$destination_taxonomy Destination taxonomy slug for this operation
 	 *
-	 * @return	mixed	Option value, if it exists else NULL
+	 * @uses	self::$source_terms	Source site term definition objects 
+	 *
+	 * @return	integer	Count of terms inserted
 	 */
-	private static function _get_plugin_option( $name ) {
-		if ( !self::_get_custom_feed_settings() ) {
-			return NULL;
+	private static function _put_destination_terms( $destination_taxonomy ) {
+		$insert_count = 0;
+
+		if ( MLACore::mla_taxonomy_support( $destination_taxonomy, 'support' ) ) {
+			$tax_object = get_taxonomy( $destination_taxonomy );
+			$flat_taxonomy = ! $tax_object->hierarchical;
+
+			$old_count = get_terms( array( 'taxonomy' => $destination_taxonomy, 'hide_empty' => false, 'fields' => 'count', ) );
+			if ( is_wp_error( $old_count ) ) {
+				MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_put_destination_terms( {$destination_taxonomy} ) bad get_terms() error = " . var_export( $old_count ), self::MLA_DEBUG_CATEGORY );
+				return 0;
+			}
+
+			$delimiter = $_REQUEST['mlapathmap_tools']['path_delimiter'];
+			foreach( self::$source_terms as $term_id => $term ) {
+				if ( $flat_taxonomy ) {
+					self::$source_terms[ $term_id ]['parent'] = 0;
+				}
+
+				$new_id = self::_maybe_insert_destination_term( $destination_taxonomy, $term_id );
+			} // foreach term
+
+			$insert_count = get_terms( array( 'taxonomy' => $destination_taxonomy, 'hide_empty' => false, 'fields' => 'count', ) ) - $old_count;
 		}
 
-		if ( !isset( self::$_settings[ $name ] ) ) {
-			return NULL;
-		}
-		
-		return self::$_settings[ $name ];
-	}
+		return $insert_count;
+	} // _put_destination_terms
 
 	/**
-	 * Update a custom feed option setting
+	 * Copy term definitions from a source taxonomy to a destination taxonomy.
 	 *
-	 * @since 1.00
+	 * @since 1.10
 	 *
-	 * @param string $name Option name
-	 * @param mixed	$new_value Option value
+	 * @param	$source_taxonomy Source taxonomy slug for this operation
+	 * @param	$destination_taxonomy Destination taxonomy slug for this operation
 	 *
-	 * @return mixed True if option value changed, false if value unchanged, NULL if failure
+	 * @return	string	action-specific message(s), e.g., summary of results
 	 */
-	private static function _update_plugin_option( $name, $new_value ) {
-		if ( !self::_get_custom_feed_settings() ) {
-			return NULL;
+	public static function mpm_copy_definitions_action( $source_taxonomy, $destination_taxonomy ) {
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action( {$source_taxonomy}, $destination_taxonomy} )", self::MLA_DEBUG_CATEGORY );
+
+		if ( '0' === $source_taxonomy ) {
+			$messages = 'No Source Taxonomy selected, nothing copied.';
+		} elseif ( $destination_taxonomy === $source_taxonomy ) {
+			$messages = 'Source and Destination are the same, nothing copied.';
+		} else {
+			$messages = '';
+
+			// MLAObjects::initialize hasn't run yet
+			MLACore::mla_initialize_tax_checked_on_top();
+
+			$source_count = self::_get_source_terms( $source_taxonomy );
+			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_definitions_action( {$source_count} )", self::MLA_DEBUG_CATEGORY );
+			$messages .= sprintf( 'Source %1$s - gathered %2$d term definitions.<br />', $source_taxonomy, $source_count ) . "\r\n";
+
+			if ( '0' === $destination_taxonomy ) {
+				$messages .= 'No Destination Taxonomy selected, nothing copied.';
+			} else {
+				$term_inserts = self::_put_destination_terms( $destination_taxonomy );
+				$messages .= sprintf( 'Destination %1$s - inserted %2$d term definitions.<br />', $destination_taxonomy, $term_inserts ) . "\r\n";
+			}
+
+			// Invalidate MLA's cached "Attachment" column counts because things have changed
+			delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $destination_taxonomy );
+		} // good $source_taxonomy
+
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mme_copy_settings_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
+		return $messages;		
+	} // mpm_copy_definitions_action
+
+	/**
+	 * Copy term assignments for one attachment from a source taxonomy to a destination taxonomy.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	integer	$attachment_id ID for the attachment
+	 * @param	string	$source_taxonomy Source taxonomy slug for this operation
+	 * @param	string	$destination_taxonomy Destination taxonomy slug for this operation
+	 *
+	 * @return	integer	Count of term assignments performed
+	 */
+	private static function _copy_term_assignments( $attachment_id, $source_taxonomy, $destination_taxonomy ) {
+		static $flat_taxonomy = NULL;
+
+		if ( NULL === $flat_taxonomy ) {
+			if ( MLACore::mla_taxonomy_support( $destination_taxonomy, 'support' ) ) {
+				$tax_object = get_taxonomy( $destination_taxonomy );
+				$flat_taxonomy = ! $tax_object->hierarchical;
+			} else {
+				$flat_taxonomy = false;
+			}
 		}
 
-		$old_value = isset( self::$_settings[ $name ] ) ? self::$_settings[ $name ] : NULL;
-		
-		if ( $new_value === $old_value ) {
-			return false;
+		// Get the current terms
+		$current_terms = get_object_term_cache( $attachment_id, $source_taxonomy );
+		if ( false === $current_terms ) {
+			$current_terms = wp_get_object_terms( $attachment_id, $source_taxonomy );
+			wp_cache_add( $attachment_id, $current_terms, $source_taxonomy . '_relationships' );
 		}
-		
-		self::$_settings[ $name ] = $new_value;
-		return true;
-	}
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments( {$attachment_id}, {$source_taxonomy} ) current terms = " . var_export( $current_terms, true ), self::MLA_DEBUG_CATEGORY );
+
+		$destination_terms = array();
+		foreach ( $current_terms as $index => $term ) {
+			if ( isset( self::$source_terms[ $term->term_id ]['destination_ttid'] ) ) {
+				$destination_terms[] = self::$source_terms[ $term->term_id ]['destination_ttid'];
+			} else {
+				$new_term = self::_maybe_insert_destination_term( $destination_taxonomy, $term->term_id, true );
+				self::$source_terms[ $term->term_id ]['destination_ttid'] = $new_term['term_taxonomy_id'];
+				$destination_terms[] = (integer) $new_term['term_taxonomy_id'];
+			}
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments() destination_terms = " . var_export( $destination_terms, true ), self::MLA_DEBUG_CATEGORY );
+		$results = wp_set_post_terms( $attachment_id, $destination_terms, $destination_taxonomy, true );
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::_copy_term_assignments( {$attachment_id}, {$destination_taxonomy} ) destination terms = " . var_export( $results, true ), self::MLA_DEBUG_CATEGORY );
+
+		return count( $results );
+	} // _copy_term_assignments
+
+	/**
+	 * Copy term assignments for all attachments from a source taxonomy to a destination taxonomy.
+	 *
+	 * @since 1.10
+	 *
+	 * @param	string	$source_taxonomy Source taxonomy slug for this operation
+	 * @param	string	$destination_taxonomy Destination taxonomy slug for this operation
+	 *
+	 * @return	string	action-specific message(s), e.g., summary of results
+	 */
+	public static function mpm_copy_assignments_action( $source_taxonomy, $destination_taxonomy ) {
+		global $wpdb;
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_assignments_action( {$source_taxonomy}, $destination_taxonomy} )", self::MLA_DEBUG_CATEGORY );
+
+		if ( '0' === $source_taxonomy ) {
+			$messages = 'No Source Taxonomy selected, nothing copied.';
+		} elseif ( $destination_taxonomy === $source_taxonomy ) {
+			$messages = 'Source and Destination are the same, nothing copied.';
+		} else {
+			$messages = '';
+
+			$source_count = self::_get_source_terms( $source_taxonomy );
+			MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_assignments_action( {$source_count} )", self::MLA_DEBUG_CATEGORY );
+
+			$messages .= sprintf( 'Source %1$s - gathered %2$d term definitions.<br />', $source_taxonomy, $source_count ) . "\r\n";
+
+			if ( '0' === $destination_taxonomy ) {
+				$messages .= 'No Destination Taxonomy selected, nothing copied.';
+			} else {
+				// MLAObjects::initialize hasn't run yet
+				MLACore::mla_initialize_tax_checked_on_top();
+
+				$attachment_ids = $wpdb->get_col( "SELECT ID FROM {$wpdb->posts} WHERE post_type = 'attachment' AND post_status = 'inherit'" );
+
+				$terms_assigned = 0;
+				foreach ( $attachment_ids as $attachment_id ) {
+					$terms_assigned += self::_copy_term_assignments($attachment_id, $source_taxonomy, $destination_taxonomy );
+				} // each ID
+
+				$messages .= sprintf( 'Copied %1$d assignments from %2$s to %3$s for %4$d attachments.<br />', $terms_assigned, $source_taxonomy, $destination_taxonomy, count( $attachment_ids ) ) . "\r\n";
+
+			// Invalidate MLA's cached "Attachment" column counts because things have changed
+			delete_transient( MLA_OPTION_PREFIX . 't_term_counts_' . $destination_taxonomy );
+			} // good destination taxonomy
+		} // good $source_taxonomy
+
+		MLACore::mla_debug_add( __LINE__ . " MLAPathMappingExample::mpm_copy_assignments_action() return messages = " . var_export( $messages, true ), self::MLA_DEBUG_CATEGORY );
+		return $messages;		
+	} // mpm_copy_assignments_action
 
 	/**
 	 * MLA Mapping Rule Filter
@@ -494,7 +592,7 @@ class MLAPathMappingExample {
 
 			self::$current_rule = $setting_value;
 		}
-		
+
 		return $setting_value;
 	} // mla_mapping_rule_filter
 
@@ -529,7 +627,7 @@ class MLAPathMappingExample {
 		// $unqualified_cache = array( [ taxonomy/setting_key ][ term name ] => array( term_id, term_taxonomy_id )
 		// $rule_parent = array( [ taxonomy/setting_key ] => WP_Term object )
 		static $term_cache = array(), $unqualified_cache = array(), $rule_parent = array();
-		
+
 		// We only care about taxonomies
 		if ( 'iptc_exif_taxonomy_mapping' !== $category ) {
 			return  $new_text;
@@ -539,7 +637,7 @@ class MLAPathMappingExample {
 		if ( !is_taxonomy_hierarchical( $setting_key ) ) {
 			return  $new_text;
 		}
-		
+
 		//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) new_text = " . var_export( $new_text, true ), 0 );
 		//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) attachment_metadata = " . var_export( $attachment_metadata, true ), 0 );
 
@@ -551,9 +649,9 @@ class MLAPathMappingExample {
 		}
 
 		$term_parent = !empty( self::$current_rule['parent'] ) ? absint( self::$current_rule['parent'] ) : 0;
-		$assign_rule_parent = $term_parent ? self::_get_plugin_option('assign_rule_parent') : false;
-		$assign_parents = self::_get_plugin_option('assign_parents');
-		$path_delimiter = self::_get_plugin_option('path_delimiter');
+		$assign_rule_parent = $term_parent ? self::$plugin_settings->get_plugin_option('assign_rule_parent') : false;
+		$assign_parents = self::$plugin_settings->get_plugin_option('assign_parents');
+		$path_delimiter = self::$plugin_settings->get_plugin_option('path_delimiter');
 
 		// Check for and validate Rule Parent
 		if ( $assign_rule_parent && empty( $rule_parent[ $setting_key ] ) ) {
@@ -567,16 +665,16 @@ class MLAPathMappingExample {
 
 		// We must build the "public" cache from scratch for each item
 		MLAOptions::$mla_term_cache[ $setting_key ][ $term_parent ] = array();
-		
+
 		// Initialize the higher-level cache elements to simplify the code
 		if ( !isset( $unqualified_cache[ $setting_key ] ) ) {
 			$unqualified_cache[ $setting_key ] = array();
 		}
-		
+
 		if ( !isset( $term_cache[ $setting_key ] ) ) {
 			$term_cache[ $setting_key ] = array();
 		}
-		
+
 		if ( !isset( $term_cache[ $setting_key ][ $term_parent ] ) ) {
 			$term_cache[ $setting_key ][ $term_parent ] = array();
 		}
@@ -600,7 +698,8 @@ class MLAPathMappingExample {
 
 			// Break the path, if present, into its component parts
 			$path = explode( $path_delimiter, $term_name );
-			
+//error_log( __LINE__ . " mla_mapping_new_text ( {$path_delimiter}, {$term_name} ) path = " . var_export( $path, true ), 0 );
+
 			// Check for an absolute path, initialize $current_id
 			$unqualified_name = false;
 			if ( empty( $path[0] ) ) {
@@ -616,7 +715,7 @@ class MLAPathMappingExample {
 
 			// Holder for the $assign_parents entries
 			$assign_parents_entry = 0;
-			
+
 			// Find or create all the path components and add them to the cache
 			foreach ( $path as $path_name ) {
 				// Check for a parent assignment
@@ -627,25 +726,25 @@ class MLAPathMappingExample {
 					$new_text[] = $name;
 					$assign_parents_entry = 0;
 				}
-				
+
 				// Ignore initial or duplicate delimiters
 				if ( empty( $path_name ) ) {
 //error_log( __LINE__ . " mla_mapping_new_text ignoring empty path_name", 0 );
 					continue;
 				}
-				
+
 				// Is this component in the cache?
 				if ( isset( $term_cache[ $setting_key ][ $current_parent ][ $path_name ] ) ) {
 //error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in cache", 0 );
 					$current_parent = $term_cache[ $setting_key ][ $current_parent ][ $path_name ]['term_id'];
-					
+
 					if ( $assign_parents ) {
 						$assign_parents_entry = $current_parent;
 					}
-					
+
 					continue;
 				}
-				
+
 				// Does this component exist?
 				if ( $unqualified_name ) {
 					// Is this component in the cache?
@@ -665,16 +764,16 @@ class MLAPathMappingExample {
 				} else {
 					$path_term = term_exists( $path_name, $setting_key, $current_parent );
 				}
-				
+
 				if ( $path_term !== 0 && $path_term !== NULL ) {
 //error_log( __LINE__ . " mla_mapping_new_text found $path_name under $current_parent in database = " . var_export( $path_term, true ), 0 );
 					$term_cache[ $setting_key ][ $current_parent ][ $path_name ] = $path_term;
 					$current_parent = absint( $path_term['term_id'] );
-					
+
 					if ( $assign_parents ) {
 						$assign_parents_entry = $current_parent;
 					}
-					
+
 					continue;
 				}
 
@@ -684,7 +783,7 @@ class MLAPathMappingExample {
 //error_log( __LINE__ . " mla_mapping_new_text created $path_name under $current_parent = " . var_export( $path_term, true ), 0 );
 					$term_cache[ $setting_key ][ $current_parent ][ $path_name ] = $path_term;
 					$current_parent = absint( $path_term['term_id'] );
-					
+
 					if ( $assign_parents ) {
 						$assign_parents_entry = $current_parent;
 					}
@@ -694,13 +793,14 @@ class MLAPathMappingExample {
 			// Finally, create a public entry based on the (path and) name as entered
 			MLAOptions::$mla_term_cache[ $setting_key ][ $term_parent ][ $term_name ] = $current_parent;
 		} // foreach term name
-		
+
 		// Create an entry with an unlikely name for the Rule Parent, if selected
 		if ( $assign_rule_parent && isset( $rule_parent[ $setting_key ] ) ) {
 			MLAOptions::$mla_term_cache[ $setting_key ][ $term_parent ]['rule_parent-term'] = $rule_parent[ $setting_key ]->term_id;
 			$new_text[] = 'rule_parent-term';			
 		}
 
+//error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) new text = " . var_export( $new_text, true ), 0 );
 //error_log( __LINE__ . " MLAPathMappingExample::mla_mapping_new_text_filter( {$setting_key}, {$post_id}, {$category} ) mla term cache = " . var_export( MLAOptions::$mla_term_cache, true ), 0 );
 		return  $new_text;
 	} // mla_mapping_new_text_filter

@@ -276,7 +276,7 @@ class MLATermList {
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= wp_kses( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ), 'post' ) . ' ';
+				$link_attributes .= MLAShortcode_Support::mla_esc_attr( MLAShortcode_Support::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
@@ -1506,7 +1506,7 @@ class MLATermList {
 	 */
 	private static function _find_child_of( &$parents, $parent_id ) {
 		foreach( $parents as $parent ) {
-			if ( $parent_id === $parent->term_id ) {
+			if ( $parent_id === (integer) $parent->term_id ) {
 				return $parent;
 			}
 

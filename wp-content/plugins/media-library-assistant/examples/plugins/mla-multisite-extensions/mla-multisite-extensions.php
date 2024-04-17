@@ -21,7 +21,7 @@
  * https://wordpress.org/support/topic/save-and-import-settings-for-multisite/
  *
  * @package MLA Multisite Extensions
- * @version 1.14
+ * @version 1.15
  */
 
 /*
@@ -29,7 +29,7 @@ Plugin Name: MLA Multisite Extensions
 Plugin URI: http://davidlingren.com/
 Description: Adds Multisite filters to MLA shortcodes, supports the "Multisite Global Media" plugin, copies MLA option settings between sites.
 Author: David Lingren
-Version: 1.14
+Version: 1.15
 Author URI: http://davidlingren.com/
 
 Copyright 2017-2023 David Lingren
@@ -62,7 +62,7 @@ class MLAMultisiteExtensions {
 	 *
 	 * @var	string
 	 */
-	const PLUGIN_VERSION = '1.14';
+	const PLUGIN_VERSION = '1.15';
 
 	/**
 	 * Slug prefix for registering and enqueueing submenu pages, style sheets, scripts and settings
@@ -151,25 +151,6 @@ class MLAMultisiteExtensions {
 	public static $page_template_array = NULL;
 
 	/**
-	 * Definitions for Settings page tab ids, titles and handlers
-	 * Each tab is defined by an array with the following elements:
-	 *
-	 * array key => HTML id/name attribute and option database key (OMIT MLA_OPTION_PREFIX)
-	 *
-	 * title => tab label / heading text
-	 * render => rendering function for tab messages and content. Usage:
-	 *     $tab_content = ['render']( );
-	 *
-	 * @since 1.10
-	 *
-	 * @var	array
-	 */
-	private static $mla_tablist = array(
-		'general' => array( 'title' => 'General', 'render' => array( 'MLAMultisiteExtensions', '_compose_general_tab' ) ),
-		'documentation' => array( 'title' => 'Documentation', 'render' => array( 'MLAMultisiteExtensions', '_compose_documentation_tab' ) ),
-		);
-
-	/**
 	 * Initialization function, similar to __construct()
 	 *
 	 * Installs filters and actions that handle the MLA hooks for uploading and mapping.
@@ -188,15 +169,23 @@ class MLAMultisiteExtensions {
 			return;
 		}
 
-		// Post/Page UI elements
-		add_shortcode( 'mme_source_site_options', 'MLAMultisiteExtensions::mme_source_site_options_shortcode' );
-		add_shortcode( 'mme_destination_sites_items', 'MLAMultisiteExtensions::mme_destination_sites_items_shortcode' );
-		add_shortcode( 'mme_terms_source_taxonomies', 'MLAMultisiteExtensions::mme_terms_source_taxonomies_shortcode' );
+		// This plugin requires MLA
+		if ( ! is_multisite() ) {
+			self::$settings_arguments['messages'] = "ERROR: Multisite support not enabled.";
+			//return;
+		}
 
-		// Tool actions
-		add_shortcode( 'mme_copy_settings', 'MLAMultisiteExtensions::mme_copy_settings_shortcode' );
-		add_shortcode( 'mme_copy_terms', 'MLAMultisiteExtensions::mme_copy_terms_shortcode' );
-
+		if ( is_multisite() ) {
+			// Post/Page UI elements
+			add_shortcode( 'mme_source_site_options', 'MLAMultisiteExtensions::mme_source_site_options_shortcode' );
+			add_shortcode( 'mme_destination_sites_items', 'MLAMultisiteExtensions::mme_destination_sites_items_shortcode' );
+			add_shortcode( 'mme_terms_source_taxonomies', 'MLAMultisiteExtensions::mme_terms_source_taxonomies_shortcode' );
+	
+			// Tool actions
+			add_shortcode( 'mme_copy_settings', 'MLAMultisiteExtensions::mme_copy_settings_shortcode' );
+			add_shortcode( 'mme_copy_terms', 'MLAMultisiteExtensions::mme_copy_terms_shortcode' );
+		}
+		
 		// The plugin settings class is shared with other MLA example plugins
 		if ( ! class_exists( 'MLAExamplePluginSettings102', false ) ) {
 			require_once( pathinfo( __FILE__, PATHINFO_DIRNAME ) . '/class-mla-example-plugin-settings-102.php' );
@@ -228,16 +217,18 @@ class MLAMultisiteExtensions {
 		
 		// Create our own settings object
 		self::$plugin_settings = new MLAExamplePluginSettings102( self::$settings_arguments );
-		
-		add_filter( 'mla_gallery_attributes', 'MLAMultisiteExtensions::mla_gallery_attributes', 10, 1 );
-		add_filter( 'mla_gallery_query_arguments', 'MLAMultisiteExtensions::mla_gallery_query_arguments', 10, 1 );
-		add_action( 'mla_gallery_wp_query_object', 'MLAMultisiteExtensions::mla_gallery_wp_query_object', 10, 1 );
-		add_filter( 'mla_gallery_the_attachments', 'MLAMultisiteExtensions::mla_gallery_the_attachments', 10, 2 );
-		add_filter( 'mla_gallery_item_initial_values', 'MLAMultisiteExtensions::mla_gallery_item_initial_values', 10, 2 );
-		add_filter( 'mla_gallery_item_values', 'MLAMultisiteExtensions::mla_gallery_item_values', 10, 1 );
 
-		// Filter for detecting the Multisite Global Media plugin
-		add_action( 'mla_media_modal_query_filtered_terms', 'MLAMultisiteExtensions::mla_media_modal_query_filtered_terms', 10, 2 );
+		if ( is_multisite() ) {
+			add_filter( 'mla_gallery_attributes', 'MLAMultisiteExtensions::mla_gallery_attributes', 10, 1 );
+			add_filter( 'mla_gallery_query_arguments', 'MLAMultisiteExtensions::mla_gallery_query_arguments', 10, 1 );
+			add_action( 'mla_gallery_wp_query_object', 'MLAMultisiteExtensions::mla_gallery_wp_query_object', 10, 1 );
+			add_filter( 'mla_gallery_the_attachments', 'MLAMultisiteExtensions::mla_gallery_the_attachments', 10, 2 );
+			add_filter( 'mla_gallery_item_initial_values', 'MLAMultisiteExtensions::mla_gallery_item_initial_values', 10, 2 );
+			add_filter( 'mla_gallery_item_values', 'MLAMultisiteExtensions::mla_gallery_item_values', 10, 1 );
+	
+			// Filter for detecting the Multisite Global Media plugin
+			add_action( 'mla_media_modal_query_filtered_terms', 'MLAMultisiteExtensions::mla_media_modal_query_filtered_terms', 10, 2 );
+		}
 
 		// Load template array for front-end shortcodes
 		self::$page_template_array = MLACore::mla_load_template( self::$settings_arguments['template_file'], 'path' );
@@ -280,20 +271,22 @@ class MLAMultisiteExtensions {
 		);
 		$select_options = MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
 
-		// Build an array of the dynamic options
-		foreach ( get_sites() as $site ) {
+		if ( is_multisite() ) {
+			// Build an array of the dynamic options
+			foreach ( get_sites() as $site ) {
 //error_log( __LINE__ . " mme_source_site_options( {$current_value} ) get_sites[] = " . var_export( $site, true ), 0 );
-
-			$details = get_blog_details( $site->blog_id );
+	
+				$details = get_blog_details( $site->blog_id );
 //error_log( __LINE__ . " mme_source_site_options( {$current_value} ) get_blog_details()= " . var_export( $details, true ), 0 );
-			
-			$option_values = array(
-				'value' => $details->blog_id,
-				'text' => esc_attr( $details->blog_id . ' - ' . $details->blogname ),
-				'selected' => $current_value === $details->blog_id ? 'selected=selected' : '',
-			);
-
-			$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
+				
+				$option_values = array(
+					'value' => $details->blog_id,
+					'text' => esc_attr( $details->blog_id . ' - ' . $details->blogname ),
+					'selected' => $current_value === $details->blog_id ? 'selected=selected' : '',
+				);
+	
+				$select_options .= MLAData::mla_parse_template( self::$page_template_array['select-option'], $option_values );
+			}
 		}
 
 //error_log( __LINE__ . " mme_source_site_options( {$current_value} ) select_options = " . var_export( $select_options, true ), 0 );
@@ -327,21 +320,23 @@ class MLAMultisiteExtensions {
 
 		$checklist_items = MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
 
-		// Build an array of the sites
-		foreach ( get_sites() as $site ) {
+		if ( is_multisite() ) {
+			// Build an array of the sites
+			foreach ( get_sites() as $site ) {
 //error_log( __LINE__ . " mme_destination_sites_items() get_sites[] = " . var_export( $site, true ), 0 );
-
-			$details = get_blog_details( $site->blog_id );
+	
+				$details = get_blog_details( $site->blog_id );
 //error_log( __LINE__ . " mme_destination_sites_items() get_blog_details()= " . var_export( $details, true ), 0 );
-
-			$option_values = array(
-				'checklist_name' => esc_attr( $checklist_name ),
-				'value' => $details->blog_id,
-				'text' => esc_attr( $details->blog_id . ' - ' . $details->blogname ),
-				'checked' => in_array( $details->blog_id, $current_value ) ? 'checked=checked' : '',
-			);
-
-			$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
+	
+				$option_values = array(
+					'checklist_name' => esc_attr( $checklist_name ),
+					'value' => $details->blog_id,
+					'text' => esc_attr( $details->blog_id . ' - ' . $details->blogname ),
+					'checked' => in_array( $details->blog_id, $current_value ) ? 'checked=checked' : '',
+				);
+	
+				$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
+			}
 		}
 
 //error_log( __LINE__ . " mme_destination_sites_items() checklist_items = " . var_export( $checklist_items, true ), 0 );
@@ -565,14 +560,16 @@ class MLAMultisiteExtensions {
 			$tax_object = get_taxonomy( $tax_name );
 //error_log( __LINE__ . " mme_terms_source_taxonomies( {$tax_name} ) tax_object = " . var_export( $tax_object, true ), 0 );
 
-			$option_values = array(
-				'checklist_name' => esc_attr( $checklist_name ),
-				'value' => $tax_name,
-				'text' => esc_attr( $tax_object->label ),
-				'checked' => in_array( $tax_name, $current_value ) ? 'checked=checked' : '',
-			);
-
-			$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
+			if ( false !== $tax_object ) {
+				$option_values = array(
+					'checklist_name' => esc_attr( $checklist_name ),
+					'value' => $tax_name,
+					'text' => esc_attr( $tax_object->label ),
+					'checked' => in_array( $tax_name, $current_value ) ? 'checked=checked' : '',
+				);
+	
+				$checklist_items .= MLAData::mla_parse_template( self::$page_template_array['checklist-item'], $option_values );
+			}
 		}
 
 //error_log( __LINE__ . " mme_terms_source_taxonomies() checklist_items = " . var_export( $checklist_items, true ), 0 );

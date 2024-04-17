@@ -259,6 +259,30 @@ class MLAShortcode_Support {
 	private static $attributes_errors = array();
 
 	/**
+	 * Make sure $attr does not contain any HTML Event Attributes
+	 *
+	 * @since 3.14
+	 *
+	 * @param	string	$attr One or more HTML attributes to be validated
+	 *
+	 * @return	string	clean attributes or an error "message"
+	 */
+	public static function mla_esc_attr( $attr ) {
+		$raw_attr = shortcode_parse_atts( $attr );
+		$valid_attr = '';
+
+		foreach ( $raw_attr as $attribute => $value ) {
+			if ( 0 === strpos( strtolower( $attribute ), 'on' ) ) {
+				return 'mla-error="HTML Event Attributes are not allowed"';
+			}
+
+			$valid_attr .= $attribute . '="' . esc_attr( $value ) . '"';
+		}
+			
+		return $valid_attr;
+	}
+
+	/**
 	 * Make sure $attr is an array, repair line-break damage, merge with $content
 	 *
 	 * @since 2.20
@@ -1327,6 +1351,7 @@ class MLAShortcode_Support {
 
 			$post_meta = MLAQuery::mla_fetch_attachment_metadata( $attachment->ID );
 			$base_file = isset( $post_meta['mla_wp_attached_file'] ) ? $post_meta['mla_wp_attached_file'] : '';
+			$original_image = isset( $post_meta['mla_wp_attachment_metadata']['original_image'] ) ? $post_meta['mla_wp_attachment_metadata']['original_image'] : '';
 			$sizes = isset( $post_meta['mla_wp_attachment_metadata']['sizes'] ) ? $post_meta['mla_wp_attachment_metadata']['sizes'] : array();
 
 			if ( ! empty( $post_meta['mla_wp_attachment_metadata']['width'] ) ) {
@@ -1402,7 +1427,9 @@ class MLAShortcode_Support {
 			// Add attachment-specific field-level substitution parameters
 			$new_text = isset( $item_template ) ? $item_template : '';
 			foreach( $mla_item_specific_arguments as $index => $value ) {
-				$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
+				if ( !empty( $arguments[ $index ] ) ) {
+					$new_text .= str_replace( '{+', '[+', str_replace( '+}', '+]', $arguments[ $index ] ) );
+				}
 			}
 			$item_values = MLAData::mla_expand_field_level_parameters( $new_text, $attr, $item_values, $attachment->ID );
 
@@ -1442,6 +1469,11 @@ class MLAShortcode_Support {
 					// The fourth argument, "show icon" is always false because we handle it in _get_attachment_image_src()
 					$item_values['pagelink'] = wp_get_attachment_link($attachment->ID, $size, true, false, $link_text);
 					$item_values['filelink'] = wp_get_attachment_link($attachment->ID, $size, false, false, $link_text);
+					
+					self::$size_parameter = 'icon_only';
+					$item_values['icon_pagelink'] = wp_get_attachment_link($attachment->ID, 'icon', true, false, $link_text);
+					$item_values['icon_filelink'] = wp_get_attachment_link($attachment->ID, 'icon', false, false, $link_text);
+					self::$size_parameter = strtolower( $arguments['size'] );
 
 					remove_filter( 'wp_get_attachment_image_src', 'MLAShortcode_Support::_get_attachment_image_src' );
 				}
@@ -1460,6 +1492,8 @@ class MLAShortcode_Support {
 
 				$item_values['pagelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', $attachment->guid, $thumbnail_content );
 				$item_values['filelink'] = sprintf( '<a href=\'%1$s\'>%2$s</a>', get_permalink( $attachment->ID ), $thumbnail_content );
+				$item_values['icon_pagelink'] = '';
+				$item_values['icon_filelink'] = '';
 			}
 
 			if ( in_array( $attachment->post_mime_type, array( 'image/svg+xml' ) ) ) {
@@ -1507,7 +1541,7 @@ class MLAShortcode_Support {
 			}
 
 			if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-				$link_attributes .= wp_kses( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ), 'post' ) . ' ';
+				$link_attributes .= MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $item_values ) ) . ' ';
 			}
 
 			if ( ! empty( $arguments['mla_link_class'] ) ) {
@@ -1525,7 +1559,7 @@ class MLAShortcode_Support {
 			 * are used in the Google Viewer code below
 			 */
 			if ( ! empty( $arguments['mla_image_attributes'] ) ) {
-				$image_attributes = wp_kses( self::mla_process_shortcode_parameter( $arguments['mla_image_attributes'], $item_values ), 'post' ) . ' ';
+				$image_attributes = MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_image_attributes'], $item_values ) ) . ' ';
 			} else {
 				$image_attributes = '';
 			}
@@ -1656,6 +1690,14 @@ class MLAShortcode_Support {
 				case 'post':
 					$item_values['link'] = $item_values['pagelink'];
 					break;
+				case 'original':
+					if ( !empty( $original_image ) ) {
+						$item_values['link'] = str_replace( $file_name, $original_image, $item_values['filelink'] );
+					} else {
+						$item_values['link'] = $item_values['filelink'];
+					}
+					
+					break;
 				case 'file':
 				case 'full':
 					$item_values['link'] = $item_values['filelink'];
@@ -1693,6 +1735,21 @@ class MLAShortcode_Support {
 				$item_values['filelink_url'] = $matches[1][0][0];
 			} else {
 				$item_values['filelink_url'] = '';
+			}
+
+			// Extract icon image tag and src URL
+			$match_count = preg_match_all( '#(\<img [^\>]+\>)#', $item_values['icon_filelink'], $matches, PREG_OFFSET_CAPTURE );
+			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$item_values['icon_img'] = $matches[1][0][0];
+			} else {
+				$item_values['icon_img'] = '';
+			}
+
+			$match_count = preg_match_all( '#src=\"([^\"]+)\"#', $item_values['icon_img'], $matches, PREG_OFFSET_CAPTURE );
+			if ( ! ( ( $match_count == false ) || ( $match_count == 0 ) ) ) {
+				$item_values['icon_src'] = $matches[1][0][0];
+			} else {
+				$item_values['icon_src'] = '';
 			}
 
 			/*
@@ -2141,7 +2198,7 @@ class MLAShortcode_Support {
 		// these will add to the default classes
 		$new_class = ( ! empty( $arguments['mla_link_class'] ) ) ? ' ' . esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_class'], $markup_values ) ) : '';
 
-		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? wp_kses( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ), 'post' ) . ' ' : '';
+		$new_attributes = ( ! empty( $arguments['mla_link_attributes'] ) ) ? MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ' : '';
 
 		$new_base =  ( ! empty( $arguments['mla_link_href'] ) ) ? esc_url( self::mla_process_shortcode_parameter( $arguments['mla_link_href'], $markup_values ) ) : $markup_values['new_url'];
 
@@ -2458,7 +2515,7 @@ class MLAShortcode_Support {
 		}
 
 		if ( ! empty( $arguments['mla_link_attributes'] ) ) {
-			$new_link .= wp_kses( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ), 'post' ) . ' ';
+			$new_link .= MLAShortcode_Support::mla_esc_attr( self::mla_process_shortcode_parameter( $arguments['mla_link_attributes'], $markup_values ) ) . ' ';
 		}
 
 		if ( ! empty( $arguments['mla_link_href'] ) ) {
@@ -3386,30 +3443,32 @@ class MLAShortcode_Support {
 			$children_ok = true;
 			switch ( $key ) {
 			case 'post_parent':
-				switch ( strtolower( $value ) ) {
-				case 'all':
-					$value = NULL;
-					$use_children = false;
-					break;
-				case 'any':
-					self::$query_parameters['post_parent'] = 'any';
-					$value = NULL;
-					$use_children = false;
-					break;
-				case 'current':
-					$value = $post_parent;
-					$use_children = true;
-					break;
-				case 'none':
-					self::$query_parameters['post_parent'] = 'none';
-					$value = NULL;
-					$use_children = false;
-					break;
-				default:
-					if ( false !== strpos( $value, ',' ) ) {
-						self::$query_parameters['post_parent'] = array_filter( array_map( 'absint', explode( ',', $value ) ) );
+				if ( NULL !== $value ) {
+					switch ( strtolower( $value ) ) {
+					case 'all':
 						$value = NULL;
 						$use_children = false;
+						break;
+					case 'any':
+						self::$query_parameters['post_parent'] = 'any';
+						$value = NULL;
+						$use_children = false;
+						break;
+					case 'current':
+						$value = $post_parent;
+						$use_children = true;
+						break;
+					case 'none':
+						self::$query_parameters['post_parent'] = 'none';
+						$value = NULL;
+						$use_children = false;
+						break;
+					default:
+						if ( false !== strpos( $value, ',' ) ) {
+							self::$query_parameters['post_parent'] = array_filter( array_map( 'absint', explode( ',', $value ) ) );
+							$value = NULL;
+							$use_children = false;
+						}
 					}
 				}
 				// fallthru
