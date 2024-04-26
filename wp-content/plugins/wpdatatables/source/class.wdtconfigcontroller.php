@@ -249,6 +249,7 @@ class WDTConfigController
             $table->fixed_right_columns_number = isset($advancedSettings->fixed_right_columns_number) ? $advancedSettings->fixed_right_columns_number : 0;
             $table->fixed_header = isset($advancedSettings->fixed_header) ? $advancedSettings->fixed_header : false;
             $table->fixed_header_offset = isset($advancedSettings->fixed_header_offset) ? $advancedSettings->fixed_header_offset : 0;
+            $table->customRowDisplay = isset($advancedSettings->customRowDisplay) ? $advancedSettings->customRowDisplay : '';
 
             $table = self::sanitizeTableConfig($table);
 
@@ -451,6 +452,7 @@ class WDTConfigController
                     'fixed_header' => $table->fixed_header,
                     'fixed_header_offset' => $table->fixed_header_offset,
                     'simple_template_id' =>  $table->simple_template_id,
+                    'customRowDisplay' => $table->customRowDisplay,
                 )
             ),
         );
@@ -551,6 +553,7 @@ class WDTConfigController
         $table->fixed_left_columns_number  = (int)$table->fixed_left_columns_number;
         $table->fixed_right_columns_number  = (int)$table->fixed_right_columns_number;
         $table->pdfPageOrientation = sanitize_text_field($table->pdfPageOrientation);
+        $table->customRowDisplay = sanitize_text_field($table->customRowDisplay);
         $table->userid_column_id = $table->userid_column_id != null ?
             (int)$table->userid_column_id : null;
 
@@ -1704,6 +1707,7 @@ class WDTConfigController
         $table->fixed_header_offset = 0;
         $table->table_wcag = 0;
         $table->simple_template_id = 0;
+        $table->customRowDisplay = '';
         return $table;
     }
 

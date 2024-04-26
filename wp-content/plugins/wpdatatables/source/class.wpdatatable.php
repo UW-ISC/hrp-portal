@@ -154,6 +154,7 @@ class WPDataTable
     private $_fixedHeaders = false;
     private $_fixedHeadersOffset = 0;
     private $_simple_template_id = 0;
+    private  $_customRowDisplay = '';
     protected $_transformValueColumns = array();
 
     /**
@@ -222,9 +223,14 @@ class WPDataTable
     {
         $this->_fixedColumns = $fixedcolumns;
     }
+    public function getCusgtomDisplayLength() {
+        return $this->_customRowDisplay;
+    }
 
-    public function getLeftFixedColumnsNumber()
-    {
+    public function setCustomDisplayLength($customRowDisplay) {
+        $this->_customRowDisplay = $customRowDisplay;
+    }
+    public function getLeftFixedColumnsNumber() {
         return $this->_fixedLeftColumnsNumber;
     }
 
@@ -776,9 +782,6 @@ class WPDataTable
 
     public function setDisplayLength($length)
     {
-        if (!in_array($length, array(1, 5, 10, 20, 25, 30, 50, 100, 200, -1))) {
-            return false;
-        }
         $this->_lengthDisplay = $length;
     }
 
@@ -1265,12 +1268,12 @@ class WPDataTable
                 if (!isset($this->_wdtNamedColumns[$name])) {
                     continue;
                 }
-                $this->_wdtNamedColumns[$name]->setWidth($value);
+                $this->_wdtNamedColumns[$name]->setWidth($this->isFixedLayout() ? $value : '');
             }
         } else {
             // if width is provided in indexed array
             foreach ($widthsArray as $name => $value) {
-                $this->_wdtIndexedColumns[$name]->setWidth($value);
+                $this->_wdtIndexedColumns[$name]->setWidth($this->isFixedLayout() ? $value : '');
             }
         }
     }
@@ -3256,7 +3259,8 @@ class WPDataTable
                 'linkButtonClass' => $wdtParameters['linkButtonClass'][$dataColumn_key],
                 'rangeSlider' => $wdtParameters['rangeSlider'][$dataColumn_key],
                 'rangeMaxValueDisplay' => $wdtParameters['rangeMaxValueDisplay'][$dataColumn_key],
-                'customMaxRangeValue' => $wdtParameters['customMaxRangeValue'][$dataColumn_key]
+                'customMaxRangeValue' => $wdtParameters['customMaxRangeValue'][$dataColumn_key],
+                'editingDefaultValue' => $wdtParameters['editingDefaultValue'][$dataColumn_key]
             );
             $colObjOptions = apply_filters('wpdt_filter_supplementary_array_column_object', $colObjOptions, $wdtParameters, $dataColumn_key);
             $colObjs[$dataColumn_key] = $tableColumnClass::generateColumn($dataColumn_type, $colObjOptions);
@@ -3510,6 +3514,9 @@ class WPDataTable
             $highestColumn = $objWorksheet->getHighestDataColumn();
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $highestColumn . '1', null, true, true, true);
+            while (!end($headingsArray[1])) {
+                array_pop($headingsArray[1]);
+            };
             foreach ($headingsArray[1] as $heading) {
                 if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
@@ -4297,7 +4304,7 @@ class WPDataTable
 
         $params = apply_filters('wpdt_filter_column_params', $params, $columnData);
 
-        if (isset($tableData->display_length) && $tableData->display_length != 0) {
+        if (isset($tableData->display_length)) {
             $this->setDisplayLength($tableData->display_length);
         } else {
             $this->disablePagination();
@@ -4500,6 +4507,7 @@ class WPDataTable
             isset($advancedSettings->fixed_right_columns_number) ? $this->setRightFixedColumnsNumber($advancedSettings->fixed_right_columns_number) : $this->setRightFixedColumnsNumber(0);
             isset($advancedSettings->fixed_header) ? $this->setFixedHeaders($advancedSettings->fixed_header) : $this->setFixedHeaders(false);
             isset($advancedSettings->fixed_header_offset) ? $this->setFixedHeadersOffset($advancedSettings->fixed_header_offset) : $this->setFixedHeadersOffset(0);
+            isset($advancedSettings->customRowDisplay) ? $this->setCustomDisplayLength($advancedSettings->customRowDisplay) : $this->setCustomDisplayLength('');
         } else {
             $this->setInfoBlock(true);
             $this->setGlobalSearch(true);
@@ -4538,6 +4546,7 @@ class WPDataTable
             $this->setRightFixedColumnsNumber(0);
             $this->setFixedHeaders(false);
             $this->setFixedHeadersOffset(0);
+            $this->setCustomDisplayLength('');
         }
 
         if (!empty($columnData['columnOrder'])) {
@@ -4794,6 +4803,7 @@ class WPDataTable
         $obj->table_wcag = $this->isTableWCAG();
         $obj->simple_template_id = $this->getSimpleTemplateId();
         $obj->scrollable = $this->isScrollable();
+        $obj->fixedLayout = $this->isFixedLayout();
         $obj->globalSearch = $this->isGlobalSearch();
         $obj->showRowsPerPage = $this->isShowRowsPerPage();
         $obj->popoverTools = $this->popoverToolsEnabled();
@@ -4835,17 +4845,33 @@ class WPDataTable
         $obj->dataTableParams->bFilter = $this->filterEnabled();
         //[<--/ Full version -->]//
         if ($this->paginationEnabled()) {
+            $obj->customRowDisplay = $this->getCusgtomDisplayLength();
             $obj->dataTableParams->bPaginate = true;
+            $originalArray = explode(',', $obj->customRowDisplay);
+
+            $trimArray = array_map(function ($value) {
+                return ($value == -1) ? __('All', 'wpdatatables') : (int)$value;
+            }, $originalArray);
 
             if (wp_is_mobile()) {
                 $obj->dataTableParams->sPaginationType = $this->getPaginationLayoutMobile();
             } else {
                 $obj->dataTableParams->sPaginationType = $this->getPaginationLayout();
             }
-            $obj->dataTableParams->aLengthMenu = json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
+            $obj->dataTableParams->aLengthMenu = $obj->customRowDisplay != "" ?
+                json_decode('[[' . $this->getCusgtomDisplayLength() . '], ' . json_encode($trimArray) . ']') :
+                json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
             $obj->dataTableParams->iDisplayLength = (int)$this->getDisplayLength();
         } else {
-            $obj->dataTableParams->aLengthMenu = json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
+            $obj->customRowDisplay = $this->getCusgtomDisplayLength();
+            $originalArray = explode(',', $obj->customRowDisplay);
+            $trimArray = array_map(function ($value) {
+                return ($value == -1) ? __('All', 'wpdatatables') : (int)$value;
+            }, $originalArray);
+
+            $obj->dataTableParams->aLengthMenu = $obj->customRowDisplay != "" ?
+                json_decode('[[' . $this->getCusgtomDisplayLength() . '], ' . json_encode($trimArray) . ']') :
+                json_decode('[[1,5,10,25,50,100,-1],[1,5,10,25,50,100,"' . __('All', 'wpdatatables') . '"]]');
             $obj->dataTableParams->iDisplayLength = (int)$this->getDisplayLength();
             if ($this->groupingEnabled()) {
                 $obj->dataTableParams->aaSortingFixed = json_decode('[[' . $this->groupingColumn() . ', "asc"]]');

@@ -1325,6 +1325,7 @@ function wdtCreateMultiSelectbox(oTable, aoColumn, columnIndex, sColumnLabel, th
  */
 function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serverSide) {
     var tableId = oTable.attr('id');
+    var tableDesc = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
 
     if (!jQuery.isArray(aoColumn.defaultValue)) {
         aoColumn.defaultValue = [aoColumn.defaultValue];
@@ -1370,10 +1371,16 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             } else {
                 var checked = jQuery.inArray(value.toString(), aoColumn.defaultValue) !== -1 ? 'checked="checked" ' : '';
             }
+            var ariaLabel = '', modifyLabel = '';
+            if (tableDesc.table_wcag){
+                ariaLabel = encodeURI(label);
+                ariaLabel = ariaLabel.replace(/["']/g, " ");
+                ariaLabel = ' aria-label="' + wpdatatables_filter_strings.filterCheckbox + ariaLabel + '" ';
+            }
 
             r += '<div class="wdt_checkbox_option checkbox">' +
                 '<label>' +
-                '<input type="checkbox" class="wdt-checkbox-filter wdt-filter-control" value="' + encodeURI(value) + '" ' + checked + ' aria-label="' + wpdatatables_filter_strings.filterCheckbox + label + '">' +
+                '<input type="checkbox" class="wdt-checkbox-filter wdt-filter-control" value="' + encodeURI(value) + '" ' + checked + ariaLabel + ' >' +
                 '<span class="wdt-checkbox-label">' + label + '</span>' +
                 '</label>' +
                 '</div>';
@@ -1414,7 +1421,7 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
     if (dialogRender) {
         var dlg = jQuery('#' + checkboxesDivId).wrap('<div class="wdt-checkbox-modal-wrap ' + checkboxesDivId + '" />').hide();
         var $modal = jQuery('#wdt-frontend-modal');
-        var tableDesc = JSON.parse(jQuery('#' + oTable.data('described-by')).val());
+
 
         $modal.on('click', 'button.close', function (e) {
             $modal.fadeOut(300, function () {
@@ -1452,10 +1459,15 @@ function wdtCreateCheckbox(oTable, aoColumn, columnIndex, sColumnLabel, th, serv
             }
             $modal.attr('data-current-checkbox-dialog', dlg.attr('id'));
             $modal.addClass('wdt-skin-' + tableDesc.tableSkin);
+            $modal.addClass('wdt-checkbox-render-modal');
             if (tableDesc.table_wcag) {
                 $modal.addClass('wpTableWCAG');
             }
             $modal.modal('show');
+        });
+
+        $modal.on('hide.bs.modal', function () {
+            $modal.removeClass('wdt-checkbox-render-modal');
         });
 
         $modal.on('shown.bs.modal', function () {

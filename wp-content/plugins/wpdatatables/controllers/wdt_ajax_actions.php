@@ -8,11 +8,15 @@ defined('ABSPATH') or die('Access denied.');
 function wdtGetAjaxData() {
     global $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9;
 
-    if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendEditTableNonce' . (int)$_GET['table_id'])) {
+    if (!wp_verify_nonce($_POST['wdtNonce'], 'wdtFrontendServerSideNonce' . (int)$_GET['table_id'])) {
         exit();
     }
 
     $id = (int)$_GET['table_id'];
+
+    if (!$id) {
+        exit();
+    }
 
     do_action('wpdatatables_get_ajax_data', $id);
 
@@ -48,6 +52,7 @@ function wdtGetAjaxData() {
     $sumColumns = array();
     $userIdColumnHeader = '';
     $filterDefaultValue = array();
+    $editingDefaultValue = array();
     $rangeSlider = array();
     $rangeMaxValueDisplay = array();
     $customMaxRangeValue = array();
@@ -111,6 +116,7 @@ function wdtGetAjaxData() {
         if (isset($advancedSettings->calculateMax) && $advancedSettings->calculateMax == 1) {
             $maxColumns[] = $column->orig_header;
         }
+
         if (isset($column->default_value)) {
             if (isset($_GET['wdt_column_filter'])) {
                 foreach ($_GET['wdt_column_filter'] as $fltColKey => $fltDefVal) {
@@ -131,27 +137,28 @@ function wdtGetAjaxData() {
             }
         }
 
-        $decimalPlaces[$column->orig_header] = isset($advancedSettings->decimalPlaces) ? $advancedSettings->decimalPlaces : null;
-        $exactFiltering[$column->orig_header] = isset($advancedSettings->exactFiltering) ? $advancedSettings->exactFiltering : null;
-        $globalSearchColumn[$column->orig_header] = isset($advancedSettings->globalSearchColumn) ? $advancedSettings->globalSearchColumn : null;
-        $searchInSelectBox[$column->orig_header] = isset($advancedSettings->searchInSelectBox) ? $advancedSettings->searchInSelectBox : null;
-        $searchInSelectBoxEditing[$column->orig_header] = isset($advancedSettings->searchInSelectBoxEditing) ? $advancedSettings->searchInSelectBoxEditing : null;
-        $andLogic[$column->orig_header] = isset($advancedSettings->andLogic) ? $advancedSettings->andLogic : null;
-        $linkTargetAttribute[$column->orig_header] = isset($advancedSettings->linkTargetAttribute) ? $advancedSettings->linkTargetAttribute : null;
-        $linkNoFollowAttribute[$column->orig_header] = isset($advancedSettings->linkNoFollowAttribute) ? $advancedSettings->linkNoFollowAttribute : null;
-        $linkNoreferrerAttribute[$column->orig_header] = isset($advancedSettings->linkNoreferrerAttribute) ? $advancedSettings->linkNoreferrerAttribute : null;
-        $linkSponsoredAttribute[$column->orig_header] = isset($advancedSettings->linkSponsoredAttribute) ? $advancedSettings->linkSponsoredAttribute : null;
-        $linkButtonAttribute[$column->orig_header] = isset($advancedSettings->linkButtonAttribute) ? $advancedSettings->linkButtonAttribute : null;
-        $linkButtonLabel[$column->orig_header] = isset($advancedSettings->linkButtonLabel) ? $advancedSettings->linkButtonLabel : null;
-        $linkButtonClass[$column->orig_header] = isset($advancedSettings->linkButtonClass) ? $advancedSettings->linkButtonClass : null;
-        $possibleValuesAddEmpty[$column->orig_header] = isset($advancedSettings->possibleValuesAddEmpty) ? $advancedSettings->possibleValuesAddEmpty : null;
-        $rangeSlider[$column->orig_header] = isset($advancedSettings->rangeSlider) ? $advancedSettings->rangeSlider : null;
-        $rangeMaxValueDisplay[$column->orig_header] = isset($advancedSettings->rangeMaxValueDisplay) ? $advancedSettings->rangeMaxValueDisplay : null;
-        $customMaxRangeValue[$column->orig_header] = isset($advancedSettings->customMaxRangeValue) ? $advancedSettings->customMaxRangeValue : null;
-        $foreignKeyRule[$column->orig_header] = isset($advancedSettings->foreignKeyRule) ? $advancedSettings->foreignKeyRule : null;
-	    $column_align_header[$column->orig_header] = isset($advancedSettings->column_align_header) ? $advancedSettings->column_align_header : '';
-	    $column_align_fields[$column->orig_header] = isset($advancedSettings->column_align_fields) ? $advancedSettings->column_align_fields : '';
-	    $column_rotate_header_name[$column->orig_header] = isset($advancedSettings->column_rotate_header_name) ? $advancedSettings->column_rotate_header_name : '';
+        $decimalPlaces[$column->orig_header] = $advancedSettings->decimalPlaces ?? null;
+        $exactFiltering[$column->orig_header] = $advancedSettings->exactFiltering ?? null;
+        $globalSearchColumn[$column->orig_header] = $advancedSettings->globalSearchColumn ?? null;
+        $searchInSelectBox[$column->orig_header] = $advancedSettings->searchInSelectBox ?? null;
+        $searchInSelectBoxEditing[$column->orig_header] = $advancedSettings->searchInSelectBoxEditing ?? null;
+        $andLogic[$column->orig_header] = $advancedSettings->andLogic ?? null;
+        $linkTargetAttribute[$column->orig_header] = $advancedSettings->linkTargetAttribute ?? null;
+        $linkNoFollowAttribute[$column->orig_header] = $advancedSettings->linkNoFollowAttribute ?? null;
+        $linkNoreferrerAttribute[$column->orig_header] = $advancedSettings->linkNoreferrerAttribute ?? null;
+        $linkSponsoredAttribute[$column->orig_header] = $advancedSettings->linkSponsoredAttribute ?? null;
+        $linkButtonAttribute[$column->orig_header] = $advancedSettings->linkButtonAttribute ?? null;
+        $linkButtonLabel[$column->orig_header] = $advancedSettings->linkButtonLabel ?? null;
+        $linkButtonClass[$column->orig_header] = $advancedSettings->linkButtonClass ?? null;
+        $possibleValuesAddEmpty[$column->orig_header] = $advancedSettings->possibleValuesAddEmpty ?? null;
+        $rangeSlider[$column->orig_header] = $advancedSettings->rangeSlider ?? null;
+        $rangeMaxValueDisplay[$column->orig_header] = $advancedSettings->rangeMaxValueDisplay ?? null;
+        $customMaxRangeValue[$column->orig_header] = $advancedSettings->customMaxRangeValue ?? null;
+        $foreignKeyRule[$column->orig_header] = $advancedSettings->foreignKeyRule ?? null;
+        $column_align_header[$column->orig_header] = $advancedSettings->column_align_header ?? '';
+        $column_align_fields[$column->orig_header] = $advancedSettings->column_align_fields ?? '';
+        $column_rotate_header_name[$column->orig_header] = $advancedSettings->column_rotate_header_name ?? '';
+        $editingDefaultValue[$column->orig_header] = $advancedSettings->editingDefaultValue ?? '';
     }
 
     if ($tableView == 'excel') {
@@ -236,8 +243,9 @@ function wdtGetAjaxData() {
         'skip_thousands'      => $skipThousands,
         'rangeSlider'         => $rangeSlider,
         'rangeMaxValueDisplay' => $rangeMaxValueDisplay,
-        'customMaxRangeValue'         => $customMaxRangeValue,
-        'filterDefaultValue'  => $filterDefaultValue
+        'customMaxRangeValue'  => $customMaxRangeValue,
+        'filterDefaultValue'  => $filterDefaultValue,
+        'editingDefaultValue'  => $editingDefaultValue
     );
 
     $columnOptions = apply_filters('wpdt_filter_column_options', $columnOptions, $columnData, $tbl);
@@ -293,6 +301,8 @@ function wdtSaveTableFrontend() {
 
     $tableData = WDTConfigController::loadTableFromDB($tableId);
     $mySqlTableName = WDTTools::applyPlaceholders($tableData->mysql_table_name);
+
+    $advancedSettings = json_decode($tableData->advanced_settings);
 
     $columnsData = WDTConfigController::loadColumnsFromDB($tableId);
     $idKey = '';
@@ -430,6 +440,10 @@ function wdtSaveTableFrontend() {
                     case 'image':
                         $formData[$column->orig_header] = WDTTools::prepareStringCell(esc_url($formData[$column->orig_header]), $tableData->connection);
                         break;
+                    case 'hidden':
+                        $formData[$column->orig_header] = WDTTools::prepareStringCell(
+                            WDTTools::getHiddenDefaultValues($advancedSettings->editingDefaultValue, $tableData), $tableData->connection);
+                        break;
                     case 'time':
                         if ($formData[$column->orig_header] != '') {
                             $formData[$column->orig_header] =
@@ -460,6 +474,12 @@ function wdtSaveTableFrontend() {
     if (!(Connection::isSeparate($tableData->connection))) {
         $formData = stripslashes_deep($formData);
         if ($idVal != '0') {
+            if (isset($advancedSettings->editButtonsDisplayed) &&
+                (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
+                    in_array('edit', $advancedSettings->editButtonsDisplayed)))
+            ){
+                exit();
+            }
             $res = $wpdb->update($mySqlTableName,
                 $formData,
                 array(
@@ -477,6 +497,13 @@ function wdtSaveTableFrontend() {
                 $returnResult['success'] = $idVal;
             }
         } else {
+            if (isset($advancedSettings->editButtonsDisplayed) &&
+                (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
+                    in_array('duplicate', $advancedSettings->editButtonsDisplayed) ||
+                    in_array('new_entry', $advancedSettings->editButtonsDisplayed)))
+            ){
+                exit();
+            }
             $returnResult['is_new'] = true;
             $res = $wpdb->insert($mySqlTableName,
                 $formData
@@ -517,7 +544,7 @@ function wdtSaveTableFrontend() {
             $query = apply_filters('wpdatatables_query_before_save_frontend', $query, $tableId);
             if ($sql->doQuery($query)) {
                 if (!$isPostgreSql)
-                $idVal = $sql->getLastInsertId();
+                    $idVal = $sql->getLastInsertId();
                 $returnResult['success'] = $idVal;
             } else {
                 if ($sql->getLastError() !== '') {
@@ -831,6 +858,22 @@ function wdtDeleteTableRow() {
     $mySqlTableName = WDTTools::applyPlaceholders($tableData->mysql_table_name);
     $columnsData = WDTConfigController::loadColumnsFromDB($tableId);
 
+    $advancedSettings = json_decode($tableData->advanced_settings);
+    if (isset($advancedSettings->editButtonsDisplayed) &&
+        (!(in_array('all', $advancedSettings->editButtonsDisplayed) ||
+            in_array('delete', $advancedSettings->editButtonsDisplayed)))
+    ){
+        exit();
+    }
+
+    foreach ($columnsData as $column) {
+        if ($column->id_column) {
+            if ($idKey != $column->orig_header)
+                exit();
+            $idKey = $column->orig_header;
+            break;
+        }
+    }
     // If current user cannot edit - do nothing
     if (!wdtCurrentUserCanEdit($tableData->editor_roles, $tableId)) {
         exit();
@@ -857,8 +900,11 @@ function wdtDeleteTableRow() {
             $returnResult['success'] = true;
         }
     } else {
+        $vendor = Connection::getVendor($tableData->connection);
+        $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
+        $rightSysIdentifier = Connection::getRightColumnQuote($vendor);
         $sql = Connection::getInstance($tableData->connection);
-        $query = "DELETE FROM " . $mySqlTableName . " WHERE " . $idKey . "='" . $idVal . "'";
+        $query = "DELETE FROM " . $mySqlTableName . " WHERE " . $leftSysIdentifier . $idKey . $rightSysIdentifier . "='" . $idVal . "'";
         $sql->doQuery($query);
         if ($sql->getLastError() !== '') {
             $returnResult['error'] = __('There was an error trying to delete the row! Error: ', 'wpdatatables') . $sql->getLastError();
@@ -963,8 +1009,11 @@ function wdtDeleteTableRows() {
 
                     do_action('wpdatatables_excel_after_delete_row', $rowId, $tableId, $wpdb->last_error);
                 } else {
+                    $vendor = Connection::getVendor($tableData->connection);
+                    $leftSysIdentifier = Connection::getLeftColumnQuote($vendor);
+                    $rightSysIdentifier = Connection::getRightColumnQuote($vendor);
                     $sql = Connection::getInstance($tableData->connection);
-                    $query = "DELETE FROM " . $mySqlTableName . " WHERE `" . $idColumnKey . "`='" . $rowId . "'";
+                    $query = "DELETE FROM " . $mySqlTableName . " WHERE " . $leftSysIdentifier . $idColumnKey . $rightSysIdentifier . "='" . $rowId . "'";
                     $sql->doQuery($query);
                     $sqlLastError = $sql->getLastError();
                     if ($sqlLastError != '') {

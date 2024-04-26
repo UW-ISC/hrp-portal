@@ -857,6 +857,9 @@ class WDTColumn {
             }// Current user last name
             if (strpos($value, '%CURRENT_USER_LAST_NAME%') !== false) {
                 $value = str_replace('%CURRENT_USER_LAST_NAME%', wp_get_current_user()->last_name, $value);
+            }// Current user display name
+            if (strpos($value, '%CURRENT_USER_DISPLAY_NAME%') !== false) {
+                $value = str_replace('%CURRENT_USER_DISPLAY_NAME%', wp_get_current_user()->display_name, $value);
             }// Current user email
             if (strpos($value, '%CURRENT_USER_EMAIL%') !== false) {
                 $value = str_replace('%CURRENT_USER_EMAIL%', wp_get_current_user()->user_email, $value);
