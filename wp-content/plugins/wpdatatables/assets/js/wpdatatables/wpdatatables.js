@@ -388,6 +388,7 @@ var singleClick = false;
                  *
                  * @param forceRedraw
                  * @param closeDialog
+                 * @param duplicateEntry
                  * @returns {boolean}
                  */
                 wpDataTablesFunctions[tableDescription.tableId].saveTableData = function (forceRedraw, closeDialog, duplicateEntry) {
@@ -460,6 +461,8 @@ var singleClick = false;
                             }
                         } else if ($(this).data('column_type') == 'int') {
                             formdata[$(this).data('key')] = $(this).val().replace(/,/g, '').replace(/\./g, '');
+                        } else if ($(this).data('column_type') == 'hidden') {
+                            formdata[$(this).data('key')] = '';
                         } else {
                             formdata[$(this).data('key')] = $(this).val();
                         }
@@ -479,7 +482,9 @@ var singleClick = false;
                             action: 'wdt_save_table_frontend',
                             wdtNonce: $('#wdtNonceFrontendEdit_' + tableDescription.tableWpId).val(),
                             isDuplicate: duplicateEntry,
-                            formdata: formdata
+                            formdata: formdata,
+                            wdtAjaxURL: tableDescription.dataTableParams.ajax.url,
+                            queryParams: getAllUrlParams()
                         },
                         success: function (returnData) {
                             $(tableDescription.selector + '_edit_dialog').closest('.modal-dialog').find('.wdt-preload-layer').animateFadeOut();
@@ -727,6 +732,7 @@ var singleClick = false;
                     data.currentUserId = $('#wdt-user-id-placeholder').val();
                     data.currentUserLogin = $('#wdt-user-login-placeholder').val();
                     data.currentPostIdPlaceholder = $('#wdt-post-id-placeholder').val();
+                    data.currentUserDisplayName = $('#wdt-user-display-name-placeholder').val();
                     data.currentUserFirstName = $('#wdt-user-first-name-placeholder').val();
                     data.currentUserLastName = $('#wdt-user-last-name-placeholder').val();
                     data.currentUserEmail = $('#wdt-user-email-placeholder').val();
@@ -734,7 +740,7 @@ var singleClick = false;
                     data.currentDateTime = $('#wdt-datetime-placeholder').val();
                     data.currentTime = $('#wdt-time-placeholder').val();
                     data.wpdbPlaceholder = $('#wdt-wpdb-placeholder').val();
-                    data.wdtNonce = $('#wdtNonceFrontendEdit_' + tableDescription.tableWpId).val();
+                    data.wdtNonce = $('#wdtNonceFrontendServerSide_' + tableDescription.tableWpId).val();
                     data.showAllRows = $('#wdt-show-all-rows').val();
                 };
             }
@@ -746,8 +752,10 @@ var singleClick = false;
                 dataTableOptions.fnInitComplete = function () {
                     $(tableDescription.selector).animateFadeIn();
 
+                    // TODO Check if is necessary
+                    // and add conditions for server-side
                     if (tableDescription.dataTableParams.fixedColumns) {
-                        addFixedColumnsHideBeforeLoad(tableDescription);
+                        $(tableDescription.selector).DataTable().draw()
                     }
                 }
             }
@@ -773,7 +781,9 @@ var singleClick = false;
 
                     if (tableDescription.hideBeforeLoad) {
                         $(tableDescription.selector).animateFadeIn();
-                        addFixedColumnsHideBeforeLoad(tableDescription);
+                        // TODO Check if is necessary
+                        // and add conditions for server-side or fixed columns
+                        $(tableDescription.selector).DataTable().draw()
                     }
                 }
             }
@@ -1128,10 +1138,6 @@ var singleClick = false;
                 }
             }
 
-            function addFixedColumnsHideBeforeLoad(tableDescription) {
-                jQuery(tableDescription.selector).DataTable().draw()
-            }
-
             /**
              * Helper function for hiding label show entries' for mojito/dark mojito skin
              */
@@ -1443,6 +1449,8 @@ var singleClick = false;
                                 var transformValueRules = {};
                                 var position = 0;
                                 var checkPosition = false;
+                                var checkPositionFilter = false;
+                                var checkPositionFilterHelper = false;
                                 transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
                                 for (var k = 0; k < oSettings.aoColumns.length; k++) {
                                     var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
@@ -1462,15 +1470,31 @@ var singleClick = false;
                                                 if(tableDescription.serverSide) {
                                                     position = m;
                                                 }
-                                                if(!tableDescription.serverSide && m === 0 && position >= oSettings.aiDisplay.length) {
+                                                if(!tableDescription.serverSide && m === 0 && position > oSettings.aiDisplay.length ) {
                                                     position = m;
+                                                    checkPositionFilter = false;
+                                                }
+                                                for (var n = 0; n < oSettings.aoColumns.length; n++) {
+                                                    if(oSettings.aoPreSearchCols[n].sSearch != ''){
+                                                        checkPositionFilterHelper = true;
+                                                    }
+                                                }
+                                                if(!tableDescription.serverSide && checkPositionFilterHelper && !checkPositionFilter) {
+                                                    position = m;
+                                                    if(oSettings._iDisplayLength - $(tableDescription.selector + ' tbody tr').length != 0){
+                                                        position = oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length;
+                                                        checkPositionFilter = true;
+                                                    } else {
+                                                        position = oSettings._iDisplayStart;
+                                                        checkPositionFilter = true;
+                                                    }
                                                 }
                                                 if (m != 0) {
                                                     if (transformValueRules[m + 1] != null) {
-                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
                                                         transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
                                                     } else {
-                                                        wdtTransformValue(transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                        wdtTransformValue(transformValueRules[m].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
                                                         transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]);
                                                     }
                                                 } else {
@@ -2197,6 +2221,17 @@ var singleClick = false;
                     e.stopImmediatePropagation();
                 }
             });
+
+            /**
+             * Correct fixed header focus for non server side tables
+             */
+            if (tableDescription.dataTableParams.fixedHeader.header && !tableDescription.serverSide) {
+                $(window).on("scroll",function() {
+                    wpDataTables[tableDescription.tableId].fnDraw(false);
+                });
+            }
+
+
             /**
              * Add some JS hooks for Master-detail add-on
              */
@@ -2206,7 +2241,6 @@ var singleClick = false;
                         wpDataTablesHooks.onRenderDetails[i](tableDescription);
                 }
             }
-
             /**
              * Show the filter box if enabled in the widget if it is present
              */
@@ -2229,6 +2263,17 @@ var singleClick = false;
             wdtRenderDataTable($(this), tableDescription);
         });
 
+        $('.wpdt-c .dataTables_length').on('shown.bs.select', function (e) {
+            var currentValue = e.target.value;
+            $('.wpdt-c .dataTables_length').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+                var tableSelector = e.currentTarget.id.replace('_length', '')
+                if (currentValue == '0') {
+                    $(document).ready(function () {
+                        wpDataTables[tableSelector].api().page(0).draw(false);
+                    });
+                }
+            });
+        });
     });
 
 })(jQuery);
@@ -2522,7 +2567,7 @@ function wdtCheckConditionalFormatting(conditionalFormattingRules, params, eleme
 
 function wdtTransformValue(trasnsformValue, params, element, m, tableID) {
     let index = element.index() + 1;
-    jQuery(element.closest('table#' + tableID + '.wpDataTable').find('tbody td:nth-child(' + index + ')')[m]).html(trasnsformValue);
+    jQuery(jQuery('table#' + tableID + '.wpDataTable').find('tbody td:nth-child(' + index + ')')[m]).html(trasnsformValue)
 }
 
 function wdtTransformValueResponsive(trasnsformValue, params, element, m, tableID) {

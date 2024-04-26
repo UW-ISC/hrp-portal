@@ -263,26 +263,16 @@
                                  </span>
                         </p>
                         <p class="wpdt-text wpdt-font m-b-18">
-                            New update with new features, improvements, and bug fixes:
+                            New update with bug fixes:
                         </p>
                         <div class="alert alert-info m-b-0" role="alert">
                             <i class="wpdt-icon-info-circle-full"></i>
                             <ul>
-                                <li><strong>Feature:</strong> Added Folders/Categories for tables.</li>
-                                <li><strong>Feature:</strong> Added Folders/Categories for charts.</li>
-                                <li><strong>Feature:</strong> New global date formats. </li>
-                                <li><strong>Feature:</strong> New global time format with seconds. </li>
-                                <li><strong>Feature:</strong> Full WCAG compatibility. </li>
-                                <li><strong>Improvement:</strong> Updated French translation language. </li>
-                                <li><strong>Improvement:</strong> Simple table templates improvements. </li>
-                                <li><strong>Improvement:</strong> Refactoring source files. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with image and attachment column types. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with Date input format (Date, Time and DateTime). </li>
-                                <li><strong>BugFix:</strong> Fixed issue with creating manual tables with separate connection. </li>
-                                <li><strong>BugFix:</strong> Fixed conflict with Royal Elementor Addons and Templates plugin. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with colors in Google charts. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with HighCharts Stock Datetime and Time axis not rendering properly. </li>
-                                <li><strong>BugFix:</strong> Fixed issue with WCAG when filters are turned off. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with vulnerability for editable tables. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with empty columns (after last column data) from Excel and CSV files. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with saving table description for Simple tables. </li>
+                                <li><strong>BugFix:</strong> Fixed issue with close element in modals for mojito skin. </li>
+                                <li><strong>BugFix:</strong> Fixed typo in "Custom rows per page". </li>
                                 <li>Other small bug fixes</li>
                             </ul>
                         </div>

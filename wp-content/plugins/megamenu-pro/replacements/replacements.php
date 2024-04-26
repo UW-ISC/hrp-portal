@@ -774,7 +774,8 @@ class Mega_Menu_Replacements {
             'id' => 'mega-search-' . $item->ID,
             'aria-label' => $placeholder,
             'data-placeholder' => $placeholder,
-            'name' => $search_var
+            'name' => $search_var,
+            'autocomplete' => 'off'
         ), $item );
 
         if ( $type == 'static'  && isset( $search_input_attributes['data-placeholder'] ) ) {

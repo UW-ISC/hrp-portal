@@ -511,7 +511,7 @@ function wdtCreateSimpleTable()
         exit();
     }
     $tableTemplateID = 0;
-    if($_POST['templateId']){
+    if ($_POST['templateId']){
         $tableTemplateID = (int)$_POST['templateId'];
     }
     $tableData = apply_filters(
@@ -522,7 +522,7 @@ function wdtCreateSimpleTable()
             )
         )
     );
-    if($tableTemplateID){
+    if ($tableTemplateID){
         $wpDataTableRowsAll = WDTConfigController::loadRowsDataFromDBTemplateAll($tableTemplateID);
         $tableData->content = $wpDataTableRowsAll[0]->content;
         $tableData = WDTConfigController::sanitizeTableSettingsSimpleTable($tableData);
@@ -614,13 +614,14 @@ function generateSimpleTableID($wpDataTableRows, $wpDataTableRowsSettings = null
                     'verticalScroll' => ($tableTemplateID === 0) ? 0 : $wpDataTableRowsSettings->verticalScroll,
                     'verticalScrollHeight' => ($tableTemplateID === 0) ? 600 : $wpDataTableRowsSettings->verticalScrollHeight,
                     'show_table_description' => false,
-                    'table_description' => '',
+                    'table_description' => sanitize_textarea_field($wpDataTableRows->getTableDescription()),
                     'fixed_header' => 0,
                     'fixed_header_offset' => 0,
                     'fixed_columns' => 0,
                     'fixed_left_columns_number' => 0,
                     'fixed_right_columns_number' => 0,
-                    'simple_template_id' => $tableTemplateID
+                    'simple_template_id' => $tableTemplateID,
+                    'customRowDisplay' => ''
                 )
             ),
         )

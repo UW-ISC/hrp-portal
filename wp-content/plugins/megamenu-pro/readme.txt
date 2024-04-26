@@ -5,6 +5,13 @@ Requires PHP: 5.6
 
 == Changelog ==
 
+= 2.4 =
+
+* New feature: Page Overlay (dim the page background when the menu is hovered over)
+* Fix: jQuery deprecation warnings
+* Accessibility improvement: Close search box when tabbed away from using keyboard navigation
+* Accessibility improvement: Clear search box when pressing back button in browser
+
 = 2.3.1.1 =
 
 * Fix: WooCommerce store search option

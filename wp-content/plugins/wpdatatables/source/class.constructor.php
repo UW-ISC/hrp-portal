@@ -148,6 +148,16 @@ class wpDataTableConstructor
         } else {
             $columnProperties = self::columnPropertiesMapper( $columnPropertiesConstruct, $column_header )[$column['predefined_type_in_db']];
         }
+        $editingDefaultValue = '';
+        if ($column['type'] === 'multiselect'){
+            if (isset($column['default_value']) && is_array($column['default_value'])){
+                $editingDefaultValue = sanitize_text_field(implode('|', $column['default_value']));
+            }
+        } else if ($column['type'] === 'hidden'){
+            $editingDefaultValue = sanitize_text_field($column['hidden_default_value']);
+        } else {
+            $editingDefaultValue = sanitize_text_field($column['default_value']);
+        }
 
         $columnProperties['advanced_settings'] = array(
             'sorting' => 1,
@@ -156,8 +166,8 @@ class wpDataTableConstructor
             'rangeMaxValueDisplay' => 'default',
             'customMaxRangeValue' => null,
             'filterLabel' => '',
-            'editingDefaultValue' => $column['type'] === 'multiselect' ? (isset($column['default_value']) && is_array($column['default_value'])) ? sanitize_text_field(implode('|', $column['default_value'])) : '': sanitize_text_field($column['default_value']),
-            'possibleValuesAjax' =>  $columnProperties['column_type'] === 'string' ? 10 : -1,
+            'editingDefaultValue' => $editingDefaultValue,
+            'possibleValuesAjax' => $columnProperties['column_type'] === 'string' ? 10 : -1,
             'searchInSelectBox' => 1,
             'searchInSelectBoxEditing' => 1,
             'globalSearchColumn' => 1,
@@ -181,6 +191,12 @@ class wpDataTableConstructor
                     'editor_type' => 'text',
                     'filter_type' => 'text',
                     'column_type' => 'string',
+                    'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
+                ],
+                'hidden' => [
+                    'editor_type' => 'hidden',
+                    'filter_type' => 'text',
+                    'column_type' => 'hidden',
                     'create_block' => "{$column_header}  $columnPropertiesConstruct->ValueForDB $columnPropertiesConstruct->columnCollate "
                 ],
                 'input' => [
@@ -585,6 +601,7 @@ class wpDataTableConstructor
                     'display_header' => sanitize_text_field($column['name']),
                     'filter_type' => sanitize_text_field($columnProperties['filter_type']),
                     'column_type' => sanitize_text_field($columnProperties['column_type']),
+                    'visible' => $columnProperties['column_type'] == 'hidden' ? 0 : 1,
                     'pos' => $column_index,
                     'possible_values' => str_replace(',,;,|', '|', sanitize_text_field($column['possible_values'])),
                     'advanced_settings' => json_encode($columnProperties['advanced_settings']),
@@ -2063,7 +2080,8 @@ class wpDataTableConstructor
 
         // Fill in with default value if requested
         $column_data['default_value'] = sanitize_text_field($column_data['default_value']);
-        if ($column_data['fill_default'] == 1 && $column_data['default_value']) {
+        $column_data['hidden_default_value'] = sanitize_text_field($column_data['hidden_default_value']);
+        if ($column_data['fill_default'] == 1 && ($column_data['default_value'] || $column_data['type'] == 'hidden' ))  {
 
             $valueQuoute = "'";
 
@@ -2089,6 +2107,9 @@ class wpDataTableConstructor
                 if ($isMSSql || $isPostgreSql) {
                     $valueQuoute = '';
                 }
+            } else if ($column_data['type'] == 'hidden') {
+                $column_data['default_value'] = WDTTools::prepareStringCell(
+                  WDTTools::getHiddenDefaultValues($column_data['hidden_default_value'], $tableData), $tableData->connection);
             }
 
             $where = '';
@@ -2137,13 +2158,12 @@ class wpDataTableConstructor
                 'filter_type' => $columnProperties['filter_type'],
                 'column_type' => $columnProperties['column_type'],
                 'pos' => $column_index,
+                'visible' => $columnProperties['column_type'] == 'hidden' ? 0 : 1,
                 'possible_values' => str_replace(',,;,|', '|', sanitize_text_field($column_data['possible_values'])),
                 'advanced_settings' => json_encode($columnProperties['advanced_settings']),
                 'input_type' => $columnProperties['editor_type']
             )
         );
-
-
     }
 
     /**

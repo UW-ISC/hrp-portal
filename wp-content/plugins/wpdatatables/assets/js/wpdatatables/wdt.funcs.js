@@ -619,7 +619,28 @@ function hidePickerForFixedHeaderAndColumns(dateData) {
 }
 
 function getMomentWdtDateFormat() {
-    return wpdatatables_settings.wdtDateFormat.replace('D', 'dddd').replace('d.', 'DD.').replace('d-', 'DD-').replace('d/', 'DD/').replace('d\s\ ', 'DD ').replace('M', 'MMM').replace('m', 'MM').replace('y', 'YY').replace('F', 'MMMM').replace('j', 'DD');
+    return wpdatatables_settings.wdtDateFormat.replace(/[DdMmYyFj]/g, function(match) {
+        switch(match) {
+            case 'D':
+                return 'ddd';
+            case 'd':
+                return 'DD';
+            case 'M':
+                return 'MMM';
+            case 'm':
+                return 'MM';
+            case 'Y':
+                return 'Y';
+            case 'y':
+                return 'YY';
+            case 'F':
+                return 'MMMM';
+            case 'j':
+                return 'DD';
+            default:
+                return match;
+        }
+    });
 }
 
 function getMomentWdtTimeFormat() {
@@ -649,6 +670,35 @@ function removeURLParameter(url, parameter) {
     } else {
         return url
     }
+}
+
+// Get all query parameters from the URL
+function getAllUrlParams(url) {
+    var queryString = url ? url.split('?')[1] : window.location.search.slice(1);
+    var params = {};
+
+    if (queryString) {
+        var pairs = queryString.split('&');
+
+        for (var i = 0; i < pairs.length; i++) {
+            var pair = pairs[i].split('=');
+            var key = decodeURIComponent(pair[0]);
+            var value = decodeURIComponent(pair[1] || '');
+
+            // If the key already exists, convert it to an array
+            if (params[key]) {
+                if (Array.isArray(params[key])) {
+                    params[key].push(value);
+                } else {
+                    params[key] = [params[key], value];
+                }
+            } else {
+                params[key] = value;
+            }
+        }
+    }
+
+    return params;
 }
 
 function createAceEditor(selector) {
@@ -752,6 +802,7 @@ function typeNameInDatabaseForSelectedType(possibleValueInput){
     let type;
     switch(possibleValueInput) {
         case 'input':
+        case 'hidden':
             type = 'VARCHAR';
             break;
         case 'memo':
@@ -841,6 +892,7 @@ function typeValueInDBFromWpcolumnType(possibleValueInput){
     let typeValue;
     switch(possibleValueInput) {
         case 'input':
+        case 'hidden':
             typeValue = '255';
             break;
         case 'memo':

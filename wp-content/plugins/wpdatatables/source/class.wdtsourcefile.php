@@ -506,7 +506,9 @@ class wpDataTableSourceFile
                 if ($insertType == 'import') {
                     // Set all cells in the row to their defaults
                     foreach ($this->getTableData()->columns as $column) {
-                        $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                        $insertArray[$column_headers[$column->orig_header]] = $column->type == 'hidden' ?
+                            "'" . esc_sql(WDTTools::getHiddenDefaultValues($column->hidden_default_value, null)) . "'" :
+                            "'" . sanitize_text_field($column->default_value) . "'";
                     }
                 }
 
@@ -544,6 +546,8 @@ class wpDataTableSourceFile
                         } else {
                             $insertArray[$dataColumnHeading] = "'" . esc_sql(str_replace(',', '', $namedDataArray[$row][$dataColumnHeadingOriginal])) . "'";
                         }
+                    } elseif ($columnTypes[$dataColumnHeading] == 'hidden') {
+                        continue;
                     } else {
                         $insertArray[$dataColumnHeading] = "'" . esc_sql($namedDataArray[$row][$dataColumnHeadingOriginal]) . "'";
                     }
@@ -557,7 +561,9 @@ class wpDataTableSourceFile
                     if ($insertType == 'import') {
                         // Set all cells in the row to their defaults
                         foreach ($this->getTableData()->columns as $column) {
-                            $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                            $insertArray[$column_headers[$column->orig_header]] = $column->type == 'hidden' ?
+                                "'" . esc_sql(WDTTools::getHiddenDefaultValues($column->hidden_default_value, null)) . "'" :
+                                "'" . sanitize_text_field($column->default_value) . "'";
                             if (in_array($column->predefined_type_in_db, array('DATE', 'DATETIME', 'TIME', 'INT', 'DECIMAL', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT'))) {
                                 $insertArray[$column_headers[$column->orig_header]] = ("'" . sanitize_text_field($column->default_value) . "'") == "''" ? 'NULL' : "'" . sanitize_text_field($column->default_value) . "'";
                             }
@@ -612,6 +618,8 @@ class wpDataTableSourceFile
                             } else {
                                 $insertArray[$dataColumnHeading] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace(',', '', $dataRows[$row][$dataColumnIndex])) . "'" : 'NULL';
                             }
+                        } elseif ($columnTypes[$dataColumnHeading] == 'hidden') {
+                           continue;
                         } else {
                             if ($columnTypes[$dataColumnHeading] === 'float') {
                                 $insertArray[$dataColumnHeading] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'" : 'NULL';

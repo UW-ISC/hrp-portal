@@ -2483,7 +2483,7 @@ div.dt-button-collection.wdt-skin-mojito button.dt-button.buttons-columnVisibili
     top: 5px;
     left: 20px;
 }
-.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito .modal-dialog .modal-content .modal-header button.close span{
+.wpdt-c .modal#wdt-frontend-modal.wdt-skin-mojito:not(.wdt-checkbox-render-modal) .modal-dialog .modal-content .modal-header button.close span{
     display: none;
 }
 .wpdt-c.wdt-skin-mojito .wpDataTablesWrapper table.wpDataTable tbody td.group.dtfc-fixed-left {
