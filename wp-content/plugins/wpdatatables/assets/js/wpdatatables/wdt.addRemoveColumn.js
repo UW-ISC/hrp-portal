@@ -63,10 +63,22 @@
         var $addColumnBlock = $(this).closest('div.wdt-add-column-modal-block');
         var $possibleValuesInput = $addColumnBlock.find('.wdt-add-column-possible-values');
         var $possibleValuesBlock = $addColumnBlock.find('.wdt-add-column-possible-values-block');
+        var $defaultValuesBlock = $addColumnBlock.find('.wdt-add-column-default-value-block');
+        var $hiddenDefaultValuesBlock = $addColumnBlock.find('.wdt-add-hidden-default-value-block');
+        var $hiddenQueryParamsValuesBlock = $addColumnBlock.find('.wdt-add-hidden-query-param-value-block');
+        var $hiddenPostMetaValuesBlock = $addColumnBlock.find('.wdt-add-hidden-post-meta-value-block');
+        var $hiddenACFValuesBlock = $addColumnBlock.find('.wdt-add-hidden-acf-data-value-block');
         var $possibleValueDB = $(this).val();
         var $typeInDatabase = typeNameInDatabaseForSelectedType($possibleValueDB);
         var $typeValueInDatabase = typeValueInDBFromWpcolumnType($possibleValueDB);
         var $connectionTypeDB = $(document).find($('#wdt-table-connection')).data('vendor');
+
+        $hiddenDefaultValuesBlock.hide()
+        $hiddenQueryParamsValuesBlock.hide()
+        $hiddenPostMetaValuesBlock.hide()
+        $hiddenACFValuesBlock.hide()
+        $defaultValuesBlock.show()
+        $addColumnBlock.find('.wdt-default-add-column-db-type').prop('disabled', '');
 
         if($(this).val() == 'float'){
             $addColumnBlock.find('.wdt-default-add-column-db-type-value')[0].type = 'text';
@@ -163,8 +175,68 @@
         }
         $addColumnBlock.find('.wdt-default-add-column-db-type-value').val($typeValueInDatabase);
         $addColumnBlock.find('.wdt-default-add-column-db-type').selectpicker('refresh');
+        if ($(this).val() == 'hidden') {
+            $possibleValuesBlock.hide();
+            $defaultValuesBlock.hide();
+            $hiddenDefaultValuesBlock.show()
+            $addColumnBlock.find('.wdt-default-add-column-db-type').prop('disabled', 'disabled');
+            $addColumnBlock.find('.wdt-add-hidden-default-value').selectpicker('refresh');
+        }
     });
 
+    $('.wdt-add-hidden-default-value').on('change', function () {
+        if($(this).val() == 'query-param') {
+            $(this).closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-acf-data-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-query-param-value-block')
+                .show()
+        } else if($(this).val() == 'post-meta'){
+            $(this).closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-post-meta-value-block')
+                .show()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-acf-data-value-block')
+                .hide()
+
+        } else if($(this).val() == 'acf-data'){
+            $(this).closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-acf-data-value-block')
+                .show()
+        } else {
+            $(this).closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-query-param-value')
+                .val('')
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-post-meta-value')
+                .val('')
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-acf-data-value-block')
+                .hide()
+                .closest('div.wdt-add-column-modal-block')
+                .find('.wdt-add-hidden-acf-data-value')
+                .val('')
+        }
+    });
     $('#wdt-add-column-submit').click(function () {
 
         var $addColumnModal = $('.wdt-add-column-modal-block');
@@ -181,8 +253,6 @@
             }
         }
 
-
-
         var columnType = $addColumnModal.find('.wdt-add-column-column-type').selectpicker('val');
         var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(document).find('.wdt-default-add-column-db-type').selectpicker('val')=='VARCHAR' ?
             $addColumnModal.find('.wdt-add-column-default-value').selectpicker('val') :
@@ -196,6 +266,10 @@
                 defaultValue = defaultValue.replace(/:(\d)$/, ':0$1');
             }
         }
+        var hiddenDefaultValue = $addColumnModal.find('.wdt-add-hidden-default-value').selectpicker('val');
+        if ($.inArray( hiddenDefaultValue, ['query-param','post-meta', 'acf-data']) != -1){
+            hiddenDefaultValue += ":" + $addColumnModal.find('.wdt-add-hidden-' + hiddenDefaultValue + '-value').val();
+        }
 
         var newColumnData = {
             name: $('#wdt-add-column-column-header').val(),
@@ -205,7 +279,8 @@
             predefined_type_value_in_db: $(document).find('.wdt-default-add-column-db-type-value').val(),
             possible_values: $addColumnModal.find('.wdt-add-column-possible-values').val().replace(/,/g, '|'),
             default_value: defaultValue,
-            fill_default: $('#wdt-add-column-fill-with-default').is(':checked') ? 1 : 0
+            fill_default: $('#wdt-add-column-fill-with-default').is(':checked') ? 1 : 0,
+            hidden_default_value: columnType == 'hidden' ? hiddenDefaultValue : ''
         };
 
         $('#wdt-add-column-modal').find('.wdt-preload-layer').animateFadeIn();

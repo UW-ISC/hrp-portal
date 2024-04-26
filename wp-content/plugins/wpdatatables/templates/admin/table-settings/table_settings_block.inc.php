@@ -538,7 +538,7 @@
                 <div role="tabpanel" class="tab-pane fade" id="display-settings">
 
                     <div class="row">
-                        <div class="col-sm-4 m-b-16">
+                        <div class="col-sm-3 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Table title', 'wpdatatables' ); ?>
@@ -568,7 +568,7 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-4 m-b-16">
+                        <div class="col-sm-3 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e('Table description', 'wpdatatables'); ?>
@@ -596,7 +596,7 @@
                         </div>
 
 
-                        <div class="col-sm-4 m-b-16 wdt-responsive-block">
+                        <div class="col-sm-3 m-b-16 wdt-responsive-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Responsiveness', 'wpdatatables' ); ?>
@@ -628,7 +628,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 responsive-action-block hidden">
+                        <div class="col-sm-3 m-b-16 responsive-action-block hidden">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Responsive action', 'wpdatatables' ); ?>
@@ -647,7 +647,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 wdt-hide-until-load-block">
+                        <div class="col-sm-3 m-b-16 wdt-hide-until-load-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Hide until loaded', 'wpdatatables' ); ?>
@@ -667,7 +667,7 @@
 
                     <div class="row">
 
-                        <div class="col-sm-4 wdt-default-rows-per-page">
+                        <div class="col-sm-3 wdt-default-rows-per-page">
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Default rows per page', 'wpdatatables' ); ?>
                                 <i class=" wpdt-icon-info-circle-thin" data-popover-content="#rows-per-page-hint"
@@ -693,7 +693,7 @@
                             <div class="form-group">
                                 <div class="fg-line">
                                     <div class="select">
-                                        <select class="form-control selectpicker" id="wdt-rows-per-page">
+                                        <select class="form-control selectpicker" id="wdt-rows-per-page" data-original-data-length="1,5,10,25,50,100,-1">
                                             <option value="1">1</option>
                                             <option value="5">5</option>
                                             <option value="10">10</option>
@@ -708,8 +708,53 @@
                             <!-- /rows per page selection -->
 
                         </div>
+                        <div class="col-sm-3 m-b-16 custom-rows-per-page-block">
+                            <h4 class="c-title-color m-b-2">
+                                <?php esc_html_e( 'Custom rows per page', 'wpdatatables' ); ?>
+                                <i class=" wpdt-icon-info-circle-thin" data-popover-content="#custom-rows-per-page-hint"
+                                   data-toggle="html-popover" data-trigger="hover" data-placement="right"></i>
+                            </h4>
 
-                        <div class="col-sm-4 m-b-16 wdt-rows-per-page-block">
+                            <!-- Hidden popover with image hint -->
+                            <div class="hidden" id="custom-rows-per-page-hint">
+                                <div class="popover-heading">
+                                    <?php esc_html_e( 'Custom rows per page', 'wpdatatables' ); ?>
+                                </div>
+
+                                <div class="popover-body">
+                                    <?php esc_html_e( 'Enter number of rows you want to display. To choose the number of rows you want to display in the table, you can input a specific sequence. ' , 'wpdatatables' ); ?>
+                                    <br>
+                                    <strong> <?php esc_html_e('The format for the sequence should be 1,3,7,15,45,200 - each number followed by a comma.', 'wpdatatables' ); ?></strong>
+                                    <br>
+                                    <strong> <?php esc_html_e('You need to add -1 to the sequence to display all rows.', 'wpdatatables' ); ?></strong>
+                                    <br>
+                                    <?php esc_html_e('This sequence will serve as the options for selecting the number of rows you want to be shown.', 'wpdatatables' ); ?>
+                                    <br>
+                                    <br>
+                                    <strong> <?php esc_html_e('Examples: ', 'wpdatatables' ); ?></strong>
+                                    <br>
+                                    <?php esc_html_e(' 1,3,7,15,45,200', 'wpdatatables' ); ?>
+                                    <br>
+                                    <?php esc_html_e(' 5,12,25,100,-1', 'wpdatatables' ); ?>
+                                    <br>
+                                    <?php esc_html_e(' 1,100,200,300', 'wpdatatables' ); ?>
+                                    <br>
+                                    <?php esc_html_e(' 20,40,60,80,-1', 'wpdatatables' ); ?>
+                                    <br>
+                                    <br>
+                                    <?php esc_html_e('After selecting a custom number of rows per page, please make sure to also choose how this selection will appear in the default rows per page option. ', 'wpdatatables' ); ?>
+                                    <strong> <?php esc_html_e('If you don\'t make a choice, the first option from the custom display row will be automatically selected, and you can change it afterwards.', 'wpdatatables' ); ?></strong>
+                                </div>
+                            </div>
+                            <!-- /Hidden popover with image hint -->
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-custom-rows-per-page" type="text" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e( '1,3,7,15,45,200', 'wpdatatables' ); ?>">
+                            </div>
+
+                        </div>
+                        <div class="col-sm-3 m-b-16 wdt-rows-per-page-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Rows per page', 'wpdatatables' ); ?>
@@ -740,7 +785,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 wdt-scrollable-block">
+                        <div class="col-sm-3 m-b-16 wdt-scrollable-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Scrollable', 'wpdatatables' ); ?>
@@ -777,7 +822,7 @@
 
                     <div class="row">
 
-                        <div class="col-sm-4 m-b-16">
+                        <div class="col-sm-3 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Info block', 'wpdatatables' ); ?>
@@ -808,7 +853,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 limit-table-width-settings-block">
+                        <div class="col-sm-3 m-b-16 limit-table-width-settings-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Limit table width', 'wpdatatables' ); ?>
@@ -840,7 +885,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 word-wrap-settings-block hidden">
+                        <div class="col-sm-3 m-b-16 word-wrap-settings-block hidden">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Word wrap', 'wpdatatables' ); ?>
@@ -876,7 +921,7 @@
 
                     <div class="row">
 
-                        <div class="col-sm-4 m-b-16">
+                        <div class="col-sm-3 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Pagination', 'wpdatatables' ); ?>
@@ -904,7 +949,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 pagination-align-settings-block">
+                        <div class="col-sm-3 m-b-16 pagination-align-settings-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Pagination Alignment', 'wpdatatables' ); ?>
@@ -935,7 +980,7 @@
 
                         </div>
 
-                        <div class="col-sm-4 m-b-16 pagination-layout-settings-block">
+                        <div class="col-sm-3 m-b-16 pagination-layout-settings-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e( 'Pagination Layout', 'wpdatatables' ); ?>
@@ -968,7 +1013,7 @@
                             </div>
 
                         </div>
-                        <div class="col-sm-4 m-b-16 pagination-layout-mobile-settings-block">
+                        <div class="col-sm-3 m-b-16 pagination-layout-mobile-settings-block">
 
                             <h4 class="c-title-color m-b-2">
                                 <?php esc_html_e('Pagination Layout for mobile', 'wpdatatables'); ?>
@@ -1814,7 +1859,7 @@
                             <h4 class="c-title-color m-b-2">
                                 %CURRENT_USER_ID%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the ID of currently logged in user. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the ID of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -1830,7 +1875,7 @@
                             <h4 class="c-title-color m-b-2">
                                 %CURRENT_USER_LOGIN%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the login of currently logged in user. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the login of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -1848,7 +1893,7 @@
                             <h4 class="c-title-color m-b-2">
                                 %CURRENT_USER_EMAIL%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the Email of currently logged in user. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the Email of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -1870,13 +1915,16 @@
                         <div class="col-sm-4 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
-                                %CURRENT_POST_ID%
+                                %CURRENT_USER_DISPLAY_NAME%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the ID of current post. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the Display Name of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
-                                <input id="wdt-post-id-placeholder" type="text" value="" class="form-control input-sm"
+                                <?php $wdt_current_user = wp_get_current_user(); ?>
+                                <input id="wdt-user-display-name-placeholder" type="text"
+                                       value="<?php echo esc_attr( $wdt_current_user->display_name ); ?>"
+                                       class="form-control input-sm"
                                        placeholder="<?php esc_attr_e( 'Default for table generation', 'wpdatatables' ); ?>">
                             </div>
 
@@ -1887,7 +1935,7 @@
                             <h4 class="c-title-color m-b-2">
                                 %CURRENT_USER_FIRST_NAME%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the First Name of currently logged in user. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the First Name of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -1905,7 +1953,7 @@
                             <h4 class="c-title-color m-b-2">
                                 %CURRENT_USER_LAST_NAME%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the Last Name of currently logged in user. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the Last Name of currently logged in user.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -1988,9 +2036,24 @@
                         <div class="col-sm-4 m-b-16">
 
                             <h4 class="c-title-color m-b-2">
+                                %CURRENT_POST_ID%
+                                <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the ID of current post.', 'wpdatatables' ); ?>"></i>
+                            </h4>
+
+                            <div class="fg-line form-group m-b-0">
+                                <input id="wdt-post-id-placeholder" type="text" value="" class="form-control input-sm"
+                                       placeholder="<?php esc_attr_e( 'Default for table generation', 'wpdatatables' ); ?>">
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-4 m-b-16">
+
+                            <h4 class="c-title-color m-b-2">
                                 %WPDB%
                                 <i class="wpdt-icon-info-circle-thin" data-toggle="tooltip" data-placement="right"
-                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the current prefix of WordPress database. Provide a value here to be used for table generation', 'wpdatatables' ); ?>"></i>
+                                   title="<?php esc_attr_e( 'This placeholder will be replaced with the current prefix of WordPress database.', 'wpdatatables' ); ?>"></i>
                             </h4>
 
                             <div class="fg-line form-group m-b-0">
@@ -2907,3 +2970,18 @@
     <!-- /.card-body -->
 </div>
 <!-- /.card /.wdt-table-settings -->
+
+<!-- .row -->
+<div class="row">
+    <div class="col-sm-12 editing-warning-settings-block hidden">
+        <div class="alert alert-warning alert-dismissible wdt-editable-table-alert" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">×</span>
+            </button>
+            <p><strong><?php esc_html_e('Please note that enabling the "Allow front-end editing" option for tables, along with setting the "Editor roles" to "Everyone", 
+                                grants all users, both authenticated and unauthenticated, the ability to manipulate table data on front-end pages or posts.', 'wpdatatables'); ?></strong></p>
+            <p><strong><?php esc_html_e('It is recommended to selectively designate which Editor roles are permitted to modify table data for enhanced control and security.', 'wpdatatables'); ?></strong></p>
+        </div>
+    </div>
+</div>
+<!-- /.row -->

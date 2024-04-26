@@ -22,7 +22,7 @@
         <div
             <?php
             if (($dataColumn_key == $this->getIdColumnKey()) ||
-            ($dataColumn->getInputType() == 'none') ||
+            ($dataColumn->getInputType() == 'none') || ($dataColumn->getDataType() == 'hidden') ||
             (($this->getUserIdColumn() != '') && ($dataColumn_key == $this->getUserIdColumn()))) { ?>
                 style="display: none"
                 <?php if ($dataColumn_key == $this->getIdColumnKey()) { ?>
@@ -130,8 +130,19 @@
                            data-dismiss="fileinput">×</a>
                     <?php } ?>
                     </div>
-                    <?php
-                } else { ?>
+
+                <?php } elseif ($dataColumn->getDataType() == 'hidden') { ?>
+                    <input type="hidden"
+                           value=""
+                           id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"
+                           data-key="<?php echo esc_attr($dataColumn_key) ?>"
+                           data-value=""
+                           data-column_type="<?php echo esc_attr($dataColumn->getDataType()); ?>"
+                           data-column_header="<?php echo esc_attr($dataColumn->getTitle()); ?>"
+                           data-input_type="<?php echo esc_attr($dataColumn->getInputType()); ?>"
+                           class="form-control input-sm editDialogInput"
+                    />
+                <?php } else { ?>
                     <input type="text"
                            value=""
                            id="<?php echo esc_attr($this->getId()) ?>_<?php echo esc_attr($dataColumn_key) ?>"

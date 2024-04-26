@@ -505,10 +505,12 @@
             var el = this.dom[item].floating;
 
             if (el && (item === 'footer' || (item === 'header' && !this.s.autoWidth))) {
-                $('th, td', el).css({
-                    width: '',
-                    minWidth: ''
-                });
+                if(!this.wpDatatableDescription.fixedLayout) {
+                    $('th, td', el).css({
+                        width: '',
+                        minWidth: ''
+                    });
+                }
             } else if (el && item === 'header') {
                 $('th, td', el).css('min-width', '');
             }

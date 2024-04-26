@@ -1,0 +1,30 @@
+@mixin overlay {
+	#{$wrap} { 
+		transition-timing-function: ease-in-out;
+	    transition-property: box-shadow;
+		transition-duration: 0.2s;
+	    transition-delay: 0s; 
+	}
+
+	#{$wrap}:hover,
+	#{$wrap}.mega-keyboard-navigation,
+	#{$wrap}:has(.mega-toggle-on) {
+	    box-shadow: 0 0 0 9999px $overlay_color;
+		transition-delay: 0.2s; 
+	}
+	#{$wrap}:has(ul[data-effect="hover"]):hover {
+		transiton-delay: 0s;
+	}
+}
+
+@if $overlay_enabled_desktop == true and $overlay_enabled_mobile == true {
+	@include overlay;
+} @else if $overlay_enabled_desktop == true {
+	@include desktop {
+		@include overlay;
+	}
+} @else if $overlay_enabled_mobile == true {
+	@include mobile {
+		@include overlay;
+	}
+}

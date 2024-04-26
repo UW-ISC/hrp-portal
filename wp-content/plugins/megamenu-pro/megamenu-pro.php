@@ -4,7 +4,7 @@
  * Plugin Name: Max Mega Menu - Pro Addon
  * Plugin URI:  https://www.megamenu.com
  * Description: Extends the free version of Max Mega Menu with additional functionality.
- * Version:     2.3.1.1
+ * Version:     2.4
  * Author:      megamenu.com
  * Author URI:  https://www.megamenu.com
  * Copyright:   2020 Tom Hemsley (https://www.megamenu.com)
@@ -24,7 +24,7 @@ class Mega_Menu_Pro {
 	/**
 	 * @var string
 	 */
-	public $version = '2.3.1.1';
+	public $version = '2.4';
 
 
 	/**
@@ -304,6 +304,7 @@ class Mega_Menu_Pro {
 			'Mega_Menu_Custom_Icon' => $plugin_path . 'icons/custom/custom.php',
 			'Mega_Menu_Genericons' => $plugin_path . 'icons/genericons/genericons.php',
 			'Mega_Menu_Style_Overrides' => $plugin_path . 'style-overrides/style-overrides.php',
+			'Mega_Menu_Overlay' => $plugin_path . 'overlay/overlay.php',
 			'Mega_Menu_Roles' => $plugin_path . 'roles/roles.php',
 			'Mega_Menu_Vertical' => $plugin_path . 'vertical/vertical.php',
 			'Mega_Menu_Replacements' => $plugin_path . 'replacements/replacements.php',

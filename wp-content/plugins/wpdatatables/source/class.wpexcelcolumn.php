@@ -10,6 +10,7 @@ defined('ABSPATH') or die('Access denied.');
  */
 class WDTExcelColumn {
     private $wdtColumn = null;
+    public $masterDetailColumnOption;
 
     public function __construct( WDTColumn $wdtColumn ) {
         $this->wdtColumn = $wdtColumn;

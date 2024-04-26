@@ -4,8 +4,8 @@ Donate link: https://www.relevanssi.com/
 Tags: search, relevance, better search
 Requires at least: 4.9
 Requires PHP: 7.0
-Tested up to: 6.4
-Stable tag: 2.25.1
+Tested up to: 6.5
+Stable tag: 2.25.2
 
 Relevanssi Premium replaces the default search with a partial-match search that sorts results by relevance. It also indexes comments and shortcode content.
 
@@ -256,6 +256,13 @@ Each document database is full of useless words. All the little words that appea
 * John Calahan for extensive 2.0 beta testing.
 
 == Changelog ==
+= 2.25.2 =
+* Security fix: Prevent CSV injection attack in log export.
+* Security fix: Restrict access to doc count updates.
+* Minor fix: Product variations check the parent product for access restrictions, to avoid situations where variations of a draft product appear in the results.
+* Minor fix: Improved TablePress compatibility.
+* Minor fix: Added error handling to the Ninja Table compatibility code.
+
 = 2.25.1 =
 * Security fix: Relevanssi had a vulnerability where anyone could access the search logs and click logs. The log export is now protected.
 * Minor fix: Relevanssi had problems with Polylang when a post or term didn't have language specified. Now Relevanssi handles those situations better.
@@ -381,6 +388,9 @@ Each document database is full of useless words. All the little words that appea
 * Minor fix: Pinning phrases that had the same word more than once (e.g. 'word by word') didn't work. Now it works better.
 
 == Upgrade notice ==
+= 2.25.2 =
+* Security hardening, improved WooCommerce, TablePress and Ninja Table compatibility.
+
 = 2.25.1 =
 * Security hardening, better Polylang support.
 

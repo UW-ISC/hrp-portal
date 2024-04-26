@@ -929,7 +929,18 @@ div.mce-widget button i.mce-i-wpdatachart {
 
 .wpdt-c .wdt-datatables-admin-wrap .bootstrap-select.btn-group .dropdown-menu li a {
     box-shadow: none !important;
-    text-transform: none !important;;
+    text-transform: none !important;
+}
+
+.wpdt-c .wdt-datatables-admin-wrap .wdt-add-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li a,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-editing-hidden-default-value-select.bootstrap-select.btn-group .dropdown-menu li a,
+.wpdt-c .wdt-datatables-admin-wrap .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li a {
+    padding-left: 30px !important;
+}
+.wpdt-c .wdt-add-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
+.wpdt-c .wdt-editing-hidden-default-value-select.bootstrap-select.btn-group .dropdown-menu li.dropdown-header,
+.wpdt-c .wdt-constructor-hidden-default-value.bootstrap-select.btn-group .dropdown-menu li.dropdown-header {
+    margin-top: 10px !important;
 }
 
 .wpdt-c .wdt-datatables-admin-wrap .bootstrap-select > .btn-default {

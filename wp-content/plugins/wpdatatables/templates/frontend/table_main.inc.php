@@ -18,7 +18,12 @@ if ($this->getFilteringForm()) {
 }
 ?>
 <?php do_action('wpdatatables_before_table', $this->getWpId()); ?>
-<?php wp_nonce_field('wdtFrontendEditTableNonce' . $this->getWpId(), 'wdtNonceFrontendEdit_' . $this->getWpId()); ?>
+<?php if ((is_admin() && current_user_can('administrator') && $this->getTableType() == 'manual') || $this->isEditable()): ?>
+    <?php wp_nonce_field('wdtFrontendEditTableNonce' . $this->getWpId(), 'wdtNonceFrontendEdit_' . $this->getWpId()); ?>
+<?php endif; ?>
+<?php if ($this->serverSide()): ?>
+    <?php wp_nonce_field('wdtFrontendServerSideNonce' . $this->getWpId(), 'wdtNonceFrontendServerSide_' . $this->getWpId()); ?>
+<?php endif; ?>
     <input type="hidden" id="<?php echo esc_attr($this->getId()) ?>_desc"
            value='<?php echo $this->getJsonDescription(); ?>'/>
 

@@ -193,6 +193,7 @@ var aceEditor = null;
         $('.wdt-constructor-column-type').selectpicker();
         $('.wdt-constructor-date-input-format').selectpicker();
         $('.wdt-constructor-default-column-db-type').selectpicker();
+        $('.wdt-constructor-hidden-default-value').selectpicker();
         $('.wdt-constructor-possible-values').tagsinput({
             tagClass: 'label label-primary'
         });
@@ -853,7 +854,15 @@ var aceEditor = null;
         var $dateInputBlock = $columnBlock.find('.wdt-constructor-date-input-format-block');
         var $defaultValuesBlock = $columnBlock.find('.wdt-constructor-default-value-block');
         var $dataPreviewBlock = $columnBlock.find('.wdt-constructor-data-preview');
+        var $hiddenDefaultValuesBlock = $columnBlock.find('.wdt-constructor-hidden-default-value-block');
+        var $hiddenQueryParamsValuesBlock = $columnBlock.find('.wdt-constructor-hidden-query-param-value-block');
+        var $hiddenPostMetaValuesBlock = $columnBlock.find('.wdt-constructor-hidden-post-meta-value-block');
+        var $hiddenACFDataValuesBlock = $columnBlock.find('.wdt-constructor-hidden-acf-data-value-block');
 
+        $hiddenDefaultValuesBlock.hide()
+        $hiddenQueryParamsValuesBlock.hide()
+        $hiddenPostMetaValuesBlock.hide()
+        $hiddenACFDataValuesBlock.hide()
         $possibleValuesBlock.show()
         $defaultValuesBlock.show()
         $dataPreviewBlock.show()
@@ -935,6 +944,13 @@ var aceEditor = null;
             $columnBlock.find('.wdt-constructor-default-value')
                 .attr('type', 'text');
 
+            if ($(this).val() == 'hidden'){
+                $hiddenDefaultValuesBlock.show()
+                $possibleValuesBlock.hide()
+                $defaultValuesBlock.hide()
+                $dataPreviewBlock.hide()
+                $columnBlock.find('.wdt-constructor-default-column-db-type').prop('disabled','disabled')
+            }
 
             if ($.inArray($(this).val(), ['date', 'datetime', 'time']) != -1) {
                 $columnBlock.find('.wdt-constructor-default-value')
@@ -1081,6 +1097,10 @@ var aceEditor = null;
                 var defaultValue = $.inArray(columnType, ['select', 'multiselect']) != -1 && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR'?
                     $(this).find('.wdt-constructor-default-value').selectpicker('val') :
                     $(this).find('.wdt-constructor-default-value').val();
+                var hiddenDefaultValue =  $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val')
+                if ($.inArray( hiddenDefaultValue, ['query-param','post-meta', 'acf-data']) != -1){
+                    hiddenDefaultValue += ":" + $(this).find('.wdt-constructor-hidden-' + hiddenDefaultValue + '-value').val();
+                }
                 if (defaultValue != null && columnType == 'multiselect' && $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val')=='VARCHAR') {
                     defaultValue.join('|');
                 }
@@ -1091,7 +1111,8 @@ var aceEditor = null;
                     possible_values: $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|'),
                     predefined_type_in_db: $(this).find('.wdt-constructor-default-column-db-type').selectpicker('val'),
                     predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
-                    default_value: defaultValue
+                    default_value: defaultValue,
+                    hidden_default_value: hiddenDefaultValue
                 });
             });
 
@@ -1156,6 +1177,8 @@ var aceEditor = null;
                         predefined_type_value_in_db : $(this).find('.wdt-constructor-default-column-db-type-value').val(),
                         possible_values: $.inArray($(this).find('select.wdt-constructor-default-column-db-type').val(),['TIME', 'DATETIME']) != -1 && $(this).find('.wdt-constructor-possible-values').val() != '' ? $(this).find('.wdt-constructor-possible-values').val().replace(/,/g, '|') : null,
                         default_value: null,
+                        hidden_default_value: $(this).find('.wdt-constructor-column-type').selectpicker('val') == 'hidden' ?
+                            $(this).find('.wdt-constructor-hidden-default-value').selectpicker('val') : '',
                         dateInputFormat: typeof $(this).find('.wdt-constructor-date-input-format').val() !== 'undefined' ?
                             $(this).find('.wdt-constructor-date-input-format').selectpicker('val') : ''
                     });
@@ -1207,6 +1230,59 @@ var aceEditor = null;
             })
         }
 
+    });
+    $(document).on('change', 'select.wdt-constructor-hidden-default-value', function (e) {
+        if($(this).val() == 'query-param') {
+            $(this).closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-query-param-value-block')
+                .show()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-acf-data-value-block')
+                .hide()
+        } else if($(this).val() == 'post-meta'){
+            $(this).closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-post-meta-value-block')
+                .show()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-acf-data-value-block')
+                .hide()
+        } else if($(this).val() == 'acf-data'){
+            $(this).closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-acf-data-value-block')
+                .show()
+        } else {
+            $(this).closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-query-param-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-query-param-value')
+                .val('')
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-post-meta-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-post-meta-value')
+                .val('')
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-acf-data-value-block')
+                .hide()
+                .closest('div.wdt-constructor-column-block')
+                .find('.wdt-constructor-hidden-acf-data-value')
+                .val('')
+
+        }
     });
 
     /**
