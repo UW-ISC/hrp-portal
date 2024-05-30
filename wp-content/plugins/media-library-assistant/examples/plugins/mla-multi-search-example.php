@@ -5,9 +5,13 @@
  * In this example:
  *
  * 1. A custom "multi_search" parameter names one or more "search keys", e.g.
- *    multi_search="keyword:,custom:Country,custom:City"
+ *        multi_search="keyword:,custom:Country,custom:City"
+ *    Where "keyword:" performs the usual Keyword(s) search
+ *    and "custom:" searches the custom fields names in the list.
+ *    You can code "custom:*" to search ALL custom fields without naming them.
  *
- * 2. Each custom field is queried for a LIKE match with the content of the "s" parameter.
+ * 2. Each custom field is queried for a LIKE match with the content of the "s" parameter.<br />
+ *    Note that this is more limited than the logic provided by the Keyword(s) Search function.
  *
  * 3. Matches from the custom field search(es) are added to any keyword(s) search matches,
  *    i.e., all searches are joined by "OR".
@@ -19,8 +23,12 @@
  * opened on 11/20/2016 by "marineb30".
  * https://wordpress.org/support/topic/gallery-layout-with-thumbnails/
  *
+ * Enhanced for support topic "Searching custom fields in attachments"
+ * opened on 3/25/2024 by "ernstwg".
+ * https://wordpress.org/support/topic/searching-custom-fields-in-attachments/
+ *
  * @package MLA Multi-search Example
- * @version 1.01
+ * @version 1.04
  */
 
 /*
@@ -28,10 +36,10 @@ Plugin Name: MLA Multi-search Example
 Plugin URI: http://davidlingren.com/
 Description: Adds custom field search(es) to the [mla_gallery] keyword(s) search results
 Author: David Lingren
-Version: 1.01
+Version: 1.04
 Author URI: http://davidlingren.com/
 
-Copyright 2016 David Lingren
+Copyright 2016-2024 David Lingren
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -57,6 +65,24 @@ Copyright 2016 David Lingren
  * @since 1.00
  */
 class MLAMultiSearchExample {
+	/**
+	 * Constant to log this plugin's debug activity
+	 *
+	 * @since 1.03
+	 *
+	 * @var	integer
+	 */
+	const MLA_DEBUG_CATEGORY = 0x00008000;
+
+	/**
+	 * Constant to log this plugin's debug activity; additional details
+	 *
+	 * @since 1.03
+	 *
+	 * @var	integer
+	 */
+	const MLA_DEBUG_DETAILS = 0x00004000;
+
 	/**
 	 * Initialization function, similar to __construct()
 	 *
@@ -90,13 +116,37 @@ class MLAMultiSearchExample {
 	 * @param	array	the shortcode parameters passed in to the shortcode
 	 */
 	public static function mla_gallery_attributes( $shortcode_attributes ) {
-		//error_log( 'MLAMultiSearchExample::mla_gallery_attributes $shortcode_attributes = ' . var_export( $shortcode_attributes, true ), 0 );
+		if ( isset( $shortcode_attributes['multi_search'] ) ) {
+			MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_attributes \$shortcode_attributes = " . var_export( $shortcode_attributes, true ), self::MLA_DEBUG_CATEGORY );
+		}
+
 		// Save the attributes for use in the later filters
 		self::$shortcode_attributes = $shortcode_attributes;
 		unset( $shortcode_attributes['multi_search'] );
 
 		return $shortcode_attributes;
 	} // mla_gallery_attributes
+
+	/**
+	 * Generate a list of all (post) Custom Field names
+	 *
+	 * @since 1.02
+	 *
+	 * @return	array	Custom field names from the postmeta table
+	 */
+	private static function _get_custom_field_names( ) {
+		global $wpdb;
+
+		$limit = (int) apply_filters( 'postmeta_form_limit', 1000 );
+		$keys = $wpdb->get_col( "SELECT meta_key FROM $wpdb->postmeta GROUP BY meta_key HAVING meta_key NOT LIKE '\_%' ORDER BY meta_key LIMIT $limit" ); // phpcs:ignore
+
+		if ( $keys ) {
+			natcasesort( $keys );
+		}
+
+		MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::_get_custom_field_names \$keys = " . var_export( $keys, true ), self::MLA_DEBUG_DETAILS );
+		return $keys;
+	} // _get_custom_field_names
 
 	/**
 	 * Look for the multi_search parameter and process it
@@ -118,6 +168,8 @@ class MLAMultiSearchExample {
 		if ( isset( self::$shortcode_attributes['multi_search'] ) ) {
 			global $post;
 			
+			MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments \$all_query_parameters = " . var_export( $all_query_parameters, true ), self::MLA_DEBUG_CATEGORY );
+
 			$multi_search = self::$shortcode_attributes['multi_search'];
 			unset( self::$shortcode_attributes['multi_search'] );
 			$attr = self::$shortcode_attributes;
@@ -140,11 +192,24 @@ class MLAMultiSearchExample {
 			$attr['orderby'] = 'none';
 			
 			$results = array();
-			$search_value = !empty( self::$shortcode_attributes['s'] ) ? trim( self::$shortcode_attributes['s'] ) : '';
+			$search_value = !empty( self::$shortcode_attributes['s'] ) ? trim( self::$shortcode_attributes['s'], ' \'"' ) : '';
 			$search_keys = explode( ',', $multi_search );
+			MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments \$search_keys = " . var_export( $search_keys, true ), self::MLA_DEBUG_CATEGORY );
+
+			foreach( $search_keys as $index => $search_key ) {
+				if ( 'custom:*' === $search_key ) {
+					unset( $search_keys[ $index ] );
+					$names = self::_get_custom_field_names();
+
+					foreach( $names as $name ) {
+						$search_keys[] = 'custom:' . $name;
+					}
+				}
+			}
 
 			foreach( $search_keys as $search_key ) {
 				$tokens = array_map( 'trim', explode( ':', $search_key ) ); 
+				MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments( {$search_key} ) \$tokens = " . var_export( $tokens, true ), self::MLA_DEBUG_DETAILS );
 				switch ( $tokens[0] ) {
 					case 'keyword':
 						$attr['s'] = $search_value;
@@ -165,9 +230,12 @@ class MLAMultiSearchExample {
 				} // switch tokens[0]
 
 				if ( is_string( $attachments ) ) {
+					MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments( {$search_key} ) \$attachments = " . var_export( $attachments, true ), self::MLA_DEBUG_CATEGORY );
 					$attachments = array();
+				} else {
+					MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments( {$search_key} ) found_rows = " . var_export( $attachments['found_rows'], true ), self::MLA_DEBUG_CATEGORY );
 				}
-
+				
 				unset( $attachments['found_rows'] );
 				unset( $attachments['max_num_pages'] );
 
@@ -178,6 +246,7 @@ class MLAMultiSearchExample {
 
 			if ( count( $results ) ) {			
 				$all_query_parameters['include'] = implode( ',', $results );
+				MLACore::mla_debug_add( __LINE__ . " MLAMultiSearchExample::mla_gallery_query_arguments results count = " . var_export( count( $results ), true ), self::MLA_DEBUG_CATEGORY );
 			} else {
 				$all_query_parameters['include'] = '1';
 			}
@@ -189,8 +258,6 @@ class MLAMultiSearchExample {
 	} // mla_gallery_query_arguments
 } // Class MLAMultiSearchExample
 
-/*
- * Install the filters at an early opportunity
- */
+// Install the filters at an early opportunity
 add_action('init', 'MLAMultiSearchExample::initialize');
 ?>

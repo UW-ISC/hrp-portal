@@ -1,6 +1,6 @@
 <?php
 /**
- * Media Library Assistant Term List Shortcode
+ * Media Library Assistant Custom Field List Shortcode
  *
  * @package Media Library Assistant
  * @since 3.13
@@ -1800,19 +1800,18 @@ class MLACustomList {
 		$placeholders = array( '%s' );
 		$clause_parameters = array( $arguments['meta_key'] );
 		$clause = array ( $wpdb->prepare( 'm.meta_key = \'' . join( ',', $placeholders ) . '\'', $clause_parameters ) ); // phpcs:ignore
-//		$clause = array( "m.meta_key = '" . $arguments['meta_key'] . "'" );
 
 		$clause_parameters = array();
 		$placeholders = array();
 
 		/*
-		 * The "ids" parameter can build an item-specific cloud.
-		 * Compile a list of all the terms assigned to the items.
+		 * The "ids" parameter can build an item-specific list.
+		 * Compile a list of all the values assigned to the items.
 		 */
 		if ( ! empty( $arguments['ids'] ) ) {
 			$ids = wp_parse_id_list( $arguments['ids'] );
-		    $placeholders = implode( "','", $ids );
-			$clause[] = "AND m.post_id IN ( '{$placeholders}' )";
+		    $id_list = implode( "','", $ids );
+			$clause[] = "AND m.post_id IN ( '{$id_list}' )";
 
 			$includes = array();
 			foreach ( $ids as $id ) {
@@ -1826,10 +1825,10 @@ class MLACustomList {
 
 			// Apply a non-empty argument before we replace it.
 			if ( ! empty( $arguments['include'] ) ) {
-				$includes = array_intersect( $includes, wp_parse_id_list( $arguments['include'] ) );
+				$includes = array_intersect( $includes, str_getcsv( $arguments['include'] ) );
 			}
 
-			// If there are no values we want an empty cloud
+			// If there are no values we want an empty list
 			if ( empty( $includes ) ) {
 				$arguments['include'] = (string) 0x7FFFFFFF;
 			} else {
@@ -1838,13 +1837,23 @@ class MLACustomList {
 			}
 		}
 
-		// Add include/exclude and parent constraints to WHERE cluse
+		// Add include/exclude constraints to WHERE cluse
 		if ( ! empty( $arguments['include'] ) ) {
-		    $placeholders = implode( "','", str_getcsv( $arguments['include'] ) );
-			$clause[] = "AND m.meta_value IN ( '{$placeholders}' )";
+		    $includes = str_getcsv( $arguments['include'] );
+			foreach ( $includes as $include ) {
+				$placeholders[] = '%s';
+				$clause_parameters[] = $include;
+			}
+
+			$clause[] = 'AND m.meta_value IN (' . join( ',', $placeholders ) . ')';
 		} elseif ( ! empty( $arguments['exclude'] ) ) {
-		    $placeholders = implode( "','", str_getcsv( $arguments['exclude'] ) );
-			$clause[] = "AND m.meta_value NOT IN ( '{$placeholders}' )";
+		    $excludes = str_getcsv( $arguments['exclude'] );
+			foreach ( $excludes as $exclude ) {
+				$placeholders[] = '%s';
+				$clause_parameters[] = $exclude;
+			}
+
+			$clause[] = 'AND m.meta_value NOT IN (' . join( ',', $placeholders ) . ')';
 		}
 
 		// Exclude MLA's "empty" value

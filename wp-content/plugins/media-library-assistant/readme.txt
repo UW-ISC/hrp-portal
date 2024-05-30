@@ -3,8 +3,8 @@ Contributors: dglingren
 Donate link: http://davidlingren.com/#donate
 Tags: categories, images, media, media library, tags
 Requires at least: 4.1
-Tested up to: 6.5
-Stable tag: 3.15
+Tested up to: 6.5.3
+Stable tag: 3.16
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -187,6 +187,13 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Changelog ==
 
+= 3.16 =
+* New: The "MLA Multi-search Example" plugin now includes a special `custom:*` feature that will perform a "Simple Custom Field" query on all custom fields that have values for one or more items.
+* Fix: **IMPORTANT: A Reflected Cross-Site Scripting security risk in the Media/Edit Media page has been mitigated.**
+* Fix: **IMPORTANT: An SQL Injection security risk in the `[mla_custom_list]` shortcode has been mitigated.**
+* Fix: For the `[mla_gallery]` shortcode, a defect in processsing blacklist parameters when using `mla_gallery` as an alternate shortcode, i.e., `mla_alt_shortcode=yes`,  has been corrected.
+* Fix: For the `[mla_custom_list]` shortcode, a defect that caused the `ids=` and `include=` parameters to fail when used together has been corrected.
+
 = 3.15 =
 * Fix: Eliminate PHP Fatal Error when accessing Example Plugins from the Settings/Media Library Assistant Documentation tab.
 
@@ -359,8 +366,8 @@ All of the MLA source code has been annotated with "DocBlocks", a special type o
 
 == Upgrade Notice ==
 
-= 3.15 =
-IMPORTANT: Eliminate PHP Fatal Error when accessing Example Plugins from the Settings/Media Library Assistant Documentation tab.
+= 3.16 =
+IMPORTANT: Security risks in the Media/Edit Media screen and [mla_custom_list] shortcode have been mitigated. Shortcode bug fixes and a new feature in the MLA Multi-search Example plugin. One enhancement, four fixes in all.
 
 == Acknowledgements ==
 
