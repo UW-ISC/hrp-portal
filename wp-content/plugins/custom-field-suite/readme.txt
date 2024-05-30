@@ -46,6 +46,10 @@ Custom Field Suite (CFS) lets you add custom fields to your posts. It's lightwei
 
 == Changelog ==
 
+= 2.6.7 =
+* Reverted some int casting to prevent errors
+* Refactor coming soon (hopefully)
+
 = 2.6.6 =
 * Even more sanitization (props wp.org team)
 
