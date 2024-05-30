@@ -1077,14 +1077,13 @@ class MLAEdit {
 
 		$view_args = array( 'page' => MLACore::ADMIN_PAGE_SLUG, 'mla_item_ID' => $post->ID );
 		if ( isset( $_REQUEST['mla_source'] ) ) {
-			$view_args['mla_source'] = sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) );
+			$view_args['mla_source'] = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) );
 		
-			// apply_filters( 'get_delete_post_link', wp_nonce_url( $delete_link, "$action-post_{$post->ID}" ), $post->ID, $force_delete ) in /wp-includes/link-template.php
 			add_filter( 'get_delete_post_link', 'MLAEdit::get_delete_post_link_filter', 10, 3 );
 		}
 		
 		if ( isset( $_REQUEST['lang'] ) ) {
-			$view_args['lang'] = sanitize_text_field( wp_unslash( $_REQUEST['lang'] ) );
+			$view_args['lang'] = esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['lang'] ) ) );
 		}
 
 		echo '<span id="mla_metadata_links" style="font-weight: bold; line-height: 2em">';

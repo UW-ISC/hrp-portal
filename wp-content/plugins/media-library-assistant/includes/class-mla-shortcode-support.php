@@ -894,9 +894,14 @@ class MLAShortcode_Support {
 					'mla_alt_parameters' => NULL,
 					) 
  				);
+
+				// Add $content attributes so the blacklist filter will be applied
+				$attr = self::mla_validate_attributes( $attr, $content );
+				$content = NULL;
 			}
 
 			$blacklist = apply_filters( 'mla_gallery_alt_shortcode_blacklist', $blacklist );
+//error_log( __LINE__ . " blacklist = " . var_export( $blacklist, true ), 0 );
 			$alt_attr = apply_filters( 'mla_gallery_alt_shortcode_attributes', $attr );
 //error_log( __LINE__ . " alt_attr = " . var_export( $alt_attr, true ), 0 );
 
@@ -923,8 +928,6 @@ class MLAShortcode_Support {
 
 				$mla_alt_shortcode_args[] = $key . '=' . $value;
 			} // foreach $attr
-//error_log( __LINE__ . " mla_alt_shortcode_args = " . var_export( $mla_alt_shortcode_args, true ), 0 );
-
 
 			$mla_alt_shortcode_args = implode( ' ', $mla_alt_shortcode_args );
 

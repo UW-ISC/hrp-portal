@@ -21,7 +21,7 @@ class MLACore {
 	 *
 	 * @var	string
 	 */
-	const CURRENT_MLA_VERSION = '3.15';
+	const CURRENT_MLA_VERSION = '3.16';
 
 	/**
 	 * Current date for Development Versions, empty for production versions
@@ -792,7 +792,7 @@ class MLACore {
 		// Check for Update, Trash or Delete Permanently on Media/Edit Media screen,
 		if ( ( false !== strpos( $location, 'upload.php?' ) ) || ( false !== strpos( $location, 'post.php?' ) ) ) {
 			if ( isset( $_REQUEST['mla_source'] ) ) {
-				$location = add_query_arg( array( 'mla_source' => sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ), $location );
+				$location = add_query_arg( array( 'mla_source' => esc_attr( sanitize_text_field( wp_unslash( $_REQUEST['mla_source'] ) ) ) ), $location );
 			}
 		}
 
