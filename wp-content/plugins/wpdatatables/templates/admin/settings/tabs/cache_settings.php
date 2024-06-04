@@ -26,7 +26,7 @@ global $wpdb;
                                 class="wpdt-icon-times-full"></i></span></button>
                 <span class="wdt-alert-title f-600">
                        <?php esc_html_e('Detailed instruction on how to set cache and auto update cache can be found on this', 'wpdatatables'); ?>
-                        <a href="https://wpdatatables.com/documentation/table-features/caching-data-and-auto-update-cache-in-wordpress-tables/" target="_blank"><?php esc_html_e('link', 'wpdatatables'); ?></a>.
+                        <a rel="nofollow" href="https://wpdatatables.com/documentation/table-features/caching-data-and-auto-update-cache-in-wordpress-tables/" target="_blank"><?php esc_html_e('link', 'wpdatatables'); ?></a>.
                     </span>
                 <span class="wdt-alert-subtitle m-t-20">
                     <p>First, you will need to create a non-serverside table (created from Excel, CSV, XML, JSON, Nested JSON, Google Spreadsheet or PHP array). In the <strong>"Data source"</strong> tab in table settings you will find a new option <strong>"Cache Data"</strong>. When you turn it on, another new option <strong>"Auto update cache"</strong> will be shown. If this option is turned on, you will need to set the cron as explained below.</p>

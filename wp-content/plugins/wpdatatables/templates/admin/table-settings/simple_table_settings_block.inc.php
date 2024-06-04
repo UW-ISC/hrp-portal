@@ -1,11 +1,11 @@
-<?php defined( 'ABSPATH' ) or die( 'Access denied.' ); ?>
-
 <?php
 /**
  * Template for Table Settings widget
  * @author Milan Jovanovic
  *
  */
+
+defined('ABSPATH') or die('Access denied.');
 ?>
 
 <div class="card wdt-table-settings wdt-simple-table-settings">

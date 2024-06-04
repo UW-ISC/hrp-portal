@@ -22,6 +22,11 @@ class WPDataTable
     public $masterDetail;
     public $masterDetailLogic;
     public $masterDetailRender;
+    public $masterDetailSender;
+    public $masterDetailSendTableType;
+    public $masterDetailSendChildTableID;
+    public $masterDetailSendParentTableColumnIDName;
+    public $masterDetailSendChildTableColumnIDName;
     public $masterDetailRenderPage;
     public $masterDetailRenderPost;
     public $masterDetailPopupTitle;
@@ -110,6 +115,7 @@ class WPDataTable
     private $_tableToolsConfig = array();
     private $_autoRefreshInterval = 0;
     private $_infoBlock = true;
+    private $_pagination_top = 0;
     private $_pagination = true;
     private $_paginationAlign = 'right';
     private $_paginationLayout = 'full_numbers';
@@ -845,7 +851,17 @@ class WPDataTable
     {
         $this->_infoBlock = (bool)$infoBlock;
     }
-
+    /**
+     * @param boolean $paginationOnTop
+     */
+    public function setPaginationOnTop($paginationOnTop)
+    {
+        $this->_pagination_top = (int)$paginationOnTop;
+    }
+    public function getPaginationOnTop()
+    {
+        return $this->_pagination_top;
+    }
     /**
      * @return bool
      */
@@ -1631,7 +1647,13 @@ class WPDataTable
             $dataColumnProperties['customMaxRangeValue'] = isset($wdtParameters['customMaxRangeValue'][$key]) ? $wdtParameters['customMaxRangeValue'][$key] : null;
             $dataColumnProperties['parentTable'] = $this;
             $dataColumnProperties['globalSearchColumn'] = isset($wdtParameters['globalSearchColumn'][$key]) ? $wdtParameters['globalSearchColumn'][$key] : false;
-            $dataColumnProperties = apply_filters('wpdt_filter_data_column_properties', $dataColumnProperties, $wdtParameters, $key);
+            $dataColumnProperties = apply_filters_deprecated(
+                'wpdt_filter_data_column_properties',
+                array( $dataColumnProperties, $wdtParameters, $key ),
+                WDT_INITIAL_STARTER_VERSION,
+                'wpdatatables_filter_data_column_properties'
+            );
+            $dataColumnProperties = apply_filters('wpdatatables_filter_data_column_properties', $dataColumnProperties, $wdtParameters, $key);
             /** @var WDTColumn $tableColumnClass */
             $tableColumnClass = static::$_columnClass;
             $dataColumn = null;
@@ -1859,7 +1881,13 @@ class WPDataTable
                 }
             }
         }
-
+        foreach ($wdtColumnTypes as $key => $columnType){
+            foreach ($this->_dataRows as &$dataRow) {
+                if (isset($dataRow[$key])) {
+                    $dataRow[$key] = wp_kses_post($dataRow[$key]);
+                }
+            }
+        }
         //[<-- Full version -->]//
         // Calculate formula columns
         if (in_array('formula', $wdtColumnTypes)) {
@@ -1975,37 +2003,6 @@ class WPDataTable
             $dataRowsFormatted[] = $formattedRow;
         }
         return $dataRowsFormatted;
-    }
-
-    public function getRow($index)
-    {
-        if (!isset($index) || !isset($this->_dataRows[$index])) {
-            throw new WDTException('Invalid row index!');
-        }
-        $rowArray = &$this->_dataRows[$index];
-        apply_filters('wdt_get_row', $rowArray);
-        return $rowArray;
-    }
-
-    public function addDataColumn(&$dataColumn)
-    {
-        if (!($dataColumn instanceof WDTColumn)) {
-            throw new WDTException('Please provide a wpDataTable column.');
-        }
-        apply_filters('wdt_add_column', $dataColumn);
-        $this->_wdtIndexedColumns[] = &$dataColumn;
-        return true;
-    }
-
-    public function addColumns(&$dataColumns)
-    {
-        if (!is_array($dataColumns)) {
-            throw new WDTException('Please provide an array of wpDataTable column objects.');
-        }
-        apply_filters('wdt_add_columns', $dataColumns);
-        foreach ($dataColumns as &$dataColumn) {
-            $this->addDataColumn($dataColumn);
-        }
     }
 
     /**
@@ -3262,7 +3259,13 @@ class WPDataTable
                 'customMaxRangeValue' => $wdtParameters['customMaxRangeValue'][$dataColumn_key],
                 'editingDefaultValue' => $wdtParameters['editingDefaultValue'][$dataColumn_key]
             );
-            $colObjOptions = apply_filters('wpdt_filter_supplementary_array_column_object', $colObjOptions, $wdtParameters, $dataColumn_key);
+            $colObjOptions = apply_filters_deprecated(
+                'wpdt_filter_supplementary_array_column_object',
+                array( $colObjOptions, $wdtParameters, $dataColumn_key ),
+                WDT_INITIAL_STARTER_VERSION,
+                'wpdatatables_filter_supplementary_array_column_object'
+            );
+            $colObjOptions = apply_filters('wpdatatables_filter_supplementary_array_column_object', $colObjOptions, $wdtParameters, $dataColumn_key);
             $colObjs[$dataColumn_key] = $tableColumnClass::generateColumn($dataColumn_type, $colObjOptions);
             $colObjs[$dataColumn_key]->setInputType($wdtParameters['input_types'][$dataColumn_key]);
             $colObjs[$dataColumn_key]->setParentTable($this);
@@ -3533,6 +3536,7 @@ class WPDataTable
                     foreach ($headingsArray as $dataColumnIndex => $dataColumnHeading) {
                         $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
                         $namedDataArray[$r][$dataColumnHeading] = trim(isset($dataRows[$row][$dataColumnIndex]) ? $dataRows[$row][$dataColumnIndex] : '');
+                        $namedDataArray[$r][$dataColumnHeading] = wp_kses_post($namedDataArray[$r][$dataColumnHeading]);
                         $currentDateFormat = isset($wdtParameters['dateInputFormat'][$dataColumnHeading]) ? $wdtParameters['dateInputFormat'][$dataColumnHeading] : null;
                         if (!empty($wdtParameters['data_types'][$dataColumnHeading]) && in_array($wdtParameters['data_types'][$dataColumnHeading], array('date',
                                 'datetime',
@@ -3845,8 +3849,14 @@ class WPDataTable
         wp_enqueue_script('wdt-common', WDT_ROOT_URL . 'assets/js/wpdatatables/admin/common.js', array(), WDT_CURRENT_VERSION, true);
         if (get_option('wdtMinifiedJs')) {
             WDTTools::wdtUIKitEnqueue();
-            wp_enqueue_style('wdt-wpdatatables', WDT_CSS_PATH . 'wdt.frontend.min.css', array(), WDT_CURRENT_VERSION);
-            wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wdt.frontend.min.js', array('wdt-common'), WDT_CURRENT_VERSION, true);
+
+            if (defined('WDT_FCH_INTEGRATION')) {
+                wp_enqueue_style('wdt-wpdatatables', WDT_CSS_PATH . 'wdt.frontend.min.css', array(), WDT_CURRENT_VERSION);
+                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wdt.frontend.min.js', array('wdt-common'), WDT_CURRENT_VERSION, true);
+            } else {
+                wp_enqueue_style('wdt-wpdatatables', WDT_CSS_PATH . 'wdt.frontend-starter.min.css', array(), WDT_CURRENT_VERSION);
+                wp_enqueue_script('wdt-wpdatatables', WDT_JS_PATH . 'wpdatatables/wdt.frontend-starter.min.js', array('wdt-common'), WDT_CURRENT_VERSION, true);
+            }
             wp_localize_script('wdt-wpdatatables', 'wdt_ajax_object', array('ajaxurl' => admin_url('admin-ajax.php')));
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_inline_strings', WDTTools::getTranslationStringsInlineEditing());
             wp_localize_script('wdt-wpdatatables', 'wpdatatables_filter_strings', WDTTools::getTranslationStringsColumnFilter());
@@ -3870,17 +3880,6 @@ class WPDataTable
                 wp_enqueue_script('wdt-row-grouping', WDT_JS_PATH . 'jquery-datatables/jquery.dataTables.rowGrouping.js', array('jquery',
                     'wdt-datatables'), WDT_CURRENT_VERSION, true);
             }
-            if ($this->isFixedHeaders()) {
-                wp_enqueue_script('wdt-fixed-header', WDT_JS_PATH . 'fixedheader/dataTables.fixedHeader.js', array(
-                    'jquery',
-                    'wdt-datatables'
-                ), WDT_CURRENT_VERSION, true);
-                wp_enqueue_style('wdt-datatables-fixedHeader', WDT_CSS_PATH . 'fixedHeader.dataTables.min.css', array(), WDT_CURRENT_VERSION);
-            }
-            if ($this->isFixedColumns()) {
-                wp_enqueue_script('wdt-fixed-columns', WDT_JS_PATH . 'fixedcolumn/dataTables.fixedColumns.js', array('jquery', 'wdt-datatables'), WDT_CURRENT_VERSION, true);
-                wp_enqueue_style('wdt-datatables-fixedColumn', WDT_CSS_PATH . 'fixedColumns.dataTables.min.css', array(), WDT_CURRENT_VERSION);
-            }
             if ($this->TTEnabled() || $this->isEditable()) {
                 wp_enqueue_script('wdt-buttons', WDT_JS_PATH . 'export-tools/dataTables.buttons.min.js', array('jquery',
                     'wdt-datatables'), WDT_CURRENT_VERSION, true);
@@ -3896,10 +3895,6 @@ class WPDataTable
                     WDTTools::wdtUIKitEnqueue();
                     wp_localize_script('wdt-common', 'wpdatatables_edit_strings', WDTTools::getTranslationStringsCommon());
                     wp_enqueue_script('wdt-jquery-mask-money', WDT_JS_PATH . 'maskmoney/jquery.maskMoney.js', array('jquery'), WDT_CURRENT_VERSION, true);
-                    if ($this->inlineEditingEnabled()) {
-                        wp_enqueue_script('wdt-inline-editing', WDT_JS_PATH . 'wpdatatables/wdt.inlineEditing.js', array(), WDT_CURRENT_VERSION, true);
-                        wp_localize_script('wdt-inline-editing', 'wpdatatables_inline_strings', WDTTools::getTranslationStringsInlineEditing());
-                    }
                 }
             }
             if ($this->isResponsive()) {
@@ -3973,7 +3968,8 @@ class WPDataTable
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_settings', WDTTools::getDateTimeSettings());
         wp_localize_script('wdt-wpdatatables', 'wpdatatables_frontend_strings', WDTTools::getTranslationStringsWpDataTables());
 
-        do_action('wdt_enqueue_on_frontend', $this);
+        do_action_deprecated( 'wdt_enqueue_on_frontend', array($this), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_enqueue_on_frontend' );
+        do_action('wpdatatables_enqueue_on_frontend', $this);
     }
 
     /**
@@ -4302,7 +4298,13 @@ class WPDataTable
             $params['linkButtonClass'] = $columnData['linkButtonClass'];
         }
 
-        $params = apply_filters('wpdt_filter_column_params', $params, $columnData);
+        $params = apply_filters_deprecated(
+            'wpdt_filter_column_params',
+            array( $params, $columnData ),
+            WDT_INITIAL_STARTER_VERSION,
+            'wpdatatables_filter_column_params'
+        );
+        $params = apply_filters('wpdatatables_filter_column_params', $params, $columnData);
 
         if (isset($tableData->display_length)) {
             $this->setDisplayLength($tableData->display_length);
@@ -4352,7 +4354,17 @@ class WPDataTable
                 if (is_admin() && $tableData->table_type == 'manual') {
                     $this->enableEditing();
                 }
-                $params['disable_limit'] = apply_filters('wpdt_filter_sql_disable_limit', !empty($tableData->disable_limit), $this->connection);
+
+                $disableLimit = apply_filters_deprecated(
+                    'wpdt_filter_sql_disable_limit',
+                    array( !empty($tableData->disable_limit), $this->connection ),
+                    WDT_INITIAL_STARTER_VERSION,
+                    'wpdatatables_filter_sql_disable_limit'
+                );
+                $disableLimit = apply_filters('wpdatatables_filter_sql_disable_limit', !empty($tableData->disable_limit), $this->connection);
+
+                $params['disable_limit'] = $disableLimit ;
+
 
                 $this->queryBasedConstruct(
                     $tableData->content,
@@ -4482,6 +4494,7 @@ class WPDataTable
             isset($advancedSettings->verticalScroll) ? $this->setVerticalScroll($advancedSettings->verticalScroll) : $this->setVerticalScroll(false);
             isset($advancedSettings->verticalScrollHeight) ? $this->setVerticalScrollHeight($advancedSettings->verticalScrollHeight) : $this->setVerticalScrollHeight(600);
             isset($advancedSettings->responsiveAction) ? $this->setResponsiveAction($advancedSettings->responsiveAction) : $this->setResponsiveAction('icon');
+            isset($advancedSettings->pagination_top) ? $this->setPaginationOnTop($advancedSettings->pagination_top) : $this->setPaginationOnTop(0);
             isset($advancedSettings->pagination) ? $this->setPagination($advancedSettings->pagination) : $this->setPagination(true);
             isset($advancedSettings->paginationAlign) ? $this->setPaginationAlign($advancedSettings->paginationAlign) : $this->setPaginationAlign('right');
             isset($advancedSettings->paginationLayout) ? $this->setPaginationLayout($advancedSettings->paginationLayout) : $this->setPaginationLayout('full_numbers');
@@ -4522,6 +4535,7 @@ class WPDataTable
             $this->setBorderSpacing(0);
             $this->setVerticalScroll(false);
             $this->setVerticalScrollHeight(600);
+            $this->setPaginationOnTop(0);
             $this->setPagination(true);
             $this->setPaginationAlign('right');
             $this->setPaginationLayout('full_numbers');
@@ -4562,7 +4576,8 @@ class WPDataTable
             $this->prepareRenderingRules($tableData->columns);
         }
 
-        do_action('wdt_extend_wpdatatable_object', $this, $tableData);
+        do_action_deprecated( 'wdt_extend_wpdatatable_object', array($this, $tableData), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_extend_wpdatatable_object' );
+        do_action('wpdatatables_extend_wpdatatable_object', $this, $tableData);
 
     }
 
@@ -4573,11 +4588,42 @@ class WPDataTable
      */
     public function prepareRenderingRules($columnData)
     {
+        global $wpdb, $wdtVar1, $wdtVar2, $wdtVar3, $wdtVar4, $wdtVar5, $wdtVar6, $wdtVar7, $wdtVar8, $wdtVar9, $is_safari;
         $columnIndex = 1;
         // Check the search values passed from URL
         if (isset($_GET['wdt_search'])) {
             $this->setDefaultSearchValue($_GET['wdt_search']);
         }
+        if (isset($_GET['wdt_var1'])) {
+            $wdtVar1 = urldecode(sanitize_text_field($_GET['wdt_var1']));
+        }
+        if (isset($_GET['wdt_var2'])) {
+            $wdtVar2 = urldecode(sanitize_text_field($_GET['wdt_var2']));
+        }
+        if (isset($_GET['wdt_var3'])) {
+            $wdtVar3 = urldecode(sanitize_text_field($_GET['wdt_var3']));
+        }
+        if (isset($_GET['wdt_var4'])) {
+            $wdtVar4 = urldecode(sanitize_text_field($_GET['wdt_var4']));
+        }
+        if (isset($_GET['wdt_var5'])) {
+            $wdtVar5 = urldecode(sanitize_text_field($_GET['wdt_var5']));
+        }
+        if (isset($_GET['wdt_var6'])) {
+            $wdtVar6 = urldecode(sanitize_text_field($_GET['wdt_var6']));
+        }
+        if (isset($_GET['wdt_var7'])) {
+            $wdtVar7 = urldecode(sanitize_text_field($_GET['wdt_var7']));
+        }
+        if (isset($_GET['wdt_var8'])) {
+            $wdtVar8 = urldecode(sanitize_text_field($_GET['wdt_var8']));
+        }
+        if (isset($_GET['wdt_var9'])) {
+            $wdtVar9 = urldecode(sanitize_text_field($_GET['wdt_var9']));
+        }
+        $id = $this->getWpId();
+        do_action('wpdatatables_before_placeholders_shortcode_url_filter', $id);
+
         // Define all column-dependent rendering rules
         foreach ($columnData as $key => $column) {
 
@@ -4718,20 +4764,25 @@ class WPDataTable
                 }
             }
             $currentSkin = $this->getTableSkin();
+            $rotationSafariSpan = $is_safari ? 'span' : '';
+
             if ($column->column_rotate_header_name != '') {
+                if ($is_safari) {
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} {text-align:center; vertical-align: middle;}";
+                }
                 if ($column->column_rotate_header_name == '180') {
-                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader}{rotate: {$column->column_rotate_header_name}deg; writing-mode: vertical-rl; width: auto;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} {$rotationSafariSpan}{rotate: {$column->column_rotate_header_name}deg; writing-mode: vertical-rl; width: auto;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{rotate: 180deg; left:15px !important; top: 16px !important; writing-mode: horizontal-tb;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
-                    $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader}{rotate: {$column->column_rotate_header_name}deg; writing-mode: vertical-rl; width: auto;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} {$rotationSafariSpan}{rotate: {$column->column_rotate_header_name}deg; writing-mode: vertical-rl; width: auto;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{rotate: 180deg; left:15px !important; top: 16px !important; writing-mode: horizontal-tb;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
 
                 } else if ($column->column_rotate_header_name == '360') {
-                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} {writing-mode: vertical-rl;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} {$rotationSafariSpan}{writing-mode: vertical-rl;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{writing-mode: horizontal-tb;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
-                    $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} {writing-mode: vertical-rl;}";
+                    $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} {$rotationSafariSpan}{writing-mode: vertical-rl;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade{writing-mode: horizontal-tb;}";
                     $this->_columnsCSS .= "\n#{$this->getId()} .fixedHeader-floating >thead >tr >th.wdtheader.{$cssColumnHeader} div.tooltip.fade div.tooltip-arrow{display: none;}";
                 }
@@ -4757,7 +4808,13 @@ class WPDataTable
                 }
             }
 
-            $this->_columnsCSS = apply_filters('wpdt_filter_columns_css', $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader);
+            $this->_columnsCSS = apply_filters_deprecated(
+                'wpdt_filter_columns_css',
+                array( $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader ),
+                WDT_INITIAL_STARTER_VERSION,
+                'wpdatatables_filter_columns_css'
+            );
+            $this->_columnsCSS = apply_filters('wpdatatables_filter_columns_css', $this->_columnsCSS, $column, $this->getId(), $cssColumnHeader);
 
             $columnIndex++;
         }
@@ -4794,6 +4851,7 @@ class WPDataTable
         $obj->editable = $this->isEditable();
         $obj->inlineEditing = $this->inlineEditingEnabled();
         $obj->infoBlock = $this->isInfoBlock();
+        $obj->pagination_top = $this->getPaginationOnTop();
         $obj->pagination = $this->isPagination();
         $obj->paginationAlign = $this->getPaginationAlign();
         $obj->paginationLayout = $this->getPaginationLayout();

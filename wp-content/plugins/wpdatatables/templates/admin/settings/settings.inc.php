@@ -78,10 +78,6 @@
                             <?php include 'tabs/main_plugin_settings.php' ?>
                             <!-- /Main plugin settings tab -->
 
-                            <!-- Separate MySQL connection settings tab -->
-                            <?php include 'tabs/separate_connection.php' ?>
-                            <!-- /Separate MySQL connection settings tab -->
-
                             <!-- Color and font settings tab-->
                             <?php include 'tabs/color_and_font_settings.php' ?>
                             <!-- /Color and font settings tab-->
@@ -89,10 +85,6 @@
                             <!-- Custom JS and CSS settings tab-->
                             <?php include 'tabs/custom_js_and_css.php' ?>
                             <!-- /Custom JS and CSS settings tab-->
-
-                            <!-- Google Sheet settings tab-->
-                            <?php include 'tabs/google_sheet_settings.php' ?>
-                            <!-- /Google Sheet settings tab-->
 
                             <!-- Cache settings tab-->
                             <?php include 'tabs/cache_settings.php' ?>
@@ -105,6 +97,10 @@
                             <!-- Charts tab-->
                             <?php include 'tabs/charts.php' ?>
                             <!-- /Charts tab-->
+
+                            <!-- Custom tab-->
+                            <?php do_action( 'wpdatatables_add_tab_in_main_settings' ); ?>
+                            <!-- /Custom tab-->
                         </div>
                     </div>
 

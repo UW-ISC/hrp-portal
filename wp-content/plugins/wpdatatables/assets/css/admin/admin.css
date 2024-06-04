@@ -2020,3 +2020,32 @@ wpdt-c button#wdt-add-data-browse-button {
 .wpdt-c .wpdt-bootstrap-update-notice .notice-dismiss{
     top : -5px;
 }
+.wpdt-c .wdt-upgrade-btn {
+    background: #091D70 !important;
+}
+
+.wpdt-c .wdt-upgrade-img {
+    width: 100%;
+}
+.wpdt-c .wdt-upgrade-btn a {
+    color: #FFFFFF !important;
+}
+.wpdt-c .wdt-upgrade-btn a:hover {
+    opacity: .8;
+}
+
+.wpdt-c .opacity-5 {
+    opacity: .5;
+}
+
+.wpdt-c .opacity-6 {
+    opacity: .6;
+}
+.wpdt-c .row-notice {
+    padding: 5px;
+    border:1px solid #091D70 !important;
+}
+
+.wpdt-c #column-editing-settings .notice-images {
+    display: none;
+}

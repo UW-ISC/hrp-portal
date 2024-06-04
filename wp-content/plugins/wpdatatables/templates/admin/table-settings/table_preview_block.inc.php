@@ -1,15 +1,16 @@
-<?php defined('ABSPATH') or die('Access denied.'); ?>
-
 <?php
 /**
  * Template for Table Preview widget
  * @author Alexander Gilmanov
  * @since 13.10.2016
  */
+
+defined('ABSPATH') or die('Access denied.');
 ?>
 <!-- div.column-settings -->
 
-<?php do_action('wdt_above_table_alert'); ?>
+<?php do_action_deprecated( 'wdt_above_table_alert', array(), WDT_INITIAL_STARTER_VERSION, 'wpdatatables_above_table_alert' ); ?>
+<?php do_action('wpdatatables_above_table_alert'); ?>
 
 <div class="card column-settings hidden">
 

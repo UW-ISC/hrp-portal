@@ -202,21 +202,21 @@ var WDTColumn = function (column, parent_table) {
     this.exactFiltering = 0;
 
     /**
-      * Toggle range slider
-      *  @type {int}
-      */
+     * Toggle range slider
+     *  @type {int}
+     */
     this.rangeSlider = 0;
 
     /**
-      * Display max value on range slider
-      *  @type {string}
-      */
+     * Display max value on range slider
+     *  @type {string}
+     */
     this.rangeMaxValueDisplay = 'default';
 
     /**
-      * Custom max value string in the range slider
-      *  @type {string}
-      */
+     * Custom max value string in the range slider
+     *  @type {string}
+     */
     this.customMaxRangeValue = null;
 
     /**
@@ -1234,8 +1234,8 @@ WDTColumn.prototype.fillInputs = function () {
         this.type == 'int' ?
             jQuery('#wdt-column-skip-thousands').prop('checked', this.skip_thousands_separator)
             : this.decimalPlaces != -1 ?
-            jQuery('#wdt-column-decimal-places').val(this.decimalPlaces) :
-            jQuery('#wdt-column-decimal-places').val('');
+                jQuery('#wdt-column-decimal-places').val(this.decimalPlaces) :
+                jQuery('#wdt-column-decimal-places').val('');
     }
 
     jQuery('#wdt-column-allow-sorting').prop('checked', this.sorting).change();
@@ -1327,19 +1327,24 @@ WDTColumn.prototype.fillInputs = function () {
 
     if ((this.parent_table.editable || this.parent_table.table_type == 'manual') && this.type != 'formula') {
         jQuery('li.column-editing-settings-tab').show();
-        jQuery('#wdt-column-editor-input-type').selectpicker('val', this.editor_type).change();
-        jQuery('#wdt-column-not-null').prop('checked', this.editingNonEmpty);
-        jQuery('#wdt-search-in-selectbox-editing').prop('checked', this.searchInSelectBoxEditing).change();
-        if (this.type == 'hidden') {
-            jQuery('#wdt-column-not-null').hide()
-            jQuery('#wdt-search-in-selectbox-editing').hide()
-            jQuery('#wdt-editing-default-value').hide()
-            jQuery('#wdt-column-editor-input-type').prop('disabled', 'disabled');
-        } else {
-            jQuery('#wdt-column-editor-input-type').prop('disabled', '');
-            jQuery('#wdt-column-not-null').show()
-            jQuery('#wdt-search-in-selectbox-editing').show()
-            jQuery('#wdt-editing-default-value').show()
+        if (jQuery('#wdt-column-editor-input-type').length){
+            jQuery('#wdt-column-editor-input-type').selectpicker('val', this.editor_type).change();
+            jQuery('#wdt-column-not-null').prop('checked', this.editingNonEmpty);
+            jQuery('#wdt-search-in-selectbox-editing').prop('checked', this.searchInSelectBoxEditing).change();
+            if (this.type == 'hidden') {
+                jQuery('#wdt-column-not-null').hide()
+                jQuery('#wdt-search-in-selectbox-editing').hide()
+                jQuery('#wdt-editing-default-value').hide()
+                jQuery('#wdt-column-editor-input-type option[value="hidden"]').prop('disabled', '');
+                jQuery('#wdt-column-editor-input-type').prop('disabled', 'disabled');
+            } else {
+                jQuery('#wdt-column-editor-input-type option[value="hidden"]').prop('disabled', 'disabled');
+                jQuery('#wdt-column-editor-input-type').prop('disabled', '');
+                jQuery('#wdt-column-not-null').show()
+                jQuery('#wdt-search-in-selectbox-editing').show()
+                jQuery('#wdt-editing-default-value').show()
+            }
+            jQuery('select#wdt-column-editor-input-type').selectpicker('refresh');
         }
         if (this.editingDefaultValue) {
             if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
@@ -1405,9 +1410,17 @@ WDTColumn.prototype.fillInputs = function () {
                 }
             } else {
                 jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
+                jQuery('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val', this.editingDefaultValue);
+                jQuery('.wdt-editing-hidden-query-param-value-block').hide()
+                jQuery('.wdt-editing-hidden-query-param-value').val('')
+                jQuery('.wdt-editing-hidden-post-meta-value-block').hide()
+                jQuery('.wdt-editing-hidden-post-meta-value').val('')
+                jQuery('.wdt-editing-hidden-acf-data-value-block').hide()
+                jQuery('.wdt-editing-hidden-acf-data-value').val('')
             }
         } else {
-            jQuery('#wdt-editing-default-value').val('');
+            if( jQuery('#wdt-editing-default-value').length)
+                jQuery('#wdt-editing-default-value').val('');
         }
         this.id_column == 1 ? jQuery('.wdt-skip-thousands-separator-block').hide() : '';
     } else {
@@ -1603,9 +1616,15 @@ WDTColumn.prototype.applyChanges = function () {
             this.checkboxesInModal = ((jQuery('#wdt-checkboxes-in-modal').is(':checked') && this.filter_type === 'checkbox')) ? 1 : 0;
         }
     }
+    this.editor_type = 'text';
+    if (jQuery('#wdt-column-editor-input-type').length){
+        this.editor_type = this.type === 'formula' ? 'none' : jQuery('#wdt-column-editor-input-type').val();
+    }
+    this.editingNonEmpty = 0;
+    if (jQuery('#wdt-column-not-null').length){
+        this.editingNonEmpty = jQuery('#wdt-column-not-null').is(':checked') ? 1 : 0;
+    }
 
-    this.editor_type = this.type === 'formula' ? 'none' : jQuery('#wdt-column-editor-input-type').val();
-    this.editingNonEmpty = jQuery('#wdt-column-not-null').is(':checked') ? 1 : 0;
     this.searchInSelectBoxEditing = jQuery('#wdt-search-in-selectbox-editing').is(':checked') ? 1 : 0;
     this.rangeSlider = jQuery('#wdt-column-range-slider').is(':checked') ? 1 : 0;
     this.rangeMaxValueDisplay = jQuery('#wdt-max-value-display').selectpicker('val');
@@ -1614,27 +1633,29 @@ WDTColumn.prototype.applyChanges = function () {
     if ( typeof callbackApplyUIChangesForNewColumnOption !== 'undefined' ) {
         callbackApplyUIChangesForNewColumnOption(this);
     }
-
-    if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
-        this.editingDefaultValue = jQuery.isArray(jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val')) ?
-            jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val').join('|') :
-            jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val');
-    } else if(jQuery.inArray(this.editor_type, ['link']) != -1) {
-        let urlValue = jQuery('#wdt-editing-default-value').val();
-        if (!(/^https?:\/\/.*\..*/.test(urlValue) || urlValue === '')) {
-            this.editingDefaultValue = "http://" + urlValue;
-        } else this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
-        jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
-    } else if(jQuery.inArray(this.editor_type, ['hidden']) != -1) {
-        let hiddenValue = jQuery('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val')
-        if (jQuery.inArray( hiddenValue, ['query-param','post-meta', 'acf-data']) != -1){
-            let hiddenParamValue = jQuery('.wdt-editing-hidden-' + hiddenValue + '-value').val()
-            this.editingDefaultValue = hiddenValue + ':' + hiddenParamValue
+    this.editingDefaultValue = '';
+    if (jQuery('#wdt-editing-default-value').length) {
+        if (jQuery.inArray(this.editor_type, ['selectbox', 'multi-selectbox']) != -1) {
+            this.editingDefaultValue = jQuery.isArray(jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val')) ?
+                jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val').join('|') :
+                jQuery('#wdt-editing-default-value-selectpicker').selectpicker('val');
+        } else if (jQuery.inArray(this.editor_type, ['link']) != -1) {
+            let urlValue = jQuery('#wdt-editing-default-value').val();
+            if (!(/^https?:\/\/.*\..*/.test(urlValue) || urlValue === '')) {
+                this.editingDefaultValue = "http://" + urlValue;
+            } else this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
+            jQuery('#wdt-editing-default-value').val(this.editingDefaultValue);
+        } else if (jQuery.inArray(this.editor_type, ['hidden']) != -1) {
+            let hiddenValue = jQuery('#wdt-editing-hidden-default-value-selectpicker').selectpicker('val')
+            if (jQuery.inArray(hiddenValue, ['query-param', 'post-meta', 'acf-data']) != -1) {
+                let hiddenParamValue = jQuery('.wdt-editing-hidden-' + hiddenValue + '-value').val()
+                this.editingDefaultValue = hiddenValue + ':' + hiddenParamValue
+            } else {
+                this.editingDefaultValue = hiddenValue
+            }
         } else {
-            this.editingDefaultValue = hiddenValue
+            this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
         }
-    } else {
-        this.editingDefaultValue = jQuery('#wdt-editing-default-value').val();
     }
     this.compileConditionalFormattingRules();
     this.columnTransformValue();

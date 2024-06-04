@@ -432,6 +432,9 @@ class wpDataTableSourceFile
             $this->setHighestColumn($objWorksheet->getHighestDataColumn());
 
             $headingsArray = $objWorksheet->rangeToArray('A1:' . $this->getHighestColumn() . '1', null, true, true, true);
+            while (!end($headingsArray[1])) {
+                array_pop($headingsArray[1]);
+            };
             foreach($headingsArray[1] as $heading){
                 if ($heading === '' || $heading === null)
                     throw new WDTException(esc_html__('One or more columns doesn\'t have a header. Please enter headers for all columns in order to proceed.'));
@@ -458,6 +461,7 @@ class wpDataTableSourceFile
                     foreach ($columnOrigHeaders as $dataColumnIndex => $dataColumnHeading) {
                         $dataColumnHeading = trim(preg_replace('/\s\s+/', ' ', str_replace("\n", " ", $dataColumnHeading)));
                         $namedDataArray[$r][$dataColumnHeading] = trim(isset($dataRows[$row][$dataColumnIndex]) ? $dataRows[$row][$dataColumnIndex] : '');
+                        $namedDataArray[$r][$dataColumnHeading] = wp_kses_post($namedDataArray[$r][$dataColumnHeading]);
                     }
                 }
             }
@@ -506,9 +510,14 @@ class wpDataTableSourceFile
                 if ($insertType == 'import') {
                     // Set all cells in the row to their defaults
                     foreach ($this->getTableData()->columns as $column) {
-                        $insertArray[$column_headers[$column->orig_header]] = $column->type == 'hidden' ?
-                            "'" . esc_sql(WDTTools::getHiddenDefaultValues($column->hidden_default_value, null)) . "'" :
-                            "'" . sanitize_text_field($column->default_value) . "'";
+                        if (has_filter('wpdatatables_import_default_entry_data_gsheet_column_type_' .$column->type)) {
+                            $insertArray[$column_headers[$column->orig_header]] = apply_filters(
+                                'wpdatatables_import_default_entry_data_gsheet_column_type_' . $column->type,
+                                null, $column, $column_headers, $insertArray
+                            );
+                        } else {
+                             $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                        }
                     }
                 }
 
@@ -546,10 +555,15 @@ class wpDataTableSourceFile
                         } else {
                             $insertArray[$dataColumnHeading] = "'" . esc_sql(str_replace(',', '', $namedDataArray[$row][$dataColumnHeadingOriginal])) . "'";
                         }
-                    } elseif ($columnTypes[$dataColumnHeading] == 'hidden') {
-                        continue;
                     } else {
-                        $insertArray[$dataColumnHeading] = "'" . esc_sql($namedDataArray[$row][$dataColumnHeadingOriginal]) . "'";
+                        if (has_filter('wpdatatables_import_entry_data_gsheet_column_type_' . $columnTypes[$dataColumnHeading])) {
+                            $insertArray[$dataColumnHeading] = apply_filters(
+                                'wpdatatables_import_entry_data_gsheet_column_type_' . $columnTypes[$dataColumnHeading],
+                                null, $insertArray, $namedDataArray, $row, $dataColumnHeadingOriginal, $dataColumnHeading, $columnTypes[$dataColumnHeading], $this
+                            );
+                        } else {
+                            $insertArray[$dataColumnHeading] = "'" . esc_sql($namedDataArray[$row][$dataColumnHeadingOriginal]) . "'";
+                        }
                     }
 
                     $dataColumnHeadingTempArr[] = $dataColumnHeading;
@@ -561,9 +575,14 @@ class wpDataTableSourceFile
                     if ($insertType == 'import') {
                         // Set all cells in the row to their defaults
                         foreach ($this->getTableData()->columns as $column) {
-                            $insertArray[$column_headers[$column->orig_header]] = $column->type == 'hidden' ?
-                                "'" . esc_sql(WDTTools::getHiddenDefaultValues($column->hidden_default_value, null)) . "'" :
-                                "'" . sanitize_text_field($column->default_value) . "'";
+                            if (has_filter('wpdatatables_import_default_entry_data_other_source_column_type_' .$column->type)) {
+                                $insertArray[$column_headers[$column->orig_header]] = apply_filters(
+                                    'wpdatatables_import_default_entry_data_other_source_column_type_' . $column->type,
+                                    null, $column, $column_headers, $insertArray
+                                );
+                            } else {
+                                $insertArray[$column_headers[$column->orig_header]] = "'" . sanitize_text_field($column->default_value) . "'";
+                            }
                             if (in_array($column->predefined_type_in_db, array('DATE', 'DATETIME', 'TIME', 'INT', 'DECIMAL', 'BIGINT', 'SMALLINT', 'TINYINT', 'MEDIUMINT'))) {
                                 $insertArray[$column_headers[$column->orig_header]] = ("'" . sanitize_text_field($column->default_value) . "'") == "''" ? 'NULL' : "'" . sanitize_text_field($column->default_value) . "'";
                             }
@@ -618,14 +637,19 @@ class wpDataTableSourceFile
                             } else {
                                 $insertArray[$dataColumnHeading] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql(str_replace(',', '', $dataRows[$row][$dataColumnIndex])) . "'" : 'NULL';
                             }
-                        } elseif ($columnTypes[$dataColumnHeading] == 'hidden') {
-                           continue;
                         } else {
                             if ($columnTypes[$dataColumnHeading] === 'float') {
                                 $insertArray[$dataColumnHeading] = $dataRows[$row][$dataColumnIndex] !== null ? "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'" : 'NULL';
                             } else {
-                                $insertArray[$dataColumnHeading] = "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'";
-                                $insertArray[$dataColumnHeading] = $insertArray[$dataColumnHeading] == "''" ? 'NULL' : $insertArray[$dataColumnHeading];
+                                if (has_filter('wpdatatables_import_entry_data_other_source_column_type_' . $columnTypes[$dataColumnHeading])) {
+                                    $insertArray[$dataColumnHeading] = apply_filters(
+                                        'wpdatatables_import_entry_data_other_source_column_type_' . $columnTypes[$dataColumnHeading],
+                                        null, $insertArray, $dataRows, $row, $dataColumnIndex, $dataColumnHeading, $columnTypes[$dataColumnHeading], $this
+                                    );
+                                } else {
+                                    $insertArray[$dataColumnHeading] = "'" . esc_sql($dataRows[$row][$dataColumnIndex]) . "'";
+                                    $insertArray[$dataColumnHeading] = $insertArray[$dataColumnHeading] == "''" ? 'NULL' : $insertArray[$dataColumnHeading];
+                                }
                             }
                         }
 
@@ -651,7 +675,13 @@ class wpDataTableSourceFile
                 }
             }
 
-            $insertArray = apply_filters('wpdt_insert_additional_column_value', $insertArray, $row, $this->getTableType());
+            $insertArray = apply_filters_deprecated(
+                'wpdt_insert_additional_column_value',
+                array( $insertArray, $row, $this->getTableType() ),
+                WDT_INITIAL_STARTER_VERSION,
+                'wpdatatables_insert_additional_column_value'
+            );
+            $insertArray = apply_filters('wpdatatables_insert_additional_column_value', $insertArray, $row, $this->getTableType());
 
             if (!empty($insertArray)) {
                 $insertBlocks[] = '(' . implode(', ', $insertArray) . ')';

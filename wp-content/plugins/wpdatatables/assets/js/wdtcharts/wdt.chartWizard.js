@@ -13,6 +13,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
     var wdtChart = null;
     var nextStepButton = $('#wdt-chart-wizard-next-step');
     var previousStepButton = $('#wdt-chart-wizard-previous-step');
+    let chartSourcePicker = $('#wpdatatables-chart-source');
 
     $('.wdt-chart-wizard-chart-selecter-block .card').on('click', function () {
         $('.wdt-chart-wizard-chart-selecter-block .card').removeClass('selected').addClass('not-selected');
@@ -432,7 +433,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
 
                 previousStepButton.prop('disabled', false);
                 previousStepButton.animateFadeIn();
-                $('#wpdatatables-chart-source').change();
+                chartSourcePicker.change();
                 $('.wdt-preload-layer').animateFadeOut();
                 break;
             case 'step2':
@@ -441,7 +442,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
                 applyDragula();
                 nextStepButton.prop('disabled', true);
                 nextStepButton.hide();
-                constructedChartData.wpdatatable_id = $('#wpdatatables-chart-source').val();
+                constructedChartData.wpdatatable_id = chartSourcePicker.val();
                 $('div.chart-wizard-step.step3').show();
                 $('li.chart_wizard_breadcrumbs_block.step3').addClass('active');
 
@@ -1582,12 +1583,19 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
     /**
      * Pick the data type
      */
-    $('#wpdatatables-chart-source').on('change', function (e) {
+    chartSourcePicker.on('change', function (e) {
         e.preventDefault();
+        let selectedTable = $(this).find('option:selected');
+        let tableType = selectedTable.data('table-type');
         if ($(this).val() == '') {
             nextStepButton.prop('disabled', true);
+            $('#wdt-simple-source-chart').hide();
+        } else if (tableType === 'simple') {
+            nextStepButton.prop('disabled', true);
+            $('#wdt-simple-source-chart').show();
         } else {
             nextStepButton.prop('disabled', false);
+            $('#wdt-simple-source-chart').hide();
         }
     });
 
@@ -1665,7 +1673,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
         });
         if (this.constructedChartData.engine === 'highstock') {
             // Disable follow filtering for Highstock for certain date formats
-            var invalidFormats = ["d Mon Y", "d M Y", "Mon d, Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y","D, F j, Y", "j F Y"];
+            var invalidFormats = ["d Mon Y", "d M Y", "Mon d, Y", "Mon Y", "M Y", "F Y", "F j, Y", "j. F Y.", "Y", "D, F j, Y", "j F Y"];
             if (invalidFormats.includes(wpdatatables_settings.wdtDateFormat)) {
                 $('label[for=follow-table-filtering]').addClass('disabled');
                 $('input#follow-table-filtering').attr('disabled', 'disabled');
@@ -2058,7 +2066,7 @@ let singleSeriesFromMultipleTypes = ['highstock_area_range_chart', 'highstock_ar
             constructedChartData.title = editing_chart_data.title;
             // General settings
             $('.charts-type').find("[data-type='" + editing_chart_data.type + "']").click();
-            $('#wpdatatables-chart-source').val(editing_chart_data.wpdatatable_id);
+            chartSourcePicker.val(editing_chart_data.wpdatatable_id);
 
             if (editing_chart_data.range_type == 'picked_range') {
                 $('#wdt-chart-row-range-type').val('pick_rows').change();

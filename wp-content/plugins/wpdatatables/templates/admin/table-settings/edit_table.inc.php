@@ -38,17 +38,9 @@
 
     <!-- Modals -->
 
-    <!-- Configure foreign key modal -->
-    <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/foreign_key_config.inc.php'; ?>
-    <!-- /Configure foreign key modal -->
-
     <!-- Columns list modal -->
     <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/columns_list_modal.inc.php'; ?>
     <!-- /Columns list modal -->
-
-    <!-- Formula Editor modal -->
-    <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/formula_editor_modal.inc.php'; ?>
-    <!-- /Formula Editor modal -->
 
     <!-- Add column modal -->
     <?php include WDT_TEMPLATE_PATH . 'admin/table-settings/add_column_modal.inc.php'; ?>
@@ -101,6 +93,8 @@
     <!-- Save table modal -->
     <?php include WDT_TEMPLATE_PATH . 'admin/common/save_table_modal.inc.php'; ?>
     <!-- /Save table modal -->
+
+    <?php do_action('wpdatatables_admin_after_edit', $connection ?? '')?>
 
     <!-- /Templates -->
 

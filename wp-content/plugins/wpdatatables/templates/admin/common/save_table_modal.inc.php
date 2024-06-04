@@ -37,9 +37,10 @@
                 </div>
                 <!--/ .modal-footer -->
             </div>
-            <!--/ .modal-content -->
+            <!--/ .modal-body -->
         </div>
-        <!--/ .modal-dialog -->
+        <!--/ .modal-content -->
     </div>
-    <!--/ #wdt-backend-close-modal -->
+    <!--/ .modal-dialog -->
+</div>
 <!--/ #wdt-backend-close-modal -->

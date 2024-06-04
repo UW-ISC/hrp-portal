@@ -974,64 +974,43 @@ var singleClick = false;
                 }
             });
             if (tableDescription.table_wcag) {
-                    wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
-                        sName: 'addFilteredValues',
-                        fn: function (oSettings) {
-                            if (tableDescription.advancedFilterEnabled) {
-                                var arrayofSearchedColumns = [];
-                                var numberOfSearchedColumn = 0;
-                                var numberOfSearchedDateTimeColumn = 0;
-                                var i = 0;
-                                for (i = 0; i < oSettings.aoPreSearchCols.length; i++) {
-                                    if (oSettings.aoPreSearchCols[i].sSearch != '') {
-                                        arrayofSearchedColumns.push(i);
-                                        numberOfSearchedColumn++;
-                                    } else if (($(oSettings.aoColumns[i].nTf).attr('data-value-to') != undefined && $(oSettings.aoColumns[i].nTf).attr('data-value-to') != '')
-                                        || ($(oSettings.aoColumns[i].nTf).attr('data-value-from') != '' && $(oSettings.aoColumns[i].nTf).attr('data-value-from') != undefined)) {
-                                        arrayofSearchedColumns.push(i);
-                                        numberOfSearchedColumn++;
-                                        numberOfSearchedDateTimeColumn++;
-                                    } else if ($.inArray(tableDescription.advancedFilterOptions.aoColumns[i].type, ['time-range', 'date-range', 'datetime-range']) !== -1
-                                        && tableDescription.advancedFilterOptions.aoColumns[i].defaultValue !== '') {
-                                        arrayofSearchedColumns.push(i);
-                                        numberOfSearchedColumn++;
-                                        numberOfSearchedDateTimeColumn++;
-                                    } else if (($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != undefined && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != '')
-                                        || ($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != '' && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != undefined)) {
-                                        arrayofSearchedColumns.push(i);
-                                        numberOfSearchedColumn++;
-                                        numberOfSearchedDateTimeColumn++;
-                                    } else if (($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != undefined && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != '')
-                                        || ($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != '' && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != undefined)) {
-                                        arrayofSearchedColumns.push(i);
-                                        numberOfSearchedColumn++;
-                                        numberOfSearchedDateTimeColumn++;
-                                    }
+                wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                    sName: 'addFilteredValues',
+                    fn: function (oSettings) {
+                        if (tableDescription.advancedFilterEnabled) {
+                            var arrayofSearchedColumns = [];
+                            var numberOfSearchedColumn = 0;
+                            var numberOfSearchedDateTimeColumn = 0;
+                            var i = 0;
+                            for (i = 0; i < oSettings.aoPreSearchCols.length; i++) {
+                                if (oSettings.aoPreSearchCols[i].sSearch != '') {
+                                    arrayofSearchedColumns.push(i);
+                                    numberOfSearchedColumn++;
+                                } else if (($(oSettings.aoColumns[i].nTf).attr('data-value-to') != undefined && $(oSettings.aoColumns[i].nTf).attr('data-value-to') != '')
+                                    || ($(oSettings.aoColumns[i].nTf).attr('data-value-from') != '' && $(oSettings.aoColumns[i].nTf).attr('data-value-from') != undefined)) {
+                                    arrayofSearchedColumns.push(i);
+                                    numberOfSearchedColumn++;
+                                    numberOfSearchedDateTimeColumn++;
+                                } else if ($.inArray(tableDescription.advancedFilterOptions.aoColumns[i].type, ['time-range', 'date-range', 'datetime-range']) !== -1
+                                    && tableDescription.advancedFilterOptions.aoColumns[i].defaultValue !== '') {
+                                    arrayofSearchedColumns.push(i);
+                                    numberOfSearchedColumn++;
+                                    numberOfSearchedDateTimeColumn++;
+                                } else if (($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != undefined && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-from') != '')
+                                    || ($('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != '' && $('tr th.wpdt_using_wcag_filter span[data-index=' + i + ']').closest('th').attr('data-value-to') != undefined)) {
+                                    arrayofSearchedColumns.push(i);
+                                    numberOfSearchedColumn++;
+                                    numberOfSearchedDateTimeColumn++;
+                                } else if (($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != undefined && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-from') != '')
+                                    || ($('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != '' && $('div.wpDataTableFilterSection div span[data-index=' + i + ']').parent().attr('data-value-to') != undefined)) {
+                                    arrayofSearchedColumns.push(i);
+                                    numberOfSearchedColumn++;
+                                    numberOfSearchedDateTimeColumn++;
                                 }
-                                oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
-                                oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
-                                if (tableDescription.globalSearch) {
-                                    if ($('.dataTables_filter input[type="search"]').val() != '') {
-                                        oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
-                                        oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
-                                        oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
-                                        oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
-                                        oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
-                                        oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
-                                    }
-                                }
-                                if (tableDescription.renderFilter == "header" && !tableDescription.filterInForm) {
-                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'tr th.wpdt_using_wcag_filter span');
-                                } else if (tableDescription.renderFilter == "footer" && !tableDescription.filterInForm) {
-                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, '');
-                                } else if (tableDescription.filterInForm) {
-                                    addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'div.wpDataTableFilterSection div span');
-                                }
-                                $(tableDescription.selector + ' .filter_column .wdt-select-filter .length_menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
-                                $(tableDescription.selector + ' .dataTables_length .dropdown-menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
-                            } else if (tableDescription.globalSearch) {
-                                oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
-                                oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
+                            }
+                            oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
+                            oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
+                            if (tableDescription.globalSearch) {
                                 if ($('.dataTables_filter input[type="search"]').val() != '') {
                                     oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
                                     oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
@@ -1041,8 +1020,29 @@ var singleClick = false;
                                     oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
                                 }
                             }
+                            if (tableDescription.renderFilter == "header" && !tableDescription.filterInForm) {
+                                addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'tr th.wpdt_using_wcag_filter span');
+                            } else if (tableDescription.renderFilter == "footer" && !tableDescription.filterInForm) {
+                                addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, '');
+                            } else if (tableDescription.filterInForm) {
+                                addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, this, numberOfSearchedColumn, 'div.wpDataTableFilterSection div span');
+                            }
+                            $(tableDescription.selector + ' .filter_column .wdt-select-filter .length_menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
+                            $(tableDescription.selector + ' .dataTables_length .dropdown-menu.open ul li').attr('role', 'list').attr('aria-required-parent', 'listbox');
+                        } else if (tableDescription.globalSearch) {
+                            oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfo;
+                            oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmpty;
+                            if ($('.dataTables_filter input[type="search"]').val() != '') {
+                                oSettings.oLanguage.sInfo = wpdatatables_frontend_strings.sInfoWCAG;
+                                oSettings.oLanguage.sInfoEmpty = wpdatatables_frontend_strings.sInfoEmptyWCAG;
+                                oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                oSettings.oLanguage.sInfo = oSettings.oLanguage.sInfo.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                                oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_COLUMN_', wpdatatables_frontend_strings.forGloablWCAG);
+                                oSettings.oLanguage.sInfoEmpty = oSettings.oLanguage.sInfoEmpty.replace('_DATA_', $('.dataTables_filter input[type="search"]').val());
+                            }
                         }
-                    });
+                    }
+                });
             }
 
             function addWCAGElementsForFilters(arrayofSearchedColumns, oSettings, thisTable, numberOfSearchedColumn, selector1) {
@@ -1141,7 +1141,6 @@ var singleClick = false;
             /**
              * Helper function for hiding label show entries' for mojito/dark mojito skin
              */
-
             function hideLabelShowXEntries(tableId) {
                 let showEntriesText = $('#' + tableId + '_length')[0].firstChild;
                 showEntriesText.removeChild(showEntriesText.firstChild);
@@ -1435,85 +1434,89 @@ var singleClick = false;
              * Transform Value of column
              */
             if (tableDescription.transform_value_columns) {
-                    wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
-                        sName: 'updateTransformColumnValue',
-                        fn: function (oSettings) {
-                            var columnNamesArray = [];
+                wpDataTables[tableDescription.tableId].fnSettings().aoDrawCallback.push({
+                    sName: 'updateTransformColumnValue',
+                    fn: function (oSettings) {
+                        var columnNamesArray = [];
+                        for (var k = 0; k < oSettings.aoColumns.length; k++) {
+                            var columnName = oSettings.aoColumns[k].name;
+                            columnNamesArray.push(columnName);
+                        }
+                        for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
+                            var params = {};
+                            var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
+                            var transformValueRules = {};
+                            var position = 0;
+                            var checkPosition = false;
+                            var checkPositionFilter = false;
+                            var checkPositionFilterHelper = false;
+                            transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
                             for (var k = 0; k < oSettings.aoColumns.length; k++) {
-                                var columnName = oSettings.aoColumns[k].name;
-                                columnNamesArray.push(columnName);
-                            }
-                            for (var i = 0; i < tableDescription.transform_value_columns.length; i++) {
-                                var params = {};
-                                var column = oSettings.oInstance.api().column(tableDescription.transform_value_columns[i] + ':name', {search: 'applied'});
-                                var transformValueRules = {};
-                                var position = 0;
-                                var checkPosition = false;
-                                var checkPositionFilter = false;
-                                var checkPositionFilterHelper = false;
-                                transformValueRules[0] = oSettings.aoColumns[column.index()].transformValueRules;
-                                for (var k = 0; k < oSettings.aoColumns.length; k++) {
-                                    var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
-                                    var nodes = column.nodes();
-                                    if (!tableDescription.serverSide && oSettings.aiDisplay.length >= oSettings._iDisplayLength && !tableDescription.groupingEnabled) {
-                                        position = parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value) === undefined ? 0 : oSettings.aiDisplayMaster.indexOf(parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value));
-                                        checkPosition = true;
-                                    }
-                                    if(oSettings.aaSorting[0][1] === 'desc' && transformValueRules[0].includes('{' + oSettings.aoColumns[oSettings.aaSorting[0][0]].name + '.value}') && checkPosition && !tableDescription.serverSide) {
-                                        if (position + 1 === oSettings.aiDisplay.length) {
-                                            position = 0;
-                                        }
-                                    };
-                                    column.nodes().to$().each(function () {
-                                        if (transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
-                                            for (var m = 0; m < col.data().length; m++) {
-                                                if(tableDescription.serverSide) {
-                                                    position = m;
-                                                }
-                                                if(!tableDescription.serverSide && m === 0 && position > oSettings.aiDisplay.length ) {
-                                                    position = m;
-                                                    checkPositionFilter = false;
-                                                }
-                                                for (var n = 0; n < oSettings.aoColumns.length; n++) {
-                                                    if(oSettings.aoPreSearchCols[n].sSearch != ''){
-                                                        checkPositionFilterHelper = true;
-                                                    }
-                                                }
-                                                if(!tableDescription.serverSide && checkPositionFilterHelper && !checkPositionFilter) {
-                                                    position = m;
-                                                    if(oSettings._iDisplayLength - $(tableDescription.selector + ' tbody tr').length != 0){
-                                                        position = oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length;
-                                                        checkPositionFilter = true;
-                                                    } else {
-                                                        position = oSettings._iDisplayStart;
-                                                        checkPositionFilter = true;
-                                                    }
-                                                }
-                                                if (m != 0) {
-                                                    if (transformValueRules[m + 1] != null) {
-                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
-                                                    } else {
-                                                        wdtTransformValue(transformValueRules[m].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]);
-                                                    }
-                                                } else {
-                                                    if (transformValueRules[m + 1] != null) {
-                                                        wdtTransformValue(transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
-                                                    } else {
-                                                        wdtTransformValue(transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
-                                                        transformValueRules[m + 1] = transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
-                                                    }
-                                                }
-                                                position++;
-                                            }
-                                        }
-                                    });
+                                var col = oSettings.oInstance.api().column(oSettings.aoColumns[k].name + ':name', {search: 'applied'});
+                                var nodes = column.nodes();
+                                if (!tableDescription.serverSide && oSettings.aiDisplay.length >= oSettings._iDisplayLength && !tableDescription.groupingEnabled) {
+                                    position = parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value) === undefined ? 0 : oSettings.aiDisplayMaster.indexOf(parseInt($(tableDescription.selector + ' tbody tr')[0].attributes[1].value));
+                                    checkPosition = true;
                                 }
+                                if (oSettings.aaSorting[0][1] === 'desc' && transformValueRules[0].includes('{' + oSettings.aoColumns[oSettings.aaSorting[0][0]].name + '.value}') && checkPosition && !tableDescription.serverSide) {
+                                    if (position + 1 === oSettings.aiDisplay.length) {
+                                        position = 0;
+                                    }
+                                }
+                                ;
+                                column.nodes().to$().each(function () {
+                                    if (transformValueRules[0].includes('{' + oSettings.aoColumns[k].name + '.value}')) {
+                                        for (var m = 0; m < col.data().length; m++) {
+                                            if (tableDescription.serverSide) {
+                                                position = m;
+                                            }
+                                            if (position >= oSettings.aiDisplay.length) {
+                                                position = m;
+                                            }
+                                            if (!tableDescription.serverSide && m === 0 && position > oSettings.aiDisplay.length) {
+                                                position = m;
+                                                checkPositionFilter = false;
+                                            }
+                                            for (var n = 0; n < oSettings.aoColumns.length; n++) {
+                                                if (oSettings.aoPreSearchCols[n].sSearch != '') {
+                                                    checkPositionFilterHelper = true;
+                                                }
+                                            }
+                                            if (!tableDescription.serverSide && checkPositionFilterHelper && !checkPositionFilter) {
+                                                position = m;
+                                                if (oSettings._iDisplayLength - $(tableDescription.selector + ' tbody tr').length != 0) {
+                                                    position = oSettings.aiDisplay.length - $(tableDescription.selector + ' tbody tr').length;
+                                                    checkPositionFilter = true;
+                                                } else {
+                                                    position = oSettings._iDisplayStart;
+                                                    checkPositionFilter = true;
+                                                }
+                                            }
+                                            if (m != 0) {
+                                                if (transformValueRules[m + 1] != null) {
+                                                    wdtTransformValue(transformValueRules[m + 1].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                    transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
+                                                } else {
+                                                    wdtTransformValue(transformValueRules[m].replaceAll(new RegExp('\\b' + col.data()[position - 1] + '\\b', 'g'), col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                    transformValueRules[m + 1] = transformValueRules[m].replaceAll(col.data()[position - 1], col.data()[position] === null ? '' : col.data()[position]);
+                                                }
+                                            } else {
+                                                if (transformValueRules[m + 1] != null) {
+                                                    wdtTransformValue(transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                    transformValueRules[m + 1] = transformValueRules[m + 1].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
+                                                } else {
+                                                    wdtTransformValue(transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]), params, $(this), m, oSettings.sTableId);
+                                                    transformValueRules[m + 1] = transformValueRules[m].replaceAll('{' + oSettings.aoColumns[k].name + '.value}', col.data()[position] === null ? '' : col.data()[position]);
+                                                }
+                                            }
+                                            position++;
+                                        }
+                                    }
+                                });
                             }
                         }
-                    });
+                    }
+                });
                 if (!tableDescription.serverSide) {
                     wpDataTables[tableDescription.tableId].fnDraw();
                 }
@@ -1654,7 +1657,6 @@ var singleClick = false;
                         $(tableDescription.selector + '_ok_edit_dialog').click();
                     }
                 });
-
 
                 /**
                  * Apply maskmoney for Float column types and apply thousands separator and decimal places
@@ -2231,7 +2233,6 @@ var singleClick = false;
                 });
             }
 
-
             /**
              * Add some JS hooks for Master-detail add-on
              */
@@ -2249,6 +2250,20 @@ var singleClick = false;
                     $('.wpDataTablesFilter').appendTo('#wdt-filter-widget');
                 }
             }
+            $(document).on('click', '.paginate_button', function () {
+                var tableSelector = $(this)[0].attributes[1].value;
+                if (JSON.parse($('#' + $('#' + tableSelector).data('described-by')).val()).pagination_top) {
+                    function paginateScroll() {
+                        $('html, body').animate({
+                            scrollTop: $('#' + tableSelector + "_wrapper.dataTables_wrapper").offset().top
+                        }, 100);
+                    }
+
+                    paginateScroll();
+
+                    $(this).closest(tableDescription.selector + "_paginate.paginate_button").off('click').on('click', paginateScroll);
+                }
+            });
             //[<--/ Full version -->]//
 
             return wpDataTables[tableDescription.tableId];
@@ -2342,17 +2357,6 @@ function wdtApplyCellAction($cell, action, setVal) {
                 .attr('style', 'background-color: ' + setVal + ' !important');
             break;
     }
-}
-
-function wdtDialog(str, title) {
-    var dialogId = Math.floor((Math.random() * 1000) + 1);
-    var editModal = jQuery('.wdt-frontend-modal').clone();
-
-    editModal.attr('id', 'remodal-' + dialogId);
-    editModal.find('.modal-title').html(title);
-    editModal.find('.modal-header').append(str);
-
-    return editModal;
 }
 
 function wdtAddOverlay(table_selector) {

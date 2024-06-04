@@ -3,6 +3,8 @@
 <!-- .wdt-datatables-admin-wrap -->
 <div class="wrap wdt-datatables-admin-wrap">
 
+    <?php do_action('wpdatatables_add_browse_chart_notice_info'); ?>
+
     <!-- .container -->
     <div class="container">
 

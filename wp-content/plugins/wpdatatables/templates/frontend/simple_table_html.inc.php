@@ -63,7 +63,13 @@
             <?php for ($j = 0; $j < $this->getColNumber(); $j++) {
                 $cellMetaClasses = $this->getCellClassesByIndexes($this->getRowsData(), $i, $j) ? implode(" ", $this->getCellClassesByIndexes($this->getRowsData(), $i, $j)) : "";
                 $cellMetaClasses .= $this->getCellDataByIndexes($this->getRowsData(), $i, $j) == "" ? " wpdt-empty-cell " : "";
-                $cellMetaClasses = apply_filters('wpdt_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
+                $cellMetaClasses = apply_filters_deprecated(
+                        'wpdt_filter_simple_table_cell_meta',
+                    array(  $cellMetaClasses, $i, $j, $this->getTableID() ),
+                    WDT_INITIAL_STARTER_VERSION,
+                        'wpdatatables_filter_simple_table_cell_meta'
+                );
+                $cellMetaClasses = apply_filters('wpdatatables_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
 
                 $hiddenCell = $this->getHiddenCellByIndexes($this->getRowsData(), $i, $j) ? 'hidden' : "";
                 $colspanValue = 1;
@@ -80,7 +86,13 @@
                 }
                 $cellMetaClasses .=  $isRemoveBorders ? ' remove-borders ' : '';
                 $cellMetaClasses .=  $isBorderSeparate ? ' border-separate ' : '';
-                $cellMetaClasses = apply_filters('wpdt_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
+                $cellMetaClasses = apply_filters_deprecated(
+                    'wpdt_filter_simple_table_cell_meta',
+                    array(  $cellMetaClasses, $i, $j, $this->getTableID() ),
+                    WDT_INITIAL_STARTER_VERSION,
+                    'wpdatatables_filter_simple_table_cell_meta'
+                );
+                $cellMetaClasses = apply_filters('wpdatatables_filter_simple_table_cell_meta', $cellMetaClasses, $i, $j, $this->getTableID());
 
                 if (($hiddenCell == 'hidden' && $isResponsive) || $hiddenCell != 'hidden'){
                 ?>
@@ -126,7 +138,13 @@
                     $cellData = substr($cellData, strpos($cellData, '>[') + 1, strpos($cellData, ']<') - strpos($cellData, '>['));
                     $cellData = do_shortcode($cellData);
                 }
-                $cellData = apply_filters('wpdt_filter_simple_table_cell_data', $cellData, $this->getTableID());
+                $cellData = apply_filters_deprecated(
+                        'wpdt_filter_simple_table_cell_data',
+                        array( $cellData, $this->getTableID() ),
+                    WDT_INITIAL_STARTER_VERSION,
+                        'wpdatatables_filter_simple_table_cell_data'
+                );
+                $cellData = apply_filters('wpdatatables_filter_simple_table_cell_data', $cellData, $this->getTableID());
                 ?>
                 <?php echo $cellData ?>
                 </<?php echo $tag ?>>

@@ -125,7 +125,14 @@ function wdtGetAjaxData() {
                     }
                 }
             }
-            $filterDefaultValue[] = apply_filters('wpdt_filter_filtering_default_value', $column->default_value , $column->orig_header, $column->table_id);
+            $column->default_value = apply_filters_deprecated(
+                'wpdt_filter_filtering_default_value',
+                array( $column->default_value , $column->orig_header, $column->table_id ),
+                WDT_INITIAL_STARTER_VERSION,
+                'wpdatatables_filter_filtering_default_value' );
+            $column->default_value = apply_filters('wpdatatables_filter_filtering_default_value', $column->default_value , $column->orig_header, $column->table_id);
+
+            $filterDefaultValue[] = $column->default_value;
         }
         if (isset($advancedSettings->rangeSlider) && $advancedSettings->rangeSlider == 1 ) {
             $rangeSlider[] = $column->orig_header;
@@ -248,7 +255,13 @@ function wdtGetAjaxData() {
         'editingDefaultValue'  => $editingDefaultValue
     );
 
-    $columnOptions = apply_filters('wpdt_filter_column_options', $columnOptions, $columnData, $tbl);
+    $columnOptions = apply_filters_deprecated(
+        'wpdt_filter_column_options',
+        array( $columnOptions, $columnData, $tbl ),
+        WDT_INITIAL_STARTER_VERSION,
+        'wpdatatables_filter_column_options'
+    );
+    $columnOptions = apply_filters('wpdatatables_filter_column_options', $columnOptions, $columnData, $tbl);
 
     if ( in_array($tbl->getTableType(), ['mysql', 'manual'], true)) {
         $json = $tbl->queryBasedConstruct(
@@ -300,6 +313,12 @@ function wdtSaveTableFrontend() {
     $formData = apply_filters('wpdatatables_filter_frontend_formdata', $formData, $tableId);
 
     $tableData = WDTConfigController::loadTableFromDB($tableId);
+
+    // If current user cannot edit - do nothing
+    if (!wdtCurrentUserCanEdit($tableData->editor_roles, $tableId)) {
+        exit();
+    }
+
     $mySqlTableName = WDTTools::applyPlaceholders($tableData->mysql_table_name);
 
     $advancedSettings = json_decode($tableData->advanced_settings);
@@ -362,9 +381,8 @@ function wdtSaveTableFrontend() {
             if (isset($formData[$column->orig_header])) {
 
                 // Sanitize data
-                $formData[$column->orig_header] = strip_tags(
-                    $formData[$column->orig_header],
-                    '<br/><br><b><strong><h1><h2><h3><a><i><em><ol><ul><li><img><blockquote><div><hr><p><span><select><option><sup><sub><iframe><pre><button>'
+                $formData[$column->orig_header] = wp_kses_post(
+                    $formData[$column->orig_header]
                 );
 
                 // Formatting for DB based on column type
@@ -440,10 +458,6 @@ function wdtSaveTableFrontend() {
                     case 'image':
                         $formData[$column->orig_header] = WDTTools::prepareStringCell(esc_url($formData[$column->orig_header]), $tableData->connection);
                         break;
-                    case 'hidden':
-                        $formData[$column->orig_header] = WDTTools::prepareStringCell(
-                            WDTTools::getHiddenDefaultValues($advancedSettings->editingDefaultValue, $tableData), $tableData->connection);
-                        break;
                     case 'time':
                         if ($formData[$column->orig_header] != '') {
                             $formData[$column->orig_header] =
@@ -459,7 +473,14 @@ function wdtSaveTableFrontend() {
                         }
                         break;
                     default:
-                        $formData[$column->orig_header] = WDTTools::wrapQuotes(sanitize_text_field($formData[$column->orig_header]), $tableData->connection);
+                        if (has_filter('wpdatatables_formatting_entry_data_custom_column_type_' . $column->column_type)) {
+                            $formData[$column->orig_header] = apply_filters(
+                                'wpdatatables_formatting_entry_data_custom_column_type_' . $column->column_type,
+                                $formData[$column->orig_header], $formData, $advancedSettings, $column, $tableData
+                            );
+                        } else {
+                            $formData[$column->orig_header] = WDTTools::wrapQuotes(sanitize_text_field($formData[$column->orig_header]), $tableData->connection);
+                        }
                         break;
                 }
 
@@ -611,6 +632,14 @@ function wdtSaveTableCellsFrontend() {
 
     // If current user cannot edit - do nothing
     if (!wdtCurrentUserCanEdit($tableData->editor_roles, $tableId)) {
+        exit();
+    }
+
+    // If is turn on user can see and edit own data for excel-like tables
+    // TODO: Implement users see and edit their own data on excel like tables
+    if ($tableData->edit_only_own_rows) {
+        $returnResult['error'] = __('At the moment option "Users see and edit only their own data" is not working with Excel like tables. Please turn it off to continue editing.', 'wpdatatables');
+        echo json_encode($returnResult);
         exit();
     }
 
@@ -966,6 +995,14 @@ function wdtDeleteTableRows() {
     // If current user cannot edit - do nothing
     if (!wdtCurrentUserCanEdit($tableData->editor_roles, $tableId)) {
         $returnResult['error'] = __('You don\'t have permission to change this table.', 'wpdatatables');
+        echo json_encode($returnResult);
+        exit();
+    }
+
+    // If is turn on user can see and edit own data for excel-like tables
+    // TODO: Implement users see and edit their own data on excel like tables
+    if ($tableData->edit_only_own_rows) {
+        $returnResult['error'] = __('At the moment option "Users see and edit only their own data" is not working with Excel like tables. Please turn it off to continue editing.', 'wpdatatables');
         echo json_encode($returnResult);
         exit();
     }
